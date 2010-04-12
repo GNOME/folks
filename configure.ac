@@ -54,6 +54,7 @@ PKG_CHECK_MODULES(LIBTPP,
                   glib-2.0 >= $GLIB_REQUIRED
                   gobject-2.0 >= $GLIB_REQUIRED
                   dbus-glib-1
+                  gee-1.0
                   telepathy-vala
                   )
 AC_SUBST(LIBTPP_CFLAGS)

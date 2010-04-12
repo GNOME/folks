@@ -19,44 +19,41 @@
  */
 
 using GLib;
+using Gee;
+using Tp.Account;
 using Tp.PersonaStore;
 
 public class Tp.IndividualAggregator : Object {
-        /* FIXME: cut this?
-        private HashTable stores;
-        */
+        private HashMap<string, PersonaStore> stores;
 
         public IndividualAggregator () {
-                /* FIXME: see if Gee has something better here
-                this.stores = new HashTable ();
-                */
+                this.stores = new HashMap<string, PersonaStore> ();
 
                 AccountManager manager = AccountManager.dup ();
-                /* FIXME: cut the GLib */
                 unowned GLib.List<Account> accounts =
                         manager.get_valid_accounts ();
-
-                /* FIXME: cut this
-                Account first_account = accounts.first().data;
-
-                stdout.printf ("first account: %p (%s: '%s'), presence: %d\n",
-                                first_account,
-                                first_account.get_protocol (),
-                                first_account.get_display_name (),
-                                first_account.get_current_presence (null, null));
-                */
 
                 foreach (Account account in accounts) {
                         PersonaStore store;
 
-                        /* FIXME: add this to this's hash */
                         store = new PersonaStore (account);
 
-                }
-        }
+                        /* FIXME: cut this */
+                        stdout.printf ("using account bus name '%s'\n",
+                                        account.get_object_path (account));
 
-        public void some_method () {
-                /* FIXME: cut this */
-                stdout.printf ("IndividualAggregator: telepathy-people says hello!\n");
+                        this.stores.set (account.get_object_path (account),
+                                        store);
+                }
+
+                /* FIXME: cut this block */
+                stdout.printf ("the accounts we've got:\n");
+                foreach (var entry in this.stores) {
+                        PersonaStore store = entry.value;
+                        stdout.printf ("     account name: '%s'\n",
+                                        store.account.get_display_name ());
+                }
+
+                /* FIXME: react to accounts being created and deleted */
         }
 }
