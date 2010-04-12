@@ -20,17 +20,26 @@
 
 using GLib;
 using Tp.Individual;
+using Tp.Channel;
+using Tp.Handle;
+using Tp.Account;
+using Tp.AccountManager;
 
+/* FIXME: split out the TpAccount-specific parts into a new subclass, since
+ * PersonaStore should also be used by non-Telepathy sources */
 public class Tp.PersonaStore : Object {
-        public PersonaStore () {
-        }
+        [Property(nick = "basis account",
+                        blurb = "Telepathy account this store is based upon")]
+        public Account account { get; construct; }
 
-        /* FIXME: cut this */
-        public void some_method () {
-                Individual individual = new Individual ();
-
+        public PersonaStore (Account account) {
                 /* FIXME: cut this */
-                stdout.printf ("telepathy-people says hello with individual %p!\n",
-                                individual);
+                stdout.printf ("creating PersonaStore from account: %p (%s: '%s'), presence: %d\n",
+                               account,
+                               account.get_protocol (),
+                               account.get_display_name (),
+                               account.get_current_presence (null, null));
+
+                Object (account: account);
         }
 }
