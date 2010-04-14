@@ -19,18 +19,13 @@
  */
 
 using GLib;
-using Tp.Individual;
 
-public class Tp.PersonaStore : Object {
-        public PersonaStore () {
+public class Tp.IndividualAggregator : Object {
+        public IndividualAggregator () {
         }
 
-        /* FIXME: cut this */
         public void some_method () {
-                Individual individual = new Individual ();
-
                 /* FIXME: cut this */
-                stdout.printf ("telepathy-people says hello with individual %p!\n",
-                                individual);
+                stdout.printf ("IndividualAggregator: telepathy-people says hello!\n");
         }
 }

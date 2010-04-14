@@ -48,10 +48,12 @@ Makefile.in
 /telepathy-people-*/
 /xmldocs.make
 
-/telepathy-people/telepathy-people-uninstalled.pc
-/telepathy-people/telepathy-people.pc
+/telepathy-people/individual.c
+/telepathy-people/individual-aggregator.c
 /telepathy-people/persona-store.c
 /telepathy-people/telepathy-people.h
+/telepathy-people/telepathy-people.pc
+/telepathy-people/telepathy-people-uninstalled.pc
 /telepathy-people/telepathy-people.vapi
 
 /tests/test-*[^ch]

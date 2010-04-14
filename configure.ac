@@ -42,13 +42,20 @@ AC_PROG_LIBTOOL
 AC_PATH_PROG(VALAC, valac, valac)
 AC_SUBST(VALAC)
 
+AC_SUBST(PKG_CONFIG_PATH)
+AC_SUBST(VALAFLAGS)
 AC_SUBST(CFLAGS)
 AC_SUBST(CPPFLAGS)
 AC_SUBST(LDFLAGS)
 
 GLIB_REQUIRED=2.12.0
 
-PKG_CHECK_MODULES(LIBTPP, glib-2.0 >= $GLIB_REQUIRED gobject-2.0 >= $GLIB_REQUIRED)
+PKG_CHECK_MODULES(LIBTPP,
+                  glib-2.0 >= $GLIB_REQUIRED
+                  gobject-2.0 >= $GLIB_REQUIRED
+                  dbus-glib-1
+                  telepathy-vala
+                  )
 AC_SUBST(LIBTPP_CFLAGS)
 AC_SUBST(LIBTPP_LIBS)
 
@@ -103,6 +110,7 @@ AC_SUBST(ERROR_CFLAGS)
 
 AC_CONFIG_FILES([Makefile
 	telepathy-people/Makefile
+	telepathy-people/telepathy-people.pc
 ])
 
 AC_OUTPUT
@@ -114,6 +122,7 @@ Configure summary:
         Compiler Flags..............:  ${CFLAGS} ${ERROR_CFLAGS}
         Prefix......................:  ${prefix}
         Coding style checks.........:  ${ENABLE_CODING_STYLE_CHECKS}
+        VAPI generation.............:  ${enable_vapigen}
         Bugreporting URL............:  ${PACKAGE_BUGREPORT}
 
 
