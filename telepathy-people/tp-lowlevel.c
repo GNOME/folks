@@ -88,18 +88,18 @@ tp_lowlevel_connection_open_contact_list_channel_async (TpLowlevel *lowlevel,
 
 /* FIXME: if possible, make this static, or at least hide it in the .metadata
  * file */
-const TpChannel *
+TpChannel *
 tp_lowlevel_connection_open_contact_list_channel_finish (TpLowlevel *lowlevel,
-    TpConnection *conn,
     GAsyncResult *result,
     GError **error)
 {
-  GSimpleAsyncResult *simple;
+  GSimpleAsyncResult *simple = G_SIMPLE_ASYNC_RESULT (result);
+  TpConnection *conn;
 
+  g_return_val_if_fail (G_IS_SIMPLE_ASYNC_RESULT (simple), FALSE);
+
+  conn = TP_CONNECTION (g_async_result_get_source_object (result));
   g_return_val_if_fail (TP_IS_CONNECTION (conn), FALSE);
-  g_return_val_if_fail (G_IS_SIMPLE_ASYNC_RESULT (result), FALSE);
-
-  simple = G_SIMPLE_ASYNC_RESULT (result);
 
   if (g_simple_async_result_propagate_error (simple, error))
     return NULL;

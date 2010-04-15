@@ -61,9 +61,8 @@ tp_lowlevel_connection_open_contact_list_channel_async (TpLowlevel *lowlevel,
     GAsyncReadyCallback callback,
     gpointer user_data);
 
-const TpChannel *
+TpChannel *
 tp_lowlevel_connection_open_contact_list_channel_finish (TpLowlevel *lowlevel,
-    TpConnection *conn,
     GAsyncResult *result,
     GError **error);
 
