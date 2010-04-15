@@ -55,5 +55,7 @@ Makefile.in
 /telepathy-people/telepathy-people.pc
 /telepathy-people/telepathy-people-uninstalled.pc
 /telepathy-people/telepathy-people.vapi
+/telepathy-people/tp-lowlevel.gi
+/telepathy-people/tp-lowlevel.vapi
 
 /tests/test-*[^ch]

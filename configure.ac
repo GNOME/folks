@@ -60,6 +60,14 @@ PKG_CHECK_MODULES(LIBTPP,
 AC_SUBST(LIBTPP_CFLAGS)
 AC_SUBST(LIBTPP_LIBS)
 
+PKG_CHECK_MODULES(LIBTP_LOWLEVEL,
+                  glib-2.0 >= $GLIB_REQUIRED
+                  gobject-2.0 >= $GLIB_REQUIRED
+                  telepathy-glib
+                  )
+AC_SUBST(LIBTP_LOWLEVEL_CFLAGS)
+AC_SUBST(LIBTP_LOWLEVEL_LIBS)
+
 GTK_DOC_CHECK([1.10])
 
 # -----------------------------------------------------------
