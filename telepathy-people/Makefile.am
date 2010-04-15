@@ -83,8 +83,9 @@ pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = $(pkgconfig_in:.in=)
 
 BUILT_SOURCES = \
-	telepathy-people.vala.stamp \
 	telepathy-people.h \
+	telepathy-people.vala.stamp \
+	telepathy-people.vapi \
 	tp-lowlevel.gi \
 	tp-lowlevel.vapi \
 	$(libtelepathy_people_la_VALASOURCES:.vala=.c) \
