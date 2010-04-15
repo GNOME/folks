@@ -37,6 +37,9 @@ public class Tp.PersonaStore : Object {
 
         private void group_members_changed_cb (Channel channel,
                         string message,
+                        /* FIXME: the "unowned" part is just a hack to prevent
+                         * the handle from being freed -- we really need to
+                         * specify that the Handle is not an object */
                         Array<unowned Handle> added,
                         Array<unowned Handle> removed,
                         Array<unowned Handle> local_pending,
@@ -49,6 +52,9 @@ public class Tp.PersonaStore : Object {
                 stdout.printf ("group members changed: '%s'\n", message);
 
                 for (i = 0; i < added.length; i++) {
+                        /* FIXME: the "unowned" part is just a hack to prevent
+                         * the handle from being freed -- we really need to
+                         * specify that the Handle is not an object */
                         unowned Handle h = added.index (i);
 
                         /* FIXME: cut this */
