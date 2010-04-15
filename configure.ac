@@ -20,7 +20,7 @@ m4_define(tpp_version, tpp_full_version[]tpp_maybe_datestamp)
 
 
 AC_INIT(telepathy-people, tpp_version, telepathy-people)
-m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES])
+m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
 
 AC_PREREQ(2.59)
 AC_COPYRIGHT([

@@ -40,11 +40,11 @@ tp_lowlevel_sources = \
 # FIXME: wrap lines
 # FIXME: use a better path to the .so file
 tp-lowlevel.gi: $(tp_lowlevel_sources) libtp-lowlevel.la
-	$(GEN_INTROSPECT) --namespace=Tp tp-lowlevel.h \
+	$(VGI_V)$(GEN_INTROSPECT) --namespace=Tp tp-lowlevel.h \
 		$(shell pkg-config telepathy-glib --cflags) .libs/libtp-lowlevel.so > tp-lowlevel.gi
 
 tp-lowlevel.vapi: tp-lowlevel.gi
-	$(VAPIGEN) $(VALAFLAGS) --library tp-lowlevel tp-lowlevel.gi
+	$(VAPIGEN_V)$(VAPIGEN) $(VALAFLAGS) --library tp-lowlevel tp-lowlevel.gi
 
 internal_vapi_files = \
 	tp-lowlevel.vapi \
@@ -75,7 +75,7 @@ telepathy_people_HEADERS = \
 telepathy-people.h $(libtelepathy_people_la_VALASOURCES:.vala=.c) $(libtelepathy_people_la_VALASOURCES:.vala=.h): telepathy-people.vala.stamp
 
 telepathy-people.vapi telepathy-people.vala.stamp: $(libtelepathy_people_la_VALASOURCES) $(internal_vapi_files)
-	$(VALAC) $(VALAFLAGS) -C --pkg tp-lowlevel -H telepathy-people.h --library telepathy-people $(libtelepathy_people_la_VALASOURCES)
+	$(VALA_V)$(VALAC) $(VALAFLAGS) -C --pkg tp-lowlevel -H telepathy-people.h --library telepathy-people $(libtelepathy_people_la_VALASOURCES)
 	touch $@
 
 pkgconfig_in = telepathy-people.pc.in
@@ -107,3 +107,18 @@ DISTCLEANFILES = \
 MAINTAINERCLEANFILES = \
 	$(libtelepathy_people_la_VALASOURCES:.vala=.c) \
 	$(NULL)
+
+# set up the verbosity rules to avoid some build noise
+# XXX: once automake >= 1.11 is common, remove these, push VALASOURCES files
+# into SOURCES and add AM_PROG_VALAC to configure.ac
+VALA_V = $(VALA_V_$(V))
+VALA_V_ = $(VALA_V_$(AM_DEFAULT_VERBOSITY))
+VALA_V_0 = @echo "  VALAC " $^;
+
+VAPIGEN_V = $(VAPIGEN_V_$(V))
+VAPIGEN_V_ = $(VAPIGEN_V_$(AM_DEFAULT_VERBOSITY))
+VAPIGEN_V_0 = @echo "  VAPIG " $^;
+
+VGI_V = $(VGI_V_$(V))
+VGI_V_ = $(VGI_V_$(AM_DEFAULT_VERBOSITY))
+VGI_V_0 = @echo "  VGI   " $^;
