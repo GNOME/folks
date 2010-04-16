@@ -19,6 +19,7 @@
  */
 
 using GLib;
+using Gee;
 using Tp.Individual;
 using Tp.Channel;
 using Tp.Handle;
@@ -34,6 +35,14 @@ public class Tp.PersonaStore : Object {
         public Account account { get; construct; }
         private bool conn_prepared = false;
         private Lowlevel ll;
+        private HashMap<string, Channel> channels;
+
+        private void create_individual (Handle h) {
+                /* FIXME: create an individual and add to internal storage */
+
+                /* FIXME: cut this */
+                stdout.printf ("would create individual for handle: %p\n", h);
+        }
 
         private void group_members_changed_cb (Channel channel,
                         string message,
@@ -57,14 +66,7 @@ public class Tp.PersonaStore : Object {
                          * specify that the Handle is not an object */
                         unowned Handle h = added.index (i);
 
-                        /* FIXME: cut this */
-                        stdout.printf ("group-members-changed: got handle: %p\n", h);
-
-                        /* FIXME: probably need to improve the telepathy-vala
-                         * binding for Tp.Handle before we can do anything
-                         * useful */
-
-                        /* FIXME: create the Tp.Individual, etc. */
+                        this.create_individual (h);
                 }
 
                 /* FIXME: continue for the other arrays */
@@ -79,6 +81,7 @@ public class Tp.PersonaStore : Object {
                 try {
                         channel = yield this.ll.connection_open_contact_list_channel_async (
                                         conn, name);
+                        this.channels[name] = channel;
                 } catch (GLib.Error e) {
                         stderr.printf ("failed to add channel '%s': %s\n",
                                         name, e.message);
@@ -94,13 +97,35 @@ public class Tp.PersonaStore : Object {
                                 channel.get_identifier (), (uint) channel.is_ready (),
                                 this);
 
-                channel.group_members_changed.connect (
-                                this.group_members_changed_cb);
-
                 channel.notify["channel-ready"].connect ((s, p) => {
+                        Channel c = (Channel) s;
+                        unowned IntSet members_set;
+                        unowned Array<unowned Handle> members;
+
+                        /* FIXME: cut this */
                         stdout.printf ("new value for 'channel-ready': %d\n", 
                                 (int) channel.channel_ready);
 
+                        c.group_members_changed.connect (
+                                        this.group_members_changed_cb);
+
+                        members_set = c.group_get_members ();
+                        if (members_set != null) {
+                                members = members_set.to_array ();
+                                uint i;
+
+                                /* FIXME: cut this */
+                                stdout.printf ("original member list:\n");
+
+                                for (i = 0; i < members.length; i++) {
+                                        unowned Handle h = members.index (i);
+
+                                        /* FIXME: cut this */
+                                        stdout.printf ("    %d\n", (int) h);
+
+                                        this.create_individual (h);
+                                }
+                        }
                 });
         }
 
@@ -182,6 +207,7 @@ public class Tp.PersonaStore : Object {
 
                 Object (account: account);
 
+                this.channels = new HashMap<string, Channel> ();
                 this.ll = new Lowlevel ();
                 this.prep_account ();
 
