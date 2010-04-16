@@ -39,7 +39,7 @@ public class Tp.IndividualAggregator : Object {
                         store = new PersonaStore (account);
 
                         /* FIXME: cut this */
-                        stdout.printf ("using account bus name '%s'\n",
+                        debug ("using account bus name '%s'",
                                         account.get_object_path (account));
 
                         this.stores.set (account.get_object_path (account),
@@ -47,10 +47,10 @@ public class Tp.IndividualAggregator : Object {
                 }
 
                 /* FIXME: cut this block */
-                stdout.printf ("the accounts we've got:\n");
+                debug ("the accounts we've got:");
                 foreach (var entry in this.stores) {
                         PersonaStore store = entry.value;
-                        stdout.printf ("     account name: '%s'\n",
+                        debug ("     account name: '%s'",
                                         store.account.get_display_name ());
                 }
 

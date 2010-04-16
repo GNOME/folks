@@ -26,6 +26,6 @@ public class Tp.Individual : Object {
 
         public void some_method () {
                 /* FIXME: cut this */
-                stdout.printf ("Individual: telepathy-people says hello!\n");
+                debug ("Individual: telepathy-people says hello!");
         }
 }

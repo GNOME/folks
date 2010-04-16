@@ -41,7 +41,7 @@ public class Tp.PersonaStore : Object {
                 /* FIXME: create an individual and add to internal storage */
 
                 /* FIXME: cut this */
-                stdout.printf ("would create individual for handle: %p\n", h);
+                debug ("would create individual for handle: %u", (uint) h);
         }
 
         private void group_members_changed_cb (Channel channel,
@@ -58,7 +58,7 @@ public class Tp.PersonaStore : Object {
                 uint i;
 
                 /* FIXME: cut this */
-                stdout.printf ("group members changed: '%s'\n", message);
+                debug ("group members changed: '%s'", message);
 
                 for (i = 0; i < added.length; i++) {
                         /* FIXME: the "unowned" part is just a hack to prevent
@@ -93,7 +93,7 @@ public class Tp.PersonaStore : Object {
                 }
 
                 /* FIXME: cut this */
-                stdout.printf ("got channel %p (%s, is ready: %u) for store %p\n", channel,
+                debug ("got channel %p (%s, is ready: %u) for store %p", channel,
                                 channel.get_identifier (), (uint) channel.is_ready (),
                                 this);
 
@@ -103,7 +103,7 @@ public class Tp.PersonaStore : Object {
                         unowned Array<unowned Handle> members;
 
                         /* FIXME: cut this */
-                        stdout.printf ("new value for 'channel-ready': %d\n", 
+                        debug ("new value for 'channel-ready': %d",
                                 (int) channel.channel_ready);
 
                         c.group_members_changed.connect (
@@ -115,13 +115,10 @@ public class Tp.PersonaStore : Object {
                                 uint i;
 
                                 /* FIXME: cut this */
-                                stdout.printf ("original member list:\n");
+                                debug ("original member list:");
 
                                 for (i = 0; i < members.length; i++) {
                                         unowned Handle h = members.index (i);
-
-                                        /* FIXME: cut this */
-                                        stdout.printf ("    %d\n", (int) h);
 
                                         this.create_individual (h);
                                 }
@@ -132,12 +129,12 @@ public class Tp.PersonaStore : Object {
         private void connection_ready_cb (Connection conn, GLib.Error error) {
                 if (error != null) {
                         /* FIXME: cut this */
-                        stdout.printf ("connection_ready_cb: non-NULL error: %s\n",
+                        debug ("connection_ready_cb: non-NULL error: %s",
                                         error.message);
 
                 } else if (this.conn_prepared == false) {
                         /* FIXME: cut this */
-                        stdout.printf ("connection_ready_cb: success\n");
+                        debug ("connection_ready_cb: success");
 
                         /* FIXME: set up a handler for the "NewChannels" signal;
                          * do much the same work in the handler as we do in the
@@ -160,7 +157,7 @@ public class Tp.PersonaStore : Object {
                 bool success;
 
                 /* FIXME: cut this */
-                stdout.printf ("about to prep the account\n");
+                debug ("about to prep the account");
 
                 try {
                         success = yield account.prepare_async (null);
@@ -168,15 +165,15 @@ public class Tp.PersonaStore : Object {
                                 Connection conn = account.get_connection ();
 
                                 /* FIXME: cut this */
-                                stdout.printf ("account prep for %s succeeded\n",
+                                debug ("account prep for %s succeeded",
                                                 this.account.get_display_name ());
 
                                 if (conn == null) {
                                         /* FIXME: cut this */
-                                        stdout.printf ("connection offline\n");
+                                        debug ("connection offline");
                                 } else {
                                         /* FIXME: cut this */
-                                        stdout.printf ("connection online\n");
+                                        debug ("connection online");
 
                                         conn.call_when_ready (this.connection_ready_cb);
                                 }
@@ -193,7 +190,7 @@ public class Tp.PersonaStore : Object {
                 string status_message = null;
 
                 /* FIXME: cut this */
-                stdout.printf ("creating PersonaStore from account: %p (%s: '%s'), presence: (%d: %s; %s)\n",
+                debug ("creating PersonaStore from account: %p (%s: '%s'), presence: (%d: %s; %s)",
                                account,
                                account.get_protocol (),
                                account.get_display_name (),
@@ -201,8 +198,8 @@ public class Tp.PersonaStore : Object {
                                        out status_message),
                                status == null ? status : "(no status)",
                                status_message == null ? status_message : "(no status message)");
-                stdout.printf ("second try with status: (%s, %s)\n",
-                                status, status_message);
+                debug ("second try with status: (%s, %s)", status,
+                                status_message);
 
 
                 Object (account: account);
