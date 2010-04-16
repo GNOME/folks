@@ -86,8 +86,9 @@ tp_lowlevel_connection_open_contact_list_channel_async (TpLowlevel *lowlevel,
       connection_ensure_channel_cb, result, NULL, G_OBJECT (conn));
 }
 
-/* FIXME: if possible, make this static, or at least hide it in the .metadata
- * file */
+/* XXX: ideally, we'd either make this static or hide it in the .metadata file,
+ * but neither seems to be supported (without breaking the binding to the async
+ * function) */
 TpChannel *
 tp_lowlevel_connection_open_contact_list_channel_finish (TpLowlevel *lowlevel,
     GAsyncResult *result,
