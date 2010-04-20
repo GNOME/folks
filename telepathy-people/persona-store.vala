@@ -22,6 +22,8 @@ using GLib;
 using Gee;
 using Tp.Individual;
 using Tp.Channel;
+using Tp.Contact;
+using Tp.ContactFeature;
 using Tp.Handle;
 using Tp.Account;
 using Tp.AccountManager;
@@ -33,15 +35,78 @@ public class Tp.PersonaStore : Object {
         [Property(nick = "basis account",
                         blurb = "Telepathy account this store is based upon")]
         public Account account { get; construct; }
+        private Connection conn;
         private bool conn_prepared = false;
         private Lowlevel ll;
         private HashMap<string, Channel> channels;
 
-        private void create_individual (Handle h) {
+        /* FIXME: Array<uint> => Array<Handle>; parser bug */
+        private Handle[] glib_handles_array_to_array (Array<uint> hs) {
+                Handle[] handles = new Handle[hs.length];
+                uint i;
+
+                for (i = 0; i < hs.length; i++) {
+                        handles[i] = (Handle) hs.index (i);
+                }
+
+                return handles;
+        }
+
+        private void get_contacts_by_handle_cb (Tp.Connection connection,
+                        uint n_contacts,
+                        [CCode (array_length = false)]
+                        Tp.Contact[] contacts,
+                        uint n_failed,
+                        [CCode (array_length = false)]
+                        Tp.Handle[] failed,
+                        GLib.Error error,
+                        GLib.Object weak_object) {
+
+                uint i;
+
+                /* FIXME: cut this */
+                debug ("in get_contacts_by_handle_cb(n_contacts: %u; contacts: %p, n_failed: %u, failed: %p)", n_contacts, contacts,
+                                n_failed, failed);
+
+                for (i = 0; i < n_contacts; i++) {
+                        Contact contact = contacts[i];
+
+                        debug ("    contact ID: %s (%s)", contact.get_identifier (), contact.get_alias ());
+                }
+
+                /* FIXME: cut this */
+                debug ("failed contacts:");
+
+                for (i = 0; i < n_failed; i++) {
+                        Handle h = failed[i];
+
+                        debug ("    handle: %u", (uint) h);
+                }
+        }
+
+        /* FIXME: Array<uint> => Array<Handle>; parser bug */
+        private void create_individuals (Array<uint> handles) {
+                Handle[] handles_array;
+                ContactFeature[] features = {
+                        TP_CONTACT_FEATURE_ALIAS,
+                        /* XXX: also avatar token? */
+                        TP_CONTACT_FEATURE_PRESENCE
+                };
+                uint i;
+
                 /* FIXME: create an individual and add to internal storage */
 
                 /* FIXME: cut this */
-                debug ("would create individual for handle: %u", (uint) h);
+                for (i = 0; i < handles.length; i++) {
+                        Handle h = (Handle) handles.index (i);
+
+                        debug ("would create individual for handle: %u", (uint) h);
+                }
+
+                handles_array = this.glib_handles_array_to_array (handles);
+
+                this.conn.get_contacts_by_handle (handles_array, features,
+                                this.get_contacts_by_handle_cb, this.conn);
         }
 
         private void group_members_changed_cb (Channel channel,
@@ -49,25 +114,18 @@ public class Tp.PersonaStore : Object {
                         /* FIXME: the "unowned" part is just a hack to prevent
                          * the handle from being freed -- we really need to
                          * specify that the Handle is not an object */
-                        Array<unowned Handle> added,
-                        Array<unowned Handle> removed,
-                        Array<unowned Handle> local_pending,
-                        Array<unowned Handle> remote_pending,
+
+                        /* FIXME: Array<uint> => Array<Handle>; parser bug */
+                        Array<uint> added,
+                        Array<uint> removed,
+                        Array<uint> local_pending,
+                        Array<uint> remote_pending,
                         uint actor,
                         uint reason) {
-                uint i;
-
                 /* FIXME: cut this */
                 debug ("group members changed: '%s'", message);
 
-                for (i = 0; i < added.length; i++) {
-                        /* FIXME: the "unowned" part is just a hack to prevent
-                         * the handle from being freed -- we really need to
-                         * specify that the Handle is not an object */
-                        unowned Handle h = added.index (i);
-
-                        this.create_individual (h);
-                }
+                this.create_individuals (added);
 
                 /* FIXME: continue for the other arrays */
         }
@@ -100,7 +158,6 @@ public class Tp.PersonaStore : Object {
                 channel.notify["channel-ready"].connect ((s, p) => {
                         Channel c = (Channel) s;
                         unowned IntSet members_set;
-                        unowned Array<unowned Handle> members;
 
                         /* FIXME: cut this */
                         debug ("new value for 'channel-ready': %d",
@@ -110,18 +167,10 @@ public class Tp.PersonaStore : Object {
                                         this.group_members_changed_cb);
 
                         members_set = c.group_get_members ();
+
                         if (members_set != null) {
-                                members = members_set.to_array ();
-                                uint i;
-
-                                /* FIXME: cut this */
-                                debug ("original member list:");
-
-                                for (i = 0; i < members.length; i++) {
-                                        unowned Handle h = members.index (i);
-
-                                        this.create_individual (h);
-                                }
+                                this.create_individuals (
+                                                members_set.to_array ());
                         }
                 });
         }
@@ -148,7 +197,7 @@ public class Tp.PersonaStore : Object {
                         this.add_channel (conn, "publish");
                         */
                         this.add_channel (conn, "subscribe");
-
+                        this.conn = conn;
                         this.conn_prepared = true;
                 }
         }
@@ -204,6 +253,7 @@ public class Tp.PersonaStore : Object {
 
                 Object (account: account);
 
+                this.conn = null;
                 this.channels = new HashMap<string, Channel> ();
                 this.ll = new Lowlevel ();
                 this.prep_account ();
