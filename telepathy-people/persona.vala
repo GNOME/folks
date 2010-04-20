@@ -20,7 +20,12 @@
 
 using GLib;
 
-public class Tp.Individual : Object {
-        public Individual () {
-        }
+/* FIXME: have this class implement a number of interfaces: Avatar, Alias,
+ * Presence, etc. */
+public abstract class Tp.Persona : Object {
+        /* internal ID */
+        public string iid { get; construct; }
+        /* universal ID (eg, "foo@xmpp.example.org") */
+        public string uid { get; construct; }
+        public string alias { get; set; }
 }

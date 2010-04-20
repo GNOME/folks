@@ -50,6 +50,7 @@ Makefile.in
 
 /telepathy-people/individual.c
 /telepathy-people/individual-aggregator.c
+/telepathy-people/persona.c
 /telepathy-people/persona-store.c
 /telepathy-people/telepathy-people.h
 /telepathy-people/telepathy-people.pc
@@ -57,5 +58,6 @@ Makefile.in
 /telepathy-people/telepathy-people.vapi
 /telepathy-people/tp-lowlevel.gi
 /telepathy-people/tp-lowlevel.vapi
+/telepathy-people/tp-persona.c
 
 /tests/test-*[^ch]

@@ -28,6 +28,8 @@ using Tp.Handle;
 using Tp.Account;
 using Tp.AccountManager;
 using Tp.Lowlevel;
+using Tp.Persona;
+using Tp.TpPersona;
 
 /* FIXME: split out the TpAccount-specific parts into a new subclass, since
  * PersonaStore should also be used by non-Telepathy sources */
@@ -63,6 +65,7 @@ public class Tp.PersonaStore : Object {
                         GLib.Object weak_object) {
 
                 uint i;
+                HashSet<Persona> personas = new HashSet<Persona> ();
 
                 /* FIXME: cut this */
                 debug ("in get_contacts_by_handle_cb(n_contacts: %u; contacts: %p, n_failed: %u, failed: %p)", n_contacts, contacts,
@@ -70,9 +73,16 @@ public class Tp.PersonaStore : Object {
 
                 for (i = 0; i < n_contacts; i++) {
                         Contact contact = contacts[i];
+                        Persona persona;
 
+                        /* FIXME: cut this */
                         debug ("    contact ID: %s (%s)", contact.get_identifier (), contact.get_alias ());
+
+                        persona = new TpPersona (contact);
+                        personas.add (persona);
                 }
+
+                /* FIXME: if personas.length >= 1, emit some "personas-created" signal */
 
                 /* FIXME: cut this */
                 debug ("failed contacts:");
@@ -93,8 +103,6 @@ public class Tp.PersonaStore : Object {
                         TP_CONTACT_FEATURE_PRESENCE
                 };
                 uint i;
-
-                /* FIXME: create an individual and add to internal storage */
 
                 /* FIXME: cut this */
                 for (i = 0; i < handles.length; i++) {
