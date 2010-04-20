@@ -52,6 +52,15 @@ public class Tp.IndividualAggregator : Object {
                         PersonaStore store = entry.value;
                         debug ("     account name: '%s'",
                                         store.account.get_display_name ());
+
+                        store.personas_added.connect ((s,p) => {
+                                        /* FIXME: cut this */
+                                        debug ("got persona store's new personas");
+
+                                        /* FIXME: find correlated personas, then
+                                         * create Individuals out of them, and
+                                         * emit signals for them. */
+                        });
                 }
 
                 /* FIXME: react to accounts being created and deleted */

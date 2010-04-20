@@ -37,6 +37,8 @@ public class Tp.PersonaStore : Object {
         [Property(nick = "basis account",
                         blurb = "Telepathy account this store is based upon")]
         public Account account { get; construct; }
+        public signal void personas_added (Persona[] personas);
+
         private Connection conn;
         private bool conn_prepared = false;
         private Lowlevel ll;
@@ -54,6 +56,20 @@ public class Tp.PersonaStore : Object {
                 return handles;
         }
 
+        /* FIXME: make this generic and relocate it */
+        private Persona[] hash_set_to_array (HashSet<Persona> hash_set) {
+                uint i;
+                Persona[] array = new Persona [hash_set.size];
+
+                i = 0;
+                foreach (var element in hash_set) {
+                        array[i] = element;
+                        i++;
+                }
+
+                return array;
+        }
+
         private void get_contacts_by_handle_cb (Tp.Connection connection,
                         uint n_contacts,
                         [CCode (array_length = false)]
@@ -65,7 +81,7 @@ public class Tp.PersonaStore : Object {
                         GLib.Object weak_object) {
 
                 uint i;
-                HashSet<Persona> personas = new HashSet<Persona> ();
+                HashSet<Persona> persona_set = new HashSet<Persona> ();
 
                 /* FIXME: cut this */
                 debug ("in get_contacts_by_handle_cb(n_contacts: %u; contacts: %p, n_failed: %u, failed: %p)", n_contacts, contacts,
@@ -79,10 +95,18 @@ public class Tp.PersonaStore : Object {
                         debug ("    contact ID: %s (%s)", contact.get_identifier (), contact.get_alias ());
 
                         persona = new TpPersona (contact);
-                        personas.add (persona);
+                        persona_set.add (persona);
+
+                        /* FIXME: add these to a long-term property containing
+                         * all the personas for this store */
                 }
 
-                /* FIXME: if personas.length >= 1, emit some "personas-created" signal */
+                if (persona_set.size >= 1) {
+                        Persona[] personas = this.hash_set_to_array (
+                                        persona_set);
+
+                        this.personas_added (personas);
+                }
 
                 /* FIXME: cut this */
                 debug ("failed contacts:");
@@ -95,7 +119,7 @@ public class Tp.PersonaStore : Object {
         }
 
         /* FIXME: Array<uint> => Array<Handle>; parser bug */
-        private void create_individuals (Array<uint> handles) {
+        private void create_personas_from_handles (Array<uint> handles) {
                 Handle[] handles_array;
                 ContactFeature[] features = {
                         TP_CONTACT_FEATURE_ALIAS,
@@ -113,8 +137,12 @@ public class Tp.PersonaStore : Object {
 
                 handles_array = this.glib_handles_array_to_array (handles);
 
+                /* FIXME: we have to use 'this' as the weak object because the
+                 * weak object gets passed into the underlying callback as the
+                 * object instance; there may be a way to fix this with the
+                 * instance_pos directive, but I couldn't get it to work */
                 this.conn.get_contacts_by_handle (handles_array, features,
-                                this.get_contacts_by_handle_cb, this.conn);
+                                this.get_contacts_by_handle_cb, this);
         }
 
         private void group_members_changed_cb (Channel channel,
@@ -133,7 +161,7 @@ public class Tp.PersonaStore : Object {
                 /* FIXME: cut this */
                 debug ("group members changed: '%s'", message);
 
-                this.create_individuals (added);
+                this.create_personas_from_handles (added);
 
                 /* FIXME: continue for the other arrays */
         }
@@ -177,8 +205,8 @@ public class Tp.PersonaStore : Object {
                         members_set = c.group_get_members ();
 
                         if (members_set != null) {
-                                this.create_individuals (
-                                                members_set.to_array ());
+                                this.create_personas_from_handles (
+                                        members_set.to_array ());
                         }
                 });
         }
