@@ -43,7 +43,7 @@ connection_ensure_channel_cb (TpConnection *conn,
 
   if (error != NULL)
     {
-      g_debug ("failed: %s\n", error->message);
+      g_warning ("failed to ensure channel: %s\n", error->message);
       g_simple_async_result_set_from_error (simple, error);
     }
   else
@@ -71,9 +71,6 @@ tp_lowlevel_connection_open_contact_list_channel_async (TpLowlevel *lowlevel,
 {
   GSimpleAsyncResult *result;
   GHashTable *request;
-
-  /* FIXME: cut this */
-  g_print ("opening channel for contact list '%s'\n", name);
 
   request = tp_asv_new (TP_IFACE_CHANNEL ".ChannelType", G_TYPE_STRING,
       TP_IFACE_CHANNEL_TYPE_CONTACT_LIST, TP_IFACE_CHANNEL ".TargetHandleType",

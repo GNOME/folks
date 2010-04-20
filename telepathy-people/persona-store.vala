@@ -83,16 +83,19 @@ public class Tp.PersonaStore : Object {
                 uint i;
                 HashSet<Persona> persona_set = new HashSet<Persona> ();
 
-                /* FIXME: cut this */
-                debug ("in get_contacts_by_handle_cb(n_contacts: %u; contacts: %p, n_failed: %u, failed: %p)", n_contacts, contacts,
-                                n_failed, failed);
+                if (n_failed >= 1) {
+                        warning ("failed to retrieve contacts for handles:");
+                }
+
+                for (i = 0; i < n_failed; i++) {
+                        Handle h = failed[i];
+
+                        warning ("    %u", (uint) h);
+                }
 
                 for (i = 0; i < n_contacts; i++) {
                         Contact contact = contacts[i];
                         Persona persona;
-
-                        /* FIXME: cut this */
-                        debug ("    contact ID: %s (%s)", contact.get_identifier (), contact.get_alias ());
 
                         persona = new TpPersona (contact);
                         persona_set.add (persona);
@@ -107,15 +110,6 @@ public class Tp.PersonaStore : Object {
 
                         this.personas_added (personas);
                 }
-
-                /* FIXME: cut this */
-                debug ("failed contacts:");
-
-                for (i = 0; i < n_failed; i++) {
-                        Handle h = failed[i];
-
-                        debug ("    handle: %u", (uint) h);
-                }
         }
 
         /* FIXME: Array<uint> => Array<Handle>; parser bug */
@@ -126,15 +120,6 @@ public class Tp.PersonaStore : Object {
                         /* XXX: also avatar token? */
                         TP_CONTACT_FEATURE_PRESENCE
                 };
-                uint i;
-
-                /* FIXME: cut this */
-                for (i = 0; i < handles.length; i++) {
-                        Handle h = (Handle) handles.index (i);
-
-                        debug ("would create individual for handle: %u", (uint) h);
-                }
-
                 handles_array = this.glib_handles_array_to_array (handles);
 
                 /* FIXME: we have to use 'this' as the weak object because the
@@ -169,15 +154,13 @@ public class Tp.PersonaStore : Object {
         private async void add_channel (Connection conn, string name) {
                 Channel channel;
 
-                debug ("trying to add channel %s", name);
-
                 /* FIXME: handle the error GLib.Error from this function */
                 try {
                         channel = yield this.ll.connection_open_contact_list_channel_async (
                                         conn, name);
                         this.channels[name] = channel;
                 } catch (GLib.Error e) {
-                        stderr.printf ("failed to add channel '%s': %s\n",
+                        warning ("failed to add channel '%s': %s\n",
                                         name, e.message);
 
                         /* XXX: assuming there's no decent way to recover from
@@ -186,18 +169,9 @@ public class Tp.PersonaStore : Object {
                         return;
                 }
 
-                /* FIXME: cut this */
-                debug ("got channel %p (%s, is ready: %u) for store %p", channel,
-                                channel.get_identifier (), (uint) channel.is_ready (),
-                                this);
-
                 channel.notify["channel-ready"].connect ((s, p) => {
                         Channel c = (Channel) s;
                         unowned IntSet members_set;
-
-                        /* FIXME: cut this */
-                        debug ("new value for 'channel-ready': %d",
-                                (int) channel.channel_ready);
 
                         c.group_members_changed.connect (
                                         this.group_members_changed_cb);
@@ -213,14 +187,10 @@ public class Tp.PersonaStore : Object {
 
         private void connection_ready_cb (Connection conn, GLib.Error error) {
                 if (error != null) {
-                        /* FIXME: cut this */
-                        debug ("connection_ready_cb: non-NULL error: %s",
+                        warning ("connection_ready_cb: non-NULL error: %s",
                                         error.message);
 
                 } else if (this.conn_prepared == false) {
-                        /* FIXME: cut this */
-                        debug ("connection_ready_cb: success");
-
                         /* FIXME: set up a handler for the "NewChannels" signal;
                          * do much the same work in the handler as we do in the
                          * ensure_channel callback (in tp-lowlevel);
@@ -241,52 +211,22 @@ public class Tp.PersonaStore : Object {
         private async void prep_account () {
                 bool success;
 
-                /* FIXME: cut this */
-                debug ("about to prep the account");
-
                 try {
                         success = yield account.prepare_async (null);
                         if (success == true) {
                                 Connection conn = account.get_connection ();
-
-                                /* FIXME: cut this */
-                                debug ("account prep for %s succeeded",
-                                                this.account.get_display_name ());
-
-                                if (conn == null) {
-                                        /* FIXME: cut this */
-                                        debug ("connection offline");
-                                } else {
-                                        /* FIXME: cut this */
-                                        debug ("connection online");
-
+                                if (conn != null) {
                                         conn.call_when_ready (this.connection_ready_cb);
                                 }
                         }
                 } catch (GLib.Error e) {
-                        stderr.printf ("failed to prepare the account '%s': %s",
+                        warning ("failed to prepare the account '%s': %s",
                                         this.account.get_display_name (),
                                         e.message);
                 }
         }
 
         public PersonaStore (Account account) {
-                string status = null;
-                string status_message = null;
-
-                /* FIXME: cut this */
-                debug ("creating PersonaStore from account: %p (%s: '%s'), presence: (%d: %s; %s)",
-                               account,
-                               account.get_protocol (),
-                               account.get_display_name (),
-                               account.get_current_presence (out status,
-                                       out status_message),
-                               status == null ? status : "(no status)",
-                               status_message == null ? status_message : "(no status message)");
-                debug ("second try with status: (%s, %s)", status,
-                                status_message);
-
-
                 Object (account: account);
 
                 this.conn = null;

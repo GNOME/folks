@@ -28,11 +28,6 @@ public class Tp.TpPersona : Tp.Persona {
                 string alias;
                 string uid;
 
-                /* FIXME: cut this */
-                debug ("creating TpPersona based on %s (%s)",
-                                contact.get_identifier (),
-                                contact.get_alias ());
-
                 uid = contact.get_identifier ();
                 if (uid == null || uid == "") {
                         /* FIXME: throw an exception */

@@ -34,13 +34,7 @@ public class Tp.IndividualAggregator : Object {
                         manager.get_valid_accounts ();
 
                 foreach (Account account in accounts) {
-                        PersonaStore store;
-
-                        store = new PersonaStore (account);
-
-                        /* FIXME: cut this */
-                        debug ("using account bus name '%s'",
-                                        account.get_object_path (account));
+                        PersonaStore store = new PersonaStore (account);
 
                         this.stores.set (account.get_object_path (account),
                                         store);
@@ -53,13 +47,24 @@ public class Tp.IndividualAggregator : Object {
                         debug ("     account name: '%s'",
                                         store.account.get_display_name ());
 
-                        store.personas_added.connect ((s,p) => {
+                        store.personas_added.connect ((s, ps) => {
                                         /* FIXME: cut this */
                                         debug ("got persona store's new personas");
 
-                                        /* FIXME: find correlated personas, then
-                                         * create Individuals out of them, and
-                                         * emit signals for them. */
+                                        foreach (Persona p in ps) {
+
+                                                /* FIXME: cut this */
+                                                debug ("\n" +
+                                                       "    uid:   %s\n" +
+                                                       "    iid:   %s\n" +
+                                                       "    alias: %s",
+                                                        p.uid, p.iid, p.alias);
+
+                                                /* FIXME: find correlated
+                                                 * personas, then create
+                                                 * Individuals out of them, and
+                                                 * emit signals for them. */
+                                        }
                         });
                 }
 
