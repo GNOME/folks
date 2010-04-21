@@ -37,7 +37,7 @@ public class Tp.PersonaStore : Object {
         [Property(nick = "basis account",
                         blurb = "Telepathy account this store is based upon")]
         public Account account { get; construct; }
-        public signal void personas_added (Persona[] personas);
+        public signal void personas_added (GLib.List<Persona> personas);
 
         private Connection conn;
         private bool conn_prepared = false;
@@ -57,17 +57,16 @@ public class Tp.PersonaStore : Object {
         }
 
         /* FIXME: make this generic and relocate it */
-        private Persona[] hash_set_to_array (HashSet<Persona> hash_set) {
-                uint i;
-                Persona[] array = new Persona [hash_set.size];
+        private GLib.List<Persona> hash_set_to_list (HashSet<Persona> hash_set) {
+                GLib.List<Persona> list = new GLib.List<Persona> ();
 
-                i = 0;
                 foreach (var element in hash_set) {
-                        array[i] = element;
-                        i++;
+                        list.prepend (element);
                 }
 
-                return array;
+                list.reverse ();
+
+                return list;
         }
 
         private void get_contacts_by_handle_cb (Tp.Connection connection,
@@ -105,7 +104,7 @@ public class Tp.PersonaStore : Object {
                 }
 
                 if (persona_set.size >= 1) {
-                        Persona[] personas = this.hash_set_to_array (
+                        GLib.List<Persona> personas = this.hash_set_to_list (
                                         persona_set);
 
                         this.personas_added (personas);

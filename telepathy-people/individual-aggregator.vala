@@ -47,27 +47,30 @@ public class Tp.IndividualAggregator : Object {
                         debug ("     account name: '%s'",
                                         store.account.get_display_name ());
 
-                        store.personas_added.connect ((s, ps) => {
-                                        /* FIXME: cut this */
-                                        debug ("got persona store's new personas");
-
-                                        foreach (Persona p in ps) {
-
-                                                /* FIXME: cut this */
-                                                debug ("\n" +
-                                                       "    uid:   %s\n" +
-                                                       "    iid:   %s\n" +
-                                                       "    alias: %s",
-                                                        p.uid, p.iid, p.alias);
-
-                                                /* FIXME: find correlated
-                                                 * personas, then create
-                                                 * Individuals out of them, and
-                                                 * emit signals for them. */
-                                        }
-                        });
+                        store.personas_added.connect (this.personas_added_cb);
                 }
 
                 /* FIXME: react to accounts being created and deleted */
+        }
+
+        private void personas_added_cb (PersonaStore store,
+                        GLib.List<Persona> personas) {
+                /* FIXME: cut this */
+                debug ("got persona store's new personas");
+
+                personas.foreach ((persona) => {
+                        Persona p = (Persona) persona;
+
+                        /* FIXME: cut this */
+                        debug ("\n" +
+                               "    uid:   %s\n" +
+                               "    iid:   %s\n" +
+                               "    alias: %s",
+                               p.uid, p.iid, p.alias);
+
+                        /* FIXME: find correlated personas, then create
+                         * Individuals out of them, and emit signals for them.
+                         */
+                });
         }
 }
