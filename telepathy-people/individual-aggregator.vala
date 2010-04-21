@@ -26,6 +26,8 @@ using Tp.PersonaStore;
 public class Tp.IndividualAggregator : Object {
         private HashMap<string, PersonaStore> stores;
 
+        public signal void individuals_added (GLib.List<Individual> inds);
+
         public IndividualAggregator () {
                 this.stores = new HashMap<string, PersonaStore> ();
 
@@ -55,22 +57,24 @@ public class Tp.IndividualAggregator : Object {
 
         private void personas_added_cb (PersonaStore store,
                         GLib.List<Persona> personas) {
-                /* FIXME: cut this */
-                debug ("got persona store's new personas");
-
+                var individuals = new GLib.List<Individual> ();
                 personas.foreach ((persona) => {
                         Persona p = (Persona) persona;
 
-                        /* FIXME: cut this */
-                        debug ("\n" +
-                               "    uid:   %s\n" +
-                               "    iid:   %s\n" +
-                               "    alias: %s",
-                               p.uid, p.iid, p.alias);
+                        /* FIXME: correlate the new personas with each other and
+                         * the existing personas and existing Individuals;
+                         * update existing Individuals and create new ones as
+                         * necessary */
 
-                        /* FIXME: find correlated personas, then create
-                         * Individuals out of them, and emit signals for them.
-                         */
+                        var grouped_personas = new GLib.List<Persona> ();
+                        grouped_personas.prepend (p);
+                        var individual = new Individual (grouped_personas);
+                        individuals.prepend (individual);
                 });
+
+                individuals.reverse ();
+                this.individuals_added (individuals);
+
+                /* FIXME: add these individuals to an internal store */
         }
 }

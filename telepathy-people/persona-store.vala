@@ -37,6 +37,7 @@ public class Tp.PersonaStore : Object {
         [Property(nick = "basis account",
                         blurb = "Telepathy account this store is based upon")]
         public Account account { get; construct; }
+        public HashTable<string, Persona> personas { get; private set; }
         public signal void personas_added (GLib.List<Persona> personas);
 
         private Connection conn;
@@ -99,8 +100,7 @@ public class Tp.PersonaStore : Object {
                         persona = new TpPersona (contact);
                         persona_set.add (persona);
 
-                        /* FIXME: add these to a long-term property containing
-                         * all the personas for this store */
+                        this.personas.insert (persona.iid, persona);
                 }
 
                 if (persona_set.size >= 1) {
@@ -228,6 +228,8 @@ public class Tp.PersonaStore : Object {
         public PersonaStore (Account account) {
                 Object (account: account);
 
+                this.personas = new HashTable<string, Persona> (str_hash,
+                                str_equal);
                 this.conn = null;
                 this.channels = new HashMap<string, Channel> ();
                 this.ll = new Lowlevel ();

@@ -19,8 +19,53 @@
  */
 
 using GLib;
+using Tp.Alias;
 
-public class Tp.Individual : Object {
-        public Individual () {
+public class Tp.Individual : Object, Alias {
+        private GLib.List<Persona> _personas;
+
+        /* XXX: should setting this push it down into the Persona (to foward
+         * along to the actual store if possible?) */
+        public string alias { get; set; }
+
+        private void update_fields () {
+                /* gather the first occurence of each field */
+                string alias = null;
+                this._personas.foreach ((persona) => {
+                        Persona p = (Persona) persona;
+
+                        /* FIXME: also check to see if alias is just
+                                * whitespace */
+                        if (alias == null) {
+                                alias = p.alias;
+                        }
+
+                });
+
+                if (alias == null) {
+                        /* FIXME: pick a UID or similar instead */
+                        alias = "Name Unknown";
+                }
+
+                /* write them back to the local members */
+                this.alias = alias;
+        }
+
+        /* FIXME: set up specific functions, so we can update the alias, etc.
+         * cache before notifying any users about the change
+         *
+         * make the custom getters/setters work on _personas
+         */
+        public GLib.List<Persona> personas {
+                get { return this._personas; }
+
+                set {
+                        this._personas = value.copy ();
+                        this.update_fields ();
+                }
+        }
+
+        public Individual (GLib.List<Persona>? personas) {
+                Object (personas: personas);
         }
 }
