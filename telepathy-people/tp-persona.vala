@@ -19,10 +19,13 @@
  */
 
 using GLib;
+using Tp.Alias;
 using Tp.Contact;
+using Tp.Persona;
 
-public class Tp.TpPersona : Tp.Persona {
+public class Tp.TpPersona : Persona, Alias {
         public Contact contact { get; construct; }
+        public override string alias { get; set; }
 
         public TpPersona (Contact contact) {
                 string alias;

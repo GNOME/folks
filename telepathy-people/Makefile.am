@@ -51,6 +51,7 @@ internal_vapi_files = \
 	$(NULL)
 
 libtelepathy_people_la_VALASOURCES = \
+	alias.vala \
 	individual.vala \
 	individual-aggregator.vala \
 	persona.vala \

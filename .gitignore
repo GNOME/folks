@@ -48,6 +48,7 @@ Makefile.in
 /telepathy-people-*/
 /xmldocs.make
 
+/telepathy-people/alias.c
 /telepathy-people/individual.c
 /telepathy-people/individual-aggregator.c
 /telepathy-people/persona.c
