@@ -18,8 +18,8 @@
  *       Travis Reitter <travis.reitter@collabora.co.uk>
  */
 
-#ifndef TP_LOWLEVEL_H
-#define TP_LOWLEVEL_H
+#ifndef TPP_LOWLEVEL_H
+#define TPP_LOWLEVEL_H
 
 #include <glib.h>
 #include <glib-object.h>
@@ -29,43 +29,43 @@
 
 G_BEGIN_DECLS
 
-typedef struct _TpLowlevel TpLowlevel;
-typedef struct _TpLowlevelClass TpLowlevelClass;
+typedef struct _TppLowlevel TppLowlevel;
+typedef struct _TppLowlevelClass TppLowlevelClass;
 
-struct _TpLowlevel {
+struct _TppLowlevel {
   /*<private>*/
   GObject parent;
 };
 
-struct _TpLowlevelClass {
+struct _TppLowlevelClass {
   /*<private>*/
   GObjectClass parent_class;
 };
 
-GType tp_lowlevel_get_type (void);
+GType tpp_lowlevel_get_type (void);
 
-#define TP_TYPE_LOWLEVEL (tp_lowlevel_get_type ())
-#define TP_LOWLEVEL(object) (G_TYPE_CHECK_INSTANCE_CAST ((object), TP_TYPE_LOWLEVEL, TpLowlevel))
-#define TP_LOWLEVEL_CLASS(klass) (G_TYPE_CHECK_CLASS_CAST ((klass), TP_TYPE_LOWLEVEL, TpLowlevelClass))
-#define TP_IS_LOWLEVEL(object) (G_TYPE_CHECK_INSTANCE_TYPE ((object), TP_TYPE_LOWLEVEL))
-#define TP_IS_LOWLEVEL_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), TP_TYPE_LOWLEVEL))
-#define TP_LOWLEVEL_GET_CLASS(obj) (G_TYPE_INSTANCE_GET_CLASS ((obj), TP_TYPE_LOWLEVEL, TpLowlevelClass))
+#define TPP_TYPE_LOWLEVEL (tpp_lowlevel_get_type ())
+#define TPP_LOWLEVEL(object) (G_TYPE_CHECK_INSTANCE_CAST ((object), TPP_TYPE_LOWLEVEL, TppLowlevel))
+#define TPP_LOWLEVEL_CLASS(klass) (G_TYPE_CHECK_CLASS_CAST ((klass), TPP_TYPE_LOWLEVEL, TppLowlevelClass))
+#define TPP_IS_LOWLEVEL(object) (G_TYPE_CHECK_INSTANCE_TYPE ((object), TPP_TYPE_LOWLEVEL))
+#define TPP_IS_LOWLEVEL_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), TPP_TYPE_LOWLEVEL))
+#define TPP_LOWLEVEL_GET_CLASS(obj) (G_TYPE_INSTANCE_GET_CLASS ((obj), TPP_TYPE_LOWLEVEL, TppLowlevelClass))
 
-TpLowlevel *
-tp_lowlevel_new (void) G_GNUC_WARN_UNUSED_RESULT;
+TppLowlevel *
+tpp_lowlevel_new (void) G_GNUC_WARN_UNUSED_RESULT;
 
 void
-tp_lowlevel_connection_open_contact_list_channel_async (TpLowlevel *lowlevel,
+tpp_lowlevel_connection_open_contact_list_channel_async (TppLowlevel *lowlevel,
     TpConnection *conn,
     const char *name,
     GAsyncReadyCallback callback,
     gpointer user_data);
 
 TpChannel *
-tp_lowlevel_connection_open_contact_list_channel_finish (TpLowlevel *lowlevel,
+tpp_lowlevel_connection_open_contact_list_channel_finish (TppLowlevel *lowlevel,
     GAsyncResult *result,
     GError **error);
 
 G_END_DECLS
 
-#endif /* TP_LOWLEVEL_H */
+#endif /* TPP_LOWLEVEL_H */

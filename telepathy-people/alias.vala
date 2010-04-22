@@ -20,6 +20,6 @@
 
 using GLib;
 
-public interface Tp.Alias : Object {
+public interface Tpp.Alias : Object {
         public abstract string alias { get; set; }
 }

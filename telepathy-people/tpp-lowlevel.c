@@ -26,9 +26,9 @@
 #include <telepathy-glib/dbus.h>
 #include <telepathy-glib/interfaces.h>
 
-#include "tp-lowlevel.h"
+#include "tpp-lowlevel.h"
 
-G_DEFINE_TYPE (TpLowlevel, tp_lowlevel, G_TYPE_OBJECT);
+G_DEFINE_TYPE (TppLowlevel, tpp_lowlevel, G_TYPE_OBJECT);
 
 static void
 connection_ensure_channel_cb (TpConnection *conn,
@@ -63,7 +63,7 @@ connection_ensure_channel_cb (TpConnection *conn,
 }
 
 void
-tp_lowlevel_connection_open_contact_list_channel_async (TpLowlevel *lowlevel,
+tpp_lowlevel_connection_open_contact_list_channel_async (TppLowlevel *lowlevel,
     TpConnection *conn,
     const char *name,
     GAsyncReadyCallback callback,
@@ -78,7 +78,7 @@ tp_lowlevel_connection_open_contact_list_channel_async (TpLowlevel *lowlevel,
 
   tp_asv_set_static_string (request, TP_IFACE_CHANNEL ".TargetID", name);
   result = g_simple_async_result_new (G_OBJECT (conn), callback, user_data,
-      tp_lowlevel_connection_open_contact_list_channel_finish);
+      tpp_lowlevel_connection_open_contact_list_channel_finish);
   tp_cli_connection_interface_requests_call_ensure_channel (conn, -1, request,
       connection_ensure_channel_cb, result, NULL, G_OBJECT (conn));
 }
@@ -87,7 +87,7 @@ tp_lowlevel_connection_open_contact_list_channel_async (TpLowlevel *lowlevel,
  * but neither seems to be supported (without breaking the binding to the async
  * function) */
 TpChannel *
-tp_lowlevel_connection_open_contact_list_channel_finish (TpLowlevel *lowlevel,
+tpp_lowlevel_connection_open_contact_list_channel_finish (TppLowlevel *lowlevel,
     GAsyncResult *result,
     GError **error)
 {
@@ -103,24 +103,24 @@ tp_lowlevel_connection_open_contact_list_channel_finish (TpLowlevel *lowlevel,
     return NULL;
 
   g_return_val_if_fail (g_simple_async_result_is_valid (result, G_OBJECT (conn),
-        tp_lowlevel_connection_open_contact_list_channel_finish), NULL);
+        tpp_lowlevel_connection_open_contact_list_channel_finish), NULL);
 
   return g_simple_async_result_get_op_res_gpointer (
       G_SIMPLE_ASYNC_RESULT (result));
 }
 
 static void
-tp_lowlevel_class_init (TpLowlevelClass *klass)
+tpp_lowlevel_class_init (TppLowlevelClass *klass)
 {
 }
 
 static void
-tp_lowlevel_init (TpLowlevel *self)
+tpp_lowlevel_init (TppLowlevel *self)
 {
 }
 
-TpLowlevel *
-tp_lowlevel_new ()
+TppLowlevel *
+tpp_lowlevel_new ()
 {
-  return TP_LOWLEVEL (g_object_new (TP_TYPE_LOWLEVEL, NULL));
+  return TPP_LOWLEVEL (g_object_new (TPP_TYPE_LOWLEVEL, NULL));
 }

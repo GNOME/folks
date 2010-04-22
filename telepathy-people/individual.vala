@@ -19,9 +19,9 @@
  */
 
 using GLib;
-using Tp.Alias;
+using Tpp.Alias;
 
-public class Tp.Individual : Object, Alias {
+public class Tpp.Individual : Object, Alias {
         private GLib.List<Persona> _personas;
 
         /* XXX: should setting this push it down into the Persona (to foward

@@ -20,10 +20,10 @@
 
 using GLib;
 using Gee;
-using Tp.Account;
-using Tp.PersonaStore;
+using Tp;
+using Tpp.PersonaStore;
 
-public class Tp.IndividualAggregator : Object {
+public class Tpp.IndividualAggregator : Object {
         private HashMap<string, PersonaStore> stores;
 
         public signal void individuals_added (GLib.List<Individual> inds);

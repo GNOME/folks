@@ -20,20 +20,16 @@
 
 using GLib;
 using Gee;
-using Tp.Individual;
-using Tp.Channel;
-using Tp.Contact;
+using Tp;
 using Tp.ContactFeature;
-using Tp.Handle;
-using Tp.Account;
-using Tp.AccountManager;
-using Tp.Lowlevel;
-using Tp.Persona;
-using Tp.TpPersona;
+using Tpp.Individual;
+using Tpp.Lowlevel;
+using Tpp.Persona;
+using Tpp.TpPersona;
 
 /* FIXME: split out the TpAccount-specific parts into a new subclass, since
  * PersonaStore should also be used by non-Telepathy sources */
-public class Tp.PersonaStore : Object {
+public class Tpp.PersonaStore : Object {
         [Property(nick = "basis account",
                         blurb = "Telepathy account this store is based upon")]
         public Account account { get; construct; }
@@ -70,13 +66,13 @@ public class Tp.PersonaStore : Object {
                 return list;
         }
 
-        private void get_contacts_by_handle_cb (Tp.Connection connection,
+        private void get_contacts_by_handle_cb (Connection connection,
                         uint n_contacts,
                         [CCode (array_length = false)]
-                        Tp.Contact[] contacts,
+                        Contact[] contacts,
                         uint n_failed,
                         [CCode (array_length = false)]
-                        Tp.Handle[] failed,
+                        Handle[] failed,
                         GLib.Error error,
                         GLib.Object weak_object) {
 

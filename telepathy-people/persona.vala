@@ -19,11 +19,11 @@
  */
 
 using GLib;
-using Tp.Alias;
+using Tpp.Alias;
 
 /* FIXME: have this class implement a number of interfaces: Avatar, Alias,
  * Presence, etc. */
-public abstract class Tp.Persona : Object, Alias {
+public abstract class Tpp.Persona : Object, Alias {
         /* internal ID */
         public string iid { get; construct; }
         /* universal ID (eg, "foo@xmpp.example.org") */
