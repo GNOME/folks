@@ -25,9 +25,11 @@ using Tpp.Alias;
  * Presence, etc. */
 public abstract class Tpp.Persona : Object, Alias
 {
+  /* interface Alias */
+  public abstract string alias { get; set; }
+
   /* internal ID */
   public string iid { get; construct; }
   /* universal ID (eg, "foo@xmpp.example.org") */
   public string uid { get; construct; }
-  public abstract string alias { get; set; }
 }

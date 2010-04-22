@@ -25,8 +25,10 @@ using Tpp.Persona;
 
 public class Tpp.TpPersona : Persona, Alias
 {
-  public Contact contact { get; construct; }
+  /* interface Alias */
   public override string alias { get; set; }
+
+  public Contact contact { get; construct; }
 
   public TpPersona (Contact contact)
     {

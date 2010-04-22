@@ -29,6 +29,27 @@ public class Tpp.Individual : Object, Alias
    * the actual store if possible?) */
   public string alias { get; set; }
 
+  /* FIXME: set up specific functions, so we can update the alias, etc.
+    * cache before notifying any users about the change
+    *
+    * make the custom getters/setters work on _personas
+    */
+  public GLib.List<Persona> personas
+    {
+      get { return this._personas; }
+
+      set
+        {
+          this._personas = value.copy ();
+          this.update_fields ();
+        }
+    }
+
+  public Individual (GLib.List<Persona>? personas)
+    {
+      Object (personas: personas);
+    }
+
   private void update_fields ()
     {
       /* gather the first occurence of each field */
@@ -50,26 +71,5 @@ public class Tpp.Individual : Object, Alias
 
       /* write them back to the local members */
       this.alias = alias;
-    }
-
-  /* FIXME: set up specific functions, so we can update the alias, etc.
-    * cache before notifying any users about the change
-    *
-    * make the custom getters/setters work on _personas
-    */
-  public GLib.List<Persona> personas
-    {
-      get { return this._personas; }
-
-      set
-        {
-          this._personas = value.copy ();
-          this.update_fields ();
-        }
-    }
-
-  public Individual (GLib.List<Persona>? personas)
-    {
-      Object (personas: personas);
     }
 }
