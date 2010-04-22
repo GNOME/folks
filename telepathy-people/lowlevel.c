@@ -26,7 +26,7 @@
 #include <telepathy-glib/dbus.h>
 #include <telepathy-glib/interfaces.h>
 
-#include "tpp-lowlevel.h"
+#include "lowlevel.h"
 
 G_DEFINE_TYPE (TppLowlevel, tpp_lowlevel, G_TYPE_OBJECT);
 

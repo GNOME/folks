@@ -14,40 +14,40 @@ VALAFLAGS += --pkg gobject-2.0 --pkg gio-2.0 --pkg gee-1.0 --pkg dbus-glib-1 --p
 
 libtelepathy_peopledir = $(includedir)/telepathy-people
 lib_LTLIBRARIES = \
-	libtpp-lowlevel.la \
+	liblowlevel.la \
 	libtelepathy-people.la \
 	$(NULL)
 
-# FIXME: cut the redundancy here with tpp_lowlevel_sources, etc.
-libtpp_lowlevel_la_SOURCES = \
-	tpp-lowlevel.c \
-	tpp-lowlevel.h \
+# FIXME: cut the redundancy here with lowlevel_sources, etc.
+liblowlevel_la_SOURCES = \
+	lowlevel.c \
+	lowlevel.h \
 	$(NULL)
 
-libtpp_lowlevel_la_CPPFLAGS = \
+liblowlevel_la_CPPFLAGS = \
 	$(LIBTPP_LOWLEVEL_CFLAGS) \
 	$(NULL)
 
-libtpp_lowlevel_la_LDFLAGS = \
+liblowlevel_la_LDFLAGS = \
 	$(LIBTPP_LOWLEVEL_LIBS) \
 	$(NULL)
 
-tpp_lowlevel_sources = \
-	tpp-lowlevel.c \
-	tpp-lowlevel.h \
+lowlevel_sources = \
+	lowlevel.c \
+	lowlevel.h \
 	$(NULL)
 
 # FIXME: wrap lines
 # FIXME: use a better path to the .so file
-tpp-lowlevel.gi: $(tpp_lowlevel_sources) libtpp-lowlevel.la
-	$(VGI_V)$(GEN_INTROSPECT) --namespace=Tpp tpp-lowlevel.h \
-		$(shell pkg-config telepathy-glib --cflags) .libs/libtpp-lowlevel.so > tpp-lowlevel.gi
+lowlevel.gi: $(lowlevel_sources) liblowlevel.la
+	$(VGI_V)$(GEN_INTROSPECT) --namespace=Tpp lowlevel.h \
+		$(shell pkg-config telepathy-glib --cflags) .libs/liblowlevel.so > lowlevel.gi
 
-tpp-lowlevel.vapi: tpp-lowlevel.gi
-	$(VAPIGEN_V)$(VAPIGEN) $(VALAFLAGS) --library tpp-lowlevel tpp-lowlevel.gi
+lowlevel.vapi: lowlevel.gi
+	$(VAPIGEN_V)$(VAPIGEN) $(VALAFLAGS) --library lowlevel lowlevel.gi
 
 internal_vapi_files = \
-	tpp-lowlevel.vapi \
+	lowlevel.vapi \
 	$(NULL)
 
 libtelepathy_people_la_VALASOURCES = \
@@ -62,7 +62,7 @@ libtelepathy_people_la_VALASOURCES = \
 libtelepathy_people_la_SOURCES = \
 	telepathy-people.vala.stamp \
 	$(libtelepathy_people_la_VALASOURCES:.vala=.c) \
-	$(tpp_lowlevel_sources) \
+	$(lowlevel_sources) \
 	$(NULL)
 
 libtelepathy_people_la_LIBADD = \
@@ -78,7 +78,7 @@ telepathy_people_HEADERS = \
 telepathy-people.h $(libtelepathy_people_la_VALASOURCES:.vala=.c) $(libtelepathy_people_la_VALASOURCES:.vala=.h): telepathy-people.vala.stamp
 
 telepathy-people.vapi telepathy-people.vala.stamp: $(libtelepathy_people_la_VALASOURCES) $(internal_vapi_files)
-	$(VALA_V)$(VALAC) $(VALAFLAGS) -C --pkg tpp-lowlevel -H telepathy-people.h --library telepathy-people $(libtelepathy_people_la_VALASOURCES)
+	$(VALA_V)$(VALAC) $(VALAFLAGS) -C --pkg lowlevel -H telepathy-people.h --library telepathy-people $(libtelepathy_people_la_VALASOURCES)
 	touch $@
 
 pkgconfig_in = telepathy-people.pc.in
@@ -89,8 +89,8 @@ BUILT_SOURCES = \
 	telepathy-people.h \
 	telepathy-people.vala.stamp \
 	telepathy-people.vapi \
-	tpp-lowlevel.gi \
-	tpp-lowlevel.vapi \
+	lowlevel.gi \
+	lowlevel.vapi \
 	$(libtelepathy_people_la_VALASOURCES:.vala=.c) \
 	$(pkgconfig_in:.in=) \
 	$(NULL)
@@ -101,7 +101,7 @@ EXTRA_DIST = \
 	$(pkgconfig_in) \
 	telepathy-people.vala.stamp \
 	telepathy-people.vapi \
-	tpp-lowlevel.vapi \
+	lowlevel.vapi \
 	$(NULL)
 
 DISTCLEANFILES = \
