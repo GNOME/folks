@@ -43,22 +43,22 @@ Makefile.in
 /shave-libtool
 /stamp-h1
 /tags
-/telepathy-people-*.tar.bz2
-/telepathy-people-*.tar.bz2.asc
-/telepathy-people-*/
+/folks-*.tar.bz2
+/folks-*.tar.bz2.asc
+/folks-*/
 /xmldocs.make
 
-/telepathy-people/alias.c
-/telepathy-people/individual.c
-/telepathy-people/individual-aggregator.c
-/telepathy-people/persona.c
-/telepathy-people/persona-store.c
-/telepathy-people/telepathy-people.h
-/telepathy-people/telepathy-people.pc
-/telepathy-people/telepathy-people-uninstalled.pc
-/telepathy-people/telepathy-people.vapi
-/telepathy-people/lowlevel.gi
-/telepathy-people/lowlevel.vapi
-/telepathy-people/tp-persona.c
+/folks/alias.c
+/folks/individual.c
+/folks/individual-aggregator.c
+/folks/persona.c
+/folks/persona-store.c
+/folks/folks.h
+/folks/folks.pc
+/folks/folks-uninstalled.pc
+/folks/folks.vapi
+/folks/lowlevel.gi
+/folks/lowlevel.vapi
+/folks/tp-persona.c
 
 /tests/test-*[^ch]

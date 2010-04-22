@@ -19,9 +19,9 @@
  */
 
 using GLib;
-using Tpp.Alias;
+using Folks.Alias;
 
-public class Tpp.Individual : Object, Alias
+public class Folks.Individual : Object, Alias
 {
   private GLib.List<Persona> _personas;
 

@@ -1,5 +1,5 @@
 SUBDIRS = \
-	telepathy-people \
+	folks \
 	$(NULL)
 
 ACLOCAL_AMFLAGS = -I m4
@@ -9,8 +9,8 @@ DISTCHECK_CONFIGURE_FLAGS =		\
 	--disable-scrollkeeper		\
 	--disable-schemas-install
 
-telepathy_peopledocdir = ${prefix}/doc/telepathy-people
-telepathy_peopledoc_DATA = \
+folksdocdir = ${prefix}/doc/folks
+folksdoc_DATA = \
 	ChangeLog \
 	README \
 	COPYING \
@@ -20,7 +20,7 @@ telepathy_peopledoc_DATA = \
 	$(NULL)
 
 EXTRA_DIST = \
-	$(telepathy_peopledoc_DATA) \
+	$(folksdoc_DATA) \
 	autogen.sh \
 	$(NULL)
 

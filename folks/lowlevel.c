@@ -28,7 +28,7 @@
 
 #include "lowlevel.h"
 
-G_DEFINE_TYPE (TppLowlevel, tpp_lowlevel, G_TYPE_OBJECT);
+G_DEFINE_TYPE (FolksLowlevel, folks_lowlevel, G_TYPE_OBJECT);
 
 static void
 connection_ensure_channel_cb (TpConnection *conn,
@@ -63,7 +63,8 @@ connection_ensure_channel_cb (TpConnection *conn,
 }
 
 void
-tpp_lowlevel_connection_open_contact_list_channel_async (TppLowlevel *lowlevel,
+folks_lowlevel_connection_open_contact_list_channel_async (
+    FolksLowlevel *lowlevel,
     TpConnection *conn,
     const char *name,
     GAsyncReadyCallback callback,
@@ -78,7 +79,7 @@ tpp_lowlevel_connection_open_contact_list_channel_async (TppLowlevel *lowlevel,
 
   tp_asv_set_static_string (request, TP_IFACE_CHANNEL ".TargetID", name);
   result = g_simple_async_result_new (G_OBJECT (conn), callback, user_data,
-      tpp_lowlevel_connection_open_contact_list_channel_finish);
+      folks_lowlevel_connection_open_contact_list_channel_finish);
   tp_cli_connection_interface_requests_call_ensure_channel (conn, -1, request,
       connection_ensure_channel_cb, result, NULL, G_OBJECT (conn));
 }
@@ -87,7 +88,8 @@ tpp_lowlevel_connection_open_contact_list_channel_async (TppLowlevel *lowlevel,
  * but neither seems to be supported (without breaking the binding to the async
  * function) */
 TpChannel *
-tpp_lowlevel_connection_open_contact_list_channel_finish (TppLowlevel *lowlevel,
+folks_lowlevel_connection_open_contact_list_channel_finish (
+    FolksLowlevel *lowlevel,
     GAsyncResult *result,
     GError **error)
 {
@@ -103,24 +105,24 @@ tpp_lowlevel_connection_open_contact_list_channel_finish (TppLowlevel *lowlevel,
     return NULL;
 
   g_return_val_if_fail (g_simple_async_result_is_valid (result, G_OBJECT (conn),
-        tpp_lowlevel_connection_open_contact_list_channel_finish), NULL);
+        folks_lowlevel_connection_open_contact_list_channel_finish), NULL);
 
   return g_simple_async_result_get_op_res_gpointer (
       G_SIMPLE_ASYNC_RESULT (result));
 }
 
 static void
-tpp_lowlevel_class_init (TppLowlevelClass *klass)
+folks_lowlevel_class_init (FolksLowlevelClass *klass)
 {
 }
 
 static void
-tpp_lowlevel_init (TppLowlevel *self)
+folks_lowlevel_init (FolksLowlevel *self)
 {
 }
 
-TppLowlevel *
-tpp_lowlevel_new ()
+FolksLowlevel *
+folks_lowlevel_new ()
 {
-  return TPP_LOWLEVEL (g_object_new (TPP_TYPE_LOWLEVEL, NULL));
+  return FOLKS_LOWLEVEL (g_object_new (FOLKS_TYPE_LOWLEVEL, NULL));
 }

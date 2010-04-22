@@ -1,25 +1,25 @@
 dnl If not 1, append datestamp to the version number
-m4_define(tpp_released, 0)
+m4_define(folks_released, 0)
 
-m4_define([tpp_major_version], [0])
-m4_define([tpp_minor_version], [1])
-m4_define([tpp_micro_version], [0])
-m4_define([tpp_nano_version], [0])
+m4_define([folks_major_version], [0])
+m4_define([folks_minor_version], [1])
+m4_define([folks_micro_version], [0])
+m4_define([folks_nano_version], [0])
 
 dnl Display the nano_version only if it's not '0'
-m4_define([tpp_base_version],
-                    [tpp_major_version.tpp_minor_version.tpp_micro_version])
-m4_define([tpp_full_version],
-                    [m4_if(tpp_nano_version, 0, [tpp_base_version],
-                                         [tpp_base_version].[tpp_nano_version])])
+m4_define([folks_base_version],
+                [folks_major_version.folks_minor_version.folks_micro_version])
+m4_define([folks_full_version],
+                [m4_if(folks_nano_version, 0, [folks_base_version],
+                        [folks_base_version].[folks_nano_version])])
 
-m4_define(tpp_maybe_datestamp,
-                    m4_esyscmd([if test x]tpp_released[ != x1; then date +.%Y%m%d | tr -d '\n\r'; fi]))
+m4_define(folks_maybe_datestamp,
+                    m4_esyscmd([if test x]folks_released[ != x1; then date +.%Y%m%d | tr -d '\n\r'; fi]))
 
-m4_define(tpp_version, tpp_full_version[]tpp_maybe_datestamp)
+m4_define(folks_version, folks_full_version[]folks_maybe_datestamp)
 
 
-AC_INIT(telepathy-people, tpp_version, telepathy-people)
+AC_INIT(folks, folks_version, folks)
 m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
 
 AC_PREREQ(2.59)
@@ -50,23 +50,23 @@ AC_SUBST(LDFLAGS)
 
 GLIB_REQUIRED=2.12.0
 
-PKG_CHECK_MODULES(LIBTPP,
+PKG_CHECK_MODULES(LIBFOLKS,
                   glib-2.0 >= $GLIB_REQUIRED
                   gobject-2.0 >= $GLIB_REQUIRED
                   dbus-glib-1
                   gee-1.0
                   telepathy-vala
                   )
-AC_SUBST(LIBTPP_CFLAGS)
-AC_SUBST(LIBTPP_LIBS)
+AC_SUBST(LIBFOLKS_CFLAGS)
+AC_SUBST(LIBFOLKS_LIBS)
 
-PKG_CHECK_MODULES(LIBTPP_LOWLEVEL,
+PKG_CHECK_MODULES(LIBLOWLEVEL,
                   glib-2.0 >= $GLIB_REQUIRED
                   gobject-2.0 >= $GLIB_REQUIRED
                   telepathy-glib
                   )
-AC_SUBST(LIBTPP_LOWLEVEL_CFLAGS)
-AC_SUBST(LIBTPP_LOWLEVEL_LIBS)
+AC_SUBST(LIBLOWLEVEL_CFLAGS)
+AC_SUBST(LIBLOWLEVEL_LIBS)
 
 GTK_DOC_CHECK([1.10])
 
@@ -92,7 +92,7 @@ AS_COMPILER_FLAG(-Wno-unused-parameter,
         wno_unused_parameter=yes,
         wno_unused_parameter=no)
 
-ifelse(tpp_released, 1, [],
+ifelse(folks_released, 1, [],
     [
         if test x$werror = xyes; then
             ERROR_CFLAGS="$ERROR_CFLAGS -Werror"
@@ -118,8 +118,8 @@ AC_SUBST(ERROR_CFLAGS)
 # -----------------------------------------------------------
 
 AC_CONFIG_FILES([Makefile
-	telepathy-people/Makefile
-	telepathy-people/telepathy-people.pc
+	folks/Makefile
+	folks/folks.pc
 ])
 
 AC_OUTPUT

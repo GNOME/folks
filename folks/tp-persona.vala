@@ -19,17 +19,34 @@
  */
 
 using GLib;
-using Tpp.Alias;
+using Tp;
+using Folks.Alias;
+using Folks.Persona;
 
-/* FIXME: have this class implement a number of interfaces: Avatar, Alias,
- * Presence, etc. */
-public abstract class Tpp.Persona : Object, Alias
+public class Folks.TpPersona : Persona, Alias
 {
   /* interface Alias */
-  public abstract string alias { get; set; }
+  public override string alias { get; set; }
 
-  /* internal ID */
-  public string iid { get; construct; }
-  /* universal ID (eg, "foo@xmpp.example.org") */
-  public string uid { get; construct; }
+  public Contact contact { get; construct; }
+
+  public TpPersona (Contact contact)
+    {
+      var uid = contact.get_identifier ();
+      if (uid == null || uid == "")
+        {
+          /* FIXME: throw an exception */
+        }
+
+      var alias = contact.get_alias ();
+      if (alias == null || alias == "")
+        alias = uid;
+
+      Object (alias: alias,
+              contact: contact,
+              /* FIXME: we'll probably need to include the ID for the contact's
+               * account in the iid */
+              iid: uid,
+              uid: uid);
+    }
 }

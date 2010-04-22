@@ -21,9 +21,9 @@
 using GLib;
 using Gee;
 using Tp;
-using Tpp.PersonaStore;
+using Folks.PersonaStore;
 
-public class Tpp.IndividualAggregator : Object
+public class Folks.IndividualAggregator : Object
 {
   private HashMap<string, PersonaStore> stores;
 

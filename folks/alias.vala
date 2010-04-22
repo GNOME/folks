@@ -20,7 +20,7 @@
 
 using GLib;
 
-public interface Tpp.Alias : Object
+public interface Folks.Alias : Object
 {
   public abstract string alias { get; set; }
 }

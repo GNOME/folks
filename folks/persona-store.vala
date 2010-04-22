@@ -22,14 +22,14 @@ using GLib;
 using Gee;
 using Tp;
 using Tp.ContactFeature;
-using Tpp.Individual;
-using Tpp.Lowlevel;
-using Tpp.Persona;
-using Tpp.TpPersona;
+using Folks.Individual;
+using Folks.Lowlevel;
+using Folks.Persona;
+using Folks.TpPersona;
 
 /* FIXME: split out the TpAccount-specific parts into a new subclass, since
  * PersonaStore should also be used by non-Telepathy sources */
-public class Tpp.PersonaStore : Object
+public class Folks.PersonaStore : Object
 {
   private HashMap<string, Channel> channels;
   private Connection conn;
