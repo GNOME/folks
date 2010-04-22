@@ -31,15 +31,13 @@ public class Tpp.IndividualAggregator : Object
 
   public IndividualAggregator ()
     {
-      this.stores = new HashMap<string, PersonaStore> ();
-
-      AccountManager manager = AccountManager.dup ();
+      var manager = AccountManager.dup ();
       unowned GLib.List<Account> accounts = manager.get_valid_accounts ();
+      this.stores = new HashMap<string, PersonaStore> ();
 
       foreach (Account account in accounts)
         {
-          PersonaStore store = new PersonaStore (account);
-
+          var store = new PersonaStore (account);
           this.stores.set (account.get_object_path (account), store);
         }
 
@@ -62,7 +60,7 @@ public class Tpp.IndividualAggregator : Object
       var individuals = new GLib.List<Individual> ();
       personas.foreach ((persona) =>
         {
-          Persona p = (Persona) persona;
+          var p = (Persona) persona;
 
           /* FIXME: correlate the new personas with each other and
             * the existing personas and existing Individuals;

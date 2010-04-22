@@ -38,17 +38,16 @@ public class Tpp.PersonaStore : Object
   public signal void personas_added (GLib.List<Persona> personas);
 
   private Connection conn;
-  private bool conn_prepared = false;
+  private bool conn_prepared;
   private Lowlevel ll;
   private HashMap<string, Channel> channels;
 
   /* FIXME: Array<uint> => Array<Handle>; parser bug */
   private Handle[] glib_handles_array_to_array (Array<uint> hs)
     {
-      Handle[] handles = new Handle[hs.length];
-      uint i;
+      var handles = new Handle[hs.length];
 
-      for (i = 0; i < hs.length; i++)
+      for (var i = 0; i < hs.length; i++)
         handles[i] = (Handle) hs.index (i);
 
       return handles;
@@ -57,8 +56,7 @@ public class Tpp.PersonaStore : Object
   /* FIXME: make this generic and relocate it */
   private GLib.List<Persona> hash_set_to_list (HashSet<Persona> hash_set)
     {
-      GLib.List<Persona> list = new GLib.List<Persona> ();
-
+      var list = new GLib.List<Persona> ();
       foreach (var element in hash_set)
         list.prepend (element);
 
@@ -77,19 +75,17 @@ public class Tpp.PersonaStore : Object
       GLib.Error error,
       GLib.Object weak_object)
     {
-      uint i;
-      HashSet<Persona> persona_set = new HashSet<Persona> ();
-
       if (n_failed >= 1)
         warning ("failed to retrieve contacts for handles:");
 
-      for (i = 0; i < n_failed; i++)
+      for (var i = 0; i < n_failed; i++)
         {
           Handle h = failed[i];
           warning ("    %u", (uint) h);
         }
 
-      for (i = 0; i < n_contacts; i++)
+      var persona_set = new HashSet<Persona> ();
+      for (var i = 0; i < n_contacts; i++)
         {
           Contact contact = contacts[i];
           Persona persona;
@@ -110,14 +106,13 @@ public class Tpp.PersonaStore : Object
   /* FIXME: Array<uint> => Array<Handle>; parser bug */
   private void create_personas_from_handles (Array<uint> handles)
     {
-      Handle[] handles_array;
       ContactFeature[] features =
         {
           TP_CONTACT_FEATURE_ALIAS,
           /* XXX: also avatar token? */
           TP_CONTACT_FEATURE_PRESENCE
         };
-      handles_array = this.glib_handles_array_to_array (handles);
+      var handles_array = this.glib_handles_array_to_array (handles);
 
       /* FIXME: we have to use 'this' as the weak object because the
         * weak object gets passed into the underlying callback as the
@@ -167,12 +162,10 @@ public class Tpp.PersonaStore : Object
 
       channel.notify["channel-ready"].connect ((s, p) =>
         {
-          Channel c = (Channel) s;
-          unowned IntSet members_set;
-
+          var c = (Channel) s;
           c.group_members_changed.connect (this.group_members_changed_cb);
 
-          members_set = c.group_get_members ();
+          unowned IntSet members_set = c.group_get_members ();
           if (members_set != null)
             {
               this.create_personas_from_handles (members_set.to_array ());
@@ -203,8 +196,7 @@ public class Tpp.PersonaStore : Object
 
   private async void prep_account ()
     {
-      bool success;
-
+      var success = false;
       try
         {
           success = yield account.prepare_async (null);
@@ -228,6 +220,7 @@ public class Tpp.PersonaStore : Object
 
       this.personas = new HashTable<string, Persona> (str_hash, str_equal);
       this.conn = null;
+      this.conn_prepared = false;
       this.channels = new HashMap<string, Channel> ();
       this.ll = new Lowlevel ();
       this.prep_account ();

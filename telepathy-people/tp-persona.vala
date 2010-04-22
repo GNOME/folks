@@ -30,16 +30,13 @@ public class Tpp.TpPersona : Persona, Alias
 
   public TpPersona (Contact contact)
     {
-      string alias;
-      string uid;
-
-      uid = contact.get_identifier ();
+      var uid = contact.get_identifier ();
       if (uid == null || uid == "")
         {
           /* FIXME: throw an exception */
         }
 
-      alias = contact.get_alias ();
+      var alias = contact.get_alias ();
       if (alias == null || alias == "")
         alias = uid;
 

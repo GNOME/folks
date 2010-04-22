@@ -35,7 +35,7 @@ public class Tpp.Individual : Object, Alias
       string alias = null;
       this._personas.foreach ((persona) =>
         {
-          Persona p = (Persona) persona;
+          var p = (Persona) persona;
 
           /* FIXME: also check to see if alias is just whitespace */
           if (alias == null)
