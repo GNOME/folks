@@ -23,29 +23,31 @@ using Tp;
 using Tpp.Alias;
 using Tpp.Persona;
 
-public class Tpp.TpPersona : Persona, Alias {
-        public Contact contact { get; construct; }
-        public override string alias { get; set; }
+public class Tpp.TpPersona : Persona, Alias
+{
+  public Contact contact { get; construct; }
+  public override string alias { get; set; }
 
-        public TpPersona (Contact contact) {
-                string alias;
-                string uid;
+  public TpPersona (Contact contact)
+    {
+      string alias;
+      string uid;
 
-                uid = contact.get_identifier ();
-                if (uid == null || uid == "") {
-                        /* FIXME: throw an exception */
-                }
-
-                alias = contact.get_alias ();
-                if (alias == null || alias == "") {
-                        alias = uid;
-                }
-
-                Object (alias: alias,
-                        contact: contact,
-                        /* FIXME: we'll probably need to include the ID for the
-                         * contact's account in the iid */
-                        iid: uid,
-                        uid: uid);
+      uid = contact.get_identifier ();
+      if (uid == null || uid == "")
+        {
+          /* FIXME: throw an exception */
         }
+
+      alias = contact.get_alias ();
+      if (alias == null || alias == "")
+        alias = uid;
+
+      Object (alias: alias,
+              contact: contact,
+              /* FIXME: we'll probably need to include the ID for the contact's
+               * account in the iid */
+              iid: uid,
+              uid: uid);
+    }
 }

@@ -23,58 +23,61 @@ using Gee;
 using Tp;
 using Tpp.PersonaStore;
 
-public class Tpp.IndividualAggregator : Object {
-        private HashMap<string, PersonaStore> stores;
+public class Tpp.IndividualAggregator : Object
+{
+  private HashMap<string, PersonaStore> stores;
 
-        public signal void individuals_added (GLib.List<Individual> inds);
+  public signal void individuals_added (GLib.List<Individual> inds);
 
-        public IndividualAggregator () {
-                this.stores = new HashMap<string, PersonaStore> ();
+  public IndividualAggregator ()
+    {
+      this.stores = new HashMap<string, PersonaStore> ();
 
-                AccountManager manager = AccountManager.dup ();
-                unowned GLib.List<Account> accounts =
-                        manager.get_valid_accounts ();
+      AccountManager manager = AccountManager.dup ();
+      unowned GLib.List<Account> accounts = manager.get_valid_accounts ();
 
-                foreach (Account account in accounts) {
-                        PersonaStore store = new PersonaStore (account);
+      foreach (Account account in accounts)
+        {
+          PersonaStore store = new PersonaStore (account);
 
-                        this.stores.set (account.get_object_path (account),
-                                        store);
-                }
-
-                /* FIXME: cut this block */
-                debug ("the accounts we've got:");
-                foreach (var entry in this.stores) {
-                        PersonaStore store = entry.value;
-                        debug ("     account name: '%s'",
-                                        store.account.get_display_name ());
-
-                        store.personas_added.connect (this.personas_added_cb);
-                }
-
-                /* FIXME: react to accounts being created and deleted */
+          this.stores.set (account.get_object_path (account), store);
         }
 
-        private void personas_added_cb (PersonaStore store,
-                        GLib.List<Persona> personas) {
-                var individuals = new GLib.List<Individual> ();
-                personas.foreach ((persona) => {
-                        Persona p = (Persona) persona;
+      /* FIXME: cut this block */
+      debug ("the accounts we've got:");
+      foreach (var entry in this.stores)
+        {
+          PersonaStore store = entry.value;
+          debug ("     account name: '%s'", store.account.get_display_name ());
 
-                        /* FIXME: correlate the new personas with each other and
-                         * the existing personas and existing Individuals;
-                         * update existing Individuals and create new ones as
-                         * necessary */
-
-                        var grouped_personas = new GLib.List<Persona> ();
-                        grouped_personas.prepend (p);
-                        var individual = new Individual (grouped_personas);
-                        individuals.prepend (individual);
-                });
-
-                individuals.reverse ();
-                this.individuals_added (individuals);
-
-                /* FIXME: add these individuals to an internal store */
+          store.personas_added.connect (this.personas_added_cb);
         }
+
+      /* FIXME: react to accounts being created and deleted */
+    }
+
+  private void personas_added_cb (PersonaStore store,
+      GLib.List<Persona> personas)
+    {
+      var individuals = new GLib.List<Individual> ();
+      personas.foreach ((persona) =>
+        {
+          Persona p = (Persona) persona;
+
+          /* FIXME: correlate the new personas with each other and
+            * the existing personas and existing Individuals;
+            * update existing Individuals and create new ones as
+            * necessary */
+
+          var grouped_personas = new GLib.List<Persona> ();
+          grouped_personas.prepend (p);
+          var individual = new Individual (grouped_personas);
+          individuals.prepend (individual);
+        });
+
+      individuals.reverse ();
+      this.individuals_added (individuals);
+
+      /* FIXME: add these individuals to an internal store */
+    }
 }
