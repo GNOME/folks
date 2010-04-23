@@ -57,6 +57,7 @@ libfolks_la_VALASOURCES = \
 	persona.vala \
 	persona-store.vala \
 	tp-persona.vala \
+	tp-persona-store.vala \
 	$(NULL)
 
 libfolks_la_SOURCES = \

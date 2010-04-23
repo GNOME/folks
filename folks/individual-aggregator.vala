@@ -22,6 +22,7 @@ using GLib;
 using Gee;
 using Tp;
 using Folks.PersonaStore;
+using Folks.TpPersonaStore;
 
 public class Folks.IndividualAggregator : Object
 {
@@ -37,7 +38,7 @@ public class Folks.IndividualAggregator : Object
 
       foreach (Account account in accounts)
         {
-          var store = new PersonaStore (account);
+          var store = new TpPersonaStore (account);
           this.stores.set (account.get_object_path (account), store);
         }
 
@@ -45,7 +46,7 @@ public class Folks.IndividualAggregator : Object
       debug ("the accounts we've got:");
       foreach (var entry in this.stores)
         {
-          PersonaStore store = entry.value;
+          var store = (TpPersonaStore) entry.value;
           debug ("     account name: '%s'", store.account.get_display_name ());
 
           store.personas_added.connect (this.personas_added_cb);
