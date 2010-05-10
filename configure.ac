@@ -49,13 +49,15 @@ AC_SUBST(CPPFLAGS)
 AC_SUBST(LDFLAGS)
 
 GLIB_REQUIRED=2.12.0
+TP_GLIB_REQUIRED=0.11.4.1
+TP_VALA_REQUIRED=0.11.4.1
 
 PKG_CHECK_MODULES(LIBFOLKS,
                   glib-2.0 >= $GLIB_REQUIRED
                   gobject-2.0 >= $GLIB_REQUIRED
                   dbus-glib-1
                   gee-1.0
-                  telepathy-vala
+                  telepathy-vala >= $TP_VALA_REQUIRED
                   )
 AC_SUBST(LIBFOLKS_CFLAGS)
 AC_SUBST(LIBFOLKS_LIBS)
@@ -63,7 +65,7 @@ AC_SUBST(LIBFOLKS_LIBS)
 PKG_CHECK_MODULES(LIBLOWLEVEL,
                   glib-2.0 >= $GLIB_REQUIRED
                   gobject-2.0 >= $GLIB_REQUIRED
-                  telepathy-glib
+                  telepathy-glib >= $TP_GLIB_REQUIRED
                   )
 AC_SUBST(LIBLOWLEVEL_CFLAGS)
 AC_SUBST(LIBLOWLEVEL_LIBS)

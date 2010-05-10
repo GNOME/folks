@@ -155,9 +155,9 @@ public class Folks.TpPersonaStore : PersonaStore
     {
       ContactFeature[] features =
         {
-          TP_CONTACT_FEATURE_ALIAS,
+          ALIAS,
           /* XXX: also avatar token? */
-          TP_CONTACT_FEATURE_PRESENCE
+          PRESENCE
         };
       var handles_array = this.glib_handles_array_to_array (handles);
 
