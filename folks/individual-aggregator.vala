@@ -26,33 +26,50 @@ using Folks.TpPersonaStore;
 
 public class Folks.IndividualAggregator : Object
 {
+  private AccountManager account_manager;
   private HashMap<string, PersonaStore> stores;
 
+  public HashTable<Individual, uint> members { get; private set; }
+
   public signal void individuals_added (GLib.List<Individual> inds);
+  /* TODO: add a signal for "subcontact went offline/online"? Is that useful
+   * enough to bother with? */
 
-  public IndividualAggregator ()
+  /* FIXME: make this a singleton? */
+  public IndividualAggregator () throws GLib.Error
     {
-      var manager = AccountManager.dup ();
-      unowned GLib.List<Account> accounts = manager.get_valid_accounts ();
       this.stores = new HashMap<string, PersonaStore> ();
+      this.members = new HashTable<Individual, uint>.full (direct_hash,
+          direct_equal, g_object_unref, null);
 
+      this.setup_account_manager ();
+    }
+
+  private async void setup_account_manager () throws GLib.Error
+    {
+      this.account_manager = AccountManager.dup ();
+      yield this.account_manager.prepare_async (null);
+      this.account_manager.account_enabled.connect (this.account_enabled_cb);
+
+      /* FIXME: react to accounts being deleted, invalidated, etc. */
+
+      unowned GLib.List<Account> accounts =
+          this.account_manager.get_valid_accounts ();
       foreach (Account account in accounts)
         {
-          var store = new TpPersonaStore (account);
-          this.stores.set (account.get_object_path (account), store);
+          this.account_enabled_cb (account);
         }
+    }
 
-      /* FIXME: cut this block */
-      debug ("the accounts we've got:");
-      foreach (var entry in this.stores)
-        {
-          var store = (TpPersonaStore) entry.value;
-          debug ("     account name: '%s'", store.account.get_display_name ());
+  private void account_enabled_cb (Account account)
+    {
+      var store = new TpPersonaStore (account);
 
-          store.personas_added.connect (this.personas_added_cb);
-        }
+      /* FIXME: cut this */
+      debug ("   adding account name: '%s'", store.account.get_display_name ());
 
-      /* FIXME: react to accounts being created and deleted */
+      store.personas_added.connect (this.personas_added_cb);
+      this.stores.set (account.get_object_path (account), store);
     }
 
   private void personas_added_cb (PersonaStore store,
@@ -74,9 +91,20 @@ public class Folks.IndividualAggregator : Object
           individuals.prepend (individual);
         });
 
-      individuals.reverse ();
-      this.individuals_added (individuals);
+      GLib.List<Individual> new_individuals = null;
+      foreach (var i in individuals)
+        {
+          if (this.members.lookup (i) == 0)
+            {
+              new_individuals.prepend (i);
+              this.members.insert (i, 1);
+            }
+        }
 
-      /* FIXME: add these individuals to an internal store */
+      if (new_individuals != null)
+        {
+          new_individuals.reverse ();
+          this.individuals_added (new_individuals);
+        }
     }
 }

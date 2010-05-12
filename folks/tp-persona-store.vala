@@ -33,7 +33,6 @@ public class Folks.TpPersonaStore : PersonaStore
   private HashTable<string, Persona> _personas;
   private HashMap<string, Channel> channels;
   private Connection conn;
-  private bool conn_prepared;
   private Lowlevel ll;
 
   [Property(nick = "basis account",
@@ -50,53 +49,55 @@ public class Folks.TpPersonaStore : PersonaStore
 
       this._personas = new HashTable<string, Persona> (str_hash, str_equal);
       this.conn = null;
-      this.conn_prepared = false;
       this.channels = new HashMap<string, Channel> ();
       this.ll = new Lowlevel ();
-      this.prep_account ();
 
-      /* FIXME: we need to react to the account going on an offline */
+      this.account.status_changed.connect (this.account_status_changed_cb);
+      Tp.ConnectionStatusReason reason;
+      var status = this.account.get_connection_status (out reason);
+      this.account_status_changed_cb (Tp.ConnectionStatus.DISCONNECTED,
+          status, reason, null, null);
+
+      /* FIXME: we need to react to the account going on and offline
+       * ("status-changed")  */
     }
 
-  private async void prep_account ()
+  /* FIXME: use this signature once we've updated the tp-glib binding for
+   * Tp.Account.status_changed
+  private void account_status_changed_cb (ConnectionStatus old_status,
+      ConnectionStatus new_status, ConnectionStatusReason reason,
+      string dbus_error_name, GLib.HashTable details)
+ */
+  private void account_status_changed_cb (uint old_status,
+      uint new_status, uint reason, string? dbus_error_name,
+      GLib.HashTable? details)
     {
-      var success = false;
-      try
-        {
-          success = yield account.prepare_async (null);
-          if (success == true)
-            {
-              Connection conn = account.get_connection ();
-              if (conn != null)
-                conn.call_when_ready (this.connection_ready_cb);
-            }
-        }
-      catch (GLib.Error e)
-        {
-          warning ("failed to prepare the account '%s': %s",
-              this.account.get_display_name (), e.message);
-        }
+      if (new_status != Tp.ConnectionStatus.CONNECTED)
+        return;
+
+      /* FIXME: connect to the connection's "invalidated" signal */
+
+      var conn = this.account.get_connection ();
+      conn.call_when_ready (this.connection_ready_cb);
     }
 
-  private void connection_ready_cb (Connection conn, GLib.Error error)
+  private void connection_ready_cb (Connection conn, GLib.Error? error)
     {
-      if (error != null)
-        warning ("connection_ready_cb: non-NULL error: %s", error.message);
-      else if (this.conn_prepared == false)
-        {
-          /* FIXME: set up a handler for the "NewChannels" signal; do much the
-           * same work in the handler as we do in the ensure_channel callback
-           * (in tp-lowlevel); remove it once we've received channels for all of
-           * {stored, publish, subscribe} */
+      /* FIXME: set up a handler for the "NewChannels" signal; do much the
+        * same work in the handler as we do in the ensure_channel callback
+        * (in tp-lowlevel); remove it once we've received channels for all of
+        * {stored, publish, subscribe} */
 
-          /* FIXME: uncomment these
-          this.add_channel (conn, "stored");
-          this.add_channel (conn, "publish");
-          */
-          this.add_channel (conn, "subscribe");
-          this.conn = conn;
-          this.conn_prepared = true;
-        }
+      /* FIXME: if this is a new connection (ie, this function has already been
+       * called), do we need to explicitly drop the old channels, disconnect
+       * signals, etc.? */
+
+      /* FIXME: uncomment these
+      this.add_channel (conn, "stored");
+      this.add_channel (conn, "publish");
+      */
+      this.add_channel (conn, "subscribe");
+      this.conn = conn;
     }
 
   private async void add_channel (Connection conn, string name)
@@ -121,6 +122,9 @@ public class Folks.TpPersonaStore : PersonaStore
 
       channel.notify["channel-ready"].connect ((s, p) =>
         {
+          /* FIXME: cut this */
+          debug ("channel ready; connecting...");
+
           var c = (Channel) s;
           c.group_members_changed.connect (this.group_members_changed_cb);
 
@@ -145,7 +149,10 @@ public class Folks.TpPersonaStore : PersonaStore
       /* FIXME: cut this */
       debug ("group members changed: '%s'", message);
 
-      this.create_personas_from_handles (added);
+      if (added.length >= 1)
+        {
+          this.create_personas_from_handles (added);
+        }
 
       /* FIXME: continue for the other arrays */
     }
