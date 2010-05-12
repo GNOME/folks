@@ -19,21 +19,20 @@
  */
 
 using GLib;
-using Folks.Alias;
-using Folks.Capabilities;
 
-/* FIXME: have this class implement a number of interfaces: Avatar, Alias,
- * Presence, etc. */
-public abstract class Folks.Persona : Object, Alias, Capabilities
+public enum Folks.CapabilitiesFlags {
+  NONE = 0,
+  AUDIO = 1 << 0,
+  VIDEO = 1 << 1,
+  FILE_TRANSFER = 1 << 2,
+  STREAM_TUBE = 1 << 3,
+  UNKNOWN = 1 << 7,
+}
+
+public interface Folks.Capabilities : Object
 {
-  /* interface Alias */
-  public abstract string alias { get; set; }
-
-  /* interface Capabilities */
-  public abstract CapabilitiesFlags capabilities { get; set; }
-
-  /* internal ID */
-  public string iid { get; construct; }
-  /* universal ID (eg, "foo@xmpp.example.org") */
-  public string uid { get; construct; }
+  public abstract CapabilitiesFlags capabilities
+    {
+      get; set; default = CapabilitiesFlags.NONE;
+    }
 }

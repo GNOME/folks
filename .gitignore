@@ -49,6 +49,7 @@ Makefile.in
 /xmldocs.make
 
 /folks/alias.c
+/folks/capabilities.c
 /folks/individual.c
 /folks/individual-aggregator.c
 /folks/persona.c

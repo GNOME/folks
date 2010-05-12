@@ -20,14 +20,16 @@
 
 using GLib;
 using Folks.Alias;
+using Folks.Capabilities;
 
-public class Folks.Individual : Object, Alias
+public class Folks.Individual : Object, Alias, Capabilities
 {
   private GLib.List<Persona> _personas;
 
   /* XXX: should setting this push it down into the Persona (to foward along to
    * the actual store if possible?) */
   public string alias { get; set; }
+  public CapabilitiesFlags capabilities { get; private set; }
 
   /* FIXME: set up specific functions, so we can update the alias, etc.
     * cache before notifying any users about the change
@@ -54,6 +56,7 @@ public class Folks.Individual : Object, Alias
     {
       /* gather the first occurence of each field */
       string alias = null;
+      var caps = CapabilitiesFlags.NONE;
       this._personas.foreach ((persona) =>
         {
           var p = (Persona) persona;
@@ -61,6 +64,8 @@ public class Folks.Individual : Object, Alias
           /* FIXME: also check to see if alias is just whitespace */
           if (alias == null)
             alias = p.alias;
+
+          caps |= p.capabilities;
         });
 
       if (alias == null)
@@ -71,5 +76,19 @@ public class Folks.Individual : Object, Alias
 
       /* write them back to the local members */
       this.alias = alias;
+      this.capabilities = caps;
+    }
+
+  public CapabilitiesFlags get_capabilities ()
+    {
+      return this.capabilities;
+    }
+
+  /*
+   * GLib/C convenience functions (for built-in casting, etc.)
+   */
+  public unowned string get_alias ()
+    {
+      return this.alias;
     }
 }

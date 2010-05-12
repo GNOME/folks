@@ -21,12 +21,16 @@
 using GLib;
 using Tp;
 using Folks.Alias;
+using Folks.Capabilities;
 using Folks.Persona;
 
-public class Folks.TpPersona : Persona, Alias
+public class Folks.TpPersona : Persona, Alias, Capabilities
 {
   /* interface Alias */
   public override string alias { get; set; }
+
+  /* interface Capabilities */
+  public override CapabilitiesFlags capabilities { get; private set; }
 
   public Contact contact { get; construct; }
 
@@ -41,6 +45,10 @@ public class Folks.TpPersona : Persona, Alias
       var alias = contact.get_alias ();
       if (alias == null || alias == "")
         alias = uid;
+
+      /* TODO: implement something like Empathy's tp_caps_to_capabilities() and
+       * fill in the capabilities as appropriate */
+      debug ("capabilities not implemented");
 
       Object (alias: alias,
               contact: contact,
