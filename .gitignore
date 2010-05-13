@@ -54,6 +54,7 @@ Makefile.in
 /folks/individual-aggregator.c
 /folks/persona.c
 /folks/persona-store.c
+/folks/presence.c
 /folks/folks.h
 /folks/folks.pc
 /folks/folks-uninstalled.pc

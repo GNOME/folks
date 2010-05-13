@@ -21,8 +21,9 @@
 using GLib;
 using Folks.Alias;
 using Folks.Capabilities;
+using Folks.Presence;
 
-public class Folks.Individual : Object, Alias, Capabilities
+public class Folks.Individual : Object, Alias, Capabilities, Presence
 {
   private GLib.List<Persona> _personas;
 
@@ -30,6 +31,8 @@ public class Folks.Individual : Object, Alias, Capabilities
    * the actual store if possible?) */
   public string alias { get; set; }
   public CapabilitiesFlags capabilities { get; private set; }
+  public Folks.PresenceType presence_type { get; private set; }
+  public string presence_message { get; private set; }
 
   /* FIXME: set up specific functions, so we can update the alias, etc.
     * cache before notifying any users about the change
@@ -57,6 +60,8 @@ public class Folks.Individual : Object, Alias, Capabilities
       /* gather the first occurence of each field */
       string alias = null;
       var caps = CapabilitiesFlags.NONE;
+      var presence_message = "";
+      var presence_type = Folks.PresenceType.UNSET;
       this._personas.foreach ((persona) =>
         {
           var p = (Persona) persona;
@@ -64,6 +69,12 @@ public class Folks.Individual : Object, Alias, Capabilities
           /* FIXME: also check to see if alias is just whitespace */
           if (alias == null)
             alias = p.alias;
+
+          if (presence_message == null || presence_message == "")
+            presence_message = p.presence_message;
+
+          if (Presence.typecmp (p.presence_type, presence_type) > 0)
+            presence_type = p.presence_type;
 
           caps |= p.capabilities;
         });
@@ -74,9 +85,14 @@ public class Folks.Individual : Object, Alias, Capabilities
           alias = "Name Unknown";
         }
 
+      if (presence_message == null)
+        presence_message = "";
+
       /* write them back to the local members */
       this.alias = alias;
       this.capabilities = caps;
+      this.presence_message = presence_message;
+      this.presence_type = presence_type;
     }
 
   public CapabilitiesFlags get_capabilities ()
@@ -90,5 +106,21 @@ public class Folks.Individual : Object, Alias, Capabilities
   public unowned string get_alias ()
     {
       return this.alias;
+    }
+
+  public string get_presence_message ()
+    {
+      return this.presence_message;
+    }
+
+  public Folks.PresenceType get_presence_type ()
+    {
+      return this.presence_type;
+    }
+
+  public bool is_online ()
+    {
+      Presence p = this;
+      return p.is_online ();
     }
 }

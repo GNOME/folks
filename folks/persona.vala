@@ -21,16 +21,21 @@
 using GLib;
 using Folks.Alias;
 using Folks.Capabilities;
+using Folks.Presence;
 
 /* FIXME: have this class implement a number of interfaces: Avatar, Alias,
  * Presence, etc. */
-public abstract class Folks.Persona : Object, Alias, Capabilities
+public abstract class Folks.Persona : Object, Alias, Capabilities, Presence
 {
   /* interface Alias */
   public abstract string alias { get; set; }
 
   /* interface Capabilities */
   public abstract CapabilitiesFlags capabilities { get; set; }
+
+  /* interface Presence */
+  public abstract Folks.PresenceType presence_type { get; set; }
+  public abstract string presence_message { get; set; }
 
   /* internal ID */
   public string iid { get; construct; }

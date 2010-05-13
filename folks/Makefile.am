@@ -57,6 +57,7 @@ libfolks_la_VALASOURCES = \
 	individual-aggregator.vala \
 	persona.vala \
 	persona-store.vala \
+	presence.vala \
 	tp-persona.vala \
 	tp-persona-store.vala \
 	$(NULL)

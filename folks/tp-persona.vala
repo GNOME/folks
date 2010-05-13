@@ -23,14 +23,19 @@ using Tp;
 using Folks.Alias;
 using Folks.Capabilities;
 using Folks.Persona;
+using Folks.Presence;
 
-public class Folks.TpPersona : Persona, Alias, Capabilities
+public class Folks.TpPersona : Persona, Alias, Capabilities, Presence
 {
   /* interface Alias */
   public override string alias { get; set; }
 
   /* interface Capabilities */
   public override CapabilitiesFlags capabilities { get; private set; }
+
+  /* interface Presence */
+  public override Folks.PresenceType presence_type { get; private set; }
+  public override string presence_message { get; private set; }
 
   public Contact contact { get; construct; }
 
@@ -49,6 +54,10 @@ public class Folks.TpPersona : Persona, Alias, Capabilities
       /* TODO: implement something like Empathy's tp_caps_to_capabilities() and
        * fill in the capabilities as appropriate */
       debug ("capabilities not implemented");
+
+      /* TODO: implement a publicly-accessible mapping between TpPresenceType
+       * and Folks.PresenceType and use it here */
+      debug ("presence not implemented");
 
       Object (alias: alias,
               contact: contact,
