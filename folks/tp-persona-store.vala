@@ -62,15 +62,9 @@ public class Folks.TpPersonaStore : PersonaStore
        * ("status-changed")  */
     }
 
-  /* FIXME: use this signature once we've updated the tp-glib binding for
-   * Tp.Account.status_changed
   private void account_status_changed_cb (ConnectionStatus old_status,
       ConnectionStatus new_status, ConnectionStatusReason reason,
-      string dbus_error_name, GLib.HashTable details)
- */
-  private void account_status_changed_cb (uint old_status,
-      uint new_status, uint reason, string? dbus_error_name,
-      GLib.HashTable? details)
+      string? dbus_error_name, GLib.HashTable? details)
     {
       if (new_status != Tp.ConnectionStatus.CONNECTED)
         return;
