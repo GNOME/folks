@@ -23,8 +23,6 @@ using Folks.Alias;
 using Folks.Capabilities;
 using Folks.Presence;
 
-/* FIXME: have this class implement a number of interfaces: Avatar, Alias,
- * Presence, etc. */
 public abstract class Folks.Persona : Object, Alias, Capabilities, Presence
 {
   /* interface Alias */

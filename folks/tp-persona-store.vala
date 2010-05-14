@@ -57,9 +57,6 @@ public class Folks.TpPersonaStore : PersonaStore
       var status = this.account.get_connection_status (out reason);
       this.account_status_changed_cb (Tp.ConnectionStatus.DISCONNECTED,
           status, reason, null, null);
-
-      /* FIXME: we need to react to the account going on and offline
-       * ("status-changed")  */
     }
 
   private void account_status_changed_cb (ConnectionStatus old_status,
@@ -68,8 +65,6 @@ public class Folks.TpPersonaStore : PersonaStore
     {
       if (new_status != Tp.ConnectionStatus.CONNECTED)
         return;
-
-      /* FIXME: connect to the connection's "invalidated" signal */
 
       var conn = this.account.get_connection ();
       conn.call_when_ready (this.connection_ready_cb);
