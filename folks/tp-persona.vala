@@ -39,7 +39,7 @@ public class Folks.TpPersona : Persona, Alias, Capabilities, Presence
 
   public Contact contact { get; construct; }
 
-  public TpPersona (Contact contact)
+  public TpPersona (Contact contact, PersonaStore store)
     {
       var uid = contact.get_identifier ();
       if (uid == null || uid == "")
@@ -64,6 +64,7 @@ public class Folks.TpPersona : Persona, Alias, Capabilities, Presence
               /* FIXME: we'll probably need to include the ID for the contact's
                * account in the iid */
               iid: uid,
-              uid: uid);
+              uid: uid,
+              store: store);
     }
 }

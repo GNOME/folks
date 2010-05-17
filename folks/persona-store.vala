@@ -24,6 +24,10 @@ using Folks.Persona;
 public abstract class Folks.PersonaStore : Object
 {
   public abstract signal void personas_added (GLib.List<Persona> personas);
+  public abstract signal void personas_removed (GLib.List<Persona> personas);
+
+  /* the backing store itself was deleted and its personas are now invalid */
+  public abstract signal void removed ();
 
   public abstract HashTable<string, Persona> personas { get; }
 }

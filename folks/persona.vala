@@ -21,6 +21,7 @@
 using GLib;
 using Folks.Alias;
 using Folks.Capabilities;
+using Folks.PersonaStore;
 using Folks.Presence;
 
 public abstract class Folks.Persona : Object, Alias, Capabilities, Presence
@@ -39,4 +40,6 @@ public abstract class Folks.Persona : Object, Alias, Capabilities, Presence
   public string iid { get; construct; }
   /* universal ID (eg, "foo@xmpp.example.org") */
   public string uid { get; construct; }
+
+  public PersonaStore store { get; construct; }
 }

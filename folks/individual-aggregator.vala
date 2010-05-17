@@ -32,6 +32,7 @@ public class Folks.IndividualAggregator : Object
   public HashTable<Individual, uint> members { get; private set; }
 
   public signal void individuals_added (GLib.List<Individual> inds);
+  public signal void individuals_removed (GLib.List<Individual> inds);
   /* TODO: add a signal for "subcontact went offline/online"? Is that useful
    * enough to bother with? */
 
@@ -63,13 +64,38 @@ public class Folks.IndividualAggregator : Object
 
   private void account_enabled_cb (Account account)
     {
-      var store = new TpPersonaStore (account);
+      var store = this.stores.get (account.get_object_path (account));
+
+      if (store != null)
+        return;
 
       /* FIXME: cut this */
-      debug ("   adding account name: '%s'", store.account.get_display_name ());
+      debug ("   adding account name: '%s'", account.get_display_name ());
 
-      store.personas_added.connect (this.personas_added_cb);
+      this.store_add_from_account (account);
+    }
+
+  private void store_add_from_account (Account account)
+    {
+      var store = new TpPersonaStore (account);
+
       this.stores.set (account.get_object_path (account), store);
+      store.personas_added.connect (this.personas_added_cb);
+      store.removed.connect (this.store_removed_cb);
+    }
+
+  private void store_removed_cb (PersonaStore store)
+    {
+      var account = ((TpPersonaStore) store).account;
+
+      store.personas_added.disconnect (this.personas_added_cb);
+      store.removed.disconnect (this.store_removed_cb);
+
+      /* no need to remove this stores' personas from all the individuals, since
+       * they'll do that themselves (and emit their own 'removed' signal if
+       * necessary) */
+
+      this.stores.unset (account.get_object_path (account));
     }
 
   private void personas_added_cb (PersonaStore store,
@@ -96,6 +122,7 @@ public class Folks.IndividualAggregator : Object
         {
           if (this.members.lookup (i) == 0)
             {
+              i.removed.connect (this.individual_removed_cb);
               new_individuals.prepend (i);
               this.members.insert (i, 1);
             }
@@ -106,5 +133,12 @@ public class Folks.IndividualAggregator : Object
           new_individuals.reverse ();
           this.individuals_added (new_individuals);
         }
+    }
+
+  private void individual_removed_cb (Individual i)
+    {
+      var i_list = new GLib.List<Individual> ();
+      i_list.append (i);
+      this.individuals_removed (i_list);
     }
 }

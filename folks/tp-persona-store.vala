@@ -52,7 +52,16 @@ public class Folks.TpPersonaStore : PersonaStore
       this.channels = new HashMap<string, Channel> ();
       this.ll = new Lowlevel ();
 
+      this.account.invalidated.connect ((s, p) => {
+          this.removed ();
+          /* in case anyone still holds onto a ref for some reason, minimize the
+           * damage */
+          this._personas = null;
+          this.channels = null;
+          this.conn = null;
+      });
       this.account.status_changed.connect (this.account_status_changed_cb);
+
       Tp.ConnectionStatusReason reason;
       var status = this.account.get_connection_status (out reason);
       this.account_status_changed_cb (Tp.ConnectionStatus.DISCONNECTED,
@@ -195,21 +204,21 @@ public class Folks.TpPersonaStore : PersonaStore
           warning ("    %u", (uint) h);
         }
 
-      var persona_set = new HashSet<Persona> ();
+      var personas_new = new HashSet<Persona> ();
       for (var i = 0; i < n_contacts; i++)
         {
           Contact contact = contacts[i];
           Persona persona;
 
-          persona = new TpPersona (contact);
-          persona_set.add (persona);
+          persona = new TpPersona (contact, this);
+          personas_new.add (persona);
 
           this._personas.insert (persona.iid, persona);
         }
 
-      if (persona_set.size >= 1)
+      if (personas_new.size >= 1)
         {
-          GLib.List<Persona> personas = this.hash_set_to_list (persona_set);
+          GLib.List<Persona> personas = this.hash_set_to_list (personas_new);
           this.personas_added (personas);
         }
     }

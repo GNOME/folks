@@ -18,14 +18,17 @@
  *       Travis Reitter <travis.reitter@collabora.co.uk>
  */
 
+using Gee;
 using GLib;
 using Folks.Alias;
 using Folks.Capabilities;
+using Folks.PersonaStore;
 using Folks.Presence;
 
 public class Folks.Individual : Object, Alias, Capabilities, Presence
 {
   private GLib.List<Persona> _personas;
+  private HashTable<PersonaStore, HashSet<Persona>> stores;
 
   /* XXX: should setting this push it down into the Persona (to foward along to
    * the actual store if possible?) */
@@ -33,6 +36,9 @@ public class Folks.Individual : Object, Alias, Capabilities, Presence
   public CapabilitiesFlags capabilities { get; private set; }
   public Folks.PresenceType presence_type { get; private set; }
   public string presence_message { get; private set; }
+
+  /* the last of this individuals personas has been removed, so it is invalid */
+  public signal void removed ();
 
   /* FIXME: set up specific functions, so we can update the alias, etc.
     * cache before notifying any users about the change
@@ -53,6 +59,55 @@ public class Folks.Individual : Object, Alias, Capabilities, Presence
   public Individual (GLib.List<Persona>? personas)
     {
       Object (personas: personas);
+
+      this.stores = new HashTable<PersonaStore, HashSet<Persona>> (direct_hash,
+          direct_equal);
+      this.stores_update ();
+    }
+
+  private void stores_update ()
+    {
+      this._personas.foreach ((p) =>
+        {
+          var persona = (Persona) p;
+          var store_is_new = false;
+          var persona_set = this.stores.lookup (persona.store);
+          if (persona_set == null)
+            {
+              persona_set = new HashSet<Persona> (direct_hash, direct_equal);
+              store_is_new = true;
+            }
+
+          persona_set.add (persona);
+
+          if (store_is_new)
+            {
+              this.stores.insert (persona.store, persona_set);
+
+              persona.store.removed.connect (this.store_removed_cb);
+            }
+        });
+    }
+
+  private void store_removed_cb (PersonaStore store)
+    {
+      var persona_set = this.stores.lookup (store);
+
+      foreach (var persona in persona_set)
+        {
+          this._personas.remove (persona);
+        }
+
+      if (persona_set.size < 1)
+        this.stores.remove (store);
+
+      if (this._personas.length () < 1)
+        {
+          this.removed ();
+          return;
+        }
+
+      this.update_fields ();
     }
 
   private void update_fields ()
