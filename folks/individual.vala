@@ -40,11 +40,6 @@ public class Folks.Individual : Object, Alias, Capabilities, Presence
   /* the last of this individuals personas has been removed, so it is invalid */
   public signal void removed ();
 
-  /* FIXME: set up specific functions, so we can update the alias, etc.
-    * cache before notifying any users about the change
-    *
-    * make the custom getters/setters work on _personas
-    */
   public GLib.List<Persona> personas
     {
       get { return this._personas; }
