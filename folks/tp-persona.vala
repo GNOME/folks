@@ -55,10 +55,6 @@ public class Folks.TpPersona : Persona, Alias, Capabilities, Presence
        * fill in the capabilities as appropriate */
       debug ("capabilities not implemented");
 
-      /* TODO: implement a publicly-accessible mapping between TpPresenceType
-       * and Folks.PresenceType and use it here */
-      debug ("presence not implemented");
-
       Object (alias: alias,
               contact: contact,
               /* FIXME: we'll probably need to include the ID for the contact's
@@ -66,5 +62,55 @@ public class Folks.TpPersona : Persona, Alias, Capabilities, Presence
               iid: uid,
               uid: uid,
               store: store);
+
+      contact.notify["presence-message"].connect ((s, p) =>
+        {
+          this.contact_notify_presence_message ((Tp.Contact) s);
+        });
+      contact.notify["presence-type"].connect ((s, p) =>
+        {
+          this.contact_notify_presence_type ((Tp.Contact) s);
+        });
+      this.contact_notify_presence_message (contact);
+      this.contact_notify_presence_type (contact);
+    }
+
+  private void contact_notify_presence_message (Tp.Contact contact)
+    {
+      this.presence_message = contact.get_presence_message ();
+    }
+
+  private void contact_notify_presence_type (Tp.Contact contact)
+    {
+      this.presence_type = folks_presence_type_from_tp (
+          contact.get_presence_type ());
+    }
+
+  private static PresenceType folks_presence_type_from_tp (
+      Tp.ConnectionPresenceType type)
+    {
+      switch (type)
+        {
+          case Tp.ConnectionPresenceType.AVAILABLE:
+            return PresenceType.AVAILABLE;
+          case Tp.ConnectionPresenceType.AWAY:
+            return PresenceType.AWAY;
+          case Tp.ConnectionPresenceType.BUSY:
+            return PresenceType.BUSY;
+          case Tp.ConnectionPresenceType.ERROR:
+            return PresenceType.ERROR;
+          case Tp.ConnectionPresenceType.EXTENDED_AWAY:
+            return PresenceType.EXTENDED_AWAY;
+          case Tp.ConnectionPresenceType.HIDDEN:
+            return PresenceType.HIDDEN;
+          case Tp.ConnectionPresenceType.OFFLINE:
+            return PresenceType.OFFLINE;
+          case Tp.ConnectionPresenceType.UNKNOWN:
+            return PresenceType.UNKNOWN;
+          case Tp.ConnectionPresenceType.UNSET:
+            return PresenceType.UNSET;
+          default:
+            return PresenceType.UNKNOWN;
+        }
     }
 }

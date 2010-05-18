@@ -38,7 +38,8 @@ public interface Folks.Presence : Object
     {
       get; set; default = Folks.PresenceType.UNSET;
     }
-  public abstract string presence_message { get; set; default = ""; }
+  /* FIXME: set the default back to "" */
+  public abstract string presence_message { get; set; default = "folks: default presence message"; }
 
   private static uint type_availability (PresenceType type)
     {

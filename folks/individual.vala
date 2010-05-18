@@ -46,9 +46,34 @@ public class Folks.Individual : Object, Alias, Capabilities, Presence
 
       set
         {
+          this._personas.foreach ((p) =>
+            {
+              var persona = (Persona) p;
+
+              persona.notify["presence-message"].disconnect (
+                  this.notify_presence_cb);
+              persona.notify["presence-type"].disconnect (
+                  this.notify_presence_cb);
+            });
+
           this._personas = value.copy ();
+
+          this._personas.foreach ((p) =>
+            {
+              var persona = (Persona) p;
+
+              persona.notify["presence-message"].connect (
+                  this.notify_presence_cb);
+              persona.notify["presence-type"].connect (this.notify_presence_cb);
+            });
+
           this.update_fields ();
         }
+    }
+
+  private void notify_presence_cb (Object obj, ParamSpec ps)
+    {
+      this.update_presence ();
     }
 
   public Individual (GLib.List<Persona>? personas)
@@ -110,8 +135,6 @@ public class Folks.Individual : Object, Alias, Capabilities, Presence
       /* gather the first occurence of each field */
       string alias = null;
       var caps = CapabilitiesFlags.NONE;
-      var presence_message = "";
-      var presence_type = Folks.PresenceType.UNSET;
       this._personas.foreach ((persona) =>
         {
           var p = (Persona) persona;
@@ -119,12 +142,6 @@ public class Folks.Individual : Object, Alias, Capabilities, Presence
           /* FIXME: also check to see if alias is just whitespace */
           if (alias == null)
             alias = p.alias;
-
-          if (presence_message == null || presence_message == "")
-            presence_message = p.presence_message;
-
-          if (Presence.typecmp (p.presence_type, presence_type) > 0)
-            presence_type = p.presence_type;
 
           caps |= p.capabilities;
         });
@@ -135,14 +152,39 @@ public class Folks.Individual : Object, Alias, Capabilities, Presence
           alias = "Name Unknown";
         }
 
-      if (presence_message == null)
-        presence_message = "";
-
       /* write them back to the local members */
       this.alias = alias;
       this.capabilities = caps;
-      this.presence_message = presence_message;
-      this.presence_type = presence_type;
+
+      this.update_presence ();
+    }
+
+  private void update_presence ()
+    {
+      var old_presence_message = this.presence_message;
+      var old_presence_type = this.presence_type;
+      var presence_message = "";
+      var presence_type = Folks.PresenceType.UNSET;
+      this._personas.foreach ((persona) =>
+        {
+          var p = (Persona) persona;
+
+          if (presence_message == null || presence_message == "")
+            presence_message = p.presence_message;
+
+          if (Presence.typecmp (p.presence_type, presence_type) > 0)
+            presence_type = p.presence_type;
+        });
+
+      if (presence_message == null)
+        presence_message = "";
+
+      /* only notify if the value has changed */
+      if (presence_message != old_presence_message)
+        this.presence_message = presence_message;
+
+      if (presence_type != old_presence_type)
+        this.presence_type = presence_type;
     }
 
   public CapabilitiesFlags get_capabilities ()
