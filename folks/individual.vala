@@ -132,6 +132,9 @@ public class Folks.Individual : Object, Alias, Capabilities, Presence
 
   private void update_fields ()
     {
+      var old_alias = this.alias;
+      var old_caps = this.capabilities;
+
       /* gather the first occurence of each field */
       string alias = null;
       var caps = CapabilitiesFlags.NONE;
@@ -152,9 +155,12 @@ public class Folks.Individual : Object, Alias, Capabilities, Presence
           alias = "Name Unknown";
         }
 
-      /* write them back to the local members */
-      this.alias = alias;
-      this.capabilities = caps;
+      /* only notify if the value has changed */
+      if (alias != old_alias)
+        this.alias = alias;
+
+      if (caps != old_caps)
+        this.capabilities = caps;
 
       this.update_presence ();
     }
