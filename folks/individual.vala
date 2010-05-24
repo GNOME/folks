@@ -22,11 +22,13 @@ using Gee;
 using GLib;
 using Folks.Alias;
 using Folks.Capabilities;
+using Folks.Groups;
 using Folks.PersonaStore;
 using Folks.Presence;
 
-public class Folks.Individual : Object, Alias, Capabilities, Presence
+public class Folks.Individual : Object, Alias, Capabilities, Groups, Presence
 {
+  private HashTable<string, bool> _groups;
   private GLib.List<Persona> _personas;
   private HashTable<PersonaStore, HashSet<Persona>> stores;
 
@@ -40,6 +42,20 @@ public class Folks.Individual : Object, Alias, Capabilities, Presence
   /* the last of this individuals personas has been removed, so it is invalid */
   public signal void removed ();
 
+  public HashTable<string, bool> groups
+    {
+      get { return this._groups; }
+
+      set
+        {
+          this._personas.foreach ((p) =>
+            {
+              if (p is Groups)
+                ((Groups) p).groups = value;
+            });
+        }
+    }
+
   public GLib.List<Persona> personas
     {
       get { return this._personas; }
@@ -49,11 +65,13 @@ public class Folks.Individual : Object, Alias, Capabilities, Presence
           this._personas.foreach ((p) =>
             {
               var persona = (Persona) p;
+              var groups = (p is Groups) ? (Groups) p : null;
 
               persona.notify["presence-message"].disconnect (
                   this.notify_presence_cb);
               persona.notify["presence-type"].disconnect (
                   this.notify_presence_cb);
+              groups.group_changed.disconnect (this.persona_group_changed_cb);
             });
 
           this._personas = value.copy ();
@@ -61,14 +79,34 @@ public class Folks.Individual : Object, Alias, Capabilities, Presence
           this._personas.foreach ((p) =>
             {
               var persona = (Persona) p;
+              var groups = (p is Groups) ? (Groups) p : null;
 
               persona.notify["presence-message"].connect (
                   this.notify_presence_cb);
               persona.notify["presence-type"].connect (this.notify_presence_cb);
+              groups.group_changed.connect (this.persona_group_changed_cb);
             });
 
           this.update_fields ();
         }
+    }
+
+  private void persona_group_changed_cb (string group, bool is_member)
+    {
+      this.change_group (group, is_member);
+      this.update_groups ();
+    }
+
+  public void change_group (string group, bool is_member)
+    {
+      this._personas.foreach ((p) =>
+        {
+          if (p is Groups)
+            ((Groups) p).change_group (group, is_member);
+        });
+
+      /* don't notify, since it hasn't happened in the persona backing stores
+       * yet; react to that directly */
     }
 
   private void notify_presence_cb (Object obj, ParamSpec ps)
@@ -162,7 +200,61 @@ public class Folks.Individual : Object, Alias, Capabilities, Presence
       if (caps != old_caps)
         this.capabilities = caps;
 
+      this.update_groups ();
       this.update_presence ();
+    }
+
+  private void update_groups ()
+    {
+      var new_groups = new HashTable<string, bool> (str_hash, str_equal);
+
+      /* this._groups is null when during initial construction */
+      if (this._groups == null)
+        this._groups = new HashTable<string, bool> (str_hash, str_equal);
+
+      /* FIXME: this should partition the personas by store (maybe we should
+       * keep that mapping in general in this class), and execute
+       * "groups-changed" on the store (with the set of personas), to allow the
+       * back-end to optimize it (like Telepathy will for MembersChanged for the
+       * groups channel list) */
+      this._personas.foreach ((p) =>
+        {
+          if (p is Groups)
+            {
+              var persona = (Groups) p;
+
+              persona.groups.foreach ((k, v) =>
+                {
+                  new_groups.insert ((string) k, true);
+                });
+            }
+        });
+
+      new_groups.foreach ((k, v) =>
+        {
+          var group = (string) k;
+          if (this._groups.lookup (group) != true)
+            {
+              this._groups.insert (group, true);
+              this.group_changed (group, true);
+            }
+        });
+
+      /* buffer the removals, so we don't remove while iterating */
+      var removes = new GLib.List<string> ();
+      this._groups.foreach ((k, v) =>
+        {
+          var group = (string) k;
+          if (new_groups.lookup (group) != true)
+            removes.prepend (group);
+        });
+
+      removes.foreach ((l) =>
+        {
+          var group = (string) l;
+          this._groups.remove (group);
+          this.group_changed (group, false);
+        });
     }
 
   private void update_presence ()
@@ -171,15 +263,15 @@ public class Folks.Individual : Object, Alias, Capabilities, Presence
       var old_presence_type = this.presence_type;
       var presence_message = "";
       var presence_type = Folks.PresenceType.UNSET;
-      this._personas.foreach ((persona) =>
+      this._personas.foreach ((p) =>
         {
-          var p = (Persona) persona;
+          var persona = (Persona) p;
 
           if (presence_message == null || presence_message == "")
-            presence_message = p.presence_message;
+            presence_message = persona.presence_message;
 
-          if (Presence.typecmp (p.presence_type, presence_type) > 0)
-            presence_type = p.presence_type;
+          if (Presence.typecmp (persona.presence_type, presence_type) > 0)
+            presence_type = persona.presence_type;
         });
 
       if (presence_message == null)
@@ -204,6 +296,12 @@ public class Folks.Individual : Object, Alias, Capabilities, Presence
   public unowned string get_alias ()
     {
       return this.alias;
+    }
+
+  public HashTable<string, bool> get_groups ()
+    {
+      Groups g = this;
+      return g.groups;
     }
 
   public string get_presence_message ()

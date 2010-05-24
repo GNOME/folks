@@ -19,18 +19,12 @@
  */
 
 using GLib;
-using Folks.Persona;
 
-public abstract class Folks.PersonaStore : Object
+public interface Folks.Groups : Object
 {
-  public abstract signal void personas_added (GLib.List<Persona> personas);
-  public abstract signal void personas_removed (GLib.List<Persona> personas);
-  public abstract signal void group_members_changed (string group,
-      GLib.List<Persona>? added, GLib.List<Persona>? removed);
-  public abstract signal void group_removed (string group, GLib.Error? error);
+  public abstract HashTable<string, bool> groups { get; set; }
 
-  /* the backing store itself was deleted and its personas are now invalid */
-  public abstract signal void removed ();
+  public abstract void change_group (string group, bool is_member);
 
-  public abstract HashTable<string, Persona> personas { get; }
+  public signal void group_changed (string group, bool is_member);
 }

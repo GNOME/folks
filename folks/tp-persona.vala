@@ -18,15 +18,19 @@
  *       Travis Reitter <travis.reitter@collabora.co.uk>
  */
 
+using Gee;
 using GLib;
 using Tp;
 using Folks.Alias;
 using Folks.Capabilities;
+using Folks.Groups;
 using Folks.Persona;
 using Folks.Presence;
 
-public class Folks.TpPersona : Persona, Alias, Capabilities, Presence
+public class Folks.TpPersona : Persona, Alias, Capabilities, Groups, Presence
 {
+  private HashTable<string, bool> _groups;
+
   /* interface Alias */
   public override string alias { get; set; }
 
@@ -36,6 +40,48 @@ public class Folks.TpPersona : Persona, Alias, Capabilities, Presence
   /* interface Presence */
   public override Folks.PresenceType presence_type { get; private set; }
   public override string presence_message { get; private set; }
+
+  /* interface Groups */
+  public HashTable<string, bool> groups
+    {
+      get { return this._groups; }
+
+      set
+        {
+          value.foreach ((k, v) =>
+            {
+              var group = (string) k;
+              if (this._groups.lookup (group) == false)
+                this.change_group (group, true);
+            });
+
+          this._groups.foreach ((k, v) =>
+            {
+              var group = (string) k;
+              if (value.lookup (group) == false)
+                this.change_group (group, true);
+            });
+        }
+    }
+
+  public void change_group (string group, bool is_member)
+    {
+      bool changed = false;
+
+      if (is_member)
+        {
+          if (this._groups.lookup (group) != true)
+            {
+              this._groups.insert (group, true);
+              changed = true;
+            }
+        }
+      else
+        changed = this._groups.remove (group);
+
+      if (changed)
+        this.group_changed (group, is_member);
+    }
 
   public Contact contact { get; construct; }
 
@@ -63,6 +109,8 @@ public class Folks.TpPersona : Persona, Alias, Capabilities, Presence
               uid: uid,
               store: store);
 
+      this._groups = new HashTable<string, bool> (str_hash, str_equal);
+
       contact.notify["presence-message"].connect ((s, p) =>
         {
           this.contact_notify_presence_message ((Tp.Contact) s);
@@ -73,6 +121,23 @@ public class Folks.TpPersona : Persona, Alias, Capabilities, Presence
         });
       this.contact_notify_presence_message (contact);
       this.contact_notify_presence_type (contact);
+
+      this.store.group_members_changed.connect ((s, group, added, removed) =>
+        {
+          if (added.find (this) != null)
+            this.change_group (group, true);
+
+          if (removed.find (this) != null)
+            this.change_group (group, false);
+        });
+
+      this.store.group_removed.connect ((s, group, error) =>
+        {
+          if (error != null)
+            warning ("group invalidated: %s", error.message);
+
+          this.change_group (group, false);
+        });
     }
 
   private void contact_notify_presence_message (Tp.Contact contact)

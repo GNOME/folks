@@ -30,7 +30,13 @@ using Folks.TpPersona;
 
 public class Folks.TpPersonaStore : PersonaStore
 {
+  private string[] undisplayed_groups = { "publish", "stored", "subscribe" };
+
   private HashTable<string, Persona> _personas;
+  /* universal, contact owner handles (not channel-specific) */
+  private HashMap<uint, Persona> handle_persona_map;
+  private HashMap<string, HashSet<Persona>> group_personas_map;
+  private HashMap<string, HashSet<uint>> group_pending_adds;
   private HashMap<string, Channel> channels;
   private Connection conn;
   private Lowlevel ll;
@@ -49,6 +55,9 @@ public class Folks.TpPersonaStore : PersonaStore
 
       this._personas = new HashTable<string, Persona> (str_hash, str_equal);
       this.conn = null;
+      this.handle_persona_map = new HashMap<uint, Persona> ();
+      this.group_personas_map = new HashMap<string, HashSet<Persona>> ();
+      this.group_pending_adds = new HashMap<string, HashSet<uint>> ();
       this.channels = new HashMap<string, Channel> ();
       this.ll = new Lowlevel ();
 
@@ -81,14 +90,8 @@ public class Folks.TpPersonaStore : PersonaStore
 
   private void connection_ready_cb (Connection conn, GLib.Error? error)
     {
-      /* FIXME: set up a handler for the "NewChannels" signal; do much the
-        * same work in the handler as we do in the ensure_channel callback
-        * (in tp-lowlevel); remove it once we've received channels for all of
-        * {stored, publish, subscribe} */
-
-      /* FIXME: if this is a new connection (ie, this function has already been
-       * called), do we need to explicitly drop the old channels, disconnect
-       * signals, etc.? */
+      this.ll.connection_connect_to_new_group_channels (conn,
+          this.new_group_channels_cb);
 
       /* FIXME: uncomment these
       this.add_channel (conn, "stored");
@@ -96,6 +99,95 @@ public class Folks.TpPersonaStore : PersonaStore
       */
       this.add_channel (conn, "subscribe");
       this.conn = conn;
+    }
+
+  private void new_group_channels_cb (void *data)
+    {
+      var channel = (Channel) data;
+      if (channel == null)
+        {
+          warning ("error creating channel for NewChannels signal");
+          return;
+        }
+
+      channel.notify["channel-ready"].connect ((s, p) =>
+        {
+          var c = (Channel) s;
+          var name = c.get_identifier ();
+          this.channels[name] = c;
+
+          c.invalidated.connect (this.channel_invalidated_cb);
+          c.group_members_changed.connect (
+            this.channel_group_members_changed_cb);
+
+          unowned IntSet members = c.group_get_members ();
+          if (members != null)
+            this.channel_group_pend_members (c, members.to_array ());
+        });
+    }
+
+  private void channel_invalidated_cb (Proxy proxy, uint domain, int code,
+      string message)
+    {
+      var channel = (Channel) proxy;
+      var group = channel.get_identifier ();
+
+      var error = new GLib.Error ((Quark) domain, code, message);
+      this.group_removed (group, error);
+
+      this.group_personas_map.remove (channel.get_identifier ());
+      this.group_pending_adds.remove (channel.get_identifier ());
+      this.channels.remove (channel.get_identifier ());
+    }
+
+  private void channel_group_pend_members (Channel channel, Array<uint> adds)
+    {
+      var group = channel.get_identifier ();
+
+      var adds_length = adds != null ? adds.length : 0;
+      if (adds_length >= 1)
+        {
+          /* this won't complete before we would add the personas to the group,
+           * so we have to buffer the contact handles below */
+          this.create_personas_from_channel_handles_async (channel, adds);
+
+          for (var i = 0; i < adds.length; i++)
+            {
+              var channel_handle = (Handle) adds.index (i);
+              var contact_handle = channel.group_get_handle_owner (
+                channel_handle);
+              var persona = this.handle_persona_map[contact_handle];
+              if (persona == null)
+                {
+                  HashSet<uint>? contact_handles =
+                    this.group_pending_adds[group];
+                  if (contact_handles == null)
+                    {
+                      contact_handles = new HashSet<uint> ();
+                      this.group_pending_adds[group] = contact_handles;
+                    }
+                  contact_handles.add (contact_handle);
+                }
+            }
+        }
+
+      this.groups_add_new_personas ();
+    }
+
+  private void channel_group_members_changed_cb (Channel channel,
+      string message,
+      /* FIXME: Array<uint> => Array<Handle>; parser bug */
+      Array<uint>? added,
+      Array<uint>? removed,
+      Array<uint>? local_pending,
+      Array<uint>? remote_pending,
+      uint actor,
+      uint reason)
+    {
+      if (added != null)
+        this.channel_group_pend_members (channel, added);
+
+      /* FIXME: continue for the other arrays */
     }
 
   private async void add_channel (Connection conn, string name)
@@ -107,7 +199,6 @@ public class Folks.TpPersonaStore : PersonaStore
         {
           channel = yield this.ll.connection_open_contact_list_channel_async (
               conn, name);
-          this.channels[name] = channel;
         }
       catch (GLib.Error e)
         {
@@ -120,43 +211,21 @@ public class Folks.TpPersonaStore : PersonaStore
 
       channel.notify["channel-ready"].connect ((s, p) =>
         {
-          /* FIXME: cut this */
-          debug ("channel ready; connecting...");
-
           var c = (Channel) s;
-          c.group_members_changed.connect (this.group_members_changed_cb);
+          this.channels[name] = c;
 
-          unowned IntSet members_set = c.group_get_members ();
-          if (members_set != null)
-            {
-              this.create_personas_from_handles (members_set.to_array ());
-            }
+          c.group_members_changed.connect (
+            this.channel_group_members_changed_cb);
+
+          unowned IntSet members = c.group_get_members ();
+          if (members != null)
+            this.channel_group_pend_members (c, members.to_array ());
         });
     }
 
-  private void group_members_changed_cb (Channel channel,
-      string message,
-      /* FIXME: Array<uint> => Array<Handle>; parser bug */
-      Array<uint> added,
-      Array<uint> removed,
-      Array<uint> local_pending,
-      Array<uint> remote_pending,
-      uint actor,
-      uint reason)
-    {
-      /* FIXME: cut this */
-      debug ("group members changed: '%s'", message);
-
-      if (added.length >= 1)
-        {
-          this.create_personas_from_handles (added);
-        }
-
-      /* FIXME: continue for the other arrays */
-    }
-
   /* FIXME: Array<uint> => Array<Handle>; parser bug */
-  private void create_personas_from_handles (Array<uint> handles)
+  private void create_personas_from_channel_handles_async (Channel channel,
+      Array<uint> channel_handles)
     {
       ContactFeature[] features =
         {
@@ -164,25 +233,24 @@ public class Folks.TpPersonaStore : PersonaStore
           /* XXX: also avatar token? */
           PRESENCE
         };
-      var handles_array = this.glib_handles_array_to_array (handles);
+
+      Handle[] contact_handles = {};
+      for (var i = 0; i < channel_handles.length; i++)
+        {
+          var channel_handle = (Handle) channel_handles.index (i);
+          var contact_handle = channel.group_get_handle_owner (channel_handle);
+
+          if (this.handle_persona_map[contact_handle] == null)
+            contact_handles += contact_handle;
+        }
 
       /* FIXME: we have to use 'this' as the weak object because the
         * weak object gets passed into the underlying callback as the
         * object instance; there may be a way to fix this with the
         * instance_pos directive, but I couldn't get it to work */
-      this.conn.get_contacts_by_handle (handles_array, features,
-          this.get_contacts_by_handle_cb, this);
-    }
-
-  /* FIXME: Array<uint> => Array<Handle>; parser bug */
-  private Handle[] glib_handles_array_to_array (Array<uint> hs)
-    {
-      var handles = new Handle[hs.length];
-
-      for (var i = 0; i < hs.length; i++)
-        handles[i] = (Handle) hs.index (i);
-
-      return handles;
+      if (contact_handles.length > 0)
+        this.conn.get_contacts_by_handle (contact_handles, features,
+            this.get_contacts_by_handle_cb, this);
     }
 
   private void get_contacts_by_handle_cb (Connection connection,
@@ -214,13 +282,69 @@ public class Folks.TpPersonaStore : PersonaStore
           personas_new.add (persona);
 
           this._personas.insert (persona.iid, persona);
+          this.handle_persona_map[contact.get_handle ()] = persona;
         }
+
+      this.groups_add_new_personas ();
 
       if (personas_new.size >= 1)
         {
           GLib.List<Persona> personas = this.hash_set_to_list (personas_new);
           this.personas_added (personas);
         }
+    }
+
+  private void groups_add_new_personas ()
+    {
+      foreach (var entry in this.group_pending_adds)
+        {
+          var group = entry.key;
+          var group_members_added = new GLib.List<Persona> ();
+
+          HashSet<Persona> group_members = this.group_personas_map[group];
+          if (group_members == null)
+            group_members = new HashSet<Persona> ();
+
+          var contact_handles = entry.value;
+          if (contact_handles != null && contact_handles.size > 0)
+            {
+              var contact_handles_added = new HashSet<uint> ();
+              foreach (var contact_handle in contact_handles)
+                {
+                  var persona = this.handle_persona_map[contact_handle];
+                  if (persona != null)
+                    {
+                      group_members.add (persona);
+                      group_members_added.prepend (persona);
+                      contact_handles_added.add (contact_handle);
+                    }
+                }
+
+              foreach (var handle in contact_handles_added)
+                contact_handles.remove (handle);
+            }
+
+          if (group_members.size > 0)
+            this.group_personas_map[group] = group_members;
+
+          if (this.group_is_display_group (group) &&
+              group_members_added.length () > 0)
+            {
+              group_members_added.reverse ();
+              this.group_members_changed (group, group_members_added, null);
+            }
+        }
+    }
+
+  private bool group_is_display_group (string group)
+    {
+      for (var i = 0; i < this.undisplayed_groups.length; i++)
+        {
+          if (this.undisplayed_groups[i] == group)
+            return false;
+        }
+
+      return true;
     }
 
   /* FIXME: make this generic and relocate it */

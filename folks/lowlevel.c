@@ -112,6 +112,97 @@ folks_lowlevel_connection_open_contact_list_channel_finish (
 }
 
 static void
+iterate_on_channels (TpConnection *conn,
+    const GPtrArray *channels,
+    gpointer user_data,
+    GObject *weak_object)
+{
+  GFunc callback = user_data;
+  GObject *cb_obj = weak_object;
+  guint i;
+
+  for (i = 0; i < channels->len ; i++) {
+    GValueArray *arr = g_ptr_array_index (channels, i);
+    const gchar *path;
+    GHashTable *properties;
+    TpHandleType handle_type;
+    TpChannel *channel;
+    GError *error = NULL;
+
+    path = g_value_get_boxed (g_value_array_get_nth (arr, 0));
+    properties = g_value_get_boxed (g_value_array_get_nth (arr, 1));
+
+    if (tp_strdiff (tp_asv_get_string (properties,
+        TP_IFACE_CHANNEL ".ChannelType"),
+        TP_IFACE_CHANNEL_TYPE_CONTACT_LIST))
+      continue;
+
+    if (tp_asv_get_string (properties, TP_IFACE_CHANNEL ".TargetID") == NULL)
+      continue;
+
+    handle_type = tp_asv_get_uint32 (properties,
+      TP_IFACE_CHANNEL ".TargetHandleType", NULL);
+
+    if (handle_type != TP_HANDLE_TYPE_GROUP)
+      continue;
+
+    channel = tp_channel_new_from_properties (conn, path, properties, &error);
+    if (channel == NULL) {
+      g_warning ("Failed to create group channel: %s", error->message);
+      g_error_free (error);
+      return;
+    }
+
+    if (callback)
+      callback (channel, cb_obj);
+  }
+}
+
+static void
+new_group_channels_cb (TpConnection *conn,
+    const GPtrArray *channels,
+    gpointer user_data,
+    GObject *weak_object)
+{
+  iterate_on_channels (conn, channels, user_data, weak_object);
+}
+
+static void
+got_channels_cb (TpProxy *conn,
+    const GValue *out,
+    const GError *error,
+    gpointer user_data,
+    GObject *weak_object)
+{
+  const GPtrArray *channels;
+
+  if (error != NULL) {
+    g_debug ("Get Channels property failed: %s", error->message);
+    return;
+  }
+
+  channels = g_value_get_boxed (out);
+  iterate_on_channels (TP_CONNECTION (conn), channels, user_data, weak_object);
+}
+
+void
+folks_lowlevel_connection_connect_to_new_group_channels (
+    FolksLowlevel *lowlevel,
+    TpConnection *conn,
+    GFunc callback,
+    gpointer user_data)
+{
+  /* Look for existing group channels */
+  tp_cli_dbus_properties_call_get (conn, -1,
+      TP_IFACE_CONNECTION_INTERFACE_REQUESTS, "Channels", got_channels_cb,
+      G_CALLBACK (callback), NULL, G_OBJECT (user_data));
+
+  tp_cli_connection_interface_requests_connect_to_new_channels (
+      conn, new_group_channels_cb, G_CALLBACK (callback), NULL, user_data,
+      NULL);
+}
+
+static void
 folks_lowlevel_class_init (FolksLowlevelClass *klass)
 {
 }

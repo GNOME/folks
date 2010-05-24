@@ -55,6 +55,13 @@ FolksLowlevel *
 folks_lowlevel_new (void) G_GNUC_WARN_UNUSED_RESULT;
 
 void
+folks_lowlevel_connection_connect_to_new_group_channels (
+    FolksLowlevel *lowlevel,
+    TpConnection *conn,
+    GFunc callback,
+    gpointer user_data);
+
+void
 folks_lowlevel_connection_open_contact_list_channel_async (
     FolksLowlevel *lowlevel,
     TpConnection *conn,

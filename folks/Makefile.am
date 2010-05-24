@@ -53,6 +53,7 @@ internal_vapi_files = \
 libfolks_la_VALASOURCES = \
 	alias.vala \
 	capabilities.vala \
+	groups.vala \
 	individual.vala \
 	individual-aggregator.vala \
 	persona.vala \

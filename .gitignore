@@ -59,6 +59,7 @@ Makefile.in
 /folks/folks.pc
 /folks/folks-uninstalled.pc
 /folks/folks.vapi
+/folks/groups.c
 /folks/lowlevel.gi
 /folks/lowlevel.vapi
 /folks/tp-persona.c
