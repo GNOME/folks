@@ -85,13 +85,17 @@ public class Folks.TpPersona : Persona, Alias, Capabilities, Groups, Presence
 
   public Contact contact { get; construct; }
 
-  public TpPersona (Contact contact, PersonaStore store)
+  public TpPersona (Contact contact, PersonaStore store) throws Tp.Error
     {
       var uid = contact.get_identifier ();
       if (uid == null || uid == "")
-        {
-          /* FIXME: throw an exception */
-        }
+        throw new Tp.Error.INVALID_ARGUMENT ("contact has an invalid UID");
+
+      var account = account_for_connection (contact.get_connection ());
+      var account_id = ((Proxy) account).object_path;
+      /* this isn't meant to convey any real information, so no need to escape
+       * existing delimiters */
+      var iid = "telepathy:" + account_id + ":" + uid;
 
       var alias = contact.get_alias ();
       if (alias == null || alias == "")
@@ -103,9 +107,7 @@ public class Folks.TpPersona : Persona, Alias, Capabilities, Groups, Presence
 
       Object (alias: alias,
               contact: contact,
-              /* FIXME: we'll probably need to include the ID for the contact's
-               * account in the iid */
-              iid: uid,
+              iid: iid,
               uid: uid,
               store: store);
 
@@ -138,6 +140,25 @@ public class Folks.TpPersona : Persona, Alias, Capabilities, Groups, Presence
 
           this.change_group (group, false);
         });
+    }
+
+  private static Account? account_for_connection (Connection conn)
+    {
+      var manager = AccountManager.dup ();
+      unowned GLib.List<Account> accounts = manager.get_valid_accounts ();
+
+      Account account_found = null;
+      accounts.foreach ((l) =>
+        {
+          var account = (Account) l;
+          if (account.get_connection () == conn)
+            {
+              account_found = account;
+              return;
+            }
+        });
+
+      return account_found;
     }
 
   private void contact_notify_presence_message (Tp.Contact contact)

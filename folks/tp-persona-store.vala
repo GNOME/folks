@@ -275,14 +275,21 @@ public class Folks.TpPersonaStore : PersonaStore
       var personas_new = new HashSet<Persona> ();
       for (var i = 0; i < n_contacts; i++)
         {
-          Contact contact = contacts[i];
-          Persona persona;
+          var contact = contacts[i];
 
-          persona = new TpPersona (contact, this);
-          personas_new.add (persona);
+          try
+            {
+              var persona = new TpPersona (contact, this);
+              personas_new.add (persona);
 
-          this._personas.insert (persona.iid, persona);
-          this.handle_persona_map[contact.get_handle ()] = persona;
+              this._personas.insert (persona.iid, persona);
+              this.handle_persona_map[contact.get_handle ()] = persona;
+            }
+          catch (Tp.Error e)
+            {
+              warning ("failed to create persona from contact '%s' (%p)",
+                  contact.alias, contact);
+            }
         }
 
       this.groups_add_new_personas ();
