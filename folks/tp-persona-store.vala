@@ -73,8 +73,13 @@ public class Folks.TpPersonaStore : PersonaStore
 
       Tp.ConnectionStatusReason reason;
       var status = this.account.get_connection_status (out reason);
-      this.account_status_changed_cb (Tp.ConnectionStatus.DISCONNECTED,
-          status, reason, null, null);
+      /* immediately handle accounts which are not currently being disconnected
+       */
+      if (status != Tp.ConnectionStatus.DISCONNECTED)
+        {
+          this.account_status_changed_cb (Tp.ConnectionStatus.DISCONNECTED,
+              status, reason, null, null);
+        }
     }
 
   private void account_status_changed_cb (ConnectionStatus old_status,
