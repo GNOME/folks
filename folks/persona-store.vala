@@ -33,4 +33,7 @@ public abstract class Folks.PersonaStore : Object
   public abstract signal void removed ();
 
   public abstract HashTable<string, Persona> personas { get; }
+
+  public abstract async void change_group_membership (Persona persona,
+      string group, bool is_member);
 }

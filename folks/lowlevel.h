@@ -51,8 +51,21 @@ GType folks_lowlevel_get_type (void);
 #define FOLKS_IS_LOWLEVEL_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), FOLKS_TYPE_LOWLEVEL))
 #define FOLKS_LOWLEVEL_GET_CLASS(obj) (G_TYPE_INSTANCE_GET_CLASS ((obj), FOLKS_TYPE_LOWLEVEL, FolksLowlevelClass))
 
+GQuark folks_error_quark (void);
+
+#define FOLKS_LOWLEVEL_ERROR (folks_lowlevel_error_quark ())
+typedef enum {
+  FOLKS_LOWLEVEL_ERROR_INVALID_ARGUMENT,
+} FolksLowlevelError;
+
 FolksLowlevel *
 folks_lowlevel_new (void) G_GNUC_WARN_UNUSED_RESULT;
+
+void
+folks_lowlevel_channel_group_change_membership (TpChannel *channel,
+    TpHandle handle,
+    gboolean is_member,
+    GError **error);
 
 void
 folks_lowlevel_connection_connect_to_new_group_channels (
@@ -60,6 +73,12 @@ folks_lowlevel_connection_connect_to_new_group_channels (
     TpConnection *conn,
     GFunc callback,
     gpointer user_data);
+
+void
+folks_lowlevel_connection_create_group_async (
+    FolksLowlevel *lowlevel,
+    TpConnection *conn,
+    const char *name);
 
 void
 folks_lowlevel_connection_open_contact_list_channel_async (

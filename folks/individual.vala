@@ -36,6 +36,7 @@ public class Folks.Individual : Object, Alias, Capabilities, Groups, Presence
    * the actual store if possible?) */
   public string alias { get; set; }
   public CapabilitiesFlags capabilities { get; private set; }
+  public string id { get; private set; }
   public Folks.PresenceType presence_type { get; private set; }
   public string presence_message { get; private set; }
 
@@ -75,6 +76,11 @@ public class Folks.Individual : Object, Alias, Capabilities, Groups, Presence
             });
 
           this._personas = value.copy ();
+
+          /* TODO: base this upon our ID in permanent storage, once we have that
+           */
+          if (this.id == null && this._personas.data != null)
+            this.id = this._personas.data.iid;
 
           this._personas.foreach ((p) =>
             {
@@ -236,6 +242,12 @@ public class Folks.Individual : Object, Alias, Capabilities, Groups, Presence
           if (this._groups.lookup (group) != true)
             {
               this._groups.insert (group, true);
+              this._groups.foreach ((k, v) =>
+                {
+                  var g = (string) k;
+                  debug ("   %s", g);
+                });
+
               this.group_changed (group, true);
             }
         });

@@ -43,8 +43,10 @@ lowlevel.gi: $(lowlevel_sources) liblowlevel.la
 	$(VGI_V)$(GEN_INTROSPECT) --namespace=Folks lowlevel.h \
 		$(shell pkg-config telepathy-glib --cflags) .libs/liblowlevel.so > lowlevel.gi
 
-lowlevel.vapi: lowlevel.gi
-	$(VAPIGEN_V)$(VAPIGEN) $(VALAFLAGS) --library lowlevel lowlevel.gi
+lowlevel.vapi: lowlevel.gi lowlevel.metadata
+	$(VAPIGEN_V)$(VAPIGEN) $(VALAFLAGS) --library lowlevel \
+		--metadata=lowlevel.metadata \
+		lowlevel.gi
 
 internal_vapi_files = \
 	lowlevel.vapi \

@@ -36,7 +36,10 @@ public class Folks.TpPersonaStore : PersonaStore
   /* universal, contact owner handles (not channel-specific) */
   private HashMap<uint, Persona> handle_persona_map;
   private HashMap<string, HashSet<Persona>> group_personas_map;
-  private HashMap<string, HashSet<uint>> group_pending_adds;
+  private HashMap<string, HashSet<uint>> group_incoming_adds;
+  private HashMap<string, HashSet<TpPersona>> group_outgoing_adds;
+  private HashMap<string, HashSet<TpPersona>> group_outgoing_removes;
+  private HashMap<string, Channel> channels_unready;
   private HashMap<string, Channel> channels;
   private Connection conn;
   private Lowlevel ll;
@@ -57,7 +60,10 @@ public class Folks.TpPersonaStore : PersonaStore
       this.conn = null;
       this.handle_persona_map = new HashMap<uint, Persona> ();
       this.group_personas_map = new HashMap<string, HashSet<Persona>> ();
-      this.group_pending_adds = new HashMap<string, HashSet<uint>> ();
+      this.group_incoming_adds = new HashMap<string, HashSet<uint>> ();
+      this.group_outgoing_adds = new HashMap<string, HashSet<TpPersona>> ();
+      this.group_outgoing_removes = new HashMap<string, HashSet<TpPersona>> ();
+      this.channels_unready = new HashMap<string, Channel> ();
       this.channels = new HashMap<string, Channel> ();
       this.ll = new Lowlevel ();
 
@@ -115,11 +121,60 @@ public class Folks.TpPersonaStore : PersonaStore
           return;
         }
 
+      this.set_up_new_channel (channel);
+      this.channel_group_changes_resolve (channel);
+    }
+
+  private void channel_group_changes_resolve (Channel channel)
+    {
+      var group = channel.get_identifier ();
+
+      var change_maps = new HashMap<HashSet<TpPersona>, bool> ();
+      if (this.group_outgoing_adds[group] != null)
+        change_maps.set (this.group_outgoing_adds[group], true);
+
+      if (this.group_outgoing_removes[group] != null)
+        change_maps.set (this.group_outgoing_removes[group], false);
+
+      if (change_maps.size < 1)
+        return;
+
+      foreach (var entry in change_maps)
+        {
+          var changes = entry.key;
+
+          foreach (var persona in changes)
+            {
+              try
+                {
+                  this.ll.channel_group_change_membership (channel,
+                      (Handle) persona.contact.handle, entry.value);
+                }
+              catch (GLib.Error e)
+                {
+                  warning ("failed to change persona %s group %s membership to "
+                      + "%s",
+                      persona.uid, group, entry.value ? "true" : "false");
+                }
+            }
+
+          changes.clear ();
+        }
+    }
+
+  private void set_up_new_channel (Channel channel)
+    {
+      /* hold a ref to the channel here until it's ready, so it doesn't
+       * disappear */
+      this.channels_unready[channel.get_identifier ()] = channel;
+
       channel.notify["channel-ready"].connect ((s, p) =>
         {
           var c = (Channel) s;
-          var name = c.get_identifier ();
-          this.channels[name] = c;
+          var group = c.get_identifier ();
+
+          this.channels[group] = c;
+          this.channels_unready.remove (group);
 
           c.invalidated.connect (this.channel_invalidated_cb);
           c.group_members_changed.connect (
@@ -127,7 +182,7 @@ public class Folks.TpPersonaStore : PersonaStore
 
           unowned IntSet members = c.group_get_members ();
           if (members != null)
-            this.channel_group_pend_members (c, members.to_array ());
+            this.channel_group_pend_incoming_adds (c, members.to_array ());
         });
     }
 
@@ -141,11 +196,13 @@ public class Folks.TpPersonaStore : PersonaStore
       this.group_removed (group, error);
 
       this.group_personas_map.remove (channel.get_identifier ());
-      this.group_pending_adds.remove (channel.get_identifier ());
-      this.channels.remove (channel.get_identifier ());
+      this.group_incoming_adds.remove (channel.get_identifier ());
+
+      this.channels.remove (group);
     }
 
-  private void channel_group_pend_members (Channel channel, Array<uint> adds)
+  private void channel_group_pend_incoming_adds (Channel channel,
+      Array<uint> adds)
     {
       var group = channel.get_identifier ();
 
@@ -165,11 +222,11 @@ public class Folks.TpPersonaStore : PersonaStore
               if (persona == null)
                 {
                   HashSet<uint>? contact_handles =
-                    this.group_pending_adds[group];
+                    this.group_incoming_adds[group];
                   if (contact_handles == null)
                     {
                       contact_handles = new HashSet<uint> ();
-                      this.group_pending_adds[group] = contact_handles;
+                      this.group_incoming_adds[group] = contact_handles;
                     }
                   contact_handles.add (contact_handle);
                 }
@@ -190,14 +247,44 @@ public class Folks.TpPersonaStore : PersonaStore
       uint reason)
     {
       if (added != null)
-        this.channel_group_pend_members (channel, added);
+        this.channel_group_pend_incoming_adds (channel, added);
 
       /* FIXME: continue for the other arrays */
     }
 
-  private async void add_channel (Connection conn, string name)
+  public override async void change_group_membership (Persona persona, string group,
+      bool is_member)
     {
-      Channel channel;
+      var tp_persona = (TpPersona) persona;
+      var channel = this.channels[group];
+      var change_map = is_member ? this.group_outgoing_adds :
+        this.group_outgoing_removes;
+      var change_set = change_map[group];
+
+      if (change_set == null)
+        {
+          change_set = new HashSet<TpPersona> ();
+          change_map[group] = change_set;
+        }
+      change_set.add (tp_persona);
+
+      if (channel == null)
+        {
+          /* the changes queued above will be resolve in the NewChannels handler
+           */
+          this.ll.connection_create_group_async (this.account.get_connection (),
+              group);
+        }
+      else
+        {
+          /* the channel is already ready, so resolve immediately */
+          this.channel_group_changes_resolve (channel);
+        }
+    }
+
+  private async Channel? add_channel (Connection conn, string name)
+    {
+      Channel? channel = null;
 
       /* FIXME: handle the error GLib.Error from this function */
       try
@@ -211,21 +298,12 @@ public class Folks.TpPersonaStore : PersonaStore
 
           /* XXX: assuming there's no decent way to recover from this */
 
-          return;
+          return null;
         }
 
-      channel.notify["channel-ready"].connect ((s, p) =>
-        {
-          var c = (Channel) s;
-          this.channels[name] = c;
+      this.set_up_new_channel (channel);
 
-          c.group_members_changed.connect (
-            this.channel_group_members_changed_cb);
-
-          unowned IntSet members = c.group_get_members ();
-          if (members != null)
-            this.channel_group_pend_members (c, members.to_array ());
-        });
+      return channel;
     }
 
   /* FIXME: Array<uint> => Array<Handle>; parser bug */
@@ -308,7 +386,7 @@ public class Folks.TpPersonaStore : PersonaStore
 
   private void groups_add_new_personas ()
     {
-      foreach (var entry in this.group_pending_adds)
+      foreach (var entry in this.group_incoming_adds)
         {
           var group = entry.key;
           var group_members_added = new GLib.List<Persona> ();

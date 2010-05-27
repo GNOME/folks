@@ -30,6 +30,17 @@
 
 G_DEFINE_TYPE (FolksLowlevel, folks_lowlevel, G_TYPE_OBJECT);
 
+GQuark
+folks_lowlevel_error_quark (void)
+{
+  static GQuark quark = 0;
+
+  if (quark == 0)
+    quark = g_quark_from_static_string ("folks-lowlevel");
+
+  return quark;
+}
+
 static void
 connection_ensure_channel_cb (TpConnection *conn,
     gboolean yours,
@@ -82,6 +93,65 @@ folks_lowlevel_connection_open_contact_list_channel_async (
       folks_lowlevel_connection_open_contact_list_channel_finish);
   tp_cli_connection_interface_requests_call_ensure_channel (conn, -1, request,
       connection_ensure_channel_cb, result, NULL, G_OBJECT (conn));
+}
+
+static void
+group_request_channel_cb (
+    TpConnection *conn,
+    const gchar *object_path,
+    const GError *error,
+    gpointer user_data,
+    GObject *list)
+{
+  /* The new channel will be handled by the NewChannels handler. Here we only
+   * handle the error if RequestChannel failed */
+  if (error)
+    {
+      g_warning ("Error: %s", error->message);
+      return;
+    }
+}
+
+static void
+group_request_handles_cb (
+    TpConnection *conn,
+    const GArray *handles,
+    const GError *error,
+    gpointer user_data,
+    GObject *lowlevel)
+{
+  TpHandle channel_handle;
+
+  if (error)
+    {
+      g_warning ("Error: %s", error->message);
+      return;
+    }
+
+  channel_handle = g_array_index (handles, TpHandle, 0);
+  tp_cli_connection_call_request_channel (conn, -1,
+    TP_IFACE_CHANNEL_TYPE_CONTACT_LIST,
+    TP_HANDLE_TYPE_GROUP,
+    channel_handle,
+    TRUE,
+    group_request_channel_cb,
+    NULL, NULL,
+    lowlevel);
+}
+
+void
+folks_lowlevel_connection_create_group_async (
+    FolksLowlevel *lowlevel,
+    TpConnection *conn,
+    const char *group)
+{
+  const gchar *names[] = { group, NULL };
+
+  tp_cli_connection_call_request_handles (conn, -1,
+      TP_HANDLE_TYPE_GROUP, names,
+      group_request_handles_cb,
+      NULL, NULL,
+      G_OBJECT (conn));
 }
 
 /* XXX: ideally, we'd either make this static or hide it in the .metadata file,
@@ -200,6 +270,68 @@ folks_lowlevel_connection_connect_to_new_group_channels (
   tp_cli_connection_interface_requests_connect_to_new_channels (
       conn, new_group_channels_cb, G_CALLBACK (callback), NULL, user_data,
       NULL);
+}
+
+static void
+group_add_members_cb (TpChannel *proxy,
+    const GError *error,
+    gpointer user_data,
+    GObject *weak_object)
+{
+  if (error != NULL)
+    {
+      g_warning ("failed to add contact to group %s: %s",
+          tp_channel_get_identifier (TP_CHANNEL (proxy)), error->message);
+      return;
+    }
+}
+
+static void
+group_remove_members_cb (TpChannel *proxy,
+    const GError *error,
+    gpointer user_data,
+    GObject *weak_object)
+{
+  if (error != NULL)
+    {
+      g_warning ("failed to remove contact from group %s: %s",
+          tp_channel_get_identifier (TP_CHANNEL (proxy)), error->message);
+      return;
+    }
+}
+
+/* XXX: there doesn't seem to be a way to make this throw a Folks.LowlevelError
+ * (vs. the generic GLib.Error) */
+void
+folks_lowlevel_channel_group_change_membership (TpChannel *channel,
+    TpHandle handle,
+    gboolean is_member,
+    GError **error)
+{
+  GArray *handles;
+
+  if (!TP_IS_CHANNEL (channel))
+    {
+      g_set_error (error, FOLKS_LOWLEVEL_ERROR,
+          FOLKS_LOWLEVEL_ERROR_INVALID_ARGUMENT,
+          "invalid group channel %p to add handle %d to", channel, handle);
+    }
+
+  handles = g_array_new (FALSE, TRUE, sizeof (TpHandle));
+  g_array_append_val (handles, handle);
+
+  if (is_member)
+    {
+      tp_cli_channel_interface_group_call_add_members (channel, -1, handles,
+          NULL, group_add_members_cb, NULL, NULL, NULL);
+    }
+  else
+    {
+      tp_cli_channel_interface_group_call_remove_members (channel, -1, handles,
+          NULL, group_remove_members_cb, NULL, NULL, NULL);
+    }
+
+  g_array_free (handles, TRUE);
 }
 
 static void

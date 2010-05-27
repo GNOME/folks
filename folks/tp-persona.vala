@@ -52,19 +52,30 @@ public class Folks.TpPersona : Persona, Alias, Capabilities, Groups, Presence
             {
               var group = (string) k;
               if (this._groups.lookup (group) == false)
-                this.change_group (group, true);
+                this._change_group (group, true);
             });
 
           this._groups.foreach ((k, v) =>
             {
               var group = (string) k;
               if (value.lookup (group) == false)
-                this.change_group (group, true);
+                this._change_group (group, true);
             });
         }
     }
 
   public void change_group (string group, bool is_member)
+    {
+      if (_change_group (group, is_member))
+        {
+          ((TpPersonaStore) this.store).change_group_membership (this, group,
+            is_member);
+
+          this.group_changed (group, is_member);
+        }
+    }
+
+  private bool _change_group (string group, bool is_member)
     {
       bool changed = false;
 
@@ -79,8 +90,7 @@ public class Folks.TpPersona : Persona, Alias, Capabilities, Groups, Presence
       else
         changed = this._groups.remove (group);
 
-      if (changed)
-        this.group_changed (group, is_member);
+      return changed;
     }
 
   public Contact contact { get; construct; }
@@ -127,10 +137,10 @@ public class Folks.TpPersona : Persona, Alias, Capabilities, Groups, Presence
       this.store.group_members_changed.connect ((s, group, added, removed) =>
         {
           if (added.find (this) != null)
-            this.change_group (group, true);
+            this._change_group (group, true);
 
           if (removed.find (this) != null)
-            this.change_group (group, false);
+            this._change_group (group, false);
         });
 
       this.store.group_removed.connect ((s, group, error) =>
@@ -138,7 +148,7 @@ public class Folks.TpPersona : Persona, Alias, Capabilities, Groups, Presence
           if (error != null)
             warning ("group invalidated: %s", error.message);
 
-          this.change_group (group, false);
+          this._change_group (group, false);
         });
     }
 
