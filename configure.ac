@@ -122,6 +122,7 @@ AC_SUBST(ERROR_CFLAGS)
 AC_CONFIG_FILES([Makefile
 	folks/Makefile
 	folks/folks.pc
+	folks/folks-uninstalled.pc
 ])
 
 AC_OUTPUT
