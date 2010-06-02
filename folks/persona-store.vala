@@ -32,6 +32,8 @@ public abstract class Folks.PersonaStore : Object
   /* the backing store itself was deleted and its personas are now invalid */
   public abstract signal void removed ();
 
+  public abstract string type_id { get; protected set; }
+  public abstract string id { get; protected set; }
   public abstract HashTable<string, Persona> personas { get; }
 
   public abstract async void change_group_membership (Persona persona,

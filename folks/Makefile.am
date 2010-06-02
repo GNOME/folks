@@ -1,59 +1,32 @@
 GEN_INTROSPECT = $(shell pkg-config vala-1.0 --variable="gen_introspect")
 VAPIGEN = $(shell pkg-config vala-1.0 --variable="vapigen")
 
+sharedir = $(datadir)/folks
+backenddir = $(libdir)/folks
+
 AM_CPPFLAGS = \
 	$(LIBFOLKS_CFLAGS) \
 	-include $(CONFIG_HEADER) \
 	-DPACKAGE_DATADIR=\"$(pkgdatadir)\" \
+	-DDATA_DIR=\"$(shareddir)\" \
+	-DBACKEND_DIR=\"$(backenddir)\" \
 	$(NULL)
 
 # this seems to work, even if vim's syntax highlighting suggests otherwise
 VALAFLAGS += $(shell PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) pkg-config --variable=valaflags telepathy-vala)
 VALAFLAGS += --vapidir=.
-VALAFLAGS += --pkg gobject-2.0 --pkg gio-2.0 --pkg gee-1.0 --pkg dbus-glib-1 --pkg telepathy-glib
+VALAFLAGS += --pkg build-conf --pkg gobject-2.0 --pkg gio-2.0 --pkg gee-1.0 \
+		--pkg gmodule-2.0 --pkg dbus-glib-1 --pkg telepathy-glib
 
 libfolksdir = $(includedir)/folks
 lib_LTLIBRARIES = \
-	liblowlevel.la \
 	libfolks.la \
-	$(NULL)
-
-# FIXME: cut the redundancy here with lowlevel_sources, etc.
-liblowlevel_la_SOURCES = \
-	lowlevel.c \
-	lowlevel.h \
-	$(NULL)
-
-liblowlevel_la_CPPFLAGS = \
-	$(LIBLOWLEVEL_CFLAGS) \
-	$(NULL)
-
-liblowlevel_la_LDFLAGS = \
-	$(LIBLOWLEVEL_LIBS) \
-	$(NULL)
-
-lowlevel_sources = \
-	lowlevel.c \
-	lowlevel.h \
-	$(NULL)
-
-# FIXME: wrap lines
-# FIXME: use a better path to the .so file
-lowlevel.gi: $(lowlevel_sources) liblowlevel.la
-	$(VGI_V)$(GEN_INTROSPECT) --namespace=Folks lowlevel.h \
-		$(shell pkg-config telepathy-glib --cflags) .libs/liblowlevel.so > lowlevel.gi
-
-lowlevel.vapi: lowlevel.gi lowlevel.metadata
-	$(VAPIGEN_V)$(VAPIGEN) $(VALAFLAGS) --library lowlevel \
-		--metadata=lowlevel.metadata \
-		lowlevel.gi
-
-internal_vapi_files = \
-	lowlevel.vapi \
 	$(NULL)
 
 libfolks_la_VALASOURCES = \
 	alias.vala \
+	backend.vala \
+	backend-store.vala \
 	capabilities.vala \
 	groups.vala \
 	individual.vala \
@@ -61,14 +34,11 @@ libfolks_la_VALASOURCES = \
 	persona.vala \
 	persona-store.vala \
 	presence.vala \
-	tp-persona.vala \
-	tp-persona-store.vala \
 	$(NULL)
 
 libfolks_la_SOURCES = \
 	folks.vala.stamp \
 	$(libfolks_la_VALASOURCES:.vala=.c) \
-	$(lowlevel_sources) \
 	$(NULL)
 
 libfolks_la_LIBADD = \
@@ -83,8 +53,9 @@ folks_HEADERS = \
 
 folks.h $(libfolks_la_VALASOURCES:.vala=.c) $(libfolks_la_VALASOURCES:.vala=.h): folks.vala.stamp
 
-folks.vapi folks.vala.stamp: $(libfolks_la_VALASOURCES) $(internal_vapi_files)
-	$(VALA_V)$(VALAC) $(VALAFLAGS) -C --pkg lowlevel -H folks.h --library folks $(libfolks_la_VALASOURCES)
+folks.vapi folks.vala.stamp: $(libfolks_la_VALASOURCES)
+	$(VALA_V)$(VALAC) $(VALAFLAGS) -C -H folks.h --library folks \
+		$(libfolks_la_VALASOURCES)
 	touch $@
 
 pkgconfig_in = folks.pc.in
@@ -95,19 +66,18 @@ BUILT_SOURCES = \
 	folks.h \
 	folks.vala.stamp \
 	folks.vapi \
-	lowlevel.gi \
-	lowlevel.vapi \
 	$(libfolks_la_VALASOURCES:.vala=.c) \
 	$(pkgconfig_in:.in=) \
+	folks-uninstalled.pc \
 	$(NULL)
 
 CLEANFILES = $(BUILT_SOURCES)
 
 EXTRA_DIST = \
 	$(pkgconfig_in) \
+	build-conf.vapi \
 	folks.vala.stamp \
 	folks.vapi \
-	lowlevel.vapi \
 	$(NULL)
 
 DISTCLEANFILES = \

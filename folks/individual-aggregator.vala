@@ -18,16 +18,15 @@
  *       Travis Reitter <travis.reitter@collabora.co.uk>
  */
 
-using GLib;
+using Folks;
 using Gee;
-using Tp;
-using Folks.PersonaStore;
-using Folks.TpPersonaStore;
+using GLib;
 
 public class Folks.IndividualAggregator : Object
 {
-  private AccountManager account_manager;
+  private BackendStore backend_store;
   private HashMap<string, PersonaStore> stores;
+  private HashSet<Backend> backends;
 
   public HashTable<string, Individual> members { get; private set; }
 
@@ -42,59 +41,43 @@ public class Folks.IndividualAggregator : Object
       this.stores = new HashMap<string, PersonaStore> ();
       this.members = new HashTable<string, Individual> (str_hash, str_equal);
 
-      this.setup_account_manager ();
+      this.backends = new HashSet<Backend> ();
+
+      this.backend_store = new BackendStore ();
+      this.backend_store.backend_available.connect (this.backend_available_cb);
+      this.backend_store.load_backends ();
     }
 
-  private async void setup_account_manager () throws GLib.Error
+  private void backend_available_cb (BackendStore backend_store,
+      Backend backend)
     {
-      this.account_manager = AccountManager.dup ();
-      yield this.account_manager.prepare_async (null);
-      this.account_manager.account_enabled.connect (this.account_enabled_cb);
-
-      /* FIXME: react to accounts being deleted, invalidated, etc. */
-
-      unowned GLib.List<Account> accounts =
-          this.account_manager.get_valid_accounts ();
-      foreach (Account account in accounts)
-        {
-          this.account_enabled_cb (account);
-        }
+      backend.persona_store_added.connect (this.backend_persona_store_added_cb);
+      backend.persona_store_removed.connect (
+          this.backend_persona_store_removed_cb);
     }
 
-  private void account_enabled_cb (Account account)
+  private void backend_persona_store_added_cb (Backend backend,
+      PersonaStore store)
     {
-      var store = this.stores.get (account.get_object_path (account));
-
-      if (store != null)
-        return;
-
-      /* FIXME: cut this */
-      debug ("   adding account name: '%s'", account.get_display_name ());
-
-      this.store_add_from_account (account);
-    }
-
-  private void store_add_from_account (Account account)
-    {
-      var store = new TpPersonaStore (account);
-
-      this.stores.set (account.get_object_path (account), store);
+      this.stores.set (this.store_get_full_id (store), store);
       store.personas_added.connect (this.personas_added_cb);
-      store.removed.connect (this.store_removed_cb);
     }
 
-  private void store_removed_cb (PersonaStore store)
+  private void backend_persona_store_removed_cb (Backend backend,
+      PersonaStore store)
     {
-      var account = ((TpPersonaStore) store).account;
-
       store.personas_added.disconnect (this.personas_added_cb);
-      store.removed.disconnect (this.store_removed_cb);
 
       /* no need to remove this stores' personas from all the individuals, since
        * they'll do that themselves (and emit their own 'removed' signal if
        * necessary) */
 
-      this.stores.unset (account.get_object_path (account));
+      this.stores.unset (this.store_get_full_id (store));
+    }
+
+  private string store_get_full_id (PersonaStore store)
+    {
+      return store.type_id + ":" + store.id;
     }
 
   private void personas_added_cb (PersonaStore store,

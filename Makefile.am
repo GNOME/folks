@@ -1,5 +1,6 @@
 SUBDIRS = \
 	folks \
+	backends \
 	$(NULL)
 
 ACLOCAL_AMFLAGS = -I m4

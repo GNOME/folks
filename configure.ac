@@ -47,6 +47,7 @@ AC_SUBST(VALAFLAGS)
 AC_SUBST(CFLAGS)
 AC_SUBST(CPPFLAGS)
 AC_SUBST(LDFLAGS)
+GTK_DOC_CHECK([1.10])
 
 GLIB_REQUIRED=2.12.0
 TP_GLIB_REQUIRED=0.11.4.1
@@ -62,6 +63,20 @@ PKG_CHECK_MODULES(LIBFOLKS,
 AC_SUBST(LIBFOLKS_CFLAGS)
 AC_SUBST(LIBFOLKS_LIBS)
 
+# -----------------------------------------------------------
+# Telepathy backend
+# -----------------------------------------------------------
+PKG_CHECK_MODULES(LIBFOLKS_BACKEND_TELEPATHY,
+                  glib-2.0 >= $GLIB_REQUIRED
+                  gobject-2.0 >= $GLIB_REQUIRED
+                  dbus-glib-1
+                  gee-1.0
+                  telepathy-vala >= $TP_VALA_REQUIRED
+                  folks
+                  )
+AC_SUBST(LIBFOLKS_BACKEND_TELEPATHY_CFLAGS)
+AC_SUBST(LIBFOLKS_BACKEND_TELEPATHY_LIBS)
+
 PKG_CHECK_MODULES(LIBLOWLEVEL,
                   glib-2.0 >= $GLIB_REQUIRED
                   gobject-2.0 >= $GLIB_REQUIRED
@@ -69,8 +84,6 @@ PKG_CHECK_MODULES(LIBLOWLEVEL,
                   )
 AC_SUBST(LIBLOWLEVEL_CFLAGS)
 AC_SUBST(LIBLOWLEVEL_LIBS)
-
-GTK_DOC_CHECK([1.10])
 
 # -----------------------------------------------------------
 # Error flags
@@ -120,6 +133,10 @@ AC_SUBST(ERROR_CFLAGS)
 # -----------------------------------------------------------
 
 AC_CONFIG_FILES([Makefile
+	backends/Makefile
+	backends/telepathy/Makefile
+	backends/telepathy/folks-backend-telepathy.pc
+	backends/telepathy/folks-backend-telepathy-uninstalled.pc
 	folks/Makefile
 	folks/folks.pc
 	folks/folks-uninstalled.pc

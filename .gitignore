@@ -48,7 +48,19 @@ Makefile.in
 /folks-*/
 /xmldocs.make
 
+/backends/telepathy/folks-backend-telepathy.h
+/backends/telepathy/folks-backend-telepathy.pc
+/backends/telepathy/folks-backend-telepathy-uninstalled.pc
+/backends/telepathy/folks-backend-telepathy.vapi
+/backends/telepathy/lowlevel.gi
+/backends/telepathy/lowlevel.vapi
+/backends/telepathy/tp-backend.c
+/backends/telepathy/tp-backend-factory.c
+/backends/telepathy/tp-persona.c
+/backends/telepathy/tp-persona-store.c
 /folks/alias.c
+/folks/backend.c
+/folks/backend-store.c
 /folks/capabilities.c
 /folks/individual.c
 /folks/individual-aggregator.c
@@ -60,9 +72,5 @@ Makefile.in
 /folks/folks-uninstalled.pc
 /folks/folks.vapi
 /folks/groups.c
-/folks/lowlevel.gi
-/folks/lowlevel.vapi
-/folks/tp-persona.c
-/folks/tp-persona-store.c
 
 /tests/test-*[^ch]

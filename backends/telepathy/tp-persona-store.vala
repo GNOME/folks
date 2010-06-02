@@ -47,6 +47,8 @@ public class Folks.TpPersonaStore : PersonaStore
   [Property(nick = "basis account",
       blurb = "Telepathy account this store is based upon")]
   public Account account { get; construct; }
+  public override string type_id { get; private set; }
+  public override string id { get; private set; }
   public override HashTable<string, Persona> personas
     {
       get { return this._personas; }
@@ -55,6 +57,9 @@ public class Folks.TpPersonaStore : PersonaStore
   public TpPersonaStore (Account account)
     {
       Object (account: account);
+
+      this.type_id = "telepathy";
+      this.id = account.get_object_path (account);
 
       this._personas = new HashTable<string, Persona> (str_hash, str_equal);
       this.conn = null;
