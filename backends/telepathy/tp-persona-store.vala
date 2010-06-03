@@ -23,7 +23,7 @@ using Gee;
 using Tp;
 using Tp.ContactFeature;
 using Folks.Individual;
-using Folks.Lowlevel;
+using Folks.TpLowlevel;
 using Folks.Persona;
 using Folks.PersonaStore;
 using Folks.TpPersona;
@@ -42,7 +42,7 @@ public class Folks.TpPersonaStore : PersonaStore
   private HashMap<string, Channel> channels_unready;
   private HashMap<string, Channel> channels;
   private Connection conn;
-  private Lowlevel ll;
+  private TpLowlevel ll;
 
   [Property(nick = "basis account",
       blurb = "Telepathy account this store is based upon")]
@@ -70,7 +70,7 @@ public class Folks.TpPersonaStore : PersonaStore
       this.group_outgoing_removes = new HashMap<string, HashSet<TpPersona>> ();
       this.channels_unready = new HashMap<string, Channel> ();
       this.channels = new HashMap<string, Channel> ();
-      this.ll = new Lowlevel ();
+      this.ll = new TpLowlevel ();
 
       this.account.invalidated.connect ((s, p) => {
           this.removed ();

@@ -54,8 +54,8 @@ Makefile.in
 /backends/telepathy/folks-telepathy.vapi
 /backends/telepathy/folks-backend-telepathy.h
 /backends/telepathy/folks-backend-telepathy.vapi
-/backends/telepathy/lowlevel.gi
-/backends/telepathy/lowlevel.vapi
+/backends/telepathy/tp-lowlevel.gi
+/backends/telepathy/tp-lowlevel.vapi
 /backends/telepathy/tp-backend.c
 /backends/telepathy/tp-backend-factory.c
 /backends/telepathy/tp-persona.c

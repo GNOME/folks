@@ -26,17 +26,17 @@
 #include <telepathy-glib/dbus.h>
 #include <telepathy-glib/interfaces.h>
 
-#include "lowlevel.h"
+#include "tp-lowlevel.h"
 
-G_DEFINE_TYPE (FolksLowlevel, folks_lowlevel, G_TYPE_OBJECT);
+G_DEFINE_TYPE (FolksTpLowlevel, folks_tp_lowlevel, G_TYPE_OBJECT);
 
 GQuark
-folks_lowlevel_error_quark (void)
+folks_tp_lowlevel_error_quark (void)
 {
   static GQuark quark = 0;
 
   if (quark == 0)
-    quark = g_quark_from_static_string ("folks-lowlevel");
+    quark = g_quark_from_static_string ("folks-tp_lowlevel");
 
   return quark;
 }
@@ -74,8 +74,8 @@ connection_ensure_channel_cb (TpConnection *conn,
 }
 
 void
-folks_lowlevel_connection_open_contact_list_channel_async (
-    FolksLowlevel *lowlevel,
+folks_tp_lowlevel_connection_open_contact_list_channel_async (
+    FolksTpLowlevel *tp_lowlevel,
     TpConnection *conn,
     const char *name,
     GAsyncReadyCallback callback,
@@ -90,7 +90,7 @@ folks_lowlevel_connection_open_contact_list_channel_async (
 
   tp_asv_set_static_string (request, TP_IFACE_CHANNEL ".TargetID", name);
   result = g_simple_async_result_new (G_OBJECT (conn), callback, user_data,
-      folks_lowlevel_connection_open_contact_list_channel_finish);
+      folks_tp_lowlevel_connection_open_contact_list_channel_finish);
   tp_cli_connection_interface_requests_call_ensure_channel (conn, -1, request,
       connection_ensure_channel_cb, result, NULL, G_OBJECT (conn));
 }
@@ -118,7 +118,7 @@ group_request_handles_cb (
     const GArray *handles,
     const GError *error,
     gpointer user_data,
-    GObject *lowlevel)
+    GObject *tp_lowlevel)
 {
   TpHandle channel_handle;
 
@@ -136,12 +136,12 @@ group_request_handles_cb (
     TRUE,
     group_request_channel_cb,
     NULL, NULL,
-    lowlevel);
+    tp_lowlevel);
 }
 
 void
-folks_lowlevel_connection_create_group_async (
-    FolksLowlevel *lowlevel,
+folks_tp_lowlevel_connection_create_group_async (
+    FolksTpLowlevel *tp_lowlevel,
     TpConnection *conn,
     const char *group)
 {
@@ -158,8 +158,8 @@ folks_lowlevel_connection_create_group_async (
  * but neither seems to be supported (without breaking the binding to the async
  * function) */
 TpChannel *
-folks_lowlevel_connection_open_contact_list_channel_finish (
-    FolksLowlevel *lowlevel,
+folks_tp_lowlevel_connection_open_contact_list_channel_finish (
+    FolksTpLowlevel *tp_lowlevel,
     GAsyncResult *result,
     GError **error)
 {
@@ -175,7 +175,7 @@ folks_lowlevel_connection_open_contact_list_channel_finish (
     return NULL;
 
   g_return_val_if_fail (g_simple_async_result_is_valid (result, G_OBJECT (conn),
-        folks_lowlevel_connection_open_contact_list_channel_finish), NULL);
+        folks_tp_lowlevel_connection_open_contact_list_channel_finish), NULL);
 
   return g_simple_async_result_get_op_res_gpointer (
       G_SIMPLE_ASYNC_RESULT (result));
@@ -256,8 +256,8 @@ got_channels_cb (TpProxy *conn,
 }
 
 void
-folks_lowlevel_connection_connect_to_new_group_channels (
-    FolksLowlevel *lowlevel,
+folks_tp_lowlevel_connection_connect_to_new_group_channels (
+    FolksTpLowlevel *tp_lowlevel,
     TpConnection *conn,
     GFunc callback,
     gpointer user_data)
@@ -300,10 +300,10 @@ group_remove_members_cb (TpChannel *proxy,
     }
 }
 
-/* XXX: there doesn't seem to be a way to make this throw a Folks.LowlevelError
+/* XXX: there doesn't seem to be a way to make this throw a Folks.TpLowlevelError
  * (vs. the generic GLib.Error) */
 void
-folks_lowlevel_channel_group_change_membership (TpChannel *channel,
+folks_tp_lowlevel_channel_group_change_membership (TpChannel *channel,
     TpHandle handle,
     gboolean is_member,
     GError **error)
@@ -312,8 +312,8 @@ folks_lowlevel_channel_group_change_membership (TpChannel *channel,
 
   if (!TP_IS_CHANNEL (channel))
     {
-      g_set_error (error, FOLKS_LOWLEVEL_ERROR,
-          FOLKS_LOWLEVEL_ERROR_INVALID_ARGUMENT,
+      g_set_error (error, FOLKS_TP_LOWLEVEL_ERROR,
+          FOLKS_TP_LOWLEVEL_ERROR_INVALID_ARGUMENT,
           "invalid group channel %p to add handle %d to", channel, handle);
     }
 
@@ -335,17 +335,17 @@ folks_lowlevel_channel_group_change_membership (TpChannel *channel,
 }
 
 static void
-folks_lowlevel_class_init (FolksLowlevelClass *klass)
+folks_tp_lowlevel_class_init (FolksTpLowlevelClass *klass)
 {
 }
 
 static void
-folks_lowlevel_init (FolksLowlevel *self)
+folks_tp_lowlevel_init (FolksTpLowlevel *self)
 {
 }
 
-FolksLowlevel *
-folks_lowlevel_new ()
+FolksTpLowlevel *
+folks_tp_lowlevel_new ()
 {
-  return FOLKS_LOWLEVEL (g_object_new (FOLKS_TYPE_LOWLEVEL, NULL));
+  return FOLKS_TP_LOWLEVEL (g_object_new (FOLKS_TYPE_TP_LOWLEVEL, NULL));
 }
