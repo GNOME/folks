@@ -22,13 +22,9 @@ using GLib;
 using Gee;
 using Tp;
 using Tp.ContactFeature;
-using Folks.Individual;
-using Folks.TpLowlevel;
-using Folks.Persona;
-using Folks.PersonaStore;
-using Folks.TpPersona;
+using Folks;
 
-public class Folks.TpPersonaStore : PersonaStore
+public class Tpf.PersonaStore : Folks.PersonaStore
 {
   private string[] undisplayed_groups = { "publish", "stored", "subscribe" };
 
@@ -37,8 +33,8 @@ public class Folks.TpPersonaStore : PersonaStore
   private HashMap<uint, Persona> handle_persona_map;
   private HashMap<string, HashSet<Persona>> group_personas_map;
   private HashMap<string, HashSet<uint>> group_incoming_adds;
-  private HashMap<string, HashSet<TpPersona>> group_outgoing_adds;
-  private HashMap<string, HashSet<TpPersona>> group_outgoing_removes;
+  private HashMap<string, HashSet<Tpf.Persona>> group_outgoing_adds;
+  private HashMap<string, HashSet<Tpf.Persona>> group_outgoing_removes;
   private HashMap<string, Channel> channels_unready;
   private HashMap<string, Channel> channels;
   private Connection conn;
@@ -54,20 +50,22 @@ public class Folks.TpPersonaStore : PersonaStore
       get { return this._personas; }
     }
 
-  public TpPersonaStore (Account account)
+  public PersonaStore (Account account)
     {
       Object (account: account);
 
       this.type_id = "telepathy";
       this.id = account.get_object_path (account);
 
-      this._personas = new HashTable<string, Persona> (str_hash, str_equal);
+      this._personas = new HashTable<string, Persona> (str_hash,
+          str_equal);
       this.conn = null;
       this.handle_persona_map = new HashMap<uint, Persona> ();
       this.group_personas_map = new HashMap<string, HashSet<Persona>> ();
       this.group_incoming_adds = new HashMap<string, HashSet<uint>> ();
-      this.group_outgoing_adds = new HashMap<string, HashSet<TpPersona>> ();
-      this.group_outgoing_removes = new HashMap<string, HashSet<TpPersona>> ();
+      this.group_outgoing_adds = new HashMap<string, HashSet<Tpf.Persona>> ();
+      this.group_outgoing_removes = new HashMap<string, HashSet<Tpf.Persona>> (
+          );
       this.channels_unready = new HashMap<string, Channel> ();
       this.channels = new HashMap<string, Channel> ();
       this.ll = new TpLowlevel ();
@@ -134,7 +132,7 @@ public class Folks.TpPersonaStore : PersonaStore
     {
       var group = channel.get_identifier ();
 
-      var change_maps = new HashMap<HashSet<TpPersona>, bool> ();
+      var change_maps = new HashMap<HashSet<Tpf.Persona>, bool> ();
       if (this.group_outgoing_adds[group] != null)
         change_maps.set (this.group_outgoing_adds[group], true);
 
@@ -257,10 +255,10 @@ public class Folks.TpPersonaStore : PersonaStore
       /* FIXME: continue for the other arrays */
     }
 
-  public override async void change_group_membership (Persona persona, string group,
-      bool is_member)
+  public override async void change_group_membership (Folks.Persona persona,
+      string group, bool is_member)
     {
-      var tp_persona = (TpPersona) persona;
+      var tp_persona = (Tpf.Persona) persona;
       var channel = this.channels[group];
       var change_map = is_member ? this.group_outgoing_adds :
         this.group_outgoing_removes;
@@ -268,7 +266,7 @@ public class Folks.TpPersonaStore : PersonaStore
 
       if (change_set == null)
         {
-          change_set = new HashSet<TpPersona> ();
+          change_set = new HashSet<Tpf.Persona> ();
           change_map[group] = change_set;
         }
       change_set.add (tp_persona);
@@ -367,7 +365,7 @@ public class Folks.TpPersonaStore : PersonaStore
 
           try
             {
-              var persona = new TpPersona (contact, this);
+              var persona = new Tpf.Persona (contact, this);
               personas_new.add (persona);
 
               this._personas.insert (persona.iid, persona);
@@ -384,7 +382,8 @@ public class Folks.TpPersonaStore : PersonaStore
 
       if (personas_new.size >= 1)
         {
-          GLib.List<Persona> personas = this.hash_set_to_list (personas_new);
+          GLib.List<Persona> personas = this.hash_set_to_list (
+              personas_new);
           this.personas_added (personas);
         }
     }

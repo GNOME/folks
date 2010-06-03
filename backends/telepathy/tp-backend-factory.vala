@@ -23,26 +23,27 @@
  */
 
 using Folks;
+using Folks.Backends.Tp;
 
-private TpBackendFactory backend_factory = null;
+private BackendFactory backend_factory = null;
 
 public void module_init (BackendStore backend_store)
 {
   if (backend_factory == null)
-    backend_factory = new TpBackendFactory (backend_store);
+    backend_factory = new BackendFactory (backend_store);
 }
 
-public class TpBackendFactory : Object
+public class Folks.Backends.Tp.BackendFactory : Object
 {
   BackendStore backend_store;
 
-  public TpBackendFactory (BackendStore backend_store)
+  public BackendFactory (BackendStore backend_store)
     {
       this.backend_store = backend_store;
 
       try
         {
-          this.backend_store.add_backend (new TpBackend ());
+          this.backend_store.add_backend (new Backend ());
         }
       catch (GLib.Error e)
         {

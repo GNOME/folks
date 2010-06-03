@@ -22,8 +22,9 @@ using GLib;
 using Gee;
 using Tp;
 using Folks;
+using Folks.Backends.Tp;
 
-public class TpBackend : Folks.Backend
+public class Folks.Backends.Tp.Backend : Folks.Backend
 {
   private AccountManager account_manager;
 
@@ -33,7 +34,7 @@ public class TpBackend : Folks.Backend
       get; private set;
     }
 
-  public TpBackend () throws GLib.Error
+  public Backend () throws GLib.Error
     {
       Object (name: "telepathy");
 
@@ -67,7 +68,7 @@ public class TpBackend : Folks.Backend
       if (store != null)
         return;
 
-      store = new TpPersonaStore (account);
+      store = new Tpf.PersonaStore (account);
 
       this.persona_stores.insert (store.id, store);
       store.removed.connect (this.store_removed_cb);

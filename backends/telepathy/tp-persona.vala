@@ -21,13 +21,10 @@
 using Gee;
 using GLib;
 using Tp;
-using Folks.Alias;
-using Folks.Capabilities;
-using Folks.Groups;
-using Folks.Persona;
-using Folks.Presence;
+using Folks;
 
-public class Folks.TpPersona : Persona, Alias, Capabilities, Groups, Presence
+public class Tpf.Persona : Folks.Persona, Alias, Folks.Capabilities, Groups,
+       Presence
 {
   private HashTable<string, bool> _groups;
 
@@ -68,7 +65,7 @@ public class Folks.TpPersona : Persona, Alias, Capabilities, Groups, Presence
     {
       if (_change_group (group, is_member))
         {
-          ((TpPersonaStore) this.store).change_group_membership (this, group,
+          ((Tpf.PersonaStore) this.store).change_group_membership (this, group,
             is_member);
 
           this.group_changed (group, is_member);
@@ -95,7 +92,7 @@ public class Folks.TpPersona : Persona, Alias, Capabilities, Groups, Presence
 
   public Contact contact { get; construct; }
 
-  public TpPersona (Contact contact, PersonaStore store) throws Tp.Error
+  public Persona (Contact contact, PersonaStore store) throws Tp.Error
     {
       var uid = contact.get_identifier ();
       if (uid == null || uid == "")
