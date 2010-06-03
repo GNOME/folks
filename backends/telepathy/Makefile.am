@@ -73,8 +73,8 @@ pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = $(pkgconfig_in:.in=)
 
 libfolks_telepathy_la_VALASOURCES = \
-	tp-persona.vala \
-	tp-persona-store.vala \
+	tpf-persona.vala \
+	tpf-persona-store.vala \
 	$(NULL)
 
 libfolks_telepathy_la_SOURCES = \

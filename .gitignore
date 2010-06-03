@@ -58,8 +58,8 @@ Makefile.in
 /backends/telepathy/tp-lowlevel.vapi
 /backends/telepathy/tp-backend.c
 /backends/telepathy/tp-backend-factory.c
-/backends/telepathy/tp-persona.c
-/backends/telepathy/tp-persona-store.c
+/backends/telepathy/tpf-persona.c
+/backends/telepathy/tpf-persona-store.c
 /folks/alias.c
 /folks/backend.c
 /folks/backend-store.c
