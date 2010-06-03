@@ -2,8 +2,8 @@ GEN_INTROSPECT = $(shell pkg-config vala-1.0 --variable="gen_introspect")
 VAPIGEN = $(shell pkg-config vala-1.0 --variable="vapigen")
 
 AM_CPPFLAGS = \
-	$(LIBFOLKS_BACKEND_TELEPATHY_CFLAGS) \
 	$(LIBFOLKS_CFLAGS) \
+	-I$(top_srcdir)/folks \
 	-include $(CONFIG_HEADER) \
 	-DPACKAGE_DATADIR=\"$(pkgdatadir)\" \
 	$(NULL)
@@ -23,9 +23,15 @@ VALAFLAGS += \
 	--pkg telepathy-glib \
 	$(NULL)
 
+noinst_LTLIBRARIES = liblowlevel.la
+folks_telepathydir = $(libdir)
+folks_telepathy_LTLIBRARIES = libfolks-telepathy.la
 backenddir = $(libdir)/folks/backends/telepathy
 backend_LTLIBRARIES = libfolks-backend-telepathy.la
-noinst_LTLIBRARIES = liblowlevel.la
+
+##################################################################
+# Lowlevel library
+##################################################################
 
 liblowlevel_la_SOURCES = \
 	lowlevel.c \
@@ -40,7 +46,7 @@ liblowlevel_la_CPPFLAGS = \
 # despite not being installed (it needs to be a shared library for
 # vala-gen-introspect)
 liblowlevel_la_LDFLAGS = \
-	-shared -rpath $(backenddir) \
+	-shared -rpath $(libdir) \
 	$(LIBLOWLEVEL_LIBS) \
 	$(NULL)
 
@@ -58,30 +64,87 @@ internal_vapi_files = \
 	lowlevel.vapi \
 	$(NULL)
 
+##################################################################
+# Support library
+##################################################################
+
+pkgconfig_in = folks-telepathy.pc.in
+pkgconfigdir = $(libdir)/pkgconfig
+pkgconfig_DATA = $(pkgconfig_in:.in=)
+
+libfolks_telepathy_la_VALASOURCES = \
+	tp-persona.vala \
+	tp-persona-store.vala \
+	$(NULL)
+
+libfolks_telepathy_la_SOURCES = \
+	folks-telepathy.vala.stamp \
+	$(libfolks_telepathy_la_VALASOURCES:.vala=.c) \
+	$(liblowlevel_la_SOURCES) \
+	$(NULL)
+
+libfolks_telepathy_la_CPPFLAGS = \
+	$(LIBFOLKS_TELEPATHY_CFLAGS) \
+	$(AM_CPPFLAGS) \
+	$(NULL)
+
+libfolks_telepathy_la_LIBADD = \
+	$(LIBFOLKS_TELEPATHY_LIBS) \
+	$(LIBFOLKS_LIBS) \
+	$(NULL)
+
+folks_telepathy_includedir = $(includedir)/folks
+folks_telepathy_include_HEADERS = \
+	folks-telepathy.h \
+	$(NULL)
+
+folks_telepathy_stamp_targets = \
+	folks-telepathy.h \
+	$(libfolks_telepathy_la_VALASOURCES:.vala=.c) \
+	$(libfolks_telepathy_la_VALASOURCES:.vala=.h) \
+	$(NULL)
+
+$(folks_telepathy_stamp_targets): folks-telepathy.vala.stamp
+
+folks_telepathy_vapi_deps = \
+	$(libfolks_telepathy_la_VALASOURCES) \
+	$(internal_vapi_files) \
+	$(NULL)
+
+folks-telepathy.vapi folks-telepathy.vala.stamp: $(folks_telepathy_vapi_deps)
+	$(VALA_V)$(VALAC) $(VALAFLAGS) -H folks-telepathy.h -C \
+		--library folks-telepathy \
+		--pkg lowlevel \
+		$(libfolks_telepathy_la_VALASOURCES)
+	touch $@
+
+##################################################################
+# Backend
+##################################################################
+
 libfolks_backend_telepathy_la_VALASOURCES = \
 	tp-backend.vala \
 	tp-backend-factory.vala \
-	tp-persona.vala \
-	tp-persona-store.vala \
 	$(NULL)
 
 libfolks_backend_telepathy_la_SOURCES = \
 	folks-backend-telepathy.vala.stamp \
 	$(libfolks_backend_telepathy_la_VALASOURCES:.vala=.c) \
-	$(liblowlevel_la_SOURCES) \
+	$(NULL)
+
+libfolks_backend_telepathy_la_CPPFLAGS = \
+	$(LIBFOLKS_BACKEND_TELEPATHY_CFLAGS) \
+	$(AM_CPPFLAGS) \
 	$(NULL)
 
 libfolks_backend_telepathy_la_LIBADD = \
 	$(LIBFOLKS_BACKEND_TELEPATHY_LIBS) \
 	$(LIBFOLKS_LIBS) \
+	-L$(abs_top_srcdir)/backends/telepathy/.libs \
+	-lfolks-telepathy \
 	$(NULL)
 
 libfolks_backend_telepathy_la_LDFLAGS = -shared -fPIC -module -avoid-version
-
-backend_includedir = $(includedir)/folks
-backend_include_HEADERS = \
-	folks-backend-telepathy.h \
-	$(NULL)
 
 folks_backend_telepathy_stamp_targets = \
 	folks-backend-telepathy.h \
@@ -92,6 +155,8 @@ folks_backend_telepathy_stamp_targets = \
 $(folks_backend_telepathy_stamp_targets): folks-backend-telepathy.vala.stamp
 
 vapi_deps = \
+	folks-telepathy.vapi \
+	libfolks-telepathy.la \
 	$(libfolks_backend_telepathy_la_VALASOURCES) \
 	$(internal_vapi_files) \
 	$(NULL)
@@ -99,29 +164,36 @@ vapi_deps = \
 folks-backend-telepathy.vapi folks-backend-telepathy.vala.stamp: $(vapi_deps)
 	$(VALA_V)$(VALAC) $(VALAFLAGS) -H folks-backend-telepathy.h -C \
 		--library folks-backend-telepathy \
-		--pkg lowlevel \
+		--pkg folks \
+		--pkg folks-telepathy \
 		$(libfolks_backend_telepathy_la_VALASOURCES)
 	touch $@
 
-pkgconfig_in = folks-backend-telepathy.pc.in
-pkgconfigdir = $(libdir)/pkgconfig
-pkgconfig_DATA = $(pkgconfig_in:.in=)
+##################################################################
+# General
+##################################################################
 
 BUILT_SOURCES = \
+	folks-telepathy.h \
+	folks-telepathy.vala.stamp \
+	folks-telepathy.vapi \
 	folks-backend-telepathy.h \
 	folks-backend-telepathy.vala.stamp \
 	folks-backend-telepathy.vapi \
 	lowlevel.gi \
 	lowlevel.vapi \
+	$(libfolks_telepathy_la_VALASOURCES:.vala=.c) \
 	$(libfolks_backend_telepathy_la_VALASOURCES:.vala=.c) \
 	$(pkgconfig_in:.in=) \
-	folks-backend-telepathy-uninstalled.pc \
+	folks-telepathy-uninstalled.pc \
 	$(NULL)
 
 CLEANFILES = $(BUILT_SOURCES)
 
 EXTRA_DIST = \
 	$(pkgconfig_in) \
+	folks-telepathy.vala.stamp \
+	folks-telepathy.vapi \
 	folks-backend-telepathy.vala.stamp \
 	folks-backend-telepathy.vapi \
 	lowlevel.vapi \
@@ -131,6 +203,7 @@ DISTCLEANFILES = \
 	$(NULL)
 
 MAINTAINERCLEANFILES = \
+	$(libfolks_telepathy_la_VALASOURCES:.vala=.c) \
 	$(libfolks_backend_telepathy_la_VALASOURCES:.vala=.c) \
 	$(NULL)
 

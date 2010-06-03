@@ -48,9 +48,11 @@ Makefile.in
 /folks-*/
 /xmldocs.make
 
+/backends/telepathy/folks-telepathy.h
+/backends/telepathy/folks-telepathy.pc
+/backends/telepathy/folks-telepathy-uninstalled.pc
+/backends/telepathy/folks-telepathy.vapi
 /backends/telepathy/folks-backend-telepathy.h
-/backends/telepathy/folks-backend-telepathy.pc
-/backends/telepathy/folks-backend-telepathy-uninstalled.pc
 /backends/telepathy/folks-backend-telepathy.vapi
 /backends/telepathy/lowlevel.gi
 /backends/telepathy/lowlevel.vapi

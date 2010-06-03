@@ -24,11 +24,12 @@
 
 using Folks;
 
-private TpBackendFactory backend_factory;
+private TpBackendFactory backend_factory = null;
 
 public void module_init (BackendStore backend_store)
 {
-  backend_factory = new TpBackendFactory (backend_store);
+  if (backend_factory == null)
+    backend_factory = new TpBackendFactory (backend_store);
 }
 
 public class TpBackendFactory : Object

@@ -66,13 +66,22 @@ AC_SUBST(LIBFOLKS_LIBS)
 # -----------------------------------------------------------
 # Telepathy backend
 # -----------------------------------------------------------
+PKG_CHECK_MODULES(LIBFOLKS_TELEPATHY,
+                  glib-2.0 >= $GLIB_REQUIRED
+                  gobject-2.0 >= $GLIB_REQUIRED
+                  dbus-glib-1
+                  gee-1.0
+                  telepathy-vala >= $TP_VALA_REQUIRED
+                  )
+AC_SUBST(LIBFOLKS_TELEPATHY_CFLAGS)
+AC_SUBST(LIBFOLKS_TELEPATHY_LIBS)
+
 PKG_CHECK_MODULES(LIBFOLKS_BACKEND_TELEPATHY,
                   glib-2.0 >= $GLIB_REQUIRED
                   gobject-2.0 >= $GLIB_REQUIRED
                   dbus-glib-1
                   gee-1.0
                   telepathy-vala >= $TP_VALA_REQUIRED
-                  folks
                   )
 AC_SUBST(LIBFOLKS_BACKEND_TELEPATHY_CFLAGS)
 AC_SUBST(LIBFOLKS_BACKEND_TELEPATHY_LIBS)
@@ -132,14 +141,15 @@ AC_SUBST(ERROR_CFLAGS)
 # Final output
 # -----------------------------------------------------------
 
-AC_CONFIG_FILES([Makefile
-	backends/Makefile
-	backends/telepathy/Makefile
-	backends/telepathy/folks-backend-telepathy.pc
-	backends/telepathy/folks-backend-telepathy-uninstalled.pc
-	folks/Makefile
+AC_CONFIG_FILES([
+	backends/telepathy/folks-telepathy.pc
+	backends/telepathy/folks-telepathy-uninstalled.pc
 	folks/folks.pc
 	folks/folks-uninstalled.pc
+	Makefile
+	backends/Makefile
+	backends/telepathy/Makefile
+	folks/Makefile
 ])
 
 AC_OUTPUT
