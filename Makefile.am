@@ -3,6 +3,7 @@ ACLOCAL_AMFLAGS = -I m4
 SUBDIRS = \
 	folks \
 	backends \
+	tests \
 	$(NULL)
 
 if ENABLE_DOCS
