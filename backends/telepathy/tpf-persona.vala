@@ -125,20 +125,20 @@ public class Tpf.Persona : Folks.Persona, Alias, Avatar, Folks.Capabilities,
 
       contact.notify["avatar-file"].connect ((s, p) =>
         {
-          this.set_avatar_from_contact ();
+          this.contact_notify_avatar ();
         });
-      this.set_avatar_from_contact ();
+      this.contact_notify_avatar ();
 
       contact.notify["presence-message"].connect ((s, p) =>
         {
-          this.contact_notify_presence_message ((Tp.Contact) s);
+          this.contact_notify_presence_message ();
         });
       contact.notify["presence-type"].connect ((s, p) =>
         {
-          this.contact_notify_presence_type ((Tp.Contact) s);
+          this.contact_notify_presence_type ();
         });
-      this.contact_notify_presence_message (contact);
-      this.contact_notify_presence_type (contact);
+      this.contact_notify_presence_message ();
+      this.contact_notify_presence_type ();
 
       this.store.group_members_changed.connect ((s, group, added, removed) =>
         {
@@ -177,15 +177,15 @@ public class Tpf.Persona : Folks.Persona, Alias, Avatar, Folks.Capabilities,
       return account_found;
     }
 
-  private void contact_notify_presence_message (Tp.Contact contact)
+  private void contact_notify_presence_message ()
     {
-      this.presence_message = contact.get_presence_message ();
+      this.presence_message = this.contact.get_presence_message ();
     }
 
-  private void contact_notify_presence_type (Tp.Contact contact)
+  private void contact_notify_presence_type ()
     {
       this.presence_type = folks_presence_type_from_tp (
-          contact.get_presence_type ());
+          this.contact.get_presence_type ());
     }
 
   private static PresenceType folks_presence_type_from_tp (
@@ -216,7 +216,7 @@ public class Tpf.Persona : Folks.Persona, Alias, Avatar, Folks.Capabilities,
         }
     }
 
-  private void set_avatar_from_contact ()
+  private void contact_notify_avatar ()
     {
       var file = this.contact.get_avatar_file ();
       if (this.avatar != file)
