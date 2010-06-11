@@ -25,6 +25,7 @@ lib_LTLIBRARIES = \
 
 libfolks_la_VALASOURCES = \
 	alias.vala \
+	avatar.vala \
 	backend.vala \
 	backend-store.vala \
 	capabilities.vala \

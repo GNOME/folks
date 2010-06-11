@@ -20,13 +20,10 @@
 
 using Gee;
 using GLib;
-using Folks.Alias;
-using Folks.Capabilities;
-using Folks.Groups;
-using Folks.PersonaStore;
-using Folks.Presence;
+using Folks;
 
-public class Folks.Individual : Object, Alias, Capabilities, Groups, Presence
+public class Folks.Individual : Object, Alias, Avatar, Capabilities, Groups,
+       Presence
 {
   private HashTable<string, bool> _groups;
   private GLib.List<Persona> _personas;
@@ -35,6 +32,7 @@ public class Folks.Individual : Object, Alias, Capabilities, Groups, Presence
   /* XXX: should setting this push it down into the Persona (to foward along to
    * the actual store if possible?) */
   public string alias { get; set; }
+  public File avatar { get; set; }
   public CapabilitiesFlags capabilities { get; private set; }
   public string id { get; private set; }
   public Folks.PresenceType presence_type { get; private set; }
@@ -68,6 +66,7 @@ public class Folks.Individual : Object, Alias, Capabilities, Groups, Presence
               var persona = (Persona) p;
               var groups = (p is Groups) ? (Groups) p : null;
 
+              persona.notify["avatar"].disconnect (this.notify_avatar_cb);
               persona.notify["presence-message"].disconnect (
                   this.notify_presence_cb);
               persona.notify["presence-type"].disconnect (
@@ -87,6 +86,7 @@ public class Folks.Individual : Object, Alias, Capabilities, Groups, Presence
               var persona = (Persona) p;
               var groups = (p is Groups) ? (Groups) p : null;
 
+              persona.notify["avatar"].connect (this.notify_avatar_cb);
               persona.notify["presence-message"].connect (
                   this.notify_presence_cb);
               persona.notify["presence-type"].connect (this.notify_presence_cb);
@@ -95,6 +95,11 @@ public class Folks.Individual : Object, Alias, Capabilities, Groups, Presence
 
           this.update_fields ();
         }
+    }
+
+  private void notify_avatar_cb (Object obj, ParamSpec ps)
+    {
+      this.update_avatar ();
     }
 
   private void persona_group_changed_cb (string group, bool is_member)
@@ -208,6 +213,7 @@ public class Folks.Individual : Object, Alias, Capabilities, Groups, Presence
 
       this.update_groups ();
       this.update_presence ();
+      this.update_avatar ();
     }
 
   private void update_groups ()
@@ -295,6 +301,26 @@ public class Folks.Individual : Object, Alias, Capabilities, Groups, Presence
 
       if (presence_type != old_presence_type)
         this.presence_type = presence_type;
+    }
+
+  private void update_avatar ()
+    {
+      File avatar = null;
+
+      this._personas.foreach ((p) =>
+        {
+          var persona = (Persona) p;
+
+          if (avatar == null)
+            {
+              avatar = persona.avatar;
+              return;
+            }
+        });
+
+      /* only notify if the value has changed */
+      if (this.avatar != avatar)
+        this.avatar = avatar;
     }
 
   public CapabilitiesFlags get_capabilities ()

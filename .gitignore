@@ -61,6 +61,7 @@ Makefile.in
 /backends/telepathy/tpf-persona.c
 /backends/telepathy/tpf-persona-store.c
 /folks/alias.c
+/folks/avatar.c
 /folks/backend.c
 /folks/backend-store.c
 /folks/capabilities.c

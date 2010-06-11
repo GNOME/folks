@@ -23,13 +23,16 @@ using GLib;
 using Tp;
 using Folks;
 
-public class Tpf.Persona : Folks.Persona, Alias, Folks.Capabilities, Groups,
-       Presence
+public class Tpf.Persona : Folks.Persona, Alias, Avatar, Folks.Capabilities,
+       Groups, Presence
 {
   private HashTable<string, bool> _groups;
 
   /* interface Alias */
   public override string alias { get; set; }
+
+  /* interface Avatar */
+  public override File avatar { get; set; }
 
   /* interface Capabilities */
   public override CapabilitiesFlags capabilities { get; private set; }
@@ -120,6 +123,12 @@ public class Tpf.Persona : Folks.Persona, Alias, Folks.Capabilities, Groups,
 
       this._groups = new HashTable<string, bool> (str_hash, str_equal);
 
+      contact.notify["avatar-file"].connect ((s, p) =>
+        {
+          this.set_avatar_from_contact ();
+        });
+      this.set_avatar_from_contact ();
+
       contact.notify["presence-message"].connect ((s, p) =>
         {
           this.contact_notify_presence_message ((Tp.Contact) s);
@@ -205,5 +214,12 @@ public class Tpf.Persona : Folks.Persona, Alias, Folks.Capabilities, Groups,
           default:
             return PresenceType.UNKNOWN;
         }
+    }
+
+  private void set_avatar_from_contact ()
+    {
+      var file = this.contact.get_avatar_file ();
+      if (this.avatar != file)
+        this.avatar = file;
     }
 }
