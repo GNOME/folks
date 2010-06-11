@@ -181,9 +181,6 @@ public class Folks.Individual : Object, Alias, Avatar, Capabilities, Groups,
 
   private void update_fields ()
     {
-      var old_alias = this.alias;
-      var old_caps = this.capabilities;
-
       /* gather the first occurence of each field */
       string alias = null;
       var caps = CapabilitiesFlags.NONE;
@@ -205,10 +202,10 @@ public class Folks.Individual : Object, Alias, Avatar, Capabilities, Groups,
         }
 
       /* only notify if the value has changed */
-      if (alias != old_alias)
+      if (this.alias != alias)
         this.alias = alias;
 
-      if (caps != old_caps)
+      if (this.capabilities != caps)
         this.capabilities = caps;
 
       this.update_groups ();
@@ -277,8 +274,6 @@ public class Folks.Individual : Object, Alias, Avatar, Capabilities, Groups,
 
   private void update_presence ()
     {
-      var old_presence_message = this.presence_message;
-      var old_presence_type = this.presence_type;
       var presence_message = "";
       var presence_type = Folks.PresenceType.UNSET;
       this._personas.foreach ((p) =>
@@ -296,10 +291,10 @@ public class Folks.Individual : Object, Alias, Avatar, Capabilities, Groups,
         presence_message = "";
 
       /* only notify if the value has changed */
-      if (presence_message != old_presence_message)
+      if (this.presence_message != presence_message)
         this.presence_message = presence_message;
 
-      if (presence_type != old_presence_type)
+      if (this.presence_type != presence_type)
         this.presence_type = presence_type;
     }
 
