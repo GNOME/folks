@@ -19,7 +19,7 @@
  */
 
 using GLib;
-using Folks.Persona;
+using Folks;
 
 public abstract class Folks.PersonaStore : Object
 {
