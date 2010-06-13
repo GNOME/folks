@@ -49,8 +49,11 @@ public class Folks.Backends.Tp.Backend : Folks.Backend
       this.account_manager = AccountManager.dup ();
       yield this.account_manager.prepare_async (null);
       this.account_manager.account_enabled.connect (this.account_enabled_cb);
-
-      /* FIXME: react to accounts being deleted, invalidated, etc. */
+      this.account_manager.account_validity_changed.connect ((a, valid) =>
+        {
+          if (valid)
+            this.account_enabled_cb (a);
+        });
 
       unowned GLib.List<Account> accounts =
           this.account_manager.get_valid_accounts ();

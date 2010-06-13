@@ -39,6 +39,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
   private HashMap<string, Channel> channels;
   private Connection conn;
   private TpLowlevel ll;
+  private AccountManager account_manager;
 
   [Property(nick = "basis account",
       blurb = "Telepathy account this store is based upon")]
@@ -69,15 +70,24 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       this.channels_unready = new HashMap<string, Channel> ();
       this.channels = new HashMap<string, Channel> ();
       this.ll = new TpLowlevel ();
+      this.account_manager = AccountManager.dup ();
 
-      this.account.invalidated.connect ((s, p) => {
-          this.removed ();
-          /* in case anyone still holds onto a ref for some reason, minimize the
-           * damage */
-          this._personas = null;
-          this.channels = null;
-          this.conn = null;
-      });
+      this.account_manager.account_disabled.connect ((a) =>
+        {
+          if (this.account == a)
+            this.removed ();
+        });
+      this.account_manager.account_removed.connect ((a) =>
+        {
+          if (this.account == a)
+            this.removed ();
+        });
+      this.account_manager.account_validity_changed.connect ((a, valid) =>
+        {
+          if (!valid && this.account == a)
+            this.removed ();
+        });
+
       this.account.status_changed.connect (this.account_status_changed_cb);
 
       Tp.ConnectionStatusReason reason;

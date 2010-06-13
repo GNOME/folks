@@ -161,16 +161,17 @@ public class Folks.Individual : Object, Alias, Avatar, Capabilities, Groups,
   private void store_removed_cb (PersonaStore store)
     {
       var persona_set = this.stores.lookup (store);
-
-      foreach (var persona in persona_set)
+      if (persona_set != null)
         {
-          this._personas.remove (persona);
+          foreach (var persona in persona_set)
+            {
+              this._personas.remove (persona);
+            }
         }
-
-      if (persona_set.size < 1)
+      if (store != null)
         this.stores.remove (store);
 
-      if (this._personas.length () < 1)
+      if (this._personas.length () < 1 || this.stores.size () < 1)
         {
           this.removed ();
           return;

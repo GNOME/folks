@@ -121,6 +121,8 @@ public class Folks.IndividualAggregator : Object
     {
       var i_list = new GLib.List<Individual> ();
       i_list.append (i);
+
       this.individuals_removed (i_list);
+      this.members.remove (i.id);
     }
 }
