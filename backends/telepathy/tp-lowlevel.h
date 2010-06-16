@@ -65,7 +65,7 @@ folks_tp_lowlevel_new (void) G_GNUC_WARN_UNUSED_RESULT;
 
 void
 folks_tp_lowlevel_channel_group_change_membership (TpChannel *channel,
-    TpHandle handle,
+    guint handle,
     gboolean is_member,
     GError **error);
 
@@ -86,7 +86,7 @@ void
 folks_tp_lowlevel_connection_set_contact_alias (
     FolksTpLowlevel *tp_lowlevel,
     TpConnection *conn,
-    TpHandle handle,
+    guint handle,
     const gchar *alias);
 
 void
@@ -107,7 +107,7 @@ void
 folks_tp_lowlevel_connection_get_contacts_by_handle_async (
     FolksTpLowlevel *tp_lowlevel,
     TpConnection *conn,
-    const TpHandle *contact_handles,
+    const guint *contact_handles,
     guint contact_handles_length,
     TpContactFeature *features,
     guint features_length,

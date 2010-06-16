@@ -135,7 +135,7 @@ get_contacts_by_handle_cb (TpConnection *conn,
     guint n_contacts,
     TpContact * const *contacts,
     guint n_failed,
-    const TpHandle *failed_handles,
+    const guint *failed_handles,
     const GError *error,
     gpointer user_data,
     GObject *weak_object)
@@ -168,7 +168,7 @@ void
 folks_tp_lowlevel_connection_get_contacts_by_handle_async (
     FolksTpLowlevel *tp_lowlevel,
     TpConnection *conn,
-    const TpHandle *contact_handles,
+    const guint *contact_handles,
     guint contact_handles_length,
     TpContactFeature *features,
     guint features_length,
@@ -331,7 +331,7 @@ group_request_handles_cb (
     gpointer user_data,
     GObject *tp_lowlevel)
 {
-  TpHandle channel_handle;
+  guint channel_handle;
 
   if (error)
     {
@@ -339,7 +339,7 @@ group_request_handles_cb (
       return;
     }
 
-  channel_handle = g_array_index (handles, TpHandle, 0);
+  channel_handle = g_array_index (handles, guint, 0);
   tp_cli_connection_call_request_channel (conn, -1,
     TP_IFACE_CHANNEL_TYPE_CONTACT_LIST,
     TP_HANDLE_TYPE_GROUP,
@@ -382,7 +382,7 @@ void
 folks_tp_lowlevel_connection_set_contact_alias (
     FolksTpLowlevel *tp_lowlevel,
     TpConnection *conn,
-    TpHandle handle,
+    guint handle,
     const gchar *alias)
 {
   GHashTable *ht = g_hash_table_new_full (g_direct_hash, g_direct_equal, NULL,
@@ -518,7 +518,7 @@ group_remove_members_cb (TpChannel *proxy,
  * (vs. the generic GLib.Error) */
 void
 folks_tp_lowlevel_channel_group_change_membership (TpChannel *channel,
-    TpHandle handle,
+    guint handle,
     gboolean is_member,
     GError **error)
 {
@@ -531,7 +531,7 @@ folks_tp_lowlevel_channel_group_change_membership (TpChannel *channel,
           "invalid group channel %p to add handle %d to", channel, handle);
     }
 
-  handles = g_array_new (FALSE, TRUE, sizeof (TpHandle));
+  handles = g_array_new (FALSE, TRUE, sizeof (guint));
   g_array_append_val (handles, handle);
 
   if (is_member)
