@@ -292,7 +292,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
 
   private void account_status_changed_cb (uint old_status, uint new_status,
       uint reason, string? dbus_error_name,
-      GLib.HashTable details)
+      GLib.HashTable<weak string, weak GLib.Value>? details)
     {
       if (new_status != TelepathyGLib.ConnectionStatus.CONNECTED)
         return;
@@ -687,7 +687,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       Array<weak uint> removed,
       Array<weak uint> local_pending,
       Array<weak uint> remote_pending,
-      HashTable details)
+      HashTable<weak string, weak Value> details)
     {
       if (added != null)
         this.channel_group_pend_incoming_adds.begin (channel, added, false);
