@@ -20,7 +20,7 @@
 
 using Gee;
 using GLib;
-using Tp;
+using TelepathyGLib;
 using Folks;
 
 /**
@@ -169,14 +169,16 @@ public class Tpf.Persona : Folks.Persona,
    * Create a new persona for the {@link PersonaStore} `store`, representing
    * the Telepathy contact given by `contact`.
    */
-  public Persona (Contact contact, PersonaStore store) throws Tp.Error
+  public Persona (Contact contact, PersonaStore store) throws
+      TelepathyGLib.Error
     {
       /* FIXME: There is the possibility of a crash in the error condition below
        * due to bgo#604299, where the C self variable isn't initialised until we
        * chain up to the Object constructor, below. */
       var uid = contact.get_identifier ();
       if (uid == null || uid == "")
-        throw new Tp.Error.INVALID_ARGUMENT ("contact has an invalid UID");
+        throw new TelepathyGLib.Error.INVALID_ARGUMENT ("contact has an " +
+            "invalid UID");
 
       var account = account_for_connection (contact.get_connection ());
       var account_id = ((Proxy) account).object_path;
@@ -272,27 +274,27 @@ public class Tpf.Persona : Folks.Persona,
     }
 
   private static PresenceType folks_presence_type_from_tp (
-      Tp.ConnectionPresenceType type)
+      TelepathyGLib.ConnectionPresenceType type)
     {
       switch (type)
         {
-          case Tp.ConnectionPresenceType.AVAILABLE:
+          case TelepathyGLib.ConnectionPresenceType.AVAILABLE:
             return PresenceType.AVAILABLE;
-          case Tp.ConnectionPresenceType.AWAY:
+          case TelepathyGLib.ConnectionPresenceType.AWAY:
             return PresenceType.AWAY;
-          case Tp.ConnectionPresenceType.BUSY:
+          case TelepathyGLib.ConnectionPresenceType.BUSY:
             return PresenceType.BUSY;
-          case Tp.ConnectionPresenceType.ERROR:
+          case TelepathyGLib.ConnectionPresenceType.ERROR:
             return PresenceType.ERROR;
-          case Tp.ConnectionPresenceType.EXTENDED_AWAY:
+          case TelepathyGLib.ConnectionPresenceType.EXTENDED_AWAY:
             return PresenceType.EXTENDED_AWAY;
-          case Tp.ConnectionPresenceType.HIDDEN:
+          case TelepathyGLib.ConnectionPresenceType.HIDDEN:
             return PresenceType.HIDDEN;
-          case Tp.ConnectionPresenceType.OFFLINE:
+          case TelepathyGLib.ConnectionPresenceType.OFFLINE:
             return PresenceType.OFFLINE;
-          case Tp.ConnectionPresenceType.UNKNOWN:
+          case TelepathyGLib.ConnectionPresenceType.UNKNOWN:
             return PresenceType.UNKNOWN;
-          case Tp.ConnectionPresenceType.UNSET:
+          case TelepathyGLib.ConnectionPresenceType.UNSET:
             return PresenceType.UNSET;
           default:
             return PresenceType.UNKNOWN;
@@ -315,7 +317,7 @@ public class Tpf.Persona : Folks.Persona,
 
   /* Based off tp_caps_to_capabilities() in empathy-contact.c */
   private static CapabilitiesFlags folks_capabilities_flags_from_tp (
-      Tp.Capabilities caps)
+      TelepathyGLib.Capabilities caps)
     {
       CapabilitiesFlags capabilities = 0;
       var classes = caps.get_channel_classes ();
@@ -327,27 +329,29 @@ public class Tpf.Persona : Folks.Persona,
           unowned Value val = class_struct.get_nth (0);
           unowned HashTable fixed_prop = (HashTable) val.get_boxed ();
 
-          Tp.HandleType handle_type = (Tp.HandleType) Tp.asv_get_uint32 (
-              fixed_prop, Tp.PROP_CHANNEL_TARGET_HANDLE_TYPE, null);
+          TelepathyGLib.HandleType handle_type =
+              (TelepathyGLib.HandleType) TelepathyGLib.asv_get_uint32 (
+                  fixed_prop, TelepathyGLib.PROP_CHANNEL_TARGET_HANDLE_TYPE,
+                  null);
           if (handle_type != HandleType.CONTACT)
             return; /* i.e. continue the loop */
 
-          unowned string chan_type = Tp.asv_get_string (fixed_prop,
-              Tp.PROP_CHANNEL_CHANNEL_TYPE);
+          unowned string chan_type = TelepathyGLib.asv_get_string (fixed_prop,
+              TelepathyGLib.PROP_CHANNEL_CHANNEL_TYPE);
 
-          if (chan_type == Tp.IFACE_CHANNEL_TYPE_FILE_TRANSFER)
+          if (chan_type == TelepathyGLib.IFACE_CHANNEL_TYPE_FILE_TRANSFER)
             {
               capabilities |= CapabilitiesFlags.FILE_TRANSFER;
             }
-          else if (chan_type == Tp.IFACE_CHANNEL_TYPE_STREAM_TUBE)
+          else if (chan_type == TelepathyGLib.IFACE_CHANNEL_TYPE_STREAM_TUBE)
             {
-              var service = Tp.asv_get_string (fixed_prop,
-                  Tp.PROP_CHANNEL_TYPE_STREAM_TUBE_SERVICE);
+              var service = TelepathyGLib.asv_get_string (fixed_prop,
+                  TelepathyGLib.PROP_CHANNEL_TYPE_STREAM_TUBE_SERVICE);
 
               if (service == "rfb")
                 capabilities |= CapabilitiesFlags.STREAM_TUBE;
             }
-          else if (chan_type == Tp.IFACE_CHANNEL_TYPE_STREAMED_MEDIA)
+          else if (chan_type == TelepathyGLib.IFACE_CHANNEL_TYPE_STREAMED_MEDIA)
             {
               val = class_struct.get_nth (1);
               unowned string[] allowed_prop = (string[]) val.get_boxed ();
@@ -359,10 +363,10 @@ public class Tpf.Persona : Folks.Persona,
                       unowned string prop = allowed_prop[i];
 
                       if (prop ==
-                          Tp.PROP_CHANNEL_TYPE_STREAMED_MEDIA_INITIAL_AUDIO)
+                          TelepathyGLib.PROP_CHANNEL_TYPE_STREAMED_MEDIA_INITIAL_AUDIO)
                         capabilities |= CapabilitiesFlags.AUDIO;
                       else if (prop ==
-                          Tp.PROP_CHANNEL_TYPE_STREAMED_MEDIA_INITIAL_VIDEO)
+                          TelepathyGLib.PROP_CHANNEL_TYPE_STREAMED_MEDIA_INITIAL_VIDEO)
                         capabilities |= CapabilitiesFlags.VIDEO;
                     }
                 }

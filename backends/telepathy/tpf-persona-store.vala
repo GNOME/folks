@@ -21,8 +21,8 @@
 
 using GLib;
 using Gee;
-using Tp;
-using Tp.ContactFeature;
+using TelepathyGLib;
+using TelepathyGLib.ContactFeature;
 using Folks;
 
 /**
@@ -97,7 +97,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       Object (account: account);
 
       this.type_id = "telepathy";
-      this.id = account.get_object_path (account);
+      this.id = account.get_object_path ();
 
       this._personas = new HashTable<string, Persona> (str_hash,
           str_equal);
@@ -137,14 +137,17 @@ public class Tpf.PersonaStore : Folks.PersonaStore
 
       this.account.status_changed.connect (this.account_status_changed_cb);
 
-      Tp.ConnectionStatusReason reason;
+      TelepathyGLib.ConnectionStatusReason reason;
       var status = this.account.get_connection_status (out reason);
       /* immediately handle accounts which are not currently being disconnected
        */
-      if (status != Tp.ConnectionStatus.DISCONNECTED)
+      if (status != TelepathyGLib.ConnectionStatus.DISCONNECTED)
         {
-          this.account_status_changed_cb (Tp.ConnectionStatus.DISCONNECTED,
-              status, reason, null, null);
+          var details = new GLib.HashTable<weak string, weak void*> (
+              str_hash, str_equal);
+          this.account_status_changed_cb (
+              TelepathyGLib.ConnectionStatus.DISCONNECTED, status, reason, null,
+              details);
         }
 
       try
@@ -287,11 +290,11 @@ public class Tpf.PersonaStore : Folks.PersonaStore
         }
     }
 
-  private void account_status_changed_cb (ConnectionStatus old_status,
-      ConnectionStatus new_status, ConnectionStatusReason reason,
-      string? dbus_error_name, GLib.HashTable? details)
+  private void account_status_changed_cb (uint old_status, uint new_status,
+      uint reason, string? dbus_error_name,
+      GLib.HashTable details)
     {
-      if (new_status != Tp.ConnectionStatus.CONNECTED)
+      if (new_status != TelepathyGLib.ConnectionStatus.CONNECTED)
         return;
 
       var conn = this.account.get_connection ();
@@ -399,7 +402,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
 
           c.invalidated.connect (this.channel_invalidated_cb);
 
-          unowned IntSet members = c.group_get_members ();
+          unowned IntSet? members = c.group_get_members ();
           if (members != null)
             {
               this.channel_group_pend_incoming_adds.begin (c,
@@ -506,7 +509,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
 
   private void ignore_by_handle_if_needed (uint handle)
     {
-      unowned Tp.IntSet members;
+      unowned TelepathyGLib.IntSet members;
 
       if (this.subscribe != null)
         {
@@ -666,8 +669,8 @@ public class Tpf.PersonaStore : Folks.PersonaStore
           this.group_channels_unready.remove (name);
 
           c.invalidated.connect (this.channel_invalidated_cb);
-          c.group_members_changed.connect (
-            this.group_channel_group_members_changed_cb);
+          c.group_members_changed_detailed.connect (
+            this.channel_group_members_changed_detailed_cb);
 
           unowned IntSet members = c.group_get_members ();
           if (members != null)
@@ -678,15 +681,13 @@ public class Tpf.PersonaStore : Folks.PersonaStore
         });
     }
 
-  private void group_channel_group_members_changed_cb (Channel channel,
-      string message,
+  private void channel_group_members_changed_detailed_cb (Channel channel,
       /* FIXME: Array<uint> => Array<Handle>; parser bug */
-      Array<uint>? added,
-      Array<uint>? removed,
-      Array<uint>? local_pending,
-      Array<uint>? remote_pending,
-      uint actor,
-      uint reason)
+      Array<weak uint> added,
+      Array<weak uint> removed,
+      Array<weak uint> local_pending,
+      Array<weak uint> remote_pending,
+      HashTable details)
     {
       if (added != null)
         this.channel_group_pend_incoming_adds.begin (channel, added, false);
@@ -724,8 +725,8 @@ public class Tpf.PersonaStore : Folks.PersonaStore
         }
     }
 
-  private void change_standard_contact_list_membership (Tp.Channel channel,
-      Folks.Persona persona, bool is_member)
+  private void change_standard_contact_list_membership (
+      TelepathyGLib.Channel channel, Folks.Persona persona, bool is_member)
     {
       var tp_persona = (Tpf.Persona) persona;
 
@@ -779,7 +780,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
           PRESENCE
         };
 
-      Handle[] contact_handles = {};
+      uint[] contact_handles = {};
       for (var i = 0; i < channel_handles.length; i++)
         {
           var channel_handle = (Handle) channel_handles.index (i);
@@ -794,16 +795,16 @@ public class Tpf.PersonaStore : Folks.PersonaStore
           if (contact_handles.length < 1)
             return;
 
-          unowned GLib.List<Tp.Contact> contacts =
+          unowned GLib.List<TelepathyGLib.Contact> contacts =
               yield this.ll.connection_get_contacts_by_handle_async (
                   this.conn, contact_handles, features);
 
           if (contacts == null || contacts.length () < 1)
             return;
 
-          var contacts_array = new Tp.Contact[contacts.length ()];
+          var contacts_array = new TelepathyGLib.Contact[contacts.length ()];
           var j = 0;
-          unowned GLib.List<Tp.Contact> l = contacts;
+          unowned GLib.List<TelepathyGLib.Contact> l = contacts;
           for (; l != null; l = l.next)
             {
               contacts_array[j] = l.data;
@@ -832,14 +833,14 @@ public class Tpf.PersonaStore : Folks.PersonaStore
 
       if (contact_ids.length > 0)
         {
-          unowned GLib.List<Tp.Contact> contacts =
+          unowned GLib.List<TelepathyGLib.Contact> contacts =
               yield this.ll.connection_get_contacts_by_id_async (
                   this.conn, contact_ids, features);
 
           GLib.List<Persona> personas = new GLib.List<Persona> ();
           uint err_count = 0;
           string err_format = "";
-          unowned GLib.List<Tp.Contact> l;
+          unowned GLib.List<TelepathyGLib.Contact> l;
           for (l = contacts; l != null; l = l.next)
             {
               var contact = l.data;
@@ -849,7 +850,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
                   if (persona != null)
                     personas.prepend (persona);
                 }
-              catch (Tp.Error e)
+              catch (TelepathyGLib.Error e)
                 {
                   if (err_count == 0)
                     err_format = "failed to create %u personas:\n";
@@ -876,7 +877,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
     }
 
   private Tpf.Persona? add_persona_from_contact (Contact contact)
-      throws Tp.Error
+      throws TelepathyGLib.Error
     {
       var h = contact.get_handle ();
       if (this.handle_persona_map[h] == null)
@@ -909,7 +910,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
               if (persona != null)
                 personas.prepend (persona);
             }
-          catch (Tp.Error e)
+          catch (Tpf.PersonaError e)
             {
               warning ("failed to create persona from contact '%s' (%p)",
                   contact.alias, contact);

@@ -20,7 +20,7 @@
 
 using GLib;
 using Gee;
-using Tp;
+using TelepathyGLib;
 using Folks;
 using Folks.Backends.Tp;
 
