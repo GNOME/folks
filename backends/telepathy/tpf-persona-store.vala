@@ -368,7 +368,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
           warning ("    %u", (uint) h);
         }
 
-      var personas_new = new HashSet<Persona> ();
+      var personas_new = new HashTable<string, Persona> (str_hash, str_equal);
       for (var i = 0; i < n_contacts; i++)
         {
           var contact = contacts[i];
@@ -376,10 +376,13 @@ public class Tpf.PersonaStore : Folks.PersonaStore
           try
             {
               var persona = new Tpf.Persona (contact, this);
-              personas_new.add (persona);
+              if (this._personas.lookup (persona.iid) == null)
+                {
+                  personas_new.insert (persona.iid, persona);
 
-              this._personas.insert (persona.iid, persona);
-              this.handle_persona_map[contact.get_handle ()] = persona;
+                  this._personas.insert (persona.iid, persona);
+                  this.handle_persona_map[contact.get_handle ()] = persona;
+                }
             }
           catch (Tp.Error e)
             {
@@ -390,10 +393,9 @@ public class Tpf.PersonaStore : Folks.PersonaStore
 
       this.groups_add_new_personas ();
 
-      if (personas_new.size >= 1)
+      if (personas_new.size () >= 1)
         {
-          GLib.List<Persona> personas = this.hash_set_to_list (
-              personas_new);
+          GLib.List<Persona> personas = personas_new.get_values ();
           this.personas_added (personas);
         }
     }
@@ -449,17 +451,5 @@ public class Tpf.PersonaStore : Folks.PersonaStore
         }
 
       return true;
-    }
-
-  /* FIXME: make this generic and relocate it */
-  private GLib.List<Persona> hash_set_to_list (HashSet<Persona> hash_set)
-    {
-      var list = new GLib.List<Persona> ();
-      foreach (var element in hash_set)
-        list.prepend (element);
-
-      list.reverse ();
-
-      return list;
     }
 }
