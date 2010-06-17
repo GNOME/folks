@@ -124,6 +124,101 @@ folks_tp_lowlevel_connection_open_contact_list_channel_finish (
 }
 
 static void
+contact_list_free (GList *contact_list)
+{
+  g_list_foreach (contact_list, (GFunc) g_object_unref, NULL);
+  g_list_free (contact_list);
+}
+
+static void
+get_contacts_by_id_cb (TpConnection *conn,
+    guint n_contacts,
+    TpContact * const *contacts,
+    const gchar * const *requested_ids,
+    GHashTable *failed_id_errors,
+    const GError *error,
+    gpointer user_data,
+    GObject *weak_object)
+{
+  GSimpleAsyncResult *simple = G_SIMPLE_ASYNC_RESULT (user_data);
+
+  if (error != NULL)
+    {
+      g_warning ("failed to get contacts: %s\n", error->message);
+      g_simple_async_result_set_from_error (simple, error);
+    }
+  else
+    {
+      GList *contact_list = NULL;
+      guint i;
+
+      for (i = 0; i < n_contacts; i++)
+        contact_list = g_list_prepend (contact_list,
+            g_object_ref (contacts[i]));
+
+      g_simple_async_result_set_op_res_gpointer (simple, contact_list,
+          (GDestroyNotify) contact_list_free);
+    }
+
+  g_simple_async_result_complete (simple);
+  g_object_unref (simple);
+}
+
+void
+folks_tp_lowlevel_connection_get_contacts_by_id_async (
+    FolksTpLowlevel *tp_lowlevel,
+    TpConnection *conn,
+    const char **contact_ids,
+    guint contact_ids_length,
+    TpContactFeature *features,
+    guint features_length,
+    GAsyncReadyCallback callback,
+    gpointer user_data)
+{
+  GSimpleAsyncResult *result;
+
+  result = g_simple_async_result_new (G_OBJECT (conn), callback, user_data,
+      folks_tp_lowlevel_connection_get_contacts_by_id_finish);
+
+  tp_connection_get_contacts_by_id (conn,
+      contact_ids_length,
+      contact_ids,
+      features_length,
+      features,
+      get_contacts_by_id_cb,
+      result,
+      NULL,
+      G_OBJECT (conn));
+}
+
+/* XXX: ideally, we'd either make this static or hide it in the .metadata file,
+ * but neither seems to be supported (without breaking the binding to the async
+ * function) */
+GList *
+folks_tp_lowlevel_connection_get_contacts_by_id_finish (
+    FolksTpLowlevel *tp_lowlevel,
+    GAsyncResult *result,
+    GError **error)
+{
+  GSimpleAsyncResult *simple = G_SIMPLE_ASYNC_RESULT (result);
+  TpConnection *conn;
+
+  g_return_val_if_fail (G_IS_SIMPLE_ASYNC_RESULT (simple), FALSE);
+
+  conn = TP_CONNECTION (g_async_result_get_source_object (result));
+  g_return_val_if_fail (TP_IS_CONNECTION (conn), FALSE);
+
+  if (g_simple_async_result_propagate_error (simple, error))
+    return NULL;
+
+  g_return_val_if_fail (g_simple_async_result_is_valid (result, G_OBJECT (conn),
+        folks_tp_lowlevel_connection_get_contacts_by_id_finish), NULL);
+
+  return g_simple_async_result_get_op_res_gpointer (
+      G_SIMPLE_ASYNC_RESULT (result));
+}
+
+static void
 group_request_channel_cb (
     TpConnection *conn,
     const gchar *object_path,
@@ -305,7 +400,7 @@ group_remove_members_cb (TpChannel *proxy,
  * (vs. the generic GLib.Error) */
 void
 folks_tp_lowlevel_channel_group_change_membership (TpChannel *channel,
-    guint handle,
+    TpHandle handle,
     gboolean is_member,
     GError **error)
 {

@@ -21,6 +21,12 @@
 using GLib;
 using Folks;
 
+public errordomain Folks.PersonaStoreError
+{
+  INVALID_ARGUMENT,
+  CREATE_FAILED,
+}
+
 public abstract class Folks.PersonaStore : Object
 {
   public abstract signal void personas_added (GLib.List<Persona> personas);
@@ -38,4 +44,6 @@ public abstract class Folks.PersonaStore : Object
 
   public abstract async void change_group_membership (Persona persona,
       string group, bool is_member);
+  public abstract async Persona? add_persona_from_details (
+      HashTable<string, string> details) throws Folks.PersonaStoreError;
 }

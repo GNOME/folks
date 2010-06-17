@@ -26,6 +26,7 @@
 #include <gio/gio.h>
 #include <telepathy-glib/channel.h>
 #include <telepathy-glib/connection.h>
+#include <telepathy-glib/contact.h>
 
 G_BEGIN_DECLS
 
@@ -92,6 +93,23 @@ folks_tp_lowlevel_connection_open_contact_list_channel_async (
 TpChannel *
 folks_tp_lowlevel_connection_open_contact_list_channel_finish (
     FolksTpLowlevel *lowlevel,
+    GAsyncResult *result,
+    GError **error);
+
+void
+folks_tp_lowlevel_connection_get_contacts_by_id_async (
+    FolksTpLowlevel *tp_lowlevel,
+    TpConnection *conn,
+    const char **contact_ids,
+    guint contact_ids_length,
+    TpContactFeature *features,
+    guint features_length,
+    GAsyncReadyCallback callback,
+    gpointer user_data);
+
+GList *
+folks_tp_lowlevel_connection_get_contacts_by_id_finish (
+    FolksTpLowlevel *tp_lowlevel,
     GAsyncResult *result,
     GError **error);
 

@@ -22,6 +22,12 @@ using Folks;
 using Gee;
 using GLib;
 
+public errordomain Folks.IndividualAggregatorError
+{
+  STORE_NOT_FOUND,
+  ADD_FAILED,
+}
+
 public class Folks.IndividualAggregator : Object
 {
   private BackendStore backend_store;
@@ -57,7 +63,7 @@ public class Folks.IndividualAggregator : Object
   private void backend_persona_store_added_cb (Backend backend,
       PersonaStore store)
     {
-      this.stores.set (this.store_get_full_id (store), store);
+      this.stores.set (this.get_store_full_id (store.type_id, store.id), store);
       store.personas_added.connect (this.personas_added_cb);
     }
 
@@ -70,12 +76,12 @@ public class Folks.IndividualAggregator : Object
        * they'll do that themselves (and emit their own 'removed' signal if
        * necessary) */
 
-      this.stores.unset (this.store_get_full_id (store));
+      this.stores.unset (this.get_store_full_id (store.type_id, store.id));
     }
 
-  private string store_get_full_id (PersonaStore store)
+  private string get_store_full_id (string type_id, string id)
     {
-      return store.type_id + ":" + store.id;
+      return type_id + ":" + id;
     }
 
   private void personas_added_cb (PersonaStore store,
@@ -126,5 +132,52 @@ public class Folks.IndividualAggregator : Object
 
       this.individuals_removed (i_list);
       this.members.remove (i.id);
+    }
+
+  /**
+   * Adds a new persona in the given store based on the details provided.
+   *
+   * The details hash is a backend-specific mapping of key, value strings.
+   * Common keys include:
+   *
+   *  * contact - service-specific contact ID
+   */
+  public async Persona? add_persona_from_details (Individual? parent,
+      string persona_store_type,
+      string persona_store_id,
+      HashTable<string, string> details) throws IndividualAggregatorError
+    {
+      var full_id = this.get_store_full_id (persona_store_type,
+          persona_store_id);
+      var store = this.stores[full_id];
+
+      if (store == null)
+        {
+          throw new IndividualAggregatorError.STORE_NOT_FOUND (
+              "no store known for type ID '%s' and ID '%s'", store.type_id,
+              store.id);
+        }
+
+      Persona persona = null;
+      try
+        {
+          persona = yield store.add_persona_from_details (details);
+        }
+      catch (PersonaStoreError e)
+        {
+          throw new IndividualAggregatorError.ADD_FAILED (
+              "failed to add contact for store type '%s', ID '%s': %s",
+              persona_store_type, persona_store_id, e.message);
+        }
+
+      if (parent != null)
+        {
+          var personas = parent.personas.copy ();
+
+          personas.append (persona);
+          parent.personas = personas;
+        }
+
+      return persona;
     }
 }

@@ -1,1 +1,6 @@
 FolksTpLowlevelError errordomain="1"
+folks_tp_lowlevel_connection_get_contacts_by_id_async.contact_ids is_array="1" array_length_type="guint"
+folks_tp_lowlevel_connection_get_contacts_by_id_async.contact_ids_length hidden="1"
+folks_tp_lowlevel_connection_get_contacts_by_id_async.features is_array="1" array_length_type="guint"
+folks_tp_lowlevel_connection_get_contacts_by_id_async.features_length hidden="1"
+folks_tp_lowlevel_connection_get_contacts_by_id_finish type_arguments="Tp.Contact"

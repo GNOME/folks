@@ -119,8 +119,8 @@ public class Tpf.PersonaStore : Folks.PersonaStore
 
       /* FIXME: uncomment these
       this.add_channel (conn, "stored");
-      this.add_channel (conn, "publish");
       */
+      this.add_channel (conn, "publish");
       this.add_channel (conn, "subscribe");
       this.conn = conn;
     }
@@ -295,6 +295,25 @@ public class Tpf.PersonaStore : Folks.PersonaStore
         }
     }
 
+  private void change_standard_contact_list_membership (Tp.Channel channel,
+      Folks.Persona persona, bool is_member)
+    {
+      var tp_persona = (Tpf.Persona) persona;
+
+      try
+        {
+          this.ll.channel_group_change_membership (channel,
+              (Handle) tp_persona.contact.handle, is_member);
+        }
+      catch (GLib.Error e)
+        {
+          warning ("failed to change persona %s contact list %s " +
+              "membership to %s",
+              persona.uid, channel.get_identifier (),
+              is_member ? "true" : "false");
+        }
+    }
+
   private async Channel? add_channel (Connection conn, string name)
     {
       Channel? channel = null;
@@ -368,6 +387,64 @@ public class Tpf.PersonaStore : Folks.PersonaStore
           warning ("    %u", (uint) h);
         }
 
+      /* we have to manually pass the length since we don't get it */
+      this.add_new_personas_from_contacts (contacts, n_contacts);
+    }
+
+  private async GLib.List<Tpf.Persona>? create_personas_from_contact_ids (
+      string[] contact_ids) throws GLib.Error
+    {
+      ContactFeature[] features =
+        {
+          ALIAS,
+          /* XXX: also avatar token? */
+          PRESENCE
+        };
+
+      if (contact_ids.length > 0)
+        {
+          unowned GLib.List<Tp.Contact> contacts =
+              yield this.ll.connection_get_contacts_by_id_async (
+                  this.conn, contact_ids, features);
+
+          GLib.List<Persona> personas = new GLib.List<Persona> ();
+          uint err_count = 0;
+          string err_format = "";
+          unowned GLib.List<Tp.Contact> l;
+          for (l = contacts; l != null; l = l.next)
+            {
+              var contact = l.data;
+              try
+                {
+                  var persona = new Tpf.Persona (contact, this);
+                  personas.prepend (persona);
+                }
+              catch (Tp.Error e)
+                {
+                  if (err_count == 0)
+                    err_format = "failed to create %u personas:\n";
+
+                  err_format = "%s        '%s' (%p): %s\n".printf (
+                    err_format, contact.alias, contact, e.message);
+                  err_count++;
+                }
+            }
+
+          if (err_count > 0)
+            {
+              throw new Folks.PersonaStoreError.CREATE_FAILED (err_format,
+                  err_count);
+            }
+
+          return personas;
+        }
+
+      return null;
+    }
+
+  private void add_new_personas_from_contacts (Contact[] contacts,
+      uint n_contacts)
+    {
       var personas_new = new HashTable<string, Persona> (str_hash, str_equal);
       for (var i = 0; i < n_contacts; i++)
         {
@@ -451,5 +528,62 @@ public class Tpf.PersonaStore : Folks.PersonaStore
         }
 
       return true;
+    }
+
+  public override async Folks.Persona? add_persona_from_details (
+      HashTable<string, string> details) throws Folks.PersonaStoreError
+    {
+      var contact_id = details.lookup ("contact");
+      if (contact_id == null)
+        {
+          throw new PersonaStoreError.INVALID_ARGUMENT (
+              "persona store (%s, %s) requires the following details:\n" +
+              "    contact (provided: '%s')\n",
+              this.type_id, this.id, contact_id);
+        }
+
+      string[] contact_ids = new string[1];
+      contact_ids[0] = contact_id;
+
+      try
+        {
+          var personas = yield create_personas_from_contact_ids (
+              contact_ids);
+
+          if (personas != null && personas.length () == 1)
+            {
+              var persona = personas.data;
+              var subscribe = this.channels["subscribe"];
+              var publish = this.channels["publish"];
+
+              if (subscribe != null)
+                change_standard_contact_list_membership (subscribe, persona,
+                    true);
+
+              if (publish != null)
+                {
+                  var flags = publish.group_get_flags ();
+                  if ((flags & ChannelGroupFlags.CAN_ADD) ==
+                      ChannelGroupFlags.CAN_ADD)
+                    {
+                      change_standard_contact_list_membership (publish, persona,
+                          true);
+                    }
+                }
+
+              return persona;
+            }
+          else
+            {
+              warning ("requested a single persona, but got %u back",
+                  personas == null ? 0 : personas.length ());
+            }
+        }
+      catch (GLib.Error e)
+        {
+          warning ("failed to add a persona from details: %s", e.message);
+        }
+
+      return null;
     }
 }
