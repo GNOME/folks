@@ -95,6 +95,33 @@ folks_tp_lowlevel_connection_open_contact_list_channel_async (
       connection_ensure_channel_cb, result, NULL, G_OBJECT (conn));
 }
 
+/* XXX: ideally, we'd either make this static or hide it in the .metadata file,
+ * but neither seems to be supported (without breaking the binding to the async
+ * function) */
+TpChannel *
+folks_tp_lowlevel_connection_open_contact_list_channel_finish (
+    FolksTpLowlevel *tp_lowlevel,
+    GAsyncResult *result,
+    GError **error)
+{
+  GSimpleAsyncResult *simple = G_SIMPLE_ASYNC_RESULT (result);
+  TpConnection *conn;
+
+  g_return_val_if_fail (G_IS_SIMPLE_ASYNC_RESULT (simple), FALSE);
+
+  conn = TP_CONNECTION (g_async_result_get_source_object (result));
+  g_return_val_if_fail (TP_IS_CONNECTION (conn), FALSE);
+
+  if (g_simple_async_result_propagate_error (simple, error))
+    return NULL;
+
+  g_return_val_if_fail (g_simple_async_result_is_valid (result, G_OBJECT (conn),
+        folks_tp_lowlevel_connection_open_contact_list_channel_finish), NULL);
+
+  return g_simple_async_result_get_op_res_gpointer (
+      G_SIMPLE_ASYNC_RESULT (result));
+}
+
 static void
 group_request_channel_cb (
     TpConnection *conn,
@@ -152,33 +179,6 @@ folks_tp_lowlevel_connection_create_group_async (
       group_request_handles_cb,
       NULL, NULL,
       G_OBJECT (conn));
-}
-
-/* XXX: ideally, we'd either make this static or hide it in the .metadata file,
- * but neither seems to be supported (without breaking the binding to the async
- * function) */
-TpChannel *
-folks_tp_lowlevel_connection_open_contact_list_channel_finish (
-    FolksTpLowlevel *tp_lowlevel,
-    GAsyncResult *result,
-    GError **error)
-{
-  GSimpleAsyncResult *simple = G_SIMPLE_ASYNC_RESULT (result);
-  TpConnection *conn;
-
-  g_return_val_if_fail (G_IS_SIMPLE_ASYNC_RESULT (simple), FALSE);
-
-  conn = TP_CONNECTION (g_async_result_get_source_object (result));
-  g_return_val_if_fail (TP_IS_CONNECTION (conn), FALSE);
-
-  if (g_simple_async_result_propagate_error (simple, error))
-    return NULL;
-
-  g_return_val_if_fail (g_simple_async_result_is_valid (result, G_OBJECT (conn),
-        folks_tp_lowlevel_connection_open_contact_list_channel_finish), NULL);
-
-  return g_simple_async_result_get_op_res_gpointer (
-      G_SIMPLE_ASYNC_RESULT (result));
 }
 
 static void
@@ -304,7 +304,7 @@ group_remove_members_cb (TpChannel *proxy,
  * (vs. the generic GLib.Error) */
 void
 folks_tp_lowlevel_channel_group_change_membership (TpChannel *channel,
-    TpHandle handle,
+    guint handle,
     gboolean is_member,
     GError **error)
 {
