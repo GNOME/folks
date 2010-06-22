@@ -300,11 +300,11 @@ public class Folks.Individual : Object, Alias, Avatar, Capabilities, Groups,
         {
           var persona = (Persona) p;
 
-          if (presence_message == null || presence_message == "")
-            presence_message = persona.presence_message;
-
           if (Presence.typecmp (persona.presence_type, presence_type) > 0)
-            presence_type = persona.presence_type;
+            {
+              presence_type = persona.presence_type;
+              presence_message = persona.presence_message;
+            }
         });
 
       if (presence_message == null)
