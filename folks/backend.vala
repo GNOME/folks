@@ -21,6 +21,11 @@
 using BuildConf;
 using Folks;
 
+/**
+ * A single backend to libfolks, such as Telepathy or evolution-data-server.
+ * Each backend provides {@link Persona}s which are aggregated to form
+ * {@link Individual}s.
+ */
 public abstract class Folks.Backend : Object
 {
   public abstract string name { get; protected set; }

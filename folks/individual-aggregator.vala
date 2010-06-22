@@ -22,6 +22,11 @@ using Folks;
 using Gee;
 using GLib;
 
+/**
+ * Allows access to the {@link Individual}s which have been created through
+ * aggregation of all the {@link Persona}s provided by the various libfolks
+ * {@link Backend}s. This is the main interface for accessing libfolks.
+ */
 public class Folks.IndividualAggregator : Object
 {
   private BackendStore backend_store;

@@ -64,6 +64,20 @@ AC_SUBST(LIBFOLKS_CFLAGS)
 AC_SUBST(LIBFOLKS_LIBS)
 
 # -----------------------------------------------------------
+# Documentation
+# -----------------------------------------------------------
+AC_ARG_ENABLE(docs,
+  AC_HELP_STRING([--enable-docs],[Enable documentation generation]),
+    enable_docs=$enableval, enable_docs=no)
+AM_CONDITIONAL(ENABLE_DOCS, test x$enable_docs = xyes)
+
+AS_IF([test "x$enable_docs" != xno],
+  [AC_PATH_PROG(VALADOC, valadoc, :)
+   AC_SUBST(VALADOC)
+   AS_IF([test "$VALADOC" = :],
+     [AC_MSG_ERROR([valadoc not found])])])
+
+# -----------------------------------------------------------
 # Telepathy backend
 # -----------------------------------------------------------
 PKG_CHECK_MODULES(LIBFOLKS_TELEPATHY,
@@ -150,6 +164,7 @@ AC_CONFIG_FILES([
 	backends/Makefile
 	backends/telepathy/Makefile
 	folks/Makefile
+	docs/Makefile
 ])
 
 AC_OUTPUT
@@ -163,6 +178,7 @@ Configure summary:
         Coding style checks.........:  ${ENABLE_CODING_STYLE_CHECKS}
         VAPI generation.............:  ${enable_vapigen}
         Bugreporting URL............:  ${PACKAGE_BUGREPORT}
+        Documentation...............:  ${enable_docs}
 
 
 "

@@ -3,6 +3,10 @@ SUBDIRS = \
 	backends \
 	$(NULL)
 
+if ENABLE_DOCS
+SUBDIRS += docs
+endif
+
 ACLOCAL_AMFLAGS = -I m4
 
 DISTCHECK_CONFIGURE_FLAGS =		\

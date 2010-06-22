@@ -21,6 +21,12 @@
 using GLib;
 using Folks;
 
+/**
+ * Represents a "shard" of a person from a single source (a single
+ * {@link Backend}), such as an XMPP contact from Telepathy or a vCard contact
+ * from evolution-data-server. All the personas belonging to one physical person
+ * are aggregated to form a single {@link Individual} representing that person.
+ */
 public abstract class Folks.Persona : Object, Alias, Avatar, Capabilities,
        Presence
 {

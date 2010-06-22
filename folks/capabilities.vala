@@ -20,15 +20,47 @@
 
 using GLib;
 
+/**
+ * Flag values for the capabilities an object implementing {@link Capabilities}
+ * could possibly have, as a bitmask.
+ */
 public enum Folks.CapabilitiesFlags {
+  /**
+   * No capabilities. Mutually exclusive with the other values.
+   */
   NONE = 0,
+
+  /**
+   * Audio chat support.
+   */
   AUDIO = 1 << 0,
+
+  /**
+   * Video chat support.
+   */
   VIDEO = 1 << 1,
+
+  /**
+   * File transfer support.
+   */
   FILE_TRANSFER = 1 << 2,
+
+  /**
+   * Telepathy tubes support.
+   */
   STREAM_TUBE = 1 << 3,
+
+  /**
+   * Unknown set of capabilities. Mutually exclusive with the other values.
+   */
   UNKNOWN = 1 << 7,
 }
 
+/**
+ * Interface exposing the capabilities of the {@link Persona} or
+ * {@link Individual} implementing it, such as whether they can do video chats
+ * or file transfers.
+ */
 public interface Folks.Capabilities : Object
 {
   public abstract CapabilitiesFlags capabilities
