@@ -79,6 +79,13 @@ public class Folks.Individual : Object, Alias, Avatar, Capabilities, Groups,
 
           this._personas = value.copy ();
 
+          /* If all the personas have been removed, remove the individual */
+          if (this._personas.length () < 1)
+            {
+              this.removed ();
+              return;
+            }
+
           /* TODO: base this upon our ID in permanent storage, once we have that
            */
           if (this.id == null && this._personas.data != null)
