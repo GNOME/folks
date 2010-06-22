@@ -25,6 +25,7 @@
 #include <telepathy-glib/connection.h>
 #include <telepathy-glib/dbus.h>
 #include <telepathy-glib/interfaces.h>
+#include <telepathy-glib/util.h>
 
 #include "tp-lowlevel.h"
 
@@ -345,7 +346,7 @@ folks_tp_lowlevel_init (FolksTpLowlevel *self)
 }
 
 FolksTpLowlevel *
-folks_tp_lowlevel_new ()
+folks_tp_lowlevel_new (void)
 {
   return FOLKS_TP_LOWLEVEL (g_object_new (FOLKS_TYPE_TP_LOWLEVEL, NULL));
 }
