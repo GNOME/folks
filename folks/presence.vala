@@ -40,6 +40,8 @@ public interface Folks.Presence : Object
     }
   public abstract string presence_message { get; set; default = ""; }
 
+  /* Rank the presence types for comparison purposes, with higher numbers
+   * meaning more available */
   private static uint type_availability (PresenceType type)
     {
       switch (type)

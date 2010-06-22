@@ -45,6 +45,8 @@ public class Folks.Individual : Object, Alias, Avatar, Capabilities, Groups,
     {
       get { return this._groups; }
 
+      /* Propagate the list of new groups to every Persona in the individual
+       * which implements the Groups interface */
       set
         {
           this._personas.foreach ((p) =>
@@ -61,6 +63,7 @@ public class Folks.Individual : Object, Alias, Avatar, Capabilities, Groups,
 
       set
         {
+          /* Disconnect from all our previous personas */
           this._personas.foreach ((p) =>
             {
               var persona = (Persona) p;
@@ -76,11 +79,19 @@ public class Folks.Individual : Object, Alias, Avatar, Capabilities, Groups,
 
           this._personas = value.copy ();
 
+          /* If all the personas have been removed, remove the individual */
+          if (this._personas.length () < 1)
+            {
+              this.removed ();
+              return;
+            }
+
           /* TODO: base this upon our ID in permanent storage, once we have that
            */
           if (this.id == null && this._personas.data != null)
             this.id = this._personas.data.iid;
 
+          /* Connect to all the new personas */
           this._personas.foreach ((p) =>
             {
               var persona = (Persona) p;
@@ -93,6 +104,7 @@ public class Folks.Individual : Object, Alias, Avatar, Capabilities, Groups,
               groups.group_changed.connect (this.persona_group_changed_cb);
             });
 
+          /* Update our aggregated fields and notify the changes */
           this.update_fields ();
         }
     }
@@ -182,7 +194,9 @@ public class Folks.Individual : Object, Alias, Avatar, Capabilities, Groups,
 
   private void update_fields ()
     {
-      /* gather the first occurence of each field */
+      /* Gather the first occurrence of each field. We assume that there is
+       * at least one persona in the list, since the Individual should've been
+       * destroyed before now otherwise. */
       string alias = null;
       var caps = CapabilitiesFlags.NONE;
       this._personas.foreach ((persona) =>
@@ -198,8 +212,11 @@ public class Folks.Individual : Object, Alias, Avatar, Capabilities, Groups,
 
       if (alias == null)
         {
-          /* FIXME: pick a UID or similar instead */
-          alias = "Name Unknown";
+          /* We have to pick a UID, since none of the personas have an alias
+           * available. Pick the UID from the first persona in the list. */
+          alias = this._personas.data.uid;
+          warning ("No aliases available for individual; using UID instead: %s",
+                   alias);
         }
 
       /* only notify if the value has changed */
@@ -218,7 +235,7 @@ public class Folks.Individual : Object, Alias, Avatar, Capabilities, Groups,
     {
       var new_groups = new HashTable<string, bool> (str_hash, str_equal);
 
-      /* this._groups is null when during initial construction */
+      /* this._groups is null during initial construction */
       if (this._groups == null)
         this._groups = new HashTable<string, bool> (str_hash, str_equal);
 
@@ -277,6 +294,8 @@ public class Folks.Individual : Object, Alias, Avatar, Capabilities, Groups,
     {
       var presence_message = "";
       var presence_type = Folks.PresenceType.UNSET;
+
+      /* Choose the most available presence from our personas */
       this._personas.foreach ((p) =>
         {
           var persona = (Persona) p;
@@ -338,7 +357,7 @@ public class Folks.Individual : Object, Alias, Avatar, Capabilities, Groups,
       return g.groups;
     }
 
-  public string get_presence_message ()
+  public unowned string get_presence_message ()
     {
       return this.presence_message;
     }
