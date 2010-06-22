@@ -45,6 +45,8 @@ public class Folks.Individual : Object, Alias, Avatar, Capabilities, Groups,
     {
       get { return this._groups; }
 
+      /* Propagate the list of new groups to every Persona in the individual
+       * which implements the Groups interface */
       set
         {
           this._personas.foreach ((p) =>
@@ -61,6 +63,7 @@ public class Folks.Individual : Object, Alias, Avatar, Capabilities, Groups,
 
       set
         {
+          /* Disconnect from all our previous personas */
           this._personas.foreach ((p) =>
             {
               var persona = (Persona) p;
@@ -81,6 +84,7 @@ public class Folks.Individual : Object, Alias, Avatar, Capabilities, Groups,
           if (this.id == null && this._personas.data != null)
             this.id = this._personas.data.iid;
 
+          /* Connect to all the new personas */
           this._personas.foreach ((p) =>
             {
               var persona = (Persona) p;
@@ -93,6 +97,7 @@ public class Folks.Individual : Object, Alias, Avatar, Capabilities, Groups,
               groups.group_changed.connect (this.persona_group_changed_cb);
             });
 
+          /* Update our aggregated fields and notify the changes */
           this.update_fields ();
         }
     }
@@ -182,7 +187,7 @@ public class Folks.Individual : Object, Alias, Avatar, Capabilities, Groups,
 
   private void update_fields ()
     {
-      /* gather the first occurence of each field */
+      /* gather the first occurrence of each field */
       string alias = null;
       var caps = CapabilitiesFlags.NONE;
       this._personas.foreach ((persona) =>
@@ -218,7 +223,7 @@ public class Folks.Individual : Object, Alias, Avatar, Capabilities, Groups,
     {
       var new_groups = new HashTable<string, bool> (str_hash, str_equal);
 
-      /* this._groups is null when during initial construction */
+      /* this._groups is null during initial construction */
       if (this._groups == null)
         this._groups = new HashTable<string, bool> (str_hash, str_equal);
 
@@ -277,6 +282,8 @@ public class Folks.Individual : Object, Alias, Avatar, Capabilities, Groups,
     {
       var presence_message = "";
       var presence_type = Folks.PresenceType.UNSET;
+
+      /* Choose the most available presence from our personas */
       this._personas.foreach ((p) =>
         {
           var persona = (Persona) p;

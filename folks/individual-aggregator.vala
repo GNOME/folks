@@ -99,6 +99,9 @@ public class Folks.IndividualAggregator : Object
           individuals.prepend (individual);
         });
 
+      /* For each of the individuals constructed from the newly added personas,
+       * if they don't exist in the aggregator's list of member individuals,
+       * add them to it. */
       GLib.List<Individual> new_individuals = null;
       foreach (var i in individuals)
         {
@@ -110,6 +113,7 @@ public class Folks.IndividualAggregator : Object
             }
         }
 
+      /* Signal the addition of new individuals to the aggregator */
       if (new_individuals != null)
         {
           new_individuals.reverse ();
