@@ -32,8 +32,6 @@ public class Folks.IndividualAggregator : Object
 
   public signal void individuals_added (GLib.List<Individual> inds);
   public signal void individuals_removed (GLib.List<Individual> inds);
-  /* TODO: add a signal for "subcontact went offline/online"? Is that useful
-   * enough to bother with? */
 
   /* FIXME: make this a singleton? */
   public IndividualAggregator () throws GLib.Error
