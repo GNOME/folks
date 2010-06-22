@@ -187,7 +187,9 @@ public class Folks.Individual : Object, Alias, Avatar, Capabilities, Groups,
 
   private void update_fields ()
     {
-      /* gather the first occurrence of each field */
+      /* Gather the first occurrence of each field. We assume that there is
+       * at least one persona in the list, since the Individual should've been
+       * destroyed before now otherwise. */
       string alias = null;
       var caps = CapabilitiesFlags.NONE;
       this._personas.foreach ((persona) =>
@@ -203,8 +205,11 @@ public class Folks.Individual : Object, Alias, Avatar, Capabilities, Groups,
 
       if (alias == null)
         {
-          /* FIXME: pick a UID or similar instead */
-          alias = "Name Unknown";
+          /* We have to pick a UID, since none of the personas have an alias
+           * available. Pick the UID from the first persona in the list. */
+          alias = this._personas.data.uid;
+          warning ("No aliases available for individual; using UID instead: %s",
+                   alias);
         }
 
       /* only notify if the value has changed */
