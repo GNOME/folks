@@ -345,7 +345,7 @@ public class Folks.Individual : Object, Alias, Avatar, Capabilities, Groups,
       return g.groups;
     }
 
-  public string get_presence_message ()
+  public unowned string get_presence_message ()
     {
       return this.presence_message;
     }
