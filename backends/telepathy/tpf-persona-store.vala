@@ -31,12 +31,14 @@ public class Tpf.PersonaStore : Folks.PersonaStore
   private HashTable<string, Persona> _personas;
   /* universal, contact owner handles (not channel-specific) */
   private HashMap<uint, Persona> handle_persona_map;
-  private HashMap<string, HashSet<Persona>> group_personas_map;
-  private HashMap<string, HashSet<uint>> group_incoming_adds;
+  private HashMap<string, HashSet<Persona>> channel_group_personas_map;
+  private HashMap<string, HashSet<uint>> channel_group_incoming_adds;
   private HashMap<string, HashSet<Tpf.Persona>> group_outgoing_adds;
   private HashMap<string, HashSet<Tpf.Persona>> group_outgoing_removes;
   private HashMap<string, Channel> channels_unready;
-  private HashMap<string, Channel> channels;
+  private HashMap<string, Channel> groups;
+  private Channel publish;
+  private Channel subscribe;
   private Connection conn;
   private TpLowlevel ll;
   private AccountManager account_manager;
@@ -62,13 +64,15 @@ public class Tpf.PersonaStore : Folks.PersonaStore
           str_equal);
       this.conn = null;
       this.handle_persona_map = new HashMap<uint, Persona> ();
-      this.group_personas_map = new HashMap<string, HashSet<Persona>> ();
-      this.group_incoming_adds = new HashMap<string, HashSet<uint>> ();
+      this.channel_group_personas_map = new HashMap<string, HashSet<Persona>> ();
+      this.channel_group_incoming_adds = new HashMap<string, HashSet<uint>> ();
       this.group_outgoing_adds = new HashMap<string, HashSet<Tpf.Persona>> ();
       this.group_outgoing_removes = new HashMap<string, HashSet<Tpf.Persona>> (
           );
+      this.publish = null;
+      this.subscribe = null;
       this.channels_unready = new HashMap<string, Channel> ();
-      this.channels = new HashMap<string, Channel> ();
+      this.groups = new HashMap<string, Channel> ();
       this.ll = new TpLowlevel ();
       this.account_manager = AccountManager.dup ();
 
@@ -118,10 +122,10 @@ public class Tpf.PersonaStore : Folks.PersonaStore
           this.new_group_channels_cb);
 
       /* FIXME: uncomment these
-      this.add_channel (conn, "stored");
+      this.add_standard_channel (conn, "stored");
       */
-      this.add_channel (conn, "publish");
-      this.add_channel (conn, "subscribe");
+      this.add_standard_channel (conn, "publish");
+      this.add_standard_channel (conn, "subscribe");
       this.conn = conn;
     }
 
@@ -134,7 +138,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
           return;
         }
 
-      this.set_up_new_channel (channel);
+      this.set_up_new_channel (channel, false);
       this.channel_group_changes_resolve (channel);
     }
 
@@ -175,7 +179,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
         }
     }
 
-  private void set_up_new_channel (Channel channel)
+  private void set_up_new_channel (Channel channel, bool is_standard)
     {
       /* hold a ref to the channel here until it's ready, so it doesn't
        * disappear */
@@ -184,10 +188,21 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       channel.notify["channel-ready"].connect ((s, p) =>
         {
           var c = (Channel) s;
-          var group = c.get_identifier ();
+          var name = c.get_identifier ();
 
-          this.channels[group] = c;
-          this.channels_unready.remove (group);
+          if (is_standard == true)
+            {
+              if (name == "publish")
+                this.publish = c;
+              else if (name == "subscribe")
+                this.subscribe = c;
+            }
+          else
+            {
+              this.groups[name] = c;
+            }
+
+          this.channels_unready.remove (name);
 
           c.invalidated.connect (this.channel_invalidated_cb);
           c.group_members_changed.connect (
@@ -203,21 +218,27 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       string message)
     {
       var channel = (Channel) proxy;
-      var group = channel.get_identifier ();
+      var name = channel.get_identifier ();
 
-      var error = new GLib.Error ((Quark) domain, code, message);
-      this.group_removed (group, error);
+      this.channel_group_personas_map.remove (name);
+      this.channel_group_incoming_adds.remove (name);
 
-      this.group_personas_map.remove (channel.get_identifier ());
-      this.group_incoming_adds.remove (channel.get_identifier ());
-
-      this.channels.remove (group);
+      if (proxy == this.publish)
+        this.publish = null;
+      else if (proxy == this.subscribe)
+        this.subscribe = null;
+      else
+        {
+          var error = new GLib.Error ((Quark) domain, code, message);
+          this.group_removed (name, error);
+          this.groups.remove (name);
+        }
     }
 
   private void channel_group_pend_incoming_adds (Channel channel,
       Array<uint> adds)
     {
-      var group = channel.get_identifier ();
+      var name = channel.get_identifier ();
 
       var adds_length = adds != null ? adds.length : 0;
       if (adds_length >= 1)
@@ -235,18 +256,18 @@ public class Tpf.PersonaStore : Folks.PersonaStore
               if (persona == null)
                 {
                   HashSet<uint>? contact_handles =
-                    this.group_incoming_adds[group];
+                    this.channel_group_incoming_adds[name];
                   if (contact_handles == null)
                     {
                       contact_handles = new HashSet<uint> ();
-                      this.group_incoming_adds[group] = contact_handles;
+                      this.channel_group_incoming_adds[name] = contact_handles;
                     }
                   contact_handles.add (contact_handle);
                 }
             }
         }
 
-      this.groups_add_new_personas ();
+      this.channel_groups_add_new_personas ();
     }
 
   private void channel_group_members_changed_cb (Channel channel,
@@ -269,7 +290,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       string group, bool is_member)
     {
       var tp_persona = (Tpf.Persona) persona;
-      var channel = this.channels[group];
+      var channel = this.groups[group];
       var change_map = is_member ? this.group_outgoing_adds :
         this.group_outgoing_removes;
       var change_set = change_map[group];
@@ -314,7 +335,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
         }
     }
 
-  private async Channel? add_channel (Connection conn, string name)
+  private async Channel? add_standard_channel (Connection conn, string name)
     {
       Channel? channel = null;
 
@@ -333,7 +354,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
           return null;
         }
 
-      this.set_up_new_channel (channel);
+      this.set_up_new_channel (channel, true);
 
       return channel;
     }
@@ -468,7 +489,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
             }
         }
 
-      this.groups_add_new_personas ();
+      this.channel_groups_add_new_personas ();
 
       if (personas_new.size () >= 1)
         {
@@ -477,16 +498,16 @@ public class Tpf.PersonaStore : Folks.PersonaStore
         }
     }
 
-  private void groups_add_new_personas ()
+  private void channel_groups_add_new_personas ()
     {
-      foreach (var entry in this.group_incoming_adds)
+      foreach (var entry in this.channel_group_incoming_adds)
         {
-          var group = entry.key;
-          var group_members_added = new GLib.List<Persona> ();
+          var name = entry.key;
+          var members_added = new GLib.List<Persona> ();
 
-          HashSet<Persona> group_members = this.group_personas_map[group];
-          if (group_members == null)
-            group_members = new HashSet<Persona> ();
+          HashSet<Persona> members = this.channel_group_personas_map[name];
+          if (members == null)
+            members = new HashSet<Persona> ();
 
           var contact_handles = entry.value;
           if (contact_handles != null && contact_handles.size > 0)
@@ -497,8 +518,8 @@ public class Tpf.PersonaStore : Folks.PersonaStore
                   var persona = this.handle_persona_map[contact_handle];
                   if (persona != null)
                     {
-                      group_members.add (persona);
-                      group_members_added.prepend (persona);
+                      members.add (persona);
+                      members_added.prepend (persona);
                       contact_handles_added.add (contact_handle);
                     }
                 }
@@ -507,14 +528,14 @@ public class Tpf.PersonaStore : Folks.PersonaStore
                 contact_handles.remove (handle);
             }
 
-          if (group_members.size > 0)
-            this.group_personas_map[group] = group_members;
+          if (members.size > 0)
+            this.channel_group_personas_map[name] = members;
 
-          if (this.group_is_display_group (group) &&
-              group_members_added.length () > 0)
+          if (this.group_is_display_group (name) &&
+              members_added.length () > 0)
             {
-              group_members_added.reverse ();
-              this.group_members_changed (group, group_members_added, null);
+              members_added.reverse ();
+              this.group_members_changed (name, members_added, null);
             }
         }
     }
@@ -553,14 +574,12 @@ public class Tpf.PersonaStore : Folks.PersonaStore
           if (personas != null && personas.length () == 1)
             {
               var persona = personas.data;
-              var subscribe = this.channels["subscribe"];
-              var publish = this.channels["publish"];
 
-              if (subscribe != null)
+              if (this.subscribe != null)
                 change_standard_contact_list_membership (subscribe, persona,
                     true);
 
-              if (publish != null)
+              if (this.publish != null)
                 {
                   var flags = publish.group_get_flags ();
                   if ((flags & ChannelGroupFlags.CAN_ADD) ==
