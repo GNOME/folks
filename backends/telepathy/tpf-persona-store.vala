@@ -31,7 +31,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
   private HashTable<string, Persona> _personas;
   /* universal, contact owner handles (not channel-specific) */
   private HashMap<uint, Persona> handle_persona_map;
-  private HashMap<string, HashSet<Persona>> channel_group_personas_map;
+  private HashMap<Channel, HashSet<Persona>> channel_group_personas_map;
   private HashMap<Channel, HashSet<uint>> channel_group_incoming_adds;
   private HashMap<string, HashSet<Tpf.Persona>> group_outgoing_adds;
   private HashMap<string, HashSet<Tpf.Persona>> group_outgoing_removes;
@@ -64,7 +64,8 @@ public class Tpf.PersonaStore : Folks.PersonaStore
           str_equal);
       this.conn = null;
       this.handle_persona_map = new HashMap<uint, Persona> ();
-      this.channel_group_personas_map = new HashMap<string, HashSet<Persona>> ();
+      this.channel_group_personas_map = new HashMap<Channel, HashSet<Persona>> (
+          direct_hash, direct_equal);
       this.channel_group_incoming_adds = new HashMap<Channel, HashSet<uint>> (
           direct_hash, direct_equal);
       this.group_outgoing_adds = new HashMap<string, HashSet<Tpf.Persona>> ();
@@ -219,9 +220,8 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       string message)
     {
       var channel = (Channel) proxy;
-      var name = channel.get_identifier ();
 
-      this.channel_group_personas_map.remove (name);
+      this.channel_group_personas_map.remove (channel);
       this.channel_group_incoming_adds.remove (channel);
 
       if (proxy == this.publish)
@@ -231,6 +231,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       else
         {
           var error = new GLib.Error ((Quark) domain, code, message);
+          var name = channel.get_identifier ();
           this.group_removed (name, error);
           this.groups.remove (name);
         }
@@ -503,10 +504,9 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       foreach (var entry in this.channel_group_incoming_adds)
         {
           var channel = (Channel) entry.key;
-          var name = channel.get_identifier ();
           var members_added = new GLib.List<Persona> ();
 
-          HashSet<Persona> members = this.channel_group_personas_map[name];
+          HashSet<Persona> members = this.channel_group_personas_map[channel];
           if (members == null)
             members = new HashSet<Persona> ();
 
@@ -530,8 +530,9 @@ public class Tpf.PersonaStore : Folks.PersonaStore
             }
 
           if (members.size > 0)
-            this.channel_group_personas_map[name] = members;
+            this.channel_group_personas_map[channel] = members;
 
+          var name = channel.get_identifier ();
           if (this.group_is_display_group (name) &&
               members_added.length () > 0)
             {
