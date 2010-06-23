@@ -221,7 +221,10 @@ public class Tpf.PersonaStore : Folks.PersonaStore
 
           unowned IntSet members = c.group_get_members ();
           if (members != null)
-            this.channel_group_pend_incoming_adds (c, members.to_array ());
+            {
+              this.channel_group_pend_incoming_adds (c, members.to_array (),
+                  true);
+            }
         });
     }
 
@@ -236,7 +239,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       uint reason)
     {
       if (added != null)
-        this.channel_group_pend_incoming_adds (channel, added);
+        this.channel_group_pend_incoming_adds (channel, added, true);
 
       /* FIXME: continue for the other arrays */
     }
@@ -253,10 +256,8 @@ public class Tpf.PersonaStore : Folks.PersonaStore
     {
       if (added != null)
         {
-          this.channel_group_pend_incoming_adds (channel, added);
+          this.channel_group_pend_incoming_adds (channel, added, true);
         }
-
-      /* FIXME: continue for the other arrays */
     }
 
   private void subscribe_channel_group_members_changed_cb (Channel channel,
@@ -271,38 +272,16 @@ public class Tpf.PersonaStore : Folks.PersonaStore
     {
       if (added != null)
         {
-          this.channel_group_pend_incoming_adds (channel, added);
+          this.channel_group_pend_incoming_adds (channel, added, true);
 
           /* expose ourselves to anyone we can see */
           if (this.publish != null)
-            this.channel_group_pend_incoming_adds (this.publish, added);
+            {
+              this.channel_group_pend_incoming_adds (this.publish, added, true);
+            }
         }
 
       /* FIXME: continue for the other arrays */
-    }
-
-  private void set_up_new_group_channel (Channel channel)
-    {
-      /* hold a ref to the channel here until it's ready, so it doesn't
-       * disappear */
-      this.group_channels_unready[channel.get_identifier ()] = channel;
-
-      channel.notify["channel-ready"].connect ((s, p) =>
-        {
-          var c = (Channel) s;
-          var name = c.get_identifier ();
-
-          this.groups[name] = c;
-          this.group_channels_unready.remove (name);
-
-          c.invalidated.connect (this.channel_invalidated_cb);
-          c.group_members_changed.connect (
-            this.group_channel_group_members_changed_cb);
-
-          unowned IntSet members = c.group_get_members ();
-          if (members != null)
-            this.channel_group_pend_incoming_adds (c, members.to_array ());
-        });
     }
 
   private void channel_invalidated_cb (Proxy proxy, uint domain, int code,
@@ -326,15 +305,19 @@ public class Tpf.PersonaStore : Folks.PersonaStore
         }
     }
 
+  /* Only non-group contact list channels should use create_personas == true,
+   * since the exposed set of Personas are meant to be filtered by them */
   private void channel_group_pend_incoming_adds (Channel channel,
-      Array<uint> adds)
+      Array<uint> adds,
+      bool create_personas)
     {
       var adds_length = adds != null ? adds.length : 0;
       if (adds_length >= 1)
         {
           /* this won't complete before we would add the personas to the group,
            * so we have to buffer the contact handles below */
-          this.create_personas_from_channel_handles_async (channel, adds);
+          if (create_personas)
+            this.create_personas_from_channel_handles_async (channel, adds);
 
           for (var i = 0; i < adds.length; i++)
             {
@@ -360,6 +343,33 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       this.channel_groups_add_new_personas ();
     }
 
+  private void set_up_new_group_channel (Channel channel)
+    {
+      /* hold a ref to the channel here until it's ready, so it doesn't
+       * disappear */
+      this.group_channels_unready[channel.get_identifier ()] = channel;
+
+      channel.notify["channel-ready"].connect ((s, p) =>
+        {
+          var c = (Channel) s;
+          var name = c.get_identifier ();
+
+          this.groups[name] = c;
+          this.group_channels_unready.remove (name);
+
+          c.invalidated.connect (this.channel_invalidated_cb);
+          c.group_members_changed.connect (
+            this.group_channel_group_members_changed_cb);
+
+          unowned IntSet members = c.group_get_members ();
+          if (members != null)
+            {
+              this.channel_group_pend_incoming_adds (c, members.to_array (),
+                false);
+            }
+        });
+    }
+
   private void group_channel_group_members_changed_cb (Channel channel,
       string message,
       /* FIXME: Array<uint> => Array<Handle>; parser bug */
@@ -371,7 +381,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       uint reason)
     {
       if (added != null)
-        this.channel_group_pend_incoming_adds (channel, added);
+        this.channel_group_pend_incoming_adds (channel, added, false);
 
       /* FIXME: continue for the other arrays */
     }
