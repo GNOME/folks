@@ -205,7 +205,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       var channel = (Channel) proxy;
       var group = channel.get_identifier ();
 
-      var error = new GLib.Error ((Quark) domain, code, message);
+      var error = new GLib.Error ((Quark) domain, code, "%s", message);
       this.group_removed (group, error);
 
       this.group_personas_map.remove (channel.get_identifier ());
