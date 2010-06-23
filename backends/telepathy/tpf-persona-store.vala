@@ -40,7 +40,6 @@ public class Tpf.PersonaStore : Folks.PersonaStore
   private HashMap<string, Channel> groups;
   private Channel publish;
   private Channel subscribe;
-  private Channel stored;
   private Connection conn;
   private TpLowlevel ll;
   private AccountManager account_manager;
@@ -74,7 +73,6 @@ public class Tpf.PersonaStore : Folks.PersonaStore
           );
       this.publish = null;
       this.subscribe = null;
-      this.stored = null;
       this.standard_channels_unready = new HashMap<string, Channel> ();
       this.group_channels_unready = new HashMap<string, Channel> ();
       this.groups = new HashMap<string, Channel> ();
@@ -126,7 +124,6 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       this.ll.connection_connect_to_new_group_channels (conn,
           this.new_group_channels_cb);
 
-      this.add_standard_channel (conn, "stored");
       this.add_standard_channel (conn, "publish");
       this.add_standard_channel (conn, "subscribe");
       this.conn = conn;
@@ -200,13 +197,6 @@ public class Tpf.PersonaStore : Folks.PersonaStore
               c.group_members_changed.connect (
                   this.publish_channel_group_members_changed_cb);
             }
-          else if (name == "stored")
-            {
-              this.stored = c;
-
-              c.group_members_changed.connect (
-                  this.stored_channel_group_members_changed_cb);
-            }
           else if (name == "subscribe")
             {
               this.subscribe = c;
@@ -249,28 +239,6 @@ public class Tpf.PersonaStore : Folks.PersonaStore
         }
 
       /* FIXME: continue for the other arrays */
-    }
-
-  private void stored_channel_group_members_changed_cb (Channel channel,
-      string message,
-      /* FIXME: Array<uint> => Array<Handle>; parser bug */
-      Array<uint>? added,
-      Array<uint>? removed,
-      Array<uint>? local_pending,
-      Array<uint>? remote_pending,
-      uint actor,
-      uint reason)
-    {
-      if (added != null)
-        {
-          this.channel_group_pend_incoming_adds (channel, added, true);
-        }
-
-      for (var i = 0; i < removed.length; i++)
-        {
-          var handle = removed.index (i);
-          this.remove_from_personas_if_needed (handle);
-        }
     }
 
   private void subscribe_channel_group_members_changed_cb (Channel channel,
