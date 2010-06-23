@@ -141,6 +141,9 @@ public class Folks.IndividualAggregator : Object
    * Common keys include:
    *
    *  * contact - service-specific contact ID
+   *
+   * If parent is provided, the new persona will be appended to its ordered list
+   * of personas.
    */
   public async Persona? add_persona_from_details (Individual? parent,
       string persona_store_type,
