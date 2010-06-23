@@ -29,55 +29,23 @@ using GLib;
  * interface in the Telepathy specification.
  */
 public enum Folks.PresenceType {
-  /**
-   * Presence is unset. (Default.)
-   */
   UNSET,
-
-  /**
-   * User is offline.
-   */
   OFFLINE,
-
-  /**
-   * User is available.
-   */
   AVAILABLE,
-
-  /**
-   * User is away.
-   */
   AWAY,
-
-  /**
-   * User is away for an extended period.
-   */
   EXTENDED_AWAY,
-
-  /**
-   * User is online but hidden.
-   */
   HIDDEN,
-
-  /**
-   * User is busy.
-   */
   BUSY,
-
-  /**
-   * Presence is unknown.
-   */
   UNKNOWN,
-
-  /**
-   * Presence is invalid.
-   */
   ERROR
 }
 
 /**
- * Interface for {@link Persona}s or {@link Individual}s which have a presence;
- * their current availability, such as for chatting.
+ * Interface exposing a {@link Persona}'s or {@link Individual}'s presence;
+ * their current availability, such as for chatting. If the {@link Backend}
+ * providing the {@link Persona} doesn't support presence, the {@link Persona}'s
+ * `presence_type` will be set to {@link PresenceType.UNSET} and their
+ * `presence_message` will be an empty string.
  */
 public interface Folks.Presence : Object
 {
