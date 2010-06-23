@@ -35,7 +35,8 @@ public class Tpf.PersonaStore : Folks.PersonaStore
   private HashMap<Channel, HashSet<uint>> channel_group_incoming_adds;
   private HashMap<string, HashSet<Tpf.Persona>> group_outgoing_adds;
   private HashMap<string, HashSet<Tpf.Persona>> group_outgoing_removes;
-  private HashMap<string, Channel> channels_unready;
+  private HashMap<string, Channel> standard_channels_unready;
+  private HashMap<string, Channel> group_channels_unready;
   private HashMap<string, Channel> groups;
   private Channel publish;
   private Channel subscribe;
@@ -73,7 +74,8 @@ public class Tpf.PersonaStore : Folks.PersonaStore
           );
       this.publish = null;
       this.subscribe = null;
-      this.channels_unready = new HashMap<string, Channel> ();
+      this.standard_channels_unready = new HashMap<string, Channel> ();
+      this.group_channels_unready = new HashMap<string, Channel> ();
       this.groups = new HashMap<string, Channel> ();
       this.ll = new TpLowlevel ();
       this.account_manager = AccountManager.dup ();
@@ -185,7 +187,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
     {
       /* hold a ref to the channel here until it's ready, so it doesn't
        * disappear */
-      this.channels_unready[channel.get_identifier ()] = channel;
+      this.standard_channels_unready[channel.get_identifier ()] = channel;
 
       channel.notify["channel-ready"].connect ((s, p) =>
         {
@@ -207,7 +209,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
                   this.subscribe_channel_group_members_changed_cb);
             }
 
-          this.channels_unready.remove (name);
+          this.standard_channels_unready.remove (name);
 
           c.invalidated.connect (this.channel_invalidated_cb);
 
@@ -259,7 +261,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
     {
       /* hold a ref to the channel here until it's ready, so it doesn't
        * disappear */
-      this.channels_unready[channel.get_identifier ()] = channel;
+      this.group_channels_unready[channel.get_identifier ()] = channel;
 
       channel.notify["channel-ready"].connect ((s, p) =>
         {
@@ -267,7 +269,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
           var name = c.get_identifier ();
 
           this.groups[name] = c;
-          this.channels_unready.remove (name);
+          this.group_channels_unready.remove (name);
 
           c.invalidated.connect (this.channel_invalidated_cb);
           c.group_members_changed.connect (
