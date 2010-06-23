@@ -32,7 +32,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
   /* universal, contact owner handles (not channel-specific) */
   private HashMap<uint, Persona> handle_persona_map;
   private HashMap<string, HashSet<Persona>> channel_group_personas_map;
-  private HashMap<string, HashSet<uint>> channel_group_incoming_adds;
+  private HashMap<Channel, HashSet<uint>> channel_group_incoming_adds;
   private HashMap<string, HashSet<Tpf.Persona>> group_outgoing_adds;
   private HashMap<string, HashSet<Tpf.Persona>> group_outgoing_removes;
   private HashMap<string, Channel> channels_unready;
@@ -65,7 +65,8 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       this.conn = null;
       this.handle_persona_map = new HashMap<uint, Persona> ();
       this.channel_group_personas_map = new HashMap<string, HashSet<Persona>> ();
-      this.channel_group_incoming_adds = new HashMap<string, HashSet<uint>> ();
+      this.channel_group_incoming_adds = new HashMap<Channel, HashSet<uint>> (
+          direct_hash, direct_equal);
       this.group_outgoing_adds = new HashMap<string, HashSet<Tpf.Persona>> ();
       this.group_outgoing_removes = new HashMap<string, HashSet<Tpf.Persona>> (
           );
@@ -221,7 +222,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       var name = channel.get_identifier ();
 
       this.channel_group_personas_map.remove (name);
-      this.channel_group_incoming_adds.remove (name);
+      this.channel_group_incoming_adds.remove (channel);
 
       if (proxy == this.publish)
         this.publish = null;
@@ -238,8 +239,6 @@ public class Tpf.PersonaStore : Folks.PersonaStore
   private void channel_group_pend_incoming_adds (Channel channel,
       Array<uint> adds)
     {
-      var name = channel.get_identifier ();
-
       var adds_length = adds != null ? adds.length : 0;
       if (adds_length >= 1)
         {
@@ -256,11 +255,12 @@ public class Tpf.PersonaStore : Folks.PersonaStore
               if (persona == null)
                 {
                   HashSet<uint>? contact_handles =
-                    this.channel_group_incoming_adds[name];
+                      this.channel_group_incoming_adds[channel];
                   if (contact_handles == null)
                     {
                       contact_handles = new HashSet<uint> ();
-                      this.channel_group_incoming_adds[name] = contact_handles;
+                      this.channel_group_incoming_adds[channel] =
+                          contact_handles;
                     }
                   contact_handles.add (contact_handle);
                 }
@@ -502,7 +502,8 @@ public class Tpf.PersonaStore : Folks.PersonaStore
     {
       foreach (var entry in this.channel_group_incoming_adds)
         {
-          var name = entry.key;
+          var channel = (Channel) entry.key;
+          var name = channel.get_identifier ();
           var members_added = new GLib.List<Persona> ();
 
           HashSet<Persona> members = this.channel_group_personas_map[name];
