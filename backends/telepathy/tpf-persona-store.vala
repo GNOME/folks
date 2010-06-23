@@ -140,7 +140,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
           return;
         }
 
-      this.set_up_new_channel (channel, false);
+      this.set_up_new_group_channel (channel);
       this.channel_group_changes_resolve (channel);
     }
 
@@ -181,7 +181,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
         }
     }
 
-  private void set_up_new_channel (Channel channel, bool is_standard)
+  private void set_up_new_standard_channel (Channel channel)
     {
       /* hold a ref to the channel here until it's ready, so it doesn't
        * disappear */
@@ -192,23 +192,86 @@ public class Tpf.PersonaStore : Folks.PersonaStore
           var c = (Channel) s;
           var name = c.get_identifier ();
 
-          if (is_standard == true)
+          if (name == "publish")
             {
-              if (name == "publish")
-                this.publish = c;
-              else if (name == "subscribe")
-                this.subscribe = c;
+              this.publish = c;
+
+              c.group_members_changed.connect (
+                  this.publish_channel_group_members_changed_cb);
             }
-          else
+          else if (name == "subscribe")
             {
-              this.groups[name] = c;
+              this.subscribe = c;
+
+              c.group_members_changed.connect (
+                  this.subscribe_channel_group_members_changed_cb);
             }
 
           this.channels_unready.remove (name);
 
           c.invalidated.connect (this.channel_invalidated_cb);
+
+          unowned IntSet members = c.group_get_members ();
+          if (members != null)
+            this.channel_group_pend_incoming_adds (c, members.to_array ());
+        });
+    }
+
+  private void publish_channel_group_members_changed_cb (Channel channel,
+      string message,
+      /* FIXME: Array<uint> => Array<Handle>; parser bug */
+      Array<uint>? added,
+      Array<uint>? removed,
+      Array<uint>? local_pending,
+      Array<uint>? remote_pending,
+      uint actor,
+      uint reason)
+    {
+      if (added != null)
+        this.channel_group_pend_incoming_adds (channel, added);
+
+      /* FIXME: continue for the other arrays */
+    }
+
+  private void subscribe_channel_group_members_changed_cb (Channel channel,
+      string message,
+      /* FIXME: Array<uint> => Array<Handle>; parser bug */
+      Array<uint>? added,
+      Array<uint>? removed,
+      Array<uint>? local_pending,
+      Array<uint>? remote_pending,
+      uint actor,
+      uint reason)
+    {
+      if (added != null)
+        {
+          this.channel_group_pend_incoming_adds (channel, added);
+
+          /* expose ourselves to anyone we can see */
+          if (this.publish != null)
+            this.channel_group_pend_incoming_adds (this.publish, added);
+        }
+
+      /* FIXME: continue for the other arrays */
+    }
+
+  private void set_up_new_group_channel (Channel channel)
+    {
+      /* hold a ref to the channel here until it's ready, so it doesn't
+       * disappear */
+      this.channels_unready[channel.get_identifier ()] = channel;
+
+      channel.notify["channel-ready"].connect ((s, p) =>
+        {
+          var c = (Channel) s;
+          var name = c.get_identifier ();
+
+          this.groups[name] = c;
+          this.channels_unready.remove (name);
+
+          c.invalidated.connect (this.channel_invalidated_cb);
           c.group_members_changed.connect (
-            this.channel_group_members_changed_cb);
+            this.group_channel_group_members_changed_cb);
 
           unowned IntSet members = c.group_get_members ();
           if (members != null)
@@ -271,7 +334,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       this.channel_groups_add_new_personas ();
     }
 
-  private void channel_group_members_changed_cb (Channel channel,
+  private void group_channel_group_members_changed_cb (Channel channel,
       string message,
       /* FIXME: Array<uint> => Array<Handle>; parser bug */
       Array<uint>? added,
@@ -355,7 +418,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
           return null;
         }
 
-      this.set_up_new_channel (channel, true);
+      this.set_up_new_standard_channel (channel);
 
       return channel;
     }
