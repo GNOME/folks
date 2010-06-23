@@ -66,9 +66,8 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       this.conn = null;
       this.handle_persona_map = new HashMap<uint, Persona> ();
       this.channel_group_personas_map = new HashMap<Channel, HashSet<Persona>> (
-          direct_hash, direct_equal);
-      this.channel_group_incoming_adds = new HashMap<Channel, HashSet<uint>> (
-          direct_hash, direct_equal);
+          );
+      this.channel_group_incoming_adds = new HashMap<Channel, HashSet<uint>> ();
       this.group_outgoing_adds = new HashMap<string, HashSet<Tpf.Persona>> ();
       this.group_outgoing_removes = new HashMap<string, HashSet<Tpf.Persona>> (
           );
