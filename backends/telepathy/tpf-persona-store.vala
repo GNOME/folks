@@ -16,6 +16,7 @@
  *
  * Authors:
  *       Travis Reitter <travis.reitter@collabora.co.uk>
+ *       Philip Withnall <philip.withnall@collabora.co.uk>
  */
 
 using GLib;
@@ -23,6 +24,24 @@ using Gee;
 using Tp;
 using Tp.ContactFeature;
 using Folks;
+
+private struct AccountFavourites {
+	DBus.ObjectPath account_path;
+	string[] ids;
+}
+
+[DBus (name = "org.freedesktop.Telepathy.Logger.DRAFT")]
+private interface Logger : DBus.Object {
+  public abstract async AccountFavourites[] get_favourite_contacts ()
+      throws DBus.Error;
+  public abstract async void add_favourite_contact (
+      DBus.ObjectPath account_path, string id) throws DBus.Error;
+  public abstract async void remove_favourite_contact (
+      DBus.ObjectPath account_path, string id) throws DBus.Error;
+
+  public abstract signal void favourite_contacts_changed (
+      DBus.ObjectPath account_path, string[] added, string[] removed);
+}
 
 public class Tpf.PersonaStore : Folks.PersonaStore
 {
@@ -38,12 +57,15 @@ public class Tpf.PersonaStore : Folks.PersonaStore
   private HashMap<string, Channel> standard_channels_unready;
   private HashMap<string, Channel> group_channels_unready;
   private HashMap<string, Channel> groups;
+  /* FIXME: Should be HashSet<Handle> */
+  private HashSet<uint> favourite_handles;
   private Channel publish;
   private Channel stored;
   private Channel subscribe;
   private Connection conn;
   private TpLowlevel ll;
   private AccountManager account_manager;
+  private Logger logger;
 
   [Property(nick = "basis account",
       blurb = "Telepathy account this store is based upon")]
@@ -62,6 +84,8 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       this.type_id = "telepathy";
       this.id = account.get_object_path (account);
 
+      debug ("Creating new PersonaStore for account '%s'", this.id);
+
       this._personas = new HashTable<string, Persona> (str_hash,
           str_equal);
       this.conn = null;
@@ -78,8 +102,10 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       this.standard_channels_unready = new HashMap<string, Channel> ();
       this.group_channels_unready = new HashMap<string, Channel> ();
       this.groups = new HashMap<string, Channel> ();
+      this.favourite_handles = new HashSet<uint> ();
       this.ll = new TpLowlevel ();
       this.account_manager = AccountManager.dup ();
+      this.logger = null;
 
       this.account_manager.account_disabled.connect ((a) =>
         {
@@ -108,6 +134,136 @@ public class Tpf.PersonaStore : Folks.PersonaStore
           this.account_status_changed_cb (Tp.ConnectionStatus.DISCONNECTED,
               status, reason, null, null);
         }
+
+      /* Create a logger proxy for favourites support */
+      /* FIXME: This should be ported to the Vala GDBus stuff and made async,
+       * but that depends on
+       * https://bugzilla.gnome.org/show_bug.cgi?id=622611 being fixed. */
+      /* FIXME: It would also be nice to have it as a per-backend singleton,
+       * much like AccountManager is implemented. At the moment, we have one
+       * Logger proxy per PersonaStore, which is sub-optimal. */
+      try
+        {
+          var dbus_conn = DBus.Bus.get (DBus.BusType.SESSION);
+          this.logger = dbus_conn.get_object ("org.freedesktop.Telepathy.Logger",
+              "/org/freedesktop/Telepathy/Logger",
+              "org.freedesktop.Telepathy.Logger.DRAFT") as Logger;
+        }
+      catch (DBus.Error e)
+        {
+          warning ("couldn't connect to the telepathy-logger service");
+          return;
+        }
+
+      /* Connect to be notified of future changes to the set of favourites */
+      this.logger.favourite_contacts_changed.connect (
+          this.favourite_contacts_changed_cb);
+    }
+
+  private async void initialise_favourite_contacts ()
+    {
+      /* Get an initial set of favourite contacts */
+      try
+        {
+          debug ("attempting to list favourite contacts...");
+          var contacts = yield this.logger.get_favourite_contacts ();
+
+          foreach (AccountFavourites account in contacts)
+            {
+              /* We only want the favourites from this account */
+              if (account.account_path != this.id)
+                continue;
+
+              debug ("adding favourite contacts for account '%s'", this.id);
+
+              /* Note that we don't need to release these handles, as they're also
+               * held by the relevant contact objects, and will be released as
+               * appropriate by those objects (we're circumventing tp-glib's handle
+               * reference counting). */
+              this.conn.request_handles (-1, HandleType.CONTACT, account.ids,
+                (c, ht, nh, h, i, e, w) =>
+                  {
+                    this.change_favourites_by_request_handles (nh, h, i, e, true);
+                  }, this);
+              /* FIXME: Have to pass this as weak_object parameter since Vala
+               * seems to swap the order of user_data and weak_object in the
+               * callback. */
+            }
+        }
+      catch (DBus.Error e)
+        {
+          warning ("couldn't get list of favourite contacts: %s", e.message);
+        }
+    }
+
+  /* Pass true or false (cast as a pointer) to user_data to add or remove the
+   * handles as favourites, respectively */
+  private void change_favourites_by_request_handles (uint n_handles,
+      Handle[] handles, string[] ids, GLib.Error? error, bool add)
+    {
+      if (error != null)
+        {
+          warning ("error requesting handles for favourite contacts: %s",
+              error.message);
+        }
+
+      for (var i = 0; i < n_handles; i++)
+        {
+          Handle h = handles[i];
+          Persona p = this.handle_persona_map[h];
+
+          /* Add/Remove the handle to the set of favourite handles, since we
+           * might not have the corresponding contact yet */
+          if (add)
+            {
+              debug ("adding '%s' as a favourite", ids[i]);
+              this.favourite_handles.add (h);
+            }
+          else
+            {
+              debug ("removing '%s' as a favourite", ids[i]);
+              this.favourite_handles.remove (h);
+            }
+
+          if (p == null)
+            {
+              warning ("unknown persona '%s' in favourites list", ids[i]);
+              continue;
+            }
+
+          /* Mark or unmark the persona as a favourite */
+          p.is_favourite = add;
+        }
+    }
+
+  private void favourite_contacts_changed_cb (string account_path,
+      string[] added, string[] removed)
+    {
+      /* Don't listen to favourites updates if the account is disconnected */
+      if (this.conn == null)
+        return;
+
+      debug ("favourite_contacts_changed_cb for account '%s'", account_path);
+
+      /* Add favourites */
+      if (added.length > 0)
+        {
+          this.conn.request_handles (-1, HandleType.CONTACT, added,
+              (c, ht, nh, h, i, e, w) =>
+                {
+                  this.change_favourites_by_request_handles (nh, h, i, e, true);
+                }, this);
+        }
+
+      /* Remove favourites */
+      if (removed.length > 0)
+        {
+          this.conn.request_handles (-1, HandleType.CONTACT, removed,
+              (c, ht, nh, h, i, e, w) =>
+                {
+                  this.change_favourites_by_request_handles (nh, h, i, e, false);
+                }, this);
+        }
     }
 
   private void account_status_changed_cb (ConnectionStatus old_status,
@@ -130,6 +286,9 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       this.add_standard_channel (conn, "stored");
       this.add_standard_channel (conn, "subscribe");
       this.conn = conn;
+
+      /* We can only initialise the favourite contacts once we've got conn */
+      this.initialise_favourite_contacts.begin ();
     }
 
   private void new_group_channels_cb (void *data)
@@ -696,8 +855,15 @@ public class Tpf.PersonaStore : Folks.PersonaStore
                 {
                   personas_new.insert (persona.iid, persona);
 
+                  var h = contact.get_handle ();
                   this._personas.insert (persona.iid, persona);
-                  this.handle_persona_map[contact.get_handle ()] = persona;
+                  this.handle_persona_map[h] = persona;
+
+                  /* If the handle is a favourite, ensure the persona's marked
+                   * as such. This deals with the case where we receive a
+                   * contact _after_ we've discovered that they're a
+                   * favourite. */
+                  persona.is_favourite = this.favourite_handles.contains (h);
                 }
             }
           catch (Tp.Error e)
@@ -823,5 +989,42 @@ public class Tpf.PersonaStore : Folks.PersonaStore
         }
 
       return null;
+    }
+
+  public void change_is_favourite (Folks.Persona persona, bool is_favourite)
+    {
+      /* It's possible for us to not be able to connect to the logger;
+       * see connection_ready_cb() */
+      if (this.logger == null)
+        {
+          warning ("failed to change favourite without connection to the " +
+                   "telepathy-logger service");
+          return;
+        }
+
+      try
+        {
+          /* Add or remove the persona to the list of favourites as
+           * appropriate. They'll get added to this.favourite_handles when the
+           * favourite_contacts_changed signal gets fired. */
+          var id = ((Tpf.Persona) persona).contact.get_identifier ();
+
+          if (is_favourite)
+            {
+              debug ("adding '%s' as a favourite contact", id);
+              this.logger.add_favourite_contact (new DBus.ObjectPath (this.id),
+                  id);
+            }
+          else
+            {
+              debug ("removing '%s' as a favourite contact", id);
+              this.logger.remove_favourite_contact (
+                  new DBus.ObjectPath (this.id), id);
+            }
+        }
+      catch (DBus.Error e)
+        {
+          warning ("failed to change a persona's favourite status");
+        }
     }
 }

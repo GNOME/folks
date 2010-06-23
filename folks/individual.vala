@@ -27,11 +27,12 @@ using Folks;
  * might have, such as their different IM addresses or vCard entries.
  */
 public class Folks.Individual : Object, Alias, Avatar, Capabilities, Groups,
-       Presence
+       Presence, Favourite
 {
   private HashTable<string, bool> _groups;
   private GLib.List<Persona> _personas;
   private HashTable<PersonaStore, HashSet<Persona>> stores;
+  private bool _is_favourite;
 
   /* XXX: should setting this push it down into the Persona (to foward along to
    * the actual store if possible?) */
@@ -41,6 +42,25 @@ public class Folks.Individual : Object, Alias, Avatar, Capabilities, Groups,
   public string id { get; private set; }
   public Folks.PresenceType presence_type { get; private set; }
   public string presence_message { get; private set; }
+  public bool is_favourite
+    {
+      get { return this._is_favourite; }
+
+      /* Propagate the new favourite status to every Persona, but only if it's
+       * changed. */
+      set
+        {
+          if (this._is_favourite == value)
+            return;
+
+          this._is_favourite = true;
+          this._personas.foreach ((p) =>
+            {
+              if (p is Favourite)
+                ((Favourite) p).is_favourite = value;
+            });
+        }
+    }
 
   /* the last of this individuals personas has been removed, so it is invalid */
   public signal void removed ();
@@ -78,6 +98,8 @@ public class Folks.Individual : Object, Alias, Avatar, Capabilities, Groups,
                   this.notify_presence_cb);
               persona.notify["presence-type"].disconnect (
                   this.notify_presence_cb);
+              persona.notify["is-favourite"].disconnect (
+                  this.notify_is_favourite_cb);
               groups.group_changed.disconnect (this.persona_group_changed_cb);
             });
 
@@ -105,6 +127,8 @@ public class Folks.Individual : Object, Alias, Avatar, Capabilities, Groups,
               persona.notify["presence-message"].connect (
                   this.notify_presence_cb);
               persona.notify["presence-type"].connect (this.notify_presence_cb);
+              persona.notify["is-favourite"].connect (
+                  this.notify_is_favourite_cb);
               groups.group_changed.connect (this.persona_group_changed_cb);
             });
 
@@ -139,6 +163,11 @@ public class Folks.Individual : Object, Alias, Avatar, Capabilities, Groups,
   private void notify_presence_cb (Object obj, ParamSpec ps)
     {
       this.update_presence ();
+    }
+
+  private void notify_is_favourite_cb (Object obj, ParamSpec ps)
+    {
+      this.update_is_favourite ();
     }
 
   public Individual (GLib.List<Persona>? personas)
@@ -251,6 +280,7 @@ public class Folks.Individual : Object, Alias, Avatar, Capabilities, Groups,
 
       this.update_groups ();
       this.update_presence ();
+      this.update_is_favourite ();
       this.update_avatar ();
     }
 
@@ -339,6 +369,23 @@ public class Folks.Individual : Object, Alias, Avatar, Capabilities, Groups,
 
       if (this.presence_type != presence_type)
         this.presence_type = presence_type;
+    }
+
+  private void update_is_favourite ()
+    {
+      bool favourite = false;
+
+      this._personas.foreach ((persona) =>
+        {
+          var p = (Persona) persona;
+
+          if (favourite == false)
+            favourite = p.is_favourite;
+        });
+
+      /* Only notify if the value has changed */
+      if (this._is_favourite != favourite)
+        this._is_favourite = favourite;
     }
 
   private void update_avatar ()

@@ -70,6 +70,7 @@ Makefile.in
 /folks/persona.c
 /folks/persona-store.c
 /folks/presence.c
+/folks/favourite.c
 /folks/folks.h
 /folks/folks.pc
 /folks/folks-uninstalled.pc

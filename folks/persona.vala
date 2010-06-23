@@ -43,6 +43,9 @@ public abstract class Folks.Persona : Object, Alias, Avatar, Capabilities,
   public abstract Folks.PresenceType presence_type { get; set; }
   public abstract string presence_message { get; set; }
 
+  /* interface Favourite */
+  public abstract bool is_favourite { get; set; }
+
   /* internal ID */
   public string iid { get; construct; }
   /* universal ID (eg, "foo@xmpp.example.org") */
