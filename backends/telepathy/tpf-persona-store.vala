@@ -241,6 +241,13 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       if (added != null)
         this.channel_group_pend_incoming_adds (channel, added, true);
 
+      /* we refuse to send these contacts our presence, so remove them */
+      for (var i = 0; i < removed.length; i++)
+        {
+          var handle = removed.index (i);
+          this.remove_from_personas_if_needed (handle);
+        }
+
       /* FIXME: continue for the other arrays */
     }
 
@@ -257,6 +264,12 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       if (added != null)
         {
           this.channel_group_pend_incoming_adds (channel, added, true);
+        }
+
+      for (var i = 0; i < removed.length; i++)
+        {
+          var handle = removed.index (i);
+          this.remove_from_personas_if_needed (handle);
         }
     }
 
@@ -281,6 +294,13 @@ public class Tpf.PersonaStore : Folks.PersonaStore
             }
         }
 
+      /* these contacts refused to send us their presence, so remove them */
+      for (var i = 0; i < removed.length; i++)
+        {
+          var handle = removed.index (i);
+          this.remove_from_personas_if_needed (handle);
+        }
+
       /* FIXME: continue for the other arrays */
     }
 
@@ -303,6 +323,57 @@ public class Tpf.PersonaStore : Folks.PersonaStore
           this.group_removed (name, error);
           this.groups.remove (name);
         }
+    }
+
+  private void remove_from_personas_if_needed (uint handle)
+    {
+      unowned Tp.IntSet members;
+
+      if (this.subscribe != null)
+        {
+          members = this.subscribe.group_get_members ();
+          if (members.is_member (handle))
+            return;
+
+          members = this.subscribe.group_get_remote_pending ();
+          if (members.is_member (handle))
+            return;
+        }
+
+      if (this.publish != null)
+        {
+          members = this.publish.group_get_members ();
+          if (members.is_member (handle))
+            return;
+        }
+
+      var persona = this.handle_persona_map[handle];
+      this.remove_persona (persona);
+    }
+
+  private void remove_persona (Tpf.Persona? persona)
+    {
+      if (persona == null)
+        return;
+
+      foreach (var entry in this.channel_group_incoming_adds)
+        {
+          var channel = (Channel) entry.key;
+          var members = this.channel_group_personas_map[channel];
+          members.remove (persona);
+        }
+
+      foreach (var entry in this.group_outgoing_adds)
+        {
+          var name = (string) entry.key;
+          var members = this.group_outgoing_adds[name];
+          members.remove (persona);
+        }
+
+      var personas = new GLib.List<Persona> ();
+      personas.append (persona);
+      this.personas_removed (personas);
+      this._personas.remove (persona.iid);
     }
 
   /* Only non-group contact list channels should use create_personas == true,
