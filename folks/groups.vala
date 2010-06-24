@@ -20,6 +20,10 @@
 
 using GLib;
 
+/**
+ * Interface for {@link Persona}s or {@link Individual}s which can be grouped
+ * into sets of similar objects.
+ */
 public interface Folks.Groups : Object
 {
   public abstract HashTable<string, bool> groups { get; set; }

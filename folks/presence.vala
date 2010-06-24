@@ -20,6 +20,14 @@
 
 using GLib;
 
+/**
+ * The possible presence states an object implementing {@link Presence} could be
+ * in.
+ *
+ * These closely follow the
+ * [[http://telepathy.freedesktop.org/spec/Connection_Interface_Simple_Presence.html#Connection_Presence_Type|SimplePresence]]
+ * interface in the Telepathy specification.
+ */
 public enum Folks.PresenceType {
   UNSET,
   OFFLINE,
@@ -32,6 +40,13 @@ public enum Folks.PresenceType {
   ERROR
 }
 
+/**
+ * Interface exposing a {@link Persona}'s or {@link Individual}'s presence;
+ * their current availability, such as for chatting. If the {@link Backend}
+ * providing the {@link Persona} doesn't support presence, the {@link Persona}'s
+ * `presence_type` will be set to {@link PresenceType.UNSET} and their
+ * `presence_message` will be an empty string.
+ */
 public interface Folks.Presence : Object
 {
   public abstract Folks.PresenceType presence_type

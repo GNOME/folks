@@ -27,6 +27,9 @@ public errordomain Folks.PersonaStoreError
   CREATE_FAILED,
 }
 
+/**
+ * A store for {@link Persona}s.
+ */
 public abstract class Folks.PersonaStore : Object
 {
   public abstract signal void personas_added (GLib.List<Persona> personas);

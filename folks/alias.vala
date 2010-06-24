@@ -20,6 +20,10 @@
 
 using GLib;
 
+/**
+ * Interface for classes which represent aliasable contacts, such as
+ * {@link Persona} and {@link Individual}.
+ */
 public interface Folks.Alias : Object
 {
   public abstract string alias { get; set; }

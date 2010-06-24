@@ -20,6 +20,10 @@
 
 using GLib;
 
+/**
+ * Flag values for the capabilities an object implementing {@link Capabilities}
+ * could possibly have, as a bitmask.
+ */
 public enum Folks.CapabilitiesFlags {
   NONE = 0,
   AUDIO = 1 << 0,
@@ -29,6 +33,11 @@ public enum Folks.CapabilitiesFlags {
   UNKNOWN = 1 << 7,
 }
 
+/**
+ * Interface exposing the capabilities of the {@link Persona} or
+ * {@link Individual} implementing it, such as whether they can do video chats
+ * or file transfers.
+ */
 public interface Folks.Capabilities : Object
 {
   public abstract CapabilitiesFlags capabilities
