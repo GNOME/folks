@@ -235,7 +235,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       for (var i = 0; i < removed.length; i++)
         {
           var handle = removed.index (i);
-          this.remove_from_personas_if_needed (handle);
+          this.ignore_by_handle_if_needed (handle);
         }
 
       /* FIXME: continue for the other arrays */
@@ -266,7 +266,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       for (var i = 0; i < removed.length; i++)
         {
           var handle = removed.index (i);
-          this.remove_from_personas_if_needed (handle);
+          this.ignore_by_handle_if_needed (handle);
         }
 
       /* FIXME: continue for the other arrays */
@@ -293,7 +293,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
         }
     }
 
-  private void remove_from_personas_if_needed (uint handle)
+  private void ignore_by_handle_if_needed (uint handle)
     {
       unowned Tp.IntSet members;
 
@@ -316,10 +316,10 @@ public class Tpf.PersonaStore : Folks.PersonaStore
         }
 
       var persona = this.handle_persona_map[handle];
-      this.remove_persona (persona);
+      this.ignore_persona (persona);
     }
 
-  private void remove_persona (Tpf.Persona? persona)
+  private void ignore_persona (Tpf.Persona? persona)
     {
       if (persona == null)
         return;
