@@ -166,6 +166,8 @@ public class Folks.Individual : Object, Alias, Avatar, Capabilities, Groups,
               this.stores.insert (persona.store, persona_set);
 
               persona.store.removed.connect (this.store_removed_cb);
+              persona.store.personas_removed.connect (
+                this.store_personas_removed_cb);
             }
         });
     }
@@ -184,6 +186,23 @@ public class Folks.Individual : Object, Alias, Avatar, Capabilities, Groups,
         this.stores.remove (store);
 
       if (this._personas.length () < 1 || this.stores.size () < 1)
+        {
+          this.removed ();
+          return;
+        }
+
+      this.update_fields ();
+    }
+
+  private void store_personas_removed_cb (PersonaStore store,
+      GLib.List<Persona> personas)
+    {
+      personas.foreach ((data) =>
+        {
+          this._personas.remove ((Persona) data);
+        });
+
+      if (this._personas.length () < 1)
         {
           this.removed ();
           return;

@@ -328,20 +328,58 @@ public class Tpf.PersonaStore : Folks.PersonaStore
         {
           var channel = (Channel) entry.key;
           var members = this.channel_group_personas_map[channel];
-          members.remove (persona);
+          if (members != null)
+            members.remove (persona);
         }
 
       foreach (var entry in this.group_outgoing_adds)
         {
           var name = (string) entry.key;
           var members = this.group_outgoing_adds[name];
-          members.remove (persona);
+          if (members != null)
+            members.remove (persona);
         }
 
       var personas = new GLib.List<Persona> ();
       personas.append (persona);
       this.personas_removed (personas);
       this._personas.remove (persona.iid);
+    }
+
+  /**
+   * Remove the given persona from the server entirely
+   */
+  public override void remove_persona (Folks.Persona persona)
+    {
+      var tp_persona = (Tpf.Persona) persona;
+
+      /* FIXME: also remove from stored list? */
+
+      try
+        {
+          this.ll.channel_group_change_membership (this.subscribe,
+              (Handle) tp_persona.contact.handle, false);
+        }
+      catch (GLib.Error e)
+        {
+          warning ("failed to remove persona '%s' (%s) from subscribe list: %s",
+              tp_persona.uid, tp_persona.alias, e.message);
+        }
+
+      try
+        {
+          this.ll.channel_group_change_membership (this.publish,
+              (Handle) tp_persona.contact.handle, false);
+        }
+      catch (GLib.Error e)
+        {
+          warning ("failed to remove persona '%s' (%s) from publish list: %s",
+              tp_persona.uid, tp_persona.alias, e.message);
+        }
+
+      var personas = new GLib.List<Persona> ();
+      personas.append (tp_persona);
+      this.personas_removed (personas);
     }
 
   /* Only non-group contact list channels should use create_personas == true,

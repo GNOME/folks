@@ -46,4 +46,5 @@ public abstract class Folks.PersonaStore : Object
       string group, bool is_member);
   public abstract async Persona? add_persona_from_details (
       HashTable<string, string> details) throws Folks.PersonaStoreError;
+  public abstract void remove_persona (Persona persona);
 }

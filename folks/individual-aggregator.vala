@@ -183,4 +183,17 @@ public class Folks.IndividualAggregator : Object
 
       return persona;
     }
+
+  /**
+   * Completely removes the individual and all of its personas from their
+   * backing stores
+   */
+  public void remove_individual (Individual individual)
+    {
+      individual.personas.foreach ((p) =>
+        {
+          var persona = (Persona) p;
+          persona.store.remove_persona (persona);
+        });
+    }
 }
