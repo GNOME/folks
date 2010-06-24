@@ -39,6 +39,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
   private HashMap<string, Channel> group_channels_unready;
   private HashMap<string, Channel> groups;
   private Channel publish;
+  private Channel stored;
   private Channel subscribe;
   private Connection conn;
   private TpLowlevel ll;
@@ -72,6 +73,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       this.group_outgoing_removes = new HashMap<string, HashSet<Tpf.Persona>> (
           );
       this.publish = null;
+      this.stored = null;
       this.subscribe = null;
       this.standard_channels_unready = new HashMap<string, Channel> ();
       this.group_channels_unready = new HashMap<string, Channel> ();
@@ -125,6 +127,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
           this.new_group_channels_cb);
 
       this.add_standard_channel (conn, "publish");
+      this.add_standard_channel (conn, "stored");
       this.add_standard_channel (conn, "subscribe");
       this.conn = conn;
     }
@@ -197,6 +200,13 @@ public class Tpf.PersonaStore : Folks.PersonaStore
               c.group_members_changed.connect (
                   this.publish_channel_group_members_changed_cb);
             }
+          else if (name == "stored")
+            {
+              this.stored = c;
+
+              c.group_members_changed.connect (
+                  this.stored_channel_group_members_changed_cb);
+            }
           else if (name == "subscribe")
             {
               this.subscribe = c;
@@ -239,6 +249,28 @@ public class Tpf.PersonaStore : Folks.PersonaStore
         }
 
       /* FIXME: continue for the other arrays */
+    }
+
+  private void stored_channel_group_members_changed_cb (Channel channel,
+      string message,
+      /* FIXME: Array<uint> => Array<Handle>; parser bug */
+      Array<uint>? added,
+      Array<uint>? removed,
+      Array<uint>? local_pending,
+      Array<uint>? remote_pending,
+      uint actor,
+      uint reason)
+    {
+      if (added != null)
+        {
+          this.channel_group_pend_incoming_adds (channel, added, true);
+        }
+
+      for (var i = 0; i < removed.length; i++)
+        {
+          var handle = removed.index (i);
+          this.ignore_by_handle_if_needed (handle);
+        }
     }
 
   private void subscribe_channel_group_members_changed_cb (Channel channel,
@@ -353,7 +385,16 @@ public class Tpf.PersonaStore : Folks.PersonaStore
     {
       var tp_persona = (Tpf.Persona) persona;
 
-      /* FIXME: also remove from stored list? */
+      try
+        {
+          this.ll.channel_group_change_membership (this.stored,
+              (Handle) tp_persona.contact.handle, false);
+        }
+      catch (GLib.Error e)
+        {
+          warning ("failed to remove persona '%s' (%s) from stored list: %s",
+              tp_persona.uid, tp_persona.alias, e.message);
+        }
 
       try
         {
