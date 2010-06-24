@@ -318,7 +318,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
         this.subscribe = null;
       else
         {
-          var error = new GLib.Error ((Quark) domain, code, message);
+          var error = new GLib.Error ((Quark) domain, code, "%s", message);
           var name = channel.get_identifier ();
           this.group_removed (name, error);
           this.groups.remove (name);

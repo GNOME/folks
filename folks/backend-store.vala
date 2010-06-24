@@ -43,7 +43,7 @@ public class Folks.BackendStore : Object {
       this.backend_hash = new HashMap<string,Backend> (str_hash, str_equal);
     }
 
-  public void load_backends () {
+  public async void load_backends () {
       assert (Module.supported());
 
       var path = Environment.get_variable ("FOLKS_BACKEND_DIR");
@@ -61,9 +61,9 @@ public class Folks.BackendStore : Object {
         }
 
       File dir = File.new_for_path (path);
-      assert (dir != null && is_dir (dir));
+      assert (dir != null && yield is_dir (dir));
 
-      this.load_modules_from_dir.begin (dir);
+      yield this.load_modules_from_dir (dir);
   }
 
   public void add_backend (Backend backend)
@@ -169,25 +169,24 @@ public class Folks.BackendStore : Object {
       debug ("Loaded module source: '%s'", module.name ());
     }
 
-  private static bool is_dir (File file)
+  private async static bool is_dir (File file)
     {
       FileInfo file_info;
 
-      if (!file.query_exists (null))
-        {
-          critical ("File or directory '%s' does not exist", file.get_path ());
-          return false;
-        }
-
       try
         {
-          file_info = file.query_info (FILE_ATTRIBUTE_STANDARD_TYPE,
-              FileQueryInfoFlags.NONE, null);
+          /* Query for the MIME type; if the file doesn't exist, we'll get an
+           * appropriate error back, so this also checks for existence. */
+          file_info = yield file.query_info_async (FILE_ATTRIBUTE_STANDARD_TYPE,
+              FileQueryInfoFlags.NONE, Priority.DEFAULT, null);
         }
       catch (Error error)
         {
-          critical ("Failed to get content type for '%s'",
-              file.get_path ());
+          if (error is IOError.NOT_FOUND)
+            critical ("File or directory '%s' does not exist",
+                      file.get_path ());
+          else
+            critical ("Failed to get content type for '%s'", file.get_path ());
 
           return false;
         }

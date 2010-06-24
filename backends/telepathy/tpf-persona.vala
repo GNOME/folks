@@ -97,6 +97,9 @@ public class Tpf.Persona : Folks.Persona, Alias, Avatar, Folks.Capabilities,
 
   public Persona (Contact contact, PersonaStore store) throws Tp.Error
     {
+      /* FIXME: There is the possibility of a crash in the error condition below
+       * due to bgo#604299, where the C self variable isn't initialised until we
+       * chain up to the Object constructor, below. */
       var uid = contact.get_identifier ();
       if (uid == null || uid == "")
         throw new Tp.Error.INVALID_ARGUMENT ("contact has an invalid UID");
