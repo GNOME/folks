@@ -35,16 +35,53 @@ public class Folks.Individual : Object, Alias, Avatar, Capabilities, Groups,
 
   /* XXX: should setting this push it down into the Persona (to foward along to
    * the actual store if possible?) */
+  /**
+   * {@inheritDoc}
+   */
   public string alias { get; set; }
+
+  /**
+   * {@inheritDoc}
+   */
   public File avatar { get; set; }
+
+  /**
+   * {@inheritDoc}
+   */
   public CapabilitiesFlags capabilities { get; private set; }
-  public string id { get; private set; }
+
+  /**
+   * {@inheritDoc}
+   */
   public Folks.PresenceType presence_type { get; private set; }
+
+  /**
+   * {@inheritDoc}
+   */
   public string presence_message { get; private set; }
 
-  /* the last of this individuals personas has been removed, so it is invalid */
+  /**
+   * A unique identifier for the Individual.
+   *
+   * This uniquely identifies the Individual, and persists across
+   * {@link IndividualAggregator} instances.
+   *
+   * FIXME: Will this.id actually be the persistent ID for storage?
+   */
+  public string id { get; private set; }
+
+  /**
+   * Emitted when the last of the Individual's {@link Persona}s has been
+   * removed.
+   *
+   * At this point, the Individual is invalid, so any client referencing it
+   * should unreference it and remove it from their UI.
+   */
   public signal void removed ();
 
+  /**
+   * {@inheritDoc}
+   */
   public HashTable<string, bool> groups
     {
       get { return this._groups; }
@@ -61,6 +98,12 @@ public class Folks.Individual : Object, Alias, Avatar, Capabilities, Groups,
         }
     }
 
+  /**
+   * The set of {@link Persona}s encapsulated by this Individual.
+   *
+   * Changing the set of personas may cause updates to the aggregated properties
+   * provided by the Individual, resulting in property notifications for them.
+   */
   public GLib.List<Persona> personas
     {
       get { return this._personas; }
@@ -124,6 +167,18 @@ public class Folks.Individual : Object, Alias, Avatar, Capabilities, Groups,
       this.update_groups ();
     }
 
+  /**
+   * Add or remove the Individual from the specified group.
+   *
+   * If `is_member` is `true`, the Individual will be added to the `group`. If
+   * it is `false`, they will be removed from the `group`.
+   *
+   * The group membership change will propagate to every {@link Persona} in
+   * the Individual.
+   *
+   * @param group a freeform group identifier
+   * @param is_member whether the Individual should be a member of the group
+   */
   public void change_group (string group, bool is_member)
     {
       this._personas.foreach ((p) =>
@@ -141,6 +196,15 @@ public class Folks.Individual : Object, Alias, Avatar, Capabilities, Groups,
       this.update_presence ();
     }
 
+  /**
+   * Create a new Individual.
+   *
+   * The Individual can optionally be seeded with the {@link Persona}s in
+   * `personas`. Otherwise, it will have to have personas added using the
+   * {@link Folks.Individual.personas} property after construction.
+   *
+   * @return a new Individual
+   */
   public Individual (GLib.List<Persona>? personas)
     {
       Object (personas: personas);
@@ -361,6 +425,14 @@ public class Folks.Individual : Object, Alias, Avatar, Capabilities, Groups,
         this.avatar = avatar;
     }
 
+  /**
+   * Get a bitmask of the capabilities of this Individual.
+   *
+   * The capabilities is the union of the sets of capabilities of all the
+   * {@link Persona}s in the Individual.
+   *
+   * @return bitmask of the Individual's capabilities
+   */
   public CapabilitiesFlags get_capabilities ()
     {
       return this.capabilities;
@@ -369,27 +441,76 @@ public class Folks.Individual : Object, Alias, Avatar, Capabilities, Groups,
   /*
    * GLib/C convenience functions (for built-in casting, etc.)
    */
+
+  /**
+   * Get the Individual's alias.
+   *
+   * The alias is a user-chosen name for the Individual; how the user wants that
+   * Individual to be represented in UIs.
+   *
+   * @return the Individual's alias
+   */
   public unowned string get_alias ()
     {
       return this.alias;
     }
 
+  /**
+   * Get a mapping of group ID to whether the Individual is a member.
+   *
+   * Freeform group IDs are mapped to a boolean which is `true` if the
+   * Individual is a member of the group, and `false` otherwise.
+   *
+   * @return a mapping of group ID to membership status
+   */
   public HashTable<string, bool> get_groups ()
     {
       Groups g = this;
       return g.groups;
     }
 
+  /**
+   * Get the Individual's current presence message.
+   *
+   * The presence message returned is from the same {@link Persona} which
+   * provided the presence type returned by
+   * {@link Individual.get_presence_type}.
+   *
+   * If none of the {@link Persona}s in the Individual have a presence message
+   * set, an empty string is returned.
+   *
+   * @return the Individual's presence message
+   */
   public unowned string get_presence_message ()
     {
       return this.presence_message;
     }
 
+  /**
+   * Get the Individual's current presence type.
+   *
+   * The presence type returned is from the same {@link Persona} which provided
+   * the presence message returned by {@link Individual.get_presence_message}.
+   *
+   * If none of the {@link Persona}s in the Individual have a presence type set,
+   * {@link PresenceType.UNSET} is returned.
+   *
+   * @return the Individual's presence type
+   */
   public Folks.PresenceType get_presence_type ()
     {
       return this.presence_type;
     }
 
+  /**
+   * Whether the Individual is online.
+   *
+   * This will be `true` if any of the Individual's {@link Persona}s have a
+   * presence type higher than {@link PresenceType.OFFLINE}, as determined by
+   * {@link Presence.typecmp}.
+   *
+   * @return `true` if the Individual is online, `false` otherwise
+   */
   public bool is_online ()
     {
       Presence p = this;

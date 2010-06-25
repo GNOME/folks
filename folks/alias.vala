@@ -26,5 +26,11 @@ using GLib;
  */
 public interface Folks.Alias : Object
 {
+  /**
+   * An alias for the contact.
+   *
+   * An alias is a user-given name, to be used in UIs as the sole way to
+   * represent the contact to the user.
+   */
   public abstract string alias { get; set; }
 }
