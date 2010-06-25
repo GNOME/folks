@@ -196,8 +196,6 @@ public class Tpf.PersonaStore : Folks.PersonaStore
         }
     }
 
-  /* Pass true or false (cast as a pointer) to user_data to add or remove the
-   * handles as favourites, respectively */
   private void change_favourites_by_request_handles (uint n_handles,
       Handle[] handles, string[] ids, GLib.Error? error, bool add)
     {
