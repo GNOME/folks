@@ -42,7 +42,7 @@ public class Folks.Individual : Object, Alias, Avatar, Capabilities, Groups,
   public Folks.PresenceType presence_type { get; private set; }
   public string presence_message { get; private set; }
 
-  /* the last of this individuals personas has been removed, so it is invalid */
+  /* this individual has become invalid (eg, its last persona is removed) */
   public signal void removed ();
 
   public HashTable<string, bool> groups
