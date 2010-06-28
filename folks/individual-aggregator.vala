@@ -39,7 +39,7 @@ public class Folks.IndividualAggregator : Object
   private HashMap<string, PersonaStore> stores;
   private HashSet<Backend> backends;
 
-  public HashTable<string, Individual> members { get; private set; }
+  public HashTable<string, Individual> individuals { get; private set; }
 
   public signal void individuals_added (GLib.List<Individual> inds);
   public signal void individuals_removed (GLib.List<Individual> inds);
@@ -48,7 +48,8 @@ public class Folks.IndividualAggregator : Object
   public IndividualAggregator () throws GLib.Error
     {
       this.stores = new HashMap<string, PersonaStore> ();
-      this.members = new HashTable<string, Individual> (str_hash, str_equal);
+      this.individuals = new HashTable<string, Individual> (str_hash,
+          str_equal);
 
       this.backends = new HashSet<Backend> ();
 
@@ -114,11 +115,11 @@ public class Folks.IndividualAggregator : Object
       GLib.List<Individual> new_individuals = null;
       foreach (var i in individuals)
         {
-          if (this.members.lookup (i.id) == null)
+          if (this.individuals.lookup (i.id) == null)
             {
               i.removed.connect (this.individual_removed_cb);
               new_individuals.prepend (i);
-              this.members.insert (i.id, i);
+              this.individuals.insert (i.id, i);
             }
         }
 
@@ -136,7 +137,7 @@ public class Folks.IndividualAggregator : Object
       i_list.append (i);
 
       this.individuals_removed (i_list);
-      this.members.remove (i.id);
+      this.individuals.remove (i.id);
     }
 
   /**
