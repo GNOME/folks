@@ -27,22 +27,8 @@ using Folks;
  * from evolution-data-server. All the personas belonging to one physical person
  * are aggregated to form a single {@link Individual} representing that person.
  */
-public abstract class Folks.Persona : Object, Alias, Avatar, Capabilities,
-       Presence
+public abstract class Folks.Persona : Object
 {
-  /* interface Alias */
-  public abstract string alias { get; set; }
-
-  /* interface Avatar */
-  public abstract File avatar { get; set; }
-
-  /* interface Capabilities */
-  public abstract CapabilitiesFlags capabilities { get; set; }
-
-  /* interface Presence */
-  public abstract Folks.PresenceType presence_type { get; set; }
-  public abstract string presence_message { get; set; }
-
   /* internal ID */
   public string iid { get; construct; }
   /* universal ID (eg, "foo@xmpp.example.org") */

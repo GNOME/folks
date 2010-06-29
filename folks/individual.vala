@@ -222,15 +222,19 @@ public class Folks.Individual : Object, Alias, Avatar, Capabilities, Groups,
        * destroyed before now otherwise. */
       string alias = null;
       var caps = CapabilitiesFlags.NONE;
-      this._personas.foreach ((persona) =>
+      this._personas.foreach ((p) =>
         {
-          var p = (Persona) persona;
+          if (p is Alias)
+            {
+              var a = (Alias) p;
 
-          /* FIXME: also check to see if alias is just whitespace */
-          if (alias == null)
-            alias = p.alias;
+              /* FIXME: also check to see if alias is just whitespace */
+              if (alias == null)
+                alias = a.alias;
+            }
 
-          caps |= p.capabilities;
+          if (p is Capabilities)
+            caps |= ((Capabilities) p).capabilities;
         });
 
       if (alias == null)
@@ -321,12 +325,15 @@ public class Folks.Individual : Object, Alias, Avatar, Capabilities, Groups,
       /* Choose the most available presence from our personas */
       this._personas.foreach ((p) =>
         {
-          var persona = (Persona) p;
-
-          if (Presence.typecmp (persona.presence_type, presence_type) > 0)
+          if (p is Presence)
             {
-              presence_type = persona.presence_type;
-              presence_message = persona.presence_message;
+              var presence = (Presence) p; 
+
+              if (Presence.typecmp (presence.presence_type, presence_type) > 0)
+                {
+                  presence_type = presence.presence_type;
+                  presence_message = presence.presence_message;
+                }
             }
         });
 
@@ -347,11 +354,9 @@ public class Folks.Individual : Object, Alias, Avatar, Capabilities, Groups,
 
       this._personas.foreach ((p) =>
         {
-          var persona = (Persona) p;
-
-          if (avatar == null)
+          if (avatar == null && p is Avatar)
             {
-              avatar = persona.avatar;
+              avatar = ((Avatar) p).avatar;
               return;
             }
         });

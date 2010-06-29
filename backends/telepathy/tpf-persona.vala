@@ -29,17 +29,17 @@ public class Tpf.Persona : Folks.Persona, Alias, Avatar, Folks.Capabilities,
   private HashTable<string, bool> _groups;
 
   /* interface Alias */
-  public override string alias { get; set; }
+  public string alias { get; set; }
 
   /* interface Avatar */
-  public override File avatar { get; set; }
+  public File avatar { get; set; }
 
   /* interface Capabilities */
-  public override CapabilitiesFlags capabilities { get; private set; }
+  public CapabilitiesFlags capabilities { get; private set; }
 
   /* interface Presence */
-  public override Folks.PresenceType presence_type { get; private set; }
-  public override string presence_message { get; private set; }
+  public Folks.PresenceType presence_type { get; private set; }
+  public string presence_message { get; private set; }
 
   /* interface Groups */
   public HashTable<string, bool> groups
