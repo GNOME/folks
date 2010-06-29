@@ -6,6 +6,7 @@ AM_CPPFLAGS = \
 	-DPACKAGE_DATADIR=\"$(pkgdatadir)\" \
 	-DDATA_DIR=\"$(shareddir)\" \
 	-DBACKEND_DIR=\"$(backenddir)\" \
+	-DG_LOG_DOMAIN=\"Core\" \
 	$(NULL)
 
 lib_LTLIBRARIES = libfolks.la
@@ -23,6 +24,7 @@ folks_valasources = \
 	persona.vala \
 	persona-store.vala \
 	presence.vala \
+	debug.vala \
 	$(NULL)
 
 libfolks_la_SOURCES = $(folks_valasources:.vala=.c)

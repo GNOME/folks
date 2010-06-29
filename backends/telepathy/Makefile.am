@@ -2,6 +2,7 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir)/folks \
 	-include $(CONFIG_HEADER) \
 	-DPACKAGE_DATADIR=\"$(pkgdatadir)\" \
+	-DG_LOG_DOMAIN=\"TelepathyBackend\" \
 	$(NULL)
 
 VALAFLAGS += $(TP_VALA_VALAFLAGS)

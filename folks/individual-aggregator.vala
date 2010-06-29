@@ -104,6 +104,8 @@ public class Folks.IndividualAggregator : Object
 
       this.backends = new HashSet<Backend> ();
 
+      Debug.set_flags (Environment.get_variable ("FOLKS_DEBUG"));
+
       this.backend_store = new BackendStore ();
       this.backend_store.backend_available.connect (this.backend_available_cb);
     }
