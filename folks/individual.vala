@@ -226,8 +226,7 @@ public class Folks.Individual : Object, Alias, Avatar, Capabilities, Groups,
         {
           var p = (Persona) persona;
 
-          /* FIXME: also check to see if alias is just whitespace */
-          if (alias == null)
+          if (alias == null || alias.strip () == "")
             alias = p.alias;
 
           caps |= p.capabilities;
