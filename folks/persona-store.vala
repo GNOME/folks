@@ -34,9 +34,6 @@ public abstract class Folks.PersonaStore : Object
 {
   public abstract signal void personas_added (GLib.List<Persona> personas);
   public abstract signal void personas_removed (GLib.List<Persona> personas);
-  public abstract signal void group_members_changed (string group,
-      GLib.List<Persona>? added, GLib.List<Persona>? removed);
-  public abstract signal void group_removed (string group, GLib.Error? error);
 
   /* the backing store itself was deleted and its personas are now invalid */
   public abstract signal void removed ();
@@ -45,8 +42,6 @@ public abstract class Folks.PersonaStore : Object
   public abstract string id { get; protected set; }
   public abstract HashTable<string, Persona> personas { get; }
 
-  public abstract async void change_group_membership (Persona persona,
-      string group, bool is_member);
   public abstract async Persona? add_persona_from_details (
       HashTable<string, string> details) throws Folks.PersonaStoreError;
   public abstract void remove_persona (Persona persona);
