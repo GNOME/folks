@@ -26,9 +26,33 @@ using GLib;
  */
 public interface Folks.Groups : Object
 {
+  /**
+   * A mapping of group ID to whether the contact is a member.
+   *
+   * Freeform group IDs are mapped to a boolean which is `true` if the
+   * contact is a member of the group, and `false` otherwise.
+   */
   public abstract HashTable<string, bool> groups { get; set; }
 
+  /**
+   * Add or remove the contact from the specified group.
+   *
+   * If `is_member` is `true`, the contact will be added to the `group`. If
+   * it is `false`, they will be removed from the `group`.
+   *
+   * @param group a freeform group identifier
+   * @param is_member whether the contact should be a member of the group
+   */
   public abstract void change_group (string group, bool is_member);
 
+  /**
+   * Emitted when the contact's membership status changes for a group.
+   *
+   * This is emitted if the contact becomes a member of a group they weren't in
+   * before, or leaves a group they were in.
+   *
+   * @param group a freeform group identifier for the group being left or joined
+   * @param is_member whether the contact is joining or leaving the group
+   */
   public signal void group_changed (string group, bool is_member);
 }

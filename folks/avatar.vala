@@ -26,5 +26,11 @@ using GLib;
  */
 public interface Folks.Avatar : Object
 {
+  /**
+   * An avatar for the contact.
+   *
+   * An avatar is a small image file which represents the contact. It may be
+   * `null` if unset.
+   */
   public abstract File avatar { get; set; }
 }

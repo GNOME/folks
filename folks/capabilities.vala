@@ -40,6 +40,13 @@ public enum Folks.CapabilitiesFlags {
  */
 public interface Folks.Capabilities : Object
 {
+  /**
+   * A bitmask of the contact's capabilities.
+   *
+   * The value will either be {@link CapabilitiesFlags.NONE} (the default),
+   * {@link CapabilitiesFlags.UNKNOWN} or a combination of the other flags in
+   * {@link CapabilitiesFlags}.
+   */
   public abstract CapabilitiesFlags capabilities
     {
       get; set; default = CapabilitiesFlags.NONE;
