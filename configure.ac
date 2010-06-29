@@ -43,7 +43,12 @@ AC_PATH_PROG(VALAC, valac, valac)
 AC_SUBST(VALAC)
 
 AC_SUBST(PKG_CONFIG_PATH)
+
+# require GLib >= 2.24 so GLib.Array, etc. reffing is handled automatically
+VALACFLAGS="$VALACFLAGS --target-glib=2.24"
+AC_SUBST(VALACFLAGS)
 AC_SUBST(VALAFLAGS)
+
 AC_SUBST(CFLAGS)
 AC_SUBST(CPPFLAGS)
 AC_SUBST(LDFLAGS)

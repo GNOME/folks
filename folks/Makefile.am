@@ -55,7 +55,8 @@ folks_HEADERS = \
 folks.h $(libfolks_la_VALASOURCES:.vala=.c) $(libfolks_la_VALASOURCES:.vala=.h): folks.vala.stamp
 
 folks.vapi folks.vala.stamp: $(libfolks_la_VALASOURCES)
-	$(VALA_V)$(VALAC) $(VALAFLAGS) -C -H folks.h --library folks \
+	$(VALA_V)$(VALAC) $(VALACFLAGS) $(VALAFLAGS) -C -H folks.h \
+		--library folks \
 		$(libfolks_la_VALASOURCES)
 	touch $@
 

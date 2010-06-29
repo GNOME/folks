@@ -112,7 +112,7 @@ folks_telepathy_vapi_deps = \
 	$(NULL)
 
 folks-telepathy.vapi folks-telepathy.vala.stamp: $(folks_telepathy_vapi_deps)
-	$(VALA_V)$(VALAC) $(VALAFLAGS) -H folks-telepathy.h -C \
+	$(VALA_V)$(VALAC) $(VALACFLAGS) $(VALAFLAGS) -H folks-telepathy.h -C \
 		--library folks-telepathy \
 		--pkg tp-lowlevel \
 		$(libfolks_telepathy_la_VALASOURCES)
@@ -162,7 +162,8 @@ vapi_deps = \
 	$(NULL)
 
 folks-backend-telepathy.vapi folks-backend-telepathy.vala.stamp: $(vapi_deps)
-	$(VALA_V)$(VALAC) $(VALAFLAGS) -H folks-backend-telepathy.h -C \
+	$(VALA_V)$(VALAC) $(VALACFLAGS) $(VALAFLAGS) \
+		-H folks-backend-telepathy.h -C \
 		--library folks-backend-telepathy \
 		--pkg folks \
 		--pkg folks-telepathy \
