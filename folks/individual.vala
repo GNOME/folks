@@ -36,7 +36,7 @@ public class Folks.Individual : Object, Alias, Avatar, Capabilities, Groups,
   /* XXX: should setting this push it down into the Persona (to foward along to
    * the actual store if possible?) */
   public string alias { get; set; }
-  public File avatar { get; set; }
+  public File avatar { get; private set; }
   public CapabilitiesFlags capabilities { get; private set; }
   public string id { get; private set; }
   public Folks.PresenceType presence_type { get; private set; }
