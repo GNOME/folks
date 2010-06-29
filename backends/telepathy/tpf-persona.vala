@@ -114,10 +114,6 @@ public class Tpf.Persona : Folks.Persona, Alias, Avatar, Folks.Capabilities,
       if (alias == null || alias == "")
         alias = uid;
 
-      /* TODO: implement something like Empathy's tp_caps_to_capabilities() and
-       * fill in the capabilities as appropriate */
-      debug ("capabilities not implemented");
-
       Object (alias: alias,
               contact: contact,
               iid: iid,
@@ -142,6 +138,12 @@ public class Tpf.Persona : Folks.Persona, Alias, Avatar, Folks.Capabilities,
         });
       this.contact_notify_presence_message ();
       this.contact_notify_presence_type ();
+
+      contact.notify["capabilities"].connect ((s, p) =>
+        {
+          this.contact_notify_capabilities ();
+        });
+      this.contact_notify_capabilities ();
 
       this.store.group_members_changed.connect ((s, group, added, removed) =>
         {
@@ -224,5 +226,64 @@ public class Tpf.Persona : Folks.Persona, Alias, Avatar, Folks.Capabilities,
       var file = this.contact.get_avatar_file ();
       if (this.avatar != file)
         this.avatar = file;
+    }
+
+  private void contact_notify_capabilities ()
+    {
+      this.capabilities = folks_capabilities_flags_from_tp (
+          this.contact.get_capabilities ());
+    }
+
+  /* Based off tp_caps_to_capabilities() in empathy-contact.c */
+  private static CapabilitiesFlags folks_capabilities_flags_from_tp (
+      Tp.Capabilities caps)
+    {
+      CapabilitiesFlags capabilities = 0;
+      var classes = caps.get_channel_classes ();
+
+      classes.foreach ((m) =>
+        {
+          unowned ValueArray class_struct = (ValueArray) m;
+
+          Value val = class_struct.get_nth (0);
+          HashTable fixed_prop = (HashTable) val.get_boxed ();
+
+          val = class_struct.get_nth (1);
+          string[] allowed_prop = (string[]) val.get_boxed ();
+
+          Tp.HandleType handle_type = (Tp.HandleType) Tp.asv_get_uint32 (
+              fixed_prop, Tp.PROP_CHANNEL_TARGET_HANDLE_TYPE, null);
+          if (handle_type != HandleType.CONTACT)
+            return; /* i.e. continue the loop */
+
+          string chan_type = Tp.asv_get_string (fixed_prop,
+              Tp.PROP_CHANNEL_CHANNEL_TYPE);
+
+          if (chan_type == Tp.IFACE_CHANNEL_TYPE_FILE_TRANSFER)
+            {
+              capabilities |= CapabilitiesFlags.FILE_TRANSFER;
+            }
+          else if (chan_type == Tp.IFACE_CHANNEL_TYPE_STREAM_TUBE)
+            {
+              var service = Tp.asv_get_string (fixed_prop,
+                  Tp.PROP_CHANNEL_TYPE_STREAM_TUBE_SERVICE);
+
+              if (service == "rfb")
+                capabilities |= CapabilitiesFlags.STREAM_TUBE;
+            }
+          else if (chan_type == Tp.IFACE_CHANNEL_TYPE_STREAMED_MEDIA)
+            {
+              foreach (string prop in allowed_prop)
+                {
+                  if (prop == Tp.PROP_CHANNEL_TYPE_STREAMED_MEDIA_INITIAL_AUDIO)
+                    capabilities |= CapabilitiesFlags.AUDIO;
+                  else if (prop ==
+                      Tp.PROP_CHANNEL_TYPE_STREAMED_MEDIA_INITIAL_VIDEO)
+                    capabilities |= CapabilitiesFlags.VIDEO;
+                }
+            }
+        });
+
+      return capabilities;
     }
 }
