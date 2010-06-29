@@ -58,9 +58,13 @@ internal class Logger : GLib.Object
           /* Create a logger proxy for favourites support */
           /* FIXME: This should be ported to the Vala GDBus stuff and made
            * async, but that depends on
-           * https://bugzilla.gnome.org/show_bug.cgi?id=622611 being fixed. */
+           * https://bugzilla.gnome.org/show_bug.cgi?id=622611 being fixed.
+           * FIXME: If this is made async, race conditions may appear in
+           * TpfPersonaStore, which will need to be prevented. e.g.
+           * change_is_favourite() may get called before logger initialisation
+           * is complete; favourites-change requests should be queued. */
           var dbus_conn = DBus.Bus.get (DBus.BusType.SESSION);
-          this.logger = dbus_conn.get_object (
+          this.logger = dbus_conn.get_object_for_name_owner (
               "org.freedesktop.Telepathy.Logger",
               "/org/freedesktop/Telepathy/Logger",
               "org.freedesktop.Telepathy.Logger.DRAFT") as LoggerIface;
