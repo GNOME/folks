@@ -25,13 +25,17 @@ using Tp;
 using Tp.ContactFeature;
 using Folks;
 
-private struct AccountFavourites {
-	DBus.ObjectPath account_path;
-	string[] ids;
+private struct AccountFavourites
+{
+  DBus.ObjectPath account_path;
+  string[] ids;
 }
 
+/* TODO: This should be visible at the package level. See
+ * https://bugzilla.gnome.org/show_bug.cgi?id=623108 */
 [DBus (name = "org.freedesktop.Telepathy.Logger.DRAFT")]
-private interface Logger : DBus.Object {
+private interface Logger : DBus.Object
+{
   public abstract async AccountFavourites[] get_favourite_contacts ()
       throws DBus.Error;
   public abstract async void add_favourite_contact (
@@ -145,7 +149,8 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       try
         {
           var dbus_conn = DBus.Bus.get (DBus.BusType.SESSION);
-          this.logger = dbus_conn.get_object ("org.freedesktop.Telepathy.Logger",
+          this.logger = dbus_conn.get_object (
+              "org.freedesktop.Telepathy.Logger",
               "/org/freedesktop/Telepathy/Logger",
               "org.freedesktop.Telepathy.Logger.DRAFT") as Logger;
         }
@@ -155,7 +160,6 @@ public class Tpf.PersonaStore : Folks.PersonaStore
           return;
         }
 
-      /* Connect to be notified of future changes to the set of favourites */
       this.logger.favourite_contacts_changed.connect (
           this.favourite_contacts_changed_cb);
     }
@@ -176,15 +180,17 @@ public class Tpf.PersonaStore : Folks.PersonaStore
 
               debug ("adding favourite contacts for account '%s'", this.id);
 
-              /* Note that we don't need to release these handles, as they're also
-               * held by the relevant contact objects, and will be released as
-               * appropriate by those objects (we're circumventing tp-glib's handle
-               * reference counting). */
+              /* Note that we don't need to release these handles, as they're
+               * also held by the relevant contact objects, and will be released
+               * as appropriate by those objects (we're circumventing tp-glib's
+               * handle reference counting). */
               this.conn.request_handles (-1, HandleType.CONTACT, account.ids,
                 (c, ht, nh, h, i, e, w) =>
                   {
-                    this.change_favourites_by_request_handles (nh, h, i, e, true);
-                  }, this);
+                    this.change_favourites_by_request_handles (nh, h, i, e,
+                        true);
+                  },
+                this);
               /* FIXME: Have to pass this as weak_object parameter since Vala
                * seems to swap the order of user_data and weak_object in the
                * callback. */
@@ -197,13 +203,11 @@ public class Tpf.PersonaStore : Folks.PersonaStore
     }
 
   private void change_favourites_by_request_handles (uint n_handles,
-      Handle[] handles, string[] ids, GLib.Error? error, bool add)
+      Handle[] handles, string[] ids, GLib.Error? error,
+      bool add) throws GLib.Error
     {
       if (error != null)
-        {
-          warning ("error requesting handles for favourite contacts: %s",
-              error.message);
-        }
+        throw error;
 
       for (var i = 0; i < n_handles; i++)
         {
@@ -237,8 +241,9 @@ public class Tpf.PersonaStore : Folks.PersonaStore
   private void favourite_contacts_changed_cb (string account_path,
       string[] added, string[] removed)
     {
-      /* Don't listen to favourites updates if the account is disconnected */
-      if (this.conn == null)
+      /* Don't listen to favourites updates if the account is disconnected
+       * or if the notification is for a different account. */
+      if (this.conn == null || account_path != this.id)
         return;
 
       debug ("favourite_contacts_changed_cb for account '%s'", account_path);
@@ -250,7 +255,8 @@ public class Tpf.PersonaStore : Folks.PersonaStore
               (c, ht, nh, h, i, e, w) =>
                 {
                   this.change_favourites_by_request_handles (nh, h, i, e, true);
-                }, this);
+                },
+              this);
         }
 
       /* Remove favourites */
@@ -259,8 +265,10 @@ public class Tpf.PersonaStore : Folks.PersonaStore
           this.conn.request_handles (-1, HandleType.CONTACT, removed,
               (c, ht, nh, h, i, e, w) =>
                 {
-                  this.change_favourites_by_request_handles (nh, h, i, e, false);
-                }, this);
+                  this.change_favourites_by_request_handles (nh, h, i, e,
+                      false);
+                },
+              this);
         }
     }
 
@@ -989,7 +997,8 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       return null;
     }
 
-  public void change_is_favourite (Folks.Persona persona, bool is_favourite)
+  public async void change_is_favourite (Folks.Persona persona,
+      bool is_favourite)
     {
       /* It's possible for us to not be able to connect to the logger;
        * see connection_ready_cb() */
@@ -1003,20 +1012,19 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       try
         {
           /* Add or remove the persona to the list of favourites as
-           * appropriate. They'll get added to this.favourite_handles when the
-           * favourite_contacts_changed signal gets fired. */
+           * appropriate. */
           var id = ((Tpf.Persona) persona).contact.get_identifier ();
 
           if (is_favourite)
             {
               debug ("adding '%s' as a favourite contact", id);
-              this.logger.add_favourite_contact (new DBus.ObjectPath (this.id),
-                  id);
+              yield this.logger.add_favourite_contact (
+                  new DBus.ObjectPath (this.id), id);
             }
           else
             {
               debug ("removing '%s' as a favourite contact", id);
-              this.logger.remove_favourite_contact (
+              yield this.logger.remove_favourite_contact (
                   new DBus.ObjectPath (this.id), id);
             }
         }
@@ -1026,3 +1034,4 @@ public class Tpf.PersonaStore : Folks.PersonaStore
         }
     }
 }
+

@@ -42,6 +42,10 @@ public class Folks.Individual : Object, Alias, Avatar, Capabilities, Groups,
   public string id { get; private set; }
   public Folks.PresenceType presence_type { get; private set; }
   public string presence_message { get; private set; }
+
+  /* the last of this individuals personas has been removed, so it is invalid */
+  public signal void removed ();
+
   public bool is_favourite
     {
       get { return this._is_favourite; }
@@ -53,7 +57,7 @@ public class Folks.Individual : Object, Alias, Avatar, Capabilities, Groups,
           if (this._is_favourite == value)
             return;
 
-          this._is_favourite = true;
+          this._is_favourite = value;
           this._personas.foreach ((p) =>
             {
               if (p is Favourite)
@@ -61,9 +65,6 @@ public class Folks.Individual : Object, Alias, Avatar, Capabilities, Groups,
             });
         }
     }
-
-  /* the last of this individuals personas has been removed, so it is invalid */
-  public signal void removed ();
 
   public HashTable<string, bool> groups
     {
