@@ -222,8 +222,8 @@ public class Tpf.PersonaStore : Folks.PersonaStore
           unowned IntSet members = c.group_get_members ();
           if (members != null)
             {
-              this.channel_group_pend_incoming_adds (c, members.to_array (),
-                  true);
+              this.channel_group_pend_incoming_adds.begin (c,
+                  members.to_array (), true);
             }
         });
     }
@@ -239,7 +239,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       uint reason)
     {
       if (added != null)
-        this.channel_group_pend_incoming_adds (channel, added, true);
+        this.channel_group_pend_incoming_adds.begin (channel, added, true);
 
       /* we refuse to send these contacts our presence, so remove them */
       for (var i = 0; i < removed.length; i++)
@@ -262,9 +262,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       uint reason)
     {
       if (added != null)
-        {
-          this.channel_group_pend_incoming_adds (channel, added, true);
-        }
+        this.channel_group_pend_incoming_adds.begin (channel, added, true);
 
       for (var i = 0; i < removed.length; i++)
         {
@@ -285,12 +283,13 @@ public class Tpf.PersonaStore : Folks.PersonaStore
     {
       if (added != null)
         {
-          this.channel_group_pend_incoming_adds (channel, added, true);
+          this.channel_group_pend_incoming_adds.begin (channel, added, true);
 
           /* expose ourselves to anyone we can see */
           if (this.publish != null)
             {
-              this.channel_group_pend_incoming_adds (this.publish, added, true);
+              this.channel_group_pend_incoming_adds.begin (this.publish, added,
+                  true);
             }
         }
 
@@ -425,17 +424,18 @@ public class Tpf.PersonaStore : Folks.PersonaStore
 
   /* Only non-group contact list channels should use create_personas == true,
    * since the exposed set of Personas are meant to be filtered by them */
-  private void channel_group_pend_incoming_adds (Channel channel,
+  private async void channel_group_pend_incoming_adds (Channel channel,
       Array<uint> adds,
       bool create_personas)
     {
       var adds_length = adds != null ? adds.length : 0;
       if (adds_length >= 1)
         {
-          /* this won't complete before we would add the personas to the group,
-           * so we have to buffer the contact handles below */
           if (create_personas)
-            this.create_personas_from_channel_handles_async (channel, adds);
+            {
+              yield this.create_personas_from_channel_handles_async (channel,
+                  adds);
+            }
 
           for (var i = 0; i < adds.length; i++)
             {
@@ -482,8 +482,8 @@ public class Tpf.PersonaStore : Folks.PersonaStore
           unowned IntSet members = c.group_get_members ();
           if (members != null)
             {
-              this.channel_group_pend_incoming_adds (c, members.to_array (),
-                false);
+              this.channel_group_pend_incoming_adds.begin (c,
+                members.to_array (), false);
             }
         });
     }
@@ -499,7 +499,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       uint reason)
     {
       if (added != null)
-        this.channel_group_pend_incoming_adds (channel, added, false);
+        this.channel_group_pend_incoming_adds.begin (channel, added, false);
 
       /* FIXME: continue for the other arrays */
     }
@@ -578,7 +578,8 @@ public class Tpf.PersonaStore : Folks.PersonaStore
     }
 
   /* FIXME: Array<uint> => Array<Handle>; parser bug */
-  private void create_personas_from_channel_handles_async (Channel channel,
+  private async void create_personas_from_channel_handles_async (
+      Channel channel,
       Array<uint> channel_handles)
     {
       ContactFeature[] features =
@@ -598,36 +599,36 @@ public class Tpf.PersonaStore : Folks.PersonaStore
             contact_handles += contact_handle;
         }
 
-      /* FIXME: we have to use 'this' as the weak object because the
-        * weak object gets passed into the underlying callback as the
-        * object instance; there may be a way to fix this with the
-        * instance_pos directive, but I couldn't get it to work */
-      if (contact_handles.length > 0)
-        this.conn.get_contacts_by_handle (contact_handles, features,
-            this.get_contacts_by_handle_cb, this);
-    }
-
-  private void get_contacts_by_handle_cb (Connection connection,
-      uint n_contacts,
-      [CCode (array_length = false)]
-      Contact[] contacts,
-      uint n_failed,
-      [CCode (array_length = false)]
-      Handle[] failed,
-      GLib.Error error,
-      GLib.Object weak_object)
-    {
-      if (n_failed >= 1)
-        warning ("failed to retrieve contacts for handles:");
-
-      for (var i = 0; i < n_failed; i++)
+      try
         {
-          Handle h = failed[i];
-          warning ("    %u", (uint) h);
-        }
+          if (contact_handles.length < 1)
+            return;
 
-      /* we have to manually pass the length since we don't get it */
-      this.add_new_personas_from_contacts (contacts, n_contacts);
+          unowned GLib.List<Tp.Contact> contacts =
+              yield this.ll.connection_get_contacts_by_handle_async (
+                  this.conn, contact_handles, features);
+
+          if (contacts == null || contacts.length () < 1)
+            return;
+
+          var contacts_array = new Tp.Contact[contacts.length ()];
+          var j = 0;
+          unowned GLib.List<Tp.Contact> l = contacts;
+          for (; l != null; l = l.next)
+            {
+              contacts_array[j] = l.data;
+              j++;
+            }
+
+          this.add_new_personas_from_contacts (contacts_array,
+              contacts_array.length);
+        }
+      catch (GLib.Error e)
+        {
+          warning ("failed to create personas from incoming contacts in " +
+              "channel '%s': %s",
+              channel.get_identifier (), e.message);
+        }
     }
 
   private async GLib.List<Tpf.Persona>? create_personas_from_contact_ids (
