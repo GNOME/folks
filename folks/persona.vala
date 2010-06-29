@@ -60,6 +60,11 @@ public abstract class Folks.Persona : Object, Alias, Avatar, Capabilities,
   public abstract string presence_message { get; set; }
 
   /**
+   * {@inheritDoc}
+   */
+  public abstract bool is_favourite { get; set; }
+
+  /**
    * The internal ID used to represent the Persona within its {@link Backend}.
    *
    * This should not be used by client code.

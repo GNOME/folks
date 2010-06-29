@@ -29,6 +29,7 @@ libfolks_la_VALASOURCES = \
 	backend.vala \
 	backend-store.vala \
 	capabilities.vala \
+	favourite.vala \
 	groups.vala \
 	individual.vala \
 	individual-aggregator.vala \
