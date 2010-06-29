@@ -75,6 +75,7 @@ pkgconfig_DATA = $(pkgconfig_in:.in=)
 libfolks_telepathy_la_VALASOURCES = \
 	tpf-persona.vala \
 	tpf-persona-store.vala \
+	tpf-logger.vala \
 	$(NULL)
 
 libfolks_telepathy_la_SOURCES = \

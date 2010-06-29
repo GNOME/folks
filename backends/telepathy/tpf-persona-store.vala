@@ -25,28 +25,6 @@ using Tp;
 using Tp.ContactFeature;
 using Folks;
 
-private struct AccountFavourites
-{
-  DBus.ObjectPath account_path;
-  string[] ids;
-}
-
-/* TODO: This should be visible at the package level. See
- * https://bugzilla.gnome.org/show_bug.cgi?id=623108 */
-[DBus (name = "org.freedesktop.Telepathy.Logger.DRAFT")]
-private interface Logger : DBus.Object
-{
-  public abstract async AccountFavourites[] get_favourite_contacts ()
-      throws DBus.Error;
-  public abstract async void add_favourite_contact (
-      DBus.ObjectPath account_path, string id) throws DBus.Error;
-  public abstract async void remove_favourite_contact (
-      DBus.ObjectPath account_path, string id) throws DBus.Error;
-
-  public abstract signal void favourite_contacts_changed (
-      DBus.ObjectPath account_path, string[] added, string[] removed);
-}
-
 public class Tpf.PersonaStore : Folks.PersonaStore
 {
   private string[] undisplayed_groups = { "publish", "stored", "subscribe" };
@@ -109,7 +87,6 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       this.favourite_handles = new HashSet<uint> ();
       this.ll = new TpLowlevel ();
       this.account_manager = AccountManager.dup ();
-      this.logger = null;
 
       this.account_manager.account_disabled.connect ((a) =>
         {
@@ -139,29 +116,17 @@ public class Tpf.PersonaStore : Folks.PersonaStore
               status, reason, null, null);
         }
 
-      /* Create a logger proxy for favourites support */
-      /* FIXME: This should be ported to the Vala GDBus stuff and made async,
-       * but that depends on
-       * https://bugzilla.gnome.org/show_bug.cgi?id=622611 being fixed. */
-      /* FIXME: It would also be nice to have it as a per-backend singleton,
-       * much like AccountManager is implemented. At the moment, we have one
-       * Logger proxy per PersonaStore, which is sub-optimal. */
       try
         {
-          var dbus_conn = DBus.Bus.get (DBus.BusType.SESSION);
-          this.logger = dbus_conn.get_object (
-              "org.freedesktop.Telepathy.Logger",
-              "/org/freedesktop/Telepathy/Logger",
-              "org.freedesktop.Telepathy.Logger.DRAFT") as Logger;
+          this.logger = new Logger (this.id);
+          this.logger.favourite_contacts_changed.connect (
+              this.favourite_contacts_changed_cb);
         }
       catch (DBus.Error e)
         {
           warning ("couldn't connect to the telepathy-logger service");
-          return;
+          this.logger = null;
         }
-
-      this.logger.favourite_contacts_changed.connect (
-          this.favourite_contacts_changed_cb);
     }
 
   private async void initialise_favourite_contacts ()
@@ -170,31 +135,24 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       try
         {
           debug ("attempting to list favourite contacts...");
-          var contacts = yield this.logger.get_favourite_contacts ();
+          string[] contacts = yield this.logger.get_favourite_contacts ();
 
-          foreach (AccountFavourites account in contacts)
-            {
-              /* We only want the favourites from this account */
-              if (account.account_path != this.id)
-                continue;
+          if (contacts.length == 0)
+            return;
 
-              debug ("adding favourite contacts for account '%s'", this.id);
-
-              /* Note that we don't need to release these handles, as they're
-               * also held by the relevant contact objects, and will be released
-               * as appropriate by those objects (we're circumventing tp-glib's
-               * handle reference counting). */
-              this.conn.request_handles (-1, HandleType.CONTACT, account.ids,
-                (c, ht, nh, h, i, e, w) =>
-                  {
-                    this.change_favourites_by_request_handles (nh, h, i, e,
-                        true);
-                  },
-                this);
-              /* FIXME: Have to pass this as weak_object parameter since Vala
-               * seems to swap the order of user_data and weak_object in the
-               * callback. */
-            }
+          /* Note that we don't need to release these handles, as they're
+           * also held by the relevant contact objects, and will be released
+           * as appropriate by those objects (we're circumventing tp-glib's
+           * handle reference counting). */
+          this.conn.request_handles (-1, HandleType.CONTACT, contacts,
+            (c, ht, nh, h, i, e, w) =>
+              {
+                this.change_favourites_by_request_handles (nh, h, i, e, true);
+              },
+            this);
+          /* FIXME: Have to pass this as weak_object parameter since Vala
+           * seems to swap the order of user_data and weak_object in the
+           * callback. */
         }
       catch (DBus.Error e)
         {
@@ -238,15 +196,13 @@ public class Tpf.PersonaStore : Folks.PersonaStore
         }
     }
 
-  private void favourite_contacts_changed_cb (string account_path,
-      string[] added, string[] removed)
+  private void favourite_contacts_changed_cb (string[] added, string[] removed)
     {
-      /* Don't listen to favourites updates if the account is disconnected
-       * or if the notification is for a different account. */
-      if (this.conn == null || account_path != this.id)
+      /* Don't listen to favourites updates if the account is disconnected. */
+      if (this.conn == null)
         return;
 
-      debug ("favourite_contacts_changed_cb for account '%s'", account_path);
+      debug ("favourite_contacts_changed_cb for account '%s'", this.id);
 
       /* Add favourites */
       if (added.length > 0)
@@ -1018,14 +974,12 @@ public class Tpf.PersonaStore : Folks.PersonaStore
           if (is_favourite)
             {
               debug ("adding '%s' as a favourite contact", id);
-              yield this.logger.add_favourite_contact (
-                  new DBus.ObjectPath (this.id), id);
+              yield this.logger.add_favourite_contact (id);
             }
           else
             {
               debug ("removing '%s' as a favourite contact", id);
-              yield this.logger.remove_favourite_contact (
-                  new DBus.ObjectPath (this.id), id);
+              yield this.logger.remove_favourite_contact (id);
             }
         }
       catch (DBus.Error e)
@@ -1034,4 +988,3 @@ public class Tpf.PersonaStore : Folks.PersonaStore
         }
     }
 }
-
