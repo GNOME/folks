@@ -88,7 +88,7 @@ public class Folks.IndividualAggregator : Object
    *
    * FIXME: Race condition when connecting to signals?
    */
-  public IndividualAggregator () throws GLib.Error
+  public IndividualAggregator ()
     {
       this.stores = new HashMap<string, PersonaStore> ();
       this.individuals = new HashTable<string, Individual> (str_hash,
