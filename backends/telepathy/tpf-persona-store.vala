@@ -147,7 +147,16 @@ public class Tpf.PersonaStore : Folks.PersonaStore
           this.conn.request_handles (-1, HandleType.CONTACT, contacts,
             (c, ht, nh, h, i, e, w) =>
               {
-                this.change_favourites_by_request_handles (nh, h, i, e, true);
+                try
+                  {
+                    this.change_favourites_by_request_handles (nh, h, i, e,
+                        true);
+                  }
+                catch (GLib.Error e)
+                  {
+                    warning ("couldn't get list of favourite contacts: %s",
+                        e.message);
+                  }
               },
             this);
           /* FIXME: Have to pass this as weak_object parameter since Vala
@@ -210,7 +219,16 @@ public class Tpf.PersonaStore : Folks.PersonaStore
           this.conn.request_handles (-1, HandleType.CONTACT, added,
               (c, ht, nh, h, i, e, w) =>
                 {
-                  this.change_favourites_by_request_handles (nh, h, i, e, true);
+                  try
+                    {
+                      this.change_favourites_by_request_handles (nh, h, i, e,
+                          true);
+                    }
+                  catch (GLib.Error e)
+                    {
+                      warning ("couldn't add favourite contacts: %s",
+                          e.message);
+                    }
                 },
               this);
         }
@@ -221,8 +239,16 @@ public class Tpf.PersonaStore : Folks.PersonaStore
           this.conn.request_handles (-1, HandleType.CONTACT, removed,
               (c, ht, nh, h, i, e, w) =>
                 {
-                  this.change_favourites_by_request_handles (nh, h, i, e,
-                      false);
+                  try
+                    {
+                      this.change_favourites_by_request_handles (nh, h, i, e,
+                          false);
+                    }
+                  catch (GLib.Error e)
+                    {
+                      warning ("couldn't remove favourite contacts: %s",
+                          e.message);
+                    }
                 },
               this);
         }
