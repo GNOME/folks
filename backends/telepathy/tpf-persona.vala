@@ -262,18 +262,15 @@ public class Tpf.Persona : Folks.Persona, Alias, Avatar, Folks.Capabilities,
         {
           unowned ValueArray class_struct = (ValueArray) m;
 
-          Value val = class_struct.get_nth (0);
-          HashTable fixed_prop = (HashTable) val.get_boxed ();
-
-          val = class_struct.get_nth (1);
-          string[] allowed_prop = (string[]) val.get_boxed ();
+          unowned Value val = class_struct.get_nth (0);
+          unowned HashTable fixed_prop = (HashTable) val.get_boxed ();
 
           Tp.HandleType handle_type = (Tp.HandleType) Tp.asv_get_uint32 (
               fixed_prop, Tp.PROP_CHANNEL_TARGET_HANDLE_TYPE, null);
           if (handle_type != HandleType.CONTACT)
             return; /* i.e. continue the loop */
 
-          string chan_type = Tp.asv_get_string (fixed_prop,
+          unowned string chan_type = Tp.asv_get_string (fixed_prop,
               Tp.PROP_CHANNEL_CHANNEL_TYPE);
 
           if (chan_type == Tp.IFACE_CHANNEL_TYPE_FILE_TRANSFER)
@@ -290,13 +287,22 @@ public class Tpf.Persona : Folks.Persona, Alias, Avatar, Folks.Capabilities,
             }
           else if (chan_type == Tp.IFACE_CHANNEL_TYPE_STREAMED_MEDIA)
             {
-              foreach (string prop in allowed_prop)
+              val = class_struct.get_nth (1);
+              unowned string[] allowed_prop = (string[]) val.get_boxed ();
+
+              if (allowed_prop != null)
                 {
-                  if (prop == Tp.PROP_CHANNEL_TYPE_STREAMED_MEDIA_INITIAL_AUDIO)
-                    capabilities |= CapabilitiesFlags.AUDIO;
-                  else if (prop ==
-                      Tp.PROP_CHANNEL_TYPE_STREAMED_MEDIA_INITIAL_VIDEO)
-                    capabilities |= CapabilitiesFlags.VIDEO;
+                  for (int i = 0; allowed_prop[i] != null; i++)
+                    {
+                      unowned string prop = allowed_prop[i];
+
+                      if (prop ==
+                          Tp.PROP_CHANNEL_TYPE_STREAMED_MEDIA_INITIAL_AUDIO)
+                        capabilities |= CapabilitiesFlags.AUDIO;
+                      else if (prop ==
+                          Tp.PROP_CHANNEL_TYPE_STREAMED_MEDIA_INITIAL_VIDEO)
+                        capabilities |= CapabilitiesFlags.VIDEO;
+                    }
                 }
             }
         });
