@@ -97,6 +97,23 @@ folks_tp_lowlevel_connection_open_contact_list_channel_finish (
     GError **error);
 
 void
+folks_tp_lowlevel_connection_get_contacts_by_handle_async (
+    FolksTpLowlevel *tp_lowlevel,
+    TpConnection *conn,
+    const TpHandle *contact_handles,
+    guint contact_handles_length,
+    TpContactFeature *features,
+    guint features_length,
+    GAsyncReadyCallback callback,
+    gpointer user_data);
+
+GList *
+folks_tp_lowlevel_connection_get_contacts_by_handle_finish (
+    FolksTpLowlevel *tp_lowlevel,
+    GAsyncResult *result,
+    GError **error);
+
+void
 folks_tp_lowlevel_connection_get_contacts_by_id_async (
     FolksTpLowlevel *tp_lowlevel,
     TpConnection *conn,

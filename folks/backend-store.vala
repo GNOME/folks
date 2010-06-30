@@ -36,13 +36,28 @@ public class Folks.BackendStore : Object {
 
   private HashMap<string,Backend> backend_hash;
 
+  /**
+   * Emitted when a backend has been added to the BackendStore.
+   *
+   * @param backend the new {@link Backend}
+   */
   public signal void backend_available (Backend backend);
 
+  /**
+   * Create a new BackendStore.
+   */
   public BackendStore ()
     {
       this.backend_hash = new HashMap<string,Backend> (str_hash, str_equal);
     }
 
+  /**
+   * Find and load all available backends.
+   *
+   * Backends will be searched for in the path given by the `FOLKS_BACKEND_DIR`
+   * environment variable, if it's set. If it's not set, backends will be
+   * searched for in a path set at compilation time.
+   */
   public async void load_backends () {
       assert (Module.supported());
 
@@ -66,6 +81,11 @@ public class Folks.BackendStore : Object {
       yield this.load_modules_from_dir (dir);
   }
 
+  /**
+   * Add a new {@link Backend} to the BackendStore.
+   *
+   * @param backend the {@link Backend} to add
+   */
   public void add_backend (Backend backend)
     {
       message ("New backend '%s' available", backend.name);
@@ -73,11 +93,22 @@ public class Folks.BackendStore : Object {
       this.backend_available (backend);
     }
 
+  /**
+   * Get a backend from the store by name.
+   *
+   * @param name the backend name to retrieve
+   * @return the backend, or `null` if none could be found
+   */
   public Backend? get_backend_by_name (string name)
     {
       return this.backend_hash.get (name);
     }
 
+  /**
+   * List the currently loaded backends.
+   *
+   * @return a list of the backends currently in the BackendStore
+   */
   public Collection<Backend> list_backends ()
     {
       return this.backend_hash.values;

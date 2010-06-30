@@ -28,12 +28,37 @@ using Folks;
  */
 public abstract class Folks.Backend : Object
 {
+  /**
+   * A unique name for the backend.
+   *
+   * This will be used to identify the backend, and should also be used as the
+   * {@link PersonaStore.type_id} of the {@link PersonaStore}s used by the
+   * backend.
+   */
   public abstract string name { get; protected set; }
+
+  /**
+   * The {@link PersonaStore}s in use by the backend.
+   *
+   * A backend may expose {@link Persona}s from multiple servers or accounts
+   * (for example), so may have a {@link PersonaStore} for each.
+   */
   public abstract HashTable<string, PersonaStore> persona_stores
     {
       get; protected set;
     }
 
+  /**
+   * Emitted when a {@link PersonaStore} is added to the backend.
+   *
+   * @param store the {@link PersonaStore}
+   */
   public abstract signal void persona_store_added (PersonaStore store);
+
+  /**
+   * Emitted when a {@link PersonaStore} is removed from the backend.
+   *
+   * @param store the {@link PersonaStore}
+   */
   public abstract signal void persona_store_removed (PersonaStore store);
 }

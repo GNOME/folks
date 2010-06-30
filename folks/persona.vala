@@ -29,10 +29,25 @@ using Folks;
  */
 public abstract class Folks.Persona : Object
 {
-  /* internal ID */
+  /**
+   * The internal ID used to represent the Persona within its {@link Backend}.
+   *
+   * This should not be used by client code.
+   */
   public string iid { get; construct; }
-  /* universal ID (eg, "foo@xmpp.example.org") */
+
+  /**
+   * The universal ID used to represent the Persona outside its {@link Backend}.
+   *
+   * For example: `foo@@xmpp.example.org`.
+   *
+   * This is the canonical way to refer to any Persona. It is guaranteed to be
+   * unique within the Persona's {@link PersonaStore}.
+   */
   public string uid { get; construct; }
 
+  /**
+   * The {@link PersonaStore} which contains this Persona.
+   */
   public PersonaStore store { get; construct; }
 }

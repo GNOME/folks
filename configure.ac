@@ -3,7 +3,7 @@ m4_define(folks_released, 0)
 
 m4_define([folks_major_version], [0])
 m4_define([folks_minor_version], [1])
-m4_define([folks_micro_version], [3])
+m4_define([folks_micro_version], [6])
 m4_define([folks_nano_version], [0])
 
 dnl Display the nano_version only if it's not '0'
@@ -43,7 +43,12 @@ AC_PATH_PROG(VALAC, valac, valac)
 AC_SUBST(VALAC)
 
 AC_SUBST(PKG_CONFIG_PATH)
+
+# require GLib >= 2.24 so GLib.Array, etc. reffing is handled automatically
+VALACFLAGS="$VALACFLAGS --target-glib=2.24"
+AC_SUBST(VALACFLAGS)
 AC_SUBST(VALAFLAGS)
+
 AC_SUBST(CFLAGS)
 AC_SUBST(CPPFLAGS)
 AC_SUBST(LDFLAGS)
