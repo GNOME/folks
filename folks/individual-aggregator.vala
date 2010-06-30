@@ -65,6 +65,9 @@ public class Folks.IndividualAggregator : Object
    * Emitted when one or more {@link Individual}s are added to or removed from
    * the aggregator.
    *
+   * This will not be emitted until after {@link IndividualAggregator.prepare}
+   * has been called.
+   *
    * @param added a list of {@link Individual}s which have been removed
    * @param removed a list of {@link Individual}s which have been removed
    * @param message a string message from the backend, if any
@@ -82,11 +85,16 @@ public class Folks.IndividualAggregator : Object
    * Create a new IndividualAggregator.
    *
    * Clients should connect to the
-   * {@link IndividualAggregator.individuals_changed} signal, which will be
-   * emitted as soon as the {@link Backend}s are loaded and {@link Persona}s
-   * found.
+   * {@link IndividualAggregator.individuals_changed} signal, then call
+   * {@link IndividualAggregator.prepare} to load the backends and start
+   * aggregating individuals.
    *
-   * FIXME: Race condition when connecting to signals?
+   * An example of how to set up an IndividualAggregator:
+   * {{{
+   *   IndividualAggregator agg = new IndividualAggregator ();
+   *   agg.individuals_changed.connect (individuals_changed_cb);
+   *   agg.prepare ();
+   * }}}
    */
   public IndividualAggregator ()
     {
@@ -98,6 +106,19 @@ public class Folks.IndividualAggregator : Object
 
       this.backend_store = new BackendStore ();
       this.backend_store.backend_available.connect (this.backend_available_cb);
+    }
+
+  /**
+   * Prepare the IndividualAggregator for use.
+   *
+   * This loads all the available backends and prepares them for use by the
+   * IndividualAggregator. This should be called //after// connecting to the
+   * {@link IndividualAggregator.individuals_changed} signal, or a race
+   * condition could occur, with the signal being emitted before your code has
+   * connected to them, and {@link Individual}s getting "lost" as a result.
+   */
+  public async void prepare ()
+    {
       this.backend_store.load_backends ();
     }
 
