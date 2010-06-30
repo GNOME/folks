@@ -24,9 +24,10 @@ using Tp;
 using Folks;
 
 public class Tpf.Persona : Folks.Persona, Alias, Avatar, Folks.Capabilities,
-       Groups, Presence
+       Groups, Presence, Favourite
 {
   private HashTable<string, bool> _groups;
+  private bool _is_favourite;
 
   /* interface Alias */
   public override string alias { get; set; }
@@ -40,6 +41,21 @@ public class Tpf.Persona : Folks.Persona, Alias, Avatar, Folks.Capabilities,
   /* interface Presence */
   public override Folks.PresenceType presence_type { get; private set; }
   public override string presence_message { get; private set; }
+
+  /* interface Favourite */
+  public override bool is_favourite
+    {
+      get { return this._is_favourite; }
+
+      set
+        {
+          if (this._is_favourite == value)
+            return;
+
+          ((Tpf.PersonaStore) this.store).change_is_favourite (this, value);
+          this._is_favourite = value;
+        }
+    }
 
   /* interface Groups */
   public HashTable<string, bool> groups

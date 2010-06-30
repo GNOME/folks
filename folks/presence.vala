@@ -49,10 +49,25 @@ public enum Folks.PresenceType {
  */
 public interface Folks.Presence : Object
 {
+  /**
+   * The contact's presence type.
+   *
+   * Each contact can have one and only one presence type at any one time,
+   * representing their availability for communication. The default presence
+   * type is {@link PresenceType.UNSET}.
+   */
   public abstract Folks.PresenceType presence_type
     {
       get; set; default = Folks.PresenceType.UNSET;
     }
+
+  /**
+   * The contact's presence message.
+   *
+   * This is a short message written by the contact to add detail to their
+   * presence type ({@link Folks.Presence.presence_type}). If the contact hasn't
+   * set a message, it will be an empty string.
+   */
   public abstract string presence_message { get; set; default = ""; }
 
   /* Rank the presence types for comparison purposes, with higher numbers
@@ -84,11 +99,28 @@ public interface Folks.Presence : Object
         }
     }
 
+  /**
+   * Compare two {@link PresenceType}s.
+   *
+   * `0` will be returned if the types are equal, a positive number will be
+   * returned if `type_a` is more available than `type_b`, and a negative
+   * number will be returned if the opposite is true.
+   *
+   * @return a number representing the similarity of the two types
+   */
   public static uint typecmp (PresenceType type_a, PresenceType type_b)
     {
       return type_availability (type_a) - type_availability (type_b);
     }
 
+  /**
+   * Whether the contact is online.
+   *
+   * This will be `true` if the contact's presence type is higher than
+   * {@link PresenceType.OFFLINE}, as determined by {@link Presence.typecmp}.
+   *
+   * @return `true` if the contact is online, `false` otherwise
+   */
   public bool is_online ()
     {
       return (typecmp (this.presence_type, PresenceType.OFFLINE) > 0);

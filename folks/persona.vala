@@ -31,22 +31,58 @@ public abstract class Folks.Persona : Object, Alias, Avatar, Capabilities,
        Presence
 {
   /* interface Alias */
+  /**
+   * {@inheritDoc}
+   */
   public abstract string alias { get; set; }
 
   /* interface Avatar */
+  /**
+   * {@inheritDoc}
+   */
   public abstract File avatar { get; set; }
 
   /* interface Capabilities */
+  /**
+   * {@inheritDoc}
+   */
   public abstract CapabilitiesFlags capabilities { get; set; }
 
   /* interface Presence */
+  /**
+   * {@inheritDoc}
+   */
   public abstract Folks.PresenceType presence_type { get; set; }
+
+  /**
+   * {@inheritDoc}
+   */
   public abstract string presence_message { get; set; }
 
-  /* internal ID */
+  /**
+   * {@inheritDoc}
+   */
+  public abstract bool is_favourite { get; set; }
+
+  /**
+   * The internal ID used to represent the Persona within its {@link Backend}.
+   *
+   * This should not be used by client code.
+   */
   public string iid { get; construct; }
-  /* universal ID (eg, "foo@xmpp.example.org") */
+
+  /**
+   * The universal ID used to represent the Persona outside its {@link Backend}.
+   *
+   * For example: `foo@@xmpp.example.org`.
+   *
+   * This is the canonical way to refer to any Persona. It is guaranteed to be
+   * unique within the Persona's {@link PersonaStore}.
+   */
   public string uid { get; construct; }
 
+  /**
+   * The {@link PersonaStore} which contains this Persona.
+   */
   public PersonaStore store { get; construct; }
 }

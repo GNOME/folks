@@ -16,6 +16,7 @@
  *
  * Authors:
  *       Travis Reitter <travis.reitter@collabora.co.uk>
+ *       Philip Withnall <philip.withnall@collabora.co.uk>
  */
 
 using GLib;
@@ -38,12 +39,15 @@ public class Tpf.PersonaStore : Folks.PersonaStore
   private HashMap<string, Channel> standard_channels_unready;
   private HashMap<string, Channel> group_channels_unready;
   private HashMap<string, Channel> groups;
+  /* FIXME: Should be HashSet<Handle> */
+  private HashSet<uint> favourite_handles;
   private Channel publish;
   private Channel stored;
   private Channel subscribe;
   private Connection conn;
   private TpLowlevel ll;
   private AccountManager account_manager;
+  private Logger logger;
 
   [Property(nick = "basis account",
       blurb = "Telepathy account this store is based upon")]
@@ -78,6 +82,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       this.standard_channels_unready = new HashMap<string, Channel> ();
       this.group_channels_unready = new HashMap<string, Channel> ();
       this.groups = new HashMap<string, Channel> ();
+      this.favourite_handles = new HashSet<uint> ();
       this.ll = new TpLowlevel ();
       this.account_manager = AccountManager.dup ();
 
@@ -108,6 +113,134 @@ public class Tpf.PersonaStore : Folks.PersonaStore
           this.account_status_changed_cb (Tp.ConnectionStatus.DISCONNECTED,
               status, reason, null, null);
         }
+
+      try
+        {
+          this.logger = new Logger (this.id);
+          this.logger.favourite_contacts_changed.connect (
+              this.favourite_contacts_changed_cb);
+        }
+      catch (DBus.Error e)
+        {
+          warning ("couldn't connect to the telepathy-logger service");
+          this.logger = null;
+        }
+    }
+
+  private async void initialise_favourite_contacts ()
+    {
+      /* Get an initial set of favourite contacts */
+      try
+        {
+          string[] contacts = yield this.logger.get_favourite_contacts ();
+
+          if (contacts.length == 0)
+            return;
+
+          /* Note that we don't need to release these handles, as they're
+           * also held by the relevant contact objects, and will be released
+           * as appropriate by those objects (we're circumventing tp-glib's
+           * handle reference counting). */
+          this.conn.request_handles (-1, HandleType.CONTACT, contacts,
+            (c, ht, nh, h, i, e, w) =>
+              {
+                try
+                  {
+                    this.change_favourites_by_request_handles (nh, h, i, e,
+                        true);
+                  }
+                catch (GLib.Error e)
+                  {
+                    warning ("couldn't get list of favourite contacts: %s",
+                        e.message);
+                  }
+              },
+            this);
+          /* FIXME: Have to pass this as weak_object parameter since Vala
+           * seems to swap the order of user_data and weak_object in the
+           * callback. */
+        }
+      catch (DBus.Error e)
+        {
+          warning ("couldn't get list of favourite contacts: %s", e.message);
+        }
+    }
+
+  private void change_favourites_by_request_handles (uint n_handles,
+      Handle[] handles, string[] ids, GLib.Error? error,
+      bool add) throws GLib.Error
+    {
+      if (error != null)
+        throw error;
+
+      for (var i = 0; i < n_handles; i++)
+        {
+          Handle h = handles[i];
+          Persona p = this.handle_persona_map[h];
+
+          /* Add/Remove the handle to the set of favourite handles, since we
+           * might not have the corresponding contact yet */
+          if (add)
+            this.favourite_handles.add (h);
+          else
+            this.favourite_handles.remove (h);
+
+          if (p == null)
+            {
+              warning ("unknown persona '%s' in favourites list", ids[i]);
+              continue;
+            }
+
+          /* Mark or unmark the persona as a favourite */
+          p.is_favourite = add;
+        }
+    }
+
+  private void favourite_contacts_changed_cb (string[] added, string[] removed)
+    {
+      /* Don't listen to favourites updates if the account is disconnected. */
+      if (this.conn == null)
+        return;
+
+      /* Add favourites */
+      if (added.length > 0)
+        {
+          this.conn.request_handles (-1, HandleType.CONTACT, added,
+              (c, ht, nh, h, i, e, w) =>
+                {
+                  try
+                    {
+                      this.change_favourites_by_request_handles (nh, h, i, e,
+                          true);
+                    }
+                  catch (GLib.Error e)
+                    {
+                      warning ("couldn't add favourite contacts: %s",
+                          e.message);
+                    }
+                },
+              this);
+        }
+
+      /* Remove favourites */
+      if (removed.length > 0)
+        {
+          this.conn.request_handles (-1, HandleType.CONTACT, removed,
+              (c, ht, nh, h, i, e, w) =>
+                {
+                  try
+                    {
+                      this.change_favourites_by_request_handles (nh, h, i, e,
+                          false);
+                    }
+                  catch (GLib.Error e)
+                    {
+                      warning ("couldn't remove favourite contacts: %s",
+                          e.message);
+                    }
+                },
+              this);
+        }
     }
 
   private void account_status_changed_cb (ConnectionStatus old_status,
@@ -130,6 +263,9 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       this.add_standard_channel (conn, "stored");
       this.add_standard_channel (conn, "subscribe");
       this.conn = conn;
+
+      /* We can only initialise the favourite contacts once we've got conn */
+      this.initialise_favourite_contacts.begin ();
     }
 
   private void new_group_channels_cb (void *data)
@@ -222,8 +358,8 @@ public class Tpf.PersonaStore : Folks.PersonaStore
           unowned IntSet members = c.group_get_members ();
           if (members != null)
             {
-              this.channel_group_pend_incoming_adds (c, members.to_array (),
-                  true);
+              this.channel_group_pend_incoming_adds.begin (c,
+                  members.to_array (), true);
             }
         });
     }
@@ -239,7 +375,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       uint reason)
     {
       if (added != null)
-        this.channel_group_pend_incoming_adds (channel, added, true);
+        this.channel_group_pend_incoming_adds.begin (channel, added, true);
 
       /* we refuse to send these contacts our presence, so remove them */
       for (var i = 0; i < removed.length; i++)
@@ -262,9 +398,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       uint reason)
     {
       if (added != null)
-        {
-          this.channel_group_pend_incoming_adds (channel, added, true);
-        }
+        this.channel_group_pend_incoming_adds.begin (channel, added, true);
 
       for (var i = 0; i < removed.length; i++)
         {
@@ -285,12 +419,13 @@ public class Tpf.PersonaStore : Folks.PersonaStore
     {
       if (added != null)
         {
-          this.channel_group_pend_incoming_adds (channel, added, true);
+          this.channel_group_pend_incoming_adds.begin (channel, added, true);
 
           /* expose ourselves to anyone we can see */
           if (this.publish != null)
             {
-              this.channel_group_pend_incoming_adds (this.publish, added, true);
+              this.channel_group_pend_incoming_adds.begin (this.publish, added,
+                  true);
             }
         }
 
@@ -425,17 +560,18 @@ public class Tpf.PersonaStore : Folks.PersonaStore
 
   /* Only non-group contact list channels should use create_personas == true,
    * since the exposed set of Personas are meant to be filtered by them */
-  private void channel_group_pend_incoming_adds (Channel channel,
+  private async void channel_group_pend_incoming_adds (Channel channel,
       Array<uint> adds,
       bool create_personas)
     {
       var adds_length = adds != null ? adds.length : 0;
       if (adds_length >= 1)
         {
-          /* this won't complete before we would add the personas to the group,
-           * so we have to buffer the contact handles below */
           if (create_personas)
-            this.create_personas_from_channel_handles_async (channel, adds);
+            {
+              yield this.create_personas_from_channel_handles_async (channel,
+                  adds);
+            }
 
           for (var i = 0; i < adds.length; i++)
             {
@@ -482,8 +618,8 @@ public class Tpf.PersonaStore : Folks.PersonaStore
           unowned IntSet members = c.group_get_members ();
           if (members != null)
             {
-              this.channel_group_pend_incoming_adds (c, members.to_array (),
-                false);
+              this.channel_group_pend_incoming_adds.begin (c,
+                members.to_array (), false);
             }
         });
     }
@@ -499,7 +635,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       uint reason)
     {
       if (added != null)
-        this.channel_group_pend_incoming_adds (channel, added, false);
+        this.channel_group_pend_incoming_adds.begin (channel, added, false);
 
       /* FIXME: continue for the other arrays */
     }
@@ -578,7 +714,8 @@ public class Tpf.PersonaStore : Folks.PersonaStore
     }
 
   /* FIXME: Array<uint> => Array<Handle>; parser bug */
-  private void create_personas_from_channel_handles_async (Channel channel,
+  private async void create_personas_from_channel_handles_async (
+      Channel channel,
       Array<uint> channel_handles)
     {
       ContactFeature[] features =
@@ -598,36 +735,36 @@ public class Tpf.PersonaStore : Folks.PersonaStore
             contact_handles += contact_handle;
         }
 
-      /* FIXME: we have to use 'this' as the weak object because the
-        * weak object gets passed into the underlying callback as the
-        * object instance; there may be a way to fix this with the
-        * instance_pos directive, but I couldn't get it to work */
-      if (contact_handles.length > 0)
-        this.conn.get_contacts_by_handle (contact_handles, features,
-            this.get_contacts_by_handle_cb, this);
-    }
-
-  private void get_contacts_by_handle_cb (Connection connection,
-      uint n_contacts,
-      [CCode (array_length = false)]
-      Contact[] contacts,
-      uint n_failed,
-      [CCode (array_length = false)]
-      Handle[] failed,
-      GLib.Error error,
-      GLib.Object weak_object)
-    {
-      if (n_failed >= 1)
-        warning ("failed to retrieve contacts for handles:");
-
-      for (var i = 0; i < n_failed; i++)
+      try
         {
-          Handle h = failed[i];
-          warning ("    %u", (uint) h);
-        }
+          if (contact_handles.length < 1)
+            return;
 
-      /* we have to manually pass the length since we don't get it */
-      this.add_new_personas_from_contacts (contacts, n_contacts);
+          unowned GLib.List<Tp.Contact> contacts =
+              yield this.ll.connection_get_contacts_by_handle_async (
+                  this.conn, contact_handles, features);
+
+          if (contacts == null || contacts.length () < 1)
+            return;
+
+          var contacts_array = new Tp.Contact[contacts.length ()];
+          var j = 0;
+          unowned GLib.List<Tp.Contact> l = contacts;
+          for (; l != null; l = l.next)
+            {
+              contacts_array[j] = l.data;
+              j++;
+            }
+
+          this.add_new_personas_from_contacts (contacts_array,
+              contacts_array.length);
+        }
+      catch (GLib.Error e)
+        {
+          warning ("failed to create personas from incoming contacts in " +
+              "channel '%s': %s",
+              channel.get_identifier (), e.message);
+        }
     }
 
   private async GLib.List<Tpf.Persona>? create_personas_from_contact_ids (
@@ -696,8 +833,15 @@ public class Tpf.PersonaStore : Folks.PersonaStore
                 {
                   personas_new.insert (persona.iid, persona);
 
+                  var h = contact.get_handle ();
                   this._personas.insert (persona.iid, persona);
-                  this.handle_persona_map[contact.get_handle ()] = persona;
+                  this.handle_persona_map[h] = persona;
+
+                  /* If the handle is a favourite, ensure the persona's marked
+                   * as such. This deals with the case where we receive a
+                   * contact _after_ we've discovered that they're a
+                   * favourite. */
+                  persona.is_favourite = this.favourite_handles.contains (h);
                 }
             }
           catch (Tp.Error e)
@@ -823,5 +967,34 @@ public class Tpf.PersonaStore : Folks.PersonaStore
         }
 
       return null;
+    }
+
+  public async void change_is_favourite (Folks.Persona persona,
+      bool is_favourite)
+    {
+      /* It's possible for us to not be able to connect to the logger;
+       * see connection_ready_cb() */
+      if (this.logger == null)
+        {
+          warning ("failed to change favourite without connection to the " +
+                   "telepathy-logger service");
+          return;
+        }
+
+      try
+        {
+          /* Add or remove the persona to the list of favourites as
+           * appropriate. */
+          var id = ((Tpf.Persona) persona).contact.get_identifier ();
+
+          if (is_favourite)
+            yield this.logger.add_favourite_contact (id);
+          else
+            yield this.logger.remove_favourite_contact (id);
+        }
+      catch (DBus.Error e)
+        {
+          warning ("failed to change a persona's favourite status");
+        }
     }
 }

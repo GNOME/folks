@@ -15,22 +15,19 @@
  * along with this library.  If not, see <http://www.gnu.org/licenses/>.
  *
  * Authors:
- *       Travis Reitter <travis.reitter@collabora.co.uk>
+ *       Philip Withnall <philip.withnall@collabora.co.uk>
  */
 
 using GLib;
 
 /**
- * Interface for classes which represent contacts which have an avatar
- * (pictorial representation), such as {@link Persona} and {@link Individual}.
+ * Interface exposing a {@link Persona}'s or {@link Individual}'s user-defined
+ * status as a favourite.
  */
-public interface Folks.Avatar : Object
+public interface Folks.Favourite : Object
 {
   /**
-   * An avatar for the contact.
-   *
-   * An avatar is a small image file which represents the contact. It may be
-   * `null` if unset.
+   * Whether this contact is a user-defined favourite.
    */
-  public abstract File avatar { get; set; }
+  public abstract bool is_favourite { get; set; }
 }
