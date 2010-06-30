@@ -190,14 +190,20 @@ public class Tpf.PersonaStore : Folks.PersonaStore
           else
             this.favourite_handles.remove (h);
 
-          if (p == null)
+          /* If the persona isn't in the handle_persona_map yet, it's most
+           * likely because the account hasn't connected yet (and we haven't
+           * received the roster). If there are already entries in
+           * handle_persona_map, the account *is* connected and we should
+           * warn about the unknown persona. */
+          if (p == null && this.handle_persona_map.size > 0)
             {
               warning ("unknown persona '%s' in favourites list", ids[i]);
               continue;
             }
 
           /* Mark or unmark the persona as a favourite */
-          p.is_favourite = add;
+          if (p != null)
+            p.is_favourite = add;
         }
     }
 
