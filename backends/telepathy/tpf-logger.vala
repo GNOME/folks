@@ -63,6 +63,10 @@ internal class Logger : GLib.Object
            * TpfPersonaStore, which will need to be prevented. e.g.
            * change_is_favourite() may get called before logger initialisation
            * is complete; favourites-change requests should be queued. */
+          /* FIXME: Before being ported to use GDBus, this should use
+           * dbus_conn.get_object_for_name_owner() so that it behaves better if
+           * the logger service disappears. This is, however, blocked by:
+           * https://bugzilla.gnome.org/show_bug.cgi?id=623198 */
           var dbus_conn = DBus.Bus.get (DBus.BusType.SESSION);
           this.logger = dbus_conn.get_object (
               "org.freedesktop.Telepathy.Logger",
