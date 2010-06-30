@@ -250,7 +250,7 @@ public class Tpf.Persona : Folks.Persona,
   private static Account? account_for_connection (Connection conn)
     {
       var manager = AccountManager.dup ();
-      unowned GLib.List<Account> accounts = manager.get_valid_accounts ();
+      GLib.List<Account> accounts = manager.get_valid_accounts ();
 
       Account account_found = null;
       accounts.foreach ((l) =>
