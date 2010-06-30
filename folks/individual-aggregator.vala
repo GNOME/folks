@@ -107,6 +107,19 @@ public class Folks.IndividualAggregator : Object
       backend.persona_store_added.connect (this.backend_persona_store_added_cb);
       backend.persona_store_removed.connect (
           this.backend_persona_store_removed_cb);
+
+      backend.prepare.begin ((obj, result) =>
+        {
+          try
+            {
+              backend.prepare.end (result);
+            }
+          catch (GLib.Error e)
+            {
+              warning ("Error preparing Backend '%s': %s", backend.name,
+                  e.message);
+            }
+        });
     }
 
   private void backend_persona_store_added_cb (Backend backend,

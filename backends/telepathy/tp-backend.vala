@@ -47,17 +47,15 @@ public class Folks.Backends.Tp.Backend : Folks.Backend
   /**
    * {@inheritDoc}
    */
-  public Backend () throws GLib.Error
+  public Backend ()
     {
       Object (name: "telepathy");
 
       this.persona_stores = new HashTable<string, PersonaStore> (str_hash,
           str_equal);
-
-      this.setup_account_manager ();
     }
 
-  private async void setup_account_manager () throws GLib.Error
+  public override async void prepare () throws GLib.Error
     {
       this.account_manager = AccountManager.dup ();
       yield this.account_manager.prepare_async (null);

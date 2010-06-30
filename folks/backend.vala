@@ -25,6 +25,13 @@ using Folks;
  * A single backend to libfolks, such as Telepathy or evolution-data-server.
  * Each backend provides {@link Persona}s which are aggregated to form
  * {@link Individual}s.
+ *
+ * After creating a Backend instance, you must connect to the
+ * {@link Backend.persona_store_added} and
+ * {@link Backend.persona_store_removed} signals, //then// call
+ * {@link Backend.prepare}, otherwise a race condition may occur between
+ * emission of {@link Backend.persona_store_added} and your code connecting to
+ * it.
  */
 public abstract class Folks.Backend : Object
 {
@@ -34,6 +41,9 @@ public abstract class Folks.Backend : Object
    * This will be used to identify the backend, and should also be used as the
    * {@link PersonaStore.type_id} of the {@link PersonaStore}s used by the
    * backend.
+   *
+   * This is guaranteed to always be available; even before
+   * {@link Backend.prepare} is called.
    */
   public abstract string name { get; protected set; }
 
@@ -51,6 +61,9 @@ public abstract class Folks.Backend : Object
   /**
    * Emitted when a {@link PersonaStore} is added to the backend.
    *
+   * This will not be emitted until after {@link Backend.prepare} has been
+   * called.
+   *
    * @param store the {@link PersonaStore}
    */
   public abstract signal void persona_store_added (PersonaStore store);
@@ -58,7 +71,26 @@ public abstract class Folks.Backend : Object
   /**
    * Emitted when a {@link PersonaStore} is removed from the backend.
    *
+   * This will not be emitted until after {@link Backend.prepare} has been
+   * called.
+   *
    * @param store the {@link PersonaStore}
    */
   public abstract signal void persona_store_removed (PersonaStore store);
+
+  /**
+   * Prepare the Backend for use.
+   *
+   * This connects the Backend to whichever backend-specific services it
+   * requires, and causes it to create its {@link PersonaStore}s. This should be
+   * called //after// connecting to the {@link Backend.persona_store_added} and
+   * {@link Backend.persona_store_removed} signals, or a race condition could
+   * occur, with the signals being emitted before your code has connected to
+   * them, and {@link PersonaStore}s getting "lost" as a result.
+   *
+   * This is normally handled transparently by the {@link IndividualAggregator}.
+   *
+   * If this function throws an error, the Backend will not be functional.
+   */
+  public abstract async void prepare () throws GLib.Error;
 }
