@@ -246,8 +246,9 @@ public class Tpf.Persona : Folks.Persona, Alias, Avatar, Folks.Capabilities,
 
   private void contact_notify_capabilities ()
     {
-      this.capabilities = folks_capabilities_flags_from_tp (
-          this.contact.get_capabilities ());
+      var caps = this.contact.get_capabilities ();
+      if (caps != null)
+        this.capabilities = folks_capabilities_flags_from_tp (caps);
     }
 
   /* Based off tp_caps_to_capabilities() in empathy-contact.c */
