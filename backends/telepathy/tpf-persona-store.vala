@@ -117,6 +117,10 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       this.groups = new HashMap<string, Channel> ();
       this.favourite_handles = new HashSet<uint> ();
       this.ll = new TpLowlevel ();
+    }
+
+  public override async void prepare ()
+    {
       this.account_manager = AccountManager.dup ();
 
       this.account_manager.account_disabled.connect ((a) =>

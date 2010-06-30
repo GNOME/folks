@@ -112,8 +112,23 @@ public class Folks.IndividualAggregator : Object
   private void backend_persona_store_added_cb (Backend backend,
       PersonaStore store)
     {
-      this.stores.set (this.get_store_full_id (store.type_id, store.id), store);
+      string store_id = this.get_store_full_id (store.type_id, store.id);
+
+      this.stores.set (store_id, store);
       store.personas_changed.connect (this.personas_changed_cb);
+
+      store.prepare.begin ((obj, result) =>
+        {
+          try
+            {
+              store.prepare.end (result);
+            }
+          catch (GLib.Error e)
+            {
+              warning ("Error preparing PersonaStore '%s': %s", store_id,
+                  e.message);
+            }
+        });
     }
 
   private void backend_persona_store_removed_cb (Backend backend,

@@ -39,12 +39,21 @@ public errordomain Folks.PersonaStoreError
 
 /**
  * A store for {@link Persona}s.
+ *
+ * After creating a PersonaStore instance, you must connect to the
+ * {@link PersonaStore.personas_changed} signal, //then// call
+ * {@link PersonaStore.prepare}, otherwise a race condition may occur between
+ * emission of {@link PersonaStore.personas_changed} and your code connecting to
+ * it.
  */
 public abstract class Folks.PersonaStore : Object
 {
   /**
    * Emitted when one or more {@link Persona}s are added to or removed from
    * the store.
+   *
+   * This will not be emitted until after {@link PersonaStore.prepare} has been
+   * called.
    *
    * @param added a list of {@link Persona}s which have been removed
    * @param removed a list of {@link Persona}s which have been removed
@@ -63,6 +72,9 @@ public abstract class Folks.PersonaStore : Object
    *
    * At this point, the PersonaStore and all its {@link Persona}s are invalid,
    * so any client referencing it should unreference it.
+   *
+   * This will not be emitted until after {@link PersonaStore.prepare} has been
+   * called.
    */
   public abstract signal void removed ();
 
@@ -70,6 +82,9 @@ public abstract class Folks.PersonaStore : Object
    * The type of PersonaStore this is.
    *
    * This is the same for all PersonaStores provided by a given {@link Backend}.
+   *
+   * This is guaranteed to always be available; even before
+   * {@link PersonaStore.prepare} is called.
    */
   public abstract string type_id { get; protected set; }
 
@@ -86,6 +101,21 @@ public abstract class Folks.PersonaStore : Object
    * The {@link Persona}s exposed by this PersonaStore.
    */
   public abstract HashTable<string, Persona> personas { get; }
+
+  /**
+   * Prepare the PersonaStore for use.
+   *
+   * This connects the PersonaStore to whichever backend-specific services it
+   * requires to be able to provide {@link Persona}s. This should be called
+   * //after// connecting to the {@link PersonaStore.personas_changed} signal,
+   * or a race condition could occur, with the signal being emitted before your
+   * code has connected to it, and {@link Persona}s getting "lost" as a result.
+   *
+   * This is normally handled transparently by the {@link IndividualAggregator}.
+   *
+   * If this function throws an error, the PersonaStore will not be functional.
+   */
+  public abstract async void prepare () throws GLib.Error;
 
   /**
    * Add a new {@link Persona} to the PersonaStore.
