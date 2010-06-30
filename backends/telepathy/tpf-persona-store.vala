@@ -117,6 +117,11 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       try
         {
           this.logger = new Logger (this.id);
+          this.logger.invalidated.connect (() =>
+            {
+              warning ("lost connection to the telepathy-logger service");
+              this.logger = null;
+            });
           this.logger.favourite_contacts_changed.connect (
               this.favourite_contacts_changed_cb);
         }

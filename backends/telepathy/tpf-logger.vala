@@ -48,6 +48,7 @@ internal class Logger : GLib.Object
   private static LoggerIface logger;
   private string account_path;
 
+  public signal void invalidated ();
   public signal void favourite_contacts_changed (string[] added,
       string[] removed);
 
@@ -72,6 +73,14 @@ internal class Logger : GLib.Object
               "org.freedesktop.Telepathy.Logger",
               "/org/freedesktop/Telepathy/Logger",
               "org.freedesktop.Telepathy.Logger.DRAFT") as LoggerIface;
+
+          this.logger.destroy.connect (() =>
+            {
+              /* We've lost the connection to the logger service, so invalidate
+               * this logger proxy (and all the others too). */
+              this.logger = null;
+              this.invalidated ();
+            });
         }
 
       this.account_path = account_path;
@@ -86,6 +95,10 @@ internal class Logger : GLib.Object
 
   public async string[] get_favourite_contacts () throws DBus.Error
     {
+      /* Invalidated */
+      if (this.logger == null)
+        return {};
+
       AccountFavourites[] favs = yield this.logger.get_favourite_contacts ();
 
       foreach (AccountFavourites account in favs)
@@ -100,12 +113,20 @@ internal class Logger : GLib.Object
 
   public async void add_favourite_contact (string id) throws DBus.Error
     {
+      /* Invalidated */
+      if (this.logger == null)
+        return;
+
       yield this.logger.add_favourite_contact (
           new DBus.ObjectPath (this.account_path), id);
     }
 
   public async void remove_favourite_contact (string id) throws DBus.Error
     {
+      /* Invalidated */
+      if (this.logger == null)
+        return;
+
       yield this.logger.remove_favourite_contact (
           new DBus.ObjectPath (this.account_path), id);
     }
