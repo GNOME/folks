@@ -899,6 +899,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       return null;
     }
 
+
   private void add_new_personas_from_contacts (Contact[] contacts)
     {
       GLib.List<Persona> personas = new GLib.List<Persona> ();
