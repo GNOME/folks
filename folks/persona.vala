@@ -27,8 +27,11 @@ using Folks;
  * from evolution-data-server. All the personas belonging to one physical person
  * are aggregated to form a single {@link Individual} representing that person.
  */
-public abstract class Folks.Persona : Object, Alias, Avatar, Capabilities,
-       Presence
+public abstract class Folks.Persona : Object,
+    Alias,
+    Avatar,
+    Capabilities,
+    Presence
 {
   /* interface Alias */
   /**

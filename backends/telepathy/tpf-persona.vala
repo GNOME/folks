@@ -23,8 +23,13 @@ using GLib;
 using Tp;
 using Folks;
 
-public class Tpf.Persona : Folks.Persona, Alias, Avatar, Folks.Capabilities,
-       Groups, Presence, Favourite
+public class Tpf.Persona : Folks.Persona,
+    Alias,
+    Avatar,
+    Folks.Capabilities,
+    Favourite,
+    Groups,
+    Presence
 {
   private HashTable<string, bool> _groups;
   private bool _is_favourite;
