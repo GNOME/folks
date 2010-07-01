@@ -23,8 +23,10 @@ img_DATA = \
 
 $(doc_data) $(innerdoc_DATA) $(img_DATA): folks-0.1/index.html
 
-folks-0.1/index.html:
+# The Vala files which will have documentation extracted from them
+doc_files = $(top_srcdir)/folks/*.vala
+
+folks-0.1/index.html: $(doc_files)
 	$(VALADOC) -o folks-0.1/ --force -b $(top_srcdir) \
 		--pkg=gee-1.0 --pkg=gio-2.0 --pkg=gmodule-2.0 --pkg=build-conf \
-		--vapidir=$(top_srcdir)/folks \
-		$(top_srcdir)/folks/*.vala
+		--vapidir=$(top_srcdir)/folks $(doc_files)

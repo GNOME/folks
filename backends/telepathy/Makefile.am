@@ -1,8 +1,4 @@
-GEN_INTROSPECT = $(shell pkg-config vala-1.0 --variable="gen_introspect")
-VAPIGEN = $(shell pkg-config vala-1.0 --variable="vapigen")
-
 AM_CPPFLAGS = \
-	$(LIBFOLKS_CFLAGS) \
 	-I$(top_srcdir)/folks \
 	-include $(CONFIG_HEADER) \
 	-DPACKAGE_DATADIR=\"$(pkgdatadir)\" \
@@ -39,7 +35,10 @@ libtp_lowlevel_la_SOURCES = \
 	$(NULL)
 
 libtp_lowlevel_la_CPPFLAGS = \
-	$(LIBTP_LOWLEVEL_CFLAGS) \
+	$(GLIB_CFLAGS) \
+	$(GEE_CFLAGS) \
+	$(TP_GLIB_CFLAGS) \
+	$(AM_CPPFLAGS) \
 	$(NULL)
 
 # the -shared and -rpath arguments are to force it to be compiled to a .so,
@@ -47,12 +46,14 @@ libtp_lowlevel_la_CPPFLAGS = \
 # vala-gen-introspect)
 libtp_lowlevel_la_LDFLAGS = \
 	-shared -rpath $(libdir) \
-	$(LIBTP_LOWLEVEL_LIBS) \
+	$(GLIB_LIBS) \
+	$(TP_GLIB_LIBS) \
 	$(NULL)
 
 tp-lowlevel.gi: $(libtp-lowlevel_la_SOURCES) libtp-lowlevel.la
-	$(VGI_V)$(GEN_INTROSPECT) --namespace=Folks tp-lowlevel.h \
-		$(shell pkg-config telepathy-glib --cflags) \
+	$(VGI_V)$(VALA_GEN_INTROSPECT) --namespace=Folks tp-lowlevel.h \
+		$(GLIB_CFLAGS) $(DBUS_GLIB_CFLAGS) $(GEE_CFLAGS) \
+		$(TP_VALA_CFLAGS) $(TP_GLIB_CFLAGS) -I$(top_srcdir)/folks \
 		.libs/libtp-lowlevel.so > tp-lowlevel.gi
 
 tp-lowlevel.vapi: tp-lowlevel.gi tp-lowlevel.metadata
@@ -85,13 +86,18 @@ libfolks_telepathy_la_SOURCES = \
 	$(NULL)
 
 libfolks_telepathy_la_CPPFLAGS = \
-	$(LIBFOLKS_TELEPATHY_CFLAGS) \
+	$(GLIB_CFLAGS) \
+	$(DBUS_GLIB_CFLAGS) \
+	$(GEE_CFLAGS) \
+	$(TP_VALA_CFLAGS) \
 	$(AM_CPPFLAGS) \
 	$(NULL)
 
 libfolks_telepathy_la_LIBADD = \
-	$(LIBFOLKS_TELEPATHY_LIBS) \
-	$(LIBFOLKS_LIBS) \
+	$(GLIB_LIBS) \
+	$(DBUS_GLIB_LIBS) \
+	$(GEE_LIBS) \
+	$(TP_VALA_LIBS) \
 	$(NULL)
 
 folks_telepathy_includedir = $(includedir)/folks
@@ -134,13 +140,18 @@ libfolks_backend_telepathy_la_SOURCES = \
 	$(NULL)
 
 libfolks_backend_telepathy_la_CPPFLAGS = \
-	$(LIBFOLKS_BACKEND_TELEPATHY_CFLAGS) \
+	$(GLIB_CFLAGS) \
+	$(DBUS_GLIB_CFLAGS) \
+	$(GEE_CFLAGS) \
+	$(TP_VALA_CFLAGS) \
 	$(AM_CPPFLAGS) \
 	$(NULL)
 
 libfolks_backend_telepathy_la_LIBADD = \
-	$(LIBFOLKS_BACKEND_TELEPATHY_LIBS) \
-	$(LIBFOLKS_LIBS) \
+	$(GLIB_LIBS) \
+	$(DBUS_GLIB_LIBS) \
+	$(GEE_LIBS) \
+	$(TP_VALA_LIBS) \
 	-L$(abs_top_srcdir)/backends/telepathy/.libs \
 	-lfolks-telepathy \
 	$(NULL)

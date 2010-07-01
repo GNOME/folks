@@ -26,8 +26,13 @@ using Folks;
  * A physical person, aggregated from the various {@link Persona}s the person
  * might have, such as their different IM addresses or vCard entries.
  */
-public class Folks.Individual : Object, Alias, Avatar, Capabilities, Groups,
-       Presence, Favourite
+public class Folks.Individual : Object,
+    Alias,
+    Avatar,
+    Capabilities,
+    Favourite,
+    Groups,
+    Presence
 {
   private HashTable<string, bool> _groups;
   private GLib.List<Persona> _personas;
@@ -44,7 +49,7 @@ public class Folks.Individual : Object, Alias, Avatar, Capabilities, Groups,
   /**
    * {@inheritDoc}
    */
-  public File avatar { get; set; }
+  public File avatar { get; private set; }
 
   /**
    * {@inheritDoc}
@@ -331,8 +336,7 @@ public class Folks.Individual : Object, Alias, Avatar, Capabilities, Groups,
             {
               var a = (Alias) p;
 
-              /* FIXME: also check to see if alias is just whitespace */
-              if (alias == null)
+              if (alias == null || alias.strip () == "")
                 alias = a.alias;
             }
 

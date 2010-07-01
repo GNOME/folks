@@ -1,11 +1,7 @@
-GEN_INTROSPECT = $(shell pkg-config vala-1.0 --variable="gen_introspect")
-VAPIGEN = $(shell pkg-config vala-1.0 --variable="vapigen")
-
 sharedir = $(datadir)/folks
 backenddir = $(libdir)/folks
 
 AM_CPPFLAGS = \
-	$(LIBFOLKS_CFLAGS) \
 	-include $(CONFIG_HEADER) \
 	-DPACKAGE_DATADIR=\"$(pkgdatadir)\" \
 	-DDATA_DIR=\"$(shareddir)\" \
@@ -43,8 +39,18 @@ libfolks_la_SOURCES = \
 	$(libfolks_la_VALASOURCES:.vala=.c) \
 	$(NULL)
 
+libfolks_la_CFLAGS = \
+	$(GLIB_CFLAGS) \
+	$(DBUS_GLIB_CFLAGS) \
+	$(GEE_CFLAGS) \
+	$(TP_VALA_CFLAGS) \
+	$(NULL)
+
 libfolks_la_LIBADD = \
-	$(LIBFOLKS_LIBS) \
+	$(GLIB_LIBS) \
+	$(DBUS_GLIB_LIBS) \
+	$(GEE_LIBS) \
+	$(TP_VALA_LIBS) \
 	$(NULL)
 
 folksdir = $(includedir)/folks

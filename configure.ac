@@ -42,6 +42,7 @@ AC_PROG_LIBTOOL
 AC_PATH_PROG(VALAC, valac, valac)
 AC_SUBST(VALAC)
 
+PKG_PROG_PKG_CONFIG([0.21])
 AC_SUBST(PKG_CONFIG_PATH)
 
 # require GLib >= 2.24 so GLib.Array, etc. reffing is handled automatically
@@ -49,24 +50,48 @@ VALACFLAGS="$VALACFLAGS --target-glib=2.24"
 AC_SUBST(VALACFLAGS)
 AC_SUBST(VALAFLAGS)
 
+VAPIGEN=`$PKG_CONFIG --variable=vapigen vala-1.0`
+AC_SUBST(VAPIGEN)
+
+VALA_GEN_INTROSPECT=`$PKG_CONFIG --variable=gen_introspect vala-1.0`
+AC_SUBST(VALA_GEN_INTROSPECT)
+
+AS_IF([test "$VAPIGEN" = "" -o "$VALA_GEN_INTROSPECT" = ""],
+	[AC_MSG_ERROR([Vala must be built with --enable-vapigen])])
+
 AC_SUBST(CFLAGS)
 AC_SUBST(CPPFLAGS)
 AC_SUBST(LDFLAGS)
 GTK_DOC_CHECK([1.10])
 
+# -----------------------------------------------------------
+# Dependencies
+# -----------------------------------------------------------
 GLIB_REQUIRED=2.12.0
 TP_GLIB_REQUIRED=0.11.8.1
 TP_VALA_REQUIRED=0.11.8.1
 
-PKG_CHECK_MODULES(LIBFOLKS,
+PKG_CHECK_MODULES(GLIB,
                   glib-2.0 >= $GLIB_REQUIRED
-                  gobject-2.0 >= $GLIB_REQUIRED
-                  dbus-glib-1
-                  gee-1.0
-                  telepathy-vala >= $TP_VALA_REQUIRED
-                  )
-AC_SUBST(LIBFOLKS_CFLAGS)
-AC_SUBST(LIBFOLKS_LIBS)
+                  gobject-2.0 >= $GLIB_REQUIRED)
+AC_SUBST(GLIB_CFLAGS)
+AC_SUBST(GLIB_LIBS)
+
+PKG_CHECK_MODULES(DBUS_GLIB, dbus-glib-1)
+AC_SUBST(DBUS_GLIB_CFLAGS)
+AC_SUBST(DBUS_GLIB_LIBS)
+
+PKG_CHECK_MODULES(GEE, gee-1.0)
+AC_SUBST(GEE_CFLAGS)
+AC_SUBST(GEE_LIBS)
+
+PKG_CHECK_MODULES(TP_VALA, telepathy-vala >= $TP_VALA_REQUIRED)
+AC_SUBST(TP_VALA_CFLAGS)
+AC_SUBST(TP_VALA_LIBS)
+
+PKG_CHECK_MODULES(TP_GLIB, telepathy-glib >= $TP_GLIB_REQUIRED)
+AC_SUBST(TP_GLIB_CFLAGS)
+AC_SUBST(TP_GLIB_LIBS)
 
 # -----------------------------------------------------------
 # Documentation
@@ -81,37 +106,6 @@ AS_IF([test "x$enable_docs" != xno],
    AC_SUBST(VALADOC)
    AS_IF([test "$VALADOC" = :],
      [AC_MSG_ERROR([valadoc not found])])])
-
-# -----------------------------------------------------------
-# Telepathy backend
-# -----------------------------------------------------------
-PKG_CHECK_MODULES(LIBFOLKS_TELEPATHY,
-                  glib-2.0 >= $GLIB_REQUIRED
-                  gobject-2.0 >= $GLIB_REQUIRED
-                  dbus-glib-1
-                  gee-1.0
-                  telepathy-vala >= $TP_VALA_REQUIRED
-                  )
-AC_SUBST(LIBFOLKS_TELEPATHY_CFLAGS)
-AC_SUBST(LIBFOLKS_TELEPATHY_LIBS)
-
-PKG_CHECK_MODULES(LIBFOLKS_BACKEND_TELEPATHY,
-                  glib-2.0 >= $GLIB_REQUIRED
-                  gobject-2.0 >= $GLIB_REQUIRED
-                  dbus-glib-1
-                  gee-1.0
-                  telepathy-vala >= $TP_VALA_REQUIRED
-                  )
-AC_SUBST(LIBFOLKS_BACKEND_TELEPATHY_CFLAGS)
-AC_SUBST(LIBFOLKS_BACKEND_TELEPATHY_LIBS)
-
-PKG_CHECK_MODULES(LIBTP_LOWLEVEL,
-                  glib-2.0 >= $GLIB_REQUIRED
-                  gobject-2.0 >= $GLIB_REQUIRED
-                  telepathy-glib >= $TP_GLIB_REQUIRED
-                  )
-AC_SUBST(LIBTP_LOWLEVEL_CFLAGS)
-AC_SUBST(LIBTP_LOWLEVEL_LIBS)
 
 # -----------------------------------------------------------
 # Error flags

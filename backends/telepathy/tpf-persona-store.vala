@@ -771,8 +771,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
               j++;
             }
 
-          this.add_new_personas_from_contacts (contacts_array,
-              contacts_array.length);
+          this.add_new_personas_from_contacts (contacts_array);
         }
       catch (GLib.Error e)
         {
@@ -833,14 +832,11 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       return null;
     }
 
-  private void add_new_personas_from_contacts (Contact[] contacts,
-      uint n_contacts)
+  private void add_new_personas_from_contacts (Contact[] contacts)
     {
       var personas_new = new HashTable<string, Persona> (str_hash, str_equal);
-      for (var i = 0; i < n_contacts; i++)
+      foreach (Contact contact in contacts)
         {
-          var contact = contacts[i];
-
           try
             {
               var persona = new Tpf.Persona (contact, this);

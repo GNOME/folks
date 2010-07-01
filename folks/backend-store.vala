@@ -39,6 +39,9 @@ public class Folks.BackendStore : Object {
   /**
    * Emitted when a backend has been added to the BackendStore.
    *
+   * This will not be emitted until after {@link BackendStore.load_backends}
+   * has been called.
+   *
    * @param backend the new {@link Backend}
    */
   public signal void backend_available (Backend backend);
