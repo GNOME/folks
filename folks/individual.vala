@@ -309,9 +309,13 @@ public class Folks.Individual : Object,
   private void store_personas_removed_cb (PersonaStore store,
       GLib.List<Persona> personas)
     {
+      var persona_set = this.stores.lookup (store);
       personas.foreach ((data) =>
         {
-          this._personas.remove ((Persona) data);
+          var p = (Persona) data;
+
+          persona_set.remove (p);
+          this._personas.remove (p);
         });
 
       if (this._personas.length () < 1)
