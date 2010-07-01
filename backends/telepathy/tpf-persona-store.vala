@@ -298,21 +298,24 @@ public class Tpf.PersonaStore : Folks.PersonaStore
         return;
 
       var conn = this.account.get_connection ();
-      conn.call_when_ready (this.connection_ready_cb);
-    }
+      conn.notify["connection-ready"].connect ((s, p) =>
+        {
+          var c = (Connection) s;
 
-  private void connection_ready_cb (Connection conn, GLib.Error? error)
-    {
-      this.ll.connection_connect_to_new_group_channels (conn,
-          this.new_group_channels_cb);
+          this.ll.connection_connect_to_new_group_channels (c,
+              this.new_group_channels_cb);
 
-      this.add_standard_channel (conn, "publish");
-      this.add_standard_channel (conn, "stored");
-      this.add_standard_channel (conn, "subscribe");
-      this.conn = conn;
+          this.add_standard_channel (c, "publish");
+          this.add_standard_channel (c, "stored");
+          this.add_standard_channel (c, "subscribe");
+          this.conn = c;
 
-      /* We can only initialise the favourite contacts once we've got conn */
-      this.initialise_favourite_contacts.begin ();
+          /* We can only initialise the favourite contacts once conn is prepared
+           */
+          this.initialise_favourite_contacts.begin ();
+        });
+
+      conn.prepare_async.begin (null);
     }
 
   private void new_group_channels_cb (void *data)
@@ -687,7 +690,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       Array<weak uint> removed,
       Array<weak uint> local_pending,
       Array<weak uint> remote_pending,
-      HashTable<weak string, weak Value> details)
+      HashTable details)
     {
       if (added != null)
         this.channel_group_pend_incoming_adds.begin (channel, added, false);
