@@ -23,7 +23,7 @@ using GLib;
 using TelepathyGLib;
 using Folks;
 
-errordomain Tpf.PersonaError
+public errordomain Tpf.PersonaError
 {
   INVALID_ARGUMENT
 }
