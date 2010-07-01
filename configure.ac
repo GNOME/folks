@@ -42,12 +42,22 @@ AC_PROG_LIBTOOL
 AC_PATH_PROG(VALAC, valac, valac)
 AC_SUBST(VALAC)
 
+PKG_PROG_PKG_CONFIG([0.21])
 AC_SUBST(PKG_CONFIG_PATH)
 
 # require GLib >= 2.24 so GLib.Array, etc. reffing is handled automatically
 VALACFLAGS="$VALACFLAGS --target-glib=2.24"
 AC_SUBST(VALACFLAGS)
 AC_SUBST(VALAFLAGS)
+
+VAPIGEN=`$PKG_CONFIG --variable=vapigen vala-1.0`
+AC_SUBST(VAPIGEN)
+
+VALA_GEN_INTROSPECT=`$PKG_CONFIG --variable=gen_introspect vala-1.0`
+AC_SUBST(VALA_GEN_INTROSPECT)
+
+AS_IF([test "$VAPIGEN" = "" -o "$VALA_GEN_INTROSPECT" = ""],
+	[AC_MSG_ERROR([Vala must be built with --enable-vapigen])])
 
 AC_SUBST(CFLAGS)
 AC_SUBST(CPPFLAGS)

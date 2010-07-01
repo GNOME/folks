@@ -1,6 +1,3 @@
-GEN_INTROSPECT = $(shell pkg-config vala-1.0 --variable="gen_introspect")
-VAPIGEN = $(shell pkg-config vala-1.0 --variable="vapigen")
-
 sharedir = $(datadir)/folks
 backenddir = $(libdir)/folks
 

@@ -1,6 +1,3 @@
-GEN_INTROSPECT = $(shell pkg-config vala-1.0 --variable="gen_introspect")
-VAPIGEN = $(shell pkg-config vala-1.0 --variable="vapigen")
-
 AM_CPPFLAGS = \
 	-I$(top_srcdir)/folks \
 	-include $(CONFIG_HEADER) \
@@ -54,7 +51,7 @@ libtp_lowlevel_la_LDFLAGS = \
 	$(NULL)
 
 tp-lowlevel.gi: $(libtp-lowlevel_la_SOURCES) libtp-lowlevel.la
-	$(VGI_V)$(GEN_INTROSPECT) --namespace=Folks tp-lowlevel.h \
+	$(VGI_V)$(VALA_GEN_INTROSPECT) --namespace=Folks tp-lowlevel.h \
 		$(shell pkg-config telepathy-glib --cflags) \
 		$(GLIB_CFLAGS) $(DBUS_GLIB_CFLAGS) $(GEE_CFLAGS) \
 		$(TP_VALA_CFLAGS) -I$(top_srcdir)/folks \
