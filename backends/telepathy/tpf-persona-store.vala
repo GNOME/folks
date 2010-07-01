@@ -25,6 +25,13 @@ using Tp;
 using Tp.ContactFeature;
 using Folks;
 
+/**
+ * A persona store which is associated with a single Telepathy account. It will
+ * create {@link Persona}s for each of the contacts in the published, stored or
+ * subscribed
+ * [[http://people.collabora.co.uk/~danni/telepathy-book/chapter.channel.html|channels]]
+ * of the account.
+ */
 public class Tpf.PersonaStore : Folks.PersonaStore
 {
   private string[] undisplayed_groups = { "publish", "stored", "subscribe" };
@@ -53,16 +60,38 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       GLib.List<Persona>? added, GLib.List<Persona>? removed);
   internal signal void group_removed (string group, GLib.Error? error);
 
+
+  /**
+   * The Telepathy account this store is based upon.
+   */
   [Property(nick = "basis account",
       blurb = "Telepathy account this store is based upon")]
   public Account account { get; construct; }
+
+  /**
+   * {@inheritDoc}
+   */
   public override string type_id { get; private set; }
+
+  /**
+   * {@inheritDoc}
+   */
   public override string id { get; private set; }
+
+  /**
+   * {@inheritDoc}
+   */
   public override HashTable<string, Persona> personas
     {
       get { return this._personas; }
     }
 
+  /**
+   * Create a new PersonaStore.
+   *
+   * Create a new persona store to store the {@link Persona}s for the contacts
+   * in the Telepathy account provided by `account`.
+   */
   public PersonaStore (Account account)
     {
       Object (account: account);
@@ -540,7 +569,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
     }
 
   /**
-   * Remove the given persona from the server entirely
+   * {@inheritDoc}
    */
   public override void remove_persona (Folks.Persona persona)
     {
@@ -935,6 +964,9 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       return true;
     }
 
+  /**
+   * {@inheritDoc}
+   */
   public override async Folks.Persona? add_persona_from_details (
       HashTable<string, string> details) throws Folks.PersonaStoreError
     {
@@ -990,6 +1022,12 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       return null;
     }
 
+  /**
+   * Change the favourite status of a persona in this store.
+   *
+   * This function is idempotent, but relies upon having a connection to the
+   * Telepathy logger service, so may fail if that connection is not present.
+   */
   internal async void change_is_favourite (Folks.Persona persona,
       bool is_favourite)
     {

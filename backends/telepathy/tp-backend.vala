@@ -24,16 +24,30 @@ using Tp;
 using Folks;
 using Folks.Backends.Tp;
 
+/**
+ * A backend which connects to the Telepathy accounts service and creates a
+ * {@link PersonaStore} for each valid account known to Telepathy.
+ */
 public class Folks.Backends.Tp.Backend : Folks.Backend
 {
   private AccountManager account_manager;
 
+  /**
+   * {@inheritDoc}
+   */
   public override string name { get; private set; }
+
+  /**
+   * {@inheritDoc}
+   */
   public override HashTable<string, PersonaStore> persona_stores
     {
       get; private set;
     }
 
+  /**
+   * {@inheritDoc}
+   */
   public Backend () throws GLib.Error
     {
       Object (name: "telepathy");

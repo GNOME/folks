@@ -27,16 +27,25 @@ using Folks.Backends.Tp;
 
 private BackendFactory backend_factory = null;
 
+/**
+ * The Telepathy backend module entry point.
+ */
 public void module_init (BackendStore backend_store)
 {
   if (backend_factory == null)
     backend_factory = new BackendFactory (backend_store);
 }
 
+/**
+ * A backend factory to create a single {@link Backend}.
+ */
 public class Folks.Backends.Tp.BackendFactory : Object
 {
   BackendStore backend_store;
 
+  /**
+   * {@inheritDoc}
+   */
   public BackendFactory (BackendStore backend_store)
     {
       this.backend_store = backend_store;

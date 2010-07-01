@@ -23,6 +23,10 @@ using GLib;
 using Tp;
 using Folks;
 
+/**
+ * A persona subclass which represents a single instant messaging contact from
+ * Telepathy.
+ */
 public class Tpf.Persona : Folks.Persona,
     Alias,
     Avatar,
@@ -41,17 +45,29 @@ public class Tpf.Persona : Folks.Persona,
    */
   private bool is_constructed = false;
 
-  /* interface Avatar */
+  /**
+   * {@inheritDoc}
+   */
   public File avatar { get; set; }
 
-  /* interface Capabilities */
+  /**
+   * {@inheritDoc}
+   */
   public CapabilitiesFlags capabilities { get; private set; }
 
-  /* interface Presence */
+  /**
+   * {@inheritDoc}
+   */
   public Folks.PresenceType presence_type { get; private set; }
+
+  /**
+   * {@inheritDoc}
+   */
   public string presence_message { get; private set; }
 
-  /* interface Alias */
+  /**
+   * {@inheritDoc}
+   */
   public string alias
     {
       get { return this._alias; }
@@ -67,7 +83,9 @@ public class Tpf.Persona : Folks.Persona,
         }
     }
 
-  /* interface Favourite */
+  /**
+   * {@inheritDoc}
+   */
   public bool is_favourite
     {
       get { return this._is_favourite; }
@@ -83,7 +101,9 @@ public class Tpf.Persona : Folks.Persona,
         }
     }
 
-  /* interface Groups */
+  /**
+   * {@inheritDoc}
+   */
   public HashTable<string, bool> groups
     {
       get { return this._groups; }
@@ -106,6 +126,9 @@ public class Tpf.Persona : Folks.Persona,
         }
     }
 
+  /**
+   * {@inheritDoc}
+   */
   public void change_group (string group, bool is_member)
     {
       if (_change_group (group, is_member))
@@ -135,8 +158,17 @@ public class Tpf.Persona : Folks.Persona,
       return changed;
     }
 
+  /**
+   * The Telepathy contact represented by this persona.
+   */
   public Contact contact { get; construct; }
 
+  /**
+   * Create a new persona.
+   *
+   * Create a new persona for the {@link PersonaStore} `store`, representing
+   * the Telepathy contact given by `contact`.
+   */
   public Persona (Contact contact, PersonaStore store) throws Tp.Error
     {
       /* FIXME: There is the possibility of a crash in the error condition below
