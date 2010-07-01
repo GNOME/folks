@@ -497,15 +497,26 @@ public class Tpf.PersonaStore : Folks.PersonaStore
             return;
         }
 
-      var persona = this.handle_persona_map[handle];
-      this.ignore_persona (persona);
+      this.ignore_by_handle (handle);
     }
 
-  private void ignore_persona (Tpf.Persona? persona)
+  private void ignore_by_handle (uint handle)
     {
+      var persona = this.handle_persona_map[handle];
+
+      /*
+       * remove all handle-keyed entries
+       */
+      this.handle_persona_map.remove (handle);
+
+      /* skip channel_group_incoming_adds because they occurred after removal */
+
       if (persona == null)
         return;
 
+      /*
+       * remove all persona-keyed entries
+       */
       foreach (var entry in this.channel_group_incoming_adds)
         {
           var channel = (Channel) entry.key;
