@@ -69,8 +69,7 @@ public class Folks.Backends.Tp.Backend : Folks.Backend
             this.account_enabled_cb (a);
         });
 
-      unowned GLib.List<Account> accounts =
-          this.account_manager.get_valid_accounts ();
+      GLib.List<Account> accounts = this.account_manager.get_valid_accounts ();
       foreach (Account account in accounts)
         {
           this.account_enabled_cb (account);
