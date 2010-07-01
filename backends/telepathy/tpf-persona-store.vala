@@ -517,7 +517,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       /*
        * remove all persona-keyed entries
        */
-      foreach (var entry in this.channel_group_incoming_adds)
+      foreach (var entry in this.channel_group_personas_map)
         {
           var channel = (Channel) entry.key;
           var members = this.channel_group_personas_map[channel];
