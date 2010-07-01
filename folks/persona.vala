@@ -27,46 +27,8 @@ using Folks;
  * from evolution-data-server. All the personas belonging to one physical person
  * are aggregated to form a single {@link Individual} representing that person.
  */
-public abstract class Folks.Persona : Object,
-    Alias,
-    Avatar,
-    Capabilities,
-    Presence
+public abstract class Folks.Persona : Object
 {
-  /* interface Alias */
-  /**
-   * {@inheritDoc}
-   */
-  public abstract string alias { get; set; }
-
-  /* interface Avatar */
-  /**
-   * {@inheritDoc}
-   */
-  public abstract File avatar { get; set; }
-
-  /* interface Capabilities */
-  /**
-   * {@inheritDoc}
-   */
-  public abstract CapabilitiesFlags capabilities { get; set; }
-
-  /* interface Presence */
-  /**
-   * {@inheritDoc}
-   */
-  public abstract Folks.PresenceType presence_type { get; set; }
-
-  /**
-   * {@inheritDoc}
-   */
-  public abstract string presence_message { get; set; }
-
-  /**
-   * {@inheritDoc}
-   */
-  public abstract bool is_favourite { get; set; }
-
   /**
    * The internal ID used to represent the Persona within its {@link Backend}.
    *

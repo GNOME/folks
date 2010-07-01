@@ -35,20 +35,20 @@ public class Tpf.Persona : Folks.Persona,
   private bool _is_favourite;
 
   /* interface Alias */
-  public override string alias { get; set; }
+  public string alias { get; set; }
 
   /* interface Avatar */
-  public override File avatar { get; set; }
+  public File avatar { get; set; }
 
   /* interface Capabilities */
-  public override CapabilitiesFlags capabilities { get; private set; }
+  public CapabilitiesFlags capabilities { get; private set; }
 
   /* interface Presence */
-  public override Folks.PresenceType presence_type { get; private set; }
-  public override string presence_message { get; private set; }
+  public Folks.PresenceType presence_type { get; private set; }
+  public string presence_message { get; private set; }
 
   /* interface Favourite */
-  public override bool is_favourite
+  public bool is_favourite
     {
       get { return this._is_favourite; }
 
@@ -166,22 +166,24 @@ public class Tpf.Persona : Folks.Persona,
         });
       this.contact_notify_capabilities ();
 
-      this.store.group_members_changed.connect ((s, group, added, removed) =>
-        {
-          if (added.find (this) != null)
-            this._change_group (group, true);
+      ((Tpf.PersonaStore) this.store).group_members_changed.connect (
+          (s, group, added, removed) =>
+            {
+              if (added.find (this) != null)
+                this._change_group (group, true);
 
-          if (removed.find (this) != null)
-            this._change_group (group, false);
-        });
+              if (removed.find (this) != null)
+                this._change_group (group, false);
+            });
 
-      this.store.group_removed.connect ((s, group, error) =>
-        {
-          if (error != null)
-            warning ("group invalidated: %s", error.message);
+      ((Tpf.PersonaStore) this.store).group_removed.connect (
+          (s, group, error) =>
+            {
+              if (error != null)
+                warning ("group invalidated: %s", error.message);
 
-          this._change_group (group, false);
-        });
+              this._change_group (group, false);
+            });
     }
 
   private static Account? account_for_connection (Connection conn)

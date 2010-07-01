@@ -49,6 +49,10 @@ public class Tpf.PersonaStore : Folks.PersonaStore
   private AccountManager account_manager;
   private Logger logger;
 
+  internal signal void group_members_changed (string group,
+      GLib.List<Persona>? added, GLib.List<Persona>? removed);
+  internal signal void group_removed (string group, GLib.Error? error);
+
   [Property(nick = "basis account",
       blurb = "Telepathy account this store is based upon")]
   public Account account { get; construct; }
@@ -117,6 +121,11 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       try
         {
           this.logger = new Logger (this.id);
+          this.logger.invalidated.connect (() =>
+            {
+              warning ("lost connection to the telepathy-logger service");
+              this.logger = null;
+            });
           this.logger.favourite_contacts_changed.connect (
               this.favourite_contacts_changed_cb);
         }
@@ -185,14 +194,20 @@ public class Tpf.PersonaStore : Folks.PersonaStore
           else
             this.favourite_handles.remove (h);
 
-          if (p == null)
+          /* If the persona isn't in the handle_persona_map yet, it's most
+           * likely because the account hasn't connected yet (and we haven't
+           * received the roster). If there are already entries in
+           * handle_persona_map, the account *is* connected and we should
+           * warn about the unknown persona. */
+          if (p == null && this.handle_persona_map.size > 0)
             {
               warning ("unknown persona '%s' in favourites list", ids[i]);
               continue;
             }
 
           /* Mark or unmark the persona as a favourite */
-          p.is_favourite = add;
+          if (p != null)
+            p.is_favourite = add;
         }
     }
 
@@ -640,7 +655,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       /* FIXME: continue for the other arrays */
     }
 
-  public override async void change_group_membership (Folks.Persona persona,
+  internal async void change_group_membership (Folks.Persona persona,
       string group, bool is_member)
     {
       var tp_persona = (Tpf.Persona) persona;
