@@ -52,9 +52,8 @@ libtp_lowlevel_la_LDFLAGS = \
 
 tp-lowlevel.gi: $(libtp-lowlevel_la_SOURCES) libtp-lowlevel.la
 	$(VGI_V)$(VALA_GEN_INTROSPECT) --namespace=Folks tp-lowlevel.h \
-		$(shell pkg-config telepathy-glib --cflags) \
 		$(GLIB_CFLAGS) $(DBUS_GLIB_CFLAGS) $(GEE_CFLAGS) \
-		$(TP_VALA_CFLAGS) -I$(top_srcdir)/folks \
+		$(TP_VALA_CFLAGS) $(TP_GLIB_CFLAGS) -I$(top_srcdir)/folks \
 		.libs/libtp-lowlevel.so > tp-lowlevel.gi
 
 tp-lowlevel.vapi: tp-lowlevel.gi tp-lowlevel.metadata
