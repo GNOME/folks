@@ -80,7 +80,7 @@ public class Folks.Backends.Tp.Backend : Folks.Backend
   private void account_enabled_cb (Account account)
     {
       PersonaStore store = this.persona_stores.lookup (
-          account.get_object_path (account));
+          account.get_object_path ());
 
       if (store != null)
         return;
