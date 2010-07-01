@@ -49,6 +49,10 @@ public class Tpf.PersonaStore : Folks.PersonaStore
   private AccountManager account_manager;
   private Logger logger;
 
+  internal signal void group_members_changed (string group,
+      GLib.List<Persona>? added, GLib.List<Persona>? removed);
+  internal signal void group_removed (string group, GLib.Error? error);
+
   [Property(nick = "basis account",
       blurb = "Telepathy account this store is based upon")]
   public Account account { get; construct; }
@@ -651,7 +655,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       /* FIXME: continue for the other arrays */
     }
 
-  public override async void change_group_membership (Folks.Persona persona,
+  internal async void change_group_membership (Folks.Persona persona,
       string group, bool is_member)
     {
       var tp_persona = (Tpf.Persona) persona;
