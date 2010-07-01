@@ -579,9 +579,8 @@ public class Tpf.PersonaStore : Folks.PersonaStore
               tp_persona.uid, tp_persona.alias, e.message);
         }
 
-      var personas = new GLib.List<Persona> ();
-      personas.append (tp_persona);
-      this.personas_removed (personas);
+      /* the contact will be actually removed (and signaled) when we hear back
+       * from the server */
     }
 
   /* Only non-group contact list channels should use create_personas == true,
