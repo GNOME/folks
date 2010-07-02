@@ -990,7 +990,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       return null;
     }
 
-  public async void change_is_favourite (Folks.Persona persona,
+  internal async void change_is_favourite (Folks.Persona persona,
       bool is_favourite)
     {
       /* It's possible for us to not be able to connect to the logger;
