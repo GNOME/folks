@@ -161,7 +161,12 @@ public class Folks.Individual : Object,
               groups.group_changed.disconnect (this.persona_group_changed_cb);
             });
 
-          this._personas = value.copy ();
+          this._personas = new GLib.List<Persona> ();
+          value.foreach ((l) =>
+            {
+              this._personas.prepend ((Persona) l);
+            });
+          this._personas.reverse ();
 
           /* If all the personas have been removed, remove the individual */
           if (this._personas.length () < 1)
