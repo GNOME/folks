@@ -83,6 +83,13 @@ folks_tp_lowlevel_connection_create_group_async (
     const char *name);
 
 void
+folks_tp_lowlevel_connection_set_contact_alias (
+    FolksTpLowlevel *tp_lowlevel,
+    TpConnection *conn,
+    TpHandle handle,
+    const gchar *alias);
+
+void
 folks_tp_lowlevel_connection_open_contact_list_channel_async (
     FolksTpLowlevel *lowlevel,
     TpConnection *conn,

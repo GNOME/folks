@@ -366,6 +366,36 @@ folks_tp_lowlevel_connection_create_group_async (
 }
 
 static void
+set_contact_alias_cb (TpConnection *conn,
+    const GError *error,
+    gpointer user_data,
+    GObject *weak_object)
+{
+  if (error != NULL)
+    {
+      g_warning ("failed to change contact's alias: %s", error->message);
+      return;
+    }
+}
+
+void
+folks_tp_lowlevel_connection_set_contact_alias (
+    FolksTpLowlevel *tp_lowlevel,
+    TpConnection *conn,
+    TpHandle handle,
+    const gchar *alias)
+{
+  GHashTable *ht = g_hash_table_new_full (g_direct_hash, g_direct_equal, NULL,
+      g_free);
+  g_hash_table_insert (ht, GUINT_TO_POINTER (handle), g_strdup (alias));
+
+  tp_cli_connection_interface_aliasing_call_set_aliases (conn, -1,
+      ht, set_contact_alias_cb, NULL, NULL, NULL);
+
+  g_hash_table_destroy (ht);
+}
+
+static void
 iterate_on_channels (TpConnection *conn,
     const GPtrArray *channels,
     gpointer user_data,

@@ -33,9 +33,13 @@ public class Tpf.Persona : Folks.Persona,
 {
   private HashTable<string, bool> _groups;
   private bool _is_favourite;
+  private string _alias;
 
-  /* interface Alias */
-  public string alias { get; set; }
+  /* Whether we've finished being constructed; this is used to prevent
+   * unnecessary trips to the Telepathy service to tell it about properties
+   * being set which are actually just being set from data it's just given us.
+   */
+  private bool is_constructed = false;
 
   /* interface Avatar */
   public File avatar { get; set; }
@@ -47,6 +51,22 @@ public class Tpf.Persona : Folks.Persona,
   public Folks.PresenceType presence_type { get; private set; }
   public string presence_message { get; private set; }
 
+  /* interface Alias */
+  public string alias
+    {
+      get { return this._alias; }
+
+      set
+        {
+          if (this._alias == value)
+            return;
+
+          if (this.is_constructed)
+            ((Tpf.PersonaStore) this.store).change_alias (this, value);
+          this._alias = value;
+        }
+    }
+
   /* interface Favourite */
   public bool is_favourite
     {
@@ -57,7 +77,8 @@ public class Tpf.Persona : Folks.Persona,
           if (this._is_favourite == value)
             return;
 
-          ((Tpf.PersonaStore) this.store).change_is_favourite (this, value);
+          if (this.is_constructed)
+            ((Tpf.PersonaStore) this.store).change_is_favourite (this, value);
           this._is_favourite = value;
         }
     }
@@ -140,6 +161,8 @@ public class Tpf.Persona : Folks.Persona,
               iid: iid,
               uid: uid,
               store: store);
+
+      this.is_constructed = true;
 
       this._groups = new HashTable<string, bool> (str_hash, str_equal);
 

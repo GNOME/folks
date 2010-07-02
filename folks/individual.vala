@@ -38,13 +38,7 @@ public class Folks.Individual : Object,
   private GLib.List<Persona> _personas;
   private HashTable<PersonaStore, HashSet<Persona>> stores;
   private bool _is_favourite;
-
-  /* XXX: should setting this push it down into the Persona (to foward along to
-   * the actual store if possible?) */
-  /**
-   * {@inheritDoc}
-   */
-  public string alias { get; set; }
+  private string _alias;
 
   /**
    * {@inheritDoc}
@@ -84,6 +78,27 @@ public class Folks.Individual : Object,
    * should unreference it and remove it from their UI.
    */
   public signal void removed ();
+
+  /**
+   * {@inheritDoc}
+   */
+  public string alias
+    {
+      get { return this._alias; }
+
+      set
+        {
+          if (this._alias == value)
+            return;
+
+          this._alias = value;
+          this._personas.foreach ((p) =>
+            {
+              if (p is Alias)
+                ((Alias) p).alias = value;
+            });
+        }
+    }
 
   /**
    * Whether this Individual is a user-defined favourite.

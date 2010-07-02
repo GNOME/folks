@@ -1018,4 +1018,12 @@ public class Tpf.PersonaStore : Folks.PersonaStore
           warning ("failed to change a persona's favourite status");
         }
     }
+
+  internal async void change_alias (Tpf.Persona persona, string alias)
+    {
+      debug ("Changing alias of persona %u to '%s'.", persona.contact.handle,
+          alias);
+      this.ll.connection_set_contact_alias (this.conn,
+          (Handle) persona.contact.handle, alias);
+    }
 }
