@@ -32,7 +32,7 @@ doc_files = $(top_srcdir)/folks/*.vala $(top_srcdir)/backends/telepathy/*.vala
 folks-0.1/index.html: $(doc_files)
 	$(VALADOC) -o folks-0.1/ --force -b $(top_srcdir) \
 		--pkg=gee-1.0 --pkg=gio-2.0 --pkg=gmodule-2.0 --pkg=build-conf \
-		--pkg=telepathy-glib --pkg=tp-lowlevel \
+		--pkg=dbus-glib-1 --pkg=telepathy-glib --pkg=tp-lowlevel \
 		$(VALAFLAGS) $(doc_files)
 
 distclean-local: distclean-docs
