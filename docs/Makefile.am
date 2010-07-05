@@ -35,3 +35,7 @@ folks-0.1/index.html: $(doc_files)
 		--pkg=telepathy-glib --pkg=tp-lowlevel \
 		$(VALAFLAGS) $(doc_files)
 
+distclean-local: distclean-docs
+distclean-docs:
+	cd $(srcdir) && rm -rf folks-0.1
+
