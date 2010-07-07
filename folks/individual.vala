@@ -495,7 +495,7 @@ public class Folks.Individual : Object,
             {
               var a = (Alias) p;
 
-              if (alias == null || alias.strip () == "")
+              if (alias == null && a.alias.strip () != "")
                 alias = a.alias;
             }
         });

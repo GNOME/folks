@@ -185,7 +185,7 @@ public class Tpf.Persona : Folks.Persona,
       var iid = "telepathy:" + account_id + ":" + uid;
 
       var alias = contact.get_alias ();
-      if (alias == null || alias == "")
+      if (alias == null || alias.strip () == "")
         alias = uid;
 
       Object (alias: alias,
