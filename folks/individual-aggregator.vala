@@ -257,4 +257,16 @@ public class Folks.IndividualAggregator : Object
           persona.store.remove_persona (persona);
         });
     }
+
+  /**
+   * Completely remove the persona from its backing store.
+   *
+   * This will leave other personas in the same individual alone.
+   *
+   * @param persona the {@link Persona} to remove
+   */
+  public void remove_persona (Persona persona)
+    {
+      persona.store.remove_persona (persona);
+    }
 }
