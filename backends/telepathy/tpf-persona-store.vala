@@ -845,8 +845,9 @@ public class Tpf.PersonaStore : Folks.PersonaStore
               var contact = l.data;
               try
                 {
-                  var persona = new Tpf.Persona (contact, this);
-                  personas.prepend (persona);
+                  var persona = this.add_persona_from_contact (contact);
+                  if (persona != null)
+                    personas.prepend (persona);
                 }
               catch (Tp.Error e)
                 {
@@ -865,7 +866,33 @@ public class Tpf.PersonaStore : Folks.PersonaStore
                   err_count);
             }
 
+          if (personas != null)
+            this.personas_added (personas);
+
           return personas;
+        }
+
+      return null;
+    }
+
+  private Tpf.Persona? add_persona_from_contact (Contact contact)
+      throws Tp.Error
+    {
+      var h = contact.get_handle ();
+      if (this.handle_persona_map[h] == null)
+        {
+          var persona = new Tpf.Persona (contact, this);
+
+          this._personas.insert (persona.iid, persona);
+          this.handle_persona_map[h] = persona;
+
+          /* If the handle is a favourite, ensure the persona's marked
+           * as such. This deals with the case where we receive a
+           * contact _after_ we've discovered that they're a
+           * favourite. */
+          persona.is_favourite = this.favourite_handles.contains (h);
+
+          return persona;
         }
 
       return null;
@@ -873,26 +900,14 @@ public class Tpf.PersonaStore : Folks.PersonaStore
 
   private void add_new_personas_from_contacts (Contact[] contacts)
     {
-      var personas_new = new HashTable<string, Persona> (str_hash, str_equal);
+      GLib.List<Persona> personas = new GLib.List<Persona> ();
       foreach (Contact contact in contacts)
         {
           try
             {
-              var persona = new Tpf.Persona (contact, this);
-              if (this._personas.lookup (persona.iid) == null)
-                {
-                  personas_new.insert (persona.iid, persona);
-
-                  var h = contact.get_handle ();
-                  this._personas.insert (persona.iid, persona);
-                  this.handle_persona_map[h] = persona;
-
-                  /* If the handle is a favourite, ensure the persona's marked
-                   * as such. This deals with the case where we receive a
-                   * contact _after_ we've discovered that they're a
-                   * favourite. */
-                  persona.is_favourite = this.favourite_handles.contains (h);
-                }
+              var persona = this.add_persona_from_contact (contact);
+              if (persona != null)
+                personas.prepend (persona);
             }
           catch (Tp.Error e)
             {
@@ -903,11 +918,8 @@ public class Tpf.PersonaStore : Folks.PersonaStore
 
       this.channel_groups_add_new_personas ();
 
-      if (personas_new.size () >= 1)
-        {
-          GLib.List<Persona> personas = personas_new.get_values ();
-          this.personas_added (personas);
-        }
+      if (personas != null)
+        this.personas_added (personas);
     }
 
   private void channel_groups_add_new_personas ()
