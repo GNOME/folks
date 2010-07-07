@@ -166,6 +166,7 @@ public class Folks.Individual : Object,
               var persona = (Persona) p;
               var groups = (p is Groups) ? (Groups) p : null;
 
+              persona.notify["alias"].disconnect (this.notify_alias_cb);
               persona.notify["avatar"].disconnect (this.notify_avatar_cb);
               persona.notify["presence-message"].disconnect (
                   this.notify_presence_cb);
@@ -201,6 +202,7 @@ public class Folks.Individual : Object,
               var persona = (Persona) p;
               var groups = (p is Groups) ? (Groups) p : null;
 
+              persona.notify["alias"].connect (this.notify_alias_cb);
               persona.notify["avatar"].connect (this.notify_avatar_cb);
               persona.notify["presence-message"].connect (
                   this.notify_presence_cb);
@@ -213,6 +215,11 @@ public class Folks.Individual : Object,
           /* Update our aggregated fields and notify the changes */
           this.update_fields ();
         }
+    }
+
+  private void notify_alias_cb (Object obj, ParamSpec ps)
+    {
+      this.update_alias ();
     }
 
   private void notify_avatar_cb (Object obj, ParamSpec ps)
@@ -352,34 +359,12 @@ public class Folks.Individual : Object,
       /* Gather the first occurrence of each field. We assume that there is
        * at least one persona in the list, since the Individual should've been
        * destroyed before now otherwise. */
-      string alias = null;
       var caps = CapabilitiesFlags.NONE;
       this._personas.foreach ((p) =>
         {
-          if (p is Alias)
-            {
-              var a = (Alias) p;
-
-              if (alias == null || alias.strip () == "")
-                alias = a.alias;
-            }
-
           if (p is Capabilities)
             caps |= ((Capabilities) p).capabilities;
         });
-
-      if (alias == null)
-        {
-          /* We have to pick a UID, since none of the personas have an alias
-           * available. Pick the UID from the first persona in the list. */
-          alias = this._personas.data.uid;
-          warning ("No aliases available for individual; using UID instead: %s",
-                   alias);
-        }
-
-      /* only notify if the value has changed */
-      if (this.alias != alias)
-        this.alias = alias;
 
       if (this.capabilities != caps)
         this.capabilities = caps;
@@ -388,6 +373,7 @@ public class Folks.Individual : Object,
       this.update_presence ();
       this.update_is_favourite ();
       this.update_avatar ();
+      this.update_alias ();
     }
 
   private void update_groups ()
@@ -497,6 +483,35 @@ public class Folks.Individual : Object,
       /* Only notify if the value has changed */
       if (this._is_favourite != favourite)
         this._is_favourite = favourite;
+    }
+
+  private void update_alias ()
+    {
+      string alias = null;
+
+      this._personas.foreach ((p) =>
+        {
+          if (p is Alias)
+            {
+              var a = (Alias) p;
+
+              if (alias == null || alias.strip () == "")
+                alias = a.alias;
+            }
+        });
+
+      if (alias == null)
+        {
+          /* We have to pick a UID, since none of the personas have an alias
+           * available. Pick the UID from the first persona in the list. */
+          alias = this._personas.data.uid;
+          warning ("No aliases available for individual; using UID instead: %s",
+                   alias);
+        }
+
+      /* only notify if the value has changed */
+      if (this.alias != alias)
+        this.alias = alias;
     }
 
   private void update_avatar ()
