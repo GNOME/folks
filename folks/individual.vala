@@ -174,6 +174,7 @@ public class Folks.Individual : Object,
                   this.notify_presence_cb);
               persona.notify["is-favourite"].disconnect (
                   this.notify_is_favourite_cb);
+              persona.notify["groups"].disconnect (this.notify_groups_cb);
               groups.group_changed.disconnect (this.persona_group_changed_cb);
             });
 
@@ -209,12 +210,18 @@ public class Folks.Individual : Object,
               persona.notify["presence-type"].connect (this.notify_presence_cb);
               persona.notify["is-favourite"].connect (
                   this.notify_is_favourite_cb);
+              persona.notify["groups"].connect (this.notify_groups_cb);
               groups.group_changed.connect (this.persona_group_changed_cb);
             });
 
           /* Update our aggregated fields and notify the changes */
           this.update_fields ();
         }
+    }
+
+  private void notify_groups_cb (Object obj, ParamSpec ps)
+    {
+      this.update_groups ();
     }
 
   private void notify_alias_cb (Object obj, ParamSpec ps)
