@@ -109,7 +109,7 @@ folks_tp_lowlevel_connection_get_contacts_by_handle_async (
     TpConnection *conn,
     const guint *contact_handles,
     guint contact_handles_length,
-    TpContactFeature *features,
+    guint *features,
     guint features_length,
     GAsyncReadyCallback callback,
     gpointer user_data);
@@ -126,7 +126,7 @@ folks_tp_lowlevel_connection_get_contacts_by_id_async (
     TpConnection *conn,
     const char **contact_ids,
     guint contact_ids_length,
-    TpContactFeature *features,
+    guint *features,
     guint features_length,
     GAsyncReadyCallback callback,
     gpointer user_data);
