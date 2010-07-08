@@ -183,12 +183,12 @@ public class Tpf.PersonaStore : Folks.PersonaStore
            * as appropriate by those objects (we're circumventing tp-glib's
            * handle reference counting). */
           this.conn.request_handles (-1, HandleType.CONTACT, contacts,
-            (c, ht, nh, h, i, e, w) =>
+            (c, ht, h, i, e, w) =>
               {
                 try
                   {
-                    this.change_favourites_by_request_handles (nh, h, i, e,
-                        true);
+                    this.change_favourites_by_request_handles (h.length,
+                      (TelepathyGLib.Handle[]) h, i, e, true);
                   }
                 catch (GLib.Error e)
                   {
@@ -253,12 +253,12 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       if (added.length > 0)
         {
           this.conn.request_handles (-1, HandleType.CONTACT, added,
-              (c, ht, nh, h, i, e, w) =>
+              (c, ht, h, i, e, w) =>
                 {
                   try
                     {
-                      this.change_favourites_by_request_handles (nh, h, i, e,
-                          true);
+                      this.change_favourites_by_request_handles (h.length,
+                        (TelepathyGLib.Handle[]) h, i, e, true);
                     }
                   catch (GLib.Error e)
                     {
@@ -273,12 +273,12 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       if (removed.length > 0)
         {
           this.conn.request_handles (-1, HandleType.CONTACT, removed,
-              (c, ht, nh, h, i, e, w) =>
+              (c, ht, h, i, e, w) =>
                 {
                   try
                     {
-                      this.change_favourites_by_request_handles (nh, h, i, e,
-                          false);
+                      this.change_favourites_by_request_handles (h.length,
+                        (TelepathyGLib.Handle[]) h, i, e, false);
                     }
                   catch (GLib.Error e)
                     {
