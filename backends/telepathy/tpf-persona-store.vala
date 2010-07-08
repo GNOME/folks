@@ -143,11 +143,9 @@ public class Tpf.PersonaStore : Folks.PersonaStore
        */
       if (status != TelepathyGLib.ConnectionStatus.DISCONNECTED)
         {
-          var details = new GLib.HashTable<weak string, weak void*> (
-              str_hash, str_equal);
           this.account_status_changed_cb (
               TelepathyGLib.ConnectionStatus.DISCONNECTED, status, reason, null,
-              details);
+              null);
         }
 
       try
@@ -290,9 +288,11 @@ public class Tpf.PersonaStore : Folks.PersonaStore
         }
     }
 
+  /* FIXME: the second generic type for details is "weak GLib.Value", but Vala
+   * doesn't accept it as a generic type */
   private void account_status_changed_cb (uint old_status, uint new_status,
       uint reason, string? dbus_error_name,
-      GLib.HashTable<weak string, weak GLib.Value>? details)
+      GLib.HashTable<weak string, weak void*>? details)
     {
       if (new_status != TelepathyGLib.ConnectionStatus.CONNECTED)
         return;
