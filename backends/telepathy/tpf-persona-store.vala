@@ -383,22 +383,22 @@ public class Tpf.PersonaStore : Folks.PersonaStore
             {
               this.publish = c;
 
-              c.group_members_changed.connect (
-                  this.publish_channel_group_members_changed_cb);
+              c.group_members_changed_detailed.connect (
+                  this.publish_channel_group_members_changed_detailed_cb);
             }
           else if (name == "stored")
             {
               this.stored = c;
 
-              c.group_members_changed.connect (
-                  this.stored_channel_group_members_changed_cb);
+              c.group_members_changed_detailed.connect (
+                  this.stored_channel_group_members_changed_detailed_cb);
             }
           else if (name == "subscribe")
             {
               this.subscribe = c;
 
-              c.group_members_changed.connect (
-                  this.subscribe_channel_group_members_changed_cb);
+              c.group_members_changed_detailed.connect (
+                  this.subscribe_channel_group_members_changed_detailed_cb);
             }
 
           this.standard_channels_unready.remove (name);
@@ -414,17 +414,16 @@ public class Tpf.PersonaStore : Folks.PersonaStore
         });
     }
 
-  private void publish_channel_group_members_changed_cb (Channel channel,
-      string message,
+  private void publish_channel_group_members_changed_detailed_cb (
+      Channel channel,
       /* FIXME: Array<uint> => Array<Handle>; parser bug */
-      Array<uint>? added,
-      Array<uint>? removed,
-      Array<uint>? local_pending,
-      Array<uint>? remote_pending,
-      uint actor,
-      uint reason)
+      Array<weak uint> added,
+      Array<weak uint> removed,
+      Array<weak uint> local_pending,
+      Array<weak uint> remote_pending,
+      HashTable details)
     {
-      if (added != null)
+      if (added.length > 0)
         this.channel_group_pend_incoming_adds.begin (channel, added, true);
 
       /* we refuse to send these contacts our presence, so remove them */
@@ -437,17 +436,16 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       /* FIXME: continue for the other arrays */
     }
 
-  private void stored_channel_group_members_changed_cb (Channel channel,
-      string message,
+  private void stored_channel_group_members_changed_detailed_cb (
+      Channel channel,
       /* FIXME: Array<uint> => Array<Handle>; parser bug */
-      Array<uint>? added,
-      Array<uint>? removed,
-      Array<uint>? local_pending,
-      Array<uint>? remote_pending,
-      uint actor,
-      uint reason)
+      Array<weak uint> added,
+      Array<weak uint> removed,
+      Array<weak uint> local_pending,
+      Array<weak uint> remote_pending,
+      HashTable details)
     {
-      if (added != null)
+      if (added.length > 0)
         this.channel_group_pend_incoming_adds.begin (channel, added, true);
 
       for (var i = 0; i < removed.length; i++)
@@ -456,18 +454,16 @@ public class Tpf.PersonaStore : Folks.PersonaStore
           this.ignore_by_handle_if_needed (handle);
         }
     }
-
-  private void subscribe_channel_group_members_changed_cb (Channel channel,
-      string message,
+  private void subscribe_channel_group_members_changed_detailed_cb (
+      Channel channel,
       /* FIXME: Array<uint> => Array<Handle>; parser bug */
-      Array<uint>? added,
-      Array<uint>? removed,
-      Array<uint>? local_pending,
-      Array<uint>? remote_pending,
-      uint actor,
-      uint reason)
+      Array<weak uint> added,
+      Array<weak uint> removed,
+      Array<weak uint> local_pending,
+      Array<weak uint> remote_pending,
+      HashTable details)
     {
-      if (added != null)
+      if (added.length > 0)
         {
           this.channel_group_pend_incoming_adds.begin (channel, added, true);
 
