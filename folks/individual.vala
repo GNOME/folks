@@ -502,7 +502,7 @@ public class Folks.Individual : Object,
             {
               var a = (Alias) p;
 
-              if (alias == null && a.alias.strip () != "")
+              if (alias == null && a.alias != null && a.alias.strip () != "")
                 alias = a.alias;
             }
         });
