@@ -796,7 +796,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
 
           unowned GLib.List<TelepathyGLib.Contact> contacts =
               yield this.ll.connection_get_contacts_by_handle_async (
-                  this.conn, contact_handles, features);
+                  this.conn, contact_handles, (uint[]) features);
 
           if (contacts == null || contacts.length () < 1)
             return;
@@ -834,7 +834,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
         {
           unowned GLib.List<TelepathyGLib.Contact> contacts =
               yield this.ll.connection_get_contacts_by_id_async (
-                  this.conn, contact_ids, features);
+                  this.conn, contact_ids, (uint[]) features);
 
           GLib.List<Persona> personas = new GLib.List<Persona> ();
           uint err_count = 0;
