@@ -488,8 +488,8 @@ public class Folks.Individual : Object,
         });
 
       /* Only notify if the value has changed */
-      if (this._is_favourite != favourite)
-        this._is_favourite = favourite;
+      if (this.is_favourite != favourite)
+        this.is_favourite = favourite;
     }
 
   private void update_alias ()
