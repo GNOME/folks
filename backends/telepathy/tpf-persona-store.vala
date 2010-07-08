@@ -853,7 +853,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
                   if (persona != null)
                     personas.prepend (persona);
                 }
-              catch (TelepathyGLib.Error e)
+              catch (Tpf.PersonaError e)
                 {
                   if (err_count == 0)
                     err_format = "failed to create %u personas:\n";
@@ -880,7 +880,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
     }
 
   private Tpf.Persona? add_persona_from_contact (Contact contact)
-      throws TelepathyGLib.Error
+      throws Tpf.PersonaError
     {
       var h = contact.get_handle ();
       if (this.handle_persona_map[h] == null)
