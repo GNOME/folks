@@ -32,9 +32,13 @@ using GLib;
  * signature).
  */
 public class Folks.BackendStore : Object {
+  [CCode (has_target = false)]
   private delegate void ModuleInitFunc (BackendStore store);
+  [CCode (has_target = false)]
+  private delegate void ModuleFinalizeFunc (BackendStore store);
 
   private HashMap<string,Backend> backend_hash;
+  private GLib.List<ModuleFinalizeFunc> finalize_funcs = null;
 
   /**
    * Emitted when a backend has been added to the BackendStore.
@@ -52,6 +56,13 @@ public class Folks.BackendStore : Object {
   public BackendStore ()
     {
       this.backend_hash = new HashMap<string,Backend> (str_hash, str_equal);
+    }
+
+  ~BackendStore ()
+    {
+      /* Finalize all the loaded modules */
+      foreach (ModuleFinalizeFunc func in this.finalize_funcs)
+        func (this);
     }
 
   /**
@@ -194,6 +205,13 @@ public class Folks.BackendStore : Object {
 
       ModuleInitFunc module_init = (ModuleInitFunc) function;
       assert (module_init != null);
+
+      /* It's optional for modules to have a finalize function */
+      if (module.symbol ("module_finalize", out function))
+        {
+          ModuleFinalizeFunc module_finalize = (ModuleFinalizeFunc) function;
+          this.finalize_funcs.prepend (module_finalize);
+        }
 
       /* We don't want our modules to ever unload */
       module.make_resident ();

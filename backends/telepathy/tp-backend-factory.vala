@@ -32,8 +32,15 @@ private BackendFactory backend_factory = null;
  */
 public void module_init (BackendStore backend_store)
 {
-  if (backend_factory == null)
-    backend_factory = new BackendFactory (backend_store);
+  backend_factory = new BackendFactory (backend_store);
+}
+
+/**
+ * The Telepathy backend module exit point.
+ */
+public void module_finalize (BackendStore backend_store)
+{
+  backend_factory = null;
 }
 
 /**
@@ -41,18 +48,14 @@ public void module_init (BackendStore backend_store)
  */
 public class Folks.Backends.Tp.BackendFactory : Object
 {
-  BackendStore backend_store;
-
   /**
    * {@inheritDoc}
    */
   public BackendFactory (BackendStore backend_store)
     {
-      this.backend_store = backend_store;
-
       try
         {
-          this.backend_store.add_backend (new Backend ());
+          backend_store.add_backend (new Backend ());
         }
       catch (GLib.Error e)
         {
