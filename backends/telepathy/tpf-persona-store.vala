@@ -172,6 +172,9 @@ public class Tpf.PersonaStore : Folks.PersonaStore
 
   private async void initialise_favourite_contacts ()
     {
+      if (this.logger == null)
+        return;
+
       /* Get an initial set of favourite contacts */
       try
         {
