@@ -27,6 +27,68 @@ using GLib;
 public interface Folks.Groups : Object
 {
   /**
+   * The reason a group member has changed its membership in the group.
+   *
+   * These closely follow the
+   * [[http://telepathy.freedesktop.org/spec/Channel_Interface_Group.html#Channel_Group_Change_Reason|Channel_Group_Change_Reason]]
+   * interface in the Telepathy specification.
+   */
+  public static enum ChangeReason
+    {
+      /* No reason was provided for this change.
+       *
+       * This is used when a member joins or leaves a group normally. */
+      NONE = 0,
+      /* The change is due to a member going offline.
+       *
+       * Also used when member is already offline, but this wasn't known
+       * previously. */
+      OFFLINE = 1,
+      /* The change is due to a kick operation. */
+      KICKED = 2,
+      /* The change is due to a busy indication. */
+      BUSY = 3,
+      /* The change is due to an invitation. */
+      INVITED = 4,
+      /* The change is due to a kick+ban operation. */
+      BANNED = 5,
+      /*  The change is due to an error occurring. */
+      ERROR = 6,
+      /* The change is because the requested member does not exist.
+       *
+       * For instance, if the user invites a nonexistent contact to a chatroom
+       * or attempts to call a nonexistent contact */
+      INVALID_MEMBER = 7,
+      /* The change is because the requested contact did not respond. */
+      NO_ANSWER = 8,
+      /* The change is because a member's unique identifier changed.
+       *
+       * There must be exactly one member in the removed set and exactly one
+       * member in one of the added sets. */
+      RENAMED = 9,
+      /* The change is because there was no permission to contact the requested
+       * member. */
+      PERMISSION_DENIED = 10,
+      /* If members are removed with this reason code, the change is because the
+       * group has split into unconnected parts which can only communicate
+       * within themselves (e.g. netsplits on IRC use this reason code).
+       *
+       * If members are added with this reason code, the change is because
+       * unconnected parts of the group have rejoined. If this channel carries
+       * messages (e.g. Text or Tubes channels) applications must assume that
+       * the contacts being added are likely to have missed some messages as a
+       * result of the separation, and that the contacts in the group are likely
+       * to have missed some messages from the contacts being added.
+       *
+       * Note that from the added contacts' perspective, they have been in the
+       * group all along, and the contacts we indicate to be in the group
+       * (including the local user) have just rejoined the group with reason
+       * Separated. Application protocols in Tubes should be prepared to cope
+       * with this situation. */
+      SEPARATED = 11
+    }
+
+  /**
    * A mapping of group ID to whether the contact is a member.
    *
    * Freeform group IDs are mapped to a boolean which is `true` if the

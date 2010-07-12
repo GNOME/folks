@@ -566,7 +566,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
 
       var personas = new GLib.List<Persona> ();
       personas.append (persona);
-      this.personas_removed (personas);
+      this.personas_changed (null, personas, null, null, 0);
       this._personas.remove (persona.iid);
     }
 
@@ -867,7 +867,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
             }
 
           if (personas != null)
-            this.personas_added (personas);
+            this.personas_changed (personas, null, null, null, 0);
 
           return personas;
         }
@@ -920,7 +920,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       this.channel_groups_add_new_personas ();
 
       if (personas != null)
-        this.personas_added (personas);
+        this.personas_changed (personas, null, null, null, 0);
     }
 
   private void channel_groups_add_new_personas ()

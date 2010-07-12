@@ -43,19 +43,20 @@ public errordomain Folks.PersonaStoreError
 public abstract class Folks.PersonaStore : Object
 {
   /**
-   * Emitted when one or more {@link Persona}s are added to the PersonaStore.
+   * Emitted when one or more {@link Persona}s are added to or removed from
+   * the store.
    *
-   * @param personas a list of {@link Persona}s added to the PersonaStore
+   * @param added a list of {@link Persona}s which have been removed
+   * @param removed a list of {@link Persona}s which have been removed
+   * @param message a string message from the backend, if any
+   * @param actor the {@link Persona} who made the change, if known
+   * @param reason the reason for the change
    */
-  public abstract signal void personas_added (GLib.List<Persona> personas);
-
-  /**
-   * Emitted when one or more {@link Persona}s are removed from the
-   * PersonaStore.
-   *
-   * @param personas a list of {@link Persona}s removed from the PersonaStore
-   */
-  public abstract signal void personas_removed (GLib.List<Persona> personas);
+  public signal void personas_changed (GLib.List<Persona>? added,
+      GLib.List<Persona>? removed,
+      string? message,
+      Persona? actor,
+      Groups.ChangeReason reason);
 
   /**
    * Emitted when the backing store for this PersonaStore has been removed.
