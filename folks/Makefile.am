@@ -24,7 +24,6 @@ libfolks_la_VALASOURCES = \
 	avatar.vala \
 	backend.vala \
 	backend-store.vala \
-	capabilities.vala \
 	favourite.vala \
 	groups.vala \
 	individual.vala \
