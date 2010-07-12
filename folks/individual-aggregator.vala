@@ -62,27 +62,27 @@ public class Folks.IndividualAggregator : Object
   public HashTable<string, Individual> individuals { get; private set; }
 
   /**
-   * Emitted when one or more {@link Individual}s are added to the aggregator.
+   * Emitted when one or more {@link Individual}s are added to or removed from
+   * the aggregator.
    *
-   * @param inds a list of {@link Individual}s which have been added
+   * @param added a list of {@link Individual}s which have been removed
+   * @param removed a list of {@link Individual}s which have been removed
+   * @param message a string message from the backend, if any
+   * @param actor the {@link Persona} who made the change, if known
+   * @param reason the reason for the change
    */
-  public signal void individuals_added (GLib.List<Individual> inds);
-
-  /**
-   * Emitted when one or more {@link Individual}s are removed from the
-   * aggregator.
-   *
-   * @param inds a list of {@link Individual}s which have been removed
-   */
-  public signal void individuals_removed (GLib.List<Individual> inds);
+  public signal void individuals_changed (GLib.List<Individual>? added,
+      GLib.List<Individual>? removed,
+      string? message,
+      Persona? actor,
+      Groups.ChangeReason reason);
 
   /* FIXME: make this a singleton? */
   /**
    * Create a new IndividualAggregator.
    *
    * Clients should connect to the
-   * {@link IndividualAggregator.individuals_added} and
-   * {@link IndividualAggregator.individuals_removed} signals, which will be
+   * {@link IndividualAggregator.individuals_changed} signal, which will be
    * emitted as soon as the {@link Backend}s are loaded and {@link Persona}s
    * found.
    *
@@ -113,13 +113,13 @@ public class Folks.IndividualAggregator : Object
       PersonaStore store)
     {
       this.stores.set (this.get_store_full_id (store.type_id, store.id), store);
-      store.personas_added.connect (this.personas_added_cb);
+      store.personas_changed.connect (this.personas_changed_cb);
     }
 
   private void backend_persona_store_removed_cb (Backend backend,
       PersonaStore store)
     {
-      store.personas_added.disconnect (this.personas_added_cb);
+      store.personas_changed.disconnect (this.personas_changed_cb);
 
       /* no need to remove this stores' personas from all the individuals, since
        * they'll do that themselves (and emit their own 'removed' signal if
@@ -133,11 +133,15 @@ public class Folks.IndividualAggregator : Object
       return type_id + ":" + id;
     }
 
-  private void personas_added_cb (PersonaStore store,
-      GLib.List<Persona> personas)
+  private void personas_changed_cb (PersonaStore store,
+      GLib.List<Persona>? added,
+      GLib.List<Persona>? removed,
+      string? message,
+      Persona? actor,
+      Groups.ChangeReason reason)
     {
       var individuals = new GLib.List<Individual> ();
-      personas.foreach ((persona) =>
+      added.foreach ((persona) =>
         {
           var p = (Persona) persona;
 
@@ -170,7 +174,7 @@ public class Folks.IndividualAggregator : Object
       if (new_individuals != null)
         {
           new_individuals.reverse ();
-          this.individuals_added (new_individuals);
+          this.individuals_changed (new_individuals, null, null, null, 0);
         }
     }
 
@@ -179,7 +183,7 @@ public class Folks.IndividualAggregator : Object
       var i_list = new GLib.List<Individual> ();
       i_list.append (i);
 
-      this.individuals_removed (i_list);
+      this.individuals_changed (null, i_list, null, null, 0);
       this.individuals.remove (i.id);
     }
 

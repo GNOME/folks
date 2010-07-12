@@ -306,8 +306,8 @@ public class Folks.Individual : Object,
               this.stores.insert (persona.store, persona_set);
 
               persona.store.removed.connect (this.store_removed_cb);
-              persona.store.personas_removed.connect (
-                this.store_personas_removed_cb);
+              persona.store.personas_changed.connect (
+                this.store_personas_changed_cb);
             }
         });
     }
@@ -334,11 +334,15 @@ public class Folks.Individual : Object,
       this.update_fields ();
     }
 
-  private void store_personas_removed_cb (PersonaStore store,
-      GLib.List<Persona> personas)
+  private void store_personas_changed_cb (PersonaStore store,
+      GLib.List<Persona>? added,
+      GLib.List<Persona>? removed,
+      string? message,
+      Persona? actor,
+      Groups.ChangeReason reason)
     {
       var persona_set = this.stores.lookup (store);
-      personas.foreach ((data) =>
+      removed.foreach ((data) =>
         {
           var p = (Persona) data;
 
