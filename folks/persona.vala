@@ -49,5 +49,5 @@ public abstract class Folks.Persona : Object
   /**
    * The {@link PersonaStore} which contains this Persona.
    */
-  public PersonaStore store { get; construct; }
+  public weak PersonaStore store { get; construct; }
 }
