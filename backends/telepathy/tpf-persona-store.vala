@@ -430,7 +430,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       for (var i = 0; i < removed.length; i++)
         {
           var handle = removed.index (i);
-          this.ignore_by_handle_if_needed (handle);
+          this.ignore_by_handle_if_needed (handle, details);
         }
 
       /* FIXME: continue for the other arrays */
@@ -451,7 +451,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       for (var i = 0; i < removed.length; i++)
         {
           var handle = removed.index (i);
-          this.ignore_by_handle_if_needed (handle);
+          this.ignore_by_handle_if_needed (handle, details);
         }
     }
   private void subscribe_channel_group_members_changed_detailed_cb (
@@ -479,7 +479,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       for (var i = 0; i < removed.length; i++)
         {
           var handle = removed.index (i);
-          this.ignore_by_handle_if_needed (handle);
+          this.ignore_by_handle_if_needed (handle, details);
         }
 
       /* FIXME: continue for the other arrays */
@@ -506,7 +506,8 @@ public class Tpf.PersonaStore : Folks.PersonaStore
         }
     }
 
-  private void ignore_by_handle_if_needed (uint handle)
+  private void ignore_by_handle_if_needed (uint handle,
+      HashTable<string, HashTable<string, Value?>> details)
     {
       unowned TelepathyGLib.IntSet members;
 
@@ -528,10 +529,30 @@ public class Tpf.PersonaStore : Folks.PersonaStore
             return;
         }
 
-      this.ignore_by_handle (handle);
+      string? message = TelepathyGLib.asv_get_string (details, "message");
+      bool valid;
+      Persona? actor = null;
+      uint32 actor_handle = TelepathyGLib.asv_get_uint32 (details, "actor",
+          out valid);
+      if (actor_handle > 0 && valid)
+        actor = this.handle_persona_map[actor_handle];
+
+      Groups.ChangeReason reason = Groups.ChangeReason.NONE;
+      uint32 tp_reason = TelepathyGLib.asv_get_uint32 (details, "change-reason",
+          out valid);
+      if (valid)
+        reason = change_reason_from_tp_reason (tp_reason);
+
+      this.ignore_by_handle (handle, message, actor, reason);
     }
 
-  private void ignore_by_handle (uint handle)
+  private Groups.ChangeReason change_reason_from_tp_reason (uint reason)
+    {
+      return (Groups.ChangeReason) reason;
+    }
+
+  private void ignore_by_handle (uint handle, string? message, Persona? actor,
+      Groups.ChangeReason reason)
     {
       var persona = this.handle_persona_map[handle];
 
@@ -566,7 +587,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
 
       var personas = new GLib.List<Persona> ();
       personas.append (persona);
-      this.personas_changed (null, personas, null, null, 0);
+      this.personas_changed (null, personas, message, actor, reason);
       this._personas.remove (persona.iid);
     }
 
