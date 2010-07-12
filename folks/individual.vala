@@ -29,7 +29,6 @@ using Folks;
 public class Folks.Individual : Object,
     Alias,
     Avatar,
-    Capabilities,
     Favourite,
     Groups,
     Presence
@@ -44,11 +43,6 @@ public class Folks.Individual : Object,
    * {@inheritDoc}
    */
   public File avatar { get; private set; }
-
-  /**
-   * {@inheritDoc}
-   */
-  public CapabilitiesFlags capabilities { get; private set; }
 
   /**
    * {@inheritDoc}
@@ -363,19 +357,6 @@ public class Folks.Individual : Object,
 
   private void update_fields ()
     {
-      /* Gather the first occurrence of each field. We assume that there is
-       * at least one persona in the list, since the Individual should've been
-       * destroyed before now otherwise. */
-      var caps = CapabilitiesFlags.NONE;
-      this._personas.foreach ((p) =>
-        {
-          if (p is Capabilities)
-            caps |= ((Capabilities) p).capabilities;
-        });
-
-      if (this.capabilities != caps)
-        this.capabilities = caps;
-
       this.update_groups ();
       this.update_presence ();
       this.update_is_favourite ();
@@ -537,19 +518,6 @@ public class Folks.Individual : Object,
       /* only notify if the value has changed */
       if (this.avatar != avatar)
         this.avatar = avatar;
-    }
-
-  /**
-   * Get a bitmask of the capabilities of this Individual.
-   *
-   * The capabilities is the union of the sets of capabilities of all the
-   * {@link Persona}s in the Individual.
-   *
-   * @return bitmask of the Individual's capabilities
-   */
-  public CapabilitiesFlags get_capabilities ()
-    {
-      return this.capabilities;
     }
 
   /*
