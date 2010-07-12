@@ -68,8 +68,8 @@ GTK_DOC_CHECK([1.10])
 # Dependencies
 # -----------------------------------------------------------
 GLIB_REQUIRED=2.12.0
-TP_GLIB_REQUIRED=0.11.8.1
-TP_VALA_REQUIRED=0.11.8.1
+TP_GLIB_REQUIRED=0.11.10
+TP_VALA_REQUIRED=0.11.10
 
 PKG_CHECK_MODULES(GLIB,
                   glib-2.0 >= $GLIB_REQUIRED
