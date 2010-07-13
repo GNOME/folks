@@ -204,6 +204,9 @@ BUILT_SOURCES = \
 CLEANFILES = $(BUILT_SOURCES)
 
 EXTRA_DIST = \
+	$(libfolks_telepathy_la_VALASOURCES) \
+	$(libfolks_backend_telepathy_la_VALASOURCES) \
+	$(libtp_lowlevel_la_SOURCES) \
 	$(pkgconfig_in) \
 	folks-telepathy.vala.stamp \
 	folks-telepathy.vapi \
