@@ -211,7 +211,7 @@ public class Folks.IndividualAggregator : Object
   public async Persona? add_persona_from_details (Individual? parent,
       string persona_store_type,
       string persona_store_id,
-      HashTable<string, string> details) throws IndividualAggregatorError
+      HashTable<string, Value?> details) throws IndividualAggregatorError
     {
       var full_id = this.get_store_full_id (persona_store_type,
           persona_store_id);
@@ -227,7 +227,8 @@ public class Folks.IndividualAggregator : Object
       Persona persona = null;
       try
         {
-          persona = yield store.add_persona_from_details (details);
+          var details_copy = asv_copy (details);
+          persona = yield store.add_persona_from_details (details_copy);
         }
       catch (PersonaStoreError e)
         {
@@ -245,6 +246,18 @@ public class Folks.IndividualAggregator : Object
         }
 
       return persona;
+    }
+
+  private HashTable<string, Value?> asv_copy (HashTable<string, Value?> asv)
+    {
+      var retval = new HashTable<string, Value?> (str_hash, str_equal);
+
+      asv.foreach ((k, v) =>
+        {
+          retval.insert ((string) k, (Value?) v);
+        });
+
+      return retval;
     }
 
   /**

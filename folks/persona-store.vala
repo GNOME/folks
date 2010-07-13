@@ -101,7 +101,7 @@ public abstract class Folks.PersonaStore : Object
    * @return the new {@link Persona}, or `null` on failure
    */
   public abstract async Persona? add_persona_from_details (
-      HashTable<string, string> details) throws Folks.PersonaStoreError;
+      HashTable<string, Value?> details) throws Folks.PersonaStoreError;
 
   /**
    * Remove a {@link Persona} from the PersonaStore.

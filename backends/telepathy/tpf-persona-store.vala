@@ -1002,9 +1002,9 @@ public class Tpf.PersonaStore : Folks.PersonaStore
    * {@inheritDoc}
    */
   public override async Folks.Persona? add_persona_from_details (
-      HashTable<string, string> details) throws Folks.PersonaStoreError
+      HashTable<string, Value?> details) throws Folks.PersonaStoreError
     {
-      var contact_id = details.lookup ("contact");
+      var contact_id = TelepathyGLib.asv_get_string (details, "contact");
       if (contact_id == null)
         {
           throw new PersonaStoreError.INVALID_ARGUMENT (
