@@ -82,6 +82,7 @@ BUILT_SOURCES = \
 CLEANFILES = $(BUILT_SOURCES)
 
 EXTRA_DIST = \
+	$(libfolks_la_VALASOURCES) \
 	$(pkgconfig_in) \
 	build-conf.vapi \
 	folks.vala.stamp \
