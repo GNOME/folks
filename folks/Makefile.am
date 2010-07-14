@@ -8,12 +8,15 @@ AM_CPPFLAGS = \
 	-DBACKEND_DIR=\"$(backenddir)\" \
 	$(NULL)
 
-VALAFLAGS += $(TP_VALA_VALAFLAGS)
-VALAFLAGS += --vapidir=.
-VALAFLAGS += --pkg build-conf --pkg gobject-2.0 --pkg gio-2.0 --pkg gee-1.0 \
-		--pkg gmodule-2.0 --pkg dbus-glib-1 --pkg telepathy-glib
+# Build-time dependencies for libfolks
+folks_deps = \
+	build-conf \
+	gobject-2.0 \
+	gmodule-2.0 \
+	gio-2.0 \
+	gee-1.0 \
+	$(NULL)
 
-libfolksdir = $(includedir)/folks
 lib_LTLIBRARIES = \
 	libfolks.la \
 	$(NULL)
@@ -60,8 +63,8 @@ folks_HEADERS = \
 folks.h $(libfolks_la_VALASOURCES:.vala=.c) $(libfolks_la_VALASOURCES:.vala=.h): folks.vala.stamp
 
 folks.vapi folks.vala.stamp: $(libfolks_la_VALASOURCES)
-	$(VALA_V)$(VALAC) $(VALACFLAGS) $(VALAFLAGS) -C -H folks.h \
-		--library folks \
+	$(VALA_V)$(VALAC) $(VALACFLAGS) $(TP_VALA_VALAFLAGS) -C -H folks.h \
+		--library folks --vapidir=. $(addprefix --pkg ,$(folks_deps)) \
 		$(libfolks_la_VALASOURCES)
 	touch $@
 
