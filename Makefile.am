@@ -26,12 +26,12 @@ EXTRA_DIST = \
 	autogen.sh \
 	$(NULL)
 
-DISTCLEANFILES = \
-	ChangeLog \
+MAINTAINERCLEANFILES = \
+	$(srcdir)/ChangeLog \
 	$(NULL)
 
 distclean-local:
-	if test "x$(srdcir)" = "x."; then :; else \
+	if test "x$(srcdir)" = "x."; then :; else \
 		rm -f ChangeLog; \
 	fi
 
