@@ -44,14 +44,12 @@ libfolks_la_CFLAGS = \
 	$(GLIB_CFLAGS) \
 	$(DBUS_GLIB_CFLAGS) \
 	$(GEE_CFLAGS) \
-	$(TP_VALA_CFLAGS) \
 	$(NULL)
 
 libfolks_la_LIBADD = \
 	$(GLIB_LIBS) \
 	$(DBUS_GLIB_LIBS) \
 	$(GEE_LIBS) \
-	$(TP_VALA_LIBS) \
 	$(NULL)
 
 folksdir = $(includedir)/folks
@@ -63,7 +61,7 @@ folks_HEADERS = \
 folks.h $(libfolks_la_VALASOURCES:.vala=.c) $(libfolks_la_VALASOURCES:.vala=.h): folks.vala.stamp
 
 folks.vapi folks.vala.stamp: $(libfolks_la_VALASOURCES)
-	$(VALA_V)$(VALAC) $(VALACFLAGS) $(TP_VALA_VALAFLAGS) -C -H folks.h \
+	$(VALA_V)$(VALAC) $(VALACFLAGS) -C -H folks.h \
 		--library folks --vapidir=. $(addprefix --pkg ,$(folks_deps)) \
 		$(libfolks_la_VALASOURCES)
 	touch $@
