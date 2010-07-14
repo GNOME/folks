@@ -219,6 +219,7 @@ EXTRA_DIST = \
 	$(libfolks_telepathy_la_VALASOURCES) \
 	$(libfolks_backend_telepathy_la_VALASOURCES) \
 	$(libtp_lowlevel_la_SOURCES) \
+	tp-lowlevel.metadata \
 	$(pkgconfig_in) \
 	folks-telepathy.vala.stamp \
 	folks-telepathy.vapi \
