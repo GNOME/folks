@@ -174,8 +174,6 @@ Configure summary:
         Compiler....................:  ${VALAC}
         Compiler Flags..............:  ${CFLAGS} ${ERROR_CFLAGS}
         Prefix......................:  ${prefix}
-        Coding style checks.........:  ${ENABLE_CODING_STYLE_CHECKS}
-        VAPI generation.............:  ${enable_vapigen}
         Bugreporting URL............:  ${PACKAGE_BUGREPORT}
         Documentation...............:  ${enable_docs}
 
