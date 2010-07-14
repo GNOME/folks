@@ -39,6 +39,23 @@ AM_PROG_CC_C_O
 AC_DISABLE_STATIC
 AC_PROG_LIBTOOL
 
+AC_SUBST(CFLAGS)
+AC_SUBST(CPPFLAGS)
+AC_SUBST(LDFLAGS)
+GTK_DOC_CHECK([1.10])
+
+# -----------------------------------------------------------
+# Dependencies
+# -----------------------------------------------------------
+GLIB_REQUIRED=2.12.0
+TP_GLIB_REQUIRED=0.11.10
+TP_VALA_REQUIRED=0.11.10
+VALA_REQUIRED=0.9.2.120-5ad2f
+
+PKG_CHECK_MODULES(VALA, vala-1.0 >= $VALA_REQUIRED)
+AC_SUBST(VALA_CFLAGS)
+AC_SUBST(VALA_LIBS)
+
 AC_PATH_PROG(VALAC, valac, valac)
 AC_SUBST(VALAC)
 
@@ -58,18 +75,6 @@ AC_SUBST(VALA_GEN_INTROSPECT)
 
 AS_IF([test "$VAPIGEN" = "" -o "$VALA_GEN_INTROSPECT" = ""],
 	[AC_MSG_ERROR([Vala must be built with --enable-vapigen])])
-
-AC_SUBST(CFLAGS)
-AC_SUBST(CPPFLAGS)
-AC_SUBST(LDFLAGS)
-GTK_DOC_CHECK([1.10])
-
-# -----------------------------------------------------------
-# Dependencies
-# -----------------------------------------------------------
-GLIB_REQUIRED=2.12.0
-TP_GLIB_REQUIRED=0.11.10
-TP_VALA_REQUIRED=0.11.10
 
 PKG_CHECK_MODULES(GLIB,
                   glib-2.0 >= $GLIB_REQUIRED
