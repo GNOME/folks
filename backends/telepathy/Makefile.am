@@ -56,10 +56,15 @@ tp-lowlevel.gi: $(libtp-lowlevel_la_SOURCES) libtp-lowlevel.la
 		$(TP_VALA_CFLAGS) $(TP_GLIB_CFLAGS) -I$(top_srcdir)/folks \
 		.libs/libtp-lowlevel.so > tp-lowlevel.gi
 
+# copy the metadata file as necessary, to work around gnome bug #624278
 tp-lowlevel.vapi: tp-lowlevel.gi tp-lowlevel.metadata
+	test -e tp-lowlevel.metadata || \
+		(cp $(srcdir)/tp-lowlevel.metadata . && \
+		touch tp-lowlevel.metadata.copied)
 	$(VAPIGEN_V)$(VAPIGEN) $(VALAFLAGS) --library tp-lowlevel \
 		--metadata=tp-lowlevel.metadata \
 		tp-lowlevel.gi
+	test ! -e tp-lowlevel.metadata.copied || rm -f tp-lowlevel.metadata*
 
 internal_vapi_files = \
 	tp-lowlevel.vapi \
