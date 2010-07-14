@@ -35,10 +35,7 @@ libfolks_la_VALASOURCES = \
 	presence.vala \
 	$(NULL)
 
-libfolks_la_SOURCES = \
-	folks.vala.stamp \
-	$(libfolks_la_VALASOURCES:.vala=.c) \
-	$(NULL)
+libfolks_la_SOURCES = $(libfolks_la_VALASOURCES:.vala=.c)
 
 libfolks_la_CFLAGS = \
 	$(GLIB_CFLAGS) \
@@ -58,7 +55,7 @@ folks_HEADERS = \
 	folks.h \
 	$(NULL)
 
-folks.h $(libfolks_la_VALASOURCES:.vala=.c) $(libfolks_la_VALASOURCES:.vala=.h): folks.vala.stamp
+folks.h $(libfolks_la_SOURCES): folks.vala.stamp
 
 folks.vapi folks.vala.stamp: $(libfolks_la_VALASOURCES)
 	$(VALA_V)$(VALAC) $(VALACFLAGS) -C -H folks.h \
@@ -74,8 +71,8 @@ BUILT_SOURCES = \
 	folks.h \
 	folks.vala.stamp \
 	folks.vapi \
-	$(libfolks_la_VALASOURCES:.vala=.c) \
-	$(pkgconfig_in:.in=) \
+	$(libfolks_la_SOURCES) \
+	$(pkgconfig_DATA) \
 	folks-uninstalled.pc \
 	$(NULL)
 
@@ -92,7 +89,7 @@ DISTCLEANFILES = \
 	$(NULL)
 
 MAINTAINERCLEANFILES = \
-	$(libfolks_la_VALASOURCES:.vala=.c) \
+	$(libfolks_la_SOURCES) \
 	$(NULL)
 
 # set up the verbosity rules to avoid some build noise
