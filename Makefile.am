@@ -11,7 +11,6 @@ ACLOCAL_AMFLAGS = -I m4
 
 DISTCHECK_CONFIGURE_FLAGS =		\
 	--enable-gtk-doc		\
-	--disable-scrollkeeper		\
 	--disable-schemas-install
 
 folksdocdir = ${prefix}/doc/folks
@@ -32,10 +31,6 @@ EXTRA_DIST = \
 DISTCLEANFILES = \
 	ChangeLog \
 	$(NULL)
-
-# Workaround broken scrollkeeper that doesn't remove its files on
-# uninstall.
-distuninstallcheck_listfiles = find . -type f -print | grep -v '^\./var/scrollkeeper'
 
 distclean-local:
 	if test "x$(srdcir)" = "x."; then :; else \
