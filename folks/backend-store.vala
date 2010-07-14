@@ -163,12 +163,12 @@ public class Folks.BackendStore : Object {
 
           File file = File.new_for_path (file_path);
           FileType file_type = info.get_file_type ();
-          string content_type = info.get_content_type ();
+          unowned string content_type = info.get_content_type ();
           /* don't load the library multiple times for its various symlink
            * aliases */
           var is_symlink = info.get_is_symlink ();
 
-          weak string mime = g_content_type_get_mime_type (content_type);
+          string mime = g_content_type_get_mime_type (content_type);
 
           if (file_type == FileType.DIRECTORY)
               this.load_modules_from_dir.begin (file);
