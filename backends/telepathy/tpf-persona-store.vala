@@ -185,8 +185,8 @@ public class Tpf.PersonaStore : Folks.PersonaStore
               {
                 try
                   {
-                    this.change_favourites_by_request_handles (h.length,
-                      (TelepathyGLib.Handle[]) h, i, e, true);
+                    this.change_favourites_by_request_handles ((Handle[]) h, i,
+                        e, true);
                   }
                 catch (GLib.Error e)
                   {
@@ -205,14 +205,13 @@ public class Tpf.PersonaStore : Folks.PersonaStore
         }
     }
 
-  private void change_favourites_by_request_handles (uint n_handles,
-      Handle[] handles, string[] ids, GLib.Error? error,
-      bool add) throws GLib.Error
+  private void change_favourites_by_request_handles (Handle[] handles,
+      string[] ids, GLib.Error? error, bool add) throws GLib.Error
     {
       if (error != null)
         throw error;
 
-      for (var i = 0; i < n_handles; i++)
+      for (var i = 0; i < handles.length; i++)
         {
           Handle h = handles[i];
           Persona p = this.handle_persona_map[h];
@@ -255,8 +254,8 @@ public class Tpf.PersonaStore : Folks.PersonaStore
                 {
                   try
                     {
-                      this.change_favourites_by_request_handles (h.length,
-                        (TelepathyGLib.Handle[]) h, i, e, true);
+                      this.change_favourites_by_request_handles ((Handle[]) h,
+                          i, e, true);
                     }
                   catch (GLib.Error e)
                     {
@@ -275,8 +274,8 @@ public class Tpf.PersonaStore : Folks.PersonaStore
                 {
                   try
                     {
-                      this.change_favourites_by_request_handles (h.length,
-                        (TelepathyGLib.Handle[]) h, i, e, false);
+                      this.change_favourites_by_request_handles ((Handle[]) h,
+                          i, e, false);
                     }
                   catch (GLib.Error e)
                     {

@@ -320,6 +320,11 @@ public class Folks.Individual : Object,
           foreach (var persona in persona_set)
             {
               this._personas.remove (persona);
+              /* FIXME: bgo#624249 means GLib.List leaks item references.
+               * We probably eventually want to transition away from GLib.List
+               * and use Gee.LinkedList, but that would mean exposing libgee
+               * in the public API. */
+              g_object_unref (persona);
             }
         }
       if (store != null)
@@ -348,6 +353,8 @@ public class Folks.Individual : Object,
 
           persona_set.remove (p);
           this._personas.remove (p);
+          /* FIXME: bgo#624249 means GLib.List leaks item references */
+          g_object_unref (p);
         });
 
       if (this._personas.length () < 1)

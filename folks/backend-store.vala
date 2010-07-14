@@ -32,9 +32,13 @@ using GLib;
  * signature).
  */
 public class Folks.BackendStore : Object {
+  [CCode (has_target = false)]
   private delegate void ModuleInitFunc (BackendStore store);
+  [CCode (has_target = false)]
+  private delegate void ModuleFinalizeFunc (BackendStore store);
 
   private HashMap<string,Backend> backend_hash;
+  private GLib.List<ModuleFinalizeFunc> finalize_funcs = null;
 
   /**
    * Emitted when a backend has been added to the BackendStore.
@@ -52,6 +56,13 @@ public class Folks.BackendStore : Object {
   public BackendStore ()
     {
       this.backend_hash = new HashMap<string,Backend> (str_hash, str_equal);
+    }
+
+  ~BackendStore ()
+    {
+      /* Finalize all the loaded modules */
+      foreach (ModuleFinalizeFunc func in this.finalize_funcs)
+        func (this);
     }
 
   /**
@@ -152,12 +163,12 @@ public class Folks.BackendStore : Object {
 
           File file = File.new_for_path (file_path);
           FileType file_type = info.get_file_type ();
-          string content_type = info.get_content_type ();
+          unowned string content_type = info.get_content_type ();
           /* don't load the library multiple times for its various symlink
            * aliases */
           var is_symlink = info.get_is_symlink ();
 
-          weak string mime = g_content_type_get_mime_type (content_type);
+          string mime = g_content_type_get_mime_type (content_type);
 
           if (file_type == FileType.DIRECTORY)
               this.load_modules_from_dir.begin (file);
@@ -194,6 +205,13 @@ public class Folks.BackendStore : Object {
 
       ModuleInitFunc module_init = (ModuleInitFunc) function;
       assert (module_init != null);
+
+      /* It's optional for modules to have a finalize function */
+      if (module.symbol ("module_finalize", out function))
+        {
+          ModuleFinalizeFunc module_finalize = (ModuleFinalizeFunc) function;
+          this.finalize_funcs.prepend (module_finalize);
+        }
 
       /* We don't want our modules to ever unload */
       module.make_resident ();
