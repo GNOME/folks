@@ -7,17 +7,6 @@ AM_CPPFLAGS = \
 VALAFLAGS += $(TP_VALA_VALAFLAGS)
 VALAFLAGS += --vapidir=. --vapidir=$(top_srcdir)/folks
 
-VALAFLAGS += \
-	--pkg build-conf \
-	--pkg folks \
-	--pkg gobject-2.0 \
-	--pkg gio-2.0 \
-	--pkg gee-1.0 \
-	--pkg gmodule-2.0 \
-	--pkg dbus-glib-1 \
-	--pkg telepathy-glib \
-	$(NULL)
-
 noinst_LTLIBRARIES = libtp-lowlevel.la
 folks_telepathydir = $(libdir)
 folks_telepathy_LTLIBRARIES = libfolks-telepathy.la
@@ -56,8 +45,8 @@ tp-lowlevel.gi: $(libtp-lowlevel_la_SOURCES) libtp-lowlevel.la
 		.libs/libtp-lowlevel.so > tp-lowlevel.gi
 
 tp-lowlevel.vapi: tp-lowlevel.gi tp-lowlevel.metadata
-	$(AM_V_GEN)$(VAPIGEN) $(VALAFLAGS) --library tp-lowlevel \
-		--metadata=tp-lowlevel.metadata \
+	$(AM_V_GEN)$(VAPIGEN) $(TP_VALA_VALAFLAGS) --library tp-lowlevel \
+		--metadata=tp-lowlevel.metadata --pkg telepathy-glib \
 		tp-lowlevel.gi
 
 internal_vapi_files = \
@@ -76,6 +65,16 @@ folks_telepathy_valasources = \
 	tpf-persona.vala \
 	tpf-persona-store.vala \
 	tpf-logger.vala \
+	$(NULL)
+
+folks_telepathy_deps = \
+	folks \
+	tp-lowlevel \
+	gobject-2.0 \
+	gio-2.0 \
+	gee-1.0 \
+	dbus-glib-1 \
+	telepathy-glib \
 	$(NULL)
 
 libfolks_telepathy_la_SOURCES = \
@@ -113,7 +112,7 @@ folks_telepathy_vapi_deps = \
 folks-telepathy.vapi folks-telepathy.vala.stamp: $(folks_telepathy_vapi_deps)
 	$(VALA_V)$(VALAC) $(VALACFLAGS) $(VALAFLAGS) -H folks-telepathy.h -C \
 		--library folks-telepathy \
-		--pkg tp-lowlevel \
+		$(addprefix --pkg ,$(folks_telepathy_deps)) \
 		$(folks_telepathy_valasources)
 	touch $@
 
@@ -124,6 +123,13 @@ folks-telepathy.vapi folks-telepathy.vala.stamp: $(folks_telepathy_vapi_deps)
 folks_backend_telepathy_valasources = \
 	tp-backend.vala \
 	tp-backend-factory.vala \
+	$(NULL)
+
+folks_backend_telepathy_deps = \
+	folks \
+	folks-telepathy \
+	gobject-2.0 \
+	telepathy-glib \
 	$(NULL)
 
 libfolks_backend_telepathy_la_SOURCES = $(folks_backend_telepathy_valasources:.vala=.c)
@@ -160,8 +166,7 @@ folks-backend-telepathy.vapi folks-backend-telepathy.vala.stamp: $(vapi_deps)
 	$(VALA_V)$(VALAC) $(VALACFLAGS) $(VALAFLAGS) \
 		-H folks-backend-telepathy.h -C \
 		--library folks-backend-telepathy \
-		--pkg folks \
-		--pkg folks-telepathy \
+		$(addprefix --pkg ,$(folks_backend_telepathy_deps)) \
 		$(folks_backend_telepathy_valasources)
 	touch $@
 

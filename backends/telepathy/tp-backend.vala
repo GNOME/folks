@@ -19,7 +19,6 @@
  */
 
 using GLib;
-using Gee;
 using TelepathyGLib;
 using Folks;
 using Folks.Backends.Tp;
