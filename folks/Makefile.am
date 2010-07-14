@@ -8,20 +8,10 @@ AM_CPPFLAGS = \
 	-DBACKEND_DIR=\"$(backenddir)\" \
 	$(NULL)
 
-# Build-time dependencies for libfolks
-folks_deps = \
-	build-conf \
-	gobject-2.0 \
-	gmodule-2.0 \
-	gio-2.0 \
-	gee-1.0 \
-	$(NULL)
+lib_LTLIBRARIES = libfolks.la
 
-lib_LTLIBRARIES = \
-	libfolks.la \
-	$(NULL)
-
-libfolks_la_VALASOURCES = \
+# Vala files to compile into libfolks.la
+folks_valasources = \
 	alias.vala \
 	avatar.vala \
 	backend.vala \
@@ -35,7 +25,16 @@ libfolks_la_VALASOURCES = \
 	presence.vala \
 	$(NULL)
 
-libfolks_la_SOURCES = $(libfolks_la_VALASOURCES:.vala=.c)
+libfolks_la_SOURCES = $(folks_valasources:.vala=.c)
+
+# Build-time dependencies for libfolks
+folks_deps = \
+	build-conf \
+	gobject-2.0 \
+	gmodule-2.0 \
+	gio-2.0 \
+	gee-1.0 \
+	$(NULL)
 
 libfolks_la_CFLAGS = \
 	$(GLIB_CFLAGS) \
@@ -50,17 +49,14 @@ libfolks_la_LIBADD = \
 	$(NULL)
 
 folksdir = $(includedir)/folks
-
-folks_HEADERS = \
-	folks.h \
-	$(NULL)
+folks_HEADERS = folks.h
 
 folks.h $(libfolks_la_SOURCES): folks.vala.stamp
 
-folks.vapi folks.vala.stamp: $(libfolks_la_VALASOURCES)
+folks.vapi folks.vala.stamp: $(folks_valasources)
 	$(VALA_V)$(VALAC) $(VALACFLAGS) -C -H folks.h \
 		--library folks --vapidir=. $(addprefix --pkg ,$(folks_deps)) \
-		$(libfolks_la_VALASOURCES)
+		$(folks_valasources)
 	touch $@
 
 pkgconfig_in = folks.pc.in
@@ -69,14 +65,12 @@ pkgconfig_DATA = $(pkgconfig_in:.in=)
 
 BUILT_SOURCES = \
 	folks.h \
-	folks.vala.stamp \
-	folks.vapi \
 	$(libfolks_la_SOURCES) \
+	folks.vapi \
+	folks.vala.stamp \
 	$(pkgconfig_DATA) \
 	folks-uninstalled.pc \
 	$(NULL)
-
-CLEANFILES = $(BUILT_SOURCES)
 
 EXTRA_DIST = \
 	$(pkgconfig_in) \
@@ -85,7 +79,8 @@ EXTRA_DIST = \
 	folks.vapi \
 	$(NULL)
 
-DISTCLEANFILES = \
+CLEANFILES = \
+	$(BUILT_SOURCES) \
 	$(NULL)
 
 MAINTAINERCLEANFILES = \
@@ -93,8 +88,8 @@ MAINTAINERCLEANFILES = \
 	$(NULL)
 
 # set up the verbosity rules to avoid some build noise
-# XXX: once automake >= 1.11 is common, remove these, push VALASOURCES files
-# into SOURCES and add AM_PROG_VALAC to configure.ac
+# XXX: once automake >= 1.11 is common, remove these, push folks_valasources
+# files into SOURCES and add AM_PROG_VALAC to configure.ac
 VALA_V = $(VALA_V_$(V))
 VALA_V_ = $(VALA_V_$(AM_DEFAULT_VERBOSITY))
 VALA_V_0 = @echo "  VALAC " $^;
