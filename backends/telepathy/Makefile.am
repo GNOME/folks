@@ -79,7 +79,6 @@ folks_telepathy_valasources = \
 	$(NULL)
 
 libfolks_telepathy_la_SOURCES = \
-	folks-telepathy.vala.stamp \
 	$(folks_telepathy_valasources:.vala=.c) \
 	$(libtp_lowlevel_la_SOURCES) \
 	$(NULL)
@@ -104,13 +103,7 @@ folks_telepathy_include_HEADERS = \
 	folks-telepathy.h \
 	$(NULL)
 
-folks_telepathy_stamp_targets = \
-	folks-telepathy.h \
-	$(folks_telepathy_valasources:.vala=.c) \
-	$(folks_telepathy_valasources:.vala=.h) \
-	$(NULL)
-
-$(folks_telepathy_stamp_targets): folks-telepathy.vala.stamp
+folks-telepathy.h $(folks_telepathy_valasources:.vala=.c): folks-telepathy.vala.stamp
 
 folks_telepathy_vapi_deps = \
 	$(folks_telepathy_valasources) \
@@ -133,10 +126,7 @@ folks_backend_telepathy_valasources = \
 	tp-backend-factory.vala \
 	$(NULL)
 
-libfolks_backend_telepathy_la_SOURCES = \
-	folks-backend-telepathy.vala.stamp \
-	$(folks_backend_telepathy_valasources:.vala=.c) \
-	$(NULL)
+libfolks_backend_telepathy_la_SOURCES = $(folks_backend_telepathy_valasources:.vala=.c)
 
 libfolks_backend_telepathy_la_CPPFLAGS = \
 	$(GLIB_CFLAGS) \
@@ -157,13 +147,7 @@ libfolks_backend_telepathy_la_LIBADD = \
 
 libfolks_backend_telepathy_la_LDFLAGS = -shared -fPIC -module -avoid-version
 
-folks_backend_telepathy_stamp_targets = \
-	folks-backend-telepathy.h \
-	$(folks_backend_telepathy_valasources:.vala=.c) \
-	$(folks_backend_telepathy_valasources:.vala=.h) \
-	$(NULL)
-
-$(folks_backend_telepathy_stamp_targets): folks-backend-telepathy.vala.stamp
+folks-backend-telepathy.h $(libfolks_backend_telepathy_la_SOURCES): folks-backend-telepathy.vala.stamp
 
 vapi_deps = \
 	folks-telepathy.vapi \
@@ -195,7 +179,7 @@ BUILT_SOURCES = \
 	tp-lowlevel.gi \
 	tp-lowlevel.vapi \
 	$(folks_telepathy_valasources:.vala=.c) \
-	$(folks_backend_telepathy_valasources:.vala=.c) \
+	$(libfolks_backend_telepathy_la_SOURCES) \
 	$(pkgconfig_in:.in=) \
 	folks-telepathy-uninstalled.pc \
 	$(NULL)
@@ -216,7 +200,7 @@ DISTCLEANFILES = \
 
 MAINTAINERCLEANFILES = \
 	$(folks_telepathy_valasources:.vala=.c) \
-	$(folks_backend_telepathy_valasources:.vala=.c) \
+	$(libfolks_backend_telepathy_la_SOURCES) \
 	$(NULL)
 
 # set up the verbosity rules to avoid some build noise
