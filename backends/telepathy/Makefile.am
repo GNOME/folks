@@ -51,13 +51,13 @@ libtp_lowlevel_la_LDFLAGS = \
 	$(NULL)
 
 tp-lowlevel.gi: $(libtp-lowlevel_la_SOURCES) libtp-lowlevel.la
-	$(VGI_V)$(VALA_GEN_INTROSPECT) --namespace=Folks tp-lowlevel.h \
+	$(AM_V_GEN)$(VALA_GEN_INTROSPECT) --namespace=Folks tp-lowlevel.h \
 		$(GLIB_CFLAGS) $(DBUS_GLIB_CFLAGS) $(GEE_CFLAGS) \
 		$(TP_VALA_CFLAGS) $(TP_GLIB_CFLAGS) -I$(top_srcdir)/folks \
 		.libs/libtp-lowlevel.so > tp-lowlevel.gi
 
 tp-lowlevel.vapi: tp-lowlevel.gi tp-lowlevel.metadata
-	$(VAPIGEN_V)$(VAPIGEN) $(VALAFLAGS) --library tp-lowlevel \
+	$(AM_V_GEN)$(VAPIGEN) $(VALAFLAGS) --library tp-lowlevel \
 		--metadata=tp-lowlevel.metadata \
 		tp-lowlevel.gi
 
@@ -226,11 +226,3 @@ MAINTAINERCLEANFILES = \
 VALA_V = $(VALA_V_$(V))
 VALA_V_ = $(VALA_V_$(AM_DEFAULT_VERBOSITY))
 VALA_V_0 = @echo "  VALAC " $^;
-
-VAPIGEN_V = $(VAPIGEN_V_$(V))
-VAPIGEN_V_ = $(VAPIGEN_V_$(AM_DEFAULT_VERBOSITY))
-VAPIGEN_V_0 = @echo "  VAPIG " $^;
-
-VGI_V = $(VGI_V_$(V))
-VGI_V_ = $(VGI_V_$(AM_DEFAULT_VERBOSITY))
-VGI_V_0 = @echo "  VGI   " $^;
