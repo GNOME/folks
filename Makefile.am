@@ -16,8 +16,18 @@ EXTRA_DIST = \
 	$(NULL)
 
 MAINTAINERCLEANFILES = \
+	$(srcdir)/INSTALL \
+	$(srcdir)/aclocal.m4 \
+	$(srcdir)/compile \
+	$(srcdir)/config.guess \
+	$(srcdir)/config.h.in \
+	$(srcdir)/config.sub \
+	$(srcdir)/depcomp \
+	$(srcdir)/install-sh \
+	$(srcdir)/ltmain.sh \
+	$(srcdir)/missing \
 	$(srcdir)/ChangeLog \
-	$(NULL)
+	`find "$(srcdir)" -type f -name Makefile.in -print`
 
 distclean-local:
 	if test "x$(srcdir)" = "x."; then :; else \
