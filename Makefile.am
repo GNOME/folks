@@ -9,36 +9,28 @@ endif
 
 ACLOCAL_AMFLAGS = -I m4
 
-DISTCHECK_CONFIGURE_FLAGS =		\
-	--enable-gtk-doc		\
-	--disable-scrollkeeper		\
-	--disable-schemas-install
-
-folksdocdir = ${prefix}/doc/folks
-folksdoc_DATA = \
-	ChangeLog \
-	README \
-	COPYING \
-	AUTHORS \
-	INSTALL \
-	NEWS\
-	$(NULL)
+DISTCHECK_CONFIGURE_FLAGS = --enable-docs
 
 EXTRA_DIST = \
-	$(folksdoc_DATA) \
 	autogen.sh \
 	$(NULL)
 
-DISTCLEANFILES = \
-	ChangeLog \
-	$(NULL)
-
-# Workaround broken scrollkeeper that doesn't remove its files on
-# uninstall.
-distuninstallcheck_listfiles = find . -type f -print | grep -v '^\./var/scrollkeeper'
+MAINTAINERCLEANFILES = \
+	$(srcdir)/INSTALL \
+	$(srcdir)/aclocal.m4 \
+	$(srcdir)/compile \
+	$(srcdir)/config.guess \
+	$(srcdir)/config.h.in \
+	$(srcdir)/config.sub \
+	$(srcdir)/depcomp \
+	$(srcdir)/install-sh \
+	$(srcdir)/ltmain.sh \
+	$(srcdir)/missing \
+	$(srcdir)/ChangeLog \
+	`find "$(srcdir)" -type f -name Makefile.in -print`
 
 distclean-local:
-	if test "x$(srdcir)" = "x."; then :; else \
+	if test "x$(srcdir)" = "x."; then :; else \
 		rm -f ChangeLog; \
 	fi
 
@@ -58,3 +50,4 @@ ChangeLog:
 
 .PHONY: ChangeLog
 
+-include $(top_srcdir)/git.mk

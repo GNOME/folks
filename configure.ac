@@ -42,7 +42,6 @@ AC_PROG_LIBTOOL
 AC_SUBST(CFLAGS)
 AC_SUBST(CPPFLAGS)
 AC_SUBST(LDFLAGS)
-GTK_DOC_CHECK([1.10])
 
 # -----------------------------------------------------------
 # Dependencies
@@ -60,7 +59,6 @@ AC_PATH_PROG(VALAC, valac, valac)
 AC_SUBST(VALAC)
 
 PKG_PROG_PKG_CONFIG([0.21])
-AC_SUBST(PKG_CONFIG_PATH)
 
 # require GLib >= 2.24 so GLib.Array, etc. reffing is handled automatically
 VALACFLAGS="$VALACFLAGS --target-glib=2.24"
@@ -93,6 +91,9 @@ AC_SUBST(GEE_LIBS)
 PKG_CHECK_MODULES(TP_VALA, telepathy-vala >= $TP_VALA_REQUIRED)
 AC_SUBST(TP_VALA_CFLAGS)
 AC_SUBST(TP_VALA_LIBS)
+
+TP_VALA_VALAFLAGS=`$PKG_CONFIG --variable=valaflags telepathy-vala`
+AC_SUBST(TP_VALA_VALAFLAGS)
 
 PKG_CHECK_MODULES(TP_GLIB, telepathy-glib >= $TP_GLIB_REQUIRED)
 AC_SUBST(TP_GLIB_CFLAGS)
@@ -179,8 +180,6 @@ Configure summary:
         Compiler....................:  ${VALAC}
         Compiler Flags..............:  ${CFLAGS} ${ERROR_CFLAGS}
         Prefix......................:  ${prefix}
-        Coding style checks.........:  ${ENABLE_CODING_STYLE_CHECKS}
-        VAPI generation.............:  ${enable_vapigen}
         Bugreporting URL............:  ${PACKAGE_BUGREPORT}
         Documentation...............:  ${enable_docs}
 

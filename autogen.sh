@@ -1,8 +1,6 @@
 #!/bin/sh
 set -e
 
-gtkdocize || exit 1
-
 if test -n "$AUTOMAKE"; then
     : # don't override an explicit user request
 elif automake-1.11 --version >/dev/null 2>/dev/null && \
