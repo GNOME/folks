@@ -9,9 +9,7 @@ endif
 
 ACLOCAL_AMFLAGS = -I m4
 
-DISTCHECK_CONFIGURE_FLAGS =		\
-	--enable-gtk-doc		\
-	--disable-schemas-install
+DISTCHECK_CONFIGURE_FLAGS = --enable-docs
 
 folksdocdir = ${prefix}/doc/folks
 folksdoc_DATA = \

@@ -62,7 +62,6 @@ AS_IF([test "$VAPIGEN" = "" -o "$VALA_GEN_INTROSPECT" = ""],
 AC_SUBST(CFLAGS)
 AC_SUBST(CPPFLAGS)
 AC_SUBST(LDFLAGS)
-GTK_DOC_CHECK([1.10])
 
 # -----------------------------------------------------------
 # Dependencies
