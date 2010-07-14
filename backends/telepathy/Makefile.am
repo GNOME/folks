@@ -84,6 +84,9 @@ libfolks_telepathy_la_VALASOURCES = \
 	tpf-logger.vala \
 	$(NULL)
 
+tp_sources_with_path = \
+	$(foreach x,$(libfolks_telepathy_la_VALASOURCES),$(srcdir)/$(x))
+
 libfolks_telepathy_la_SOURCES = \
 	folks-telepathy.vala.stamp \
 	$(libfolks_telepathy_la_VALASOURCES:.vala=.c) \
@@ -127,7 +130,7 @@ folks-telepathy.vapi folks-telepathy.vala.stamp: $(folks_telepathy_vapi_deps)
 	$(VALA_V)$(VALAC) $(VALACFLAGS) $(VALAFLAGS) -H folks-telepathy.h -C \
 		--library folks-telepathy \
 		--pkg tp-lowlevel \
-		$(libfolks_telepathy_la_VALASOURCES)
+		$(tp_sources_with_path)
 	touch $@
 
 ##################################################################
@@ -138,6 +141,9 @@ libfolks_backend_telepathy_la_VALASOURCES = \
 	tp-backend.vala \
 	tp-backend-factory.vala \
 	$(NULL)
+
+backend_tp_sources_with_path = \
+	$(foreach x,$(libfolks_backend_telepathy_la_VALASOURCES),$(srcdir)/$(x))
 
 libfolks_backend_telepathy_la_SOURCES = \
 	folks-backend-telepathy.vala.stamp \
@@ -184,7 +190,7 @@ folks-backend-telepathy.vapi folks-backend-telepathy.vala.stamp: $(vapi_deps)
 		--library folks-backend-telepathy \
 		--pkg folks \
 		--pkg folks-telepathy \
-		$(libfolks_backend_telepathy_la_VALASOURCES)
+		$(backend_tp_sources_with_path)
 	touch $@
 
 ##################################################################
