@@ -51,7 +51,8 @@ libtp_lowlevel_la_LDFLAGS = \
 	$(NULL)
 
 tp-lowlevel.gi: $(libtp-lowlevel_la_SOURCES) libtp-lowlevel.la
-	$(VGI_V)$(VALA_GEN_INTROSPECT) --namespace=Folks tp-lowlevel.h \
+	$(VGI_V)$(VALA_GEN_INTROSPECT) --namespace=Folks \
+		$(srcdir)/tp-lowlevel.h \
 		$(GLIB_CFLAGS) $(DBUS_GLIB_CFLAGS) $(GEE_CFLAGS) \
 		$(TP_VALA_CFLAGS) $(TP_GLIB_CFLAGS) -I$(top_srcdir)/folks \
 		.libs/libtp-lowlevel.so > tp-lowlevel.gi
