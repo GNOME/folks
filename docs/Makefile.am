@@ -39,3 +39,6 @@ distclean-local: distclean-docs
 distclean-docs:
 	cd $(srcdir) && rm -rf folks-0.1
 
+GITIGNOREFILES = folks-0.1/
+
+-include $(top_srcdir)/git.mk
