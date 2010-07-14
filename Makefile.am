@@ -11,18 +11,7 @@ ACLOCAL_AMFLAGS = -I m4
 
 DISTCHECK_CONFIGURE_FLAGS = --enable-docs
 
-folksdocdir = ${prefix}/doc/folks
-folksdoc_DATA = \
-	ChangeLog \
-	README \
-	COPYING \
-	AUTHORS \
-	INSTALL \
-	NEWS\
-	$(NULL)
-
 EXTRA_DIST = \
-	$(folksdoc_DATA) \
 	autogen.sh \
 	$(NULL)
 
