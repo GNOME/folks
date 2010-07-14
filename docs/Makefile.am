@@ -24,7 +24,7 @@ img_DATA = \
 $(doc_data) $(innerdoc_DATA) $(img_DATA): folks-0.1/index.html
 
 VALAFLAGS = --vapidir=$(top_srcdir)/folks --vapidir=$(top_srcdir)/backends/telepathy
-VALAFLAGS += $(shell PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) pkg-config --variable=valaflags telepathy-vala)
+VALAFLAGS += $(TP_VALA_VALAFLAGS)
 
 # The Vala files which will have documentation extracted from them
 doc_files = $(top_srcdir)/folks/*.vala $(top_srcdir)/backends/telepathy/*.vala

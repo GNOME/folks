@@ -8,8 +8,7 @@ AM_CPPFLAGS = \
 	-DBACKEND_DIR=\"$(backenddir)\" \
 	$(NULL)
 
-# this seems to work, even if vim's syntax highlighting suggests otherwise
-VALAFLAGS += $(shell PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) pkg-config --variable=valaflags telepathy-vala)
+VALAFLAGS += $(TP_VALA_VALAFLAGS)
 VALAFLAGS += --vapidir=.
 VALAFLAGS += --pkg build-conf --pkg gobject-2.0 --pkg gio-2.0 --pkg gee-1.0 \
 		--pkg gmodule-2.0 --pkg dbus-glib-1 --pkg telepathy-glib

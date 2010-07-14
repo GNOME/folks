@@ -4,8 +4,7 @@ AM_CPPFLAGS = \
 	-DPACKAGE_DATADIR=\"$(pkgdatadir)\" \
 	$(NULL)
 
-# this seems to work, even if vim's syntax highlighting suggests otherwise
-VALAFLAGS += $(shell PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) pkg-config --variable=valaflags telepathy-vala)
+VALAFLAGS += $(TP_VALA_VALAFLAGS)
 VALAFLAGS += --vapidir=. --vapidir=$(top_srcdir)/folks
 
 VALAFLAGS += \
