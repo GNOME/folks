@@ -47,7 +47,7 @@ GTK_DOC_CHECK([1.10])
 # -----------------------------------------------------------
 # Dependencies
 # -----------------------------------------------------------
-GLIB_REQUIRED=2.12.0
+GLIB_REQUIRED=2.24.0
 TP_GLIB_REQUIRED=0.11.10
 TP_VALA_REQUIRED=0.11.10
 VALA_REQUIRED=0.9.2.120-5ad2f
