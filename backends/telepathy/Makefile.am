@@ -97,6 +97,7 @@ libfolks_telepathy_la_CPPFLAGS = \
 	$(GLIB_CFLAGS) \
 	$(DBUS_GLIB_CFLAGS) \
 	$(GEE_CFLAGS) \
+	$(TP_GLIB_CFLAGS) \
 	$(TP_VALA_CFLAGS) \
 	$(AM_CPPFLAGS) \
 	$(NULL)
@@ -106,6 +107,7 @@ libfolks_telepathy_la_LIBADD = \
 	$(GLIB_LIBS) \
 	$(DBUS_GLIB_LIBS) \
 	$(GEE_LIBS) \
+	$(TP_GLIB_LIBS) \
 	$(TP_VALA_LIBS) \
 	$(top_builddir)/folks/libfolks.la \
 	$(NULL)
@@ -161,6 +163,7 @@ libfolks_backend_telepathy_la_CPPFLAGS = \
 	$(GLIB_CFLAGS) \
 	$(DBUS_GLIB_CFLAGS) \
 	$(GEE_CFLAGS) \
+	$(TP_GLIB_CFLAGS) \
 	$(TP_VALA_CFLAGS) \
 	$(AM_CPPFLAGS) \
 	$(NULL)
@@ -170,6 +173,7 @@ libfolks_backend_telepathy_la_LIBADD = \
 	$(GLIB_LIBS) \
 	$(DBUS_GLIB_LIBS) \
 	$(GEE_LIBS) \
+	$(TP_GLIB_LIBS) \
 	$(TP_VALA_LIBS) \
 	-L$(abs_top_srcdir)/backends/telepathy/.libs \
 	-lfolks-telepathy \
