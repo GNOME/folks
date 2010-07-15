@@ -34,6 +34,7 @@ libtp_lowlevel_la_CPPFLAGS = \
 # vala-gen-introspect)
 libtp_lowlevel_la_LDFLAGS = \
 	-shared -rpath $(libdir) \
+	-avoid-version \
 	$(GLIB_LIBS) \
 	$(TP_GLIB_LIBS) \
 	$(NULL)
