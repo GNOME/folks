@@ -23,6 +23,7 @@ libtp_lowlevel_la_SOURCES = \
 	$(NULL)
 
 libtp_lowlevel_la_CPPFLAGS = \
+	$(GIO_CFLAGS) \
 	$(GLIB_CFLAGS) \
 	$(GEE_CFLAGS) \
 	$(TP_GLIB_CFLAGS) \
@@ -35,6 +36,7 @@ libtp_lowlevel_la_CPPFLAGS = \
 libtp_lowlevel_la_LDFLAGS = \
 	-shared -rpath $(libdir) \
 	-avoid-version \
+	$(GIO_LIBS) \
 	$(GLIB_LIBS) \
 	$(TP_GLIB_LIBS) \
 	$(NULL)
@@ -91,6 +93,7 @@ libfolks_telepathy_la_SOURCES = \
 	$(NULL)
 
 libfolks_telepathy_la_CPPFLAGS = \
+	$(GIO_CFLAGS) \
 	$(GLIB_CFLAGS) \
 	$(DBUS_GLIB_CFLAGS) \
 	$(GEE_CFLAGS) \
@@ -99,6 +102,7 @@ libfolks_telepathy_la_CPPFLAGS = \
 	$(NULL)
 
 libfolks_telepathy_la_LIBADD = \
+	$(GIO_LIBS) \
 	$(GLIB_LIBS) \
 	$(DBUS_GLIB_LIBS) \
 	$(GEE_LIBS) \
@@ -152,6 +156,7 @@ libfolks_backend_telepathy_la_SOURCES = \
 	$(folks_backend_telepathy_valasources:.vala=.c)
 
 libfolks_backend_telepathy_la_CPPFLAGS = \
+	$(GIO_CFLAGS) \
 	$(GLIB_CFLAGS) \
 	$(DBUS_GLIB_CFLAGS) \
 	$(GEE_CFLAGS) \
@@ -160,6 +165,7 @@ libfolks_backend_telepathy_la_CPPFLAGS = \
 	$(NULL)
 
 libfolks_backend_telepathy_la_LIBADD = \
+	$(GIO_LIBS) \
 	$(GLIB_LIBS) \
 	$(DBUS_GLIB_LIBS) \
 	$(GEE_LIBS) \
