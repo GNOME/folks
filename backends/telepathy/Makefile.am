@@ -104,6 +104,12 @@ libfolks_telepathy_la_LIBADD = \
 	$(TP_VALA_LIBS) \
 	$(NULL)
 
+# The quoting here is unnecessary but harmless, and has the useful side-effect
+# that vim quickfix mode (:make) doesn't interpret the libtool --mode=link
+# command as an error message in a bizarrely named file
+libfolks_telepathy_la_LDFLAGS = \
+	-version-info "$(LT_CURRENT)":"$(LT_REVISION)":"$(LT_AGE)"
+
 folks_telepathy_includedir = $(includedir)/folks
 folks_telepathy_include_HEADERS = \
 	folks-telepathy.h \

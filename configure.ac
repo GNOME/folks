@@ -6,6 +6,16 @@ m4_define([folks_minor_version], [1])
 m4_define([folks_micro_version], [10])
 m4_define([folks_nano_version], [0])
 
+# If library source has changed since last release, increment revision
+# If interfaces have been added, removed or changed since last release,
+#  increment current and set revision to 0
+# If interfaces have been added since last release, increment age
+# If interfaces have been removed since last release, set age to 0
+
+m4_define([folks_lt_current], [10])
+m4_define([folks_lt_revision], [0])
+m4_define([folks_lt_age], [10])
+
 dnl Display the nano_version only if it's not '0'
 m4_define([folks_base_version],
                 [folks_major_version.folks_minor_version.folks_micro_version])
@@ -59,6 +69,13 @@ AC_PATH_PROG(VALAC, valac, valac)
 AC_SUBST(VALAC)
 
 PKG_PROG_PKG_CONFIG([0.21])
+
+LT_CURRENT=folks_lt_current
+LT_REVISION=folks_lt_revision
+LT_AGE=folks_lt_age
+AC_SUBST([LT_CURRENT])
+AC_SUBST([LT_REVISION])
+AC_SUBST([LT_AGE])
 
 # require GLib >= 2.24 so GLib.Array, etc. reffing is handled automatically
 VALACFLAGS="$VALACFLAGS --target-glib=2.24"
