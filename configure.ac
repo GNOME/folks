@@ -3,7 +3,7 @@ m4_define(folks_released, 0)
 
 m4_define([folks_major_version], [0])
 m4_define([folks_minor_version], [1])
-m4_define([folks_micro_version], [10])
+m4_define([folks_micro_version], [11])
 m4_define([folks_nano_version], [0])
 
 # If library source has changed since last release, increment revision
