@@ -107,6 +107,7 @@ libfolks_telepathy_la_LIBADD = \
 	$(DBUS_GLIB_LIBS) \
 	$(GEE_LIBS) \
 	$(TP_VALA_LIBS) \
+	$(top_builddir)/folks/libfolks.la \
 	$(NULL)
 
 # The quoting here is unnecessary but harmless, and has the useful side-effect
