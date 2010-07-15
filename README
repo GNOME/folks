@@ -1,0 +1,13 @@
+libfolks is a library that aggregates people from multiple sources (eg,
+Telepathy connection managers) to create metacontacts.
+
+This source distribution also builds a Telepathy backend
+(libfolks-telepathy-backend.so) and Telepathy-specific implementations of the
+libfolks classes (libfolks-telepathy.so).
+
+Browse the official repository for folks here:
+  http://git.gnome.org/browse/folks
+
+More information is available at:
+  http://telepathy.freedesktop.org/wiki/Folks
+  http://telepathy.freedesktop.org/wiki/
