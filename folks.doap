@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Project xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+         xmlns:foaf="http://xmlns.com/foaf/0.1/"
+         xmlns:gnome="http://api.gnome.org/doap-extensions#"
+         xmlns="http://usefulinc.com/ns/doap#">
+
+  <name xml:lang="en">Folks</name>
+  <shortdesc xml:lang="en">People aggregation library</shortdesc>
+  <homepage rdf:resource="http://telepathy.freedesktop.org/wiki/Folks" />
+  <mailing-list rdf:resource="http://lists.freedesktop.org/mailman/listinfo/telepathy" />
+  <category rdf:resource="http://api.gnome.org/doap-extensions#platform" />
+
+  <maintainer>
+    <foaf:Person>
+      <foaf:name>Travis Reitter</foaf:name>
+      <foaf:mbox rdf:resource="mailto:travis.reitter@collabora.co.uk" />
+      <gnome:userid>treitter</gnome:userid>
+    </foaf:Person>
+  </maintainer>
+  <maintainer>
+    <foaf:Person>
+      <foaf:name>Philip Withnall</foaf:name>
+      <foaf:mbox rdf:resource="mailto:philip.withnall@collabora.co.uk" />
+      <gnome:userid>pwithnall</gnome:userid>
+    </foaf:Person>
+  </maintainer>
+</Project>
