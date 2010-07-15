@@ -157,8 +157,8 @@ public class Folks.Individual : Object,
           /* Disconnect from all our previous personas */
           this._personas.foreach ((p) =>
             {
-              var persona = (Persona) p;
-              var groups = (p is Groups) ? (Groups) p : null;
+              unowned Persona persona = (Persona) p;
+              unowned Groups groups = (p is Groups) ? (Groups) p : null;
 
               persona.notify["alias"].disconnect (this.notify_alias_cb);
               persona.notify["avatar"].disconnect (this.notify_avatar_cb);
@@ -194,8 +194,8 @@ public class Folks.Individual : Object,
           /* Connect to all the new personas */
           this._personas.foreach ((p) =>
             {
-              var persona = (Persona) p;
-              var groups = (p is Groups) ? (Groups) p : null;
+              unowned Persona persona = (Persona) p;
+              unowned Groups groups = (p is Groups) ? (Groups) p : null;
 
               persona.notify["alias"].connect (this.notify_alias_cb);
               persona.notify["avatar"].connect (this.notify_avatar_cb);
@@ -290,7 +290,7 @@ public class Folks.Individual : Object,
     {
       this._personas.foreach ((p) =>
         {
-          var persona = (Persona) p;
+          unowned Persona persona = (Persona) p;
           var store_is_new = false;
           var persona_set = this.stores.lookup (persona.store);
           if (persona_set == null)
@@ -349,7 +349,7 @@ public class Folks.Individual : Object,
       var persona_set = this.stores.lookup (store);
       removed.foreach ((data) =>
         {
-          var p = (Persona) data;
+          unowned Persona p = (Persona) data;
 
           persona_set.remove (p);
           this._personas.remove (p);
@@ -392,7 +392,7 @@ public class Folks.Individual : Object,
         {
           if (p is Groups)
             {
-              var persona = (Groups) p;
+              unowned Groups persona = (Groups) p;
 
               persona.groups.foreach ((k, v) =>
                 {
@@ -444,7 +444,7 @@ public class Folks.Individual : Object,
         {
           if (p is Presence)
             {
-              var presence = (Presence) p; 
+              unowned Presence presence = (Presence) p;
 
               if (Presence.typecmp (presence.presence_type, presence_type) > 0)
                 {
@@ -492,7 +492,7 @@ public class Folks.Individual : Object,
         {
           if (p is Alias)
             {
-              var a = (Alias) p;
+              unowned Alias a = (Alias) p;
 
               if (alias == null && a.alias != null && a.alias.strip () != "")
                 alias = a.alias;

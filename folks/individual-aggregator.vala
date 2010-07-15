@@ -143,7 +143,7 @@ public class Folks.IndividualAggregator : Object
       var individuals = new GLib.List<Individual> ();
       added.foreach ((persona) =>
         {
-          var p = (Persona) persona;
+          unowned Persona p = (Persona) persona;
 
           /* FIXME: correlate the new personas with each other and
             * the existing personas and existing Individuals;
