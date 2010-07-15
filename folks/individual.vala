@@ -351,10 +351,12 @@ public class Folks.Individual : Object,
         {
           unowned Persona p = (Persona) data;
 
-          persona_set.remove (p);
-          this._personas.remove (p);
-          /* FIXME: bgo#624249 means GLib.List leaks item references */
-          g_object_unref (p);
+          if (persona_set.remove (p))
+            {
+              this._personas.remove (p);
+              /* FIXME: bgo#624249 means GLib.List leaks item references */
+              g_object_unref (p);
+            }
         });
 
       if (this._personas.length () < 1)
