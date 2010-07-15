@@ -3,8 +3,8 @@ m4_define(folks_released, 0)
 
 m4_define([folks_major_version], [0])
 m4_define([folks_minor_version], [1])
-m4_define([folks_micro_version], [9])
-m4_define([folks_nano_version], [1])
+m4_define([folks_micro_version], [10])
+m4_define([folks_nano_version], [0])
 
 dnl Display the nano_version only if it's not '0'
 m4_define([folks_base_version],
