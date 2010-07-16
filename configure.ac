@@ -59,8 +59,7 @@ AC_SUBST(LDFLAGS)
 # Dependencies
 # -----------------------------------------------------------
 GLIB_REQUIRED=2.24.0
-TP_GLIB_REQUIRED=0.11.10
-TP_VALA_REQUIRED=0.11.10
+TP_GLIB_REQUIRED=0.11.11
 VALA_REQUIRED=0.9.4
 
 PKG_CHECK_MODULES(VALA, vala-1.0 >= $VALA_REQUIRED)
@@ -84,6 +83,8 @@ VALACFLAGS="$VALACFLAGS --target-glib=2.24"
 AC_SUBST(VALACFLAGS)
 AC_SUBST(VALAFLAGS)
 
+VAPIDIR=`$PKG_CONFIG --variable=vapidir vala-1.0`
+AC_SUBST(VAPIDIR)
 VAPIGEN=`$PKG_CONFIG --variable=vapigen vala-1.0`
 AC_SUBST(VAPIGEN)
 
@@ -111,16 +112,12 @@ PKG_CHECK_MODULES(GEE, gee-1.0)
 AC_SUBST(GEE_CFLAGS)
 AC_SUBST(GEE_LIBS)
 
-PKG_CHECK_MODULES(TP_VALA, telepathy-vala >= $TP_VALA_REQUIRED)
-AC_SUBST(TP_VALA_CFLAGS)
-AC_SUBST(TP_VALA_LIBS)
-
-TP_VALA_VALAFLAGS=`$PKG_CONFIG --variable=valaflags telepathy-vala`
-AC_SUBST(TP_VALA_VALAFLAGS)
-
 PKG_CHECK_MODULES(TP_GLIB, telepathy-glib >= $TP_GLIB_REQUIRED)
 AC_SUBST(TP_GLIB_CFLAGS)
 AC_SUBST(TP_GLIB_LIBS)
+
+AS_IF([test ! -e "$VAPIDIR/telepathy-glib.vapi"],
+	[AC_MSG_ERROR([missing telepathy-glib Vala bindings])])
 
 # -----------------------------------------------------------
 # Backends

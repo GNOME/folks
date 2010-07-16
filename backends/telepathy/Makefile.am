@@ -5,8 +5,9 @@ AM_CPPFLAGS = \
 	-DG_LOG_DOMAIN=\"TelepathyBackend\" \
 	$(NULL)
 
-VALAFLAGS += $(TP_VALA_VALAFLAGS)
-VALAFLAGS += --vapidir=. --vapidir=$(top_srcdir)/folks
+VALAFLAGS += \
+	--vapidir=. \
+	--vapidir=$(top_srcdir)/folks
 
 noinst_LTLIBRARIES = libtp-lowlevel.la
 folks_telepathydir = $(libdir)
@@ -46,7 +47,7 @@ tp-lowlevel.gi: $(libtp-lowlevel_la_SOURCES) libtp-lowlevel.la
 	$(AM_V_GEN)$(VALA_GEN_INTROSPECT) --namespace=Folks \
 		$(srcdir)/tp-lowlevel.h \
 		$(GLIB_CFLAGS) $(DBUS_GLIB_CFLAGS) $(GEE_CFLAGS) \
-		$(TP_VALA_CFLAGS) $(TP_GLIB_CFLAGS) -I$(top_srcdir)/folks \
+		$(TP_GLIB_CFLAGS) -I$(top_srcdir)/folks \
 		.libs/libtp-lowlevel.so > tp-lowlevel.gi
 
 # copy the metadata file as necessary, to work around gnome bug #624278
@@ -54,7 +55,7 @@ tp-lowlevel.vapi: tp-lowlevel.gi tp-lowlevel.metadata
 	test -e tp-lowlevel.metadata || \
 		(cp $(srcdir)/tp-lowlevel.metadata . && \
 		touch tp-lowlevel.metadata.copied)
-	$(AM_V_GEN)$(VAPIGEN) $(TP_VALA_VALAFLAGS) --library tp-lowlevel \
+	$(AM_V_GEN)$(VAPIGEN) $(VALAFLAGS) --library tp-lowlevel \
 		--metadata=tp-lowlevel.metadata --pkg gio-2.0 \
 		--pkg telepathy-glib \
 		tp-lowlevel.gi
@@ -99,7 +100,6 @@ libfolks_telepathy_la_CPPFLAGS = \
 	$(DBUS_GLIB_CFLAGS) \
 	$(GEE_CFLAGS) \
 	$(TP_GLIB_CFLAGS) \
-	$(TP_VALA_CFLAGS) \
 	$(AM_CPPFLAGS) \
 	$(NULL)
 
@@ -109,7 +109,6 @@ libfolks_telepathy_la_LIBADD = \
 	$(DBUS_GLIB_LIBS) \
 	$(GEE_LIBS) \
 	$(TP_GLIB_LIBS) \
-	$(TP_VALA_LIBS) \
 	$(top_builddir)/folks/libfolks.la \
 	$(NULL)
 
@@ -165,7 +164,6 @@ libfolks_backend_telepathy_la_CPPFLAGS = \
 	$(DBUS_GLIB_CFLAGS) \
 	$(GEE_CFLAGS) \
 	$(TP_GLIB_CFLAGS) \
-	$(TP_VALA_CFLAGS) \
 	$(AM_CPPFLAGS) \
 	$(NULL)
 
@@ -175,7 +173,6 @@ libfolks_backend_telepathy_la_LIBADD = \
 	$(DBUS_GLIB_LIBS) \
 	$(GEE_LIBS) \
 	$(TP_GLIB_LIBS) \
-	$(TP_VALA_LIBS) \
 	-L$(abs_top_srcdir)/backends/telepathy/.libs \
 	-lfolks-telepathy \
 	$(NULL)
