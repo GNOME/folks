@@ -50,4 +50,12 @@ public abstract class Folks.Persona : Object
    * The {@link PersonaStore} which contains this Persona.
    */
   public weak PersonaStore store { get; construct; }
+
+  /**
+   * The names of the properties of this Persona which are linkable.
+   *
+   * Note that {@link Persona.uid} is always implicitly a member of this list,
+   * and doesn't need to be added explicitly.
+   */
+  public string[] linkable_properties { get; protected set; }
 }
