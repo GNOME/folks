@@ -93,4 +93,10 @@ public abstract class Folks.Backend : Object
    * If this function throws an error, the Backend will not be functional.
    */
   public abstract async void prepare () throws GLib.Error;
+
+  construct
+    {
+      this.persona_stores = new HashTable<string, PersonaStore> (str_hash,
+          str_equal);
+    }
 }

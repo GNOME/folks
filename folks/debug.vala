@@ -25,16 +25,19 @@ namespace Folks.Debug
   private enum Domains {
     /* Zero is used for "no debug spew" */
     CORE = 1 << 0,
-    TELEPATHY_BACKEND = 1 << 1
+    TELEPATHY_BACKEND = 1 << 1,
+    KEY_FILE_BACKEND = 1 << 2
   }
 
   internal static void set_flags (string? debug_flags)
     {
-      GLib.DebugKey keys[2] =
+      GLib.DebugKey keys[3] =
         {
           DebugKey () { key = "Core", value = Domains.CORE },
           DebugKey () { key = "TelepathyBackend",
-              value = Domains.TELEPATHY_BACKEND }
+              value = Domains.TELEPATHY_BACKEND },
+          DebugKey () { key = "KeyFileBackend",
+              value = Domains.KEY_FILE_BACKEND }
         };
 
       uint flags = GLib.parse_debug_string (debug_flags, keys);

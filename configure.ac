@@ -202,6 +202,7 @@ AC_CONFIG_FILES([
 	folks/folks-uninstalled.pc
 	Makefile
 	backends/Makefile
+	backends/key-file/Makefile
 	backends/telepathy/Makefile
 	folks/Makefile
 	docs/Makefile

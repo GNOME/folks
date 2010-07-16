@@ -50,9 +50,6 @@ public class Folks.Backends.Tp.Backend : Folks.Backend
   public Backend ()
     {
       Object (name: "telepathy");
-
-      this.persona_stores = new HashTable<string, PersonaStore> (str_hash,
-          str_equal);
     }
 
   public override async void prepare () throws GLib.Error
