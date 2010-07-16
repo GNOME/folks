@@ -18,6 +18,7 @@ folks_valasources = \
 	backend-store.vala \
 	favourite.vala \
 	groups.vala \
+	imable.vala \
 	individual.vala \
 	individual-aggregator.vala \
 	persona.vala \
