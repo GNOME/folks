@@ -22,6 +22,40 @@ using GLib;
 using Folks;
 
 /**
+ * Trust level for a {@link PersonaStore}'s {@link Persona}s for linking
+ * purposes.
+ */
+public enum Folks.PersonaStoreTrust
+{
+  /**
+   * The {@link Persona}s aren't trusted at all, and cannot be linked.
+   *
+   * This should be used for {@link PersonaStore}s where even the
+   * {@link Persona} UID could be maliciously edited to corrupt {@link Persona}
+   * links, or where the UID changes regularly.
+   */
+  NONE,
+
+  /**
+   * Only the {@link Persona.uid} property is trusted for linking.
+   *
+   * In practice, this means that {@link Persona}s from this
+   * {@link PersonaStore} will not contribute towards the linking process, but
+   * can be linked together by their UIDs using data from {@link Persona}s from
+   * a fully-trusted {@link PersonaStore}.
+   */
+  PARTIAL,
+
+  /**
+   * Every property in {@link Persona.linkable_properties} is trusted.
+   *
+   * This should only be used for user-controlled {@link PersonaStore}s, as if a
+   * remote store is compromised, malicious changes could be made to its data
+   * which corrupt the user's {@link Persona} links.
+   */
+  FULL
+}
+/**
  * Errors from {@link PersonaStore}s.
  */
 public errordomain Folks.PersonaStoreError
@@ -101,6 +135,20 @@ public abstract class Folks.PersonaStore : Object
    * The {@link Persona}s exposed by this PersonaStore.
    */
   public abstract HashTable<string, Persona> personas { get; }
+
+  /**
+   * The trust level of the PersonaStore for linking.
+   *
+   * Each {@link PersonaStore} is assigned a trust level by the
+   * IndividualAggregator, designating whether to trust the properties of its
+   * {@link Persona}s for linking to produce {@link Individual}s.
+   *
+   * @see PersonaStoreTrust
+   */
+  public PersonaStoreTrust trust_level
+    {
+      get; set; default = PersonaStoreTrust.NONE;
+    }
 
   /**
    * Prepare the PersonaStore for use.

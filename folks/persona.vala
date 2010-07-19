@@ -54,8 +54,17 @@ public abstract class Folks.Persona : Object
   /**
    * The names of the properties of this Persona which are linkable.
    *
+   * If a property name is in this list, and the Persona is from a
+   * {@link PersonaStore} whose trust level is {@link PersonaStoreTrust.FULL},
+   * the {@link IndividualAggregator} should be able to reliably use the value
+   * of the property from a given Persona instance to link the Persona with
+   * other Personas and form {@link Individual}s.
+   *
    * Note that {@link Persona.uid} is always implicitly a member of this list,
    * and doesn't need to be added explicitly.
+   *
+   * This list will have no effect if the Persona's {@link PersonaStore} trust
+   * level is not {@link PersonaStoreTrust.FULL}.
    */
   public string[] linkable_properties { get; protected set; }
 }

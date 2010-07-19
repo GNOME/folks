@@ -150,8 +150,16 @@ public class Folks.IndividualAggregator : Object
     {
       string store_id = this.get_store_full_id (store.type_id, store.id);
 
+      /* FIXME: We hardcode the key-file backend's singleton PersonaStore as the
+       * only trusted PersonaStore for now. */
+      if (store.type_id == "key-file")
+        {
+          store.trust_level = PersonaStoreTrust.FULL;
+        }
+
       this.stores.set (store_id, store);
       store.personas_changed.connect (this.personas_changed_cb);
+      store.notify["trust-level"].connect (this.trust_level_changed_cb);
 
       store.prepare.begin ((obj, result) =>
         {
@@ -171,6 +179,7 @@ public class Folks.IndividualAggregator : Object
       PersonaStore store)
     {
       store.personas_changed.disconnect (this.personas_changed_cb);
+      store.notify["trust-level"].disconnect (this.trust_level_changed_cb);
 
       /* no need to remove this stores' personas from all the individuals, since
        * they'll do that themselves (and emit their own 'removed' signal if
@@ -227,6 +236,17 @@ public class Folks.IndividualAggregator : Object
           new_individuals.reverse ();
           this.individuals_changed (new_individuals, null, null, null, 0);
         }
+    }
+
+  private void trust_level_changed_cb (Object object, ParamSpec pspec)
+    {
+      /* FIXME: For the moment, assert that only the key-file backend's
+       * singleton PersonaStore is trusted. */
+      unowned PersonaStore store = (PersonaStore) object;
+      if (store.type_id == "key-file")
+        assert (store.trust_level == PersonaStoreTrust.FULL);
+      else
+        assert (store.trust_level != PersonaStoreTrust.FULL);
     }
 
   private void individual_removed_cb (Individual i)

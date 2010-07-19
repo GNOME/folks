@@ -104,6 +104,13 @@ public class Tpf.PersonaStore : Folks.PersonaStore
 
   private void reset ()
     {
+      /* We do not trust local-xmpp at all, since Persona UIDs can be faked by
+       * just changing hostname/username. */
+      if (account.get_protocol () == "local-xmpp")
+        this.trust_level = PersonaStoreTrust.NONE;
+      else
+        this.trust_level = PersonaStoreTrust.PARTIAL;
+
       this._personas = new HashTable<string, Persona> (str_hash,
           str_equal);
       this.conn = null;
