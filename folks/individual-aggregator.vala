@@ -48,6 +48,7 @@ public class Folks.IndividualAggregator : Object
   private BackendStore backend_store;
   private HashMap<string, PersonaStore> stores;
   private HashSet<Backend> backends;
+  private HashTable<string, Individual> link_map;
 
   /**
    * A table mapping {@link Individual.id}s to their {@link Individual}s.
@@ -101,6 +102,7 @@ public class Folks.IndividualAggregator : Object
       this.stores = new HashMap<string, PersonaStore> ();
       this.individuals = new HashTable<string, Individual> (str_hash,
           str_equal);
+      this.link_map = new HashTable<string, Individual> (str_hash, str_equal);
 
       this.backends = new HashSet<Backend> ();
 
@@ -200,35 +202,99 @@ public class Folks.IndividualAggregator : Object
       Persona? actor,
       Groups.ChangeReason reason)
     {
-      var individuals = new GLib.List<Individual> ();
-      added.foreach ((persona) =>
+      GLib.List<Individual> new_individuals = new GLib.List<Individual> ();
+
+      added.foreach ((p) =>
         {
-          unowned Persona p = (Persona) persona;
+          unowned Persona persona = (Persona) p;
+          PersonaStoreTrust trust_level = persona.store.trust_level;
+          Individual candidate_ind = null;
 
-          /* FIXME: correlate the new personas with each other and
-            * the existing personas and existing Individuals;
-            * update existing Individuals and create new ones as
-            * necessary */
+          /* If we don't trust the PersonaStore at all, we can't link the
+           * Persona to any existing Individual */
+          if (trust_level != PersonaStoreTrust.NONE)
+            candidate_ind = this.link_map.lookup (persona.uid);
 
-          var grouped_personas = new GLib.List<Persona> ();
-          grouped_personas.prepend (p);
-          var individual = new Individual (grouped_personas);
-          individuals.prepend (individual);
+          if (candidate_ind != null)
+            {
+              /* The Persona's UID matches a linkable field which is already in
+               * the link map, so we add the new Persona to that Individual. */
+              GLib.List<unowned Persona> personas =
+                  candidate_ind.personas.copy ();
+              personas.append (persona);
+              candidate_ind.personas = personas;
+            }
+          else
+            {
+              /* The Persona doesn't match anything in the link map, so we
+               * create a new Individual for the Persona. */
+              GLib.List<Persona> personas = new GLib.List<Persona> ();
+              personas.prepend (persona);
+              candidate_ind = new Individual (personas);
+
+              /* Add the new Individual to the aggregator */
+              candidate_ind.removed.connect (this.individual_removed_cb);
+              new_individuals.prepend (candidate_ind);
+              this.individuals.insert (candidate_ind.id, candidate_ind);
+
+              /* Only add the Persona to the link map if we trust its UID. */
+              if (trust_level != PersonaStoreTrust.NONE)
+                this.link_map.insert (persona.uid, candidate_ind);
+            }
+
+          /* Only allow linking on non-UID properties of the Persona if we fully
+           * trust the PersonaStore it came from. */
+          if (persona.store.trust_level == PersonaStoreTrust.FULL)
+            {
+              /* Insert maps from the Persona's linkable properties to the
+               * Individual. */
+              foreach (string prop_name in persona.linkable_properties)
+                {
+                  unowned ObjectClass pclass = persona.get_class ();
+                  if (pclass.find_property (prop_name) == null)
+                    {
+                      warning ("Unknown property '%s' in linkable property " +
+                          "list.", prop_name);
+                      continue;
+                    }
+
+                  persona.linkable_property_to_links (prop_name, (l) =>
+                    {
+                      this.link_map.insert ((string) l, candidate_ind);
+                    });
+                }
+            }
         });
 
-      /* For each of the individuals constructed from the newly added personas,
-       * if they don't exist in the aggregator's list of member individuals,
-       * add them to it. */
-      GLib.List<Individual> new_individuals = null;
-      foreach (var i in individuals)
+      removed.foreach ((p) =>
         {
-          if (this.individuals.lookup (i.id) == null)
+          unowned Persona persona = (Persona) p;
+          PersonaStoreTrust trust_level = persona.store.trust_level;
+
+          if (trust_level != PersonaStoreTrust.NONE)
+            this.link_map.remove (persona.uid);
+
+          if (trust_level == PersonaStoreTrust.FULL)
             {
-              i.removed.connect (this.individual_removed_cb);
-              new_individuals.prepend (i);
-              this.individuals.insert (i.id, i);
+              /* Remove maps from the Persona's linkable properties to the
+               * Individual. */
+              foreach (string prop_name in persona.linkable_properties)
+                {
+                  unowned ObjectClass pclass = persona.get_class ();
+                  if (pclass.find_property (prop_name) == null)
+                    {
+                      warning ("Unknown property '%s' in linkable property " +
+                          "list.", prop_name);
+                      continue;
+                    }
+
+                  persona.linkable_property_to_links (prop_name, (l) =>
+                    {
+                     this.link_map.remove ((string) l);
+                   });
+                }
             }
-        }
+        });
 
       /* Signal the addition of new individuals to the aggregator */
       if (new_individuals != null)

@@ -121,4 +121,29 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
           GLib.assert_not_reached ();
         }
     }
+
+  public override void linkable_property_to_links (string prop_name,
+      Folks.Persona.LinkablePropertyCallback callback)
+    {
+      if (prop_name == "im-addresses")
+        {
+          this.im_addresses.foreach ((k, v) =>
+            {
+              unowned string protocol = (string) k;
+              unowned GenericArray<string> im_addresses =
+                  (GenericArray<string>) v;
+
+              im_addresses.foreach ((v) =>
+                {
+                  unowned string address = (string) v;
+                  callback (protocol + ":" + address);
+                });
+            });
+        }
+      else
+        {
+          /* Chain up */
+          base.linkable_property_to_links (prop_name, callback);
+        }
+    }
 }

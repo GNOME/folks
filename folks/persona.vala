@@ -67,4 +67,38 @@ public abstract class Folks.Persona : Object
    * level is not {@link PersonaStoreTrust.FULL}.
    */
   public string[] linkable_properties { get; protected set; }
+
+  /**
+   * Callback into the aggregator to manipulate a link mapping.
+   *
+   * This is a callback provided by the {@link IndividualAggregator} whenever
+   * a {@link Persona.linkable_property_to_links} method is called, which should
+   * be called by the `linkable_property_to_links` implementation for each
+   * linkable-property-to-individual mapping it wants to add or remove in the
+   * aggregator.
+   */
+  public delegate void LinkablePropertyCallback (string link);
+
+  /* FIXME: This code should move to the IMable interface as a concrete
+   * method of the interface. However, that depends on bgo#624842 */
+  /**
+   * Produce one or more mapping strings for the given property's value.
+   *
+   * This is a virtual method, to be overridden by subclasses of {@link Persona}
+   * who have linkable properties. Each of their linkable properties should be
+   * handled by their implementation of this function, examining the current
+   * value of the property and calling `callback` with one or more mapping
+   * strings for the property's value. Each of these mapping strings will be
+   * added to the {@link IndividualAggregator}'s link map, related to the
+   * {@link Individual} instance which contains this {@link Persona}.
+   *
+   * @see Persona.linkable_properties
+   */
+  public virtual void linkable_property_to_links (string prop_name,
+      LinkablePropertyCallback callback)
+    {
+      /* Backend-specific Persona subclasses should override this if they have
+       * any linkable properties */
+      assert_not_reached ();
+    }
 }
