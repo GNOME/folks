@@ -158,7 +158,6 @@ public class Folks.Individual : Object,
           this._personas.foreach ((p) =>
             {
               unowned Persona persona = (Persona) p;
-              unowned Groups groups = (p is Groups) ? (Groups) p : null;
 
               persona.notify["alias"].disconnect (this.notify_alias_cb);
               persona.notify["avatar"].disconnect (this.notify_avatar_cb);
@@ -169,7 +168,12 @@ public class Folks.Individual : Object,
               persona.notify["is-favourite"].disconnect (
                   this.notify_is_favourite_cb);
               persona.notify["groups"].disconnect (this.notify_groups_cb);
-              groups.group_changed.disconnect (this.persona_group_changed_cb);
+
+              if (p is Groups)
+                {
+                  ((Groups) p).group_changed.disconnect (
+                      this.persona_group_changed_cb);
+                }
             });
 
           this._personas = new GLib.List<Persona> ();
@@ -195,7 +199,6 @@ public class Folks.Individual : Object,
           this._personas.foreach ((p) =>
             {
               unowned Persona persona = (Persona) p;
-              unowned Groups groups = (p is Groups) ? (Groups) p : null;
 
               persona.notify["alias"].connect (this.notify_alias_cb);
               persona.notify["avatar"].connect (this.notify_avatar_cb);
@@ -205,7 +208,12 @@ public class Folks.Individual : Object,
               persona.notify["is-favourite"].connect (
                   this.notify_is_favourite_cb);
               persona.notify["groups"].connect (this.notify_groups_cb);
-              groups.group_changed.connect (this.persona_group_changed_cb);
+
+              if (p is Groups)
+                {
+                  ((Groups) p).group_changed.connect (
+                      this.persona_group_changed_cb);
+                }
             });
 
           /* Update our aggregated fields and notify the changes */
