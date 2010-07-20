@@ -213,11 +213,11 @@ public class Folks.IndividualAggregator : Object
           /* If we don't trust the PersonaStore at all, we can't link the
            * Persona to any existing Individual */
           if (trust_level != PersonaStoreTrust.NONE)
-            candidate_ind = this.link_map.lookup (persona.uid);
+            candidate_ind = this.link_map.lookup (persona.iid);
 
           if (candidate_ind != null)
             {
-              /* The Persona's UID matches a linkable field which is already in
+              /* The Persona's IID matches a linkable field which is already in
                * the link map, so we add the new Persona to that Individual. */
               GLib.List<unowned Persona> personas =
                   candidate_ind.personas.copy ();
@@ -237,12 +237,12 @@ public class Folks.IndividualAggregator : Object
               new_individuals.prepend (candidate_ind);
               this.individuals.insert (candidate_ind.id, candidate_ind);
 
-              /* Only add the Persona to the link map if we trust its UID. */
+              /* Only add the Persona to the link map if we trust its IID. */
               if (trust_level != PersonaStoreTrust.NONE)
-                this.link_map.insert (persona.uid, candidate_ind);
+                this.link_map.insert (persona.iid, candidate_ind);
             }
 
-          /* Only allow linking on non-UID properties of the Persona if we fully
+          /* Only allow linking on non-IID properties of the Persona if we fully
            * trust the PersonaStore it came from. */
           if (persona.store.trust_level == PersonaStoreTrust.FULL)
             {
@@ -272,7 +272,7 @@ public class Folks.IndividualAggregator : Object
           PersonaStoreTrust trust_level = persona.store.trust_level;
 
           if (trust_level != PersonaStoreTrust.NONE)
-            this.link_map.remove (persona.uid);
+            this.link_map.remove (persona.iid);
 
           if (trust_level == PersonaStoreTrust.FULL)
             {

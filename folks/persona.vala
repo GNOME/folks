@@ -30,20 +30,39 @@ using Folks;
 public abstract class Folks.Persona : Object
 {
   /**
-   * The internal ID used to represent the Persona within its {@link Backend}.
+   * The internal ID used to represent the Persona for linking.
    *
-   * This should not be used by client code.
+   * This is opaque, and shouldn't be parsed or considered meaningful by
+   * clients.
+   *
+   * The internal ID should be unique within a backend, but may not be unique
+   * across backends, so that links can be made between Personas with similar
+   * internal IDs.
    */
+  /* For example: jabber:foo@xmpp.example.org or joe@example.org */
   public string iid { get; construct; }
 
   /**
    * The universal ID used to represent the Persona outside its {@link Backend}.
    *
-   * For example: `foo@@xmpp.example.org`.
+   * This is opaque, and should only be parsed by clients using
+   * {@link Persona.split_uid}.
    *
    * This is the canonical way to refer to any Persona. It is guaranteed to be
    * unique within the Persona's {@link PersonaStore}.
+   *
+   * @see Persona.build_uid
+   * @see Persona.split_uid
    */
+  /* For example: telepathy:jabber:foo@xmpp.example.org or
+   * key-file:relationships.ini:joe@example.org
+   *
+   * It comprises three components, separated by colons:
+   * # {@link Backend.name}
+   * # {@link PersonaStore.id}
+   * # Persona identifier
+   * Each component is escaped by replacing all colons with double underscores
+   * before building the UID.*/
   public string uid { get; construct; }
 
   /**
@@ -100,5 +119,82 @@ public abstract class Folks.Persona : Object
       /* Backend-specific Persona subclasses should override this if they have
        * any linkable properties */
       assert_not_reached ();
+    }
+
+  private static string escape_uid_component (string component)
+    {
+      /* Escape colons with backslashes */
+      string escaped = component.replace ("\\", "\\\\");
+      return escaped.replace (":", "\\:");
+    }
+
+  private static string unescape_uid_component (string component)
+    {
+      /* Unescape colons and backslashes */
+      string unescaped = component.replace ("\\:", ":");
+      return unescaped.replace ("\\", "\\\\");
+    }
+
+  /**
+   * Build a UID from the given components.
+   *
+   * Each component is escaped before the UID is built.
+   *
+   * @param backend_name the {@link Backend.name}
+   * @param persona_store_id the {@link PersonaStore.id}
+   * @param persona_id the Persona identifier (backend-specific)
+   * @return a valid UID
+   * @see Persona.split_uid
+   */
+  public static string build_uid (string backend_name,
+      string persona_store_id, string persona_id)
+    {
+      return "%s:%s:%s".printf (Persona.escape_uid_component (backend_name),
+                                Persona.escape_uid_component (persona_store_id),
+                                Persona.escape_uid_component (persona_id));
+    }
+
+  /**
+   * Split a UID into its component parts.
+   *
+   * Each component is unescaped before being returned. The UID //must// be
+   * correctly formed.
+   *
+   * @param uid a valid UID
+   * @param backend_name the {@link Backend.name}
+   * @param persona_store_id the {@link PersonaStore.id}
+   * @param persona_id the Persona identifier (backend-specific)
+   * @see Persona.build_uid
+   */
+  public static void split_uid (string uid, out string backend_name,
+      out string persona_store_id, out string persona_id)
+    {
+      assert (uid.validate ());
+
+      size_t backend_name_length = 0, persona_store_id_length = 0;
+      bool escaped = false;
+      for (unowned string i = uid; i.get_char () != '\0'; i = i.next_char ())
+        {
+          if (i.get_char () == '\\')
+            escaped = !escaped;
+          else if (escaped == false && i.get_char () == ':')
+            {
+              if (backend_name_length == 0)
+                backend_name_length = ((char*) i) - ((char*) uid);
+              else
+                persona_store_id_length = ((char*) i) - ((char*) uid);
+            }
+        }
+
+      assert (backend_name_length != 0 && persona_store_id_length != 0);
+
+      backend_name = Persona.unescape_uid_component (
+          uid.ndup (backend_name_length));
+      persona_store_id = Persona.unescape_uid_component (
+          ((string) ((char*) uid + backend_name_length + 1)).ndup (
+              persona_store_id_length));
+      persona_id = Persona.unescape_uid_component (
+          ((string) ((char*) uid + backend_name_length +
+              persona_store_id_length + 2)));
     }
 }

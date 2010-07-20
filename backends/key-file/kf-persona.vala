@@ -80,13 +80,12 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
    * Create a new persona for the {@link PersonaStore} `store`, representing
    * the Persona given by the group `uid` in the key file `key_file`.
    */
-  public Persona (KeyFile key_file, string uid, Folks.PersonaStore store)
+  public Persona (KeyFile key_file, string id, Folks.PersonaStore store)
     {
-      string iid = "key-file:" + uid;
       string[] linkable_properties = { "im-addresses" };
 
-      Object (iid: iid,
-              uid: uid,
+      Object (iid: id,
+              uid: this.build_uid ("key-file", store.id, id),
               store: store,
               linkable_properties: linkable_properties);
 
@@ -97,10 +96,10 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
       /* Load the IM addresses from the key file */
       try
         {
-          string[] keys = this.key_file.get_keys (uid);
+          string[] keys = this.key_file.get_keys (id);
           foreach (string protocol in keys)
             {
-              string[] im_addresses = this.key_file.get_string_list (uid,
+              string[] im_addresses = this.key_file.get_string_list (id,
                   protocol);
 
               /* FIXME: We have to convert our nice efficient string[] to a

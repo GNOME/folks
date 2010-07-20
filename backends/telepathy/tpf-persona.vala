@@ -173,16 +173,13 @@ public class Tpf.Persona : Folks.Persona,
       /* FIXME: There is the possibility of a crash in the error condition below
        * due to bgo#604299, where the C self variable isn't initialised until we
        * chain up to the Object constructor, below. */
-      var uid = contact.get_identifier ();
-      if (uid == null || uid == "")
+      unowned string id = contact.get_identifier ();
+      if (id == null || id == "")
         throw new Tpf.PersonaError.INVALID_ARGUMENT ("contact has an " +
-            "invalid UID");
+            "invalid ID");
 
       var account = account_for_connection (contact.get_connection ());
-      var account_id = ((Proxy) account).object_path;
-      /* this isn't meant to convey any real information, so no need to escape
-       * existing delimiters */
-      var iid = "telepathy:" + account_id + ":" + uid;
+      string uid = this.build_uid ("telepathy", account.get_protocol (), id);
 
       var alias = contact.get_alias ();
       if (alias == null || alias.strip () == "")
@@ -190,7 +187,11 @@ public class Tpf.Persona : Folks.Persona,
 
       Object (alias: alias,
               contact: contact,
-              iid: iid,
+              /* FIXME: This IID format should be moved out to the IMable
+               * interface along with the code in
+               * Kf.Persona.linkable_property_to_links(), but that depends on
+               * bgo#624842 being fixed. */
+              iid: account.get_protocol () + ":" + id,
               uid: uid,
               store: store);
 
