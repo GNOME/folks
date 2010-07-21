@@ -55,7 +55,7 @@ connection_ensure_channel_cb (TpConnection *conn,
 
   if (error != NULL)
     {
-      g_warning ("failed to ensure channel: %s\n", error->message);
+      g_message ("Failed to ensure channel: %s\n", error->message);
       g_simple_async_result_set_from_error (simple, error);
     }
   else
@@ -144,7 +144,7 @@ get_contacts_by_handle_cb (TpConnection *conn,
 
   if (error != NULL)
     {
-      g_warning ("failed to get contacts: %s\n", error->message);
+      g_message ("Failed to get contacts: %s\n", error->message);
       g_simple_async_result_set_from_error (simple, error);
     }
   else
@@ -232,7 +232,7 @@ get_contacts_by_id_cb (TpConnection *conn,
 
   if (error != NULL)
     {
-      g_warning ("failed to get contacts: %s\n", error->message);
+      g_message ("Failed to get contacts: %s\n", error->message);
       g_simple_async_result_set_from_error (simple, error);
     }
   else
@@ -318,7 +318,7 @@ group_request_channel_cb (
    * handle the error if RequestChannel failed */
   if (error)
     {
-      g_warning ("Error: %s", error->message);
+      g_message ("Error: %s", error->message);
       return;
     }
 }
@@ -335,7 +335,7 @@ group_request_handles_cb (
 
   if (error)
     {
-      g_warning ("Error: %s", error->message);
+      g_message ("Error: %s", error->message);
       return;
     }
 
@@ -373,7 +373,7 @@ set_contact_alias_cb (TpConnection *conn,
 {
   if (error != NULL)
     {
-      g_warning ("failed to change contact's alias: %s", error->message);
+      g_message ("Failed to change contact's alias: %s", error->message);
       return;
     }
 }
@@ -432,7 +432,7 @@ iterate_on_channels (TpConnection *conn,
 
     channel = tp_channel_new_from_properties (conn, path, properties, &error);
     if (channel == NULL) {
-      g_warning ("Failed to create group channel: %s", error->message);
+      g_message ("Failed to create group channel: %s", error->message);
       g_error_free (error);
       return;
     }
@@ -461,7 +461,7 @@ got_channels_cb (TpProxy *conn,
   const GPtrArray *channels;
 
   if (error != NULL) {
-    g_debug ("Get Channels property failed: %s", error->message);
+    g_message ("Get Channels property failed: %s", error->message);
     return;
   }
 
@@ -494,7 +494,7 @@ group_add_members_cb (TpChannel *proxy,
 {
   if (error != NULL)
     {
-      g_warning ("failed to add contact to group %s: %s",
+      g_message ("Failed to add contact to group %s: %s",
           tp_channel_get_identifier (TP_CHANNEL (proxy)), error->message);
       return;
     }
@@ -508,7 +508,7 @@ group_remove_members_cb (TpChannel *proxy,
 {
   if (error != NULL)
     {
-      g_warning ("failed to remove contact from group %s: %s",
+      g_message ("Failed to remove contact from group %s: %s",
           tp_channel_get_identifier (TP_CHANNEL (proxy)), error->message);
       return;
     }
