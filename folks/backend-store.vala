@@ -102,7 +102,7 @@ public class Folks.BackendStore : Object {
    */
   public void add_backend (Backend backend)
     {
-      message ("New backend '%s' available", backend.name);
+      debug ("New backend '%s' available", backend.name);
       this.backend_hash.set (backend.name, backend);
       this.backend_available (backend);
     }
