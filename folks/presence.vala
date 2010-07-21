@@ -108,9 +108,10 @@ public interface Folks.Presence : Object
    *
    * @return a number representing the similarity of the two types
    */
-  public static uint typecmp (PresenceType type_a, PresenceType type_b)
+  public static int typecmp (PresenceType type_a, PresenceType type_b)
     {
-      return type_availability (type_a) - type_availability (type_b);
+      return (int) type_availability (type_a) -
+          (int) type_availability (type_b);
     }
 
   /**
