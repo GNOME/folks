@@ -99,6 +99,11 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       this.type_id = "telepathy";
       this.id = account.get_object_path ();
 
+      this.reset ();
+    }
+
+  private void reset ()
+    {
       this._personas = new HashTable<string, Persona> (str_hash,
           str_equal);
       this.conn = null;
@@ -300,7 +305,14 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       uint reason, string? dbus_error_name,
       GLib.HashTable<weak string, weak void*>? details)
     {
-      if (new_status != TelepathyGLib.ConnectionStatus.CONNECTED)
+      if (new_status == TelepathyGLib.ConnectionStatus.DISCONNECTED)
+        {
+          this.personas_changed (null, this._personas.get_values (), null, null,
+              0);
+          this.reset ();
+          return;
+        }
+      else if (new_status != TelepathyGLib.ConnectionStatus.CONNECTED)
         return;
 
       var conn = this.account.get_connection ();
