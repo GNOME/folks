@@ -250,7 +250,7 @@ public class Tpf.Persona : Folks.Persona,
       Account account_found = null;
       accounts.foreach ((l) =>
         {
-          var account = (Account) l;
+          unowned Account account = (Account) l;
           if (account.get_connection () == conn)
             {
               account_found = account;
