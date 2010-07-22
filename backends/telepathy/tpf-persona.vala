@@ -228,8 +228,15 @@ public class Tpf.Persona : Folks.Persona,
       ((Tpf.PersonaStore) this.store).group_removed.connect (
           (s, group, error) =>
             {
-              if (error != null)
-                warning ("group invalidated: %s", error.message);
+              /* FIXME: Can't use
+               * !(error is TelepathyGLib.DBusError.OBJECT_REMOVED) because the
+               * GIR bindings don't annotate errors */
+              if (error != null &&
+                  (error.domain != TelepathyGLib.dbus_errors_quark () ||
+                   error.code != TelepathyGLib.DBusError.OBJECT_REMOVED))
+                {
+                  warning ("Group invalidated: %s", error.message);
+                }
 
               this._change_group (group, false);
             });
