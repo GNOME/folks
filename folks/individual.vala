@@ -193,7 +193,7 @@ public class Folks.Individual : Object,
           /* TODO: base this upon our ID in permanent storage, once we have that
            */
           if (this.id == null && this._personas.data != null)
-            this.id = this._personas.data.iid;
+            this.id = this._personas.data.uid;
 
           /* Connect to all the new personas */
           this._personas.foreach ((p) =>
