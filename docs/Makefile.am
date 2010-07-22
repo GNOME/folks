@@ -27,7 +27,11 @@ VALAFLAGS = --vapidir=$(top_srcdir)/folks --vapidir=$(top_srcdir)/backends/telep
 VALAFLAGS += $(TP_VALA_VALAFLAGS)
 
 # The Vala files which will have documentation extracted from them
-doc_files = $(top_srcdir)/folks/*.vala $(top_srcdir)/backends/telepathy/*.vala
+_doc_files = \
+	$(top_srcdir)/folks/*.vala \
+	$(top_srcdir)/backends/telepathy/*.vala \
+	$(top_srcdir)/backends/key-file/*.vala
+doc_files = $(filter-out %-backend-factory.vala,$(wildcard $(_doc_files)))
 
 folks-0.1/index.html: $(doc_files)
 	$(AM_V_GEN)$(VALADOC) -o folks-0.1/ --force -b $(top_srcdir) \
