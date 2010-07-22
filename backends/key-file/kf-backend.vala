@@ -52,9 +52,23 @@ public class Folks.Backends.Kf.Backend : Folks.Backend
 
   public override async void prepare ()
     {
-      File file = File.new_for_path (Environment.get_user_data_dir ());
-      file = file.get_child ("folks");
-      file = file.get_child ("relationships.ini");
+      File file;
+      string path = Environment.get_variable ("FOLKS_BACKEND_KEY_FILE_PATH");
+      if (path == null)
+        {
+          file = File.new_for_path (Environment.get_user_data_dir ());
+          file = file.get_child ("folks");
+          file = file.get_child ("relationships.ini");
+
+          debug ("Using built-in key file '%s' (override with environment " +
+              "variable FOLKS_BACKEND_KEY_FILE_PATH)", file.get_path ());
+        }
+      else
+        {
+          file = File.new_for_path (path);
+          debug ("Using environment variable FOLKS_BACKEND_KEY_FILE_PATH = '%s'"
+              + " to load the key file.", path);
+        }
 
       /* Create the PersonaStore for the key file */
       PersonaStore store = new Kf.PersonaStore (file);
