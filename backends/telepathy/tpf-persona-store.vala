@@ -600,7 +600,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
   /**
    * {@inheritDoc}
    */
-  public override void remove_persona (Folks.Persona persona)
+  public override async void remove_persona (Folks.Persona persona)
     {
       var tp_persona = (Tpf.Persona) persona;
 
@@ -609,10 +609,10 @@ public class Tpf.PersonaStore : Folks.PersonaStore
           this.ll.channel_group_change_membership (this.stored,
               (Handle) tp_persona.contact.handle, false);
         }
-      catch (GLib.Error e)
+      catch (GLib.Error e1)
         {
           warning ("failed to remove persona '%s' (%s) from stored list: %s",
-              tp_persona.uid, tp_persona.alias, e.message);
+              tp_persona.uid, tp_persona.alias, e1.message);
         }
 
       try
@@ -620,10 +620,10 @@ public class Tpf.PersonaStore : Folks.PersonaStore
           this.ll.channel_group_change_membership (this.subscribe,
               (Handle) tp_persona.contact.handle, false);
         }
-      catch (GLib.Error e)
+      catch (GLib.Error e2)
         {
           warning ("failed to remove persona '%s' (%s) from subscribe list: %s",
-              tp_persona.uid, tp_persona.alias, e.message);
+              tp_persona.uid, tp_persona.alias, e2.message);
         }
 
       try
@@ -631,10 +631,10 @@ public class Tpf.PersonaStore : Folks.PersonaStore
           this.ll.channel_group_change_membership (this.publish,
               (Handle) tp_persona.contact.handle, false);
         }
-      catch (GLib.Error e)
+      catch (GLib.Error e3)
         {
           warning ("failed to remove persona '%s' (%s) from publish list: %s",
-              tp_persona.uid, tp_persona.alias, e.message);
+              tp_persona.uid, tp_persona.alias, e3.message);
         }
 
       /* the contact will be actually removed (and signaled) when we hear back

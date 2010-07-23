@@ -136,7 +136,12 @@ public abstract class Folks.PersonaStore : Object
   /**
    * Remove a {@link Persona} from the PersonaStore.
    *
+   * It isn't guaranteed that the Persona will actually be removed by the time
+   * this asynchronous function finishes. The successful removal of the Persona
+   * will be signalled through emission of
+   * {@link PersonaStore.personas_changed}.
+   *
    * @param persona the {@link Persona} to remove
    */
-  public abstract void remove_persona (Persona persona);
+  public abstract async void remove_persona (Persona persona);
 }

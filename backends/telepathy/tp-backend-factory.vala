@@ -53,14 +53,6 @@ public class Folks.Backends.Tp.BackendFactory : Object
    */
   public BackendFactory (BackendStore backend_store)
     {
-      try
-        {
-          backend_store.add_backend (new Backend ());
-        }
-      catch (GLib.Error e)
-        {
-          warning ("Failed to add Telepathy backend to libfolks: %s",
-              e.message);
-        }
+      backend_store.add_backend (new Backend ());
     }
 }

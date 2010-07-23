@@ -315,13 +315,10 @@ public class Folks.IndividualAggregator : Object
    *
    * @param individual the {@link Individual} to remove
    */
-  public void remove_individual (Individual individual)
+  public async void remove_individual (Individual individual)
     {
-      individual.personas.foreach ((p) =>
-        {
-          var persona = (Persona) p;
-          persona.store.remove_persona (persona);
-        });
+      foreach (unowned Persona persona in individual.personas)
+        yield persona.store.remove_persona (persona);
     }
 
   /**
@@ -331,8 +328,8 @@ public class Folks.IndividualAggregator : Object
    *
    * @param persona the {@link Persona} to remove
    */
-  public void remove_persona (Persona persona)
+  public async void remove_persona (Persona persona)
     {
-      persona.store.remove_persona (persona);
+      yield persona.store.remove_persona (persona);
     }
 }
