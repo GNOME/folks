@@ -1,11 +1,10 @@
 sharedir = $(datadir)/folks
-backenddir = $(libdir)/folks
 
 AM_CPPFLAGS = \
 	-include $(CONFIG_HEADER) \
 	-DPACKAGE_DATADIR=\"$(pkgdatadir)\" \
 	-DDATA_DIR=\"$(shareddir)\" \
-	-DBACKEND_DIR=\"$(backenddir)\" \
+	-DBACKEND_DIR=\"$(BACKEND_DIR)\" \
 	-DG_LOG_DOMAIN=\"Core\" \
 	$(NULL)
 

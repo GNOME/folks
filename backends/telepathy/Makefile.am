@@ -11,7 +11,7 @@ VALAFLAGS += --vapidir=. --vapidir=$(top_srcdir)/folks
 noinst_LTLIBRARIES = libtp-lowlevel.la
 folks_telepathydir = $(libdir)
 folks_telepathy_LTLIBRARIES = libfolks-telepathy.la
-backenddir = $(libdir)/folks/backends/telepathy
+backenddir = $(BACKEND_DIR)/telepathy
 backend_LTLIBRARIES = libfolks-backend-telepathy.la
 
 ##################################################################
