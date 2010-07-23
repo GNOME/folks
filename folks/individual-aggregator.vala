@@ -319,8 +319,14 @@ public class Folks.IndividualAggregator : Object
    */
   public async void remove_individual (Individual individual) throws GLib.Error
     {
-      foreach (unowned Persona persona in individual.personas)
-        yield persona.store.remove_persona (persona);
+      /* We have to iterate manually since using foreach() requires a sync
+       * lambda function, meaning we can't yield on the remove_persona() call */
+      unowned GLib.List<unowned Persona> i;
+      for (i = individual.personas; i != null; i = i.next)
+        {
+          unowned Persona persona = (Persona) i.data;
+          yield persona.store.remove_persona (persona);
+        }
     }
 
   /**
