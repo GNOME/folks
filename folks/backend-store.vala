@@ -72,7 +72,7 @@ public class Folks.BackendStore : Object {
    * environment variable, if it's set. If it's not set, backends will be
    * searched for in a path set at compilation time.
    */
-  public async void load_backends () {
+  public async void load_backends () throws GLib.Error {
       assert (Module.supported());
 
       var path = Environment.get_variable ("FOLKS_BACKEND_DIR");

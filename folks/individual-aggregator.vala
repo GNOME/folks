@@ -117,7 +117,7 @@ public class Folks.IndividualAggregator : Object
    * condition could occur, with the signal being emitted before your code has
    * connected to them, and {@link Individual}s getting "lost" as a result.
    */
-  public async void prepare ()
+  public async void prepare () throws GLib.Error
     {
       this.backend_store.load_backends ();
     }
@@ -315,7 +315,7 @@ public class Folks.IndividualAggregator : Object
    *
    * @param individual the {@link Individual} to remove
    */
-  public async void remove_individual (Individual individual)
+  public async void remove_individual (Individual individual) throws GLib.Error
     {
       foreach (unowned Persona persona in individual.personas)
         yield persona.store.remove_persona (persona);
@@ -328,7 +328,7 @@ public class Folks.IndividualAggregator : Object
    *
    * @param persona the {@link Persona} to remove
    */
-  public async void remove_persona (Persona persona)
+  public async void remove_persona (Persona persona) throws GLib.Error
     {
       yield persona.store.remove_persona (persona);
     }

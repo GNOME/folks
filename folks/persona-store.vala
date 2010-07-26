@@ -143,5 +143,5 @@ public abstract class Folks.PersonaStore : Object
    *
    * @param persona the {@link Persona} to remove
    */
-  public abstract async void remove_persona (Persona persona);
+  public abstract async void remove_persona (Persona persona) throws GLib.Error;
 }
