@@ -128,7 +128,7 @@ public class Tpf.Persona : Folks.Persona,
   /**
    * {@inheritDoc}
    */
-  public void change_group (string group, bool is_member)
+  public async void change_group (string group, bool is_member)
     {
       if (_change_group (group, is_member))
         {

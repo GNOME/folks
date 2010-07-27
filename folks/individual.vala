@@ -238,7 +238,7 @@ public class Folks.Individual : Object,
 
   private void persona_group_changed_cb (string group, bool is_member)
     {
-      this.change_group (group, is_member);
+      this.change_group.begin (group, is_member);
       this.update_groups ();
     }
 
@@ -254,12 +254,12 @@ public class Folks.Individual : Object,
    * @param group a freeform group identifier
    * @param is_member whether the Individual should be a member of the group
    */
-  public void change_group (string group, bool is_member)
+  public async void change_group (string group, bool is_member)
     {
       this._personas.foreach ((p) =>
         {
           if (p is Groups)
-            ((Groups) p).change_group (group, is_member);
+            ((Groups) p).change_group.begin (group, is_member);
         });
 
       /* don't notify, since it hasn't happened in the persona backing stores
