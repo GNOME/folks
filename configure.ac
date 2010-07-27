@@ -12,9 +12,9 @@ m4_define([folks_nano_version], [0])
 # If interfaces have been added since last release, increment age
 # If interfaces have been removed since last release, set age to 0
 
-m4_define([folks_lt_current], [10])
+m4_define([folks_lt_current], [11])
 m4_define([folks_lt_revision], [0])
-m4_define([folks_lt_age], [10])
+m4_define([folks_lt_age], [11])
 
 dnl Display the nano_version only if it's not '0'
 m4_define([folks_base_version],
