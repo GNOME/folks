@@ -126,6 +126,9 @@ public abstract class Folks.PersonaStore : Object
    * If the details are not recognised or are invalid,
    * {@link PersonaStoreError.INVALID_ARGUMENT} will be thrown.
    *
+   * If a {@link Persona} with the given details already exists in the store,
+   * `null` will be returned, but no error will be thrown.
+   *
    * @param details a key-value map of details to use in creating the new
    * {@link Persona}
    * @return the new {@link Persona}, or `null` on failure

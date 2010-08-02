@@ -1090,10 +1090,12 @@ public class Tpf.PersonaStore : Folks.PersonaStore
 
               return persona;
             }
-          else
+          else if (personas != null && personas.length () > 1)
             {
+              /* We ignore the case of an empty list, as it just means the
+               * contact was already in our roster */
               warning ("requested a single persona, but got %u back",
-                  personas == null ? 0 : personas.length ());
+                  personas.length ());
             }
         }
       catch (GLib.Error e)

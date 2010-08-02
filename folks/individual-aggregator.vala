@@ -288,7 +288,7 @@ public class Folks.IndividualAggregator : Object
               persona_store_type, persona_store_id, e.message);
         }
 
-      if (parent != null)
+      if (parent != null && persona != null)
         {
           var personas = parent.personas.copy ();
 
