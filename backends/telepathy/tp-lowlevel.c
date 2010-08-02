@@ -55,7 +55,6 @@ connection_ensure_channel_cb (TpConnection *conn,
 
   if (error != NULL)
     {
-      g_message ("Failed to ensure channel: %s\n", error->message);
       g_simple_async_result_set_from_error (simple, error);
     }
   else
@@ -144,7 +143,6 @@ get_contacts_by_handle_cb (TpConnection *conn,
 
   if (error != NULL)
     {
-      g_message ("Failed to get contacts: %s\n", error->message);
       g_simple_async_result_set_from_error (simple, error);
     }
   else
@@ -232,7 +230,6 @@ get_contacts_by_id_cb (TpConnection *conn,
 
   if (error != NULL)
     {
-      g_message ("Failed to get contacts: %s\n", error->message);
       g_simple_async_result_set_from_error (simple, error);
     }
   else
