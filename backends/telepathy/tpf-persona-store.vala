@@ -319,24 +319,33 @@ public class Tpf.PersonaStore : Folks.PersonaStore
         return;
 
       var conn = this.account.get_connection ();
-      conn.notify["connection-ready"].connect ((s, p) =>
-        {
-          var c = (Connection) s;
+      conn.notify["connection-ready"].connect (this.connection_ready_cb);
 
-          this.ll.connection_connect_to_new_group_channels (c,
-              this.new_group_channels_cb);
+      /* Deal with the case where the connection is already ready
+       * FIXME: We have to access the property manually until bgo#571348 is
+       * fixed. */
+      bool connection_ready = false;
+      conn.get ("connection-ready", out connection_ready);
 
-          this.add_standard_channel (c, "publish");
-          this.add_standard_channel (c, "stored");
-          this.add_standard_channel (c, "subscribe");
-          this.conn = c;
+      if (connection_ready == true)
+        this.connection_ready_cb (conn, null);
+      else
+        conn.prepare_async.begin (null);
+    }
 
-          /* We can only initialise the favourite contacts once conn is prepared
-           */
-          this.initialise_favourite_contacts.begin ();
-        });
+  private void connection_ready_cb (Object s, ParamSpec? p)
+    {
+      Connection c = (Connection) s;
+      this.ll.connection_connect_to_new_group_channels (c,
+          this.new_group_channels_cb);
 
-      conn.prepare_async.begin (null);
+      this.add_standard_channel (c, "publish");
+      this.add_standard_channel (c, "stored");
+      this.add_standard_channel (c, "subscribe");
+      this.conn = c;
+
+      /* We can only initialise the favourite contacts once conn is prepared */
+      this.initialise_favourite_contacts.begin ();
     }
 
   private void new_group_channels_cb (void *data)
