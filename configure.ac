@@ -13,7 +13,7 @@ m4_define([folks_nano_version], [0])
 # If interfaces have been removed since last release, set age to 0
 
 m4_define([folks_lt_current], [11])
-m4_define([folks_lt_revision], [0])
+m4_define([folks_lt_revision], [1])
 m4_define([folks_lt_age], [11])
 
 dnl Display the nano_version only if it's not '0'
