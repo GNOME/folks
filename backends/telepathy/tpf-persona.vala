@@ -194,6 +194,7 @@ public class Tpf.Persona : Folks.Persona,
               uid: uid,
               store: store);
 
+      debug ("Creating new Tpf.Persona '%s': %p", uid, this);
       this.is_constructed = true;
 
       this._groups = new HashTable<string, bool> (str_hash, str_equal);
@@ -240,6 +241,11 @@ public class Tpf.Persona : Folks.Persona,
 
               this._change_group (group, false);
             });
+    }
+
+  ~Persona ()
+    {
+      debug ("Destroying Tpf.Persona '%s': %p", this.uid, this);
     }
 
   private static Account? account_for_connection (Connection conn)

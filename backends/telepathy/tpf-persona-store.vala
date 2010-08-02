@@ -305,6 +305,9 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       uint reason, string? dbus_error_name,
       GLib.HashTable<weak string, weak void*>? details)
     {
+      debug ("Account '%s' changed status from %u to %u.", this.id, old_status,
+          new_status);
+
       if (new_status == TelepathyGLib.ConnectionStatus.DISCONNECTED)
         {
           this.personas_changed (null, this._personas.get_values (), null, null,
@@ -388,6 +391,9 @@ public class Tpf.PersonaStore : Folks.PersonaStore
 
   private void set_up_new_standard_channel (Channel channel)
     {
+      debug ("Setting up new standard channel '%s'.",
+          channel.get_identifier ());
+
       /* hold a ref to the channel here until it's ready, so it doesn't
        * disappear */
       this.standard_channels_unready[channel.get_identifier ()] = channel;
@@ -396,6 +402,8 @@ public class Tpf.PersonaStore : Folks.PersonaStore
         {
           var c = (Channel) s;
           var name = c.get_identifier ();
+
+          debug ("Channel '%s' is ready.", name);
 
           if (name == "publish")
             {
@@ -573,6 +581,8 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       Groups.ChangeReason reason)
     {
       var persona = this.handle_persona_map[handle];
+
+      debug ("Ignoring handle %u (persona: %p)", handle, persona);
 
       /*
        * remove all handle-keyed entries
@@ -786,6 +796,8 @@ public class Tpf.PersonaStore : Folks.PersonaStore
     {
       Channel? channel = null;
 
+      debug ("Adding standard channel '%s' to connection %p", name, conn);
+
       /* FIXME: handle the error GLib.Error from this function */
       try
         {
@@ -882,6 +894,9 @@ public class Tpf.PersonaStore : Folks.PersonaStore
           for (l = contacts; l != null; l = l.next)
             {
               var contact = l.data;
+
+              debug ("Creating persona from contact '%s'", contact.identifier);
+
               try
                 {
                   var persona = this.add_persona_from_contact (contact);
@@ -918,6 +933,9 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       throws Tpf.PersonaError
     {
       var h = contact.get_handle ();
+
+      debug ("Adding persona from contact '%s'", contact.identifier);
+
       if (this.handle_persona_map[h] == null)
         {
           var persona = new Tpf.Persona (contact, this);
@@ -973,6 +991,8 @@ public class Tpf.PersonaStore : Folks.PersonaStore
           if (members == null)
             members = new HashSet<Persona> ();
 
+          debug ("Adding members to channel '%s':", channel.get_identifier ());
+
           var contact_handles = entry.value;
           if (contact_handles != null && contact_handles.size > 0)
             {
@@ -982,6 +1002,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
                   var persona = this.handle_persona_map[contact_handle];
                   if (persona != null)
                     {
+                      debug ("    %s", persona.uid);
                       members.add (persona);
                       members_added.prepend (persona);
                       contact_handles_added.add (contact_handle);
