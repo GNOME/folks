@@ -187,6 +187,7 @@ public class Tpf.Persona : Folks.Persona,
 
       Object (alias: alias,
               contact: contact,
+              display_id: id,
               /* FIXME: This IID format should be moved out to the IMable
                * interface along with the code in
                * Kf.Persona.linkable_property_to_links(), but that depends on
@@ -195,7 +196,8 @@ public class Tpf.Persona : Folks.Persona,
               uid: uid,
               store: store);
 
-      debug ("Creating new Tpf.Persona '%s': %p", uid, this);
+      debug ("Creating new Tpf.Persona '%s' for service-specific UID '%s': %p",
+          uid, id, this);
       this.is_constructed = true;
 
       this._groups = new HashTable<string, bool> (str_hash, str_equal);

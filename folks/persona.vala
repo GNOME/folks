@@ -66,6 +66,22 @@ public abstract class Folks.Persona : Object
   public string uid { get; construct; }
 
   /**
+   * The human-readable, service-specific universal ID used to represent the
+   * Persona.
+   *
+   * For example: `foo@@xmpp.example.org`.
+   *
+   * This should be used whenever the user needs to be presented with a
+   * familiar, service-specific ID. For instance, in a prompt for the user to
+   * select a specific IM contact within an {@link Individual} to begin a chat
+   * with.
+   *
+   * This is not guaranteed to be unique outside of the Persona's
+   * {@link PersonaStore}.
+   */
+  public string display_id { get; construct; }
+
+  /**
    * The {@link PersonaStore} which contains this Persona.
    */
   public weak PersonaStore store { get; construct; }
