@@ -31,7 +31,7 @@ m4_define(folks_version, folks_full_version[]folks_maybe_datestamp)
 # Module API version.
 m4_define([folks_module_version], [folks_lt_current])
 
-AC_INIT(folks, folks_version, folks)
+AC_INIT(folks, folks_version, https://bugzilla.gnome.org/browse.cgi?product=folks)
 m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
 
 AC_PREREQ(2.59)
