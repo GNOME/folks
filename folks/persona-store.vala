@@ -123,6 +123,21 @@ public abstract class Folks.PersonaStore : Object
   public abstract string type_id { get; protected set; }
 
   /**
+   * The human-readable, service-specific name used to represent the
+   * PersonaStore to the user.
+   *
+   * For example: `foo@@xmpp.example.org`.
+   *
+   * This should be used whenever the user needs to be presented with a
+   * familiar, service-specific name. For instance, in a prompt for the user to
+   * select a specific IM account from which to initiate a chat.
+   *
+   * This is not guaranteed to be unique even within this PersonaStore's
+   * {@link Backend}.
+   */
+  public abstract string display_name { get; protected set; }
+
+  /**
    * The instance identifier for this PersonaStore.
    *
    * Since each {@link Backend} can provide multiple different PersonaStores

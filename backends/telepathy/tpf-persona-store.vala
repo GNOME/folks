@@ -76,6 +76,11 @@ public class Tpf.PersonaStore : Folks.PersonaStore
   /**
    * {@inheritDoc}
    */
+  public override string display_name { get; private set; }
+
+  /**
+   * {@inheritDoc}
+   */
   public override string id { get; private set; }
 
   /**
@@ -97,6 +102,8 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       Object (account: account);
 
       this.type_id = "telepathy";
+
+      this.display_name = account.display_name;
       this.id = account.get_object_path ();
 
       this.reset ();
