@@ -134,6 +134,8 @@ public abstract class Folks.PersonaStore : Object
    *
    * This is not guaranteed to be unique even within this PersonaStore's
    * {@link Backend}.
+   *
+   * @since 0.1.13
    */
   public abstract string display_name { get; protected set; }
 

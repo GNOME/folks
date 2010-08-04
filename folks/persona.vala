@@ -78,6 +78,8 @@ public abstract class Folks.Persona : Object
    *
    * This is not guaranteed to be unique outside of the Persona's
    * {@link PersonaStore}.
+   *
+   * @since 0.1.13
    */
   public string display_id { get; construct; }
 
