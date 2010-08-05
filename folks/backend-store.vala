@@ -171,9 +171,18 @@ public class Folks.BackendStore : Object {
           string mime = g_content_type_get_mime_type (content_type);
 
           if (file_type == FileType.DIRECTORY)
+            {
               this.load_modules_from_dir.begin (file);
+            }
           else if (mime == "application/x-sharedlib" && !is_symlink)
+            {
               this.load_module_from_file (file_path);
+            }
+          else if (mime == null)
+            {
+              warning ("MIME type could not be determined for file '%s'. " +
+                  "Have you installed shared-mime-info?", file_path);
+            }
         }
 
       debug ("Finished searching for modules in folder '%s'",
