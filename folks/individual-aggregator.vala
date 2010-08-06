@@ -47,6 +47,7 @@ public class Folks.IndividualAggregator : Object
 {
   private BackendStore backend_store;
   private HashMap<string, PersonaStore> stores;
+  private unowned PersonaStore writeable_store;
   private HashSet<Backend> backends;
   private HashTable<string, Individual> link_map;
 
@@ -157,6 +158,7 @@ public class Folks.IndividualAggregator : Object
       if (store.type_id == "key-file")
         {
           store.trust_level = PersonaStoreTrust.FULL;
+          this.writeable_store = store;
         }
 
       this.stores.set (store_id, store);
@@ -183,10 +185,12 @@ public class Folks.IndividualAggregator : Object
       store.personas_changed.disconnect (this.personas_changed_cb);
       store.notify["trust-level"].disconnect (this.trust_level_changed_cb);
 
-      /* no need to remove this stores' personas from all the individuals, since
+      /* no need to remove this store's personas from all the individuals, since
        * they'll do that themselves (and emit their own 'removed' signal if
        * necessary) */
 
+      if (this.writeable_store == store)
+        this.writeable_store = null;
       this.stores.unset (this.get_store_full_id (store.type_id, store.id));
     }
 
