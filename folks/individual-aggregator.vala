@@ -208,46 +208,29 @@ public class Folks.IndividualAggregator : Object
         {
           unowned Persona persona = (Persona) p;
           PersonaStoreTrust trust_level = persona.store.trust_level;
-          Individual candidate_ind = null;
+          GLib.List<Individual> candidate_inds = null;
+          GLib.List<Persona> final_personas = new GLib.List<Persona> ();
+          Individual final_individual = null;
+
+          debug ("Aggregating persona '%s' on '%s'.", persona.uid, persona.iid);
 
           /* If we don't trust the PersonaStore at all, we can't link the
            * Persona to any existing Individual */
           if (trust_level != PersonaStoreTrust.NONE)
-            candidate_ind = this.link_map.lookup (persona.iid);
-
-          if (candidate_ind != null)
             {
-              /* The Persona's IID matches a linkable field which is already in
-               * the link map, so we add the new Persona to that Individual. */
-              GLib.List<unowned Persona> personas =
-                  candidate_ind.personas.copy ();
-              personas.append (persona);
-              candidate_ind.personas = personas;
-            }
-          else
-            {
-              /* The Persona doesn't match anything in the link map, so we
-               * create a new Individual for the Persona. */
-              GLib.List<Persona> personas = new GLib.List<Persona> ();
-              personas.prepend (persona);
-              candidate_ind = new Individual (personas);
-
-              /* Add the new Individual to the aggregator */
-              candidate_ind.removed.connect (this.individual_removed_cb);
-              new_individuals.prepend (candidate_ind);
-              this.individuals.insert (candidate_ind.id, candidate_ind);
-
-              /* Only add the Persona to the link map if we trust its IID. */
-              if (trust_level != PersonaStoreTrust.NONE)
-                this.link_map.insert (persona.iid, candidate_ind);
+              Individual candidate_ind = this.link_map.lookup (persona.iid);
+              if (candidate_ind != null)
+                {
+                  debug ("    Found candidate individual '%s' by IID.",
+                      candidate_ind.id);
+                  candidate_inds.prepend (candidate_ind);
+                }
             }
 
-          /* Only allow linking on non-IID properties of the Persona if we fully
-           * trust the PersonaStore it came from. */
           if (persona.store.trust_level == PersonaStoreTrust.FULL)
             {
-              /* Insert maps from the Persona's linkable properties to the
-               * Individual. */
+              /* If we trust the PersonaStore the Persona came from, we can
+               * attempt to link based on its linkable properties. */
               foreach (string prop_name in persona.linkable_properties)
                 {
                   unowned ObjectClass pclass = persona.get_class ();
@@ -260,10 +243,102 @@ public class Folks.IndividualAggregator : Object
 
                   persona.linkable_property_to_links (prop_name, (l) =>
                     {
-                      this.link_map.insert ((string) l, candidate_ind);
+                      Individual candidate_ind =
+                          this.link_map.lookup ((string) l);
+                      if (candidate_ind != null)
+                        candidate_inds.prepend (candidate_ind);
                     });
                 }
             }
+
+          /* Ensure the original persona makes it into the final persona */
+          final_personas.prepend (persona);
+
+          if (candidate_inds != null)
+            {
+              debug ("    Found candidate individuals:");
+
+              /* The Persona's IID or linkable properties match one or more
+               * linkable fields which are already in the link map, so we link
+               * together all the Individuals we found to form a new
+               * final_individual. Later, we remove the Personas from the old
+               * Individuals so that the Individuals themselves are removed. */
+              candidate_inds.foreach ((i) =>
+                {
+                  unowned Individual individual = (Individual) i;
+
+                  debug ("        %s", individual.id);
+
+                  /* FIXME: It would be faster to prepend a reversed copy of
+                   * `individual.personas`, then reverse the entire
+                   * `final_personas` list afterwards, but Vala won't let us.
+                   * We also have to reference each of `individual.personas`
+                   * manually, since copy() doesn't do that for us. */
+                  individual.personas.foreach ((p) =>
+                    {
+                      ((Persona) p).ref ();
+                    });
+
+                  final_personas.concat (individual.personas.copy ());
+                });
+            }
+          else
+            {
+              debug ("    Did not find any candidate individuals.");
+            }
+
+          /* Create the final linked Individual */
+          final_individual = new Individual (final_personas);
+
+          debug ("    Created new individual '%s' with personas:",
+              final_individual.id);
+          final_personas.foreach ((i) =>
+            {
+              unowned Persona final_persona = (Persona) i;
+
+              debug ("        %s", final_persona.uid);
+
+              /* Only add the Persona to the link map if we trust its IID. */
+              if (trust_level != PersonaStoreTrust.NONE)
+                this.link_map.replace (final_persona.iid, final_individual);
+
+              /* Only allow linking on non-IID properties of the Persona if we
+               * fully trust the PersonaStore it came from. */
+              if (final_persona.store.trust_level == PersonaStoreTrust.FULL)
+                {
+                  /* Insert maps from the Persona's linkable properties to the
+                   * Individual. */
+                  foreach (string prop_name in
+                      final_persona.linkable_properties)
+                    {
+                      unowned ObjectClass pclass = final_persona.get_class ();
+                      if (pclass.find_property (prop_name) == null)
+                        {
+                          warning ("Unknown property '%s' in linkable " +
+                              "property list.", prop_name);
+                          continue;
+                        }
+
+                      final_persona.linkable_property_to_links (prop_name,
+                          (l) =>
+                        {
+                          this.link_map.replace ((string) l, final_individual);
+                        });
+                    }
+                }
+            });
+
+          /* Remove the old Individuals. This has to be done here, as we need
+           * the final_individual. */
+          candidate_inds.foreach ((i) =>
+            {
+              ((Individual) i).replace (final_individual);
+            });
+
+          /* Add the new Individual to the aggregator */
+          final_individual.removed.connect (this.individual_removed_cb);
+          new_individuals.prepend (final_individual);
+          this.individuals.insert (final_individual.id, final_individual);
         });
 
       removed.foreach ((p) =>
