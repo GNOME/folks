@@ -102,16 +102,11 @@ public class Folks.Individual : Object,
    *
    * This property is `true` if any of this Individual's {@link Persona}s are
    * favourites).
-   *
-   * When set, the value is propagated to all of this Individual's
-   * {@link Persona}s.
    */
   public bool is_favourite
     {
       get { return this._is_favourite; }
 
-      /* Propagate the new favourite status to every Persona, but only if it's
-       * changed. */
       set
         {
           if (this._is_favourite == value)
@@ -120,7 +115,7 @@ public class Folks.Individual : Object,
           this._is_favourite = value;
           this._personas.foreach ((p) =>
             {
-              if (p is Favourite)
+              if (p is Favourite && ((Persona) p).store.is_writeable == true)
                 ((Favourite) p).is_favourite = value;
             });
         }
@@ -133,8 +128,6 @@ public class Folks.Individual : Object,
     {
       get { return this._groups; }
 
-      /* Propagate the list of new groups to every Persona in the individual
-       * which implements the Groups interface */
       set
         {
           this._personas.foreach ((p) =>
