@@ -432,17 +432,33 @@ public class Folks.Individual : Object,
   private void update_alias ()
     {
       string alias = null;
+      bool alias_is_display_id = false;
 
-      this._personas.foreach ((p) =>
+      foreach (Persona p in this._personas)
         {
           if (p is Alias)
             {
               unowned Alias a = (Alias) p;
 
-              if (alias == null && a.alias != null && a.alias.strip () != "")
-                alias = a.alias;
+              if (a.alias == null || a.alias.strip () == "")
+                continue;
+
+              if (alias == null || alias_is_display_id == true)
+                {
+                  /* We prefer to not have an alias which is the same as the
+                   * Persona's display-id, since having such an alias implies
+                   * that it's the default. However, we prefer using such an
+                   * alias to using the Persona's UID, which is our ultimate
+                   * fallback (below). */
+                  alias = a.alias;
+
+                  if (a.alias == p.display_id)
+                    alias_is_display_id = true;
+                  else if (alias != null)
+                    break;
+                }
             }
-        });
+        }
 
       if (alias == null)
         {
