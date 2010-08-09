@@ -32,6 +32,7 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
   private HashTable<string, Persona> _personas;
   private File file;
   private GLib.KeyFile key_file;
+  private uint first_unused_id = 0;
 
   /**
    * {@inheritDoc}
@@ -139,6 +140,9 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
       string[] groups = this.key_file.get_groups ();
       foreach (string persona_uid in groups)
         {
+          if (persona_uid.to_int () == this.first_unused_id)
+            this.first_unused_id++;
+
           Persona persona = new Kf.Persona (this.key_file, persona_uid, this);
           this._personas.insert (persona.iid, persona);
         }
@@ -187,9 +191,8 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
               this.type_id, this.id, im_address, protocol);
         }
 
-      /* Take the persona ID as the concatenation of the protocol and IM
-       * address, fairly arbitrarily */
-      string persona_id = protocol + ":" + im_address;
+      string persona_id = this.first_unused_id.to_string ();
+      this.first_unused_id++;
 
       /* Insert the new IM details into the key file and create a Persona from
        * them */
