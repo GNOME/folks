@@ -150,6 +150,12 @@ public class Folks.Individual : Object,
    *
    * Changing the set of personas may cause updates to the aggregated properties
    * provided by the Individual, resulting in property notifications for them.
+   *
+   * Changing the set of personas will not cause permanent linking/unlinking of
+   * the added/removed personas to/from this Individual. To do that, call
+   * {@link IndividualAggregator.link_personas} or
+   * {@link IndividualAggregator.unlink_individual}, which will ensure the link
+   * changes are written to the appropriate backend.
    */
   public GLib.List<Persona> personas
     {

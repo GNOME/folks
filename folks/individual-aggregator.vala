@@ -36,6 +36,12 @@ public errordomain Folks.IndividualAggregatorError
    * Adding a {@link Persona} to a {@link PersonaStore} failed.
    */
   ADD_FAILED,
+
+  /**
+   * An operation which required the use of a writeable store failed because no
+   * writeable store was available.
+   */
+  NO_WRITEABLE_STORE,
 }
 
 /**
@@ -504,5 +510,81 @@ public class Folks.IndividualAggregator : Object
   public async void remove_persona (Persona persona) throws GLib.Error
     {
       yield persona.store.remove_persona (persona);
+    }
+
+  /* FIXME: This should be GLib.List<Persona>, but Vala won't allow it */
+  public async void link_personas (void *_personas)
+      throws GLib.Error
+    {
+      unowned GLib.List<Persona> personas = (GLib.List<Persona>) _personas;
+
+      if (this.writeable_store == null)
+        {
+          throw new IndividualAggregatorError.NO_WRITEABLE_STORE (
+              "Can't link personas with no writeable store.");
+        }
+
+      /* Don't bother linking if it's just one Persona */
+      if (personas.next == null)
+        return;
+
+      /* Create a new persona in the writeable store which links together the
+       * given personas */
+      /* FIXME: We hardcode this to use the key-file backend for now */
+      assert (this.writeable_store.type_id == "key-file");
+
+      HashTable<string, GenericArray<string>> protocols =
+          new HashTable<string, GenericArray<string>> (str_hash, str_equal);
+      personas.foreach ((p) =>
+        {
+          unowned Persona persona = (Persona) p;
+
+          if (!(Persona is IMable))
+            return;
+
+          ((IMable) persona).im_addresses.foreach ((k, v) =>
+            {
+              unowned string protocol = (string) k;
+              unowned GenericArray<string> addresses = (GenericArray<string>) v;
+
+              GenericArray<string> existing_addresses =
+                  protocols.lookup (protocol);
+              if (existing_addresses == null)
+                {
+                  existing_addresses = new GenericArray<string> ();
+                  protocols.insert (protocol, existing_addresses);
+                }
+
+              addresses.foreach ((a) =>
+                {
+                  unowned string address = (string) a;
+                  existing_addresses.add (address);
+                });
+            });
+        });
+
+      Value addresses_value = Value (typeof (HashTable));
+      addresses_value.set_boxed (protocols);
+
+      HashTable<string, Value?> details =
+          new HashTable<string, Value?> (str_hash, str_equal);
+      details.insert ("im-addresses", addresses_value);
+
+      yield this.add_persona_from_details (null, this.writeable_store.type_id,
+          this.writeable_store.id, details);
+    }
+
+  public async void unlink_individual (Individual individual) throws GLib.Error
+    {
+      /* Remove all the Personas from writeable PersonaStores
+       * We have to iterate manually since using foreach() requires a sync
+       * lambda function, meaning we can't yield on the remove_persona() call */
+      unowned GLib.List<unowned Persona> i;
+      for (i = individual.personas; i != null; i = i.next)
+        {
+          unowned Persona persona = (Persona) i.data;
+          if (persona.store == this.writeable_store)
+            yield this.writeable_store.remove_persona (persona);
+        }
     }
 }
