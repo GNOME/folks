@@ -315,7 +315,7 @@ public class Folks.IndividualAggregator : Object
         assert (store.trust_level != PersonaStoreTrust.FULL);
     }
 
-  private void individual_removed_cb (Individual i)
+  private void individual_removed_cb (Individual i, Individual? replacement)
     {
       var i_list = new GLib.List<Individual> ();
       i_list.append (i);

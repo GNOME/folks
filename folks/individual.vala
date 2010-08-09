@@ -70,8 +70,11 @@ public class Folks.Individual : Object,
    *
    * At this point, the Individual is invalid, so any client referencing it
    * should unreference it and remove it from their UI.
+   *
+   * @param replacement_individual the individual which has replaced this one
+   * due to linking, or `null` if this individual was removed for another reason
    */
-  public signal void removed ();
+  public signal void removed (Individual? replacement_individual);
 
   /**
    * {@inheritDoc}
@@ -151,74 +154,7 @@ public class Folks.Individual : Object,
   public GLib.List<Persona> personas
     {
       get { return this._personas; }
-
-      set
-        {
-          /* Disconnect from all our previous personas */
-          this._personas.foreach ((p) =>
-            {
-              unowned Persona persona = (Persona) p;
-
-              persona.notify["alias"].disconnect (this.notify_alias_cb);
-              persona.notify["avatar"].disconnect (this.notify_avatar_cb);
-              persona.notify["presence-message"].disconnect (
-                  this.notify_presence_cb);
-              persona.notify["presence-type"].disconnect (
-                  this.notify_presence_cb);
-              persona.notify["is-favourite"].disconnect (
-                  this.notify_is_favourite_cb);
-              persona.notify["groups"].disconnect (this.notify_groups_cb);
-
-              if (p is Groups)
-                {
-                  ((Groups) p).group_changed.disconnect (
-                      this.persona_group_changed_cb);
-                }
-            });
-
-          this._personas = new GLib.List<Persona> ();
-          value.foreach ((l) =>
-            {
-              this._personas.prepend ((Persona) l);
-            });
-          this._personas.reverse ();
-
-          /* If all the personas have been removed, remove the individual */
-          if (this._personas.length () < 1)
-            {
-              this.removed ();
-              return;
-            }
-
-          /* TODO: base this upon our ID in permanent storage, once we have that
-           */
-          if (this.id == null && this._personas.data != null)
-            this.id = this._personas.data.uid;
-
-          /* Connect to all the new personas */
-          this._personas.foreach ((p) =>
-            {
-              unowned Persona persona = (Persona) p;
-
-              persona.notify["alias"].connect (this.notify_alias_cb);
-              persona.notify["avatar"].connect (this.notify_avatar_cb);
-              persona.notify["presence-message"].connect (
-                  this.notify_presence_cb);
-              persona.notify["presence-type"].connect (this.notify_presence_cb);
-              persona.notify["is-favourite"].connect (
-                  this.notify_is_favourite_cb);
-              persona.notify["groups"].connect (this.notify_groups_cb);
-
-              if (p is Groups)
-                {
-                  ((Groups) p).group_changed.connect (
-                      this.persona_group_changed_cb);
-                }
-            });
-
-          /* Update our aggregated fields and notify the changes */
-          this.update_fields ();
-        }
+      set { this._set_personas (value, null); }
     }
 
   private void notify_groups_cb (Object obj, ParamSpec ps)
@@ -340,7 +276,7 @@ public class Folks.Individual : Object,
 
       if (this._personas.length () < 1 || this.stores.size () < 1)
         {
-          this.removed ();
+          this.removed (null);
           return;
         }
 
@@ -369,7 +305,7 @@ public class Folks.Individual : Object,
 
       if (this._personas.length () < 1)
         {
-          this.removed ();
+          this.removed (null);
           return;
         }
 
@@ -618,5 +554,76 @@ public class Folks.Individual : Object,
     {
       Presence p = this;
       return p.is_online ();
+    }
+
+  private void _set_personas (GLib.List<Persona>? personas,
+      Individual? replacement_individual)
+    {
+      /* Disconnect from all our previous personas */
+      this._personas.foreach ((p) =>
+        {
+          unowned Persona persona = (Persona) p;
+
+          persona.notify["alias"].disconnect (this.notify_alias_cb);
+          persona.notify["avatar"].disconnect (this.notify_avatar_cb);
+          persona.notify["presence-message"].disconnect (
+              this.notify_presence_cb);
+          persona.notify["presence-type"].disconnect (this.notify_presence_cb);
+          persona.notify["is-favourite"].disconnect (
+              this.notify_is_favourite_cb);
+          persona.notify["groups"].disconnect (this.notify_groups_cb);
+
+          if (p is Groups)
+            {
+              ((Groups) p).group_changed.disconnect (
+                  this.persona_group_changed_cb);
+            }
+        });
+
+      this._personas = new GLib.List<Persona> ();
+      personas.foreach ((l) =>
+        {
+          this._personas.prepend ((Persona) l);
+        });
+      this._personas.reverse ();
+
+      /* If all the personas have been removed, remove the individual */
+      if (this._personas.length () < 1)
+        {
+          this.removed (replacement_individual);
+            return;
+        }
+
+      /* TODO: base this upon our ID in permanent storage, once we have that
+       */
+      if (this.id == null && this._personas.data != null)
+        this.id = this._personas.data.uid;
+
+      /* Connect to all the new personas */
+      this._personas.foreach ((p) =>
+        {
+          unowned Persona persona = (Persona) p;
+
+          persona.notify["alias"].connect (this.notify_alias_cb);
+          persona.notify["avatar"].connect (this.notify_avatar_cb);
+          persona.notify["presence-message"].connect (this.notify_presence_cb);
+          persona.notify["presence-type"].connect (this.notify_presence_cb);
+          persona.notify["is-favourite"].connect (this.notify_is_favourite_cb);
+          persona.notify["groups"].connect (this.notify_groups_cb);
+
+          if (p is Groups)
+            {
+              ((Groups) p).group_changed.connect (
+                  this.persona_group_changed_cb);
+            }
+        });
+
+      /* Update our aggregated fields and notify the changes */
+      this.update_fields ();
+    }
+
+  internal void replace (Individual replacement_individual)
+    {
+      this._set_personas (null, replacement_individual);
     }
 }
