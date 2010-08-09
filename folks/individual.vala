@@ -132,7 +132,7 @@ public class Folks.Individual : Object,
         {
           this._personas.foreach ((p) =>
             {
-              if (p is Groups)
+              if (p is Groups && ((Persona) p).store.is_writeable == true)
                 ((Groups) p).groups = value;
             });
         }
