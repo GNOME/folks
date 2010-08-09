@@ -153,6 +153,17 @@ public abstract class Folks.PersonaStore : Object
    */
   public abstract HashTable<string, Persona> personas { get; }
 
+   /**
+   * Whether the PersonaStore is writeable.
+   *
+   * Only if a PersonaStore is writeable will changes to its {@link Persona}s'
+   * properties be written out to the relevant backing store.
+   *
+   * PersonaStores must not set this property themselves; it will be set as
+   * appropriate by the {@link IndividualAggregator}.
+   */
+  public bool is_writeable { get; set; default = false; }
+
   /**
    * The trust level of the PersonaStore for linking.
    *

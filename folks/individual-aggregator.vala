@@ -160,15 +160,17 @@ public class Folks.IndividualAggregator : Object
       string store_id = this.get_store_full_id (store.type_id, store.id);
 
       /* FIXME: We hardcode the key-file backend's singleton PersonaStore as the
-       * only trusted PersonaStore for now. */
+       * only trusted and writeable PersonaStore for now. */
       if (store.type_id == "key-file")
         {
+          store.is_writeable = true;
           store.trust_level = PersonaStoreTrust.FULL;
           this.writeable_store = store;
         }
 
       this.stores.set (store_id, store);
       store.personas_changed.connect (this.personas_changed_cb);
+      store.notify["is-writeable"].connect (this.is_writeable_changed_cb);
       store.notify["trust-level"].connect (this.trust_level_changed_cb);
 
       store.prepare.begin ((obj, result) =>
@@ -190,6 +192,7 @@ public class Folks.IndividualAggregator : Object
     {
       store.personas_changed.disconnect (this.personas_changed_cb);
       store.notify["trust-level"].disconnect (this.trust_level_changed_cb);
+      store.notify["is-writeable"].disconnect (this.is_writeable_changed_cb);
 
       /* no need to remove this store's personas from all the individuals, since
        * they'll do that themselves (and emit their own 'removed' signal if
@@ -387,6 +390,14 @@ public class Folks.IndividualAggregator : Object
           new_individuals.reverse ();
           this.individuals_changed (new_individuals, null, null, null, 0);
         }
+    }
+
+  private void is_writeable_changed_cb (Object object, ParamSpec pspec)
+    {
+      /* Ensure that we only have one writeable PersonaStore */
+      unowned PersonaStore store = (PersonaStore) object;
+      assert ((store.is_writeable == true && store == this.writeable_store) ||
+          (store.is_writeable == false && store != this.writeable_store));
     }
 
   private void trust_level_changed_cb (Object object, ParamSpec pspec)
