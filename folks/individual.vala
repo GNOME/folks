@@ -91,7 +91,7 @@ public class Folks.Individual : Object,
           this._alias = value;
           this._personas.foreach ((p) =>
             {
-              if (p is Alias)
+              if (p is Alias && ((Persona) p).store.is_writeable == true)
                 ((Alias) p).alias = value;
             });
         }
