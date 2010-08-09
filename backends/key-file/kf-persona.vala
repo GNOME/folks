@@ -65,8 +65,10 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
           this._im_addresses.foreach ((k, v) =>
             {
               unowned string protocol = (string) k;
-              unowned string[] addresses = (string[]) v;
-              this.key_file.set_string_list (this.uid, protocol, addresses);
+              unowned PtrArray addresses = (PtrArray) v;
+              unowned string[] _addresses = (string[]) addresses.pdata;
+              _addresses.length = (int) addresses.len;
+              this.key_file.set_string_list (this.uid, protocol, _addresses);
             });
 
           /* Get the PersonaStore to save the key file */
@@ -118,9 +120,12 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
         }
       catch (KeyFileError e)
         {
-          /* This should never be reached, as we're listing the keys then
-           * iterating through the list. */
-          GLib.assert_not_reached ();
+          /* We get a GROUP_NOT_FOUND exception if we're creating a new
+           * Persona, since it doesn't yet exist in the key file. We shouldn't
+           * get any other exceptions, since we're iterating through a list of
+           * keys we've just retrieved. */
+          if (!(e is KeyFileError.GROUP_NOT_FOUND))
+            GLib.assert_not_reached ();
         }
     }
 

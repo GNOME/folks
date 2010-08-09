@@ -177,32 +177,26 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
   public override async Folks.Persona? add_persona_from_details (
       HashTable<string, Value?> details) throws Folks.PersonaStoreError
     {
-      Value val = details.lookup ("im-address");
-      unowned string im_address = val.get_string ();
-      val = details.lookup ("protocol");
-      unowned string protocol = val.get_string ();
+      unowned Value val = details.lookup ("im-addresses");
+      unowned HashTable<string, GenericArray<string>> im_addresses =
+          (HashTable<string, GenericArray<string>>) val.get_boxed ();
 
-      if (im_address == null || protocol == null)
+      if (im_addresses == null || im_addresses.size () == 0)
         {
           throw new PersonaStoreError.INVALID_ARGUMENT (
               "persona store (%s, %s) requires the following details:\n" +
-              "    im-address (provided: '%s')\n",
-              "    protocol (provided: '%s')\n",
-              this.type_id, this.id, im_address, protocol);
+              "    im-addresses (provided: '%p')\n",
+              this.type_id, this.id, im_addresses);
         }
 
       string persona_id = this.first_unused_id.to_string ();
       this.first_unused_id++;
 
-      /* Insert the new IM details into the key file and create a Persona from
-       * them */
-      string[] im_addresses = new string[1];
-      im_addresses[0] = im_address;
-      this.key_file.set_string_list (persona_id, protocol, im_addresses);
-      yield this.save_key_file ();
-
+      /* Create a new persona and set its im-addresses property to update the
+       * key file */
       Persona persona = new Kf.Persona (this.key_file, persona_id, this);
       this._personas.insert (persona.iid, persona);
+      persona.im_addresses = im_addresses;
 
       /* FIXME: Groups.ChangeReason is not the right enum to use here */
       GLib.List<Persona> personas = new GLib.List<Persona> ();
