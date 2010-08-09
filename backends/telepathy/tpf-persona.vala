@@ -37,11 +37,13 @@ public class Tpf.Persona : Folks.Persona,
     Avatar,
     Favourite,
     Groups,
+    IMable,
     Presence
 {
   private HashTable<string, bool> _groups;
   private bool _is_favourite;
   private string _alias;
+  private HashTable<string, GenericArray<string>> _im_addresses;
 
   /* Whether we've finished being constructed; this is used to prevent
    * unnecessary trips to the Telepathy service to tell it about properties
@@ -98,6 +100,15 @@ public class Tpf.Persona : Folks.Persona,
             ((Tpf.PersonaStore) this.store).change_is_favourite (this, value);
           this._is_favourite = value;
         }
+    }
+
+  /**
+   * {@inheritDoc}
+   */
+  public HashTable<string, GenericArray<string>> im_addresses
+    {
+      get { return this._im_addresses; }
+      private set {}
     }
 
   /**
@@ -170,6 +181,8 @@ public class Tpf.Persona : Folks.Persona,
    */
   public Persona (Contact contact, PersonaStore store) throws Tpf.PersonaError
     {
+      string[] linkable_properties = { "im-addresses" };
+
       /* FIXME: There is the possibility of a crash in the error condition below
        * due to bgo#604299, where the C self variable isn't initialised until we
        * chain up to the Object constructor, below. */
@@ -194,12 +207,22 @@ public class Tpf.Persona : Folks.Persona,
                * bgo#624842 being fixed. */
               iid: account.get_protocol () + ":" + id,
               uid: uid,
-              store: store);
+              store: store,
+              linkable_properties: linkable_properties);
 
       debug ("Creating new Tpf.Persona '%s' for service-specific UID '%s': %p",
           uid, id, this);
       this.is_constructed = true;
 
+      /* Set our single IM address */
+      GenericArray<string> im_address_array = new GenericArray<string> ();
+      im_address_array.add (id);
+
+      this._im_addresses =
+          new HashTable<string, GenericArray<string>> (str_hash, str_equal);
+      this._im_addresses.insert (account.get_protocol (), im_address_array);
+
+      /* Groups */
       this._groups = new HashTable<string, bool> (str_hash, str_equal);
 
       contact.notify["avatar-file"].connect ((s, p) =>
