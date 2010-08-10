@@ -208,14 +208,9 @@ public class Folks.IndividualAggregator : Object
       return type_id + ":" + id;
     }
 
-  private void personas_changed_cb (PersonaStore store,
-      GLib.List<Persona>? added,
-      GLib.List<Persona>? removed,
-      string? message,
-      Persona? actor,
-      Groups.ChangeReason reason)
+  private GLib.List<Individual> add_personas (GLib.List<Persona> added)
     {
-      GLib.List<Individual> new_individuals = new GLib.List<Individual> ();
+      GLib.List<Individual> added_individuals = new GLib.List<Individual> ();
 
       added.foreach ((p) =>
         {
@@ -350,22 +345,53 @@ public class Folks.IndividualAggregator : Object
 
           /* Add the new Individual to the aggregator */
           final_individual.removed.connect (this.individual_removed_cb);
-          new_individuals.prepend (final_individual);
+          added_individuals.prepend (final_individual);
           this.individuals.insert (final_individual.id, final_individual);
         });
+
+      /* FIXME: AAAARGH VALA GO AWAY */
+      foreach (Individual i in added_individuals)
+        i.ref ();
+      return added_individuals.copy ();
+    }
+
+  private void personas_changed_cb (PersonaStore store,
+      GLib.List<Persona>? added,
+      GLib.List<Persona>? removed,
+      string? message,
+      Persona? actor,
+      Groups.ChangeReason reason)
+    {
+      GLib.List<Individual> added_individuals = null,
+          removed_individuals = null;
+      GLib.List<Persona> relinked_personas = null;
+      HashSet<Persona> removed_personas = new HashSet<Persona> (direct_hash,
+          direct_equal);
+
+      if (added != null)
+        added_individuals = this.add_personas (added);
 
       removed.foreach ((p) =>
         {
           unowned Persona persona = (Persona) p;
           PersonaStoreTrust trust_level = persona.store.trust_level;
 
+          /* Build a hash table of the removed Personas so that we can quickly
+           * eliminate them from the list of Personas to relink, below. */
+          removed_personas.add (persona);
+
           if (trust_level != PersonaStoreTrust.NONE)
-            this.link_map.remove (persona.iid);
+            {
+              Individual ind = this.link_map.lookup (persona.iid);
+              removed_individuals.prepend (ind);
+              this.link_map.remove (persona.iid);
+            }
 
           if (trust_level == PersonaStoreTrust.FULL)
             {
-              /* Remove maps from the Persona's linkable properties to the
-               * Individual. */
+              /* Remove maps from the Persona's linkable properties to
+               * Individuals. Add the Individuals to a list of Individuals to be
+               * removed. */
               foreach (string prop_name in persona.linkable_properties)
                 {
                   unowned ObjectClass pclass = persona.get_class ();
@@ -378,17 +404,53 @@ public class Folks.IndividualAggregator : Object
 
                   persona.linkable_property_to_links (prop_name, (l) =>
                     {
-                     this.link_map.remove ((string) l);
-                   });
+                      this.link_map.remove ((string) l);
+                    });
                 }
             }
         });
 
-      /* Signal the addition of new individuals to the aggregator */
-      if (new_individuals != null)
+      /* Remove the Individuals which were pointed to by the linkable properties
+       * of the removed Personas. We can then re-link the other Personas in
+       * those Individuals, since their links may have changed.
+       * Note that we remove the Individual from this.individuals, meaning that
+       * individual_removed_cb() ignores this Individual. This allows us to
+       * group together the IndividualAggregator.individuals_changed signals
+       * for all the removed Individuals. */
+      debug ("Removing Individuals due to removed links:");
+      foreach (Individual individual in removed_individuals)
         {
-          new_individuals.reverse ();
-          this.individuals_changed (new_individuals, null, null, null, 0);
+          /* Ensure we don't remove the same Individual twice */
+          if (this.individuals.lookup (individual.id) == null)
+            continue;
+
+          debug ("    %s", individual.id);
+
+          /* Build a list of Personas which need relinking. Ensure we don't
+           * include any of the Personas which have just been removed. */
+          foreach (unowned Persona p in individual.personas)
+            {
+              if (removed_personas.contains (p) == false)
+                relinked_personas.prepend (p);
+            }
+
+          this.individuals.remove (individual.id);
+          individual.personas = null;
+        }
+
+      debug ("Relinking Personas:");
+      foreach (unowned Persona persona in relinked_personas)
+        debug ("    %s", persona.uid);
+
+      /* FIXME: Vala is horrible with GLists */
+      added_individuals.concat (this.add_personas (relinked_personas));
+
+      /* Signal the addition of new individuals and removal of old ones to the
+       * aggregator */
+      if (added_individuals != null || removed_individuals != null)
+        {
+          this.individuals_changed (added_individuals, removed_individuals,
+              null, null, 0);
         }
     }
 
@@ -413,8 +475,23 @@ public class Folks.IndividualAggregator : Object
 
   private void individual_removed_cb (Individual i, Individual? replacement)
     {
+      /* Only signal if the individual is still in this.individuals. This allows
+       * us to group removals together in, e.g., personas_changed_cb(). */
+      if (this.individuals.lookup (i.id) == null)
+        return;
+
       var i_list = new GLib.List<Individual> ();
       i_list.append (i);
+
+      if (replacement != null)
+        {
+          debug ("Individual '%s' removed (replaced by '%s')", i.alias,
+              replacement.alias);
+        }
+      else
+        {
+          debug ("Individual '%s' removed (not replaced)", i.alias);
+        }
 
       this.individuals_changed (null, i_list, null, null, 0);
       this.individuals.remove (i.id);
@@ -590,12 +667,23 @@ public class Folks.IndividualAggregator : Object
       /* Remove all the Personas from writeable PersonaStores
        * We have to iterate manually since using foreach() requires a sync
        * lambda function, meaning we can't yield on the remove_persona() call */
-      unowned GLib.List<unowned Persona> i;
-      for (i = individual.personas; i != null; i = i.next)
+      debug ("Unlinking Individual '%s', deleting Personas:", individual.alias);
+
+      /* We have to take a copy of the Persona list before removing the
+       * Personas, as personas_changed_cb() (which is called as a result of
+       * calling writeable_store.remove_persona()) messes around with Persona
+       * lists. */
+      GLib.List<Persona> personas = individual.personas.copy ();
+      foreach (Persona p in personas)
+        p.ref ();
+
+      foreach (unowned Persona persona in personas)
         {
-          unowned Persona persona = (Persona) i.data;
           if (persona.store == this.writeable_store)
-            yield this.writeable_store.remove_persona (persona);
+            {
+              debug ("    %s", persona.uid);
+              yield this.writeable_store.remove_persona (persona);
+            }
         }
     }
 }
