@@ -164,6 +164,11 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
         {
           this.key_file.remove_group (persona.display_id);
           yield this.save_key_file ();
+
+          /* Signal the removal of the Persona */
+          GLib.List<Folks.Persona> personas = new GLib.List<Folks.Persona> ();
+          personas.prepend (persona);
+          this.personas_changed (null, personas, null, null, 0);
         }
       catch (KeyFileError e)
         {
