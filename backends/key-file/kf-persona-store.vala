@@ -138,12 +138,12 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
       /* We've loaded or created a key file by now, so cycle through the groups:
        * each group is a persona which we have to create and emit */
       string[] groups = this.key_file.get_groups ();
-      foreach (string persona_uid in groups)
+      foreach (string persona_id in groups)
         {
-          if (persona_uid.to_int () == this.first_unused_id)
+          if (persona_id.to_int () == this.first_unused_id)
             this.first_unused_id++;
 
-          Persona persona = new Kf.Persona (this.key_file, persona_uid, this);
+          Persona persona = new Kf.Persona (this.key_file, persona_id, this);
           this._personas.insert (persona.iid, persona);
         }
 
@@ -162,7 +162,7 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
     {
       try
         {
-          this.key_file.remove_group (persona.uid);
+          this.key_file.remove_group (persona.display_id);
           yield this.save_key_file ();
         }
       catch (KeyFileError e)

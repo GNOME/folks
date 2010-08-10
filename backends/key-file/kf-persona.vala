@@ -50,7 +50,7 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
               try
                 {
                   unowned string protocol = (string) k;
-                  this.key_file.remove_key (this.uid, protocol);
+                  this.key_file.remove_key (this.display_id, protocol);
                 }
               catch (KeyFileError e)
                 {
@@ -68,7 +68,8 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
               unowned PtrArray addresses = (PtrArray) v;
               unowned string[] _addresses = (string[]) addresses.pdata;
               _addresses.length = (int) addresses.len;
-              this.key_file.set_string_list (this.uid, protocol, _addresses);
+              this.key_file.set_string_list (this.display_id, protocol,
+                  _addresses);
             });
 
           /* Get the PersonaStore to save the key file */
@@ -87,7 +88,7 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
       string[] linkable_properties = { "im-addresses" };
 
       Object (display_id: id,
-              iid: id,
+              iid: store.id + ":" + id,
               uid: this.build_uid ("key-file", store.id, id),
               store: store,
               linkable_properties: linkable_properties);
@@ -101,11 +102,11 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
       /* Load the IM addresses from the key file */
       try
         {
-          string[] keys = this.key_file.get_keys (id);
+          string[] keys = this.key_file.get_keys (this.display_id);
           foreach (string protocol in keys)
             {
-              string[] im_addresses = this.key_file.get_string_list (id,
-                  protocol);
+              string[] im_addresses = this.key_file.get_string_list (
+                  this.display_id, protocol);
 
               /* FIXME: We have to convert our nice efficient string[] to a
                * GenericArray<string> because Vala doesn't like null-terminated
