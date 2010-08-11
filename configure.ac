@@ -119,7 +119,7 @@ AC_SUBST(TP_GLIB_LIBS)
 # check for tp-glib vala bindings by compiling a trivial program
 AC_MSG_CHECKING([Telepathy Vala bindings])
 AS_IF(! [$VALAC $VALACFLAGS $VALAFLAGS --vapidir=$VAPIDIR --pkg telepathy-glib \
-	 -o /dev/null telepathy-check.vala],
+	 -o /dev/null "${srcdir}/telepathy-check.vala"],
 	[AC_MSG_ERROR([Missing telepathy-glib Vala bindings])])
 AC_MSG_RESULT([yes])
 
