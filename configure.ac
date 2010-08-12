@@ -91,13 +91,14 @@ AC_SUBST(DBUS_GLIB_LIBS)
 VALACFLAGS="$VALACFLAGS --target-glib=2.24"
 AC_SUBST(VALACFLAGS)
 AC_SUBST(VALAFLAGS)
-
-VAPIDIR=`$PKG_CONFIG --variable=vapidir vala-1.0`
 AC_SUBST(VAPIDIR)
-VAPIGEN=`$PKG_CONFIG --variable=vapigen vala-1.0`
+
+AC_PATH_PROG(VAPIGEN, vapigen, vapigen)
 AC_SUBST(VAPIGEN)
 
-VALA_GEN_INTROSPECT=`$PKG_CONFIG --variable=gen_introspect vala-1.0`
+# XXX: using this path instead of the wrapper script vala-gen-introspect is
+# sub-optimal, but the wrapper fails without explanation
+VALA_GEN_INTROSPECT='$(libdir)/vala/gen-introspect'
 AC_SUBST(VALA_GEN_INTROSPECT)
 
 AS_IF([test "$VAPIGEN" = "" -o "$VALA_GEN_INTROSPECT" = ""],
