@@ -43,7 +43,7 @@ AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_SRCDIR([Makefile.am])
 AC_CONFIG_HEADERS(config.h)
 AC_CONFIG_SRCDIR([configure.ac])
-AM_INIT_AUTOMAKE(1.9 dist-bzip2 no-define no-dist-gzip tar-ustar -Wno-portability)
+AM_INIT_AUTOMAKE(1.11 dist-bzip2 no-define no-dist-gzip tar-ustar -Wno-portability)
 AM_MAINTAINER_MODE
 
 AC_PROG_CC
@@ -60,14 +60,9 @@ AC_SUBST(LDFLAGS)
 # -----------------------------------------------------------
 GLIB_REQUIRED=2.24.0
 TP_GLIB_REQUIRED=0.11.11
-VALA_REQUIRED=0.9.4
+VALA_REQUIRED=0.9.5
 
-PKG_CHECK_MODULES(VALA, vala-1.0 >= $VALA_REQUIRED)
-AC_SUBST(VALA_CFLAGS)
-AC_SUBST(VALA_LIBS)
-
-AC_PATH_PROG(VALAC, valac, valac)
-AC_SUBST(VALAC)
+AM_PROG_VALAC([$VALA_REQUIRED])
 
 PKG_PROG_PKG_CONFIG([0.21])
 
