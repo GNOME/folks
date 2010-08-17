@@ -449,7 +449,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
                   this.subscribe_channel_group_members_changed_detailed_cb);
             }
 
-          this.standard_channels_unready.remove (name);
+          this.standard_channels_unready.unset (name);
 
           c.invalidated.connect (this.channel_invalidated_cb);
 
@@ -538,8 +538,8 @@ public class Tpf.PersonaStore : Folks.PersonaStore
     {
       var channel = (Channel) proxy;
 
-      this.channel_group_personas_map.remove (channel);
-      this.channel_group_incoming_adds.remove (channel);
+      this.channel_group_personas_map.unset (channel);
+      this.channel_group_incoming_adds.unset (channel);
 
       if (proxy == this.publish)
         this.publish = null;
@@ -550,7 +550,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
           var error = new GLib.Error ((Quark) domain, code, "%s", message);
           var name = channel.get_identifier ();
           this.group_removed (name, error);
-          this.groups.remove (name);
+          this.groups.unset (name);
         }
     }
 
@@ -609,7 +609,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       /*
        * remove all handle-keyed entries
        */
-      this.handle_persona_map.remove (handle);
+      this.handle_persona_map.unset (handle);
 
       /* skip channel_group_incoming_adds because they occurred after removal */
 
@@ -736,7 +736,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
           var name = c.get_identifier ();
 
           this.groups[name] = c;
-          this.group_channels_unready.remove (name);
+          this.group_channels_unready.unset (name);
 
           c.invalidated.connect (this.channel_invalidated_cb);
           c.group_members_changed_detailed.connect (
