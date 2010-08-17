@@ -69,11 +69,14 @@ folks_tp_lowlevel_channel_group_change_membership (TpChannel *channel,
     gboolean is_member,
     GError **error);
 
+typedef void (*FolksTpLowlevelNewGroupChannelsCallback) (TpChannel *channel,
+    gpointer user_data);
+
 void
 folks_tp_lowlevel_connection_connect_to_new_group_channels (
     FolksTpLowlevel *lowlevel,
     TpConnection *conn,
-    GFunc callback,
+    FolksTpLowlevelNewGroupChannelsCallback callback,
     gpointer user_data);
 
 void
@@ -109,7 +112,7 @@ folks_tp_lowlevel_connection_get_contacts_by_handle_async (
     TpConnection *conn,
     const guint *contact_handles,
     guint contact_handles_length,
-    guint *features,
+    const guint *features,
     guint features_length,
     GAsyncReadyCallback callback,
     gpointer user_data);

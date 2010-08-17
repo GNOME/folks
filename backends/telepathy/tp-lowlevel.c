@@ -162,13 +162,27 @@ get_contacts_by_handle_cb (TpConnection *conn,
   g_object_unref (simple);
 }
 
+/**
+ * folks_tp_lowlevel_connection_get_contacts_by_handle_async:
+ * @tp_lowlevel: a #FolksTpLowlevel
+ * @conn: the connection to use
+ * @contact_handles: (array length=contact_handles_length): the contact handles
+ * to get
+ * @contact_handles_length: number of handles in @contact_handles
+ * @features: (array length=features_length): the features to use
+ * @features_length: number of features in @features
+ * @callback: function to call on completion
+ * @user_data: user data to pass to @callback
+ *
+ * Get an array of #TpContact<!-- -->s for the given contact handles.
+ */
 void
 folks_tp_lowlevel_connection_get_contacts_by_handle_async (
     FolksTpLowlevel *tp_lowlevel,
     TpConnection *conn,
     const guint *contact_handles,
     guint contact_handles_length,
-    guint *features,
+    const guint *features,
     guint features_length,
     GAsyncReadyCallback callback,
     gpointer user_data)
@@ -192,6 +206,18 @@ folks_tp_lowlevel_connection_get_contacts_by_handle_async (
 /* XXX: ideally, we'd either make this static or hide it in the .metadata file,
  * but neither seems to be supported (without breaking the binding to the async
  * function) */
+/**
+ * folks_tp_lowlevel_connection_get_contacts_by_handle_finish:
+ * @tp_lowlevel: a #FolksTpLowlevel
+ * @result: the async result
+ * @error: a #GError, or %NULL
+ *
+ * Finish an operation started with
+ * folks_tp_lowlevel_connection_get_contacts_by_handle_async().
+ *
+ * Return value: (element-type TelepathyGLib.Contact) (transfer full): a list of
+ * #TpContact<!-- -->s
+ */
 GList *
 folks_tp_lowlevel_connection_get_contacts_by_handle_finish (
     FolksTpLowlevel *tp_lowlevel,
@@ -249,6 +275,20 @@ get_contacts_by_id_cb (TpConnection *conn,
   g_object_unref (simple);
 }
 
+/**
+ * folks_tp_lowlevel_connection_get_contacts_by_id_async:
+ * @tp_lowlevel: a #FolksTpLowlevel
+ * @conn: the connection to use
+ * @contact_ids: (array length=contact_ids_length) (element-type utf8): the
+ * contact IDs to get
+ * @contact_ids_length: number of IDs in @contact_ids
+ * @features: (array length=features_length): the features to use
+ * @features_length: number of features in @features
+ * @callback: function to call on completion
+ * @user_data: user data to pass to @callback
+ *
+ * Get an array of #TpContact<!-- -->s for the given contact IDs.
+ */
 void
 folks_tp_lowlevel_connection_get_contacts_by_id_async (
     FolksTpLowlevel *tp_lowlevel,
@@ -279,6 +319,18 @@ folks_tp_lowlevel_connection_get_contacts_by_id_async (
 /* XXX: ideally, we'd either make this static or hide it in the .metadata file,
  * but neither seems to be supported (without breaking the binding to the async
  * function) */
+/**
+ * folks_tp_lowlevel_connection_get_contacts_by_id_finish:
+ * @tp_lowlevel: a #FolksTpLowlevel
+ * @result: the async result
+ * @error: a #GError, or %NULL
+ *
+ * Finish an operation started with
+ * folks_tp_lowlevel_connection_get_contacts_by_id_async().
+ *
+ * Return value: (element-type TelepathyGLib.Contact) (transfer full): a list of
+ * #TpContact<!-- -->s
+ */
 GList *
 folks_tp_lowlevel_connection_get_contacts_by_id_finish (
     FolksTpLowlevel *tp_lowlevel,
@@ -398,7 +450,7 @@ iterate_on_channels (TpConnection *conn,
     gpointer user_data,
     GObject *weak_object)
 {
-  GFunc callback = user_data;
+  FolksTpLowlevelNewGroupChannelsCallback callback = user_data;
   GObject *cb_obj = weak_object;
   guint i;
 
@@ -466,11 +518,20 @@ got_channels_cb (TpProxy *conn,
   iterate_on_channels (TP_CONNECTION (conn), channels, user_data, weak_object);
 }
 
+/**
+ * folks_tp_lowlevel_connection_connect_to_new_group_channels:
+ * @tp_lowlevel: a #FolksTpLowlevel
+ * @conn: the connection to use
+ * @callback: function to call on completion
+ * @user_data: (closure): user data to pass to @callback
+ *
+ * Connect to the NewChannels signal.
+ */
 void
 folks_tp_lowlevel_connection_connect_to_new_group_channels (
     FolksTpLowlevel *tp_lowlevel,
     TpConnection *conn,
-    GFunc callback,
+    FolksTpLowlevelNewGroupChannelsCallback callback,
     gpointer user_data)
 {
   /* Look for existing group channels */
