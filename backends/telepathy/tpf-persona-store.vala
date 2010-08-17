@@ -829,9 +829,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
         }
       catch (GLib.Error e)
         {
-          /* the 'stored' channel doesn't always exist for the CM */
-          if (name != "stored")
-            warning ("failed to add channel '%s': %s\n", name, e.message);
+          debug ("Failed to add channel '%s': %s\n", name, e.message);
 
           /* XXX: assuming there's no decent way to recover from this */
 
