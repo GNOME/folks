@@ -97,8 +97,10 @@ AC_PATH_PROG(VAPIGEN, vapigen, vapigen)
 AC_SUBST(VAPIGEN)
 
 # XXX: using this path instead of the wrapper script vala-gen-introspect is
-# sub-optimal, but the wrapper fails without explanation
-VALA_GEN_INTROSPECT='$(libdir)/vala/gen-introspect'
+# sub-optimal, but the wrapper requires that we use a pkg-config file. Once
+# the dependencies of bgo#627046 are fixed, we should use g-ir-scanner instead
+# of vala-gen-introspect anyway.
+VALA_GEN_INTROSPECT='$(libdir)/vala-0.10/gen-introspect-0.10'
 AC_SUBST(VALA_GEN_INTROSPECT)
 
 AS_IF([test "$VAPIGEN" = "" -o "$VALA_GEN_INTROSPECT" = ""],
