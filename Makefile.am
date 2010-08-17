@@ -1,3 +1,5 @@
+ACLOCAL_AMFLAGS = -I m4
+
 SUBDIRS = \
 	folks \
 	backends \
@@ -7,12 +9,11 @@ if ENABLE_DOCS
 SUBDIRS += docs
 endif
 
-ACLOCAL_AMFLAGS = -I m4
-
 DISTCHECK_CONFIGURE_FLAGS = --enable-docs
 
 EXTRA_DIST = \
 	autogen.sh \
+	m4/introspection.m4 \
 	telepathy-check.vala \
 	$(NULL)
 

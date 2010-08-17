@@ -43,23 +43,31 @@ libtp_lowlevel_la_LDFLAGS = \
 	$(TP_GLIB_LIBS) \
 	$(NULL)
 
-tp-lowlevel.gi: $(libtp-lowlevel_la_SOURCES) libtp-lowlevel.la
-	$(AM_V_GEN)$(VALA_GEN_INTROSPECT) --namespace=Folks \
-		$(srcdir)/tp-lowlevel.h \
-		$(GLIB_CFLAGS) $(DBUS_GLIB_CFLAGS) $(GEE_CFLAGS) \
-		$(TP_GLIB_CFLAGS) -I$(top_srcdir)/folks \
-		.libs/libtp-lowlevel.so > tp-lowlevel.gi
+DISTCHECK_CONFIGURE_FLAGS = --enable-introspection
 
-# copy the metadata file as necessary, to work around gnome bug #624278
-tp-lowlevel.vapi: tp-lowlevel.gi tp-lowlevel.metadata
-	test -e tp-lowlevel.metadata || \
-		(cp $(srcdir)/tp-lowlevel.metadata . && \
-		touch tp-lowlevel.metadata.copied)
+-include $(INTROSPECTION_MAKEFILE)
+INTROSPECTION_GIRS =
+INTROSPECTION_SCANNER_ARGS = --add-include-path=$(srcdir)
+INTROSPECTION_COMPILER_ARGS = --includedir=$(srcdir)
+CLEANFILES =
+
+if HAVE_INTROSPECTION
+tp-lowlevel.gir: libtp-lowlevel.la
+tp_lowlevel_gir_INCLUDES = GObject-2.0 Gee-1.0 TelepathyGLib-0.12
+tp_lowlevel_gir_CFLAGS = $(TP_GLIB_CFLAGS)
+tp_lowlevel_gir_LIBS = libtp-lowlevel.la
+tp_lowlevel_gir_FILES = $(libtp_lowlevel_la_SOURCES)
+tp_lowlevel_gir_NAMESPACE = Folks
+INTROSPECTION_GIRS += tp-lowlevel.gir
+
+CLEANFILES += $(gir_DATA) $(typelib_DATA)
+endif
+
+tp-lowlevel.vapi: tp-lowlevel.gir
 	$(AM_V_GEN)$(VAPIGEN) $(VALAFLAGS) --library tp-lowlevel \
-		--metadata=tp-lowlevel.metadata --pkg gio-2.0 \
+		--pkg gio-2.0 \
 		--pkg telepathy-glib \
-		tp-lowlevel.gi
-	test ! -e tp-lowlevel.metadata.copied || rm -f tp-lowlevel.metadata*
+		tp-lowlevel.gir
 
 internal_vapi_files = \
 	tp-lowlevel.vapi \
@@ -208,7 +216,7 @@ BUILT_SOURCES = \
 	folks-backend-telepathy.h \
 	folks-backend-telepathy.vala.stamp \
 	folks-backend-telepathy.vapi \
-	tp-lowlevel.gi \
+	tp-lowlevel.gir \
 	tp-lowlevel.vapi \
 	$(folks_telepathy_valasources:.vala=.c) \
 	$(libfolks_backend_telepathy_la_SOURCES) \
@@ -216,13 +224,12 @@ BUILT_SOURCES = \
 	folks-telepathy-uninstalled.pc \
 	$(NULL)
 
-CLEANFILES = $(BUILT_SOURCES)
+CLEANFILES += $(BUILT_SOURCES)
 
 EXTRA_DIST = \
 	$(folks_telepathy_valasources) \
 	$(folks_backend_telepathy_valasources) \
 	$(libtp_lowlevel_la_SOURCES) \
-	tp-lowlevel.metadata \
 	$(pkgconfig_in) \
 	folks-telepathy.vala.stamp \
 	folks-telepathy.vapi \
