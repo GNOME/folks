@@ -362,9 +362,8 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       this.initialise_favourite_contacts.begin ();
     }
 
-  private void new_group_channels_cb (void *data)
+  private void new_group_channels_cb (Channel channel)
     {
-      var channel = (Channel) data;
       if (channel == null)
         {
           warning ("error creating channel for NewChannels signal");
@@ -868,7 +867,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
           if (contact_handles.length < 1)
             return;
 
-          unowned GLib.List<TelepathyGLib.Contact> contacts =
+          GLib.List<TelepathyGLib.Contact> contacts =
               yield this.ll.connection_get_contacts_by_handle_async (
                   this.conn, contact_handles, (uint[]) features);
 
@@ -906,7 +905,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
 
       if (contact_ids.length > 0)
         {
-          unowned GLib.List<TelepathyGLib.Contact> contacts =
+          GLib.List<TelepathyGLib.Contact> contacts =
               yield this.ll.connection_get_contacts_by_id_async (
                   this.conn, contact_ids, (uint[]) features);
 
