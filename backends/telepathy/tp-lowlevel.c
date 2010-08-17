@@ -64,7 +64,7 @@ connection_ensure_channel_cb (TpConnection *conn,
       /* FIXME: pass in an error here and react to it */
       channel = tp_channel_new_from_properties (conn, path, properties, NULL);
       g_simple_async_result_set_op_res_gpointer (simple, g_object_ref (channel),
-          g_object_unref);
+          NULL);
 
       g_object_unref (channel);
     }
@@ -123,13 +123,6 @@ folks_tp_lowlevel_connection_open_contact_list_channel_finish (
 }
 
 static void
-contact_list_free (GList *contact_list)
-{
-  g_list_foreach (contact_list, (GFunc) g_object_unref, NULL);
-  g_list_free (contact_list);
-}
-
-static void
 get_contacts_by_handle_cb (TpConnection *conn,
     guint n_contacts,
     TpContact * const *contacts,
@@ -154,8 +147,7 @@ get_contacts_by_handle_cb (TpConnection *conn,
         contact_list = g_list_prepend (contact_list,
             g_object_ref (contacts[i]));
 
-      g_simple_async_result_set_op_res_gpointer (simple, contact_list,
-          (GDestroyNotify) contact_list_free);
+      g_simple_async_result_set_op_res_gpointer (simple, contact_list, NULL);
     }
 
   g_simple_async_result_complete (simple);
@@ -267,8 +259,7 @@ get_contacts_by_id_cb (TpConnection *conn,
         contact_list = g_list_prepend (contact_list,
             g_object_ref (contacts[i]));
 
-      g_simple_async_result_set_op_res_gpointer (simple, contact_list,
-          (GDestroyNotify) contact_list_free);
+      g_simple_async_result_set_op_res_gpointer (simple, contact_list, NULL);
     }
 
   g_simple_async_result_complete (simple);
