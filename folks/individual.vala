@@ -465,7 +465,7 @@ public class Folks.Individual : Object,
           /* We have to pick a UID, since none of the personas have an alias
            * available. Pick the UID from the first persona in the list. */
           alias = this._personas.data.uid;
-          message ("No aliases available for individual; using UID instead: %s",
+          debug ("No aliases available for individual; using UID instead: %s",
                    alias);
         }
 
