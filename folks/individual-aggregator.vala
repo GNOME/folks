@@ -627,7 +627,7 @@ public class Folks.IndividualAggregator : Object
         {
           unowned Persona persona = (Persona) p;
 
-          if (!(Persona is IMable))
+          if (!(persona is IMable))
             return;
 
           ((IMable) persona).im_addresses.foreach ((k, v) =>
