@@ -60,7 +60,7 @@ AC_SUBST(LDFLAGS)
 # -----------------------------------------------------------
 GLIB_REQUIRED=2.24.0
 TP_GLIB_REQUIRED=0.11.11
-VALA_REQUIRED=0.9.5
+VALA_REQUIRED=0.9.5.24-fb5e
 
 AM_PROG_VALAC([$VALA_REQUIRED])
 
