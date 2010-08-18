@@ -262,7 +262,7 @@ public class Tpf.Persona : Folks.Persona,
                   (error.domain != TelepathyGLib.dbus_errors_quark () ||
                    error.code != TelepathyGLib.DBusError.OBJECT_REMOVED))
                 {
-                  warning ("Group invalidated: %s", error.message);
+                  debug ("Group invalidated: %s", error.message);
                 }
 
               this._change_group (group, false);
