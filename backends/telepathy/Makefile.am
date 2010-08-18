@@ -182,7 +182,7 @@ libfolks_backend_telepathy_la_LIBADD = \
 	$(GEE_LIBS) \
 	$(TP_GLIB_LIBS) \
 	-L$(abs_top_srcdir)/backends/telepathy/.libs \
-	-lfolks-telepathy \
+	libfolks-telepathy.la \
 	$(NULL)
 
 libfolks_backend_telepathy_la_LDFLAGS = -shared -fPIC -module -avoid-version
