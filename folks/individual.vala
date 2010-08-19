@@ -33,12 +33,18 @@ public class Folks.Individual : Object,
     Groups,
     Presence
 {
-  private HashTable<string, bool> _groups;
-  private GLib.List<Persona> _persona_list;
-  private HashSet<Persona> _persona_set;
-  private HashSet<PersonaStore> stores;
   private bool _is_favourite;
   private string _alias;
+  private HashTable<string, bool> _groups;
+  /* These two data structures should store exactly the same set of Personas:
+   * the Personas contained in this Individual. The HashSet is used for fast
+   * lookups, whereas the List is used for iteration. */
+  private GLib.List<Persona> _persona_list;
+  private HashSet<Persona> _persona_set;
+  /* Mapping from PersonaStore -> number of Personas from that store contained
+   * in this Individual. There shouldn't be any entries with a number < 1.
+   * This is used for working out when to disconnect from store signals. */
+  private HashMap<PersonaStore, uint> stores;
 
   /**
    * {@inheritDoc}
@@ -157,6 +163,18 @@ public class Folks.Individual : Object,
       set { this._set_personas (value, null); }
     }
 
+  /**
+   * Emitted when one or more {@link Persona}s are added to or removed from
+   * the Individual.
+   *
+   * @param added a list of {@link Persona}s which have been added
+   * @param removed a list of {@link Persona}s which have been removed
+   *
+   * @since 0.1.16
+   */
+  public signal void personas_changed (GLib.List<Persona>? added,
+      GLib.List<Persona>? removed);
+
   private void notify_groups_cb (Object obj, ParamSpec ps)
     {
       this.update_groups ();
@@ -224,16 +242,19 @@ public class Folks.Individual : Object,
   public Individual (GLib.List<Persona>? personas)
     {
       this._persona_set = new HashSet<Persona> (null, null);
-      this.stores = new HashSet<PersonaStore> (null, null);
+      this.stores = new HashMap<PersonaStore, uint> (null, null);
       this.personas = personas;
     }
 
   private void store_removed_cb (PersonaStore store)
     {
+      GLib.List<Persona> removed_personas = null;
       Iterator<Persona> iter = this._persona_set.iterator ();
       while (iter.next ())
         {
           Persona persona = iter.get ();
+
+          removed_personas.prepend (persona);
 
           this._persona_list.remove (persona);
           /* FIXME: bgo#624249 means GLib.List leaks item references.
@@ -244,6 +265,9 @@ public class Folks.Individual : Object,
 
           iter.remove ();
         }
+
+      if (removed_personas != null)
+        this.personas_changed (null, removed_personas);
 
       if (store != null)
         this.stores.remove (store);
@@ -264,17 +288,23 @@ public class Folks.Individual : Object,
       Persona? actor,
       Groups.ChangeReason reason)
     {
+      GLib.List<Persona> removed_personas = null;
       removed.foreach ((data) =>
         {
           unowned Persona p = (Persona) data;
 
           if (this._persona_set.remove (p))
             {
+              removed_personas.prepend (p);
+
               this._persona_list.remove (p);
               /* FIXME: bgo#624249 means GLib.List leaks item references */
               g_object_unref (p);
             }
         });
+
+      if (removed_personas != null)
+        this.personas_changed (null, removed_personas);
 
       if (this._persona_set.size < 1)
         {
@@ -545,85 +575,120 @@ public class Folks.Individual : Object,
       return p.is_online ();
     }
 
-  private void _set_personas (GLib.List<Persona>? personas,
+  private void connect_to_persona (Persona persona)
+    {
+      persona.notify["alias"].connect (this.notify_alias_cb);
+      persona.notify["avatar"].connect (this.notify_avatar_cb);
+      persona.notify["presence-message"].connect (this.notify_presence_cb);
+      persona.notify["presence-type"].connect (this.notify_presence_cb);
+      persona.notify["is-favourite"].connect (this.notify_is_favourite_cb);
+      persona.notify["groups"].connect (this.notify_groups_cb);
+
+      if (persona is Groups)
+        {
+          ((Groups) persona).group_changed.connect (
+              this.persona_group_changed_cb);
+        }
+    }
+
+  private void disconnect_from_persona (Persona persona)
+    {
+      persona.notify["alias"].disconnect (this.notify_alias_cb);
+      persona.notify["avatar"].disconnect (this.notify_avatar_cb);
+      persona.notify["presence-message"].disconnect (
+          this.notify_presence_cb);
+      persona.notify["presence-type"].disconnect (this.notify_presence_cb);
+      persona.notify["is-favourite"].disconnect (
+          this.notify_is_favourite_cb);
+      persona.notify["groups"].disconnect (this.notify_groups_cb);
+
+      if (persona is Groups)
+        {
+          ((Groups) persona).group_changed.disconnect (
+              this.persona_group_changed_cb);
+        }
+    }
+
+  private void _set_personas (GLib.List<Persona>? persona_list,
       Individual? replacement_individual)
     {
-      /* Disconnect from all our previous personas */
-      this._persona_list.foreach ((p) =>
+      HashSet<Persona> persona_set = new HashSet<Persona> (null, null);
+      GLib.List<Persona> added = null;
+      GLib.List<Persona> removed = null;
+
+      /* Determine which Personas have been added */
+      foreach (Persona p in persona_list)
         {
-          unowned Persona persona = (Persona) p;
-
-          persona.notify["alias"].disconnect (this.notify_alias_cb);
-          persona.notify["avatar"].disconnect (this.notify_avatar_cb);
-          persona.notify["presence-message"].disconnect (
-              this.notify_presence_cb);
-          persona.notify["presence-type"].disconnect (this.notify_presence_cb);
-          persona.notify["is-favourite"].disconnect (
-              this.notify_is_favourite_cb);
-          persona.notify["groups"].disconnect (this.notify_groups_cb);
-
-          if (p is Groups)
+          if (!this._persona_set.contains (p))
             {
-              ((Groups) p).group_changed.disconnect (
-                  this.persona_group_changed_cb);
+              added.prepend (p);
+
+              this._persona_set.add (p);
+              this.connect_to_persona (p);
+
+              /* Increment the Persona count for this PersonaStore */
+              unowned PersonaStore store = p.store;
+              uint num_from_store = this.stores.get (store);
+              if (num_from_store == 0)
+                {
+                  this.stores.set (store, num_from_store + 1);
+                }
+              else
+                {
+                  this.stores.set (store, 1);
+
+                  store.removed.connect (this.store_removed_cb);
+                  store.personas_changed.connect (
+                      this.store_personas_changed_cb);
+                }
             }
 
-          /* Disconnect from this persona's store */
-          if (this.stores.contains (persona.store))
-            {
-              persona.store.removed.disconnect (this.store_removed_cb);
-              persona.store.personas_changed.disconnect (
-                  this.store_personas_changed_cb);
-              this.stores.remove (persona.store);
-            }
+          persona_set.add (p);
+        }
 
-          this._persona_set.remove (persona);
-        });
-
-      /* Connect to all the new Personas */
-      this._persona_list = new GLib.List<Persona> ();
-      personas.foreach ((p) =>
+      /* Determine which Personas have been removed */
+      foreach (Persona p in this._persona_list)
         {
-          unowned Persona persona = (Persona) p;
-
-          this._persona_list.prepend (persona);
-
-          persona.notify["alias"].connect (this.notify_alias_cb);
-          persona.notify["avatar"].connect (this.notify_avatar_cb);
-          persona.notify["presence-message"].connect (this.notify_presence_cb);
-          persona.notify["presence-type"].connect (this.notify_presence_cb);
-          persona.notify["is-favourite"].connect (this.notify_is_favourite_cb);
-          persona.notify["groups"].connect (this.notify_groups_cb);
-
-          if (p is Groups)
+          if (!persona_set.contains (p))
             {
-              ((Groups) p).group_changed.connect (
-                  this.persona_group_changed_cb);
+              removed.prepend (p);
+
+              /* Decrement the Persona count for this PersonaStore */
+              unowned PersonaStore store = p.store;
+              uint num_from_store = this.stores.get (store);
+              if (num_from_store > 1)
+                {
+                  this.stores.set (store, num_from_store - 1);
+                }
+              else
+                {
+                  store.removed.disconnect (this.store_removed_cb);
+                  store.personas_changed.disconnect (
+                      this.store_personas_changed_cb);
+
+                  this.stores.unset (store);
+                }
+
+              this.disconnect_from_persona (p);
+              this._persona_set.remove (p);
             }
+        }
 
-          /* Connect to this persona's store */
-          if (!this.stores.contains (persona.store))
-            {
-              persona.store.removed.connect (this.store_removed_cb);
-              persona.store.personas_changed.connect (
-                  this.store_personas_changed_cb);
-              this.stores.add (persona.store);
-            }
+      /* Update the Persona list. We just copy the list given to us to save
+       * repeated insertions/removals and also to ensure we retain the ordering
+       * of the Personas we were given. */
+      this._persona_list = persona_list.copy ();
 
-          this._persona_set.add (persona);
-        });
+      this.personas_changed (added, removed);
 
-      this._persona_list.reverse ();
-
-      /* If all the personas have been removed, remove the individual */
+      /* If all the Personas have been removed, remove the Individual */
       if (this._persona_set.size < 1)
         {
           this.removed (replacement_individual);
             return;
         }
 
-      /* TODO: base this upon our ID in permanent storage, once we have that
-       */
+      /* TODO: Base this upon our ID in permanent storage, once we have that. */
       if (this.id == null && this._persona_list.data != null)
         this.id = this._persona_list.data.uid;
 
