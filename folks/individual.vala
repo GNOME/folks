@@ -34,8 +34,9 @@ public class Folks.Individual : Object,
     Presence
 {
   private HashTable<string, bool> _groups;
-  private GLib.List<Persona> _personas;
-  private HashTable<PersonaStore, HashSet<Persona>> stores;
+  private GLib.List<Persona> _persona_list;
+  private HashSet<Persona> _persona_set;
+  private HashSet<PersonaStore> stores;
   private bool _is_favourite;
   private string _alias;
 
@@ -89,7 +90,7 @@ public class Folks.Individual : Object,
             return;
 
           this._alias = value;
-          this._personas.foreach ((p) =>
+          this._persona_list.foreach ((p) =>
             {
               if (p is Alias && ((Persona) p).store.is_writeable == true)
                 ((Alias) p).alias = value;
@@ -113,7 +114,7 @@ public class Folks.Individual : Object,
             return;
 
           this._is_favourite = value;
-          this._personas.foreach ((p) =>
+          this._persona_list.foreach ((p) =>
             {
               if (p is Favourite && ((Persona) p).store.is_writeable == true)
                 ((Favourite) p).is_favourite = value;
@@ -130,7 +131,7 @@ public class Folks.Individual : Object,
 
       set
         {
-          this._personas.foreach ((p) =>
+          this._persona_list.foreach ((p) =>
             {
               if (p is Groups && ((Persona) p).store.is_writeable == true)
                 ((Groups) p).groups = value;
@@ -152,7 +153,7 @@ public class Folks.Individual : Object,
    */
   public GLib.List<Persona> personas
     {
-      get { return this._personas; }
+      get { return this._persona_list; }
       set { this._set_personas (value, null); }
     }
 
@@ -191,7 +192,7 @@ public class Folks.Individual : Object,
    */
   public async void change_group (string group, bool is_member)
     {
-      this._personas.foreach ((p) =>
+      this._persona_list.foreach ((p) =>
         {
           if (p is Groups)
             ((Groups) p).change_group.begin (group, is_member);
@@ -222,58 +223,32 @@ public class Folks.Individual : Object,
    */
   public Individual (GLib.List<Persona>? personas)
     {
-      Object (personas: personas);
-
-      this.stores = new HashTable<PersonaStore, HashSet<Persona>> (direct_hash,
-          direct_equal);
-      this.stores_update ();
-    }
-
-  private void stores_update ()
-    {
-      this._personas.foreach ((p) =>
-        {
-          unowned Persona persona = (Persona) p;
-          var store_is_new = false;
-          var persona_set = this.stores.lookup (persona.store);
-          if (persona_set == null)
-            {
-              persona_set = new HashSet<Persona> (direct_hash, direct_equal);
-              store_is_new = true;
-            }
-
-          persona_set.add (persona);
-
-          if (store_is_new)
-            {
-              this.stores.insert (persona.store, persona_set);
-
-              persona.store.removed.connect (this.store_removed_cb);
-              persona.store.personas_changed.connect (
-                this.store_personas_changed_cb);
-            }
-        });
+      this._persona_set = new HashSet<Persona> (null, null);
+      this.stores = new HashSet<PersonaStore> (null, null);
+      this.personas = personas;
     }
 
   private void store_removed_cb (PersonaStore store)
     {
-      var persona_set = this.stores.lookup (store);
-      if (persona_set != null)
+      Iterator<Persona> iter = this._persona_set.iterator ();
+      while (iter.next ())
         {
-          foreach (var persona in persona_set)
-            {
-              this._personas.remove (persona);
-              /* FIXME: bgo#624249 means GLib.List leaks item references.
-               * We probably eventually want to transition away from GLib.List
-               * and use Gee.LinkedList, but that would mean exposing libgee
-               * in the public API. */
-              g_object_unref (persona);
-            }
+          Persona persona = iter.get ();
+
+          this._persona_list.remove (persona);
+          /* FIXME: bgo#624249 means GLib.List leaks item references.
+           * We probably eventually want to transition away from GLib.List
+           * and use Gee.LinkedList, but that would mean exposing libgee
+           * in the public API. */
+          g_object_unref (persona);
+
+          iter.remove ();
         }
+
       if (store != null)
         this.stores.remove (store);
 
-      if (this._personas.length () < 1 || this.stores.size () < 1)
+      if (this._persona_set.size < 1)
         {
           this.removed (null);
           return;
@@ -289,20 +264,19 @@ public class Folks.Individual : Object,
       Persona? actor,
       Groups.ChangeReason reason)
     {
-      var persona_set = this.stores.lookup (store);
       removed.foreach ((data) =>
         {
           unowned Persona p = (Persona) data;
 
-          if (persona_set.remove (p))
+          if (this._persona_set.remove (p))
             {
-              this._personas.remove (p);
+              this._persona_list.remove (p);
               /* FIXME: bgo#624249 means GLib.List leaks item references */
               g_object_unref (p);
             }
         });
 
-      if (this._personas.length () < 1)
+      if (this._persona_set.size < 1)
         {
           this.removed (null);
           return;
@@ -333,7 +307,7 @@ public class Folks.Individual : Object,
        * "groups-changed" on the store (with the set of personas), to allow the
        * back-end to optimize it (like Telepathy will for MembersChanged for the
        * groups channel list) */
-      this._personas.foreach ((p) =>
+      this._persona_list.foreach ((p) =>
         {
           if (p is Groups)
             {
@@ -385,7 +359,7 @@ public class Folks.Individual : Object,
       var presence_type = Folks.PresenceType.UNSET;
 
       /* Choose the most available presence from our personas */
-      this._personas.foreach ((p) =>
+      this._persona_list.foreach ((p) =>
         {
           if (p is Presence)
             {
@@ -414,7 +388,7 @@ public class Folks.Individual : Object,
     {
       bool favourite = false;
 
-      this._personas.foreach ((p) =>
+      this._persona_list.foreach ((p) =>
         {
           if (favourite == false && p is Favourite)
             {
@@ -434,7 +408,7 @@ public class Folks.Individual : Object,
       string alias = null;
       bool alias_is_display_id = false;
 
-      foreach (Persona p in this._personas)
+      foreach (Persona p in this._persona_list)
         {
           if (p is Alias)
             {
@@ -464,7 +438,7 @@ public class Folks.Individual : Object,
         {
           /* We have to pick a UID, since none of the personas have an alias
            * available. Pick the UID from the first persona in the list. */
-          alias = this._personas.data.uid;
+          alias = this._persona_list.data.uid;
           debug ("No aliases available for individual; using UID instead: %s",
                    alias);
         }
@@ -478,7 +452,7 @@ public class Folks.Individual : Object,
     {
       File avatar = null;
 
-      this._personas.foreach ((p) =>
+      this._persona_list.foreach ((p) =>
         {
           if (avatar == null && p is Avatar)
             {
@@ -575,7 +549,7 @@ public class Folks.Individual : Object,
       Individual? replacement_individual)
     {
       /* Disconnect from all our previous personas */
-      this._personas.foreach ((p) =>
+      this._persona_list.foreach ((p) =>
         {
           unowned Persona persona = (Persona) p;
 
@@ -593,31 +567,26 @@ public class Folks.Individual : Object,
               ((Groups) p).group_changed.disconnect (
                   this.persona_group_changed_cb);
             }
+
+          /* Disconnect from this persona's store */
+          if (this.stores.contains (persona.store))
+            {
+              persona.store.removed.disconnect (this.store_removed_cb);
+              persona.store.personas_changed.disconnect (
+                  this.store_personas_changed_cb);
+              this.stores.remove (persona.store);
+            }
+
+          this._persona_set.remove (persona);
         });
 
-      this._personas = new GLib.List<Persona> ();
-      personas.foreach ((l) =>
-        {
-          this._personas.prepend ((Persona) l);
-        });
-      this._personas.reverse ();
-
-      /* If all the personas have been removed, remove the individual */
-      if (this._personas.length () < 1)
-        {
-          this.removed (replacement_individual);
-            return;
-        }
-
-      /* TODO: base this upon our ID in permanent storage, once we have that
-       */
-      if (this.id == null && this._personas.data != null)
-        this.id = this._personas.data.uid;
-
-      /* Connect to all the new personas */
-      this._personas.foreach ((p) =>
+      /* Connect to all the new Personas */
+      this._persona_list = new GLib.List<Persona> ();
+      personas.foreach ((p) =>
         {
           unowned Persona persona = (Persona) p;
+
+          this._persona_list.prepend (persona);
 
           persona.notify["alias"].connect (this.notify_alias_cb);
           persona.notify["avatar"].connect (this.notify_avatar_cb);
@@ -631,7 +600,32 @@ public class Folks.Individual : Object,
               ((Groups) p).group_changed.connect (
                   this.persona_group_changed_cb);
             }
+
+          /* Connect to this persona's store */
+          if (!this.stores.contains (persona.store))
+            {
+              persona.store.removed.connect (this.store_removed_cb);
+              persona.store.personas_changed.connect (
+                  this.store_personas_changed_cb);
+              this.stores.add (persona.store);
+            }
+
+          this._persona_set.add (persona);
         });
+
+      this._persona_list.reverse ();
+
+      /* If all the personas have been removed, remove the individual */
+      if (this._persona_set.size < 1)
+        {
+          this.removed (replacement_individual);
+            return;
+        }
+
+      /* TODO: base this upon our ID in permanent storage, once we have that
+       */
+      if (this.id == null && this._persona_list.data != null)
+        this.id = this._persona_list.data.uid;
 
       /* Update our aggregated fields and notify the changes */
       this.update_fields ();
