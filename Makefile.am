@@ -13,7 +13,6 @@ DISTCHECK_CONFIGURE_FLAGS = --enable-docs
 
 EXTRA_DIST = \
 	autogen.sh \
-	m4/introspection.m4 \
 	telepathy-check.vala \
 	$(NULL)
 
