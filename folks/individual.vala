@@ -38,8 +38,11 @@ public class Folks.Individual : Object,
   private HashTable<string, bool> _groups;
   /* These two data structures should store exactly the same set of Personas:
    * the Personas contained in this Individual. The HashSet is used for fast
-   * lookups, whereas the List is used for iteration. */
-  private GLib.List<Persona> _persona_list;
+   * lookups, whereas the List is used for iteration.
+   * The Individual's references to its Personas are kept by the HashSet;
+   * since the List contains the same set of Personas, it doesn't need an
+   * extra reference (and due to bgo#624249, this is a good thing). */
+  private GLib.List<unowned Persona> _persona_list;
   private HashSet<Persona> _persona_set;
   /* Mapping from PersonaStore -> number of Personas from that store contained
    * in this Individual. There shouldn't be any entries with a number < 1.
@@ -255,14 +258,7 @@ public class Folks.Individual : Object,
           Persona persona = iter.get ();
 
           removed_personas.prepend (persona);
-
           this._persona_list.remove (persona);
-          /* FIXME: bgo#624249 means GLib.List leaks item references.
-           * We probably eventually want to transition away from GLib.List
-           * and use Gee.LinkedList, but that would mean exposing libgee
-           * in the public API. */
-          g_object_unref (persona);
-
           iter.remove ();
         }
 
@@ -296,10 +292,7 @@ public class Folks.Individual : Object,
           if (this._persona_set.remove (p))
             {
               removed_personas.prepend (p);
-
               this._persona_list.remove (p);
-              /* FIXME: bgo#624249 means GLib.List leaks item references */
-              g_object_unref (p);
             }
         });
 
