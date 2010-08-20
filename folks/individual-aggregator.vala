@@ -216,7 +216,19 @@ public class Folks.IndividualAggregator : Object
         {
           unowned Persona persona = (Persona) p;
           PersonaStoreTrust trust_level = persona.store.trust_level;
+
+          /* These are the Individuals whose Personas will be linked together
+           * to form the `final_individual`. We keep a list of the Individuals
+           * for fast iteration, but also keep a set to ensure that we don't
+           * get duplicate Individuals in the list.
+           * Since a given Persona can only be part of one Individual, and the
+           * code in Persona._set_personas() ensures that there are no duplicate
+           * Personas in a given Individual, ensuring that there are no
+           * duplicate Individuals in `candidate_inds` guarantees that there
+           * will be no duplicate Personas in the `final_individual`. */
           GLib.List<Individual> candidate_inds = null;
+          HashSet<Individual> candidate_ind_set = new HashSet<Individual> ();
+
           GLib.List<Persona> final_personas = new GLib.List<Persona> ();
           Individual final_individual = null;
 
@@ -232,6 +244,7 @@ public class Folks.IndividualAggregator : Object
                   debug ("    Found candidate individual '%s' by IID.",
                       candidate_ind.id);
                   candidate_inds.prepend (candidate_ind);
+                  candidate_ind_set.add (candidate_ind);
                 }
             }
 
@@ -253,8 +266,12 @@ public class Folks.IndividualAggregator : Object
                     {
                       Individual candidate_ind =
                           this.link_map.lookup ((string) l);
-                      if (candidate_ind != null)
-                        candidate_inds.prepend (candidate_ind);
+                      if (candidate_ind != null &&
+                          !candidate_ind_set.contains (candidate_ind))
+                        {
+                          candidate_inds.prepend (candidate_ind);
+                          candidate_ind_set.add (candidate_ind);
+                        }
                     });
                 }
             }
