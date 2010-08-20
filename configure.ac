@@ -96,7 +96,7 @@ AC_SUBST(VAPIDIR)
 AC_PATH_PROG(VAPIGEN, vapigen, vapigen)
 AC_SUBST(VAPIGEN)
 
-GOBJECT_INTROSPECTION_CHECK([0.6.7])
+GOBJECT_INTROSPECTION_REQUIRE([0.6.7])
 
 AS_IF([test "$VAPIGEN" = ""],
 	[AC_MSG_ERROR([Vala must be built with --enable-vapigen])])
