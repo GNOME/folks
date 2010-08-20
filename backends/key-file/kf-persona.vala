@@ -19,6 +19,7 @@
  */
 
 using GLib;
+using Gee;
 using Folks;
 using Folks.Backends.Kf;
 
@@ -110,11 +111,20 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
 
               /* FIXME: We have to convert our nice efficient string[] to a
                * GenericArray<string> because Vala doesn't like null-terminated
-               * arrays as generic types. */
+               * arrays as generic types.
+               * We can take this opportunity to remove duplicates. */
+              HashSet<string> address_set = new HashSet<string> ();
               GenericArray<string> im_address_array =
                   new GenericArray<string> ();
+
               foreach (string address in im_addresses)
-                im_address_array.add (address);
+                {
+                  if (!address_set.contains (address))
+                    {
+                      im_address_array.add (address);
+                      address_set.add (address);
+                    }
+                }
 
               this._im_addresses.insert (protocol, im_address_array);
             }

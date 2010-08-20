@@ -26,14 +26,20 @@ using GLib;
 public interface Folks.IMable : Object
 {
   /* FIXME: We have to use GenericArray<string> here rather than string[] as
-   * null-terminated arrays aren't supported as generic types yet. */
+   * null-terminated arrays aren't supported as generic types yet. It would be
+   * best if we changed to using a proper ordered set datatype, which inherently
+   * disallows duplicates, while retaining the ordering of its members.
+   * (bgo#627483) */
   /**
-   * A mapping of IM protocol to an ordered list of IM addresses.
+   * A mapping of IM protocol to an ordered set of IM addresses.
    *
-   * Each mapping is from an arbitrary protocol identifier to a list of IM
+   * Each mapping is from an arbitrary protocol identifier to a set of IM
    * addresses on that protocol for the contact, listed in preference order.
    * The most-preferred IM address for each protocol comes first in that
    * protocol's list.
+   *
+   * There must be no duplicate IM addresses in each ordered set, though a given
+   * IM address may be present in the sets for different protocols.
    */
   public abstract HashTable<string, GenericArray<string>> im_addresses
     {

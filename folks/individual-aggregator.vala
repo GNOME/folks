@@ -621,8 +621,14 @@ public class Folks.IndividualAggregator : Object
       /* FIXME: We hardcode this to use the key-file backend for now */
       assert (this.writeable_store.type_id == "key-file");
 
+      /* `protocols` will be passed to the new Kf.Persona, whereas `_protocols`
+       * is used to ensure we don't get duplicate IM addresses in the ordered
+       * set of addresses for each protocol in `protocols`. It's temporary. */
       HashTable<string, GenericArray<string>> protocols =
           new HashTable<string, GenericArray<string>> (str_hash, str_equal);
+      HashTable<string, HashSet<string>> _protocols =
+          new HashTable<string, HashSet<string>> (str_hash, str_equal);
+
       personas.foreach ((p) =>
         {
           unowned Persona persona = (Persona) p;
@@ -637,16 +643,28 @@ public class Folks.IndividualAggregator : Object
 
               GenericArray<string> existing_addresses =
                   protocols.lookup (protocol);
-              if (existing_addresses == null)
+              HashSet<string> address_set = _protocols.lookup (protocol);
+
+              if (existing_addresses == null || address_set == null)
                 {
                   existing_addresses = new GenericArray<string> ();
+                  address_set = new HashSet<string> ();
+
                   protocols.insert (protocol, existing_addresses);
+                  _protocols.insert (protocol, address_set);
                 }
 
               addresses.foreach ((a) =>
                 {
                   unowned string address = (string) a;
-                  existing_addresses.add (address);
+
+                  /* Only add the IM address to the ordered set if it isn't
+                   * already a member. */
+                  if (!address_set.contains (address))
+                    {
+                      existing_addresses.add (address);
+                      address_set.add (address);
+                    }
                 });
             });
         });
