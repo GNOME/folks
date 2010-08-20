@@ -638,12 +638,13 @@ public class Folks.IndividualAggregator : Object
       /* FIXME: We hardcode this to use the key-file backend for now */
       assert (this.writeable_store.type_id == "key-file");
 
-      /* `protocols` will be passed to the new Kf.Persona, whereas `_protocols`
-       * is used to ensure we don't get duplicate IM addresses in the ordered
-       * set of addresses for each protocol in `protocols`. It's temporary. */
-      HashTable<string, GenericArray<string>> protocols =
+      /* `protocols_addrs_list` will be passed to the new Kf.Persona, whereas
+       * `protocols_addrs_set` is used to ensure we don't get duplicate IM
+       * addresses in the ordered set of addresses for each protocol in
+       * `protocols_addrs_list`. It's temporary. */
+      HashTable<string, GenericArray<string>> protocols_addrs_list =
           new HashTable<string, GenericArray<string>> (str_hash, str_equal);
-      HashTable<string, HashSet<string>> _protocols =
+      HashTable<string, HashSet<string>> protocols_addrs_set =
           new HashTable<string, HashSet<string>> (str_hash, str_equal);
 
       personas.foreach ((p) =>
@@ -658,17 +659,18 @@ public class Folks.IndividualAggregator : Object
               unowned string protocol = (string) k;
               unowned GenericArray<string> addresses = (GenericArray<string>) v;
 
-              GenericArray<string> existing_addresses =
-                  protocols.lookup (protocol);
-              HashSet<string> address_set = _protocols.lookup (protocol);
+              GenericArray<string> address_list =
+                  protocols_addrs_list.lookup (protocol);
+              HashSet<string> address_set = protocols_addrs_set.lookup (
+                protocol);
 
-              if (existing_addresses == null || address_set == null)
+              if (address_list == null || address_set == null)
                 {
-                  existing_addresses = new GenericArray<string> ();
+                  address_list = new GenericArray<string> ();
                   address_set = new HashSet<string> ();
 
-                  protocols.insert (protocol, existing_addresses);
-                  _protocols.insert (protocol, address_set);
+                  protocols_addrs_list.insert (protocol, address_list);
+                  protocols_addrs_set.insert (protocol, address_set);
                 }
 
               addresses.foreach ((a) =>
@@ -679,7 +681,7 @@ public class Folks.IndividualAggregator : Object
                    * already a member. */
                   if (!address_set.contains (address))
                     {
-                      existing_addresses.add (address);
+                      address_list.add (address);
                       address_set.add (address);
                     }
                 });
@@ -687,7 +689,7 @@ public class Folks.IndividualAggregator : Object
         });
 
       Value addresses_value = Value (typeof (HashTable));
-      addresses_value.set_boxed (protocols);
+      addresses_value.set_boxed (protocols_addrs_list);
 
       HashTable<string, Value?> details =
           new HashTable<string, Value?> (str_hash, str_equal);
