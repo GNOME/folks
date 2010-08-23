@@ -83,6 +83,16 @@ public abstract class Folks.Persona : Object
   public string display_id { get; construct; }
 
   /**
+   * Whether the Persona is the user.
+   *
+   * Iff the Persona represents the user – the person who owns the account in
+   * the respective backend – this is `true`.
+   *
+   * @since 0.3.0
+   */
+  public bool is_user { get; construct; }
+
+  /**
    * The {@link PersonaStore} which contains this Persona.
    */
   public weak PersonaStore store { get; construct; }

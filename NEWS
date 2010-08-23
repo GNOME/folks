@@ -19,6 +19,8 @@ API changes:
 * Removed BackendStore constructor
 * Added BackendStore.dup()
 * Added BackendStore::enabled-backends
+* Added Individual::is-user
+* Added Persona::is-user
 
 Bugs fixed:
 * Bug 629452 — [Patch] Add missing gio linking for import-tool

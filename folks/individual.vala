@@ -84,6 +84,9 @@ public class Folks.Individual : Object,
    * in this Individual. There shouldn't be any entries with a number < 1.
    * This is used for working out when to disconnect from store signals. */
   private HashMap<PersonaStore, uint> stores;
+  /* The number of Personas in this Individual which have
+   * Persona.is_user == true. Iff this is > 0, Individual.is_user == true. */
+  private uint persona_user_count = 0;
 
   /**
    * The trust level of the Individual.
@@ -112,6 +115,31 @@ public class Folks.Individual : Object,
    * {@inheritDoc}
    */
   public string presence_message { get; private set; }
+
+  /**
+   * Whether the Individual is the user.
+   *
+   * Iff the Individual represents the user – the person who owns the account in
+   * the backend for each {@link Persona} in the Individual – this is `true`.
+   *
+   * It is //not// guaranteed that every {@link Persona} in the Individual has
+   * its {@link Persona.is_user} set to the same value as the Individual. For
+   * example, the user could own two Telepathy accounts, and have added the
+   * other account as a contact in each account. The accounts will expose a
+   * {@link Persona} for the user (which will have {@link Persona.is_user} set
+   * to `true`) //and// a {@link Persona} for the contact for the other account
+   * (which will have {@link Persona.is_user} set to `false`).
+   *
+   * It is guaranteed that iff this property is set to `true` on an Individual,
+   * there will be at least one {@link Persona} in the Individual with its
+   * {@link Persona.is_user} set to `true`.
+   *
+   * It is guaranteed that there will only ever be one Individual with this
+   * property set to `true`.
+   *
+   * @since 0.3.0
+   */
+  public bool is_user { get; private set; }
 
   /**
    * A unique identifier for the Individual.
@@ -756,6 +784,10 @@ public class Folks.Individual : Object,
         {
           if (!this._persona_set.contains (p))
             {
+              /* Keep track of how many Personas are users */
+              if (p.is_user)
+                this.persona_user_count++;
+
               added.prepend (p);
 
               this._persona_set.add (p);
@@ -786,6 +818,10 @@ public class Folks.Individual : Object,
         {
           if (!persona_set.contains (p))
             {
+              /* Keep track of how many Personas are users */
+              if (p.is_user)
+                this.persona_user_count--;
+
               removed.prepend (p);
 
               /* Decrement the Persona count for this PersonaStore */
@@ -815,6 +851,11 @@ public class Folks.Individual : Object,
       this._persona_list = persona_list.copy ();
 
       this.personas_changed (added, removed);
+
+      /* Update this.is_user */
+      bool new_is_user = (this.persona_user_count > 0) ? true : false;
+      if (new_is_user != this.is_user)
+        this.is_user = new_is_user;
 
       /* If all the Personas have been removed, remove the Individual */
       if (this._persona_set.size < 1)
