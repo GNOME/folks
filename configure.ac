@@ -101,7 +101,8 @@ GOBJECT_INTROSPECTION_REQUIRE([0.6.7])
 AS_IF([test "$VAPIGEN" = ""],
 	[AC_MSG_ERROR([Vala must be built with --enable-vapigen])])
 
-PKG_CHECK_MODULES(GEE, gee-1.0)
+# FIXME: We depend on libgee <= 0.5.2 because 0.5.3 broke API. bgo#627746
+PKG_CHECK_MODULES(GEE, gee-1.0 <= 0.5.2)
 AC_SUBST(GEE_CFLAGS)
 AC_SUBST(GEE_LIBS)
 
