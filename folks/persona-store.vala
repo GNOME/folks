@@ -76,6 +76,14 @@ public errordomain Folks.PersonaStoreError
    * Creation of a {@link Persona} failed.
    */
   CREATE_FAILED,
+
+  /**
+   * Such an operation may not be performed on a {@link Persona} with
+   * {@link Persona.is_user} set to `true`.
+   *
+   * @since 0.3.0
+   */
+  UNSUPPORTED_ON_USER,
 }
 
 /**

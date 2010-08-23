@@ -213,7 +213,8 @@ public class Tpf.Persona : Folks.Persona,
         throw new Tpf.PersonaError.INVALID_ARGUMENT ("contact has an " +
             "invalid ID");
 
-      var account = account_for_connection (contact.get_connection ());
+      unowned Connection connection = contact.get_connection ();
+      var account = account_for_connection (connection);
       string uid = this.build_uid ("telepathy", account.get_protocol (), id);
 
       var alias = contact.get_alias ();
@@ -233,7 +234,8 @@ public class Tpf.Persona : Folks.Persona,
               iid: account.get_protocol () + ":" + id,
               uid: uid,
               store: store,
-              linkable_properties: linkable_properties);
+              linkable_properties: linkable_properties,
+              is_user: contact.handle == connection.self_handle);
 
       debug ("Creating new Tpf.Persona '%s' for service-specific UID '%s': %p",
           uid, id, this);

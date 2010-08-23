@@ -55,6 +55,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
   private TpLowlevel ll;
   private AccountManager account_manager;
   private Logger logger;
+  private Contact self_contact;
 
   internal signal void group_members_changed (string group,
       GLib.List<Persona>? added, GLib.List<Persona>? removed);
@@ -393,8 +394,68 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       this.add_standard_channel (c, "subscribe");
       this.conn = c;
 
+      /* Add the local user */
+      conn.notify["self-handle"].connect (this.self_handle_changed_cb);
+      if (conn.self_handle != 0)
+        this.self_handle_changed_cb (conn, null);
+
       /* We can only initialise the favourite contacts once conn is prepared */
       this.initialise_favourite_contacts.begin ();
+    }
+
+  private void self_handle_changed_cb (Object s, ParamSpec? p)
+    {
+      Connection c = (Connection) s;
+
+      /* Remove the old self persona */
+      if (this.self_contact != null)
+        this.ignore_by_handle (this.self_contact.handle, null, null, 0);
+
+      /* Add the new self persona */
+      ContactFeature[] features =
+        {
+          ALIAS,
+          /* XXX: also avatar token? */
+          PRESENCE
+        };
+
+      if (c.self_handle == 0)
+        return;
+
+      uint[] contact_handles = { c.self_handle };
+
+      /* We have to do it this way instead of using
+       * TpLowleve.get_contacts_by_handle_async() as we're in a notification
+       * callback */
+      c.get_contacts_by_handle (contact_handles, (uint[]) features,
+          (conn, contacts, failed, error, weak_object) =>
+            {
+              if (error != null)
+                {
+                  warning ("Failed to create contact for self handle '%u': %s",
+                      conn.self_handle, error.message);
+                  return;
+                }
+
+              /* Add the local user */
+              Contact contact = contacts[0];
+              try
+                {
+                  Persona persona = this.add_persona_from_contact (contact);
+
+                  GLib.List<Persona> personas = new GLib.List<Persona> ();
+                  personas.prepend (persona);
+
+                  this.self_contact = contact;
+                  this.personas_changed (personas, null, null, null, 0);
+                }
+              catch (Tpf.PersonaError e)
+                {
+                  warning ("Failed to create self persona from contact '%s' " +
+                      "(%p)", contact.alias, contact);
+                }
+            },
+          this);
     }
 
   private void new_group_channels_cb (TelepathyGLib.Channel? channel,
@@ -644,6 +705,9 @@ public class Tpf.PersonaStore : Folks.PersonaStore
 
       debug ("Ignoring handle %u (persona: %p)", handle, persona);
 
+      if (this.self_contact != null && this.self_contact.handle == handle)
+        this.self_contact = null;
+
       /*
        * remove all handle-keyed entries
        */
@@ -685,8 +749,15 @@ public class Tpf.PersonaStore : Folks.PersonaStore
    * See {@link Folks.PersonaStore.remove_persona}.
    */
   public override async void remove_persona (Folks.Persona persona)
+      throws Folks.PersonaStoreError
     {
       var tp_persona = (Tpf.Persona) persona;
+
+      if (tp_persona.contact == this.self_contact)
+        {
+          throw new PersonaStoreError.UNSUPPORTED_ON_USER (
+              "Personas representing the local user may not be removed.");
+        }
 
       try
         {
@@ -1016,7 +1087,6 @@ public class Tpf.PersonaStore : Folks.PersonaStore
 
       return null;
     }
-
 
   private void add_new_personas_from_contacts (Contact[] contacts)
     {
