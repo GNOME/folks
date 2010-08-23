@@ -200,7 +200,8 @@ public abstract class Folks.Persona : Object
               if (backend_name_length == 0)
                 backend_name_length = ((char*) i) - ((char*) uid);
               else
-                persona_store_id_length = ((char*) i) - ((char*) uid);
+                persona_store_id_length =
+                  (((char*) i) - ((char*) uid)) - backend_name_length - 1;
             }
         }
 
