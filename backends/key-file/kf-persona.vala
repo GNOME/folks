@@ -135,7 +135,8 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
               iid: iid,
               uid: uid,
               store: store,
-              linkable_properties: linkable_properties);
+              linkable_properties: linkable_properties,
+              is_user: false);
 
       debug ("Adding key-file Persona '%s' (IID '%s', group '%s')", uid, iid,
           id);
