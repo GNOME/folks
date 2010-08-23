@@ -279,8 +279,14 @@ public class Tpf.PersonaStore : Folks.PersonaStore
            * likely because the account hasn't connected yet (and we haven't
            * received the roster). If there are already entries in
            * handle_persona_map, the account *is* connected and we should
-           * warn about the unknown persona. */
-          if (p == null && this.handle_persona_map.size > 0)
+           * warn about the unknown persona.
+           * We have to take into account that this.self_contact may be
+           * retrieved before or after the rest of the account's contact list,
+           * affecting the size of this.handle_persona_map. */
+          if (p == null &&
+              ((this.self_contact == null &&
+                this.handle_persona_map.size > 0) ||
+               (this.self_contact != null && this.handle_persona_map.size > 1)))
             {
               warning ("unknown persona '%s' in favourites list", ids[i]);
               continue;

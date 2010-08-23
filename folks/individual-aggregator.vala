@@ -72,6 +72,17 @@ public class Folks.IndividualAggregator : Object
   public HashTable<string, Individual> individuals { get; private set; }
 
   /**
+   * The {@link Individual} representing the user.
+   *
+   * If it exists, this holds the {@link Individual} who is the user — the
+   * {@link Individual} containing the {@link Persona}s who are the owners of
+   * the accounts for their respective backends.
+   *
+   * @since 0.3.0
+   */
+  public Individual user { get; private set; }
+
+  /**
    * Emitted when one or more {@link Individual}s are added to or removed from
    * the aggregator.
    *
@@ -251,6 +262,16 @@ public class Folks.IndividualAggregator : Object
 
           debug ("Aggregating persona '%s' on '%s'.", persona.uid, persona.iid);
 
+          /* If the Persona is the user, we *always* want to link it to the
+           * existing this.user. */
+          if (persona.is_user == true && this.user != null)
+            {
+              debug ("    Found candidate individual '%s' as user.",
+                  this.user.id);
+              candidate_inds.prepend (this.user);
+              candidate_ind_set.add (this.user);
+            }
+
           /* If we don't trust the PersonaStore at all, we can't link the
            * Persona to any existing Individual */
           if (trust_level != PersonaStoreTrust.NONE)
@@ -397,6 +418,13 @@ public class Folks.IndividualAggregator : Object
               ((Individual) i).replace (final_individual);
             });
 
+          /* If the final Individual is the user, set them as such. */
+          if (final_individual.is_user == true)
+            {
+              assert (this.user == null);
+              this.user = final_individual;
+            }
+
           /* Add the new Individual to the aggregator */
           final_individual.removed.connect (this.individual_removed_cb);
           added_individuals.prepend (final_individual);
@@ -497,6 +525,9 @@ public class Folks.IndividualAggregator : Object
                 relinked_personas.prepend (p);
             }
 
+          if (this.user == individual)
+            this.user = null;
+
           this.individuals.remove (individual.id);
           individual.personas = null;
         }
@@ -542,6 +573,9 @@ public class Folks.IndividualAggregator : Object
        * us to group removals together in, e.g., personas_changed_cb(). */
       if (this.individuals.lookup (i.id) == null)
         return;
+
+      if (this.user == i)
+        this.user = null;
 
       var i_list = new GLib.List<Individual> ();
       i_list.append (i);

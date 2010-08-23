@@ -21,6 +21,7 @@ API changes:
 * Added BackendStore::enabled-backends
 * Added Individual::is-user
 * Added Persona::is-user
+* Added IndividualAggregator::user
 
 Bugs fixed:
 * Bug 629452 — [Patch] Add missing gio linking for import-tool
