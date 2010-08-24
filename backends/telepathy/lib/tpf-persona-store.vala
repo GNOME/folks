@@ -543,6 +543,8 @@ public class Tpf.PersonaStore : Folks.PersonaStore
 
       if (proxy == this.publish)
         this.publish = null;
+      else if (proxy == this.stored)
+        this.stored = null;
       else if (proxy == this.subscribe)
         this.subscribe = null;
       else
