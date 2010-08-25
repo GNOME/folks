@@ -482,6 +482,32 @@ public class Folks.Individual : Object,
       string alias = null;
       bool alias_is_display_id = false;
 
+      /* Search for an alias from a writeable Persona, and use it as our first
+       * choice if it's non-empty, since that's where the user-set alias is
+       * stored. */
+      foreach (Persona p in this._persona_list)
+        {
+          if (p is Alias && p.store.is_writeable == true)
+            {
+              unowned Alias a = (Alias) p;
+
+              if (a.alias != null && a.alias.strip () != "")
+                {
+                  alias = a.alias;
+
+                  /* Only notify if the value has changed */
+                  if (this.alias != alias)
+                    this.alias = alias;
+
+                  return;
+                }
+            }
+        }
+
+      /* Since we can't find a non-empty alias from a writeable backend, try
+       * the aliases from other personas. Use a non-empty alias which isn't
+       * equal to the persona's display ID as our preference. If we can't find
+       * one of those, fall back to one which is equal to the display ID. */
       foreach (Persona p in this._persona_list)
         {
           if (p is Alias)
