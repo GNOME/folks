@@ -192,7 +192,7 @@ public class Folks.Individual : Object,
           this._is_favourite = value;
           this._persona_list.foreach ((p) =>
             {
-              if (p is Favourite && ((Persona) p).store.is_writeable == true)
+              if (p is Favourite)
                 ((Favourite) p).is_favourite = value;
             });
         }
