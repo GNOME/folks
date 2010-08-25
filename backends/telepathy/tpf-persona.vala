@@ -195,12 +195,15 @@ public class Tpf.Persona : Folks.Persona,
       string uid = this.build_uid ("telepathy", account.get_protocol (), id);
 
       var alias = contact.get_alias ();
+      var display_id = id;
+
+      /* If the alias is empty, fall back to the display ID */
       if (alias == null || alias.strip () == "")
-        alias = uid;
+        alias = display_id;
 
       Object (alias: alias,
               contact: contact,
-              display_id: id,
+              display_id: display_id,
               /* FIXME: This IID format should be moved out to the IMable
                * interface along with the code in
                * Kf.Persona.linkable_property_to_links(), but that depends on
