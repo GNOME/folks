@@ -133,6 +133,11 @@ public class Tpf.Persona : Folks.Persona,
               if (value.lookup (group) == false)
                 this._change_group (group, true);
             });
+
+          /* Since we're only changing the members of this._groups, rather than
+           * replacing it with a new instance, we have to manually emit the
+           * notification. */
+          this.notify_property ("groups");
         }
     }
 
@@ -144,10 +149,7 @@ public class Tpf.Persona : Folks.Persona,
       if (_change_group (group, is_member))
         {
           Tpf.PersonaStore store = (Tpf.PersonaStore) this.store;
-
           yield store.change_group_membership (this, group, is_member);
-
-          this.group_changed (group, is_member);
         }
     }
 
@@ -165,6 +167,9 @@ public class Tpf.Persona : Folks.Persona,
         }
       else
         changed = this._groups.remove (group);
+
+      if (changed == true)
+        this.group_changed (group, is_member);
 
       return changed;
     }
