@@ -27,6 +27,7 @@ using Folks.Backends.Kf;
  * A persona subclass which represents a single persona from a simple key file.
  */
 public class Folks.Backends.Kf.Persona : Folks.Persona,
+    Alias,
     IMable
 {
   private unowned GLib.KeyFile key_file;
@@ -34,6 +35,25 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
    * GenericArray<string> here rather than just string[], as null-terminated
    * arrays aren't supported as generic types. */
   private HashTable<string, GenericArray<string>> _im_addresses;
+  private string _alias;
+
+  /**
+   * {@inheritDoc}
+   *
+   * @since 0.1.16
+   */
+  public string alias
+    {
+      get { return this._alias; }
+
+      set
+        {
+          this._alias = value;
+          this.key_file.set_string (this.display_id, "__alias", value);
+
+          ((Kf.PersonaStore) this.store).save_key_file.begin ();
+        }
+    }
 
   /**
    * {@inheritDoc}
@@ -104,8 +124,17 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
       try
         {
           string[] keys = this.key_file.get_keys (this.display_id);
-          foreach (string protocol in keys)
+          foreach (string key in keys)
             {
+              /* Alias */
+              if (key == "__alias")
+                {
+                  this.alias = this.key_file.get_string (this.display_id, key);
+                  continue;
+                }
+
+              /* IM addresses */
+              string protocol = key;
               string[] im_addresses = this.key_file.get_string_list (
                   this.display_id, protocol);
 
