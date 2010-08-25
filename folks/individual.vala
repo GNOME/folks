@@ -510,11 +510,12 @@ public class Folks.Individual : Object,
 
       if (alias == null)
         {
-          /* We have to pick a UID, since none of the personas have an alias
-           * available. Pick the UID from the first persona in the list. */
-          alias = this._persona_list.data.uid;
-          debug ("No aliases available for individual; using UID instead: %s",
-                   alias);
+          /* We have to pick a display ID, since none of the personas have an
+           * alias available. Pick the display ID from the first persona in the
+           * list. */
+          alias = this._persona_list.data.display_id;
+          debug ("No aliases available for individual; using display ID " +
+              "instead: %s", alias);
         }
 
       /* only notify if the value has changed */
