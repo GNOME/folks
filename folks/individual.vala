@@ -190,6 +190,7 @@ public class Folks.Individual : Object,
 
       set
         {
+          this._groups = value;
           this._persona_list.foreach ((p) =>
             {
               if (p is Groups && ((Persona) p).store.is_writeable == true)
@@ -240,7 +241,6 @@ public class Folks.Individual : Object,
 
   private void persona_group_changed_cb (string group, bool is_member)
     {
-      this.change_group.begin (group, is_member);
       this.update_groups ();
     }
 
