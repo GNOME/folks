@@ -23,6 +23,43 @@ using GLib;
 using Folks;
 
 /**
+ * Trust level for an {@link Individual} for use in the UI.
+ *
+ * @since 0.1.16
+ */
+public enum Folks.TrustLevel
+{
+  /**
+   * The {@link Individual}'s {@link Persona}s aren't trusted at all.
+   *
+   * This is the trust level for an {@link Individual} which contains one or
+   * more {@link Persona}s which cannot be guaranteed to be the same
+   * {@link Persona}s as were originally linked together.
+   *
+   * For example, an {@link Individual} containing a link-local XMPP
+   * {@link Persona} would have this trust level, since someone else could
+   * easily spoof the link-local XMPP {@link Persona}'s identity.
+   *
+   * @since 0.1.16
+   */
+  NONE,
+
+  /**
+   * The {@link Individual}'s {@link Persona}s are trusted.
+   *
+   * This trust level is for {@link Individual}s where it can be guaranteed
+   * that all the {@link Persona}s are the same ones as when they were
+   * originally linked together.
+   *
+   * Note that this doesn't guarantee that the user who behind each
+   * {@link Persona} is who they claim to be.
+   *
+   * @since 0.1.16
+   */
+  PERSONAS
+}
+
+/**
  * A physical person, aggregated from the various {@link Persona}s the person
  * might have, such as their different IM addresses or vCard entries.
  */
@@ -48,6 +85,19 @@ public class Folks.Individual : Object,
    * in this Individual. There shouldn't be any entries with a number < 1.
    * This is used for working out when to disconnect from store signals. */
   private HashMap<PersonaStore, uint> stores;
+
+  /**
+   * The trust level of the Individual.
+   *
+   * This specifies how far the Individual can be trusted to be who it claims
+   * to be. See the descriptions for the elements of {@link TrustLevel}.
+   *
+   * Clients should ''not'' allow linking of Individuals who have a trust level
+   * of {@link TrustLevel.NONE}.
+   *
+   * @since 0.1.16
+   */
+  public TrustLevel trust_level { get; private set; }
 
   /**
    * {@inheritDoc}
@@ -315,6 +365,7 @@ public class Folks.Individual : Object,
       this.update_is_favourite ();
       this.update_avatar ();
       this.update_alias ();
+      this.update_trust_level ();
     }
 
   private void update_groups ()
@@ -487,6 +538,21 @@ public class Folks.Individual : Object,
       /* only notify if the value has changed */
       if (this.avatar != avatar)
         this.avatar = avatar;
+    }
+
+  private void update_trust_level ()
+    {
+      TrustLevel trust_level = TrustLevel.PERSONAS;
+
+      foreach (Persona p in this._persona_list)
+        {
+          if (p.store.trust_level == PersonaStoreTrust.NONE)
+            trust_level = TrustLevel.NONE;
+        }
+
+      /* Only notify if the value has changed */
+      if (this.trust_level != trust_level)
+        this.trust_level = trust_level;
     }
 
   /*
