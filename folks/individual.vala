@@ -149,11 +149,28 @@ public class Folks.Individual : Object,
             return;
 
           this._alias = value;
+
+          /* First, try to write it to only the writeable Personas… */
+          bool alias_changed = false;
           this._persona_list.foreach ((p) =>
             {
               if (p is Alias && ((Persona) p).store.is_writeable == true)
-                ((Alias) p).alias = value;
+                {
+                  ((Alias) p).alias = value;
+                  alias_changed = true;
+                }
             });
+
+          /* …but if there are no writeable Personas, we have to fall back to
+           * writing it to every Persona. */
+          if (alias_changed == false)
+            {
+              this._persona_list.foreach ((p) =>
+                {
+                  if (p is Alias)
+                    ((Alias) p).alias = value;
+                });
+            }
         }
     }
 
