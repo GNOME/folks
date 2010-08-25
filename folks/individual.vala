@@ -228,11 +228,6 @@ public class Folks.Individual : Object,
   public signal void personas_changed (GLib.List<Persona>? added,
       GLib.List<Persona>? removed);
 
-  private void notify_groups_cb (Object obj, ParamSpec ps)
-    {
-      this.update_groups ();
-    }
-
   private void notify_alias_cb (Object obj, ParamSpec ps)
     {
       this.update_alias ();
@@ -668,7 +663,6 @@ public class Folks.Individual : Object,
       persona.notify["presence-message"].connect (this.notify_presence_cb);
       persona.notify["presence-type"].connect (this.notify_presence_cb);
       persona.notify["is-favourite"].connect (this.notify_is_favourite_cb);
-      persona.notify["groups"].connect (this.notify_groups_cb);
 
       if (persona is Groups)
         {
@@ -686,7 +680,6 @@ public class Folks.Individual : Object,
       persona.notify["presence-type"].disconnect (this.notify_presence_cb);
       persona.notify["is-favourite"].disconnect (
           this.notify_is_favourite_cb);
-      persona.notify["groups"].disconnect (this.notify_groups_cb);
 
       if (persona is Groups)
         {
