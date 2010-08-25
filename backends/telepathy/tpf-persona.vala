@@ -143,8 +143,9 @@ public class Tpf.Persona : Folks.Persona,
     {
       if (_change_group (group, is_member))
         {
-          ((Tpf.PersonaStore) this.store).change_group_membership (this, group,
-            is_member);
+          Tpf.PersonaStore store = (Tpf.PersonaStore) this.store;
+
+          yield store.change_group_membership (this, group, is_member);
 
           this.group_changed (group, is_member);
         }
