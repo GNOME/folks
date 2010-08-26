@@ -189,14 +189,15 @@ AC_SUBST(ERROR_CFLAGS)
 # -----------------------------------------------------------
 
 AC_CONFIG_FILES([
-	backends/telepathy/folks-telepathy.pc
-	backends/telepathy/folks-telepathy-uninstalled.pc
+	backends/telepathy/lib/folks-telepathy.pc
+	backends/telepathy/lib/folks-telepathy-uninstalled.pc
 	folks/folks.pc
 	folks/folks-uninstalled.pc
 	Makefile
 	backends/Makefile
 	backends/key-file/Makefile
 	backends/telepathy/Makefile
+	backends/telepathy/lib/Makefile
 	folks/Makefile
 	docs/Makefile
 ])

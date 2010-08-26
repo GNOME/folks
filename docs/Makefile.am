@@ -23,13 +23,17 @@ img_DATA = \
 
 $(doc_data) $(innerdoc_DATA) $(img_DATA): folks-0.1/index.html
 
-VALAFLAGS = --vapidir=$(top_srcdir)/folks --vapidir=$(top_srcdir)/backends/telepathy
+VALAFLAGS = \
+	--vapidir=$(top_srcdir)/folks \
+	--vapidir=$(top_srcdir)/backends/telepathy \
+	--vapidir=$(top_srcdir)/backends/telepathy/lib
 VALAFLAGS += $(TP_VALA_VALAFLAGS)
 
 # The Vala files which will have documentation extracted from them
 _doc_files = \
 	$(top_srcdir)/folks/*.vala \
 	$(top_srcdir)/backends/telepathy/*.vala \
+	$(top_srcdir)/backends/telepathy/lib/*.vala \
 	$(top_srcdir)/backends/key-file/*.vala
 doc_files = $(filter-out %-backend-factory.vala,$(wildcard $(_doc_files)))
 
