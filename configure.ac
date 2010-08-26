@@ -115,6 +115,10 @@ VALA_CHECK_PACKAGES([telepathy-glib
                     gio-2.0
                     gee-1.0])
 
+# Various functions that we need (used in C code generated from Vala)
+AC_CHECK_FUNCS([memset])
+AC_CHECK_FUNCS([strstr])
+
 # -----------------------------------------------------------
 # Backends
 # -----------------------------------------------------------
