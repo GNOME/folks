@@ -207,7 +207,19 @@ folks-backend-telepathy.vapi folks-backend-telepathy.vala.stamp: $(vapi_deps)
 # General
 ##################################################################
 
-BUILT_SOURCES = \
+EXTRA_DIST = \
+	$(folks_telepathy_valasources) \
+	$(folks_backend_telepathy_valasources) \
+	$(libtp_lowlevel_la_SOURCES) \
+	$(pkgconfig_in) \
+	folks-telepathy.vala.stamp \
+	folks-telepathy.vapi \
+	folks-backend-telepathy.vala.stamp \
+	folks-backend-telepathy.vapi \
+	tp-lowlevel.vapi \
+	$(NULL)
+
+CLEANFILES += \
 	folks-telepathy.h \
 	folks-telepathy.vala.stamp \
 	folks-telepathy.vapi \
@@ -220,20 +232,6 @@ BUILT_SOURCES = \
 	$(libfolks_backend_telepathy_la_SOURCES) \
 	$(pkgconfig_in:.in=) \
 	folks-telepathy-uninstalled.pc \
-	$(NULL)
-
-CLEANFILES += $(BUILT_SOURCES)
-
-EXTRA_DIST = \
-	$(folks_telepathy_valasources) \
-	$(folks_backend_telepathy_valasources) \
-	$(libtp_lowlevel_la_SOURCES) \
-	$(pkgconfig_in) \
-	folks-telepathy.vala.stamp \
-	folks-telepathy.vapi \
-	folks-backend-telepathy.vala.stamp \
-	folks-backend-telepathy.vapi \
-	tp-lowlevel.vapi \
 	$(NULL)
 
 DISTCLEANFILES = \

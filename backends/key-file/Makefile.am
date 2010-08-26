@@ -53,13 +53,6 @@ folks-backend-key-file.vapi folks-backend-key-file.vala.stamp: $(folks_backend_k
 		$(addprefix $(srcdir)/,$(folks_backend_key_file_valasources))
 	touch $@
 
-BUILT_SOURCES = \
-	folks-backend-key-file.h \
-	folks-backend-key-file.vala.stamp \
-	folks-backend-key-file.vapi \
-	$(libfolks_backend_key_file_la_SOURCES) \
-	$(NULL)
-
 EXTRA_DIST = \
 	$(folks_backend_key_file_valasources) \
 	folks-backend-key-file.vala.stamp \
@@ -67,7 +60,10 @@ EXTRA_DIST = \
 	$(NULL)
 
 CLEANFILES = \
-	$(BUILT_SOURCES) \
+	folks-backend-key-file.h \
+	folks-backend-key-file.vala.stamp \
+	folks-backend-key-file.vapi \
+	$(libfolks_backend_key_file_la_SOURCES) \
 	$(NULL)
 
 MAINTAINERCLEANFILES = \

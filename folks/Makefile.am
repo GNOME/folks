@@ -71,15 +71,6 @@ pkgconfig_in = folks.pc.in
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = $(pkgconfig_in:.in=)
 
-BUILT_SOURCES = \
-	folks.h \
-	$(libfolks_la_SOURCES) \
-	folks.vapi \
-	folks.vala.stamp \
-	$(pkgconfig_DATA) \
-	folks-uninstalled.pc \
-	$(NULL)
-
 EXTRA_DIST = \
 	$(folks_valasources) \
 	$(pkgconfig_in) \
@@ -89,7 +80,12 @@ EXTRA_DIST = \
 	$(NULL)
 
 CLEANFILES = \
-	$(BUILT_SOURCES) \
+	folks.h \
+	$(libfolks_la_SOURCES) \
+	folks.vapi \
+	folks.vala.stamp \
+	$(pkgconfig_DATA) \
+	folks-uninstalled.pc \
 	$(NULL)
 
 MAINTAINERCLEANFILES = \
