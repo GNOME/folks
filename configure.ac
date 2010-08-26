@@ -31,10 +31,10 @@ m4_define(folks_version, folks_full_version[]folks_maybe_datestamp)
 # Module API version.
 m4_define([folks_module_version], [folks_lt_current])
 
-AC_INIT(folks, folks_version, https://bugzilla.gnome.org/browse.cgi?product=folks)
+AC_INIT([folks],[folks_version],[https://bugzilla.gnome.org/browse.cgi?product=folks],[folks],[http://telepathy.freedesktop.org/wiki/Folks])
 m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
 
-AC_PREREQ(2.59)
+AC_PREREQ(2.65)
 AC_COPYRIGHT([
   Copyright (C) 2010 Collabora Ltd.
 ])
@@ -49,7 +49,7 @@ AM_MAINTAINER_MODE
 AC_PROG_CC
 AM_PROG_CC_C_O
 AC_DISABLE_STATIC
-AC_PROG_LIBTOOL
+LT_INIT
 
 AC_SUBST(CFLAGS)
 AC_SUBST(CPPFLAGS)
@@ -131,7 +131,7 @@ AC_SUBST(BACKEND_DIR)
 # Documentation
 # -----------------------------------------------------------
 AC_ARG_ENABLE(docs,
-  AC_HELP_STRING([--enable-docs],[Enable documentation generation]),
+  AS_HELP_STRING([--enable-docs],[Enable documentation generation]),
     enable_docs=$enableval, enable_docs=no)
 AM_CONDITIONAL(ENABLE_DOCS, test x$enable_docs = xyes)
 
@@ -148,11 +148,11 @@ AS_COMPILER_FLAG(-Wall, ERROR_CFLAGS="-Wall", ERROR_CFLAGS="")
 AS_COMPILER_FLAG(-Werror, werror=yes, werror=no)
 
 AC_ARG_ENABLE(debug,
-  AC_HELP_STRING([--disable-debug],[compile without debug code]),
+  AS_HELP_STRING([--disable-debug],[compile without debug code]),
     enable_debug=$enableval, enable_debug=yes)
 
 AC_ARG_ENABLE(Werror,
-  AC_HELP_STRING([--disable-Werror],[compile without -Werror (normally enabled in development builds)]),
+  AS_HELP_STRING([--disable-Werror],[compile without -Werror (normally enabled in development builds)]),
     werror=$enableval, werror=yes)
 
 AS_COMPILER_FLAG(-Wextra, wextra=yes, wextra=no)
