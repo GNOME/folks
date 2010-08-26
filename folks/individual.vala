@@ -328,7 +328,7 @@ public class Folks.Individual : Object,
         this.personas_changed (null, removed_personas);
 
       if (store != null)
-        this.stores.remove (store);
+        this.stores.unset (store);
 
       if (this._persona_set.size < 1)
         {
