@@ -196,7 +196,13 @@ public class Folks.Individual : Object,
           this._persona_list.foreach ((p) =>
             {
               if (p is Favourite)
-                ((Favourite) p).is_favourite = value;
+                {
+                  SignalHandler.block_by_func (p,
+                      (void*) this.notify_is_favourite_cb, this);
+                  ((Favourite) p).is_favourite = value;
+                  SignalHandler.unblock_by_func (p,
+                      (void*) this.notify_is_favourite_cb, this);
+                }
             });
         }
     }
