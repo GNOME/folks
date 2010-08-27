@@ -13,7 +13,6 @@ DISTCHECK_CONFIGURE_FLAGS = --enable-docs
 
 EXTRA_DIST = \
 	autogen.sh \
-	telepathy-check.vala \
 	$(NULL)
 
 MAINTAINERCLEANFILES = \
