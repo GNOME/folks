@@ -40,7 +40,7 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
   /**
    * {@inheritDoc}
    *
-   * @since 0.1.16
+   * @since 0.1.15
    */
   public string alias
     {

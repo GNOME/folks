@@ -25,7 +25,7 @@ using Folks;
 /**
  * Trust level for an {@link Individual} for use in the UI.
  *
- * @since 0.1.16
+ * @since 0.1.15
  */
 public enum Folks.TrustLevel
 {
@@ -40,7 +40,7 @@ public enum Folks.TrustLevel
    * {@link Persona} would have this trust level, since someone else could
    * easily spoof the link-local XMPP {@link Persona}'s identity.
    *
-   * @since 0.1.16
+   * @since 0.1.15
    */
   NONE,
 
@@ -54,7 +54,7 @@ public enum Folks.TrustLevel
    * Note that this doesn't guarantee that the user who behind each
    * {@link Persona} is who they claim to be.
    *
-   * @since 0.1.16
+   * @since 0.1.15
    */
   PERSONAS
 }
@@ -95,7 +95,7 @@ public class Folks.Individual : Object,
    * Clients should ''not'' allow linking of Individuals who have a trust level
    * of {@link TrustLevel.NONE}.
    *
-   * @since 0.1.16
+   * @since 0.1.15
    */
   public TrustLevel trust_level { get; private set; }
 
@@ -241,7 +241,7 @@ public class Folks.Individual : Object,
    * @param added a list of {@link Persona}s which have been added
    * @param removed a list of {@link Persona}s which have been removed
    *
-   * @since 0.1.16
+   * @since 0.1.15
    */
   public signal void personas_changed (GLib.List<Persona>? added,
       GLib.List<Persona>? removed);
