@@ -189,6 +189,9 @@ public class Folks.Individual : Object,
           if (this._is_favourite == value)
             return;
 
+          debug ("Setting '%s' favourite status to %s", this.id,
+              value ? "TRUE" : "FALSE");
+
           this._is_favourite = value;
           this._persona_list.foreach ((p) =>
             {
@@ -473,6 +476,8 @@ public class Folks.Individual : Object,
   private void update_is_favourite ()
     {
       bool favourite = false;
+
+      debug ("Running update_is_favourite() on '%s'", this.id);
 
       this._persona_list.foreach ((p) =>
         {
