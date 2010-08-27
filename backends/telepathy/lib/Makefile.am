@@ -50,7 +50,7 @@ INTROSPECTION_COMPILER_ARGS = --includedir=$(srcdir)
 CLEANFILES =
 
 tp-lowlevel.gir: libtp-lowlevel.la
-tp_lowlevel_gir_INCLUDES = GObject-2.0 Gee-1.0 TelepathyGLib-0.12
+tp_lowlevel_gir_INCLUDES = GObject-2.0 TelepathyGLib-0.12
 tp_lowlevel_gir_CFLAGS = $(TP_GLIB_CFLAGS)
 tp_lowlevel_gir_LIBS = libtp-lowlevel.la
 tp_lowlevel_gir_FILES = $(libtp_lowlevel_la_SOURCES)
