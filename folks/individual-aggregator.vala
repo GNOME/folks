@@ -252,12 +252,12 @@ public class Folks.IndividualAggregator : Object
             {
               /* If we trust the PersonaStore the Persona came from, we can
                * attempt to link based on its linkable properties. */
-              foreach (string foo in persona.linkable_properties)
+              foreach (unowned string foo in persona.linkable_properties)
                 {
                   /* FIXME: If we just use string prop_name directly in the
                    * foreach, Vala doesn't copy it into the closure data, and
                    * prop_name ends up as NULL. bgo#628336 */
-                  string prop_name = foo;
+                  unowned string prop_name = foo;
 
                   unowned ObjectClass pclass = persona.get_class ();
                   if (pclass.find_property (prop_name) == null)
@@ -341,7 +341,7 @@ public class Folks.IndividualAggregator : Object
 
                   /* Insert maps from the Persona's linkable properties to the
                    * Individual. */
-                  foreach (string prop_name in
+                  foreach (unowned string prop_name in
                       final_persona.linkable_properties)
                     {
                       unowned ObjectClass pclass = final_persona.get_class ();
