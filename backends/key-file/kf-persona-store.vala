@@ -160,6 +160,9 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
    */
   public override async void remove_persona (Folks.Persona persona)
     {
+      debug ("Removing Persona '%s' (IID '%s', group '%s')", persona.uid,
+          persona.iid, persona.display_id);
+
       try
         {
           this.key_file.remove_group (persona.display_id);
@@ -194,6 +197,8 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
               this.type_id, this.id, im_addresses);
         }
 
+      debug ("Adding Persona from details.");
+
       string persona_id = this.first_unused_id.to_string ();
       this.first_unused_id++;
 
@@ -215,6 +220,8 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
   internal async void save_key_file ()
     {
       string key_file_data = this.key_file.to_data ();
+
+      debug ("Saving key file '%s'.", this.file.get_path ());
 
       try
         {

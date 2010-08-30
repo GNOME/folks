@@ -107,14 +107,17 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
   public Persona (KeyFile key_file, string id, Folks.PersonaStore store)
     {
       string[] linkable_properties = { "im-addresses" };
+      string iid = store.id + ":" + id;
+      string uid = this.build_uid ("key-file", store.id, id);
 
       Object (display_id: id,
-              iid: store.id + ":" + id,
-              uid: this.build_uid ("key-file", store.id, id),
+              iid: iid,
+              uid: uid,
               store: store,
               linkable_properties: linkable_properties);
 
-      debug ("Adding key-file Persona '%s'", id);
+      debug ("Adding key-file Persona '%s' (IID '%s', group '%s')", uid, iid,
+          id);
 
       this.key_file = key_file;
       this._im_addresses = new HashTable<string, GenericArray<string>> (
