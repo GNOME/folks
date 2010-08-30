@@ -241,8 +241,8 @@ public class Folks.IndividualAggregator : Object
               Individual candidate_ind = this.link_map.lookup (persona.iid);
               if (candidate_ind != null)
                 {
-                  debug ("    Found candidate individual '%s' by IID.",
-                      candidate_ind.id);
+                  debug ("    Found candidate individual '%s' by IID '%s'.",
+                      candidate_ind.id, persona.iid);
                   candidate_inds.prepend (candidate_ind);
                   candidate_ind_set.add (candidate_ind);
                 }
@@ -264,11 +264,16 @@ public class Folks.IndividualAggregator : Object
 
                   persona.linkable_property_to_links (prop_name, (l) =>
                     {
+                      string prop_linking_value = (string) l;
                       Individual candidate_ind =
-                          this.link_map.lookup ((string) l);
+                          this.link_map.lookup (prop_linking_value);
+
                       if (candidate_ind != null &&
                           !candidate_ind_set.contains (candidate_ind))
                         {
+                          debug ("    Found candidate individual '%s' by " +
+                              "linkable property '%s' = '%s'.",
+                              candidate_ind.id, prop_name, prop_linking_value);
                           candidate_inds.prepend (candidate_ind);
                           candidate_ind_set.add (candidate_ind);
                         }
@@ -281,8 +286,6 @@ public class Folks.IndividualAggregator : Object
 
           if (candidate_inds != null)
             {
-              debug ("    Found candidate individuals:");
-
               /* The Persona's IID or linkable properties match one or more
                * linkable fields which are already in the link map, so we link
                * together all the Individuals we found to form a new
@@ -291,8 +294,6 @@ public class Folks.IndividualAggregator : Object
               candidate_inds.foreach ((i) =>
                 {
                   unowned Individual individual = (Individual) i;
-
-                  debug ("        %s", individual.id);
 
                   /* FIXME: It would be faster to prepend a reversed copy of
                    * `individual.personas`, then reverse the entire
@@ -321,7 +322,7 @@ public class Folks.IndividualAggregator : Object
             {
               unowned Persona final_persona = (Persona) i;
 
-              debug ("        %s", final_persona.uid);
+              debug ("        %s (%s)", final_persona.uid, final_persona.iid);
 
               /* Only add the Persona to the link map if we trust its IID. */
               if (trust_level != PersonaStoreTrust.NONE)
@@ -331,6 +332,8 @@ public class Folks.IndividualAggregator : Object
                * fully trust the PersonaStore it came from. */
               if (final_persona.store.trust_level == PersonaStoreTrust.FULL)
                 {
+                  debug ("        Inserting links:");
+
                   /* Insert maps from the Persona's linkable properties to the
                    * Individual. */
                   foreach (string prop_name in
@@ -347,7 +350,11 @@ public class Folks.IndividualAggregator : Object
                       final_persona.linkable_property_to_links (prop_name,
                           (l) =>
                         {
-                          this.link_map.replace ((string) l, final_individual);
+                          string prop_linking_value = (string) l;
+
+                          debug ("            %s", prop_linking_value);
+                          this.link_map.replace (prop_linking_value,
+                              final_individual);
                         });
                     }
                 }
@@ -388,10 +395,14 @@ public class Folks.IndividualAggregator : Object
       if (added != null)
         added_individuals = this.add_personas (added);
 
+      debug ("Removing Personas:");
+
       removed.foreach ((p) =>
         {
           unowned Persona persona = (Persona) p;
           PersonaStoreTrust trust_level = persona.store.trust_level;
+
+          debug ("    %s (%s)", persona.uid, persona.iid);
 
           /* Build a hash table of the removed Personas so that we can quickly
            * eliminate them from the list of Personas to relink, below. */
@@ -406,6 +417,8 @@ public class Folks.IndividualAggregator : Object
 
           if (trust_level == PersonaStoreTrust.FULL)
             {
+              debug ("    Removing links:");
+
               /* Remove maps from the Persona's linkable properties to
                * Individuals. Add the Individuals to a list of Individuals to be
                * removed. */
@@ -421,7 +434,10 @@ public class Folks.IndividualAggregator : Object
 
                   persona.linkable_property_to_links (prop_name, (l) =>
                     {
-                      this.link_map.remove ((string) l);
+                      string prop_linking_value = (string) l;
+
+                      debug ("        %s", prop_linking_value);
+                      this.link_map.remove (prop_linking_value);
                     });
                 }
             }
@@ -457,7 +473,7 @@ public class Folks.IndividualAggregator : Object
 
       debug ("Relinking Personas:");
       foreach (unowned Persona persona in relinked_personas)
-        debug ("    %s", persona.uid);
+        debug ("    %s (%s)", persona.uid, persona.iid);
 
       /* FIXME: Vala is horrible with GLists */
       added_individuals.concat (this.add_personas (relinked_personas));
@@ -502,12 +518,12 @@ public class Folks.IndividualAggregator : Object
 
       if (replacement != null)
         {
-          debug ("Individual '%s' removed (replaced by '%s')", i.alias,
-              replacement.alias);
+          debug ("Individual '%s' removed (replaced by '%s')", i.id,
+              replacement.id);
         }
       else
         {
-          debug ("Individual '%s' removed (not replaced)", i.alias);
+          debug ("Individual '%s' removed (not replaced)", i.id);
         }
 
       this.individuals_changed (null, i_list, null, null, 0);
@@ -704,7 +720,7 @@ public class Folks.IndividualAggregator : Object
       /* Remove all the Personas from writeable PersonaStores
        * We have to iterate manually since using foreach() requires a sync
        * lambda function, meaning we can't yield on the remove_persona() call */
-      debug ("Unlinking Individual '%s', deleting Personas:", individual.alias);
+      debug ("Unlinking Individual '%s', deleting Personas:", individual.id);
 
       /* We have to take a copy of the Persona list before removing the
        * Personas, as personas_changed_cb() (which is called as a result of
@@ -718,7 +734,7 @@ public class Folks.IndividualAggregator : Object
         {
           if (persona.store == this.writeable_store)
             {
-              debug ("    %s", persona.uid);
+              debug ("    %s (%s)", persona.uid, persona.iid);
               yield this.writeable_store.remove_persona (persona);
             }
         }
