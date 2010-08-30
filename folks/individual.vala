@@ -517,12 +517,7 @@ public class Folks.Individual : Object,
               if (a.alias != null && a.alias.strip () != "")
                 {
                   alias = a.alias;
-
-                  /* Only notify if the value has changed */
-                  if (this.alias != alias)
-                    this.alias = alias;
-
-                  return;
+                  break;
                 }
             }
         }
@@ -531,28 +526,31 @@ public class Folks.Individual : Object,
        * the aliases from other personas. Use a non-empty alias which isn't
        * equal to the persona's display ID as our preference. If we can't find
        * one of those, fall back to one which is equal to the display ID. */
-      foreach (Persona p in this._persona_list)
+      if (alias == null)
         {
-          if (p is Alias)
+          foreach (Persona p in this._persona_list)
             {
-              unowned Alias a = (Alias) p;
-
-              if (a.alias == null || a.alias.strip () == "")
-                continue;
-
-              if (alias == null || alias_is_display_id == true)
+              if (p is Alias)
                 {
-                  /* We prefer to not have an alias which is the same as the
-                   * Persona's display-id, since having such an alias implies
-                   * that it's the default. However, we prefer using such an
-                   * alias to using the Persona's UID, which is our ultimate
-                   * fallback (below). */
-                  alias = a.alias;
+                  unowned Alias a = (Alias) p;
 
-                  if (a.alias == p.display_id)
-                    alias_is_display_id = true;
-                  else if (alias != null)
-                    break;
+                  if (a.alias == null || a.alias.strip () == "")
+                    continue;
+
+                  if (alias == null || alias_is_display_id == true)
+                    {
+                      /* We prefer to not have an alias which is the same as the
+                       * Persona's display-id, since having such an alias
+                       * implies that it's the default. However, we prefer using
+                       * such an alias to using the Persona's UID, which is our
+                       * ultimate fallback (below). */
+                      alias = a.alias;
+
+                      if (a.alias == p.display_id)
+                        alias_is_display_id = true;
+                      else if (alias != null)
+                        break;
+                    }
                 }
             }
         }
