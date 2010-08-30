@@ -199,8 +199,15 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
 
       debug ("Adding Persona from details.");
 
-      string persona_id = this.first_unused_id.to_string ();
-      this.first_unused_id++;
+      /* Find the first unused ID, taking into account that the IDs in the key
+       * file may not be contiguous. */
+      string persona_id = null;
+      do
+        {
+          persona_id = this.first_unused_id.to_string ();
+          this.first_unused_id++;
+        }
+      while (this.key_file.has_group (persona_id) == true);
 
       /* Create a new persona and set its im-addresses property to update the
        * key file */
