@@ -52,10 +52,9 @@ GType folks_tp_lowlevel_get_type (void);
 #define FOLKS_IS_TP_LOWLEVEL_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), FOLKS_TYPE_TP_LOWLEVEL))
 #define FOLKS_TP_LOWLEVEL_GET_CLASS(obj) (G_TYPE_INSTANCE_GET_CLASS ((obj), FOLKS_TYPE_TP_LOWLEVEL, FolksTpLowlevelClass))
 
-GQuark folks_error_quark (void);
 GQuark folks_tp_lowlevel_error_quark (void);
-
 #define FOLKS_TP_LOWLEVEL_ERROR (folks_tp_lowlevel_error_quark ())
+
 typedef enum {
   FOLKS_TP_LOWLEVEL_ERROR_INVALID_ARGUMENT,
 } FolksTpLowlevelError;
