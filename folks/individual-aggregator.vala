@@ -239,7 +239,8 @@ public class Folks.IndividualAggregator : Object
           if (trust_level != PersonaStoreTrust.NONE)
             {
               Individual candidate_ind = this.link_map.lookup (persona.iid);
-              if (candidate_ind != null)
+              if (candidate_ind != null &&
+                  candidate_ind.trust_level != TrustLevel.NONE)
                 {
                   debug ("    Found candidate individual '%s' by IID '%s'.",
                       candidate_ind.id, persona.iid);
@@ -274,6 +275,7 @@ public class Folks.IndividualAggregator : Object
                           this.link_map.lookup (prop_linking_value);
 
                       if (candidate_ind != null &&
+                          candidate_ind.trust_level != TrustLevel.NONE &&
                           !candidate_ind_set.contains (candidate_ind))
                         {
                           debug ("    Found candidate individual '%s' by " +
@@ -329,9 +331,11 @@ public class Folks.IndividualAggregator : Object
 
               debug ("        %s (%s)", final_persona.uid, final_persona.iid);
 
-              /* Only add the Persona to the link map if we trust its IID. */
-              if (trust_level != PersonaStoreTrust.NONE)
-                this.link_map.replace (final_persona.iid, final_individual);
+              /* Add the Persona to the link map. Its trust level will be
+               * reflected in final_individual.trust_level, so other Personas
+               * won't be linked against it in error if the trust level is
+               * NONE. */
+              this.link_map.replace (final_persona.iid, final_individual);
 
               /* Only allow linking on non-IID properties of the Persona if we
                * fully trust the PersonaStore it came from. */
@@ -413,12 +417,12 @@ public class Folks.IndividualAggregator : Object
            * eliminate them from the list of Personas to relink, below. */
           removed_personas.add (persona);
 
-          if (trust_level != PersonaStoreTrust.NONE)
-            {
-              Individual ind = this.link_map.lookup (persona.iid);
-              removed_individuals.prepend (ind);
-              this.link_map.remove (persona.iid);
-            }
+          /* Find the Individual containing the Persona and mark them for
+           * removal (any other Personas they have which aren't being removed
+           * will be re-linked into other Individuals). */
+          Individual ind = this.link_map.lookup (persona.iid);
+          removed_individuals.prepend (ind);
+          this.link_map.remove (persona.iid);
 
           if (trust_level == PersonaStoreTrust.FULL)
             {
