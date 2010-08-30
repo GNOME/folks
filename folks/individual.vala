@@ -565,9 +565,15 @@ public class Folks.Individual : Object,
               "instead: %s", alias);
         }
 
-      /* only notify if the value has changed */
-      if (this.alias != alias)
-        this.alias = alias;
+      /* Only notify if the value has changed. We have to set the private member
+       * and notify manually, or we'd end up propagating the new alias back
+       * down to all our Personas, even if it's a fallback display ID or
+       * something else undesirable. */
+      if (this._alias != alias)
+        {
+          this._alias = alias;
+          this.notify_property ("alias");
+        }
     }
 
   private void update_avatar ()
