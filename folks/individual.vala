@@ -495,9 +495,14 @@ public class Folks.Individual : Object,
             }
         });
 
-      /* Only notify if the value has changed */
-      if (this.is_favourite != favourite)
-        this.is_favourite = favourite;
+      /* Only notify if the value has changed. We have to set the private member
+       * and notify manually, or we'd end up propagating the new favourite
+       * status back down to all our Personas. */
+      if (this._is_favourite != favourite)
+        {
+          this._is_favourite = favourite;
+          this.notify_property ("is-favourite");
+        }
     }
 
   private void update_alias ()
