@@ -716,12 +716,10 @@ public class Folks.IndividualAggregator : Object
       HashTable<string, HashSet<string>> protocols_addrs_set =
           new HashTable<string, HashSet<string>> (str_hash, str_equal);
 
-      personas.foreach ((p) =>
+      foreach (unowned Persona persona in personas)
         {
-          unowned Persona persona = (Persona) p;
-
           if (!(persona is IMable))
-            return;
+            continue;
 
           ((IMable) persona).im_addresses.foreach ((k, v) =>
             {
@@ -755,7 +753,7 @@ public class Folks.IndividualAggregator : Object
                     }
                 });
             });
-        });
+        }
 
       Value addresses_value = Value (typeof (HashTable));
       addresses_value.set_boxed (protocols_addrs_list);
