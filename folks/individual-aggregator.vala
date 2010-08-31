@@ -56,6 +56,7 @@ public class Folks.IndividualAggregator : Object
   private unowned PersonaStore writeable_store;
   private HashSet<Backend> backends;
   private HashTable<string, Individual> link_map;
+  private bool linking_enabled = true;
 
   /**
    * A table mapping {@link Individual.id}s to their {@link Individual}s.
@@ -114,6 +115,13 @@ public class Folks.IndividualAggregator : Object
       this.backends = new HashSet<Backend> ();
 
       Debug.set_flags (Environment.get_variable ("FOLKS_DEBUG"));
+
+      string disable_linking =
+          Environment.get_variable ("FOLKS_DISABLE_LINKING");
+      if (disable_linking != null)
+        disable_linking = disable_linking.strip ().down ();
+      this.linking_enabled = (disable_linking == null ||
+          disable_linking == "no" || disable_linking == "0");
 
       this.backend_store = new BackendStore ();
       this.backend_store.backend_available.connect (this.backend_available_cb);
@@ -291,7 +299,7 @@ public class Folks.IndividualAggregator : Object
           /* Ensure the original persona makes it into the final persona */
           final_personas.prepend (persona);
 
-          if (candidate_inds != null)
+          if (candidate_inds != null && this.linking_enabled == true)
             {
               /* The Persona's IID or linkable properties match one or more
                * linkable fields which are already in the link map, so we link
@@ -314,6 +322,10 @@ public class Folks.IndividualAggregator : Object
 
                   final_personas.concat (individual.personas.copy ());
                 });
+            }
+          else if (candidate_inds != null)
+            {
+              debug ("    Linking disabled.");
             }
           else
             {
@@ -658,6 +670,13 @@ public class Folks.IndividualAggregator : Object
       if (personas.next == null)
         return;
 
+      /* Disallow linking if it's disabled */
+      if (this.linking_enabled == false)
+        {
+          debug ("Can't link Personas: linking disabled.");
+          return;
+        }
+
       /* Create a new persona in the writeable store which links together the
        * given personas */
       /* FIXME: We hardcode this to use the key-file backend for now */
@@ -726,6 +745,13 @@ public class Folks.IndividualAggregator : Object
 
   public async void unlink_individual (Individual individual) throws GLib.Error
     {
+      if (this.linking_enabled == false)
+        {
+          debug ("Can't unlink Individual '%s': linking disabled.",
+              individual.id);
+          return;
+        }
+
       /* Remove all the Personas from writeable PersonaStores
        * We have to iterate manually since using foreach() requires a sync
        * lambda function, meaning we can't yield on the remove_persona() call */
