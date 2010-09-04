@@ -204,7 +204,7 @@ public class ContactRetrievalTests : Folks.TestCase
           foreach (Individual i in added)
             {
               /* We only check one */
-              if (i.id != "telepathy:protocol:olivier@example.com")
+              if (i.id != (this.individual_id_prefix + "olivier@example.com"))
                 {
                   continue;
                 }
