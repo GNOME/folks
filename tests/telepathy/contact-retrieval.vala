@@ -14,10 +14,25 @@ public class ContactRetrievalTests : Folks.TestCase
   private MainLoop main_loop;
   private string bus_name;
   private string object_path;
+  private HashSet<string> default_individuals;
+  private string individual_id_prefix = "telepathy:protocol:";
 
   public ContactRetrievalTests ()
     {
       base ("ContactRetrieval");
+
+      /* Create a set of the individuals we expect to see */
+      this.default_individuals = new HashSet<string> (str_hash, str_equal);
+
+      var prefix = this.individual_id_prefix;
+      default_individuals.add (prefix + "travis@example.com");
+      default_individuals.add (prefix + "olivier@example.com");
+      default_individuals.add (prefix + "guillaume@example.com");
+      default_individuals.add (prefix + "sjoerd@example.com");
+      default_individuals.add (prefix + "christian@example.com");
+      default_individuals.add (prefix + "wim@example.com");
+      default_individuals.add (prefix + "helen@example.com");
+      default_individuals.add (prefix + "geraldine@example.com");
 
       this.add_test ("aggregator", this.test_aggregator);
       this.add_test ("individual properties",
@@ -139,19 +154,10 @@ public class ContactRetrievalTests : Folks.TestCase
               "any .service files");
         });
 
-      /* Create a set of the individuals we expect to see */
-      HashSet<string> expected_individuals = new HashSet<string> (str_hash,
-          str_equal);
-
-      string prefix = "telepathy:protocol:";
-      expected_individuals.add (prefix + "travis@example.com");
-      expected_individuals.add (prefix + "olivier@example.com");
-      expected_individuals.add (prefix + "guillaume@example.com");
-      expected_individuals.add (prefix + "sjoerd@example.com");
-      expected_individuals.add (prefix + "christian@example.com");
-      expected_individuals.add (prefix + "wim@example.com");
-      expected_individuals.add (prefix + "helen@example.com");
-      expected_individuals.add (prefix + "geraldine@example.com");
+      /* work on a copy so we can mangle it */
+      HashSet<string> expected_individuals = new HashSet<string> ();
+      foreach (var id in this.default_individuals)
+        expected_individuals.add (id);
 
       /* Set up the aggregator */
       var aggregator = new IndividualAggregator ();
