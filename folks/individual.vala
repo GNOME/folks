@@ -652,7 +652,8 @@ public class Folks.Individual : Object,
 
       foreach (Persona p in this._persona_list)
         {
-          if (p.store.trust_level == PersonaStoreTrust.NONE)
+          if (p.is_user == false &&
+              p.store.trust_level == PersonaStoreTrust.NONE)
             trust_level = TrustLevel.NONE;
         }
 
