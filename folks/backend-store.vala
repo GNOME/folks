@@ -224,9 +224,9 @@ public class Folks.BackendStore : Object {
     {
       if (this.backend_is_enabled (backend.name))
         {
-          try
+          if (!this._prepared_backends.has_key (backend.name))
             {
-              if (!this._prepared_backends.has_key (backend.name))
+              try
                 {
                   yield backend.prepare ();
 
@@ -234,11 +234,13 @@ public class Folks.BackendStore : Object {
                   this._prepared_backends.set (backend.name, backend);
                   this.backend_available (backend);
                 }
-            }
-          catch (GLib.Error e)
-            {
-              warning ("Error preparing Backend '%s': %s", backend.name,
-                  e.message);
+              catch (GLib.Error e)
+                {
+                  /* Translators: the first parameter is a backend name, and the
+                   * second is an error message. */
+                  warning (_("Error preparing Backend '%s': %s"),
+                      backend.name, e.message);
+                }
             }
         }
     }
@@ -386,7 +388,9 @@ public class Folks.BackendStore : Object {
         }
       catch (Error error)
         {
-          critical ("Error listing contents of folder '%s': %s",
+          /* Translators: the first parameter is a folder path and the second
+           * is an error message. */
+          critical (_("Error listing contents of folder '%s': %s"),
               dir.get_path (), error.message);
 
           return null;
@@ -417,8 +421,10 @@ public class Folks.BackendStore : Object {
             }
           else if (mime == null)
             {
-              warning ("MIME type could not be determined for file '%s'. " +
-                  "Have you installed shared-mime-info?", file.get_path ());
+              warning (
+                  /* Translators: the parameter is a filename. */
+                  _("The content type of '%s' could not be determined. Have you installed shared-mime-info?"),
+                  file.get_path ());
             }
         }
 
@@ -438,7 +444,9 @@ public class Folks.BackendStore : Object {
       Module module = Module.open (file_path, ModuleFlags.BIND_LOCAL);
       if (module == null)
         {
-          warning ("Failed to load module from path '%s' : %s",
+          /* Translators: the first parameter is a filename and the second is an
+           * error message. */
+          warning (_("Failed to load module from path '%s': %s"),
                     file_path, Module.error ());
 
           return;
@@ -451,7 +459,9 @@ public class Folks.BackendStore : Object {
        * removed if they've since been disabled */
       if (!module.symbol("module_init", out function))
         {
-          warning ("Failed to find entry point function '%s' in '%s': %s",
+          /* Translators: the first parameter is a function name, the second is
+           * a filename and the third is an error message. */
+          warning (_("Failed to find entry point function '%s' in '%s': %s"),
                     "module_init",
                     file_path,
                     Module.error ());
@@ -486,10 +496,17 @@ public class Folks.BackendStore : Object {
       catch (Error error)
         {
           if (error is IOError.NOT_FOUND)
-            critical ("File or directory '%s' does not exist",
-                      file.get_path ());
+            {
+              /* Translators: the parameter is a filename. */
+              critical (_("File or directory '%s' does not exist."),
+                  file.get_path ());
+            }
           else
-            critical ("Failed to get content type for '%s'", file.get_path ());
+            {
+              /* Translators: the parameter is a filename. */
+              critical (_("Failed to get content type for '%s'."),
+                  file.get_path ());
+            }
 
           return false;
         }

@@ -210,8 +210,10 @@ public class Tpf.Persona : Folks.Persona,
        * chain up to the Object constructor, below. */
       unowned string id = contact.get_identifier ();
       if (id == null || id == "")
-        throw new Tpf.PersonaError.INVALID_ARGUMENT ("contact has an " +
-            "invalid ID");
+        {
+          throw new Tpf.PersonaError.INVALID_ARGUMENT (
+              _("Contact has an invalid ID."));
+        }
 
       unowned Connection connection = contact.connection;
       var account = account_for_connection (connection);

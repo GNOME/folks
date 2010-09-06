@@ -39,10 +39,10 @@ public class Folks.ImportTool : Object
   private static const OptionEntry[] options =
     {
       { "source", 's', 0, OptionArg.STRING, ref ImportTool.source,
-          "Source backend name (default: 'pidgin')", "name" },
+          N_("Source backend name (default: 'pidgin')"), "name" },
       { "source-filename", 0, 0, OptionArg.FILENAME,
           ref ImportTool.source_filename,
-          "Source filename (default: specific to source backend)", null },
+          N_("Source filename (default: specific to source backend)"), null },
       { null }
     };
 
@@ -51,8 +51,8 @@ public class Folks.ImportTool : Object
       Intl.bindtextdomain (BuildConf.GETTEXT_PACKAGE, BuildConf.LOCALE_DIR);
       Intl.textdomain (BuildConf.GETTEXT_PACKAGE);
 
-      OptionContext context = new OptionContext ("— import meta-contact " +
-          "information to libfolks");
+      OptionContext context = new OptionContext (
+          _("— import meta-contact information to libfolks"));
       context.add_main_entries (ImportTool.options, "folks");
 
       try
@@ -61,7 +61,8 @@ public class Folks.ImportTool : Object
         }
       catch (OptionError e)
         {
-          stderr.printf ("Couldn't parse command line options: %s\n",
+          /* Translators: the parameter is an error message. */
+          stderr.printf (_("Couldn't parse command line options: %s\n"),
               e.message);
           return 1;
         }
@@ -101,7 +102,8 @@ public class Folks.ImportTool : Object
         }
       catch (GLib.Error e1)
         {
-          stderr.printf ("Couldn't load the backends: %s\n", e1.message);
+          /* Translators: the parameter is an error message. */
+          stderr.printf (_("Couldn't load the backends: %s\n"), e1.message);
           return false;
         }
 
@@ -110,7 +112,7 @@ public class Folks.ImportTool : Object
 
       if (kf_backend == null)
         {
-          stderr.printf ("Couldn't load the 'key-file' backend.\n");
+          stderr.printf (_("Couldn't load the 'key-file' backend.\n"));
           return false;
         }
 
@@ -120,7 +122,8 @@ public class Folks.ImportTool : Object
         }
       catch (GLib.Error e2)
         {
-          stderr.printf ("Couldn't prepare the 'key-file' backend: %s\n",
+          /* Translators: the parameter is an error message. */
+          stderr.printf (_("Couldn't prepare the 'key-file' backend: %s\n"),
               e2.message);
           return false;
         }
@@ -132,8 +135,8 @@ public class Folks.ImportTool : Object
 
       if (stores == null)
         {
-          stderr.printf ("Couldn't load the 'key-file' backend's persona " +
-              "store.\n");
+          stderr.printf (
+              _("Couldn't load the 'key-file' backend's persona store.\n"));
           return false;
         }
 
@@ -144,8 +147,10 @@ public class Folks.ImportTool : Object
         }
       catch (GLib.Error e3)
         {
-          stderr.printf ("Couldn't prepare the 'key-file' backend's persona " +
-              "store: %s\n", e3.message);
+          /* Translators: the parameter is an error message. */
+          stderr.printf (
+              _("Couldn't prepare the 'key-file' backend's persona store: %s\n"),
+              e3.message);
           return false;
         }
 
@@ -161,7 +166,8 @@ public class Folks.ImportTool : Object
             }
           catch (ImportError e)
             {
-              stderr.printf ("Error: %s\n", e.message);
+              /* Translators: the parameter is an error message. */
+              stderr.printf (_("Error importing personas: %s\n"), e.message);
               return false;
             }
 
@@ -172,8 +178,8 @@ public class Folks.ImportTool : Object
         }
       else
         {
-          stderr.printf ("Unrecognised source backend name '%s'. " +
-              "'pidgin' is currently the only supported source backend.\n",
+          stderr.printf (
+              _("Unrecognised source backend name '%s'. 'pidgin' is currently the only supported source backend.\n"),
               source);
           return false;
         }

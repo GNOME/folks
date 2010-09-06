@@ -292,8 +292,8 @@ public class Tpf.PersonaStore : Folks.PersonaStore
                   this.logger = new Logger (this.id);
                   this.logger.invalidated.connect (() =>
                     {
-                      warning ("lost connection to the telepathy-logger " +
-                        "service");
+                      warning (
+                          _("Lost connection to the telepathy-logger service."));
                       this.logger = null;
                     });
                   this.logger.favourite_contacts_changed.connect (
@@ -301,7 +301,8 @@ public class Tpf.PersonaStore : Folks.PersonaStore
                 }
               catch (DBus.Error e)
                 {
-                  warning ("couldn't connect to the telepathy-logger service");
+                  warning (
+                      _("Couldn't connect to the telepathy-logger service."));
                   this.logger = null;
                 }
 
@@ -338,7 +339,8 @@ public class Tpf.PersonaStore : Folks.PersonaStore
                   }
                 catch (GLib.Error e)
                   {
-                    warning ("couldn't get list of favourite contacts: %s",
+                    /* Translators: the parameter is an error message. */
+                    warning (_("Couldn't get list of favorite contacts: %s"),
                         e.message);
                   }
               },
@@ -349,7 +351,8 @@ public class Tpf.PersonaStore : Folks.PersonaStore
         }
       catch (DBus.Error e)
         {
-          warning ("couldn't get list of favourite contacts: %s", e.message);
+          /* Translators: the parameter is an error message. */
+          warning (_("Couldn't get list of favorite contacts: %s"), e.message);
         }
     }
 
@@ -384,7 +387,8 @@ public class Tpf.PersonaStore : Folks.PersonaStore
                 this.handle_persona_map.size > 0) ||
                (this.self_contact != null && this.handle_persona_map.size > 1)))
             {
-              warning ("unknown persona '%s' in favourites list", ids[i]);
+              /* Translators: the parameter is an identifier. */
+              warning (_("Unknown persona '%s' in favorites list."), ids[i]);
               continue;
             }
 
@@ -413,7 +417,8 @@ public class Tpf.PersonaStore : Folks.PersonaStore
                     }
                   catch (GLib.Error e)
                     {
-                      warning ("couldn't add favourite contacts: %s",
+                      /* Translators: the parameter is an error message. */
+                      warning (_("Couldn't add favorite contacts: %s"),
                           e.message);
                     }
                 },
@@ -433,7 +438,8 @@ public class Tpf.PersonaStore : Folks.PersonaStore
                     }
                   catch (GLib.Error e)
                     {
-                      warning ("couldn't remove favourite contacts: %s",
+                      /* Translators: the parameter is an error message. */
+                      warning (_("Couldn't remove favorite contacts: %s"),
                           e.message);
                     }
                 },
@@ -498,9 +504,12 @@ public class Tpf.PersonaStore : Folks.PersonaStore
               }
             catch (GLib.Error e)
               {
-                GLib.warning ("failed to determine whether we can set " +
-                  "aliases on Telepathy account %s: %s",
-                  this.display_name, e.message);
+                GLib.warning (
+                    /* Translators: the first parameter is the display name for
+                     * the Telepathy account, and the second is an error
+                     * message. */
+                    _("Failed to determine whether we can set aliases on Telepathy account '%s': %s"),
+                    this.display_name, e.message);
               }
 
             this._can_alias_personas = new_can_alias;
@@ -547,9 +556,12 @@ public class Tpf.PersonaStore : Folks.PersonaStore
               }
             catch (GLib.Error e3)
               {
-                GLib.warning ("failed to determine whether we can set " +
-                  "groups on Telepathy account %s: %s",
-                  this.display_name, e3.message);
+                GLib.warning (
+                    /* Translators: the first parameter is the display name for
+                     * the Telepathy account, and the second is an error
+                     * message. */
+                    _("Failed to determine whether we can set groups on Telepathy account '%s': %s"),
+                    this.display_name, e3.message);
               }
 
             this._can_group_personas = new_can_group;
@@ -591,7 +603,10 @@ public class Tpf.PersonaStore : Folks.PersonaStore
             {
               if (error != null)
                 {
-                  warning ("Failed to create contact for self handle '%u': %s",
+                  warning (
+                      /* Translators: the first parameter is a Telepathy handle,
+                       * and the second is an error message. */
+                      _("Failed to create contact for self handle '%u': %s"),
                       conn.self_handle, error.message);
                   return;
                 }
@@ -610,8 +625,12 @@ public class Tpf.PersonaStore : Folks.PersonaStore
                 }
               catch (Tpf.PersonaError e)
                 {
-                  warning ("Failed to create self persona from contact '%s' " +
-                      "(%p)", contact.alias, contact);
+                  warning (
+                      /* Translators: the first parameter is the contact's
+                       * alias, and the second is the location of the contact's
+                       * data in memory (for debugging). */
+                      _("Failed to create self persona from contact '%s' (%p)"),
+                      contact.alias, contact);
                 }
             },
           this);
@@ -622,7 +641,9 @@ public class Tpf.PersonaStore : Folks.PersonaStore
     {
       if (channel == null)
         {
-          warning ("error creating channel for NewChannels signal");
+          /* Translators: do not translate "NewChannels", as it's a D-Bus
+           * signal name. */
+          warning (_("Error creating channel for NewChannels signal."));
           return;
         }
 
@@ -657,9 +678,21 @@ public class Tpf.PersonaStore : Folks.PersonaStore
                 }
               catch (GLib.Error e)
                 {
-                  warning ("failed to change persona %s group %s membership to "
-                      + "%s",
-                      persona.uid, group, entry.value ? "true" : "false");
+                  if (entry.value == true)
+                    {
+                      /* Translators: the parameter is a persona identifier and
+                       * the second parameter is a group name. */
+                      warning (_("Failed to add persona '%s' to group '%s'."),
+                          persona.uid, group);
+                    }
+                  else
+                    {
+                      warning (
+                          /* Translators: the parameter is a persona identifier
+                           * and the second parameter is a group name. */
+                          _("Failed to remove persona '%s' from group '%s'."),
+                          persona.uid, group);
+                    }
                 }
             }
 
@@ -958,7 +991,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       if (tp_persona.contact == this.self_contact)
         {
           throw new PersonaStoreError.UNSUPPORTED_ON_USER (
-              "Personas representing the local user may not be removed.");
+              _("Personas representing the local user may not be removed."));
         }
 
       try
@@ -968,7 +1001,12 @@ public class Tpf.PersonaStore : Folks.PersonaStore
         }
       catch (GLib.Error e1)
         {
-          warning ("failed to remove persona '%s' (%s) from stored list: %s",
+          warning (
+              /* Translators: The first parameter is an identifier, the second
+               * is the persona's alias and the third is an error message.
+               * "stored" is the name of a program object, and shouldn't be
+               * translated. */
+              _("Failed to remove persona '%s' (%s) from 'stored' list: %s"),
               tp_persona.uid, tp_persona.alias, e1.message);
         }
 
@@ -979,7 +1017,12 @@ public class Tpf.PersonaStore : Folks.PersonaStore
         }
       catch (GLib.Error e2)
         {
-          warning ("failed to remove persona '%s' (%s) from subscribe list: %s",
+          warning (
+              /* Translators: The first parameter is an identifier, the second
+               * is the persona's alias and the third is an error message.
+               * "subscribe" is the name of a program object, and shouldn't be
+               * translated. */
+              _("Failed to remove persona '%s' (%s) from 'subscribe' list: %s"),
               tp_persona.uid, tp_persona.alias, e2.message);
         }
 
@@ -990,7 +1033,12 @@ public class Tpf.PersonaStore : Folks.PersonaStore
         }
       catch (GLib.Error e3)
         {
-          warning ("failed to remove persona '%s' (%s) from publish list: %s",
+          warning (
+              /* Translators: The first parameter is an identifier, the second
+               * is the persona's alias and the third is an error message.
+               * "publish" is the name of a program object, and shouldn't be
+               * translated. */
+              _("Failed to remove persona '%s' (%s) from 'publish' list: %s"),
               tp_persona.uid, tp_persona.alias, e3.message);
         }
 
@@ -1120,10 +1168,24 @@ public class Tpf.PersonaStore : Folks.PersonaStore
         }
       catch (GLib.Error e)
         {
-          warning ("failed to change persona %s contact list %s " +
-              "membership to %s",
-              persona.uid, channel.get_identifier (),
-              is_member ? "true" : "false");
+          if (is_member == true)
+            {
+              warning (
+                  /* Translators: the first parameter is a persona identifier,
+                   * the second is a contact list identifier and the third is
+                   * an error message. */
+                  _("Failed to add persona '%s' to contact list '%s': %s"),
+                  persona.uid, channel.get_identifier (), e.message);
+            }
+          else
+            {
+              warning (
+                  /* Translators: the first parameter is a persona identifier,
+                   * the second is a contact list identifier and the third is
+                   * an error message. */
+                  _("Failed to remove persona '%s' from contact list '%s': %s"),
+                  persona.uid, channel.get_identifier (), e.message);
+            }
         }
     }
 
@@ -1193,8 +1255,10 @@ public class Tpf.PersonaStore : Folks.PersonaStore
         }
       catch (GLib.Error e)
         {
-          warning ("failed to create personas from incoming contacts in " +
-              "channel '%s': %s",
+          warning (
+              /* Translators: the first parameter is a channel identifier and
+               * the second is an error message.. */
+              _("Failed to create personas from incoming contacts in channel '%s': %s"),
               channel.get_identifier (), e.message);
         }
     }
@@ -1210,7 +1274,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
 
           GLib.List<Persona> personas = new GLib.List<Persona> ();
           uint err_count = 0;
-          string err_format = "";
+          string err_string = "";
           unowned GLib.List<TelepathyGLib.Contact> l;
           for (l = contacts; l != null; l = l.next)
             {
@@ -1226,19 +1290,27 @@ public class Tpf.PersonaStore : Folks.PersonaStore
                 }
               catch (Tpf.PersonaError e)
                 {
-                  if (err_count == 0)
-                    err_format = "failed to create %u personas:\n";
-
-                  err_format = "%s        '%s' (%p): %s\n".printf (
-                    err_format, contact.alias, contact, e.message);
+                  err_string = "%s\n%s".printf (err_string,
+                      /* Translators: format for lines in the error string below
+                       * "Failed to create %u personas:". The first parameter is
+                       * a contact alias, the second is a pointer address and
+                       * the third is an error message. */
+                      _("'%s' (%p): %s").printf (contact.alias, contact,
+                          e.message));
                   err_count++;
                 }
             }
 
           if (err_count > 0)
             {
-              throw new Folks.PersonaStoreError.CREATE_FAILED (err_format,
-                  err_count);
+              throw new Folks.PersonaStoreError.CREATE_FAILED (
+                  /* Translators: the first parameter is the number of personas
+                   * which couldn't be created, and the second is a set of error
+                   * message lines, built using the "'%s' (%p): %s" string
+                   * above. */
+                  ngettext ("Failed to create %u persona:\n%s",
+                      "Failed to create %u personas:\n%s", err_count),
+                  err_count, err_string);
             }
 
           if (personas != null)
@@ -1289,7 +1361,9 @@ public class Tpf.PersonaStore : Folks.PersonaStore
             }
           catch (Tpf.PersonaError e)
             {
-              warning ("failed to create persona from contact '%s' (%p)",
+              /* Translators: the first parameter is a contact alias and the
+               * second is a pointer address. */
+              warning (_("Failed to create persona from contact '%s' (%p)."),
                   contact.alias, contact);
             }
         }
@@ -1369,8 +1443,9 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       if (contact_id == null)
         {
           throw new PersonaStoreError.INVALID_ARGUMENT (
-              "persona store (%s, %s) requires the following details:\n" +
-              "    contact (provided: '%s')\n",
+              /* Translators: the first two parameters are store identifiers and
+               * the third is a contact identifier. */
+              _("Persona store (%s, %s) requires the following details:\n    contact (provided: '%s')\n"),
               this.type_id, this.id, contact_id);
         }
 
@@ -1379,8 +1454,8 @@ public class Tpf.PersonaStore : Folks.PersonaStore
           (status == TelepathyGLib.ConnectionStatus.CONNECTING) ||
           this.conn == null)
         {
-          throw new PersonaStoreError.STORE_OFFLINE ("cannot create a new " +
-              "Tpf.Persona while offline");
+          throw new PersonaStoreError.STORE_OFFLINE (
+              _("Cannot create a new persona while offline."));
         }
 
       string[] contact_ids = new string[1];
@@ -1419,14 +1494,25 @@ public class Tpf.PersonaStore : Folks.PersonaStore
             }
           else
             {
-              throw new PersonaStoreError.CREATE_FAILED ("requested a single " +
-                  "persona, but got %u back", personas.length ());
+              /* We ignore the case of an empty list, as it just means the
+               * contact was already in our roster */
+              uint num_personas = personas.length ();
+              string message =
+                  ngettext (
+                      /* Translators: the parameter is the number of personas
+                       * which were returned. */
+                      "Requested a single persona, but got %u persona back.",
+                      "Requested a single persona, but got %u personas back.",
+                          num_personas);
+
+              throw new PersonaStoreError.CREATE_FAILED (message, num_personas);
             }
         }
       catch (GLib.Error e)
         {
-          throw new PersonaStoreError.CREATE_FAILED ("failed to add a " +
-              "persona from details: %s", e.message);
+          /* Translators: the parameter is an error message. */
+          throw new PersonaStoreError.CREATE_FAILED (
+              _("Failed to add a persona from details: %s"), e.message);
         }
     }
 
@@ -1443,8 +1529,10 @@ public class Tpf.PersonaStore : Folks.PersonaStore
        * see connection_ready_cb() */
       if (this.logger == null)
         {
-          warning ("failed to change favourite without connection to the " +
-                   "telepathy-logger service");
+          warning (
+              /* Translators: "telepathy-logger" is the name of an application,
+               * and should not be translated. */
+              _("Failed to change favorite without a connection to the telepathy-logger service."));
           return;
         }
 
@@ -1461,7 +1549,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
         }
       catch (DBus.Error e)
         {
-          warning ("failed to change a persona's favourite status");
+          warning (_("Failed to change a persona's favorite status."));
         }
     }
 

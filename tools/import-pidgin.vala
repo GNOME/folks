@@ -44,7 +44,8 @@ public class Folks.Importers.Pidgin : Folks.Importer
       var file = File.new_for_path (filename);
       if (!file.query_exists ())
         {
-          throw new ImportError.MALFORMED_INPUT ("File %s does not exist.",
+          /* Translators: the parameter is a filename. */
+          throw new ImportError.MALFORMED_INPUT (_("File %s does not exist."),
               filename);
         }
 
@@ -58,13 +59,16 @@ public class Folks.Importers.Pidgin : Folks.Importer
       catch (GLib.Error e)
         {
           throw new ImportError.MALFORMED_INPUT (
-              "Failed to get information about file %s: %s", filename,
+              /* Translators: the first parameter is a filename, and the second
+               * is an error message. */
+              _("Failed to get information about file %s: %s"), filename,
               e.message);
         }
 
       if (!file_info.get_attribute_boolean (FILE_ATTRIBUTE_ACCESS_CAN_READ))
         {
-          throw new ImportError.MALFORMED_INPUT ("File %s is not readable.",
+          /* Translators: the parameter is a filename. */
+          throw new ImportError.MALFORMED_INPUT (_("File %s is not readable."),
               filename);
         }
 
@@ -72,8 +76,10 @@ public class Folks.Importers.Pidgin : Folks.Importer
 
       if (xml_doc == null)
         {
-          throw new ImportError.MALFORMED_INPUT ("The Pidgin buddy list file " +
-              "'%s' could not be loaded.", filename);
+          throw new ImportError.MALFORMED_INPUT (
+              /* Translators: the parameter is a filename. */
+              _("The Pidgin buddy list file '%s' could not be loaded."),
+              filename);
         }
 
       /* Check the root node */
@@ -85,9 +91,10 @@ public class Folks.Importers.Pidgin : Folks.Importer
           /* Free the document manually before throwing because the garbage
            * collector can't work on pointers. */
           delete xml_doc;
-          throw new ImportError.MALFORMED_INPUT ("The Pidgin buddy list file " +
-              "'%s' could not be loaded: the root element could not be found " +
-              "or was not recognised.", filename);
+          throw new ImportError.MALFORMED_INPUT (
+              /* Translators: the parameter is a filename. */
+              _("The Pidgin buddy list file '%s' could not be loaded: the root element could not be found or was not recognised."),
+              filename);
         }
 
       /* Parse each <blist> child element */
@@ -103,7 +110,9 @@ public class Folks.Importers.Pidgin : Folks.Importer
       /* Tidy up */
       delete xml_doc;
 
-      stdout.printf ("Imported %u buddies from '%s'.\n", this.persona_count,
+      /* Translators: the first parameter is the number of buddies which were
+       * successfully imported, and the second is a filename. */
+      stdout.printf (_("Imported %u buddies from '%s'.\n"), this.persona_count,
           filename);
 
       /* Return the number of Personas we imported */
@@ -146,8 +155,11 @@ public class Folks.Importers.Pidgin : Folks.Importer
             }
           catch (GLib.Error e)
             {
-              stderr.printf ("Error changing group of Pidgin.Persona " +
-                  "'%s': %s\n", persona.iid, e.message);
+              stderr.printf (
+                  /* Translators: the first parameter is a persona identifier,
+                   * and the second is an error message. */
+                  _("Error changing group of Pidgin.Persona '%s': %s\n"),
+                  persona.iid, e.message);
             }
         }
     }
@@ -210,8 +222,10 @@ public class Folks.Importers.Pidgin : Folks.Importer
           (alias == null || alias.strip () == "" ||
            alias.strip () == im_address_string.strip ()))
         {
-          stdout.printf ("Ignoring buddy with no alias and only one IM " +
-              "address:\n%s", im_address_string);
+          stdout.printf (
+              /* Translators: the parameter is the buddy's IM address. */
+              _("Ignoring buddy with no alias and only one IM address:\n%s"),
+              im_address_string);
           return null;
         }
 
@@ -230,9 +244,12 @@ public class Folks.Importers.Pidgin : Folks.Importer
         }
       catch (PersonaStoreError e)
         {
-          stderr.printf ("Failed to create new persona for buddy with alias " +
-              "'%s' and IM addresses:\n%s\nError: %s\n", alias,
-              im_address_string, e.message);
+          /* Translators: the first parameter is an alias, the second is a set
+           * of IM addresses each on a new line, and the third is an error
+           * message. */
+          stderr.printf (
+              _("Failed to create new persona for buddy with alias '%s' and IM addresses:\n%s\nError: %s\n"),
+              alias, im_address_string, e.message);
           return null;
         }
 
@@ -241,8 +258,12 @@ public class Folks.Importers.Pidgin : Folks.Importer
         ((Aliasable) persona).alias = alias;
 
       /* Print progress */
-      stdout.printf ("Created persona '%s' for buddy with alias '%s' and IM " +
-          "addresses:\n%s", persona.uid, alias, im_address_string);
+      stdout.printf (
+          /* Translators: the first parameter is a persona identifier, the
+           * second is an alias for the persona, and the third is a set of IM
+           * addresses each on a new line. */
+          _("Created persona '%s' for buddy with alias '%s' and IM addresses:\n%s"),
+          persona.uid, alias, im_address_string);
       this.persona_count++;
 
       return persona;

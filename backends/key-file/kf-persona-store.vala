@@ -173,8 +173,11 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
                     {
                       if (!(e1 is IOError.NOT_FOUND))
                         {
-                          warning ("The relationship key file '%s' could " +
-                              "not be loaded: %s", filename, e1.message);
+                          warning (
+                              /* Translators: the first parameter is a filename,
+                               * and the second is an error message. */
+                              _("The relationship key file '%s' could not be loaded: %s"),
+                              filename, e1.message);
                           this.removed ();
                           return;
                         }
@@ -192,8 +195,10 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
                     {
                       if (!(e3 is IOError.EXISTS))
                         {
-                          warning ("The relationship key file directory " +
-                              "'%s' could not be created: %s",
+                          warning (
+                              /* Translators: the first parameter is a path, and
+                               * the second is an error message. */
+                              _("The relationship key file directory '%s' could not be created: %s"),
                               parent_dir.get_path (), e3.message);
                           this.removed ();
                           return;
@@ -214,8 +219,11 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
                     {
                       if (!(e2 is IOError.EXISTS))
                         {
-                          warning ("The relationship key file '%s' could " +
-                              "not be created: %s", filename, e2.message);
+                          warning (
+                              /* Translators: the first parameter is a filename,
+                               * and the second is an error message. */
+                              _("The relationship key file '%s' could not be created: %s"),
+                              filename, e2.message);
                           this.removed ();
                           return;
                         }
@@ -302,8 +310,10 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
       if (im_addresses == null || im_addresses.size () == 0)
         {
           throw new PersonaStoreError.INVALID_ARGUMENT (
-              "persona store (%s, %s) requires the following details:\n" +
-              "    im-addresses (provided: '%p')\n",
+              /* Translators: the first two parameters are identifiers for the
+               * persona store. The third is a pointer address. Do not translate
+               * "im-addresses", as it's an object property name. */
+              _("Persona store (%s, %s) requires the following details:\n    im-addresses (provided: '%p')"),
               this.type_id, this.id, im_addresses);
         }
 
@@ -363,7 +373,9 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
         {
           if (!(e is IOError.CANCELLED))
             {
-              warning ("Could not write updated key file '%s': %s",
+              /* Translators: the first parameter is a filename, the second is
+               * an error message. */
+              warning (_("Could not write updated key file '%s': %s"),
                   this.file.get_path (), e.message);
             }
         }

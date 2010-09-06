@@ -20,6 +20,7 @@
  */
 
 #include <glib.h>
+#include <glib/gi18n.h>
 #include <gio/gio.h>
 #include <telepathy-glib/channel.h>
 #include <telepathy-glib/connection.h>
@@ -512,7 +513,8 @@ group_request_channel_cb (
    * handle the error if RequestChannel failed */
   if (error)
     {
-      g_message ("Error: %s", error->message);
+      /* Translators: the parameter is an error message. */
+      g_message (_("Error requesting a group channel: %s"), error->message);
       return;
     }
 }
@@ -529,7 +531,8 @@ group_request_handles_cb (
 
   if (error)
     {
-      g_message ("Error: %s", error->message);
+      /* Translators: the parameter is an error message. */
+      g_message (_("Error requesting group handles: %s"), error->message);
       return;
     }
 
@@ -567,7 +570,8 @@ set_contact_alias_cb (TpConnection *conn,
 {
   if (error != NULL)
     {
-      g_message ("Failed to change contact's alias: %s", error->message);
+      /* Translators: the parameter is an error message. */
+      g_message (_("Failed to change contact's alias: %s"), error->message);
       return;
     }
 }
@@ -626,7 +630,8 @@ iterate_on_channels (TpConnection *conn,
 
     channel = tp_channel_new_from_properties (conn, path, properties, &error);
     if (channel == NULL) {
-      g_message ("Failed to create group channel: %s", error->message);
+      /* Translators: the parameter is an error message. */
+      g_message (_("Failed to create group channel: %s"), error->message);
       g_error_free (error);
       return;
     }
@@ -655,7 +660,8 @@ got_channels_cb (TpProxy *conn,
   const GPtrArray *channels;
 
   if (error != NULL) {
-    g_message ("Get Channels property failed: %s", error->message);
+    /* Translators: the parameter is an error message. */
+    g_message (_("Get Channels property failed: %s"), error->message);
     return;
   }
 
@@ -697,7 +703,9 @@ group_add_members_cb (TpChannel *proxy,
 {
   if (error != NULL)
     {
-      g_message ("Failed to add contact to group %s: %s",
+      /* Translators: the first parameter is a group channel identifier and the
+       * second is an error message. */
+      g_message (_("Failed to add contact to group '%s': %s"),
           tp_channel_get_identifier (TP_CHANNEL (proxy)), error->message);
       return;
     }
@@ -711,7 +719,9 @@ group_remove_members_cb (TpChannel *proxy,
 {
   if (error != NULL)
     {
-      g_message ("Failed to remove contact from group %s: %s",
+      /* Translators: the first parameter is a group channel identifier and the
+       * second is an error message. */
+      g_message (_("Failed to remove contact from group '%s': %s"),
           tp_channel_get_identifier (TP_CHANNEL (proxy)), error->message);
       return;
     }
@@ -731,7 +741,9 @@ folks_tp_lowlevel_channel_group_change_membership (TpChannel *channel,
     {
       g_set_error (error, FOLKS_TP_LOWLEVEL_ERROR,
           FOLKS_TP_LOWLEVEL_ERROR_INVALID_ARGUMENT,
-          "invalid group channel %p to add handle %d to", channel, handle);
+          /* Translators: the first parameter is a pointer address and the
+           * second is a contact handle (numeric identifier). */
+          _("Invalid group channel %p to add handle %d to."), channel, handle);
     }
 
   handles = g_array_new (FALSE, TRUE, sizeof (guint));

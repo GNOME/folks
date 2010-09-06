@@ -241,7 +241,9 @@ public class Folks.IndividualAggregator : Object
             }
           catch (GLib.Error e)
             {
-              warning ("Error preparing PersonaStore '%s': %s", store_id,
+              /* Translators: the first parameter is a persona store identifier
+               * and the second is an error message. */
+              warning (_("Error preparing persona store '%s': %s"), store_id,
                   e.message);
             }
         });
@@ -345,8 +347,10 @@ public class Folks.IndividualAggregator : Object
                   unowned ObjectClass pclass = persona.get_class ();
                   if (pclass.find_property (prop_name) == null)
                     {
-                      warning ("Unknown property '%s' in linkable property " +
-                          "list.", prop_name);
+                      warning (
+                          /* Translators: the parameter is a property name. */
+                          _("Unknown property '%s' in linkable property list."),
+                          prop_name);
                       continue;
                     }
 
@@ -437,8 +441,11 @@ public class Folks.IndividualAggregator : Object
                       unowned ObjectClass pclass = final_persona.get_class ();
                       if (pclass.find_property (prop_name) == null)
                         {
-                          warning ("Unknown property '%s' in linkable " +
-                              "property list.", prop_name);
+                          warning (
+                              /* Translators: the parameter is a property
+                               * name. */
+                              _("Unknown property '%s' in linkable property list."),
+                              prop_name);
                           continue;
                         }
 
@@ -545,8 +552,10 @@ public class Folks.IndividualAggregator : Object
                   unowned ObjectClass pclass = persona.get_class ();
                   if (pclass.find_property (prop_name) == null)
                     {
-                      warning ("Unknown property '%s' in linkable property " +
-                          "list.", prop_name);
+                      warning (
+                          /* Translators: the parameter is a property name. */
+                          _("Unknown property '%s' in linkable property list."),
+                          prop_name);
                       continue;
                     }
 
@@ -703,8 +712,9 @@ public class Folks.IndividualAggregator : Object
       if (store == null)
         {
           throw new IndividualAggregatorError.STORE_NOT_FOUND (
-              "no store known for type ID '%s' and ID '%s'", persona_store_type,
-              persona_store_id);
+              /* Translators: the parameters are store identifiers. */
+              _("No store known for type ID '%s' and ID '%s'."),
+              persona_store_type, persona_store_id);
         }
 
       Persona persona = null;
@@ -722,7 +732,9 @@ public class Folks.IndividualAggregator : Object
           else
             {
               throw new IndividualAggregatorError.ADD_FAILED (
-                  "failed to add contact for store type '%s', ID '%s': %s",
+                  /* Translators: the first two parameters are store identifiers
+                   * and the third parameter is an error message. */
+                  _("Failed to add contact for store type '%s', ID '%s': %s"),
                   persona_store_type, persona_store_id, e.message);
             }
         }
@@ -805,7 +817,7 @@ public class Folks.IndividualAggregator : Object
       if (this.writeable_store == null)
         {
           throw new IndividualAggregatorError.NO_WRITEABLE_STORE (
-              "Can't link personas with no writeable store.");
+              _("Can't link personas with no writeable store."));
         }
 
       /* Don't bother linking if it's just one Persona */
