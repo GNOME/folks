@@ -38,4 +38,10 @@ public class Folks.BuildConf
 
   [CCode (cname = "PACKAGE_STRING")]
   public static const string PACKAGE_STRING;
+
+  [CCode (cname = "GETTEXT_PACKAGE")]
+  public static const string GETTEXT_PACKAGE;
+
+  [CCode (cname = "LOCALE_DIR")]
+  public static const string LOCALE_DIR;
 }

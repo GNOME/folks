@@ -149,6 +149,17 @@ AS_IF([test "x$enable_docs" != xno],
              [AC_MSG_ERROR([valadoc not found])])])
 
 # -----------------------------------------------------------
+# Gettext
+# -----------------------------------------------------------
+
+GETTEXT_PACKAGE=AC_PACKAGE_NAME
+AC_SUBST(GETTEXT_PACKAGE)
+AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, ["$GETTEXT_PACKAGE"], [Define the gettext package to be used])
+AM_GNU_GETTEXT_VERSION([0.17])
+AM_GNU_GETTEXT([external])
+IT_PROG_INTLTOOL([0.35.0])
+
+# -----------------------------------------------------------
 # Error flags
 # -----------------------------------------------------------
 
@@ -218,6 +229,7 @@ AC_CONFIG_FILES([
     backends/telepathy/lib/Makefile
     folks/Makefile
     docs/Makefile
+    po/Makefile.in
     tests/Makefile
     tests/folks/Makefile
     tests/key-file/Makefile

@@ -5,6 +5,7 @@ SUBDIRS = \
 	backends \
 	tests \
 	tools \
+	po \
 	$(NULL)
 
 if ENABLE_DOCS

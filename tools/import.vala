@@ -48,6 +48,9 @@ public class Folks.ImportTool : Object
 
   public static int main (string[] args)
     {
+      Intl.bindtextdomain (BuildConf.GETTEXT_PACKAGE, BuildConf.LOCALE_DIR);
+      Intl.textdomain (BuildConf.GETTEXT_PACKAGE);
+
       OptionContext context = new OptionContext ("— import meta-contact " +
           "information to libfolks");
       context.add_main_entries (ImportTool.options, "folks");

@@ -2,11 +2,17 @@ if ENABLE_IMPORT_TOOL
 bin_PROGRAMS = folks-import
 endif
 
+AM_CPPFLAGS = \
+	-include $(CONFIG_HEADER) \
+	-DLOCALE_DIR=\"$(pkgdatadir)/locale\" \
+	$(NULL)
+
 VALAFLAGS = \
 	--vapidir=$(top_builddir)/folks \
 	--pkg=gee-1.0 \
 	--pkg=libxml-2.0 \
 	--pkg=folks \
+	--pkg=build-conf \
 	$(NULL)
 
 folks_import_SOURCES = \
