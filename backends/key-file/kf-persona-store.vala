@@ -109,15 +109,30 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
                 }
             }
 
+          /* Ensure the parent directory tree exists for the new file */
+          File parent_dir = this.file.get_parent ();
+
+          try
+            {
+              /* Recursively create the directory */
+              parent_dir.make_directory_with_parents ();
+            }
+          catch (Error e3)
+            {
+              if (!(e3 is IOError.EXISTS))
+                {
+                  warning ("The relationship key file directory '%s' could " +
+                      "not be created: %s", parent_dir.get_path (), e3.message);
+                  this.removed ();
+                  return;
+                }
+            }
+
           /* Create a new file; if this fails due to the file having been
            * created in the meantime, we can loop back round and try and load
            * it. */
           try
             {
-              /* Recursively create the directory */
-              File parent_dir = this.file.get_parent ();
-              parent_dir.make_directory_with_parents ();
-
               /* Create the file */
               FileOutputStream stream = yield this.file.create_async (
                   FileCreateFlags.PRIVATE, Priority.DEFAULT);
