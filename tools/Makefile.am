@@ -1,3 +1,11 @@
+# Inspector
+DIST_SUBDIRS = inspect
+
+if ENABLE_INSPECT_TOOL
+SUBDIRS = inspect
+endif
+
+# Importer
 if ENABLE_IMPORT_TOOL
 bin_PROGRAMS = folks-import
 endif

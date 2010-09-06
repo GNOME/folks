@@ -193,6 +193,25 @@ AS_IF([test "$enable_import_tool" = "yes" -a "$with_import_tool" = "no"],
       [AC_MSG_ERROR([Import tool explicitly enabled, but libxml2 not found])])
 AM_CONDITIONAL([ENABLE_IMPORT_TOOL], [test "$with_import_tool" = "yes"])
 
+# Readline's required for the folks-inspect program
+AC_ARG_ENABLE([inspect-tool],
+              AS_HELP_STRING([--enable-inspect-tool],
+                             [Enable building the data inspection tool]),
+              [enable_inspect_tool=$enableval with_inspect_tool=$enableval],
+              [enable_inspect_tool=maybe with_inspect_tool=no])
+AS_IF([test "$enable_inspect_tool" != "no"],
+      [AC_CHECK_LIB([readline], [main],
+                    [with_inspect_tool=yes], [with_inspect_tool=no],
+                    [-lncurses])])
+AS_IF([test "$enable_inspect_tool" != "no" -a "$with_inspect_tool" = "yes"],
+      [VALA_CHECK_PACKAGES([readline])
+       LIBREADLINE="-lreadline -lncurses"
+       AC_DEFINE([HAVE_LIBREADLINE], [1], [Define if you have libreadline])
+       AC_SUBST([LIBREADLINE])])
+AS_IF([test "$enable_inspect_tool" = "yes" -a "$with_inspect_tool" = "no"],
+      [AC_MSG_ERROR([Inspect tool explicitly enabled, but readline not found])])
+AM_CONDITIONAL([ENABLE_INSPECT_TOOL], [test "$with_inspect_tool" = "yes"])
+
 # -----------------------------------------------------------
 # Documentation
 # -----------------------------------------------------------
@@ -304,6 +323,7 @@ AC_CONFIG_FILES([
     tests/lib/telepathy/contactlist/session.conf
     tests/tools/Makefile
     tools/Makefile
+    tools/inspect/Makefile
 ])
 
 AC_OUTPUT
@@ -319,6 +339,7 @@ Configure summary:
         Documentation...............:  ${HAVE_VALADOC}
         Tests.......................:  ${have_tp_glib_for_tests}
         Import tool.................:  ${with_import_tool}
+        Inspector tool..............:  ${with_inspect_tool}
 
 
 "
