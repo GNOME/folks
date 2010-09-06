@@ -168,14 +168,32 @@ public class ContactRetrievalTests : Folks.TestCase
 
           assert (removed == null);
         });
-      aggregator.prepare ();
 
       /* Kill the main loop after a few seconds. If there are still individuals
-       * in the set of expected individuals, the aggregator has either failed
-       * or been too slow (which we can consider to be failure). */
+       * in the set of expected individuals, the aggregator has either failed or
+       * been too slow (which we can consider to be failure). */
       Timeout.add_seconds (3, () =>
         {
           main_loop.quit ();
+          return false;
+        });
+
+      Idle.add (() =>
+        {
+          aggregator.prepare.begin ((s,r) =>
+            {
+              try
+                {
+                  aggregator.prepare.end (r);
+                }
+              catch (GLib.Error e1)
+                {
+                  GLib.critical ("failed to prepare aggregator: %s",
+                    e1.message);
+                  assert_not_reached ();
+                }
+            });
+
           return false;
         });
 
