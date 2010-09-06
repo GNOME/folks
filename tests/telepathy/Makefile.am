@@ -4,6 +4,7 @@ AM_CPPFLAGS = \
 	$(TP_GLIB_CFLAGS) \
 	-I$(top_srcdir)/folks \
 	-I$(top_srcdir)/backends/telepathy \
+	-I$(top_srcdir)/backends/telepathy/lib \
 	-I$(top_srcdir)/tests/lib/telepathy/contactlist \
 	-include $(CONFIG_HEADER) \
 	$(NULL)
@@ -12,6 +13,7 @@ LDADD = \
 	$(GLIB_LIBS) \
 	$(GEE_LIBS) \
 	$(TP_GLIB_LIBS) \
+	-L$(top_srcdir)/backends/telepathy/lib \
 	$(NULL)
 
 RUN_WITH_PRIVATE_BUS = $(top_srcdir)/tests/tools/with-session-bus.sh
@@ -47,6 +49,7 @@ contact_retrieval_SOURCES = \
 
 contact_retrieval_LDADD = \
 	$(top_builddir)/tests/lib/telepathy/contactlist/libtp-test-contactlist.la \
+	$(top_builddir)/backends/telepathy/lib/libfolks-telepathy.la \
 	$(top_builddir)/folks/libfolks.la
 
 CLEANFILES = \

@@ -45,6 +45,7 @@ Bugs fixed:
   attempts
 * Bug 629331 — BackendStore.load_backends and the prepare() functions should
   be idempotent.
+* Bug 629008 — Add a test for Persona additions
 
 Overview of changes from libfolks 0.1.16 to libfolks 0.1.17
 ===========================================================
