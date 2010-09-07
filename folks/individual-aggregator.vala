@@ -645,22 +645,30 @@ public class Folks.IndividualAggregator : Object
    * Add a new persona in the given {@link PersonaStore} based on the `details`
    * provided.
    *
+   * If the target store is offline, this function will throw
+   * {@link IndividualAggregatorError.STORE_OFFLINE}. It's the responsibility of
+   * the caller to cache details and re-try this function if it wishes to make
+   * offline adds work.
+   *
    * The details hash is a backend-specific mapping of key, value strings.
    * Common keys include:
    *
    *  * contact - service-specific contact ID
    *
-   * If `parent` is provided, the new persona will be appended to its ordered
-   * list of personas.
+   * If a {@link Persona} with the given details already exists in the store, no
+   * error will be thrown and this function will return `null`.
    *
    * @param parent an optional {@link Individual} to add the new {@link Persona}
-   * to
+   * to. This persona will be appended to its ordered list of personas.
    * @param persona_store_type the {@link PersonaStore.type_id} of the
    * {@link PersonaStore} to use
    * @param persona_store_id the {@link PersonaStore.id} of the
    * {@link PersonaStore} to use
    * @param details a key-value map of details to use in creating the new
    * {@link Persona}
+   * @return the new {@link Persona} or `null` if the corresponding
+   * {@link Persona} already existed. If non-`null`, the new {@link Persona}
+   * will also be added to a new or existing {@link Individual} as necessary.
    */
   public async Persona? add_persona_from_details (Individual? parent,
       string persona_store_type,
@@ -686,9 +694,16 @@ public class Folks.IndividualAggregator : Object
         }
       catch (PersonaStoreError e)
         {
-          throw new IndividualAggregatorError.ADD_FAILED (
-              "failed to add contact for store type '%s', ID '%s': %s",
-              persona_store_type, persona_store_id, e.message);
+          if (e is PersonaStoreError.STORE_OFFLINE)
+            {
+              throw new IndividualAggregatorError.STORE_OFFLINE (e.message);
+            }
+          else
+            {
+              throw new IndividualAggregatorError.ADD_FAILED (
+                  "failed to add contact for store type '%s', ID '%s': %s",
+                  persona_store_type, persona_store_id, e.message);
+            }
         }
 
       if (parent != null && persona != null)

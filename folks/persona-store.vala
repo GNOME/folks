@@ -243,15 +243,29 @@ public abstract class Folks.PersonaStore : Object
    * The {@link Persona} will be created by the PersonaStore backend from the
    * key-value pairs given in `details`. FIXME: These are backend-specific.
    *
+   * All additions through this function will later be emitted through the
+   * personas-changed signal to be notified of the new {@link Persona}. The
+   * return value is purely for convenience, since it can be complicated to
+   * correlate the provided details with the final Persona.
+   *
+   * If the store is offline, this function will throw
+   * {@link PersonaStoreError.STORE_OFFLINE}. It's the responsibility of the
+   * caller to cache details and re-try this function if it wishes to make
+   * offline adds work.
+   *
    * If the details are not recognised or are invalid,
    * {@link PersonaStoreError.INVALID_ARGUMENT} will be thrown.
    *
-   * If a {@link Persona} with the given details already exists in the store,
-   * `null` will be returned, but no error will be thrown.
+   * If a {@link Persona} with the given details already exists in the store, no
+   * error will be thrown and this function will return `null`.
    *
    * @param details a key-value map of details to use in creating the new
    * {@link Persona}
-   * @return the new {@link Persona}, or `null` on failure
+   *
+   * @return the new {@link Persona} or `null` if the corresponding Persona
+   * already existed. If non-`null`, the new {@link Persona} will also be
+   * amongst the {@link Persona}(s) in a future emission of
+   * {@link PersonaStore.personas_changed}.
    */
   public abstract async Persona? add_persona_from_details (
       HashTable<string, Value?> details) throws Folks.PersonaStoreError;

@@ -1186,6 +1186,15 @@ public class Tpf.PersonaStore : Folks.PersonaStore
               this.type_id, this.id, contact_id);
         }
 
+      var status = this.account.get_connection_status (null);
+      if ((status == TelepathyGLib.ConnectionStatus.DISCONNECTED) ||
+          (status == TelepathyGLib.ConnectionStatus.CONNECTING) ||
+          this.conn == null)
+        {
+          throw new PersonaStoreError.STORE_OFFLINE ("cannot create a new " +
+              "Tpf.Persona while offline");
+        }
+
       string[] contact_ids = new string[1];
       contact_ids[0] = contact_id;
 
@@ -1194,7 +1203,12 @@ public class Tpf.PersonaStore : Folks.PersonaStore
           var personas = yield create_personas_from_contact_ids (
               contact_ids);
 
-          if (personas != null && personas.length () == 1)
+          if (personas == null)
+            {
+              /* the persona already existed */
+              return null;
+            }
+          else if (personas.length () == 1)
             {
               var persona = personas.data;
 
@@ -1215,20 +1229,17 @@ public class Tpf.PersonaStore : Folks.PersonaStore
 
               return persona;
             }
-          else if (personas != null && personas.length () > 1)
+          else
             {
-              /* We ignore the case of an empty list, as it just means the
-               * contact was already in our roster */
-              warning ("requested a single persona, but got %u back",
-                  personas.length ());
+              throw new PersonaStoreError.CREATE_FAILED ("requested a single " +
+                  "persona, but got %u back", personas.length ());
             }
         }
       catch (GLib.Error e)
         {
-          warning ("failed to add a persona from details: %s", e.message);
+          throw new PersonaStoreError.CREATE_FAILED ("failed to add a " +
+              "persona from details: %s", e.message);
         }
-
-      return null;
     }
 
   /**

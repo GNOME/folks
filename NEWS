@@ -25,6 +25,8 @@ API changes:
 * Added Persona::is-user
 * Added IndividualAggregator::user
 * Added PersonaStoreError.UNSUPPORTED_ON_USER
+* Added {IndividualAggregator, PersonaStoreError}.STORE_OFFLINE, used by the
+  respective add_persona_from_details() functions
 
 Bugs fixed:
 * Bug 629452 — [Patch] Add missing gio linking for import-tool
@@ -38,6 +40,8 @@ Bugs fixed:
 * Bug 627402 — Support marking FolksPersonas as "me"
 * Bug 629642 — individuals-changed emitted in the wrong order
 * Bug 629643 — do not fall back to the id if alias is empty
+* Bug 629006 — PersonaStore should gracefully handle offline Persona change
+  attempts
 
 Overview of changes from libfolks 0.1.16 to libfolks 0.1.17
 ===========================================================
