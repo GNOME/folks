@@ -705,8 +705,8 @@ public class Folks.IndividualAggregator : Object
       if (store == null)
         {
           throw new IndividualAggregatorError.STORE_NOT_FOUND (
-              "no store known for type ID '%s' and ID '%s'", store.type_id,
-              store.id);
+              "no store known for type ID '%s' and ID '%s'", persona_store_type,
+              persona_store_id);
         }
 
       Persona persona = null;
