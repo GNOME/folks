@@ -48,6 +48,9 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
 
       set
         {
+          if (this._alias == value)
+            return;
+
           this._alias = value;
           this.key_file.set_string (this.display_id, "__alias", value);
 
