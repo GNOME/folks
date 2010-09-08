@@ -47,9 +47,41 @@ public class Folks.BackendStore : Object {
    * This will not be emitted until after {@link BackendStore.load_backends}
    * has been called.
    *
+   * {@link Backend}s referenced in this signal are also included in @{link
+   * BackendStore.enabled_backends}.
+   *
    * @param backend the new {@link Backend}
    */
   public signal void backend_available (Backend backend);
+
+  /**
+   * The list of backends visible to this store which have not been explicitly
+   * disabled.
+   *
+   * This list will be empty before {@link BackendStore.load_backends} has been
+   * called.
+   *
+   * The backends in this list have not necessarily been prepared (see {@link
+   * Backend.prepare}).
+   *
+   * @since 0.2.0
+   */
+  public GLib.List<Backend> enabled_backends
+    {
+      owned get
+        {
+          var backends = new GLib.List<Backend> ();
+          foreach (var entry in this.backend_hash)
+            {
+              backends.prepend (entry.value);
+
+            }
+
+          return backends;
+        }
+
+      private set {}
+    }
 
   /**
    * Create a new BackendStore.
