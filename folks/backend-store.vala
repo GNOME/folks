@@ -40,6 +40,7 @@ public class Folks.BackendStore : Object {
   private HashMap<string,Backend> _prepared_backends;
   private GLib.List<ModuleFinalizeFunc> finalize_funcs = null;
   private static weak BackendStore instance;
+  private static bool _backends_loaded = false;
 
   /**
    * Emitted when a backend has been added to the BackendStore.
@@ -112,6 +113,10 @@ public class Folks.BackendStore : Object {
       foreach (ModuleFinalizeFunc func in this.finalize_funcs)
         func (this);
 
+      /* reset status of backends */
+      lock (this._backends_loaded)
+        this._backends_loaded = false;
+
       /* manually clear the singleton instance */
       instance = null;
     }
@@ -123,49 +128,58 @@ public class Folks.BackendStore : Object {
    * environment variable, if it's set. If it's not set, backends will be
    * searched for in a path set at compilation time.
    */
-  public async void load_backends () throws GLib.Error {
-      assert (Module.supported());
-
-      var path = Environment.get_variable ("FOLKS_BACKEND_DIR");
-      if (path == null)
+  public async void load_backends () throws GLib.Error
+    {
+      lock (this._backends_loaded)
         {
-          path = BuildConf.BACKEND_DIR;
-
-          debug ("Using built-in backend dir '%s' (override with environment "
-              + "variable FOLKS_BACKEND_DIR)", path);
-        }
-      else
-        {
-          debug ("Using environment variable FOLKS_BACKEND_DIR = '%s' to look "
-              + "for backends", path);
-        }
-
-      File dir = File.new_for_path (path);
-      assert (dir != null && yield is_dir (dir));
-
-      yield this.load_modules_from_dir (dir);
-
-      /* all the found modules should call add_backend() for their backends
-       * (adding them to the backend hash) as a consequence of
-       * load_modules_from_dir(). */
-
-      foreach (var backend in this.backend_hash.values)
-        {
-          try
+          if (!this._backends_loaded)
             {
-              yield backend.prepare ();
+              assert (Module.supported());
 
-              debug ("New backend '%s' prepared", backend.name);
-              this._prepared_backends.set (backend.name, backend);
-              this.backend_available (backend);
-            }
-          catch (GLib.Error e)
-            {
-              warning ("Error preparing Backend '%s': %s", backend.name,
-                  e.message);
+              var path = Environment.get_variable ("FOLKS_BACKEND_DIR");
+              if (path == null)
+                {
+                  path = BuildConf.BACKEND_DIR;
+
+                  debug ("Using built-in backend dir '%s' (override with " +
+                      "environment variable FOLKS_BACKEND_DIR)", path);
+                }
+              else
+                {
+                  debug ("Using environment variable FOLKS_BACKEND_DIR = " +
+                      "'%s' to look for backends", path);
+                }
+
+              File dir = File.new_for_path (path);
+              assert (dir != null && yield is_dir (dir));
+
+              yield this.load_modules_from_dir (dir);
+
+              /* all the found modules should call add_backend() for their
+               * backends (adding them to the backend hash) as a consequence of
+               * load_modules_from_dir(). */
+
+              foreach (var backend in this.backend_hash.values)
+                {
+                  try
+                    {
+                      yield backend.prepare ();
+
+                      debug ("New backend '%s' prepared", backend.name);
+                      this._prepared_backends.set (backend.name, backend);
+                      this.backend_available (backend);
+                    }
+                  catch (GLib.Error e)
+                    {
+                      warning ("Error preparing Backend '%s': %s", backend.name,
+                          e.message);
+                    }
+                }
+
+              this._backends_loaded = true;
             }
         }
-  }
+    }
 
   /**
    * Add a new {@link Backend} to the BackendStore.
