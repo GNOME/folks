@@ -135,7 +135,7 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
               /* Alias */
               if (key == "__alias")
                 {
-                  this.alias = this.key_file.get_string (this.display_id, key);
+                  this._alias = this.key_file.get_string (this.display_id, key);
                   continue;
                 }
 
