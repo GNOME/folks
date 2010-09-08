@@ -201,6 +201,9 @@ public class ContactRetrievalTests : Folks.TestCase
 
       /* We should have enumerated exactly the individuals in the set */
       assert (expected_individuals.size == 0);
+
+      /* necessary to reset the aggregator for the next test */
+      aggregator = null;
     }
 
   public void test_individual_properties ()
@@ -253,6 +256,9 @@ public class ContactRetrievalTests : Folks.TestCase
         });
 
       main_loop.run ();
+
+      /* necessary to reset the aggregator for the next test */
+      aggregator = null;
     }
 }
 
