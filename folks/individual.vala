@@ -150,12 +150,16 @@ public class Folks.Individual : Object,
 
           this._alias = value;
 
+          debug ("Setting alias of individual '%s' to '%s'…", this.id, value);
+
           /* First, try to write it to only the writeable Personas… */
           bool alias_changed = false;
           this._persona_list.foreach ((p) =>
             {
               if (p is Alias && ((Persona) p).store.is_writeable == true)
                 {
+                  debug ("    written to writeable persona '%s'",
+                      ((Persona) p).uid);
                   ((Alias) p).alias = value;
                   alias_changed = true;
                 }
@@ -168,7 +172,11 @@ public class Folks.Individual : Object,
               this._persona_list.foreach ((p) =>
                 {
                   if (p is Alias)
-                    ((Alias) p).alias = value;
+                    {
+                      debug ("    written to non-writeable persona '%s'",
+                          ((Persona) p).uid);
+                      ((Alias) p).alias = value;
+                    }
                 });
             }
         }
@@ -510,6 +518,8 @@ public class Folks.Individual : Object,
       string alias = null;
       bool alias_is_display_id = false;
 
+      debug ("Updating alias for individual '%s'", this.id);
+
       /* Search for an alias from a writeable Persona, and use it as our first
        * choice if it's non-empty, since that's where the user-set alias is
        * stored. */
@@ -526,6 +536,8 @@ public class Folks.Individual : Object,
                 }
             }
         }
+
+      debug ("    got alias '%s' from writeable personas", alias);
 
       /* Since we can't find a non-empty alias from a writeable backend, try
        * the aliases from other personas. Use a non-empty alias which isn't
@@ -560,6 +572,8 @@ public class Folks.Individual : Object,
             }
         }
 
+      debug ("    got alias '%s' from non-writeable personas", alias);
+
       if (alias == null)
         {
           /* We have to pick a display ID, since none of the personas have an
@@ -576,6 +590,8 @@ public class Folks.Individual : Object,
        * something else undesirable. */
       if (this._alias != alias)
         {
+          debug ("Changing alias of individual '%s' from '%s' to '%s'.",
+              this.id, this._alias, alias);
           this._alias = alias;
           this.notify_property ("alias");
         }

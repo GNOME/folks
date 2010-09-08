@@ -51,6 +51,8 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
           if (this._alias == value)
             return;
 
+          debug ("Setting alias of Kf.Persona '%s' to '%s'.", this.uid, value);
+
           this._alias = value;
           this.key_file.set_string (this.display_id, "__alias", value);
 
@@ -136,6 +138,7 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
               if (key == "__alias")
                 {
                   this._alias = this.key_file.get_string (this.display_id, key);
+                  debug ("    Loaded alias '%s'.", this._alias);
                   continue;
                 }
 
