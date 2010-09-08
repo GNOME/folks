@@ -172,7 +172,7 @@ public class Folks.BackendStore : Object {
 
           if (file_type == FileType.DIRECTORY)
             {
-              this.load_modules_from_dir.begin (file);
+              yield this.load_modules_from_dir (file);
             }
           else if (mime == "application/x-sharedlib" && !is_symlink)
             {

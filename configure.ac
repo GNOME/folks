@@ -127,6 +127,13 @@ PKG_CHECK_MODULES([TP_GLIB_FOR_TESTS],
 AM_CONDITIONAL([HAVE_TP_GLIB_FOR_TESTS], [$have_tp_glib_for_tests])
 
 # -----------------------------------------------------------
+# Tools
+# -----------------------------------------------------------
+
+PKG_CHECK_MODULES(LIBXML, libxml-2.0, [have_libxml=yes], [have_libxml=no])
+AM_CONDITIONAL([HAVE_LIBXML], [test "$have_libxml" = "yes"])
+
+# -----------------------------------------------------------
 # Documentation
 # -----------------------------------------------------------
 
@@ -212,6 +219,7 @@ AC_CONFIG_FILES([
     tests/lib/telepathy/contactlist/Makefile
     tests/lib/telepathy/contactlist/session.conf
     tests/tools/Makefile
+    tools/Makefile
 ])
 
 AC_OUTPUT
@@ -225,6 +233,7 @@ Configure summary:
         Bugreporting URL............:  ${PACKAGE_BUGREPORT}
         Documentation...............:  ${enable_docs}
         Tests.......................:  ${have_tp_glib_for_tests}
+        Import tool.................:  ${have_libxml}
 
 
 "

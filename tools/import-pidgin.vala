@@ -1,0 +1,247 @@
+/*
+ * Copyright (C) 2010 Collabora Ltd.
+ *
+ * This library is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 2.1 of the License, or
+ * (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Authors:
+ *       Philip Withnall <philip.withnall@collabora.co.uk>
+ */
+
+using GLib;
+using Gee;
+using Xml;
+using Folks;
+
+public class Folks.Importers.Pidgin : Folks.Importer
+{
+  private PersonaStore destination_store;
+  private uint persona_count = 0;
+
+  public override async uint import (PersonaStore destination_store,
+      string? source_filename) throws ImportError
+    {
+      this.destination_store = destination_store;
+      string filename = source_filename;
+
+      /* Default filename */
+      if (filename == null || filename.strip () == "")
+        {
+          filename = Path.build_filename (Environment.get_home_dir (),
+              ".purple", "blist.xml", null);
+        }
+
+      Xml.Doc* xml_doc = Parser.parse_file (filename);
+
+      if (xml_doc == null)
+        {
+          throw new ImportError.MALFORMED_INPUT ("The Pidgin buddy list file " +
+              "'%s' could not be loaded.", filename);
+        }
+
+      /* Check the root node */
+      Xml.Node *root_node = xml_doc->get_root_element ();
+
+      if (root_node == null || root_node->name != "purple" ||
+          root_node->get_prop ("version") != "1.0")
+        {
+          /* Free the document manually before throwing because the garbage
+           * collector can't work on pointers. */
+          delete xml_doc;
+          throw new ImportError.MALFORMED_INPUT ("The Pidgin buddy list file " +
+              "'%s' could not be loaded: the root element could not be found " +
+              "or was not recognised.", filename);
+        }
+
+      /* Parse each <blist> child element */
+      for (Xml.Node *iter = root_node->children; iter != null;
+          iter = iter->next)
+        {
+          if (iter->type != ElementType.ELEMENT_NODE || iter->name != "blist")
+            continue;
+
+          yield this.parse_blist (iter);
+        }
+
+      /* Tidy up */
+      delete xml_doc;
+
+      stdout.printf ("Imported %u buddies from '%s'.\n", this.persona_count,
+          filename);
+
+      /* Return the number of Personas we imported */
+      return this.persona_count;
+    }
+
+  private async void parse_blist (Xml.Node *blist_node)
+    {
+      for (Xml.Node *iter = blist_node->children; iter != null;
+          iter = iter->next)
+        {
+          if (iter->type != ElementType.ELEMENT_NODE || iter->name != "group")
+            continue;
+
+          yield this.parse_group (iter);
+        }
+    }
+
+  private async void parse_group (Xml.Node *group_node)
+    {
+      string group_name = group_node->get_prop ("name");
+
+      for (Xml.Node *iter = group_node->children; iter != null;
+          iter = iter->next)
+        {
+          if (iter->type != ElementType.ELEMENT_NODE || iter->name != "contact")
+            continue;
+
+          Persona persona = yield this.parse_contact (iter);
+
+          /* Skip the persona if creating them failed or if they don't support
+           * groups. */
+          if (persona == null || !(persona is Groups))
+            continue;
+
+          try
+            {
+              Groups groupable = (Groups) persona;
+              yield groupable.change_group (group_name, true);
+            }
+          catch (GLib.Error e)
+            {
+              stderr.printf ("Error changing group of Pidgin.Persona " +
+                  "'%s': %s\n", persona.iid, e.message);
+            }
+        }
+    }
+
+  private async Persona? parse_contact (Xml.Node *contact_node)
+    {
+      string alias = null;
+      HashTable<string, GenericArray<string>> im_addresses =
+          new HashTable<string, GenericArray<string>> (str_hash, str_equal);
+      string im_address_string = "";
+
+      /* Parse the <buddy> elements beneath <contact> */
+      for (Xml.Node *iter = contact_node->children; iter != null;
+          iter = iter->next)
+        {
+          if (iter->type != ElementType.ELEMENT_NODE || iter->name != "buddy")
+            continue;
+
+          string blist_protocol = iter->get_prop ("proto");
+          if (blist_protocol == null)
+            continue;
+
+          string tp_protocol =
+              this.blist_protocol_to_tp_protocol (blist_protocol);
+          if (tp_protocol == null)
+            continue;
+
+          /* Parse the <name> and <alias> elements beneath <buddy> */
+          for (Xml.Node *subiter = iter->children; subiter != null;
+              subiter = subiter->next)
+            {
+              if (subiter->type != ElementType.ELEMENT_NODE)
+                continue;
+
+              if (subiter->name == "alias")
+                alias = subiter->get_content ();
+              else if (subiter->name == "name")
+                {
+                  /* The <name> element seems to give the contact ID, which
+                   * we need to insert into the Persona's im-addresses property
+                   * for the linking to work. */
+                  string im_address = subiter->get_content ();
+
+                  GenericArray<string> im_address_array =
+                      im_addresses.lookup (tp_protocol);
+                  if (im_address_array == null)
+                    {
+                      im_address_array = new GenericArray<string> ();
+                      im_addresses.insert (tp_protocol, im_address_array);
+                    }
+
+                  im_address_array.add (im_address);
+                  im_address_string += "    %s\n".printf (im_address);
+                }
+            }
+        }
+
+      /* Don't bother if there's no alias and only one IM address */
+      if (im_addresses.size () < 2 &&
+          (alias == null || alias.strip () == "" ||
+           alias.strip () == im_address_string.strip ()))
+        {
+          stdout.printf ("Ignoring buddy with no alias and only one IM " +
+              "address:\n%s", im_address_string);
+          return null;
+        }
+
+      /* Create or update the relevant Persona */
+      HashTable<string, Value?> details =
+          new HashTable<string, Value?> (str_hash, str_equal);
+      Value im_addresses_value = Value (typeof (HashTable));
+      im_addresses_value.set_boxed (im_addresses);
+      details.insert ("im-addresses", im_addresses_value);
+
+      Persona persona;
+      try
+        {
+          persona =
+              yield this.destination_store.add_persona_from_details (details);
+        }
+      catch (PersonaStoreError e)
+        {
+          stderr.printf ("Failed to create new persona for buddy with alias " +
+              "'%s' and IM addresses:\n%s\nError: %s\n", alias,
+              im_address_string, e.message);
+          return null;
+        }
+
+      /* Set the Persona's details */
+      if (alias != null && persona is Alias)
+        ((Alias) persona).alias = alias;
+
+      /* Print progress */
+      stdout.printf ("Created persona '%s' for buddy with alias '%s' and IM " +
+          "addresses:\n%s", persona.uid, alias, im_address_string);
+      this.persona_count++;
+
+      return persona;
+    }
+
+  private string? blist_protocol_to_tp_protocol (string blist_protocol)
+    {
+      string tp_protocol = blist_protocol;
+      if (blist_protocol.has_prefix ("prpl-"))
+        tp_protocol = blist_protocol.substring (5);
+
+      /* Convert protocol names from Pidgin to Telepathy. Other protocol names
+       * should be OK now that we've taken off the "prpl-" prefix. See:
+       * http://telepathy.freedesktop.org/spec/Connection_Manager.html#Protocol
+       * and http://developer.pidgin.im/wiki/prpl_id. */
+      if (tp_protocol == "bonjour")
+        tp_protocol = "local-xmpp";
+      else if (tp_protocol == "novell")
+        tp_protocol = "groupwise";
+      else if (tp_protocol == "gg")
+        tp_protocol = "gadugadu";
+      else if (tp_protocol == "meanwhile")
+        tp_protocol = "sametime";
+      else if (tp_protocol == "simple")
+        tp_protocol = "sip";
+
+      return tp_protocol;
+    }
+}
