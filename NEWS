@@ -1,0 +1,11 @@
+============================================================================
+API breaks in 0.2.0
+============================================================================
+
+BackendStore is now a singleton.
+
+Vala:
+BackendStore default constructor removed. Use BackendStore.dup().
+
+C:
+folks_backend_store_new() removed. Use folks_backend_store_dup().

@@ -39,6 +39,7 @@ public class Folks.BackendStore : Object {
 
   private HashMap<string,Backend> backend_hash;
   private GLib.List<ModuleFinalizeFunc> finalize_funcs = null;
+  private static weak BackendStore instance;
 
   /**
    * Emitted when a backend has been added to the BackendStore.
@@ -53,7 +54,21 @@ public class Folks.BackendStore : Object {
   /**
    * Create a new BackendStore.
    */
-  public BackendStore ()
+  public static BackendStore dup ()
+    {
+      if (instance == null)
+        {
+          /* use an intermediate variable to force a strong reference */
+          var new_instance = new BackendStore ();
+          instance = new_instance;
+
+          return new_instance;
+        }
+
+      return instance;
+    }
+
+  private BackendStore ()
     {
       this.backend_hash = new HashMap<string,Backend> (str_hash, str_equal);
     }
@@ -63,6 +78,9 @@ public class Folks.BackendStore : Object {
       /* Finalize all the loaded modules */
       foreach (ModuleFinalizeFunc func in this.finalize_funcs)
         func (this);
+
+      /* manually clear the singleton instance */
+      instance = null;
     }
 
   /**

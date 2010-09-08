@@ -123,7 +123,7 @@ public class Folks.IndividualAggregator : Object
       this.linking_enabled = (disable_linking == null ||
           disable_linking == "no" || disable_linking == "0");
 
-      this.backend_store = new BackendStore ();
+      this.backend_store = BackendStore.dup ();
       this.backend_store.backend_available.connect (this.backend_available_cb);
     }
 
