@@ -174,7 +174,7 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
            * get any other exceptions, since we're iterating through a list of
            * keys we've just retrieved. */
           if (!(e is KeyFileError.GROUP_NOT_FOUND))
-            GLib.assert_not_reached ();
+            warning ("Couldn't load data from key file: %s", e.message);
         }
     }
 
