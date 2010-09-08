@@ -232,8 +232,10 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
 
       try
         {
+          /* Note: We have to use key_file_data.size () here to get its length
+           * in _bytes_ rather than _characters_. bgo#628930 */
           yield this.file.replace_contents_async (key_file_data,
-              key_file_data.length, null, false, FileCreateFlags.PRIVATE);
+              key_file_data.size (), null, false, FileCreateFlags.PRIVATE);
         }
       catch (Error e)
         {
