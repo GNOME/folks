@@ -38,6 +38,7 @@ public class Folks.BackendStore : Object {
   private delegate void ModuleFinalizeFunc (BackendStore store);
 
   private HashMap<string,Backend> backend_hash;
+  private HashMap<string,Backend> _prepared_backends;
   private GLib.List<ModuleFinalizeFunc> finalize_funcs = null;
   private static weak BackendStore instance;
 
@@ -61,8 +62,7 @@ public class Folks.BackendStore : Object {
    * This list will be empty before {@link BackendStore.load_backends} has been
    * called.
    *
-   * The backends in this list have not necessarily been prepared (see {@link
-   * Backend.prepare}).
+   * The backends in this list have been prepared and are ready to use.
    *
    * @since 0.2.0
    */
@@ -71,11 +71,8 @@ public class Folks.BackendStore : Object {
       owned get
         {
           var backends = new GLib.List<Backend> ();
-          foreach (var entry in this.backend_hash)
-            {
-              backends.prepend (entry.value);
-
-            }
+          foreach (var entry in this._prepared_backends)
+            backends.prepend (entry.value);
 
           return backends;
         }
@@ -103,6 +100,8 @@ public class Folks.BackendStore : Object {
   private BackendStore ()
     {
       this.backend_hash = new HashMap<string,Backend> (str_hash, str_equal);
+      this._prepared_backends = new HashMap<string,Backend> (str_hash,
+          str_equal);
     }
 
   ~BackendStore ()
@@ -116,7 +115,7 @@ public class Folks.BackendStore : Object {
     }
 
   /**
-   * Find and load all available backends.
+   * Find, load, and prepare all backends which are not disabled.
    *
    * Backends will be searched for in the path given by the `FOLKS_BACKEND_DIR`
    * environment variable, if it's set. If it's not set, backends will be
@@ -143,6 +142,27 @@ public class Folks.BackendStore : Object {
       assert (dir != null && yield is_dir (dir));
 
       yield this.load_modules_from_dir (dir);
+
+      /* all the found modules should call add_backend() for their backends
+       * (adding them to the backend hash) as a consequence of
+       * load_modules_from_dir(). */
+
+      foreach (var backend in this.backend_hash.values)
+        {
+          try
+            {
+              yield backend.prepare ();
+
+              debug ("New backend '%s' prepared", backend.name);
+              this._prepared_backends.set (backend.name, backend);
+              this.backend_available (backend);
+            }
+          catch (GLib.Error e)
+            {
+              warning ("Error preparing Backend '%s': %s", backend.name,
+                  e.message);
+            }
+        }
   }
 
   /**
@@ -152,9 +172,7 @@ public class Folks.BackendStore : Object {
    */
   public void add_backend (Backend backend)
     {
-      debug ("New backend '%s' available", backend.name);
       this.backend_hash.set (backend.name, backend);
-      this.backend_available (backend);
     }
 
   /**
