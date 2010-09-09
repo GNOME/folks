@@ -145,17 +145,29 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       this.account_manager.account_disabled.connect ((a) =>
         {
           if (this.account == a)
-            this.removed ();
+            {
+              this.personas_changed (null, this._personas.get_values (), null,
+                  null, 0);
+              this.removed ();
+            }
         });
       this.account_manager.account_removed.connect ((a) =>
         {
           if (this.account == a)
-            this.removed ();
+            {
+              this.personas_changed (null, this._personas.get_values (), null,
+                  null, 0);
+              this.removed ();
+            }
         });
       this.account_manager.account_validity_changed.connect ((a, valid) =>
         {
           if (!valid && this.account == a)
-            this.removed ();
+            {
+              this.personas_changed (null, this._personas.get_values (), null,
+                  null, 0);
+              this.removed ();
+            }
         });
 
       this.account.status_changed.connect (this.account_status_changed_cb);
@@ -324,6 +336,9 @@ public class Tpf.PersonaStore : Folks.PersonaStore
 
       if (new_status == TelepathyGLib.ConnectionStatus.DISCONNECTED)
         {
+          /* When disconnecting, we want the PersonaStore to remain alive, but
+           * all its Personas to be removed. We do *not* want the PersonaStore
+           * to be destroyed, as that makes coming back online hard. */
           this.personas_changed (null, this._personas.get_values (), null, null,
               0);
           this.reset ();
