@@ -175,6 +175,14 @@ public abstract class Folks.PersonaStore : Object
    */
   public abstract HashTable<string, Persona> personas { get; }
 
+  /**
+   * Whether {@link PersonaStore.prepare} has successfully completed for this
+   * store.
+   *
+   * @since 0.3.0
+   */
+  public abstract bool is_prepared { get; default = false; }
+
    /**
    * Whether the PersonaStore is writeable.
    *
@@ -215,6 +223,8 @@ public abstract class Folks.PersonaStore : Object
    * This is normally handled transparently by the {@link IndividualAggregator}.
    *
    * If this function throws an error, the PersonaStore will not be functional.
+   *
+   * This function is guaranteed to be idempotent (since version 0.3.0).
    *
    * @since 0.1.11
    */

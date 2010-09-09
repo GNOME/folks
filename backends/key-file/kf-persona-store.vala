@@ -36,6 +36,7 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
   private GLib.KeyFile key_file;
   private uint first_unused_id = 0;
   private unowned Cancellable save_key_file_cancellable = null;
+  private bool _is_prepared = false;
 
   /**
    * {@inheritDoc}
@@ -51,6 +52,18 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
    * {@inheritDoc}
    */
   public override string id { get; private set; }
+
+  /**
+   * Whether this PersonaStore has been prepared.
+   *
+   * See {@link Folks.PersonaStore.is_prepared}.
+   *
+   * @since 0.3.0
+   */
+  public override bool is_prepared
+    {
+      get { return this._is_prepared; }
+    }
 
   /**
    * {@inheritDoc}
@@ -81,98 +94,111 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
    */
   public override async void prepare ()
     {
-      string filename = this.file.get_path ();
-      this.key_file = new GLib.KeyFile ();
-
-      /* Load or create the file */
-      while (true)
+      lock (this._is_prepared)
         {
-          /* Load the file; if this fails due to the file not existing or having
-           * been deleted in the meantime, we can continue below and try to
-           * create it instead. */
-          try
+          if (!this._is_prepared)
             {
-              string contents = null;
-              size_t length = 0;
+              string filename = this.file.get_path ();
+              this.key_file = new GLib.KeyFile ();
 
-              yield this.file.load_contents_async (null, out contents,
-                  out length);
-              if (length > 0)
+              /* Load or create the file */
+              while (true)
                 {
-                  this.key_file.load_from_data (contents, length,
-                      KeyFileFlags.KEEP_COMMENTS);
+                  /* Load the file; if this fails due to the file not existing
+                   * or having been deleted in the meantime, we can continue
+                   * below and try to create it instead. */
+                  try
+                    {
+                      string contents = null;
+                      size_t length = 0;
+
+                      yield this.file.load_contents_async (null, out contents,
+                          out length);
+                      if (length > 0)
+                        {
+                          this.key_file.load_from_data (contents, length,
+                              KeyFileFlags.KEEP_COMMENTS);
+                        }
+                      break;
+                    }
+                  catch (Error e1)
+                    {
+                      if (!(e1 is IOError.NOT_FOUND))
+                        {
+                          warning ("The relationship key file '%s' could " +
+                              "not be loaded: %s", filename, e1.message);
+                          this.removed ();
+                          return;
+                        }
+                    }
+
+                  /* Ensure the parent directory tree exists for the new file */
+                  File parent_dir = this.file.get_parent ();
+
+                  try
+                    {
+                      /* Recursively create the directory */
+                      parent_dir.make_directory_with_parents ();
+                    }
+                  catch (Error e3)
+                    {
+                      if (!(e3 is IOError.EXISTS))
+                        {
+                          warning ("The relationship key file directory " +
+                              "'%s' could not be created: %s",
+                              parent_dir.get_path (), e3.message);
+                          this.removed ();
+                          return;
+                        }
+                    }
+
+                  /* Create a new file; if this fails due to the file having
+                   * been created in the meantime, we can loop back round and
+                   * try and load it. */
+                  try
+                    {
+                      /* Create the file */
+                      FileOutputStream stream = yield this.file.create_async (
+                          FileCreateFlags.PRIVATE, Priority.DEFAULT);
+                      yield stream.close_async (Priority.DEFAULT);
+                    }
+                  catch (Error e2)
+                    {
+                      if (!(e2 is IOError.EXISTS))
+                        {
+                          warning ("The relationship key file '%s' could " +
+                              "not be created: %s", filename, e2.message);
+                          this.removed ();
+                          return;
+                        }
+                    }
                 }
-              break;
-            }
-          catch (Error e1)
-            {
-              if (!(e1 is IOError.NOT_FOUND))
+
+              /* We've loaded or created a key file by now, so cycle through the
+               * groups: each group is a persona which we have to create and
+               * emit */
+              string[] groups = this.key_file.get_groups ();
+              foreach (string persona_id in groups)
                 {
-                  warning ("The relationship key file '%s' could not be " +
-                      "loaded: %s", filename, e1.message);
-                  this.removed ();
-                  return;
+                  if (persona_id.to_int () == this.first_unused_id)
+                    this.first_unused_id++;
+
+                  Persona persona = new Kf.Persona (this.key_file, persona_id,
+                      this);
+                  this._personas.insert (persona.iid, persona);
                 }
-            }
 
-          /* Ensure the parent directory tree exists for the new file */
-          File parent_dir = this.file.get_parent ();
-
-          try
-            {
-              /* Recursively create the directory */
-              parent_dir.make_directory_with_parents ();
-            }
-          catch (Error e3)
-            {
-              if (!(e3 is IOError.EXISTS))
+              if (this._personas.size () > 0)
                 {
-                  warning ("The relationship key file directory '%s' could " +
-                      "not be created: %s", parent_dir.get_path (), e3.message);
-                  this.removed ();
-                  return;
+                  /* FIXME: Groupable.ChangeReason is not the right enum to use
+                   * here */
+                  this.personas_changed (this._personas.get_values (), null,
+                      null, null, Groupable.ChangeReason.NONE);
                 }
+
+              this._is_prepared = true;
+              this.notify_property ("is-prepared");
             }
-
-          /* Create a new file; if this fails due to the file having been
-           * created in the meantime, we can loop back round and try and load
-           * it. */
-          try
-            {
-              /* Create the file */
-              FileOutputStream stream = yield this.file.create_async (
-                  FileCreateFlags.PRIVATE, Priority.DEFAULT);
-              yield stream.close_async (Priority.DEFAULT);
-            }
-          catch (Error e2)
-            {
-              if (!(e2 is IOError.EXISTS))
-                {
-                  warning ("The relationship key file '%s' could not be " +
-                      "created: %s", filename, e2.message);
-                  this.removed ();
-                  return;
-                }
-            }
-        }
-
-      /* We've loaded or created a key file by now, so cycle through the groups:
-       * each group is a persona which we have to create and emit */
-      string[] groups = this.key_file.get_groups ();
-      foreach (string persona_id in groups)
-        {
-          if (persona_id.to_int () == this.first_unused_id)
-            this.first_unused_id++;
-
-          Persona persona = new Kf.Persona (this.key_file, persona_id, this);
-          this._personas.insert (persona.iid, persona);
-        }
-
-      if (this._personas.size () > 0)
-        {
-          /* FIXME: Groupable.ChangeReason is not the right enum to use here */
-          this.personas_changed (this._personas.get_values (), null, null, null,
-              Groupable.ChangeReason.NONE);
         }
     }
 

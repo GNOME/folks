@@ -56,6 +56,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
   private AccountManager account_manager;
   private Logger logger;
   private Contact self_contact;
+  private bool _is_prepared = false;
 
   internal signal void group_members_changed (string group,
       GLib.List<Persona>? added, GLib.List<Persona>? removed);
@@ -90,6 +91,18 @@ public class Tpf.PersonaStore : Folks.PersonaStore
    * See {@link Folks.PersonaStore.id}.
    */
   public override string id { get; private set; }
+
+  /**
+   * Whether this PersonaStore has been prepared.
+   *
+   * See {@link Folks.PersonaStore.is_prepared}.
+   *
+   * @since 0.3.0
+   */
+  public override bool is_prepared
+    {
+      get { return this._is_prepared; }
+    }
 
   /**
    * The {@link Persona}s exposed by this PersonaStore.
@@ -155,64 +168,76 @@ public class Tpf.PersonaStore : Folks.PersonaStore
    */
   public override async void prepare ()
     {
-      this.account_manager = AccountManager.dup ();
-
-      this.account_manager.account_disabled.connect ((a) =>
+      lock (this._is_prepared)
         {
-          if (this.account == a)
+          if (!this._is_prepared)
             {
-              this.personas_changed (null, this._personas.get_values (), null,
-                  null, 0);
-              this.removed ();
+              this.account_manager = AccountManager.dup ();
+
+              this.account_manager.account_disabled.connect ((a) =>
+                {
+                  if (this.account == a)
+                    {
+                      this.personas_changed (null, this._personas.get_values (),
+                        null, null, 0);
+                      this.removed ();
+                    }
+                });
+              this.account_manager.account_removed.connect ((a) =>
+                {
+                  if (this.account == a)
+                    {
+                      this.personas_changed (null, this._personas.get_values (),
+                        null, null, 0);
+                      this.removed ();
+                    }
+                });
+              this.account_manager.account_validity_changed.connect (
+                  (a, valid) =>
+                    {
+                      if (!valid && this.account == a)
+                        {
+                          this.personas_changed (null, this._personas.get_values
+                            (), null, null, 0);
+                          this.removed ();
+                        }
+                    });
+
+              this.account.status_changed.connect (
+                  this.account_status_changed_cb);
+
+              TelepathyGLib.ConnectionStatusReason reason;
+              var status = this.account.get_connection_status (out reason);
+              /* immediately handle accounts which are not currently being
+               * disconnected */
+              if (status != TelepathyGLib.ConnectionStatus.DISCONNECTED)
+                {
+                  this.account_status_changed_cb (
+                      TelepathyGLib.ConnectionStatus.DISCONNECTED, status,
+                      reason, null, null);
+                }
+
+              try
+                {
+                  this.logger = new Logger (this.id);
+                  this.logger.invalidated.connect (() =>
+                    {
+                      warning ("lost connection to the telepathy-logger " +
+                        "service");
+                      this.logger = null;
+                    });
+                  this.logger.favourite_contacts_changed.connect (
+                      this.favourite_contacts_changed_cb);
+                }
+              catch (DBus.Error e)
+                {
+                  warning ("couldn't connect to the telepathy-logger service");
+                  this.logger = null;
+                }
+
+              this._is_prepared = true;
+              this.notify_property ("is-prepared");
             }
-        });
-      this.account_manager.account_removed.connect ((a) =>
-        {
-          if (this.account == a)
-            {
-              this.personas_changed (null, this._personas.get_values (), null,
-                  null, 0);
-              this.removed ();
-            }
-        });
-      this.account_manager.account_validity_changed.connect ((a, valid) =>
-        {
-          if (!valid && this.account == a)
-            {
-              this.personas_changed (null, this._personas.get_values (), null,
-                  null, 0);
-              this.removed ();
-            }
-        });
-
-      this.account.status_changed.connect (this.account_status_changed_cb);
-
-      TelepathyGLib.ConnectionStatusReason reason;
-      var status = this.account.get_connection_status (out reason);
-      /* immediately handle accounts which are not currently being disconnected
-       */
-      if (status != TelepathyGLib.ConnectionStatus.DISCONNECTED)
-        {
-          this.account_status_changed_cb (
-              TelepathyGLib.ConnectionStatus.DISCONNECTED, status, reason, null,
-              null);
-        }
-
-      try
-        {
-          this.logger = new Logger (this.id);
-          this.logger.invalidated.connect (() =>
-            {
-              warning ("lost connection to the telepathy-logger service");
-              this.logger = null;
-            });
-          this.logger.favourite_contacts_changed.connect (
-              this.favourite_contacts_changed_cb);
-        }
-      catch (DBus.Error e)
-        {
-          warning ("couldn't connect to the telepathy-logger service");
-          this.logger = null;
         }
     }
 
