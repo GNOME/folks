@@ -65,6 +65,18 @@ public class Folks.IndividualAggregator : Object
   private HashSet<Backend> backends;
   private HashTable<string, Individual> link_map;
   private bool linking_enabled = true;
+  private bool _is_prepared = false;
+
+  /**
+   * Whether {@link IndividualAggregator.prepare} has successfully completed for
+   * this aggregator.
+   *
+   * @since 0.3.0
+   */
+  public bool is_prepared
+    {
+      get { return this._is_prepared; }
+    }
 
   /**
    * A table mapping {@link Individual.id}s to their {@link Individual}s.
@@ -153,6 +165,8 @@ public class Folks.IndividualAggregator : Object
    * condition could occur, with the signal being emitted before your code has
    * connected to them, and {@link Individual}s getting "lost" as a result.
    *
+   * This function is guaranteed to be idempotent (since version 0.3.0).
+   *
    * @since 0.1.11
    */
   public async void prepare () throws GLib.Error
@@ -160,7 +174,16 @@ public class Folks.IndividualAggregator : Object
       /* Once this async function returns, all the {@link Backend}s will have
        * been prepared (though no {@link PersonaStore}s are guaranteed to be
        * available yet). This last guarantee is new as of version 0.2.0. */
-      yield this.backend_store.load_backends ();
+
+      lock (this._is_prepared)
+        {
+          if (!this._is_prepared)
+            {
+              yield this.backend_store.load_backends ();
+              this._is_prepared = true;
+              this.notify_property ("is-prepared");
+            }
+        }
     }
 
   private async void add_backend (Backend backend)
