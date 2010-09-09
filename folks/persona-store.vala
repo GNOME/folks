@@ -194,6 +194,23 @@ public abstract class Folks.PersonaStore : Object
   public abstract async void prepare () throws GLib.Error;
 
   /**
+   * Flush any pending changes to the PersonaStore's backing store.
+   *
+   * PersonaStores may (transparently) implement caching or I/O queueing which
+   * means that changes to their {@link Persona}s may not be immediately written
+   * to the PersonaStore's backing store. Calling this function will force all
+   * pending changes to be flushed to the backing store.
+   *
+   * This must not be called before {@link PersonaStore.prepare}.
+   *
+   * @since 0.1.17
+   */
+  public virtual async void flush ()
+    {
+      /* Default implementation doesn't have to do anything */
+    }
+
+  /**
    * Add a new {@link Persona} to the PersonaStore.
    *
    * The {@link Persona} will be created by the PersonaStore backend from the

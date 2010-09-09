@@ -33,6 +33,7 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
   private File file;
   private GLib.KeyFile key_file;
   private uint first_unused_id = 0;
+  private unowned Cancellable save_key_file_cancellable = null;
 
   /**
    * {@inheritDoc}
@@ -173,6 +174,21 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
   /**
    * {@inheritDoc}
    */
+  public override async void flush ()
+    {
+      /* If there are any ongoing file operations, wait for them to finish
+       * before returning. We have to iterate the main context manually to
+       * achieve this, as all the code in this file is run in the main loop (in
+       * the main thread). We would cause a deadlock if we used anything as
+       * fancy/useful as a GCond. */
+      MainContext context = MainContext.default ();
+      while (this.save_key_file_cancellable != null)
+        context.iteration (true);
+    }
+
+  /**
+   * {@inheritDoc}
+   */
   public override async void remove_persona (Folks.Persona persona)
     {
       debug ("Removing Persona '%s' (IID '%s', group '%s')", persona.uid,
@@ -242,20 +258,38 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
   internal async void save_key_file ()
     {
       string key_file_data = this.key_file.to_data ();
+      Cancellable cancellable = new Cancellable ();
 
       debug ("Saving key file '%s'.", this.file.get_path ());
+
+      /* There's no point in having two competing file write operations.
+       * We can ensure that only one is running by just checking if a
+       * cancellable is set. This is thread safe because the code in this file
+       * is all run in the main thread (inside the main loop), so only we touch
+       * this.save_key_file_cancellable (albeit in many weird and wonderful
+       * orders due to idle handler queuing). */
+      if (this.save_key_file_cancellable != null)
+        this.save_key_file_cancellable.cancel ();
+      this.save_key_file_cancellable = cancellable;
 
       try
         {
           /* Note: We have to use key_file_data.size () here to get its length
            * in _bytes_ rather than _characters_. bgo#628930 */
           yield this.file.replace_contents_async (key_file_data,
-              key_file_data.size (), null, false, FileCreateFlags.PRIVATE);
+              key_file_data.size (), null, false, FileCreateFlags.PRIVATE,
+              cancellable);
         }
       catch (Error e)
         {
-          warning ("Could not write updated key file '%s': %s",
-              this.file.get_path (), e.message);
+          if (!(e is IOError.CANCELLED))
+            {
+              warning ("Could not write updated key file '%s': %s",
+                  this.file.get_path (), e.message);
+            }
         }
+
+      if (this.save_key_file_cancellable == cancellable)
+        this.save_key_file_cancellable = null;
     }
 }
