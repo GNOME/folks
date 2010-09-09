@@ -1,4 +1,4 @@
-dnl If not 1, append datestamp to the version number
+# If not 1, append datestamp to the version number
 m4_define(folks_released, 0)
 
 m4_define([folks_major_version], [0])
@@ -16,7 +16,7 @@ m4_define([folks_lt_current], [13])
 m4_define([folks_lt_revision], [1])
 m4_define([folks_lt_age], [13])
 
-dnl Display the nano_version only if it's not '0'
+# Display the nano_version only if it's not '0'
 m4_define([folks_base_version],
                 [folks_major_version.folks_minor_version.folks_micro_version])
 m4_define([folks_full_version],
