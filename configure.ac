@@ -80,16 +80,10 @@ AC_SUBST([LT_AGE])
 PKG_CHECK_MODULES([GLIB],
                   [glib-2.0 >= $GLIB_REQUIRED
                   gobject-2.0 >= $GLIB_REQUIRED])
-AC_SUBST([GLIB_CFLAGS])
-AC_SUBST([GLIB_LIBS])
 
 PKG_CHECK_MODULES([GIO], [gio-2.0 >= $GLIB_REQUIRED])
-AC_SUBST([GIO_CFLAGS])
-AC_SUBST([GIO_LIBS])
 
 PKG_CHECK_MODULES([DBUS_GLIB], [dbus-glib-1])
-AC_SUBST([DBUS_GLIB_CFLAGS])
-AC_SUBST([DBUS_GLIB_LIBS])
 
 # require GLib >= 2.24 so GLib.Array, etc. reffing is handled automatically
 VALACFLAGS="$VALACFLAGS --target-glib=2.24"
@@ -98,7 +92,6 @@ AC_SUBST([VALAFLAGS])
 AC_SUBST([VAPIDIR])
 
 AC_PATH_PROG([VAPIGEN], [vapigen], [vapigen])
-AC_SUBST([VAPIGEN])
 
 GOBJECT_INTROSPECTION_REQUIRE([0.6.7])
 
@@ -107,12 +100,8 @@ AS_IF([test "$VAPIGEN" = ""],
 
 # FIXME: We depend on libgee < 0.7 because 0.7 breaks API. bgo#627746
 PKG_CHECK_MODULES([GEE], [gee-1.0 < 0.7])
-AC_SUBST([GEE_CFLAGS])
-AC_SUBST([GEE_LIBS])
 
 PKG_CHECK_MODULES([TP_GLIB], [telepathy-glib >= $TP_GLIB_REQUIRED])
-AC_SUBST([TP_GLIB_CFLAGS])
-AC_SUBST([TP_GLIB_LIBS])
 
 VALA_CHECK_PACKAGES([telepathy-glib
                     dbus-glib-1
@@ -154,7 +143,6 @@ AM_CONDITIONAL([ENABLE_DOCS], [test x$enable_docs = xyes])
 
 AS_IF([test "x$enable_docs" != xno],
   [AC_PATH_PROG([VALADOC], [valadoc], [:])
-   AC_SUBST([VALADOC])
    AS_IF([test "$VALADOC" = :],
      [AC_MSG_ERROR([valadoc not found])])])
 
