@@ -31,6 +31,20 @@ using Folks.Backends.Kf;
  */
 public class Folks.Backends.Kf.Backend : Folks.Backend
 {
+  private bool _is_prepared = false;
+
+  /**
+   * Whether this Backend has been prepared.
+   *
+   * See {@link Folks.Backend.is_prepared}.
+   *
+   * @since 0.3.0
+   */
+  public override bool is_prepared
+    {
+      get { return this._is_prepared; }
+    }
+
   /**
    * {@inheritDoc}
    */
@@ -57,31 +71,43 @@ public class Folks.Backends.Kf.Backend : Folks.Backend
    */
   public override async void prepare () throws GLib.Error
     {
-      File file;
-      string path = Environment.get_variable ("FOLKS_BACKEND_KEY_FILE_PATH");
-      if (path == null)
+      lock (this._is_prepared)
         {
-          file = File.new_for_path (Environment.get_user_data_dir ());
-          file = file.get_child ("folks");
-          file = file.get_child ("relationships.ini");
+          if (!this._is_prepared)
+            {
+              File file;
+              string path = Environment.get_variable (
+                  "FOLKS_BACKEND_KEY_FILE_PATH");
+              if (path == null)
+                {
+                  file = File.new_for_path (Environment.get_user_data_dir ());
+                  file = file.get_child ("folks");
+                  file = file.get_child ("relationships.ini");
 
-          debug ("Using built-in key file '%s' (override with environment " +
-              "variable FOLKS_BACKEND_KEY_FILE_PATH)", file.get_path ());
+                  debug ("Using built-in key file '%s' (override with " +
+                      "environment variable FOLKS_BACKEND_KEY_FILE_PATH)",
+                      file.get_path ());
+                }
+              else
+                {
+                  file = File.new_for_path (path);
+                  debug ("Using environment variable " +
+                      "FOLKS_BACKEND_KEY_FILE_PATH = '%s' to load the key " +
+                      "file.", path);
+                }
+
+              /* Create the PersonaStore for the key file */
+              PersonaStore store = new Kf.PersonaStore (file);
+
+              this.persona_stores.insert (store.id, store);
+              store.removed.connect (this.store_removed_cb);
+
+              this.persona_store_added (store);
+
+              this._is_prepared = true;
+              this.notify_property ("is-prepared");
+            }
         }
-      else
-        {
-          file = File.new_for_path (path);
-          debug ("Using environment variable FOLKS_BACKEND_KEY_FILE_PATH = '%s'"
-              + " to load the key file.", path);
-        }
-
-      /* Create the PersonaStore for the key file */
-      PersonaStore store = new Kf.PersonaStore (file);
-
-      this.persona_stores.insert (store.id, store);
-      store.removed.connect (this.store_removed_cb);
-
-      this.persona_store_added (store);
     }
 
   private void store_removed_cb (Folks.PersonaStore store)

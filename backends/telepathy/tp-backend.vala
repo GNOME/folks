@@ -30,6 +30,7 @@ using Folks.Backends.Tp;
 public class Folks.Backends.Tp.Backend : Folks.Backend
 {
   private AccountManager account_manager;
+  private bool _is_prepared = false;
 
   /**
    * {@inheritDoc}
@@ -53,23 +54,47 @@ public class Folks.Backends.Tp.Backend : Folks.Backend
     }
 
   /**
+   * Whether this Backend has been prepared.
+   *
+   * See {@link Folks.Backend.is_prepared}.
+   *
+   * @since 0.3.0
+   */
+  public override bool is_prepared
+    {
+      get { return this._is_prepared; }
+    }
+
+  /**
    * {@inheritDoc}
    */
   public override async void prepare () throws GLib.Error
     {
-      this.account_manager = AccountManager.dup ();
-      yield this.account_manager.prepare_async (null);
-      this.account_manager.account_enabled.connect (this.account_enabled_cb);
-      this.account_manager.account_validity_changed.connect ((a, valid) =>
+      lock (this._is_prepared)
         {
-          if (valid)
-            this.account_enabled_cb (a);
-        });
+          if (!this._is_prepared)
+            {
+              this.account_manager = AccountManager.dup ();
+              yield this.account_manager.prepare_async (null);
+              this.account_manager.account_enabled.connect (
+                  this.account_enabled_cb);
+              this.account_manager.account_validity_changed.connect (
+                  (a, valid) =>
+                    {
+                      if (valid)
+                        this.account_enabled_cb (a);
+                    });
 
-      GLib.List<unowned Account> accounts = this.account_manager.get_valid_accounts ();
-      foreach (Account account in accounts)
-        {
-          this.account_enabled_cb (account);
+              GLib.List<unowned Account> accounts =
+                  this.account_manager.get_valid_accounts ();
+              foreach (Account account in accounts)
+                {
+                  this.account_enabled_cb (account);
+                }
+
+              this._is_prepared = true;
+              this.notify_property ("is-prepared");
+            }
         }
     }
 

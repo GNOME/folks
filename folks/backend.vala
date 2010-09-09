@@ -35,6 +35,14 @@ using GLib;
 public abstract class Folks.Backend : Object
 {
   /**
+   * Whether {@link Backend.prepare} has successfully completed for this
+   * backend.
+   *
+   * @since 0.3.0
+   */
+  public abstract bool is_prepared { get; default = false; }
+
+  /**
    * A unique name for the backend.
    *
    * This will be used to identify the backend, and should also be used as the
@@ -90,6 +98,8 @@ public abstract class Folks.Backend : Object
    * This is normally handled transparently by the {@link IndividualAggregator}.
    *
    * If this function throws an error, the Backend will not be functional.
+   *
+   * This function is guaranteed to be idempotent (since version 0.3.0).
    *
    * @since 0.1.11
    */
