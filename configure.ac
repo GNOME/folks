@@ -24,7 +24,8 @@ m4_define([folks_full_version],
                         folks_base_version.folks_nano_version)])
 
 m4_define([folks_maybe_datestamp],
-                    m4_esyscmd([if test x]folks_released[ != x1; then date +.%Y%m%d | tr -d '\n\r'; fi]))
+                    m4_if(folks_released, [1], [],
+                        [m4_esyscmd([date +.%Y%m%d | tr -d '\n\r'])]))
 
 m4_define([folks_version], folks_full_version[]folks_maybe_datestamp)
 
@@ -179,7 +180,7 @@ AS_COMPILER_FLAG([-Wno-unused-parameter],
         [wno_unused_parameter=yes],
         [wno_unused_parameter=no])
 
-ifelse(folks_released, [1], [],
+m4_if(folks_released, [1], [],
     [
         if test x$werror = xyes; then
             ERROR_CFLAGS="$ERROR_CFLAGS -Werror"
