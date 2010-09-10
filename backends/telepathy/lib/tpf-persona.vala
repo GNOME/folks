@@ -44,6 +44,7 @@ public class Tpf.Persona : Folks.Persona,
   private bool _is_favourite;
   private string _alias;
   private HashTable<string, GenericArray<string>> _im_addresses;
+  private const string[] _linkable_properties = { "im-addresses" };
 
   /* Whether we've finished being constructed; this is used to prevent
    * unnecessary trips to the Telepathy service to tell it about properties
@@ -71,6 +72,16 @@ public class Tpf.Persona : Folks.Persona,
    * See {@link Folks.Presence.presence_message}.
    */
   public string presence_message { get; private set; }
+
+  /**
+   * The names of the Persona's linkable properties.
+   *
+   * See {@link Folks.Persona.linkable_properties}.
+   */
+  public override string[] linkable_properties
+    {
+      get { return this._linkable_properties; }
+    }
 
   /**
    * An alias for the Persona.
@@ -203,8 +214,6 @@ public class Tpf.Persona : Folks.Persona,
    */
   public Persona (Contact contact, PersonaStore store) throws Tpf.PersonaError
     {
-      string[] linkable_properties = { "im-addresses" };
-
       /* FIXME: There is the possibility of a crash in the error condition below
        * due to bgo#604299, where the C self variable isn't initialised until we
        * chain up to the Object constructor, below. */
@@ -229,7 +238,6 @@ public class Tpf.Persona : Folks.Persona,
               iid: account.get_protocol () + ":" + id,
               uid: uid,
               store: store,
-              linkable_properties: linkable_properties,
               is_user: contact.handle == connection.self_handle);
 
       contact.notify["alias"].connect ((s, p) =>

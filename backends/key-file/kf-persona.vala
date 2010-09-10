@@ -38,6 +38,15 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
    * arrays aren't supported as generic types. */
   private HashTable<string, GenericArray<string>> _im_addresses;
   private string _alias;
+  private const string[] _linkable_properties = { "im-addresses" };
+
+  /**
+   * {@inheritDoc}
+   */
+  public override string[] linkable_properties
+    {
+      get { return this._linkable_properties; }
+    }
 
   /**
    * {@inheritDoc}
@@ -127,7 +136,6 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
    */
   public Persona (KeyFile key_file, string id, Folks.PersonaStore store)
     {
-      string[] linkable_properties = { "im-addresses" };
       string iid = store.id + ":" + id;
       string uid = this.build_uid ("key-file", store.id, id);
 
@@ -135,7 +143,6 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
               iid: iid,
               uid: uid,
               store: store,
-              linkable_properties: linkable_properties,
               is_user: false);
 
       debug ("Adding key-file Persona '%s' (IID '%s', group '%s')", uid, iid,

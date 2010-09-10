@@ -116,7 +116,7 @@ public abstract class Folks.Persona : Object
    *
    * @since 0.1.13
    */
-  public string[] linkable_properties { get; protected set; }
+  public abstract string[] linkable_properties { get; }
 
   /**
    * Callback into the aggregator to manipulate a link mapping.

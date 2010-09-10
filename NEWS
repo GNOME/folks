@@ -14,6 +14,10 @@ API changes:
 * Add BackendStore.disable_backend().
 * Add BackendStore.unprepare().
 * Remove casting convenience methods on Individual (casting isn't hard)
+* Change the visibility of the setters of PersonaStore.type_id,
+  PersonaStore.display_name, PersonaStore.id, Backend.name,
+  Backend.persona_stores and Persona.linkable_properties. This removes the
+  corresponding C setter methods which should never have been exposed
 
 Bugs fixed:
 * Bug 629081 — Add API to allow specific backends to be disabled
