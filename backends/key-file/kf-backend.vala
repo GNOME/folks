@@ -32,6 +32,7 @@ using Folks.Backends.Kf;
 public class Folks.Backends.Kf.Backend : Folks.Backend
 {
   private bool _is_prepared = false;
+  private HashTable<string, PersonaStore> _persona_stores;
 
   /**
    * Whether this Backend has been prepared.
@@ -55,7 +56,16 @@ public class Folks.Backends.Kf.Backend : Folks.Backend
    */
   public override HashTable<string, PersonaStore> persona_stores
     {
-      get; private set;
+      get { return this._persona_stores; }
+    }
+
+  /**
+   * {@inheritDoc}
+   */
+  public Backend ()
+    {
+      this._persona_stores = new HashTable<string, PersonaStore> (str_hash,
+          str_equal);
     }
 
   /**
@@ -91,10 +101,11 @@ public class Folks.Backends.Kf.Backend : Folks.Backend
               /* Create the PersonaStore for the key file */
               PersonaStore store = new Kf.PersonaStore (file);
 
-              this.persona_stores.insert (store.id, store);
+              this._persona_stores.insert (store.id, store);
               store.removed.connect (this.store_removed_cb);
 
               this.persona_store_added (store);
+              this.notify_property ("persona-stores");
 
               this._is_prepared = true;
               this.notify_property ("is-prepared");
@@ -107,12 +118,13 @@ public class Folks.Backends.Kf.Backend : Folks.Backend
    */
   public override async void unprepare () throws GLib.Error
     {
-      this.persona_stores.foreach ((k, v) =>
+      this._persona_stores.foreach ((k, v) =>
         {
           this.persona_store_removed ((PersonaStore) v);
         });
 
-      this.persona_stores.remove_all ();
+      this._persona_stores.remove_all ();
+      this.notify_property ("persona-stores");
 
       this._is_prepared = false;
       this.notify_property ("is-prepared");
@@ -121,6 +133,7 @@ public class Folks.Backends.Kf.Backend : Folks.Backend
   private void store_removed_cb (Folks.PersonaStore store)
     {
       this.persona_store_removed (store);
-      this.persona_stores.remove (store.id);
+      this._persona_stores.remove (store.id);
+      this.notify_property ("persona-stores");
     }
 }

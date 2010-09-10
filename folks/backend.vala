@@ -60,10 +60,7 @@ public abstract class Folks.Backend : Object
    * A backend may expose {@link Persona}s from multiple servers or accounts
    * (for example), so may have a {@link PersonaStore} for each.
    */
-  public abstract HashTable<string, PersonaStore> persona_stores
-    {
-      get; protected set;
-    }
+  public abstract HashTable<string, PersonaStore> persona_stores { get; }
 
   /**
    * Emitted when a {@link PersonaStore} is added to the backend.
@@ -120,10 +117,4 @@ public abstract class Folks.Backend : Object
    * @since 0.3.2
    */
   public abstract async void unprepare () throws GLib.Error;
-
-  construct
-    {
-      this.persona_stores = new HashTable<string, PersonaStore> (str_hash,
-          str_equal);
-    }
 }

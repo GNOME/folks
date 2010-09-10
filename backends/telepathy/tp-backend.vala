@@ -31,6 +31,7 @@ public class Folks.Backends.Tp.Backend : Folks.Backend
 {
   private AccountManager account_manager;
   private bool _is_prepared = false;
+  private HashTable<string, PersonaStore> _persona_stores;
 
   /**
    * {@inheritDoc}
@@ -42,7 +43,16 @@ public class Folks.Backends.Tp.Backend : Folks.Backend
    */
   public override HashTable<string, PersonaStore> persona_stores
     {
-      get; private set;
+      get { return this._persona_stores; }
+    }
+
+  /**
+   * {@inheritDoc}
+   */
+  public Backend ()
+    {
+      this._persona_stores = new HashTable<string, PersonaStore> (str_hash,
+          str_equal);
     }
 
   /**
@@ -100,12 +110,13 @@ public class Folks.Backends.Tp.Backend : Folks.Backend
           this.account_validity_changed_cb);
       this.account_manager = null;
 
-      this.persona_stores.foreach ((k, v) =>
+      this._persona_stores.foreach ((k, v) =>
         {
           this.persona_store_removed ((PersonaStore) v);
         });
 
-      this.persona_stores.remove_all ();
+      this._persona_stores.remove_all ();
+      this.notify_property ("persona-stores");
 
       this._is_prepared = false;
       this.notify_property ("is-prepared");
@@ -119,7 +130,7 @@ public class Folks.Backends.Tp.Backend : Folks.Backend
 
   private void account_enabled_cb (Account account)
     {
-      PersonaStore store = this.persona_stores.lookup (
+      PersonaStore store = this._persona_stores.lookup (
           account.get_object_path ());
 
       if (store != null)
@@ -127,15 +138,17 @@ public class Folks.Backends.Tp.Backend : Folks.Backend
 
       store = new Tpf.PersonaStore (account);
 
-      this.persona_stores.insert (store.id, store);
+      this._persona_stores.insert (store.id, store);
       store.removed.connect (this.store_removed_cb);
 
       this.persona_store_added (store);
+      this.notify_property ("persona-stores");
     }
 
   private void store_removed_cb (PersonaStore store)
     {
       this.persona_store_removed (store);
-      this.persona_stores.remove (store.id);
+      this._persona_stores.remove (store.id);
+      this.notify_property ("persona-stores");
     }
 }
