@@ -60,4 +60,9 @@ test-contact-retrieval: contact-retrieval
 	> $@
 	chmod +x $@
 
+GITIGNOREFILES = \
+	$(contact_retrieval_SOURCES:.vala=.c) \
+	contact_retrieval_vala.stamp \
+	$(NULL)
+
 -include $(top_srcdir)/git.mk

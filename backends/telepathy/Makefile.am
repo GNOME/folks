@@ -51,4 +51,10 @@ libfolks_backend_telepathy_la_LIBADD = \
 
 libfolks_backend_telepathy_la_LDFLAGS = -shared -fPIC -module -avoid-version
 
+GITIGNOREFILES = \
+	folks-backend-telepathy.vapi \
+	$(libfolks_backend_telepathy_la_SOURCES:.vala=.c) \
+	libfolks_backend_telepathy_la_vala.stamp \
+	$(NULL)
+
 -include $(top_srcdir)/git.mk
