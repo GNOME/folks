@@ -67,6 +67,12 @@ folks.vapi folks.vala.stamp: $(folks_valasources)
 		$(folks_valasources)
 	touch $@
 
+vapidir = $(datadir)/vala/vapi
+dist_vapi_DATA = \
+	folks.vapi \
+	folks.deps \
+	$(NULL)
+
 pkgconfig_in = folks.pc.in
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = $(pkgconfig_in:.in=)

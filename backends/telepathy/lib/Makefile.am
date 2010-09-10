@@ -141,6 +141,12 @@ folks-telepathy.vapi folks-telepathy.vala.stamp: $(folks_telepathy_vapi_deps)
 		$(addprefix $(srcdir)/,$(folks_telepathy_valasources))
 	touch $@
 
+vapidir = $(datadir)/vala/vapi
+dist_vapi_DATA = \
+	folks-telepathy.vapi \
+	folks-telepathy.deps \
+	$(NULL)
+
 ##################################################################
 # General
 ##################################################################
