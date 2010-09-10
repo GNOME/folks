@@ -211,6 +211,7 @@ AC_CONFIG_FILES([
     tests/lib/telepathy/Makefile
     tests/lib/telepathy/contactlist/Makefile
     tests/lib/telepathy/contactlist/session.conf
+    tests/tools/Makefile
 ])
 
 AC_OUTPUT

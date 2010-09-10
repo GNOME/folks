@@ -1,5 +1,6 @@
 SUBDIRS = \
     lib \
+    tools \
     $(NULL)
 
 if HAVE_TP_GLIB_FOR_TESTS
