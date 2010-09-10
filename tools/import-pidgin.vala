@@ -41,6 +41,33 @@ public class Folks.Importers.Pidgin : Folks.Importer
               ".purple", "blist.xml", null);
         }
 
+      var file = File.new_for_path (filename);
+      if (!file.query_exists ())
+        {
+          throw new ImportError.MALFORMED_INPUT ("File %s does not exist.",
+              filename);
+        }
+
+      FileInfo file_info;
+      try
+        {
+          file_info = yield file.query_info_async (
+              FILE_ATTRIBUTE_ACCESS_CAN_READ, FileQueryInfoFlags.NONE,
+              Priority.DEFAULT);
+        }
+      catch (GLib.Error e)
+        {
+          throw new ImportError.MALFORMED_INPUT (
+              "Failed to get information about file %s: %s", filename,
+              e.message);
+        }
+
+      if (!file_info.get_attribute_boolean (FILE_ATTRIBUTE_ACCESS_CAN_READ))
+        {
+          throw new ImportError.MALFORMED_INPUT ("File %s is not readable.",
+              filename);
+        }
+
       Xml.Doc* xml_doc = Parser.parse_file (filename);
 
       if (xml_doc == null)
