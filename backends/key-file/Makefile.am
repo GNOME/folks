@@ -28,11 +28,10 @@ folks_backend_key_file_deps = \
 	gobject-2.0 \
 	$(NULL)
 
-libfolks_backend_key_file_la_CPPFLAGS = \
+libfolks_backend_key_file_la_CFLAGS = \
 	$(GIO_CFLAGS) \
 	$(GLIB_CFLAGS) \
 	$(GEE_CFLAGS) \
-	$(AM_CPPFLAGS) \
 	$(NULL)
 
 libfolks_backend_key_file_la_LIBADD = \

@@ -32,13 +32,12 @@ folks_backend_telepathy_deps = \
 	telepathy-glib \
 	$(NULL)
 
-libfolks_backend_telepathy_la_CPPFLAGS = \
+libfolks_backend_telepathy_la_CFLAGS = \
 	$(GIO_CFLAGS) \
 	$(GLIB_CFLAGS) \
 	$(DBUS_GLIB_CFLAGS) \
 	$(GEE_CFLAGS) \
 	$(TP_GLIB_CFLAGS) \
-	$(AM_CPPFLAGS) \
 	$(NULL)
 
 libfolks_backend_telepathy_la_LIBADD = \
