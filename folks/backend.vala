@@ -52,7 +52,7 @@ public abstract class Folks.Backend : Object
    * This is guaranteed to always be available; even before
    * {@link Backend.prepare} is called.
    */
-  public abstract string name { get; protected set; }
+  public abstract string name { get; }
 
   /**
    * The {@link PersonaStore}s in use by the backend.

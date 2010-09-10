@@ -48,7 +48,7 @@ public class Folks.Backends.Kf.Backend : Folks.Backend
   /**
    * {@inheritDoc}
    */
-  public override string name { get; private set; }
+  public override string name { get { return "key-file"; } }
 
   /**
    * {@inheritDoc}
@@ -56,14 +56,6 @@ public class Folks.Backends.Kf.Backend : Folks.Backend
   public override HashTable<string, PersonaStore> persona_stores
     {
       get; private set;
-    }
-
-  /**
-   * {@inheritDoc}
-   */
-  public Backend ()
-    {
-      Object (name: "key-file");
     }
 
   /**

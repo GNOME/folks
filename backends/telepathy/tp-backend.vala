@@ -35,7 +35,7 @@ public class Folks.Backends.Tp.Backend : Folks.Backend
   /**
    * {@inheritDoc}
    */
-  public override string name { get; private set; }
+  public override string name { get { return "telepathy"; } }
 
   /**
    * {@inheritDoc}
@@ -43,14 +43,6 @@ public class Folks.Backends.Tp.Backend : Folks.Backend
   public override HashTable<string, PersonaStore> persona_stores
     {
       get; private set;
-    }
-
-  /**
-   * {@inheritDoc}
-   */
-  public Backend ()
-    {
-      Object (name: "telepathy");
     }
 
   /**
