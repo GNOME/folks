@@ -34,9 +34,9 @@ libtp_test_contactlist_la_CFLAGS = $(TP_GLIB_CFLAGS)
 libtp_test_contactlist_la_LIBADD = $(TP_GLIB_LIBS)
 
 _gen/tp_test_contact_list.manager _gen/param-spec-struct.h: \
-			manager-file.py $(top_srcdir)/tools/manager-file.py
+			manager-file.py $(top_srcdir)/tests/tools/manager-file.py
 		$(AM_V_at)$(mkdir_p) _gen
-		$(AM_V_GEN)$(PYTHON) $(top_srcdir)/tools/manager-file.py \
+		$(AM_V_GEN)$(PYTHON) $(top_srcdir)/tests/tools/manager-file.py \
 			$(srcdir)/manager-file.py _gen
 
 DISTCHECK_CONFIGURE_FLAGS = --enable-introspection
