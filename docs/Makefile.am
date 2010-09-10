@@ -27,7 +27,6 @@ VALAFLAGS = \
 	--vapidir=$(top_srcdir)/folks \
 	--vapidir=$(top_srcdir)/backends/telepathy \
 	--vapidir=$(top_srcdir)/backends/telepathy/lib
-VALAFLAGS += $(TP_VALA_VALAFLAGS)
 
 # The Vala files which will have documentation extracted from them
 _doc_files = \
