@@ -96,22 +96,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
    *
    * See {@link Folks.PersonaStore.type_id}.
    */
-  public override string type_id { get; private set; }
-
-  /**
-   * The human-readable, service-specific name used to represent the
-   * PersonaStore to the user.
-   *
-   * See {@link Folks.PersonaStore.display_name}.
-   */
-  public override string display_name { get; private set; }
-
-  /**
-   * The instance identifier for this PersonaStore.
-   *
-   * See {@link Folks.PersonaStore.id}.
-   */
-  public override string id { get; private set; }
+  public override string type_id { get { return "telepathy"; } }
 
   /**
    * Whether this PersonaStore can add {@link Folks.Persona}s.
@@ -191,12 +176,9 @@ public class Tpf.PersonaStore : Folks.PersonaStore
    */
   public PersonaStore (Account account)
     {
-      Object (account: account);
-
-      this.type_id = "telepathy";
-
-      this.display_name = account.display_name;
-      this.id = account.get_object_path ();
+      Object (account: account,
+              display_name: account.display_name,
+              id: account.get_object_path ());
 
       this.reset ();
     }

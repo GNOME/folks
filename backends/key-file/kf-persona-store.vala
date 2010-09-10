@@ -41,17 +41,7 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
   /**
    * {@inheritDoc}
    */
-  public override string type_id { get; private set; }
-
-  /**
-   * {@inheritDoc}
-   */
-  public override string display_name { get; private set; }
-
-  /**
-   * {@inheritDoc}
-   */
-  public override string id { get; private set; }
+  public override string type_id { get { return "key-file"; } }
 
   /**
    * Whether this PersonaStore can add {@link Folks.Persona}s.
@@ -129,9 +119,11 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
    */
   public PersonaStore (File key_file)
     {
-      this.type_id = "key-file";
-      this.id = key_file.get_basename ();
-      this.display_name = this.id; /* the user should _never_ see this */
+      string id = key_file.get_basename ();
+
+      Object (id: id,
+              display_name: id);
+
       this.trust_level = PersonaStoreTrust.FULL;
       this.file = key_file;
       this._personas = new HashTable<string, Persona> (str_hash, str_equal);

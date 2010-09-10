@@ -142,7 +142,7 @@ public abstract class Folks.PersonaStore : Object
    * This is guaranteed to always be available; even before
    * {@link PersonaStore.prepare} is called.
    */
-  public abstract string type_id { get; protected set; }
+  public abstract string type_id { get; }
 
   /**
    * The human-readable, service-specific name used to represent the
@@ -159,7 +159,7 @@ public abstract class Folks.PersonaStore : Object
    *
    * @since 0.1.13
    */
-  public abstract string display_name { get; protected set; }
+  public string display_name { get; construct; }
 
   /**
    * The instance identifier for this PersonaStore.
@@ -168,7 +168,7 @@ public abstract class Folks.PersonaStore : Object
    * for different accounts or servers (for example), they each need an ID
    * which is unique within the backend.
    */
-  public abstract string id { get; protected set; }
+  public string id { get; construct; }
 
   /**
    * The {@link Persona}s exposed by this PersonaStore.
