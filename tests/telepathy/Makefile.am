@@ -56,7 +56,7 @@ CLEANFILES = \
 test-contact-retrieval: contact-retrieval
 	{ echo "#!/bin/sh" && \
 	echo -n "$(RUN_WITH_PRIVATE_BUS) " && \
-	echo "--config-file=$(top_srcdir)/tests/lib/telepathy/contactlist/session.conf -- ./$<"; } \
+	echo "--config-file=$(top_builddir)/tests/lib/telepathy/contactlist/session.conf -- ./$<"; } \
 	> $@
 	chmod +x $@
 
