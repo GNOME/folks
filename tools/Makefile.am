@@ -14,12 +14,14 @@ folks_import_SOURCES = \
 	import-pidgin.vala \
 	$(NULL)
 folks_import_CFLAGS = \
+	$(GIO_CFLAGS) \
 	$(GLIB_CFLAGS) \
 	$(GEE_CFLAGS) \
 	$(LIBXML_CFLAGS) \
 	-I$(top_srcdir)/folks \
 	$(NULL)
 folks_import_LDADD = \
+	$(GIO_LIBS) \
 	$(GLIB_LIBS) \
 	$(GEE_LIBS) \
 	$(LIBXML_LIBS) \
