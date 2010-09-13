@@ -914,7 +914,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
     }
 
   private async GLib.List<Tpf.Persona>? create_personas_from_contact_ids (
-      string[] contact_ids) throws Folks.PersonaStoreError
+      string[] contact_ids) throws GLib.Error
     {
       ContactFeature[] features =
         {
@@ -1131,7 +1131,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
                   personas.length ());
             }
         }
-      catch (Folks.PersonaStoreError e)
+      catch (GLib.Error e)
         {
           warning ("failed to add a persona from details: %s", e.message);
         }
