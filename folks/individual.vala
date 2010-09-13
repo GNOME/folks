@@ -67,7 +67,7 @@ public class Folks.Individual : Object,
     Alias,
     Avatar,
     Favourite,
-    Groups,
+    Groupable,
     Presence
 {
   private bool _is_favourite;
@@ -228,8 +228,8 @@ public class Folks.Individual : Object,
           this._groups = value;
           this._persona_list.foreach ((p) =>
             {
-              if (p is Groups && ((Persona) p).store.is_writeable == true)
-                ((Groups) p).groups = value;
+              if (p is Groupable && ((Persona) p).store.is_writeable == true)
+                ((Groupable) p).groups = value;
             });
         }
     }
@@ -296,8 +296,8 @@ public class Folks.Individual : Object,
     {
       this._persona_list.foreach ((p) =>
         {
-          if (p is Groups)
-            ((Groups) p).change_group.begin (group, is_member);
+          if (p is Groupable)
+            ((Groupable) p).change_group.begin (group, is_member);
         });
 
       /* don't notify, since it hasn't happened in the persona backing stores
@@ -363,7 +363,7 @@ public class Folks.Individual : Object,
       GLib.List<Persona>? removed,
       string? message,
       Persona? actor,
-      Groups.ChangeReason reason)
+      Groupable.ChangeReason reason)
     {
       GLib.List<Persona> removed_personas = null;
       removed.foreach ((data) =>
@@ -414,9 +414,9 @@ public class Folks.Individual : Object,
        * groups channel list) */
       this._persona_list.foreach ((p) =>
         {
-          if (p is Groups)
+          if (p is Groupable)
             {
-              unowned Groups persona = (Groups) p;
+              unowned Groupable persona = (Groupable) p;
 
               persona.groups.foreach ((k, v) =>
                 {
@@ -659,7 +659,7 @@ public class Folks.Individual : Object,
    */
   public HashTable<string, bool> get_groups ()
     {
-      Groups g = this;
+      Groupable g = this;
       return g.groups;
     }
 
@@ -719,9 +719,9 @@ public class Folks.Individual : Object,
       persona.notify["presence-type"].connect (this.notify_presence_cb);
       persona.notify["is-favourite"].connect (this.notify_is_favourite_cb);
 
-      if (persona is Groups)
+      if (persona is Groupable)
         {
-          ((Groups) persona).group_changed.connect (
+          ((Groupable) persona).group_changed.connect (
               this.persona_group_changed_cb);
         }
     }
@@ -736,9 +736,9 @@ public class Folks.Individual : Object,
       persona.notify["is-favourite"].disconnect (
           this.notify_is_favourite_cb);
 
-      if (persona is Groups)
+      if (persona is Groupable)
         {
-          ((Groups) persona).group_changed.disconnect (
+          ((Groupable) persona).group_changed.disconnect (
               this.persona_group_changed_cb);
         }
     }

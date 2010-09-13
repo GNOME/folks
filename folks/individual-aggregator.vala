@@ -89,7 +89,7 @@ public class Folks.IndividualAggregator : Object
       GLib.List<Individual>? removed,
       string? message,
       Persona? actor,
-      Groups.ChangeReason reason);
+      Groupable.ChangeReason reason);
 
   /* FIXME: make this a singleton? */
   /**
@@ -409,7 +409,7 @@ public class Folks.IndividualAggregator : Object
       GLib.List<Persona>? removed,
       string? message,
       Persona? actor,
-      Groups.ChangeReason reason)
+      Groupable.ChangeReason reason)
     {
       GLib.List<Individual> added_individuals = null,
           removed_individuals = null;

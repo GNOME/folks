@@ -36,7 +36,7 @@ public class Tpf.Persona : Folks.Persona,
     Alias,
     Avatar,
     Favourite,
-    Groups,
+    Groupable,
     IMable,
     Presence
 {

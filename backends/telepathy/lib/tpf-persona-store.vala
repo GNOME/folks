@@ -605,7 +605,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       if (actor_handle > 0 && valid)
         actor = this.handle_persona_map[actor_handle];
 
-      Groups.ChangeReason reason = Groups.ChangeReason.NONE;
+      Groupable.ChangeReason reason = Groupable.ChangeReason.NONE;
       uint32 tp_reason = TelepathyGLib.asv_get_uint32 (details, "change-reason",
           out valid);
       if (valid)
@@ -614,13 +614,13 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       this.ignore_by_handle (handle, message, actor, reason);
     }
 
-  private Groups.ChangeReason change_reason_from_tp_reason (uint reason)
+  private Groupable.ChangeReason change_reason_from_tp_reason (uint reason)
     {
-      return (Groups.ChangeReason) reason;
+      return (Groupable.ChangeReason) reason;
     }
 
   private void ignore_by_handle (uint handle, string? message, Persona? actor,
-      Groups.ChangeReason reason)
+      Groupable.ChangeReason reason)
     {
       var persona = this.handle_persona_map[handle];
 
