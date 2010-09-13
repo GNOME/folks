@@ -47,7 +47,7 @@ public class Folks.Backends.Kf.Backend : Folks.Backend
   /**
    * {@inheritDoc}
    */
-  public Backend () throws GLib.Error
+  public Backend ()
     {
       Object (name: "key-file");
     }
@@ -55,7 +55,7 @@ public class Folks.Backends.Kf.Backend : Folks.Backend
   /**
    * {@inheritDoc}
    */
-  public override async void prepare ()
+  public override async void prepare () throws GLib.Error
     {
       File file;
       string path = Environment.get_variable ("FOLKS_BACKEND_KEY_FILE_PATH");

@@ -662,7 +662,7 @@ public class Folks.IndividualAggregator : Object
 
   /* FIXME: This should be GLib.List<Persona>, but Vala won't allow it */
   public async void link_personas (void *_personas)
-      throws GLib.Error
+      throws IndividualAggregatorError
     {
       unowned GLib.List<Persona> personas = (GLib.List<Persona>) _personas;
 
