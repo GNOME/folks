@@ -22,6 +22,8 @@ using GLib;
 
 /**
  * IM addresses exposed by an object implementing {@link Presence}.
+ *
+ * @since 0.1.13
  */
 public interface Folks.IMable : Object
 {
@@ -40,6 +42,8 @@ public interface Folks.IMable : Object
    *
    * There must be no duplicate IM addresses in each ordered set, though a given
    * IM address may be present in the sets for different protocols.
+   *
+   * @since 0.1.13
    */
   public abstract HashTable<string, GenericArray<string>> im_addresses
     {

@@ -26,6 +26,8 @@ using Folks.Backends.Kf;
  * A backend which loads {@link Persona}s from a simple key file in
  * (XDG_DATA_HOME/folks/) and presents them through a single
  * {@link PersonaStore}.
+ *
+ * @since 0.1.13
  */
 public class Folks.Backends.Kf.Backend : Folks.Backend
 {

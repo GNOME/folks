@@ -24,6 +24,8 @@ using Folks;
 /**
  * Trust level for a {@link PersonaStore}'s {@link Persona}s for linking
  * purposes.
+ *
+ * @since 0.1.13
  */
 public enum Folks.PersonaStoreTrust
 {
@@ -33,6 +35,8 @@ public enum Folks.PersonaStoreTrust
    * This should be used for {@link PersonaStore}s where even the
    * {@link Persona} UID could be maliciously edited to corrupt {@link Persona}
    * links, or where the UID changes regularly.
+   *
+   * @since 0.1.13
    */
   NONE,
 
@@ -43,6 +47,8 @@ public enum Folks.PersonaStoreTrust
    * {@link PersonaStore} will not contribute towards the linking process, but
    * can be linked together by their UIDs using data from {@link Persona}s from
    * a fully-trusted {@link PersonaStore}.
+   *
+   * @since 0.1.13
    */
   PARTIAL,
 
@@ -52,6 +58,8 @@ public enum Folks.PersonaStoreTrust
    * This should only be used for user-controlled {@link PersonaStore}s, as if a
    * remote store is compromised, malicious changes could be made to its data
    * which corrupt the user's {@link Persona} links.
+   *
+   * @since 0.1.13
    */
   FULL
 }
@@ -161,6 +169,8 @@ public abstract class Folks.PersonaStore : Object
    *
    * PersonaStores must not set this property themselves; it will be set as
    * appropriate by the {@link IndividualAggregator}.
+   *
+   * @since 0.1.13
    */
   public bool is_writeable { get; set; default = false; }
 
@@ -172,6 +182,7 @@ public abstract class Folks.PersonaStore : Object
    * {@link Persona}s for linking to produce {@link Individual}s.
    *
    * @see PersonaStoreTrust
+   * @since 0.1.13
    */
   public PersonaStoreTrust trust_level
     {
@@ -190,6 +201,8 @@ public abstract class Folks.PersonaStore : Object
    * This is normally handled transparently by the {@link IndividualAggregator}.
    *
    * If this function throws an error, the PersonaStore will not be functional.
+   *
+   * @since 0.1.11
    */
   public abstract async void prepare () throws GLib.Error;
 
@@ -238,6 +251,7 @@ public abstract class Folks.PersonaStore : Object
    * {@link PersonaStore.personas_changed}.
    *
    * @param persona the {@link Persona} to remove
+   * @since 0.1.11
    */
   public abstract async void remove_persona (Persona persona) throws GLib.Error;
 }

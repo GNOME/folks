@@ -91,6 +91,8 @@ public abstract class Folks.Backend : Object
    * This is normally handled transparently by the {@link IndividualAggregator}.
    *
    * If this function throws an error, the Backend will not be functional.
+   *
+   * @since 0.1.11
    */
   public abstract async void prepare () throws GLib.Error;
 

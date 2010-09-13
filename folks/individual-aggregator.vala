@@ -40,6 +40,8 @@ public errordomain Folks.IndividualAggregatorError
   /**
    * An operation which required the use of a writeable store failed because no
    * writeable store was available.
+   *
+   * @since 0.1.13
    */
   NO_WRITEABLE_STORE,
 }
@@ -135,6 +137,8 @@ public class Folks.IndividualAggregator : Object
    * {@link IndividualAggregator.individuals_changed} signal, or a race
    * condition could occur, with the signal being emitted before your code has
    * connected to them, and {@link Individual}s getting "lost" as a result.
+   *
+   * @since 0.1.11
    */
   public async void prepare () throws GLib.Error
     {
@@ -629,6 +633,7 @@ public class Folks.IndividualAggregator : Object
    * backing stores.
    *
    * @param individual the {@link Individual} to remove
+   * @since 0.1.11
    */
   public async void remove_individual (Individual individual) throws GLib.Error
     {
@@ -648,6 +653,7 @@ public class Folks.IndividualAggregator : Object
    * This will leave other personas in the same individual alone.
    *
    * @param persona the {@link Persona} to remove
+   * @since 0.1.11
    */
   public async void remove_persona (Persona persona) throws GLib.Error
     {

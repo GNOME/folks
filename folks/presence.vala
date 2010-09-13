@@ -107,6 +107,7 @@ public interface Folks.Presence : Object
    * number will be returned if the opposite is true.
    *
    * @return a number representing the similarity of the two types
+   * @since 0.1.11
    */
   public static int typecmp (PresenceType type_a, PresenceType type_b)
     {

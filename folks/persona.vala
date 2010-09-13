@@ -102,6 +102,8 @@ public abstract class Folks.Persona : Object
    *
    * This list will have no effect if the Persona's {@link PersonaStore} trust
    * level is not {@link PersonaStoreTrust.FULL}.
+   *
+   * @since 0.1.13
    */
   public string[] linkable_properties { get; protected set; }
 
@@ -113,6 +115,8 @@ public abstract class Folks.Persona : Object
    * be called by the `linkable_property_to_links` implementation for each
    * linkable-property-to-individual mapping it wants to add or remove in the
    * aggregator.
+   *
+   * @since 0.1.13
    */
   public delegate void LinkablePropertyCallback (string link);
 
@@ -130,6 +134,7 @@ public abstract class Folks.Persona : Object
    * {@link Individual} instance which contains this {@link Persona}.
    *
    * @see Persona.linkable_properties
+   * @since 0.1.13
    */
   public virtual void linkable_property_to_links (string prop_name,
       LinkablePropertyCallback callback)
@@ -163,6 +168,7 @@ public abstract class Folks.Persona : Object
    * @param persona_id the Persona identifier (backend-specific)
    * @return a valid UID
    * @see Persona.split_uid
+   * @since 0.1.13
    */
   public static string build_uid (string backend_name,
       string persona_store_id, string persona_id)
@@ -183,6 +189,7 @@ public abstract class Folks.Persona : Object
    * @param persona_store_id the {@link PersonaStore.id}
    * @param persona_id the Persona identifier (backend-specific)
    * @see Persona.build_uid
+   * @since 0.1.13
    */
   public static void split_uid (string uid, out string backend_name,
       out string persona_store_id, out string persona_id)

@@ -26,6 +26,8 @@ using Folks.Backends.Kf;
 /**
  * A persona store which is associated with a single simple key file. It will
  * create a {@link Persona} for each of the groups in the key file.
+ *
+ * @since 0.1.13
  */
 public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
 {

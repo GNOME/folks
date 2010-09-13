@@ -133,6 +133,7 @@ public class Folks.Individual : Object,
    *
    * @param replacement_individual the individual which has replaced this one
    * due to linking, or `null` if this individual was removed for another reason
+   * @since 0.1.13
    */
   public signal void removed (Individual? replacement_individual);
 
@@ -289,6 +290,7 @@ public class Folks.Individual : Object,
    *
    * @param group a freeform group identifier
    * @param is_member whether the Individual should be a member of the group
+   * @since 0.1.11
    */
   public async void change_group (string group, bool is_member)
     {

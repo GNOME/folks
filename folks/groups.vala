@@ -104,6 +104,7 @@ public interface Folks.Groups : Object
    *
    * @param group a freeform group identifier
    * @param is_member whether the contact should be a member of the group
+   * @since 0.1.11
    */
   public async abstract void change_group (string group, bool is_member)
     throws GLib.Error;
@@ -116,6 +117,7 @@ public interface Folks.Groups : Object
    *
    * @param group a freeform group identifier for the group being left or joined
    * @param is_member whether the contact is joining or leaving the group
+   * @since 0.1.11
    */
   public async signal void group_changed (string group, bool is_member);
 }

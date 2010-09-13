@@ -25,6 +25,8 @@ using Folks.Backends.Kf;
 
 /**
  * A persona subclass which represents a single persona from a simple key file.
+ *
+ * @since 0.1.13
  */
 public class Folks.Backends.Kf.Persona : Folks.Persona,
     Alias,
