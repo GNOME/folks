@@ -115,8 +115,6 @@ public class Folks.IndividualAggregator : Object
 
       this.backends = new HashSet<Backend> ();
 
-      Debug.set_flags (Environment.get_variable ("FOLKS_DEBUG"));
-
       string disable_linking =
           Environment.get_variable ("FOLKS_DISABLE_LINKING");
       if (disable_linking != null)

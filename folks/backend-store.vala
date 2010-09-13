@@ -98,6 +98,9 @@ public class Folks.BackendStore : Object {
 
   private BackendStore ()
     {
+      /* Treat this as a library init function */
+      Debug.set_flags (Environment.get_variable ("FOLKS_DEBUG"));
+
       this.backend_hash = new HashMap<string,Backend> (str_hash, str_equal);
       this._prepared_backends = new HashMap<string,Backend> (str_hash,
           str_equal);
