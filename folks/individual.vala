@@ -64,7 +64,7 @@ public enum Folks.TrustLevel
  * might have, such as their different IM addresses or vCard entries.
  */
 public class Folks.Individual : Object,
-    Alias,
+    Aliasable,
     Avatar,
     Favourite,
     Groupable,
@@ -157,11 +157,11 @@ public class Folks.Individual : Object,
           bool alias_changed = false;
           this._persona_list.foreach ((p) =>
             {
-              if (p is Alias && ((Persona) p).store.is_writeable == true)
+              if (p is Aliasable && ((Persona) p).store.is_writeable == true)
                 {
                   debug ("    written to writeable persona '%s'",
                       ((Persona) p).uid);
-                  ((Alias) p).alias = value;
+                  ((Aliasable) p).alias = value;
                   alias_changed = true;
                 }
             });
@@ -172,11 +172,11 @@ public class Folks.Individual : Object,
             {
               this._persona_list.foreach ((p) =>
                 {
-                  if (p is Alias)
+                  if (p is Aliasable)
                     {
                       debug ("    written to non-writeable persona '%s'",
                           ((Persona) p).uid);
-                      ((Alias) p).alias = value;
+                      ((Aliasable) p).alias = value;
                     }
                 });
             }
@@ -527,9 +527,9 @@ public class Folks.Individual : Object,
        * stored. */
       foreach (Persona p in this._persona_list)
         {
-          if (p is Alias && p.store.is_writeable == true)
+          if (p is Aliasable && p.store.is_writeable == true)
             {
-              unowned Alias a = (Alias) p;
+              unowned Aliasable a = (Aliasable) p;
 
               if (a.alias != null && a.alias.strip () != "")
                 {
@@ -549,9 +549,9 @@ public class Folks.Individual : Object,
         {
           foreach (Persona p in this._persona_list)
             {
-              if (p is Alias)
+              if (p is Aliasable)
                 {
-                  unowned Alias a = (Alias) p;
+                  unowned Aliasable a = (Aliasable) p;
 
                   if (a.alias == null || a.alias.strip () == "")
                     continue;

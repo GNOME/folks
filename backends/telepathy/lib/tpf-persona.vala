@@ -33,7 +33,7 @@ public errordomain Tpf.PersonaError
  * Telepathy.
  */
 public class Tpf.Persona : Folks.Persona,
-    Alias,
+    Aliasable,
     Avatar,
     Favourite,
     Groupable,

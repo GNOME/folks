@@ -29,7 +29,7 @@ using Folks.Backends.Kf;
  * @since 0.1.13
  */
 public class Folks.Backends.Kf.Persona : Folks.Persona,
-    Alias,
+    Aliasable,
     IMable
 {
   private unowned GLib.KeyFile key_file;

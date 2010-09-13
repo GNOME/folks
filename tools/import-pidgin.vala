@@ -237,8 +237,8 @@ public class Folks.Importers.Pidgin : Folks.Importer
         }
 
       /* Set the Persona's details */
-      if (alias != null && persona is Alias)
-        ((Alias) persona).alias = alias;
+      if (alias != null && persona is Aliasable)
+        ((Aliasable) persona).alias = alias;
 
       /* Print progress */
       stdout.printf ("Created persona '%s' for buddy with alias '%s' and IM " +
