@@ -87,18 +87,32 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
                 }
             });
 
-          this._im_addresses = value;
+          /* Add the new IM addresses to the key file and build a normalised
+           * table of them to set as the new property value */
+          HashTable<string, GenericArray<string>> im_addresses =
+              new HashTable<string, GenericArray<string>> (str_hash, str_equal);
 
-          /* Add the new IM addresses to the key file */
-          this._im_addresses.foreach ((k, v) =>
+          value.foreach ((k, v) =>
             {
               unowned string protocol = (string) k;
-              unowned PtrArray addresses = (PtrArray) v;
-              unowned string[] _addresses = (string[]) addresses.pdata;
-              _addresses.length = (int) addresses.len;
+              unowned GenericArray<string> addresses = (GenericArray<string>) v;
+
+              for (int i = 0; i < addresses.length; i++)
+                {
+                  addresses[i] =
+                      IMable.normalise_im_address (addresses[i], protocol);
+                }
+
+              unowned string[] _addresses =
+                  (string[]) ((PtrArray) addresses).pdata;
+              _addresses.length = (int) addresses.length;
+
               this.key_file.set_string_list (this.display_id, protocol,
                   _addresses);
+              im_addresses.insert (protocol, addresses);
             });
+
+          this._im_addresses = im_addresses;
 
           /* Get the PersonaStore to save the key file */
           ((Kf.PersonaStore) this.store).save_key_file.begin ();
@@ -157,8 +171,11 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
               GenericArray<string> im_address_array =
                   new GenericArray<string> ();
 
-              foreach (string address in im_addresses)
+              foreach (string _address in im_addresses)
                 {
+                  string address =
+                      IMable.normalise_im_address (_address, protocol);
+
                   if (!address_set.contains (address))
                     {
                       im_address_array.add (address);
