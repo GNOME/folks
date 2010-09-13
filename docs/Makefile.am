@@ -1,27 +1,27 @@
-docdir=$(datadir)/devhelp/references/folks-0.1
-innerdocdir=$(datadir)/devhelp/references/folks-0.1/folks-0.1
-imgdir=$(datadir)/devhelp/references/folks-0.1/folks-0.1/img
+docdir=$(datadir)/devhelp/references/folks-@FOLKS_MAJOR_MINOR_VERSION@
+innerdocdir=$(datadir)/devhelp/references/folks-@FOLKS_MAJOR_MINOR_VERSION@/folks-@FOLKS_MAJOR_MINOR_VERSION@
+imgdir=$(datadir)/devhelp/references/folks-@FOLKS_MAJOR_MINOR_VERSION@/folks-@FOLKS_MAJOR_MINOR_VERSION@/img
 
 doc_data = \
-	folks-0.1/*.css \
-	folks-0.1/*.png \
+	folks-@FOLKS_MAJOR_MINOR_VERSION@/*.css \
+	folks-@FOLKS_MAJOR_MINOR_VERSION@/*.png \
 	$(NULL)
 
 doc_DATA = \
-	folks-0.1/index.html \
+	folks-@FOLKS_MAJOR_MINOR_VERSION@/index.html \
 	$(doc_data) \
 	$(NULL)
 
 innerdoc_DATA = \
-	folks-0.1/folks-0.1/index.htm \
-	folks-0.1/folks-0.1/*.html \
+	folks-@FOLKS_MAJOR_MINOR_VERSION@/folks-@FOLKS_MAJOR_MINOR_VERSION@/index.htm \
+	folks-@FOLKS_MAJOR_MINOR_VERSION@/folks-@FOLKS_MAJOR_MINOR_VERSION@/*.html \
 	$(NULL)
 
 img_DATA = \
-	folks-0.1/folks-0.1/img/*.png \
+	folks-@FOLKS_MAJOR_MINOR_VERSION@/folks-@FOLKS_MAJOR_MINOR_VERSION@/img/*.png \
 	$(NULL)
 
-$(doc_data) $(innerdoc_DATA) $(img_DATA): folks-0.1/index.html
+$(doc_data) $(innerdoc_DATA) $(img_DATA): folks-@FOLKS_MAJOR_MINOR_VERSION@/index.html
 
 VALAFLAGS = \
 	--vapidir=$(top_srcdir)/folks \
@@ -36,16 +36,16 @@ _doc_files = \
 	$(top_srcdir)/backends/key-file/*.vala
 doc_files = $(filter-out %-backend-factory.vala,$(wildcard $(_doc_files)))
 
-folks-0.1/index.html: $(doc_files)
-	$(AM_V_GEN)$(VALADOC) -o folks-0.1/ --force -b $(top_srcdir) \
+folks-@FOLKS_MAJOR_MINOR_VERSION@/index.html: $(doc_files)
+	$(AM_V_GEN)$(VALADOC) -o folks-@FOLKS_MAJOR_MINOR_VERSION@/ --force -b $(top_srcdir) \
 		--pkg=gee-1.0 --pkg=gio-2.0 --pkg=gmodule-2.0 --pkg=build-conf \
 		--pkg=dbus-glib-1 --pkg=telepathy-glib --pkg=tp-lowlevel \
 		$(VALAFLAGS) $(doc_files)
 
 distclean-local: distclean-docs
 distclean-docs:
-	rm -rf folks-0.1
+	rm -rf folks-@FOLKS_MAJOR_MINOR_VERSION@
 
-GITIGNOREFILES = folks-0.1/
+GITIGNOREFILES = folks-@FOLKS_MAJOR_MINOR_VERSION@/
 
 -include $(top_srcdir)/git.mk
