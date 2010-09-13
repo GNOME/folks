@@ -138,6 +138,9 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       this.ll = new TpLowlevel ();
     }
 
+  /**
+   * {@inheritDoc}
+   */
   public override async void prepare ()
     {
       this.account_manager = AccountManager.dup ();

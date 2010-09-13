@@ -76,6 +76,9 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
       this._personas = new HashTable<string, Persona> (str_hash, str_equal);
     }
 
+  /**
+   * {@inheritDoc}
+   */
   public override async void prepare ()
     {
       string filename = this.file.get_path ();

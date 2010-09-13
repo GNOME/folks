@@ -52,6 +52,9 @@ public class Folks.Backends.Kf.Backend : Folks.Backend
       Object (name: "key-file");
     }
 
+  /**
+   * {@inheritDoc}
+   */
   public override async void prepare ()
     {
       File file;

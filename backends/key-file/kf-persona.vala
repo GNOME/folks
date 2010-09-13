@@ -180,6 +180,9 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
         }
     }
 
+  /**
+   * {@inheritDoc}
+   */
   public override void linkable_property_to_links (string prop_name,
       Folks.Persona.LinkablePropertyCallback callback)
     {

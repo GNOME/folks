@@ -52,6 +52,9 @@ public class Folks.Backends.Tp.Backend : Folks.Backend
       Object (name: "telepathy");
     }
 
+  /**
+   * {@inheritDoc}
+   */
   public override async void prepare () throws GLib.Error
     {
       this.account_manager = AccountManager.dup ();
