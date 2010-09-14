@@ -21,7 +21,8 @@
  * This file was originally part of Rygel.
  */
 
-public class BuildConf
+[CCode (cheader_filename = "config.h")]
+public class Folks.BuildConf
 {
   [CCode (cname = "DATA_DIR")]
   public static const string DATA_DIR;

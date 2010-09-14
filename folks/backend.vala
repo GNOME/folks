@@ -18,8 +18,7 @@
  *       Travis Reitter <travis.reitter@collabora.co.uk>
  */
 
-using BuildConf;
-using Folks;
+using GLib;
 
 /**
  * A single backend to libfolks, such as Telepathy or evolution-data-server.

@@ -20,7 +20,6 @@
 
 using Gee;
 using GLib;
-using Folks;
 
 /**
  * Trust level for an {@link Individual} for use in the UI.

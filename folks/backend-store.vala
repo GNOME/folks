@@ -22,7 +22,6 @@
  * This file was originally part of Rygel.
  */
 
-using BuildConf;
 using Gee;
 using GLib;
 

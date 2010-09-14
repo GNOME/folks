@@ -19,7 +19,6 @@
  */
 
 using GLib;
-using Folks;
 
 /**
  * Trust level for a {@link PersonaStore}'s {@link Persona}s for linking

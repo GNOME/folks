@@ -18,7 +18,6 @@
  *       Travis Reitter <travis.reitter@collabora.co.uk>
  */
 
-using Folks;
 using Gee;
 using GLib;
 

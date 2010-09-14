@@ -19,7 +19,6 @@
  */
 
 using GLib;
-using Folks;
 
 /**
  * Represents a "shard" of a person from a single source (a single
