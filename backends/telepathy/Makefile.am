@@ -45,6 +45,7 @@ libfolks_backend_telepathy_la_LIBADD = \
 	$(GLIB_LIBS) \
 	$(DBUS_GLIB_LIBS) \
 	$(GEE_LIBS) \
+	$(top_builddir)/folks/libfolks.la \
 	$(TP_GLIB_LIBS) \
 	lib/libfolks-telepathy.la \
 	$(NULL)
