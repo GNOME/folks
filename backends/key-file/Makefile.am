@@ -38,6 +38,7 @@ libfolks_backend_key_file_la_LIBADD = \
 	$(GIO_LIBS) \
 	$(GLIB_LIBS) \
 	$(GEE_LIBS) \
+	$(top_builddir)/folks/libfolks.la \
 	$(NULL)
 
 libfolks_backend_key_file_la_LDFLAGS = -shared -fPIC -module -avoid-version
