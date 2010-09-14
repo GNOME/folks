@@ -67,7 +67,7 @@ AC_SUBST([LT_AGE])
 # -----------------------------------------------------------
 
 GLIB_REQUIRED=2.24.0
-TP_GLIB_REQUIRED=0.11.11
+TP_GLIB_REQUIRED=0.11.15.1
 # FIXME: remove the machinery using this once it's safe to require this version
 # (be sure to remove the HAVE_TP_GLIB_FOR_TESTS conditionals in Makefile.am
 # files)
