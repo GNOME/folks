@@ -72,10 +72,6 @@ AC_SUBST([FOLKS_MAJOR_MINOR_VERSION])
 
 GLIB_REQUIRED=2.24.0
 TP_GLIB_REQUIRED=0.11.15.1
-# FIXME: remove the machinery using this once it's safe to require this version
-# (be sure to remove the HAVE_TP_GLIB_FOR_TESTS conditionals in Makefile.am
-# files)
-TP_GLIB_TESTS_REQUIRED=0.11.14.1
 VALA_REQUIRED=0.9.6
 
 AM_PROG_VALAC([$VALA_REQUIRED])
@@ -120,15 +116,6 @@ AC_DEFINE([MODULE_VERSION], "folks_module_version", [Module interface version])
 
 BACKEND_DIR='$(libdir)/folks/$(FOLKS_MODULE_VERSION)/backends'
 AC_SUBST([BACKEND_DIR])
-
-# -----------------------------------------------------------
-# Tests
-# -----------------------------------------------------------
-
-PKG_CHECK_MODULES([TP_GLIB_FOR_TESTS],
-                  [telepathy-glib >= $TP_GLIB_TESTS_REQUIRED],
-                  [have_tp_glib_for_tests=true], [have_tp_glib_for_tests=false])
-AM_CONDITIONAL([HAVE_TP_GLIB_FOR_TESTS], [$have_tp_glib_for_tests])
 
 # -----------------------------------------------------------
 # Tools
