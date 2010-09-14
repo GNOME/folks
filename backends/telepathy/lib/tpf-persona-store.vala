@@ -471,7 +471,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
 
           c.invalidated.connect (this.channel_invalidated_cb);
 
-          unowned IntSet? members = c.group_get_members ();
+          unowned Intset? members = c.group_get_members ();
           if (members != null)
             {
               this.channel_group_pend_incoming_adds.begin (c,
@@ -577,7 +577,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
   private void ignore_by_handle_if_needed (uint handle,
       HashTable<string, HashTable<string, Value?>> details)
     {
-      unowned TelepathyGLib.IntSet members;
+      unowned TelepathyGLib.Intset members;
 
       if (this.subscribe != null)
         {
@@ -762,7 +762,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
           c.group_members_changed_detailed.connect (
             this.channel_group_members_changed_detailed_cb);
 
-          unowned IntSet members = c.group_get_members ();
+          unowned Intset members = c.group_get_members ();
           if (members != null)
             {
               this.channel_group_pend_incoming_adds.begin (c,
