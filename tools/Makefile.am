@@ -1,4 +1,4 @@
-if HAVE_LIBXML
+if ENABLE_IMPORT_TOOL
 bin_PROGRAMS = folks-import
 endif
 

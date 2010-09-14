@@ -120,8 +120,17 @@ AC_SUBST([BACKEND_DIR])
 # Tools
 # -----------------------------------------------------------
 
-PKG_CHECK_MODULES(LIBXML, libxml-2.0, [have_libxml=yes], [have_libxml=no])
-AM_CONDITIONAL([HAVE_LIBXML], [test "$have_libxml" = "yes"])
+AC_ARG_ENABLE([import-tool],
+              AS_HELP_STRING([--enable-import-tool],
+                             [Enable building the meta-contact import tool]),
+              [enable_import_tool=$enableval with_import_tool=$enableval],
+              [enable_import_tool=maybe with_import_tool=no])
+AS_IF([test "$enable_import_tool" != "no"],
+      [PKG_CHECK_MODULES([LIBXML], [libxml-2.0],
+                         [with_import_tool=yes], [with_import_tool=no])])
+AS_IF([test "$enable_import_tool" = "yes" -a "$with_import_tool" = "no"],
+      [AC_MSG_ERROR([Import tool explicitly enabled, but libxml2 not found])])
+AM_CONDITIONAL([ENABLE_IMPORT_TOOL], [test "$with_import_tool" = "yes"])
 
 # -----------------------------------------------------------
 # Documentation
@@ -223,7 +232,7 @@ Configure summary:
         Bugreporting URL............:  ${PACKAGE_BUGREPORT}
         Documentation...............:  ${enable_docs}
         Tests.......................:  ${have_tp_glib_for_tests}
-        Import tool.................:  ${have_libxml}
+        Import tool.................:  ${with_import_tool}
 
 
 "
