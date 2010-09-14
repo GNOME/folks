@@ -98,6 +98,18 @@ folks_tp_lowlevel_connection_open_contact_list_channel_async (
 /* XXX: ideally, we'd either make this static or hide it in the .metadata file,
  * but neither seems to be supported (without breaking the binding to the async
  * function) */
+/**
+ * folks_tp_lowlevel_connection_open_contact_list_channel_finish:
+ * @tp_lowlevel: a #FolksTpLowlevel
+ * @result: a #GAsyncResult
+ * @error: return location for a #GError, or %NULL
+ *
+ * Finish an asynchronous operation to open a contact list channel, started with
+ * folks_tp_lowlevel_connection_open_contact_list_channel_async().
+ *
+ * Return value: (transfer full): the contact list channel; unref with
+ * g_object_unref()
+ */
 TpChannel *
 folks_tp_lowlevel_connection_open_contact_list_channel_finish (
     FolksTpLowlevel *tp_lowlevel,
@@ -513,7 +525,7 @@ got_channels_cb (TpProxy *conn,
  * folks_tp_lowlevel_connection_connect_to_new_group_channels:
  * @tp_lowlevel: a #FolksTpLowlevel
  * @conn: the connection to use
- * @callback: function to call on completion
+ * @callback: (scope async): function to call on completion
  * @user_data: (closure): user data to pass to @callback
  *
  * Connect to the NewChannels signal.
