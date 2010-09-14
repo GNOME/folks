@@ -41,12 +41,14 @@ folks_deps = \
 libfolks_la_CFLAGS = \
 	$(GIO_CFLAGS) \
 	$(GLIB_CFLAGS) \
+	$(GMODULE_CFLAGS) \
 	$(GEE_CFLAGS) \
 	$(NULL)
 
 libfolks_la_LIBADD = \
 	$(GIO_LIBS) \
 	$(GLIB_LIBS) \
+	$(GMODULE_LIBS) \
 	$(GEE_LIBS) \
 	$(NULL)
 

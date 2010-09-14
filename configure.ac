@@ -89,6 +89,7 @@ GOBJECT_INTROSPECTION_REQUIRE([0.9.6])
 PKG_CHECK_MODULES([GLIB],
                   [glib-2.0 >= $GLIB_REQUIRED
                    gobject-2.0 >= $GLIB_REQUIRED])
+PKG_CHECK_MODULES([GMODULE], [gmodule-no-export-2.0])
 PKG_CHECK_MODULES([GIO], [gio-2.0 >= $GLIB_REQUIRED])
 PKG_CHECK_MODULES([DBUS_GLIB], [dbus-glib-1])
 
