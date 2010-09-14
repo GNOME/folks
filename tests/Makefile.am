@@ -1,11 +1,8 @@
 SUBDIRS = \
     lib \
     tools \
+    telepathy \
     $(NULL)
-
-if HAVE_TP_GLIB_FOR_TESTS
-SUBDIRS += telepathy
-endif
 
 TESTS_ENVIRONMENT = \
     abs_top_builddir=@abs_top_builddir@ \

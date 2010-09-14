@@ -1,7 +1,5 @@
-SUBDIRS =
-
-if HAVE_TP_GLIB_FOR_TESTS
-SUBDIRS += telepathy
-endif
+SUBDIRS = \
+	telepathy \
+	$(NULL)
 
 -include $(top_srcdir)/git.mk
