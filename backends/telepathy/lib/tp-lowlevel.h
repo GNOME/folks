@@ -68,7 +68,17 @@ folks_tp_lowlevel_channel_group_change_membership (TpChannel *channel,
     gboolean is_member,
     GError **error);
 
+/**
+ * FolksTpLowlevelNewGroupChannelsCallback:
+ * @channel: (allow-none): the new group #TpChannel
+ * @result: the #GAsyncResult to finish the async call with
+ * @user_data: extra data to pass to the callback
+ *
+ * The callback type for
+ * folks_tp_lowlevel_connection_connect_to_new_group_channels().
+ */
 typedef void (*FolksTpLowlevelNewGroupChannelsCallback) (TpChannel *channel,
+    GAsyncResult *result,
     gpointer user_data);
 
 void

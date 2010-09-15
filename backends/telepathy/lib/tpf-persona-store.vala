@@ -380,7 +380,8 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       this.initialise_favourite_contacts.begin ();
     }
 
-  private void new_group_channels_cb (Channel channel)
+  private void new_group_channels_cb (TelepathyGLib.Channel? channel,
+      GLib.AsyncResult result)
     {
       if (channel == null)
         {

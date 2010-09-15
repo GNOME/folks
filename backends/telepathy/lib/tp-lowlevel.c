@@ -478,7 +478,7 @@ iterate_on_channels (TpConnection *conn,
     }
 
     if (callback)
-      callback (channel, cb_obj);
+      callback (channel, NULL, cb_obj);
   }
 }
 
