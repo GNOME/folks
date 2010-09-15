@@ -84,6 +84,13 @@ public errordomain Folks.PersonaStoreError
    * @since 0.3.0
    */
   UNSUPPORTED_ON_USER,
+
+  /**
+   * The {@link PersonaStore} was offline (ie, this is a temporary failure).
+   *
+   * @since 0.3.0
+   */
+  STORE_OFFLINE,
 }
 
 /**

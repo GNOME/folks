@@ -43,6 +43,13 @@ public errordomain Folks.IndividualAggregatorError
    * @since 0.1.13
    */
   NO_WRITEABLE_STORE,
+
+  /**
+   * The {@link PersonaStore} was offline (ie, this is a temporary failure).
+   *
+   * @since 0.3.0
+   */
+  STORE_OFFLINE,
 }
 
 /**
