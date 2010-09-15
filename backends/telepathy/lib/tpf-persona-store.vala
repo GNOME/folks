@@ -69,22 +69,31 @@ public class Tpf.PersonaStore : Folks.PersonaStore
   public Account account { get; construct; }
 
   /**
-   * {@inheritDoc}
+   * The type of persona store this is.
+   *
+   * See {@link Folks.PersonaStore.type_id}.
    */
   public override string type_id { get; private set; }
 
   /**
-   * {@inheritDoc}
+   * The human-readable, service-specific name used to represent the
+   * PersonaStore to the user.
+   *
+   * See {@link Folks.PersonaStore.display_name}.
    */
   public override string display_name { get; private set; }
 
   /**
-   * {@inheritDoc}
+   * The instance identifier for this PersonaStore.
+   *
+   * See {@link Folks.PersonaStore.id}.
    */
   public override string id { get; private set; }
 
   /**
-   * {@inheritDoc}
+   * The {@link Persona}s exposed by this PersonaStore.
+   *
+   * See {@link Folks.PersonaStore.personas}.
    */
   public override HashTable<string, Persona> personas
     {
@@ -139,7 +148,9 @@ public class Tpf.PersonaStore : Folks.PersonaStore
     }
 
   /**
-   * {@inheritDoc}
+   * Prepare the PersonaStore for use.
+   *
+   * See {@link Folks.PersonaStore.prepare}.
    */
   public override async void prepare ()
     {
@@ -663,7 +674,9 @@ public class Tpf.PersonaStore : Folks.PersonaStore
     }
 
   /**
-   * {@inheritDoc}
+   * Remove a {@link Persona} from the PersonaStore.
+   *
+   * See {@link Folks.PersonaStore.remove_persona}.
    */
   public override async void remove_persona (Folks.Persona persona)
     {
@@ -1081,7 +1094,9 @@ public class Tpf.PersonaStore : Folks.PersonaStore
     }
 
   /**
-   * {@inheritDoc}
+   * Add a new {@link Persona} to the PersonaStore.
+   *
+   * See {@link Folks.PersonaStore.add_persona_from_details}.
    */
   public override async Folks.Persona? add_persona_from_details (
       HashTable<string, Value?> details) throws Folks.PersonaStoreError

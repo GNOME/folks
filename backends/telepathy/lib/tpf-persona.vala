@@ -52,22 +52,30 @@ public class Tpf.Persona : Folks.Persona,
   private bool is_constructed = false;
 
   /**
-   * {@inheritDoc}
+   * An avatar for the Persona.
+   *
+   * See {@link Folks.Avatar.avatar}.
    */
   public File avatar { get; set; }
 
   /**
-   * {@inheritDoc}
+   * The Persona's presence type.
+   *
+   * See {@link Folks.Presence.presence_type}.
    */
   public Folks.PresenceType presence_type { get; private set; }
 
   /**
-   * {@inheritDoc}
+   * The Persona's presence message.
+   *
+   * See {@link Folks.Presence.presence_message}.
    */
   public string presence_message { get; private set; }
 
   /**
-   * {@inheritDoc}
+   * An alias for the Persona.
+   *
+   * See {@link Folks.Aliasable.alias}.
    */
   public string alias
     {
@@ -85,7 +93,9 @@ public class Tpf.Persona : Folks.Persona,
     }
 
   /**
-   * {@inheritDoc}
+   * Whether this Persona is a user-defined favourite.
+   *
+   * See {@link Folks.Favourite.is_favourite}.
    */
   public bool is_favourite
     {
@@ -103,7 +113,9 @@ public class Tpf.Persona : Folks.Persona,
     }
 
   /**
-   * {@inheritDoc}
+   * A mapping of IM protocol to an ordered set of IM addresses.
+   *
+   * See {@link Folks.IMable.im_addresses}.
    */
   public HashTable<string, GenericArray<string>> im_addresses
     {
@@ -112,7 +124,9 @@ public class Tpf.Persona : Folks.Persona,
     }
 
   /**
-   * {@inheritDoc}
+   * A mapping of group ID to whether the contact is a member.
+   *
+   * See {@link Folks.Groupable.groups}.
    */
   public HashTable<string, bool> groups
     {
@@ -142,7 +156,9 @@ public class Tpf.Persona : Folks.Persona,
     }
 
   /**
-   * {@inheritDoc}
+   * Add or remove the Persona from the specified group.
+   *
+   * See {@link Folks.Groupable.change_group}.
    */
   public async void change_group (string group, bool is_member)
     {
