@@ -369,7 +369,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
     {
       Connection c = (Connection) s;
       this.ll.connection_connect_to_new_group_channels (c,
-          (AsyncReadyCallback) this.new_group_channels_cb);
+          this.new_group_channels_cb);
 
       this.add_standard_channel (c, "publish");
       this.add_standard_channel (c, "stored");
@@ -380,7 +380,8 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       this.initialise_favourite_contacts.begin ();
     }
 
-  private void new_group_channels_cb (Channel? channel, AsyncResult result)
+  private void new_group_channels_cb (TelepathyGLib.Channel? channel,
+      GLib.AsyncResult result)
     {
       if (channel == null)
         {
