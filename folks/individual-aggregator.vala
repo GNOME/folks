@@ -220,13 +220,12 @@ public class Folks.IndividualAggregator : Object
       return type_id + ":" + id;
     }
 
-  private GLib.List<Individual> add_personas (GLib.List<Persona> added)
+  private void add_personas (GLib.List<Persona> added,
+      ref GLib.List<Individual> added_individuals,
+      ref HashMap<Individual, Individual> replaced_individuals)
     {
-      GLib.List<Individual> added_individuals = new GLib.List<Individual> ();
-
-      added.foreach ((p) =>
+      foreach (unowned Persona persona in added)
         {
-          unowned Persona persona = (Persona) p;
           PersonaStoreTrust trust_level = persona.store.trust_level;
 
           /* These are the Individuals whose Personas will be linked together
@@ -387,21 +386,14 @@ public class Folks.IndividualAggregator : Object
 
           /* Remove the old Individuals. This has to be done here, as we need
            * the final_individual. */
-          candidate_inds.foreach ((i) =>
-            {
-              ((Individual) i).replace (final_individual);
-            });
+          foreach (unowned Individual i in candidate_inds)
+            replaced_individuals.set (i, final_individual);
 
           /* Add the new Individual to the aggregator */
           final_individual.removed.connect (this.individual_removed_cb);
           added_individuals.prepend (final_individual);
           this.individuals.insert (final_individual.id, final_individual);
-        });
-
-      /* FIXME: AAAARGH VALA GO AWAY */
-      foreach (Individual i in added_individuals)
-        i.ref ();
-      return added_individuals.copy ();
+        }
     }
 
   private void personas_changed_cb (PersonaStore store,
@@ -411,14 +403,19 @@ public class Folks.IndividualAggregator : Object
       Persona? actor,
       Groups.ChangeReason reason)
     {
-      GLib.List<Individual> added_individuals = null,
+      GLib.List<Individual> added_individuals = new GLib.List<Individual> (),
           removed_individuals = null;
+      HashMap<Individual, Individual> replaced_individuals =
+          new HashMap<Individual, Individual> ();
       GLib.List<Persona> relinked_personas = null;
       HashSet<Persona> removed_personas = new HashSet<Persona> (direct_hash,
           direct_equal);
 
       if (added != null)
-        added_individuals = this.add_personas (added);
+        {
+          this.add_personas (added, ref added_individuals,
+              ref replaced_individuals);
+        }
 
       debug ("Removing Personas:");
 
@@ -500,8 +497,8 @@ public class Folks.IndividualAggregator : Object
       foreach (unowned Persona persona in relinked_personas)
         debug ("    %s (%s)", persona.uid, persona.iid);
 
-      /* FIXME: Vala is horrible with GLists */
-      added_individuals.concat (this.add_personas (relinked_personas));
+      this.add_personas (relinked_personas, ref added_individuals,
+          ref replaced_individuals);
 
       /* Signal the addition of new individuals and removal of old ones to the
        * aggregator */
@@ -509,6 +506,16 @@ public class Folks.IndividualAggregator : Object
         {
           this.individuals_changed (added_individuals, removed_individuals,
               null, null, 0);
+        }
+
+      /* Signal the replacement of various Individuals as a consequence of
+       * linking. */
+      debug ("Replacing Individuals due to linking:");
+      MapIterator<Individual, Individual> iter =
+          replaced_individuals.map_iterator ();
+      while (iter.next () == true)
+        {
+          iter.get_key ().replace (iter.get_value ());
         }
     }
 

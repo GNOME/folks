@@ -1,3 +1,9 @@
+Overview of changes from libfolks 0.2.0 to libfolks 0.2.1
+=========================================================
+
+Bugs fixed:
+* Bug 629642 — individuals-changed emitted in the wrong order
+
 Overview of changes from libfolks 0.1.17 to libfolks 0.2.0
 ==========================================================
 
