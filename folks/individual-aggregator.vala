@@ -665,10 +665,24 @@ public class Folks.IndividualAggregator : Object
       yield persona.store.remove_persona (persona);
     }
 
-  /* FIXME: This should be GLib.List<Persona>, but Vala won't allow it */
+  /**
+   * Link the given {@link Persona}s together.
+   *
+   * Create links between the given {@link Persona}s so that they form a single
+   * {@link Individual}. The new {@link Individual} will be returned via the
+   * {@link IndividualAggregator.individuals_changed} signal.
+   *
+   * Removal of the {@link Individual}s which the {@link Persona}s were in
+   * before is signalled by {@link IndividualAggregator.individuals_changed} and
+   * {@link Individual.removed}.
+   *
+   * @param _personas the {@link Persona}s to be linked
+   * @since 0.1.13
+   */
   public async void link_personas (void *_personas)
       throws IndividualAggregatorError
     {
+      /* FIXME: _personas should be GLib.List<Persona>, but Vala won't allow it */
       unowned GLib.List<Persona> personas = (GLib.List<Persona>) _personas;
 
       if (this.writeable_store == null)
@@ -754,6 +768,25 @@ public class Folks.IndividualAggregator : Object
           this.writeable_store.id, details);
     }
 
+  /**
+   * Unlinks the given {@link Individual} into its constituent {@link Persona}s.
+   *
+   * This completely unlinks the given {@link Individual}, destroying all of
+   * its writeable {@link Persona}s.
+   *
+   * The {@link Individual}'s removal is signalled by
+   * {@link IndividualAggregator.individuals_changed} and
+   * {@link Individual.removed}.
+   *
+   * The {@link Persona}s comprising the {@link Individual} will be re-linked
+   * into one or more new {@link Individual}s, depending on how much linking
+   * data remains (typically only implicit links remain). The addition of these
+   * new {@link Individual}s will be signalled by
+   * {@link IndividualAggregator.individuals_changed}.
+   *
+   * @param individual the {@link Individual} to unlink
+   * @since 0.1.13
+   */
   public async void unlink_individual (Individual individual) throws GLib.Error
     {
       if (this.linking_enabled == false)

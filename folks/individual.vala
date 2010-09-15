@@ -320,6 +320,8 @@ public class Folks.Individual : Object,
    * `personas`. Otherwise, it will have to have personas added using the
    * {@link Folks.Individual.personas} property after construction.
    *
+   * @param personas a list of {@link Persona}s to initialise the
+   * {@link Individual} with, or `null`
    * @return a new Individual
    */
   public Individual (GLib.List<Persona>? personas)

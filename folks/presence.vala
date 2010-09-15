@@ -106,6 +106,8 @@ public interface Folks.Presence : Object
    * returned if `type_a` is more available than `type_b`, and a negative
    * number will be returned if the opposite is true.
    *
+   * @param type_a the first {@link PresenceType} to compare
+   * @param type_b the second {@link PresenceType} to compare
    * @return a number representing the similarity of the two types
    * @since 0.1.11
    */
