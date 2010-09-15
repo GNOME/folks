@@ -47,8 +47,8 @@ public class Folks.BackendStore : Object {
    * This will not be emitted until after {@link BackendStore.load_backends}
    * has been called.
    *
-   * {@link Backend}s referenced in this signal are also included in @{link
-   * BackendStore.enabled_backends}.
+   * {@link Backend}s referenced in this signal are also included in
+   * {@link BackendStore.enabled_backends}.
    *
    * @param backend the new {@link Backend}
    */
