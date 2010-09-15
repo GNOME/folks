@@ -124,7 +124,7 @@ public class Folks.IndividualAggregator : Object
       this.linking_enabled = (disable_linking == null ||
           disable_linking == "no" || disable_linking == "0");
 
-      this.backend_store = new BackendStore ();
+      this.backend_store = BackendStore.dup ();
       this.backend_store.backend_available.connect (this.backend_available_cb);
     }
 
@@ -141,28 +141,36 @@ public class Folks.IndividualAggregator : Object
    */
   public async void prepare () throws GLib.Error
     {
-      this.backend_store.load_backends ();
+      /* Once this async function returns, all the {@link Backend}s will have
+       * been prepared (though no {@link PersonaStore}s are guaranteed to be
+       * available yet). This last guarantee is new as of version 0.2.0. */
+      yield this.backend_store.load_backends ();
+    }
+
+  private async void add_backend (Backend backend)
+    {
+      if (!this.backends.contains (backend))
+        {
+          this.backends.add (backend);
+
+          backend.persona_store_added.connect (
+              this.backend_persona_store_added_cb);
+          backend.persona_store_removed.connect (
+              this.backend_persona_store_removed_cb);
+
+          /* handle the stores that have already been signaled */
+          backend.persona_stores.foreach ((k, v) =>
+              {
+                this.backend_persona_store_added_cb (backend,
+                  (PersonaStore) v);
+              });
+        }
     }
 
   private void backend_available_cb (BackendStore backend_store,
       Backend backend)
     {
-      backend.persona_store_added.connect (this.backend_persona_store_added_cb);
-      backend.persona_store_removed.connect (
-          this.backend_persona_store_removed_cb);
-
-      backend.prepare.begin ((obj, result) =>
-        {
-          try
-            {
-              backend.prepare.end (result);
-            }
-          catch (GLib.Error e)
-            {
-              warning ("Error preparing Backend '%s': %s", backend.name,
-                  e.message);
-            }
-        });
+      this.add_backend.begin (backend);
     }
 
   private void backend_persona_store_added_cb (Backend backend,

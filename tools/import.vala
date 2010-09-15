@@ -90,7 +90,7 @@ public class Folks.ImportTool : Object
 
   private static async bool import ()
     {
-      BackendStore backend_store = new BackendStore ();
+      BackendStore backend_store = BackendStore.dup ();
 
       try
         {
