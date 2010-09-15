@@ -1,76 +1,82 @@
-folksdocdir=$(datadir)/devhelp/references/folks-@FOLKS_MAJOR_MINOR_VERSION@
-folksinnerdocdir=$(datadir)/devhelp/references/folks-@FOLKS_MAJOR_MINOR_VERSION@/folks-@FOLKS_MAJOR_MINOR_VERSION@
-folksimgdir=$(datadir)/devhelp/references/folks-@FOLKS_MAJOR_MINOR_VERSION@/folks-@FOLKS_MAJOR_MINOR_VERSION@/img
-folkstpdocdir=$(datadir)/devhelp/references/folks-telepathy-@FOLKS_MAJOR_MINOR_VERSION@
-folkstpinnerdocdir=$(datadir)/devhelp/references/folks-telepathy-@FOLKS_MAJOR_MINOR_VERSION@/folks-telepathy-@FOLKS_MAJOR_MINOR_VERSION@
-folkstpimgdir=$(datadir)/devhelp/references/folks-telepathy-@FOLKS_MAJOR_MINOR_VERSION@/folks-telepathy-@FOLKS_MAJOR_MINOR_VERSION@/img
+folksdocdir=$(datadir)/devhelp/references/folks
+folksimgdir=$(datadir)/devhelp/references/folks/img
+folkstelepathydocdir=$(datadir)/devhelp/references/folks-telepathy
+folkstelepathyimgdir=$(datadir)/devhelp/references/folks-telepathy/img
 
-folksdoc_data = \
-	folks-@FOLKS_MAJOR_MINOR_VERSION@/*.css \
-	folks-@FOLKS_MAJOR_MINOR_VERSION@/*.png \
-	$(NULL)
-folkstpdoc_data = \
-	folks-telepathy-@FOLKS_MAJOR_MINOR_VERSION@/*.css \
-	folks-telepathy-@FOLKS_MAJOR_MINOR_VERSION@/*.png \
+common_doc_files = \
+	*.css \
+	*.png \
+	*.js \
+	index.htm \
+	*.html \
 	$(NULL)
 
 folksdoc_DATA = \
-	folks-@FOLKS_MAJOR_MINOR_VERSION@/index.html \
-	$(folksdoc_data) \
+	folks/folks/folks.devhelp2 \
+	$(addprefix folks/folks/,$(common_doc_files)) \
 	$(NULL)
-folkstpdoc_DATA = \
-	folks-telepathy-@FOLKS_MAJOR_MINOR_VERSION@/index.html \
-	$(folkstpdoc_data) \
-	$(NULL)
-
-folksinnerdoc_DATA = \
-	folks-@FOLKS_MAJOR_MINOR_VERSION@/folks-@FOLKS_MAJOR_MINOR_VERSION@/index.htm \
-	folks-@FOLKS_MAJOR_MINOR_VERSION@/folks-@FOLKS_MAJOR_MINOR_VERSION@/*.html \
-	$(NULL)
-folkstpinnerdoc_DATA = \
-	folks-telepathy-@FOLKS_MAJOR_MINOR_VERSION@/folks-telepathy-@FOLKS_MAJOR_MINOR_VERSION@/index.htm \
-	folks-telepathy-@FOLKS_MAJOR_MINOR_VERSION@/folks-telepathy-@FOLKS_MAJOR_MINOR_VERSION@/*.html \
+folkstelepathydoc_DATA = \
+	folks-telepathy/folks-telepathy/folks-telepathy.devhelp2 \
+	$(addprefix folks-telepathy/folks-telepathy/,$(common_doc_files)) \
 	$(NULL)
 
 folksimg_DATA = \
-	folks-@FOLKS_MAJOR_MINOR_VERSION@/folks-@FOLKS_MAJOR_MINOR_VERSION@/img/*.png \
+	folks/folks/img/*.png \
 	$(NULL)
-folkstpimg_DATA = \
-	folks-telepathy-@FOLKS_MAJOR_MINOR_VERSION@/folks-telepathy-@FOLKS_MAJOR_MINOR_VERSION@/img/*.png \
+folkstelepathyimg_DATA = \
+	folks-telepathy/folks-telepathy/img/*.png \
 	$(NULL)
 
-$(folksdoc_data) $(folksinnerdoc_DATA) $(folksimg_DATA): folks-@FOLKS_MAJOR_MINOR_VERSION@/index.html
-$(folkstpdoc_data) $(folkstpinnerdoc_DATA) $(folkstpimg_DATA): folks-telepathy-@FOLKS_MAJOR_MINOR_VERSION@/index.html
+$(folksdoc_DATA) $(folksimg_DATA): folks-doc
+$(folkstelepathydoc_DATA) $(folkstelepathyimg_DATA): folks-telepathy-doc
 
 # folks documentation
 folks_doc_files = $(top_srcdir)/folks/*.vala
+folks_doc_deps = \
+	gmodule-2.0 \
+	gio-2.0 \
+	gee-1.0 \
+	build-conf \
+	$(NULL)
 
-folks-@FOLKS_MAJOR_MINOR_VERSION@/index.html: $(folks_doc_files)
-	$(AM_V_GEN)$(VALADOC) -o folks-@FOLKS_MAJOR_MINOR_VERSION@/ --force -b $(top_srcdir)/folks \
-		--pkg=gee-1.0 --pkg=gio-2.0 --pkg=gmodule-2.0 --pkg=build-conf \
+folks-doc: $(folks_doc_files)
+	$(AM_V_GEN)$(VALADOC) -o folks/ --force -b $(top_srcdir)/folks \
+		$(addprefix --pkg=,$(folks_doc_deps)) \
+		--doclet=devhelp \
 		--vapidir=$(top_srcdir)/folks $(folks_doc_files)
 
 # folks-telepathy documentation
 folks_telepathy_doc_files = $(top_srcdir)/backends/telepathy/lib/*.vala
+folks_telepathy_doc_deps = \
+	gmodule-2.0 \
+	gio-2.0 \
+	gee-1.0 \
+	dbus-glib-1 \
+	telepathy-glib \
+	tp-lowlevel \
+	build-conf \
+	folks \
+	$(NULL)
 
-folks-telepathy-@FOLKS_MAJOR_MINOR_VERSION@/index.html: $(folks_telepathy_doc_files)
-	$(AM_V_GEN)$(VALADOC) -o folks-telepathy-@FOLKS_MAJOR_MINOR_VERSION@/ \
+folks-telepathy-doc: $(folks_telepathy_doc_files)
+	$(AM_V_GEN)$(VALADOC) -o folks-telepathy/ \
 		--force -b $(top_srcdir)/backends/telepathy/lib \
-		--pkg=gee-1.0 --pkg=gio-2.0 --pkg=gmodule-2.0 --pkg=build-conf \
-		--pkg=dbus-glib-1 --pkg=telepathy-glib --pkg=tp-lowlevel \
-		--pkg=folks \
+		$(addprefix --pkg=,$(folks_telepathy_doc_deps)) \
+		--doclet=devhelp \
 		--vapidir=$(top_srcdir)/folks \
 		--vapidir=$(top_srcdir)/backends/telepathy/lib \
 		$(folks_telepathy_doc_files)
 
+.PHONY: folks-doc folks-telepathy-doc
+
 distclean-local: distclean-docs
 distclean-docs:
-	rm -rf folks-@FOLKS_MAJOR_MINOR_VERSION@ && \
-	rm -rf folks-telepathy-@FOLKS_MAJOR_MINOR_VERSION@
+	rm -rf folks && \
+	rm -rf folks-telepathy
 
 GITIGNOREFILES = \
-	folks-@FOLKS_MAJOR_MINOR_VERSION@/ \
-	folks-telepathy-@FOLKS_MAJOR_MINOR_VERSION@/ \
+	folks/ \
+	folks-telepathy/ \
 	$(NULL)
 
 -include $(top_srcdir)/git.mk
