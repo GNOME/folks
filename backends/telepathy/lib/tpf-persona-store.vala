@@ -381,7 +381,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
     }
 
   private void new_group_channels_cb (TelepathyGLib.Channel? channel,
-      GLib.AsyncResult result)
+      GLib.AsyncResult? result)
     {
       if (channel == null)
         {
