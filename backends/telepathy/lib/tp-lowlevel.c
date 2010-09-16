@@ -100,19 +100,18 @@ folks_tp_lowlevel_connection_open_contact_list_channel_async (
  * function) */
 /**
  * folks_tp_lowlevel_connection_open_contact_list_channel_finish:
- * @tp_lowlevel: a #FolksTpLowlevel
+ * @lowlevel: a #FolksTpLowlevel
  * @result: a #GAsyncResult
  * @error: return location for a #GError, or %NULL
  *
  * Finish an asynchronous operation to open a contact list channel, started with
  * folks_tp_lowlevel_connection_open_contact_list_channel_async().
  *
- * Return value: (transfer full): the contact list channel; unref with
- * g_object_unref()
+ * Returns: (transfer none): the ensured-valid #TpChannel
  */
 TpChannel *
 folks_tp_lowlevel_connection_open_contact_list_channel_finish (
-    FolksTpLowlevel *tp_lowlevel,
+    FolksTpLowlevel *lowlevel,
     GAsyncResult *result,
     GError **error)
 {
