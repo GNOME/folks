@@ -1,4 +1,5 @@
 SUBDIRS = \
+	key-file \
 	telepathy \
 	$(NULL)
 

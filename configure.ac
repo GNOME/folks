@@ -223,6 +223,7 @@ AC_CONFIG_FILES([
     tests/telepathy/Makefile
     tests/lib/Makefile
     tests/lib/folks-test-uninstalled.pc
+    tests/lib/key-file/Makefile
     tests/lib/telepathy/Makefile
     tests/lib/telepathy/contactlist/Makefile
     tests/lib/telepathy/contactlist/session.conf
