@@ -511,16 +511,16 @@ got_channels_cb (TpProxy *conn,
 
 /**
  * folks_tp_lowlevel_connection_connect_to_new_group_channels:
- * @tp_lowlevel: a #FolksTpLowlevel
+ * @lowlevel: a #FolksTpLowlevel
  * @conn: the connection to use
- * @callback: function to call on completion
+ * @callback: (scope call): function to call on completion
  * @user_data: (closure): user data to pass to @callback
  *
  * Connect to the NewChannels signal.
  */
 void
 folks_tp_lowlevel_connection_connect_to_new_group_channels (
-    FolksTpLowlevel *tp_lowlevel,
+    FolksTpLowlevel *lowlevel,
     TpConnection *conn,
     FolksTpLowlevelNewGroupChannelsCallback callback,
     gpointer user_data)
