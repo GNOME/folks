@@ -41,9 +41,12 @@ public class Folks.BackendStore : Object {
 
   private HashMap<string,Backend> backend_hash;
   private HashMap<string,Backend> _prepared_backends;
+  private File config_file;
+  private GLib.KeyFile backends_key_file;
   private GLib.List<ModuleFinalizeFunc> finalize_funcs = null;
   private static weak BackendStore instance;
   private static bool _backends_loaded = false;
+  private bool _is_prepared = false;
 
   /**
    * Emitted when a backend has been added to the BackendStore.
@@ -79,6 +82,19 @@ public class Folks.BackendStore : Object {
 
           return backends;
         }
+
+      private set {}
+    }
+
+  /**
+   * Whether {@link BackendStore.prepare} has successfully completed for this
+   * store.
+   *
+   * @since 0.3.0
+   */
+  public bool is_prepared
+    {
+      get { return this._is_prepared; }
 
       private set {}
     }
@@ -125,6 +141,27 @@ public class Folks.BackendStore : Object {
     }
 
   /**
+   * Prepare the BackendStore for use.
+   *
+   * This must only ever be called before {@link BackendStore.load_backends} is
+   * called for the first time. If it isn't called explicitly,
+   * {@link BackendStore.load_backends} will call it.
+   *
+   * @since 0.3.0
+   */
+  public async void prepare ()
+    {
+      if (this._is_prepared == true)
+        return;
+      this._is_prepared = true;
+
+      /* Load the list of disabled backends */
+      yield this.load_disabled_backend_names ();
+
+      this.notify_property ("is-prepared");
+    }
+
+  /**
    * Find, load, and prepare all backends which are not disabled.
    *
    * Backends will be searched for in the path given by the `FOLKS_BACKEND_DIR`
@@ -138,6 +175,9 @@ public class Folks.BackendStore : Object {
           if (!this._backends_loaded)
             {
               assert (Module.supported());
+
+              if (this._is_prepared == false)
+                yield this.prepare ();
 
               var path = Environment.get_variable ("FOLKS_BACKEND_DIR");
               if (path == null)
@@ -191,7 +231,27 @@ public class Folks.BackendStore : Object {
    */
   public void add_backend (Backend backend)
     {
-      this.backend_hash.set (backend.name, backend);
+      /* Check the backend isn't disabled */
+      bool enabled = true;
+      try
+        {
+          enabled = this.backends_key_file.get_boolean (backend.name,
+              "enabled");
+        }
+      catch (KeyFileError e)
+        {
+          if (!(e is KeyFileError.GROUP_NOT_FOUND) &&
+              !(e is KeyFileError.KEY_NOT_FOUND))
+            {
+              warning ("Couldn't check enabled state of backend '%s': %s\n" +
+                  "Disabling backend.",
+                  backend.name, e.message);
+              enabled = false;
+            }
+        }
+
+      if (enabled == true)
+        this.backend_hash.set (backend.name, backend);
     }
 
   /**
@@ -339,5 +399,55 @@ public class Folks.BackendStore : Object {
         }
 
       return file_info.get_file_type () == FileType.DIRECTORY;
+    }
+
+  private async void load_disabled_backend_names ()
+    {
+      File file;
+      string path =
+          Environment.get_variable ("FOLKS_BACKEND_STORE_KEY_FILE_PATH");
+      if (path == null)
+        {
+          file = File.new_for_path (Environment.get_user_data_dir ());
+          file = file.get_child ("folks");
+          file = file.get_child ("backends.ini");
+
+          debug ("Using built-in backends key file '%s' (override with " +
+              "environment variable FOLKS_BACKEND_STORE_KEY_FILE_PATH)",
+              file.get_path ());
+        }
+      else
+        {
+          file = File.new_for_path (path);
+          debug ("Using environment variable " +
+              "FOLKS_BACKEND_STORE_KEY_FILE_PATH = '%s' to load the backends " +
+              "key file.", path);
+        }
+
+      this.config_file = file;
+
+      /* Load the disabled backends file */
+      this.backends_key_file = new GLib.KeyFile ();
+      try
+        {
+          string contents = null;
+          size_t length = 0;
+
+          yield file.load_contents_async (null, out contents, out length);
+          if (length > 0)
+            {
+              this.backends_key_file.load_from_data (contents, length,
+                  KeyFileFlags.KEEP_COMMENTS);
+            }
+        }
+      catch (Error e1)
+        {
+          if (!(e1 is IOError.NOT_FOUND))
+            {
+              warning ("The backends key file '%s' could not be loaded: %s",
+                  file.get_path (), e1.message);
+              return;
+            }
+        }
     }
 }
