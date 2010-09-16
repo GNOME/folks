@@ -245,10 +245,7 @@ public class Folks.BackendStore : Object {
 
       foreach (var info in infos)
         {
-          string file_name = info.get_name ();
-          string file_path = Path.build_filename (dir.get_path (), file_name);
-
-          File file = File.new_for_path (file_path);
+          File file = dir.get_child (info.get_name ());
           FileType file_type = info.get_file_type ();
           unowned string content_type = info.get_content_type ();
           /* don't load the library multiple times for its various symlink
@@ -263,12 +260,12 @@ public class Folks.BackendStore : Object {
             }
           else if (mime == "application/x-sharedlib" && !is_symlink)
             {
-              this.load_module_from_file (file_path);
+              this.load_module_from_file (file);
             }
           else if (mime == null)
             {
               warning ("MIME type could not be determined for file '%s'. " +
-                  "Have you installed shared-mime-info?", file_path);
+                  "Have you installed shared-mime-info?", file.get_path ());
             }
         }
 
@@ -276,8 +273,10 @@ public class Folks.BackendStore : Object {
           dir.get_path ());
     }
 
-  private void load_module_from_file (string file_path)
+  private void load_module_from_file (File file)
     {
+      string file_path = file.get_path ();
+
       Module module = Module.open (file_path, ModuleFlags.BIND_LOCAL);
       if (module == null)
         {
