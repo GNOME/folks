@@ -44,6 +44,14 @@ public class IndividualRetrievalTests : Folks.TestCase
           store.disable_backend.begin ("key-file");
         });
 
+      /* Disable the key-file backend so it doesn't interfere with the tests */
+      BackendStore store = BackendStore.dup ();
+      store.prepare.begin ((o, r) =>
+        {
+          store.prepare.end (r);
+          store.disable_backend.begin ("key-file");
+        });
+
       this.tp_backend.set_up ();
     }
 

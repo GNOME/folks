@@ -6,6 +6,7 @@ public class IndividualRetrievalTests : Folks.TestCase
 {
   private KfTest.Backend kf_backend;
   private MainLoop main_loop;
+  private static const string STORE_FILE_PATH = "folks-key-file-store.ini";
 
   public IndividualRetrievalTests ()
     {
@@ -20,10 +21,29 @@ public class IndividualRetrievalTests : Folks.TestCase
   public override void set_up ()
     {
       this.main_loop = new GLib.MainLoop (null, false);
+
+      FileUtils.remove (Path.build_filename (Environment.get_tmp_dir (),
+          this.STORE_FILE_PATH, null));
+
+      /* Use a temporary key file for the BackendStore */
+      Environment.set_variable ("FOLKS_BACKEND_STORE_KEY_FILE_PATH",
+          Path.build_filename (Environment.get_tmp_dir (),
+              this.STORE_FILE_PATH, null), true);
+
+      /* Disable the Telepathy backend so it doesn't interfere with the tests */
+      BackendStore store = BackendStore.dup ();
+      store.prepare.begin ((o, r) =>
+        {
+          store.prepare.end (r);
+          store.disable_backend.begin ("telepathy");
+        });
     }
 
   public override void tear_down ()
     {
+      FileUtils.remove (Path.build_filename (Environment.get_tmp_dir (),
+          this.STORE_FILE_PATH, null));
+
       Timeout.add_seconds (5, () =>
         {
           this.main_loop.quit ();
