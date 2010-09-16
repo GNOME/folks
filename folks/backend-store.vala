@@ -275,6 +275,38 @@ public class Folks.BackendStore : Object {
       return this.backend_hash.values;
     }
 
+  /**
+   * Enable a backend.
+   *
+   * Mark a backend as enabled, such that the BackendStore will always attempt
+   * to load it when {@link BackendStore.load_backends} is called. This will
+   * not load the backend if it's not currently loaded.
+   *
+   * @param name the name of the backend to enable
+   * @since 0.3.2
+   */
+  public async void enable_backend (string name)
+    {
+      this.backends_key_file.set_boolean (name, "enabled", true);
+      yield this.save_key_file ();
+    }
+
+  /**
+   * Disable a backend.
+   *
+   * Mark a backend as disabled, such that it won't be loaded even when the
+   * client application is restarted. This will not remove the backend if it's
+   * already loaded.
+   *
+   * @param name the name of the backend to disable
+   * @since 0.3.2
+   */
+  public async void disable_backend (string name)
+    {
+      this.backends_key_file.set_boolean (name, "enabled", false);
+      yield this.save_key_file ();
+    }
+
   private async void load_modules_from_dir (File dir)
     {
       debug ("Searching for modules in folder '%s' ..", dir.get_path ());
@@ -448,6 +480,27 @@ public class Folks.BackendStore : Object {
                   file.get_path (), e1.message);
               return;
             }
+        }
+    }
+
+  private async void save_key_file ()
+    {
+      string key_file_data = this.backends_key_file.to_data ();
+
+      debug ("Saving backend key file '%s'.", this.config_file.get_path ());
+
+      try
+        {
+          /* Note: We have to use key_file_data.size () here to get its length
+           * in _bytes_ rather than _characters_. bgo#628930 */
+          yield this.config_file.replace_contents_async (key_file_data,
+              key_file_data.size (), null, false, FileCreateFlags.PRIVATE,
+              null);
+        }
+      catch (Error e)
+        {
+          warning ("Could not write updated backend key file '%s': %s",
+              this.config_file.get_path (), e.message);
         }
     }
 }
