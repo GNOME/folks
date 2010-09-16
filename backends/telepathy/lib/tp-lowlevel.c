@@ -98,9 +98,19 @@ folks_tp_lowlevel_connection_open_contact_list_channel_async (
 /* XXX: ideally, we'd either make this static or hide it in the .metadata file,
  * but neither seems to be supported (without breaking the binding to the async
  * function) */
+/**
+ * folks_tp_lowlevel_connection_open_contact_list_channel_finish:
+ * @lowlevel: a #FolksTpLowlevel
+ * @result: the async result
+ * @error: a #GError, or %NULL
+ *
+ * Finish opening a Telepathy Contact List Channel.
+ *
+ * Returns: (transfer none): the ensured-valid #TpChannel
+ */
 TpChannel *
 folks_tp_lowlevel_connection_open_contact_list_channel_finish (
-    FolksTpLowlevel *tp_lowlevel,
+    FolksTpLowlevel *lowlevel,
     GAsyncResult *result,
     GError **error)
 {
