@@ -22,6 +22,8 @@ libtp_test_contactlist_la_SOURCES = \
         account.h \
         account-manager.c \
         account-manager.h \
+        backend.c \
+        backend.h \
         conn.c \
         conn.h \
         contact-list.c \

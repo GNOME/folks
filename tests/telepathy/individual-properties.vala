@@ -7,18 +7,15 @@ using Gee;
 
 public class IndividualPropertiesTests : Folks.TestCase
 {
-  private DBusDaemon daemon;
-  private TpTest.Account account;
-  private TpTest.AccountManager account_manager;
-  private TpTest.ContactListConnection conn;
+  private TpTest.Backend tp_backend;
   private MainLoop main_loop;
-  private string bus_name;
-  private string object_path;
   private string individual_id_prefix = "telepathy:protocol:";
 
   public IndividualPropertiesTests ()
     {
       base ("IndividualProperties");
+
+      this.tp_backend = new TpTest.Backend ();
 
       this.add_test ("individual properties",
           this.test_individual_properties);
@@ -31,94 +28,12 @@ public class IndividualPropertiesTests : Folks.TestCase
   public override void set_up ()
     {
       this.main_loop = new GLib.MainLoop (null, false);
-
-      try
-        {
-          this.daemon = DBusDaemon.dup ();
-        }
-      catch (GLib.Error e)
-        {
-          error ("Couldn't get D-Bus daemon: %s", e.message);
-        }
-
-      /* Set up a contact list connection */
-      this.conn = new TpTest.ContactListConnection ("me@example.com",
-          "protocol", 0, 0);
-
-      try
-        {
-          this.conn.register ("cm", out this.bus_name, out this.object_path);
-        }
-      catch (GLib.Error e)
-        {
-          error ("Failed to register connection %p.", this.conn);
-        }
-
-      var handle_repo = this.conn.get_handles (HandleType.CONTACT);
-      Handle self_handle = 0;
-      try
-        {
-          self_handle = TelepathyGLib.handle_ensure (handle_repo,
-              "me@example.com", null);
-        }
-      catch (GLib.Error e)
-        {
-          error ("Couldn't ensure self handle '%s': %s", "me@example.com",
-              e.message);
-        }
-
-      this.conn.set_self_handle (self_handle);
-      this.conn.change_status (ConnectionStatus.CONNECTED,
-          ConnectionStatusReason.REQUESTED);
-
-      /* Create an account */
-      this.account = new TpTest.Account (this.object_path);
-      this.daemon.register_object (
-          TelepathyGLib.ACCOUNT_OBJECT_PATH_BASE + "cm/protocol/account",
-          this.account);
-
-      /* Create an account manager */
-      try
-        {
-          this.daemon.request_name (TelepathyGLib.ACCOUNT_MANAGER_BUS_NAME,
-              false);
-        }
-      catch (GLib.Error e)
-        {
-          error ("Couldn't request account manager bus name '%s': %s",
-              TelepathyGLib.ACCOUNT_MANAGER_BUS_NAME, e.message);
-        }
-
-      this.account_manager = new TpTest.AccountManager ();
-      this.daemon.register_object (TelepathyGLib.ACCOUNT_MANAGER_OBJECT_PATH,
-          this.account_manager);
+      this.tp_backend.set_up ();
     }
 
   public override void tear_down ()
     {
-      this.conn.change_status (ConnectionStatus.DISCONNECTED,
-          ConnectionStatusReason.REQUESTED);
-
-      this.daemon.unregister_object (this.account_manager);
-      this.account_manager = null;
-
-      try
-        {
-          this.daemon.release_name (TelepathyGLib.ACCOUNT_MANAGER_BUS_NAME);
-        }
-      catch (GLib.Error e)
-        {
-          error ("Couldn't release account manager bus name '%s': %s",
-              TelepathyGLib.ACCOUNT_MANAGER_BUS_NAME, e.message);
-        }
-
-      this.daemon.unregister_object (this.account);
-      this.account = null;
-
-      this.conn = null;
-      this.daemon = null;
-      this.bus_name = null;
-      this.object_path = null;
+      this.tp_backend.tear_down ();
 
       Timeout.add_seconds (5, () =>
         {
@@ -305,7 +220,7 @@ public class IndividualPropertiesTests : Folks.TestCase
                * alias notification callback above */
 
               var handle = (Handle) ((Tpf.Persona) persona).contact.handle;
-              this.conn.manager.set_alias (handle, new_alias);
+              this.tp_backend.connection.manager.set_alias (handle, new_alias);
             }
 
           assert (removed == null);

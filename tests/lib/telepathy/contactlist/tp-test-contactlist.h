@@ -3,6 +3,7 @@
 
 #include <account-manager.h>
 #include <account.h>
+#include <backend.h>
 #include <conn.h>
 #include <contact-list-manager.h>
 #include <contact-list.h>
