@@ -95,9 +95,6 @@ folks_tp_lowlevel_connection_open_contact_list_channel_async (
       connection_ensure_channel_cb, result, NULL, G_OBJECT (conn));
 }
 
-/* XXX: ideally, we'd either make this static or hide it in the .metadata file,
- * but neither seems to be supported (without breaking the binding to the async
- * function) */
 /**
  * folks_tp_lowlevel_connection_open_contact_list_channel_finish:
  * @lowlevel: a #FolksTpLowlevel
@@ -206,9 +203,6 @@ folks_tp_lowlevel_connection_get_contacts_by_handle_async (
       G_OBJECT (conn));
 }
 
-/* XXX: ideally, we'd either make this static or hide it in the .metadata file,
- * but neither seems to be supported (without breaking the binding to the async
- * function) */
 /**
  * folks_tp_lowlevel_connection_get_contacts_by_handle_finish:
  * @tp_lowlevel: a #FolksTpLowlevel
@@ -318,9 +312,6 @@ folks_tp_lowlevel_connection_get_contacts_by_id_async (
       G_OBJECT (conn));
 }
 
-/* XXX: ideally, we'd either make this static or hide it in the .metadata file,
- * but neither seems to be supported (without breaking the binding to the async
- * function) */
 /**
  * folks_tp_lowlevel_connection_get_contacts_by_id_finish:
  * @tp_lowlevel: a #FolksTpLowlevel
