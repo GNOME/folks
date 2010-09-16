@@ -2,6 +2,7 @@ SUBDIRS = \
     lib \
     tools \
     folks \
+    key-file \
     telepathy \
     $(NULL)
 

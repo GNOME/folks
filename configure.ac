@@ -220,6 +220,7 @@ AC_CONFIG_FILES([
     docs/Makefile
     tests/Makefile
     tests/folks/Makefile
+    tests/key-file/Makefile
     tests/telepathy/Makefile
     tests/lib/Makefile
     tests/lib/folks-test-uninstalled.pc
