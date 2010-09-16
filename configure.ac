@@ -66,6 +66,8 @@ AC_SUBST([LT_AGE])
 FOLKS_MAJOR_MINOR_VERSION=folks_major_minor_version
 AC_SUBST([FOLKS_MAJOR_MINOR_VERSION])
 
+AM_CONDITIONAL([FOLKS_RELEASED], [test folks_released = 1])
+
 # -----------------------------------------------------------
 # Dependencies
 # -----------------------------------------------------------
