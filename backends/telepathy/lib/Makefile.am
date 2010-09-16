@@ -45,7 +45,15 @@ DISTCHECK_CONFIGURE_FLAGS = --enable-introspection
 
 -include $(INTROSPECTION_MAKEFILE)
 INTROSPECTION_GIRS =
-INTROSPECTION_SCANNER_ARGS = --add-include-path=$(srcdir)
+INTROSPECTION_SCANNER_ARGS = \
+	--add-include-path=$(srcdir) \
+	--warn-all \
+	$(NULL)
+
+if !FOLKS_RELEASED
+INTROSPECTION_SCANNER_ARGS += --warn-error
+endif
+
 INTROSPECTION_COMPILER_ARGS = --includedir=$(srcdir)
 CLEANFILES =
 

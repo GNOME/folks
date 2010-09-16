@@ -62,6 +62,8 @@ AC_SUBST([LT_CURRENT])
 AC_SUBST([LT_REVISION])
 AC_SUBST([LT_AGE])
 
+AM_CONDITIONAL([FOLKS_RELEASED], [test folks_released = 1])
+
 # -----------------------------------------------------------
 # Dependencies
 # -----------------------------------------------------------
