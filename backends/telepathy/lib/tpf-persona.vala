@@ -23,11 +23,6 @@ using GLib;
 using TelepathyGLib;
 using Folks;
 
-public errordomain Tpf.PersonaError
-{
-  INVALID_ARGUMENT
-}
-
 /**
  * A persona subclass which represents a single instant messaging contact from
  * Telepathy.
@@ -212,18 +207,9 @@ public class Tpf.Persona : Folks.Persona,
    * Create a new persona for the {@link PersonaStore} `store`, representing
    * the Telepathy contact given by `contact`.
    */
-  public Persona (Contact contact, PersonaStore store) throws Tpf.PersonaError
+  public Persona (Contact contact, PersonaStore store)
     {
-      /* FIXME: There is the possibility of a crash in the error condition below
-       * due to bgo#604299, where the C self variable isn't initialised until we
-       * chain up to the Object constructor, below. */
       unowned string id = contact.get_identifier ();
-      if (id == null || id == "")
-        {
-          throw new Tpf.PersonaError.INVALID_ARGUMENT (
-              _("Contact has an invalid ID."));
-        }
-
       unowned Connection connection = contact.connection;
       var account = account_for_connection (connection);
       string uid = this.build_uid ("telepathy", account.get_protocol (), id);

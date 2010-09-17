@@ -594,25 +594,13 @@ public class Tpf.PersonaStore : Folks.PersonaStore
 
               /* Add the local user */
               Contact contact = contacts[0];
-              try
-                {
-                  Persona persona = this.add_persona_from_contact (contact);
+              Persona persona = this.add_persona_from_contact (contact);
 
-                  GLib.List<Persona> personas = new GLib.List<Persona> ();
-                  personas.prepend (persona);
+              GLib.List<Persona> personas = new GLib.List<Persona> ();
+              personas.prepend (persona);
 
-                  this.self_contact = contact;
-                  this.personas_changed (personas, null, null, null, 0);
-                }
-              catch (Tpf.PersonaError e)
-                {
-                  warning (
-                      /* Translators: the first parameter is the contact's
-                       * alias, and the second is the location of the contact's
-                       * data in memory (for debugging). */
-                      _("Failed to create self persona from contact '%s' (%p)"),
-                      contact.alias, contact);
-                }
+              this.self_contact = contact;
+              this.personas_changed (personas, null, null, null, 0);
             },
           this);
     }
@@ -1261,23 +1249,9 @@ public class Tpf.PersonaStore : Folks.PersonaStore
 
               debug ("Creating persona from contact '%s'", contact.identifier);
 
-              try
-                {
-                  var persona = this.add_persona_from_contact (contact);
-                  if (persona != null)
-                    personas.prepend (persona);
-                }
-              catch (Tpf.PersonaError e)
-                {
-                  err_string = "%s\n%s".printf (err_string,
-                      /* Translators: format for lines in the error string below
-                       * "Failed to create %u personas:". The first parameter is
-                       * a contact alias, the second is a pointer address and
-                       * the third is an error message. */
-                      _("'%s' (%p): %s").printf (contact.alias, contact,
-                          e.message));
-                  err_count++;
-                }
+              var persona = this.add_persona_from_contact (contact);
+              if (persona != null)
+                personas.prepend (persona);
             }
 
           if (err_count > 0)
@@ -1302,7 +1276,6 @@ public class Tpf.PersonaStore : Folks.PersonaStore
     }
 
   private Tpf.Persona? add_persona_from_contact (Contact contact)
-      throws Tpf.PersonaError
     {
       var h = contact.get_handle ();
 
@@ -1332,19 +1305,9 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       GLib.List<Persona> personas = new GLib.List<Persona> ();
       foreach (Contact contact in contacts)
         {
-          try
-            {
-              var persona = this.add_persona_from_contact (contact);
-              if (persona != null)
-                personas.prepend (persona);
-            }
-          catch (Tpf.PersonaError e)
-            {
-              /* Translators: the first parameter is a contact alias and the
-               * second is a pointer address. */
-              warning (_("Failed to create persona from contact '%s' (%p)."),
-                  contact.alias, contact);
-            }
+          var persona = this.add_persona_from_contact (contact);
+          if (persona != null)
+            personas.prepend (persona);
         }
 
       this.channel_groups_add_new_personas ();

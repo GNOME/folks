@@ -18,6 +18,8 @@ API changes:
   PersonaStore.display_name, PersonaStore.id, Backend.name,
   Backend.persona_stores and Persona.linkable_properties. This removes the
   corresponding C setter methods which should never have been exposed
+* Remove Tpf.PersonaError
+* Remove the exception from the Tpf.Persona constructor
 
 Bugs fixed:
 * Bug 629081 — Add API to allow specific backends to be disabled
