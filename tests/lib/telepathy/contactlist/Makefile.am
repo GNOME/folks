@@ -68,7 +68,6 @@ CLEANFILES = \
 	_gen/tp_test_contact_list.manager \
 	$(INTROSPECTION_GIRS) \
 	tp-test-contactlist.vapi \
-	session.conf \
 	$(gir_DATA) \
 	$(typelib_DATA) \
 	$(NULL)
