@@ -552,8 +552,8 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       /* FIXME: continue for the other arrays */
     }
 
-  private void channel_invalidated_cb (Proxy proxy, uint domain, int code,
-      string message)
+  private void channel_invalidated_cb (TelepathyGLib.Proxy proxy, uint domain,
+      int code, string message)
     {
       var channel = (Channel) proxy;
 
