@@ -73,8 +73,8 @@ AM_CONDITIONAL([FOLKS_RELEASED], [test folks_released = 1])
 # -----------------------------------------------------------
 
 GLIB_REQUIRED=2.24.0
-TP_GLIB_REQUIRED=0.11.15.1
-VALA_REQUIRED=0.9.9
+TP_GLIB_REQUIRED=0.11.16
+VALA_REQUIRED=0.10.0
 
 AM_PROG_VALAC([$VALA_REQUIRED])
 
@@ -88,7 +88,7 @@ AC_PATH_PROG([VAPIGEN], [vapigen], [vapigen])
 AS_IF([test "$VAPIGEN" = ""],
       [AC_MSG_ERROR([Vala must be built with --enable-vapigen])])
 
-GOBJECT_INTROSPECTION_REQUIRE([0.6.7])
+GOBJECT_INTROSPECTION_REQUIRE([0.9.6])
 
 PKG_CHECK_MODULES([GLIB],
                   [glib-2.0 >= $GLIB_REQUIRED
