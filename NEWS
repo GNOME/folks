@@ -1,11 +1,220 @@
-============================================================================
-API breaks in 0.2.0
-============================================================================
+Overview of changes from libfolks 0.1.17 to libfolks 0.3.0
+==========================================================
 
-BackendStore is now a singleton.
+Major changes:
+* Fixed some linking problems
+* Added some missing documentation
+* Fixed build problems introduced by switching to gobject-introspection 0.9.6
+  (i.e. GIR format 1.2)
+* Bumped telepathy-glib dependency to 0.11.16
+* Bumped Vala dependency to 0.10.0
+* Bumped gobject-introspection dependency to 0.9.6
+* Ensured IM addresses are normalised before being compared
+* Made the folks-import build optional through a configure argument
 
-Vala:
-BackendStore default constructor removed. Use BackendStore.dup().
+API changes:
+* Added IMable.normalise_im_address()
+* Renamed Groups interface to Groupable
+* Renamed Alias interface to Aliasable
+* Removed BackendStore constructor
+* Added BackendStore.dup()
+* Added BackendStore::enabled-backends
 
-C:
-folks_backend_store_new() removed. Use folks_backend_store_dup().
+Bugs fixed:
+* Bug 629452 — [Patch] Add missing gio linking for import-tool
+* Bug 626008 — Add @since lines to all symbols
+* Bug 629311 — Folks should normalize IDs written to the writable backend
+* Bug 629644 — Key file backend cannot be loaded because of linking problems
+* Bug 629666 — libfolks should not hard autodetect libxml
+* Bug 628970 — Folks API needs a way to determine whether a specific type of
+  PersonaStore is available
+
+Overview of changes from libfolks 0.1.16 to libfolks 0.1.17
+===========================================================
+
+Major changes:
+* Added a basic test suite
+* Cleaned up the build system
+* Ensured the public libraries' VAPI files are distributed and installed
+* Prevented the key-file from being saved unnecessarily
+* Fixed multi-byte character handling in the key-file backend
+* Ensured account removal and invalidation is handled in the Telepathy backend
+* Prevented a hang when creating relationships.ini in certain situations
+* Added a folks-import tool to import meta-contact data from Pidgin; this adds
+  a dependency on libxml
+
+API changes:
+* Added PersonaStore.flush()
+
+Bugs fixed:
+* Bug 628930 — folks crahses empathy on relationships.ini read
+* Bug 629082 — Empathy crashes when toggling "Ignore SSL certificate errors"
+  checkbox
+* Bug 628853 — hangs if there's no relationships.ini file
+* Bug 629084 — Add a folks-import tool
+
+Overview of changes from libfolks 0.1.15 to libfolks 0.1.16
+===========================================================
+
+Major changes:
+* Added more debugging output
+* Fixed various small outputted code bugs
+* Fixed problem where key file groups would be overwritten in some situations
+* Fixed various signal emission problems
+* Prevented changes to Personas' properties from being propagated back up to the
+  Individuals
+* Limited libgee dependency to < 0.7 due to API changes in libgee
+* Added a FOLKS_DISABLE_LINKING environment variable to disable linking (for
+  debugging purposes)
+
+Bugs fixed:
+* Bug 628108 — Favorite contacts are not save any more
+* Bug 628294 — Some contacts appear to be linked together while they shouldn't
+* Bug 628305 — Signal removal of Individuals containing untrusted Personas
+* Bug 628131 — error message when trying to link ICQ with jabber
+* Bug 628343 — Add an environment variable to disable linking
+
+Overview of changes from libfolks 0.1.14.1 to libfolks 0.1.15
+=============================================================
+
+Major changes:
+* Fixed various build problems
+* Ensured duplicate entries don't appear in various sets
+* Made gobject-introspection dependency explicit
+* Limited libgee dependency to <= 0.5.2 due to API changes in libgee
+* Reworked some of the Individual internals to make notifications more efficient
+* Added the concept of an Individual's “trust level”
+* Changed alias fallbacks to fall back to a display ID instead of a UID
+* Added support for storing aliases in the key-file backend and use them in
+  preference to aliases from other Personas in an Individual
+
+API changes:
+* Added Individual:personas-changed
+* Added TrustLevel enum
+* Added Individual::trust-level
+* Implemented Alias on Kf.Persona
+
+Bugs fixed:
+* Bug 627314 — folks cannot be install in gentoo sandbox
+* Bug 627506 — Require gobject-introspection
+* Bug 626725 — Add an Individual.personas_changed signal
+* Bug 627968 — Add Individual.trust_level property
+* Bug 626578 — Use vala's vala.m4 to check for telepathy-glib(.vapi)
+* Bug 626410 — contacts show up with a weird alias
+* Bug 627508 — Store alias and groups in the key-file backend
+* Bug 627898 — Fails to install with -j4
+
+Overview of changes from libfolks 0.1.14 to libfolks 0.1.14.1
+=============================================================
+
+Major changes:
+* Bumped Vala dependency to 0.9.6
+* Fixed some more warning spew
+
+Overview of changes from libfolks 0.1.13 to libfolks 0.1.14
+===========================================================
+
+Major changes:
+* Changed Vala detection code to use the correct macro
+* Bumped Vala dependency to 0.9.5
+* Removed some more message spew
+* Changed tp-lowlevel Vala bindings to be generated using gobject-introspection
+* Added optional dependency on gobject-introspection 0.6.7
+
+Overview of changes from libfolks 0.1.12 to libfolks 0.1.13
+===========================================================
+
+Major changes:
+* Added the concept of “linkable properties”
+* Added the IMable interface
+* Added the concept of persona store “trust”
+* Added a writeable key-file backend
+* Added linking support to the IndividualAggregator
+* Tidied up ID handling in the backends
+* Warn if a backend's MIME type could not be determined, notifying the user if
+  libfolks can't load backends due to shared-mime-info not being installed
+* Hint to clients the Individual replacing a removed Individual (if any)
+* Exposed Telepathy contacts' IM addresses using the IMable interface
+* Fixed some build and dependency issues
+* Bumped telepathy-glib dependency to 0.11.11 and dropped dependency on
+  telepathy-vala
+* Added the concept of “writeable” PersonaStores and use this concept to prevent
+  properties being synchronised between PersonaStores unnecessarily (and
+  potentially even destructively)
+
+API changes:
+* Added Persona::linkable-properties
+* Added IMable interface
+* Added PersonaStoreTrust enum
+* Added PersonaStore::trust-level
+* Added Persona.LinkablePropertyCallback()
+* Added Persona.linkable_property_to_links()
+* Added Persona.build_uid()
+* Added Persona.split_uid()
+* Added Persona::display-id
+* Added PersonaStore::display-name
+* Added replacement_individual parameter to Individual:removed
+* Implemented IMable on Tpf.Persona
+* Added IndividualAggregatorError.NO_WRITEABLE_STORE
+* Added IndividualAggregator.link_personas()
+* Added IndividualAggregator.unlink_individual()
+* Added PersonaStore::is-writeable
+
+Bugs fixed:
+* Bug 625830 — Adding an existing contact to the tp backend results in bogus
+  warnings
+* Bug 626108 — Defining XDG_DATA_DIRS prevents backends from being loaded
+
+Overview of changes from libfolks 0.1.11 to libfolks 0.1.12
+===========================================================
+
+Major changes:
+* Added debug flags support using the FOLKS_DEBUG environment variable
+* Removed various bits of message and warning spew
+* Bumped Vala dependency to 0.9.4
+* Ensured connections which are ready as soon as they're connected are handled
+  correctly
+* Versioned the installed backends using the main library's libtool version
+
+Bugs fixed:
+* Bug 625815 — No contat showed in the contact list
+
+Overview of changes from libfolks 0.1.10 to libfolks 0.1.11
+===========================================================
+
+Major changes:
+* Moved various bits of preparation code out into async prepare() methods to
+  avoid race conditions on startup
+* Reset TpfPersonaStore state when going offline
+* Made several methods async which could potentially require it in future
+* Added error throws to various functions which could potentially fail in future
+
+API changes:
+* Added PersonaStore.prepare()
+* Added Backend.prepare()
+* Removed error thrown from Backend constructor
+* Added IndividualAggregator.prepare()
+* Changed return type of Presence.is_online() from uint to int
+* Made IndividualAggregator.remove_individual() async
+* Made PersonaStore.remove_persona() async
+* Added an error throw to BackendStore.load_backends()
+* Added an error throw to IndividualAggregator.prepare()
+* Added an error throw to IndividualAggregator.remove_individual()
+* Added an error throw to IndividualAggregator.remove_persona()
+* Added an error throw to PersonaStore.remove_persona()
+* Made Groups.change_group() async
+* Made Groups:group-changed async
+
+Overview of changes from libfolks 0.1.9 to libfolks 0.1.10
+==========================================================
+
+Major changes:
+* Fixed various memory and reference leaks
+* Lots of build system improvements
+* Added a libtool version to the installed libraries
+
+Initial release of libfolks 0.1.9
+=================================
+
+Major changes:
+* Move to GNOME infrastructure
