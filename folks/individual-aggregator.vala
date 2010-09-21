@@ -238,7 +238,8 @@ public class Folks.IndividualAggregator : Object
 
   private void add_personas (GLib.List<Persona> added,
       ref GLib.List<Individual> added_individuals,
-      ref HashMap<Individual, Individual> replaced_individuals)
+      ref HashMap<Individual, Individual> replaced_individuals,
+      ref Individual user)
     {
       /* Set of individuals which have been added as a result of the new
        * personas. These will be returned in added_individuals, but have to be
@@ -276,12 +277,11 @@ public class Folks.IndividualAggregator : Object
 
           /* If the Persona is the user, we *always* want to link it to the
            * existing this.user. */
-          if (persona.is_user == true && this.user != null)
+          if (persona.is_user == true && user != null)
             {
-              debug ("    Found candidate individual '%s' as user.",
-                  this.user.id);
-              candidate_inds.prepend (this.user);
-              candidate_ind_set.add (this.user);
+              debug ("    Found candidate individual '%s' as user.", user.id);
+              candidate_inds.prepend (user);
+              candidate_ind_set.add (user);
             }
 
           /* If we don't trust the PersonaStore at all, we can't link the
@@ -437,7 +437,7 @@ public class Folks.IndividualAggregator : Object
 
           /* If the final Individual is the user, set them as such. */
           if (final_individual.is_user == true)
-            this.user = final_individual;
+            user = final_individual;
 
           /* Mark the final individual for addition later */
           almost_added_individuals.add (final_individual);
@@ -469,10 +469,15 @@ public class Folks.IndividualAggregator : Object
       HashSet<Persona> removed_personas = new HashSet<Persona> (direct_hash,
           direct_equal);
 
+      /* We store the value of this.user locally and only update it at the end
+       * of the function to prevent spamming notifications of changes to the
+       * property. */
+      Individual user = this.user;
+
       if (added != null)
         {
           this.add_personas (added, ref added_individuals,
-              ref replaced_individuals);
+              ref replaced_individuals, ref user);
         }
 
       debug ("Removing Personas:");
@@ -547,8 +552,8 @@ public class Folks.IndividualAggregator : Object
                 relinked_personas.prepend (p);
             }
 
-          if (this.user == individual)
-            this.user = null;
+          if (user == individual)
+            user = null;
 
           this.individuals.remove (individual.id);
           individual.personas = null;
@@ -559,7 +564,10 @@ public class Folks.IndividualAggregator : Object
         debug ("    %s (%s)", persona.uid, persona.iid);
 
       this.add_personas (relinked_personas, ref added_individuals,
-          ref replaced_individuals);
+          ref replaced_individuals, ref user);
+
+      /* Notify of changes to this.user */
+      this.user = user;
 
       /* Signal the addition of new individuals and removal of old ones to the
        * aggregator */
