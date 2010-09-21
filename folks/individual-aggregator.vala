@@ -417,10 +417,7 @@ public class Folks.IndividualAggregator : Object
 
           /* If the final Individual is the user, set them as such. */
           if (final_individual.is_user == true)
-            {
-              assert (this.user == null);
-              this.user = final_individual;
-            }
+            this.user = final_individual;
 
           /* Add the new Individual to the aggregator */
           final_individual.removed.connect (this.individual_removed_cb);
