@@ -12,6 +12,7 @@ Major changes:
 * Ensured IM addresses are normalised before being compared
 * Made the folks-import build optional through a configure argument
 * Added support for a “self” individual
+* Added support for generating and installing Devhelp format documentation
 
 API changes:
 * Added IMable.normalise_im_address()
@@ -33,6 +34,7 @@ Bugs fixed:
 * Bug 629666 — libfolks should not hard autodetect libxml
 * Bug 628970 — Folks API needs a way to determine whether a specific type of
   PersonaStore is available
+* Bug 629096 — Add a library init function
 * Bug 627402 — Support marking FolksPersonas as "me"
 
 Overview of changes from libfolks 0.1.16 to libfolks 0.1.17
