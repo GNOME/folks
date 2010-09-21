@@ -240,6 +240,19 @@ public class Folks.IndividualAggregator : Object
       ref GLib.List<Individual> added_individuals,
       ref HashMap<Individual, Individual> replaced_individuals)
     {
+      /* Set of individuals which have been added as a result of the new
+       * personas. These will be returned in added_individuals, but have to be
+       * cached first so that we can ensure that we don't return any given
+       * individual in both added_individuals _and_ replaced_individuals. This
+       * can happen in the case that several of the added personas are linked
+       * together to form one final individual. In that case, a succession of
+       * newly linked individuals will be produced (one for each iteration of
+       * the loop over the added personas); only the *last one* of which should
+       * make its way into added_individuals. The rest should not even make
+       * their way into replaced_individuals, as they've existed only within the
+       * confines of this function call. */
+      HashSet<Individual> almost_added_individuals = new HashSet<Individual> ();
+
       foreach (unowned Persona persona in added)
         {
           PersonaStoreTrust trust_level = persona.store.trust_level;
@@ -413,16 +426,31 @@ public class Folks.IndividualAggregator : Object
           /* Remove the old Individuals. This has to be done here, as we need
            * the final_individual. */
           foreach (unowned Individual i in candidate_inds)
-            replaced_individuals.set (i, final_individual);
+            {
+              /* If the replaced individual was marked to be added to the
+               * aggregator, unmark it. */
+              if (almost_added_individuals.contains (i) == true)
+                almost_added_individuals.remove (i);
+              else
+                replaced_individuals.set (i, final_individual);
+            }
 
           /* If the final Individual is the user, set them as such. */
           if (final_individual.is_user == true)
             this.user = final_individual;
 
+          /* Mark the final individual for addition later */
+          almost_added_individuals.add (final_individual);
+        }
+
+      /* Add the set of final individuals which weren't later replaced to the
+       * aggregator. */
+      foreach (Individual i in almost_added_individuals)
+        {
           /* Add the new Individual to the aggregator */
-          final_individual.removed.connect (this.individual_removed_cb);
-          added_individuals.prepend (final_individual);
-          this.individuals.insert (final_individual.id, final_individual);
+          i.removed.connect (this.individual_removed_cb);
+          added_individuals.prepend (i);
+          this.individuals.insert (i.id, i);
         }
     }
 
