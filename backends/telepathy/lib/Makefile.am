@@ -22,12 +22,11 @@ libtp_lowlevel_la_SOURCES = \
 	tp-lowlevel.h \
 	$(NULL)
 
-libtp_lowlevel_la_CPPFLAGS = \
+libtp_lowlevel_la_CFLAGS = \
 	$(GIO_CFLAGS) \
 	$(GLIB_CFLAGS) \
 	$(GEE_CFLAGS) \
 	$(TP_GLIB_CFLAGS) \
-	$(AM_CPPFLAGS) \
 	$(NULL)
 
 # the -shared and -rpath arguments are to force it to be compiled to a .so,
@@ -103,13 +102,12 @@ libfolks_telepathy_la_SOURCES = \
 	$(libtp_lowlevel_la_SOURCES) \
 	$(NULL)
 
-libfolks_telepathy_la_CPPFLAGS = \
+libfolks_telepathy_la_CFLAGS = \
 	$(GIO_CFLAGS) \
 	$(GLIB_CFLAGS) \
 	$(DBUS_GLIB_CFLAGS) \
 	$(GEE_CFLAGS) \
 	$(TP_GLIB_CFLAGS) \
-	$(AM_CPPFLAGS) \
 	$(NULL)
 
 libfolks_telepathy_la_LIBADD = \
