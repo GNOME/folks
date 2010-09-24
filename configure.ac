@@ -66,8 +66,6 @@ AC_SUBST([LT_AGE])
 FOLKS_MAJOR_MINOR_VERSION=folks_major_minor_version
 AC_SUBST([FOLKS_MAJOR_MINOR_VERSION])
 
-AM_CONDITIONAL([FOLKS_RELEASED], [test folks_released = 1])
-
 # -----------------------------------------------------------
 # Dependencies
 # -----------------------------------------------------------
@@ -176,6 +174,8 @@ AS_COMPILER_FLAG([-Wno-unused-parameter],
 
 m4_if(folks_released, [1], [],
     [
+        ERROR_INTROSPECTION_SCANNER_ARGS="$ERROR_INTROSPECTION_SCANNER_ARGS \
+                --warn-error"
         if test x$werror = xyes; then
             ERROR_CFLAGS="$ERROR_CFLAGS -Werror"
         fi
@@ -197,6 +197,7 @@ AS_COMPILER_FLAG([-Wmissing-declarations], [ERROR_CFLAGS="$ERROR_CFLAGS \
 AS_COMPILER_FLAG([-Wstrict-prototypes], [ERROR_CFLAGS="$ERROR_CFLAGS \
                                          -Wstrict-prototypes"])
 
+AC_SUBST([ERROR_INTROSPECTION_SCANNER_ARGS])
 AC_SUBST([ERROR_CFLAGS])
 
 # -----------------------------------------------------------
