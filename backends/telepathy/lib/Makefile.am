@@ -23,6 +23,7 @@ libtp_lowlevel_la_SOURCES = \
 	$(NULL)
 
 libtp_lowlevel_la_CFLAGS = \
+	$(ERROR_CFLAGS) \
 	$(GIO_CFLAGS) \
 	$(GLIB_CFLAGS) \
 	$(GEE_CFLAGS) \
