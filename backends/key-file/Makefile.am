@@ -6,6 +6,7 @@ AM_CPPFLAGS = \
 	$(NULL)
 
 VALAFLAGS += \
+	$(ERROR_VALAFLAGS) \
 	--vapidir=. \
 	--vapidir=$(top_srcdir)/folks \
 	$(addprefix --pkg ,$(folks_backend_key_file_deps)) \

@@ -176,6 +176,7 @@ m4_if(folks_released, [1], [],
     [
         ERROR_INTROSPECTION_SCANNER_ARGS="$ERROR_INTROSPECTION_SCANNER_ARGS \
                 --warn-error"
+        ERROR_VALAFLAGS="$ERROR_VALAFLAGS --fatal-warnings"
         if test x$werror = xyes; then
             ERROR_CFLAGS="$ERROR_CFLAGS -Werror"
         fi
@@ -198,6 +199,7 @@ AS_COMPILER_FLAG([-Wstrict-prototypes], [ERROR_CFLAGS="$ERROR_CFLAGS \
                                          -Wstrict-prototypes"])
 
 AC_SUBST([ERROR_INTROSPECTION_SCANNER_ARGS])
+AC_SUBST([ERROR_VALAFLAGS])
 AC_SUBST([ERROR_CFLAGS])
 
 # -----------------------------------------------------------

@@ -54,14 +54,6 @@ public class Folks.Backends.Kf.BackendFactory : Object
    */
   public BackendFactory (BackendStore backend_store)
     {
-      try
-        {
-          backend_store.add_backend (new Backend ());
-        }
-      catch (GLib.Error e)
-        {
-          warning ("Failed to add key file backend to libfolks: %s",
-              e.message);
-        }
+      backend_store.add_backend (new Backend ());
     }
 }
