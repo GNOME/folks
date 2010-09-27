@@ -35,7 +35,6 @@ folks_backend_telepathy_deps = \
 libfolks_backend_telepathy_la_CFLAGS = \
 	$(GIO_CFLAGS) \
 	$(GLIB_CFLAGS) \
-	$(DBUS_GLIB_CFLAGS) \
 	$(GEE_CFLAGS) \
 	$(TP_GLIB_CFLAGS) \
 	$(NULL)
@@ -43,7 +42,6 @@ libfolks_backend_telepathy_la_CFLAGS = \
 libfolks_backend_telepathy_la_LIBADD = \
 	$(GIO_LIBS) \
 	$(GLIB_LIBS) \
-	$(DBUS_GLIB_LIBS) \
 	$(GEE_LIBS) \
 	$(top_builddir)/folks/libfolks.la \
 	$(TP_GLIB_LIBS) \
