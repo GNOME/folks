@@ -64,7 +64,7 @@ folks_HEADERS = folks.h
 folks.h $(libfolks_la_SOURCES): folks.vala.stamp
 
 folks.vapi folks.vala.stamp: $(folks_valasources)
-	$(VALA_V)$(VALAC) $(VALACFLAGS) -C -H folks.h \
+	$(VALA_V)$(VALAC) $(VALAFLAGS) -C -H folks.h \
 		--library folks --vapidir=. $(addprefix --pkg ,$(folks_deps)) \
 		$(folks_valasources)
 	touch $@

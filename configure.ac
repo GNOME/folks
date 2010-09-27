@@ -77,9 +77,9 @@ VALA_REQUIRED=0.10.0
 AM_PROG_VALAC([$VALA_REQUIRED])
 
 # require GLib >= 2.24 so GLib.Array, etc. reffing is handled automatically
-VALACFLAGS="$VALACFLAGS --target-glib=2.24"
-AC_SUBST([VALACFLAGS])
+VALAFLAGS="$VALAFLAGS --target-glib=2.24"
 AC_SUBST([VALAFLAGS])
+AC_SUBST([VAPIGENFLAGS])
 AC_SUBST([VAPIDIR])
 
 AC_PATH_PROG([VAPIGEN], [vapigen], [vapigen])

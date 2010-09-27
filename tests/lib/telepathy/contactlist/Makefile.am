@@ -4,7 +4,7 @@
 # copy-and-modify (moving it to a better namespace), or make changes in the
 # copy in telepathy-glib first.
 
-VALAFLAGS += \
+VAPIGENFLAGS += \
 	--vapidir=. \
 	--pkg gobject-2.0 \
 	--pkg gio-2.0 \
@@ -58,7 +58,7 @@ tp_test_contactlist_gir_NAMESPACE = TpTest
 INTROSPECTION_GIRS += tp-test-contactlist.gir
 
 tp-test-contactlist.vapi: tp-test-contactlist.gir
-	$(AM_V_GEN)$(VAPIGEN) $(VALAFLAGS) --library tp-test-contactlist \
+	$(AM_V_GEN)$(VAPIGEN) $(VAPIGENFLAGS) --library tp-test-contactlist \
 		tp-test-contactlist.gir
 
 BUILT_SOURCES = \

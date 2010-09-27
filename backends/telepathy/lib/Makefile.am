@@ -9,6 +9,10 @@ VALAFLAGS += \
 	--vapidir=. \
 	--vapidir=$(top_srcdir)/folks
 
+VAPIGENFLAGS += \
+	--vapidir=. \
+	--vapidir=$(top_srcdir)/folks
+
 noinst_LTLIBRARIES = libtp-lowlevel.la
 folks_telepathydir = $(libdir)
 folks_telepathy_LTLIBRARIES = libfolks-telepathy.la
@@ -65,7 +69,8 @@ INTROSPECTION_GIRS += tp-lowlevel.gir
 CLEANFILES += $(gir_DATA) $(typelib_DATA)
 
 tp-lowlevel.vapi: tp-lowlevel.gir
-	$(AM_V_GEN)$(VAPIGEN) $(VALAFLAGS) --library tp-lowlevel \
+	$(AM_V_GEN)$(VAPIGEN) $(VAPIGENFLAGS) \
+		--library tp-lowlevel \
 		--pkg gio-2.0 \
 		--pkg telepathy-glib \
 		tp-lowlevel.gir
@@ -139,7 +144,7 @@ folks_telepathy_vapi_deps = \
 	$(NULL)
 
 folks-telepathy.vapi folks-telepathy.vala.stamp: $(folks_telepathy_vapi_deps)
-	$(VALA_V)$(VALAC) $(VALACFLAGS) $(VALAFLAGS) -H folks-telepathy.h -C \
+	$(VALA_V)$(VALAC) $(VALAFLAGS) -H folks-telepathy.h -C \
 		--library folks-telepathy \
 		$(addprefix --pkg ,$(folks_telepathy_deps)) \
 		$(addprefix $(srcdir)/,$(folks_telepathy_valasources))
