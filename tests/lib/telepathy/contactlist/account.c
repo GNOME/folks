@@ -154,7 +154,7 @@ tp_test_account_get_property (GObject *object,
 static void
 tp_test_account_set_property (GObject *object,
               guint property_id,
-              GValue *value,
+              const GValue *value,
               GParamSpec *spec)
 {
   TpTestAccountPrivate *priv = TP_TEST_ACCOUNT (object)->priv;

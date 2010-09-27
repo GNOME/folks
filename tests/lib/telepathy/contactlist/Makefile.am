@@ -30,7 +30,10 @@ libtp_test_contactlist_la_SOURCES = \
         contact-list-manager.h \
 	$(NULL)
 
-libtp_test_contactlist_la_CFLAGS = $(TP_GLIB_CFLAGS)
+libtp_test_contactlist_la_CFLAGS = \
+	$(ERROR_CFLAGS) \
+	$(TP_GLIB_CFLAGS) \
+	$(NULL)
 libtp_test_contactlist_la_LIBADD = $(TP_GLIB_LIBS)
 
 _gen/tp_test_contact_list.manager _gen/param-spec-struct.h: \
