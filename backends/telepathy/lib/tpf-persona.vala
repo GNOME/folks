@@ -213,7 +213,7 @@ public class Tpf.Persona : Folks.Persona,
         throw new Tpf.PersonaError.INVALID_ARGUMENT ("contact has an " +
             "invalid ID");
 
-      unowned Connection connection = contact.get_connection ();
+      unowned Connection connection = contact.connection;
       var account = account_for_connection (connection);
       string uid = this.build_uid ("telepathy", account.get_protocol (), id);
 
@@ -304,7 +304,7 @@ public class Tpf.Persona : Folks.Persona,
       accounts.foreach ((l) =>
         {
           unowned Account account = (Account) l;
-          if (account.get_connection () == conn)
+          if (account.connection == conn)
             {
               account_found = account;
               return;
@@ -355,7 +355,7 @@ public class Tpf.Persona : Folks.Persona,
 
   private void contact_notify_avatar ()
     {
-      var file = this.contact.get_avatar_file ();
+      var file = this.contact.avatar_file;
       if (this.avatar != file)
         this.avatar = file;
     }

@@ -393,7 +393,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       else if (new_status != TelepathyGLib.ConnectionStatus.CONNECTED)
         return;
 
-      var conn = this.account.get_connection ();
+      var conn = this.account.connection;
       conn.notify["connection-ready"].connect (this.connection_ready_cb);
 
       /* Deal with the case where the connection is already ready
@@ -921,7 +921,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
         {
           /* the changes queued above will be resolve in the NewChannels handler
            */
-          this.ll.connection_create_group_async (this.account.get_connection (),
+          this.ll.connection_create_group_async (this.account.connection,
               group);
         }
       else
