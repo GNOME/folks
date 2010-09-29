@@ -121,8 +121,9 @@ public class Folks.Individual : Object,
   /**
    * Whether the Individual is the user.
    *
-   * Iff the Individual represents the user – the person who owns the account in
-   * the backend for each {@link Persona} in the Individual – this is `true`.
+   * Iff the Individual represents the user – the person who owns the
+   * account in the backend for each {@link Persona} in the Individual –
+   * this is `true`.
    *
    * It is //not// guaranteed that every {@link Persona} in the Individual has
    * its {@link Persona.is_user} set to the same value as the Individual. For
