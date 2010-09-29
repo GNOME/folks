@@ -923,7 +923,7 @@ public class Folks.Individual : Object,
       if (this._persona_set.size < 1)
         {
           this.removed (replacement_individual);
-            return;
+          return;
         }
 
       /* TODO: Base this upon our ID in permanent storage, once we have that. */
