@@ -38,6 +38,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
   private static ContactFeature[] contact_features =
       {
         ALIAS,
+        CAPABILITIES,
         PRESENCE
       };
 
