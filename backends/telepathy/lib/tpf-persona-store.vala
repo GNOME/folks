@@ -35,6 +35,11 @@ using Folks;
 public class Tpf.PersonaStore : Folks.PersonaStore
 {
   private string[] undisplayed_groups = { "publish", "stored", "subscribe" };
+  private static ContactFeature[] contact_features =
+      {
+        ALIAS,
+        PRESENCE
+      };
 
   private HashTable<string, Persona> _personas;
   /* universal, contact owner handles (not channel-specific) */
@@ -436,14 +441,6 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       if (this.self_contact != null)
         this.ignore_by_handle (this.self_contact.handle, null, null, 0);
 
-      /* Add the new self persona */
-      ContactFeature[] features =
-        {
-          ALIAS,
-          /* XXX: also avatar token? */
-          PRESENCE
-        };
-
       if (c.self_handle == 0)
         return;
 
@@ -452,7 +449,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       /* We have to do it this way instead of using
        * TpLowleve.get_contacts_by_handle_async() as we're in a notification
        * callback */
-      c.get_contacts_by_handle (contact_handles, (uint[]) features,
+      c.get_contacts_by_handle (contact_handles, (uint[]) contact_features,
           (conn, contacts, failed, error, weak_object) =>
             {
               if (error != null)
@@ -981,13 +978,6 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       Channel channel,
       Array<uint> channel_handles)
     {
-      ContactFeature[] features =
-        {
-          ALIAS,
-          /* XXX: also avatar token? */
-          PRESENCE
-        };
-
       uint[] contact_handles = {};
       for (var i = 0; i < channel_handles.length; i++)
         {
@@ -1005,7 +995,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
 
           GLib.List<TelepathyGLib.Contact> contacts =
               yield this.ll.connection_get_contacts_by_handle_async (
-                  this.conn, contact_handles, (uint[]) features);
+                  this.conn, contact_handles, (uint[]) contact_features);
 
           if (contacts == null || contacts.length () < 1)
             return;
@@ -1032,18 +1022,11 @@ public class Tpf.PersonaStore : Folks.PersonaStore
   private async GLib.List<Tpf.Persona>? create_personas_from_contact_ids (
       string[] contact_ids) throws GLib.Error
     {
-      ContactFeature[] features =
-        {
-          ALIAS,
-          /* XXX: also avatar token? */
-          PRESENCE
-        };
-
       if (contact_ids.length > 0)
         {
           GLib.List<TelepathyGLib.Contact> contacts =
               yield this.ll.connection_get_contacts_by_id_async (
-                  this.conn, contact_ids, (uint[]) features);
+                  this.conn, contact_ids, (uint[]) contact_features);
 
           GLib.List<Persona> personas = new GLib.List<Persona> ();
           uint err_count = 0;
