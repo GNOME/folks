@@ -14,6 +14,7 @@ Major changes:
 * Added support for a “self” individual
 * Added support for generating and installing Devhelp format documentation
 * BackendStore.load_backends and the prepare() functions are now idempotent
+* Tpf.Persona.contact is now guaranteed to have its capabilities fetched
 
 API changes:
 * Added IMable.normalise_im_address()
