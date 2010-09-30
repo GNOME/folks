@@ -41,6 +41,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
         AVATAR_DATA,
         AVATAR_TOKEN,
         CAPABILITIES,
+        CLIENT_TYPES,
         PRESENCE
       };
 
