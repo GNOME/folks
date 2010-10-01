@@ -869,7 +869,8 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       ContactFeature[] features =
         {
           ALIAS,
-          /* XXX: also avatar token? */
+          AVATAR_DATA,
+          AVATAR_TOKEN,
           PRESENCE
         };
 
@@ -920,7 +921,8 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       ContactFeature[] features =
         {
           ALIAS,
-          /* XXX: also avatar token? */
+          AVATAR_DATA,
+          AVATAR_TOKEN,
           PRESENCE
         };
 
