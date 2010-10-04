@@ -65,6 +65,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
   private AccountManager account_manager;
   private Logger logger;
   private Contact self_contact;
+  private MaybeBool _can_add_personas = MaybeBool.UNSET;
   private bool _is_prepared = false;
 
   internal signal void group_members_changed (string group,
@@ -100,6 +101,18 @@ public class Tpf.PersonaStore : Folks.PersonaStore
    * See {@link Folks.PersonaStore.id}.
    */
   public override string id { get; private set; }
+
+  /**
+   * Whether this PersonaStore can add {@link Folks.Persona}s.
+   *
+   * See {@link Folks.PersonaStore.can_add_personas}.
+   *
+   * @since 0.3.1
+   */
+  public override MaybeBool can_add_personas
+    {
+      get { return this._can_add_personas; }
+    }
 
   /**
    * Whether this PersonaStore has been prepared.
@@ -570,6 +583,12 @@ public class Tpf.PersonaStore : Folks.PersonaStore
 
               c.group_members_changed_detailed.connect (
                   this.subscribe_channel_group_members_changed_detailed_cb);
+
+              c.group_flags_changed.connect (
+                  this.subscribe_channel_group_flags_changed_cb);
+
+              this.subscribe_channel_group_flags_changed_cb (c,
+                  c.group_get_flags (), 0);
             }
 
           this.standard_channels_unready.unset (name);
@@ -625,6 +644,39 @@ public class Tpf.PersonaStore : Folks.PersonaStore
           this.ignore_by_handle_if_needed (handle, details);
         }
     }
+
+  private void subscribe_channel_group_flags_changed_cb (
+      Channel? channel,
+      uint added,
+      uint removed)
+    {
+      this.update_capability ((ChannelGroupFlags) added,
+          (ChannelGroupFlags) removed, ChannelGroupFlags.CAN_ADD,
+          ref this._can_add_personas, "can-add-personas");
+    }
+
+  private void update_capability (
+      ChannelGroupFlags added,
+      ChannelGroupFlags removed,
+      ChannelGroupFlags tp_flag,
+      ref MaybeBool private_member,
+      string prop_name)
+    {
+      var new_value = private_member;
+
+      if ((added & tp_flag) != 0)
+        new_value = MaybeBool.TRUE;
+
+      if ((removed & tp_flag) != 0)
+        new_value = MaybeBool.FALSE;
+
+      if (new_value != private_member)
+        {
+          private_member = new_value;
+          this.notify_property (prop_name);
+        }
+    }
+
   private void subscribe_channel_group_members_changed_detailed_cb (
       Channel channel,
       /* FIXME: Array<uint> => Array<Handle>; parser bug */

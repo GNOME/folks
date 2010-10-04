@@ -43,11 +43,16 @@ VALAFLAGS += \
 
 # in order from least to most complex
 noinst_PROGRAMS = \
+	persona-store-capabilities \
 	contact-retrieval \
 	contact-properties \
 	$(NULL)
 
 TESTS = $(addprefix test-,$(noinst_PROGRAMS))
+
+persona_store_capabilities_SOURCES = \
+	persona-store-capabilities.vala \
+	$(NULL)
 
 contact_retrieval_SOURCES = \
 	contact-retrieval.vala \

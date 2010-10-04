@@ -54,6 +54,18 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
   public override string id { get; private set; }
 
   /**
+   * Whether this PersonaStore can add {@link Folks.Persona}s.
+   *
+   * See {@link Folks.PersonaStore.can_add_personas}.
+   *
+   * @since 0.3.1
+   */
+  public override MaybeBool can_add_personas
+    {
+      get { return MaybeBool.TRUE; }
+    }
+
+  /**
    * Whether this PersonaStore has been prepared.
    *
    * See {@link Folks.PersonaStore.is_prepared}.

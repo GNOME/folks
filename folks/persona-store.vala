@@ -176,6 +176,13 @@ public abstract class Folks.PersonaStore : Object
   public abstract HashTable<string, Persona> personas { get; }
 
   /**
+   * Whether this {@link PersonaStore} can add {@link Persona}s.
+   *
+   * @since 0.3.1
+   */
+  public abstract MaybeBool can_add_personas { get; default = MaybeBool.UNSET; }
+
+  /**
    * Whether {@link PersonaStore.prepare} has successfully completed for this
    * store.
    *
