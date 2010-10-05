@@ -39,6 +39,7 @@ enum
 {
   PROP_ACCOUNT = 1,
   PROP_SIMULATION_DELAY,
+  PROP_MANAGER,
   N_PROPS
 };
 
@@ -71,6 +72,10 @@ get_property (GObject *object,
     {
     case PROP_ACCOUNT:
       g_value_set_string (value, self->priv->account);
+      break;
+
+    case PROP_MANAGER:
+      g_value_set_object (value, self->priv->list_manager);
       break;
 
     case PROP_SIMULATION_DELAY:
@@ -118,6 +123,14 @@ finalize (GObject *object)
 
   G_OBJECT_CLASS (tp_test_contact_list_connection_parent_class)->finalize (
       object);
+}
+
+TpTestContactListManager *
+tp_test_contact_list_connection_get_manager (TpTestContactListConnection *self)
+{
+  g_return_val_if_fail (TP_TEST_IS_CONTACT_LIST_CONNECTION (self), NULL);
+
+  return self->priv->list_manager;
 }
 
 static gchar *
@@ -441,6 +454,12 @@ tp_test_contact_list_connection_class_init (
       G_PARAM_CONSTRUCT_ONLY | G_PARAM_READWRITE |
       G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK | G_PARAM_STATIC_BLURB);
   g_object_class_install_property (object_class, PROP_ACCOUNT, param_spec);
+
+  param_spec = g_param_spec_object ("manager", "TpTestContactListManager",
+      "TpTestContactListManager object that owns this channel",
+      TP_TEST_TYPE_CONTACT_LIST_MANAGER,
+      G_PARAM_READABLE | G_PARAM_STATIC_STRINGS);
+  g_object_class_install_property (object_class, PROP_MANAGER, param_spec);
 
   param_spec = g_param_spec_uint ("simulation-delay", "Simulation delay",
       "Delay between simulated network events",

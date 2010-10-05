@@ -17,6 +17,8 @@
 #include <telepathy-glib/contacts-mixin.h>
 #include <telepathy-glib/presence-mixin.h>
 
+#include "contact-list-manager.h"
+
 G_BEGIN_DECLS
 
 typedef struct _TpTestContactListConnection TpTestContactListConnection;
@@ -56,6 +58,9 @@ GType tp_test_contact_list_connection_get_type (void);
 #define TP_TEST_CONTACT_LIST_CONNECTION_GET_CLASS(obj) \
   (G_TYPE_INSTANCE_GET_CLASS ((obj), TP_TEST_TYPE_CONTACT_LIST_CONNECTION, \
                               TpTestContactListConnectionClass))
+
+TpTestContactListManager *tp_test_contact_list_connection_get_manager (
+    TpTestContactListConnection *self);
 
 gchar *tp_test_contact_list_normalize_contact (TpHandleRepoIface *repo,
     const gchar *id, gpointer context, GError **error);
