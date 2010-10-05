@@ -34,38 +34,56 @@ VALAFLAGS += \
 	--pkg tp-test-contactlist \
 	$(NULL)
 
+# in order from least to most complex
 TESTS = \
 	test-contact-retrieval \
+	test-contact-properties \
 	$(NULL)
 
 noinst_PROGRAMS = \
 	contact-retrieval \
+	contact-properties \
 	$(NULL)
 
+# FIXME: make this the general LDADD if possible
+common_ldadd = \
+	$(top_builddir)/tests/lib/telepathy/contactlist/libtp-test-contactlist.la \
+	$(top_builddir)/backends/telepathy/lib/libfolks-telepathy.la \
+	$(top_builddir)/folks/libfolks.la
+
+# FIXME: turn test-case into a library that the tests use or push it into the
+# existing library
 contact_retrieval_SOURCES = \
 	test-case.vala \
 	contact-retrieval.vala \
 	$(NULL)
 
-contact_retrieval_LDADD = \
-	$(top_builddir)/tests/lib/telepathy/contactlist/libtp-test-contactlist.la \
-	$(top_builddir)/backends/telepathy/lib/libfolks-telepathy.la \
-	$(top_builddir)/folks/libfolks.la
+contact_retrieval_LDADD = $(common_ldadd)
+
+contact_properties_SOURCES = \
+	test-case.vala \
+	contact-properties.vala \
+	$(NULL)
+
+contact_properties_LDADD = $(common_ldadd)
 
 CLEANFILES = \
 	$(TESTS) \
 	$(NULL)
 
-test-contact-retrieval: contact-retrieval
+test-%: %
 	{ echo "#!/bin/sh" && \
 	echo -n "$(RUN_WITH_PRIVATE_BUS) " && \
 	echo "--config-file=$(top_builddir)/tests/lib/telepathy/contactlist/session.conf -- ./$<"; } \
 	> $@
 	chmod +x $@
 
+#FIXME: simplify if possible
 GITIGNOREFILES = \
 	$(contact_retrieval_SOURCES:.vala=.c) \
 	contact_retrieval_vala.stamp \
+	$(contact_properties_SOURCES:.vala=.c) \
+	contact_properties_vala.stamp \
 	$(NULL)
 
 -include $(top_srcdir)/git.mk

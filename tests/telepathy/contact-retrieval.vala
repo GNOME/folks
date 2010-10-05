@@ -36,8 +36,6 @@ public class ContactRetrievalTests : Folks.TestCase
 
       this.add_test ("aggregator", this.test_aggregator);
       this.add_test ("aggregator:add", this.test_aggregator_add);
-      this.add_test ("individual properties",
-          this.test_individual_properties);
     }
 
   public override void set_up ()
@@ -385,61 +383,6 @@ public class ContactRetrievalTests : Folks.TestCase
               e2.message);
           assert_not_reached ();
         }
-    }
-
-  public void test_individual_properties ()
-    {
-      var main_loop = new GLib.MainLoop (null, false);
-
-      /* Ignore the error caused by not running the logger */
-      Test.log_set_fatal_handler ((d, l, m) =>
-        {
-          return !m.has_suffix ("couldn't get list of favourite contacts: " +
-              "The name org.freedesktop.Telepathy.Logger was not provided by " +
-              "any .service files");
-        });
-
-      /* Set up the aggregator */
-      var aggregator = new IndividualAggregator ();
-      aggregator.individuals_changed.connect ((added, removed, m, a, r) =>
-        {
-          foreach (Individual i in added)
-            {
-              /* We only check one */
-              if (i.id != (this.individual_id_prefix + "olivier@example.com"))
-                {
-                  continue;
-                }
-
-              /* Check properties */
-              assert (i.alias == "Olivier");
-              assert (i.presence_message == "");
-              assert (i.presence_type == PresenceType.AWAY);
-              assert (i.is_online () == true);
-
-              /* Check groups */
-              assert (i.groups.size () == 2);
-              assert (i.groups.lookup ("Montreal") == true);
-              assert (i.groups.lookup ("Francophones") == true);
-            }
-
-          assert (removed == null);
-        });
-      aggregator.prepare ();
-
-      /* Kill the main loop after a few seconds. If there are still individuals
-       * in the set of expected individuals, the aggregator has either failed
-       * or been too slow (which we can consider to be failure). */
-      Timeout.add_seconds (3, () =>
-        {
-          main_loop.quit ();
-          return false;
-        });
-
-      main_loop.run ();
-
-      /* necessary to reset the aggregator for the next test */
-      aggregator = null;
     }
 }
 
