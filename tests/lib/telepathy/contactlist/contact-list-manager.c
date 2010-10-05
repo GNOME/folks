@@ -52,6 +52,7 @@ tp_test_contact_list_presence_statuses (void)
 }
 
 typedef struct {
+    gchar *id;
     gchar *alias;
 
     guint subscribe:1;
@@ -77,6 +78,7 @@ tp_test_contact_details_destroy (gpointer p)
   if (d->tags != NULL)
     tp_handle_set_destroy (d->tags);
 
+  g_free (d->id);
   g_free (d->alias);
   g_slice_free (TpTestContactDetails, d);
 }
@@ -377,6 +379,7 @@ receive_contact_lists (gpointer p)
 {
   TpTestContactListManager *self = p;
   TpHandle handle, cambridge, montreal, francophones;
+  const gchar *id;
   TpTestContactDetails *d;
   TpIntSet *set, *cam_set, *mtl_set, *fr_set;
   TpIntSetFastIter iter;
@@ -418,11 +421,13 @@ receive_contact_lists (gpointer p)
   mtl_set = tp_intset_new ();
   fr_set = tp_intset_new ();
 
-  handle = tp_handle_ensure (self->priv->contact_repo, "sjoerd@example.com",
-      NULL, NULL);
+  id = "sjoerd@example.com";
+  handle = tp_handle_ensure (self->priv->contact_repo, id, NULL, NULL);
   tp_intset_add (set, handle);
   tp_intset_add (cam_set, handle);
   d = ensure_contact (self, handle, NULL);
+  g_free (d->id);
+  d->id = g_strdup (id);
   g_free (d->alias);
   d->alias = g_strdup ("Sjoerd");
   d->subscribe = TRUE;
@@ -431,12 +436,14 @@ receive_contact_lists (gpointer p)
   tp_handle_set_add (d->tags, cambridge);
   tp_handle_unref (self->priv->contact_repo, handle);
 
-  handle = tp_handle_ensure (self->priv->contact_repo, "guillaume@example.com",
-      NULL, NULL);
+  id = "guillaume@example.com";
+  handle = tp_handle_ensure (self->priv->contact_repo, id, NULL, NULL);
   tp_intset_add (set, handle);
   tp_intset_add (cam_set, handle);
   tp_intset_add (fr_set, handle);
   d = ensure_contact (self, handle, NULL);
+  g_free (d->id);
+  d->id = g_strdup (id);
   g_free (d->alias);
   d->alias = g_strdup ("Guillaume");
   d->subscribe = TRUE;
@@ -446,12 +453,14 @@ receive_contact_lists (gpointer p)
   tp_handle_set_add (d->tags, francophones);
   tp_handle_unref (self->priv->contact_repo, handle);
 
-  handle = tp_handle_ensure (self->priv->contact_repo, "olivier@example.com",
-      NULL, NULL);
+  id = "olivier@example.com";
+  handle = tp_handle_ensure (self->priv->contact_repo, id, NULL, NULL);
   tp_intset_add (set, handle);
   tp_intset_add (mtl_set, handle);
   tp_intset_add (fr_set, handle);
   d = ensure_contact (self, handle, NULL);
+  g_free (d->id);
+  d->id = g_strdup (id);
   g_free (d->alias);
   d->alias = g_strdup ("Olivier");
   d->subscribe = TRUE;
@@ -461,10 +470,12 @@ receive_contact_lists (gpointer p)
   tp_handle_set_add (d->tags, francophones);
   tp_handle_unref (self->priv->contact_repo, handle);
 
-  handle = tp_handle_ensure (self->priv->contact_repo, "travis@example.com",
-      NULL, NULL);
+  id = "travis@example.com";
+  handle = tp_handle_ensure (self->priv->contact_repo, id, NULL, NULL);
   tp_intset_add (set, handle);
   d = ensure_contact (self, handle, NULL);
+  g_free (d->id);
+  d->id = g_strdup (id);
   g_free (d->alias);
   d->alias = g_strdup ("Travis");
   d->subscribe = TRUE;
@@ -496,12 +507,14 @@ receive_contact_lists (gpointer p)
 
   set = tp_intset_new ();
 
-  handle = tp_handle_ensure (self->priv->contact_repo, "geraldine@example.com",
-      NULL, NULL);
+  id = "geraldine@example.com";
+  handle = tp_handle_ensure (self->priv->contact_repo, id, NULL, NULL);
   tp_intset_add (set, handle);
   tp_intset_add (cam_set, handle);
   tp_intset_add (fr_set, handle);
   d = ensure_contact (self, handle, NULL);
+  g_free (d->id);
+  d->id = g_strdup (id);
   g_free (d->alias);
   d->alias = g_strdup ("Géraldine");
   d->subscribe_requested = TRUE;
@@ -510,11 +523,13 @@ receive_contact_lists (gpointer p)
   tp_handle_set_add (d->tags, francophones);
   tp_handle_unref (self->priv->contact_repo, handle);
 
-  handle = tp_handle_ensure (self->priv->contact_repo, "helen@example.com",
-      NULL, NULL);
+  id = "helen@example.com";
+  handle = tp_handle_ensure (self->priv->contact_repo, id, NULL, NULL);
   tp_intset_add (set, handle);
   tp_intset_add (cam_set, handle);
   d = ensure_contact (self, handle, NULL);
+  g_free (d->id);
+  d->id = g_strdup (id);
   g_free (d->alias);
   d->alias = g_strdup ("Helen");
   d->subscribe_requested = TRUE;
@@ -542,9 +557,11 @@ receive_contact_lists (gpointer p)
   /* Receive a couple of authorization requests too. These people are
    * local-pending in publish */
 
-  handle = tp_handle_ensure (self->priv->contact_repo, "wim@example.com",
-      NULL, NULL);
+  id = "wim@example.com";
+  handle = tp_handle_ensure (self->priv->contact_repo, id, NULL, NULL);
   d = ensure_contact (self, handle, NULL);
+  g_free (d->id);
+  d->id = g_strdup (id);
   g_free (d->alias);
   d->alias = g_strdup ("Wim");
   d->publish_requested = TRUE;
@@ -562,9 +579,11 @@ receive_contact_lists (gpointer p)
   g_signal_emit (self, signals[ALIAS_UPDATED], 0, handle);
   g_signal_emit (self, signals[PRESENCE_UPDATED], 0, handle);
 
-  handle = tp_handle_ensure (self->priv->contact_repo, "christian@example.com",
-      NULL, NULL);
+  id = "christian@example.com";
+  handle = tp_handle_ensure (self->priv->contact_repo, id, NULL, NULL);
   d = ensure_contact (self, handle, NULL);
+  g_free (d->id);
+  d->id = g_strdup (id);
   g_free (d->alias);
   d->alias = g_strdup ("Christian");
   d->publish_requested = TRUE;
