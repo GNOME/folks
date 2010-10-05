@@ -1036,6 +1036,8 @@ send_updated_roster (TpTestContactListManager *self,
     }
   else
     {
+      TpHandle handle;
+
       g_message ("Transmitting new state of contact %s to server", identifier);
       g_message ("\talias = %s", d->alias);
       g_message ("\tcan see our presence = %s",
@@ -1063,6 +1065,15 @@ send_updated_roster (TpTestContactListManager *self,
                   tp_handle_inspect (self->priv->group_repo, member));
             }
         }
+
+      handle = tp_handle_ensure (self->priv->contact_repo, d->id, NULL, NULL);
+      /* XXX: ideally, we'd only do this if thse specific details really
+       * changed, but it's not terribly unrealistic to think some servers or CMs
+       * would make this mistake as well. */
+      g_signal_emit (self, signals[ALIAS_UPDATED], 0, handle);
+      g_signal_emit (self, signals[PRESENCE_UPDATED], 0, handle);
+
+      tp_handle_unref (self->priv->contact_repo, handle);
     }
 }
 
