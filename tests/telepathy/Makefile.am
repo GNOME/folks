@@ -10,6 +10,9 @@ AM_CPPFLAGS = \
 	$(NULL)
 
 LDADD = \
+	$(top_builddir)/tests/lib/telepathy/contactlist/libtp-test-contactlist.la \
+	$(top_builddir)/backends/telepathy/lib/libfolks-telepathy.la \
+	$(top_builddir)/folks/libfolks.la
 	$(GLIB_LIBS) \
 	$(GEE_LIBS) \
 	$(TP_GLIB_LIBS) \
@@ -45,12 +48,6 @@ noinst_PROGRAMS = \
 	contact-properties \
 	$(NULL)
 
-# FIXME: make this the general LDADD if possible
-common_ldadd = \
-	$(top_builddir)/tests/lib/telepathy/contactlist/libtp-test-contactlist.la \
-	$(top_builddir)/backends/telepathy/lib/libfolks-telepathy.la \
-	$(top_builddir)/folks/libfolks.la
-
 # FIXME: turn test-case into a library that the tests use or push it into the
 # existing library
 contact_retrieval_SOURCES = \
@@ -58,14 +55,10 @@ contact_retrieval_SOURCES = \
 	contact-retrieval.vala \
 	$(NULL)
 
-contact_retrieval_LDADD = $(common_ldadd)
-
 contact_properties_SOURCES = \
 	test-case.vala \
 	contact-properties.vala \
 	$(NULL)
-
-contact_properties_LDADD = $(common_ldadd)
 
 CLEANFILES = \
 	$(TESTS) \
