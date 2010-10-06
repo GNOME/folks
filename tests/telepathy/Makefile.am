@@ -5,11 +5,13 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir)/folks \
 	-I$(top_srcdir)/backends/telepathy \
 	-I$(top_srcdir)/backends/telepathy/lib \
+	-I$(top_srcdir)/tests/lib \
 	-I$(top_srcdir)/tests/lib/telepathy/contactlist \
 	-include $(CONFIG_HEADER) \
 	$(NULL)
 
 LDADD = \
+	$(top_builddir)/tests/lib/libfolks-test.la \
 	$(top_builddir)/tests/lib/telepathy/contactlist/libtp-test-contactlist.la \
 	$(top_builddir)/backends/telepathy/lib/libfolks-telepathy.la \
 	$(top_builddir)/folks/libfolks.la
@@ -23,6 +25,7 @@ RUN_WITH_PRIVATE_BUS = $(top_srcdir)/tests/tools/with-session-bus.sh
 
 VALAFLAGS += \
 	--vapidir=$(top_builddir)/tests/lib/telepathy/contactlist/ \
+	--vapidir=$(top_builddir)/tests/lib/ \
 	--vapidir=. \
 	--vapidir=$(top_srcdir)/folks \
 	--vapidir=$(top_srcdir)/backends/telepathy/lib \
@@ -34,6 +37,7 @@ VALAFLAGS += \
 	--pkg telepathy-glib \
 	--pkg folks \
 	--pkg folks-telepathy \
+	--pkg folks-test \
 	--pkg tp-test-contactlist \
 	$(NULL)
 
@@ -48,15 +52,11 @@ noinst_PROGRAMS = \
 	contact-properties \
 	$(NULL)
 
-# FIXME: turn test-case into a library that the tests use or push it into the
-# existing library
 contact_retrieval_SOURCES = \
-	test-case.vala \
 	contact-retrieval.vala \
 	$(NULL)
 
 contact_properties_SOURCES = \
-	test-case.vala \
 	contact-properties.vala \
 	$(NULL)
 
