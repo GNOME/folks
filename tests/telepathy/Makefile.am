@@ -61,6 +61,10 @@ contact_properties_SOURCES = \
 	$(NULL)
 
 CLEANFILES = \
+	$(addsuffix .c,$(noinst_PROGRAMS)) \
+	*.stamp \
+	*.pid \
+	*.address \
 	$(TESTS) \
 	$(NULL)
 
@@ -70,13 +74,5 @@ test-%: %
 	echo "--config-file=$(top_builddir)/tests/lib/telepathy/contactlist/session.conf -- ./$<"; } \
 	> $@
 	chmod +x $@
-
-#FIXME: simplify if possible
-GITIGNOREFILES = \
-	$(contact_retrieval_SOURCES:.vala=.c) \
-	contact_retrieval_vala.stamp \
-	$(contact_properties_SOURCES:.vala=.c) \
-	contact_properties_vala.stamp \
-	$(NULL)
 
 -include $(top_srcdir)/git.mk
