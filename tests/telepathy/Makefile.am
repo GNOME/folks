@@ -42,15 +42,12 @@ VALAFLAGS += \
 	$(NULL)
 
 # in order from least to most complex
-TESTS = \
-	test-contact-retrieval \
-	test-contact-properties \
-	$(NULL)
-
 noinst_PROGRAMS = \
 	contact-retrieval \
 	contact-properties \
 	$(NULL)
+
+TESTS = $(addprefix test-,$(noinst_PROGRAMS))
 
 contact_retrieval_SOURCES = \
 	contact-retrieval.vala \
