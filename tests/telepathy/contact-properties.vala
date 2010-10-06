@@ -24,6 +24,8 @@ public class ContactPropertiesTests : Folks.TestCase
           this.test_individual_properties);
       this.add_test ("individual properties:change alias through tp backend",
           this.test_individual_properties_change_alias_through_tp_backend);
+      this.add_test ("individual properties:change alias through test cm",
+          this.test_individual_properties_change_alias_through_test_cm);
     }
 
   public override void set_up ()
@@ -232,6 +234,78 @@ public class ContactPropertiesTests : Folks.TestCase
                * alias notification callback above */
 
               ((Tpf.Persona) persona).alias = new_alias;
+            }
+
+          assert (removed == null);
+        });
+      aggregator.prepare ();
+
+      /* Kill the main loop after a few seconds. If the alias hasn't been
+       * notified, something along the way failed or been too slow (which we can
+       * consider to be failure). */
+      Timeout.add_seconds (3, () =>
+        {
+          main_loop.quit ();
+          return false;
+        });
+
+      main_loop.run ();
+
+      assert (alias_notified);
+
+      /* necessary to reset the aggregator for the next test */
+      aggregator = null;
+    }
+
+  public void test_individual_properties_change_alias_through_test_cm ()
+    {
+      var main_loop = new GLib.MainLoop (null, false);
+      var alias_notified = false;
+
+      /* Ignore the error caused by not running the logger */
+      Test.log_set_fatal_handler ((d, l, m) =>
+        {
+          return !m.has_suffix ("couldn't get list of favourite contacts: " +
+              "The name org.freedesktop.Telepathy.Logger was not provided by " +
+              "any .service files");
+        });
+
+      /* Set up the aggregator */
+      var aggregator = new IndividualAggregator ();
+      aggregator.individuals_changed.connect ((added, removed, m, a, r) =>
+        {
+          var new_alias = "New Alias";
+
+          foreach (Individual i in added)
+            {
+              /* We only check one */
+              if (i.id != (this.individual_id_prefix + "olivier@example.com"))
+                {
+                  continue;
+                }
+
+              /* Check properties */
+              assert (i.alias != new_alias);
+
+              i.notify["alias"].connect ((s, p) =>
+                  {
+                    /* we can't re-use i here due to Vala's implementation */
+                    var ind = (Individual) s;
+
+                    if (ind.alias == new_alias)
+                      alias_notified = true;
+                  });
+
+              /* the contact list this aggregator is based upon has exactly 1
+               * Tpf.Persona per Individual */
+              var persona = i.personas.data;
+              assert (persona is Tpf.Persona);
+
+              /* set the alias through Telepathy and wait for it to hit our
+               * alias notification callback above */
+
+              var handle = (Handle) ((Tpf.Persona) persona).contact.handle;
+              this.conn.manager.set_alias (handle, new_alias);
             }
 
           assert (removed == null);

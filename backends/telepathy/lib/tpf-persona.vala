@@ -230,6 +230,15 @@ public class Tpf.Persona : Folks.Persona,
               linkable_properties: linkable_properties,
               is_user: contact.handle == connection.self_handle);
 
+      contact.notify["alias"].connect ((s, p) =>
+          {
+            if (this._alias != contact.alias)
+              {
+                this._alias = contact.alias;
+                this.notify_property ("alias");
+              }
+          });
+
       debug ("Creating new Tpf.Persona '%s' for service-specific UID '%s': %p",
           uid, id, this);
       this.is_constructed = true;
