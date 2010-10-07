@@ -3,7 +3,7 @@ Overview of changes from libfolks 0.3.0 to libfolks 0.3.1
 
 Bugs fixed:
 * Bug 630431 — notify::alias is never emitted
-* Tpf.Persona.contact is now guaranteed to have its client type fetched
+* Tpf.Persona.contact is now guaranteed to have the client type feature
 
 Overview of changes from libfolks 0.1.17 to libfolks 0.3.0
 ==========================================================
@@ -21,7 +21,9 @@ Major changes:
 * Added support for a “self” individual
 * Added support for generating and installing Devhelp format documentation
 * BackendStore.load_backends and the prepare() functions are now idempotent
-* Tpf.Persona.contact is now guaranteed to have its capabilities fetched
+* Tpf.Persona.contact is now guaranteed to have the avatar token and data
+  features
+* Tpf.Persona.contact is now guaranteed to have the capabilities feature
 
 API changes:
 * Added IMable.normalise_im_address()
