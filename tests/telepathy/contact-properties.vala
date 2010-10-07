@@ -43,7 +43,7 @@ public class ContactPropertiesTests : Folks.TestCase
 
       /* Set up a contact list connection */
       this.conn = new TpTest.ContactListConnection ("me@example.com",
-          "protocol");
+          "protocol", 0, 0);
 
       try
         {

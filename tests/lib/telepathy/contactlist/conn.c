@@ -40,6 +40,8 @@ enum
   PROP_ACCOUNT = 1,
   PROP_SIMULATION_DELAY,
   PROP_MANAGER,
+  PROP_PUBLISH_FLAGS,
+  PROP_SUBSCRIBE_FLAGS,
   N_PROPS
 };
 
@@ -49,7 +51,14 @@ struct _TpTestContactListConnectionPrivate
   guint simulation_delay;
   TpTestContactListManager *list_manager;
   gboolean away;
+  TpChannelGroupFlags publish_flags;
+  TpChannelGroupFlags subscribe_flags;
 };
+
+static TpChannelGroupFlags default_group_flags =
+    TP_CHANNEL_GROUP_FLAG_CAN_ADD |
+    TP_CHANNEL_GROUP_FLAG_CAN_REMOVE |
+    TP_CHANNEL_GROUP_FLAG_MEMBERS_CHANGED_DETAILED;
 
 static void
 tp_test_contact_list_connection_init (TpTestContactListConnection *self)
@@ -78,6 +87,14 @@ get_property (GObject *object,
       g_value_set_object (value, self->priv->list_manager);
       break;
 
+    case PROP_PUBLISH_FLAGS:
+      g_value_set_uint (value, self->priv->publish_flags);
+      break;
+
+    case PROP_SUBSCRIBE_FLAGS:
+      g_value_set_uint (value, self->priv->subscribe_flags);
+      break;
+
     case PROP_SIMULATION_DELAY:
       g_value_set_uint (value, self->priv->simulation_delay);
       break;
@@ -101,6 +118,14 @@ set_property (GObject *object,
     case PROP_ACCOUNT:
       g_free (self->priv->account);
       self->priv->account = g_value_dup_string (value);
+      break;
+
+    case PROP_PUBLISH_FLAGS:
+      self->priv->publish_flags = g_value_get_uint (value);
+      break;
+
+    case PROP_SUBSCRIBE_FLAGS:
+      self->priv->subscribe_flags = g_value_get_uint (value);
       break;
 
     case PROP_SIMULATION_DELAY:
@@ -461,6 +486,20 @@ tp_test_contact_list_connection_class_init (
       G_PARAM_READABLE | G_PARAM_STATIC_STRINGS);
   g_object_class_install_property (object_class, PROP_MANAGER, param_spec);
 
+  param_spec = g_param_spec_uint ("publish-flags", "publish channel flags",
+      "'publish' channel group capabilities flags",
+      0, ~0, default_group_flags,
+      G_PARAM_CONSTRUCT_ONLY | G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS);
+  g_object_class_install_property (object_class, PROP_PUBLISH_FLAGS,
+      param_spec);
+
+  param_spec = g_param_spec_uint ("subscribe-flags", "subscribe channel flags",
+      "'subscribe' channel group capabilities flags",
+      0, ~0, default_group_flags,
+      G_PARAM_CONSTRUCT_ONLY | G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS);
+  g_object_class_install_property (object_class, PROP_SUBSCRIBE_FLAGS,
+      param_spec);
+
   param_spec = g_param_spec_uint ("simulation-delay", "Simulation delay",
       "Delay between simulated network events",
       0, G_MAXUINT32, 1000,
@@ -626,8 +665,20 @@ init_aliasing (gpointer iface,
 
 TpTestContactListConnection *
 tp_test_contact_list_connection_new (const gchar *account,
-    const gchar *protocol)
+    const gchar *protocol,
+    TpChannelGroupFlags publish_flags,
+    TpChannelGroupFlags subscribe_flags)
 {
-  return g_object_new (TP_TEST_TYPE_CONTACT_LIST_CONNECTION, "account", account,
-      "protocol", protocol, NULL);
+  if (publish_flags == 0)
+    publish_flags = default_group_flags;
+
+  if (subscribe_flags == 0)
+    subscribe_flags = default_group_flags;
+
+  return g_object_new (TP_TEST_TYPE_CONTACT_LIST_CONNECTION,
+      "account", account,
+      "protocol", protocol,
+      "publish-flags", publish_flags,
+      "subscribe-flags", subscribe_flags,
+      NULL);
 }

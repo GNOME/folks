@@ -66,7 +66,8 @@ gchar *tp_test_contact_list_normalize_contact (TpHandleRepoIface *repo,
     const gchar *id, gpointer context, GError **error);
 
 TpTestContactListConnection *tp_test_contact_list_connection_new (
-    const gchar *account, const gchar *protocol);
+    const gchar *account, const gchar *protocol,
+    TpChannelGroupFlags publish_flags, TpChannelGroupFlags subscribe_flags);
 
 G_END_DECLS
 
