@@ -24,6 +24,7 @@ folks_valasources = \
 	persona.vala \
 	persona-store.vala \
 	presence.vala \
+	types.vala \
 	debug.vala \
 	$(NULL)
 
