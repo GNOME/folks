@@ -183,6 +183,17 @@ public abstract class Folks.PersonaStore : Object
   public abstract MaybeBool can_add_personas { get; default = MaybeBool.UNSET; }
 
   /**
+   * Whether this {@link PersonaStore} can remove {@link Persona}s.
+   *
+   * @since 0.3.1
+   */
+  public abstract MaybeBool can_remove_personas
+    {
+      get;
+      default = MaybeBool.UNSET;
+    }
+
+  /**
    * Whether {@link PersonaStore.prepare} has successfully completed for this
    * store.
    *

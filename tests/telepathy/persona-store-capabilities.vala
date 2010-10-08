@@ -14,7 +14,7 @@ public class PersonaStoreCapabilitiesTests : Folks.TestCase
   private MainLoop main_loop;
   private string bus_name;
   private string object_path;
-  private bool got_group_flags;
+  private HashSet<string> group_flags_received;
 
   public PersonaStoreCapabilitiesTests ()
     {
@@ -26,7 +26,7 @@ public class PersonaStoreCapabilitiesTests : Folks.TestCase
 
   public override void set_up ()
     {
-      this.got_group_flags = false;
+      this.group_flags_received = new HashSet<string> (str_hash, str_equal);
 
       this.main_loop = new GLib.MainLoop (null, false);
 
@@ -170,7 +170,8 @@ public class PersonaStoreCapabilitiesTests : Folks.TestCase
 
       main_loop.run ();
 
-      assert (this.got_group_flags);
+      assert (this.group_flags_received.contains ("can-add-personas"));
+      assert (this.group_flags_received.contains ("can-remove-personas"));
     }
 
   private void set_up_persona_store (Folks.PersonaStore store)
@@ -186,6 +187,12 @@ public class PersonaStoreCapabilitiesTests : Folks.TestCase
               else
                 store.notify["can-add-personas"].connect (
                     this.can_add_personas_cb);
+
+              if (store.can_remove_personas != MaybeBool.UNSET)
+                can_remove_personas_cb (store, null);
+              else
+                store.notify["can-remove-personas"].connect (
+                    this.can_remove_personas_cb);
             }
           catch (GLib.Error e)
             {
@@ -204,10 +211,26 @@ public class PersonaStoreCapabilitiesTests : Folks.TestCase
         {
           assert (store.can_add_personas == MaybeBool.TRUE);
 
-          this.got_group_flags = true;
+          this.group_flags_received.add ("can-add-personas");
 
           store.notify["can-add-personas"].disconnect (
               this.can_add_personas_cb);
+        }
+    }
+
+  private void can_remove_personas_cb (GLib.Object s, ParamSpec? p)
+    {
+      assert (s is Tpf.PersonaStore);
+      var store = (Tpf.PersonaStore) s;
+
+      if (store.can_remove_personas != MaybeBool.UNSET)
+        {
+          assert (store.can_remove_personas == MaybeBool.TRUE);
+
+          this.group_flags_received.add ("can-remove-personas");
+
+          store.notify["can-remove-personas"].disconnect (
+              this.can_remove_personas_cb);
         }
     }
 }

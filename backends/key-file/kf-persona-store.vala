@@ -66,6 +66,18 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
     }
 
   /**
+   * Whether this PersonaStore can remove {@link Folks.Persona}s.
+   *
+   * See {@link Folks.PersonaStore.can_remove_personas}.
+   *
+   * @since 0.3.1
+   */
+  public override MaybeBool can_remove_personas
+    {
+      get { return MaybeBool.TRUE; }
+    }
+
+  /**
    * Whether this PersonaStore has been prepared.
    *
    * See {@link Folks.PersonaStore.is_prepared}.

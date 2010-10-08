@@ -66,6 +66,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
   private Logger logger;
   private Contact self_contact;
   private MaybeBool _can_add_personas = MaybeBool.UNSET;
+  private MaybeBool _can_remove_personas = MaybeBool.UNSET;
   private bool _is_prepared = false;
 
   internal signal void group_members_changed (string group,
@@ -112,6 +113,18 @@ public class Tpf.PersonaStore : Folks.PersonaStore
   public override MaybeBool can_add_personas
     {
       get { return this._can_add_personas; }
+    }
+
+  /**
+   * Whether this PersonaStore can remove {@link Folks.Persona}s.
+   *
+   * See {@link Folks.PersonaStore.can_remove_personas}.
+   *
+   * @since 0.3.1
+   */
+  public override MaybeBool can_remove_personas
+    {
+      get { return this._can_remove_personas; }
     }
 
   /**
@@ -653,6 +666,10 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       this.update_capability ((ChannelGroupFlags) added,
           (ChannelGroupFlags) removed, ChannelGroupFlags.CAN_ADD,
           ref this._can_add_personas, "can-add-personas");
+
+      this.update_capability ((ChannelGroupFlags) added,
+          (ChannelGroupFlags) removed, ChannelGroupFlags.CAN_REMOVE,
+          ref this._can_remove_personas, "can-remove-personas");
     }
 
   private void update_capability (
