@@ -1,10 +1,12 @@
 Overview of changes from libfolks 0.3.0 to libfolks 0.3.1
 ==========================================================
 
+Major changes:
+* Tpf.Persona.contact is now guaranteed to have the client type feature
+
 Bugs fixed:
 * Bug 630431 — notify::alias is never emitted
 * Bug 631864 — Crash when empathy disconnects
-* Tpf.Persona.contact is now guaranteed to have the client type feature
 
 Overview of changes from libfolks 0.1.17 to libfolks 0.3.0
 ==========================================================
