@@ -193,6 +193,12 @@ public class PersonaStoreCapabilitiesTests : Folks.TestCase
               else
                 store.notify["can-remove-personas"].connect (
                     this.can_remove_personas_cb);
+
+              if (store.can_alias_personas != MaybeBool.UNSET)
+                can_alias_personas_cb (store, null);
+              else
+                store.notify["can-alias-personas"].connect (
+                    this.can_alias_personas_cb);
             }
           catch (GLib.Error e)
             {
@@ -231,6 +237,22 @@ public class PersonaStoreCapabilitiesTests : Folks.TestCase
 
           store.notify["can-remove-personas"].disconnect (
               this.can_remove_personas_cb);
+        }
+    }
+
+  private void can_alias_personas_cb (GLib.Object s, ParamSpec? p)
+    {
+      assert (s is Tpf.PersonaStore);
+      var store = (Tpf.PersonaStore) s;
+
+      if (store.can_alias_personas != MaybeBool.UNSET)
+        {
+          assert (store.can_alias_personas == MaybeBool.TRUE);
+
+          this.group_flags_received.add ("can-alias-personas");
+
+          store.notify["can-alias-personas"].disconnect (
+              this.can_alias_personas_cb);
         }
     }
 }

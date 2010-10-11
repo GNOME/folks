@@ -116,6 +116,19 @@ folks_tp_lowlevel_connection_open_contact_list_channel_finish (
     GError **error);
 
 void
+folks_tp_lowlevel_connection_get_alias_flags_async (
+    FolksTpLowlevel *tp_lowlevel,
+    TpConnection *conn,
+    GAsyncReadyCallback callback,
+    gpointer user_data);
+
+TpConnectionAliasFlags
+folks_tp_lowlevel_connection_get_alias_flags_finish (
+    FolksTpLowlevel *lowlevel,
+    GAsyncResult *result,
+    GError **error);
+
+void
 folks_tp_lowlevel_connection_get_contacts_by_handle_async (
     FolksTpLowlevel *tp_lowlevel,
     TpConnection *conn,

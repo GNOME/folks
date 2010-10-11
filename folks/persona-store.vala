@@ -183,6 +183,17 @@ public abstract class Folks.PersonaStore : Object
   public abstract MaybeBool can_add_personas { get; default = MaybeBool.UNSET; }
 
   /**
+   * Whether this {@link PersonaStore} can set the alias of {@link Persona}s.
+   *
+   * @since 0.3.1
+   */
+  public abstract MaybeBool can_alias_personas
+    {
+      get;
+      default = MaybeBool.UNSET;
+    }
+
+  /**
    * Whether this {@link PersonaStore} can remove {@link Persona}s.
    *
    * @since 0.3.1

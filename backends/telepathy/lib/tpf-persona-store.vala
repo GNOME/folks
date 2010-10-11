@@ -66,6 +66,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
   private Logger logger;
   private Contact self_contact;
   private MaybeBool _can_add_personas = MaybeBool.UNSET;
+  private MaybeBool _can_alias_personas = MaybeBool.UNSET;
   private MaybeBool _can_remove_personas = MaybeBool.UNSET;
   private bool _is_prepared = false;
 
@@ -113,6 +114,18 @@ public class Tpf.PersonaStore : Folks.PersonaStore
   public override MaybeBool can_add_personas
     {
       get { return this._can_add_personas; }
+    }
+
+  /**
+   * Whether this PersonaStore can set the alias of {@link Folks.Persona}s.
+   *
+   * See {@link Folks.PersonaStore.can_alias_personas}.
+   *
+   * @since 0.3.1
+   */
+  public override MaybeBool can_alias_personas
+    {
+      get { return this._can_alias_personas; }
     }
 
   /**
@@ -448,6 +461,29 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       Connection c = (Connection) s;
       this.ll.connection_connect_to_new_group_channels (c,
           this.new_group_channels_cb);
+
+      this.ll.connection_get_alias_flags_async.begin (c, (s2, res) =>
+          {
+            var new_can_alias = MaybeBool.FALSE;
+            try
+              {
+                var flags = this.ll.connection_get_alias_flags_async.end (res);
+                if ((flags &
+                    ConnectionAliasFlags.CONNECTION_ALIAS_FLAG_USER_SET) > 0)
+                  {
+                    new_can_alias = MaybeBool.TRUE;
+                  }
+              }
+            catch (GLib.Error e)
+              {
+                GLib.warning ("failed to determine whether we can set " +
+                  "aliases on Telepathy account %s: %s",
+                  this.display_name, e.message);
+              }
+
+            this._can_alias_personas = new_can_alias;
+            this.notify_property ("can-alias-personas");
+          });
 
       this.add_standard_channel (c, "publish");
       this.add_standard_channel (c, "stored");
