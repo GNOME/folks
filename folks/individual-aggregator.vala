@@ -523,11 +523,12 @@ public class Folks.IndividualAggregator : Object
            * eliminate them from the list of Personas to relink, below. */
           removed_personas.add (persona);
 
-          /* Find the Individual containing the Persona and mark them for
-           * removal (any other Personas they have which aren't being removed
-           * will be re-linked into other Individuals). */
+          /* Find the Individual containing the Persona (if any) and mark them
+           * for removal (any other Personas they have which aren't being
+           * removed will be re-linked into other Individuals). */
           Individual ind = this.link_map.lookup (persona.iid);
-          removed_individuals.prepend (ind);
+          if (ind != null)
+            removed_individuals.prepend (ind);
           this.link_map.remove (persona.iid);
 
           if (trust_level == PersonaStoreTrust.FULL)
