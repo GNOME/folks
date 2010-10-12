@@ -34,6 +34,15 @@ using Folks;
  */
 public class Tpf.PersonaStore : Folks.PersonaStore
 {
+  /* FIXME: expose the interface strings in the introspected tp-glib bindings
+   */
+  private static string tp_channel_iface = "org.freedesktop.Telepathy.Channel";
+  private static string tp_channel_contact_list_type = tp_channel_iface +
+      ".Type.ContactList";
+  private static string tp_channel_channel_type = tp_channel_iface +
+      ".ChannelType";
+  private static string tp_channel_handle_type = tp_channel_iface +
+      ".TargetHandleType";
   private string[] undisplayed_groups = { "publish", "stored", "subscribe" };
   private static ContactFeature[] contact_features =
       {
@@ -67,6 +76,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
   private Contact self_contact;
   private MaybeBool _can_add_personas = MaybeBool.UNSET;
   private MaybeBool _can_alias_personas = MaybeBool.UNSET;
+  private MaybeBool _can_group_personas = MaybeBool.UNSET;
   private MaybeBool _can_remove_personas = MaybeBool.UNSET;
   private bool _is_prepared = false;
 
@@ -126,6 +136,18 @@ public class Tpf.PersonaStore : Folks.PersonaStore
   public override MaybeBool can_alias_personas
     {
       get { return this._can_alias_personas; }
+    }
+
+  /**
+   * Whether this PersonaStore can set the groups of {@link Folks.Persona}s.
+   *
+   * See {@link Folks.PersonaStore.can_group_personas}.
+   *
+   * @since 0.3.1
+   */
+  public override MaybeBool can_group_personas
+    {
+      get { return this._can_group_personas; }
     }
 
   /**
@@ -483,6 +505,55 @@ public class Tpf.PersonaStore : Folks.PersonaStore
 
             this._can_alias_personas = new_can_alias;
             this.notify_property ("can-alias-personas");
+          });
+
+      this.ll.connection_get_requestable_channel_classes_async.begin (c,
+          (s3, res3) =>
+          {
+            var new_can_group = MaybeBool.FALSE;
+            try
+              {
+                var ll = this.ll;
+                GenericArray<weak void*> v;
+                int i;
+
+                v = ll.connection_get_requestable_channel_classes_async.end (
+                  res3);
+
+                for (i = 0; i < v.length; i++)
+                  {
+                    unowned ValueArray @class = (ValueArray) v.get (i);
+                    var val = @class.get_nth (0);
+                    if (val != null)
+                      {
+                        var props = (HashTable<weak string, weak Value?>)
+                            val.get_boxed ();
+
+                        var channel_type = TelepathyGLib.asv_get_string (props,
+                            tp_channel_channel_type);
+                        bool handle_type_valid;
+                        var handle_type = TelepathyGLib.asv_get_uint32 (props,
+                            tp_channel_handle_type, out handle_type_valid);
+
+                        if ((channel_type == tp_channel_contact_list_type) &&
+                            handle_type_valid &&
+                            (handle_type == HandleType.GROUP))
+                          {
+                            new_can_group = MaybeBool.TRUE;
+                            break;
+                          }
+                      }
+                  }
+              }
+            catch (GLib.Error e3)
+              {
+                GLib.warning ("failed to determine whether we can set " +
+                  "groups on Telepathy account %s: %s",
+                  this.display_name, e3.message);
+              }
+
+            this._can_group_personas = new_can_group;
+            this.notify_property ("can-group-personas");
           });
 
       this.add_standard_channel (c, "publish");

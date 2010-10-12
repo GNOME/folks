@@ -78,6 +78,18 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
     }
 
   /**
+   * Whether this PersonaStore can set the groups of {@link Folks.Persona}s.
+   *
+   * See {@link Folks.PersonaStore.can_group_personas}.
+   *
+   * @since 0.3.1
+   */
+  public override MaybeBool can_group_personas
+    {
+      get { return MaybeBool.FALSE; }
+    }
+
+  /**
    * Whether this PersonaStore can remove {@link Folks.Persona}s.
    *
    * See {@link Folks.PersonaStore.can_remove_personas}.

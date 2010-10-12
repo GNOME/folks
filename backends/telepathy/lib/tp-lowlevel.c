@@ -423,6 +423,84 @@ folks_tp_lowlevel_connection_get_contacts_by_id_finish (
 }
 
 static void
+connection_get_requestable_channel_classes_cb (TpProxy *conn,
+    const GValue *value,
+    const GError *error,
+    gpointer user_data,
+    GObject *weak_object)
+{
+  GSimpleAsyncResult *simple = G_SIMPLE_ASYNC_RESULT (user_data);
+  gpointer props;
+
+  if (error != NULL)
+    {
+      g_simple_async_result_set_from_error (simple, error);
+    }
+  else
+    {
+      props = g_value_dup_boxed (value);
+      g_simple_async_result_set_op_res_gpointer (simple, props, NULL);
+    }
+
+  g_simple_async_result_complete (simple);
+  g_object_unref (simple);
+}
+
+void
+folks_tp_lowlevel_connection_get_requestable_channel_classes_async (
+    FolksTpLowlevel *tp_lowlevel,
+    TpConnection *conn,
+    GAsyncReadyCallback callback,
+    gpointer user_data)
+{
+  GSimpleAsyncResult *result;
+
+  result = g_simple_async_result_new (G_OBJECT (conn), callback, user_data,
+      folks_tp_lowlevel_connection_get_requestable_channel_classes_finish);
+
+  tp_cli_dbus_properties_call_get (conn, -1,
+      TP_IFACE_CONNECTION_INTERFACE_REQUESTS, "RequestableChannelClasses",
+      connection_get_requestable_channel_classes_cb, result, NULL,
+      G_OBJECT (conn));
+}
+
+/**
+ * folks_tp_lowlevel_connection_get_requestable_channel_classes_finish:
+ * @tp_lowlevel: a #FolksTpLowlevel
+ * @result: a #GAsyncResult
+ * @error: return location for a #GError, or %NULL
+ *
+ * Retrieve the #TpConnection's RequestableChannelClasses D-Bus property.
+ *
+ * Returns: (transfer full): the boxed property details. Free with
+ * g_boxed_free().
+ */
+GPtrArray *
+folks_tp_lowlevel_connection_get_requestable_channel_classes_finish (
+    FolksTpLowlevel *tp_lowlevel,
+    GAsyncResult *result,
+    GError **error)
+{
+  GSimpleAsyncResult *simple = G_SIMPLE_ASYNC_RESULT (result);
+  TpConnection *conn;
+
+  g_return_val_if_fail (G_IS_SIMPLE_ASYNC_RESULT (simple), FALSE);
+
+  conn = TP_CONNECTION (g_async_result_get_source_object (result));
+  g_return_val_if_fail (TP_IS_CONNECTION (conn), FALSE);
+
+  if (g_simple_async_result_propagate_error (simple, error))
+    return 0;
+
+  g_return_val_if_fail (g_simple_async_result_is_valid (result,
+      G_OBJECT (conn),
+      folks_tp_lowlevel_connection_get_requestable_channel_classes_finish), 0);
+
+  return g_simple_async_result_get_op_res_gpointer (
+      G_SIMPLE_ASYNC_RESULT (result));
+}
+
+static void
 group_request_channel_cb (
     TpConnection *conn,
     const gchar *object_path,

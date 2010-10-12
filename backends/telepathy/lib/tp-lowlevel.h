@@ -162,6 +162,19 @@ folks_tp_lowlevel_connection_get_contacts_by_id_finish (
     GAsyncResult *result,
     GError **error);
 
+void
+folks_tp_lowlevel_connection_get_requestable_channel_classes_async (
+    FolksTpLowlevel *tp_lowlevel,
+    TpConnection *conn,
+    GAsyncReadyCallback callback,
+    gpointer user_data);
+
+GPtrArray *
+folks_tp_lowlevel_connection_get_requestable_channel_classes_finish (
+    FolksTpLowlevel *tp_lowlevel,
+    GAsyncResult *result,
+    GError **error);
+
 G_END_DECLS
 
 #endif /* FOLKS_TP_LOWLEVEL_H */

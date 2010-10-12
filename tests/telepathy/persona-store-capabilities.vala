@@ -199,6 +199,12 @@ public class PersonaStoreCapabilitiesTests : Folks.TestCase
               else
                 store.notify["can-alias-personas"].connect (
                     this.can_alias_personas_cb);
+
+              if (store.can_group_personas != MaybeBool.UNSET)
+                can_group_personas_cb (store, null);
+              else
+                store.notify["can-group-personas"].connect (
+                    this.can_group_personas_cb);
             }
           catch (GLib.Error e)
             {
@@ -253,6 +259,22 @@ public class PersonaStoreCapabilitiesTests : Folks.TestCase
 
           store.notify["can-alias-personas"].disconnect (
               this.can_alias_personas_cb);
+        }
+    }
+
+  private void can_group_personas_cb (GLib.Object s, ParamSpec? p)
+    {
+      assert (s is Tpf.PersonaStore);
+      var store = (Tpf.PersonaStore) s;
+
+      if (store.can_group_personas != MaybeBool.UNSET)
+        {
+          assert (store.can_group_personas == MaybeBool.TRUE);
+
+          this.group_flags_received.add ("can-group-personas");
+
+          store.notify["can-group-personas"].disconnect (
+              this.can_group_personas_cb);
         }
     }
 }

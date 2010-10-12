@@ -194,6 +194,17 @@ public abstract class Folks.PersonaStore : Object
     }
 
   /**
+   * Whether this {@link PersonaStore} can set the groups of {@link Persona}s.
+   *
+   * @since 0.3.1
+   */
+  public abstract MaybeBool can_group_personas
+    {
+      get;
+      default = MaybeBool.UNSET;
+    }
+
+  /**
    * Whether this {@link PersonaStore} can remove {@link Persona}s.
    *
    * @since 0.3.1
