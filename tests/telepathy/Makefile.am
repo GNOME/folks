@@ -14,7 +14,7 @@ LDADD = \
 	$(top_builddir)/tests/lib/libfolks-test.la \
 	$(top_builddir)/tests/lib/telepathy/contactlist/libtp-test-contactlist.la \
 	$(top_builddir)/backends/telepathy/lib/libfolks-telepathy.la \
-	$(top_builddir)/folks/libfolks.la
+	$(top_builddir)/folks/libfolks.la \
 	$(GLIB_LIBS) \
 	$(GEE_LIBS) \
 	$(TP_GLIB_LIBS) \
