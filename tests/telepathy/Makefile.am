@@ -44,7 +44,7 @@ VALAFLAGS += \
 # in order from least to most complex
 noinst_PROGRAMS = \
 	persona-store-capabilities \
-	contact-retrieval \
+	individual-retrieval \
 	contact-properties \
 	$(NULL)
 
@@ -54,8 +54,8 @@ persona_store_capabilities_SOURCES = \
 	persona-store-capabilities.vala \
 	$(NULL)
 
-contact_retrieval_SOURCES = \
-	contact-retrieval.vala \
+individual_retrieval_SOURCES = \
+	individual-retrieval.vala \
 	$(NULL)
 
 contact_properties_SOURCES = \

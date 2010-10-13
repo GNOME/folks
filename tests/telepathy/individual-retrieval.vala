@@ -5,7 +5,7 @@ using Tpf;
 using Folks;
 using Gee;
 
-public class ContactRetrievalTests : Folks.TestCase
+public class IndividualRetrievalTests : Folks.TestCase
 {
   private DBusDaemon daemon;
   private TpTest.Account account;
@@ -17,9 +17,9 @@ public class ContactRetrievalTests : Folks.TestCase
   private HashSet<string> default_individuals;
   private string individual_id_prefix = "telepathy:protocol:";
 
-  public ContactRetrievalTests ()
+  public IndividualRetrievalTests ()
     {
-      base ("ContactRetrieval");
+      base ("IndividualRetrieval");
 
       /* Create a set of the individuals we expect to see */
       this.default_individuals = new HashSet<string> (str_hash, str_equal);
@@ -391,7 +391,7 @@ public int main (string[] args)
   Test.init (ref args);
 
   TestSuite root = TestSuite.get_root ();
-  root.add_suite (new ContactRetrievalTests ().get_suite ());
+  root.add_suite (new IndividualRetrievalTests ().get_suite ());
 
   Test.run ();
 
