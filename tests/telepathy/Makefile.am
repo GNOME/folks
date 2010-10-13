@@ -45,7 +45,7 @@ VALAFLAGS += \
 noinst_PROGRAMS = \
 	persona-store-capabilities \
 	individual-retrieval \
-	contact-properties \
+	individual-properties \
 	$(NULL)
 
 TESTS = $(addprefix test-,$(noinst_PROGRAMS))
@@ -58,8 +58,8 @@ individual_retrieval_SOURCES = \
 	individual-retrieval.vala \
 	$(NULL)
 
-contact_properties_SOURCES = \
-	contact-properties.vala \
+individual_properties_SOURCES = \
+	individual-properties.vala \
 	$(NULL)
 
 CLEANFILES = \

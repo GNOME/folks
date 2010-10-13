@@ -5,7 +5,7 @@ using Tpf;
 using Folks;
 using Gee;
 
-public class ContactPropertiesTests : Folks.TestCase
+public class IndividualPropertiesTests : Folks.TestCase
 {
   private DBusDaemon daemon;
   private TpTest.Account account;
@@ -16,9 +16,9 @@ public class ContactPropertiesTests : Folks.TestCase
   private string object_path;
   private string individual_id_prefix = "telepathy:protocol:";
 
-  public ContactPropertiesTests ()
+  public IndividualPropertiesTests ()
     {
-      base ("ContactProperties");
+      base ("IndividualProperties");
 
       this.add_test ("individual properties",
           this.test_individual_properties);
@@ -335,7 +335,7 @@ public int main (string[] args)
   Test.init (ref args);
 
   TestSuite root = TestSuite.get_root ();
-  root.add_suite (new ContactPropertiesTests ().get_suite ());
+  root.add_suite (new IndividualPropertiesTests ().get_suite ());
 
   Test.run ();
 
