@@ -6,6 +6,8 @@ Bugs fixed:
 * Bug 631864 — Crash when empathy disconnects
 * Bug 632564 — assertion `EMPATHY_IS_CONTACT (contact)' failed in
   individual_store_contact_sort
+* Bug 632163 — Folks key-file backend needs a way to point to a specific
+  .ini file
 
 Overview of changes from libfolks 0.1.17 to libfolks 0.2.0
 ==========================================================

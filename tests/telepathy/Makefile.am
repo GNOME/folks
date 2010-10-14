@@ -32,13 +32,13 @@ VALAFLAGS += \
 	--pkg tp-test-contactlist \
 	$(NULL)
 
-TESTS = \
-	test-contact-retrieval \
-	$(NULL)
-
 noinst_PROGRAMS = \
 	contact-retrieval \
 	$(NULL)
+
+TESTS_ENVIRONMENT = \
+	FOLKS_BACKEND_KEY_FILE_PATH=$(srcdir)/data/relationships-empty.ini
+TESTS = $(addprefix test-,$(noinst_PROGRAMS))
 
 contact_retrieval_SOURCES = \
 	test-case.vala \
