@@ -7,6 +7,7 @@ Major changes:
 * Add the PersonaStore:can-remove-personas property
 * Add the PersonaStore:can-alias-personas property
 * Add the PersonaStore:can-group-personas property
+* Make Individual implement the IMable interface
 
 Bugs fixed:
 * Bug 630431 — notify::alias is never emitted

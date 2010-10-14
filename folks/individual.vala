@@ -67,6 +67,7 @@ public class Folks.Individual : Object,
     Avatar,
     Favourite,
     Groupable,
+    IMable,
     Presence
 {
   private bool _is_favourite;
@@ -87,6 +88,7 @@ public class Folks.Individual : Object,
   /* The number of Personas in this Individual which have
    * Persona.is_user == true. Iff this is > 0, Individual.is_user == true. */
   private uint persona_user_count = 0;
+  private HashTable<string, GenericArray<string>> _im_addresses;
 
   /**
    * The trust level of the Individual.
@@ -262,6 +264,15 @@ public class Folks.Individual : Object,
     }
 
   /**
+   * {@inheritDoc}
+   */
+  public HashTable<string, GenericArray<string>> im_addresses
+    {
+      get { return this._im_addresses; }
+      private set {}
+    }
+
+  /**
    * The set of {@link Persona}s encapsulated by this Individual.
    *
    * Changing the set of personas may cause updates to the aggregated properties
@@ -336,6 +347,11 @@ public class Folks.Individual : Object,
       this.update_presence ();
     }
 
+  private void notify_im_addresses_cb (Object obj, ParamSpec ps)
+    {
+      this.update_im_addresses ();
+    }
+
   private void notify_is_favourite_cb (Object obj, ParamSpec ps)
     {
       this.update_is_favourite ();
@@ -354,6 +370,8 @@ public class Folks.Individual : Object,
    */
   public Individual (GLib.List<Persona>? personas)
     {
+      this._im_addresses =
+          new HashTable<string, GenericArray<string>> (str_hash, str_equal);
       this._persona_set = new HashSet<Persona> (null, null);
       this.stores = new HashMap<PersonaStore, uint> (null, null);
       this.personas = personas;
@@ -426,6 +444,7 @@ public class Folks.Individual : Object,
       this.update_avatar ();
       this.update_alias ();
       this.update_trust_level ();
+      this.update_im_addresses ();
     }
 
   private void update_groups ()
@@ -662,6 +681,44 @@ public class Folks.Individual : Object,
         this.trust_level = trust_level;
     }
 
+  private void update_im_addresses ()
+    {
+      /* populate the IM addresses as the union of our Personas' addresses */
+      foreach (var persona in this.personas)
+        {
+          if (persona is IMable)
+            {
+              var imable = (IMable) persona;
+              imable.im_addresses.foreach ((k, v) =>
+                {
+                  var cur_protocol = (string) k;
+                  var cur_addresses = (GenericArray<string>) v;
+                  var old_im_array = this._im_addresses.lookup (cur_protocol);
+                  var im_array = new GenericArray<string> ();
+
+                  /* use a set to eliminate duplicates */
+                  var address_set = new HashSet<string> (str_hash, str_equal);
+                  if (old_im_array != null)
+                    {
+                      old_im_array.foreach ((old_address) =>
+                        {
+                          address_set.add ((string) old_address);
+                        });
+                    }
+                  cur_addresses.foreach ((cur_address) =>
+                    {
+                      address_set.add ((string) cur_address);
+                    });
+                  foreach (string addr in address_set)
+                    im_array.add (addr);
+
+                  this._im_addresses.insert (cur_protocol, im_array);
+                });
+            }
+        }
+      this.notify_property ("im-addresses");
+    }
+
   /*
    * GLib/C convenience functions (for built-in casting, etc.)
    */
@@ -747,6 +804,7 @@ public class Folks.Individual : Object,
       persona.notify["avatar"].connect (this.notify_avatar_cb);
       persona.notify["presence-message"].connect (this.notify_presence_cb);
       persona.notify["presence-type"].connect (this.notify_presence_cb);
+      persona.notify["im-addresses"].connect (this.notify_im_addresses_cb);
       persona.notify["is-favourite"].connect (this.notify_is_favourite_cb);
 
       if (persona is Groupable)
@@ -763,6 +821,8 @@ public class Folks.Individual : Object,
       persona.notify["presence-message"].disconnect (
           this.notify_presence_cb);
       persona.notify["presence-type"].disconnect (this.notify_presence_cb);
+      persona.notify["im-addresses"].disconnect (
+          this.notify_im_addresses_cb);
       persona.notify["is-favourite"].disconnect (
           this.notify_is_favourite_cb);
 
