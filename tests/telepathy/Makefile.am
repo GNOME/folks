@@ -48,6 +48,8 @@ noinst_PROGRAMS = \
 	individual-properties \
 	$(NULL)
 
+TESTS_ENVIRONMENT = \
+	FOLKS_BACKEND_KEY_FILE_PATH=$(srcdir)/data/relationships-empty.ini
 TESTS = $(addprefix test-,$(noinst_PROGRAMS))
 
 persona_store_capabilities_SOURCES = \

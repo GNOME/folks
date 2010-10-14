@@ -13,6 +13,8 @@ Bugs fixed:
 * Bug 631864 — Crash when empathy disconnects
 * 632096 - build failure: contact-retrieval.o: undefined reference to symbol
   'gee_abstract_collection_add'
+* Bug 632163 — Folks key-file backend needs a way to point to a specific
+  .ini file
 
 Overview of changes from libfolks 0.1.17 to libfolks 0.3.0
 ==========================================================
