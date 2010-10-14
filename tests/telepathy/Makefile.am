@@ -48,9 +48,13 @@ noinst_PROGRAMS = \
 	individual-properties \
 	$(NULL)
 
+SESSION_CONF = $(top_builddir)/tests/lib/telepathy/contactlist/session.conf
 TESTS_ENVIRONMENT = \
-	FOLKS_BACKEND_KEY_FILE_PATH=$(srcdir)/data/relationships-empty.ini
-TESTS = $(addprefix test-,$(noinst_PROGRAMS))
+	FOLKS_BACKEND_KEY_FILE_PATH=$(srcdir)/data/relationships-empty.ini \
+	$(RUN_WITH_PRIVATE_BUS) \
+	--config-file=$(SESSION_CONF) \
+	--
+TESTS = $(noinst_PROGRAMS)
 
 persona_store_capabilities_SOURCES = \
 	persona-store-capabilities.vala \
@@ -71,12 +75,5 @@ CLEANFILES = \
 	*.address \
 	$(TESTS) \
 	$(NULL)
-
-test-%: %
-	{ echo "#!/bin/sh" && \
-	echo -n "$(RUN_WITH_PRIVATE_BUS) " && \
-	echo "--config-file=$(top_builddir)/tests/lib/telepathy/contactlist/session.conf -- ./$<"; } \
-	> $@
-	chmod +x $@
 
 -include $(top_srcdir)/git.mk
