@@ -56,16 +56,16 @@ TESTS_ENVIRONMENT = \
 	--
 TESTS = $(noinst_PROGRAMS)
 
-persona_store_capabilities_SOURCES = \
-	persona-store-capabilities.vala \
-	$(NULL)
-
 individual_retrieval_SOURCES = \
 	individual-retrieval.vala \
 	$(NULL)
 
 individual_properties_SOURCES = \
 	individual-properties.vala \
+	$(NULL)
+
+persona_store_capabilities_SOURCES = \
+	persona-store-capabilities.vala \
 	$(NULL)
 
 CLEANFILES = \
