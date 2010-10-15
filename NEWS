@@ -12,8 +12,8 @@ Major changes:
 Bugs fixed:
 * Bug 630431 — notify::alias is never emitted
 * Bug 631864 — Crash when empathy disconnects
-* 632096 - build failure: contact-retrieval.o: undefined reference to symbol
-  'gee_abstract_collection_add'
+* Bug 632096 — build failure: contact-retrieval.o: undefined reference to
+  symbol 'gee_abstract_collection_add'
 * Bug 632163 — Folks key-file backend needs a way to point to a specific
   .ini file
 
