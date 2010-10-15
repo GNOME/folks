@@ -3,6 +3,8 @@ Overview of changes from libfolks 0.3.0 to libfolks 0.3.1
 
 Major changes:
 * Tpf.Persona.contact is now guaranteed to have the client type feature
+
+API changes:
 * Add the PersonaStore:can-add-personas property
 * Add the PersonaStore:can-remove-personas property
 * Add the PersonaStore:can-alias-personas property
