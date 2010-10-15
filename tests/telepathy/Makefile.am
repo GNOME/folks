@@ -76,4 +76,8 @@ CLEANFILES = \
 	$(TESTS) \
 	$(NULL)
 
+EXTRA_DIST = \
+	$(srcdir)/data/relationships-empty.ini \
+	$(NULL)
+
 -include $(top_srcdir)/git.mk
