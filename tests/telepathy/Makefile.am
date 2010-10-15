@@ -65,4 +65,8 @@ GITIGNOREFILES = \
 	contact_retrieval_vala.stamp \
 	$(NULL)
 
+EXTRA_DIST = \
+	$(srcdir)/data/relationships-empty.ini \
+	$(NULL)
+
 -include $(top_srcdir)/git.mk
