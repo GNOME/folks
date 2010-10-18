@@ -1,7 +1,9 @@
 folksdocdir=$(datadir)/devhelp/references/folks
 folksimgdir=$(datadir)/devhelp/references/folks/img
+folksgtkdocdir=$(datadir)/gtk-doc/html/folks
 folkstelepathydocdir=$(datadir)/devhelp/references/folks-telepathy
 folkstelepathyimgdir=$(datadir)/devhelp/references/folks-telepathy/img
+folkstelepathygtkdocdir=$(datadir)/gtk-doc/html/folks-telepathy
 
 common_doc_files = \
 	*.css \
@@ -15,10 +17,12 @@ folksdoc_DATA = \
 	folks/folks/folks.devhelp2 \
 	$(addprefix folks/folks/,$(common_doc_files)) \
 	$(NULL)
+folksgtkdoc_DATA = gtk-doc/folks/html/*
 folkstelepathydoc_DATA = \
 	folks-telepathy/folks-telepathy/folks-telepathy.devhelp2 \
 	$(addprefix folks-telepathy/folks-telepathy/,$(common_doc_files)) \
 	$(NULL)
+folkstelepathygtkdoc_DATA = gtk-doc/folks-telepathy/html/*
 
 folksimg_DATA = \
 	folks/folks/img/*.png \
@@ -28,10 +32,13 @@ folkstelepathyimg_DATA = \
 	$(NULL)
 
 $(folksdoc_DATA) $(folksimg_DATA): folks-doc
+$(folksgtkdoc_DATA): folks-gtk-doc
 $(folkstelepathydoc_DATA) $(folkstelepathyimg_DATA): folks-telepathy-doc
+$(folkstelepathygtkdoc_DATA): folks-telepathy-gtk-doc
 
 valadoc_flags = \
 	--force \
+	--package-version $(PACKAGE_VERSION) \
 	$(NULL)
 
 # folks documentation
@@ -54,6 +61,14 @@ folks-doc: $(folks_doc_files)
 	$(AM_V_GEN)$(VALADOC) \
 		-o folks/ \
 		--doclet=devhelp \
+		$(valadoc_flags_folks) \
+		$(NULL)
+
+folks-gtk-doc: $(folks_doc_files)
+	$(AM_V_GEN)$(VALADOC) \
+		-X -l -X $(top_srcdir)/folks/.libs/libfolks.so \
+		-o gtk-doc/folks \
+		--doclet=gtkdoc \
 		$(valadoc_flags_folks) \
 		$(NULL)
 
@@ -85,16 +100,28 @@ folks-telepathy-doc: $(folks_telepathy_doc_files)
 		$(valadoc_flags_folks_telepathy) \
 		$(NULL)
 
-.PHONY: folks-doc folks-telepathy-doc
+folks-telepathy-gtk-doc: $(folks_telepathy_doc_files)
+	$(AM_V_GEN)$(VALADOC) \
+		-X -l \
+		-X $(top_srcdir)/folks/.libs/libfolks.so \
+		-X $(top_srcdir)/backends/telepathy/lib/.libs/libfolks-telepathy.so \
+		-o gtk-doc/folks-telepathy \
+		--doclet=gtkdoc \
+		$(valadoc_flags_folks_telepathy) \
+		$(NULL)
+
+.PHONY: folks-doc folks-gtk-doc folks-telepathy-doc folks-telepathy-gtk-doc
 
 distclean-local: distclean-docs
 distclean-docs:
 	rm -rf folks && \
-	rm -rf folks-telepathy
+	rm -rf folks-telepathy && \
+	rm -rf gtk-doc
 
 GITIGNOREFILES = \
 	folks/ \
 	folks-telepathy/ \
+	gtk-doc/ \
 	$(NULL)
 
 -include $(top_srcdir)/git.mk
