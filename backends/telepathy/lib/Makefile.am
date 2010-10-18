@@ -5,10 +5,6 @@ AM_CPPFLAGS = \
 	-DG_LOG_DOMAIN=\"TelepathyBackend\" \
 	$(NULL)
 
-VALAFLAGS += \
-	--vapidir=. \
-	--vapidir=$(top_srcdir)/folks
-
 VAPIGENFLAGS += \
 	--vapidir=. \
 	--vapidir=$(top_srcdir)/folks
@@ -23,8 +19,9 @@ folks_telepathy_LTLIBRARIES = libfolks-telepathy.la
 
 libtp_lowlevel_la_SOURCES = \
 	tp-lowlevel.c \
-	tp-lowlevel.h \
 	$(NULL)
+
+tp_lowlevel_headers = tp-lowlevel.h
 
 libtp_lowlevel_la_CFLAGS = \
 	$(ERROR_CFLAGS) \
@@ -62,7 +59,7 @@ tp-lowlevel.gir: libtp-lowlevel.la
 tp_lowlevel_gir_INCLUDES = GObject-2.0 TelepathyGLib-0.12
 tp_lowlevel_gir_CFLAGS = $(TP_GLIB_CFLAGS)
 tp_lowlevel_gir_LIBS = libtp-lowlevel.la
-tp_lowlevel_gir_FILES = $(libtp_lowlevel_la_SOURCES)
+tp_lowlevel_gir_FILES = $(libtp_lowlevel_la_SOURCES) $(tp_lowlevel_headers)
 tp_lowlevel_gir_NAMESPACE = Folks
 INTROSPECTION_GIRS += tp-lowlevel.gir
 
@@ -75,10 +72,6 @@ tp-lowlevel.vapi: tp-lowlevel.gir
 		--pkg telepathy-glib \
 		tp-lowlevel.gir
 
-internal_vapi_files = \
-	tp-lowlevel.vapi \
-	$(NULL)
-
 ##################################################################
 # Support library
 ##################################################################
@@ -87,25 +80,27 @@ pkgconfig_in = folks-telepathy.pc.in
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = $(pkgconfig_in:.in=)
 
-folks_telepathy_valasources = \
+libfolks_telepathy_la_vala.stamp: tp-lowlevel.vapi
+
+libfolks_telepathy_la_SOURCES = \
 	tpf-persona.vala \
 	tpf-persona-store.vala \
 	tpf-logger.vala \
+	tp-lowlevel.c \
 	$(NULL)
 
-folks_telepathy_deps = \
-	folks \
-	tp-lowlevel \
-	gobject-2.0 \
-	gio-2.0 \
-	gee-1.0 \
-	dbus-glib-1 \
-	telepathy-glib \
-	$(NULL)
-
-libfolks_telepathy_la_SOURCES = \
-	$(folks_telepathy_valasources:.vala=.c) \
-	$(libtp_lowlevel_la_SOURCES) \
+libfolks_telepathy_la_VALAFLAGS = \
+	--vapidir=. \
+	--vapidir=$(top_srcdir)/folks \
+	--pkg folks \
+	--pkg tp-lowlevel \
+	--pkg gobject-2.0 \
+	--pkg gio-2.0 \
+	--pkg gee-1.0 \
+	--pkg dbus-glib-1 \
+	--pkg telepathy-glib \
+	--vapi folks-telepathy.vapi \
+	-H folks-telepathy.h \
 	$(NULL)
 
 libfolks_telepathy_la_CFLAGS = \
@@ -136,20 +131,6 @@ folks_telepathy_include_HEADERS = \
 	folks-telepathy.h \
 	$(NULL)
 
-folks-telepathy.h $(folks_telepathy_valasources:.vala=.c): folks-telepathy.vala.stamp
-
-folks_telepathy_vapi_deps = \
-	$(folks_telepathy_valasources) \
-	$(internal_vapi_files) \
-	$(NULL)
-
-folks-telepathy.vapi folks-telepathy.vala.stamp: $(folks_telepathy_vapi_deps)
-	$(VALA_V)$(VALAC) $(VALAFLAGS) -H folks-telepathy.h -C \
-		--library folks-telepathy \
-		$(addprefix --pkg ,$(folks_telepathy_deps)) \
-		$(addprefix $(srcdir)/,$(folks_telepathy_valasources))
-	touch $@
-
 vapidir = $(datadir)/vala/vapi
 dist_vapi_DATA = \
 	folks-telepathy.vapi \
@@ -161,39 +142,26 @@ dist_vapi_DATA = \
 ##################################################################
 
 BUILT_SOURCES = \
+	$(pkgconfig_in:.in=) \
+	folks-telepathy-uninstalled.pc \
 	folks-telepathy.h \
-	folks-telepathy.vala.stamp \
 	folks-telepathy.vapi \
 	tp-lowlevel.gir \
 	tp-lowlevel.vapi \
-	$(folks_telepathy_valasources:.vala=.c) \
-	$(pkgconfig_in:.in=) \
-	folks-telepathy-uninstalled.pc \
 	$(NULL)
 
 CLEANFILES += $(BUILT_SOURCES)
 
 EXTRA_DIST = \
-	$(folks_telepathy_valasources) \
 	$(libtp_lowlevel_la_SOURCES) \
 	$(pkgconfig_in) \
-	folks-telepathy.vala.stamp \
 	folks-telepathy.vapi \
 	tp-lowlevel.vapi \
 	$(NULL)
 
-DISTCLEANFILES = \
-	$(NULL)
-
-MAINTAINERCLEANFILES = \
-	$(folks_telepathy_valasources:.vala=.c) \
-	$(NULL)
-
-# set up the verbosity rules to avoid some build noise
-# XXX: once automake >= 1.11 is common, remove these, push valasources files
-# into SOURCES and add AM_PROG_VALAC to configure.ac
-VALA_V = $(VALA_V_$(V))
-VALA_V_ = $(VALA_V_$(AM_DEFAULT_VERBOSITY))
-VALA_V_0 = @echo "  VALAC " $^;
+# XXX: headers separated because automake erroneously treats all libraries in
+# this file as Vala-based, so it will try (and fail) to compile the header into
+# a Vala library during distcheck otherwise
+noinst_HEADERS = $(tp_lowlevel_headers)
 
 -include $(top_srcdir)/git.mk
