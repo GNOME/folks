@@ -30,6 +30,10 @@ folkstelepathyimg_DATA = \
 $(folksdoc_DATA) $(folksimg_DATA): folks-doc
 $(folkstelepathydoc_DATA) $(folkstelepathyimg_DATA): folks-telepathy-doc
 
+valadoc_flags = \
+	--force \
+	$(NULL)
+
 # folks documentation
 folks_doc_files = $(top_srcdir)/folks/*.vala
 folks_doc_deps = \
@@ -38,12 +42,20 @@ folks_doc_deps = \
 	gee-1.0 \
 	build-conf \
 	$(NULL)
+valadoc_flags_folks = \
+	$(valadoc_flags) \
+	-b $(top_srcdir)/folks \
+	$(addprefix --pkg=,$(folks_doc_deps)) \
+	--vapidir=$(top_srcdir)/folks \
+	$(folks_doc_files) \
+	$(NULL)
 
 folks-doc: $(folks_doc_files)
-	$(AM_V_GEN)$(VALADOC) -o folks/ --force -b $(top_srcdir)/folks \
-		$(addprefix --pkg=,$(folks_doc_deps)) \
+	$(AM_V_GEN)$(VALADOC) \
+		-o folks/ \
 		--doclet=devhelp \
-		--vapidir=$(top_srcdir)/folks $(folks_doc_files)
+		$(valadoc_flags_folks) \
+		$(NULL)
 
 # folks-telepathy documentation
 folks_telepathy_doc_files = $(top_srcdir)/backends/telepathy/lib/*.vala
@@ -57,15 +69,21 @@ folks_telepathy_doc_deps = \
 	build-conf \
 	folks \
 	$(NULL)
+valadoc_flags_folks_telepathy = \
+	$(valadoc_flags) \
+	-b $(top_srcdir)/backends/telepathy/lib \
+	$(addprefix --pkg=,$(folks_telepathy_doc_deps)) \
+	--vapidir=$(top_srcdir)/folks \
+	--vapidir=$(top_srcdir)/backends/telepathy/lib \
+	$(folks_telepathy_doc_files) \
+	$(NULL)
 
 folks-telepathy-doc: $(folks_telepathy_doc_files)
-	$(AM_V_GEN)$(VALADOC) -o folks-telepathy/ \
-		--force -b $(top_srcdir)/backends/telepathy/lib \
-		$(addprefix --pkg=,$(folks_telepathy_doc_deps)) \
+	$(AM_V_GEN)$(VALADOC) \
+		-o folks-telepathy/ \
 		--doclet=devhelp \
-		--vapidir=$(top_srcdir)/folks \
-		--vapidir=$(top_srcdir)/backends/telepathy/lib \
-		$(folks_telepathy_doc_files)
+		$(valadoc_flags_folks_telepathy) \
+		$(NULL)
 
 .PHONY: folks-doc folks-telepathy-doc
 
