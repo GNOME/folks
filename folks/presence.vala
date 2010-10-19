@@ -29,14 +29,41 @@ using GLib;
  * interface in the Telepathy specification.
  */
 public enum Folks.PresenceType {
+  /**
+   * never set
+   */
   UNSET,
+  /**
+   * offline
+   */
   OFFLINE,
+  /**
+   * available
+   */
   AVAILABLE,
+  /**
+   * away from keyboard
+   */
   AWAY,
+  /**
+   * away from keyboard for an extended period of time
+   */
   EXTENDED_AWAY,
+  /**
+   * also known as "invisible" or "appear offline"
+   */
   HIDDEN,
+  /**
+   * at keyboard, but too busy to chat
+   */
   BUSY,
+  /**
+   * presence not received from server
+   */
   UNKNOWN,
+  /**
+   * an error occurred with fetching the presence
+   */
   ERROR
 }
 
