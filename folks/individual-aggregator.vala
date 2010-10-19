@@ -53,9 +53,11 @@ public errordomain Folks.IndividualAggregatorError
 }
 
 /**
- * Allows access to the {@link Individual}s which have been created through
+ * Stores {@link Individual}s which have been created through
  * aggregation of all the {@link Persona}s provided by the various
- * {@link Backend}s. This is the main interface for client applications.
+ * {@link Backend}s.
+ *
+ * This is the main interface for client applications.
  */
 public class Folks.IndividualAggregator : Object
 {

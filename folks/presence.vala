@@ -42,10 +42,12 @@ public enum Folks.PresenceType {
 
 /**
  * Interface exposing a {@link Persona}'s or {@link Individual}'s presence;
- * their current availability, such as for chatting. If the {@link Backend}
- * providing the {@link Persona} doesn't support presence, the {@link Persona}'s
- * `presence_type` will be set to {@link PresenceType.UNSET} and their
- * `presence_message` will be an empty string.
+ * their current availability, such as for chatting.
+ *
+ * If the {@link Backend} providing the {@link Persona} doesn't support
+ * presence, the {@link Persona}'s `presence_type` will be set to
+ * {@link PresenceType.UNSET} and their `presence_message` will be an empty
+ * string.
  */
 public interface Folks.Presence : Object
 {
