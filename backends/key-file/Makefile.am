@@ -5,13 +5,6 @@ AM_CPPFLAGS = \
 	-DG_LOG_DOMAIN=\"KeyFileBackend\" \
 	$(NULL)
 
-VALAFLAGS += \
-	$(ERROR_VALAFLAGS) \
-	--vapidir=. \
-	--vapidir=$(top_srcdir)/folks \
-	$(addprefix --pkg ,$(folks_backend_key_file_deps)) \
-	$(NULL)
-
 backenddir = $(BACKEND_DIR)/key-file
 backend_LTLIBRARIES = libfolks-backend-key-file.la
 
@@ -22,11 +15,14 @@ libfolks_backend_key_file_la_SOURCES = \
 	kf-persona-store.vala \
 	$(NULL)
 
-folks_backend_key_file_deps = \
-	folks \
-	gee-1.0 \
-	gio-2.0 \
-	gobject-2.0 \
+libfolks_backend_key_file_la_VALAFLAGS = \
+	$(ERROR_VALAFLAGS) \
+	--vapidir=. \
+	--vapidir=$(top_srcdir)/folks \
+	--pkg folks \
+	--pkg gee-1.0 \
+	--pkg gio-2.0 \
+	--pkg gobject-2.0 \
 	$(NULL)
 
 libfolks_backend_key_file_la_CFLAGS = \
