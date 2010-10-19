@@ -60,6 +60,9 @@ public interface Folks.IMable : Object
    * only one of which is canonical. In order to allow simple string comparisons
    * of IM addresses to work, the IM addresses must be normalised beforehand.
    *
+   * @param im_address the address to normalise
+   * @param protocol the protocol of this im_address
+   *
    * @since 0.2.0
    */
   public static string normalise_im_address (string im_address, string protocol)
