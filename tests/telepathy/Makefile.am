@@ -23,7 +23,7 @@ LDADD = \
 
 RUN_WITH_PRIVATE_BUS = $(top_srcdir)/tests/tools/with-session-bus.sh
 
-VALAFLAGS += \
+AM_VALAFLAGS = \
 	--vapidir=$(top_builddir)/tests/lib/telepathy/contactlist/ \
 	--vapidir=$(top_builddir)/tests/lib/ \
 	--vapidir=. \
