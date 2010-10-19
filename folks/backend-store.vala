@@ -26,9 +26,12 @@ using Gee;
 using GLib;
 
 /**
- * Responsible for backend loading. Probes for shared library files in a
- * specific directory, looking for (and calling) a specific function (by name,
- * signature).
+ * Responsible for backend loading.
+ *
+ * The BackendStore manages the set of available Folks backends. The
+ * {@link BackendStore.load_backends} function loads all compatible and enabled
+ * backends and the {@link BackendStore.backend_available} signal notifies when
+ * these backends are ready.
  */
 public class Folks.BackendStore : Object {
   [CCode (has_target = false)]
