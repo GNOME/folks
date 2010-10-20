@@ -70,7 +70,9 @@ persona_store_capabilities_SOURCES = \
 
 CLEANFILES = \
 	$(addsuffix .c,$(noinst_PROGRAMS)) \
-	*.stamp \
+	individual_properties_vala.stamp \
+	individual_retrieval_vala.stamp \
+	persona_store_capabilities_vala.stamp \
 	*.pid \
 	*.address \
 	$(TESTS) \
