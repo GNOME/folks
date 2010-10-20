@@ -15,15 +15,27 @@ endif
 DISTCHECK_CONFIGURE_FLAGS = --enable-docs
 
 EXTRA_DIST = \
+	ABOUT-NLS \
 	autogen.sh \
+	po/Makevars.template \
+	po/Rules-quot \
+	po/boldquot.sed \
+	po/en@boldquot.header \
+	po/en@quot.header \
+	po/insert-header.sin \
+	po/missing \
+	po/quot.sed \
+	po/remove-potcdate.sin \
 	$(NULL)
 
 MAINTAINERCLEANFILES = \
+	ABOUT-NLS \
 	$(srcdir)/INSTALL \
 	$(srcdir)/aclocal.m4 \
 	$(srcdir)/compile \
 	$(srcdir)/config.guess \
 	$(srcdir)/config.h.in \
+	$(srcdir)/config.rpath \
 	$(srcdir)/config.sub \
 	$(srcdir)/depcomp \
 	$(srcdir)/install-sh \
@@ -31,7 +43,18 @@ MAINTAINERCLEANFILES = \
 	$(srcdir)/missing \
 	$(srcdir)/mkinstalldirs \
 	$(srcdir)/ChangeLog \
-	`find "$(srcdir)" -type f -name Makefile.in -print`
+	`find "$(srcdir)" -type f -name Makefile.in -print` \
+	`find "m4" -type f -name "*.m4" -print` \
+	po/Makevars.template \
+	po/Rules-quot \
+	po/boldquot.sed \
+	po/en@boldquot.header \
+	po/en@quot.header \
+	po/insert-header.sin \
+	po/missing \
+	po/quot.sed \
+	po/remove-potcdate.sin \
+	$(NULL)
 
 distclean-local:
 	if test "x$(srcdir)" = "x."; then :; else \
