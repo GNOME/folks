@@ -51,9 +51,8 @@ public class IndividualRetrievalTests : Folks.TestCase
       /* Ignore the error caused by not running the logger */
       Test.log_set_fatal_handler ((d, l, m) =>
         {
-          return !m.has_suffix ("couldn't get list of favourite contacts: " +
-              "The name org.freedesktop.Telepathy.Logger was not provided by " +
-              "any .service files");
+          return !m.has_suffix ("The name org.freedesktop.Telepathy.Logger " +
+              "was not provided by any .service files");
         });
 
       /* work on a copy so we can mangle it */
@@ -115,9 +114,8 @@ public class IndividualRetrievalTests : Folks.TestCase
       /* Ignore the error caused by not running the logger */
       Test.log_set_fatal_handler ((d, l, m) =>
         {
-          return !m.has_suffix ("couldn't get list of favourite contacts: " +
-              "The name org.freedesktop.Telepathy.Logger was not provided by " +
-              "any .service files");
+          return !m.has_suffix ("The name org.freedesktop.Telepathy.Logger " +
+              "was not provided by any .service files");
         });
 
       HashSet<string> added_individuals = new HashSet<string> ();
