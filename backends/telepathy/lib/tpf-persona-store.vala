@@ -727,10 +727,10 @@ public class Tpf.PersonaStore : Folks.PersonaStore
   private void publish_channel_group_members_changed_detailed_cb (
       Channel channel,
       /* FIXME: Array<uint> => Array<Handle>; parser bug */
-      Array<weak uint> added,
-      Array<weak uint> removed,
-      Array<weak uint> local_pending,
-      Array<weak uint> remote_pending,
+      Array<uint> added,
+      Array<uint> removed,
+      Array<uint> local_pending,
+      Array<uint> remote_pending,
       HashTable details)
     {
       if (added.length > 0)
@@ -749,10 +749,10 @@ public class Tpf.PersonaStore : Folks.PersonaStore
   private void stored_channel_group_members_changed_detailed_cb (
       Channel channel,
       /* FIXME: Array<uint> => Array<Handle>; parser bug */
-      Array<weak uint> added,
-      Array<weak uint> removed,
-      Array<weak uint> local_pending,
-      Array<weak uint> remote_pending,
+      Array<uint> added,
+      Array<uint> removed,
+      Array<uint> local_pending,
+      Array<uint> remote_pending,
       HashTable details)
     {
       if (added.length > 0)
@@ -804,10 +804,10 @@ public class Tpf.PersonaStore : Folks.PersonaStore
   private void subscribe_channel_group_members_changed_detailed_cb (
       Channel channel,
       /* FIXME: Array<uint> => Array<Handle>; parser bug */
-      Array<weak uint> added,
-      Array<weak uint> removed,
-      Array<weak uint> local_pending,
-      Array<weak uint> remote_pending,
+      Array<uint> added,
+      Array<uint> removed,
+      Array<uint> local_pending,
+      Array<uint> remote_pending,
       HashTable details)
     {
       if (added.length > 0)
@@ -1066,10 +1066,10 @@ public class Tpf.PersonaStore : Folks.PersonaStore
 
   private void channel_group_members_changed_detailed_cb (Channel channel,
       /* FIXME: Array<uint> => Array<Handle>; parser bug */
-      Array<weak uint> added,
-      Array<weak uint> removed,
-      Array<weak uint> local_pending,
-      Array<weak uint> remote_pending,
+      Array<uint> added,
+      Array<uint> removed,
+      Array<uint> local_pending,
+      Array<uint> remote_pending,
       HashTable details)
     {
       if (added != null)
