@@ -86,7 +86,7 @@ AC_PATH_PROG([VAPIGEN], [vapigen], [vapigen])
 AS_IF([test "$VAPIGEN" = ""],
       [AC_MSG_ERROR([Vala must be built with --enable-vapigen])])
 
-GOBJECT_INTROSPECTION_REQUIRE([0.9.6])
+GOBJECT_INTROSPECTION_REQUIRE([0.9.12])
 
 PKG_CHECK_MODULES([GLIB],
                   [glib-2.0 >= $GLIB_REQUIRED
