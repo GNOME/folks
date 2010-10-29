@@ -1,6 +1,7 @@
 SUBDIRS = \
     lib \
     tools \
+    folks \
     telepathy \
     $(NULL)
 

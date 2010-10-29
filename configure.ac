@@ -219,6 +219,7 @@ AC_CONFIG_FILES([
     folks/Makefile
     docs/Makefile
     tests/Makefile
+    tests/folks/Makefile
     tests/telepathy/Makefile
     tests/lib/Makefile
     tests/lib/folks-test-uninstalled.pc
