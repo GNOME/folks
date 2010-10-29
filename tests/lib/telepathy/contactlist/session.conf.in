@@ -12,7 +12,7 @@
   <listen>unix:tmpdir=/tmp</listen>
 
   <!-- Search for .service files in our special services dir -->
-  <servicedir>@abs_top_srcdir@/tests/lib/backends/telepathy/contactlist/_gen</servicedir>
+  <servicedir>@abs_top_srcdir@/tests/lib/telepathy/contactlist/_gen</servicedir>
 
   <policy context="default">
     <!-- Allow everything to be sent -->
