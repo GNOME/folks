@@ -403,14 +403,14 @@ static void
 tp_test_contact_list_base_class_init (TpTestContactListBaseClass *klass)
 {
   static TpDBusPropertiesMixinPropImpl channel_props[] = {
-      { "TargetHandleType", "handle-type", NULL },
-      { "TargetHandle", "handle", NULL },
-      { "ChannelType", "channel-type", NULL },
-      { "Interfaces", "interfaces", NULL },
-      { "TargetID", "target-id", NULL },
-      { "Requested", "requested", NULL },
-      { "InitiatorHandle", "initiator-handle", NULL },
-      { "InitiatorID", "initiator-id", NULL },
+      { "TargetHandleType", (gpointer) "handle-type", NULL },
+      { "TargetHandle", (gpointer) "handle", NULL },
+      { "ChannelType", (gpointer) "channel-type", NULL },
+      { "Interfaces", (gpointer) "interfaces", NULL },
+      { "TargetID", (gpointer) "target-id", NULL },
+      { "Requested", (gpointer) "requested", NULL },
+      { "InitiatorHandle", (gpointer) "initiator-handle", NULL },
+      { "InitiatorID", (gpointer) "initiator-id", NULL },
       { NULL }
   };
   static TpDBusPropertiesMixinIfaceImpl prop_interfaces[] = {
@@ -534,7 +534,7 @@ list_channel_close (TpSvcChannel *iface G_GNUC_UNUSED,
                     DBusGMethodInvocation *context)
 {
   GError e = { TP_ERRORS, TP_ERROR_NOT_IMPLEMENTED,
-      "ContactList channels with handle type LIST may not be closed" };
+      (gchar *) "ContactList channels with handle type LIST may not be closed" };
 
   dbus_g_method_return_error (context, &e);
 }
@@ -549,7 +549,7 @@ group_channel_close (TpSvcChannel *iface,
   if (tp_handle_set_size (base->group.members) > 0)
     {
       GError e = { TP_ERRORS, TP_ERROR_NOT_AVAILABLE,
-          "Non-empty groups may not be deleted (closed)" };
+          (gchar *) "Non-empty groups may not be deleted (closed)" };
 
       dbus_g_method_return_error (context, &e);
       return;

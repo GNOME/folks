@@ -33,11 +33,11 @@ G_DEFINE_TYPE_WITH_CODE (TpTestAccountManager,
 /* TP_IFACE_ACCOUNT_MANAGER is implied */
 static const char *ACCOUNT_MANAGER_INTERFACES[] = { NULL };
 
-static gchar *VALID_ACCOUNTS[] = {
+static const gchar *VALID_ACCOUNTS[] = {
   "/org/freedesktop/Telepathy/Account/cm/protocol/account",
   NULL };
 
-static gchar *INVALID_ACCOUNTS[] = {
+static const gchar *INVALID_ACCOUNTS[] = {
   "/org/freedesktop/Telepathy/Account/fakecm/fakeproto/invalidaccount",
   NULL };
 
@@ -139,11 +139,11 @@ tp_test_account_manager_class_init (
   GParamSpec *param_spec;
 
   static TpDBusPropertiesMixinPropImpl am_props[] = {
-        { "Interfaces", "interfaces", NULL },
-        { "ValidAccounts", "valid-accounts", NULL },
-        { "InvalidAccounts", "invalid-accounts", NULL },
+        { "Interfaces", (gpointer) "interfaces", NULL },
+        { "ValidAccounts", (gpointer) "valid-accounts", NULL },
+        { "InvalidAccounts", (gpointer) "invalid-accounts", NULL },
         /*
-        { "SupportedAccountProperties", "supported-account-properties", NULL },
+        { "SupportedAccountProperties", (gpointer) "supported-account-properties", NULL },
         */
         { NULL }
   };

@@ -655,6 +655,8 @@ status_changed_cb (TpBaseConnection *conn,
           tp_test_contact_list_manager_close_all (self);
         }
       break;
+    default:
+        g_assert_not_reached ();
     }
 }
 
@@ -900,7 +902,7 @@ tp_test_contact_list_manager_foreach_channel_class (TpChannelManager *manager,
 
     func (manager, table, allowed_properties, user_data);
 
-    g_hash_table_insert (table, TP_PROP_CHANNEL_TARGET_HANDLE_TYPE,
+    g_hash_table_insert (table, (gpointer) TP_PROP_CHANNEL_TARGET_HANDLE_TYPE,
         tp_g_value_slice_new_uint (TP_HANDLE_TYPE_GROUP));
     func (manager, table, allowed_properties, user_data);
 
@@ -1429,6 +1431,7 @@ tp_test_contact_list_manager_add_to_list (TpTestContactListManager *self,
         }
       return TRUE;
 
+    case INVALID_TP_TEST_CONTACT_LIST:
     default:
       g_return_val_if_reached (FALSE);
     }
@@ -1598,6 +1601,7 @@ tp_test_contact_list_manager_remove_from_list (TpTestContactListManager *self,
         }
       return TRUE;
 
+    case INVALID_TP_TEST_CONTACT_LIST:
     default:
       g_return_val_if_reached (FALSE);
     }

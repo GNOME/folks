@@ -191,22 +191,22 @@ tp_test_account_class_init (TpTestAccountClass *klass)
   GParamSpec *param_spec;
 
   static TpDBusPropertiesMixinPropImpl a_props[] = {
-        { "Interfaces", "interfaces", NULL },
-        { "DisplayName", "display-name", NULL },
-        { "Icon", "icon", NULL },
-        { "Valid", "valid", NULL },
-        { "Enabled", "enabled", NULL },
-        { "Nickname", "nickname", NULL },
-        { "Parameters", "parameters", NULL },
-        { "AutomaticPresence", "automatic-presence", NULL },
-        { "ConnectAutomatically", "connect-automatically", NULL },
-        { "Connection", "connection", NULL },
-        { "ConnectionStatus", "connection-status", NULL },
-        { "ConnectionStatusReason", "connection-status-reason", NULL },
-        { "CurrentPresence", "current-presence", NULL },
-        { "RequestedPresence", "requested-presence", NULL },
-        { "NormalizedName", "normalized-name", NULL },
-        { "HasBeenOnline", "has-been-online", NULL },
+        { "Interfaces", (gpointer) "interfaces", NULL },
+        { "DisplayName", (gpointer) "display-name", NULL },
+        { "Icon", (gpointer) "icon", NULL },
+        { "Valid", (gpointer) "valid", NULL },
+        { "Enabled", (gpointer) "enabled", NULL },
+        { "Nickname", (gpointer) "nickname", NULL },
+        { "Parameters", (gpointer) "parameters", NULL },
+        { "AutomaticPresence", (gpointer) "automatic-presence", NULL },
+        { "ConnectAutomatically", (gpointer) "connect-automatically", NULL },
+        { "Connection", (gpointer) "connection", NULL },
+        { "ConnectionStatus", (gpointer) "connection-status", NULL },
+        { "ConnectionStatusReason", (gpointer) "connection-status-reason", NULL },
+        { "CurrentPresence", (gpointer) "current-presence", NULL },
+        { "RequestedPresence", (gpointer) "requested-presence", NULL },
+        { "NormalizedName", (gpointer) "normalized-name", NULL },
+        { "HasBeenOnline", (gpointer) "has-been-online", NULL },
         { NULL }
   };
 

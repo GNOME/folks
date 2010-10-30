@@ -66,9 +66,10 @@ typedef enum {
     INVALID_TP_TEST_CONTACT_LIST,
     TP_TEST_CONTACT_LIST_SUBSCRIBE = 1,
     TP_TEST_CONTACT_LIST_PUBLISH,
-    TP_TEST_CONTACT_LIST_STORED,
-    NUM_TP_TEST_CONTACT_LISTS
+    TP_TEST_CONTACT_LIST_STORED
 } TpTestContactListHandle;
+
+#define NUM_TP_TEST_CONTACT_LISTS TP_TEST_CONTACT_LIST_STORED + 1
 
 /* this enum must be kept in sync with the array _statuses in
  * contact-list-manager.c */
