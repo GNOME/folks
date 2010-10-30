@@ -15,12 +15,6 @@ libfolks_test_la_VALAFLAGS = \
 	-H folks-test.h \
 	$(NULL)
 
-# The quoting here is unnecessary but harmless, and has the useful side-effect
-# that vim quickfix mode (:make) doesn't interpret the libtool --mode=link
-# command as an error message in a bizarrely named file
-libfolks_test_la_LDFLAGS = \
-        -version-info "$(LT_CURRENT)":"$(LT_REVISION)":"$(LT_AGE)"
-
 CLEANFILES = \
 	$(libfolks_test_la_SOURCES:.vala=.c) \
 	*.stamp \
