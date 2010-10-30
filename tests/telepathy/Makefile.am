@@ -46,6 +46,7 @@ contact_retrieval_SOURCES = \
 	$(NULL)
 
 contact_retrieval_LDADD = \
+	$(GEE_LIBS) \
 	$(top_builddir)/tests/lib/telepathy/contactlist/libtp-test-contactlist.la \
 	$(top_builddir)/folks/libfolks.la
 
