@@ -412,14 +412,14 @@ public class Folks.IndividualAggregator : Object
 
           /* Create the final linked Individual */
           final_individual = new Individual (final_personas);
-
           debug ("    Created new individual '%s' with personas:",
               final_individual.id);
           final_personas.foreach ((i) =>
             {
               unowned Persona final_persona = (Persona) i;
 
-              debug ("        %s (%s)", final_persona.uid, final_persona.iid);
+              debug ("        %s (is user: %s, IID: %s)", final_persona.uid,
+                  final_persona.is_user ? "yes" : "no", final_persona.iid);
 
               /* Add the Persona to the link map. Its trust level will be
                * reflected in final_individual.trust_level, so other Personas
@@ -526,7 +526,8 @@ public class Folks.IndividualAggregator : Object
           unowned Persona persona = (Persona) p;
           PersonaStoreTrust trust_level = persona.store.trust_level;
 
-          debug ("    %s (%s)", persona.uid, persona.iid);
+          debug ("    %s (is user: %s, IID: %s)", persona.uid,
+              persona.is_user ? "yes" : "no", persona.iid);
 
           /* Build a hash table of the removed Personas so that we can quickly
            * eliminate them from the list of Personas to relink, below. */
@@ -603,7 +604,10 @@ public class Folks.IndividualAggregator : Object
 
       debug ("Relinking Personas:");
       foreach (unowned Persona persona in relinked_personas)
-        debug ("    %s (%s)", persona.uid, persona.iid);
+        {
+          debug ("    %s (is user: %s, IID: %s)", persona.uid,
+              persona.is_user ? "yes" : "no", persona.iid);
+        }
 
       this.add_personas (relinked_personas, ref added_individuals,
           ref replaced_individuals, ref user);
@@ -940,7 +944,8 @@ public class Folks.IndividualAggregator : Object
         {
           if (persona.store == this.writeable_store)
             {
-              debug ("    %s (%s)", persona.uid, persona.iid);
+              debug ("    %s (is user: %s, IID: %s)", persona.uid,
+                  persona.is_user ? "yes" : "no", persona.iid);
               yield this.writeable_store.remove_persona (persona);
             }
         }
