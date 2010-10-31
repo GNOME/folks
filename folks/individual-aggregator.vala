@@ -501,6 +501,18 @@ public class Folks.IndividualAggregator : Object
       this.add_personas (relinked_personas, ref added_individuals,
           ref replaced_individuals);
 
+      /* Signal the removal of the replaced_individuals at the same time as the
+       * removed_individuals. (The only difference between replaced individuals
+       * and removed ones is that replaced individuals specify a replacement
+       * when they emit their Individual:removed signal. */
+      if (replaced_individuals != null)
+        {
+          MapIterator<Individual, Individual> iter =
+              replaced_individuals.map_iterator ();
+          while (iter.next () == true)
+            removed_individuals.prepend (iter.get_key ());
+        }
+
       /* Signal the addition of new individuals and removal of old ones to the
        * aggregator */
       if (added_individuals != null || removed_individuals != null)
@@ -541,6 +553,11 @@ public class Folks.IndividualAggregator : Object
 
   private void individual_removed_cb (Individual i, Individual? replacement)
     {
+      /* Only signal if the individual is still in this.individuals. This allows
+       * us to group removals together in, e.g., personas_changed_cb(). */
+      if (this.individuals.lookup (i.id) == null)
+        return;
+
       var i_list = new GLib.List<Individual> ();
       i_list.append (i);
 
