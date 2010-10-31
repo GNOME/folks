@@ -35,8 +35,12 @@ libtp_test_contactlist_la_SOURCES = \
 libtp_test_contactlist_la_CFLAGS = \
 	$(ERROR_CFLAGS) \
 	$(TP_GLIB_CFLAGS) \
+	$(DBUS_GLIB_CFLAGS) \
 	$(NULL)
-libtp_test_contactlist_la_LIBADD = $(TP_GLIB_LIBS)
+libtp_test_contactlist_la_LIBADD = \
+	$(TP_GLIB_LIBS) \
+	$(DBUS_GLIB_LIBS) \
+	$(NULL)
 
 _gen/tp_test_contact_list.manager _gen/param-spec-struct.h: \
 			manager-file.py $(top_srcdir)/tests/tools/manager-file.py
