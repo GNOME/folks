@@ -33,6 +33,11 @@ noinst_PROGRAMS = \
 	individual-retrieval \
 	$(NULL)
 
+backend_store_key_file=$(srcdir)/data/backend-store-key-file-only.ini
+TESTS_ENVIRONMENT = \
+        FOLKS_BACKEND_STORE_KEY_FILE_PATH=$(backend_store_key_file) \
+        $(NULL)
+
 TESTS = $(noinst_PROGRAMS)
 
 individual_retrieval_SOURCES = \

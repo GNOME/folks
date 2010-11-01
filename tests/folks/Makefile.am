@@ -30,6 +30,11 @@ noinst_PROGRAMS = \
 	backend-loading \
 	$(NULL)
 
+backend_store_key_file=$(top_srcdir)/tests/data/backend-store-all.ini
+TESTS_ENVIRONMENT = \
+	FOLKS_BACKEND_STORE_KEY_FILE_PATH=$(backend_store_key_file) \
+	$(NULL)
+
 TESTS = $(noinst_PROGRAMS)
 
 backend_loading_SOURCES = \

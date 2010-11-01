@@ -49,8 +49,10 @@ noinst_PROGRAMS = \
 	$(NULL)
 
 SESSION_CONF = $(top_builddir)/tests/lib/telepathy/contactlist/session.conf
+backend_store_key_file=$(srcdir)/data/backend-store-telepathy-only.ini
 TESTS_ENVIRONMENT = \
 	FOLKS_BACKEND_KEY_FILE_PATH=$(srcdir)/data/relationships-empty.ini \
+	FOLKS_BACKEND_STORE_KEY_FILE_PATH=$(backend_store_key_file) \
 	$(RUN_WITH_PRIVATE_BUS) \
 	--config-file=$(SESSION_CONF) \
 	--
