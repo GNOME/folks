@@ -84,6 +84,7 @@ VALA_REQUIRED=0.11.6
 VALADOC_REQUIRED=0.2.1
 TRACKER_SPARQL_REQUIRED=0.10
 GCONF2_REQUIRED=2.31
+SW_CLIENT_REQUIRED=0.25
 
 PKG_CHECK_MODULES([GLIB],
                   [glib-2.0 >= $GLIB_REQUIRED
@@ -101,6 +102,13 @@ if test x$enable_tracker_backend = xyes; then
         PKG_CHECK_MODULES([TRACKER_SPARQL],
                           [tracker-sparql-0.10 >= $TRACKER_SPARQL_REQUIRED])
 fi
+
+PKG_CHECK_MODULES([SW_CLIENT], [libsocialweb-client >= $SW_CLIENT_REQUIRED])
+VALA_CHECK_PACKAGES([telepathy-glib
+                     dbus-glib-1
+                     gio-2.0
+                     gee-1.0
+                     libsocialweb-client])
 
 #
 # Vala building options -- allows tarball builds without installing Vala
@@ -358,6 +366,7 @@ AC_CONFIG_FILES([
     Makefile
     backends/Makefile
     backends/key-file/Makefile
+    backends/libsocialweb/Makefile
     backends/telepathy/Makefile
     backends/telepathy/lib/Makefile
     backends/tracker/Makefile
