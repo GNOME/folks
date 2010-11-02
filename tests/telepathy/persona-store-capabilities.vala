@@ -8,7 +8,6 @@ using Gee;
 public class PersonaStoreCapabilitiesTests : Folks.TestCase
 {
   private TpTest.Backend tp_backend;
-  private MainLoop main_loop;
   private HashSet<string> group_flags_received;
 
   public PersonaStoreCapabilitiesTests ()
@@ -25,23 +24,12 @@ public class PersonaStoreCapabilitiesTests : Folks.TestCase
     {
       this.group_flags_received = new HashSet<string> (str_hash, str_equal);
 
-      this.main_loop = new GLib.MainLoop (null, false);
       this.tp_backend.set_up ();
     }
 
   public override void tear_down ()
     {
       this.tp_backend.tear_down ();
-
-      Timeout.add_seconds (5, () =>
-        {
-          this.main_loop.quit ();
-          this.main_loop = null;
-          return false;
-        });
-
-      /* Run the main loop to process the carnage and destruction */
-      this.main_loop.run ();
     }
 
   public void test_persona_store_capabilities ()

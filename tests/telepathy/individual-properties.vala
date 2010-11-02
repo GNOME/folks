@@ -8,7 +8,6 @@ using Gee;
 public class IndividualPropertiesTests : Folks.TestCase
 {
   private TpTest.Backend tp_backend;
-  private MainLoop main_loop;
   private string individual_id_prefix = "telepathy:protocol:";
 
   public IndividualPropertiesTests ()
@@ -27,23 +26,12 @@ public class IndividualPropertiesTests : Folks.TestCase
 
   public override void set_up ()
     {
-      this.main_loop = new GLib.MainLoop (null, false);
       this.tp_backend.set_up ();
     }
 
   public override void tear_down ()
     {
       this.tp_backend.tear_down ();
-
-      Timeout.add_seconds (5, () =>
-        {
-          this.main_loop.quit ();
-          this.main_loop = null;
-          return false;
-        });
-
-      /* Run the main loop to process the carnage and destruction */
-      this.main_loop.run ();
     }
 
   public void test_individual_properties ()

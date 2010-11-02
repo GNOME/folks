@@ -8,7 +8,6 @@ using Gee;
 public class IndividualRetrievalTests : Folks.TestCase
 {
   private TpTest.Backend tp_backend;
-  private MainLoop main_loop;
   private HashSet<string> default_individuals;
   private string individual_id_prefix = "telepathy:protocol:";
 
@@ -37,7 +36,13 @@ public class IndividualRetrievalTests : Folks.TestCase
 
   public override void set_up ()
     {
-      this.main_loop = new GLib.MainLoop (null, false);
+      /* Disable the key-file backend so it doesn't interfere with the tests */
+      BackendStore store = BackendStore.dup ();
+      store.prepare.begin ((o, r) =>
+        {
+          store.prepare.end (r);
+          store.disable_backend.begin ("key-file");
+        });
 
       this.tp_backend.set_up ();
     }
@@ -45,16 +50,6 @@ public class IndividualRetrievalTests : Folks.TestCase
   public override void tear_down ()
     {
       this.tp_backend.tear_down ();
-
-      Timeout.add_seconds (5, () =>
-        {
-          this.main_loop.quit ();
-          this.main_loop = null;
-          return false;
-        });
-
-      /* Run the main loop to process the carnage and destruction */
-      this.main_loop.run ();
     }
 
   public void test_aggregator ()
