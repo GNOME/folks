@@ -98,6 +98,33 @@ public class Folks.Backends.Tp.Backend : Folks.Backend
         }
     }
 
+  /**
+   * {@inheritDoc}
+   */
+  public override async void unprepare () throws GLib.Error
+    {
+      this.account_manager.account_enabled.disconnect (this.account_enabled_cb);
+      this.account_manager.account_validity_changed.disconnect (
+          this.account_validity_changed_cb);
+      this.account_manager = null;
+
+      this.persona_stores.foreach ((k, v) =>
+        {
+          this.persona_store_removed ((PersonaStore) v);
+        });
+
+      this.persona_stores.remove_all ();
+
+      this._is_prepared = false;
+      this.notify_property ("is-prepared");
+    }
+
+  private void account_validity_changed_cb (Account account, bool valid)
+    {
+      if (valid)
+        this.account_enabled_cb (account);
+    }
+
   private void account_enabled_cb (Account account)
     {
       PersonaStore store = this.persona_stores.lookup (

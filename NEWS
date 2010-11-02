@@ -1,10 +1,18 @@
 Overview of changes from libfolks 0.3.1 to libfolks 0.3.2
 ==========================================================
 
+Major changes:
+* BackendStore.load_backends() now (un)loads backends which have been
+  (dis|en)abled since the last call
+
 API changes:
 * Added BackendStore.prepare() and BackendStore::is-prepared
 * Add BackendStore.enable_backend().
 * Add BackendStore.disable_backend().
+* Add BackendStore.unprepare().
+
+Bugs fixed:
+* Bug 629081 — Add API to allow specific backends to be disabled
 
 Overview of changes from libfolks 0.3.0 to libfolks 0.3.1
 ==========================================================

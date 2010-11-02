@@ -20,6 +20,7 @@ public class BackendLoadingTests : Folks.TestCase
 
       this.add_test ("load and prep", this.test_load_and_prep);
       this.add_test ("disabling", this.test_disabling);
+      this.add_test ("reloading", this.test_reloading);
     }
 
   public override void set_up ()
@@ -118,6 +119,136 @@ public class BackendLoadingTests : Folks.TestCase
         {
           GLib.error ("Failed to load backends: %s", e.message);
         }
+    }
+
+  public void test_reloading ()
+    {
+      this.main_loop = new GLib.MainLoop (null, false);
+
+      var store = BackendStore.dup ();
+      this.test_reloading_async (store, (o, r) =>
+        {
+          this.test_reloading_async.end (r);
+        });
+
+      main_loop.run ();
+    }
+
+  private async void test_reloading_async (BackendStore store)
+    {
+      HashSet<string> backends_expected;
+
+      /*
+       * First loading
+       */
+      backends_expected = new HashSet<string> (str_hash, str_equal);
+      backends_expected.add ("key-file");
+      backends_expected.add ("telepathy");
+
+      try
+        {
+          yield store.load_backends ();
+
+          store.enabled_backends.foreach ((i) =>
+            {
+              var backend = (Backend) i;
+              assert (backends_expected.contains (backend.name));
+              backends_expected.remove (backend.name);
+            });
+
+          assert (backends_expected.size == 0);
+        }
+      catch (GLib.Error e1)
+        {
+          GLib.error ("Failed to load backends: %s", e1.message);
+        }
+
+      /*
+       * Second loading: late disabling
+       */
+      backends_expected = new HashSet<string> (str_hash, str_equal);
+      backends_expected.add ("telepathy");
+
+      /* Disable some backends */
+      yield store.disable_backend ("key-file");
+
+      /* this time we should get (all - key-file) */
+      try
+        {
+          yield store.load_backends ();
+
+          store.enabled_backends.foreach ((i) =>
+            {
+              var backend = (Backend) i;
+              assert (backends_expected.contains (backend.name));
+              backends_expected.remove (backend.name);
+            });
+
+          assert (backends_expected.size == 0);
+        }
+      catch (GLib.Error e2)
+        {
+          GLib.error ("Failed to load backends: %s", e2.message);
+        }
+
+      /*
+       * Third loading: late enabling
+       */
+      backends_expected = new HashSet<string> (str_hash, str_equal);
+      backends_expected.add ("key-file");
+      backends_expected.add ("telepathy");
+
+      /* Re-enable some backends */
+      yield store.enable_backend ("key-file");
+
+      /* this time we should get them all */
+      try
+        {
+          yield store.load_backends ();
+
+          store.enabled_backends.foreach ((i) =>
+            {
+              var backend = (Backend) i;
+              assert (backends_expected.contains (backend.name));
+              backends_expected.remove (backend.name);
+            });
+
+          assert (backends_expected.size == 0);
+        }
+      catch (GLib.Error e3)
+        {
+          GLib.error ("Failed to load backends: %s", e3.message);
+        }
+
+      /*
+       * Fourth loading: idempotency
+       */
+
+      backends_expected = new HashSet<string> (str_hash, str_equal);
+      backends_expected.add ("key-file");
+      backends_expected.add ("telepathy");
+
+      /* this time we should get them all */
+      try
+        {
+          yield store.load_backends ();
+
+          store.enabled_backends.foreach ((i) =>
+            {
+              var backend = (Backend) i;
+
+              assert (backends_expected.contains (backend.name));
+              backends_expected.remove (backend.name);
+            });
+
+          assert (backends_expected.size == 0);
+        }
+      catch (GLib.Error e4)
+        {
+          GLib.error ("Failed to load backends: %s", e4.message);
+        }
+
+      this.main_loop.quit ();
     }
 }
 

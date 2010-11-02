@@ -110,6 +110,22 @@ public class Folks.Backends.Kf.Backend : Folks.Backend
         }
     }
 
+  /**
+   * {@inheritDoc}
+   */
+  public override async void unprepare () throws GLib.Error
+    {
+      this.persona_stores.foreach ((k, v) =>
+        {
+          this.persona_store_removed ((PersonaStore) v);
+        });
+
+      this.persona_stores.remove_all ();
+
+      this._is_prepared = false;
+      this.notify_property ("is-prepared");
+    }
+
   private void store_removed_cb (Folks.PersonaStore store)
     {
       this.persona_store_removed (store);

@@ -105,6 +105,22 @@ public abstract class Folks.Backend : Object
    */
   public abstract async void prepare () throws GLib.Error;
 
+  /**
+   * Revert the Backend to its pre-prepared state.
+   *
+   * This will disconnect this Backend and its dependencies from their
+   * respective services and the Backend will issue
+   * {@link Backend.persona_store_removed} for each of its
+   * {@link PersonaStore}s.
+   *
+   * Most users won't need to use this function.
+   *
+   * If this function throws an error, the Backend will not be functional.
+   *
+   * @since 0.3.2
+   */
+  public abstract async void unprepare () throws GLib.Error;
+
   construct
     {
       this.persona_stores = new HashTable<string, PersonaStore> (str_hash,

@@ -39,13 +39,13 @@ public class Folks.BackendStore : Object {
   [CCode (has_target = false)]
   private delegate void ModuleFinalizeFunc (BackendStore store);
 
+  /* this contains all backends, regardless of enabled or prepared state */
   private HashMap<string,Backend> backend_hash;
   private HashMap<string,Backend> _prepared_backends;
   private File config_file;
   private GLib.KeyFile backends_key_file;
-  private GLib.List<ModuleFinalizeFunc> finalize_funcs = null;
+  private HashMap<string,Module> modules;
   private static weak BackendStore instance;
-  private static bool _backends_loaded = false;
   private bool _is_prepared = false;
 
   /**
@@ -121,6 +121,7 @@ public class Folks.BackendStore : Object {
       /* Treat this as a library init function */
       Debug.set_flags (Environment.get_variable ("FOLKS_DEBUG"));
 
+      this.modules = new HashMap<string,unowned Module> (str_hash, str_equal);
       this.backend_hash = new HashMap<string,Backend> (str_hash, str_equal);
       this._prepared_backends = new HashMap<string,Backend> (str_hash,
           str_equal);
@@ -128,13 +129,17 @@ public class Folks.BackendStore : Object {
 
   ~BackendStore ()
     {
-      /* Finalize all the loaded modules */
-      foreach (ModuleFinalizeFunc func in this.finalize_funcs)
-        func (this);
-
-      /* reset status of backends */
-      lock (this._backends_loaded)
-        this._backends_loaded = false;
+      /* Finalize all the loaded modules that have finalize functions */
+      foreach (var entry in this.modules)
+        {
+          unowned Module module = entry.value;
+          void* func;
+          if (module.symbol ("module_finalize", out func))
+            {
+              ModuleFinalizeFunc module_finalize = (ModuleFinalizeFunc) func;
+              module_finalize (this);
+            }
+        }
 
       /* manually clear the singleton instance */
       instance = null;
@@ -151,12 +156,12 @@ public class Folks.BackendStore : Object {
    */
   public async void prepare ()
     {
+      /* (re-)load the list of disabled backends */
+      yield this.load_disabled_backend_names ();
+
       if (this._is_prepared == true)
         return;
       this._is_prepared = true;
-
-      /* Load the list of disabled backends */
-      yield this.load_disabled_backend_names ();
 
       this.notify_property ("is-prepared");
     }
@@ -170,61 +175,100 @@ public class Folks.BackendStore : Object {
    */
   public async void load_backends () throws GLib.Error
     {
-      lock (this._backends_loaded)
+      assert (Module.supported());
+
+      yield this.prepare ();
+
+      /* unload backends that have been disabled since they were loaded */
+      foreach (var backend_existing in this.backend_hash.values)
         {
-          if (!this._backends_loaded)
+          yield this.backend_unload_if_needed (backend_existing);
+        }
+
+      var path = Environment.get_variable ("FOLKS_BACKEND_DIR");
+      if (path == null)
+        {
+          path = BuildConf.BACKEND_DIR;
+
+          debug ("Using built-in backend dir '%s' (override with " +
+              "environment variable FOLKS_BACKEND_DIR)", path);
+        }
+      else
+        {
+          debug ("Using environment variable FOLKS_BACKEND_DIR = " +
+              "'%s' to look for backends", path);
+        }
+
+      File dir = File.new_for_path (path);
+      assert (dir != null && yield is_dir (dir));
+
+      var modules = yield this.get_modules_from_dir (dir);
+
+      /* this will load any new modules found in the backends dir and will
+       * prepare and unprepare backends such that they match the state in the
+       * backend store key file */
+      foreach (var mod_entry in modules)
+        {
+          var module = (File) mod_entry.value;
+          this.load_module_from_file (module);
+        }
+
+      /* this is populated indirectly from load_module_from_file(), above */
+      foreach (var backend in this.backend_hash.values)
+        {
+          yield this.backend_load_if_needed (backend);
+        }
+    }
+
+  private async void backend_load_if_needed (Backend backend)
+    {
+      if (this.backend_is_enabled (backend.name))
+        {
+          try
             {
-              assert (Module.supported());
-
-              if (this._is_prepared == false)
-                yield this.prepare ();
-
-              var path = Environment.get_variable ("FOLKS_BACKEND_DIR");
-              if (path == null)
+              if (!this._prepared_backends.has_key (backend.name))
                 {
-                  path = BuildConf.BACKEND_DIR;
+                  yield backend.prepare ();
 
-                  debug ("Using built-in backend dir '%s' (override with " +
-                      "environment variable FOLKS_BACKEND_DIR)", path);
+                  debug ("New backend '%s' prepared", backend.name);
+                  this._prepared_backends.set (backend.name, backend);
+                  this.backend_available (backend);
                 }
-              else
-                {
-                  debug ("Using environment variable FOLKS_BACKEND_DIR = " +
-                      "'%s' to look for backends", path);
-                }
-
-              File dir = File.new_for_path (path);
-              assert (dir != null && yield is_dir (dir));
-
-              var modules = yield this.get_modules_from_dir (dir);
-              foreach (var entry in modules)
-                {
-                  var module = (File) entry.value;
-                  this.load_module_from_file (module);
-                }
-
-              /* this is populated indirectly from load_module_from_file(),
-               * above */
-              foreach (var backend in this.backend_hash.values)
-                {
-                  try
-                    {
-                      yield backend.prepare ();
-
-                      debug ("New backend '%s' prepared", backend.name);
-                      this._prepared_backends.set (backend.name, backend);
-                      this.backend_available (backend);
-                    }
-                  catch (GLib.Error e)
-                    {
-                      warning ("Error preparing Backend '%s': %s", backend.name,
-                          e.message);
-                    }
-                }
-
-              this._backends_loaded = true;
+            }
+          catch (GLib.Error e)
+            {
+              warning ("Error preparing Backend '%s': %s", backend.name,
+                  e.message);
             }
         }
+    }
+
+  private async bool backend_unload_if_needed (Backend backend)
+    {
+      bool unloaded = false;
+
+      if (!this.backend_is_enabled (backend.name))
+        {
+          var backend_existing = this.backend_hash.get (backend.name);
+          if (backend_existing != null)
+            {
+              try
+                {
+                  yield backend_existing.unprepare ();
+                }
+              catch (GLib.Error e)
+                {
+                  warning ("Error unpreparing Backend '%s': %s", backend.name,
+                      e.message);
+                }
+
+              this._prepared_backends.unset (backend_existing.name);
+
+              unloaded = true;
+            }
+        }
+
+      return unloaded;
     }
 
   /**
@@ -234,12 +278,23 @@ public class Folks.BackendStore : Object {
    */
   public void add_backend (Backend backend)
     {
-      /* Check the backend isn't disabled */
+      /* Purge any other backend with the same name; re-add if enabled */
+      var backend_existing = this.backend_hash.get (backend.name);
+      if (backend_existing != null && backend_existing != backend)
+        {
+          backend_existing.unprepare ();
+          this._prepared_backends.unset (backend_existing.name);
+        }
+
+      this.backend_hash.set (backend.name, backend);
+    }
+
+  private bool backend_is_enabled (string name)
+    {
       bool enabled = true;
       try
         {
-          enabled = this.backends_key_file.get_boolean (backend.name,
-              "enabled");
+          enabled = this.backends_key_file.get_boolean (name, "enabled");
         }
       catch (KeyFileError e)
         {
@@ -248,13 +303,12 @@ public class Folks.BackendStore : Object {
             {
               warning ("Couldn't check enabled state of backend '%s': %s\n" +
                   "Disabling backend.",
-                  backend.name, e.message);
+                  name, e.message);
               enabled = false;
             }
         }
 
-      if (enabled == true)
-        this.backend_hash.set (backend.name, backend);
+      return enabled;
     }
 
   /**
@@ -378,6 +432,9 @@ public class Folks.BackendStore : Object {
     {
       string file_path = file.get_path ();
 
+      if (this.modules.has_key (file_path))
+        return;
+
       Module module = Module.open (file_path, ModuleFlags.BIND_LOCAL);
       if (module == null)
         {
@@ -390,7 +447,8 @@ public class Folks.BackendStore : Object {
       void* function;
 
       /* this causes the module to call add_backend() for its backends (adding
-       * them to the backend hash) */
+       * them to the backend hash); any backends that already existed will be
+       * removed if they've since been disabled */
       if (!module.symbol("module_init", out function))
         {
           warning ("Failed to find entry point function '%s' in '%s': %s",
@@ -404,12 +462,7 @@ public class Folks.BackendStore : Object {
       ModuleInitFunc module_init = (ModuleInitFunc) function;
       assert (module_init != null);
 
-      /* It's optional for modules to have a finalize function */
-      if (module.symbol ("module_finalize", out function))
-        {
-          ModuleFinalizeFunc module_finalize = (ModuleFinalizeFunc) function;
-          this.finalize_funcs.prepend (module_finalize);
-        }
+      this.modules.set (file_path, module);
 
       /* We don't want our modules to ever unload */
       module.make_resident ();
