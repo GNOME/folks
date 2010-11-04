@@ -23,7 +23,6 @@ EXTRA_DIST = \
 	po/en@boldquot.header \
 	po/en@quot.header \
 	po/insert-header.sin \
-	po/missing \
 	po/quot.sed \
 	po/remove-potcdate.sin \
 	$(NULL)
