@@ -650,6 +650,10 @@ status_changed_cb (TpBaseConnection *conn,
         }
       break;
 
+    case TP_CONNECTION_STATUS_CONNECTING:
+      /* nothing to do here */
+      break;
+
     case TP_CONNECTION_STATUS_DISCONNECTED:
         {
           tp_test_contact_list_manager_close_all (self);
