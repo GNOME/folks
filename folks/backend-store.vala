@@ -196,12 +196,15 @@ public class Folks.BackendStore : Object {
               File dir = File.new_for_path (path);
               assert (dir != null && yield is_dir (dir));
 
-              yield this.load_modules_from_dir (dir);
+              var modules = yield this.get_modules_from_dir (dir);
+              foreach (var entry in modules)
+                {
+                  var module = (File) entry.value;
+                  this.load_module_from_file (module);
+                }
 
-              /* all the found modules should call add_backend() for their
-               * backends (adding them to the backend hash) as a consequence of
-               * load_modules_from_dir(). */
-
+              /* this is populated indirectly from load_module_from_file(),
+               * above */
               foreach (var backend in this.backend_hash.values)
                 {
                   try
@@ -307,7 +310,7 @@ public class Folks.BackendStore : Object {
       yield this.save_key_file ();
     }
 
-  private async void load_modules_from_dir (File dir)
+  private async HashMap<string, File>? get_modules_from_dir (File dir)
     {
       debug ("Searching for modules in folder '%s' ..", dir.get_path ());
 
@@ -332,8 +335,10 @@ public class Folks.BackendStore : Object {
           critical ("Error listing contents of folder '%s': %s",
               dir.get_path (), error.message);
 
-          return;
+          return null;
         }
+
+      var modules_final = new HashMap<string, File> (str_hash, str_equal);
 
       foreach (var info in infos)
         {
@@ -348,11 +353,13 @@ public class Folks.BackendStore : Object {
 
           if (file_type == FileType.DIRECTORY)
             {
-              yield this.load_modules_from_dir (file);
+              var modules = yield this.get_modules_from_dir (file);
+              foreach (var entry in modules)
+                modules_final.set (entry.key, entry.value);
             }
           else if (mime == "application/x-sharedlib" && !is_symlink)
             {
-              this.load_module_from_file (file);
+              modules_final.set (file.get_path (), file);
             }
           else if (mime == null)
             {
@@ -363,6 +370,8 @@ public class Folks.BackendStore : Object {
 
       debug ("Finished searching for modules in folder '%s'",
           dir.get_path ());
+
+      return modules_final;
     }
 
   private void load_module_from_file (File file)
@@ -380,6 +389,8 @@ public class Folks.BackendStore : Object {
 
       void* function;
 
+      /* this causes the module to call add_backend() for its backends (adding
+       * them to the backend hash) */
       if (!module.symbol("module_init", out function))
         {
           warning ("Failed to find entry point function '%s' in '%s': %s",
