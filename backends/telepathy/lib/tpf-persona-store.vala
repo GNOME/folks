@@ -22,7 +22,6 @@
 using GLib;
 using Gee;
 using TelepathyGLib;
-using TelepathyGLib.ContactFeature;
 using Folks;
 
 /**
@@ -46,12 +45,12 @@ public class Tpf.PersonaStore : Folks.PersonaStore
   private string[] undisplayed_groups = { "publish", "stored", "subscribe" };
   private static ContactFeature[] contact_features =
       {
-        ALIAS,
-        AVATAR_DATA,
-        AVATAR_TOKEN,
-        CAPABILITIES,
-        CLIENT_TYPES,
-        PRESENCE
+        ContactFeature.ALIAS,
+        ContactFeature.AVATAR_DATA,
+        ContactFeature.AVATAR_TOKEN,
+        ContactFeature.CAPABILITIES,
+        ContactFeature.CLIENT_TYPES,
+        ContactFeature.PRESENCE
       };
 
   private HashTable<string, Persona> _personas;
