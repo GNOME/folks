@@ -23,6 +23,10 @@ MAINTAINERCLEANFILES = \
 	kf-test.h \
 	$(NULL)
 
+EXTRA_DIST = \
+	kf-test.h \
+	$(NULL)
+
 GITIGNOREFILES = \
 	$(libkf_test_la_SOURCES:.vala=.c) \
 	libkf_test_la_vala.stamp \
