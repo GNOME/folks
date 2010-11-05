@@ -77,8 +77,8 @@ public class Folks.BackendStore : Object {
       owned get
         {
           var backends = new GLib.List<Backend> ();
-          foreach (var entry in this._prepared_backends)
-            backends.prepend (entry.value);
+          foreach (var backend in this._prepared_backends.values)
+            backends.prepend (backend);
 
           return backends;
         }
@@ -130,9 +130,8 @@ public class Folks.BackendStore : Object {
   ~BackendStore ()
     {
       /* Finalize all the loaded modules that have finalize functions */
-      foreach (var entry in this.modules)
+      foreach (var module in this.modules.values)
         {
-          unowned Module module = entry.value;
           void* func;
           if (module.symbol ("module_finalize", out func))
             {
@@ -207,17 +206,12 @@ public class Folks.BackendStore : Object {
       /* this will load any new modules found in the backends dir and will
        * prepare and unprepare backends such that they match the state in the
        * backend store key file */
-      foreach (var mod_entry in modules)
-        {
-          var module = (File) mod_entry.value;
-          this.load_module_from_file (module);
-        }
+      foreach (var module in modules.values)
+        this.load_module_from_file (module);
 
       /* this is populated indirectly from load_module_from_file(), above */
       foreach (var backend in this.backend_hash.values)
-        {
-          yield this.backend_load_if_needed (backend);
-        }
+        yield this.backend_load_if_needed (backend);
     }
 
   private async void backend_load_if_needed (Backend backend)
@@ -412,7 +406,7 @@ public class Folks.BackendStore : Object {
           if (file_type == FileType.DIRECTORY)
             {
               var modules = yield this.get_modules_from_dir (file);
-              foreach (var entry in modules)
+              foreach (var entry in modules.entries)
                 modules_final.set (entry.key, entry.value);
             }
           else if (mime == "application/x-sharedlib" && !is_symlink)

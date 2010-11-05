@@ -664,7 +664,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       if (change_maps.size < 1)
         return;
 
-      foreach (var entry in change_maps)
+      foreach (var entry in change_maps.entries)
         {
           var changes = entry.key;
 
@@ -955,17 +955,15 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       /*
        * remove all persona-keyed entries
        */
-      foreach (var entry in this.channel_group_personas_map)
+      foreach (var channel in this.channel_group_personas_map.keys)
         {
-          var channel = (Channel) entry.key;
           var members = this.channel_group_personas_map[channel];
           if (members != null)
             members.remove (persona);
         }
 
-      foreach (var entry in this.group_outgoing_adds)
+      foreach (var name in this.group_outgoing_adds.keys)
         {
-          var name = (string) entry.key;
           var members = this.group_outgoing_adds[name];
           if (members != null)
             members.remove (persona);
@@ -1375,7 +1373,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
 
   private void channel_groups_add_new_personas ()
     {
-      foreach (var entry in this.channel_group_incoming_adds)
+      foreach (var entry in this.channel_group_incoming_adds.entries)
         {
           var channel = (Channel) entry.key;
           var members_added = new GLib.List<Persona> ();
