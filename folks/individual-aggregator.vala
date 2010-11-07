@@ -493,6 +493,40 @@ public class Folks.IndividualAggregator : Object
         }
     }
 
+  private void remove_persona_from_link_map (Persona persona)
+    {
+      this.link_map.remove (persona.iid);
+
+      if (persona.store.trust_level == PersonaStoreTrust.FULL)
+        {
+          debug ("    Removing links to %s:", persona.uid);
+
+          /* Remove maps from the Persona's linkable properties to
+           * Individuals. Add the Individuals to a list of Individuals to be
+           * removed. */
+          foreach (string prop_name in persona.linkable_properties)
+            {
+              unowned ObjectClass pclass = persona.get_class ();
+              if (pclass.find_property (prop_name) == null)
+                {
+                  warning (
+                      /* Translators: the parameter is a property name. */
+                      _("Unknown property '%s' in linkable property list."),
+                      prop_name);
+                  continue;
+                }
+
+              persona.linkable_property_to_links (prop_name, (l) =>
+                {
+                  string prop_linking_value = (string) l;
+
+                  debug ("        %s", prop_linking_value);
+                  this.link_map.remove (prop_linking_value);
+                });
+            }
+        }
+    }
+
   private void personas_changed_cb (PersonaStore store,
       GLib.List<Persona>? added,
       GLib.List<Persona>? removed,
@@ -524,7 +558,6 @@ public class Folks.IndividualAggregator : Object
       removed.foreach ((p) =>
         {
           unowned Persona persona = (Persona) p;
-          PersonaStoreTrust trust_level = persona.store.trust_level;
 
           debug ("    %s (is user: %s, IID: %s)", persona.uid,
               persona.is_user ? "yes" : "no", persona.iid);
@@ -539,36 +572,9 @@ public class Folks.IndividualAggregator : Object
           Individual ind = this.link_map.lookup (persona.iid);
           if (ind != null)
             removed_individuals.prepend (ind);
-          this.link_map.remove (persona.iid);
 
-          if (trust_level == PersonaStoreTrust.FULL)
-            {
-              debug ("    Removing links:");
-
-              /* Remove maps from the Persona's linkable properties to
-               * Individuals. Add the Individuals to a list of Individuals to be
-               * removed. */
-              foreach (string prop_name in persona.linkable_properties)
-                {
-                  unowned ObjectClass pclass = persona.get_class ();
-                  if (pclass.find_property (prop_name) == null)
-                    {
-                      warning (
-                          /* Translators: the parameter is a property name. */
-                          _("Unknown property '%s' in linkable property list."),
-                          prop_name);
-                      continue;
-                    }
-
-                  persona.linkable_property_to_links (prop_name, (l) =>
-                    {
-                      string prop_linking_value = (string) l;
-
-                      debug ("        %s", prop_linking_value);
-                      this.link_map.remove (prop_linking_value);
-                    });
-                }
-            }
+          /* Remove the Persona's links from the link map */
+          this.remove_persona_from_link_map (persona);
         });
 
       /* Remove the Individuals which were pointed to by the linkable properties
@@ -596,38 +602,8 @@ public class Folks.IndividualAggregator : Object
 
               relinked_personas.prepend (persona);
 
-              /* Remove links to the persona */
-              this.link_map.remove (persona.iid);
-
-              if (persona.store.trust_level == PersonaStoreTrust.FULL)
-                {
-                  debug ("    Removing links:");
-
-                  /* Remove maps from the Persona's linkable properties to
-                   * Individuals. Add the Individuals to a list of Individuals
-                   * to be removed. */
-                 foreach (string prop_name in persona.linkable_properties)
-                    {
-                     unowned ObjectClass pclass = persona.get_class ();
-                      if (pclass.find_property (prop_name) == null)
-                        {
-                          warning (
-                              /* Translators: the parameter is a property
-                               * name. */
-                              _("Unknown property '%s' in linkable property list."),
-                              prop_name);
-                          continue;
-                        }
-
-                      persona.linkable_property_to_links (prop_name, (l) =>
-                        {
-                          string prop_linking_value = (string) l;
-
-                          debug ("        %s", prop_linking_value);
-                          this.link_map.remove (prop_linking_value);
-                        });
-                    }
-                }
+              /* Remove links to the Persona */
+              this.remove_persona_from_link_map (persona);
             }
 
           if (user == individual)
