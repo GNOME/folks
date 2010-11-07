@@ -589,10 +589,45 @@ public class Folks.IndividualAggregator : Object
 
           /* Build a list of Personas which need relinking. Ensure we don't
            * include any of the Personas which have just been removed. */
-          foreach (unowned Persona p in individual.personas)
+          foreach (unowned Persona persona in individual.personas)
             {
-              if (removed_personas.contains (p) == false)
-                relinked_personas.prepend (p);
+              if (removed_personas.contains (persona) == true)
+                continue;
+
+              relinked_personas.prepend (persona);
+
+              /* Remove links to the persona */
+              this.link_map.remove (persona.iid);
+
+              if (persona.store.trust_level == PersonaStoreTrust.FULL)
+                {
+                  debug ("    Removing links:");
+
+                  /* Remove maps from the Persona's linkable properties to
+                   * Individuals. Add the Individuals to a list of Individuals
+                   * to be removed. */
+                 foreach (string prop_name in persona.linkable_properties)
+                    {
+                     unowned ObjectClass pclass = persona.get_class ();
+                      if (pclass.find_property (prop_name) == null)
+                        {
+                          warning (
+                              /* Translators: the parameter is a property
+                               * name. */
+                              _("Unknown property '%s' in linkable property list."),
+                              prop_name);
+                          continue;
+                        }
+
+                      persona.linkable_property_to_links (prop_name, (l) =>
+                        {
+                          string prop_linking_value = (string) l;
+
+                          debug ("        %s", prop_linking_value);
+                          this.link_map.remove (prop_linking_value);
+                        });
+                    }
+                }
             }
 
           if (user == individual)
