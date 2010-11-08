@@ -4,6 +4,8 @@ Overview of changes from libfolks 0.3.1 to libfolks 0.3.2
 Major changes:
 * BackendStore.load_backends() now (un)loads backends which have been
   (dis|en)abled since the last call
+* FOLKS_BACKEND_DIR has been replaced by FOLKS_BACKEND_PATH. It accepts any
+  number of files and directories, separated by :
 
 API changes:
 * Added BackendStore.prepare() and BackendStore::is-prepared

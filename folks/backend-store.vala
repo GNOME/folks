@@ -168,7 +168,7 @@ public class Folks.BackendStore : Object {
   /**
    * Find, load, and prepare all backends which are not disabled.
    *
-   * Backends will be searched for in the path given by the `FOLKS_BACKEND_DIR`
+   * Backends will be searched for in the path given by the `FOLKS_BACKEND_PATH`
    * environment variable, if it's set. If it's not set, backends will be
    * searched for in a path set at compilation time.
    */
@@ -184,24 +184,48 @@ public class Folks.BackendStore : Object {
           yield this.backend_unload_if_needed (backend_existing);
         }
 
-      var path = Environment.get_variable ("FOLKS_BACKEND_DIR");
+      var path = Environment.get_variable ("FOLKS_BACKEND_PATH");
       if (path == null)
         {
           path = BuildConf.BACKEND_DIR;
 
           debug ("Using built-in backend dir '%s' (override with " +
-              "environment variable FOLKS_BACKEND_DIR)", path);
+              "environment variable FOLKS_BACKEND_PATH)", path);
         }
       else
         {
-          debug ("Using environment variable FOLKS_BACKEND_DIR = " +
+          debug ("Using environment variable FOLKS_BACKEND_PATH = " +
               "'%s' to look for backends", path);
         }
 
-      File dir = File.new_for_path (path);
-      assert (dir != null && yield is_dir (dir));
+      var modules = new HashMap<string, File?> ();
+      var path_split = path.split (":");
+      foreach (var subpath in path_split)
+        {
+          File file = File.new_for_path (subpath);
+          assert (file != null);
 
-      var modules = yield this.get_modules_from_dir (dir);
+          bool is_file;
+          bool is_dir;
+          yield get_file_info (file, out is_file, out is_dir);
+          if (is_file)
+            {
+              modules.set (subpath, file);
+            }
+          else if (is_dir)
+            {
+              var cur_modules = yield this.get_modules_from_dir (file);
+              foreach (var entry in cur_modules.entries)
+                modules.set (entry.key, entry.value);
+            }
+          else
+            {
+              critical ("FOLKS_BACKEND_PATH component '%s' is not a regular " +
+                  "file or directory; ignoring...",
+                  subpath);
+              assert_not_reached ();
+            }
+        }
 
       /* this will load any new modules found in the backends dir and will
        * prepare and unprepare backends such that they match the state in the
@@ -476,9 +500,13 @@ public class Folks.BackendStore : Object {
       debug ("Loaded module source: '%s'", module.name ());
     }
 
-  private async static bool is_dir (File file)
+  private async static void get_file_info (File file,
+      out bool is_file,
+      out bool is_dir)
     {
       FileInfo file_info;
+      is_file = false;
+      is_dir = false;
 
       try
         {
@@ -502,10 +530,11 @@ public class Folks.BackendStore : Object {
                   file.get_path ());
             }
 
-          return false;
+          return;
         }
 
-      return file_info.get_file_type () == FileType.DIRECTORY;
+      is_file = (file_info.get_file_type () == FileType.REGULAR);
+      is_dir = (file_info.get_file_type () == FileType.DIRECTORY);
     }
 
   private async void load_disabled_backend_names ()
