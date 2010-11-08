@@ -27,8 +27,8 @@ using SocialWebClient;
  * A persona subclass which represents a single libsocialweb contact.
  */
 internal class Folks.Backends.Sw.Persona : Folks.Persona,
-    Aliasable,
-    AvatarDetails
+    AvatarDetails,
+    NameDetails
 {
   private const string[] _linkable_properties = {};
 
@@ -50,11 +50,20 @@ internal class Folks.Backends.Sw.Persona : Folks.Persona,
   public File avatar { get; set; }
 
   /**
-   * An alias for the Persona.
-   *
-   * See {@link Folks.Aliasable.alias}.
+   * {@inheritDoc}
    */
-  public string alias { get; private set; }
+  public StructuredName structured_name { get; private set; }
+
+  /**
+   * {@inheritDoc}
+   */
+  public string full_name { get; private set; }
+
+  private string _nickname;
+  /**
+   * {@inheritDoc}
+   */
+  public string nickname { get { return this._nickname; } }
 
   /**
    * Create a new persona.
@@ -68,8 +77,7 @@ internal class Folks.Backends.Sw.Persona : Folks.Persona,
       var uid = this.build_uid ("folks", store.id, id);
       debug ("Creating new Sw.Persona '%s' for %s UID '%s': %p",
           uid, store.display_name, id, this);
-      Object (alias: item.get_value ("name"),
-              display_id: id,
+      Object (display_id: id,
               uid: uid,
               iid: store.id + ":" + id,
               store: store,
@@ -89,16 +97,30 @@ internal class Folks.Backends.Sw.Persona : Folks.Persona,
 
   public void update (Item item)
     {
-      var name = item.get_value ("name");
-      if (name != null && name != alias)
-        alias = name;
+      var nickname = item.get_value ("name");
+      if (nickname != null && this._nickname != nickname)
+        {
+          this._nickname = nickname;
+          this.notify_property ("nickname");
+        }
 
       var avatar_path = item.get_value ("icon");
       if (avatar_path != null)
         {
           var avatar_file = File.new_for_path (avatar_path);
-          if (avatar != avatar_file)
-            avatar = avatar_file;
+          if (this.avatar != avatar_file)
+            this.avatar = avatar_file;
         }
+
+      var structured_name = new StructuredName.simple (
+          item.get_value ("n.family"), item.get_value ("n.given"));
+      if (!structured_name.is_empty ())
+        this.structured_name = structured_name;
+      else if (this.structured_name != null)
+        this.structured_name = null;
+
+      var full_name = item.get_value ("fn");
+      if (this.full_name != full_name)
+        this.full_name = full_name;
     }
 }
