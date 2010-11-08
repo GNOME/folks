@@ -45,6 +45,10 @@ individual_retrieval_SOURCES = \
 	individual-retrieval.vala \
 	$(NULL)
 
+EXTRA_DIST = \
+	$(backend_store_key_file) \
+	$(NULL)
+
 CLEANFILES = \
         $(addsuffix .c,$(noinst_PROGRAMS)) \
         individual_retrieval_vala.stamp \

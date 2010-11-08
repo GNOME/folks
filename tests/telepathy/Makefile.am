@@ -82,6 +82,7 @@ CLEANFILES = \
 	$(NULL)
 
 EXTRA_DIST = \
+	$(backend_store_key_file) \
 	$(srcdir)/data/relationships-empty.ini \
 	$(NULL)
 
