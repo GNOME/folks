@@ -23,6 +23,7 @@ libfolks_la_SOURCES = \
 	individual.vala \
 	individual-aggregator.vala \
 	linked-hash-set.vala \
+	name-owner.vala \
 	persona.vala \
 	persona-store.vala \
 	types.vala \

@@ -1,0 +1,212 @@
+/*
+ * Copyright (C) 2011 Collabora Ltd.
+ *
+ * This library is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 2.1 of the License, or
+ * (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Authors:
+ *       Marco Barisione <marco.barisione@collabora.co.u>
+ */
+
+using GLib;
+
+/**
+ * Object for a full name split in its constituent parts (given name,
+ * family name, etc.). This structure corresponds to the "N" field in
+ * VCards.  The parts of the name are never null, an empty string
+ * indicates that a property is not set.
+ *
+ * @since 0.3.UNRELEASED
+ */
+public class Folks.StructuredName : Object
+{
+  private string _family_name = "";
+  /**
+   * The family name.
+   *
+   * The family name (also known as surname or last name) of a contact.
+   *
+   * @since 0.3.UNRELEASED
+   */
+  public string family_name
+    {
+      get { return this._family_name; }
+      construct set { this._family_name = value != null ? value : ""; }
+    }
+
+  private string _given_name = "";
+  /**
+   * The given name.
+   *
+   * The family name (also known as first name) of a contact.
+   *
+   * @since 0.3.UNRELEASED
+   */
+  public string given_name
+    {
+      get { return this._given_name; }
+      construct set { this._given_name = value != null ? value : ""; }
+    }
+
+  private string _additional_names = "";
+  /**
+   * Additional names.
+   *
+   * The additional names of a contact, for instance the contact's
+   * middle name.
+   *
+   * @since 0.3.UNRELEASED
+   */
+  public string additional_names
+    {
+      get { return this._additional_names; }
+      construct set { this._additional_names = value != null ? value : ""; }
+    }
+
+  private string _prefixes = "";
+  /**
+   * The prefixes of a name.
+   *
+   * The prefixes used in front of the name (for instance "Mr", "Mrs",
+   * "Doctor" or honorific titles).
+   *
+   * @since 0.3.UNRELEASED
+   */
+  public string prefixes
+    {
+      get { return this._prefixes; }
+      construct set { this._prefixes = value != null ? value : ""; }
+    }
+
+  private string _suffixes = "";
+  /**
+   * The suffixes of a name.
+   *
+   * The suffixes used after a name (for instance "PhD" or "Junior").
+   *
+   * @since 0.3.UNRELEASED
+   */
+  public string suffixes
+    {
+      get { return this._suffixes; }
+      construct set { this._suffixes = value != null ? value : ""; }
+    }
+
+  /**
+   * Create a StructuredName.
+   *
+   * You can pass `null` if a component is not set.
+   *
+   * @param family_name the family (last) name
+   * @param given_name the given (first) name
+   * @param additional_names additional names
+   * @param prefixes prefixes of the name
+   * @param suffixes suffixes of the name
+   * @return a new StructuredName
+   *
+   * @since 0.3.UNRELEASED
+   */
+  public StructuredName (string? family_name, string? given_name,
+      string? additional_names, string? prefixes, string? suffixes)
+    {
+      Object (family_name:      family_name,
+              given_name:       given_name,
+              additional_names: additional_names,
+              prefixes:         prefixes,
+              suffixes:         suffixes);
+    }
+
+  /**
+   * Create a StructuredName.
+   *
+   * Shorthand for the common case of just having the family and given
+   * name of a contact. It's equivalent to calling
+   * {@link StructuredName.StructuredName} and passing `null` for all
+   * the other components.
+   *
+   * @param family_name the family (last) name
+   * @param given_name the given (first) name
+   * @return a new StructuredName
+   *
+   * @since 0.3.UNRELEASED
+   */
+  public StructuredName.simple (string? family_name, string? given_name)
+    {
+      Object (family_name: family_name,
+              given_name:  given_name);
+    }
+
+  /**
+   * Whether none of the components is set.
+   *
+   * @return `true` if all the components are the empty string, `false`
+   * otherwise.
+   *
+   * @since 0.3.UNRELEASED
+   */
+  public bool is_empty ()
+    {
+      return this._family_name      == "" &&
+             this._given_name       == "" &&
+             this._additional_names == "" &&
+             this._prefixes         == "" &&
+             this._suffixes         == "";
+    }
+}
+
+/**
+ * Interface for classes which represent contacts with names, such as
+ * {@link Persona} and {@link Individual}.
+ *
+ * @since 0.3.UNRELEASED
+ */
+public interface Folks.NameOwner : Object
+{
+  /**
+   * The contact name split in its constituent parts.
+   *
+   * Note that most of the time the structured name is not set (i.e.
+   * it's `null`) or just some of the components are set.
+   * The components are immutable. To get notification of changes of
+   * the structured name, you just have to connect to the `notify` signal
+   * of this property.
+   *
+   * @since 0.3.UNRELEASED
+   */
+  public abstract StructuredName structured_name { get; set; }
+
+  /**
+   * The full name of the contact.
+   *
+   * The full name is the name of the contact written in the way the contact
+   * prefers. For instance for English names this is usually the given name
+   * followed by the family name, but Chinese names are usually the family
+   * name followed by the given name.
+   * The full name could or could not contain additional names (like a
+   * middle name), prefixes or suffixes.
+   *
+   * @since 0.3.UNRELEASED
+   */
+  public abstract string full_name { get; set; }
+
+  /**
+   * The nickname of the contact.
+   *
+   * The nickname is the name that the contact chose for himself. This is
+   * different from {@link Aliasable.alias} as aliases can be chosen by
+   * the user and not by the contacts themselves.
+   *
+   * @since 0.3.UNRELEASED
+   */
+  public abstract string nickname { get; }
+}

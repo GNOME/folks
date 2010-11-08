@@ -68,7 +68,8 @@ public class Folks.Individual : Object,
     Groupable,
     AvatarOwner,
     PresenceOwner,
-    IMable
+    IMable,
+    NameOwner
 {
   private bool _is_favourite;
   private string _alias;
@@ -214,6 +215,22 @@ public class Folks.Individual : Object,
     }
 
   /**
+   * {@inheritDoc}
+   */
+  public StructuredName structured_name { get; private set; }
+
+  /**
+   * {@inheritDoc}
+   */
+  public string full_name { get; private set; }
+
+  private string _nickname;
+  /**
+   * {@inheritDoc}
+   */
+  public string nickname { get { return this._nickname; } }
+
+  /**
    * Whether this Individual is a user-defined favourite.
    *
    * This property is `true` if any of this Individual's {@link Persona}s are
@@ -311,6 +328,21 @@ public class Folks.Individual : Object,
   private void _notify_avatar_cb (Object obj, ParamSpec ps)
     {
       this._update_avatar ();
+    }
+
+  private void _notify_full_name_cb ()
+    {
+      this._update_full_name ();
+    }
+
+  private void _notify_structured_name_cb ()
+    {
+      this._update_structured_name ();
+    }
+
+  private void _notify_nickname_cb ()
+    {
+      this._update_nickname ();
     }
 
   private void _persona_group_changed_cb (string group, bool is_member)
@@ -446,6 +478,9 @@ public class Folks.Individual : Object,
       this._update_alias ();
       this._update_trust_level ();
       this._update_im_addresses ();
+      this._update_structured_name ();
+      this._update_full_name ();
+      this._update_nickname ();
     }
 
   private void _update_groups ()
@@ -718,11 +753,75 @@ public class Folks.Individual : Object,
       persona.notify["presence-type"].connect (this._notify_presence_cb);
       persona.notify["im-addresses"].connect (this._notify_im_addresses_cb);
       persona.notify["is-favourite"].connect (this._notify_is_favourite_cb);
+      persona.notify["structured-name"].connect (
+          this._notify_structured_name_cb);
+      persona.notify["full-name"].connect (this._notify_full_name_cb);
+      persona.notify["nickname"].connect (this._notify_nickname_cb);
 
       if (persona is Groupable)
         {
           ((Groupable) persona).group_changed.connect (
               this._persona_group_changed_cb);
+        }
+    }
+
+  private void _update_structured_name ()
+    {
+      foreach (var persona in this._persona_list)
+        {
+          var name_owner = persona as NameOwner;
+          if (name_owner != null)
+            {
+              var new_value = name_owner.structured_name;
+              if (new_value != null)
+                {
+                  if (new_value != this.structured_name)
+                    this.structured_name = new_value;
+
+                  break;
+                }
+            }
+        }
+    }
+
+  private void _update_full_name ()
+    {
+      foreach (var persona in this._persona_list)
+        {
+          var name_owner = persona as NameOwner;
+          if (name_owner != null)
+            {
+              var new_value = name_owner.full_name;
+              if (new_value != null)
+                {
+                  if (new_value != this.full_name)
+                    this.full_name = new_value;
+
+                  break;
+                }
+            }
+        }
+    }
+
+  private void _update_nickname ()
+    {
+      foreach (var persona in this._persona_list)
+        {
+          var name_owner = persona as NameOwner;
+          if (name_owner != null)
+            {
+              var new_value = name_owner.nickname;
+              if (new_value != null)
+                {
+                  if (new_value != this._nickname)
+                    {
+                      this._nickname = new_value;
+                      this.notify_property ("nickname");
+                    }
+
+                  break;
+                }
+            }
         }
     }
 
@@ -737,6 +836,10 @@ public class Folks.Individual : Object,
           this._notify_im_addresses_cb);
       persona.notify["is-favourite"].disconnect (
           this._notify_is_favourite_cb);
+      persona.notify["structured-name"].disconnect (
+          this._notify_structured_name_cb);
+      persona.notify["full-name"].disconnect (this._notify_full_name_cb);
+      persona.notify["nickname"].disconnect (this._notify_nickname_cb);
 
       if (persona is Groupable)
         {
