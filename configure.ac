@@ -118,6 +118,15 @@ AC_DEFINE([MODULE_VERSION], "folks_module_version", [Module interface version])
 BACKEND_DIR='$(libdir)/folks/$(FOLKS_MODULE_VERSION)/backends'
 AC_SUBST([BACKEND_DIR])
 
+BACKEND_KF='$(top_builddir)/backends/key-file/.libs/libfolks-backend-key-file.so'
+AC_SUBST([BACKEND_KF])
+BACKEND_TP='$(top_builddir)/backends/telepathy/.libs/libfolks-backend-telepathy.so'
+AC_SUBST([BACKEND_TP])
+
+# All of the backend libraries in our tree; to be used by the tests
+BACKEND_UNINST_PATH='$(BACKEND_KF):$(BACKEND_TP)'
+AC_SUBST([BACKEND_UNINST_PATH])
+
 # -----------------------------------------------------------
 # Tools
 # -----------------------------------------------------------
