@@ -150,6 +150,12 @@ finalize (GObject *object)
       object);
 }
 
+/**
+ * tp_test_contact_list_connection_get_manager:
+ * @self: the connection
+ *
+ * Returns: (transfer none): the contact list manager or %NULL.
+ */
 TpTestContactListManager *
 tp_test_contact_list_connection_get_manager (TpTestContactListConnection *self)
 {

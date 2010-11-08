@@ -209,6 +209,12 @@ tp_test_backend_tear_down (TpTestBackend *self)
   priv->object_path = NULL;
 }
 
+/**
+ * tp_test_backend_get_connection:
+ * @self: the backend
+ *
+ * Returns: (transfer none): the contact list connection or %NULL.
+ */
 TpTestContactListConnection *
 tp_test_backend_get_connection (TpTestBackend *self)
 {
