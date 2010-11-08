@@ -44,7 +44,7 @@ public class Folks.BackendStore : Object {
   private HashMap<string,Backend> _prepared_backends;
   private File config_file;
   private GLib.KeyFile backends_key_file;
-  private HashMap<string,Module> modules;
+  private HashMap<string,unowned Module> modules;
   private static weak BackendStore instance;
   private bool _is_prepared = false;
 
