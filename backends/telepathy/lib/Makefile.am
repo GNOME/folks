@@ -157,10 +157,17 @@ CLEANFILES += \
 	$(BUILT_SOURCES) \
 	$(NULL)
 
+GITIGNOREFILES = \
+	folks-telepathy.h \
+	folks-telepathy.vapi \
+	tp-lowlevel.vapi \
+	$(NULL)
+
 EXTRA_DIST = \
 	$(libtp_lowlevel_la_SOURCES) \
 	$(pkgconfig_in) \
-	folks-telepathy.h \
+	$(GITIGNOREFILES) \
+	tp-lowlevel.gir \
 	$(NULL)
 
 # XXX: headers separated because automake erroneously treats all libraries in
