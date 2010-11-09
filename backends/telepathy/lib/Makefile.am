@@ -151,15 +151,24 @@ BUILT_SOURCES = \
 	folks-telepathy-uninstalled.pc \
 	libfolks_telepathy_la_vala.stamp \
 	libtp_lowlevel_la_vala.stamp \
+	tp-lowlevel.gir \
+	tp-lowlevel.vapi \
 	$(NULL)
 
 CLEANFILES += \
-	$(BUILT_SOURCES) \
+	$(pkgconfig_in:.in=) \
+	folks-telepathy-uninstalled.pc \
+	$(NULL)
+
+DISTCLEANFILES = \
+	tp-lowlevel.gir \
+	tp-lowlevel.vapi \
 	$(NULL)
 
 GITIGNOREFILES = \
 	folks-telepathy.h \
 	folks-telepathy.vapi \
+	tp-lowlevel.gir \
 	tp-lowlevel.vapi \
 	$(NULL)
 
@@ -167,7 +176,6 @@ EXTRA_DIST = \
 	$(libtp_lowlevel_la_SOURCES) \
 	$(pkgconfig_in) \
 	$(GITIGNOREFILES) \
-	tp-lowlevel.gir \
 	$(NULL)
 
 # XXX: headers separated because automake erroneously treats all libraries in
