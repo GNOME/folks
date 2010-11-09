@@ -154,8 +154,9 @@ AM_CONDITIONAL([ENABLE_DOCS], [test x$enable_docs = xyes])
 
 AS_IF([test "x$enable_docs" != xno],
       [AC_PATH_PROG([VALADOC], [valadoc], [:])
-       AS_IF([test "$VALADOC" = :],
-             [AC_MSG_ERROR([valadoc not found])])])
+       AS_IF([test "$VALADOC" != :],
+             have_valadoc=yes)])
+AM_CONDITIONAL([HAVE_VALADOC], [test x$have_valadoc = xyes])
 
 # -----------------------------------------------------------
 # Gettext
@@ -262,7 +263,7 @@ Configure summary:
         Compiler Flags..............:  ${CFLAGS} ${ERROR_CFLAGS}
         Prefix......................:  ${prefix}
         Bugreporting URL............:  ${PACKAGE_BUGREPORT}
-        Documentation...............:  ${enable_docs}
+        Documentation...............:  ${HAVE_VALADOC}
         Tests.......................:  ${have_tp_glib_for_tests}
         Import tool.................:  ${with_import_tool}
 

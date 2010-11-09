@@ -8,7 +8,7 @@ SUBDIRS = \
 	po \
 	$(NULL)
 
-if ENABLE_DOCS
+if HAVE_VALADOC
 SUBDIRS += docs
 endif
 
