@@ -71,11 +71,15 @@ persona_store_capabilities_SOURCES = \
 	persona-store-capabilities.vala \
 	$(NULL)
 
-CLEANFILES = \
-	$(addsuffix .c,$(noinst_PROGRAMS)) \
+BUILT_SOURCES = \
 	individual_properties_vala.stamp \
 	individual_retrieval_vala.stamp \
 	persona_store_capabilities_vala.stamp \
+	$(NULL)
+
+CLEANFILES = \
+	$(BUILT_SOURCES) \
+	$(addsuffix .c,$(noinst_PROGRAMS)) \
 	*.pid \
 	*.address \
 	$(TESTS) \
