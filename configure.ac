@@ -74,20 +74,6 @@ GLIB_REQUIRED=2.24.0
 TP_GLIB_REQUIRED=0.13.1
 VALA_REQUIRED=0.10.0
 
-AM_PROG_VALAC([$VALA_REQUIRED])
-
-# require GLib >= 2.24 so GLib.Array, etc. reffing is handled automatically
-VALAFLAGS="$VALAFLAGS --target-glib=2.24"
-AC_SUBST([VALAFLAGS])
-AC_SUBST([VAPIGENFLAGS])
-AC_SUBST([VAPIDIR])
-
-AC_PATH_PROG([VAPIGEN], [vapigen], [vapigen])
-AS_IF([test "$VAPIGEN" = ""],
-      [AC_MSG_ERROR([Vala must be built with --enable-vapigen])])
-
-GOBJECT_INTROSPECTION_REQUIRE([0.9.12])
-
 PKG_CHECK_MODULES([GLIB],
                   [glib-2.0 >= $GLIB_REQUIRED
                    gobject-2.0 >= $GLIB_REQUIRED])
@@ -98,10 +84,74 @@ PKG_CHECK_MODULES([DBUS_GLIB], [dbus-glib-1])
 # FIXME: We depend on libgee < 0.7 because 0.7 breaks API. bgo#627746
 PKG_CHECK_MODULES([GEE], [gee-1.0 < 0.7])
 PKG_CHECK_MODULES([TP_GLIB], [telepathy-glib >= $TP_GLIB_REQUIRED])
-VALA_CHECK_PACKAGES([telepathy-glib
-                     dbus-glib-1
-                     gio-2.0
-                     gee-1.0])
+
+#
+# Vala building options -- allows tarball builds without installing Vala
+#
+AC_ARG_ENABLE([vala],
+              AS_HELP_STRING([--enable-vala],
+                             [Enable building from the Vala sources]),
+              [enable_vala=$enableval],
+              [enable_vala=no])
+
+# will be re-set as necessary below
+AM_CONDITIONAL([HAVE_INTROSPECTION], [test "x$enable_vala" = "xyes"])
+sd=${srcdir}/
+# Force Vala if generated source is missing or outdated
+if test \
+        ! -e ${sd}tools/folks_import_vala.stamp -o \
+        ! -e ${sd}tests/key-file/individual_retrieval_vala.stamp -o \
+        ! -e ${sd}tests/lib/folks-test.vapi -o \
+        ! -e ${sd}tests/lib/key-file/kf-test.vapi -o \
+        ! -e ${sd}tests/lib/key-file/libkf_test_la_vala.stamp -o \
+        ! -e ${sd}tests/lib/telepathy/contactlist/tp-test-contactlist.gir -o \
+        ! -e ${sd}tests/lib/telepathy/contactlist/tp-test-contactlist.vapi -o \
+        ! -e ${sd}tests/lib/libfolks_test_la_vala.stamp -o \
+        ! -e ${sd}tests/telepathy/persona_store_capabilities_vala.stamp -o \
+        ! -e ${sd}tests/telepathy/individual_retrieval_vala.stamp -o \
+        ! -e ${sd}tests/telepathy/individual_properties_vala.stamp -o \
+        ! -e ${sd}tests/folks/backend_loading_vala.stamp -o \
+        ! -e ${sd}backends/key-file/libfolks_backend_key_file_la_vala.stamp -o \
+        ! -e ${sd}backends/telepathy/libfolks_backend_telepathy_la_vala.stamp \
+                -o \
+        ! -e ${sd}backends/telepathy/lib/folks-telepathy.vapi -o \
+        ! -e ${sd}backends/telepathy/lib/tp-lowlevel.gir -o \
+        ! -e ${sd}backends/telepathy/lib/tp-lowlevel.vapi -o \
+        ! -e ${sd}backends/telepathy/lib/libfolks_telepathy_la_vala.stamp -o \
+        ! -e ${sd}folks/folks.vapi -o \
+        ! -e ${sd}folks/libfolks_la_vala.stamp ; then
+        enable_vala=yes
+        echo "Vala source needs to be re-compiled; requiring Vala..."
+fi
+
+if test "x$enable_vala" = "xyes" ; then
+        AM_PROG_VALAC([$VALA_REQUIRED])
+        if test "x$VALAC" = "x"; then
+              AC_MSG_ERROR([Vala requested but valac is not installed])
+        fi
+
+        AC_PATH_PROG([VAPIGEN], [vapigen], [])
+        if test "x$VAPIGEN" = "x"; then
+              AC_MSG_ERROR([Vala must be built with --enable-vapigen])
+        fi
+
+        # require GLib >= 2.24 so GLib.Array, etc. reffing is handled
+        # automatically
+        VALAFLAGS="$VALAFLAGS --target-glib=2.24"
+        AC_SUBST([VALAFLAGS])
+        AC_SUBST([VAPIGENFLAGS])
+        AC_SUBST([VAPIDIR])
+
+        VALA_CHECK_PACKAGES([telepathy-glib
+                             dbus-glib-1
+                             gio-2.0
+                             gee-1.0])
+
+        # this will set HAVE_INTROSPECTION
+        GOBJECT_INTROSPECTION_REQUIRE([0.9.12])
+fi
+
+AM_CONDITIONAL([HAVE_VALA], [test "x$enable_vala" = "xyes"])
 
 # Various functions that we need (used in C code generated from Vala)
 AC_CHECK_FUNCS([memset])
@@ -197,7 +247,6 @@ m4_if(folks_released, [1], [],
     [
         ERROR_INTROSPECTION_SCANNER_ARGS="$ERROR_INTROSPECTION_SCANNER_ARGS \
                 --warn-error"
-        ERROR_VALAFLAGS="$ERROR_VALAFLAGS --fatal-warnings"
         if test x$werror = xyes; then
             ERROR_CFLAGS="$ERROR_CFLAGS -Werror"
         fi
@@ -219,9 +268,18 @@ AS_COMPILER_FLAG([-Wmissing-declarations], [ERROR_CFLAGS="$ERROR_CFLAGS \
 AS_COMPILER_FLAG([-Wstrict-prototypes], [ERROR_CFLAGS="$ERROR_CFLAGS \
                                          -Wstrict-prototypes"])
 
-AC_SUBST([ERROR_INTROSPECTION_SCANNER_ARGS])
-AC_SUBST([ERROR_VALAFLAGS])
 AC_SUBST([ERROR_CFLAGS])
+
+# Vala-related flags
+if test "x$enable_vala" = "xyes" ; then
+        m4_if(folks_released, [1], [],
+              [
+                ERROR_VALAFLAGS="$ERROR_VALAFLAGS --fatal-warnings"
+              ])
+
+        AC_SUBST([ERROR_INTROSPECTION_SCANNER_ARGS])
+        AC_SUBST([ERROR_VALAFLAGS])
+fi
 
 # -----------------------------------------------------------
 # Final output
@@ -259,8 +317,9 @@ AC_OUTPUT
 echo "
 Configure summary:
 
-        Compiler....................:  ${VALAC}
-        Compiler Flags..............:  ${CFLAGS} ${ERROR_CFLAGS}
+        Vala........................:  ${enable_vala}
+        Vala Compiler...............:  ${VALAC}
+        C Compiler Flags............:  ${CFLAGS} ${ERROR_CFLAGS}
         Prefix......................:  ${prefix}
         Bugreporting URL............:  ${PACKAGE_BUGREPORT}
         Documentation...............:  ${HAVE_VALADOC}

@@ -12,7 +12,10 @@ if HAVE_VALADOC
 SUBDIRS += docs
 endif
 
-DISTCHECK_CONFIGURE_FLAGS = --enable-docs
+DISTCHECK_CONFIGURE_FLAGS = \
+	--enable-docs \
+	--disable-vala \
+	$(NULL)
 
 EXTRA_DIST = \
 	ABOUT-NLS \

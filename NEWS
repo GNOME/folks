@@ -17,6 +17,8 @@ Bugs fixed:
 * Bug 629081 — Add API to allow specific backends to be disabled
 * Bug 629862 — Add tests for the key-file backend
 * Bug 628883 — Add localisation support
+* Bug 633718 — Make the Folks releases buildable without vala, valadoc, or
+  g-i
 
 Overview of changes from libfolks 0.3.0 to libfolks 0.3.1
 ==========================================================
