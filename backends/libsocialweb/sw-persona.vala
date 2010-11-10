@@ -28,7 +28,9 @@ using SocialWebClient;
  */
 internal class Folks.Backends.Sw.Persona : Folks.Persona,
     AvatarDetails,
-    NameDetails
+    GenderDetails,
+    NameDetails,
+    UrlDetails
 {
   private const string[] _linkable_properties = {};
 
@@ -66,6 +68,27 @@ internal class Folks.Backends.Sw.Persona : Folks.Persona,
   public string nickname { get { return this._nickname; } }
 
   /**
+   * {@inheritDoc}
+   */
+  public Gender gender { get; private set; }
+
+  private List<FieldDetails> _urls;
+  /**
+   * {@inheritDoc}
+   */
+  public List<FieldDetails> urls
+    {
+      get { return this._urls; }
+      private set
+        {
+          this._urls = new List<FieldDetails> ();
+          foreach (unowned FieldDetails ps in value)
+            this._urls.prepend (ps);
+          this._urls.reverse ();
+        }
+    }
+
+  /**
    * Create a new persona.
    *
    * Create a new persona for the {@link PersonaStore} `store`, representing
@@ -81,6 +104,7 @@ internal class Folks.Backends.Sw.Persona : Folks.Persona,
               uid: uid,
               iid: store.id + ":" + id,
               store: store,
+              gender: Gender.UNSPECIFIED,
               is_user: false);
       update (item);
     }
@@ -122,5 +146,33 @@ internal class Folks.Backends.Sw.Persona : Folks.Persona,
       var full_name = item.get_value ("fn");
       if (this.full_name != full_name)
         this.full_name = full_name;
+
+      var urls = new List<FieldDetails> ();
+
+      var website = item.get_value ("url");
+      if (website != null)
+        urls.prepend (new FieldDetails (website));
+
+      var profile = item.get_value ("x-facebook-profile");
+      if (profile != null)
+        {
+          var ps = new FieldDetails (profile);
+          ps.add_parameter ("type", "x-facebook-profile");
+          urls.prepend (ps);
+        }
+
+      if (this.urls != urls)
+        this.urls = urls;
+
+      var gender_string = item.get_value ("x-gender");
+      Gender gender;
+      if (gender_string == "male")
+        gender = Gender.MALE;
+      else if (gender_string == "female")
+        gender = Gender.FEMALE;
+      else
+        gender = Gender.UNSPECIFIED;
+      if (this.gender != gender)
+        this.gender = gender;
     }
 }
