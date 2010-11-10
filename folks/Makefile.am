@@ -16,6 +16,7 @@ libfolks_la_SOURCES = \
 	backend.vala \
 	backend-store.vala \
 	favouritable.vala \
+	field-details.vala \
 	groupable.vala \
 	avatar-owner.vala \
 	presence-owner.vala \
