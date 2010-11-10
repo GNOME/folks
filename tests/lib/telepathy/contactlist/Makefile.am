@@ -81,6 +81,13 @@ CLEANFILES = \
 	$(typelib_DATA) \
 	$(NULL)
 
+# XXX: theoretically, these shouldn't be here, but distcheck's final disclean
+# complains that these files exist at the end
+DISTCLEANFILES = \
+	tp-test-contactlist.gir \
+	tp-test-contactlist.vapi \
+	$(NULL)
+
 EXTRA_DIST = \
     tp-test-contactlist.vapi \
     $(INTROSPECTION_GIRS) \
