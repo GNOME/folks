@@ -75,11 +75,8 @@ BUILT_SOURCES += \
 endif
 
 CLEANFILES = \
-	$(BUILT_SOURCES) \
 	_gen/param-spec-struct.h \
 	_gen/tp_test_contact_list.manager \
-	$(INTROSPECTION_GIRS) \
-	tp-test-contactlist.vapi \
 	$(gir_DATA) \
 	$(typelib_DATA) \
 	$(NULL)
