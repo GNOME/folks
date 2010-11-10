@@ -29,6 +29,7 @@ using SocialWebClient;
 internal class Folks.Backends.Sw.Persona : Folks.Persona,
     AvatarDetails,
     GenderDetails,
+    ImDetails,
     NameDetails,
     UrlDetails
 {
@@ -88,6 +89,17 @@ internal class Folks.Backends.Sw.Persona : Folks.Persona,
         }
     }
 
+  private HashTable<string, GenericArray<string>> _im_addresses =
+      new HashTable<string, GenericArray<string>> (str_hash, str_equal);
+  /**
+   * {@inheritDoc}
+   */
+  public HashTable<string, GenericArray<string>> im_addresses
+    {
+      get { return this._im_addresses; }
+      private set {}
+    }
+
   /**
    * Create a new persona.
    *
@@ -98,14 +110,49 @@ internal class Folks.Backends.Sw.Persona : Folks.Persona,
     {
       var id = get_item_id (item);
       var uid = this.build_uid ("folks", store.id, id);
+
+      /* This is a hack so that Facebook contacts from libsocialweb are
+       * automatically merged with Facebook contacts from Telepathy
+       * because they have the same iid. */
+      string facebook_jid = null;
+      string iid;
+      if (store.id == "facebook" && "facebook-" in id)
+        {
+          /* The id is in the form "facebook-XXXX", while the JID is
+           * "-XXXX@chat.facebook.com". */
+          facebook_jid = id.replace("facebook", "") + "@chat.facebook.com";
+          iid = "jabber:" + facebook_jid;
+        }
+      else
+        {
+          iid = store.id + ":" + id;
+        }
+
       debug ("Creating new Sw.Persona '%s' for %s UID '%s': %p",
           uid, store.display_name, id, this);
+
       Object (display_id: id,
               uid: uid,
-              iid: store.id + ":" + id,
+              iid: iid,
               store: store,
               gender: Gender.UNSPECIFIED,
               is_user: false);
+
+      if (facebook_jid != null)
+        {
+          var im_address_array = new GenericArray<string> ();
+          try
+            {
+              im_address_array.add (normalise_im_address (facebook_jid,
+                    "jabber"));
+              this._im_addresses.insert ("jabber", im_address_array);
+            }
+          catch (ImDetailsError e)
+            {
+              warning (e.message);
+            }
+        }
+
       update (item);
     }
 
