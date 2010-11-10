@@ -11,6 +11,7 @@ LDADD = \
 	$(top_builddir)/folks/libfolks.la \
 	$(GLIB_LIBS) \
 	$(GEE_LIBS) \
+	$(GIO_LIBS) \
 	$(NULL)
 
 AM_VALAFLAGS = \
