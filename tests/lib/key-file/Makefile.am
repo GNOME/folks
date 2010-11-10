@@ -24,6 +24,7 @@ MAINTAINERCLEANFILES = \
 	$(NULL)
 
 EXTRA_DIST = \
+	kf-test.vapi \
 	kf-test.h \
 	$(NULL)
 
