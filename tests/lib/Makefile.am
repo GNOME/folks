@@ -24,4 +24,8 @@ CLEANFILES = \
 	folks-test-uninstalled.pc \
 	$(NULL)
 
+EXTRA_DIST = \
+	folks-test.vapi \
+	$(NULL)
+
 -include $(top_srcdir)/git.mk
