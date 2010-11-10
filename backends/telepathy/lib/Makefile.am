@@ -145,27 +145,22 @@ dist_vapi_DATA = \
 # General
 ##################################################################
 
-BUILT_SOURCES = \
-	$(pkgconfig_in:.in=) \
-	$(folks_telepathy_valasources:.vala=.c) \
-	folks-telepathy-uninstalled.pc \
-	libfolks_telepathy_la_vala.stamp \
-	libtp_lowlevel_la_vala.stamp \
-	tp-lowlevel.gir \
-	tp-lowlevel.vapi \
-	$(NULL)
-
 CLEANFILES += \
 	$(pkgconfig_in:.in=) \
 	folks-telepathy-uninstalled.pc \
 	$(NULL)
 
+# XXX: theoretically, these shouldn't be here, but distcheck's final disclean
+# complains that these files exist at the end
 DISTCLEANFILES = \
 	tp-lowlevel.gir \
 	tp-lowlevel.vapi \
 	$(NULL)
 
 GITIGNOREFILES = \
+	$(folks_telepathy_valasources:.vala=.c) \
+	libfolks_telepathy_la_vala.stamp \
+	libtp_lowlevel_la_vala.stamp \
 	folks-telepathy.h \
 	folks-telepathy.vapi \
 	tp-lowlevel.gir \
