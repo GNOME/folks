@@ -44,11 +44,18 @@ backend_loading_SOURCES = \
 	$(NULL)
 
 CLEANFILES = \
-        $(addsuffix .c,$(noinst_PROGRAMS)) \
-        backend_loading_vala.stamp \
         *.pid \
         *.address \
         $(TESTS) \
         $(NULL)
+
+MAINTAINERCLEANFILES = \
+        $(addsuffix .c,$(noinst_PROGRAMS)) \
+        backend_loading_vala.stamp \
+        $(NULL)
+
+EXTRA_DIST = \
+	$(MAINTAINERCLEANFILES) \
+	$(NULL)
 
 -include $(top_srcdir)/git.mk

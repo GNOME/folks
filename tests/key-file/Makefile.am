@@ -45,16 +45,20 @@ individual_retrieval_SOURCES = \
 	individual-retrieval.vala \
 	$(NULL)
 
-EXTRA_DIST = \
-	$(backend_store_key_file) \
-	$(NULL)
-
 CLEANFILES = \
-        $(addsuffix .c,$(noinst_PROGRAMS)) \
-        individual_retrieval_vala.stamp \
         *.pid \
         *.address \
         $(TESTS) \
         $(NULL)
+
+MAINTAINERCLEANFILES = \
+        $(addsuffix .c,$(noinst_PROGRAMS)) \
+        individual_retrieval_vala.stamp \
+        $(NULL)
+
+EXTRA_DIST = \
+	$(MAINTAINERCLEANFILES) \
+	$(backend_store_key_file) \
+	$(NULL)
 
 -include $(top_srcdir)/git.mk

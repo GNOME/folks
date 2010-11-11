@@ -78,14 +78,18 @@ BUILT_SOURCES = \
 	$(NULL)
 
 CLEANFILES = \
-	$(BUILT_SOURCES) \
-	$(addsuffix .c,$(noinst_PROGRAMS)) \
 	*.pid \
 	*.address \
 	$(TESTS) \
 	$(NULL)
 
+MAINTAINERCLEANFILES = \
+	$(BUILT_SOURCES) \
+	$(addsuffix .c,$(noinst_PROGRAMS)) \
+	$(NULL)
+
 EXTRA_DIST = \
+	$(MAINTAINERCLEANFILES) \
 	$(backend_store_key_file) \
 	$(srcdir)/data/relationships-empty.ini \
 	$(NULL)
