@@ -67,12 +67,10 @@ tp-test-contactlist.vapi: tp-test-contactlist.gir
 	$(AM_V_GEN)$(VAPIGEN) $(VAPIGENFLAGS) --library tp-test-contactlist \
 		tp-test-contactlist.gir
 
-BUILT_SOURCES =
-if HAVE_VALA
-BUILT_SOURCES += \
+BUILT_SOURCES = \
+	tp-test-contactlist.gir \
 	tp-test-contactlist.vapi \
 	$(NULL)
-endif
 
 CLEANFILES = \
 	_gen/param-spec-struct.h \
@@ -81,19 +79,18 @@ CLEANFILES = \
 	$(typelib_DATA) \
 	$(NULL)
 
-# XXX: theoretically, these shouldn't be here, but distcheck's final disclean
-# complains that these files exist at the end
-DISTCLEANFILES = \
+MAINTAINERCLEANFILES = \
+	$(BUILT_SOURCES) \
 	tp-test-contactlist.gir \
 	tp-test-contactlist.vapi \
 	$(NULL)
 
 EXTRA_DIST = \
-    tp-test-contactlist.vapi \
-    $(INTROSPECTION_GIRS) \
-    manager-file.py \
-    tp-test-contactlist.h \
-    $(NULL)
+	$(MAINTAINERCLEANFILES) \
+	manager-file.py \
+	session.conf \
+	tp-test-contactlist.h \
+	$(NULL)
 
 clean-local:
 	rm -rf _gen
