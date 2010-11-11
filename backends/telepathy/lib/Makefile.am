@@ -150,14 +150,7 @@ CLEANFILES += \
 	folks-telepathy-uninstalled.pc \
 	$(NULL)
 
-# XXX: theoretically, these shouldn't be here, but distcheck's final disclean
-# complains that these files exist at the end
-DISTCLEANFILES = \
-	tp-lowlevel.gir \
-	tp-lowlevel.vapi \
-	$(NULL)
-
-GITIGNOREFILES = \
+MAINTAINERCLEANFILES = \
 	$(folks_telepathy_valasources:.vala=.c) \
 	libfolks_telepathy_la_vala.stamp \
 	libtp_lowlevel_la_vala.stamp \
@@ -170,7 +163,7 @@ GITIGNOREFILES = \
 EXTRA_DIST = \
 	$(libtp_lowlevel_la_SOURCES) \
 	$(pkgconfig_in) \
-	$(GITIGNOREFILES) \
+	$(MAINTAINERCLEANFILES) \
 	$(NULL)
 
 # XXX: headers separated because automake erroneously treats all libraries in
