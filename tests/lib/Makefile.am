@@ -17,15 +17,18 @@ libfolks_test_la_VALAFLAGS = \
 	$(NULL)
 
 CLEANFILES = \
-	$(libfolks_test_la_SOURCES:.vala=.c) \
-	*.stamp \
-	folks-test.h \
-	folks-test.vapi \
 	folks-test-uninstalled.pc \
 	$(NULL)
 
-EXTRA_DIST = \
+MAINTAINERCLEANFILES = \
+	$(libfolks_test_la_SOURCES:.vala=.c) \
+	libfolks_test_la_vala.stamp \
+	folks-test.h \
 	folks-test.vapi \
+	$(NULL)
+
+EXTRA_DIST = \
+	$(MAINTAINERCLEANFILES) \
 	$(NULL)
 
 -include $(top_srcdir)/git.mk
