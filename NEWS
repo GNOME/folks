@@ -6,6 +6,7 @@ Major changes:
   (dis|en)abled since the last call
 * FOLKS_BACKEND_DIR has been replaced by FOLKS_BACKEND_PATH. It accepts any
   number of files and directories, separated by :
+* Significantly clean up the build system
 
 API changes:
 * Added BackendStore.prepare() and BackendStore::is-prepared
