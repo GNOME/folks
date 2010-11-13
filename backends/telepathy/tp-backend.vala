@@ -140,9 +140,9 @@ public class Folks.Backends.Tp.Backend : Folks.Backend
 
       this._persona_stores.insert (store.id, store);
       store.removed.connect (this.store_removed_cb);
+      this.notify_property ("persona-stores");
 
       this.persona_store_added (store);
-      this.notify_property ("persona-stores");
     }
 
   private void store_removed_cb (PersonaStore store)
