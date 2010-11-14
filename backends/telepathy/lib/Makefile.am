@@ -71,6 +71,7 @@ tp-lowlevel.vapi: tp-lowlevel.gir
 		--pkg gio-2.0 \
 		--pkg telepathy-glib \
 		tp-lowlevel.gir
+	touch $@
 
 ##################################################################
 # Support library

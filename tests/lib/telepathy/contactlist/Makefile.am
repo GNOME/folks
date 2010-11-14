@@ -66,6 +66,7 @@ INTROSPECTION_GIRS += tp-test-contactlist.gir
 tp-test-contactlist.vapi: tp-test-contactlist.gir
 	$(AM_V_GEN)$(VAPIGEN) $(VAPIGENFLAGS) --library tp-test-contactlist \
 		tp-test-contactlist.gir
+	touch $@
 
 BUILT_SOURCES = \
 	tp-test-contactlist.gir \
