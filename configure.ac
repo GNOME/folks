@@ -245,8 +245,6 @@ AS_COMPILER_FLAG([-Wno-unused-parameter],
 
 m4_if(folks_released, [1], [],
     [
-        ERROR_INTROSPECTION_SCANNER_ARGS="$ERROR_INTROSPECTION_SCANNER_ARGS \
-                --warn-error"
         if test x$werror = xyes; then
             ERROR_CFLAGS="$ERROR_CFLAGS -Werror"
         fi
@@ -272,7 +270,9 @@ AC_SUBST([ERROR_CFLAGS])
 
 # Vala-related flags
 AS_IF([test "x$enable_vala" = "xyes"],
-      [ERROR_VALAFLAGS="$ERROR_VALAFLAGS --fatal-warnings"])
+      [ERROR_INTROSPECTION_SCANNER_ARGS="\
+                        $ERROR_INTROSPECTION_SCANNER_ARGS --warn-error"
+       ERROR_VALAFLAGS="$ERROR_VALAFLAGS --fatal-warnings"])
 
 AC_SUBST([ERROR_INTROSPECTION_SCANNER_ARGS])
 AC_SUBST([ERROR_VALAFLAGS])
