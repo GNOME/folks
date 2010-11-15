@@ -271,15 +271,11 @@ AS_COMPILER_FLAG([-Wstrict-prototypes], [ERROR_CFLAGS="$ERROR_CFLAGS \
 AC_SUBST([ERROR_CFLAGS])
 
 # Vala-related flags
-if test "x$enable_vala" = "xyes" ; then
-        m4_if(folks_released, [1], [],
-              [
-                ERROR_VALAFLAGS="$ERROR_VALAFLAGS --fatal-warnings"
-              ])
+AS_IF([test "x$enable_vala" = "xyes"],
+      [ERROR_VALAFLAGS="$ERROR_VALAFLAGS --fatal-warnings"])
 
-        AC_SUBST([ERROR_INTROSPECTION_SCANNER_ARGS])
-        AC_SUBST([ERROR_VALAFLAGS])
-fi
+AC_SUBST([ERROR_INTROSPECTION_SCANNER_ARGS])
+AC_SUBST([ERROR_VALAFLAGS])
 
 # -----------------------------------------------------------
 # Final output
