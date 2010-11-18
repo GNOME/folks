@@ -94,6 +94,8 @@ folks_tp_lowlevel_connection_open_contact_list_channel_async (
       folks_tp_lowlevel_connection_open_contact_list_channel_finish);
   tp_cli_connection_interface_requests_call_ensure_channel (conn, -1, request,
       connection_ensure_channel_cb, result, NULL, G_OBJECT (conn));
+
+  g_hash_table_unref (request);
 }
 
 /**
