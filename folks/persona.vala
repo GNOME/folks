@@ -52,6 +52,11 @@ public abstract class Folks.Persona : Object
    * This is the canonical way to refer to any Persona. It is guaranteed to be
    * unique within the Persona's {@link PersonaStore}.
    *
+   * A Persona's UID is immutable over the life of the Persona in the backing
+   * store, so a given UID is guaranteed to refer to the same Persona each time
+   * libfolks is used, until the Persona is permanently removed from its backing
+   * store.
+   *
    * @see Persona.build_uid
    * @see Persona.split_uid
    */
