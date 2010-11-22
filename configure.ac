@@ -215,8 +215,6 @@ AM_CONDITIONAL([HAVE_VALADOC], [test x$have_valadoc = xyes])
 GETTEXT_PACKAGE=AC_PACKAGE_NAME
 AC_SUBST(GETTEXT_PACKAGE)
 AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, ["$GETTEXT_PACKAGE"], [Define the gettext package to be used])
-AM_GNU_GETTEXT_VERSION([0.17])
-AM_GNU_GETTEXT([external])
 IT_PROG_INTLTOOL([0.35.0])
 
 # -----------------------------------------------------------
