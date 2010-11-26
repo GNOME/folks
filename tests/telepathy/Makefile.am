@@ -16,6 +16,7 @@ LDADD = \
 	$(top_builddir)/backends/telepathy/lib/libfolks-telepathy.la \
 	$(top_builddir)/folks/libfolks.la \
 	$(GLIB_LIBS) \
+	$(GIO_LIBS) \
 	$(GEE_LIBS) \
 	$(TP_GLIB_LIBS) \
 	-L$(top_srcdir)/backends/telepathy/lib \

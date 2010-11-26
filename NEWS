@@ -6,6 +6,7 @@ Bugs fixed:
   folks_tp_lowlevel_connection_open_contact_list_channel_async
 * Bug 635649 — autopoint fails to run
 * Bug 635703 — Leak in connection_get_requestable_channel_classes_cb
+* Bug 635823 — [PATCH] telepathy test not linking against GIO
 
 Overview of changes from libfolks 0.3.1 to libfolks 0.3.2
 ==========================================================
