@@ -475,8 +475,8 @@ folks_tp_lowlevel_connection_get_requestable_channel_classes_async (
  *
  * Retrieve the #TpConnection's RequestableChannelClasses D-Bus property.
  *
- * Returns: (transfer full): the boxed property details. Free with
- * g_boxed_free().
+ * Returns: (transfer full): the boxed property details. Unref with
+ * g_ptr_array_unref().
  */
 GPtrArray *
 folks_tp_lowlevel_connection_get_requestable_channel_classes_finish (
@@ -487,17 +487,18 @@ folks_tp_lowlevel_connection_get_requestable_channel_classes_finish (
   GSimpleAsyncResult *simple = G_SIMPLE_ASYNC_RESULT (result);
   TpConnection *conn;
 
-  g_return_val_if_fail (G_IS_SIMPLE_ASYNC_RESULT (simple), FALSE);
+  g_return_val_if_fail (G_IS_SIMPLE_ASYNC_RESULT (simple), NULL);
 
   conn = TP_CONNECTION (g_async_result_get_source_object (result));
-  g_return_val_if_fail (TP_IS_CONNECTION (conn), FALSE);
+  g_return_val_if_fail (TP_IS_CONNECTION (conn), NULL);
 
   if (g_simple_async_result_propagate_error (simple, error))
-    return 0;
+    return NULL;
 
   g_return_val_if_fail (g_simple_async_result_is_valid (result,
       G_OBJECT (conn),
-      folks_tp_lowlevel_connection_get_requestable_channel_classes_finish), 0);
+      folks_tp_lowlevel_connection_get_requestable_channel_classes_finish),
+      NULL);
 
   return g_simple_async_result_get_op_res_gpointer (
       G_SIMPLE_ASYNC_RESULT (result));
