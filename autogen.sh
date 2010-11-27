@@ -15,7 +15,6 @@ elif automake-1.11 --version >/dev/null 2>/dev/null && \
 fi
 
 autoreconf -i -f
-autopoint --force || exit $?
 intltoolize --force --copy --automake
 
 run_configure=true
