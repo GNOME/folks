@@ -433,7 +433,7 @@ connection_get_requestable_channel_classes_cb (TpProxy *conn,
     GObject *weak_object)
 {
   GSimpleAsyncResult *simple = G_SIMPLE_ASYNC_RESULT (user_data);
-  gpointer props;
+  GPtrArray *props;
 
   if (error != NULL)
     {
@@ -441,8 +441,9 @@ connection_get_requestable_channel_classes_cb (TpProxy *conn,
     }
   else
     {
-      props = g_value_dup_boxed (value);
-      g_simple_async_result_set_op_res_gpointer (simple, props, NULL);
+      props = (GPtrArray*) g_value_get_boxed (value);
+      g_simple_async_result_set_op_res_gpointer (simple,
+          g_ptr_array_ref (props), (GDestroyNotify) g_ptr_array_unref);
     }
 
   g_simple_async_result_complete (simple);
@@ -485,6 +486,7 @@ folks_tp_lowlevel_connection_get_requestable_channel_classes_finish (
     GError **error)
 {
   GSimpleAsyncResult *simple = G_SIMPLE_ASYNC_RESULT (result);
+  GPtrArray *props;
   TpConnection *conn;
 
   g_return_val_if_fail (G_IS_SIMPLE_ASYNC_RESULT (simple), NULL);
@@ -500,8 +502,9 @@ folks_tp_lowlevel_connection_get_requestable_channel_classes_finish (
       folks_tp_lowlevel_connection_get_requestable_channel_classes_finish),
       NULL);
 
-  return g_simple_async_result_get_op_res_gpointer (
+  props = (GPtrArray*) g_simple_async_result_get_op_res_gpointer (
       G_SIMPLE_ASYNC_RESULT (result));
+  return g_ptr_array_ref (props);
 }
 
 static void
