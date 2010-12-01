@@ -788,7 +788,11 @@ public class Folks.IndividualAggregator : Object
 
       asv.foreach ((k, v) =>
         {
+#if VALA_0_12
+          retval.insert ((string) k, v);
+#else
           retval.insert ((string) k, (Value?) v);
+#endif
         });
 
       return retval;
