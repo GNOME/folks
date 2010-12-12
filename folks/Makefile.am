@@ -18,12 +18,12 @@ libfolks_la_SOURCES = \
 	favourite.vala \
 	groupable.vala \
 	has-avatar.vala \
+	has-presence.vala \
 	imable.vala \
 	individual.vala \
 	individual-aggregator.vala \
 	persona.vala \
 	persona-store.vala \
-	presence.vala \
 	types.vala \
 	debug.vala \
 	$(NULL)

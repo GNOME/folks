@@ -21,7 +21,7 @@
 using GLib;
 
 /**
- * IM addresses exposed by an object implementing {@link Presence}.
+ * IM addresses exposed by an object implementing {@link HasPresence}.
  *
  * @since 0.1.13
  */

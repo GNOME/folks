@@ -32,8 +32,8 @@ public class Tpf.Persona : Folks.Persona,
     Favourite,
     Groupable,
     HasAvatar,
-    IMable,
-    Presence
+    HasPresence,
+    IMable
 {
   private HashTable<string, bool> _groups;
   private bool _is_favourite;
@@ -57,14 +57,14 @@ public class Tpf.Persona : Folks.Persona,
   /**
    * The Persona's presence type.
    *
-   * See {@link Folks.Presence.presence_type}.
+   * See {@link Folks.HasPresence.presence_type}.
    */
   public Folks.PresenceType presence_type { get; private set; }
 
   /**
    * The Persona's presence message.
    *
-   * See {@link Folks.Presence.presence_message}.
+   * See {@link Folks.HasPresence.presence_message}.
    */
   public string presence_message { get; private set; }
 

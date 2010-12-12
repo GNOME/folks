@@ -21,8 +21,8 @@
 using GLib;
 
 /**
- * The possible presence states an object implementing {@link Presence} could be
- * in.
+ * The possible presence states an object implementing {@link HasPresence} could
+ * be in.
  *
  * These closely follow the
  * [[http://telepathy.freedesktop.org/spec/Connection_Interface_Simple_Presence.html#Connection_Presence_Type|SimplePresence]]
@@ -76,7 +76,7 @@ public enum Folks.PresenceType {
  * {@link PresenceType.UNSET} and their `presence_message` will be an empty
  * string.
  */
-public interface Folks.Presence : Object
+public interface Folks.HasPresence : Object
 {
   /**
    * The contact's presence type.
@@ -94,8 +94,8 @@ public interface Folks.Presence : Object
    * The contact's presence message.
    *
    * This is a short message written by the contact to add detail to their
-   * presence type ({@link Folks.Presence.presence_type}). If the contact hasn't
-   * set a message, it will be an empty string.
+   * presence type ({@link Folks.HasPresence.presence_type}). If the contact
+   * hasn't set a message, it will be an empty string.
    */
   public abstract string presence_message { get; set; default = ""; }
 
@@ -150,7 +150,7 @@ public interface Folks.Presence : Object
    * Whether the contact is online.
    *
    * This will be `true` if the contact's presence type is higher than
-   * {@link PresenceType.OFFLINE}, as determined by {@link Presence.typecmp}.
+   * {@link PresenceType.OFFLINE}, as determined by {@link HasPresence.typecmp}.
    *
    * @return `true` if the contact is online, `false` otherwise
    */
