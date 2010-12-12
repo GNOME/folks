@@ -46,7 +46,7 @@ MAINTAINERCLEANFILES = \
 	$(srcdir)/mkinstalldirs \
 	$(srcdir)/ChangeLog \
 	`find "$(srcdir)" -type f -name Makefile.in -print` \
-	`find "m4" -type f -name "*.m4" -print` \
+	`find "m4" -type f -name "*.m4" ! -name "as-compiler-flag.m4" ! -name "introspection.m4" ! -name "vala.m4" -print` \
 	po/Makevars.template \
 	po/Rules-quot \
 	po/boldquot.sed \
