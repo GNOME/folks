@@ -5,6 +5,8 @@ API changes:
 * Rename the Avatar interface to HasAvatar
 * Rename the Presence interface to HasPresence
 * Rename the Favourite interface to Favouritable
+* Add IMableError
+* Throw IMableError from IMable.normalise_im_address()
 
 Bugs fixed:
 * Bug 635178 — Leak in
@@ -15,6 +17,7 @@ Bugs fixed:
 * Bug 636251 — Fails to add contact
 * Bug 629526 — Generate gtk-doc documentation
 * Bug 627397 — Use better interface names
+* Bug 636714 — Assertion failure on invalid IM address
 
 Overview of changes from libfolks 0.3.1 to libfolks 0.3.2
 ==========================================================

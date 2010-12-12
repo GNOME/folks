@@ -244,8 +244,16 @@ public class Tpf.Persona : Folks.Persona,
 
       /* Set our single IM address */
       GenericArray<string> im_address_array = new GenericArray<string> ();
-      im_address_array.add (IMable.normalise_im_address (id,
-          account.get_protocol ()));
+      try
+        {
+          im_address_array.add (IMable.normalise_im_address (id,
+              account.get_protocol ()));
+        }
+      catch (IMableError e)
+        {
+          /* This should never happen…but if it does, warn of it and continue */
+          warning (e.message);
+        }
 
       this._im_addresses =
           new HashTable<string, GenericArray<string>> (str_hash, str_equal);

@@ -104,13 +104,36 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
           value.foreach ((k, v) =>
             {
               unowned string protocol = (string) k;
-              unowned GenericArray<string> addresses = (GenericArray<string>) v;
+              unowned GenericArray<string?> addresses =
+                  (GenericArray<string?>) v;
+              uint offset = 0;
 
               for (int i = 0; i < addresses.length; i++)
                 {
-                  addresses[i] =
-                      IMable.normalise_im_address (addresses[i], protocol);
+                  try
+                    {
+                      addresses[i - offset] =
+                          IMable.normalise_im_address (addresses[i],
+                              protocol);
+                    }
+                  catch (IMableError e)
+                    {
+                      /* Somehow an error has crept into the user's
+                       * relationships.ini. Warn of it and ignore the IM
+                       * address. We achieve this by decrementing the offset
+                       * between the index of the address being set and the
+                       * index of the address being read. */
+                      warning (e.message);
+                      addresses[i - offset] = null;
+                      offset++;
+                    }
                 }
+
+              /* Nullify the last few addresses if we have a non-zero offset,
+               * as they're the gaps left by invalid addresses, which we want
+               * set_string_list() to ignore. */
+              for (; offset > 0; offset--)
+                addresses[addresses.length - offset] = null;
 
               unowned string[] _addresses =
                   (string[]) ((PtrArray) addresses).pdata;
@@ -181,13 +204,21 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
 
               foreach (string _address in im_addresses)
                 {
-                  string address =
-                      IMable.normalise_im_address (_address, protocol);
-
-                  if (!address_set.contains (address))
+                  try
                     {
-                      im_address_array.add (address);
-                      address_set.add (address);
+                      string address =
+                          IMable.normalise_im_address (_address, protocol);
+
+                      if (!address_set.contains (address))
+                        {
+                          im_address_array.add (address);
+                          address_set.add (address);
+                        }
+                    }
+                  catch (IMableError e)
+                    {
+                      /* Warn of and ignore any invalid IM addresses */
+                      warning (e.message);
                     }
                 }
 

@@ -21,6 +21,17 @@
 using GLib;
 
 /**
+ * Errors related to IM addresses and IM address handling.
+ */
+public errordomain Folks.IMableError
+{
+  /**
+   * The specified IM address could not be parsed.
+   */
+  INVALID_IM_ADDRESS
+}
+
+/**
  * IM addresses exposed by an object implementing {@link HasPresence}.
  *
  * @since 0.1.13
@@ -60,12 +71,19 @@ public interface Folks.IMable : Object
    * only one of which is canonical. In order to allow simple string comparisons
    * of IM addresses to work, the IM addresses must be normalised beforehand.
    *
+   * If the provided IM address is invalid,
+   * {@link Folks.IMableError.INVALID_IM_ADDRESS} will be thrown. Note that this
+   * isn't guaranteed to be thrown for all invalid addresses, but if it is
+   * thrown, the address is guaranteed to be invalid.
+   *
    * @param im_address the address to normalise
    * @param protocol the protocol of this im_address
    *
    * @since 0.2.0
+   * @throws Folks.IMableError if the provided IM address was invalid
    */
   public static string normalise_im_address (string im_address, string protocol)
+      throws Folks.IMableError
     {
       string normalised;
 
@@ -83,7 +101,13 @@ public interface Folks.IMable : Object
           /* Parse the JID */
           string[] parts = im_address.split ("/", 2);
 
-          return_val_if_fail (parts.length >= 1, null);
+          if (parts.length < 1)
+            {
+              throw new IMableError.INVALID_IM_ADDRESS (
+                  /* Translators: the parameter is an IM address. */
+                  _("The IM address '%s' could not be understood."),
+                  im_address);
+            }
 
           string resource = null;
           if (parts.length == 2)
@@ -91,7 +115,13 @@ public interface Folks.IMable : Object
 
           parts = parts[0].split ("@", 2);
 
-          return_val_if_fail (parts.length >= 1, null);
+          if (parts.length < 1)
+            {
+              throw new IMableError.INVALID_IM_ADDRESS (
+                  /* Translators: the parameter is an IM address. */
+                  _("The IM address '%s' could not be understood."),
+                  im_address);
+            }
 
           string node, domain;
           if (parts.length == 2)
@@ -105,9 +135,15 @@ public interface Folks.IMable : Object
               domain = parts[0];
             }
 
-          return_val_if_fail (node == null || node != "", null);
-          return_val_if_fail (domain != null && domain != "", null);
-          return_val_if_fail (resource == null || resource != "", null);
+          if ((node != null && node == "") ||
+              (domain == null || domain == "") ||
+              (resource != null && resource == ""))
+            {
+              throw new IMableError.INVALID_IM_ADDRESS (
+                  /* Translators: the parameter is an IM address. */
+                  _("The IM address '%s' could not be understood."),
+                  im_address);
+            }
 
           domain = domain.down ();
           if (node != null)
@@ -115,13 +151,24 @@ public interface Folks.IMable : Object
 
           /* Build a new JID */
           if (node != null && resource != null)
-            normalised = "%s@%s/%s".printf (node, domain, resource);
+            {
+              normalised = "%s@%s/%s".printf (node, domain, resource);
+            }
           else if (node != null)
-            normalised = "%s@%s".printf (node, domain);
+            {
+              normalised = "%s@%s".printf (node, domain);
+            }
           else if (resource != null)
-            normalised = "%s/%s".printf (domain, resource);
+            {
+              normalised = "%s/%s".printf (domain, resource);
+            }
           else
-            assert_not_reached ();
+            {
+              throw new IMableError.INVALID_IM_ADDRESS (
+                  /* Translators: the parameter is an IM address. */
+                  _("The IM address '%s' could not be understood."),
+                  im_address);
+            }
         }
       else
         {
