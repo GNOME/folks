@@ -173,6 +173,8 @@ public class Tpf.PersonaStore : Folks.PersonaStore
    *
    * Create a new persona store to store the {@link Persona}s for the contacts
    * in the Telepathy account provided by `account`.
+   *
+   * @param account the Telepathy account being represented by the persona store
    */
   public PersonaStore (Account account)
     {

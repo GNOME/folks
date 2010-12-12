@@ -206,6 +206,9 @@ public class Tpf.Persona : Folks.Persona,
    *
    * Create a new persona for the {@link PersonaStore} `store`, representing
    * the Telepathy contact given by `contact`.
+   *
+   * @param contact the Telepathy contact being represented by the persona
+   * @param store the persona store to place the persona in
    */
   public Persona (Contact contact, PersonaStore store)
     {
