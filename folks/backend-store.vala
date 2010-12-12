@@ -600,10 +600,21 @@ public class Folks.BackendStore : Object {
       try
         {
           /* Note: We have to use key_file_data.size () here to get its length
-           * in _bytes_ rather than _characters_. bgo#628930 */
+           * in _bytes_ rather than _characters_. bgo#628930.
+           * In Vala >= 0.11, string.size() has been deprecated in favour of
+           * string.length (which now returns the byte length, whereas in
+           * Vala <= 0.10, it returned the character length). FIXME: We need to
+           * take this into account until we depend explicitly on
+           * Vala >= 0.11. */
+#if VALA_0_12
+          yield this.config_file.replace_contents_async (key_file_data,
+              key_file_data.length, null, false, FileCreateFlags.PRIVATE,
+              null);
+#else
           yield this.config_file.replace_contents_async (key_file_data,
               key_file_data.size (), null, false, FileCreateFlags.PRIVATE,
               null);
+#endif
         }
       catch (Error e)
         {
