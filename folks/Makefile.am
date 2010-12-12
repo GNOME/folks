@@ -15,7 +15,7 @@ libfolks_la_SOURCES = \
 	aliasable.vala \
 	backend.vala \
 	backend-store.vala \
-	favourite.vala \
+	favouritable.vala \
 	groupable.vala \
 	has-avatar.vala \
 	has-presence.vala \

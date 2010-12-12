@@ -24,7 +24,7 @@ using GLib;
  * Interface exposing a {@link Persona}'s or {@link Individual}'s user-defined
  * status as a favourite.
  */
-public interface Folks.Favourite : Object
+public interface Folks.Favouritable : Object
 {
   /**
    * Whether this contact is a user-defined favourite.

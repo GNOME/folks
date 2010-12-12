@@ -29,7 +29,7 @@ using Folks;
  */
 public class Tpf.Persona : Folks.Persona,
     Aliasable,
-    Favourite,
+    Favouritable,
     Groupable,
     HasAvatar,
     HasPresence,
@@ -101,7 +101,7 @@ public class Tpf.Persona : Folks.Persona,
   /**
    * Whether this Persona is a user-defined favourite.
    *
-   * See {@link Folks.Favourite.is_favourite}.
+   * See {@link Folks.Favouritable.is_favourite}.
    */
   public bool is_favourite
     {

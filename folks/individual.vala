@@ -64,7 +64,7 @@ public enum Folks.TrustLevel
  */
 public class Folks.Individual : Object,
     Aliasable,
-    Favourite,
+    Favouritable,
     Groupable,
     HasAvatar,
     HasPresence,
@@ -234,11 +234,11 @@ public class Folks.Individual : Object,
           this._is_favourite = value;
           this._persona_list.foreach ((p) =>
             {
-              if (p is Favourite)
+              if (p is Favouritable)
                 {
                   SignalHandler.block_by_func (p,
                       (void*) this.notify_is_favourite_cb, this);
-                  ((Favourite) p).is_favourite = value;
+                  ((Favouritable) p).is_favourite = value;
                   SignalHandler.unblock_by_func (p,
                       (void*) this.notify_is_favourite_cb, this);
                 }
@@ -547,9 +547,9 @@ public class Folks.Individual : Object,
 
       this._persona_list.foreach ((p) =>
         {
-          if (favourite == false && p is Favourite)
+          if (favourite == false && p is Favouritable)
             {
-              favourite = ((Favourite) p).is_favourite;
+              favourite = ((Favouritable) p).is_favourite;
               if (favourite == true)
                 return;
             }
