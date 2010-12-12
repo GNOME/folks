@@ -64,9 +64,9 @@ public enum Folks.TrustLevel
  */
 public class Folks.Individual : Object,
     Aliasable,
-    Avatar,
     Favourite,
     Groupable,
+    HasAvatar,
     IMable,
     Presence
 {
@@ -654,9 +654,9 @@ public class Folks.Individual : Object,
 
       this._persona_list.foreach ((p) =>
         {
-          if (avatar == null && p is Avatar)
+          if (avatar == null && p is HasAvatar)
             {
-              avatar = ((Avatar) p).avatar;
+              avatar = ((HasAvatar) p).avatar;
               return;
             }
         });

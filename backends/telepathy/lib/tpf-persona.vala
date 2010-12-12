@@ -29,9 +29,9 @@ using Folks;
  */
 public class Tpf.Persona : Folks.Persona,
     Aliasable,
-    Avatar,
     Favourite,
     Groupable,
+    HasAvatar,
     IMable,
     Presence
 {
@@ -50,7 +50,7 @@ public class Tpf.Persona : Folks.Persona,
   /**
    * An avatar for the Persona.
    *
-   * See {@link Folks.Avatar.avatar}.
+   * See {@link Folks.HasAvatar.avatar}.
    */
   public File avatar { get; set; }
 

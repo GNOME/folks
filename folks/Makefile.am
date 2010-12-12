@@ -13,11 +13,11 @@ lib_LTLIBRARIES = libfolks.la
 # Vala files to compile into libfolks.la
 libfolks_la_SOURCES = \
 	aliasable.vala \
-	avatar.vala \
 	backend.vala \
 	backend-store.vala \
 	favourite.vala \
 	groupable.vala \
+	has-avatar.vala \
 	imable.vala \
 	individual.vala \
 	individual-aggregator.vala \
