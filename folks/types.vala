@@ -27,11 +27,17 @@ namespace Folks
    */
   public static enum MaybeBool
     {
-      /* This value is explicitly unset. */
+      /**
+       * This value is explicitly unset.
+       */
       UNSET = 0,
-      /* False (this value was set from its default of UNSET). */
+      /**
+       * False (this value was set from its default of UNSET).
+       */
       FALSE = 1,
-      /* True (this value was set from its default of UNSET). */
+      /**
+       * True (this value was set from its default of UNSET).
+       */
       TRUE = 2,
     }
 }
