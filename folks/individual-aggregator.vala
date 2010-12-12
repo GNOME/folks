@@ -95,7 +95,7 @@ public class Folks.IndividualAggregator : Object
   /**
    * The {@link Individual} representing the user.
    *
-   * If it exists, this holds the {@link Individual} who is the user — the
+   * If it exists, this holds the {@link Individual} who is the user: the
    * {@link Individual} containing the {@link Persona}s who are the owners of
    * the accounts for their respective backends.
    *

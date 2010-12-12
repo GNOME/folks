@@ -87,8 +87,8 @@ public abstract class Folks.Persona : Object
   /**
    * Whether the Persona is the user.
    *
-   * Iff the Persona represents the user – the person who owns the account in
-   * the respective backend – this is `true`.
+   * Iff the Persona represents the user (the person who owns the account in
+   * the respective backend) this is `true`.
    *
    * @since 0.3.0
    */
