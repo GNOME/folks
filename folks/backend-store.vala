@@ -425,7 +425,11 @@ public class Folks.BackendStore : Object {
            * aliases */
           var is_symlink = info.get_is_symlink ();
 
+#if VALA_0_12
+          string mime = ContentType.get_mime_type (content_type);
+#else
           string mime = g_content_type_get_mime_type (content_type);
+#endif
 
           if (file_type == FileType.DIRECTORY)
             {
