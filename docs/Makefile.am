@@ -41,6 +41,17 @@ valadoc_flags = \
 	--package-version $(PACKAGE_VERSION) \
 	$(NULL)
 
+# We need to modify LDFLAGS so that gtkdoc-scangobj can find the symbols when
+# it comes to link its scanning program. This is what gtk-doc.make does for
+# normal gtk-doc-enabled projects.
+# FIXME: An enhancement request has been filed against valadoc for it to do this
+# automatically for us: https://bugzilla.gnome.org/show_bug.cgi?id=637090
+LDFLAGS = \
+	$(abs_top_builddir)/folks/libfolks.la \
+	$(abs_top_builddir)/backends/telepathy/lib/libfolks-telepathy.la \
+	@LDFLAGS@ \
+	$(NULL)
+
 # folks documentation
 folks_doc_files = $(top_srcdir)/folks/*.vala
 folks_doc_deps = \
