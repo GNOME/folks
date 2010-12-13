@@ -1,6 +1,17 @@
 Overview of changes from libfolks 0.3.2 to libfolks 0.3.3
 =========================================================
 
+Major changes:
+* Fix some minor leaks
+* Add support for building gtk-doc documentation for the C API
+* Fix some related documentation problems
+* Fix some Vala problems caused by differences between Vala 0.10 and 0.12
+* Finish off renaming interfaces (this is an API break; see below)
+* Don't trust personas from IRC
+* Handle invalid IM addresses more gracefully than with an assertion failure
+* Fix a linking problem with the user's individual when going offline which
+  could lead to infinite loops
+
 API changes:
 * Rename the Avatar interface to HasAvatar
 * Rename the Presence interface to HasPresence
@@ -18,6 +29,7 @@ Bugs fixed:
 * Bug 629526 — Generate gtk-doc documentation
 * Bug 627397 — Use better interface names
 * Bug 636714 — Assertion failure on invalid IM address
+* Bug 637136 — Infinite loop when disconnecting accounts
 
 Overview of changes from libfolks 0.3.1 to libfolks 0.3.2
 ==========================================================

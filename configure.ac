@@ -3,7 +3,7 @@ m4_define([folks_released], [1])
 
 m4_define([folks_major_version], [0])
 m4_define([folks_minor_version], [3])
-m4_define([folks_micro_version], [2])
+m4_define([folks_micro_version], [3])
 m4_define([folks_nano_version], [0])
 
 # If library source has changed since last release, increment revision
@@ -11,7 +11,7 @@ m4_define([folks_nano_version], [0])
 #  increment current and set revision to 0
 # If interfaces have been added since last release, increment age
 # If interfaces have been removed since last release, set age to 0
-m4_define([folks_lt_current], [18])
+m4_define([folks_lt_current], [19])
 m4_define([folks_lt_revision], [0])
 m4_define([folks_lt_age], [0])
 
