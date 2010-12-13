@@ -3,7 +3,9 @@ backends/key-file/kf-persona-store.c
 backends/key-file/kf-persona.c
 backends/telepathy/lib/tpf-persona-store.c
 backends/telepathy/lib/tpf-persona.c
+docs/gtk-doc/folks-telepathy/ccomments/tp-lowlevel.c
 folks/backend-store.c
+folks/imable.c
 folks/individual-aggregator.c
 tools/import-pidgin.c
 tools/import.c
