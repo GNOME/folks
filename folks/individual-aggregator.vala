@@ -539,6 +539,8 @@ public class Folks.IndividualAggregator : Object
       HashMap<Individual, Individual> replaced_individuals =
           new HashMap<Individual, Individual> ();
       GLib.List<Persona> relinked_personas = null;
+      HashSet<Persona> relinked_personas_set =
+          new HashSet<Persona> (direct_hash, direct_equal);
       HashSet<Persona> removed_personas = new HashSet<Persona> (direct_hash,
           direct_equal);
 
@@ -597,10 +599,12 @@ public class Folks.IndividualAggregator : Object
            * include any of the Personas which have just been removed. */
           foreach (unowned Persona persona in individual.personas)
             {
-              if (removed_personas.contains (persona) == true)
+              if (removed_personas.contains (persona) == true ||
+                  relinked_personas_set.contains (persona) == true)
                 continue;
 
               relinked_personas.prepend (persona);
+              relinked_personas_set.add (persona);
 
               /* Remove links to the Persona */
               this.remove_persona_from_link_map (persona);
