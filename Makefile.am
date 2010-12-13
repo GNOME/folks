@@ -18,16 +18,7 @@ DISTCHECK_CONFIGURE_FLAGS = \
 	$(NULL)
 
 EXTRA_DIST = \
-	ABOUT-NLS \
 	autogen.sh \
-	po/Makevars.template \
-	po/Rules-quot \
-	po/boldquot.sed \
-	po/en@boldquot.header \
-	po/en@quot.header \
-	po/insert-header.sin \
-	po/quot.sed \
-	po/remove-potcdate.sin \
 	$(NULL)
 
 MAINTAINERCLEANFILES = \
