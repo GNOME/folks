@@ -129,7 +129,9 @@ libfolks_telepathy_la_LIBADD = \
 # that vim quickfix mode (:make) doesn't interpret the libtool --mode=link
 # command as an error message in a bizarrely named file
 libfolks_telepathy_la_LDFLAGS = \
-	-version-info "$(LT_CURRENT)":"$(LT_REVISION)":"$(LT_AGE)"
+	-version-info "$(LT_CURRENT)":"$(LT_REVISION)":"$(LT_AGE)" \
+	-export-symbols-regex "^tpf_.*" \
+	$(NULL)
 
 folks_telepathy_includedir = $(includedir)/folks
 folks_telepathy_include_HEADERS = \
