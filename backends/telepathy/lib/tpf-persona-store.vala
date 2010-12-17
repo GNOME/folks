@@ -606,9 +606,11 @@ public class Tpf.PersonaStore : Folks.PersonaStore
                   return;
                 }
 
+              debug ("Creating persona from self-handle");
+
               /* Add the local user */
               Contact contact = contacts[0];
-              Persona persona = this._add_persona_from_contact (contact);
+              Persona persona = this._add_persona_from_contact (contact, false);
 
               GLib.List<Persona> personas = new GLib.List<Persona> ();
               personas.prepend (persona);
@@ -972,7 +974,8 @@ public class Tpf.PersonaStore : Folks.PersonaStore
     {
       var tp_persona = (Tpf.Persona) persona;
 
-      if (tp_persona.contact == this._self_contact)
+      if (tp_persona.contact == this._self_contact &&
+          tp_persona.is_in_contact_list == false)
         {
           throw new PersonaStoreError.UNSUPPORTED_ON_USER (
               _("Personas representing the local user may not be removed."));
@@ -1209,9 +1212,24 @@ public class Tpf.PersonaStore : Folks.PersonaStore
         {
           var channel_handle = (Handle) channel_handles.index (i);
           var contact_handle = channel.group_get_handle_owner (channel_handle);
+          Persona? persona = this._handle_persona_map[contact_handle];
 
-          if (this._handle_persona_map[contact_handle] == null)
-            contact_handles += contact_handle;
+          if (persona == null)
+            {
+              contact_handles += contact_handle;
+            }
+          else
+            {
+              /* Mark the persona as having been seen in the contact list.
+               * The persona might have originally been discovered by querying
+               * the Telepathy connection's self-handle; in this case, its
+               * is-in-contact-list property will originally be false, as a
+               * contact could be exposed as the self-handle, but not actually
+               * be in the user's contact list. */
+              debug ("Setting is-in-contact-list for '%s' to true",
+                  persona.uid);
+              persona.is_in_contact_list = true;
+            }
         }
 
       try
@@ -1266,7 +1284,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
 
               debug ("Creating persona from contact '%s'", contact.identifier);
 
-              var persona = this._add_persona_from_contact (contact);
+              var persona = this._add_persona_from_contact (contact, true);
               if (persona != null)
                 personas.prepend (persona);
             }
@@ -1292,15 +1310,18 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       return null;
     }
 
-  private Tpf.Persona? _add_persona_from_contact (Contact contact)
+  private Tpf.Persona? _add_persona_from_contact (Contact contact,
+      bool from_contact_list)
     {
       var h = contact.get_handle ();
+      Persona? persona = null;
 
       debug ("Adding persona from contact '%s'", contact.identifier);
 
-      if (this._handle_persona_map[h] == null)
+      persona = this._handle_persona_map[h];
+      if (persona == null)
         {
-          var persona = new Tpf.Persona (contact, this);
+          persona = new Tpf.Persona (contact, this);
 
           this._personas.insert (persona.iid, persona);
           this._handle_persona_map[h] = persona;
@@ -1311,10 +1332,35 @@ public class Tpf.PersonaStore : Folks.PersonaStore
            * favourite. */
           persona.is_favourite = this._favourite_handles.contains (h);
 
+          /* Only emit this debug message in the false case to reduce debug
+           * spam (see https://bugzilla.gnome.org/show_bug.cgi?id=640901#c2). */
+          if (from_contact_list == false)
+            {
+              debug ("    Setting is-in-contact-list to false");
+            }
+
+          persona.is_in_contact_list = from_contact_list;
+
           return persona;
         }
+      else
+        {
+           debug ("    ...already exists.");
 
-      return null;
+          /* Mark the persona as having been seen in the contact list.
+           * The persona might have originally been discovered by querying
+           * the Telepathy connection's self-handle; in this case, its
+           * is-in-contact-list property will originally be false, as a
+           * contact could be exposed as the self-handle, but not actually
+           * be in the user's contact list. */
+          if (persona.is_in_contact_list == false && from_contact_list == true)
+            {
+              debug ("    Setting is-in-contact-list to true");
+              persona.is_in_contact_list = true;
+            }
+
+          return null;
+        }
     }
 
   private void _add_new_personas_from_contacts (Contact[] contacts)
@@ -1322,7 +1368,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       GLib.List<Persona> personas = new GLib.List<Persona> ();
       foreach (Contact contact in contacts)
         {
-          var persona = this._add_persona_from_contact (contact);
+          var persona = this._add_persona_from_contact (contact, true);
           if (persona != null)
             personas.prepend (persona);
         }

@@ -48,6 +48,18 @@ public class Tpf.Persona : Folks.Persona,
   private bool _is_constructed = false;
 
   /**
+   * Whether the Persona is in the user's contact list.
+   *
+   * This will be true for most {@link Folks.Persona}s, but may not be true for
+   * personas where {@link Folks.Persona.is_user} is true. If it's false in
+   * this case, it means that the persona has been retrieved from the Telepathy
+   * connection, but has not been added to the user's contact list.
+   *
+   * @since 0.3.UNRELEASED
+   */
+  public bool is_in_contact_list { get; set; }
+
+  /**
    * An avatar for the Persona.
    *
    * See {@link Folks.AvatarOwner.avatar}.
