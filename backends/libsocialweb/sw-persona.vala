@@ -128,15 +128,15 @@ internal class Folks.Backends.Sw.Persona : Folks.Persona,
           iid = store.id + ":" + id;
         }
 
-      debug ("Creating new Sw.Persona '%s' for %s UID '%s': %p",
-          uid, store.display_name, id, this);
-
       Object (display_id: id,
               uid: uid,
               iid: iid,
               store: store,
               gender: Gender.UNSPECIFIED,
               is_user: false);
+
+      debug ("Creating new Sw.Persona '%s' for %s UID '%s': %p",
+          uid, store.display_name, id, this);
 
       if (facebook_jid != null)
         {
