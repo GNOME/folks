@@ -28,6 +28,7 @@ libfolks_la_SOURCES = \
 	name-owner.vala \
 	persona.vala \
 	persona-store.vala \
+	phoneable.vala \
 	types.vala \
 	urlable.vala \
 	debug.vala \
