@@ -21,6 +21,9 @@ Bugs fixed:
 * Bug 639742 — Logger service unavailable in make check
 * Bug 640213 — Add tests for LinkedHashSet
 
+API changes:
+* Rename the HasAvatar interface to AvatarOwner
+
 Overview of changes from libfolks 0.3.2 to libfolks 0.3.3
 =========================================================
 

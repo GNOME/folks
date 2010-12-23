@@ -66,7 +66,7 @@ public class Folks.Individual : Object,
     Aliasable,
     Favouritable,
     Groupable,
-    HasAvatar,
+    AvatarOwner,
     HasPresence,
     IMable
 {
@@ -655,9 +655,9 @@ public class Folks.Individual : Object,
 
       this._persona_list.foreach ((p) =>
         {
-          if (avatar == null && p is HasAvatar)
+          if (avatar == null && p is AvatarOwner)
             {
-              avatar = ((HasAvatar) p).avatar;
+              avatar = ((AvatarOwner) p).avatar;
               return;
             }
         });
