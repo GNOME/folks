@@ -67,7 +67,7 @@ public class Folks.Individual : Object,
     Favouritable,
     Groupable,
     AvatarOwner,
-    HasPresence,
+    PresenceOwner,
     IMable
 {
   private bool _is_favourite;
@@ -515,11 +515,11 @@ public class Folks.Individual : Object,
       /* Choose the most available presence from our personas */
       this._persona_list.foreach ((p) =>
         {
-          if (p is HasPresence)
+          if (p is PresenceOwner)
             {
-              var presence = (HasPresence) p;
+              unowned PresenceOwner presence = (PresenceOwner) p;
 
-              if (HasPresence.typecmp (presence.presence_type,
+              if (PresenceOwner.typecmp (presence.presence_type,
                   presence_type) > 0)
                 {
                   presence_type = presence.presence_type;

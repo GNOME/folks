@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 Collabora Ltd.
+ * Copyright (C) 2010-2011 Collabora Ltd.
  *
  * This library is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -21,8 +21,8 @@
 using GLib;
 
 /**
- * The possible presence states an object implementing {@link HasPresence} could
- * be in.
+ * The possible presence states an object implementing {@link PresenceOwner}
+ * could be in.
  *
  * These closely follow the
  * [[http://telepathy.freedesktop.org/spec/Connection_Interface_Simple_Presence.html#Connection_Presence_Type|SimplePresence]]
@@ -76,7 +76,7 @@ public enum Folks.PresenceType {
  * {@link PresenceType.UNSET} and their `presence_message` will be an empty
  * string.
  */
-public interface Folks.HasPresence : Object
+public interface Folks.PresenceOwner : Object
 {
   /**
    * The contact's presence type.
@@ -94,7 +94,7 @@ public interface Folks.HasPresence : Object
    * The contact's presence message.
    *
    * This is a short message written by the contact to add detail to their
-   * presence type ({@link Folks.HasPresence.presence_type}). If the contact
+   * presence type ({@link Folks.PresenceOwner.presence_type}). If the contact
    * hasn't set a message, it will be an empty string.
    */
   public abstract string presence_message { get; set; default = ""; }
@@ -142,15 +142,16 @@ public interface Folks.HasPresence : Object
    */
   public static int typecmp (PresenceType type_a, PresenceType type_b)
     {
-      return (HasPresence._type_availability (type_a) -
-          HasPresence._type_availability (type_b));
+      return (PresenceOwner._type_availability (type_a) -
+          PresenceOwner._type_availability (type_b));
     }
 
   /**
    * Whether the contact is online.
    *
    * This will be `true` if the contact's presence type is higher than
-   * {@link PresenceType.OFFLINE}, as determined by {@link HasPresence.typecmp}.
+   * {@link PresenceType.OFFLINE}, as determined by
+   * {@link PresenceOwner.typecmp}.
    *
    * @return `true` if the contact is online, `false` otherwise
    */

@@ -18,7 +18,7 @@ libfolks_la_SOURCES = \
 	favouritable.vala \
 	groupable.vala \
 	avatar-owner.vala \
-	has-presence.vala \
+	presence-owner.vala \
 	imable.vala \
 	individual.vala \
 	individual-aggregator.vala \
