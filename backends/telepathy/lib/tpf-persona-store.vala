@@ -42,7 +42,12 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       ".ChannelType";
   private static string _tp_channel_handle_type = _tp_channel_iface +
       ".TargetHandleType";
-  private string[] _undisplayed_groups = { "publish", "stored", "subscribe" };
+  private static string[] _undisplayed_groups =
+      {
+        "publish",
+        "stored",
+        "subscribe"
+      };
   private static ContactFeature[] _contact_features =
       {
         ContactFeature.ALIAS,
@@ -305,7 +310,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       /* Get an initial set of favourite contacts */
       try
         {
-          string[] contacts = yield this._logger.get_favourite_contacts ();
+          var contacts = yield this._logger.get_favourite_contacts ();
 
           if (contacts.length == 0)
             return;
@@ -349,8 +354,8 @@ public class Tpf.PersonaStore : Folks.PersonaStore
 
       for (var i = 0; i < handles.length; i++)
         {
-          Handle h = handles[i];
-          Persona p = this._handle_persona_map[h];
+          var h = handles[i];
+          var p = this._handle_persona_map[h];
 
           /* Add/Remove the handle to the set of favourite handles, since we
            * might not have the corresponding contact yet */
@@ -461,7 +466,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       /* Deal with the case where the connection is already ready
        * FIXME: We have to access the property manually until bgo#571348 is
        * fixed. */
-      bool connection_ready = false;
+      var connection_ready = false;
       conn.get ("connection-ready", out connection_ready);
 
       if (connection_ready == true)
@@ -472,7 +477,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
 
   private void _connection_ready_cb (Object s, ParamSpec? p)
     {
-      Connection c = (Connection) s;
+      var c = (Connection) s;
       this._ll.connection_connect_to_new_group_channels (c,
           this._new_group_channels_cb);
 
@@ -570,7 +575,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
 
   private void _self_handle_changed_cb (Object s, ParamSpec? p)
     {
-      Connection c = (Connection) s;
+      var c = (Connection) s;
 
       /* Remove the old self persona */
       if (this._self_contact != null)
@@ -885,16 +890,16 @@ public class Tpf.PersonaStore : Folks.PersonaStore
             return;
         }
 
-      string? message = TelepathyGLib.asv_get_string (details, "message");
+      var message = TelepathyGLib.asv_get_string (details, "message");
       bool valid;
       Persona? actor = null;
-      uint32 actor_handle = TelepathyGLib.asv_get_uint32 (details, "actor",
+      var actor_handle = TelepathyGLib.asv_get_uint32 (details, "actor",
           out valid);
       if (actor_handle > 0 && valid)
         actor = this._handle_persona_map[actor_handle];
 
       Groupable.ChangeReason reason = Groupable.ChangeReason.NONE;
-      uint32 tp_reason = TelepathyGLib.asv_get_uint32 (details, "change-reason",
+      var tp_reason = TelepathyGLib.asv_get_uint32 (details, "change-reason",
           out valid);
       if (valid)
         reason = _change_reason_from_tp_reason (tp_reason);
@@ -1246,8 +1251,8 @@ public class Tpf.PersonaStore : Folks.PersonaStore
                   this._conn, contact_ids, (uint[]) _contact_features);
 
           GLib.List<Persona> personas = new GLib.List<Persona> ();
-          uint err_count = 0;
-          string err_string = "";
+          var err_count = 0;
+          var err_string = "";
           unowned GLib.List<TelepathyGLib.Contact> l;
           for (l = contacts; l != null; l = l.next)
             {
@@ -1406,7 +1411,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
               _("Cannot create a new persona while offline."));
         }
 
-      string[] contact_ids = new string[1];
+      var contact_ids = new string[1];
       contact_ids[0] = contact_id;
 
       try
@@ -1444,8 +1449,8 @@ public class Tpf.PersonaStore : Folks.PersonaStore
             {
               /* We ignore the case of an empty list, as it just means the
                * contact was already in our roster */
-              uint num_personas = personas.length ();
-              string message =
+              var num_personas = personas.length ();
+              var message =
                   ngettext (
                       /* Translators: the parameter is the number of personas
                        * which were returned. */

@@ -214,7 +214,7 @@ public abstract class Folks.Persona : Object
       assert (uid.validate ());
 
       size_t backend_name_length = 0, persona_store_id_length = 0;
-      bool escaped = false;
+      var escaped = false;
       for (unowned string i = uid; i.get_char () != '\0'; i = i.next_char ())
         {
           if (i.get_char () == '\\')

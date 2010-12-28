@@ -131,8 +131,7 @@ public class Folks.Backends.Tp.Backend : Folks.Backend
 
   private void _account_enabled_cb (Account account)
     {
-      PersonaStore store = this._persona_stores.lookup (
-          account.get_object_path ());
+      var store = this._persona_stores.lookup (account.get_object_path ());
 
       if (store != null)
         return;

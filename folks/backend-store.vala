@@ -202,7 +202,7 @@ public class Folks.BackendStore : Object {
       var path_split = path.split (":");
       foreach (var subpath in path_split)
         {
-          File file = File.new_for_path (subpath);
+          var file = File.new_for_path (subpath);
           assert (file != null);
 
           bool is_file;
@@ -265,7 +265,7 @@ public class Folks.BackendStore : Object {
 
   private async bool _backend_unload_if_needed (Backend backend)
     {
-      bool unloaded = false;
+      var unloaded = false;
 
       if (!this._backend_is_enabled (backend.name))
         {
@@ -311,7 +311,7 @@ public class Folks.BackendStore : Object {
 
   private bool _backend_is_enabled (string name)
     {
-      bool enabled = true;
+      var enabled = true;
       try
         {
           enabled = this.backends_key_file.get_boolean (name, "enabled");
@@ -388,18 +388,18 @@ public class Folks.BackendStore : Object {
     {
       debug ("Searching for modules in folder '%s' ..", dir.get_path ());
 
-      string attributes = FILE_ATTRIBUTE_STANDARD_NAME + "," +
-                          FILE_ATTRIBUTE_STANDARD_TYPE + "," +
-                          FILE_ATTRIBUTE_STANDARD_IS_SYMLINK + "," +
-                          FILE_ATTRIBUTE_STANDARD_CONTENT_TYPE;
+      var attributes =
+          FILE_ATTRIBUTE_STANDARD_NAME + "," +
+          FILE_ATTRIBUTE_STANDARD_TYPE + "," +
+          FILE_ATTRIBUTE_STANDARD_IS_SYMLINK + "," +
+          FILE_ATTRIBUTE_STANDARD_CONTENT_TYPE;
 
       GLib.List<FileInfo> infos;
-      FileEnumerator enumerator;
-
       try
         {
-          enumerator = yield dir.enumerate_children_async (attributes,
-              FileQueryInfoFlags.NONE, Priority.DEFAULT, null);
+          FileEnumerator enumerator =
+            yield dir.enumerate_children_async (attributes,
+                FileQueryInfoFlags.NONE, Priority.DEFAULT, null);
 
           infos = yield enumerator.next_files_async (int.MAX,
               Priority.DEFAULT, null);
@@ -418,8 +418,8 @@ public class Folks.BackendStore : Object {
 
       foreach (var info in infos)
         {
-          File file = dir.get_child (info.get_name ());
-          FileType file_type = info.get_file_type ();
+          var file = dir.get_child (info.get_name ());
+          var file_type = info.get_file_type ();
           unowned string content_type = info.get_content_type ();
           /* don't load the library multiple times for its various symlink
            * aliases */
@@ -458,7 +458,7 @@ public class Folks.BackendStore : Object {
 
   private void _load_module_from_file (File file)
     {
-      string file_path = file.get_path ();
+      var file_path = file.get_path ();
 
       if (this.modules.has_key (file_path))
         return;
@@ -544,8 +544,7 @@ public class Folks.BackendStore : Object {
   private async void _load_disabled_backend_names ()
     {
       File file;
-      string path =
-          Environment.get_variable ("FOLKS_BACKEND_STORE_KEY_FILE_PATH");
+      var path = Environment.get_variable ("FOLKS_BACKEND_STORE_KEY_FILE_PATH");
       if (path == null)
         {
           file = File.new_for_path (Environment.get_user_data_dir ());
@@ -593,7 +592,7 @@ public class Folks.BackendStore : Object {
 
   private async void _save_key_file ()
     {
-      string key_file_data = this.backends_key_file.to_data ();
+      var key_file_data = this.backends_key_file.to_data ();
 
       debug ("Saving backend key file '%s'.", this.config_file.get_path ());
 

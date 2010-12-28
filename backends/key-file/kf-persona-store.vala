@@ -119,7 +119,7 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
    */
   public PersonaStore (File key_file)
     {
-      string id = key_file.get_basename ();
+      var id = key_file.get_basename ();
 
       Object (id: id,
               display_name: id);
@@ -138,7 +138,7 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
         {
           if (!this._is_prepared)
             {
-              string filename = this._file.get_path ();
+              var filename = this._file.get_path ();
               this._key_file = new GLib.KeyFile ();
 
               /* Load or create the file */
@@ -225,8 +225,8 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
               /* We've loaded or created a key file by now, so cycle through the
                * groups: each group is a persona which we have to create and
                * emit */
-              string[] groups = this._key_file.get_groups ();
-              foreach (string persona_id in groups)
+              var groups = this._key_file.get_groups ();
+              foreach (var persona_id in groups)
                 {
                   if (persona_id.to_int () == this._first_unused_id)
                     this._first_unused_id++;
@@ -338,8 +338,8 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
 
   internal async void save_key_file ()
     {
-      string key_file_data = this._key_file.to_data ();
-      Cancellable cancellable = new Cancellable ();
+      var key_file_data = this._key_file.to_data ();
+      var cancellable = new Cancellable ();
 
       debug ("Saving key file '%s'.", this._file.get_path ());
 

@@ -147,8 +147,7 @@ public class Folks.IndividualAggregator : Object
 
       this._backends = new HashSet<Backend> ();
 
-      string disable_linking =
-          Environment.get_variable ("FOLKS_DISABLE_LINKING");
+      var disable_linking = Environment.get_variable ("FOLKS_DISABLE_LINKING");
       if (disable_linking != null)
         disable_linking = disable_linking.strip ().down ();
       this._linking_enabled = (disable_linking == null ||
@@ -218,7 +217,7 @@ public class Folks.IndividualAggregator : Object
   private void _backend_persona_store_added_cb (Backend backend,
       PersonaStore store)
     {
-      string store_id = this._get_store_full_id (store.type_id, store.id);
+      var store_id = this._get_store_full_id (store.type_id, store.id);
 
       /* FIXME: We hardcode the key-file backend's singleton PersonaStore as the
        * only trusted and writeable PersonaStore for now. */
@@ -289,7 +288,7 @@ public class Folks.IndividualAggregator : Object
        * confines of this function call. */
       HashSet<Individual> almost_added_individuals = new HashSet<Individual> ();
 
-      foreach (unowned Persona persona in added)
+      foreach (var persona in added)
         {
           PersonaStoreTrust trust_level = persona.store.trust_level;
 
@@ -323,7 +322,7 @@ public class Folks.IndividualAggregator : Object
            * Persona to any existing Individual */
           if (trust_level != PersonaStoreTrust.NONE)
             {
-              Individual candidate_ind = this._link_map.lookup (persona.iid);
+              var candidate_ind = this._link_map.lookup (persona.iid);
               if (candidate_ind != null &&
                   candidate_ind.trust_level != TrustLevel.NONE)
                 {
@@ -345,6 +344,7 @@ public class Folks.IndividualAggregator : Object
                    * prop_name ends up as NULL. bgo#628336 */
                   unowned string prop_name = foo;
 
+                  /* FIXME: can't be var because of bgo#638208 */
                   unowned ObjectClass pclass = persona.get_class ();
                   if (pclass.find_property (prop_name) == null)
                     {
@@ -357,8 +357,8 @@ public class Folks.IndividualAggregator : Object
 
                   persona.linkable_property_to_links (prop_name, (l) =>
                     {
-                      string prop_linking_value = (string) l;
-                      Individual candidate_ind =
+                      var prop_linking_value = (string) l;
+                      var candidate_ind =
                           this._link_map.lookup (prop_linking_value);
 
                       if (candidate_ind != null &&
@@ -387,7 +387,7 @@ public class Folks.IndividualAggregator : Object
                * Individuals so that the Individuals themselves are removed. */
               candidate_inds.foreach ((i) =>
                 {
-                  unowned Individual individual = (Individual) i;
+                  var individual = (Individual) i;
 
                   /* FIXME: It would be faster to prepend a reversed copy of
                    * `individual.personas`, then reverse the entire
@@ -417,7 +417,7 @@ public class Folks.IndividualAggregator : Object
               final_individual.id);
           final_personas.foreach ((i) =>
             {
-              unowned Persona final_persona = (Persona) i;
+              var final_persona = (Persona) i;
 
               debug ("        %s (is user: %s, IID: %s)", final_persona.uid,
                   final_persona.is_user ? "yes" : "no", final_persona.iid);
@@ -439,6 +439,7 @@ public class Folks.IndividualAggregator : Object
                   foreach (unowned string prop_name in
                       final_persona.linkable_properties)
                     {
+                      /* FIXME: can't be var because of bgo#638208 */
                       unowned ObjectClass pclass = final_persona.get_class ();
                       if (pclass.find_property (prop_name) == null)
                         {
@@ -465,7 +466,7 @@ public class Folks.IndividualAggregator : Object
 
           /* Remove the old Individuals. This has to be done here, as we need
            * the final_individual. */
-          foreach (unowned Individual i in candidate_inds)
+          foreach (var i in candidate_inds)
             {
               /* If the replaced individual was marked to be added to the
                * aggregator, unmark it. */
@@ -485,7 +486,7 @@ public class Folks.IndividualAggregator : Object
 
       /* Add the set of final individuals which weren't later replaced to the
        * aggregator. */
-      foreach (Individual i in almost_added_individuals)
+      foreach (var i in almost_added_individuals)
         {
           /* Add the new Individual to the aggregator */
           i.removed.connect (this._individual_removed_cb);
@@ -507,6 +508,7 @@ public class Folks.IndividualAggregator : Object
            * removed. */
           foreach (string prop_name in persona.linkable_properties)
             {
+              /* FIXME: can't be var because of bgo#638208 */
               unowned ObjectClass pclass = persona.get_class ();
               if (pclass.find_property (prop_name) == null)
                 {
@@ -535,20 +537,18 @@ public class Folks.IndividualAggregator : Object
       Persona? actor,
       Groupable.ChangeReason reason)
     {
-      GLib.List<Individual> added_individuals = new GLib.List<Individual> (),
-          removed_individuals = null;
-      HashMap<Individual, Individual> replaced_individuals =
-          new HashMap<Individual, Individual> ();
+      var added_individuals = new GLib.List<Individual> ();
+      GLib.List<Individual> removed_individuals = null;
+      var replaced_individuals = new HashMap<Individual, Individual> ();
       GLib.List<Persona> relinked_personas = null;
-      HashSet<Persona> relinked_personas_set =
-          new HashSet<Persona> (direct_hash, direct_equal);
-      HashSet<Persona> removed_personas = new HashSet<Persona> (direct_hash,
+      var relinked_personas_set = new HashSet<Persona> (direct_hash,
           direct_equal);
+      var removed_personas = new HashSet<Persona> (direct_hash, direct_equal);
 
       /* We store the value of this.user locally and only update it at the end
        * of the function to prevent spamming notifications of changes to the
        * property. */
-      Individual user = this.user;
+      var user = this.user;
 
       if (added != null)
         {
@@ -560,7 +560,7 @@ public class Folks.IndividualAggregator : Object
 
       removed.foreach ((p) =>
         {
-          unowned Persona persona = (Persona) p;
+          var persona = (Persona) p;
 
           debug ("    %s (is user: %s, IID: %s)", persona.uid,
               persona.is_user ? "yes" : "no", persona.iid);
@@ -572,7 +572,7 @@ public class Folks.IndividualAggregator : Object
           /* Find the Individual containing the Persona (if any) and mark them
            * for removal (any other Personas they have which aren't being
            * removed will be re-linked into other Individuals). */
-          Individual ind = this._link_map.lookup (persona.iid);
+          var ind = this._link_map.lookup (persona.iid);
           if (ind != null)
             removed_individuals.prepend (ind);
 
@@ -588,7 +588,7 @@ public class Folks.IndividualAggregator : Object
        * group together the IndividualAggregator.individuals_changed signals
        * for all the removed Individuals. */
       debug ("Removing Individuals due to removed links:");
-      foreach (Individual individual in removed_individuals)
+      foreach (var individual in removed_individuals)
         {
           /* Ensure we don't remove the same Individual twice */
           if (this.individuals.lookup (individual.id) == null)
@@ -598,7 +598,7 @@ public class Folks.IndividualAggregator : Object
 
           /* Build a list of Personas which need relinking. Ensure we don't
            * include any of the Personas which have just been removed. */
-          foreach (unowned Persona persona in individual.personas)
+          foreach (var persona in individual.personas)
             {
               if (removed_personas.contains (persona) == true ||
                   relinked_personas_set.contains (persona) == true)
@@ -619,7 +619,7 @@ public class Folks.IndividualAggregator : Object
         }
 
       debug ("Relinking Personas:");
-      foreach (unowned Persona persona in relinked_personas)
+      foreach (var persona in relinked_personas)
         {
           debug ("    %s (is user: %s, IID: %s)", persona.uid,
               persona.is_user ? "yes" : "no", persona.iid);
@@ -654,8 +654,7 @@ public class Folks.IndividualAggregator : Object
       /* Signal the replacement of various Individuals as a consequence of
        * linking. */
       debug ("Replacing Individuals due to linking:");
-      MapIterator<Individual, Individual> iter =
-          replaced_individuals.map_iterator ();
+      var iter = replaced_individuals.map_iterator ();
       while (iter.next () == true)
         {
           iter.get_key ().replace (iter.get_value ());
@@ -665,7 +664,7 @@ public class Folks.IndividualAggregator : Object
   private void _is_writeable_changed_cb (Object object, ParamSpec pspec)
     {
       /* Ensure that we only have one writeable PersonaStore */
-      unowned PersonaStore store = (PersonaStore) object;
+      var store = (PersonaStore) object;
       assert ((store.is_writeable == true && store == this._writeable_store) ||
           (store.is_writeable == false && store != this._writeable_store));
     }
@@ -674,7 +673,7 @@ public class Folks.IndividualAggregator : Object
     {
       /* FIXME: For the moment, assert that only the key-file backend's
        * singleton PersonaStore is trusted. */
-      unowned PersonaStore store = (PersonaStore) object;
+      var store = (PersonaStore) object;
       if (store.type_id == "key-file")
         assert (store.trust_level == PersonaStoreTrust.FULL);
       else
@@ -817,7 +816,7 @@ public class Folks.IndividualAggregator : Object
       unowned GLib.List<unowned Persona> i;
       for (i = individual.personas; i != null; i = i.next)
         {
-          unowned Persona persona = (Persona) i.data;
+          var persona = (Persona) i.data;
           yield persona.store.remove_persona (persona);
         }
     }
@@ -882,12 +881,12 @@ public class Folks.IndividualAggregator : Object
        * `protocols_addrs_set` is used to ensure we don't get duplicate IM
        * addresses in the ordered set of addresses for each protocol in
        * `protocols_addrs_list`. It's temporary. */
-      HashTable<string, GenericArray<string>> protocols_addrs_list =
+      var protocols_addrs_list =
           new HashTable<string, GenericArray<string>> (str_hash, str_equal);
-      HashTable<string, HashSet<string>> protocols_addrs_set =
+      var protocols_addrs_set =
           new HashTable<string, HashSet<string>> (str_hash, str_equal);
 
-      foreach (unowned Persona persona in personas)
+      foreach (var persona in personas)
         {
           if (!(persona is IMable))
             continue;
@@ -897,10 +896,8 @@ public class Folks.IndividualAggregator : Object
               unowned string protocol = (string) k;
               unowned GenericArray<string> addresses = (GenericArray<string>) v;
 
-              GenericArray<string> address_list =
-                  protocols_addrs_list.lookup (protocol);
-              HashSet<string> address_set = protocols_addrs_set.lookup (
-                protocol);
+              var address_list = protocols_addrs_list.lookup (protocol);
+              var address_set = protocols_addrs_set.lookup (protocol);
 
               if (address_list == null || address_set == null)
                 {
@@ -926,11 +923,10 @@ public class Folks.IndividualAggregator : Object
             });
         }
 
-      Value addresses_value = Value (typeof (HashTable));
+      var addresses_value = Value (typeof (HashTable));
       addresses_value.set_boxed (protocols_addrs_list);
 
-      HashTable<string, Value?> details =
-          new HashTable<string, Value?> (str_hash, str_equal);
+      var details = new HashTable<string, Value?> (str_hash, str_equal);
       details.insert ("im-addresses", addresses_value);
 
       yield this.add_persona_from_details (null, this._writeable_store.type_id,
@@ -974,11 +970,11 @@ public class Folks.IndividualAggregator : Object
        * Personas, as _personas_changed_cb() (which is called as a result of
        * calling _writeable_store.remove_persona()) messes around with Persona
        * lists. */
-      GLib.List<Persona> personas = individual.personas.copy ();
-      foreach (Persona p in personas)
+      var personas = individual.personas.copy ();
+      foreach (var p in personas)
         p.ref ();
 
-      foreach (unowned Persona persona in personas)
+      foreach (var persona in personas)
         {
           if (persona.store == this._writeable_store)
             {

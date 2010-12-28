@@ -106,9 +106,9 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
               unowned string protocol = (string) k;
               unowned GenericArray<string?> addresses =
                   (GenericArray<string?>) v;
-              uint offset = 0;
+              var offset = 0;
 
-              for (int i = 0; i < addresses.length; i++)
+              for (var i = 0; i < addresses.length; i++)
                 {
                   try
                     {
@@ -157,8 +157,8 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
    */
   public Persona (KeyFile key_file, string id, Folks.PersonaStore store)
     {
-      string iid = store.id + ":" + id;
-      string uid = this.build_uid ("key-file", store.id, id);
+      var iid = store.id + ":" + id;
+      var uid = this.build_uid ("key-file", store.id, id);
 
       Object (display_id: id,
               iid: iid,
@@ -176,8 +176,8 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
       /* Load the IM addresses from the key file */
       try
         {
-          string[] keys = this._key_file.get_keys (this.display_id);
-          foreach (string key in keys)
+          var keys = this._key_file.get_keys (this.display_id);
+          foreach (var key in keys)
             {
               /* Alias */
               if (key == "__alias")
@@ -189,23 +189,22 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
                 }
 
               /* IM addresses */
-              string protocol = key;
-              string[] im_addresses = this._key_file.get_string_list (
+              var protocol = key;
+              var im_addresses = this._key_file.get_string_list (
                   this.display_id, protocol);
 
               /* FIXME: We have to convert our nice efficient string[] to a
                * GenericArray<string> because Vala doesn't like null-terminated
                * arrays as generic types.
                * We can take this opportunity to remove duplicates. */
-              HashSet<string> address_set = new HashSet<string> ();
-              GenericArray<string> im_address_array =
-                  new GenericArray<string> ();
+              var address_set = new HashSet<string> ();
+              var im_address_array = new GenericArray<string> ();
 
-              foreach (string im_address in im_addresses)
+              foreach (var im_address in im_addresses)
                 {
                   try
                     {
-                      string address = IMable.normalise_im_address (im_address,
+                      var address = IMable.normalise_im_address (im_address,
                           protocol);
 
                       if (!address_set.contains (address))

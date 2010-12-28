@@ -177,7 +177,7 @@ public class Tpf.Persona : Folks.Persona,
 
   private bool _change_group (string group, bool is_member)
     {
-      bool changed = false;
+      var changed = false;
 
       if (is_member)
         {
@@ -215,7 +215,7 @@ public class Tpf.Persona : Folks.Persona,
       unowned string id = contact.get_identifier ();
       unowned Connection connection = contact.connection;
       var account = _account_for_connection (connection);
-      string uid = this.build_uid ("telepathy", account.get_protocol (), id);
+      var uid = this.build_uid ("telepathy", account.get_protocol (), id);
 
       Object (alias: contact.get_alias (),
               contact: contact,
@@ -314,7 +314,7 @@ public class Tpf.Persona : Folks.Persona,
   private static Account? _account_for_connection (Connection conn)
     {
       var manager = AccountManager.dup ();
-      GLib.List<unowned Account> accounts = manager.get_valid_accounts ();
+      var accounts = manager.get_valid_accounts ();
 
       Account account_found = null;
       accounts.foreach ((l) =>

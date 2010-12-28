@@ -184,7 +184,7 @@ public class Folks.Individual : Object,
           debug ("Setting alias of individual '%s' to '%s'…", this.id, value);
 
           /* First, try to write it to only the writeable Personas… */
-          bool alias_changed = false;
+          var alias_changed = false;
           this._persona_list.foreach ((p) =>
             {
               if (p is Aliasable && ((Persona) p).store.is_writeable == true)
@@ -381,10 +381,10 @@ public class Folks.Individual : Object,
   private void _store_removed_cb (PersonaStore store)
     {
       GLib.List<Persona> removed_personas = null;
-      Iterator<Persona> iter = this._persona_set.iterator ();
+      var iter = this._persona_set.iterator ();
       while (iter.next ())
         {
-          Persona persona = iter.get ();
+          var persona = iter.get ();
 
           removed_personas.prepend (persona);
           this._persona_list.remove (persona);
@@ -416,7 +416,7 @@ public class Folks.Individual : Object,
       GLib.List<Persona> removed_personas = null;
       removed.foreach ((data) =>
         {
-          unowned Persona p = (Persona) data;
+          var p = (Persona) data;
 
           if (this._persona_set.remove (p))
             {
@@ -465,7 +465,7 @@ public class Folks.Individual : Object,
         {
           if (p is Groupable)
             {
-              unowned Groupable persona = (Groupable) p;
+              var persona = (Groupable) p;
 
               persona.groups.foreach ((k, v) =>
                 {
@@ -517,7 +517,7 @@ public class Folks.Individual : Object,
         {
           if (p is HasPresence)
             {
-              unowned HasPresence presence = (HasPresence) p;
+              var presence = (HasPresence) p;
 
               if (HasPresence.typecmp (presence.presence_type,
                   presence_type) > 0)
@@ -541,7 +541,7 @@ public class Folks.Individual : Object,
 
   private void _update_is_favourite ()
     {
-      bool favourite = false;
+      var favourite = false;
 
       debug ("Running _update_is_favourite() on '%s'", this.id);
 
@@ -568,18 +568,18 @@ public class Folks.Individual : Object,
   private void _update_alias ()
     {
       string alias = null;
-      bool alias_is_display_id = false;
+      var alias_is_display_id = false;
 
       debug ("Updating alias for individual '%s'", this.id);
 
       /* Search for an alias from a writeable Persona, and use it as our first
        * choice if it's non-empty, since that's where the user-set alias is
        * stored. */
-      foreach (Persona p in this._persona_list)
+      foreach (var p in this._persona_list)
         {
           if (p is Aliasable && p.store.is_writeable == true)
             {
-              unowned Aliasable a = (Aliasable) p;
+              var a = (Aliasable) p;
 
               if (a.alias != null && a.alias.strip () != "")
                 {
@@ -597,11 +597,11 @@ public class Folks.Individual : Object,
        * one of those, fall back to one which is equal to the display ID. */
       if (alias == null)
         {
-          foreach (Persona p in this._persona_list)
+          foreach (var p in this._persona_list)
             {
               if (p is Aliasable)
                 {
-                  unowned Aliasable a = (Aliasable) p;
+                  var a = (Aliasable) p;
 
                   if (a.alias == null || a.alias.strip () == "")
                     continue;
@@ -669,9 +669,9 @@ public class Folks.Individual : Object,
 
   private void _update_trust_level ()
     {
-      TrustLevel trust_level = TrustLevel.PERSONAS;
+      var trust_level = TrustLevel.PERSONAS;
 
-      foreach (Persona p in this._persona_list)
+      foreach (var p in this._persona_list)
         {
           if (p.is_user == false &&
               p.store.trust_level == PersonaStoreTrust.NONE)
@@ -759,12 +759,12 @@ public class Folks.Individual : Object,
   private void _set_personas (GLib.List<Persona>? persona_list,
       Individual? replacement_individual)
     {
-      HashSet<Persona> persona_set = new HashSet<Persona> (null, null);
+      var persona_set = new HashSet<Persona> (null, null);
       GLib.List<Persona> added = null;
       GLib.List<Persona> removed = null;
 
       /* Determine which Personas have been added */
-      foreach (Persona p in persona_list)
+      foreach (var p in persona_list)
         {
           if (!this._persona_set.contains (p))
             {
@@ -778,8 +778,8 @@ public class Folks.Individual : Object,
               this._connect_to_persona (p);
 
               /* Increment the Persona count for this PersonaStore */
-              unowned PersonaStore store = p.store;
-              uint num_from_store = this._stores.get (store);
+              var store = p.store;
+              var num_from_store = this._stores.get (store);
               if (num_from_store == 0)
                 {
                   this._stores.set (store, num_from_store + 1);
@@ -798,7 +798,7 @@ public class Folks.Individual : Object,
         }
 
       /* Determine which Personas have been removed */
-      foreach (Persona p in this._persona_list)
+      foreach (var p in this._persona_list)
         {
           if (!persona_set.contains (p))
             {
@@ -809,8 +809,8 @@ public class Folks.Individual : Object,
               removed.prepend (p);
 
               /* Decrement the Persona count for this PersonaStore */
-              unowned PersonaStore store = p.store;
-              uint num_from_store = this._stores.get (store);
+              var store = p.store;
+              var num_from_store = this._stores.get (store);
               if (num_from_store > 1)
                 {
                   this._stores.set (store, num_from_store - 1);
@@ -837,7 +837,7 @@ public class Folks.Individual : Object,
       this.personas_changed (added, removed);
 
       /* Update this.is_user */
-      bool new_is_user = (this._persona_user_count > 0) ? true : false;
+      var new_is_user = (this._persona_user_count > 0) ? true : false;
       if (new_is_user != this.is_user)
         this.is_user = new_is_user;
 

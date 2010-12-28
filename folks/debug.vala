@@ -40,7 +40,7 @@ namespace Folks.Debug
               value = Domains.KEY_FILE_BACKEND }
         };
 
-      uint flags = GLib.parse_debug_string (debug_flags, keys);
+      var flags = GLib.parse_debug_string (debug_flags, keys);
 
       foreach (unowned DebugKey key in keys)
         {

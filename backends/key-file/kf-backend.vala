@@ -78,7 +78,7 @@ public class Folks.Backends.Kf.Backend : Folks.Backend
           if (!this._is_prepared)
             {
               File file;
-              string path = Environment.get_variable (
+              var path = Environment.get_variable (
                   "FOLKS_BACKEND_KEY_FILE_PATH");
               if (path == null)
                 {
