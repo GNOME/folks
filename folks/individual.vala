@@ -64,6 +64,7 @@ public enum Folks.TrustLevel
  */
 public class Folks.Individual : Object,
     Aliasable,
+    Emailable,
     Favouritable,
     GenderOwner,
     Groupable,
@@ -279,6 +280,22 @@ public class Folks.Individual : Object,
         }
     }
 
+  private GLib.List<FieldDetails> _email_addresses;
+  /**
+   * {@inheritDoc}
+   */
+  public GLib.List<FieldDetails> email_addresses
+    {
+      get { return this._email_addresses; }
+      private set
+        {
+          this._email_addresses = new GLib.List<FieldDetails> ();
+          foreach (unowned FieldDetails fd in value)
+            this._email_addresses.prepend (fd);
+          this._email_addresses.reverse ();
+        }
+    }
+
   /**
    * Whether this Individual is a user-defined favourite.
    *
@@ -412,6 +429,11 @@ public class Folks.Individual : Object,
   private void _notify_phone_numbers_cb ()
     {
       this._update_phone_numbers ();
+    }
+
+  private void _notify_email_addresses_cb ()
+    {
+      this._update_email_addresses ();
     }
 
   /**
@@ -549,6 +571,7 @@ public class Folks.Individual : Object,
       this._update_gender ();
       this._update_urls ();
       this._update_phone_numbers ();
+      this._update_email_addresses ();
     }
 
   private void _update_groups ()
@@ -828,6 +851,8 @@ public class Folks.Individual : Object,
       persona.notify["gender"].connect (this._notify_gender_cb);
       persona.notify["urls"].connect (this._notify_urls_cb);
       persona.notify["phone-numbers"].connect (this._notify_phone_numbers_cb);
+      persona.notify["email-addresses"].connect (
+          this._notify_email_addresses_cb);
 
       if (persona is Groupable)
         {
@@ -915,6 +940,8 @@ public class Folks.Individual : Object,
       persona.notify["urls"].disconnect (this._notify_urls_cb);
       persona.notify["phone-numbers"].disconnect (
           this._notify_phone_numbers_cb);
+      persona.notify["email-addresses"].disconnect (
+          this._notify_email_addresses_cb);
 
       if (persona is Groupable)
         {
@@ -995,6 +1022,32 @@ public class Folks.Individual : Object,
       this._phone_numbers = phone_numbers_set.get_values ();
 
       this.notify_property ("phone-numbers");
+    }
+
+  private void _update_email_addresses ()
+    {
+      /* Populate the email addresses as the union of our Personas' addresses.
+       * If the same URL exist multiple times we merge the parameters. */
+      var emails_set = new HashTable<unowned string, unowned FieldDetails> (
+          str_hash, str_equal);
+      foreach (var persona in this._persona_list)
+        {
+          var emailable = persona as Emailable;
+          if (emailable != null)
+            {
+              foreach (unowned FieldDetails fd in emailable.email_addresses)
+                {
+                  var existing = emails_set.lookup (fd.value);
+                  if (existing != null)
+                    existing.extend_parameters (fd.parameters);
+                  else
+                    emails_set.insert (fd.value, fd);
+                }
+            }
+        }
+      this._email_addresses = emails_set.get_values ();
+
+      this.notify_property ("email-addresses");
     }
 
   private void _set_personas (GLib.List<Persona>? persona_list,

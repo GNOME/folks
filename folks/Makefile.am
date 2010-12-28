@@ -15,6 +15,7 @@ libfolks_la_SOURCES = \
 	aliasable.vala \
 	backend.vala \
 	backend-store.vala \
+	emailable.vala \
 	favouritable.vala \
 	field-details.vala \
 	gender-owner.vala \
