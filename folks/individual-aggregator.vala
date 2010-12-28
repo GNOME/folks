@@ -357,7 +357,7 @@ public class Folks.IndividualAggregator : Object
 
                   persona.linkable_property_to_links (prop_name, (l) =>
                     {
-                      var prop_linking_value = (string) l;
+                      unowned string prop_linking_value = (string) l;
                       var candidate_ind =
                           this._link_map.lookup (prop_linking_value);
 
@@ -454,7 +454,7 @@ public class Folks.IndividualAggregator : Object
                       final_persona.linkable_property_to_links (prop_name,
                           (l) =>
                         {
-                          string prop_linking_value = (string) l;
+                          unowned string prop_linking_value = (string) l;
 
                           debug ("            %s", prop_linking_value);
                           this._link_map.replace (prop_linking_value,
@@ -506,7 +506,7 @@ public class Folks.IndividualAggregator : Object
           /* Remove maps from the Persona's linkable properties to
            * Individuals. Add the Individuals to a list of Individuals to be
            * removed. */
-          foreach (string prop_name in persona.linkable_properties)
+          foreach (unowned string prop_name in persona.linkable_properties)
             {
               /* FIXME: can't be var because of bgo#638208 */
               unowned ObjectClass pclass = persona.get_class ();
@@ -521,7 +521,7 @@ public class Folks.IndividualAggregator : Object
 
               persona.linkable_property_to_links (prop_name, (l) =>
                 {
-                  string prop_linking_value = (string) l;
+                  unowned string prop_linking_value = (string) l;
 
                   debug ("        %s", prop_linking_value);
                   this._link_map.remove (prop_linking_value);

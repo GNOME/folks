@@ -88,3 +88,12 @@ Vala-specific rules
 
    Rarely, the use of 'var' can obscure the effective type of the variable. In
    this case, it's acceptable to provide an explicit type.
+
+8. Use the 'unowned' modifier when it would prevent a non-trivial amount of
+   memory allocation. This is most commonly true for strings, arrays, and
+   non-reference-counted variables.
+
+   Do not use 'unowned' for reference-counted variables (like objects) since it
+   reduces readability without benefit. And, as of this writing, bgo#638199
+   forces unowned variables to have an explicit type (preventing the use of
+   'var').

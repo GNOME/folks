@@ -632,7 +632,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
 
   private void _channel_group_changes_resolve (Channel channel)
     {
-      var group = channel.get_identifier ();
+      unowned string group = channel.get_identifier ();
 
       var change_maps = new HashMap<HashSet<Tpf.Persona>, bool> ();
       if (this._group_outgoing_adds[group] != null)
@@ -691,7 +691,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       channel.notify["channel-ready"].connect ((s, p) =>
         {
           var c = (Channel) s;
-          var name = c.get_identifier ();
+          unowned string name = c.get_identifier ();
 
           debug ("Channel '%s' is ready.", name);
 
@@ -890,7 +890,8 @@ public class Tpf.PersonaStore : Folks.PersonaStore
             return;
         }
 
-      var message = TelepathyGLib.asv_get_string (details, "message");
+      unowned string message = TelepathyGLib.asv_get_string (details,
+          "message");
       bool valid;
       Persona? actor = null;
       var actor_handle = TelepathyGLib.asv_get_uint32 (details, "actor",
@@ -1493,7 +1494,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
         {
           /* Add or remove the persona to the list of favourites as
            * appropriate. */
-          var id = ((Tpf.Persona) persona).contact.get_identifier ();
+          unowned string id = ((Tpf.Persona) persona).contact.get_identifier ();
 
           if (is_favourite)
             yield this._logger.add_favourite_contact (id);

@@ -142,14 +142,14 @@ public class Tpf.Persona : Folks.Persona,
         {
           value.foreach ((k, v) =>
             {
-              var group = (string) k;
+              unowned string group = (string) k;
               if (this._groups.lookup (group) == false)
                 this._change_group (group, true);
             });
 
           this._groups.foreach ((k, v) =>
             {
-              var group = (string) k;
+              unowned string group = (string) k;
               if (value.lookup (group) == false)
                 this._change_group (group, true);
             });

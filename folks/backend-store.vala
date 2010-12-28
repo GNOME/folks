@@ -200,7 +200,7 @@ public class Folks.BackendStore : Object {
 
       var modules = new HashMap<string, File?> ();
       var path_split = path.split (":");
-      foreach (var subpath in path_split)
+      foreach (unowned string subpath in path_split)
         {
           var file = File.new_for_path (subpath);
           assert (file != null);
@@ -544,7 +544,8 @@ public class Folks.BackendStore : Object {
   private async void _load_disabled_backend_names ()
     {
       File file;
-      var path = Environment.get_variable ("FOLKS_BACKEND_STORE_KEY_FILE_PATH");
+      unowned string path = Environment.get_variable (
+          "FOLKS_BACKEND_STORE_KEY_FILE_PATH");
       if (path == null)
         {
           file = File.new_for_path (Environment.get_user_data_dir ());

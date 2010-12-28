@@ -476,13 +476,13 @@ public class Folks.Individual : Object,
 
       new_groups.foreach ((k, v) =>
         {
-          var group = (string) k;
+          unowned string group = (string) k;
           if (this._groups.lookup (group) != true)
             {
               this._groups.insert (group, true);
               this._groups.foreach ((k, v) =>
                 {
-                  var g = (string) k;
+                  unowned string g = (string) k;
                   debug ("   %s", g);
                 });
 
@@ -494,14 +494,14 @@ public class Folks.Individual : Object,
       var removes = new GLib.List<string> ();
       this._groups.foreach ((k, v) =>
         {
-          var group = (string) k;
+          unowned string group = (string) k;
           if (new_groups.lookup (group) != true)
             removes.prepend (group);
         });
 
       removes.foreach ((l) =>
         {
-          var group = (string) l;
+          unowned string group = (string) l;
           this._groups.remove (group);
           this.group_changed (group, false);
         });

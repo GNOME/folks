@@ -177,7 +177,7 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
       try
         {
           var keys = this._key_file.get_keys (this.display_id);
-          foreach (var key in keys)
+          foreach (unowned string key in keys)
             {
               /* Alias */
               if (key == "__alias")
@@ -189,7 +189,7 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
                 }
 
               /* IM addresses */
-              var protocol = key;
+              unowned string protocol = key;
               var im_addresses = this._key_file.get_string_list (
                   this.display_id, protocol);
 
