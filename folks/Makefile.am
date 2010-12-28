@@ -30,6 +30,7 @@ libfolks_la_SOURCES = \
 	persona.vala \
 	persona-store.vala \
 	phoneable.vala \
+	postal-address-owner.vala \
 	types.vala \
 	urlable.vala \
 	debug.vala \
