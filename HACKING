@@ -78,3 +78,7 @@ Vala-specific rules
    members and local variables should not begin with a _). This is to make
    non-public data members instantly recognizable as such (which helps
    readability).
+
+6. Private and internal class functions should begin with a _ (public functions
+   should not begin with a _). This is to make non-public functions instantly
+   recognizable as such (which helps readability).

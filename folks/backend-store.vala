@@ -119,7 +119,7 @@ public class Folks.BackendStore : Object {
   private BackendStore ()
     {
       /* Treat this as a library init function */
-      Debug.set_flags (Environment.get_variable ("FOLKS_DEBUG"));
+      Debug._set_flags (Environment.get_variable ("FOLKS_DEBUG"));
 
       this.modules = new HashMap<string,unowned Module> (str_hash, str_equal);
       this._backend_hash = new HashMap<string,Backend> (str_hash, str_equal);
@@ -156,7 +156,7 @@ public class Folks.BackendStore : Object {
   public async void prepare ()
     {
       /* (re-)load the list of disabled backends */
-      yield this.load_disabled_backend_names ();
+      yield this._load_disabled_backend_names ();
 
       if (this._is_prepared == true)
         return;
@@ -181,7 +181,7 @@ public class Folks.BackendStore : Object {
       /* unload backends that have been disabled since they were loaded */
       foreach (var backend_existing in this._backend_hash.values)
         {
-          yield this.backend_unload_if_needed (backend_existing);
+          yield this._backend_unload_if_needed (backend_existing);
         }
 
       var path = Environment.get_variable ("FOLKS_BACKEND_PATH");
@@ -207,14 +207,14 @@ public class Folks.BackendStore : Object {
 
           bool is_file;
           bool is_dir;
-          yield get_file_info (file, out is_file, out is_dir);
+          yield _get_file_info (file, out is_file, out is_dir);
           if (is_file)
             {
               modules.set (subpath, file);
             }
           else if (is_dir)
             {
-              var cur_modules = yield this.get_modules_from_dir (file);
+              var cur_modules = yield this._get_modules_from_dir (file);
               foreach (var entry in cur_modules.entries)
                 modules.set (entry.key, entry.value);
             }
@@ -231,16 +231,16 @@ public class Folks.BackendStore : Object {
        * prepare and unprepare backends such that they match the state in the
        * backend store key file */
       foreach (var module in modules.values)
-        this.load_module_from_file (module);
+        this._load_module_from_file (module);
 
-      /* this is populated indirectly from load_module_from_file(), above */
+      /* this is populated indirectly from _load_module_from_file(), above */
       foreach (var backend in this._backend_hash.values)
-        yield this.backend_load_if_needed (backend);
+        yield this._backend_load_if_needed (backend);
     }
 
-  private async void backend_load_if_needed (Backend backend)
+  private async void _backend_load_if_needed (Backend backend)
     {
-      if (this.backend_is_enabled (backend.name))
+      if (this._backend_is_enabled (backend.name))
         {
           if (!this._prepared_backends.has_key (backend.name))
             {
@@ -263,11 +263,11 @@ public class Folks.BackendStore : Object {
         }
     }
 
-  private async bool backend_unload_if_needed (Backend backend)
+  private async bool _backend_unload_if_needed (Backend backend)
     {
       bool unloaded = false;
 
-      if (!this.backend_is_enabled (backend.name))
+      if (!this._backend_is_enabled (backend.name))
         {
           var backend_existing = this._backend_hash.get (backend.name);
           if (backend_existing != null)
@@ -309,7 +309,7 @@ public class Folks.BackendStore : Object {
       this._backend_hash.set (backend.name, backend);
     }
 
-  private bool backend_is_enabled (string name)
+  private bool _backend_is_enabled (string name)
     {
       bool enabled = true;
       try
@@ -365,7 +365,7 @@ public class Folks.BackendStore : Object {
   public async void enable_backend (string name)
     {
       this.backends_key_file.set_boolean (name, "enabled", true);
-      yield this.save_key_file ();
+      yield this._save_key_file ();
     }
 
   /**
@@ -381,10 +381,10 @@ public class Folks.BackendStore : Object {
   public async void disable_backend (string name)
     {
       this.backends_key_file.set_boolean (name, "enabled", false);
-      yield this.save_key_file ();
+      yield this._save_key_file ();
     }
 
-  private async HashMap<string, File>? get_modules_from_dir (File dir)
+  private async HashMap<string, File>? _get_modules_from_dir (File dir)
     {
       debug ("Searching for modules in folder '%s' ..", dir.get_path ());
 
@@ -433,7 +433,7 @@ public class Folks.BackendStore : Object {
 
           if (file_type == FileType.DIRECTORY)
             {
-              var modules = yield this.get_modules_from_dir (file);
+              var modules = yield this._get_modules_from_dir (file);
               foreach (var entry in modules.entries)
                 modules_final.set (entry.key, entry.value);
             }
@@ -456,7 +456,7 @@ public class Folks.BackendStore : Object {
       return modules_final;
     }
 
-  private void load_module_from_file (File file)
+  private void _load_module_from_file (File file)
     {
       string file_path = file.get_path ();
 
@@ -504,7 +504,7 @@ public class Folks.BackendStore : Object {
       debug ("Loaded module source: '%s'", module.name ());
     }
 
-  private async static void get_file_info (File file,
+  private async static void _get_file_info (File file,
       out bool is_file,
       out bool is_dir)
     {
@@ -541,7 +541,7 @@ public class Folks.BackendStore : Object {
       is_dir = (file_info.get_file_type () == FileType.DIRECTORY);
     }
 
-  private async void load_disabled_backend_names ()
+  private async void _load_disabled_backend_names ()
     {
       File file;
       string path =
@@ -591,7 +591,7 @@ public class Folks.BackendStore : Object {
         }
     }
 
-  private async void save_key_file ()
+  private async void _save_key_file ()
     {
       string key_file_data = this.backends_key_file.to_data ();
 

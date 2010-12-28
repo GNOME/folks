@@ -161,14 +161,14 @@ public abstract class Folks.Persona : Object
       assert_not_reached ();
     }
 
-  private static string escape_uid_component (string component)
+  private static string _escape_uid_component (string component)
     {
       /* Escape colons with backslashes */
       string escaped = component.replace ("\\", "\\\\");
       return escaped.replace (":", "\\:");
     }
 
-  private static string unescape_uid_component (string component)
+  private static string _unescape_uid_component (string component)
     {
       /* Unescape colons and backslashes */
       string unescaped = component.replace ("\\:", ":");
@@ -190,9 +190,9 @@ public abstract class Folks.Persona : Object
   public static string build_uid (string backend_name,
       string persona_store_id, string persona_id)
     {
-      return "%s:%s:%s".printf (Persona.escape_uid_component (backend_name),
-                                Persona.escape_uid_component (persona_store_id),
-                                Persona.escape_uid_component (persona_id));
+      return "%s:%s:%s".printf (Persona._escape_uid_component (backend_name),
+          Persona._escape_uid_component (persona_store_id),
+          Persona._escape_uid_component (persona_id));
     }
 
   /**
@@ -231,12 +231,12 @@ public abstract class Folks.Persona : Object
 
       assert (backend_name_length != 0 && persona_store_id_length != 0);
 
-      backend_name = Persona.unescape_uid_component (
+      backend_name = Persona._unescape_uid_component (
           uid.ndup (backend_name_length));
-      persona_store_id = Persona.unescape_uid_component (
+      persona_store_id = Persona._unescape_uid_component (
           ((string) ((char*) uid + backend_name_length + 1)).ndup (
               persona_store_id_length));
-      persona_id = Persona.unescape_uid_component (
+      persona_id = Persona._unescape_uid_component (
           ((string) ((char*) uid + backend_name_length +
               persona_store_id_length + 2)));
     }

@@ -79,19 +79,19 @@ public class Folks.Backends.Tp.Backend : Folks.Backend
               this._account_manager = AccountManager.dup ();
               yield this._account_manager.prepare_async (null);
               this._account_manager.account_enabled.connect (
-                  this.account_enabled_cb);
+                  this._account_enabled_cb);
               this._account_manager.account_validity_changed.connect (
                   (a, valid) =>
                     {
                       if (valid)
-                        this.account_enabled_cb (a);
+                        this._account_enabled_cb (a);
                     });
 
               GLib.List<unowned Account> accounts =
                   this._account_manager.get_valid_accounts ();
               foreach (Account account in accounts)
                 {
-                  this.account_enabled_cb (account);
+                  this._account_enabled_cb (account);
                 }
 
               this._is_prepared = true;
@@ -106,9 +106,9 @@ public class Folks.Backends.Tp.Backend : Folks.Backend
   public override async void unprepare () throws GLib.Error
     {
       this._account_manager.account_enabled.disconnect (
-          this.account_enabled_cb);
+          this._account_enabled_cb);
       this._account_manager.account_validity_changed.disconnect (
-          this.account_validity_changed_cb);
+          this._account_validity_changed_cb);
       this._account_manager = null;
 
       this._persona_stores.foreach ((k, v) =>
@@ -123,13 +123,13 @@ public class Folks.Backends.Tp.Backend : Folks.Backend
       this.notify_property ("is-prepared");
     }
 
-  private void account_validity_changed_cb (Account account, bool valid)
+  private void _account_validity_changed_cb (Account account, bool valid)
     {
       if (valid)
-        this.account_enabled_cb (account);
+        this._account_enabled_cb (account);
     }
 
-  private void account_enabled_cb (Account account)
+  private void _account_enabled_cb (Account account)
     {
       PersonaStore store = this._persona_stores.lookup (
           account.get_object_path ());
@@ -140,13 +140,13 @@ public class Folks.Backends.Tp.Backend : Folks.Backend
       store = new Tpf.PersonaStore (account);
 
       this._persona_stores.insert (store.id, store);
-      store.removed.connect (this.store_removed_cb);
+      store.removed.connect (this._store_removed_cb);
       this.notify_property ("persona-stores");
 
       this.persona_store_added (store);
     }
 
-  private void store_removed_cb (PersonaStore store)
+  private void _store_removed_cb (PersonaStore store)
     {
       this.persona_store_removed (store);
       this._persona_stores.remove (store.id);

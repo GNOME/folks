@@ -237,10 +237,10 @@ public class Folks.Individual : Object,
               if (p is Favouritable)
                 {
                   SignalHandler.block_by_func (p,
-                      (void*) this.notify_is_favourite_cb, this);
+                      (void*) this._notify_is_favourite_cb, this);
                   ((Favouritable) p).is_favourite = value;
                   SignalHandler.unblock_by_func (p,
-                      (void*) this.notify_is_favourite_cb, this);
+                      (void*) this._notify_is_favourite_cb, this);
                 }
             });
         }
@@ -303,19 +303,19 @@ public class Folks.Individual : Object,
   public signal void personas_changed (GLib.List<Persona>? added,
       GLib.List<Persona>? removed);
 
-  private void notify_alias_cb (Object obj, ParamSpec ps)
+  private void _notify_alias_cb (Object obj, ParamSpec ps)
     {
-      this.update_alias ();
+      this._update_alias ();
     }
 
-  private void notify_avatar_cb (Object obj, ParamSpec ps)
+  private void _notify_avatar_cb (Object obj, ParamSpec ps)
     {
-      this.update_avatar ();
+      this._update_avatar ();
     }
 
-  private void persona_group_changed_cb (string group, bool is_member)
+  private void _persona_group_changed_cb (string group, bool is_member)
     {
-      this.update_groups ();
+      this._update_groups ();
     }
 
   /**
@@ -343,19 +343,19 @@ public class Folks.Individual : Object,
        * yet; react to that directly */
     }
 
-  private void notify_presence_cb (Object obj, ParamSpec ps)
+  private void _notify_presence_cb (Object obj, ParamSpec ps)
     {
-      this.update_presence ();
+      this._update_presence ();
     }
 
-  private void notify_im_addresses_cb (Object obj, ParamSpec ps)
+  private void _notify_im_addresses_cb (Object obj, ParamSpec ps)
     {
-      this.update_im_addresses ();
+      this._update_im_addresses ();
     }
 
-  private void notify_is_favourite_cb (Object obj, ParamSpec ps)
+  private void _notify_is_favourite_cb (Object obj, ParamSpec ps)
     {
-      this.update_is_favourite ();
+      this._update_is_favourite ();
     }
 
   /**
@@ -378,7 +378,7 @@ public class Folks.Individual : Object,
       this.personas = personas;
     }
 
-  private void store_removed_cb (PersonaStore store)
+  private void _store_removed_cb (PersonaStore store)
     {
       GLib.List<Persona> removed_personas = null;
       Iterator<Persona> iter = this._persona_set.iterator ();
@@ -403,10 +403,10 @@ public class Folks.Individual : Object,
           return;
         }
 
-      this.update_fields ();
+      this._update_fields ();
     }
 
-  private void store_personas_changed_cb (PersonaStore store,
+  private void _store_personas_changed_cb (PersonaStore store,
       GLib.List<Persona>? added,
       GLib.List<Persona>? removed,
       string? message,
@@ -434,21 +434,21 @@ public class Folks.Individual : Object,
           return;
         }
 
-      this.update_fields ();
+      this._update_fields ();
     }
 
-  private void update_fields ()
+  private void _update_fields ()
     {
-      this.update_groups ();
-      this.update_presence ();
-      this.update_is_favourite ();
-      this.update_avatar ();
-      this.update_alias ();
-      this.update_trust_level ();
-      this.update_im_addresses ();
+      this._update_groups ();
+      this._update_presence ();
+      this._update_is_favourite ();
+      this._update_avatar ();
+      this._update_alias ();
+      this._update_trust_level ();
+      this._update_im_addresses ();
     }
 
-  private void update_groups ()
+  private void _update_groups ()
     {
       var new_groups = new HashTable<string, bool> (str_hash, str_equal);
 
@@ -507,7 +507,7 @@ public class Folks.Individual : Object,
         });
     }
 
-  private void update_presence ()
+  private void _update_presence ()
     {
       var presence_message = "";
       var presence_type = Folks.PresenceType.UNSET;
@@ -539,11 +539,11 @@ public class Folks.Individual : Object,
         this.presence_type = presence_type;
     }
 
-  private void update_is_favourite ()
+  private void _update_is_favourite ()
     {
       bool favourite = false;
 
-      debug ("Running update_is_favourite() on '%s'", this.id);
+      debug ("Running _update_is_favourite() on '%s'", this.id);
 
       this._persona_list.foreach ((p) =>
         {
@@ -565,7 +565,7 @@ public class Folks.Individual : Object,
         }
     }
 
-  private void update_alias ()
+  private void _update_alias ()
     {
       string alias = null;
       bool alias_is_display_id = false;
@@ -649,7 +649,7 @@ public class Folks.Individual : Object,
         }
     }
 
-  private void update_avatar ()
+  private void _update_avatar ()
     {
       File avatar = null;
 
@@ -667,7 +667,7 @@ public class Folks.Individual : Object,
         this.avatar = avatar;
     }
 
-  private void update_trust_level ()
+  private void _update_trust_level ()
     {
       TrustLevel trust_level = TrustLevel.PERSONAS;
 
@@ -683,7 +683,7 @@ public class Folks.Individual : Object,
         this.trust_level = trust_level;
     }
 
-  private void update_im_addresses ()
+  private void _update_im_addresses ()
     {
       /* populate the IM addresses as the union of our Personas' addresses */
       foreach (var persona in this.personas)
@@ -721,38 +721,38 @@ public class Folks.Individual : Object,
       this.notify_property ("im-addresses");
     }
 
-  private void connect_to_persona (Persona persona)
+  private void _connect_to_persona (Persona persona)
     {
-      persona.notify["alias"].connect (this.notify_alias_cb);
-      persona.notify["avatar"].connect (this.notify_avatar_cb);
-      persona.notify["presence-message"].connect (this.notify_presence_cb);
-      persona.notify["presence-type"].connect (this.notify_presence_cb);
-      persona.notify["im-addresses"].connect (this.notify_im_addresses_cb);
-      persona.notify["is-favourite"].connect (this.notify_is_favourite_cb);
+      persona.notify["alias"].connect (this._notify_alias_cb);
+      persona.notify["avatar"].connect (this._notify_avatar_cb);
+      persona.notify["presence-message"].connect (this._notify_presence_cb);
+      persona.notify["presence-type"].connect (this._notify_presence_cb);
+      persona.notify["im-addresses"].connect (this._notify_im_addresses_cb);
+      persona.notify["is-favourite"].connect (this._notify_is_favourite_cb);
 
       if (persona is Groupable)
         {
           ((Groupable) persona).group_changed.connect (
-              this.persona_group_changed_cb);
+              this._persona_group_changed_cb);
         }
     }
 
-  private void disconnect_from_persona (Persona persona)
+  private void _disconnect_from_persona (Persona persona)
     {
-      persona.notify["alias"].disconnect (this.notify_alias_cb);
-      persona.notify["avatar"].disconnect (this.notify_avatar_cb);
+      persona.notify["alias"].disconnect (this._notify_alias_cb);
+      persona.notify["avatar"].disconnect (this._notify_avatar_cb);
       persona.notify["presence-message"].disconnect (
-          this.notify_presence_cb);
-      persona.notify["presence-type"].disconnect (this.notify_presence_cb);
+          this._notify_presence_cb);
+      persona.notify["presence-type"].disconnect (this._notify_presence_cb);
       persona.notify["im-addresses"].disconnect (
-          this.notify_im_addresses_cb);
+          this._notify_im_addresses_cb);
       persona.notify["is-favourite"].disconnect (
-          this.notify_is_favourite_cb);
+          this._notify_is_favourite_cb);
 
       if (persona is Groupable)
         {
           ((Groupable) persona).group_changed.disconnect (
-              this.persona_group_changed_cb);
+              this._persona_group_changed_cb);
         }
     }
 
@@ -775,7 +775,7 @@ public class Folks.Individual : Object,
               added.prepend (p);
 
               this._persona_set.add (p);
-              this.connect_to_persona (p);
+              this._connect_to_persona (p);
 
               /* Increment the Persona count for this PersonaStore */
               unowned PersonaStore store = p.store;
@@ -788,9 +788,9 @@ public class Folks.Individual : Object,
                 {
                   this._stores.set (store, 1);
 
-                  store.removed.connect (this.store_removed_cb);
+                  store.removed.connect (this._store_removed_cb);
                   store.personas_changed.connect (
-                      this.store_personas_changed_cb);
+                      this._store_personas_changed_cb);
                 }
             }
 
@@ -817,14 +817,14 @@ public class Folks.Individual : Object,
                 }
               else
                 {
-                  store.removed.disconnect (this.store_removed_cb);
+                  store.removed.disconnect (this._store_removed_cb);
                   store.personas_changed.disconnect (
-                      this.store_personas_changed_cb);
+                      this._store_personas_changed_cb);
 
                   this._stores.unset (store);
                 }
 
-              this.disconnect_from_persona (p);
+              this._disconnect_from_persona (p);
               this._persona_set.remove (p);
             }
         }
@@ -853,7 +853,7 @@ public class Folks.Individual : Object,
         this.id = this._persona_list.data.uid;
 
       /* Update our aggregated fields and notify the changes */
-      this.update_fields ();
+      this._update_fields ();
     }
 
   internal void replace (Individual replacement_individual)

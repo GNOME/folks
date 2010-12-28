@@ -171,7 +171,7 @@ public class Tpf.Persona : Folks.Persona,
       if (_change_group (group, is_member))
         {
           Tpf.PersonaStore store = (Tpf.PersonaStore) this.store;
-          yield store.change_group_membership (this, group, is_member);
+          yield store._change_group_membership (this, group, is_member);
         }
     }
 
@@ -214,7 +214,7 @@ public class Tpf.Persona : Folks.Persona,
     {
       unowned string id = contact.get_identifier ();
       unowned Connection connection = contact.connection;
-      var account = account_for_connection (connection);
+      var account = _account_for_connection (connection);
       string uid = this.build_uid ("telepathy", account.get_protocol (), id);
 
       Object (alias: contact.get_alias (),
@@ -264,20 +264,20 @@ public class Tpf.Persona : Folks.Persona,
 
       contact.notify["avatar-file"].connect ((s, p) =>
         {
-          this.contact_notify_avatar ();
+          this._contact_notify_avatar ();
         });
-      this.contact_notify_avatar ();
+      this._contact_notify_avatar ();
 
       contact.notify["presence-message"].connect ((s, p) =>
         {
-          this.contact_notify_presence_message ();
+          this._contact_notify_presence_message ();
         });
       contact.notify["presence-type"].connect ((s, p) =>
         {
-          this.contact_notify_presence_type ();
+          this._contact_notify_presence_type ();
         });
-      this.contact_notify_presence_message ();
-      this.contact_notify_presence_type ();
+      this._contact_notify_presence_message ();
+      this._contact_notify_presence_type ();
 
       ((Tpf.PersonaStore) this.store).group_members_changed.connect (
           (s, group, added, removed) =>
@@ -311,7 +311,7 @@ public class Tpf.Persona : Folks.Persona,
       debug ("Destroying Tpf.Persona '%s': %p", this.uid, this);
     }
 
-  private static Account? account_for_connection (Connection conn)
+  private static Account? _account_for_connection (Connection conn)
     {
       var manager = AccountManager.dup ();
       GLib.List<unowned Account> accounts = manager.get_valid_accounts ();
@@ -330,18 +330,18 @@ public class Tpf.Persona : Folks.Persona,
       return account_found;
     }
 
-  private void contact_notify_presence_message ()
+  private void _contact_notify_presence_message ()
     {
       this.presence_message = this.contact.get_presence_message ();
     }
 
-  private void contact_notify_presence_type ()
+  private void _contact_notify_presence_type ()
     {
-      this.presence_type = folks_presence_type_from_tp (
+      this.presence_type = _folks_presence_type_from_tp (
           this.contact.get_presence_type ());
     }
 
-  private static PresenceType folks_presence_type_from_tp (
+  private static PresenceType _folks_presence_type_from_tp (
       TelepathyGLib.ConnectionPresenceType type)
     {
       switch (type)
@@ -369,7 +369,7 @@ public class Tpf.Persona : Folks.Persona,
         }
     }
 
-  private void contact_notify_avatar ()
+  private void _contact_notify_avatar ()
     {
       var file = this.contact.avatar_file;
       if (this.avatar != file)

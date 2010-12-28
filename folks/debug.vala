@@ -29,7 +29,7 @@ namespace Folks.Debug
     KEY_FILE_BACKEND = 1 << 2
   }
 
-  internal static void set_flags (string? debug_flags)
+  internal static void _set_flags (string? debug_flags)
     {
       GLib.DebugKey keys[3] =
         {

@@ -102,7 +102,7 @@ public class Folks.Backends.Kf.Backend : Folks.Backend
               PersonaStore store = new Kf.PersonaStore (file);
 
               this._persona_stores.insert (store.id, store);
-              store.removed.connect (this.store_removed_cb);
+              store.removed.connect (this._store_removed_cb);
               this.notify_property ("persona-stores");
 
               this.persona_store_added (store);
@@ -130,7 +130,7 @@ public class Folks.Backends.Kf.Backend : Folks.Backend
       this.notify_property ("is-prepared");
     }
 
-  private void store_removed_cb (Folks.PersonaStore store)
+  private void _store_removed_cb (Folks.PersonaStore store)
     {
       this.persona_store_removed (store);
       this._persona_stores.remove (store.id);

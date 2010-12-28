@@ -155,7 +155,8 @@ public class Folks.IndividualAggregator : Object
           disable_linking == "no" || disable_linking == "0");
 
       this._backend_store = BackendStore.dup ();
-      this._backend_store.backend_available.connect (this.backend_available_cb);
+      this._backend_store.backend_available.connect (
+          this._backend_available_cb);
     }
 
   /**
@@ -188,36 +189,36 @@ public class Folks.IndividualAggregator : Object
         }
     }
 
-  private async void add_backend (Backend backend)
+  private async void _add_backend (Backend backend)
     {
       if (!this._backends.contains (backend))
         {
           this._backends.add (backend);
 
           backend.persona_store_added.connect (
-              this.backend_persona_store_added_cb);
+              this._backend_persona_store_added_cb);
           backend.persona_store_removed.connect (
-              this.backend_persona_store_removed_cb);
+              this._backend_persona_store_removed_cb);
 
           /* handle the stores that have already been signaled */
           backend.persona_stores.foreach ((k, v) =>
               {
-                this.backend_persona_store_added_cb (backend,
+                this._backend_persona_store_added_cb (backend,
                   (PersonaStore) v);
               });
         }
     }
 
-  private void backend_available_cb (BackendStore backend_store,
+  private void _backend_available_cb (BackendStore backend_store,
       Backend backend)
     {
-      this.add_backend.begin (backend);
+      this._add_backend.begin (backend);
     }
 
-  private void backend_persona_store_added_cb (Backend backend,
+  private void _backend_persona_store_added_cb (Backend backend,
       PersonaStore store)
     {
-      string store_id = this.get_store_full_id (store.type_id, store.id);
+      string store_id = this._get_store_full_id (store.type_id, store.id);
 
       /* FIXME: We hardcode the key-file backend's singleton PersonaStore as the
        * only trusted and writeable PersonaStore for now. */
@@ -229,9 +230,9 @@ public class Folks.IndividualAggregator : Object
         }
 
       this._stores.set (store_id, store);
-      store.personas_changed.connect (this.personas_changed_cb);
-      store.notify["is-writeable"].connect (this.is_writeable_changed_cb);
-      store.notify["trust-level"].connect (this.trust_level_changed_cb);
+      store.personas_changed.connect (this._personas_changed_cb);
+      store.notify["is-writeable"].connect (this._is_writeable_changed_cb);
+      store.notify["trust-level"].connect (this._trust_level_changed_cb);
 
       store.prepare.begin ((obj, result) =>
         {
@@ -249,12 +250,12 @@ public class Folks.IndividualAggregator : Object
         });
     }
 
-  private void backend_persona_store_removed_cb (Backend backend,
+  private void _backend_persona_store_removed_cb (Backend backend,
       PersonaStore store)
     {
-      store.personas_changed.disconnect (this.personas_changed_cb);
-      store.notify["trust-level"].disconnect (this.trust_level_changed_cb);
-      store.notify["is-writeable"].disconnect (this.is_writeable_changed_cb);
+      store.personas_changed.disconnect (this._personas_changed_cb);
+      store.notify["trust-level"].disconnect (this._trust_level_changed_cb);
+      store.notify["is-writeable"].disconnect (this._is_writeable_changed_cb);
 
       /* no need to remove this store's personas from all the individuals, since
        * they'll do that themselves (and emit their own 'removed' signal if
@@ -262,15 +263,15 @@ public class Folks.IndividualAggregator : Object
 
       if (this._writeable_store == store)
         this._writeable_store = null;
-      this._stores.unset (this.get_store_full_id (store.type_id, store.id));
+      this._stores.unset (this._get_store_full_id (store.type_id, store.id));
     }
 
-  private string get_store_full_id (string type_id, string id)
+  private string _get_store_full_id (string type_id, string id)
     {
       return type_id + ":" + id;
     }
 
-  private void add_personas (GLib.List<Persona> added,
+  private void _add_personas (GLib.List<Persona> added,
       ref GLib.List<Individual> added_individuals,
       ref HashMap<Individual, Individual> replaced_individuals,
       ref Individual user)
@@ -487,13 +488,13 @@ public class Folks.IndividualAggregator : Object
       foreach (Individual i in almost_added_individuals)
         {
           /* Add the new Individual to the aggregator */
-          i.removed.connect (this.individual_removed_cb);
+          i.removed.connect (this._individual_removed_cb);
           added_individuals.prepend (i);
           this.individuals.insert (i.id, i);
         }
     }
 
-  private void remove_persona_from_link_map (Persona persona)
+  private void _remove_persona_from_link_map (Persona persona)
     {
       this._link_map.remove (persona.iid);
 
@@ -527,7 +528,7 @@ public class Folks.IndividualAggregator : Object
         }
     }
 
-  private void personas_changed_cb (PersonaStore store,
+  private void _personas_changed_cb (PersonaStore store,
       GLib.List<Persona>? added,
       GLib.List<Persona>? removed,
       string? message,
@@ -551,7 +552,7 @@ public class Folks.IndividualAggregator : Object
 
       if (added != null)
         {
-          this.add_personas (added, ref added_individuals,
+          this._add_personas (added, ref added_individuals,
               ref replaced_individuals, ref user);
         }
 
@@ -576,14 +577,14 @@ public class Folks.IndividualAggregator : Object
             removed_individuals.prepend (ind);
 
           /* Remove the Persona's links from the link map */
-          this.remove_persona_from_link_map (persona);
+          this._remove_persona_from_link_map (persona);
         });
 
       /* Remove the Individuals which were pointed to by the linkable properties
        * of the removed Personas. We can then re-link the other Personas in
        * those Individuals, since their links may have changed.
        * Note that we remove the Individual from this.individuals, meaning that
-       * individual_removed_cb() ignores this Individual. This allows us to
+       * _individual_removed_cb() ignores this Individual. This allows us to
        * group together the IndividualAggregator.individuals_changed signals
        * for all the removed Individuals. */
       debug ("Removing Individuals due to removed links:");
@@ -607,7 +608,7 @@ public class Folks.IndividualAggregator : Object
               relinked_personas_set.add (persona);
 
               /* Remove links to the Persona */
-              this.remove_persona_from_link_map (persona);
+              this._remove_persona_from_link_map (persona);
             }
 
           if (user == individual)
@@ -624,7 +625,7 @@ public class Folks.IndividualAggregator : Object
               persona.is_user ? "yes" : "no", persona.iid);
         }
 
-      this.add_personas (relinked_personas, ref added_individuals,
+      this._add_personas (relinked_personas, ref added_individuals,
           ref replaced_individuals, ref user);
 
       /* Signal the removal of the replaced_individuals at the same time as the
@@ -661,7 +662,7 @@ public class Folks.IndividualAggregator : Object
         }
     }
 
-  private void is_writeable_changed_cb (Object object, ParamSpec pspec)
+  private void _is_writeable_changed_cb (Object object, ParamSpec pspec)
     {
       /* Ensure that we only have one writeable PersonaStore */
       unowned PersonaStore store = (PersonaStore) object;
@@ -669,7 +670,7 @@ public class Folks.IndividualAggregator : Object
           (store.is_writeable == false && store != this._writeable_store));
     }
 
-  private void trust_level_changed_cb (Object object, ParamSpec pspec)
+  private void _trust_level_changed_cb (Object object, ParamSpec pspec)
     {
       /* FIXME: For the moment, assert that only the key-file backend's
        * singleton PersonaStore is trusted. */
@@ -680,10 +681,10 @@ public class Folks.IndividualAggregator : Object
         assert (store.trust_level != PersonaStoreTrust.FULL);
     }
 
-  private void individual_removed_cb (Individual i, Individual? replacement)
+  private void _individual_removed_cb (Individual i, Individual? replacement)
     {
       /* Only signal if the individual is still in this.individuals. This allows
-       * us to group removals together in, e.g., personas_changed_cb(). */
+       * us to group removals together in, e.g., _personas_changed_cb(). */
       if (this.individuals.lookup (i.id) == null)
         return;
 
@@ -741,7 +742,7 @@ public class Folks.IndividualAggregator : Object
       string persona_store_id,
       HashTable<string, Value?> details) throws IndividualAggregatorError
     {
-      var full_id = this.get_store_full_id (persona_store_type,
+      var full_id = this._get_store_full_id (persona_store_type,
           persona_store_id);
       var store = this._stores[full_id];
 
@@ -756,7 +757,7 @@ public class Folks.IndividualAggregator : Object
       Persona persona = null;
       try
         {
-          var details_copy = asv_copy (details);
+          var details_copy = _asv_copy (details);
           persona = yield store.add_persona_from_details (details_copy);
         }
       catch (PersonaStoreError e)
@@ -786,7 +787,7 @@ public class Folks.IndividualAggregator : Object
       return persona;
     }
 
-  private HashTable<string, Value?> asv_copy (HashTable<string, Value?> asv)
+  private HashTable<string, Value?> _asv_copy (HashTable<string, Value?> asv)
     {
       var retval = new HashTable<string, Value?> (str_hash, str_equal);
 
@@ -970,7 +971,7 @@ public class Folks.IndividualAggregator : Object
       debug ("Unlinking Individual '%s', deleting Personas:", individual.id);
 
       /* We have to take a copy of the Persona list before removing the
-       * Personas, as personas_changed_cb() (which is called as a result of
+       * Personas, as _personas_changed_cb() (which is called as a result of
        * calling _writeable_store.remove_persona()) messes around with Persona
        * lists. */
       GLib.List<Persona> personas = individual.personas.copy ();
