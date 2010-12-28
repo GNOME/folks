@@ -75,6 +75,7 @@ public class Folks.Individual : Object,
     NoteOwner,
     PresenceOwner,
     Phoneable,
+    PostalAddressOwner,
     RoleOwner,
     Urlable
 {
@@ -331,6 +332,22 @@ public class Folks.Individual : Object,
         }
     }
 
+  private GLib.List<PostalAddress> _postal_addresses;
+  /**
+   * {@inheritDoc}
+   */
+  public GLib.List<PostalAddress> postal_addresses
+    {
+      get { return this._postal_addresses; }
+      private set
+        {
+          this._postal_addresses = new GLib.List<PostalAddress> ();
+          foreach (PostalAddress pa in value)
+            this._postal_addresses.prepend (pa);
+          this._postal_addresses.reverse ();
+        }
+    }
+
   /**
    * Whether this Individual is a user-defined favourite.
    *
@@ -464,6 +481,11 @@ public class Folks.Individual : Object,
   private void _notify_phone_numbers_cb ()
     {
       this._update_phone_numbers ();
+    }
+
+  private void _notify_postal_addresses_cb ()
+    {
+      this._update_postal_addresses ();
     }
 
   private void _notify_email_addresses_cb ()
@@ -627,6 +649,7 @@ public class Folks.Individual : Object,
       this._update_roles ();
       this._update_birthday ();
       this._update_notes ();
+      this._update_postal_addresses ();
     }
 
   private void _update_groups ()
@@ -911,6 +934,8 @@ public class Folks.Individual : Object,
       persona.notify["roles"].connect (this._notify_roles_cb);
       persona.notify["birthday"].connect (this._notify_birthday_cb);
       persona.notify["notes"].connect (this._notify_notes_cb);
+      persona.notify["postal_addresses"].connect
+          (this._notify_postal_addresses_cb);
 
       if (persona is Groupable)
         {
@@ -1003,6 +1028,9 @@ public class Folks.Individual : Object,
       persona.notify["roles"].disconnect (this._notify_roles_cb);
       persona.notify["birthday"].disconnect (this._notify_birthday_cb);
       persona.notify["notes"].disconnect (this._notify_notes_cb);
+      persona.notify["postal_addresses"].disconnect
+          (this._notify_postal_addresses_cb);
+
 
       if (persona is Groupable)
         {
@@ -1150,6 +1178,24 @@ public class Folks.Individual : Object,
 
       this._roles = (owned) roles;
       this.notify_property ("roles");
+    }
+
+  private void _update_postal_addresses ()
+    {
+      this._postal_addresses = new GLib.List<PostalAddress> ();
+      /* FIXME: Detect duplicates somehow? */
+      foreach (var persona in this._persona_list)
+        {
+          var address_owner = persona as PostalAddressOwner;
+          if (address_owner != null)
+            {
+              foreach (unowned PostalAddress pa in address_owner.postal_addresses)
+                this._postal_addresses.append (pa);
+            }
+        }
+      this._postal_addresses.reverse ();
+
+      this.notify_property ("postal-addresses");
     }
 
   private void _update_birthday ()
