@@ -29,7 +29,7 @@ using Folks.Backends.Tp;
  */
 public class Folks.Backends.Tp.Backend : Folks.Backend
 {
-  private AccountManager account_manager;
+  private AccountManager _account_manager;
   private bool _is_prepared = false;
   private HashTable<string, PersonaStore> _persona_stores;
 
@@ -76,11 +76,11 @@ public class Folks.Backends.Tp.Backend : Folks.Backend
         {
           if (!this._is_prepared)
             {
-              this.account_manager = AccountManager.dup ();
-              yield this.account_manager.prepare_async (null);
-              this.account_manager.account_enabled.connect (
+              this._account_manager = AccountManager.dup ();
+              yield this._account_manager.prepare_async (null);
+              this._account_manager.account_enabled.connect (
                   this.account_enabled_cb);
-              this.account_manager.account_validity_changed.connect (
+              this._account_manager.account_validity_changed.connect (
                   (a, valid) =>
                     {
                       if (valid)
@@ -88,7 +88,7 @@ public class Folks.Backends.Tp.Backend : Folks.Backend
                     });
 
               GLib.List<unowned Account> accounts =
-                  this.account_manager.get_valid_accounts ();
+                  this._account_manager.get_valid_accounts ();
               foreach (Account account in accounts)
                 {
                   this.account_enabled_cb (account);
@@ -105,10 +105,11 @@ public class Folks.Backends.Tp.Backend : Folks.Backend
    */
   public override async void unprepare () throws GLib.Error
     {
-      this.account_manager.account_enabled.disconnect (this.account_enabled_cb);
-      this.account_manager.account_validity_changed.disconnect (
+      this._account_manager.account_enabled.disconnect (
+          this.account_enabled_cb);
+      this._account_manager.account_validity_changed.disconnect (
           this.account_validity_changed_cb);
-      this.account_manager = null;
+      this._account_manager = null;
 
       this._persona_stores.foreach ((k, v) =>
         {

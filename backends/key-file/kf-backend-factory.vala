@@ -26,14 +26,14 @@
 using Folks;
 using Folks.Backends.Kf;
 
-private BackendFactory backend_factory = null;
+private BackendFactory _backend_factory = null;
 
 /**
  * The backend module entry point.
  */
 public void module_init (BackendStore backend_store)
 {
-  backend_factory = new BackendFactory (backend_store);
+  _backend_factory = new BackendFactory (backend_store);
 }
 
 /**
@@ -41,7 +41,7 @@ public void module_init (BackendStore backend_store)
  */
 public void module_finalize (BackendStore backend_store)
 {
-  backend_factory = null;
+  _backend_factory = null;
 }
 
 /**

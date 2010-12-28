@@ -61,12 +61,12 @@ public errordomain Folks.IndividualAggregatorError
  */
 public class Folks.IndividualAggregator : Object
 {
-  private BackendStore backend_store;
-  private HashMap<string, PersonaStore> stores;
-  private unowned PersonaStore writeable_store;
-  private HashSet<Backend> backends;
-  private HashTable<string, Individual> link_map;
-  private bool linking_enabled = true;
+  private BackendStore _backend_store;
+  private HashMap<string, PersonaStore> _stores;
+  private unowned PersonaStore _writeable_store;
+  private HashSet<Backend> _backends;
+  private HashTable<string, Individual> _link_map;
+  private bool _linking_enabled = true;
   private bool _is_prepared = false;
 
   /**
@@ -140,22 +140,22 @@ public class Folks.IndividualAggregator : Object
    */
   public IndividualAggregator ()
     {
-      this.stores = new HashMap<string, PersonaStore> ();
+      this._stores = new HashMap<string, PersonaStore> ();
       this.individuals = new HashTable<string, Individual> (str_hash,
           str_equal);
-      this.link_map = new HashTable<string, Individual> (str_hash, str_equal);
+      this._link_map = new HashTable<string, Individual> (str_hash, str_equal);
 
-      this.backends = new HashSet<Backend> ();
+      this._backends = new HashSet<Backend> ();
 
       string disable_linking =
           Environment.get_variable ("FOLKS_DISABLE_LINKING");
       if (disable_linking != null)
         disable_linking = disable_linking.strip ().down ();
-      this.linking_enabled = (disable_linking == null ||
+      this._linking_enabled = (disable_linking == null ||
           disable_linking == "no" || disable_linking == "0");
 
-      this.backend_store = BackendStore.dup ();
-      this.backend_store.backend_available.connect (this.backend_available_cb);
+      this._backend_store = BackendStore.dup ();
+      this._backend_store.backend_available.connect (this.backend_available_cb);
     }
 
   /**
@@ -181,7 +181,7 @@ public class Folks.IndividualAggregator : Object
         {
           if (!this._is_prepared)
             {
-              yield this.backend_store.load_backends ();
+              yield this._backend_store.load_backends ();
               this._is_prepared = true;
               this.notify_property ("is-prepared");
             }
@@ -190,9 +190,9 @@ public class Folks.IndividualAggregator : Object
 
   private async void add_backend (Backend backend)
     {
-      if (!this.backends.contains (backend))
+      if (!this._backends.contains (backend))
         {
-          this.backends.add (backend);
+          this._backends.add (backend);
 
           backend.persona_store_added.connect (
               this.backend_persona_store_added_cb);
@@ -225,10 +225,10 @@ public class Folks.IndividualAggregator : Object
         {
           store.is_writeable = true;
           store.trust_level = PersonaStoreTrust.FULL;
-          this.writeable_store = store;
+          this._writeable_store = store;
         }
 
-      this.stores.set (store_id, store);
+      this._stores.set (store_id, store);
       store.personas_changed.connect (this.personas_changed_cb);
       store.notify["is-writeable"].connect (this.is_writeable_changed_cb);
       store.notify["trust-level"].connect (this.trust_level_changed_cb);
@@ -260,9 +260,9 @@ public class Folks.IndividualAggregator : Object
        * they'll do that themselves (and emit their own 'removed' signal if
        * necessary) */
 
-      if (this.writeable_store == store)
-        this.writeable_store = null;
-      this.stores.unset (this.get_store_full_id (store.type_id, store.id));
+      if (this._writeable_store == store)
+        this._writeable_store = null;
+      this._stores.unset (this.get_store_full_id (store.type_id, store.id));
     }
 
   private string get_store_full_id (string type_id, string id)
@@ -322,7 +322,7 @@ public class Folks.IndividualAggregator : Object
            * Persona to any existing Individual */
           if (trust_level != PersonaStoreTrust.NONE)
             {
-              Individual candidate_ind = this.link_map.lookup (persona.iid);
+              Individual candidate_ind = this._link_map.lookup (persona.iid);
               if (candidate_ind != null &&
                   candidate_ind.trust_level != TrustLevel.NONE)
                 {
@@ -358,7 +358,7 @@ public class Folks.IndividualAggregator : Object
                     {
                       string prop_linking_value = (string) l;
                       Individual candidate_ind =
-                          this.link_map.lookup (prop_linking_value);
+                          this._link_map.lookup (prop_linking_value);
 
                       if (candidate_ind != null &&
                           candidate_ind.trust_level != TrustLevel.NONE &&
@@ -377,7 +377,7 @@ public class Folks.IndividualAggregator : Object
           /* Ensure the original persona makes it into the final persona */
           final_personas.prepend (persona);
 
-          if (candidate_inds != null && this.linking_enabled == true)
+          if (candidate_inds != null && this._linking_enabled == true)
             {
               /* The Persona's IID or linkable properties match one or more
                * linkable fields which are already in the link map, so we link
@@ -425,7 +425,7 @@ public class Folks.IndividualAggregator : Object
                * reflected in final_individual.trust_level, so other Personas
                * won't be linked against it in error if the trust level is
                * NONE. */
-              this.link_map.replace (final_persona.iid, final_individual);
+              this._link_map.replace (final_persona.iid, final_individual);
 
               /* Only allow linking on non-IID properties of the Persona if we
                * fully trust the PersonaStore it came from. */
@@ -455,7 +455,7 @@ public class Folks.IndividualAggregator : Object
                           string prop_linking_value = (string) l;
 
                           debug ("            %s", prop_linking_value);
-                          this.link_map.replace (prop_linking_value,
+                          this._link_map.replace (prop_linking_value,
                               final_individual);
                         });
                     }
@@ -495,7 +495,7 @@ public class Folks.IndividualAggregator : Object
 
   private void remove_persona_from_link_map (Persona persona)
     {
-      this.link_map.remove (persona.iid);
+      this._link_map.remove (persona.iid);
 
       if (persona.store.trust_level == PersonaStoreTrust.FULL)
         {
@@ -521,7 +521,7 @@ public class Folks.IndividualAggregator : Object
                   string prop_linking_value = (string) l;
 
                   debug ("        %s", prop_linking_value);
-                  this.link_map.remove (prop_linking_value);
+                  this._link_map.remove (prop_linking_value);
                 });
             }
         }
@@ -571,7 +571,7 @@ public class Folks.IndividualAggregator : Object
           /* Find the Individual containing the Persona (if any) and mark them
            * for removal (any other Personas they have which aren't being
            * removed will be re-linked into other Individuals). */
-          Individual ind = this.link_map.lookup (persona.iid);
+          Individual ind = this._link_map.lookup (persona.iid);
           if (ind != null)
             removed_individuals.prepend (ind);
 
@@ -665,8 +665,8 @@ public class Folks.IndividualAggregator : Object
     {
       /* Ensure that we only have one writeable PersonaStore */
       unowned PersonaStore store = (PersonaStore) object;
-      assert ((store.is_writeable == true && store == this.writeable_store) ||
-          (store.is_writeable == false && store != this.writeable_store));
+      assert ((store.is_writeable == true && store == this._writeable_store) ||
+          (store.is_writeable == false && store != this._writeable_store));
     }
 
   private void trust_level_changed_cb (Object object, ParamSpec pspec)
@@ -743,7 +743,7 @@ public class Folks.IndividualAggregator : Object
     {
       var full_id = this.get_store_full_id (persona_store_type,
           persona_store_id);
-      var store = this.stores[full_id];
+      var store = this._stores[full_id];
 
       if (store == null)
         {
@@ -845,16 +845,17 @@ public class Folks.IndividualAggregator : Object
    * before is signalled by {@link IndividualAggregator.individuals_changed} and
    * {@link Individual.removed}.
    *
-   * @param _personas the {@link Persona}s to be linked
+   * @param personas_in the {@link Persona}s to be linked
    * @since 0.1.13
    */
-  public async void link_personas (void *_personas)
+  public async void link_personas (void *personas_in)
       throws IndividualAggregatorError
     {
-      /* FIXME: _personas should be GLib.List<Persona>, but Vala won't allow it */
-      unowned GLib.List<Persona> personas = (GLib.List<Persona>) _personas;
+      /* FIXME: personas_in should be GLib.List<Persona>, but Vala won't allow
+       * it */
+      unowned GLib.List<Persona> personas = (GLib.List<Persona>) personas_in;
 
-      if (this.writeable_store == null)
+      if (this._writeable_store == null)
         {
           throw new IndividualAggregatorError.NO_WRITEABLE_STORE (
               _("Can't link personas with no writeable store."));
@@ -865,7 +866,7 @@ public class Folks.IndividualAggregator : Object
         return;
 
       /* Disallow linking if it's disabled */
-      if (this.linking_enabled == false)
+      if (this._linking_enabled == false)
         {
           debug ("Can't link Personas: linking disabled.");
           return;
@@ -874,7 +875,7 @@ public class Folks.IndividualAggregator : Object
       /* Create a new persona in the writeable store which links together the
        * given personas */
       /* FIXME: We hardcode this to use the key-file backend for now */
-      assert (this.writeable_store.type_id == "key-file");
+      assert (this._writeable_store.type_id == "key-file");
 
       /* `protocols_addrs_list` will be passed to the new Kf.Persona, whereas
        * `protocols_addrs_set` is used to ensure we don't get duplicate IM
@@ -931,8 +932,8 @@ public class Folks.IndividualAggregator : Object
           new HashTable<string, Value?> (str_hash, str_equal);
       details.insert ("im-addresses", addresses_value);
 
-      yield this.add_persona_from_details (null, this.writeable_store.type_id,
-          this.writeable_store.id, details);
+      yield this.add_persona_from_details (null, this._writeable_store.type_id,
+          this._writeable_store.id, details);
     }
 
   /**
@@ -956,7 +957,7 @@ public class Folks.IndividualAggregator : Object
    */
   public async void unlink_individual (Individual individual) throws GLib.Error
     {
-      if (this.linking_enabled == false)
+      if (this._linking_enabled == false)
         {
           debug ("Can't unlink Individual '%s': linking disabled.",
               individual.id);
@@ -970,7 +971,7 @@ public class Folks.IndividualAggregator : Object
 
       /* We have to take a copy of the Persona list before removing the
        * Personas, as personas_changed_cb() (which is called as a result of
-       * calling writeable_store.remove_persona()) messes around with Persona
+       * calling _writeable_store.remove_persona()) messes around with Persona
        * lists. */
       GLib.List<Persona> personas = individual.personas.copy ();
       foreach (Persona p in personas)
@@ -978,11 +979,11 @@ public class Folks.IndividualAggregator : Object
 
       foreach (unowned Persona persona in personas)
         {
-          if (persona.store == this.writeable_store)
+          if (persona.store == this._writeable_store)
             {
               debug ("    %s (is user: %s, IID: %s)", persona.uid,
                   persona.is_user ? "yes" : "no", persona.iid);
-              yield this.writeable_store.remove_persona (persona);
+              yield this._writeable_store.remove_persona (persona);
             }
         }
     }

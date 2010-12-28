@@ -40,7 +40,7 @@ public class Folks.BackendStore : Object {
   private delegate void ModuleFinalizeFunc (BackendStore store);
 
   /* this contains all backends, regardless of enabled or prepared state */
-  private HashMap<string,Backend> backend_hash;
+  private HashMap<string,Backend> _backend_hash;
   private HashMap<string,Backend> _prepared_backends;
   private File config_file;
   private GLib.KeyFile backends_key_file;
@@ -122,7 +122,7 @@ public class Folks.BackendStore : Object {
       Debug.set_flags (Environment.get_variable ("FOLKS_DEBUG"));
 
       this.modules = new HashMap<string,unowned Module> (str_hash, str_equal);
-      this.backend_hash = new HashMap<string,Backend> (str_hash, str_equal);
+      this._backend_hash = new HashMap<string,Backend> (str_hash, str_equal);
       this._prepared_backends = new HashMap<string,Backend> (str_hash,
           str_equal);
     }
@@ -179,7 +179,7 @@ public class Folks.BackendStore : Object {
       yield this.prepare ();
 
       /* unload backends that have been disabled since they were loaded */
-      foreach (var backend_existing in this.backend_hash.values)
+      foreach (var backend_existing in this._backend_hash.values)
         {
           yield this.backend_unload_if_needed (backend_existing);
         }
@@ -234,7 +234,7 @@ public class Folks.BackendStore : Object {
         this.load_module_from_file (module);
 
       /* this is populated indirectly from load_module_from_file(), above */
-      foreach (var backend in this.backend_hash.values)
+      foreach (var backend in this._backend_hash.values)
         yield this.backend_load_if_needed (backend);
     }
 
@@ -269,7 +269,7 @@ public class Folks.BackendStore : Object {
 
       if (!this.backend_is_enabled (backend.name))
         {
-          var backend_existing = this.backend_hash.get (backend.name);
+          var backend_existing = this._backend_hash.get (backend.name);
           if (backend_existing != null)
             {
               try
@@ -299,14 +299,14 @@ public class Folks.BackendStore : Object {
   public void add_backend (Backend backend)
     {
       /* Purge any other backend with the same name; re-add if enabled */
-      var backend_existing = this.backend_hash.get (backend.name);
+      var backend_existing = this._backend_hash.get (backend.name);
       if (backend_existing != null && backend_existing != backend)
         {
           backend_existing.unprepare ();
           this._prepared_backends.unset (backend_existing.name);
         }
 
-      this.backend_hash.set (backend.name, backend);
+      this._backend_hash.set (backend.name, backend);
     }
 
   private bool backend_is_enabled (string name)
@@ -339,7 +339,7 @@ public class Folks.BackendStore : Object {
    */
   public Backend? get_backend_by_name (string name)
     {
-      return this.backend_hash.get (name);
+      return this._backend_hash.get (name);
     }
 
   /**
@@ -349,7 +349,7 @@ public class Folks.BackendStore : Object {
    */
   public Collection<Backend> list_backends ()
     {
-      return this.backend_hash.values;
+      return this._backend_hash.values;
     }
 
   /**

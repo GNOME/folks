@@ -45,7 +45,7 @@ public class Tpf.Persona : Folks.Persona,
    * unnecessary trips to the Telepathy service to tell it about properties
    * being set which are actually just being set from data it's just given us.
    */
-  private bool is_constructed = false;
+  private bool _is_constructed = false;
 
   /**
    * An avatar for the Persona.
@@ -92,7 +92,7 @@ public class Tpf.Persona : Folks.Persona,
           if (this._alias == value)
             return;
 
-          if (this.is_constructed)
+          if (this._is_constructed)
             ((Tpf.PersonaStore) this.store).change_alias (this, value);
           this._alias = value;
         }
@@ -112,7 +112,7 @@ public class Tpf.Persona : Folks.Persona,
           if (this._is_favourite == value)
             return;
 
-          if (this.is_constructed)
+          if (this._is_constructed)
             ((Tpf.PersonaStore) this.store).change_is_favourite (this, value);
           this._is_favourite = value;
         }
@@ -240,7 +240,7 @@ public class Tpf.Persona : Folks.Persona,
 
       debug ("Creating new Tpf.Persona '%s' for service-specific UID '%s': %p",
           uid, id, this);
-      this.is_constructed = true;
+      this._is_constructed = true;
 
       /* Set our single IM address */
       GenericArray<string> im_address_array = new GenericArray<string> ();

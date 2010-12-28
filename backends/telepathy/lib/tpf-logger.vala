@@ -45,8 +45,8 @@ private interface LoggerIface : DBus.Object
 
 internal class Logger : GLib.Object
 {
-  private static LoggerIface logger;
-  private string account_path;
+  private static LoggerIface _logger;
+  private string _account_path;
 
   public signal void invalidated ();
   public signal void favourite_contacts_changed (string[] added,
@@ -54,7 +54,7 @@ internal class Logger : GLib.Object
 
   public Logger (string account_path) throws DBus.Error
     {
-      if (this.logger == null)
+      if (this._logger == null)
         {
           /* Create a logger proxy for favourites support */
           /* FIXME: This should be ported to the Vala GDBus stuff and made
@@ -69,24 +69,24 @@ internal class Logger : GLib.Object
            * the logger service disappears. This is, however, blocked by:
            * https://bugzilla.gnome.org/show_bug.cgi?id=623198 */
           var dbus_conn = DBus.Bus.get (DBus.BusType.SESSION);
-          this.logger = dbus_conn.get_object (
+          this._logger = dbus_conn.get_object (
               "org.freedesktop.Telepathy.Logger",
               "/org/freedesktop/Telepathy/Logger",
               "org.freedesktop.Telepathy.Logger.DRAFT") as LoggerIface;
 
-          this.logger.destroy.connect (() =>
+          this._logger.destroy.connect (() =>
             {
               /* We've lost the connection to the logger service, so invalidate
                * this logger proxy (and all the others too). */
-              this.logger = null;
+              this._logger = null;
               this.invalidated ();
             });
         }
 
-      this.account_path = account_path;
-      this.logger.favourite_contacts_changed.connect ((ap, a, r) =>
+      this._account_path = account_path;
+      this._logger.favourite_contacts_changed.connect ((ap, a, r) =>
         {
-          if (ap != this.account_path)
+          if (ap != this._account_path)
             return;
 
           this.favourite_contacts_changed (a, r);
@@ -96,15 +96,15 @@ internal class Logger : GLib.Object
   public async string[] get_favourite_contacts () throws DBus.Error
     {
       /* Invalidated */
-      if (this.logger == null)
+      if (this._logger == null)
         return {};
 
-      AccountFavourites[] favs = yield this.logger.get_favourite_contacts ();
+      AccountFavourites[] favs = yield this._logger.get_favourite_contacts ();
 
       foreach (AccountFavourites account in favs)
         {
           /* We only want the favourites from this account */
-          if (account.account_path == this.account_path)
+          if (account.account_path == this._account_path)
             return account.ids;
         }
 
@@ -114,20 +114,20 @@ internal class Logger : GLib.Object
   public async void add_favourite_contact (string id) throws DBus.Error
     {
       /* Invalidated */
-      if (this.logger == null)
+      if (this._logger == null)
         return;
 
-      yield this.logger.add_favourite_contact (
-          new DBus.ObjectPath (this.account_path), id);
+      yield this._logger.add_favourite_contact (
+          new DBus.ObjectPath (this._account_path), id);
     }
 
   public async void remove_favourite_contact (string id) throws DBus.Error
     {
       /* Invalidated */
-      if (this.logger == null)
+      if (this._logger == null)
         return;
 
-      yield this.logger.remove_favourite_contact (
-          new DBus.ObjectPath (this.account_path), id);
+      yield this._logger.remove_favourite_contact (
+          new DBus.ObjectPath (this._account_path), id);
     }
 }

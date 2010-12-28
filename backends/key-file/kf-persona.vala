@@ -32,7 +32,7 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
     Aliasable,
     IMable
 {
-  private unowned GLib.KeyFile key_file;
+  private unowned GLib.KeyFile _key_file;
   /* FIXME: As described in the IMable interface, we have to use
    * GenericArray<string> here rather than just string[], as null-terminated
    * arrays aren't supported as generic types. */
@@ -65,7 +65,7 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
           debug ("Setting alias of Kf.Persona '%s' to '%s'.", this.uid, value);
 
           this._alias = value;
-          this.key_file.set_string (this.display_id, "__alias", value);
+          this._key_file.set_string (this.display_id, "__alias", value);
 
           ((Kf.PersonaStore) this.store).save_key_file.begin ();
         }
@@ -87,7 +87,7 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
               try
                 {
                   unowned string protocol = (string) k;
-                  this.key_file.remove_key (this.display_id, protocol);
+                  this._key_file.remove_key (this.display_id, protocol);
                 }
               catch (KeyFileError e)
                 {
@@ -135,12 +135,10 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
               for (; offset > 0; offset--)
                 addresses[addresses.length - offset] = null;
 
-              unowned string[] _addresses =
-                  (string[]) ((PtrArray) addresses).pdata;
-              _addresses.length = (int) addresses.length;
+              unowned string[] addrs = (string[]) ((PtrArray) addresses).pdata;
+              addrs.length = (int) addresses.length;
 
-              this.key_file.set_string_list (this.display_id, protocol,
-                  _addresses);
+              this._key_file.set_string_list (this.display_id, protocol, addrs);
               im_addresses.insert (protocol, addresses);
             });
 
@@ -171,27 +169,28 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
       debug ("Adding key-file Persona '%s' (IID '%s', group '%s')", uid, iid,
           id);
 
-      this.key_file = key_file;
+      this._key_file = key_file;
       this._im_addresses = new HashTable<string, GenericArray<string>> (
           str_hash, str_equal);
 
       /* Load the IM addresses from the key file */
       try
         {
-          string[] keys = this.key_file.get_keys (this.display_id);
+          string[] keys = this._key_file.get_keys (this.display_id);
           foreach (string key in keys)
             {
               /* Alias */
               if (key == "__alias")
                 {
-                  this._alias = this.key_file.get_string (this.display_id, key);
+                  this._alias = this._key_file.get_string (this.display_id,
+                      key);
                   debug ("    Loaded alias '%s'.", this._alias);
                   continue;
                 }
 
               /* IM addresses */
               string protocol = key;
-              string[] im_addresses = this.key_file.get_string_list (
+              string[] im_addresses = this._key_file.get_string_list (
                   this.display_id, protocol);
 
               /* FIXME: We have to convert our nice efficient string[] to a
@@ -202,12 +201,12 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
               GenericArray<string> im_address_array =
                   new GenericArray<string> ();
 
-              foreach (string _address in im_addresses)
+              foreach (string im_address in im_addresses)
                 {
                   try
                     {
-                      string address =
-                          IMable.normalise_im_address (_address, protocol);
+                      string address = IMable.normalise_im_address (im_address,
+                          protocol);
 
                       if (!address_set.contains (address))
                         {

@@ -84,10 +84,10 @@ public class Folks.Individual : Object,
   /* Mapping from PersonaStore -> number of Personas from that store contained
    * in this Individual. There shouldn't be any entries with a number < 1.
    * This is used for working out when to disconnect from store signals. */
-  private HashMap<PersonaStore, uint> stores;
+  private HashMap<PersonaStore, uint> _stores;
   /* The number of Personas in this Individual which have
    * Persona.is_user == true. Iff this is > 0, Individual.is_user == true. */
-  private uint persona_user_count = 0;
+  private uint _persona_user_count = 0;
   private HashTable<string, GenericArray<string>> _im_addresses;
 
   /**
@@ -374,7 +374,7 @@ public class Folks.Individual : Object,
       this._im_addresses =
           new HashTable<string, GenericArray<string>> (str_hash, str_equal);
       this._persona_set = new HashSet<Persona> (null, null);
-      this.stores = new HashMap<PersonaStore, uint> (null, null);
+      this._stores = new HashMap<PersonaStore, uint> (null, null);
       this.personas = personas;
     }
 
@@ -395,7 +395,7 @@ public class Folks.Individual : Object,
         this.personas_changed (null, removed_personas);
 
       if (store != null)
-        this.stores.unset (store);
+        this._stores.unset (store);
 
       if (this._persona_set.size < 1)
         {
@@ -770,7 +770,7 @@ public class Folks.Individual : Object,
             {
               /* Keep track of how many Personas are users */
               if (p.is_user)
-                this.persona_user_count++;
+                this._persona_user_count++;
 
               added.prepend (p);
 
@@ -779,14 +779,14 @@ public class Folks.Individual : Object,
 
               /* Increment the Persona count for this PersonaStore */
               unowned PersonaStore store = p.store;
-              uint num_from_store = this.stores.get (store);
+              uint num_from_store = this._stores.get (store);
               if (num_from_store == 0)
                 {
-                  this.stores.set (store, num_from_store + 1);
+                  this._stores.set (store, num_from_store + 1);
                 }
               else
                 {
-                  this.stores.set (store, 1);
+                  this._stores.set (store, 1);
 
                   store.removed.connect (this.store_removed_cb);
                   store.personas_changed.connect (
@@ -804,16 +804,16 @@ public class Folks.Individual : Object,
             {
               /* Keep track of how many Personas are users */
               if (p.is_user)
-                this.persona_user_count--;
+                this._persona_user_count--;
 
               removed.prepend (p);
 
               /* Decrement the Persona count for this PersonaStore */
               unowned PersonaStore store = p.store;
-              uint num_from_store = this.stores.get (store);
+              uint num_from_store = this._stores.get (store);
               if (num_from_store > 1)
                 {
-                  this.stores.set (store, num_from_store - 1);
+                  this._stores.set (store, num_from_store - 1);
                 }
               else
                 {
@@ -821,7 +821,7 @@ public class Folks.Individual : Object,
                   store.personas_changed.disconnect (
                       this.store_personas_changed_cb);
 
-                  this.stores.unset (store);
+                  this._stores.unset (store);
                 }
 
               this.disconnect_from_persona (p);
@@ -837,7 +837,7 @@ public class Folks.Individual : Object,
       this.personas_changed (added, removed);
 
       /* Update this.is_user */
-      bool new_is_user = (this.persona_user_count > 0) ? true : false;
+      bool new_is_user = (this._persona_user_count > 0) ? true : false;
       if (new_is_user != this.is_user)
         this.is_user = new_is_user;
 

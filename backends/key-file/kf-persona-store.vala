@@ -32,10 +32,10 @@ using Folks.Backends.Kf;
 public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
 {
   private HashTable<string, Persona> _personas;
-  private File file;
-  private GLib.KeyFile key_file;
-  private uint first_unused_id = 0;
-  private unowned Cancellable save_key_file_cancellable = null;
+  private File _file;
+  private GLib.KeyFile _key_file;
+  private uint _first_unused_id = 0;
+  private unowned Cancellable _save_key_file_cancellable = null;
   private bool _is_prepared = false;
 
   /**
@@ -125,7 +125,7 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
               display_name: id);
 
       this.trust_level = PersonaStoreTrust.FULL;
-      this.file = key_file;
+      this._file = key_file;
       this._personas = new HashTable<string, Persona> (str_hash, str_equal);
     }
 
@@ -138,8 +138,8 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
         {
           if (!this._is_prepared)
             {
-              string filename = this.file.get_path ();
-              this.key_file = new GLib.KeyFile ();
+              string filename = this._file.get_path ();
+              this._key_file = new GLib.KeyFile ();
 
               /* Load or create the file */
               while (true)
@@ -152,11 +152,11 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
                       string contents = null;
                       size_t length = 0;
 
-                      yield this.file.load_contents_async (null, out contents,
+                      yield this._file.load_contents_async (null, out contents,
                           out length);
                       if (length > 0)
                         {
-                          this.key_file.load_from_data (contents, length,
+                          this._key_file.load_from_data (contents, length,
                               KeyFileFlags.KEEP_COMMENTS);
                         }
                       break;
@@ -176,7 +176,7 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
                     }
 
                   /* Ensure the parent directory tree exists for the new file */
-                  File parent_dir = this.file.get_parent ();
+                  File parent_dir = this._file.get_parent ();
 
                   try
                     {
@@ -203,7 +203,7 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
                   try
                     {
                       /* Create the file */
-                      FileOutputStream stream = yield this.file.create_async (
+                      FileOutputStream stream = yield this._file.create_async (
                           FileCreateFlags.PRIVATE, Priority.DEFAULT);
                       yield stream.close_async (Priority.DEFAULT);
                     }
@@ -225,13 +225,13 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
               /* We've loaded or created a key file by now, so cycle through the
                * groups: each group is a persona which we have to create and
                * emit */
-              string[] groups = this.key_file.get_groups ();
+              string[] groups = this._key_file.get_groups ();
               foreach (string persona_id in groups)
                 {
-                  if (persona_id.to_int () == this.first_unused_id)
-                    this.first_unused_id++;
+                  if (persona_id.to_int () == this._first_unused_id)
+                    this._first_unused_id++;
 
-                  Persona persona = new Kf.Persona (this.key_file, persona_id,
+                  Persona persona = new Kf.Persona (this._key_file, persona_id,
                       this);
                   this._personas.insert (persona.iid, persona);
                 }
@@ -261,7 +261,7 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
        * the main thread). We would cause a deadlock if we used anything as
        * fancy/useful as a GCond. */
       MainContext context = MainContext.default ();
-      while (this.save_key_file_cancellable != null)
+      while (this._save_key_file_cancellable != null)
         context.iteration (true);
     }
 
@@ -275,7 +275,7 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
 
       try
         {
-          this.key_file.remove_group (persona.display_id);
+          this._key_file.remove_group (persona.display_id);
           yield this.save_key_file ();
 
           /* Signal the removal of the Persona */
@@ -316,14 +316,14 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
       string persona_id = null;
       do
         {
-          persona_id = this.first_unused_id.to_string ();
-          this.first_unused_id++;
+          persona_id = this._first_unused_id.to_string ();
+          this._first_unused_id++;
         }
-      while (this.key_file.has_group (persona_id) == true);
+      while (this._key_file.has_group (persona_id) == true);
 
       /* Create a new persona and set its im-addresses property to update the
        * key file */
-      Persona persona = new Kf.Persona (this.key_file, persona_id, this);
+      Persona persona = new Kf.Persona (this._key_file, persona_id, this);
       this._personas.insert (persona.iid, persona);
       persona.im_addresses = im_addresses;
 
@@ -338,20 +338,20 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
 
   internal async void save_key_file ()
     {
-      string key_file_data = this.key_file.to_data ();
+      string key_file_data = this._key_file.to_data ();
       Cancellable cancellable = new Cancellable ();
 
-      debug ("Saving key file '%s'.", this.file.get_path ());
+      debug ("Saving key file '%s'.", this._file.get_path ());
 
       /* There's no point in having two competing file write operations.
        * We can ensure that only one is running by just checking if a
        * cancellable is set. This is thread safe because the code in this file
        * is all run in the main thread (inside the main loop), so only we touch
-       * this.save_key_file_cancellable (albeit in many weird and wonderful
+       * this._save_key_file_cancellable (albeit in many weird and wonderful
        * orders due to idle handler queuing). */
-      if (this.save_key_file_cancellable != null)
-        this.save_key_file_cancellable.cancel ();
-      this.save_key_file_cancellable = cancellable;
+      if (this._save_key_file_cancellable != null)
+        this._save_key_file_cancellable.cancel ();
+      this._save_key_file_cancellable = cancellable;
 
       try
         {
@@ -363,11 +363,11 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
            * take this into account until we depend explicitly on
            * Vala >= 0.11. */
 #if VALA_0_12
-          yield this.file.replace_contents_async (key_file_data,
+          yield this._file.replace_contents_async (key_file_data,
               key_file_data.length, null, false, FileCreateFlags.PRIVATE,
               cancellable);
 #else
-          yield this.file.replace_contents_async (key_file_data,
+          yield this._file.replace_contents_async (key_file_data,
               key_file_data.size (), null, false, FileCreateFlags.PRIVATE,
               cancellable);
 #endif
@@ -379,11 +379,11 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
               /* Translators: the first parameter is a filename, the second is
                * an error message. */
               warning (_("Could not write updated key file '%s': %s"),
-                  this.file.get_path (), e.message);
+                  this._file.get_path (), e.message);
             }
         }
 
-      if (this.save_key_file_cancellable == cancellable)
-        this.save_key_file_cancellable = null;
+      if (this._save_key_file_cancellable == cancellable)
+        this._save_key_file_cancellable = null;
     }
 }
