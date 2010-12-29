@@ -101,7 +101,7 @@ public interface Folks.HasPresence : Object
 
   /* Rank the presence types for comparison purposes, with higher numbers
    * meaning more available */
-  private static uint _type_availability (PresenceType type)
+  private static int _type_availability (PresenceType type)
     {
       switch (type)
         {
@@ -142,8 +142,7 @@ public interface Folks.HasPresence : Object
    */
   public static int typecmp (PresenceType type_a, PresenceType type_b)
     {
-      return (int) _type_availability (type_a) -
-          (int) _type_availability (type_b);
+      return _type_availability (type_a) - _type_availability (type_b);
     }
 
   /**

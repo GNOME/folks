@@ -357,7 +357,7 @@ public class Folks.IndividualAggregator : Object
 
                   persona.linkable_property_to_links (prop_name, (l) =>
                     {
-                      unowned string prop_linking_value = (string) l;
+                      unowned string prop_linking_value = l;
                       var candidate_ind =
                           this._link_map.lookup (prop_linking_value);
 
@@ -454,7 +454,7 @@ public class Folks.IndividualAggregator : Object
                       final_persona.linkable_property_to_links (prop_name,
                           (l) =>
                         {
-                          unowned string prop_linking_value = (string) l;
+                          unowned string prop_linking_value = l;
 
                           debug ("            %s", prop_linking_value);
                           this._link_map.replace (prop_linking_value,
@@ -519,12 +519,10 @@ public class Folks.IndividualAggregator : Object
                   continue;
                 }
 
-              persona.linkable_property_to_links (prop_name, (l) =>
+              persona.linkable_property_to_links (prop_name, (linking_value) =>
                 {
-                  unowned string prop_linking_value = (string) l;
-
-                  debug ("        %s", prop_linking_value);
-                  this._link_map.remove (prop_linking_value);
+                  debug ("        %s", linking_value);
+                  this._link_map.remove (linking_value);
                 });
             }
         }

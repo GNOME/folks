@@ -82,11 +82,10 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
       set
         {
           /* Remove the current IM addresses from the key file */
-          this._im_addresses.foreach ((k, v) =>
+          this._im_addresses.foreach ((protocol, v) =>
             {
               try
                 {
-                  unowned string protocol = (string) k;
                   this._key_file.remove_key (this.display_id, protocol);
                 }
               catch (KeyFileError e)

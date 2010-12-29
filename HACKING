@@ -97,3 +97,6 @@ Vala-specific rules
    reduces readability without benefit. And, as of this writing, bgo#638199
    forces unowned variables to have an explicit type (preventing the use of
    'var').
+
+9. As in most languages, avoid casting. Casting is usually a sign of an error
+   which should be fixed and reduces readability.
