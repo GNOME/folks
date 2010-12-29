@@ -1,0 +1,75 @@
+This file is meant to summarize the Folks development policies.
+
+Code merging
+============
+
+This is the work flow for modifying the master repository:
+
+1. File a bug for the given flaw or feature (if it does not already exist) at
+   <https://bugzilla.gnome.org/enter_bug.cgi?product=folks>.
+
+2. Clone the main repository (if you haven't already) and start work in a new
+   branch (which preferably includes the bug number in its name).
+
+3. If this is a non-trivial flaw or feature, write test cases. We won't accept
+   significant changes without adequate test coverage.
+
+4. Write code to fix the flaw or add the feature. In the case that tests are
+   necessary, the new tests must pass consistently.
+   
+5. All code must follow the project coding style (see below).
+
+6. The project must remain buildable with all configure options and pass all
+   tests on all platforms.
+
+7. Push your branch to a public repository and attach patch(es) to the bug. Ask
+   for a review.
+
+8. Rework your code based on suggestions in the review and submit new patches.
+   Return to the review step as necessary.
+
+9. Upon approval, pull the latest master branch, rebase your branch upon it, and
+   push the resulting branch to master. Simple!
+
+Clean commits
+=============
+
+Commits/patches should be as fine-grained as possible (and no finer). Every
+distinct change should be in its own commit and every commit should be a
+meaningful change on its own.
+
+As much as possible, the full tree should be buildable and pass all tests at
+every commit. There are exceptions, but they're rare. And, of course, it's more
+critical that the master branch be buildable (and all tests pass) after every
+merge.
+
+Coding style
+============
+
+In general, Folks follows the Telepathy-GLib coding style described in
+<http://telepathy.freedesktop.org/wiki/Style>.
+
+Additional general rules
+------------------------
+
+1. All public symbols which support a Valadoc comment block must have one. This
+   comment block must also be sufficient for gobject-introspection to adequately
+   introspect the symbol for use in other programming languages.
+
+2. Include a @since statement in the comment block for new symbols.
+
+Vala-specific rules
+-------------------
+
+1. Any functions which could block must be async.
+
+2. Use the language-native Errors for error reporting, not return values.
+
+3. Take advantage of properties and their automatic notify signals as much as
+   possible (this eliminates the need for most special accessors, mutators, and
+   custom signals and is more conventional).
+
+4. Class function blocks should be indented like GNU/Telepathy-GLib if/while
+   blocks. It's arguable that these should be aligned in column 0, as in regular
+   C functions, but it's too late to change this (as it would make 'git blame'
+   useless).
