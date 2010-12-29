@@ -100,3 +100,9 @@ Vala-specific rules
 
 9. As in most languages, avoid casting. Casting is usually a sign of an error
    which should be fixed and reduces readability.
+
+10. Refer to non-local variables and methods with their qualified name. Within a
+    class function, refer to private data members like 'this._foo' and foreign
+    package symbols like 'package_name.symbol'.
+
+    This makes scope immediately clear, helping readability.

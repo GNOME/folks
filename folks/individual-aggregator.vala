@@ -754,7 +754,7 @@ public class Folks.IndividualAggregator : Object
       Persona persona = null;
       try
         {
-          var details_copy = _asv_copy (details);
+          var details_copy = this._asv_copy (details);
           persona = yield store.add_persona_from_details (details_copy);
         }
       catch (PersonaStoreError e)

@@ -530,12 +530,14 @@ public class Tpf.PersonaStore : Folks.PersonaStore
                             val.get_boxed ();
 
                         var channel_type = TelepathyGLib.asv_get_string (props,
-                            _tp_channel_channel_type);
+                            this._tp_channel_channel_type);
                         bool handle_type_valid;
                         var handle_type = TelepathyGLib.asv_get_uint32 (props,
-                            _tp_channel_handle_type, out handle_type_valid);
+                            this._tp_channel_handle_type,
+                            out handle_type_valid);
 
-                        if ((channel_type == _tp_channel_contact_list_type) &&
+                        if ((channel_type ==
+                              this._tp_channel_contact_list_type) &&
                             handle_type_valid &&
                             (handle_type == HandleType.GROUP))
                           {
@@ -566,8 +568,8 @@ public class Tpf.PersonaStore : Folks.PersonaStore
 
       /* Add the local user */
       _conn.notify["self-handle"].connect (this._self_handle_changed_cb);
-      if (_conn.self_handle != 0)
-        this._self_handle_changed_cb (_conn, null);
+      if (this._conn.self_handle != 0)
+        this._self_handle_changed_cb (this._conn, null);
 
       /* We can only initialise the favourite contacts once _conn is prepared */
       this._initialise_favourite_contacts.begin ();
@@ -589,7 +591,8 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       /* We have to do it this way instead of using
        * TpLowleve.get_contacts_by_handle_async() as we're in a notification
        * callback */
-      c.get_contacts_by_handle (contact_handles, (uint[]) _contact_features,
+      c.get_contacts_by_handle (contact_handles,
+          (uint[]) this._contact_features,
           (conn, contacts, failed, error, weak_object) =>
             {
               if (error != null)
@@ -903,12 +906,13 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       var tp_reason = TelepathyGLib.asv_get_uint32 (details, "change-reason",
           out valid);
       if (valid)
-        reason = _change_reason_from_tp_reason (tp_reason);
+        reason = Tpf.PersonaStore._change_reason_from_tp_reason (tp_reason);
 
       this._ignore_by_handle (handle, message, actor, reason);
     }
 
-  private Groupable.ChangeReason _change_reason_from_tp_reason (uint reason)
+  private static Groupable.ChangeReason _change_reason_from_tp_reason (
+      uint reason)
     {
       return (Groupable.ChangeReason) reason;
     }
@@ -1417,7 +1421,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
 
       try
         {
-          var personas = yield _create_personas_from_contact_ids (
+          var personas = yield this._create_personas_from_contact_ids (
               contact_ids);
 
           if (personas == null)
@@ -1430,17 +1434,17 @@ public class Tpf.PersonaStore : Folks.PersonaStore
               var persona = personas.data;
 
               if (this._subscribe != null)
-                _change_standard_contact_list_membership (_subscribe, persona,
-                    true);
+                this._change_standard_contact_list_membership (this._subscribe,
+                    persona, true);
 
               if (this._publish != null)
                 {
-                  var flags = _publish.group_get_flags ();
+                  var flags = this._publish.group_get_flags ();
                   if ((flags & ChannelGroupFlags.CAN_ADD) ==
                       ChannelGroupFlags.CAN_ADD)
                     {
-                      _change_standard_contact_list_membership (_publish,
-                          persona, true);
+                      this._change_standard_contact_list_membership (
+                          this._publish, persona, true);
                     }
                 }
 

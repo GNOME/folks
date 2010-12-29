@@ -207,7 +207,7 @@ public class Folks.BackendStore : Object {
 
           bool is_file;
           bool is_dir;
-          yield _get_file_info (file, out is_file, out is_dir);
+          yield this._get_file_info (file, out is_file, out is_dir);
           if (is_file)
             {
               modules.set (subpath, file);

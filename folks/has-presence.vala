@@ -142,7 +142,8 @@ public interface Folks.HasPresence : Object
    */
   public static int typecmp (PresenceType type_a, PresenceType type_b)
     {
-      return _type_availability (type_a) - _type_availability (type_b);
+      return (HasPresence._type_availability (type_a) -
+          HasPresence._type_availability (type_b));
     }
 
   /**

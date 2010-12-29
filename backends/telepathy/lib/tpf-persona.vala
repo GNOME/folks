@@ -168,7 +168,7 @@ public class Tpf.Persona : Folks.Persona,
    */
   public async void change_group (string group, bool is_member)
     {
-      if (_change_group (group, is_member))
+      if (this._change_group (group, is_member))
         {
           Tpf.PersonaStore store = (Tpf.PersonaStore) this.store;
           yield store._change_group_membership (this, group, is_member);
@@ -214,7 +214,7 @@ public class Tpf.Persona : Folks.Persona,
     {
       unowned string id = contact.get_identifier ();
       unowned Connection connection = contact.connection;
-      var account = _account_for_connection (connection);
+      var account = this._account_for_connection (connection);
       var uid = this.build_uid ("telepathy", account.get_protocol (), id);
 
       Object (alias: contact.get_alias (),
@@ -337,7 +337,7 @@ public class Tpf.Persona : Folks.Persona,
 
   private void _contact_notify_presence_type ()
     {
-      this.presence_type = _folks_presence_type_from_tp (
+      this.presence_type = Tpf.Persona._folks_presence_type_from_tp (
           this.contact.get_presence_type ());
     }
 
