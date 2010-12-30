@@ -214,7 +214,7 @@ private class Folks.Inspect.Commands.Signals : Folks.Inspect.Command
       string signal_name_inner = (parts.length > 1) ? parts[1] : null;
       string detail_string_inner = (parts.length > 2) ? parts[2] : null;
 
-      if (signal_name == "" || detail_string == "")
+      if (signal_name_inner == "" || detail_string_inner == "")
         {
           Utils.print_line ("Invalid signal identifier '%s'.", input);
           return false;
