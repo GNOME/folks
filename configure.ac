@@ -199,6 +199,12 @@ AC_ARG_ENABLE([inspect-tool],
                              [Enable building the data inspection tool]),
               [enable_inspect_tool=$enableval with_inspect_tool=$enableval],
               [enable_inspect_tool=maybe with_inspect_tool=no])
+AS_IF([test "$enable_inspect_tool" = "yes" -a "$enable_vala" != "yes"],
+      [AC_MSG_ERROR([Inspect tool explicitly enabled, but Vala wasn't enabled \
+                     using --enable-vala])])
+AS_IF([test "$enable_inspect_tool" = "maybe" -a "$enable_vala" != "yes"],
+      [AC_MSG_NOTICE([Inspect tool disabled, as Vala wasn't enabled using \
+                      --enable-vala])])
 AS_IF([test "$enable_inspect_tool" != "no" -a "x$enable_vala" = "xyes"],
       [AC_CHECK_LIB([readline], [main],
                     [with_inspect_tool=yes], [with_inspect_tool=no],
