@@ -203,7 +203,7 @@ AS_IF([test "$enable_inspect_tool" != "no" -a "x$enable_vala" = "xyes"],
       [AC_CHECK_LIB([readline], [main],
                     [with_inspect_tool=yes], [with_inspect_tool=no],
                     [-lncurses])])
-AS_IF([test "$enable_inspect_tool" != "no" -a "$with_inspect_tool" = "yes" -a
+AS_IF([test "$enable_inspect_tool" != "no" -a "$with_inspect_tool" = "yes" -a \
        "x$enable_vala" = "xyes"],
       [VALA_CHECK_PACKAGES([readline])
        LIBREADLINE="-lreadline -lncurses"
