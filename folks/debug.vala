@@ -31,6 +31,7 @@ namespace Folks.Debug
 
   internal static void _set_flags (string? debug_flags)
     {
+      /* FIXME: we obviously shouldn't be hard-coding these. See bgo#638609 */
       GLib.DebugKey keys[3] =
         {
           DebugKey () { key = "Core", value = Domains.CORE },
