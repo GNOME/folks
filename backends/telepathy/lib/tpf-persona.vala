@@ -215,7 +215,7 @@ public class Tpf.Persona : Folks.Persona,
       unowned string id = contact.get_identifier ();
       unowned Connection connection = contact.connection;
       var account = this._account_for_connection (connection);
-      var uid = this.build_uid ("telepathy", account.get_protocol (), id);
+      var uid = this.build_uid (store.type_id, account.get_protocol (), id);
 
       Object (alias: contact.get_alias (),
               contact: contact,
