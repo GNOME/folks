@@ -118,8 +118,10 @@ public class Folks.BackendStore : Object {
 
   private BackendStore ()
     {
+      var debug = Debug.dup ();
+
       /* Treat this as a library init function */
-      Debug._set_flags (Environment.get_variable ("FOLKS_DEBUG"));
+      debug._set_flags (Environment.get_variable ("FOLKS_DEBUG"));
 
       this.modules = new HashMap<string,unowned Module> (str_hash, str_equal);
       this._backend_hash = new HashMap<string,Backend> (str_hash, str_equal);

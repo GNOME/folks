@@ -19,8 +19,9 @@
  */
 
 using GLib;
+using Gee;
 
-namespace Folks.Debug
+internal class Folks.Debug : Object
 {
   private enum Domains {
     /* Zero is used for "no debug spew" */
@@ -29,7 +30,9 @@ namespace Folks.Debug
     KEY_FILE_BACKEND = 1 << 2
   }
 
-  internal static void _set_flags (string? debug_flags)
+  private static weak Debug _instance;
+
+  internal void _set_flags (string? debug_flags)
     {
       /* FIXME: we obviously shouldn't be hard-coding these. See bgo#638609 */
       GLib.DebugKey keys[3] =
@@ -54,5 +57,25 @@ namespace Folks.Debug
                   (domain, flags, message) => {});
             }
         }
+    }
+
+  internal static Debug dup ()
+    {
+      if (_instance == null)
+        {
+          /* use an intermediate variable to force a strong reference */
+          var new_instance = new Debug ();
+          _instance = new_instance;
+
+          return new_instance;
+        }
+
+      return _instance;
+    }
+
+  ~Debug ()
+    {
+      /* manually clear the singleton _instance */
+      _instance = null;
     }
 }
