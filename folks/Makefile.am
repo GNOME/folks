@@ -5,7 +5,7 @@ AM_CPPFLAGS = \
 	-DPACKAGE_DATADIR=\"$(pkgdatadir)\" \
 	-DDATA_DIR=\"$(shareddir)\" \
 	-DBACKEND_DIR=\"$(BACKEND_DIR)\" \
-	-DG_LOG_DOMAIN=\"Core\" \
+	-DG_LOG_DOMAIN=\"folks\" \
 	$(NULL)
 
 lib_LTLIBRARIES = libfolks.la
