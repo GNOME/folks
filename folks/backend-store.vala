@@ -47,6 +47,7 @@ public class Folks.BackendStore : Object {
   private HashMap<string,unowned Module> modules;
   private static weak BackendStore instance;
   private bool _is_prepared = false;
+  private Debug _debug;
 
   /**
    * Emitted when a backend has been added to the BackendStore.
@@ -118,10 +119,12 @@ public class Folks.BackendStore : Object {
 
   private BackendStore ()
     {
-      var debug = Debug.dup ();
+      this._debug = Debug.dup ();
 
       /* Treat this as a library init function */
-      debug._set_flags (Environment.get_variable ("FOLKS_DEBUG"));
+      this._debug._set_flags (Environment.get_variable ("FOLKS_DEBUG"));
+      /* register the core debug messages */
+      this._debug._register_domain ("folks");
 
       this.modules = new HashMap<string,unowned Module> (str_hash, str_equal);
       this._backend_hash = new HashMap<string,Backend> (str_hash, str_equal);
@@ -307,6 +310,8 @@ public class Folks.BackendStore : Object {
           backend_existing.unprepare ();
           this._prepared_backends.unset (backend_existing.name);
         }
+
+      this._debug._register_domain (backend.name);
 
       this._backend_hash.set (backend.name, backend);
     }

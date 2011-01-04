@@ -31,32 +31,45 @@ internal class Folks.Debug : Object
   }
 
   private static weak Debug _instance;
+  private HashSet<string> _domains;
+  private bool _all = false;
 
   internal void _set_flags (string? debug_flags)
     {
-      /* FIXME: we obviously shouldn't be hard-coding these. See bgo#638609 */
-      GLib.DebugKey keys[3] =
-        {
-          DebugKey () { key = "Core", value = Domains.CORE },
-          DebugKey () { key = "TelepathyBackend",
-              value = Domains.TELEPATHY_BACKEND },
-          DebugKey () { key = "KeyFileBackend",
-              value = Domains.KEY_FILE_BACKEND }
-        };
+      this._all = false;
+      this._domains = new HashSet<string> (str_hash, str_equal);
 
-      var flags = GLib.parse_debug_string (debug_flags, keys);
+      if (debug_flags == null || debug_flags == "")
+        return;
 
-      foreach (unowned DebugKey key in keys)
+      var domains_split = debug_flags.split (",");
+      foreach (var domain in domains_split)
         {
-          if ((flags & key.value) == 0)
-            {
-              /* Install a log handler which will blackhole the log message.
-               * Other log messages will be printed out by the default log
-               * handler. */
-              Log.set_handler (key.key, LogLevelFlags.LEVEL_DEBUG,
-                  (domain, flags, message) => {});
-            }
+          var domain_lower = domain.down ();
+
+          if (GLib.strcmp (domain_lower, "all") == 0)
+            this._all = true;
+          else
+            this._domains.add (domain_lower);
         }
+    }
+
+  /* turn off debug output for the given domain unless it was in the FOLKS_DEBUG
+   * environment variable (or 'all' was set) */
+  internal void _register_domain (string domain)
+    {
+      if (this._all || this._domains.contains (domain.down ()))
+        {
+          /* FIXME: shouldn't need to cast. See bgo#638682 */
+          Log.set_handler (domain, LogLevelFlags.LEVEL_MASK,
+              (LogFunc) Log.default_handler);
+          return;
+        }
+
+      /* Install a log handler which will blackhole the log message.
+       * Other log messages will be printed out by the default log handler. */
+      Log.set_handler (domain, LogLevelFlags.LEVEL_DEBUG,
+          (domain_arg, flags, message) => {});
     }
 
   internal static Debug dup ()
