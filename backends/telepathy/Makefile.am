@@ -5,7 +5,8 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir)/backends/telepathy/lib \
 	-include $(CONFIG_HEADER) \
 	-DPACKAGE_DATADIR=\"$(pkgdatadir)\" \
-	-DG_LOG_DOMAIN=\"telepathy\" \
+	-DBACKEND_NAME=\"$(BACKEND_NAME)\" \
+	-DG_LOG_DOMAIN=\"$(BACKEND_NAME)\" \
 	$(NULL)
 
 VALAFLAGS += \
@@ -56,4 +57,5 @@ GITIGNOREFILES = \
 	libfolks_backend_telepathy_la_vala.stamp \
 	$(NULL)
 
+-include backend.mk
 -include $(top_srcdir)/git.mk

@@ -23,6 +23,8 @@ using TelepathyGLib;
 using Folks;
 using Folks.Backends.Tp;
 
+extern const string BACKEND_NAME;
+
 /**
  * A backend which connects to the Telepathy accounts service and creates a
  * {@link PersonaStore} for each valid account known to Telepathy.
@@ -36,7 +38,7 @@ public class Folks.Backends.Tp.Backend : Folks.Backend
   /**
    * {@inheritDoc}
    */
-  public override string name { get { return "telepathy"; } }
+  public override string name { get { return BACKEND_NAME; } }
 
   /**
    * {@inheritDoc}

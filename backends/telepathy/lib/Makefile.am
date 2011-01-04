@@ -2,7 +2,8 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir)/folks \
 	-include $(CONFIG_HEADER) \
 	-DPACKAGE_DATADIR=\"$(pkgdatadir)\" \
-	-DG_LOG_DOMAIN=\"telepathy\" \
+	-DBACKEND_NAME=\"$(BACKEND_NAME)\" \
+	-DG_LOG_DOMAIN=\"$(BACKEND_NAME)\" \
 	$(NULL)
 
 VAPIGENFLAGS += \
@@ -174,4 +175,5 @@ EXTRA_DIST = \
 # a Vala library during distcheck otherwise
 noinst_HEADERS = $(tp_lowlevel_headers)
 
+-include ../backend.mk
 -include $(top_srcdir)/git.mk

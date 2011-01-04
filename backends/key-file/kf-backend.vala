@@ -22,6 +22,8 @@ using GLib;
 using Folks;
 using Folks.Backends.Kf;
 
+extern const string BACKEND_NAME;
+
 /**
  * A backend which loads {@link Persona}s from a simple key file in
  * (XDG_DATA_HOME/folks/) and presents them through a single
@@ -49,7 +51,7 @@ public class Folks.Backends.Kf.Backend : Folks.Backend
   /**
    * {@inheritDoc}
    */
-  public override string name { get { return "key-file"; } }
+  public override string name { get { return BACKEND_NAME; } }
 
   /**
    * {@inheritDoc}

@@ -41,7 +41,7 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
   /**
    * {@inheritDoc}
    */
-  public override string type_id { get { return "key-file"; } }
+  public override string type_id { get { return BACKEND_NAME; } }
 
   /**
    * Whether this PersonaStore can add {@link Folks.Persona}s.

@@ -24,6 +24,8 @@ using Gee;
 using TelepathyGLib;
 using Folks;
 
+extern const string BACKEND_NAME;
+
 /**
  * A persona store which is associated with a single Telepathy account. It will
  * create {@link Persona}s for each of the contacts in the published, stored or
@@ -88,7 +90,6 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       GLib.List<Persona>? added, GLib.List<Persona>? removed);
   internal signal void group_removed (string group, GLib.Error? error);
 
-
   /**
    * The Telepathy account this store is based upon.
    */
@@ -101,7 +102,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
    *
    * See {@link Folks.PersonaStore.type_id}.
    */
-  public override string type_id { get { return "telepathy"; } }
+  public override string type_id { get { return BACKEND_NAME; } }
 
   /**
    * Whether this PersonaStore can add {@link Folks.Persona}s.
