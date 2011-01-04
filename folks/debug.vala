@@ -34,26 +34,6 @@ internal class Folks.Debug : Object
   private HashSet<string> _domains;
   private bool _all = false;
 
-  internal void _set_flags (string? debug_flags)
-    {
-      this._all = false;
-      this._domains = new HashSet<string> (str_hash, str_equal);
-
-      if (debug_flags == null || debug_flags == "")
-        return;
-
-      var domains_split = debug_flags.split (",");
-      foreach (var domain in domains_split)
-        {
-          var domain_lower = domain.down ();
-
-          if (GLib.strcmp (domain_lower, "all") == 0)
-            this._all = true;
-          else
-            this._domains.add (domain_lower);
-        }
-    }
-
   /* turn off debug output for the given domain unless it was in the FOLKS_DEBUG
    * environment variable (or 'all' was set) */
   internal void _register_domain (string domain)
@@ -72,18 +52,35 @@ internal class Folks.Debug : Object
           (domain_arg, flags, message) => {});
     }
 
-  internal static Debug dup ()
+  internal static Debug dup (string? debug_flags)
     {
-      if (_instance == null)
+      var retval = _instance;
+
+      if (retval == null)
         {
           /* use an intermediate variable to force a strong reference */
-          var new_instance = new Debug ();
-          _instance = new_instance;
-
-          return new_instance;
+          retval = new Debug ();
+          _instance = retval;
         }
 
-      return _instance;
+      retval._all = false;
+      retval._domains = new HashSet<string> (str_hash, str_equal);
+
+      if (debug_flags != null && debug_flags != "")
+        {
+          var domains_split = debug_flags.split (",");
+          foreach (var domain in domains_split)
+            {
+              var domain_lower = domain.down ();
+
+              if (GLib.strcmp (domain_lower, "all") == 0)
+                retval._all = true;
+              else
+                retval._domains.add (domain_lower);
+            }
+        }
+
+      return retval;
     }
 
   ~Debug ()

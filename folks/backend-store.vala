@@ -119,10 +119,9 @@ public class Folks.BackendStore : Object {
 
   private BackendStore ()
     {
-      this._debug = Debug.dup ();
-
       /* Treat this as a library init function */
-      this._debug._set_flags (Environment.get_variable ("FOLKS_DEBUG"));
+      this._debug = Debug.dup (Environment.get_variable ("FOLKS_DEBUG"));
+
       /* register the core debug messages */
       this._debug._register_domain ("folks");
 
