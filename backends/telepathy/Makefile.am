@@ -5,7 +5,7 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir)/backends/telepathy/lib \
 	-include $(CONFIG_HEADER) \
 	-DPACKAGE_DATADIR=\"$(pkgdatadir)\" \
-	-DG_LOG_DOMAIN=\"TelepathyBackend\" \
+	-DG_LOG_DOMAIN=\"telepathy\" \
 	$(NULL)
 
 VALAFLAGS += \

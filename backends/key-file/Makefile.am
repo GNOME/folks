@@ -2,7 +2,7 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir)/folks \
 	-include $(CONFIG_HEADER) \
 	-DPACKAGE_DATADIR=\"$(pkgdatadir)\" \
-	-DG_LOG_DOMAIN=\"KeyFileBackend\" \
+	-DG_LOG_DOMAIN=\"key-file\" \
 	$(NULL)
 
 backenddir = $(BACKEND_DIR)/key-file
