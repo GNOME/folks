@@ -25,6 +25,8 @@
 using Gee;
 using GLib;
 
+extern const string G_LOG_DOMAIN;
+
 /**
  * Responsible for backend loading.
  *
@@ -123,7 +125,7 @@ public class Folks.BackendStore : Object {
       this._debug = Debug.dup (Environment.get_variable ("FOLKS_DEBUG"));
 
       /* register the core debug messages */
-      this._debug._register_domain ("folks");
+      this._debug._register_domain (G_LOG_DOMAIN);
 
       this.modules = new HashMap<string,unowned Module> (str_hash, str_equal);
       this._backend_hash = new HashMap<string,Backend> (str_hash, str_equal);
