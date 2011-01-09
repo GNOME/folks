@@ -8,6 +8,7 @@ using Gee;
 public class PersonaStoreCapabilitiesTests : Folks.TestCase
 {
   private TpTest.Backend tp_backend;
+  private void* _account_handle;
   private HashSet<string> group_flags_received;
 
   public PersonaStoreCapabilitiesTests ()
@@ -25,10 +26,13 @@ public class PersonaStoreCapabilitiesTests : Folks.TestCase
       this.group_flags_received = new HashSet<string> (str_hash, str_equal);
 
       this.tp_backend.set_up ();
+      this._account_handle = this.tp_backend.add_account ("protocol",
+          "me@example.com", "cm", "account");
     }
 
   public override void tear_down ()
     {
+      this.tp_backend.remove_account (this._account_handle);
       this.tp_backend.tear_down ();
     }
 

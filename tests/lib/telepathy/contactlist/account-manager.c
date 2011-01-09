@@ -33,10 +33,6 @@ G_DEFINE_TYPE_WITH_CODE (TpTestAccountManager,
 /* TP_IFACE_ACCOUNT_MANAGER is implied */
 static const char *ACCOUNT_MANAGER_INTERFACES[] = { NULL };
 
-static const gchar *VALID_ACCOUNTS[] = {
-  "/org/freedesktop/Telepathy/Account/cm/protocol/account",
-  NULL };
-
 static const gchar *INVALID_ACCOUNTS[] = {
   "/org/freedesktop/Telepathy/Account/fakecm/fakeproto/invalidaccount",
   NULL };
@@ -51,7 +47,7 @@ enum
 
 struct _TpTestAccountManagerPrivate
 {
-  int dummy;
+  GPtrArray *valid_accounts;
 };
 
 static void
@@ -84,6 +80,17 @@ tp_test_account_manager_init (TpTestAccountManager *self)
 {
   self->priv = G_TYPE_INSTANCE_GET_PRIVATE (self,
       TP_TEST_TYPE_ACCOUNT_MANAGER, TpTestAccountManagerPrivate);
+
+  self->priv->valid_accounts =
+      g_ptr_array_new_with_free_func ((GDestroyNotify) g_free);
+}
+
+static void
+tp_test_account_manager_finalize (GObject *obj)
+{
+  g_ptr_array_free (TP_TEST_ACCOUNT_MANAGER (obj)->priv->valid_accounts, TRUE);
+
+  G_OBJECT_CLASS (tp_test_account_manager_parent_class)->finalize (obj);
 }
 
 static void
@@ -92,6 +99,7 @@ tp_test_account_manager_get_property (GObject *object,
               GValue *value,
               GParamSpec *spec)
 {
+  TpTestAccountManagerPrivate *priv = TP_TEST_ACCOUNT_MANAGER (object)->priv;
   GPtrArray *accounts;
   guint i = 0;
 
@@ -103,8 +111,8 @@ tp_test_account_manager_get_property (GObject *object,
     case PROP_VALID_ACCOUNTS:
       accounts = g_ptr_array_new ();
 
-      for (i=0; VALID_ACCOUNTS[i] != NULL; i++)
-        g_ptr_array_add (accounts, g_strdup (VALID_ACCOUNTS[i]));
+      for (i = 0; i < priv->valid_accounts->len; i++)
+        g_ptr_array_add (accounts, g_strdup (priv->valid_accounts->pdata[i]));
 
       g_value_take_boxed (value, accounts);
       break;
@@ -159,6 +167,7 @@ tp_test_account_manager_class_init (
 
   g_type_class_add_private (klass, sizeof (TpTestAccountManagerPrivate));
   object_class->get_property = tp_test_account_manager_get_property;
+  object_class->finalize = tp_test_account_manager_finalize;
 
   param_spec = g_param_spec_boxed ("interfaces", "Extra D-Bus interfaces",
       "In this case we only implement AccountManager, so none.",
@@ -185,4 +194,31 @@ TpTestAccountManager *
 tp_test_account_manager_new (void)
 {
   return g_object_new (TP_TEST_TYPE_ACCOUNT_MANAGER, NULL);
+}
+
+void
+tp_test_account_manager_add_account (TpTestAccountManager *self,
+    const gchar *account_path)
+{
+  g_ptr_array_add (self->priv->valid_accounts, g_strdup (account_path));
+  g_object_notify (G_OBJECT (self), "valid-accounts");
+}
+
+void
+tp_test_account_manager_remove_account (TpTestAccountManager *self,
+    const gchar *account_path)
+{
+  TpTestAccountManagerPrivate *priv = self->priv;
+  guint i;
+
+  for (i = 0; i < priv->valid_accounts->len; i++)
+    {
+      if (g_strcmp0 (account_path, priv->valid_accounts->pdata[0]) == 0)
+        {
+          g_ptr_array_remove_index_fast (priv->valid_accounts, i);
+          break;
+        }
+    }
+
+  g_object_notify (G_OBJECT (self), "valid-accounts");
 }

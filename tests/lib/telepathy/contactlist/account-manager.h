@@ -56,6 +56,11 @@ GType tp_test_account_manager_get_type (void);
 
 TpTestAccountManager *tp_test_account_manager_new (void);
 
+void tp_test_account_manager_add_account (TpTestAccountManager *self,
+    const gchar *account_path);
+void tp_test_account_manager_remove_account (TpTestAccountManager *self,
+    const gchar *account_path);
+
 G_END_DECLS
 
 #endif /* #ifndef __TP_TEST_ACCOUNT_MANAGER_H__ */

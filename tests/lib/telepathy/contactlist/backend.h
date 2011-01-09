@@ -64,6 +64,14 @@ void tp_test_backend_tear_down (TpTestBackend *self);
 TpTestContactListConnection *tp_test_backend_get_connection (
     TpTestBackend *self);
 
+gpointer tp_test_backend_add_account (TpTestBackend *self,
+    const gchar *protocol_name,
+    const gchar *user_id,
+    const gchar *connection_manager_name,
+    const gchar *account_name);
+void tp_test_backend_remove_account (TpTestBackend *self,
+    gpointer handle);
+
 G_END_DECLS
 
 #endif /* !TP_TEST_BACKEND_H */

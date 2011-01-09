@@ -8,6 +8,7 @@ using Gee;
 public class IndividualPropertiesTests : Folks.TestCase
 {
   private TpTest.Backend tp_backend;
+  private void* _account_handle;
   private string individual_id_prefix = "telepathy:protocol:";
 
   public IndividualPropertiesTests ()
@@ -27,10 +28,13 @@ public class IndividualPropertiesTests : Folks.TestCase
   public override void set_up ()
     {
       this.tp_backend.set_up ();
+      this._account_handle = this.tp_backend.add_account ("protocol",
+          "me@example.com", "cm", "account");
     }
 
   public override void tear_down ()
     {
+      this.tp_backend.remove_account (this._account_handle);
       this.tp_backend.tear_down ();
     }
 

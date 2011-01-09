@@ -33,12 +33,17 @@
 struct _TpTestBackendPrivate
 {
   TpDBusDaemon *daemon;
-  TpTestAccount *account;
   TpTestAccountManager *account_manager;
+  GList *accounts;
+};
+
+typedef struct
+{
+  TpTestAccount *account;
   TpBaseConnection *conn;
   gchar *bus_name;
   gchar *object_path;
-};
+} AccountData;
 
 G_DEFINE_TYPE (TpTestBackend, tp_test_backend, G_TYPE_OBJECT)
 
@@ -58,6 +63,14 @@ tp_test_backend_init (TpTestBackend *self)
 static void
 tp_test_backend_finalize (GObject *object)
 {
+  TpTestBackendPrivate *priv = TP_TEST_BACKEND (object)->priv;
+  GList *l;
+
+  for (l = priv->accounts; l != NULL; l = l->next)
+    {
+      tp_test_backend_remove_account (TP_TEST_BACKEND (object), l->data);
+    }
+
   tp_test_backend_tear_down (TP_TEST_BACKEND (object));
   G_OBJECT_CLASS (tp_test_backend_parent_class)->finalize (object);
 }
@@ -73,7 +86,7 @@ tp_test_backend_get_property (GObject *object,
   switch (property_id)
     {
     case PROP_CONNECTION:
-      g_value_set_object (value, self->priv->conn);
+      g_value_set_object (value, tp_test_backend_get_connection (self));
       break;
 
     default:
@@ -141,9 +154,6 @@ void
 tp_test_backend_set_up (TpTestBackend *self)
 {
   TpTestBackendPrivate *priv = self->priv;
-  TpHandleRepoIface *handle_repo;
-  TpHandle self_handle;
-  gchar *object_path;
   GError *error = NULL;
 
   /* Override the handler set in the general Folks.TestCase class */
@@ -153,39 +163,6 @@ tp_test_backend_set_up (TpTestBackend *self)
   priv->daemon = tp_dbus_daemon_dup (&error);
   if (error != NULL)
     g_error ("Couldn't get D-Bus daemon: %s", error->message);
-
-  /* Set up a contact list connection */
-  priv->conn =
-      TP_BASE_CONNECTION (tp_test_contact_list_connection_new ("me@example.com",
-          "protocol", 0, 0));
-
-  tp_base_connection_register (priv->conn, "cm", &priv->bus_name,
-      &priv->object_path, &error);
-  if (error != NULL)
-    {
-      g_error ("Failed to register connection %p: %s", priv->conn,
-          error->message);
-    }
-
-  handle_repo = tp_base_connection_get_handles (priv->conn,
-      TP_HANDLE_TYPE_CONTACT);
-  self_handle = tp_handle_ensure (handle_repo, "me@example.com", NULL, &error);
-  if (error != NULL)
-    {
-      g_error ("Couldn't ensure self handle '%s': %s", "me@example.com",
-              error->message);
-    }
-
-  tp_base_connection_set_self_handle (priv->conn, self_handle);
-  tp_base_connection_change_status (priv->conn,
-      TP_CONNECTION_STATUS_CONNECTED, TP_CONNECTION_STATUS_REASON_REQUESTED);
-
-  /* Create an account */
-  priv->account = tp_test_account_new (priv->object_path);
-  object_path =
-      g_strdup_printf ("%scm/protocol/account", TP_ACCOUNT_OBJECT_PATH_BASE);
-  tp_dbus_daemon_register_object (priv->daemon, object_path, priv->account);
-  g_free (object_path);
 
   /* Create an account manager */
   tp_dbus_daemon_request_name (priv->daemon, TP_ACCOUNT_MANAGER_BUS_NAME, FALSE,
@@ -201,14 +178,105 @@ tp_test_backend_set_up (TpTestBackend *self)
       priv->account_manager);
 }
 
+/**
+ * tp_test_backend_add_account:
+ * @self:
+ * @protocol_name:
+ * @user_id:
+ * @connection_manager_name:
+ * @account_name:
+ *
+ * Return value: (transfer none):
+ */
+gpointer
+tp_test_backend_add_account (TpTestBackend *self,
+    const gchar *protocol_name,
+    const gchar *user_id,
+    const gchar *connection_manager_name,
+    const gchar *account_name)
+{
+  TpTestBackendPrivate *priv = self->priv;
+  TpHandleRepoIface *handle_repo;
+  TpHandle self_handle;
+  gchar *object_path;
+  AccountData *data;
+  GError *error = NULL;
+
+  data = g_slice_new (AccountData);
+
+  /* Set up a contact list connection */
+  data->conn =
+      TP_BASE_CONNECTION (tp_test_contact_list_connection_new (user_id,
+          protocol_name, 0, 0));
+
+  tp_base_connection_register (data->conn, connection_manager_name,
+      &data->bus_name, &data->object_path, &error);
+  if (error != NULL)
+    {
+      g_error ("Failed to register connection %p: %s", data->conn,
+          error->message);
+    }
+
+  handle_repo = tp_base_connection_get_handles (data->conn,
+      TP_HANDLE_TYPE_CONTACT);
+  self_handle = tp_handle_ensure (handle_repo, user_id, NULL, &error);
+  if (error != NULL)
+    {
+      g_error ("Couldn't ensure self handle '%s': %s", user_id, error->message);
+    }
+
+  tp_base_connection_set_self_handle (data->conn, self_handle);
+  tp_base_connection_change_status (data->conn,
+      TP_CONNECTION_STATUS_CONNECTED, TP_CONNECTION_STATUS_REASON_REQUESTED);
+
+  /* Create an account */
+  data->account = tp_test_account_new (data->object_path);
+  object_path =
+      g_strdup_printf ("%s%s/%s/%s", TP_ACCOUNT_OBJECT_PATH_BASE,
+          connection_manager_name, protocol_name, account_name);
+  tp_dbus_daemon_register_object (priv->daemon, object_path, data->account);
+  g_free (object_path);
+
+  /* Add the account to the list of accounts and return a handle to it */
+  priv->accounts = g_list_prepend (priv->accounts, data);
+
+  return data;
+}
+
+void
+tp_test_backend_remove_account (TpTestBackend *self,
+    gpointer handle)
+{
+  TpTestBackendPrivate *priv = self->priv;
+  AccountData *data;
+
+  if (g_list_find (priv->accounts, handle) == NULL)
+    {
+      return;
+    }
+
+  /* Remove the account from the list of accounts */
+  priv->accounts = g_list_remove (priv->accounts, handle);
+  data = (AccountData *) handle;
+
+  /* Disconnect it */
+  tp_base_connection_change_status (data->conn,
+      TP_CONNECTION_STATUS_DISCONNECTED, TP_CONNECTION_STATUS_REASON_REQUESTED);
+
+  tp_dbus_daemon_unregister_object (priv->daemon, data->account);
+  tp_clear_object (&data->account);
+
+  tp_clear_object (&data->conn);
+
+  g_free (data->bus_name);
+  g_free (data->object_path);
+}
+
 void
 tp_test_backend_tear_down (TpTestBackend *self)
 {
   TpTestBackendPrivate *priv = self->priv;
   GError *error = NULL;
-
-  tp_base_connection_change_status (priv->conn,
-      TP_CONNECTION_STATUS_DISCONNECTED, TP_CONNECTION_STATUS_REASON_REQUESTED);
 
   tp_dbus_daemon_unregister_object (priv->daemon, priv->account_manager);
   tp_clear_object (&priv->account_manager);
@@ -221,15 +289,7 @@ tp_test_backend_tear_down (TpTestBackend *self)
           TP_ACCOUNT_MANAGER_BUS_NAME, error->message);
     }
 
-  tp_dbus_daemon_unregister_object (priv->daemon, priv->account);
-  tp_clear_object (&priv->account);
-
-  tp_clear_object (&priv->conn);
   tp_clear_object (&priv->daemon);
-  g_free (priv->bus_name);
-  priv->bus_name = NULL;
-  g_free (priv->object_path);
-  priv->object_path = NULL;
 }
 
 /**
@@ -241,7 +301,15 @@ tp_test_backend_tear_down (TpTestBackend *self)
 TpTestContactListConnection *
 tp_test_backend_get_connection (TpTestBackend *self)
 {
+  AccountData *data;
+
   g_return_val_if_fail (TP_TEST_IS_BACKEND (self), NULL);
 
-  return TP_TEST_CONTACT_LIST_CONNECTION (self->priv->conn);
+  if (self->priv->accounts == NULL)
+    {
+      return NULL;
+    }
+
+  data = (AccountData *) self->priv->accounts->data;
+  return TP_TEST_CONTACT_LIST_CONNECTION (data->conn);
 }
