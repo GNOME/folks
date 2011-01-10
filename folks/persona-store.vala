@@ -91,6 +91,13 @@ public errordomain Folks.PersonaStoreError
    * @since 0.3.0
    */
   STORE_OFFLINE,
+
+  /**
+   * The {@link PersonaStore} doesn't support write operations.
+   *
+   * @since 0.3.4
+   */
+  READ_ONLY,
 }
 
 /**
