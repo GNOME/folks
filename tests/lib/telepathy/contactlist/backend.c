@@ -235,6 +235,10 @@ tp_test_backend_add_account (TpTestBackend *self,
       g_strdup_printf ("%s%s/%s/%s", TP_ACCOUNT_OBJECT_PATH_BASE,
           connection_manager_name, protocol_name, account_name);
   tp_dbus_daemon_register_object (priv->daemon, object_path, data->account);
+
+  /* Add the account to the account manager */
+  tp_test_account_manager_add_account (priv->account_manager, object_path);
+
   g_free (object_path);
 
   /* Add the account to the list of accounts and return a handle to it */
@@ -258,6 +262,10 @@ tp_test_backend_remove_account (TpTestBackend *self,
   /* Remove the account from the list of accounts */
   priv->accounts = g_list_remove (priv->accounts, handle);
   data = (AccountData *) handle;
+
+  /* Remove the account from the account manager */
+  tp_test_account_manager_remove_account (priv->account_manager,
+      data->object_path);
 
   /* Disconnect it */
   tp_base_connection_change_status (data->conn,

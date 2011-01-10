@@ -13,6 +13,7 @@ Bugs fixed:
 * Bug 638609 — libfolks hard-codes backend names for debugging
 * Bug 639195 — Print stack traces for failed tests to improve remote
   debugging
+* Bug 639113 — Add static aggregation tests
 
 Overview of changes from libfolks 0.3.2 to libfolks 0.3.3
 =========================================================
