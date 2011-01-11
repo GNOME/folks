@@ -97,6 +97,14 @@ AC_ARG_ENABLE([vala],
 # will be re-set as necessary below
 AM_CONDITIONAL([HAVE_INTROSPECTION], [test "x$enable_vala" = "xyes"])
 sd=${srcdir}/
+
+# Force Vala for non-release builds
+m4_if(folks_released, [1], [],
+    [
+        enable_vala=yes
+        echo "Vala compiler required for non-release builds; requiring Vala..."
+    ])
+
 # Force Vala if generated source is missing or outdated
 if test \
         ! -e ${sd}tools/folks_import_vala.stamp -o \
