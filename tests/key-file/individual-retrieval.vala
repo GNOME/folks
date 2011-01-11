@@ -34,14 +34,6 @@ public class IndividualRetrievalTests : Folks.TestCase
           "__alias=Bar McBadgerson\n" +
           "jabber=bar@jabber.org\n");
 
-      /* Ignore the error caused by not running the logger */
-      Test.log_set_fatal_handler ((d, l, m) =>
-        {
-          return !m.has_suffix ("couldn't get list of favourite individuals: " +
-              "The name org.freedesktop.Telepathy.Logger was not provided by " +
-              "any .service files");
-        });
-
       /* Create a set of the individuals we expect to see */
       HashSet<string> expected_individuals = new HashSet<string> (str_hash,
           str_equal);
@@ -90,14 +82,6 @@ public class IndividualRetrievalTests : Folks.TestCase
           "[0]\n" +
           "__alias=Brian Briansson\n" +
           "msn=foo@hotmail.com\n");
-
-      /* Ignore the error caused by not running the logger */
-      Test.log_set_fatal_handler ((d, l, m) =>
-        {
-          return !m.has_suffix ("couldn't get list of favourite individuals: " +
-              "The name org.freedesktop.Telepathy.Logger was not provided by " +
-              "any .service files");
-        });
 
       /* Set up the aggregator */
       var aggregator = new IndividualAggregator ();
