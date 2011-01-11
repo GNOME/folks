@@ -701,7 +701,9 @@ public class Folks.IndividualAggregator : Object
           debug ("Individual '%s' removed (not replaced)", i.id);
         }
 
-      this.individuals_changed (null, i_list, null, null, 0);
+      /* If the individual has 0 personas, we've already signaled removal */
+      if (i.personas.length () > 0)
+        this.individuals_changed (null, i_list, null, null, 0);
       this.individuals.remove (i.id);
     }
 
