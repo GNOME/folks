@@ -68,8 +68,25 @@ public abstract class Folks.TestCase : Object {
 		}
 
 		public void set_up (void* fixture) {
+			Log.set_default_handler (this._log_func_stack_trace);
+
 			this.test_case.set_up ();
 		}
+
+		private void _log_func_stack_trace (string? log_domain,
+				LogLevelFlags log_levels,
+				string message) {
+			Log.default_handler (log_domain, log_levels, message);
+
+			/* Print a stack trace for any message at the warning level or above */
+			if ((log_levels &
+					(LogLevelFlags.LEVEL_WARNING | LogLevelFlags.LEVEL_ERROR |
+							LogLevelFlags.LEVEL_CRITICAL))
+					!= 0) {
+					GLib.on_error_stack_trace ("libtool --mode=execute gdb");
+				}
+		}
+
 
 		public void run (void* fixture) {
 			this.test ();
