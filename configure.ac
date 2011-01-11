@@ -100,6 +100,8 @@ sd=${srcdir}/
 # Force Vala if generated source is missing or outdated
 if test \
         ! -e ${sd}tools/folks_import_vala.stamp -o \
+        ! -e ${sd}tests/folks/aggregation_vala.stamp -o \
+        ! -e ${sd}tests/folks/backend_loading_vala.stamp -o \
         ! -e ${sd}tests/key-file/individual_retrieval_vala.stamp -o \
         ! -e ${sd}tests/lib/folks-test.vapi -o \
         ! -e ${sd}tests/lib/key-file/kf-test.vapi -o \
