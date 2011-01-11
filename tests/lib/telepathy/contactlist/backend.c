@@ -124,9 +124,17 @@ _log_fatal_handler (const char *domain,
    const char *message,
    gpointer user_data)
 {
-  return !g_str_has_suffix (message,
+  gboolean fatal;
+
+  /* Ignore the error caused by not running the logger */
+  fatal = !g_str_has_suffix (message,
       "The name org.freedesktop.Telepathy.Logger was not provided by any "
       ".service files");
+
+  if (fatal)
+    g_on_error_stack_trace ("libtool --mode=exec gdb");
+
+  return fatal;
 }
 
 void
@@ -138,7 +146,8 @@ tp_test_backend_set_up (TpTestBackend *self)
   gchar *object_path;
   GError *error = NULL;
 
-  /* Ignore the error caused by not running the logger */
+  /* Override the handler set in the general Folks.TestCase class */
+  g_log_set_default_handler (g_log_default_handler, NULL);
   g_test_log_set_fatal_handler (_log_fatal_handler, NULL);
 
   priv->daemon = tp_dbus_daemon_dup (&error);
