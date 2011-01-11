@@ -118,6 +118,17 @@ tp_test_backend_new (void)
   return g_object_new (TP_TEST_TYPE_BACKEND, NULL);
 }
 
+static gboolean
+_log_fatal_handler (const char *domain,
+   GLogLevelFlags flags,
+   const char *message,
+   gpointer user_data)
+{
+  return !g_str_has_suffix (message,
+      "The name org.freedesktop.Telepathy.Logger was not provided by any "
+      ".service files");
+}
+
 void
 tp_test_backend_set_up (TpTestBackend *self)
 {
@@ -126,6 +137,9 @@ tp_test_backend_set_up (TpTestBackend *self)
   TpHandle self_handle;
   gchar *object_path;
   GError *error = NULL;
+
+  /* Ignore the error caused by not running the logger */
+  g_test_log_set_fatal_handler (_log_fatal_handler, NULL);
 
   priv->daemon = tp_dbus_daemon_dup (&error);
   if (error != NULL)

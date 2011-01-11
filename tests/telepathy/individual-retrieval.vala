@@ -48,13 +48,6 @@ public class IndividualRetrievalTests : Folks.TestCase
     {
       var main_loop = new GLib.MainLoop (null, false);
 
-      /* Ignore the error caused by not running the logger */
-      Test.log_set_fatal_handler ((d, l, m) =>
-        {
-          return !m.has_suffix ("The name org.freedesktop.Telepathy.Logger " +
-              "was not provided by any .service files");
-        });
-
       /* work on a copy so we can mangle it */
       HashSet<string> expected_individuals = new HashSet<string> ();
       foreach (var id in this.default_individuals)
@@ -110,13 +103,6 @@ public class IndividualRetrievalTests : Folks.TestCase
   public void test_aggregator_add ()
     {
       var main_loop = new GLib.MainLoop (null, false);
-
-      /* Ignore the error caused by not running the logger */
-      Test.log_set_fatal_handler ((d, l, m) =>
-        {
-          return !m.has_suffix ("The name org.freedesktop.Telepathy.Logger " +
-              "was not provided by any .service files");
-        });
 
       HashSet<string> added_individuals = new HashSet<string> ();
       added_individuals.add ("master.shake@example.com");

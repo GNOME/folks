@@ -36,13 +36,6 @@ public class PersonaStoreCapabilitiesTests : Folks.TestCase
     {
       var main_loop = new GLib.MainLoop (null, false);
 
-      /* Ignore the error caused by not running the logger */
-      Test.log_set_fatal_handler ((d, l, m) =>
-        {
-          return !m.has_suffix ("The name org.freedesktop.Telepathy.Logger " +
-              "was not provided by any .service files");
-        });
-
       var backend_store = BackendStore.dup ();
       backend_store.backend_available.connect ((b) =>
           {

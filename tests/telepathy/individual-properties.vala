@@ -38,13 +38,6 @@ public class IndividualPropertiesTests : Folks.TestCase
     {
       var main_loop = new GLib.MainLoop (null, false);
 
-      /* Ignore the error caused by not running the logger */
-      Test.log_set_fatal_handler ((d, l, m) =>
-        {
-          return !m.has_suffix ("The name org.freedesktop.Telepathy.Logger " +
-              "was not provided by any .service files");
-        });
-
       /* Set up the aggregator */
       var aggregator = new IndividualAggregator ();
       aggregator.individuals_changed.connect ((added, removed, m, a, r) =>
@@ -92,13 +85,6 @@ public class IndividualPropertiesTests : Folks.TestCase
     {
       var main_loop = new GLib.MainLoop (null, false);
       var alias_notified = false;
-
-      /* Ignore the error caused by not running the logger */
-      Test.log_set_fatal_handler ((d, l, m) =>
-        {
-          return !m.has_suffix ("The name org.freedesktop.Telepathy.Logger " +
-              "was not provided by any .service files");
-        });
 
       /* Set up the aggregator */
       var aggregator = new IndividualAggregator ();
@@ -162,13 +148,6 @@ public class IndividualPropertiesTests : Folks.TestCase
     {
       var main_loop = new GLib.MainLoop (null, false);
       var alias_notified = false;
-
-      /* Ignore the error caused by not running the logger */
-      Test.log_set_fatal_handler ((d, l, m) =>
-        {
-          return !m.has_suffix ("The name org.freedesktop.Telepathy.Logger " +
-              "was not provided by any .service files");
-        });
 
       /* Set up the aggregator */
       var aggregator = new IndividualAggregator ();
