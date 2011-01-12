@@ -10,6 +10,7 @@ public class IndividualPropertiesTests : Folks.TestCase
   private TpTest.Backend tp_backend;
   private void* _account_handle;
   private string individual_id_prefix = "telepathy:protocol:";
+  private int _test_timeout = 3;
 
   public IndividualPropertiesTests ()
     {
@@ -23,6 +24,9 @@ public class IndividualPropertiesTests : Folks.TestCase
           this.test_individual_properties_change_alias_through_tp_backend);
       this.add_test ("individual properties:change alias through test cm",
           this.test_individual_properties_change_alias_through_test_cm);
+
+      if (Environment.get_variable ("FOLKS_TEST_VALGRIND") != null)
+          this._test_timeout = 10;
     }
 
   public override void set_up ()
@@ -73,7 +77,7 @@ public class IndividualPropertiesTests : Folks.TestCase
       /* Kill the main loop after a few seconds. If there are still individuals
        * in the set of expected individuals, the aggregator has either failed
        * or been too slow (which we can consider to be failure). */
-      Timeout.add_seconds (3, () =>
+      Timeout.add_seconds (this._test_timeout, () =>
         {
           main_loop.quit ();
           return false;
@@ -134,7 +138,7 @@ public class IndividualPropertiesTests : Folks.TestCase
       /* Kill the main loop after a few seconds. If the alias hasn't been
        * notified, something along the way failed or been too slow (which we can
        * consider to be failure). */
-      Timeout.add_seconds (3, () =>
+      Timeout.add_seconds (this._test_timeout, () =>
         {
           main_loop.quit ();
           return false;
@@ -198,7 +202,7 @@ public class IndividualPropertiesTests : Folks.TestCase
       /* Kill the main loop after a few seconds. If the alias hasn't been
        * notified, something along the way failed or been too slow (which we can
        * consider to be failure). */
-      Timeout.add_seconds (3, () =>
+      Timeout.add_seconds (this._test_timeout, () =>
         {
           main_loop.quit ();
           return false;

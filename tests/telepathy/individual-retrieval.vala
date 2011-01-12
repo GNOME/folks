@@ -11,6 +11,7 @@ public class IndividualRetrievalTests : Folks.TestCase
   private void* _account_handle;
   private HashSet<string> default_individuals;
   private string individual_id_prefix = "telepathy:protocol:";
+  private int _test_timeout = 3;
 
   public IndividualRetrievalTests ()
     {
@@ -33,6 +34,9 @@ public class IndividualRetrievalTests : Folks.TestCase
 
       this.add_test ("aggregator", this.test_aggregator);
       this.add_test ("aggregator:add", this.test_aggregator_add);
+
+      if (Environment.get_variable ("FOLKS_TEST_VALGRIND") != null)
+          this._test_timeout = 10;
     }
 
   public override void set_up ()
@@ -70,7 +74,7 @@ public class IndividualRetrievalTests : Folks.TestCase
       /* Kill the main loop after a few seconds. If there are still individuals
        * in the set of expected individuals, the aggregator has either failed or
        * been too slow (which we can consider to be failure). */
-      Timeout.add_seconds (3, () =>
+      Timeout.add_seconds (this._test_timeout, () =>
         {
           main_loop.quit ();
           return false;
@@ -140,7 +144,7 @@ public class IndividualRetrievalTests : Folks.TestCase
       /* Kill the main loop after a few seconds. If there are still individuals
        * in the set of expected individuals, the aggregator has either failed or
        * been too slow (which we can consider to be failure). */
-      Timeout.add_seconds (3, () =>
+      Timeout.add_seconds (this._test_timeout, () =>
         {
           main_loop.quit ();
           return false;

@@ -5,6 +5,7 @@ using KfTest;
 public class IndividualRetrievalTests : Folks.TestCase
 {
   private KfTest.Backend kf_backend;
+  private int _test_timeout = 3;
 
   public IndividualRetrievalTests ()
     {
@@ -14,6 +15,9 @@ public class IndividualRetrievalTests : Folks.TestCase
 
       this.add_test ("singleton individuals", this.test_singleton_individuals);
       this.add_test ("aliases", this.test_aliases);
+
+      if (Environment.get_variable ("FOLKS_TEST_VALGRIND") != null)
+          this._test_timeout = 10;
     }
 
   public override void set_up ()
@@ -61,7 +65,7 @@ public class IndividualRetrievalTests : Folks.TestCase
       /* Kill the main loop after a few seconds. If there are still individuals
        * in the set of expected individuals, the aggregator has either failed
        * or been too slow (which we can consider to be failure). */
-      Timeout.add_seconds (3, () =>
+      Timeout.add_seconds (this._test_timeout, () =>
         {
           main_loop.quit ();
           return false;
@@ -101,7 +105,7 @@ public class IndividualRetrievalTests : Folks.TestCase
       /* Kill the main loop after a few seconds. If there are still individuals
        * in the set of expected individuals, the aggregator has either failed
        * or been too slow (which we can consider to be failure). */
-      Timeout.add_seconds (3, () =>
+      Timeout.add_seconds (this._test_timeout, () =>
         {
           main_loop.quit ();
           return false;

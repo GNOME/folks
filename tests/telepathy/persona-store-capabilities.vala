@@ -10,6 +10,7 @@ public class PersonaStoreCapabilitiesTests : Folks.TestCase
   private TpTest.Backend tp_backend;
   private void* _account_handle;
   private HashSet<string> group_flags_received;
+  private int _test_timeout = 3;
 
   public PersonaStoreCapabilitiesTests ()
     {
@@ -19,6 +20,9 @@ public class PersonaStoreCapabilitiesTests : Folks.TestCase
 
       this.add_test ("persona store capabilities",
           this.test_persona_store_capabilities);
+
+      if (Environment.get_variable ("FOLKS_TEST_VALGRIND") != null)
+          this._test_timeout = 10;
     }
 
   public override void set_up ()
@@ -61,7 +65,7 @@ public class PersonaStoreCapabilitiesTests : Folks.TestCase
 
       backend_store.load_backends ();
 
-      Timeout.add_seconds (3, () =>
+      Timeout.add_seconds (this._test_timeout, () =>
         {
           main_loop.quit ();
           return false;

@@ -8,6 +8,7 @@ public class AggregationTests : Folks.TestCase
   private TpTest.Backend _tp_backend;
   private HashSet<string> _default_individuals;
   private string _individual_id_prefix = "telepathy:protocol:";
+  private int _test_timeout = 3;
 
   public AggregationTests ()
     {
@@ -36,6 +37,9 @@ public class AggregationTests : Folks.TestCase
           this.test_linkable_properties_different_stores);
       this.add_test ("user", this.test_user);
       this.add_test ("untrusted store", this.test_untrusted_store);
+
+      if (Environment.get_variable ("FOLKS_TEST_VALGRIND") != null)
+          this._test_timeout = 10;
     }
 
   public override void set_up ()
@@ -114,7 +118,7 @@ public class AggregationTests : Folks.TestCase
       /* Kill the main loop after a few seconds. If there are still individuals
        * in the set of expected individuals, the aggregator has either failed or
        * been too slow (which we can consider to be failure). */
-      Timeout.add_seconds (3, () =>
+      Timeout.add_seconds (this._test_timeout, () =>
         {
           main_loop.quit ();
           return false;
@@ -231,7 +235,7 @@ public class AggregationTests : Folks.TestCase
       /* Kill the main loop after a few seconds. If there are still individuals
        * in the set of expected individuals, the aggregator has either failed or
        * been too slow (which we can consider to be failure). */
-      Timeout.add_seconds (3, () =>
+      Timeout.add_seconds (this._test_timeout, () =>
         {
           main_loop.quit ();
           return false;
@@ -404,7 +408,7 @@ public class AggregationTests : Folks.TestCase
       /* Kill the main loop after a few seconds. If there are still individuals
        * in the set of expected individuals, the aggregator has either failed or
        * been too slow (which we can consider to be failure). */
-      Timeout.add_seconds (3, () =>
+      Timeout.add_seconds (this._test_timeout, () =>
         {
           main_loop.quit ();
           return false;
@@ -519,7 +523,7 @@ public class AggregationTests : Folks.TestCase
       /* Kill the main loop after a few seconds. If there are still individuals
        * in the set of expected individuals, the aggregator has either failed or
        * been too slow (which we can consider to be failure). */
-      Timeout.add_seconds (3, () =>
+      Timeout.add_seconds (this._test_timeout, () =>
         {
           main_loop.quit ();
           return false;
@@ -605,7 +609,7 @@ public class AggregationTests : Folks.TestCase
       /* Kill the main loop after a few seconds. If there are still individuals
        * in the set of expected individuals, the aggregator has either failed or
        * been too slow (which we can consider to be failure). */
-      Timeout.add_seconds (3, () =>
+      Timeout.add_seconds (this._test_timeout, () =>
         {
           main_loop.quit ();
           return false;
