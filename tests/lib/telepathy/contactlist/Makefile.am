@@ -84,8 +84,6 @@ CLEANFILES = \
 
 MAINTAINERCLEANFILES = \
 	$(BUILT_SOURCES) \
-	tp-test-contactlist.gir \
-	tp-test-contactlist.vapi \
 	$(NULL)
 
 EXTRA_DIST = \
