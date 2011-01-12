@@ -55,7 +55,8 @@ INTROSPECTION_GIRS =
 INTROSPECTION_SCANNER_ARGS = --add-include-path=$(srcdir)
 INTROSPECTION_COMPILER_ARGS = --includedir=$(srcdir)
 
-tp-test-contactlist.gir: libtp-test-contactlist.la
+tp-test-contactlist.gir: $(libtp_test_contactlist_la_SOURCES)
+	$(MAKE) $(AM_MAKEFLAGS) libtp-test-contactlist.la
 tp_test_contactlist_gir_INCLUDES = GObject-2.0 TelepathyGLib-0.12
 tp_test_contactlist_gir_CFLAGS = $(TP_GLIB_CFLAGS)
 tp_test_contactlist_gir_LIBS = libtp-test-contactlist.la
@@ -64,6 +65,7 @@ tp_test_contactlist_gir_NAMESPACE = TpTest
 INTROSPECTION_GIRS += tp-test-contactlist.gir
 
 tp-test-contactlist.vapi: tp-test-contactlist.gir
+	$(MAKE) $(AM_MAKEFLAGS) tp-test-contactlist.gir
 	$(AM_V_GEN)$(VAPIGEN) $(VAPIGENFLAGS) --library tp-test-contactlist \
 		tp-test-contactlist.gir
 	touch $@
