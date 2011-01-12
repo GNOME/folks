@@ -1,5 +1,7 @@
 SUBDIRS = lib
 
+BACKEND_NAME = "telepathy"
+
 AM_CPPFLAGS = \
 	-I$(top_srcdir)/folks \
 	-I$(top_srcdir)/backends/telepathy/lib \
@@ -57,5 +59,4 @@ GITIGNOREFILES = \
 	libfolks_backend_telepathy_la_vala.stamp \
 	$(NULL)
 
--include backend.mk
 -include $(top_srcdir)/git.mk

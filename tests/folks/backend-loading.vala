@@ -66,6 +66,7 @@ public class BackendLoadingTests : Folks.TestCase
               store.enabled_backends.foreach ((i) =>
                 {
                   var backend = (Backend) i;
+
                   assert (backends_expected.contains (backend.name));
                   backends_expected.remove (backend.name);
                 });

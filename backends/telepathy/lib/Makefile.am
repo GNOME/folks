@@ -1,3 +1,5 @@
+BACKEND_NAME = "telepathy"
+
 AM_CPPFLAGS = \
 	-I$(top_srcdir)/folks \
 	-include $(CONFIG_HEADER) \
@@ -84,6 +86,11 @@ pkgconfig_DATA = $(pkgconfig_in:.in=)
 
 libfolks_telepathy_la_vala.stamp: tp-lowlevel.vapi
 
+BUILT_SOURCES = \
+	tp-lowlevel.gir \
+	tp-lowlevel.vapi \
+	$(NULL)
+
 folks_telepathy_valasources = \
 	tpf-persona.vala \
 	tpf-persona-store.vala \
@@ -160,8 +167,7 @@ MAINTAINERCLEANFILES = \
 	libtp_lowlevel_la_vala.stamp \
 	folks-telepathy.h \
 	folks-telepathy.vapi \
-	tp-lowlevel.gir \
-	tp-lowlevel.vapi \
+	$(BUILT_SOURCES) \
 	$(NULL)
 
 EXTRA_DIST = \
@@ -175,5 +181,4 @@ EXTRA_DIST = \
 # a Vala library during distcheck otherwise
 noinst_HEADERS = $(tp_lowlevel_headers)
 
--include ../backend.mk
 -include $(top_srcdir)/git.mk
