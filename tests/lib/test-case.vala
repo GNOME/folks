@@ -68,9 +68,18 @@ public abstract class Folks.TestCase : Object {
 		}
 
 		public void set_up (void* fixture) {
+			GLib.set_printerr_handler ((PrintFunc) this._printerr_func_stack_trace);
 			Log.set_default_handler (this._log_func_stack_trace);
 
 			this.test_case.set_up ();
+		}
+
+		private void _printerr_func_stack_trace (string? text) {
+			if (text != null)
+				stderr.printf (text);
+
+			/* Print a stack trace since we've hit some major issue */
+			GLib.on_error_stack_trace ("libtool --mode=execute gdb");
 		}
 
 		private void _log_func_stack_trace (string? log_domain,
