@@ -58,8 +58,8 @@ INTROSPECTION_SCANNER_ARGS = \
 INTROSPECTION_COMPILER_ARGS = --includedir=$(srcdir)
 CLEANFILES =
 
-tp-lowlevel.gir: $(libtp_lowlevel_la_SOURCES) $(tp_lowlevel_headers)
-	$(MAKE) $(AM_MAKEFLAGS) libtp-lowlevel.la
+tp-lowlevel.gir: $(libtp_lowlevel_la_SOURCES) $(tp_lowlevel_headers) \
+	libtp-lowlevel.la
 tp_lowlevel_gir_INCLUDES = GObject-2.0 TelepathyGLib-0.12
 tp_lowlevel_gir_CFLAGS = $(TP_GLIB_CFLAGS)
 tp_lowlevel_gir_LIBS = libtp-lowlevel.la
