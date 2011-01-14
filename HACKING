@@ -106,3 +106,13 @@ Vala-specific rules
     package symbols like 'package_name.symbol'.
 
     This makes scope immediately clear, helping readability.
+
+Build health
+============
+
+1.  Before pushing commits to the mainline branch, the final commit in the
+    series must successfully build and pass 'make check' consistently.
+
+2.  After commits have been pushed to mainline, all buildbots must successfully
+    build and pass 'make check' on their next build of Folks. It's up to the
+    committer to ensure this requirement is met and make necessary changes.
