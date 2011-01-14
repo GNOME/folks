@@ -44,10 +44,10 @@ public class Folks.BackendStore : Object {
   /* this contains all backends, regardless of enabled or prepared state */
   private HashMap<string,Backend> _backend_hash;
   private HashMap<string,Backend> _prepared_backends;
-  private File config_file;
-  private GLib.KeyFile backends_key_file;
-  private HashMap<string,unowned Module> modules;
-  private static weak BackendStore instance;
+  private File _config_file;
+  private GLib.KeyFile _backends_key_file;
+  private HashMap<string,unowned Module> _modules;
+  private static weak BackendStore _instance;
   private bool _is_prepared = false;
   private Debug _debug;
 
@@ -107,16 +107,16 @@ public class Folks.BackendStore : Object {
    */
   public static BackendStore dup ()
     {
-      if (instance == null)
+      if (_instance == null)
         {
           /* use an intermediate variable to force a strong reference */
           var new_instance = new BackendStore ();
-          instance = new_instance;
+          _instance = new_instance;
 
           return new_instance;
         }
 
-      return instance;
+      return _instance;
     }
 
   private BackendStore ()
@@ -127,7 +127,7 @@ public class Folks.BackendStore : Object {
       /* register the core debug messages */
       this._debug._register_domain (G_LOG_DOMAIN);
 
-      this.modules = new HashMap<string,unowned Module> (str_hash, str_equal);
+      this._modules = new HashMap<string,unowned Module> (str_hash, str_equal);
       this._backend_hash = new HashMap<string,Backend> (str_hash, str_equal);
       this._prepared_backends = new HashMap<string,Backend> (str_hash,
           str_equal);
@@ -136,7 +136,7 @@ public class Folks.BackendStore : Object {
   ~BackendStore ()
     {
       /* Finalize all the loaded modules that have finalize functions */
-      foreach (var module in this.modules.values)
+      foreach (var module in this._modules.values)
         {
           void* func;
           if (module.symbol ("module_finalize", out func))
@@ -147,7 +147,7 @@ public class Folks.BackendStore : Object {
         }
 
       /* manually clear the singleton instance */
-      instance = null;
+      _instance = null;
     }
 
   /**
@@ -322,7 +322,7 @@ public class Folks.BackendStore : Object {
       var enabled = true;
       try
         {
-          enabled = this.backends_key_file.get_boolean (name, "enabled");
+          enabled = this._backends_key_file.get_boolean (name, "enabled");
         }
       catch (KeyFileError e)
         {
@@ -372,7 +372,7 @@ public class Folks.BackendStore : Object {
    */
   public async void enable_backend (string name)
     {
-      this.backends_key_file.set_boolean (name, "enabled", true);
+      this._backends_key_file.set_boolean (name, "enabled", true);
       yield this._save_key_file ();
     }
 
@@ -388,7 +388,7 @@ public class Folks.BackendStore : Object {
    */
   public async void disable_backend (string name)
     {
-      this.backends_key_file.set_boolean (name, "enabled", false);
+      this._backends_key_file.set_boolean (name, "enabled", false);
       yield this._save_key_file ();
     }
 
@@ -468,7 +468,7 @@ public class Folks.BackendStore : Object {
     {
       var file_path = file.get_path ();
 
-      if (this.modules.has_key (file_path))
+      if (this._modules.has_key (file_path))
         return;
 
       Module module = Module.open (file_path, ModuleFlags.BIND_LOCAL);
@@ -502,7 +502,7 @@ public class Folks.BackendStore : Object {
       ModuleInitFunc module_init = (ModuleInitFunc) function;
       assert (module_init != null);
 
-      this.modules.set (file_path, module);
+      this._modules.set (file_path, module);
 
       /* We don't want our modules to ever unload */
       module.make_resident ();
@@ -572,10 +572,10 @@ public class Folks.BackendStore : Object {
               "key file.", path);
         }
 
-      this.config_file = file;
+      this._config_file = file;
 
       /* Load the disabled backends file */
-      this.backends_key_file = new GLib.KeyFile ();
+      this._backends_key_file = new GLib.KeyFile ();
       try
         {
           string contents = null;
@@ -584,7 +584,7 @@ public class Folks.BackendStore : Object {
           yield file.load_contents_async (null, out contents, out length);
           if (length > 0)
             {
-              this.backends_key_file.load_from_data (contents, length,
+              this._backends_key_file.load_from_data (contents, length,
                   KeyFileFlags.KEEP_COMMENTS);
             }
         }
@@ -601,9 +601,9 @@ public class Folks.BackendStore : Object {
 
   private async void _save_key_file ()
     {
-      var key_file_data = this.backends_key_file.to_data ();
+      var key_file_data = this._backends_key_file.to_data ();
 
-      debug ("Saving backend key file '%s'.", this.config_file.get_path ());
+      debug ("Saving backend key file '%s'.", this._config_file.get_path ());
 
       try
         {
@@ -615,11 +615,11 @@ public class Folks.BackendStore : Object {
            * take this into account until we depend explicitly on
            * Vala >= 0.11. */
 #if VALA_0_12
-          yield this.config_file.replace_contents_async (key_file_data,
+          yield this._config_file.replace_contents_async (key_file_data,
               key_file_data.length, null, false, FileCreateFlags.PRIVATE,
               null);
 #else
-          yield this.config_file.replace_contents_async (key_file_data,
+          yield this._config_file.replace_contents_async (key_file_data,
               key_file_data.size (), null, false, FileCreateFlags.PRIVATE,
               null);
 #endif
@@ -627,7 +627,7 @@ public class Folks.BackendStore : Object {
       catch (Error e)
         {
           warning ("Could not write updated backend key file '%s': %s",
-              this.config_file.get_path (), e.message);
+              this._config_file.get_path (), e.message);
         }
     }
 }
