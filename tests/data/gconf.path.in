@@ -1,0 +1,51 @@
+# These settings set up gconf in a sandbox for our tests for a few reasons:
+#
+#  1. So we don't read or mangle the $USER's gconf settings
+#
+#  2. To have a consistent state every time we run the tests for
+#     repeatability
+#
+# Note that we still source the system settings to hopefully play nicely
+# with unusual (yet valid) set-ups. We can't source /etc/gconf/2/path directly
+# since it will pull in various config paths in $(HOME).
+#
+# This is based on the default /etc/gconf/2/path
+###########################################################################
+
+######################
+# 1. Forced settings #
+######################
+
+# Settings forced by the local administrator
+xml:readonly:/etc/gconf/gconf.xml.mandatory
+
+# Other forced sources imagined by the local administrator
+include /etc/gconf/2/local-mandatory.path
+
+#######################
+# 2. User Preferences #
+#######################
+
+# our in-tree writeable directory for these tests
+xml:readwrite:@abs_top_srcdir@/tests/data/gconf.d
+
+# mandatory path for desktop-profiles
+include $(ENV_MANDATORY_PATH)
+
+# default path for desktop-profiles
+include $(ENV_DEFAULTS_PATH)
+
+######################
+# 3. System defaults #
+######################
+
+# Other default sources imagined by the local administrator
+include /etc/gconf/2/local-defaults.path
+
+# System administrator's defaults. This source also serves as a legacy
+# source for packages not using a recent dh_gconf, or for applications
+# installed by hand.
+xml:readonly:/etc/gconf/gconf.xml.defaults
+
+# Upstream application defaults
+xml:readonly:/var/lib/gconf/defaults

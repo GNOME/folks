@@ -361,6 +361,7 @@ AC_CONFIG_FILES([
     po/Makefile.in
     tests/Makefile
     tests/data/Makefile
+    tests/data/gconf.path
     tests/folks/Makefile
     tests/key-file/Makefile
     tests/telepathy/Makefile
