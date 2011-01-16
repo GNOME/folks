@@ -36,7 +36,7 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
   /* FIXME: As described in the IMable interface, we have to use
    * GenericArray<string> here rather than just string[], as null-terminated
    * arrays aren't supported as generic types. */
-  private HashTable<string, GenericArray<string>> _im_addresses;
+  private HashTable<string, LinkedHashSet<string>> _im_addresses;
   private string _alias;
   private const string[] _linkable_properties = { "im-addresses" };
 
@@ -74,7 +74,7 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
   /**
    * {@inheritDoc}
    */
-  public HashTable<string, GenericArray<string>> im_addresses
+  public HashTable<string, LinkedHashSet<string>> im_addresses
     {
       get
         { return this._im_addresses; }
@@ -97,48 +97,42 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
 
           /* Add the new IM addresses to the key file and build a normalised
            * table of them to set as the new property value */
-          HashTable<string, GenericArray<string>> im_addresses =
-              new HashTable<string, GenericArray<string>> (str_hash, str_equal);
+          HashTable<string, LinkedHashSet<string>> im_addresses =
+              new HashTable<string, LinkedHashSet<string>> (str_hash, str_equal);
 
           value.foreach ((k, v) =>
             {
               unowned string protocol = (string) k;
-              unowned GenericArray<string?> addresses =
-                  (GenericArray<string?>) v;
-              var offset = 0;
+              unowned LinkedHashSet<string?> addresses =
+                  (LinkedHashSet<string?>) v;
+              LinkedHashSet<string> normalized_addresses =
+                  new LinkedHashSet<string> ();
 
-              for (var i = 0; i < addresses.length; i++)
+              foreach (string address in addresses)
                 {
+                  string normalized_address;
                   try
                     {
-                      addresses[i - offset] =
-                          IMable.normalise_im_address (addresses[i],
-                              protocol);
+                      normalized_address = IMable.normalise_im_address (
+                          address, protocol);
                     }
                   catch (IMableError e)
                     {
                       /* Somehow an error has crept into the user's
                        * relationships.ini. Warn of it and ignore the IM
-                       * address. We achieve this by decrementing the offset
-                       * between the index of the address being set and the
-                       * index of the address being read. */
+                       * address. */
                       warning (e.message);
-                      addresses[i - offset] = null;
-                      offset++;
+                      continue;
                     }
+
+                    normalized_addresses.add (normalized_address);
                 }
 
-              /* Nullify the last few addresses if we have a non-zero offset,
-               * as they're the gaps left by invalid addresses, which we want
-               * set_string_list() to ignore. */
-              for (; offset > 0; offset--)
-                addresses[addresses.length - offset] = null;
-
-              unowned string[] addrs = (string[]) ((PtrArray) addresses).pdata;
-              addrs.length = (int) addresses.length;
+              string[] addrs = (string[]) normalized_addresses.to_array ();
+              addrs.length = normalized_addresses.size;
 
               this._key_file.set_string_list (this.display_id, protocol, addrs);
-              im_addresses.insert (protocol, addresses);
+              im_addresses.insert (protocol, normalized_addresses);
             });
 
           this._im_addresses = im_addresses;
@@ -169,7 +163,7 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
           id);
 
       this._key_file = key_file;
-      this._im_addresses = new HashTable<string, GenericArray<string>> (
+      this._im_addresses = new HashTable<string, LinkedHashSet<string>> (
           str_hash, str_equal);
 
       /* Load the IM addresses from the key file */
@@ -192,34 +186,26 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
               var im_addresses = this._key_file.get_string_list (
                   this.display_id, protocol);
 
-              /* FIXME: We have to convert our nice efficient string[] to a
-               * GenericArray<string> because Vala doesn't like null-terminated
-               * arrays as generic types.
-               * We can take this opportunity to remove duplicates. */
-              var address_set = new HashSet<string> ();
-              var im_address_array = new GenericArray<string> ();
+              var address_set = new LinkedHashSet<string> ();
 
               foreach (var im_address in im_addresses)
                 {
+                  string address;
                   try
                     {
-                      var address = IMable.normalise_im_address (im_address,
+                      address = IMable.normalise_im_address (im_address,
                           protocol);
-
-                      if (!address_set.contains (address))
-                        {
-                          im_address_array.add (address);
-                          address_set.add (address);
-                        }
                     }
                   catch (IMableError e)
                     {
                       /* Warn of and ignore any invalid IM addresses */
                       warning (e.message);
+                      continue;
                     }
+                    address_set.add (address);
                 }
 
-              this._im_addresses.insert (protocol, im_address_array);
+              this._im_addresses.insert (protocol, address_set);
             }
         }
       catch (KeyFileError e)
@@ -247,14 +233,11 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
           this.im_addresses.foreach ((k, v) =>
             {
               unowned string protocol = (string) k;
-              unowned GenericArray<string> im_addresses =
-                  (GenericArray<string>) v;
+              unowned LinkedHashSet<string> im_addresses =
+                  (LinkedHashSet<string>) v;
 
-              im_addresses.foreach ((v) =>
-                {
-                  unowned string address = (string) v;
+              foreach (string address in im_addresses)
                   callback (protocol + ":" + address);
-                });
             });
         }
       else

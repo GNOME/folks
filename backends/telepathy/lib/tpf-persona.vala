@@ -38,7 +38,7 @@ public class Tpf.Persona : Folks.Persona,
   private HashTable<string, bool> _groups;
   private bool _is_favourite;
   private string _alias;
-  private HashTable<string, GenericArray<string>> _im_addresses;
+  private HashTable<string, LinkedHashSet<string>> _im_addresses;
   private const string[] _linkable_properties = { "im-addresses" };
 
   /* Whether we've finished being constructed; this is used to prevent
@@ -123,7 +123,7 @@ public class Tpf.Persona : Folks.Persona,
    *
    * See {@link Folks.IMable.im_addresses}.
    */
-  public HashTable<string, GenericArray<string>> im_addresses
+  public HashTable<string, LinkedHashSet<string>> im_addresses
     {
       get { return this._im_addresses; }
       private set {}
@@ -243,10 +243,10 @@ public class Tpf.Persona : Folks.Persona,
       this._is_constructed = true;
 
       /* Set our single IM address */
-      GenericArray<string> im_address_array = new GenericArray<string> ();
+      LinkedHashSet<string> im_address_set = new LinkedHashSet<string> ();
       try
         {
-          im_address_array.add (IMable.normalise_im_address (id,
+          im_address_set.add (IMable.normalise_im_address (id,
               account.get_protocol ()));
         }
       catch (IMableError e)
@@ -256,8 +256,8 @@ public class Tpf.Persona : Folks.Persona,
         }
 
       this._im_addresses =
-          new HashTable<string, GenericArray<string>> (str_hash, str_equal);
-      this._im_addresses.insert (account.get_protocol (), im_address_array);
+          new HashTable<string, LinkedHashSet<string>> (str_hash, str_equal);
+      this._im_addresses.insert (account.get_protocol (), im_address_set);
 
       /* Groups */
       this._groups = new HashTable<string, bool> (str_hash, str_equal);
