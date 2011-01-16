@@ -88,7 +88,7 @@ public class Folks.Individual : Object,
   /* The number of Personas in this Individual which have
    * Persona.is_user == true. Iff this is > 0, Individual.is_user == true. */
   private uint _persona_user_count = 0;
-  private HashTable<string, GenericArray<string>> _im_addresses;
+  private HashTable<string, LinkedHashSet<string>> _im_addresses;
 
   /**
    * The trust level of the Individual.
@@ -267,7 +267,7 @@ public class Folks.Individual : Object,
   /**
    * {@inheritDoc}
    */
-  public HashTable<string, GenericArray<string>> im_addresses
+  public HashTable<string, LinkedHashSet<string>> im_addresses
     {
       get { return this._im_addresses; }
       private set {}
@@ -372,7 +372,7 @@ public class Folks.Individual : Object,
   public Individual (GLib.List<Persona>? personas)
     {
       this._im_addresses =
-          new HashTable<string, GenericArray<string>> (str_hash, str_equal);
+          new HashTable<string, LinkedHashSet<string>> (str_hash, str_equal);
       this._persona_set = new HashSet<Persona> (null, null);
       this._stores = new HashMap<PersonaStore, uint> (null, null);
       this.personas = personas;
@@ -694,27 +694,16 @@ public class Folks.Individual : Object,
               imable.im_addresses.foreach ((k, v) =>
                 {
                   var cur_protocol = (string) k;
-                  var cur_addresses = (GenericArray<string>) v;
-                  var old_im_array = this._im_addresses.lookup (cur_protocol);
-                  var im_array = new GenericArray<string> ();
+                  var cur_addresses = (LinkedHashSet<string>) v;
+                  var im_set = this._im_addresses.lookup (cur_protocol);
 
-                  /* use a set to eliminate duplicates */
-                  var address_set = new HashSet<string> (str_hash, str_equal);
-                  if (old_im_array != null)
+                  if (im_set == null)
                     {
-                      old_im_array.foreach ((old_address) =>
-                        {
-                          address_set.add ((string) old_address);
-                        });
+                      im_set = new LinkedHashSet<string> ();
+                      this._im_addresses.insert (cur_protocol, im_set);
                     }
-                  cur_addresses.foreach ((cur_address) =>
-                    {
-                      address_set.add ((string) cur_address);
-                    });
-                  foreach (string addr in address_set)
-                    im_array.add (addr);
 
-                  this._im_addresses.insert (cur_protocol, im_array);
+                  im_set.add_all (cur_addresses);
                 });
             }
         }

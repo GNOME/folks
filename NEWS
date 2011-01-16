@@ -6,6 +6,7 @@ Major changes:
 
 API changes:
 * New type: LinkedHashSet, similar to Gee.HashSet, but ordered.
+* IMable.im_addresses is now a mapping of string to LinkedHashSet.
 
 Bugs fixed:
 * Bug 637240 — libfolks-telepathy.so exports private symbols

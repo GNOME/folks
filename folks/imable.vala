@@ -57,9 +57,9 @@ public interface Folks.IMable : Object
    * All the IM addresses must be normalised using
    * {@link IMable.normalise_im_address} before being added to this property.
    *
-   * @since 0.1.13
+   * @since 0.3.UNRELEASED
    */
-  public abstract HashTable<string, GenericArray<string>> im_addresses
+  public abstract HashTable<string, LinkedHashSet<string>> im_addresses
     {
       get; set;
     }

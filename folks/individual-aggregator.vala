@@ -878,14 +878,9 @@ public class Folks.IndividualAggregator : Object
       /* FIXME: We hardcode this to use the key-file backend for now */
       assert (this._writeable_store.type_id == "key-file");
 
-      /* `protocols_addrs_list` will be passed to the new Kf.Persona, whereas
-       * `protocols_addrs_set` is used to ensure we don't get duplicate IM
-       * addresses in the ordered set of addresses for each protocol in
-       * `protocols_addrs_list`. It's temporary. */
-      var protocols_addrs_list =
-          new HashTable<string, GenericArray<string>> (str_hash, str_equal);
+      /* `protocols_addrs_set` will be passed to the new Kf.Persona */
       var protocols_addrs_set =
-          new HashTable<string, HashSet<string>> (str_hash, str_equal);
+          new HashTable<string, LinkedHashSet<string>> (str_hash, str_equal);
 
       foreach (var persona in personas)
         {
@@ -895,37 +890,24 @@ public class Folks.IndividualAggregator : Object
           ((IMable) persona).im_addresses.foreach ((k, v) =>
             {
               unowned string protocol = (string) k;
-              unowned GenericArray<string> addresses = (GenericArray<string>) v;
+              unowned LinkedHashSet<string> addresses =
+                (LinkedHashSet<string>) v;
 
-              var address_list = protocols_addrs_list.lookup (protocol);
               var address_set = protocols_addrs_set.lookup (protocol);
 
-              if (address_list == null || address_set == null)
+              if (address_set == null)
                 {
-                  address_list = new GenericArray<string> ();
-                  address_set = new HashSet<string> ();
+                  address_set = new LinkedHashSet<string> ();
 
-                  protocols_addrs_list.insert (protocol, address_list);
                   protocols_addrs_set.insert (protocol, address_set);
                 }
 
-              addresses.foreach ((a) =>
-                {
-                  unowned string address = (string) a;
-
-                  /* Only add the IM address to the ordered set if it isn't
-                   * already a member. */
-                  if (!address_set.contains (address))
-                    {
-                      address_list.add (address);
-                      address_set.add (address);
-                    }
-                });
+              address_set.add_all (addresses);
             });
         }
 
       var addresses_value = Value (typeof (HashTable));
-      addresses_value.set_boxed (protocols_addrs_list);
+      addresses_value.set_boxed (protocols_addrs_set);
 
       var details = new HashTable<string, Value?> (str_hash, str_equal);
       details.insert ("im-addresses", addresses_value);
