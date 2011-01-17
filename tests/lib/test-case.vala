@@ -80,8 +80,10 @@ public abstract class Folks.TestCase : Object
 
       private void _printerr_func_stack_trace (string? text)
         {
-          if (text != null)
-            stderr.printf (text);
+          if (text == null || str_equal (text, ""))
+            return;
+
+          stderr.printf (text);
 
           /* Print a stack trace since we've hit some major issue */
           GLib.on_error_stack_trace ("libtool --mode=execute gdb");
