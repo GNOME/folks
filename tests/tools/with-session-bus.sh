@@ -13,6 +13,9 @@
 set -e
 
 me=with-session-bus
+if [ "x$V" = "x" ] ; then
+  V=0;
+fi
 
 dbus_daemon_args="--print-address=5 --print-pid=6 --fork"
 sleep=0
@@ -59,7 +62,10 @@ cleanup ()
 {
   pid=`head -n1 $me-$$.pid`
   if test -n "$pid" ; then
-    echo "Killing temporary bus daemon: $pid" >&2
+
+    if [ $V -gt 0 ] ; then
+      echo "Killing temporary bus daemon: $pid" >&2
+    fi
     kill -INT "$pid"
   fi
   rm -f $me-$$.address
@@ -69,15 +75,26 @@ cleanup ()
 trap cleanup INT HUP TERM
 dbus-daemon $dbus_daemon_args
 
-{ echo -n "Temporary bus daemon is "; cat $me-$$.address; } >&2
-{ echo -n "Temporary bus daemon PID is "; head -n1 $me-$$.pid; } >&2
+{
+  if [ $V -gt 0 ] ; then
+    echo -n "Temporary bus daemon is "; cat $me-$$.address;
+  fi
+} >&2
+{
+  if [ $V -gt 0 ] ; then
+    echo -n "Temporary bus daemon PID is "; head -n1 $me-$$.pid;
+  fi
+} >&2
 
 e=0
 DBUS_SESSION_BUS_ADDRESS="`cat $me-$$.address`"
 export DBUS_SESSION_BUS_ADDRESS
 
 if [ -n "$WITH_SESSION_BUS_FORK_DBUS_MONITOR" ] ; then
-  echo -n "Forking dbus-monitor $WITH_SESSION_BUS_FORK_DBUS_MONITOR_OPT" >&2
+  if [ $V -gt 0 ] ; then
+    echo -n "Forking dbus-monitor " \
+      "$WITH_SESSION_BUS_FORK_DBUS_MONITOR_OPT" >&2
+  fi
   dbus-monitor $WITH_SESSION_BUS_FORK_DBUS_MONITOR_OPT \
         > $me-$$.dbus-monitor-logs 2>&1 &
 fi
