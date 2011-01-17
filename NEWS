@@ -14,6 +14,7 @@ Bugs fixed:
 * Bug 639195 — Print stack traces for failed tests to improve remote
   debugging
 * Bug 639113 — Add static aggregation tests
+* Bug 639742 — Logger service unavailable in make check
 
 Overview of changes from libfolks 0.3.2 to libfolks 0.3.3
 =========================================================

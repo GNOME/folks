@@ -132,22 +132,38 @@ tp_test_backend_new (void)
 }
 
 static gboolean
+_log_should_suppress (const char *domain,
+   GLogLevelFlags flags,
+   const char *message)
+{
+  /* Ignore the error caused by not running the logger */
+  return g_str_has_suffix (message,
+      "The name org.freedesktop.Telepathy.Logger was not provided by any "
+      ".service files");
+}
+
+static void
+_log_default_handler (const char *domain,
+   GLogLevelFlags flags,
+   const char *message,
+   gpointer user_data)
+{
+  if (!_log_should_suppress (domain, flags, message))
+    g_log_default_handler (domain, flags, message, user_data);
+}
+
+static gboolean
 _log_fatal_handler (const char *domain,
    GLogLevelFlags flags,
    const char *message,
    gpointer user_data)
 {
-  gboolean fatal;
+  gboolean suppress = _log_should_suppress (domain, flags, message);
 
-  /* Ignore the error caused by not running the logger */
-  fatal = !g_str_has_suffix (message,
-      "The name org.freedesktop.Telepathy.Logger was not provided by any "
-      ".service files");
-
-  if (fatal)
+  if (!suppress)
     g_on_error_stack_trace ("libtool --mode=exec gdb");
 
-  return fatal;
+  return !suppress;
 }
 
 void
@@ -157,7 +173,7 @@ tp_test_backend_set_up (TpTestBackend *self)
   GError *error = NULL;
 
   /* Override the handler set in the general Folks.TestCase class */
-  g_log_set_default_handler (g_log_default_handler, NULL);
+  g_log_set_default_handler (_log_default_handler, NULL);
   g_test_log_set_fatal_handler (_log_fatal_handler, NULL);
 
   priv->daemon = tp_dbus_daemon_dup (&error);
