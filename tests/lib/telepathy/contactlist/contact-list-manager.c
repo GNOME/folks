@@ -397,8 +397,6 @@ receive_contact_lists (gpointer p)
   /* In a real CM we'd have received a contact list from the server at this
    * point. But this isn't a real CM, so we have to make one up... */
 
-  g_message ("Receiving roster from server");
-
   subscribe = ensure_list (self, TP_TEST_CONTACT_LIST_SUBSCRIBE);
   publish = ensure_list (self, TP_TEST_CONTACT_LIST_PUBLISH);
   stored = ensure_list (self, TP_TEST_CONTACT_LIST_STORED);
