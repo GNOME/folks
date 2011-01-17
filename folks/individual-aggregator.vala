@@ -324,7 +324,8 @@ public class Folks.IndividualAggregator : Object
             {
               var candidate_ind = this._link_map.lookup (persona.iid);
               if (candidate_ind != null &&
-                  candidate_ind.trust_level != TrustLevel.NONE)
+                  candidate_ind.trust_level != TrustLevel.NONE &&
+                  !candidate_ind_set.contains (candidate_ind))
                 {
                   debug ("    Found candidate individual '%s' by IID '%s'.",
                       candidate_ind.id, persona.iid);
