@@ -34,7 +34,6 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
   private HashTable<string, Persona> _personas;
   private File _file;
   private GLib.KeyFile _key_file;
-  private uint _first_unused_id = 0;
   private unowned Cancellable _save_key_file_cancellable = null;
   private bool _is_prepared = false;
 
@@ -228,9 +227,6 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
               var groups = this._key_file.get_groups ();
               foreach (var persona_id in groups)
                 {
-                  if (int.parse (persona_id) == this._first_unused_id)
-                    this._first_unused_id++;
-
                   Persona persona = new Kf.Persona (this._key_file, persona_id,
                       this);
                   this._personas.insert (persona.iid, persona);
@@ -311,13 +307,15 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
 
       debug ("Adding Persona from details.");
 
-      /* Find the first unused ID, taking into account that the IDs in the key
-       * file may not be contiguous. */
+      /* Generate a new random number for the persona's ID, so as to try and
+       * ensure that IDs don't get recycled; if they did, anti-links which were
+       * made against a key-file persona which used an ID which has been
+       * re-used would be applied to the wrong persona (the new one, instead of
+       * the old one, which could've been completely different). */
       string persona_id = null;
       do
         {
-          persona_id = this._first_unused_id.to_string ();
-          this._first_unused_id++;
+          persona_id = Random.next_int ().to_string ();
         }
       while (this._key_file.has_group (persona_id) == true);
 
