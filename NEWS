@@ -11,6 +11,7 @@ Bugs fixed:
 * Bug 645411 - folks-import segfaults on startup
 * Crasher when removing Personas
 * Crasher when reconnecting a Telepathy account
+* Bug 645680 — Use random integer IDs for Kf.Personas
 
 API changes:
 * Add equal () to StructuredName
