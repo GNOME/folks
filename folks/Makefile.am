@@ -28,6 +28,7 @@ libfolks_la_SOURCES = \
 	persona.vala \
 	persona-store.vala \
 	types.vala \
+	urlable.vala \
 	debug.vala \
 	$(NULL)
 

@@ -69,7 +69,8 @@ public class Folks.Individual : Object,
     AvatarOwner,
     PresenceOwner,
     IMable,
-    NameOwner
+    NameOwner,
+    URLable
 {
   private bool _is_favourite;
   private string _alias;
@@ -350,6 +351,11 @@ public class Folks.Individual : Object,
       this._update_groups ();
     }
 
+  private void _notify_urls_cb ()
+    {
+      this._update_urls ();
+    }
+
   /**
    * Add or remove the Individual from the specified group.
    *
@@ -481,6 +487,7 @@ public class Folks.Individual : Object,
       this._update_structured_name ();
       this._update_full_name ();
       this._update_nickname ();
+      this._update_urls ();
     }
 
   private void _update_groups ()
@@ -757,6 +764,7 @@ public class Folks.Individual : Object,
           this._notify_structured_name_cb);
       persona.notify["full-name"].connect (this._notify_full_name_cb);
       persona.notify["nickname"].connect (this._notify_nickname_cb);
+      persona.notify["urls"].connect (this._notify_urls_cb);
 
       if (persona is Groupable)
         {
@@ -840,12 +848,40 @@ public class Folks.Individual : Object,
           this._notify_structured_name_cb);
       persona.notify["full-name"].disconnect (this._notify_full_name_cb);
       persona.notify["nickname"].disconnect (this._notify_nickname_cb);
+      persona.notify["urls"].disconnect (this._notify_urls_cb);
 
       if (persona is Groupable)
         {
           ((Groupable) persona).group_changed.disconnect (
               this._persona_group_changed_cb);
         }
+    }
+
+  private void _update_urls ()
+    {
+      /* Populate the URLs as the union of our Personas' URLs.
+       * If the same URL exist multiple times we merge the parameters. */
+      var urls_set = new HashTable<unowned string, unowned FieldDetails> (
+          str_hash, str_equal);
+      foreach (var persona in this._persona_list)
+        {
+          var urlable = persona as URLable;
+          if (urlable != null)
+            {
+              foreach (unowned FieldDetails ps in urlable.urls)
+                {
+                  var existing = urls_set.lookup (ps.value);
+                  if (existing != null)
+                    existing.extend_parameters (ps.parameters);
+                  else
+                    urls_set.insert (ps.value, ps);
+                }
+            }
+        }
+      /* Set the private member directly to avoid iterating this list again */
+      this._urls = urls_set.get_values ();
+
+      this.notify_property ("urls");
     }
 
   private void _set_personas (GLib.List<Persona>? persona_list,
