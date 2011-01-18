@@ -65,6 +65,7 @@ public enum Folks.TrustLevel
 public class Folks.Individual : Object,
     Aliasable,
     Favouritable,
+    GenderOwner,
     Groupable,
     AvatarOwner,
     PresenceOwner,
@@ -231,6 +232,68 @@ public class Folks.Individual : Object,
    */
   public string nickname { get { return this._nickname; } }
 
+  private Gender _gender;
+  /**
+   * {@inheritDoc}
+   */
+  public Gender gender
+    {
+      get { return this._gender; }
+      private set
+        {
+          this._gender = value;
+          this.notify_property ("gender");
+        }
+    }
+
+  private GLib.List<FieldDetails> _urls;
+  /**
+   * {@inheritDoc}
+   */
+  public GLib.List<FieldDetails> urls
+    {
+      get { return this._urls; }
+      private set
+        {
+          this._urls = new GLib.List<FieldDetails> ();
+          foreach (unowned FieldDetails ps in value)
+            this._urls.prepend (ps);
+          this._urls.reverse ();
+        }
+    }
+
+  private GLib.List<FieldDetails> _phone_numbers;
+  /**
+   * {@inheritDoc}
+   */
+  public GLib.List<FieldDetails> phone_numbers
+    {
+      get { return this._phone_numbers; }
+      private set
+        {
+          this._phone_numbers = new GLib.List<FieldDetails> ();
+          foreach (unowned FieldDetails fd in value)
+            this._phone_numbers.prepend (fd);
+          this._phone_numbers.reverse ();
+        }
+    }
+
+  private GLib.List<FieldDetails> _email_addresses;
+  /**
+   * {@inheritDoc}
+   */
+  public GLib.List<FieldDetails> email_addresses
+    {
+      get { return this._email_addresses; }
+      private set
+        {
+          this._email_addresses = new GLib.List<FieldDetails> ();
+          foreach (unowned FieldDetails fd in value)
+            this._email_addresses.prepend (fd);
+          this._email_addresses.reverse ();
+        }
+    }
+
   /**
    * Whether this Individual is a user-defined favourite.
    *
@@ -351,6 +414,11 @@ public class Folks.Individual : Object,
       this._update_groups ();
     }
 
+  private void _notify_gender_cb ()
+    {
+      this._update_gender ();
+    }
+
   private void _notify_urls_cb ()
     {
       this._update_urls ();
@@ -413,6 +481,7 @@ public class Folks.Individual : Object,
           new HashTable<string, LinkedHashSet<string>> (str_hash, str_equal);
       this._persona_set = new HashSet<Persona> (null, null);
       this._stores = new HashMap<PersonaStore, uint> (null, null);
+      this._gender = Gender.UNSPECIFIED;
       this.personas = personas;
     }
 
@@ -487,6 +556,7 @@ public class Folks.Individual : Object,
       this._update_structured_name ();
       this._update_full_name ();
       this._update_nickname ();
+      this._update_gender ();
       this._update_urls ();
     }
 
@@ -764,6 +834,7 @@ public class Folks.Individual : Object,
           this._notify_structured_name_cb);
       persona.notify["full-name"].connect (this._notify_full_name_cb);
       persona.notify["nickname"].connect (this._notify_nickname_cb);
+      persona.notify["gender"].connect (this._notify_gender_cb);
       persona.notify["urls"].connect (this._notify_urls_cb);
 
       if (persona is Groupable)
@@ -848,12 +919,31 @@ public class Folks.Individual : Object,
           this._notify_structured_name_cb);
       persona.notify["full-name"].disconnect (this._notify_full_name_cb);
       persona.notify["nickname"].disconnect (this._notify_nickname_cb);
+      persona.notify["gender"].disconnect (this._notify_gender_cb);
       persona.notify["urls"].disconnect (this._notify_urls_cb);
 
       if (persona is Groupable)
         {
           ((Groupable) persona).group_changed.disconnect (
               this._persona_group_changed_cb);
+        }
+    }
+
+  private void _update_gender ()
+    {
+      foreach (var persona in this._persona_list)
+        {
+          var gender_owner = persona as GenderOwner;
+          if (gender_owner != null)
+            {
+              var new_value = gender_owner.gender;
+              if (new_value != Gender.UNSPECIFIED)
+                {
+                  if (new_value != this.gender)
+                    this.gender = new_value;
+                  break;
+                }
+            }
         }
     }
 
