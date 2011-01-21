@@ -39,6 +39,7 @@ AM_VALAFLAGS = \
 
 # in order from least to most complex
 noinst_PROGRAMS = \
+	linked-hash-set \
 	backend-loading \
 	aggregation \
 	$(NULL)
@@ -62,6 +63,10 @@ aggregation_SOURCES = \
 	aggregation.vala \
 	$(NULL)
 
+linked_hash_set_SOURCES = \
+	linked-hash-set.vala \
+	$(NULL)
+
 CLEANFILES = \
         *.pid \
         *.address \
@@ -72,6 +77,7 @@ MAINTAINERCLEANFILES = \
         $(addsuffix .c,$(noinst_PROGRAMS)) \
         backend_loading_vala.stamp \
         aggregation_vala.stamp \
+        linked_hash_set_vala.stamp \
         $(NULL)
 
 EXTRA_DIST = \
