@@ -10,7 +10,8 @@ public class IndividualRetrievalTests : Folks.TestCase
   private TpTest.Backend tp_backend;
   private void* _account_handle;
   private HashSet<string> default_individuals;
-  private string individual_id_prefix = "telepathy:protocol:";
+  private string individual_id_prefix =
+      "telepathy:/org/freedesktop/Telepathy/Account/cm/protocol/account:";
   private int _test_timeout = 3;
 
   public IndividualRetrievalTests ()
