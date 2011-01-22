@@ -7,7 +7,6 @@ public class AggregationTests : Folks.TestCase
   private KfTest.Backend _kf_backend;
   private TpTest.Backend _tp_backend;
   private HashSet<string> _default_individuals;
-  private string _individual_id_prefix = "telepathy:protocol:";
   private int _test_timeout = 3;
 
   public AggregationTests ()
@@ -81,7 +80,7 @@ public class AggregationTests : Folks.TestCase
       HashSet<string> expected_individuals = new HashSet<string> ();
       foreach (var id in this._default_individuals)
         {
-          expected_individuals.add (this._individual_id_prefix + id);
+          expected_individuals.add (id);
         }
 
       /* Set up the aggregator */
@@ -92,11 +91,14 @@ public class AggregationTests : Folks.TestCase
            * individuals (if they were originally on it) */
           foreach (Individual i in removed)
             {
+              var parts = i.id.split (":");
+              var id = parts[2];
+
               if (!i.is_user &&
                   i.personas.length () == 2 &&
-                  this._default_individuals.contains (i.id))
+                  this._default_individuals.contains (id))
                 {
-                  expected_individuals.add (i.id);
+                  expected_individuals.add (id);
                 }
             }
 
@@ -104,12 +106,15 @@ public class AggregationTests : Folks.TestCase
            * from the set of expected individuals. */
           foreach (Individual i in added)
             {
+              var parts = i.id.split (":");
+              var id = parts[2];
+
               unowned GLib.List<Persona> personas = i.personas;
 
               /* We're not testing the user here */
               if (!i.is_user && personas.length () == 2)
                 {
-                  assert (expected_individuals.remove (i.id));
+                  assert (expected_individuals.remove (id));
                   assert (personas.data.iid == personas.next.data.iid);
                 }
             }
