@@ -9,6 +9,7 @@ public class LinkedHashSetTests : Folks.TestCase
       this.add_test ("set properties", this.test_set_properties);
       this.add_test ("list properties", this.test_list_properties);
       this.add_test ("object elements", this.test_object_elements);
+      this.add_test ("bgo640551", this.test_bgo640551);
     }
 
   public override void set_up ()
@@ -238,6 +239,47 @@ public class LinkedHashSetTests : Folks.TestCase
           assert (ll.get (i).name == val.name);
           i++;
         }
+    }
+
+  /* derive a new string from the given one (purely for checking for leaks) */
+  private string _normalise_key (string key)
+    {
+      return key.down ();
+    }
+
+  public void test_bgo640551 ()
+    {
+      /* This resembles the compound structure used by the Telepathy backend's
+       * IMable implementation in Tpf.Persona (which has caused memory leaks in
+       * the past - see bgo#640551) */
+      var global_im_addresses =
+          new HashTable<string, LinkedHashSet<string>> (str_hash, str_equal);
+      var im_address_set = new LinkedHashSet<string> ();
+      const string protocol = "foo protocol";
+      const string address = "bar@example.org";
+      const string address2 = "bar2@example.org";
+
+      im_address_set.add (this._normalise_key (address));
+      im_address_set.add (this._normalise_key (address2));
+
+      var im_addresses =
+          new HashTable<string, LinkedHashSet<string>> (str_hash, str_equal);
+      im_addresses.insert (protocol, im_address_set);
+
+      im_addresses.foreach ((k, v) =>
+        {
+          var cur_protocol = (string) k;
+          var cur_addresses = (LinkedHashSet<string>) v;
+          var im_set = global_im_addresses.lookup (cur_protocol);
+
+          if (im_set == null)
+            {
+              im_set = new LinkedHashSet<string> ();
+              global_im_addresses.insert (cur_protocol, im_set);
+            }
+
+          im_set.add_all (cur_addresses);
+        });
     }
 }
 
