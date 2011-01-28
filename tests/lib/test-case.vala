@@ -22,87 +22,96 @@
  * Copied from libgee/tests/testcase.vala.
  */
 
-public abstract class Folks.TestCase : Object {
+public abstract class Folks.TestCase : Object
+{
+  private GLib.TestSuite _suite;
+  private Adaptor[] _adaptors = new Adaptor[0];
 
-	private GLib.TestSuite suite;
-	private Adaptor[] adaptors = new Adaptor[0];
+  public delegate void TestMethod ();
 
-	public delegate void TestMethod ();
+  public TestCase (string name)
+    {
+      this._suite = new GLib.TestSuite (name);
+    }
 
-	public TestCase (string name) {
-		this.suite = new GLib.TestSuite (name);
-	}
+  public void add_test (string name, TestMethod test)
+    {
+      var adaptor = new Adaptor (name, test, this);
+      this._adaptors += adaptor;
 
-	public void add_test (string name, TestMethod test) {
-		var adaptor = new Adaptor (name, test, this);
-		this.adaptors += adaptor;
+      this._suite.add (new GLib.TestCase (
+            adaptor.name, adaptor.set_up, adaptor.run, adaptor.tear_down));
+    }
 
-		this.suite.add (new GLib.TestCase (adaptor.name,
-		                                   adaptor.set_up,
-		                                   adaptor.run,
-		                                   adaptor.tear_down ));
-	}
+  public virtual void set_up ()
+    {
+    }
 
-	public virtual void set_up () {
-	}
+  public virtual void tear_down ()
+    {
+    }
 
-	public virtual void tear_down () {
-	}
+  public GLib.TestSuite get_suite ()
+    {
+      return this._suite;
+    }
 
-	public GLib.TestSuite get_suite () {
-		return this.suite;
-	}
+	private class Adaptor
+    {
+      public string name { get; private set; }
+      private TestMethod _test;
+      private TestCase _test_case;
 
-	private class Adaptor {
+      public Adaptor (string name, TestMethod test, TestCase test_case)
+        {
+          this._name = name;
+          this._test = test;
+          this._test_case = test_case;
+        }
 
-		public string name { get; private set; }
-		private TestMethod test;
-		private TestCase test_case;
+      public void set_up (void* fixture)
+        {
+          GLib.set_printerr_handler (
+              (PrintFunc) this._printerr_func_stack_trace);
+          Log.set_default_handler (this._log_func_stack_trace);
 
-		public Adaptor (string name,
-		                TestMethod test,
-		                TestCase test_case) {
-			this.name = name;
-			this.test = test;
-			this.test_case = test_case;
-		}
+          this._test_case.set_up ();
+        }
 
-		public void set_up (void* fixture) {
-			GLib.set_printerr_handler ((PrintFunc) this._printerr_func_stack_trace);
-			Log.set_default_handler (this._log_func_stack_trace);
+      private void _printerr_func_stack_trace (string? text)
+        {
+          if (text != null)
+            stderr.printf (text);
 
-			this.test_case.set_up ();
-		}
+          /* Print a stack trace since we've hit some major issue */
+          GLib.on_error_stack_trace ("libtool --mode=execute gdb");
+        }
 
-		private void _printerr_func_stack_trace (string? text) {
-			if (text != null)
-				stderr.printf (text);
+      private void _log_func_stack_trace (string? log_domain,
+          LogLevelFlags log_levels,
+          string message)
+        {
+          Log.default_handler (log_domain, log_levels, message);
 
-			/* Print a stack trace since we've hit some major issue */
-			GLib.on_error_stack_trace ("libtool --mode=execute gdb");
-		}
+          /* Print a stack trace for any message at the warning level or above
+           */
+          if ((log_levels &
+              (LogLevelFlags.LEVEL_WARNING | LogLevelFlags.LEVEL_ERROR |
+                  LogLevelFlags.LEVEL_CRITICAL))
+              != 0)
+            {
+              GLib.on_error_stack_trace ("libtool --mode=execute gdb");
+            }
+        }
 
-		private void _log_func_stack_trace (string? log_domain,
-				LogLevelFlags log_levels,
-				string message) {
-			Log.default_handler (log_domain, log_levels, message);
+      public void run (void* fixture)
+        {
+          this._test ();
+        }
 
-			/* Print a stack trace for any message at the warning level or above */
-			if ((log_levels &
-					(LogLevelFlags.LEVEL_WARNING | LogLevelFlags.LEVEL_ERROR |
-							LogLevelFlags.LEVEL_CRITICAL))
-					!= 0) {
-					GLib.on_error_stack_trace ("libtool --mode=execute gdb");
-				}
-		}
-
-
-		public void run (void* fixture) {
-			this.test ();
-		}
-
-		public void tear_down (void* fixture) {
-			this.test_case.tear_down ();
-		}
-	}
+      public void tear_down (void* fixture)
+        {
+          this._test_case.tear_down ();
+        }
+    }
 }
