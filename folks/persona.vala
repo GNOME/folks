@@ -232,10 +232,10 @@ public abstract class Folks.Persona : Object
       assert (backend_name_length != 0 && persona_store_id_length != 0);
 
       backend_name = Persona._unescape_uid_component (
-          uid.ndup (backend_name_length));
+          uid.substring (0, (long) backend_name_length));
       persona_store_id = Persona._unescape_uid_component (
-          ((string) ((char*) uid + backend_name_length + 1)).ndup (
-              persona_store_id_length));
+          ((string) ((char*) uid + backend_name_length + 1)).substring (0,
+              (long) persona_store_id_length));
       persona_id = Persona._unescape_uid_component (
           ((string) ((char*) uid + backend_name_length +
               persona_store_id_length + 2)));
