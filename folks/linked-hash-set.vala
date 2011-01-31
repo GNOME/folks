@@ -23,7 +23,7 @@ using Gee;
 /* Linked list implementation of the {@link Gee.Set} interface.
  * This implementation provides an ordered set with predictable iteration.
  *
- * @since 0.3.UNRELEASED
+ * @since 0.3.4
  */
 public class Folks.LinkedHashSet<G> : AbstractList<G>,
     Set<G>
@@ -41,6 +41,8 @@ public class Folks.LinkedHashSet<G> : AbstractList<G>,
    *
    * @param hash_func an optional hash function
    * @param equal_func an optional equality testing function
+   *
+   * @since 0.3.4
    */
   public LinkedHashSet (HashFunc? hash_func = null,
       EqualFunc? equal_func = null)
