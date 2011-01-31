@@ -38,11 +38,6 @@ public errordomain Folks.IMableError
  */
 public interface Folks.IMable : Object
 {
-  /* FIXME: We have to use GenericArray<string> here rather than string[] as
-   * null-terminated arrays aren't supported as generic types yet. It would be
-   * best if we changed to using a proper ordered set datatype, which inherently
-   * disallows duplicates, while retaining the ordering of its members.
-   * (bgo#627483) */
   /**
    * A mapping of IM protocol to an ordered set of IM addresses.
    *
