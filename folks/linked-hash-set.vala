@@ -20,7 +20,8 @@
 
 using Gee;
 
-/* Linked list implementation of the {@link Gee.Set} interface.
+/**
+ * Linked list implementation of the {@link Gee.Set} interface.
  * This implementation provides an ordered set with predictable iteration.
  *
  * @since 0.3.4
@@ -52,7 +53,11 @@ public class Folks.LinkedHashSet<G> : AbstractList<G>,
   }
 
   /**
-   * {@inheritDoc}
+   * The number of items in this collection.
+   *
+   * @see Gee.AbstractCollection.size
+   *
+   * @since 0.3.4
    */
   public override int size
   {
@@ -60,7 +65,14 @@ public class Folks.LinkedHashSet<G> : AbstractList<G>,
   }
 
   /**
-   * {@inheritDoc}
+   * Returns whether this structure contains the given item.
+   *
+   * @param item the element to find
+   *
+   * @return `true` if this collection contains the specified item.
+   * @see Gee.AbstractCollection.contains
+   *
+   * @since 0.3.4
    */
   public override bool contains (G item)
   {
@@ -68,7 +80,14 @@ public class Folks.LinkedHashSet<G> : AbstractList<G>,
   }
 
   /**
-   * {@inheritDoc}
+   * Add the given element.
+   *
+   * @param item element to add
+   *
+   * @return `true` if the element was added.
+   * @see Gee.AbstractCollection.add
+   *
+   * @since 0.3.4
    */
   public override bool add (G item)
   {
@@ -82,7 +101,14 @@ public class Folks.LinkedHashSet<G> : AbstractList<G>,
   }
 
   /**
-   * {@inheritDoc}
+   * Remove the instance of the given element.
+   *
+   * @param item element to remove
+   *
+   * @return `true` if the element was removed.
+   * @see Gee.AbstractCollection.remove
+   *
+   * @since 0.3.4
    */
   public override bool remove (G item)
   {
@@ -96,7 +122,12 @@ public class Folks.LinkedHashSet<G> : AbstractList<G>,
   }
 
   /**
-   * {@inheritDoc}
+   * Removes all items from this collection. Must not be called on read-only
+   * collections.
+   *
+   * @see Gee.AbstractCollection.clear
+   *
+   * @since 0.3.4
    */
   public override void clear ()
   {
@@ -105,7 +136,14 @@ public class Folks.LinkedHashSet<G> : AbstractList<G>,
   }
 
   /**
-   * {@inheritDoc}
+   * Returns the item at the given position.
+   *
+   * @param index the position of an element to retrieve.
+   *
+   * @return the item at the specified index in this list.
+   * @see Gee.AbstractList.get
+   *
+   * @since 0.3.4
    */
   public override G get (int index)
   {
@@ -129,7 +167,14 @@ public class Folks.LinkedHashSet<G> : AbstractList<G>,
   }
 
   /**
-   * {@inheritDoc}
+   * Returns the position of the given item.
+   *
+   * @param item an element to find within this structure.
+   *
+   * @return the index of the occurence of the specified item in this list.
+   * @see Gee.AbstractList.index_of
+   *
+   * @since 0.3.4
    */
   public override int index_of (G item)
   {
@@ -139,7 +184,14 @@ public class Folks.LinkedHashSet<G> : AbstractList<G>,
   }
 
   /**
-   * {@inheritDoc}
+   * Remove the element at the given index.
+   *
+   * @param index position of the element to remove.
+   *
+   * @return the removed element.
+   * @see Gee.AbstractList.remove_at
+   *
+   * @since 0.3.4
    */
   public override G remove_at (int index)
   {
@@ -150,7 +202,16 @@ public class Folks.LinkedHashSet<G> : AbstractList<G>,
   }
 
   /**
-   * {@inheritDoc}
+   * Returns a new sub-list of this structure. Caller does not own the new
+   * list's elements.
+   *
+   * @param start position of first element in sub-list
+   * @param stop position of last element in sub-list
+   *
+   * @return the sub-list specified by start and stop.
+   * @see Gee.AbstractList.slice
+   *
+   * @since 0.3.4
    */
   public override Gee.List<G>? slice (int start, int stop)
   {
@@ -158,7 +219,13 @@ public class Folks.LinkedHashSet<G> : AbstractList<G>,
   }
 
   /**
-   * {@inheritDoc}
+   * Returns the first element in this structure.
+   *
+   * @return the first element in the structure. Fails if the structure is
+   * empty.
+   * @see Gee.AbstractList.first
+   *
+   * @since 0.3.4
    */
   public override G first ()
   {
@@ -166,7 +233,12 @@ public class Folks.LinkedHashSet<G> : AbstractList<G>,
   }
 
   /**
-   * {@inheritDoc}
+   * Returns the first element in this structure.
+   *
+   * @return the last element in the structure. Fails if the structure is empty.
+   * @see Gee.AbstractList.last
+   *
+   * @since 0.3.4
    */
   public override G last ()
   {
@@ -174,7 +246,14 @@ public class Folks.LinkedHashSet<G> : AbstractList<G>,
   }
 
   /**
-   * {@inheritDoc}
+   * Adds all the elements of the given collection to this one (as necessary).
+   *
+   * @param collection a {@link Gee.Collection} of elements to add.
+   *
+   * @return `true` if new elements were added to the collection.
+   * @see Gee.AbstractCollection.add_all
+   *
+   * @since 0.3.4
    */
   public override bool add_all (Collection<G> collection)
   {
@@ -188,7 +267,13 @@ public class Folks.LinkedHashSet<G> : AbstractList<G>,
 
 
   /**
-   * {@inheritDoc}
+   * Returns the Iterator for this structure.
+   *
+   * @return a {@link Gee.Iterator} that can be used for iteration over this
+   * structure.
+   * @see Gee.Iterator
+   *
+   * @since 0.3.4
    */
   public override Gee.Iterator<G> iterator ()
   {
@@ -196,7 +281,13 @@ public class Folks.LinkedHashSet<G> : AbstractList<G>,
   }
 
   /**
-   * {@inheritDoc}
+   * Returns the ListIterator for this structure.
+   *
+   * @return a {@link Gee.ListIterator} that can be used for iteration over this
+   * structure (as a list).
+   * @see Gee.ListIterator
+   *
+   * @since 0.3.4
    */
   public override ListIterator<G> list_iterator ()
   {
