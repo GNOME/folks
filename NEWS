@@ -210,6 +210,7 @@ Bugs fixed:
 * Bug 628305 — Signal removal of Individuals containing untrusted Personas
 * Bug 628131 — error message when trying to link ICQ with jabber
 * Bug 628343 — Add an environment variable to disable linking
+* Bug 628335 — Assertion error with master
 
 Overview of changes from libfolks 0.1.14.1 to libfolks 0.1.15
 =============================================================
