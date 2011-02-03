@@ -72,6 +72,7 @@ AC_SUBST([FOLKS_MAJOR_MINOR_VERSION])
 
 GLIB_REQUIRED=2.24.0
 TP_GLIB_REQUIRED=0.13.1
+# XXX: once we bump this to 0.12.x, remove all the #if VALA_0_12 conditionals
 VALA_REQUIRED=0.10.0
 
 PKG_CHECK_MODULES([GLIB],
