@@ -139,7 +139,7 @@ public class LinkPersonasTests : Folks.TestCase
           yield this._aggregator.prepare ();
 
           PersonaStore pstore = null;
-          foreach (var backend in store.enabled_backends)
+          foreach (var backend in store.enabled_backends.values)
             {
               pstore = backend.persona_stores.get ("tracker");
               if (pstore != null)

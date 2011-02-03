@@ -83,13 +83,11 @@ public class BackendLoadingTests : Folks.TestCase
             {
               store.load_backends.end (r);
 
-              store.enabled_backends.foreach ((i) =>
+              foreach (var backend in store.enabled_backends.values)
                 {
-                  var backend = (Backend) i;
-
                   assert (backends_expected.contains (backend.name));
                   backends_expected.remove (backend.name);
-                });
+                }
 
               assert (backends_expected.size == 0);
               main_loop.quit ();
@@ -129,12 +127,11 @@ public class BackendLoadingTests : Folks.TestCase
         {
           yield store.load_backends ();
 
-          store.enabled_backends.foreach ((i) =>
+          foreach (var backend in store.enabled_backends.values)
             {
-              var backend = (Backend) i;
               assert (backends_expected.contains (backend.name));
               backends_expected.remove (backend.name);
-            });
+            }
 
           assert (backends_expected.size == 0);
           this.main_loop.quit ();
@@ -173,12 +170,11 @@ public class BackendLoadingTests : Folks.TestCase
         {
           yield store.load_backends ();
 
-          store.enabled_backends.foreach ((i) =>
+          foreach (var backend1 in store.enabled_backends.values)
             {
-              var backend = (Backend) i;
-              assert (backends_expected.contains (backend.name));
-              backends_expected.remove (backend.name);
-            });
+              assert (backends_expected.contains (backend1.name));
+              backends_expected.remove (backend1.name);
+            }
 
           assert (backends_expected.size == 0);
         }
@@ -201,12 +197,11 @@ public class BackendLoadingTests : Folks.TestCase
         {
           yield store.load_backends ();
 
-          store.enabled_backends.foreach ((i) =>
+          foreach (var backend2 in store.enabled_backends.values)
             {
-              var backend = (Backend) i;
-              assert (backends_expected.contains (backend.name));
-              backends_expected.remove (backend.name);
-            });
+              assert (backends_expected.contains (backend2.name));
+              backends_expected.remove (backend2.name);
+            }
 
           assert (backends_expected.size == 0);
         }
@@ -230,12 +225,11 @@ public class BackendLoadingTests : Folks.TestCase
         {
           yield store.load_backends ();
 
-          store.enabled_backends.foreach ((i) =>
+          foreach (var backend3 in store.enabled_backends.values)
             {
-              var backend = (Backend) i;
-              assert (backends_expected.contains (backend.name));
-              backends_expected.remove (backend.name);
-            });
+              assert (backends_expected.contains (backend3.name));
+              backends_expected.remove (backend3.name);
+            }
 
           assert (backends_expected.size == 0);
         }
@@ -257,13 +251,11 @@ public class BackendLoadingTests : Folks.TestCase
         {
           yield store.load_backends ();
 
-          store.enabled_backends.foreach ((i) =>
+          foreach (var backend in store.enabled_backends.values)
             {
-              var backend = (Backend) i;
-
               assert (backends_expected.contains (backend.name));
               backends_expected.remove (backend.name);
-            });
+            }
 
           assert (backends_expected.size == 0);
         }

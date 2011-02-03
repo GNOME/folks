@@ -175,7 +175,7 @@ public class IndividualRetrievalTests : Folks.TestCase
 
               /* once we see a valid Tpf.PersonaStore, add our new personas */
               var backend_store = BackendStore.dup ();
-              foreach (var backend in backend_store.enabled_backends)
+              foreach (var backend in backend_store.enabled_backends.values)
                 {
                   /* PersonaStores can be added after the backend is prepared */
                   backend.persona_store_added.connect ((store) =>

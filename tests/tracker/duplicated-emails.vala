@@ -83,7 +83,7 @@ public class DuplicatedEmailsTests : Folks.TestCase
         {
           yield this._aggregator.prepare ();
           this._pstore = null;
-          foreach (var backend in store.enabled_backends)
+          foreach (var backend in store.enabled_backends.values)
             {
               this._pstore =
                 (Trf.PersonaStore) backend.persona_stores.get ("tracker");

@@ -43,7 +43,7 @@ public class Folks.BackendStore : Object {
 
   /* this contains all backends, regardless of enabled or prepared state */
   private HashMap<string,Backend> _backend_hash;
-  private HashMap<string,Backend> _prepared_backends;
+  private HashMap<string, Backend> _prepared_backends;
   private File _config_file;
   private GLib.KeyFile _backends_key_file;
   private HashMap<string,unowned Module> _modules;
@@ -87,19 +87,11 @@ public class Folks.BackendStore : Object {
    *
    * The backends in this list have been prepared and are ready to use.
    *
-   * @since 0.3.5
+   * @since UNRELEASED
    */
-  public GLib.List<Backend> enabled_backends
+  public Map<string, Backend> enabled_backends
     {
-      [CCode (cname = "folks_backend_store_dup_enabled_backends")]
-      owned get
-        {
-          var backends = new GLib.List<Backend> ();
-          foreach (var backend in this._prepared_backends.values)
-            backends.prepend (backend);
-
-          return backends;
-        }
+      get { return this._prepared_backends; }
 
       private set {}
     }

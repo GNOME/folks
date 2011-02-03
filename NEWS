@@ -25,6 +25,10 @@ API changes:
 * EmailDetails.email_addresses is now of type Set<FieldDetails>
 * PhoneDetails.phone_numbers is now of type Set<FieldDetails>
 * UrlDetails.urls is now of type Set<FieldDetails>
+* BackendStore.enabled_backends now has type Map<string, Backend>
+  - The corresponding C function folks_backend_store_dup_enabled_backends()
+    has been renamed folks_backend_store_get_enabled_backends(), and no longer
+    returns an owned variable.
 
 Overview of changes from libfolks 0.4.0 to libfolks 0.5.0
 =========================================================
