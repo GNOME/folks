@@ -228,11 +228,7 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
               var groups = this._key_file.get_groups ();
               foreach (var persona_id in groups)
                 {
-#if VALA_0_12
-                  if (int.parse (persona_id) == this._first_unused_id)
-#else
                   if (persona_id.to_int () == this._first_unused_id)
-#endif
                     this._first_unused_id++;
 
                   Persona persona = new Kf.Persona (this._key_file, persona_id,
