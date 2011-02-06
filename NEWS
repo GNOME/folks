@@ -4,11 +4,15 @@ Overview of changes from libfolks 0.3.4 to libfolks 0.3.5
 API changes:
 * Add Tpf.Persona.is_in_contact_list
 * Rename the URLable interface to Urlable
+* Take a PersonaStore in IndividualAggregator.add_persona_from_details
+* Remove IndividualAggregatorError.STORE_NOT_FOUND
 
 Bugs fixed:
 * Bug 640901 — Allow it to be determined whether a user Tpf.Persona is in the
   contact list
 * Bug 641780 — Incorrect C function names for URLable interface
+* Bug 629078 — Folks needs a full API review to take advantage of our
+  compatibility break in 0.2.x
 
 Overview of changes from libfolks 0.3.3 to libfolks 0.3.4
 =========================================================

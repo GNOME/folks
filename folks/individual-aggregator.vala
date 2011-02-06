@@ -27,11 +27,6 @@ using GLib;
 public errordomain Folks.IndividualAggregatorError
 {
   /**
-   * A specified {@link PersonaStore} could not be found.
-   */
-  STORE_NOT_FOUND,
-
-  /**
    * Adding a {@link Persona} to a {@link PersonaStore} failed.
    */
   ADD_FAILED,
@@ -727,38 +722,24 @@ public class Folks.IndividualAggregator : Object
    *
    * @param parent an optional {@link Individual} to add the new {@link Persona}
    * to. This persona will be appended to its ordered list of personas.
-   * @param persona_store_type the {@link PersonaStore.type_id} of the
-   * {@link PersonaStore} to use
-   * @param persona_store_id the {@link PersonaStore.id} of the
-   * {@link PersonaStore} to use
+   * @param persona_store the {@link PersonaStore} to add the persona to
    * @param details a key-value map of details to use in creating the new
    * {@link Persona}
    * @return the new {@link Persona} or `null` if the corresponding
    * {@link Persona} already existed. If non-`null`, the new {@link Persona}
    * will also be added to a new or existing {@link Individual} as necessary.
+   *
+   * @since 0.3.UNRELEASED
    */
   public async Persona? add_persona_from_details (Individual? parent,
-      string persona_store_type,
-      string persona_store_id,
+      PersonaStore persona_store,
       HashTable<string, Value?> details) throws IndividualAggregatorError
     {
-      var full_id = this._get_store_full_id (persona_store_type,
-          persona_store_id);
-      var store = this._stores[full_id];
-
-      if (store == null)
-        {
-          throw new IndividualAggregatorError.STORE_NOT_FOUND (
-              /* Translators: the parameters are store identifiers. */
-              _("No store known for type ID '%s' and ID '%s'."),
-              persona_store_type, persona_store_id);
-        }
-
       Persona persona = null;
       try
         {
           var details_copy = this._asv_copy (details);
-          persona = yield store.add_persona_from_details (details_copy);
+          persona = yield persona_store.add_persona_from_details (details_copy);
         }
       catch (PersonaStoreError e)
         {
@@ -768,11 +749,14 @@ public class Folks.IndividualAggregator : Object
             }
           else
             {
+              var full_id = this._get_store_full_id (persona_store.type_id,
+                  persona_store.id);
+
               throw new IndividualAggregatorError.ADD_FAILED (
-                  /* Translators: the first two parameters are store identifiers
-                   * and the third parameter is an error message. */
-                  _("Failed to add contact for store type '%s', ID '%s': %s"),
-                  persona_store_type, persona_store_id, e.message);
+                  /* Translators: the first parameter is a store identifier
+                   * and the second parameter is an error message. */
+                  _("Failed to add contact for persona store ID '%s': %s"),
+                  full_id, e.message);
             }
         }
 
@@ -912,8 +896,8 @@ public class Folks.IndividualAggregator : Object
       var details = new HashTable<string, Value?> (str_hash, str_equal);
       details.insert ("im-addresses", addresses_value);
 
-      yield this.add_persona_from_details (null, this._writeable_store.type_id,
-          this._writeable_store.id, details);
+      yield this.add_persona_from_details (null, this._writeable_store,
+          details);
     }
 
   /**
