@@ -1,3 +1,13 @@
+Overview of changes from libfolks 0.3.4 to libfolks 0.3.5
+=========================================================
+
+API changes:
+* Add Tpf.Persona.is_in_contact_list
+
+Bugs fixed:
+* Bug 640901 — Allow it to be determined whether a user Tpf.Persona is in the
+  contact list
+
 Overview of changes from libfolks 0.3.3 to libfolks 0.3.4
 =========================================================
 
@@ -11,7 +21,6 @@ API changes:
 * IMable.im_addresses is now a mapping of string to LinkedHashSet.
 * Rename the HasAvatar interface to AvatarOwner
 * Rename the HasPresence interface to PresenceOwner
-* Add Tpf.Persona.is_in_contact_list
 
 Bugs fixed:
 * Bug 637240 — libfolks-telepathy.so exports private symbols
@@ -26,8 +35,6 @@ Bugs fixed:
 * Bug 639742 — Logger service unavailable in make check
 * Bug 640213 — Add tests for LinkedHashSet
 * Bug 627397 — Use better interface names
-* Bug 640901 — Allow it to be determined whether a user Tpf.Persona is in the
-  contact list
 
 Overview of changes from libfolks 0.3.2 to libfolks 0.3.3
 =========================================================
