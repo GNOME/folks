@@ -73,10 +73,11 @@ public class Folks.BackendStore : Object {
    *
    * The backends in this list have been prepared and are ready to use.
    *
-   * @since 0.2.0
+   * @since 0.3.UNRELEASED
    */
   public GLib.List<Backend> enabled_backends
     {
+      [CCode (cname = "folks_backend_store_dup_enabled_backends")]
       owned get
         {
           var backends = new GLib.List<Backend> ();
@@ -340,12 +341,15 @@ public class Folks.BackendStore : Object {
     }
 
   /**
-   * Get a backend from the store by name.
+   * Get a backend from the store by name. If a backend is returned, its
+   * reference count is increased.
    *
    * @param name the backend name to retrieve
    * @return the backend, or `null` if none could be found
+   *
+   * @since 0.3.UNRELEASED
    */
-  public Backend? get_backend_by_name (string name)
+  public Backend? dup_backend_by_name (string name)
     {
       return this._backend_hash.get (name);
     }

@@ -108,7 +108,7 @@ public class Folks.ImportTool : Object
         }
 
       /* Get the key-file backend */
-      Backend kf_backend = backend_store.get_backend_by_name ("key-file");
+      Backend kf_backend = backend_store.dup_backend_by_name ("key-file");
 
       if (kf_backend == null)
         {

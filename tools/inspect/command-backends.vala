@@ -68,7 +68,7 @@ private class Folks.Inspect.Commands.Backends : Folks.Inspect.Command
         {
           /* Show the details of a particular backend */
           Backend backend =
-              this.client.backend_store.get_backend_by_name (command_string);
+              this.client.backend_store.dup_backend_by_name (command_string);
 
           if (backend == null)
             {

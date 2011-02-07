@@ -6,6 +6,10 @@ API changes:
 * Rename the URLable interface to Urlable
 * Take a PersonaStore in IndividualAggregator.add_persona_from_details
 * Remove IndividualAggregatorError.STORE_NOT_FOUND
+* Rename the getter for BackendStore.enabled_backends from
+  folks_backend_store_get_enabled_backends() to
+  folks_backend_store_dup_enabled_backends()
+* Rename BackendStore.get_backend_by_name() to .dup_backend_by_name()
 
 Bugs fixed:
 * Bug 640901 — Allow it to be determined whether a user Tpf.Persona is in the
