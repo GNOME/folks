@@ -73,7 +73,7 @@ public class Folks.Individual : Object,
     IMable,
     NameOwner,
     Phoneable,
-    URLable
+    Urlable
 {
   private bool _is_favourite;
   private string _alias;
@@ -976,7 +976,7 @@ public class Folks.Individual : Object,
           str_hash, str_equal);
       foreach (var persona in this._persona_list)
         {
-          var urlable = persona as URLable;
+          var urlable = persona as Urlable;
           if (urlable != null)
             {
               foreach (unowned FieldDetails ps in urlable.urls)
