@@ -437,11 +437,7 @@ public class Folks.BackendStore : Object {
            * aliases */
           var is_symlink = info.get_is_symlink ();
 
-#if VALA_0_12
           string mime = ContentType.get_mime_type (content_type);
-#else
-          string mime = g_content_type_get_mime_type (content_type);
-#endif
 
           if (file_type == FileType.DIRECTORY)
             {
@@ -618,15 +614,9 @@ public class Folks.BackendStore : Object {
            * Vala <= 0.10, it returned the character length). FIXME: We need to
            * take this into account until we depend explicitly on
            * Vala >= 0.11. */
-#if VALA_0_12
           yield this._config_file.replace_contents_async (key_file_data,
               key_file_data.length, null, false, FileCreateFlags.PRIVATE,
               null);
-#else
-          yield this._config_file.replace_contents_async (key_file_data,
-              key_file_data.size (), null, false, FileCreateFlags.PRIVATE,
-              null);
-#endif
         }
       catch (Error e)
         {

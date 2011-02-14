@@ -228,7 +228,7 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
               var groups = this._key_file.get_groups ();
               foreach (var persona_id in groups)
                 {
-                  if (persona_id.to_int () == this._first_unused_id)
+                  if (int.parse (persona_id) == this._first_unused_id)
                     this._first_unused_id++;
 
                   Persona persona = new Kf.Persona (this._key_file, persona_id,
@@ -362,15 +362,9 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
            * Vala <= 0.10, it returned the character length). FIXME: We need to
            * take this into account until we depend explicitly on
            * Vala >= 0.11. */
-#if VALA_0_12
           yield this._file.replace_contents_async (key_file_data,
               key_file_data.length, null, false, FileCreateFlags.PRIVATE,
               cancellable);
-#else
-          yield this._file.replace_contents_async (key_file_data,
-              key_file_data.size (), null, false, FileCreateFlags.PRIVATE,
-              cancellable);
-#endif
         }
       catch (Error e)
         {
