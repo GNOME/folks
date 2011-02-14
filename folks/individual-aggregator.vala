@@ -730,7 +730,7 @@ public class Folks.IndividualAggregator : Object
    * {@link Persona} already existed. If non-`null`, the new {@link Persona}
    * will also be added to a new or existing {@link Individual} as necessary.
    *
-   * @since 0.3.UNRELEASED
+   * @since 0.3.5
    */
   public async Persona? add_persona_from_details (Individual? parent,
       PersonaStore persona_store,

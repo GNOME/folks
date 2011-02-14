@@ -73,7 +73,7 @@ public class Folks.BackendStore : Object {
    *
    * The backends in this list have been prepared and are ready to use.
    *
-   * @since 0.3.UNRELEASED
+   * @since 0.3.5
    */
   public GLib.List<Backend> enabled_backends
     {
@@ -347,7 +347,7 @@ public class Folks.BackendStore : Object {
    * @param name the backend name to retrieve
    * @return the backend, or `null` if none could be found
    *
-   * @since 0.3.UNRELEASED
+   * @since 0.3.5
    */
   public Backend? dup_backend_by_name (string name)
     {

@@ -24,14 +24,14 @@ using GLib;
  * Interface for classes that have email addresses, such as {@link Persona}
  * and {@link Individual}.
  *
- * @since 0.3.UNRELEASED
+ * @since 0.3.5
  */
 public interface Folks.Emailable : Object
 {
   /**
    * The email addresses of the contact.
    *
-   * @since 0.3.UNRELEASED
+   * @since 0.3.5
    */
   public abstract List<FieldDetails> email_addresses { get; set; }
 }

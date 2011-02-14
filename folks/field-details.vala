@@ -31,7 +31,7 @@ using GLib;
  * a FieldDetails with value "(111) 555-1234" and with parameters
  * `['type': ('work', 'voice')]`.
  *
- * @since 0.3.UNRELEASED
+ * @since 0.3.5
  */
 public class Folks.FieldDetails : Object
 {
@@ -40,7 +40,7 @@ public class Folks.FieldDetails : Object
    * The value of the field, the exact content depends on what the structure is
    * used for.
    *
-   * @since 0.3.UNRELEASED
+   * @since 0.3.5
    */
   public string value { get; set; }
 
@@ -51,7 +51,7 @@ public class Folks.FieldDetails : Object
    * {@link Folks.FieldDetails.value}. The keys are the names of the
    * parameters, while the values are a list of strings.
    *
-   * @since 0.3.UNRELEASED
+   * @since 0.3.5
    */
   public HashTable<string, List<string>> parameters { get; set; }
 
@@ -61,7 +61,7 @@ public class Folks.FieldDetails : Object
    * @param value the value of the field
    * @return a new FieldDetails
    *
-   * @since 0.3.UNRELEASED
+   * @since 0.3.5
    */
   public FieldDetails (string value)
     {
@@ -77,7 +77,7 @@ public class Folks.FieldDetails : Object
    * @return a list of values for `parameter_name` or `null` (i.e. an empty
    * list) if there are no such parameters.
    *
-   * @since 0.3.UNRELEASED
+   * @since 0.3.5
    */
   public unowned List<string> get_parameter_values (string parameter_name)
     {
@@ -93,7 +93,7 @@ public class Folks.FieldDetails : Object
    * @param parameter_name the name of the parameter
    * @param parameter_value the value to add
    *
-   * @since 0.3.UNRELEASED
+   * @since 0.3.5
    */
   public void add_parameter (string parameter_name, string parameter_value)
     {
@@ -120,7 +120,7 @@ public class Folks.FieldDetails : Object
    * @param parameter_name the name of the parameter
    * @param parameter_value the value to add
    *
-   * @since 0.3.UNRELEASED
+   * @since 0.3.5
    */
   public void set_parameter (string parameter_name, string parameter_value)
     {
@@ -136,7 +136,7 @@ public class Folks.FieldDetails : Object
    *
    * @param additional the parameters to add
    *
-   * @since 0.3.UNRELEASED
+   * @since 0.3.5
    */
   public void extend_parameters (HashTable<string, List<string>> additional)
     {
@@ -155,7 +155,7 @@ public class Folks.FieldDetails : Object
    *
    * @param parameter_name the name of the parameter
    *
-   * @since 0.3.UNRELEASED
+   * @since 0.3.5
    */
   public void remove_parameter_all (string parameter_name)
     {

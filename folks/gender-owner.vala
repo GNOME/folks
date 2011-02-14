@@ -24,7 +24,7 @@ using GLib;
 /**
  * The gender of a contact
  *
- * @since 0.3.UNRELEASED
+ * @since 0.3.5
  */
 public enum Folks.Gender
 {
@@ -45,14 +45,14 @@ public enum Folks.Gender
 /**
  * Interface for specifying the gender of a contact.
  *
- * @since 0.3.UNRELEASED
+ * @since 0.3.5
  */
 public interface Folks.GenderOwner : Object
 {
   /**
    * The gender of the contact.
    *
-   * @since 0.3.UNRELEASED
+   * @since 0.3.5
    */
   public abstract Gender gender { get; set; }
 }

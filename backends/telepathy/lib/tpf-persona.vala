@@ -55,7 +55,7 @@ public class Tpf.Persona : Folks.Persona,
    * this case, it means that the persona has been retrieved from the Telepathy
    * connection, but has not been added to the user's contact list.
    *
-   * @since 0.3.UNRELEASED
+   * @since 0.3.5
    */
   public bool is_in_contact_list { get; set; }
 

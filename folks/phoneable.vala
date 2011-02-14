@@ -24,7 +24,7 @@ using GLib;
  * Interface for classes that can provide a phone number, such as
  * {@link Persona} and {@link Individual}.
  *
- * @since 0.3.UNRELEASED
+ * @since 0.3.5
  */
 public interface Folks.Phoneable : Object
 {
@@ -33,7 +33,7 @@ public interface Folks.Phoneable : Object
    *
    * A list of phone numbers associated to the contact.
    *
-   * @since 0.3.UNRELEASED
+   * @since 0.3.5
    */
   public abstract List<FieldDetails> phone_numbers { get; set; }
 }

@@ -26,7 +26,7 @@ using GLib;
  * VCards.  The parts of the name are never null, an empty string
  * indicates that a property is not set.
  *
- * @since 0.3.UNRELEASED
+ * @since 0.3.5
  */
 public class Folks.StructuredName : Object
 {
@@ -36,7 +36,7 @@ public class Folks.StructuredName : Object
    *
    * The family name (also known as surname or last name) of a contact.
    *
-   * @since 0.3.UNRELEASED
+   * @since 0.3.5
    */
   public string family_name
     {
@@ -50,7 +50,7 @@ public class Folks.StructuredName : Object
    *
    * The family name (also known as first name) of a contact.
    *
-   * @since 0.3.UNRELEASED
+   * @since 0.3.5
    */
   public string given_name
     {
@@ -65,7 +65,7 @@ public class Folks.StructuredName : Object
    * The additional names of a contact, for instance the contact's
    * middle name.
    *
-   * @since 0.3.UNRELEASED
+   * @since 0.3.5
    */
   public string additional_names
     {
@@ -80,7 +80,7 @@ public class Folks.StructuredName : Object
    * The prefixes used in front of the name (for instance "Mr", "Mrs",
    * "Doctor" or honorific titles).
    *
-   * @since 0.3.UNRELEASED
+   * @since 0.3.5
    */
   public string prefixes
     {
@@ -94,7 +94,7 @@ public class Folks.StructuredName : Object
    *
    * The suffixes used after a name (for instance "PhD" or "Junior").
    *
-   * @since 0.3.UNRELEASED
+   * @since 0.3.5
    */
   public string suffixes
     {
@@ -114,7 +114,7 @@ public class Folks.StructuredName : Object
    * @param suffixes suffixes of the name
    * @return a new StructuredName
    *
-   * @since 0.3.UNRELEASED
+   * @since 0.3.5
    */
   public StructuredName (string? family_name, string? given_name,
       string? additional_names, string? prefixes, string? suffixes)
@@ -138,7 +138,7 @@ public class Folks.StructuredName : Object
    * @param given_name the given (first) name
    * @return a new StructuredName
    *
-   * @since 0.3.UNRELEASED
+   * @since 0.3.5
    */
   public StructuredName.simple (string? family_name, string? given_name)
     {
@@ -152,7 +152,7 @@ public class Folks.StructuredName : Object
    * @return `true` if all the components are the empty string, `false`
    * otherwise.
    *
-   * @since 0.3.UNRELEASED
+   * @since 0.3.5
    */
   public bool is_empty ()
     {
@@ -168,7 +168,7 @@ public class Folks.StructuredName : Object
  * Interface for classes which represent contacts with names, such as
  * {@link Persona} and {@link Individual}.
  *
- * @since 0.3.UNRELEASED
+ * @since 0.3.5
  */
 public interface Folks.NameOwner : Object
 {
@@ -181,7 +181,7 @@ public interface Folks.NameOwner : Object
    * the structured name, you just have to connect to the `notify` signal
    * of this property.
    *
-   * @since 0.3.UNRELEASED
+   * @since 0.3.5
    */
   public abstract StructuredName structured_name { get; set; }
 
@@ -195,7 +195,7 @@ public interface Folks.NameOwner : Object
    * The full name could or could not contain additional names (like a
    * middle name), prefixes or suffixes.
    *
-   * @since 0.3.UNRELEASED
+   * @since 0.3.5
    */
   public abstract string full_name { get; set; }
 
@@ -206,7 +206,7 @@ public interface Folks.NameOwner : Object
    * different from {@link Aliasable.alias} as aliases can be chosen by
    * the user and not by the contacts themselves.
    *
-   * @since 0.3.UNRELEASED
+   * @since 0.3.5
    */
   public abstract string nickname { get; }
 }

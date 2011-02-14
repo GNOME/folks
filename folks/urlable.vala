@@ -24,7 +24,7 @@ using GLib;
 /**
  * Associates a list of URLs with a contact.
  *
- * @since 0.3.UNRELEASED
+ * @since 0.3.5
  */
 public interface Folks.Urlable : Object
 {
@@ -33,7 +33,7 @@ public interface Folks.Urlable : Object
    *
    * A list or websites associated to the contact.
    *
-   * @since 0.3.UNRELEASED
+   * @since 0.3.5
    */
   public abstract List<FieldDetails> urls { get; set; }
 }
