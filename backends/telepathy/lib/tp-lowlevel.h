@@ -62,10 +62,19 @@ typedef enum {
 FolksTpLowlevel *
 folks_tp_lowlevel_new (void) G_GNUC_WARN_UNUSED_RESULT;
 
+/**
+ * folks_tp_lowlevel_channel_group_change_membership:
+ * @channel:
+ * @handle:
+ * @is_member:
+ * @message: (allow-none):
+ * @error:
+ */
 void
 folks_tp_lowlevel_channel_group_change_membership (TpChannel *channel,
     guint handle,
     gboolean is_member,
+    const gchar *message,
     GError **error);
 
 /**

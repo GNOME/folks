@@ -659,7 +659,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
               try
                 {
                   this._ll.channel_group_change_membership (channel,
-                      (Handle) persona.contact.handle, entry.value);
+                      (Handle) persona.contact.handle, entry.value, null);
                 }
               catch (GLib.Error e)
                 {
@@ -984,7 +984,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       try
         {
           this._ll.channel_group_change_membership (this._stored,
-              (Handle) tp_persona.contact.handle, false);
+              (Handle) tp_persona.contact.handle, false, null);
         }
       catch (GLib.Error e1)
         {
@@ -1000,7 +1000,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       try
         {
           this._ll.channel_group_change_membership (this._subscribe,
-              (Handle) tp_persona.contact.handle, false);
+              (Handle) tp_persona.contact.handle, false, null);
         }
       catch (GLib.Error e2)
         {
@@ -1016,7 +1016,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       try
         {
           this._ll.channel_group_change_membership (this._publish,
-              (Handle) tp_persona.contact.handle, false);
+              (Handle) tp_persona.contact.handle, false, null);
         }
       catch (GLib.Error e3)
         {
@@ -1144,14 +1144,15 @@ public class Tpf.PersonaStore : Folks.PersonaStore
     }
 
   private void _change_standard_contact_list_membership (
-      TelepathyGLib.Channel channel, Folks.Persona persona, bool is_member)
+      TelepathyGLib.Channel channel, Folks.Persona persona, bool is_member,
+      string? message)
     {
       var tp_persona = (Tpf.Persona) persona;
 
       try
         {
           this._ll.channel_group_change_membership (channel,
-              (Handle) tp_persona.contact.handle, is_member);
+              (Handle) tp_persona.contact.handle, is_member, message);
         }
       catch (GLib.Error e)
         {
@@ -1454,6 +1455,11 @@ public class Tpf.PersonaStore : Folks.PersonaStore
               this.type_id, this.id, contact_id);
         }
 
+      // Optional message to pass to the new persona
+      var add_message = TelepathyGLib.asv_get_string (details, "message");
+      if (add_message == "")
+        add_message = null;
+
       var status = this.account.get_connection_status (null);
       if ((status == TelepathyGLib.ConnectionStatus.DISCONNECTED) ||
           (status == TelepathyGLib.ConnectionStatus.CONNECTING) ||
@@ -1482,7 +1488,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
 
               if (this._subscribe != null)
                 this._change_standard_contact_list_membership (this._subscribe,
-                    persona, true);
+                    persona, true, add_message);
 
               if (this._publish != null)
                 {
@@ -1491,7 +1497,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
                       ChannelGroupFlags.CAN_ADD)
                     {
                       this._change_standard_contact_list_membership (
-                          this._publish, persona, true);
+                          this._publish, persona, true, add_message);
                     }
                 }
 

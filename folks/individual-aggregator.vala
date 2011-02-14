@@ -716,6 +716,7 @@ public class Folks.IndividualAggregator : Object
    * Common keys include:
    *
    *  * contact - service-specific contact ID
+   *  * message - a user-readable message to pass to the persona being added
    *
    * If a {@link Persona} with the given details already exists in the store, no
    * error will be thrown and this function will return `null`.

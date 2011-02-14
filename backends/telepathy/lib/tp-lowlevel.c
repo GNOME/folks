@@ -739,6 +739,7 @@ void
 folks_tp_lowlevel_channel_group_change_membership (TpChannel *channel,
     guint handle,
     gboolean is_member,
+    const gchar *message,
     GError **error)
 {
   GArray *handles;
@@ -758,12 +759,12 @@ folks_tp_lowlevel_channel_group_change_membership (TpChannel *channel,
   if (is_member)
     {
       tp_cli_channel_interface_group_call_add_members (channel, -1, handles,
-          NULL, group_add_members_cb, NULL, NULL, NULL);
+          message, group_add_members_cb, NULL, NULL, NULL);
     }
   else
     {
       tp_cli_channel_interface_group_call_remove_members (channel, -1, handles,
-          NULL, group_remove_members_cb, NULL, NULL, NULL);
+          message, group_remove_members_cb, NULL, NULL, NULL);
     }
 
   g_array_free (handles, TRUE);
