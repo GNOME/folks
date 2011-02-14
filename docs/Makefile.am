@@ -77,7 +77,7 @@ folks-doc: $(folks_doc_files)
 
 folks-gtk-doc: $(folks_doc_files)
 	$(AM_V_GEN)$(VALADOC) \
-		-X -l -X $(top_srcdir)/folks/.libs/libfolks.so \
+		-X -l -X $(top_builddir)/folks/.libs/libfolks.so \
 		-o gtk-doc/folks \
 		--doclet=gtkdoc \
 		$(valadoc_flags_folks) \
@@ -114,8 +114,8 @@ folks-telepathy-doc: $(folks_telepathy_doc_files)
 folks-telepathy-gtk-doc: $(folks_telepathy_doc_files)
 	$(AM_V_GEN)$(VALADOC) \
 		-X -l \
-		-X $(top_srcdir)/folks/.libs/libfolks.so \
-		-X $(top_srcdir)/backends/telepathy/lib/.libs/libfolks-telepathy.so \
+		-X $(top_builddir)/folks/.libs/libfolks.so \
+		-X $(top_builddir)/backends/telepathy/lib/.libs/libfolks-telepathy.so \
 		-o gtk-doc/folks-telepathy \
 		--doclet=gtkdoc \
 		$(valadoc_flags_folks_telepathy) \
