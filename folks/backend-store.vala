@@ -52,6 +52,20 @@ public class Folks.BackendStore : Object {
   private Debug _debug;
 
   /**
+   * This keyword in the keyfile acts as a wildcard for all backends not already
+   * listed in the same file.
+   *
+   * This is particularly useful for tests which want to ensure they're only
+   * operating with backends they were designed for (and thus may not be able to
+   * enumerate entries for).
+   *
+   * To avoid conflicts, backends must not use this as a name.
+   *
+   * @since 0.3.UNRELEASED
+   */
+  public static string KEY_FILE_GROUP_ALL_OTHERS = "all-others";
+
+  /**
    * Emitted when a backend has been added to the BackendStore.
    *
    * This will not be emitted until after {@link BackendStore.load_backends}
@@ -320,6 +334,31 @@ public class Folks.BackendStore : Object {
 
   private bool _backend_is_enabled (string name)
     {
+      var all_others_enabled = true;
+      try
+        {
+          all_others_enabled = this._backends_key_file.get_boolean (
+              this.KEY_FILE_GROUP_ALL_OTHERS, "enabled");
+        }
+      catch (KeyFileError e)
+        {
+          if (!(e is KeyFileError.GROUP_NOT_FOUND) &&
+              !(e is KeyFileError.KEY_NOT_FOUND))
+            {
+              warning ("Couldn't determine whether to enable or disable " +
+                  "backends not listed in backend key file. Defaulting to %s.",
+                  all_others_enabled ? "enabled" : "disabled");
+            }
+          else
+            {
+              debug ("No catch-all entry in the backend key file. %s " +
+                  "unlisted backends.",
+                  all_others_enabled ? "Enabling" : "Disabling");
+            }
+
+          /* fall back to the default in case of any level of failure */
+        }
+
       var enabled = true;
       try
         {
@@ -327,7 +366,18 @@ public class Folks.BackendStore : Object {
         }
       catch (KeyFileError e)
         {
-          if (!(e is KeyFileError.GROUP_NOT_FOUND) &&
+          /* if there's no entry for this backend, use the default set above */
+          if ((e is KeyFileError.GROUP_NOT_FOUND) ||
+              (e is KeyFileError.KEY_NOT_FOUND))
+            {
+              debug ("Found no entry for backend '%s'.enabled in backend " +
+                  "keyfile. %s according to '%s' setting.",
+                  name,
+                  all_others_enabled ? "Enabling" : "Disabling",
+                  this.KEY_FILE_GROUP_ALL_OTHERS);
+              enabled = all_others_enabled;
+            }
+          else if (!(e is KeyFileError.GROUP_NOT_FOUND) &&
               !(e is KeyFileError.KEY_NOT_FOUND))
             {
               warning ("Couldn't check enabled state of backend '%s': %s\n" +
