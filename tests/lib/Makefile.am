@@ -3,6 +3,19 @@ SUBDIRS = \
 	telepathy \
 	$(NULL)
 
+if ENABLE_TRACKER
+SUBDIRS += tracker
+endif
+
+DIST_SUBDIRS = \
+	key-file \
+	telepathy \
+	$(NULL)
+
+if ENABLE_TRACKER
+DIST_SUBDIRS += tracker
+endif
+
 noinst_LTLIBRARIES = libfolks-test.la
 
 libfolks_test_la_SOURCES = test-case.vala

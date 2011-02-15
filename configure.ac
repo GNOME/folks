@@ -66,6 +66,14 @@ AC_SUBST([LT_AGE])
 FOLKS_MAJOR_MINOR_VERSION=folks_major_minor_version
 AC_SUBST([FOLKS_MAJOR_MINOR_VERSION])
 
+AC_ARG_ENABLE(tracker-backend,
+        AC_HELP_STRING([--enable-tracker-backend],
+                       [ build the Tracker backend]),
+        enable_tracker_backend=$enableval,
+        enable_tracker_backend=no )
+
+AM_CONDITIONAL([ENABLE_TRACKER], [test "x$enable_tracker_backend" = "xyes"])
+
 # -----------------------------------------------------------
 # Dependencies
 # -----------------------------------------------------------
@@ -74,6 +82,7 @@ GLIB_REQUIRED=2.24.0
 TP_GLIB_REQUIRED=0.13.1
 VALA_REQUIRED=0.11.6
 VALADOC_REQUIRED=0.2.1
+TRACKER_SPARQL_REQUIRED=0.10
 
 PKG_CHECK_MODULES([GLIB],
                   [glib-2.0 >= $GLIB_REQUIRED
@@ -85,6 +94,11 @@ PKG_CHECK_MODULES([DBUS_GLIB], [dbus-glib-1])
 # FIXME: We depend on libgee < 0.7 because 0.7 breaks API. bgo#627746
 PKG_CHECK_MODULES([GEE], [gee-1.0 < 0.7])
 PKG_CHECK_MODULES([TP_GLIB], [telepathy-glib >= $TP_GLIB_REQUIRED])
+
+if test x$enable_tracker_backend = xyes; then
+        PKG_CHECK_MODULES([TRACKER_SPARQL],
+                          [tracker-sparql-0.10 >= $TRACKER_SPARQL_REQUIRED])
+fi
 
 #
 # Vala building options -- allows tarball builds without installing Vala
@@ -160,6 +174,10 @@ if test "x$enable_vala" = "xyes" ; then
                              gio-2.0
                              gee-1.0])
 
+        if test x$enable_tracker_backend = xyes; then
+          VALA_CHECK_PACKAGES([tracker-sparql-0.10])
+        fi
+
         # this will set HAVE_INTROSPECTION
         GOBJECT_INTROSPECTION_REQUIRE([0.9.12])
 fi
@@ -186,8 +204,17 @@ AC_SUBST([BACKEND_KF])
 BACKEND_TP='$(top_builddir)/backends/telepathy/.libs/libfolks-backend-telepathy.so'
 AC_SUBST([BACKEND_TP])
 
+if test x$enable_tracker_backend = xyes; then
+  BACKEND_TRACKER='$(top_builddir)/backends/tracker/.libs/libfolks-backend-tracker.so'
+  AC_SUBST([BACKEND_TRACKER])
+fi
+
 # All of the backend libraries in our tree; to be used by the tests
 BACKEND_UNINST_PATH='$(BACKEND_KF):$(BACKEND_TP)'
+if test x$enable_tracker_backend = xyes; then
+  TRACKER_BACKEND_UNINST_PATH='$(BACKEND_TRACKER)'
+  BACKEND_UNINST_PATH="$BACKEND_UNINST_PATH:$TRACKER_BACKEND_UNINST_PATH"
+fi
 AC_SUBST([BACKEND_UNINST_PATH])
 
 # -----------------------------------------------------------
@@ -348,6 +375,17 @@ AC_CONFIG_FILES([
     tools/inspect/Makefile
 ])
 
+if test x$enable_tracker_backend = xyes; then
+AC_CONFIG_FILES([
+    backends/tracker/lib/folks-tracker.pc
+    backends/tracker/lib/folks-tracker-uninstalled.pc
+    backends/tracker/Makefile
+    backends/tracker/lib/Makefile
+    tests/tracker/Makefile
+    tests/lib/tracker/Makefile
+])
+fi
+
 AC_OUTPUT
 
 echo "
@@ -362,6 +400,7 @@ Configure summary:
         Tests.......................:  ${have_tp_glib_for_tests}
         Import tool.................:  ${with_import_tool}
         Inspector tool..............:  ${with_inspect_tool}
+        Tracker backend.............:  ${enable_tracker_backend}
 
 
 "
