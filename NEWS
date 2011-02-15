@@ -1,3 +1,9 @@
+Overview of changes from libfolks 0.3.6 to libfolks 0.3.7
+=========================================================
+
+Bugs fixed:
+* Bug 642351 — BACKEND_STORE_KEY_FILE format should support a wildcard entry
+
 Overview of changes from libfolks 0.3.5 to libfolks 0.3.6
 =========================================================
 
