@@ -104,6 +104,7 @@ folks-telepathy-gtk-doc: $(folks_telepathy_doc_files)
 	$(AM_V_GEN)$(VALADOC) \
 		-X -l -X $(top_builddir)/folks/.libs/libfolks.so \
 		-X -l -X $(top_builddir)/backends/telepathy/lib/.libs/libfolks-telepathy.so \
+		-X --ignore-headers -X $(top_srcdir)/backends/telepathy/lib/tp-lowlevel.h \
 		-o gtk-doc/folks-telepathy \
 		--doclet=gtkdoc \
 		$(valadoc_flags_folks_telepathy) \
