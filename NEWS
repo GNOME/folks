@@ -5,6 +5,7 @@ Bugs fixed:
 * Bug 642351 — BACKEND_STORE_KEY_FILE format should support a wildcard entry
 * Bug 643241 — _update_urls () needs to create copies of each
   List<FieldDetails>
+* Bug 643247 — Folks needs C API documentation
 
 Overview of changes from libfolks 0.3.5 to libfolks 0.3.6
 =========================================================

@@ -53,7 +53,7 @@ folks_doc_deps = \
 	$(NULL)
 valadoc_flags_folks = \
 	$(valadoc_flags) \
-	-b $(top_srcdir)/folks \
+	-X $(top_srcdir)/folks/folks.h \
 	$(addprefix --pkg=,$(folks_doc_deps)) \
 	--vapidir=$(top_srcdir)/folks \
 	$(folks_doc_files) \
@@ -88,7 +88,7 @@ folks_telepathy_doc_deps = \
 	$(NULL)
 valadoc_flags_folks_telepathy = \
 	$(valadoc_flags) \
-	-b $(top_srcdir)/backends/telepathy/lib \
+	-X $(top_srcdir)/backends/telepathy/lib/folks-telepathy.h \
 	$(addprefix --pkg=,$(folks_telepathy_doc_deps)) \
 	--vapidir=$(top_srcdir)/folks \
 	--vapidir=$(top_srcdir)/backends/telepathy/lib \
