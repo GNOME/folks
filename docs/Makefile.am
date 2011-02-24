@@ -3,9 +3,8 @@ folksimgdir=$(datadir)/devhelp/references/folks/img
 folkstelepathydocdir=$(datadir)/devhelp/references/folks-telepathy
 folkstelepathyimgdir=$(datadir)/devhelp/references/folks-telepathy/img
 
-# FIXME: disabled due to continued brokenness in valadoc (related to bgo#629531)
-#folksgtkdocdir=$(datadir)/gtk-doc/html/folks
-#folkstelepathygtkdocdir=$(datadir)/gtk-doc/html/folks-telepathy
+folksgtkdocdir=$(datadir)/gtk-doc/html/folks
+folkstelepathygtkdocdir=$(datadir)/gtk-doc/html/folks-telepathy
 
 common_doc_files = \
 	*.css \
@@ -24,9 +23,8 @@ folkstelepathydoc_DATA = \
 	$(addprefix folks-telepathy/folks-telepathy/,$(common_doc_files)) \
 	$(NULL)
 
-# FIXME: disabled due to continued brokenness in valadoc (related to bgo#629531)
-#folksgtkdoc_DATA = gtk-doc/folks/html/*
-#folkstelepathygtkdoc_DATA = gtk-doc/folks-telepathy/html/*
+folksgtkdoc_DATA = gtk-doc/folks/html/*
+folkstelepathygtkdoc_DATA = gtk-doc/folks-telepathy/html/*
 
 folksimg_DATA = \
 	folks/folks/img/*.png \
@@ -37,9 +35,8 @@ folkstelepathyimg_DATA = \
 
 $(folksdoc_DATA) $(folksimg_DATA): folks-doc
 $(folkstelepathydoc_DATA) $(folkstelepathyimg_DATA): folks-telepathy-doc
-# FIXME: disabled due to continued brokenness in valadoc (related to bgo#629531)
-#$(folksgtkdoc_DATA): folks-gtk-doc
-#$(folkstelepathygtkdoc_DATA): folks-telepathy-gtk-doc
+$(folksgtkdoc_DATA): folks-gtk-doc
+$(folkstelepathygtkdoc_DATA): folks-telepathy-gtk-doc
 
 valadoc_flags = \
 	--force \
@@ -69,14 +66,13 @@ folks-doc: $(folks_doc_files)
 		$(valadoc_flags_folks) \
 		$(NULL)
 
-# FIXME: disabled due to continued brokenness in valadoc (related to bgo#629531)
-#folks-gtk-doc: $(folks_doc_files)
-#	$(AM_V_GEN)$(VALADOC) \
-#		-X -l -X $(top_builddir)/folks/.libs/libfolks.so \
-#		-o gtk-doc/folks \
-#		--doclet=gtkdoc \
-#		$(valadoc_flags_folks) \
-#		$(NULL)
+folks-gtk-doc: $(folks_doc_files)
+	$(AM_V_GEN)$(VALADOC) \
+		-X -l -X $(top_builddir)/folks/.libs/libfolks.so \
+		-o gtk-doc/folks \
+		--doclet=gtkdoc \
+		$(valadoc_flags_folks) \
+		$(NULL)
 
 # folks-telepathy documentation
 folks_telepathy_doc_files = $(top_srcdir)/backends/telepathy/lib/*.vala
@@ -106,20 +102,17 @@ folks-telepathy-doc: $(folks_telepathy_doc_files)
 		$(valadoc_flags_folks_telepathy) \
 		$(NULL)
 
-# FIXME: disabled due to continued brokenness in valadoc (related to bgo#629531)
-#folks-telepathy-gtk-doc: $(folks_telepathy_doc_files)
-#	$(AM_V_GEN)$(VALADOC) \
-#		-X -l -X $(top_builddir)/folks/.libs/libfolks.so \
-#		-X -l -X $(top_builddir)/backends/telepathy/lib/.libs/libfolks-telepathy.so \
-#		-X --ignore-headers -X $(top_srcdir)/backends/telepathy/lib/tp-lowlevel.h \
-#		-o gtk-doc/folks-telepathy \
-#		--doclet=gtkdoc \
-#		$(valadoc_flags_folks_telepathy) \
-#		$(NULL)
+folks-telepathy-gtk-doc: $(folks_telepathy_doc_files)
+	$(AM_V_GEN)$(VALADOC) \
+		-X -l -X $(top_builddir)/folks/.libs/libfolks.so \
+		-X -l -X $(top_builddir)/backends/telepathy/lib/.libs/libfolks-telepathy.so \
+		-X --ignore-headers -X $(top_srcdir)/backends/telepathy/lib/tp-lowlevel.h \
+		-o gtk-doc/folks-telepathy \
+		--doclet=gtkdoc \
+		$(valadoc_flags_folks_telepathy) \
+		$(NULL)
 
-# FIXME: disabled due to continued brokenness in valadoc (related to bgo#629531)
-#.PHONY: folks-doc folks-gtk-doc folks-telepathy-doc folks-telepathy-gtk-doc
-.PHONY: folks-doc folks-telepathy-doc
+.PHONY: folks-doc folks-gtk-doc folks-telepathy-doc folks-telepathy-gtk-doc
 
 distclean-local: distclean-docs
 distclean-docs:

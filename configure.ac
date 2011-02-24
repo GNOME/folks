@@ -73,6 +73,7 @@ AC_SUBST([FOLKS_MAJOR_MINOR_VERSION])
 GLIB_REQUIRED=2.24.0
 TP_GLIB_REQUIRED=0.13.1
 VALA_REQUIRED=0.11.6
+VALADOC_REQUIRED=0.2.1
 
 PKG_CHECK_MODULES([GLIB],
                   [glib-2.0 >= $GLIB_REQUIRED
@@ -241,7 +242,8 @@ AC_ARG_ENABLE([docs],
 AM_CONDITIONAL([ENABLE_DOCS], [test x$enable_docs = xyes])
 
 AS_IF([test "x$enable_docs" != xno],
-      [AC_PATH_PROG([VALADOC], [valadoc], [:])
+      [PKG_CHECK_MODULES([VALADOC_PC], [valadoc-1.0 >= $VALADOC_REQUIRED])
+       AC_PATH_PROG([VALADOC], [valadoc], [:])
        AS_IF([test "$VALADOC" != :],
              have_valadoc=yes)])
 AM_CONDITIONAL([HAVE_VALADOC], [test x$have_valadoc = xyes])
