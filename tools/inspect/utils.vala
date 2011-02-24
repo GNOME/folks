@@ -291,6 +291,28 @@ private class Folks.Inspect.Utils
           output_string += " }";
           return output_string;
         }
+      else if (prop_name == "email-addresses" ||
+               prop_name == "urls" ||
+               prop_name == "phone-numbers")
+        {
+          output_string = "{ ";
+          bool first = true;
+          unowned GLib.List<FieldDetails> prop_list =
+              (GLib.List<FieldDetails>) prop_value.get_pointer ();
+
+          foreach (var p in prop_list)
+            {
+              if (!first)
+                {
+                  output_string += ", ";
+                }
+              output_string +=  p.value;
+              first = false;
+            }
+            output_string += " }";
+
+            return output_string;
+        }
 
       return Utils.transform_value_to_string (prop_value);
     }
