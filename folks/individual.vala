@@ -974,6 +974,8 @@ public class Folks.Individual : Object,
        * If the same URL exist multiple times we merge the parameters. */
       var urls_set = new HashTable<unowned string, unowned FieldDetails> (
           str_hash, str_equal);
+      var urls = new GLib.List<FieldDetails> ();
+
       foreach (var persona in this._persona_list)
         {
           var urlable = persona as Urlable;
@@ -985,12 +987,18 @@ public class Folks.Individual : Object,
                   if (existing != null)
                     existing.extend_parameters (ps.parameters);
                   else
-                    urls_set.insert (ps.value, ps);
+                    {
+                      var new_ps = new FieldDetails (ps.value);
+                      new_ps.extend_parameters (ps.parameters);
+                      urls_set.insert (ps.value, new_ps);
+                      urls.prepend ((owned) new_ps);
+                    }
                 }
             }
         }
       /* Set the private member directly to avoid iterating this list again */
-      this._urls = urls_set.get_values ();
+      urls.reverse ();
+      this._urls = (owned) urls;
 
       this.notify_property ("urls");
     }
