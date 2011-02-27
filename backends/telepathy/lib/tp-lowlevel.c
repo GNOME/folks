@@ -65,7 +65,7 @@ connection_ensure_channel_cb (TpConnection *conn,
       /* FIXME: pass in an error here and react to it */
       channel = tp_channel_new_from_properties (conn, path, properties, NULL);
       g_simple_async_result_set_op_res_gpointer (simple, g_object_ref (channel),
-          NULL);
+          (GDestroyNotify) g_object_unref);
 
       g_object_unref (channel);
     }
