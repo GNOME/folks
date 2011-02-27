@@ -8,6 +8,8 @@ Bugs fixed:
 * Bug 643247 — Folks needs C API documentation
 * Bug 643201 — folks-inspect can't handle properties which are
   List<FieldDetails>
+* Bug 642866 — tp-lowlevel leaks TpChannel
+* Bug 642861 — FolksLinkedHashSet still alive when exiting Empathy
 
 Overview of changes from libfolks 0.3.5 to libfolks 0.3.6
 =========================================================

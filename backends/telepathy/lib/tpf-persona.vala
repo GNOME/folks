@@ -243,9 +243,9 @@ public class Tpf.Persona : Folks.Persona,
 
       contact.notify["alias"].connect ((s, p) =>
           {
-            if (this._alias != contact.alias)
+            if (this._alias != this.contact.alias)
               {
-                this._alias = contact.alias;
+                this._alias = this.contact.alias;
                 this.notify_property ("alias");
               }
           });
