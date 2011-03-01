@@ -64,14 +64,14 @@ public enum Folks.TrustLevel
  */
 public class Folks.Individual : Object,
     Aliasable,
+    AvatarOwner,
     Emailable,
     Favouritable,
     GenderOwner,
     Groupable,
-    AvatarOwner,
-    PresenceOwner,
     IMable,
     NameOwner,
+    PresenceOwner,
     Phoneable,
     Urlable
 {
