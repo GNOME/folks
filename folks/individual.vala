@@ -73,6 +73,7 @@ public class Folks.Individual : Object,
     NameOwner,
     PresenceOwner,
     Phoneable,
+    RoleOwner,
     Urlable
 {
   private bool _is_favourite;
@@ -296,6 +297,20 @@ public class Folks.Individual : Object,
         }
     }
 
+  private HashSet<Role> _roles;
+  /**
+   * {@inheritDoc}
+   */
+  public HashSet<Role> roles
+    {
+      get { return this._roles; }
+      private set
+        {
+          this._roles = value;
+          this.notify_property ("roles");
+        }
+    }
+
   /**
    * Whether this Individual is a user-defined favourite.
    *
@@ -436,6 +451,11 @@ public class Folks.Individual : Object,
       this._update_email_addresses ();
     }
 
+  private void _notify_roles_cb ()
+    {
+      this._update_roles ();
+    }
+
   /**
    * Add or remove the Individual from the specified group.
    *
@@ -572,6 +592,7 @@ public class Folks.Individual : Object,
       this._update_urls ();
       this._update_phone_numbers ();
       this._update_email_addresses ();
+      this._update_roles ();
     }
 
   private void _update_groups ()
@@ -853,6 +874,7 @@ public class Folks.Individual : Object,
       persona.notify["phone-numbers"].connect (this._notify_phone_numbers_cb);
       persona.notify["email-addresses"].connect (
           this._notify_email_addresses_cb);
+      persona.notify["roles"].connect (this._notify_roles_cb);
 
       if (persona is Groupable)
         {
@@ -942,6 +964,7 @@ public class Folks.Individual : Object,
           this._notify_phone_numbers_cb);
       persona.notify["email-addresses"].disconnect (
           this._notify_email_addresses_cb);
+      persona.notify["roles"].disconnect (this._notify_roles_cb);
 
       if (persona is Groupable)
         {
@@ -1056,6 +1079,30 @@ public class Folks.Individual : Object,
       this._email_addresses = emails_set.get_values ();
 
       this.notify_property ("email-addresses");
+    }
+
+  private void _update_roles ()
+    {
+      HashSet<Role> roles = new HashSet<Role>
+          ((GLib.HashFunc) Role.hash, (GLib.EqualFunc) Role.equal);
+
+      foreach (var persona in this._persona_list)
+        {
+          var role_owner = persona as RoleOwner;
+          if (role_owner != null)
+            {
+              foreach (var r in role_owner.roles)
+                {
+                  if (roles.contains (r) == false)
+                    {
+                      roles.add (r);
+                    }
+                }
+            }
+        }
+
+      this._roles = (owned) roles;
+      this.notify_property ("roles");
     }
 
   private void _set_personas (GLib.List<Persona>? persona_list,
