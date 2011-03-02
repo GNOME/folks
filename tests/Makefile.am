@@ -1,4 +1,5 @@
 SUBDIRS = \
+    data \
     lib \
     tools \
     folks \

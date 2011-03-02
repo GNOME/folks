@@ -333,6 +333,7 @@ AC_CONFIG_FILES([
     docs/Makefile
     po/Makefile.in
     tests/Makefile
+    tests/data/Makefile
     tests/folks/Makefile
     tests/key-file/Makefile
     tests/telepathy/Makefile
