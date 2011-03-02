@@ -65,6 +65,7 @@ public enum Folks.TrustLevel
 public class Folks.Individual : Object,
     Aliasable,
     AvatarOwner,
+    BirthdayOwner,
     Emailable,
     Favouritable,
     GenderOwner,
@@ -311,6 +312,10 @@ public class Folks.Individual : Object,
         }
     }
 
+  public DateTime birthday { get; set; }
+
+  public string calendar_event_id { get; set; }
+
   /**
    * Whether this Individual is a user-defined favourite.
    *
@@ -454,6 +459,11 @@ public class Folks.Individual : Object,
   private void _notify_roles_cb ()
     {
       this._update_roles ();
+    }
+
+  private void _notify_birthday_cb ()
+    {
+      this._update_birthday ();
     }
 
   /**
@@ -875,6 +885,7 @@ public class Folks.Individual : Object,
       persona.notify["email-addresses"].connect (
           this._notify_email_addresses_cb);
       persona.notify["roles"].connect (this._notify_roles_cb);
+      persona.notify["birthday"].connect (this._notify_birthday_cb);
 
       if (persona is Groupable)
         {
@@ -965,6 +976,7 @@ public class Folks.Individual : Object,
       persona.notify["email-addresses"].disconnect (
           this._notify_email_addresses_cb);
       persona.notify["roles"].disconnect (this._notify_roles_cb);
+      persona.notify["birthday"].disconnect (this._notify_birthday_cb);
 
       if (persona is Groupable)
         {
@@ -1103,6 +1115,41 @@ public class Folks.Individual : Object,
 
       this._roles = (owned) roles;
       this.notify_property ("roles");
+    }
+
+  private void _update_birthday ()
+    {
+      unowned DateTime bday = null;
+      unowned string calendar_event_id = "";
+
+      foreach (var persona in this._persona_list)
+        {
+          var bday_owner = persona as BirthdayOwner;
+          if (bday_owner != null)
+            {
+              if (bday_owner.birthday != null)
+                {
+                  if (this.birthday == null ||
+                      bday_owner.birthday.compare (this.birthday) != 0)
+                    {
+                      bday = bday_owner.birthday;
+                      calendar_event_id = bday_owner.calendar_event_id;
+                      break;
+                    }
+                }
+            }
+        }
+
+      if (this.birthday != null && bday == null)
+        {
+          this.birthday = null;
+          this.calendar_event_id = null;
+        }
+      else if (bday != null)
+        {
+          this.birthday = bday;
+          this.calendar_event_id = calendar_event_id;
+        }
     }
 
   private void _set_personas (GLib.List<Persona>? persona_list,

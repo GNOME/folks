@@ -34,6 +34,7 @@ libfolks_la_SOURCES = \
 	urlable.vala \
 	debug.vala \
 	role-owner.vala \
+	birthday-owner.vala \
 	$(NULL)
 
 libfolks_la_VALAFLAGS = \
