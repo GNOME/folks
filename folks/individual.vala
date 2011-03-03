@@ -1044,6 +1044,9 @@ public class Folks.Individual : Object,
             {
               foreach (unowned FieldDetails ps in urlable.urls)
                 {
+                  if (ps.value == null)
+                    continue;
+
                   var existing = urls_set.lookup (ps.value);
                   if (existing != null)
                     existing.extend_parameters (ps.parameters);
@@ -1080,6 +1083,9 @@ public class Folks.Individual : Object,
             {
               foreach (unowned FieldDetails fd in phoneable.phone_numbers)
                 {
+                  if (fd.value == null)
+                    continue;
+
                   var existing = phone_numbers_set.lookup (fd.value);
                   if (existing != null)
                     existing.extend_parameters (fd.parameters);
@@ -1106,6 +1112,9 @@ public class Folks.Individual : Object,
             {
               foreach (unowned FieldDetails fd in emailable.email_addresses)
                 {
+                  if (fd.value == null)
+                    continue;
+
                   var existing = emails_set.lookup (fd.value);
                   if (existing != null)
                     existing.extend_parameters (fd.parameters);
