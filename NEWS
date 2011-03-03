@@ -12,6 +12,7 @@ Bugs fixed:
 * Bug 642861 — FolksLinkedHashSet still alive when exiting Empathy
 * Bug 642493 — Folks needs API for specifying a contact's organisation
 * Bug 642500 — Folks needs API for specifying a contact's birthday
+* Bug 642501 — Folks needs API for attaching notes to a Contact
 
 Overview of changes from libfolks 0.3.5 to libfolks 0.3.6
 =========================================================

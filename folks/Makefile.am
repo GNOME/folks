@@ -35,6 +35,7 @@ libfolks_la_SOURCES = \
 	debug.vala \
 	role-owner.vala \
 	birthday-owner.vala \
+	note-owner.vala \
 	$(NULL)
 
 libfolks_la_VALAFLAGS = \

@@ -72,6 +72,7 @@ public class Folks.Individual : Object,
     Groupable,
     IMable,
     NameOwner,
+    NoteOwner,
     PresenceOwner,
     Phoneable,
     RoleOwner,
@@ -316,6 +317,20 @@ public class Folks.Individual : Object,
 
   public string calendar_event_id { get; set; }
 
+  private HashSet<Note> _notes;
+  /**
+   * {@inheritDoc}
+   */
+  public HashSet<Note> notes
+    {
+      get { return this._notes; }
+      private set
+        {
+          this._notes = value;
+          this.notify_property ("notes");
+        }
+    }
+
   /**
    * Whether this Individual is a user-defined favourite.
    *
@@ -466,6 +481,11 @@ public class Folks.Individual : Object,
       this._update_birthday ();
     }
 
+  private void _notify_notes_cb ()
+    {
+      this._update_notes ();
+    }
+
   /**
    * Add or remove the Individual from the specified group.
    *
@@ -525,6 +545,8 @@ public class Folks.Individual : Object,
       this._stores = new HashMap<PersonaStore, uint> (null, null);
       this._gender = Gender.UNSPECIFIED;
       this.personas = personas;
+      this._notes = new HashSet<Note>
+          ((GLib.HashFunc) Note.hash, (GLib.EqualFunc) Note.equal);
     }
 
   private void _store_removed_cb (PersonaStore store)
@@ -886,6 +908,7 @@ public class Folks.Individual : Object,
           this._notify_email_addresses_cb);
       persona.notify["roles"].connect (this._notify_roles_cb);
       persona.notify["birthday"].connect (this._notify_birthday_cb);
+      persona.notify["notes"].connect (this._notify_notes_cb);
 
       if (persona is Groupable)
         {
@@ -977,6 +1000,7 @@ public class Folks.Individual : Object,
           this._notify_email_addresses_cb);
       persona.notify["roles"].disconnect (this._notify_roles_cb);
       persona.notify["birthday"].disconnect (this._notify_birthday_cb);
+      persona.notify["notes"].disconnect (this._notify_notes_cb);
 
       if (persona is Groupable)
         {
@@ -1150,6 +1174,27 @@ public class Folks.Individual : Object,
           this.birthday = bday;
           this.calendar_event_id = calendar_event_id;
         }
+    }
+
+  private void _update_notes ()
+    {
+      HashSet<Note> notes = new HashSet<Note>
+          ((GLib.HashFunc) Note.hash, (GLib.EqualFunc) Note.equal);
+
+      foreach (var persona in this._persona_list)
+        {
+          var note_owner = persona as NoteOwner;
+          if (note_owner != null)
+            {
+              foreach (var n in note_owner.notes)
+                {
+                  notes.add (n);
+                }
+            }
+        }
+
+      this._notes = (owned) notes;
+      this.notify_property ("notes");
     }
 
   private void _set_personas (GLib.List<Persona>? persona_list,
