@@ -626,6 +626,7 @@ public class Folks.Individual : Object,
       this._update_email_addresses ();
       this._update_roles ();
       this._update_birthday ();
+      this._update_notes ();
     }
 
   private void _update_groups ()
