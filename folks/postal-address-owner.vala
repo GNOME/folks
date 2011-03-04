@@ -16,6 +16,7 @@
  *
  * Authors:
  *       Marco Barisione <marco.barisione@collabora.co.uk>
+ *       Raul Gutierrez Segales <raul.gutierrez.segales@collabora.co.uk>
  */
 
 using GLib;
@@ -145,6 +146,16 @@ public class Folks.PostalAddress : Object
         }
     }
 
+  private string _uid = "";
+  /**
+   * The UID of the Postal Address (if any).
+   */
+  public string uid
+    {
+      get { return _uid; }
+      construct set { _uid = (value != null ? value : ""); }
+    }
+
   /**
    * Create a PostalAddress.
    *
@@ -160,7 +171,7 @@ public class Folks.PostalAddress : Object
    */
   public PostalAddress (string? po_box, string? extension, string? street,
       string? locality, string? region, string? postal_code, string? country,
-      string? address_format, List<string> types)
+      string? address_format, List<string> types, string? uid)
     {
       Object (po_box:         po_box,
               extension:      extension,
@@ -170,7 +181,8 @@ public class Folks.PostalAddress : Object
               postal_code:    postal_code,
               country:        country,
               address_format: address_format,
-              types:          types);
+              types:          types,
+              uid:            uid);
     }
 }
 

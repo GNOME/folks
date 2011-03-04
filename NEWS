@@ -20,6 +20,7 @@ API changes:
 * Add BirthdayOwner interface
 * Add NoteOwner interface
 * Add PostalAddressOwner interface
+* Add PostalAddressOwner.uid as a convenience for backends
 
 Overview of changes from libfolks 0.3.5 to libfolks 0.3.6
 =========================================================
