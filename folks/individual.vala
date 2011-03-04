@@ -567,8 +567,6 @@ public class Folks.Individual : Object,
       this._stores = new HashMap<PersonaStore, uint> (null, null);
       this._gender = Gender.UNSPECIFIED;
       this.personas = personas;
-      this._notes = new HashSet<Note>
-          ((GLib.HashFunc) Note.hash, (GLib.EqualFunc) Note.equal);
     }
 
   private void _store_removed_cb (PersonaStore store)
