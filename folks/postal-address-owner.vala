@@ -184,6 +184,29 @@ public class Folks.PostalAddress : Object
               types:          types,
               uid:            uid);
     }
+
+  public bool equal (PostalAddress with)
+    {
+      if (this.po_box != with.po_box ||
+          this.extension != with.extension ||
+          this.street != with.street ||
+          this.locality != with.locality ||
+          this.region != with.region ||
+          this.postal_code != with.postal_code ||
+          this.country != with.country ||
+          this.address_format != with.address_format ||
+          this.types.length () != with.types.length () ||
+          this.uid != with.uid)
+        return false;
+
+      for (int i=0; i<this.types.length (); i++)
+        {
+          if (this.types.nth_data (i) != with.types.nth_data (i))
+            return false;
+        }
+
+      return true;
+    }
 }
 
 /**
