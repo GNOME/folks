@@ -93,6 +93,17 @@ public class Folks.Role : Object
     {
       return r.organisation_name.hash () + r.title.hash ();
     }
+
+  /**
+   * Formatted version of this role.
+   *
+   * @since 0.3.UNRELEASED
+   */
+  public string to_string ()
+    {
+      var str = _("Title: %s , Organisation: %s");
+      return str.printf (this.title, this.organisation_name);
+    }
 }
 
 /**
