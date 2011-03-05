@@ -15,6 +15,7 @@ Bugs fixed:
 * Bug 642501 — Folks needs API for attaching notes to a Contact
 * Bug 641210 — Add interface for postal addresses
 * Bug 643956 — Use the correct signal name for postal addresses
+* Bug 643954 — Add to_string () to PostalAddress class
 
 API changes:
 * Add RoleOwner interface
@@ -23,6 +24,7 @@ API changes:
 * Add PostalAddressOwner interface
 * Add PostalAddressOwner.uid as a convenience for backends
 * Add PostalAddress.equal()
+* Add PostalAddress.to_string()
 
 Overview of changes from libfolks 0.3.5 to libfolks 0.3.6
 =========================================================

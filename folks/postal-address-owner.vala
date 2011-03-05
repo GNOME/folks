@@ -207,6 +207,18 @@ public class Folks.PostalAddress : Object
 
       return true;
     }
+
+  /*
+   * Returns a formatted address.
+   *
+   * @since 0.3.UNRELEASED
+   */
+  public string to_string ()
+    {
+      var str = _("%s, %s, %s, %s, %s, %s, %s");
+      return str.printf (this.po_box, this.extension, this.street,
+          this.locality, this.region, this.postal_code, this.country);
+    }
 }
 
 /**
