@@ -932,7 +932,7 @@ public class Folks.Individual : Object,
       persona.notify["roles"].connect (this._notify_roles_cb);
       persona.notify["birthday"].connect (this._notify_birthday_cb);
       persona.notify["notes"].connect (this._notify_notes_cb);
-      persona.notify["postal_addresses"].connect
+      persona.notify["postal-addresses"].connect
           (this._notify_postal_addresses_cb);
 
       if (persona is Groupable)
@@ -1026,7 +1026,7 @@ public class Folks.Individual : Object,
       persona.notify["roles"].disconnect (this._notify_roles_cb);
       persona.notify["birthday"].disconnect (this._notify_birthday_cb);
       persona.notify["notes"].disconnect (this._notify_notes_cb);
-      persona.notify["postal_addresses"].disconnect
+      persona.notify["postal-addresses"].disconnect
           (this._notify_postal_addresses_cb);
 
 

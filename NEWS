@@ -14,6 +14,7 @@ Bugs fixed:
 * Bug 642500 — Folks needs API for specifying a contact's birthday
 * Bug 642501 — Folks needs API for attaching notes to a Contact
 * Bug 641210 — Add interface for postal addresses
+* Bug 643956 — Use the correct signal name for postal addresses
 
 API changes:
 * Add RoleOwner interface
