@@ -171,6 +171,11 @@ public class Folks.Backends.Sw.PersonaStore : Folks.PersonaStore
               this._service.query_open_view("people", parameters,
                   (query, item_view) =>
                     {
+                      /* The D-Bus call could return an error. In this case,
+                       * item_view is null */
+                      if (item_view == null)
+                        return;
+
                       item_view.items_added.connect (this.items_added_cb);
                       item_view.items_changed.connect (this.items_changed_cb);
                       item_view.items_removed.connect (this.items_removed_cb);
