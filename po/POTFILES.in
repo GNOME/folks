@@ -8,5 +8,7 @@ backends/telepathy/lib/tpf-persona.vala
 folks/backend-store.vala
 folks/imable.vala
 folks/individual-aggregator.vala
+folks/postal-address-owner.vala
+folks/role-owner.vala
 tools/import-pidgin.vala
 tools/import.vala

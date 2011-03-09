@@ -7,5 +7,7 @@ docs/gtk-doc/folks-telepathy/ccomments/tp-lowlevel.c
 folks/backend-store.c
 folks/imable.c
 folks/individual-aggregator.c
+folks/postal-address-owner.c
+folks/role-owner.c
 tools/import-pidgin.c
 tools/import.c
