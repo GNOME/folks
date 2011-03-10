@@ -128,7 +128,7 @@ public abstract class Folks.PersonaStore : Object
       GLib.List<Persona>? removed,
       string? message,
       Persona? actor,
-      Groupable.ChangeReason reason);
+      GroupDetails.ChangeReason reason);
 
   /**
    * Emitted when the backing store for this PersonaStore has been removed.

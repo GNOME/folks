@@ -145,13 +145,13 @@ public class Folks.Importers.Pidgin : Folks.Importer
 
           /* Skip the persona if creating them failed or if they don't support
            * groups. */
-          if (persona == null || !(persona is Groupable))
+          if (persona == null || !(persona is GroupDetails))
             continue;
 
           try
             {
-              Groupable groupable = (Groupable) persona;
-              yield groupable.change_group (group_name, true);
+              GroupDetails group_details = (GroupDetails) persona;
+              yield group_details.change_group (group_name, true);
             }
           catch (GLib.Error e)
             {

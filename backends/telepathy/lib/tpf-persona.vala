@@ -31,7 +31,7 @@ public class Tpf.Persona : Folks.Persona,
     AliasDetails,
     AvatarDetails,
     FavouriteDetails,
-    Groupable,
+    GroupDetails,
     PresenceOwner,
     IMable
 {
@@ -144,7 +144,7 @@ public class Tpf.Persona : Folks.Persona,
   /**
    * A mapping of group ID to whether the contact is a member.
    *
-   * See {@link Folks.Groupable.groups}.
+   * See {@link Folks.GroupDetails.groups}.
    */
   public HashTable<string, bool> groups
     {
@@ -176,7 +176,7 @@ public class Tpf.Persona : Folks.Persona,
   /**
    * Add or remove the Persona from the specified group.
    *
-   * See {@link Folks.Groupable.change_group}.
+   * See {@link Folks.GroupDetails.change_group}.
    */
   public async void change_group (string group, bool is_member)
     {

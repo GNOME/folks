@@ -24,7 +24,7 @@ using GLib;
  * Interface for {@link Persona}s or {@link Individual}s which can be grouped
  * into sets of similar objects.
  */
-public interface Folks.Groupable : Object
+public interface Folks.GroupDetails : Object
 {
   /**
    * The reason a group member has changed its membership in the group.

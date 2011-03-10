@@ -32,6 +32,7 @@ API changes:
 * Rename Emailable -> EmailDetails
 * Rename Favouritable -> FavouriteDetails
 * Rename GenderOwner -> GenderDetails
+* Rename Groupable -> GroupDetails
 
 Overview of changes from libfolks 0.3.5 to libfolks 0.3.6
 =========================================================

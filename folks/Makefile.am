@@ -21,7 +21,7 @@ libfolks_la_SOURCES = \
 	favourite-details.vala \
 	field-details.vala \
 	gender-details.vala \
-	groupable.vala \
+	group-details.vala \
 	presence-owner.vala \
 	imable.vala \
 	individual.vala \

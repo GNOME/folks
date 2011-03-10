@@ -238,10 +238,10 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
 
               if (this._personas.size () > 0)
                 {
-                  /* FIXME: Groupable.ChangeReason is not the right enum to use
-                   * here */
+                  /* FIXME: GroupDetails.ChangeReason is not the right enum to
+                   * use here */
                   this.personas_changed (this._personas.get_values (), null,
-                      null, null, Groupable.ChangeReason.NONE);
+                      null, null, GroupDetails.ChangeReason.NONE);
                 }
 
               this._is_prepared = true;
@@ -327,11 +327,11 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
       this._personas.insert (persona.iid, persona);
       persona.im_addresses = im_addresses;
 
-      /* FIXME: Groupable.ChangeReason is not the right enum to use here */
+      /* FIXME: GroupDetails.ChangeReason is not the right enum to use here */
       GLib.List<Persona> personas = new GLib.List<Persona> ();
       personas.prepend (persona);
       this.personas_changed (personas, null, null, null,
-          Groupable.ChangeReason.NONE);
+          GroupDetails.ChangeReason.NONE);
 
       return persona;
     }
