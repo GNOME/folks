@@ -63,7 +63,7 @@ public enum Folks.TrustLevel
  * might have, such as their different IM addresses or vCard entries.
  */
 public class Folks.Individual : Object,
-    Aliasable,
+    AliasDetails,
     AvatarOwner,
     BirthdayOwner,
     Emailable,
@@ -196,11 +196,12 @@ public class Folks.Individual : Object,
           var alias_changed = false;
           this._persona_list.foreach ((p) =>
             {
-              if (p is Aliasable && ((Persona) p).store.is_writeable == true)
+              if (p is AliasDetails &&
+                  ((Persona) p).store.is_writeable == true)
                 {
                   debug ("    written to writeable persona '%s'",
                       ((Persona) p).uid);
-                  ((Aliasable) p).alias = value;
+                  ((AliasDetails) p).alias = value;
                   alias_changed = true;
                 }
             });
@@ -211,11 +212,11 @@ public class Folks.Individual : Object,
             {
               this._persona_list.foreach ((p) =>
                 {
-                  if (p is Aliasable)
+                  if (p is AliasDetails)
                     {
                       debug ("    written to non-writeable persona '%s'",
                           ((Persona) p).uid);
-                      ((Aliasable) p).alias = value;
+                      ((AliasDetails) p).alias = value;
                     }
                 });
             }
@@ -779,9 +780,9 @@ public class Folks.Individual : Object,
        * stored. */
       foreach (var p in this._persona_list)
         {
-          if (p is Aliasable && p.store.is_writeable == true)
+          if (p is AliasDetails && p.store.is_writeable == true)
             {
-              var a = (Aliasable) p;
+              var a = (AliasDetails) p;
 
               if (a.alias != null && a.alias.strip () != "")
                 {
@@ -801,9 +802,9 @@ public class Folks.Individual : Object,
         {
           foreach (var p in this._persona_list)
             {
-              if (p is Aliasable)
+              if (p is AliasDetails)
                 {
-                  var a = (Aliasable) p;
+                  var a = (AliasDetails) p;
 
                   if (a.alias == null || a.alias.strip () == "")
                     continue;

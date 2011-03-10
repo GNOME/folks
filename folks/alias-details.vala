@@ -24,7 +24,7 @@ using GLib;
  * Interface for classes which represent aliasable contacts, such as
  * {@link Persona} and {@link Individual}.
  */
-public interface Folks.Aliasable : Object
+public interface Folks.AliasDetails : Object
 {
   /**
    * An alias for the contact.

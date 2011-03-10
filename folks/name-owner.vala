@@ -203,7 +203,7 @@ public interface Folks.NameOwner : Object
    * The nickname of the contact.
    *
    * The nickname is the name that the contact chose for himself. This is
-   * different from {@link Aliasable.alias} as aliases can be chosen by
+   * different from {@link AliasDetails.alias} as aliases can be chosen by
    * the user and not by the contacts themselves.
    *
    * @since 0.3.5

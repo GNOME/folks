@@ -12,7 +12,7 @@ lib_LTLIBRARIES = libfolks.la
 
 # Vala files to compile into libfolks.la
 libfolks_la_SOURCES = \
-	aliasable.vala \
+	alias-details.vala \
 	backend.vala \
 	backend-store.vala \
 	emailable.vala \

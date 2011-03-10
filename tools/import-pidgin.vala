@@ -254,8 +254,8 @@ public class Folks.Importers.Pidgin : Folks.Importer
         }
 
       /* Set the Persona's details */
-      if (alias != null && persona is Aliasable)
-        ((Aliasable) persona).alias = alias;
+      if (alias != null && persona is AliasDetails)
+        ((AliasDetails) persona).alias = alias;
 
       /* Print progress */
       stdout.printf (

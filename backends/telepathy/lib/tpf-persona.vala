@@ -28,7 +28,7 @@ using Folks;
  * Telepathy.
  */
 public class Tpf.Persona : Folks.Persona,
-    Aliasable,
+    AliasDetails,
     Favouritable,
     Groupable,
     AvatarOwner,
@@ -93,7 +93,7 @@ public class Tpf.Persona : Folks.Persona,
   /**
    * An alias for the Persona.
    *
-   * See {@link Folks.Aliasable.alias}.
+   * See {@link Folks.AliasDetails.alias}.
    */
   public string alias
     {
