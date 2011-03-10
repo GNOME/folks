@@ -24,7 +24,7 @@ using GLib;
  * Interface for classes which represent contacts which have an avatar
  * (pictorial representation), such as {@link Persona} and {@link Individual}.
  */
-public interface Folks.AvatarOwner : Object
+public interface Folks.AvatarDetails : Object
 {
   /**
    * An avatar for the contact.

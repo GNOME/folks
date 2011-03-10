@@ -13,6 +13,7 @@ lib_LTLIBRARIES = libfolks.la
 # Vala files to compile into libfolks.la
 libfolks_la_SOURCES = \
 	alias-details.vala \
+	avatar-details.vala \
 	backend.vala \
 	backend-store.vala \
 	emailable.vala \
@@ -20,7 +21,6 @@ libfolks_la_SOURCES = \
 	field-details.vala \
 	gender-owner.vala \
 	groupable.vala \
-	avatar-owner.vala \
 	presence-owner.vala \
 	imable.vala \
 	individual.vala \

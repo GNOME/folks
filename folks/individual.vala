@@ -64,7 +64,7 @@ public enum Folks.TrustLevel
  */
 public class Folks.Individual : Object,
     AliasDetails,
-    AvatarOwner,
+    AvatarDetails,
     BirthdayOwner,
     Emailable,
     Favouritable,
@@ -858,9 +858,9 @@ public class Folks.Individual : Object,
 
       this._persona_list.foreach ((p) =>
         {
-          if (avatar == null && p is AvatarOwner)
+          if (avatar == null && p is AvatarDetails)
             {
-              avatar = ((AvatarOwner) p).avatar;
+              avatar = ((AvatarDetails) p).avatar;
               return;
             }
         });
