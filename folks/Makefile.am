@@ -16,6 +16,7 @@ libfolks_la_SOURCES = \
 	avatar-details.vala \
 	backend.vala \
 	backend-store.vala \
+	birthday-details.vala \
 	emailable.vala \
 	favouritable.vala \
 	field-details.vala \
@@ -35,7 +36,6 @@ libfolks_la_SOURCES = \
 	urlable.vala \
 	debug.vala \
 	role-owner.vala \
-	birthday-owner.vala \
 	note-owner.vala \
 	$(NULL)
 

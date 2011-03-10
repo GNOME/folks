@@ -20,7 +20,7 @@ Bugs fixed:
 
 API changes:
 * Add RoleOwner interface
-* Add BirthdayOwner interface
+* Add BirthdayDetails interface
 * Add NoteOwner interface
 * Add PostalAddressOwner interface
 * Add PostalAddressOwner.uid as a convenience for backends

@@ -26,7 +26,7 @@ using GLib;
  *
  * @since 0.3.UNRELEASED
  */
-public interface Folks.BirthdayOwner : Object
+public interface Folks.BirthdayDetails : Object
 {
   /**
    * The birthday of the {@link Persona} and

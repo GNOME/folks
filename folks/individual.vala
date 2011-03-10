@@ -65,7 +65,7 @@ public enum Folks.TrustLevel
 public class Folks.Individual : Object,
     AliasDetails,
     AvatarDetails,
-    BirthdayOwner,
+    BirthdayDetails,
     Emailable,
     Favouritable,
     GenderOwner,
@@ -1204,7 +1204,7 @@ public class Folks.Individual : Object,
 
       foreach (var persona in this._persona_list)
         {
-          var bday_owner = persona as BirthdayOwner;
+          var bday_owner = persona as BirthdayDetails;
           if (bday_owner != null)
             {
               if (bday_owner.birthday != null)
