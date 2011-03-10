@@ -26,7 +26,7 @@ using GLib;
  *
  * @since 0.3.5
  */
-public interface Folks.Emailable : Object
+public interface Folks.EmailDetails : Object
 {
   /**
    * The email addresses of the contact.

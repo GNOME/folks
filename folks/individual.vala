@@ -66,7 +66,7 @@ public class Folks.Individual : Object,
     AliasDetails,
     AvatarDetails,
     BirthdayDetails,
-    Emailable,
+    EmailDetails,
     Favouritable,
     GenderOwner,
     Groupable,
@@ -1134,10 +1134,10 @@ public class Folks.Individual : Object,
           str_hash, str_equal);
       foreach (var persona in this._persona_list)
         {
-          var emailable = persona as Emailable;
-          if (emailable != null)
+          var email_details = persona as EmailDetails;
+          if (email_details != null)
             {
-              foreach (unowned FieldDetails fd in emailable.email_addresses)
+              foreach (unowned FieldDetails fd in email_details.email_addresses)
                 {
                   if (fd.value == null)
                     continue;

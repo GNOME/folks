@@ -17,7 +17,7 @@ libfolks_la_SOURCES = \
 	backend.vala \
 	backend-store.vala \
 	birthday-details.vala \
-	emailable.vala \
+	email-details.vala \
 	favouritable.vala \
 	field-details.vala \
 	gender-owner.vala \
