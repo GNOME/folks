@@ -67,7 +67,7 @@ public class Folks.Individual : Object,
     AvatarDetails,
     BirthdayDetails,
     EmailDetails,
-    Favouritable,
+    FavouriteDetails,
     GenderOwner,
     Groupable,
     IMable,
@@ -370,11 +370,11 @@ public class Folks.Individual : Object,
           this._is_favourite = value;
           this._persona_list.foreach ((p) =>
             {
-              if (p is Favouritable)
+              if (p is FavouriteDetails)
                 {
                   SignalHandler.block_by_func (p,
                       (void*) this._notify_is_favourite_cb, this);
-                  ((Favouritable) p).is_favourite = value;
+                  ((FavouriteDetails) p).is_favourite = value;
                   SignalHandler.unblock_by_func (p,
                       (void*) this._notify_is_favourite_cb, this);
                 }
@@ -750,9 +750,9 @@ public class Folks.Individual : Object,
 
       this._persona_list.foreach ((p) =>
         {
-          if (favourite == false && p is Favouritable)
+          if (favourite == false && p is FavouriteDetails)
             {
-              favourite = ((Favouritable) p).is_favourite;
+              favourite = ((FavouriteDetails) p).is_favourite;
               if (favourite == true)
                 return;
             }
