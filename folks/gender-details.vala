@@ -47,7 +47,7 @@ public enum Folks.Gender
  *
  * @since 0.3.5
  */
-public interface Folks.GenderOwner : Object
+public interface Folks.GenderDetails : Object
 {
   /**
    * The gender of the contact.

@@ -68,7 +68,7 @@ public class Folks.Individual : Object,
     BirthdayDetails,
     EmailDetails,
     FavouriteDetails,
-    GenderOwner,
+    GenderDetails,
     Groupable,
     IMable,
     NameOwner,
@@ -1042,10 +1042,10 @@ public class Folks.Individual : Object,
     {
       foreach (var persona in this._persona_list)
         {
-          var gender_owner = persona as GenderOwner;
-          if (gender_owner != null)
+          var gender_details = persona as GenderDetails;
+          if (gender_details != null)
             {
-              var new_value = gender_owner.gender;
+              var new_value = gender_details.gender;
               if (new_value != Gender.UNSPECIFIED)
                 {
                   if (new_value != this.gender)

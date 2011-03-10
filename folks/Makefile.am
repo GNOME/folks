@@ -20,7 +20,7 @@ libfolks_la_SOURCES = \
 	email-details.vala \
 	favourite-details.vala \
 	field-details.vala \
-	gender-owner.vala \
+	gender-details.vala \
 	groupable.vala \
 	presence-owner.vala \
 	imable.vala \
