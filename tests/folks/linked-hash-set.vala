@@ -250,8 +250,8 @@ public class LinkedHashSetTests : Folks.TestCase
   public void test_bgo640551 ()
     {
       /* This resembles the compound structure used by the Telepathy backend's
-       * IMable implementation in Tpf.Persona (which has caused memory leaks in
-       * the past - see bgo#640551) */
+       * ImDetails implementation in Tpf.Persona (which has caused memory leaks
+       * in the past - see bgo#640551) */
       var global_im_addresses =
           new HashTable<string, LinkedHashSet<string>> (str_hash, str_equal);
       var im_address_set = new LinkedHashSet<string> ();

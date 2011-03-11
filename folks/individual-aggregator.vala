@@ -865,10 +865,10 @@ public class Folks.IndividualAggregator : Object
 
       foreach (var persona in personas)
         {
-          if (!(persona is IMable))
+          if (!(persona is ImDetails))
             continue;
 
-          ((IMable) persona).im_addresses.foreach ((k, v) =>
+          ((ImDetails) persona).im_addresses.foreach ((k, v) =>
             {
               unowned string protocol = (string) k;
               unowned LinkedHashSet<string> addresses =

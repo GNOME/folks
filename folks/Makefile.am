@@ -22,8 +22,8 @@ libfolks_la_SOURCES = \
 	field-details.vala \
 	gender-details.vala \
 	group-details.vala \
+	im-details.vala \
 	presence-owner.vala \
-	imable.vala \
 	individual.vala \
 	individual-aggregator.vala \
 	linked-hash-set.vala \

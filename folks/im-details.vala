@@ -23,7 +23,7 @@ using GLib;
 /**
  * Errors related to IM addresses and IM address handling.
  */
-public errordomain Folks.IMableError
+public errordomain Folks.ImDetailsError
 {
   /**
    * The specified IM address could not be parsed.
@@ -36,7 +36,7 @@ public errordomain Folks.IMableError
  *
  * @since 0.1.13
  */
-public interface Folks.IMable : Object
+public interface Folks.ImDetails : Object
 {
   /**
    * A mapping of IM protocol to an ordered set of IM addresses.
@@ -50,7 +50,7 @@ public interface Folks.IMable : Object
    * IM address may be present in the sets for different protocols.
    *
    * All the IM addresses must be normalised using
-   * {@link IMable.normalise_im_address} before being added to this property.
+   * {@link ImDetails.normalise_im_address} before being added to this property.
    *
    * @since 0.3.4
    */
@@ -67,7 +67,7 @@ public interface Folks.IMable : Object
    * of IM addresses to work, the IM addresses must be normalised beforehand.
    *
    * If the provided IM address is invalid,
-   * {@link Folks.IMableError.INVALID_IM_ADDRESS} will be thrown. Note that this
+   * {@link Folks.ImDetailsError.INVALID_IM_ADDRESS} will be thrown. Note that this
    * isn't guaranteed to be thrown for all invalid addresses, but if it is
    * thrown, the address is guaranteed to be invalid.
    *
@@ -75,10 +75,10 @@ public interface Folks.IMable : Object
    * @param protocol the protocol of this im_address
    *
    * @since 0.2.0
-   * @throws Folks.IMableError if the provided IM address was invalid
+   * @throws Folks.ImDetailsError if the provided IM address was invalid
    */
   public static string normalise_im_address (string im_address, string protocol)
-      throws Folks.IMableError
+      throws Folks.ImDetailsError
     {
       string normalised;
 
@@ -98,7 +98,7 @@ public interface Folks.IMable : Object
 
           if (parts.length < 1)
             {
-              throw new IMableError.INVALID_IM_ADDRESS (
+              throw new ImDetailsError.INVALID_IM_ADDRESS (
                   /* Translators: the parameter is an IM address. */
                   _("The IM address '%s' could not be understood."),
                   im_address);
@@ -112,7 +112,7 @@ public interface Folks.IMable : Object
 
           if (parts.length < 1)
             {
-              throw new IMableError.INVALID_IM_ADDRESS (
+              throw new ImDetailsError.INVALID_IM_ADDRESS (
                   /* Translators: the parameter is an IM address. */
                   _("The IM address '%s' could not be understood."),
                   im_address);
@@ -134,7 +134,7 @@ public interface Folks.IMable : Object
               (domain == null || domain == "") ||
               (resource != null && resource == ""))
             {
-              throw new IMableError.INVALID_IM_ADDRESS (
+              throw new ImDetailsError.INVALID_IM_ADDRESS (
                   /* Translators: the parameter is an IM address. */
                   _("The IM address '%s' could not be understood."),
                   im_address);
@@ -159,7 +159,7 @@ public interface Folks.IMable : Object
             }
           else
             {
-              throw new IMableError.INVALID_IM_ADDRESS (
+              throw new ImDetailsError.INVALID_IM_ADDRESS (
                   /* Translators: the parameter is an IM address. */
                   _("The IM address '%s' could not be understood."),
                   im_address);

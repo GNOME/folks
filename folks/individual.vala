@@ -70,7 +70,7 @@ public class Folks.Individual : Object,
     FavouriteDetails,
     GenderDetails,
     GroupDetails,
-    IMable,
+    ImDetails,
     NameOwner,
     NoteOwner,
     PresenceOwner,
@@ -891,10 +891,10 @@ public class Folks.Individual : Object,
       /* populate the IM addresses as the union of our Personas' addresses */
       foreach (var persona in this.personas)
         {
-          if (persona is IMable)
+          if (persona is ImDetails)
             {
-              var imable = (IMable) persona;
-              imable.im_addresses.foreach ((k, v) =>
+              var im_details = (ImDetails) persona;
+              im_details.im_addresses.foreach ((k, v) =>
                 {
                   var cur_protocol = (string) k;
                   var cur_addresses = (LinkedHashSet<string>) v;

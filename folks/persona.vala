@@ -133,7 +133,7 @@ public abstract class Folks.Persona : Object
    */
   public delegate void LinkablePropertyCallback (string link);
 
-  /* FIXME: This code should move to the IMable interface as a concrete
+  /* FIXME: This code should move to the ImDetails interface as a concrete
    * method of the interface. However, that depends on bgo#624842 */
   /**
    * Produce one or more mapping strings for the given property's value.

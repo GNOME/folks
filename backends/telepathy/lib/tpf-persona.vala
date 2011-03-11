@@ -32,8 +32,8 @@ public class Tpf.Persona : Folks.Persona,
     AvatarDetails,
     FavouriteDetails,
     GroupDetails,
-    PresenceOwner,
-    IMable
+    ImDetails,
+    PresenceOwner
 {
   private HashTable<string, bool> _groups;
   private bool _is_favourite;
@@ -133,7 +133,7 @@ public class Tpf.Persona : Folks.Persona,
   /**
    * A mapping of IM protocol to an ordered set of IM addresses.
    *
-   * See {@link Folks.IMable.im_addresses}.
+   * See {@link Folks.ImDetails.im_addresses}.
    */
   public HashTable<string, LinkedHashSet<string>> im_addresses
     {
@@ -232,7 +232,7 @@ public class Tpf.Persona : Folks.Persona,
       Object (alias: contact.get_alias (),
               contact: contact,
               display_id: id,
-              /* FIXME: This IID format should be moved out to the IMable
+              /* FIXME: This IID format should be moved out to the ImDetails
                * interface along with the code in
                * Kf.Persona.linkable_property_to_links(), but that depends on
                * bgo#624842 being fixed. */
@@ -258,10 +258,10 @@ public class Tpf.Persona : Folks.Persona,
       LinkedHashSet<string> im_address_set = new LinkedHashSet<string> ();
       try
         {
-          im_address_set.add (IMable.normalise_im_address (id,
+          im_address_set.add (ImDetails.normalise_im_address (id,
               account.get_protocol ()));
         }
-      catch (IMableError e)
+      catch (ImDetailsError e)
         {
           /* This should never happen…but if it does, warn of it and continue */
           warning (e.message);

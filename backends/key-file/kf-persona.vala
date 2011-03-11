@@ -30,10 +30,10 @@ using Folks.Backends.Kf;
  */
 public class Folks.Backends.Kf.Persona : Folks.Persona,
     AliasDetails,
-    IMable
+    ImDetails
 {
   private unowned GLib.KeyFile _key_file;
-  /* FIXME: As described in the IMable interface, we have to use
+  /* FIXME: As described in the ImDetails interface, we have to use
    * GenericArray<string> here rather than just string[], as null-terminated
    * arrays aren't supported as generic types. */
   private HashTable<string, LinkedHashSet<string>> _im_addresses;
@@ -113,10 +113,10 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
                   string normalized_address;
                   try
                     {
-                      normalized_address = IMable.normalise_im_address (
+                      normalized_address = ImDetails.normalise_im_address (
                           address, protocol);
                     }
-                  catch (IMableError e)
+                  catch (ImDetailsError e)
                     {
                       /* Somehow an error has crept into the user's
                        * relationships.ini. Warn of it and ignore the IM
@@ -193,10 +193,10 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
                   string address;
                   try
                     {
-                      address = IMable.normalise_im_address (im_address,
+                      address = ImDetails.normalise_im_address (im_address,
                           protocol);
                     }
-                  catch (IMableError e)
+                  catch (ImDetailsError e)
                     {
                       /* Warn of and ignore any invalid IM addresses */
                       warning (e.message);
