@@ -71,7 +71,7 @@ public class Folks.Individual : Object,
     GenderDetails,
     GroupDetails,
     ImDetails,
-    NameOwner,
+    NameDetails,
     NoteOwner,
     PresenceOwner,
     Phoneable,
@@ -947,10 +947,10 @@ public class Folks.Individual : Object,
     {
       foreach (var persona in this._persona_list)
         {
-          var name_owner = persona as NameOwner;
-          if (name_owner != null)
+          var name_details = persona as NameDetails;
+          if (name_details != null)
             {
-              var new_value = name_owner.structured_name;
+              var new_value = name_details.structured_name;
               if (new_value != null)
                 {
                   if (new_value != this.structured_name)
@@ -966,10 +966,10 @@ public class Folks.Individual : Object,
     {
       foreach (var persona in this._persona_list)
         {
-          var name_owner = persona as NameOwner;
-          if (name_owner != null)
+          var name_details = persona as NameDetails;
+          if (name_details != null)
             {
-              var new_value = name_owner.full_name;
+              var new_value = name_details.full_name;
               if (new_value != null)
                 {
                   if (new_value != this.full_name)
@@ -985,10 +985,10 @@ public class Folks.Individual : Object,
     {
       foreach (var persona in this._persona_list)
         {
-          var name_owner = persona as NameOwner;
-          if (name_owner != null)
+          var name_details = persona as NameDetails;
+          if (name_details != null)
             {
-              var new_value = name_owner.nickname;
+              var new_value = name_details.nickname;
               if (new_value != null)
                 {
                   if (new_value != this._nickname)

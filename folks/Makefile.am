@@ -23,11 +23,11 @@ libfolks_la_SOURCES = \
 	gender-details.vala \
 	group-details.vala \
 	im-details.vala \
+	name-details.vala \
 	presence-owner.vala \
 	individual.vala \
 	individual-aggregator.vala \
 	linked-hash-set.vala \
-	name-owner.vala \
 	persona.vala \
 	persona-store.vala \
 	phoneable.vala \

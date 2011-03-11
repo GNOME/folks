@@ -170,7 +170,7 @@ public class Folks.StructuredName : Object
  *
  * @since 0.3.5
  */
-public interface Folks.NameOwner : Object
+public interface Folks.NameDetails : Object
 {
   /**
    * The contact name split in its constituent parts.
