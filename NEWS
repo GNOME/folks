@@ -23,10 +23,6 @@ API changes:
 * Add BirthdayDetails interface
 * Add NoteDetails interface
 * Add PostalAddressDetails interface
-* Add PostalAddressDetails.uid as a convenience for backends
-* Add PostalAddress.equal()
-* Add PostalAddress.to_string()
-* Add RoleDetails.to_string()
 * Rename Aliasable -> AliasDetails
 * Rename AvatarOwner -> AvatarDetails
 * Rename Emailable -> EmailDetails
