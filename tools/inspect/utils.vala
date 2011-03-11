@@ -258,7 +258,11 @@ private class Folks.Inspect.Utils
         }
       else if (prop_name == "avatar")
         {
-          return "%p".printf (prop_value.get_object ());
+          string ret = null;
+          File avatar = (File) prop_value.get_object ();
+          if (avatar != null)
+            ret = avatar.get_uri ();
+          return ret;
         }
       else if (prop_name == "im-addresses")
         {

@@ -19,6 +19,7 @@ Bugs fixed:
 * Bug 643955 — Add to_string () to RoleOwner class
 * Bug 643957 — Deal handle birthday and postal-addresses.
 * Bug 644457 — Handle structured names
+* Bug 644165 — An individual's avatar shouldn't be replaced by a null avatar
 
 API changes:
 * Add RoleDetails interface

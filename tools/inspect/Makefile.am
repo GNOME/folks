@@ -2,6 +2,7 @@ VALAFLAGS = \
 	--vapidir=$(top_srcdir)/folks \
 	--pkg=readline \
 	--pkg=gobject-2.0 \
+	--pkg=gio-2.0 \
 	--pkg=gee-1.0 \
 	--pkg=folks \
 	$(NULL)
@@ -22,12 +23,14 @@ folks_inspect_SOURCES = \
 	$(NULL)
 folks_inspect_LDADD = \
 	$(LIBREADLINE) \
+	$(GIO_LIBS) \
 	$(GLIB_LIBS) \
 	$(GEE_LIBS) \
 	$(top_builddir)/folks/libfolks.la \
 	$(NULL)
 folks_inspect_CFLAGS = \
 	-I$(top_srcdir)/folks \
+	$(GIO_CFLAGS) \
 	$(GLIB_CFLAGS) \
 	$(GEE_CFLAGS) \
 	$(NULL)
