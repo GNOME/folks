@@ -77,7 +77,7 @@ public class Folks.Individual : Object,
     PhoneDetails,
     PostalAddressDetails,
     RoleDetails,
-    Urlable
+    UrlDetails
 {
   private bool _is_favourite;
   private string _alias;
@@ -1066,10 +1066,10 @@ public class Folks.Individual : Object,
 
       foreach (var persona in this._persona_list)
         {
-          var urlable = persona as Urlable;
-          if (urlable != null)
+          var url_details = persona as UrlDetails;
+          if (url_details != null)
             {
-              foreach (unowned FieldDetails ps in urlable.urls)
+              foreach (unowned FieldDetails ps in url_details.urls)
                 {
                   if (ps.value == null)
                     continue;

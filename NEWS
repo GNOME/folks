@@ -37,6 +37,7 @@ API changes:
 * Rename NameOwner -> NameDetails
 * Rename Phoneable -> PhoneDetails
 * Rename PresenceOwner -> PresenceDetails
+* Rename Urlable -> UrlDetails
 
 Overview of changes from libfolks 0.3.5 to libfolks 0.3.6
 =========================================================

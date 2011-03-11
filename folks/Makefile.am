@@ -29,13 +29,13 @@ libfolks_la_SOURCES = \
 	postal-address-details.vala \
 	presence-details.vala \
 	role-details.vala \
+	url-details.vala \
 	individual.vala \
 	individual-aggregator.vala \
 	linked-hash-set.vala \
 	persona.vala \
 	persona-store.vala \
 	types.vala \
-	urlable.vala \
 	debug.vala \
 	$(NULL)
 

@@ -26,7 +26,7 @@ using GLib;
  *
  * @since 0.3.5
  */
-public interface Folks.Urlable : Object
+public interface Folks.UrlDetails : Object
 {
   /**
    * The websites of the contact.
