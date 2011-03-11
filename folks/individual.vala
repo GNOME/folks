@@ -76,7 +76,7 @@ public class Folks.Individual : Object,
     PresenceDetails,
     PhoneDetails,
     PostalAddressDetails,
-    RoleOwner,
+    RoleDetails,
     Urlable
 {
   private bool _is_favourite;
@@ -1162,10 +1162,10 @@ public class Folks.Individual : Object,
 
       foreach (var persona in this._persona_list)
         {
-          var role_owner = persona as RoleOwner;
-          if (role_owner != null)
+          var role_details = persona as RoleDetails;
+          if (role_details != null)
             {
-              foreach (var r in role_owner.roles)
+              foreach (var r in role_details.roles)
                 {
                   if (roles.contains (r) == false)
                     {

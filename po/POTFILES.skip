@@ -8,6 +8,6 @@ folks/backend-store.c
 folks/im-details.c
 folks/individual-aggregator.c
 folks/postal-address-details.c
-folks/role-owner.c
+folks/role-details.c
 tools/import-pidgin.c
 tools/import.c

@@ -28,6 +28,7 @@ libfolks_la_SOURCES = \
 	phone-details.vala \
 	postal-address-details.vala \
 	presence-details.vala \
+	role-details.vala \
 	individual.vala \
 	individual-aggregator.vala \
 	linked-hash-set.vala \
@@ -36,7 +37,6 @@ libfolks_la_SOURCES = \
 	types.vala \
 	urlable.vala \
 	debug.vala \
-	role-owner.vala \
 	$(NULL)
 
 libfolks_la_VALAFLAGS = \

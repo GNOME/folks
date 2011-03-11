@@ -19,14 +19,14 @@ Bugs fixed:
 * Bug 643955 — Add to_string () to RoleOwner class
 
 API changes:
-* Add RoleOwner interface
+* Add RoleDetails interface
 * Add BirthdayDetails interface
 * Add NoteDetails interface
 * Add PostalAddressDetails interface
 * Add PostalAddressDetails.uid as a convenience for backends
 * Add PostalAddress.equal()
 * Add PostalAddress.to_string()
-* Add RoleOwner.to_string()
+* Add RoleDetails.to_string()
 * Rename Aliasable -> AliasDetails
 * Rename AvatarOwner -> AvatarDetails
 * Rename Emailable -> EmailDetails

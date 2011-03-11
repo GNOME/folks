@@ -112,7 +112,7 @@ public class Folks.Role : Object
  *
  * @since 0.3.UNRELEASED
  */
-public interface Folks.RoleOwner : Object
+public interface Folks.RoleDetails : Object
 {
   /**
    * The roles of the contact.
