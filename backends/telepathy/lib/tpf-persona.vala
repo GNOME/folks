@@ -33,7 +33,7 @@ public class Tpf.Persona : Folks.Persona,
     FavouriteDetails,
     GroupDetails,
     ImDetails,
-    PresenceOwner
+    PresenceDetails
 {
   private HashTable<string, bool> _groups;
   private bool _is_favourite;
@@ -69,14 +69,14 @@ public class Tpf.Persona : Folks.Persona,
   /**
    * The Persona's presence type.
    *
-   * See {@link Folks.PresenceOwner.presence_type}.
+   * See {@link Folks.PresenceDetails.presence_type}.
    */
   public Folks.PresenceType presence_type { get; private set; }
 
   /**
    * The Persona's presence message.
    *
-   * See {@link Folks.PresenceOwner.presence_message}.
+   * See {@link Folks.PresenceDetails.presence_message}.
    */
   public string presence_message { get; private set; }
 

@@ -32,7 +32,7 @@ public errordomain Folks.ImDetailsError
 }
 
 /**
- * IM addresses exposed by an object implementing {@link PresenceOwner}.
+ * IM addresses exposed by an object implementing {@link PresenceDetails}.
  *
  * @since 0.1.13
  */

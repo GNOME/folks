@@ -73,7 +73,7 @@ public class Folks.Individual : Object,
     ImDetails,
     NameDetails,
     NoteDetails,
-    PresenceOwner,
+    PresenceDetails,
     PhoneDetails,
     PostalAddressDetails,
     RoleOwner,
@@ -718,11 +718,11 @@ public class Folks.Individual : Object,
       /* Choose the most available presence from our personas */
       this._persona_list.foreach ((p) =>
         {
-          if (p is PresenceOwner)
+          if (p is PresenceDetails)
             {
-              unowned PresenceOwner presence = (PresenceOwner) p;
+              unowned PresenceDetails presence = (PresenceDetails) p;
 
-              if (PresenceOwner.typecmp (presence.presence_type,
+              if (PresenceDetails.typecmp (presence.presence_type,
                   presence_type) > 0)
                 {
                   presence_type = presence.presence_type;

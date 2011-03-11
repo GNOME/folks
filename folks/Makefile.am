@@ -27,7 +27,7 @@ libfolks_la_SOURCES = \
 	note-details.vala \
 	phone-details.vala \
 	postal-address-details.vala \
-	presence-owner.vala \
+	presence-details.vala \
 	individual.vala \
 	individual-aggregator.vala \
 	linked-hash-set.vala \

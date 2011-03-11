@@ -21,7 +21,7 @@
 using GLib;
 
 /**
- * The possible presence states an object implementing {@link PresenceOwner}
+ * The possible presence states an object implementing {@link PresenceDetails}
  * could be in.
  *
  * These closely follow the
@@ -76,7 +76,7 @@ public enum Folks.PresenceType {
  * {@link PresenceType.UNSET} and their `presence_message` will be an empty
  * string.
  */
-public interface Folks.PresenceOwner : Object
+public interface Folks.PresenceDetails : Object
 {
   /**
    * The contact's presence type.
@@ -94,7 +94,7 @@ public interface Folks.PresenceOwner : Object
    * The contact's presence message.
    *
    * This is a short message written by the contact to add detail to their
-   * presence type ({@link Folks.PresenceOwner.presence_type}). If the contact
+   * presence type ({@link Folks.PresenceDetails.presence_type}). If the contact
    * hasn't set a message, it will be an empty string.
    */
   public abstract string presence_message { get; set; default = ""; }
@@ -142,8 +142,8 @@ public interface Folks.PresenceOwner : Object
    */
   public static int typecmp (PresenceType type_a, PresenceType type_b)
     {
-      return (PresenceOwner._type_availability (type_a) -
-          PresenceOwner._type_availability (type_b));
+      return (PresenceDetails._type_availability (type_a) -
+          PresenceDetails._type_availability (type_b));
     }
 
   /**
@@ -151,7 +151,7 @@ public interface Folks.PresenceOwner : Object
    *
    * This will be `true` if the contact's presence type is higher than
    * {@link PresenceType.OFFLINE}, as determined by
-   * {@link PresenceOwner.typecmp}.
+   * {@link PresenceDetails.typecmp}.
    *
    * @return `true` if the contact is online, `false` otherwise
    */
