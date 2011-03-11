@@ -75,7 +75,7 @@ public class Folks.Individual : Object,
     NoteDetails,
     PresenceOwner,
     PhoneDetails,
-    PostalAddressOwner,
+    PostalAddressDetails,
     RoleOwner,
     Urlable
 {
@@ -1185,10 +1185,11 @@ public class Folks.Individual : Object,
       /* FIXME: Detect duplicates somehow? */
       foreach (var persona in this._persona_list)
         {
-          var address_owner = persona as PostalAddressOwner;
-          if (address_owner != null)
+          var address_details = persona as PostalAddressDetails;
+          if (address_details != null)
             {
-              foreach (unowned PostalAddress pa in address_owner.postal_addresses)
+              foreach (unowned PostalAddress pa in
+                  address_details.postal_addresses)
                 this._postal_addresses.append (pa);
             }
         }

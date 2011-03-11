@@ -225,7 +225,7 @@ public class Folks.PostalAddress : Object
  * Interface for classes that can provide postal addresses, such as
  * {@link Persona} and {@link Individual}.
  */
-public interface Folks.PostalAddressOwner : Object
+public interface Folks.PostalAddressDetails : Object
 {
   /**
    * The postal addresses of the contact.

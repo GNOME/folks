@@ -22,8 +22,8 @@ API changes:
 * Add RoleOwner interface
 * Add BirthdayDetails interface
 * Add NoteDetails interface
-* Add PostalAddressOwner interface
-* Add PostalAddressOwner.uid as a convenience for backends
+* Add PostalAddressDetails interface
+* Add PostalAddressDetails.uid as a convenience for backends
 * Add PostalAddress.equal()
 * Add PostalAddress.to_string()
 * Add RoleOwner.to_string()
