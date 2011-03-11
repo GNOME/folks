@@ -15,7 +15,8 @@
  * along with this library.  If not, see <http://www.gnu.org/licenses/>.
  *
  * Authors:
- *       Marco Barisione <marco.barisione@collabora.co.u>
+ *       Marco Barisione <marco.barisione@collabora.co.uk>
+ *       Raul Gutierrez Segales <raul.gutierrez.segales@collabora.co.uk>
  */
 
 using GLib;
@@ -161,6 +162,24 @@ public class Folks.StructuredName : Object
              this._additional_names == "" &&
              this._prefixes         == "" &&
              this._suffixes         == "";
+    }
+
+  /**
+   * Formatted version of the structured name.
+   *
+   * @since 0.3.UNRELEASED
+   */
+  public string to_string ()
+    {
+      /* Translators: format for the formatted structured name.
+       * Parameters (in order) are: prefixes (for the name), given name,
+       * family name, additional names and (name) suffixes */
+      var str = "%s, %s, %s, %s, %s";
+      return str.printf (this.prefixes,
+          this.given_name,
+          this.family_name,
+          this.additional_names,
+          this.suffixes);
     }
 }
 

@@ -341,6 +341,14 @@ private class Folks.Inspect.Utils
 
             return output_string;
         }
+      else if (prop_name == "structured-name")
+        {
+          unowned StructuredName sn = (StructuredName) prop_value.get_object ();
+          string ret = null;
+          if (sn != null)
+            ret = sn.to_string ();
+          return ret;
+        }
 
       return Utils.transform_value_to_string (prop_value);
     }

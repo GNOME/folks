@@ -18,6 +18,7 @@ Bugs fixed:
 * Bug 643954 — Add to_string () to PostalAddress class
 * Bug 643955 — Add to_string () to RoleOwner class
 * Bug 643957 — Deal handle birthday and postal-addresses.
+* Bug 644457 — Handle structured names
 
 API changes:
 * Add RoleDetails interface
