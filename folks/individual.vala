@@ -72,7 +72,7 @@ public class Folks.Individual : Object,
     GroupDetails,
     ImDetails,
     NameDetails,
-    NoteOwner,
+    NoteDetails,
     PresenceOwner,
     Phoneable,
     PostalAddressOwner,
@@ -1239,10 +1239,10 @@ public class Folks.Individual : Object,
 
       foreach (var persona in this._persona_list)
         {
-          var note_owner = persona as NoteOwner;
-          if (note_owner != null)
+          var note_details = persona as NoteDetails;
+          if (note_details != null)
             {
-              foreach (var n in note_owner.notes)
+              foreach (var n in note_details.notes)
                 {
                   notes.add (n);
                 }

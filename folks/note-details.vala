@@ -81,7 +81,7 @@ public class Folks.Note : Object
  *
  * @since 0.3.UNRELEASED
  */
-public interface Folks.NoteOwner : Object
+public interface Folks.NoteDetails : Object
 {
   /**
    * The notes about the contact.

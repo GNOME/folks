@@ -21,7 +21,7 @@ Bugs fixed:
 API changes:
 * Add RoleOwner interface
 * Add BirthdayDetails interface
-* Add NoteOwner interface
+* Add NoteDetails interface
 * Add PostalAddressOwner interface
 * Add PostalAddressOwner.uid as a convenience for backends
 * Add PostalAddress.equal()

@@ -24,6 +24,7 @@ libfolks_la_SOURCES = \
 	group-details.vala \
 	im-details.vala \
 	name-details.vala \
+	note-details.vala \
 	presence-owner.vala \
 	individual.vala \
 	individual-aggregator.vala \
@@ -36,7 +37,6 @@ libfolks_la_SOURCES = \
 	urlable.vala \
 	debug.vala \
 	role-owner.vala \
-	note-owner.vala \
 	$(NULL)
 
 libfolks_la_VALAFLAGS = \
