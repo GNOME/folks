@@ -26,7 +26,7 @@ using GLib;
  *
  * @since 0.3.5
  */
-public interface Folks.Phoneable : Object
+public interface Folks.PhoneDetails : Object
 {
   /**
    * The phone numbers of the contact.

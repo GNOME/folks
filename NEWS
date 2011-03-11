@@ -35,6 +35,7 @@ API changes:
 * Rename Groupable -> GroupDetails
 * Rename IMable -> ImDetails
 * Rename NameOwner -> NameDetails
+* Rename Phoneable -> PhoneDetails
 
 Overview of changes from libfolks 0.3.5 to libfolks 0.3.6
 =========================================================

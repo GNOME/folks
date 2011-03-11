@@ -74,7 +74,7 @@ public class Folks.Individual : Object,
     NameDetails,
     NoteDetails,
     PresenceOwner,
-    Phoneable,
+    PhoneDetails,
     PostalAddressOwner,
     RoleOwner,
     Urlable
@@ -1105,10 +1105,10 @@ public class Folks.Individual : Object,
               str_hash, str_equal);
       foreach (var persona in this._persona_list)
         {
-          var phoneable = persona as Phoneable;
-          if (phoneable != null)
+          var phone_details = persona as PhoneDetails;
+          if (phone_details != null)
             {
-              foreach (unowned FieldDetails fd in phoneable.phone_numbers)
+              foreach (unowned FieldDetails fd in phone_details.phone_numbers)
                 {
                   if (fd.value == null)
                     continue;
