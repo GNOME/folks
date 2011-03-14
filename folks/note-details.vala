@@ -24,7 +24,7 @@ using GLib;
 /**
  * Representation of a Note that might be attached to a {@link Persona}.
  *
- * @since 0.3.UNRELEASED
+ * @since 0.4.0
  */
 public class Folks.Note : Object
 {
@@ -45,7 +45,7 @@ public class Folks.Note : Object
    * @param uid the note's UID (may be null)
    * @return a new Note
    *
-   * @since 0.3.UNRELEASED
+   * @since 0.4.0
    */
   public Note (string content, string? uid = null)
     {
@@ -79,14 +79,14 @@ public class Folks.Note : Object
  * This interface represents the list of notes associated
  * to a {@link Persona} and {@link Individual}.
  *
- * @since 0.3.UNRELEASED
+ * @since 0.4.0
  */
 public interface Folks.NoteDetails : Object
 {
   /**
    * The notes about the contact.
    *
-   * @since 0.3.UNRELEASED
+   * @since 0.4.0
    */
   public abstract HashSet<Note> notes { get; set; }
 }

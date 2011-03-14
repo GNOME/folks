@@ -24,7 +24,7 @@ using GLib;
  * This interface contains the birth date of a {@link Persona} and
  * {@link Individual}
  *
- * @since 0.3.UNRELEASED
+ * @since 0.4.0
  */
 public interface Folks.BirthdayDetails : Object
 {
@@ -32,14 +32,14 @@ public interface Folks.BirthdayDetails : Object
    * The birthday of the {@link Persona} and
    * {@link Individual}
    *
-   * @since 0.3.UNRELEASED
+   * @since 0.4.0
    */
   public abstract DateTime birthday { get; set; }
 
   /**
    * The event id from the source calenar
    *
-   * @since 0.3.UNRELEASED
+   * @since 0.4.0
    */
   public abstract string calendar_event_id { get; set; }
 }

@@ -61,7 +61,7 @@ public class Folks.BackendStore : Object {
    *
    * To avoid conflicts, backends must not use this as a name.
    *
-   * @since 0.3.UNRELEASED
+   * @since 0.4.0
    */
   public static string KEY_FILE_GROUP_ALL_OTHERS = "all-others";
 

@@ -208,10 +208,10 @@ public class Folks.PostalAddress : Object
       return true;
     }
 
-  /*
+  /**
    * Returns a formatted address.
    *
-   * @since 0.3.UNRELEASED
+   * @since 0.4.0
    */
   public string to_string ()
     {

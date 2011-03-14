@@ -167,7 +167,7 @@ public class Folks.StructuredName : Object
   /**
    * Formatted version of the structured name.
    *
-   * @since 0.3.UNRELEASED
+   * @since 0.4.0
    */
   public string to_string ()
     {

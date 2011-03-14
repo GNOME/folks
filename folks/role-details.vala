@@ -25,7 +25,7 @@ using GLib;
  * This interface represents the role a {@link Persona} and {@link Individual}
  * have in a given Organisation.
  *
- * @since 0.3.UNRELEASED
+ * @since 0.4.0
  */
 public class Folks.Role : Object
 {
@@ -52,7 +52,7 @@ public class Folks.Role : Object
    * @param uid a Unique ID associated to this Role
    * @return a new Role
    *
-   * @since 0.3.UNRELEASED
+   * @since 0.4.0
    */
   public Role (string? title = null,
       string? organisation_name = null, string? uid = null)
@@ -97,7 +97,7 @@ public class Folks.Role : Object
   /**
    * Formatted version of this role.
    *
-   * @since 0.3.UNRELEASED
+   * @since 0.4.0
    */
   public string to_string ()
     {
@@ -110,14 +110,14 @@ public class Folks.Role : Object
  * This interfaces represents the list of roles a {@link Persona} and
  * {@link Individual} might have.
  *
- * @since 0.3.UNRELEASED
+ * @since 0.4.0
  */
 public interface Folks.RoleDetails : Object
 {
   /**
    * The roles of the contact.
    *
-   * @since 0.3.UNRELEASED
+   * @since 0.4.0
    */
   public abstract HashSet<Role> roles { get; set; }
 }
