@@ -856,14 +856,15 @@ public class Folks.Individual : Object,
     {
       File avatar = null;
 
-      this._persona_list.foreach ((p) =>
+      foreach (var p in this._persona_list)
         {
-          if (avatar == null && p is AvatarDetails)
+          if (p is AvatarDetails)
             {
               avatar = ((AvatarDetails) p).avatar;
-              return;
+              if (avatar != null)
+                break;
             }
-        });
+        }
 
       /* only notify if the value has changed */
       if (this.avatar != avatar)
