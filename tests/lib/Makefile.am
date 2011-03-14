@@ -3,6 +3,10 @@ SUBDIRS = \
 	telepathy \
 	$(NULL)
 
+if ENABLE_LIBSOCIALWEB
+SUBDIRS += libsocialweb
+endif
+
 if ENABLE_TRACKER
 SUBDIRS += tracker
 endif
@@ -10,6 +14,7 @@ endif
 DIST_SUBDIRS = \
 	key-file \
 	telepathy \
+	libsocialweb \
 	tracker \
 	$(NULL)
 

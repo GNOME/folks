@@ -211,6 +211,8 @@ AC_SUBST([BACKEND_DIR])
 
 BACKEND_KF='$(top_builddir)/backends/key-file/.libs/libfolks-backend-key-file.so'
 AC_SUBST([BACKEND_KF])
+BACKEND_LIBSOCIALWEB='$(top_builddir)/backends/libsocialweb/.libs/libfolks-backend-libsocialweb.so'
+AC_SUBST([BACKEND_LIBSOCIALWEB])
 BACKEND_TP='$(top_builddir)/backends/telepathy/.libs/libfolks-backend-telepathy.so'
 AC_SUBST([BACKEND_TP])
 
@@ -220,7 +222,7 @@ if test x$enable_tracker_backend = xyes; then
 fi
 
 # All of the backend libraries in our tree; to be used by the tests
-BACKEND_UNINST_PATH='$(BACKEND_KF):$(BACKEND_TP)'
+BACKEND_UNINST_PATH='$(BACKEND_KF):$(BACKEND_TP):$(BACKEND_LIBSOCIALWEB)'
 if test x$enable_tracker_backend = xyes; then
   TRACKER_BACKEND_UNINST_PATH='$(BACKEND_TRACKER)'
   BACKEND_UNINST_PATH="$BACKEND_UNINST_PATH:$TRACKER_BACKEND_UNINST_PATH"
@@ -382,11 +384,14 @@ AC_CONFIG_FILES([
     tests/data/gconf.path
     tests/folks/Makefile
     tests/key-file/Makefile
+    tests/libsocialweb/Makefile
     tests/telepathy/Makefile
     tests/tracker/Makefile
     tests/lib/Makefile
     tests/lib/folks-test-uninstalled.pc
     tests/lib/key-file/Makefile
+    tests/lib/libsocialweb/Makefile
+    tests/lib/libsocialweb/session.conf
     tests/lib/telepathy/Makefile
     tests/lib/tracker/Makefile
     tests/lib/telepathy/contactlist/Makefile
