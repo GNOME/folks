@@ -1104,6 +1104,8 @@ public class Folks.Individual : Object,
       var phone_numbers_set =
           new HashTable<unowned string, unowned FieldDetails> (
               str_hash, str_equal);
+      var phones = new GLib.List<FieldDetails> ();
+
       foreach (var persona in this._persona_list)
         {
           var phone_details = persona as PhoneDetails;
@@ -1118,11 +1120,18 @@ public class Folks.Individual : Object,
                   if (existing != null)
                     existing.extend_parameters (fd.parameters);
                   else
-                    phone_numbers_set.insert (fd.value, fd);
+                    {
+                      var new_fd = new FieldDetails (fd.value);
+                      new_fd.extend_parameters (fd.parameters);
+                      phone_numbers_set.insert (fd.value, new_fd);
+                      phones.prepend ((owned) new_fd);
+                    }
                 }
             }
         }
-      this._phone_numbers = phone_numbers_set.get_values ();
+      /* Set the private member directly to avoid iterating this list again */
+      phones.reverse ();
+      this._phone_numbers = (owned) phones;
 
       this.notify_property ("phone-numbers");
     }
