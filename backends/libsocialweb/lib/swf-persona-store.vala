@@ -36,7 +36,7 @@ public class Swf.PersonaStore : Folks.PersonaStore
   private HashTable<string, Persona> _personas;
   private bool _is_prepared = false;
   private ClientService _service;
-  private ClientItemView _item_view;
+  private ClientContactView _contact_view;
 
   /**
    * The type of persona store this is.
@@ -170,34 +170,34 @@ public class Swf.PersonaStore : Folks.PersonaStore
             {
               var parameters = new HashTable<weak string, weak string> (
                   str_hash, str_equal);
-              this._service.query_open_view("people", parameters,
-                  (query, item_view) =>
+              this._service.contacts_query_open_view("people", parameters,
+                  (query, contact_view) =>
                     {
                       /* The D-Bus call could return an error. In this case,
-                       * item_view is null */
-                      if (item_view == null)
+                       * contact_view is null */
+                      if (contact_view == null)
                         return;
 
-                      item_view.items_added.connect (this.items_added_cb);
-                      item_view.items_changed.connect (this.items_changed_cb);
-                      item_view.items_removed.connect (this.items_removed_cb);
+                      contact_view.contacts_added.connect (this.contacts_added_cb);
+                      contact_view.contacts_changed.connect (this.contacts_changed_cb);
+                      contact_view.contacts_removed.connect (this.contacts_removed_cb);
 
-                      this._item_view = item_view;
+                      this._contact_view = contact_view;
                       this._is_prepared = true;
                       this.notify_property ("is-prepared");
 
-                      this._item_view.start ();
+                      this._contact_view.start ();
                     });
             }
         }
     }
 
-  private void items_added_cb (List<unowned Item> items)
+  private void contacts_added_cb (List<unowned Contact> contacts)
     {
       var added_personas = new Queue<Persona> ();
-      foreach (var item in items)
+      foreach (var contact in contacts)
         {
-          var persona = new Persona(this, item);
+          var persona = new Persona(this, contact);
           _personas.insert(persona.iid, persona);
           added_personas.push_tail(persona);
         }
@@ -206,22 +206,22 @@ public class Swf.PersonaStore : Folks.PersonaStore
         this.personas_changed (added_personas.head, null, null, null, 0);
     }
 
-  private void items_changed_cb (List<unowned Item> items)
+  private void contacts_changed_cb (List<unowned Contact> contacts)
     {
-      foreach (var item in items)
+      foreach (var contact in contacts)
         {
-          var persona = _personas.lookup(Persona.get_item_id (item));
+          var persona = _personas.lookup(Persona.get_contact_id (contact));
           if (persona != null)
-            persona.update (item);
+            persona.update (contact);
         }
     }
 
-  private void items_removed_cb (List<unowned Item> items)
+  private void contacts_removed_cb (List<unowned Contact> contacts)
     {
       var removed_personas = new Queue<Persona> ();
-      foreach (var item in items)
+      foreach (var contact in contacts)
         {
-          var persona = _personas.lookup(Persona.get_item_id (item));
+          var persona = _personas.lookup(Persona.get_contact_id (contact));
           if (persona != null)
             {
               removed_personas.push_tail(persona);

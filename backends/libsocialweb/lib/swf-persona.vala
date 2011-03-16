@@ -104,11 +104,11 @@ public class Swf.Persona : Folks.Persona,
    * Create a new persona.
    *
    * Create a new persona for the {@link PersonaStore} `store`, representing
-   * the libsocialweb contact given by `item`.
+   * the libsocialweb contact given by `contact`.
    */
-  public Persona (PersonaStore store, Item item)
+  public Persona (PersonaStore store, Contact contact)
     {
-      var id = get_item_id (item);
+      var id = get_contact_id (contact);
       var uid = this.build_uid ("folks", store.id, id);
 
       /* This is a hack so that Facebook contacts from libsocialweb are
@@ -158,7 +158,7 @@ public class Swf.Persona : Folks.Persona,
             }
         }
 
-      update (item);
+      update (contact);
     }
 
   ~Persona ()
@@ -166,21 +166,21 @@ public class Swf.Persona : Folks.Persona,
       debug ("Destroying Sw.Persona '%s': %p", this.uid, this);
     }
 
-  public static string? get_item_id (Item item)
+  public static string? get_contact_id (Contact contact)
     {
-      return item.get_value ("id");
+      return contact.get_value ("id");
     }
 
-  public void update (Item item)
+  public void update (Contact contact)
     {
-      var nickname = item.get_value ("name");
+      var nickname = contact.get_value ("name");
       if (nickname != null && this._nickname != nickname)
         {
           this._nickname = nickname;
           this.notify_property ("nickname");
         }
 
-      var avatar_path = item.get_value ("icon");
+      var avatar_path = contact.get_value ("icon");
       if (avatar_path != null)
         {
           var avatar_file = File.new_for_path (avatar_path);
@@ -189,31 +189,31 @@ public class Swf.Persona : Folks.Persona,
         }
 
       var structured_name = new StructuredName.simple (
-          item.get_value ("n.family"), item.get_value ("n.given"));
+          contact.get_value ("n.family"), contact.get_value ("n.given"));
       if (!structured_name.is_empty ())
         this.structured_name = structured_name;
       else if (this.structured_name != null)
         this.structured_name = null;
 
-      var full_name = item.get_value ("fn");
+      var full_name = contact.get_value ("fn");
       if (this.full_name != full_name)
         this.full_name = full_name;
 
       var urls = new List<FieldDetails> ();
 
-      var website = item.get_value ("url");
+      var website = contact.get_value ("url");
       if (website != null)
         urls.prepend (new FieldDetails (website));
 
-/* https://bugzilla.gnome.org/show_bug.cgi?id=645139
-      string[] websites = item.get_value_all ("url");
+      /* https://bugzilla.gnome.org/show_bug.cgi?id=645139
+      string[] websites = contact.get_value_all ("url");
       foreach (string website in websites)
         urls.prepend (new FieldDetails (website));
-*/
+      */
       if (this.urls != urls)
         this.urls = urls;
 
-      var gender_string = item.get_value ("x-gender");
+      var gender_string = contact.get_value ("x-gender");
       Gender gender;
       if (gender_string == "male")
         gender = Gender.MALE;
