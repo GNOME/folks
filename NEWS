@@ -2,6 +2,8 @@ Overview of changes from libfolks 0.4.0 to libfolks 0.4.1
 =========================================================
 
 Bugs fixed:
+* Bug 644968 - _update_phone_numbers() needs to create copies
+  of each List<FieldDetails>
 * Bug 644966 - _update_emails () needs to create copies of each
   List<FieldDetails>
 
