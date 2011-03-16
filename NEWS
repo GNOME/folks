@@ -1,6 +1,10 @@
 Overview of changes from libfolks 0.4.0 to libfolks 0.4.1
 =========================================================
 
+Bugs fixed:
+* Bug 644966 - _update_emails () needs to create copies of each
+  List<FieldDetails>
+
 Overview of changes from libfolks 0.3.6 to libfolks 0.4.0
 =========================================================
 
