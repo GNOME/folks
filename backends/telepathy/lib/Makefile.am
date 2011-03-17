@@ -86,7 +86,7 @@ pkgconfig_DATA = $(pkgconfig_in:.in=)
 
 libfolks_telepathy_la_vala.stamp: tp-lowlevel.vapi
 
-BUILT_SOURCES = \
+dist_noinst_DATA = \
 	tp-lowlevel.gir \
 	tp-lowlevel.vapi \
 	$(NULL)
@@ -167,7 +167,7 @@ MAINTAINERCLEANFILES = \
 	libtp_lowlevel_la_vala.stamp \
 	folks-telepathy.h \
 	folks-telepathy.vapi \
-	$(BUILT_SOURCES) \
+	$(dist_noinst_DATA) \
 	$(NULL)
 
 EXTRA_DIST = \

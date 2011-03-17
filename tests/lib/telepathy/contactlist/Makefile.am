@@ -70,7 +70,7 @@ tp-test-contactlist.vapi: tp-test-contactlist.gir
 		tp-test-contactlist.gir
 	touch $@
 
-BUILT_SOURCES = \
+dist_noinst_DATA = \
 	tp-test-contactlist.gir \
 	tp-test-contactlist.vapi \
 	$(NULL)
@@ -81,7 +81,7 @@ CLEANFILES = \
 	$(NULL)
 
 MAINTAINERCLEANFILES = \
-	$(BUILT_SOURCES) \
+	$(dist_noinst_DATA) \
 	$(NULL)
 
 EXTRA_DIST = \
