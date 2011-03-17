@@ -67,8 +67,6 @@ tp_lowlevel_gir_FILES = $(libtp_lowlevel_la_SOURCES) $(tp_lowlevel_headers)
 tp_lowlevel_gir_NAMESPACE = Folks
 INTROSPECTION_GIRS += tp-lowlevel.gir
 
-CLEANFILES += $(gir_DATA) $(typelib_DATA)
-
 tp-lowlevel.vapi: tp-lowlevel.gir
 	$(MAKE) $(AM_MAKEFLAGS) tp-lowlevel.gir
 	$(AM_V_GEN)$(VAPIGEN) $(VAPIGENFLAGS) \

@@ -78,8 +78,6 @@ BUILT_SOURCES = \
 CLEANFILES = \
 	_gen/param-spec-struct.h \
 	_gen/tp_test_contact_list.manager \
-	$(gir_DATA) \
-	$(typelib_DATA) \
 	$(NULL)
 
 MAINTAINERCLEANFILES = \
