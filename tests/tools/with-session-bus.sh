@@ -1,8 +1,7 @@
 #!/bin/sh
 # with-session-bus.sh - run a program with a temporary D-Bus session daemon
 #
-# The canonical location of this program is the telepathy-glib tools/
-# directory, please synchronize any changes with that copy.
+# interesting bits have been move into dbus to permit reusability
 #
 # Copyright (C) 2007-2008 Collabora Ltd. <http://www.collabora.co.uk/>
 #
@@ -10,100 +9,30 @@
 # are permitted in any medium without royalty provided the copyright
 # notice and this notice are preserved.
 
-set -e
 
-me=with-session-bus
-if [ "x$V" = "x" ] ; then
-  V=0;
-fi
+cur_dir=`dirname $0`
 
-dbus_daemon_args="--print-address=5 --print-pid=6 --fork"
-sleep=0
+. $cur_dir"/dbus-session.sh"
 
-usage ()
-{
-  echo "usage: $me [options] -- program [program_options]" >&2
-  echo "Requires write access to the current directory." >&2
-  echo "" >&2
-  echo "If \$WITH_SESSION_BUS_FORK_DBUS_MONITOR is set, fork dbus-monitor" >&2
-  echo "with the arguments in \$WITH_SESSION_BUS_FORK_DBUS_MONITOR_OPT." >&2
-  echo "The output of dbus-monitor is saved in $me-<pid>.dbus-monitor-logs" >&2
-  exit 2
-}
-
+dbus_parse_args $@
 while test "z$1" != "z--"; do
-  case "$1" in
-  --sleep=*)
-    sleep="$1"
-    sleep="${sleep#--sleep=}"
     shift
-    ;;
-  --session)
-    dbus_daemon_args="$dbus_daemon_args --session"
-    shift
-    ;;
-  --config-file=*)
-    # FIXME: assumes config file doesn't contain any special characters
-    dbus_daemon_args="$dbus_daemon_args $1"
-    shift
-    ;;
-  *)
-    usage
-    ;;
-  esac
 done
 shift
-if test "z$1" = "z"; then usage; fi
-
-exec 5> $me-$$.address
-exec 6> $me-$$.pid
+if test "z$1" = "z"; then dbus_usage; fi
 
 cleanup ()
 {
-  pid=`head -n1 $me-$$.pid`
-  if test -n "$pid" ; then
-
-    if [ $V -gt 0 ] ; then
-      echo "Killing temporary bus daemon: $pid" >&2
-    fi
-    kill -INT "$pid"
-  fi
-  rm -f $me-$$.address
-  rm -f $me-$$.pid
+    dbus_stop
 }
 
 trap cleanup INT HUP TERM
-dbus-daemon $dbus_daemon_args
 
-{
-  if [ $V -gt 0 ] ; then
-    echo -n "Temporary bus daemon is "; cat $me-$$.address;
-  fi
-} >&2
-{
-  if [ $V -gt 0 ] ; then
-    echo -n "Temporary bus daemon PID is "; head -n1 $me-$$.pid;
-  fi
-} >&2
+dbus_init 0
+dbus_start
 
 e=0
-DBUS_SESSION_BUS_ADDRESS="`cat $me-$$.address`"
-export DBUS_SESSION_BUS_ADDRESS
-
-if [ -n "$WITH_SESSION_BUS_FORK_DBUS_MONITOR" ] ; then
-  if [ $V -gt 0 ] ; then
-    echo -n "Forking dbus-monitor " \
-      "$WITH_SESSION_BUS_FORK_DBUS_MONITOR_OPT" >&2
-  fi
-  dbus-monitor $WITH_SESSION_BUS_FORK_DBUS_MONITOR_OPT \
-        > $me-$$.dbus-monitor-logs 2>&1 &
-fi
-
 "$@" || e=$?
-
-if test $sleep != 0; then
-  sleep $sleep
-fi
 
 trap - INT HUP TERM
 cleanup
