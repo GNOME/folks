@@ -199,14 +199,11 @@ public class Swf.Persona : Folks.Persona,
       if (website != null)
         urls.prepend (new FieldDetails (website));
 
-      var profile = item.get_value ("x-facebook-profile");
-      if (profile != null)
-        {
-          var ps = new FieldDetails (profile);
-          ps.add_parameter ("type", "x-facebook-profile");
-          urls.prepend (ps);
-        }
-
+/* https://bugzilla.gnome.org/show_bug.cgi?id=645139
+      string[] websites = item.get_value_all ("url");
+      foreach (string website in websites)
+        urls.prepend (new FieldDetails (website));
+*/
       if (this.urls != urls)
         this.urls = urls;
 
