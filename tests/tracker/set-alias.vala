@@ -23,21 +23,24 @@ using TrackerTest;
 using Folks;
 using Gee;
 
-public class AddContactTests : Folks.TestCase
+public class SetAliasTests : Folks.TestCase
 {
+  private GLib.MainLoop _main_loop;
   private TrackerTest.Backend _tracker_backend;
-  private bool _contact_added;
   private IndividualAggregator _aggregator;
   private string _persona_fullname;
-  private GLib.MainLoop _main_loop;
+  private string _initial_alias;
+  private string _modified_alias;
+  private bool _initial_alias_found;
+  private bool _modified_alias_found;
 
-  public AddContactTests ()
+  public SetAliasTests ()
     {
-      base ("AddContactTests");
+      base ("SetAliasTests");
 
       this._tracker_backend = new TrackerTest.Backend ();
 
-      this.add_test ("test adding contacts ", this.test_add_contact);
+      this.add_test ("test setting alias ", this.test_set_alias);
     }
 
   public override void set_up ()
@@ -48,38 +51,52 @@ public class AddContactTests : Folks.TestCase
     {
     }
 
-  public void test_add_contact ()
+  public void test_set_alias ()
     {
       this._main_loop = new GLib.MainLoop (null, false);
-      this._persona_fullname = "persona #1";
-      this._contact_added = false;
-
       Gee.HashMap<string, string> c1 = new Gee.HashMap<string, string> ();
+      this._persona_fullname = "persona #1";
+      this._initial_alias = "initial alias";
+      this._modified_alias = "modified alias";
+
       c1.set (Trf.OntologyDefs.NCO_FULLNAME, this._persona_fullname);
+
+      /* Note:
+       *
+       * we treat the nco:nickname associated to an nco:PersonContact
+       * as the alias, and the nco:nickname(s) associated to IM accounts
+       * as possible nicknames. */
+      c1.set (Trf.OntologyDefs.NCO_NICKNAME, this._initial_alias);
       this._tracker_backend.add_contact (c1);
+
       this._tracker_backend.set_up ();
 
-      this._test_add_contact_async ();
+      this._initial_alias_found = false;
+      this._modified_alias_found = false;
+
+      this._test_set_alias_async ();
 
       Timeout.add_seconds (5, () =>
-          {
-            this._main_loop.quit ();
-            assert_not_reached ();
-          });
+        {
+          this._main_loop.quit ();
+          assert_not_reached ();
+        });
 
       this._main_loop.run ();
-      assert (this._contact_added == true);
+
+      assert (this._initial_alias_found == true);
+      assert (this._modified_alias_found == true);
+
       this._tracker_backend.tear_down ();
     }
 
-  private async void _test_add_contact_async ()
+  private async void _test_set_alias_async ()
     {
       var store = BackendStore.dup ();
       yield store.prepare ();
       this._aggregator = new IndividualAggregator ();
       this._aggregator.individuals_changed.connect
           (this._individuals_changed_cb);
-
       try
         {
           yield this._aggregator.prepare ();
@@ -90,7 +107,7 @@ public class AddContactTests : Folks.TestCase
         }
     }
 
-  private void _individuals_changed_cb
+ private void _individuals_changed_cb
       (GLib.List<Individual>? added,
        GLib.List<Individual>? removed,
        string? message,
@@ -99,32 +116,41 @@ public class AddContactTests : Folks.TestCase
     {
       foreach (unowned Individual i in added)
         {
-          string full_name = i.full_name;
-          i.notify["full-name"].connect (this._notify_full_name_cb);
-          if (full_name != null)
+          if (i.full_name == this._persona_fullname)
             {
-              if (full_name == this._persona_fullname)
+              if (i.alias == this._initial_alias)
                 {
-                  this._contact_added = true;
-                  this._main_loop.quit ();
+                  this._initial_alias_found = true;
+
+                  Trf.Persona p = (Trf.Persona)i.personas.nth_data (0);
+
+                  /*
+                   * We connect to the Persona's handler because
+                   * Individual won't forward the notification to us
+                   * unless it comes from a writeable store.
+                   */
+                  p.notify["alias"].connect (this._notify_alias_cb);
+
+                  /* FIXME:
+                   * it would be nice if we could just do:
+                   *    i.alias = "foobar"
+                   * but we depend on:
+                   * https://bugzilla.gnome.org/show_bug.cgi?id=645441 */
+                  p.alias = this._modified_alias;
                 }
             }
         }
 
-        assert (removed == null);
+      assert (removed == null);
     }
 
-  private void _notify_full_name_cb ()
+  private void _notify_alias_cb (Object persona, ParamSpec ps)
     {
-      GLib.List<Individual> individuals =
-          this._aggregator.individuals.get_values ();
-      foreach (unowned Individual i in individuals)
+      Trf.Persona p = (Trf.Persona) persona;
+      if (p.alias == this._modified_alias)
         {
-          if (i.full_name == this._persona_fullname)
-            {
-              this._contact_added = true;
-              this._main_loop.quit ();
-            }
+          this._modified_alias_found = true;
+          this._main_loop.quit ();
         }
     }
 }
@@ -134,7 +160,7 @@ public int main (string[] args)
   Test.init (ref args);
 
   TestSuite root = TestSuite.get_root ();
-  root.add_suite (new AddContactTests ().get_suite ());
+  root.add_suite (new SetAliasTests ().get_suite ());
 
   Test.run ();
 

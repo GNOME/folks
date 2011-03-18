@@ -34,6 +34,7 @@ public class AdditionalNamesUpdatesTests : Folks.TestCase
   private bool _initial_additional_names_found;
   private string _contact_urn;
   private string _initial_additional_names;
+  private string _initial_fullname;
 
   public AdditionalNamesUpdatesTests ()
     {
@@ -58,13 +59,13 @@ public class AdditionalNamesUpdatesTests : Folks.TestCase
     {
       this._main_loop = new GLib.MainLoop (null, false);
       Gee.HashMap<string, string> c1 = new Gee.HashMap<string, string> ();
-      string initial_fullname = "persona #1";
+      this._initial_fullname = "persona #1";
       this._initial_additional_names = "additional name #1";
       this._updated_additional_names = "updated additional name #1";
       this._contact_urn = "<urn:contact001>";
 
       c1.set (TrackerTest.Backend.URN, this._contact_urn);
-      c1.set (Trf.OntologyDefs.NCO_FULLNAME, initial_fullname);
+      c1.set (Trf.OntologyDefs.NCO_FULLNAME, this._initial_fullname);
       c1.set (Trf.OntologyDefs.NCO_ADDITIONAL,
           this._initial_additional_names);
       this._tracker_backend.add_contact (c1);
@@ -116,31 +117,30 @@ public class AdditionalNamesUpdatesTests : Folks.TestCase
        GroupDetails.ChangeReason reason)
     {
       foreach (unowned Individual i in added)
-      {
-        i.structured_name.notify["additional-names"].connect
-        (this._notify_additional_names_cb);
-        var additional_names = i.structured_name.additional_names;
-        if (additional_names == this._initial_additional_names)
-          {
-            this._individual_id = i.id;
-            this._initial_additional_names_found = true;
-            this._tracker_backend.update_contact (this._contact_urn,
-                Trf.OntologyDefs.NCO_ADDITIONAL,
-                this._updated_additional_names);
-          }
-      }
+        {
+          if (this._initial_fullname == i.full_name)
+            {
+              var additional_names = i.structured_name.additional_names;
+              if (additional_names == this._initial_additional_names)
+                {
+                  i.structured_name.notify["additional-names"].connect
+                    (this._notify_additional_names_cb);
+                  this._individual_id = i.id;
+                  this._initial_additional_names_found = true;
+                  this._tracker_backend.update_contact (this._contact_urn,
+                      Trf.OntologyDefs.NCO_ADDITIONAL,
+                      this._updated_additional_names);
+                }
+            }
+        }
 
       assert (removed == null);
     }
 
-  private void _notify_additional_names_cb ()
+  private void _notify_additional_names_cb (Object sname_obj, ParamSpec ps)
     {
-      var i = this._aggregator.individuals.lookup (this._individual_id);
-
-      if (i == null)
-        return;
-
-      var additional_names = i.structured_name.additional_names;
+      Folks.StructuredName sname = (Folks.StructuredName) sname_obj;
+      var additional_names = sname.additional_names;
 
       if (additional_names == this._updated_additional_names)
         {

@@ -46,6 +46,8 @@ internal class Trf.AfflInfo : Object
 
   public string im_account_id { get; set; }
 
+  public string im_nickname { get; set; }
+
   public string affl_tracker_id  { get; set; }
 
   public string title { get; set; }
@@ -105,6 +107,7 @@ public class Trf.OntologyDefs : Object
   public static const string NCO_NICKNAME = "nco:nickname";
   public static const string RDF_TYPE = "ns:type";
   public static const string NCO_PERSON = "nco:PersonContact";
+  public static const string NCO_URL = "nco:url";
   public static const string NCO_WEBSITE = "nco:websiteUrl";
   public static const string NCO_BLOG = "nco:blogUrl";
   public static const string NAO_FAVORITE = "nao:predefined-tag-favorite";
@@ -125,11 +128,26 @@ public class Trf.OntologyDefs : Object
   public static const string NCO_PHOTO = "nco:photo";
   public static const string NIE_URL = "nie:url";
   public static const string NFO_IMAGE = "nfo:Image";
+  public static const string NIE_DATAOBJECT = "nie:DataObject";
   public static const string NCO_IMADDRESS = "nco:IMAddress";
   public static const string NCO_HAS_IMADDRESS = "nco:hasIMAddress";
   public static const string NCO_IMPROTOCOL = "nco:imProtocol";
   public static const string NCO_IMID = "nco:imID";
+  public static const string NCO_IM_NICKNAME = "nco:imNickname";
   public static const string NCO_POSTAL_ADDRESS = "nco:PostalAddress";
+  public static const string NCO_HAS_POSTAL_ADDRESS = "nco:hasPostalAddress";
+  public static const string NCO_POBOX = "nco:pobox";
+  public static const string NCO_DISTRICT = "nco:district";
+  public static const string NCO_COUNTY = "nco:county";
+  public static const string NCO_LOCALITY = "nco:locality";
+  public static const string NCO_POSTALCODE = "nco:postalcode";
+  public static const string NCO_STREET_ADDRESS = "nco:streetAddress";
+  public static const string NCO_ADDRESS_LOCATION = "nco:addressLocation";
+  public static const string NCO_EXTENDED_ADDRESS = "nco:extendedAddress";
+  public static const string NCO_COUNTRY = "nco:country";
+  public static const string NCO_REGION = "nco:region";
+  public static const string NCO_ROLE = "nco:role";
+  public static const string NCO_ORG = "nco:org";
   public static const string NCO_URL_PREFIX =
       "<http://www.semanticdesktop.org/ontologies/2007/03/22/";
   public static const string NAO_URL_PREFIX =

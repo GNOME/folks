@@ -56,7 +56,6 @@ public class NameDetailsInterfaceTests : Folks.TestCase
       this._c2 = new Gee.HashMap<string, string> ();
 
       this._c1.set (Trf.OntologyDefs.NCO_FULLNAME, "persona #1");
-      this._c1.set (Trf.OntologyDefs.NCO_NICKNAME, "p #1");
       this._c1.set (Trf.OntologyDefs.NCO_FAMILY, "p #1 Family");
       this._c1.set (Trf.OntologyDefs.NCO_GIVEN, "p #1 Given");
       this._c1.set (Trf.OntologyDefs.NCO_ADDITIONAL, "p #1 Additional");
@@ -65,7 +64,6 @@ public class NameDetailsInterfaceTests : Folks.TestCase
       this._tracker_backend.add_contact (this._c1);
 
       this._c2.set (Trf.OntologyDefs.NCO_FULLNAME, "persona #2");
-      this._c2.set (Trf.OntologyDefs.NCO_NICKNAME, "p #2");
       this._tracker_backend.add_contact (this._c2);
 
       this._tracker_backend.set_up ();
@@ -122,11 +120,6 @@ public class NameDetailsInterfaceTests : Folks.TestCase
                  {
                    this._c1.unset (Trf.OntologyDefs.NCO_FULLNAME);
 
-                   string nickname = ((Folks.NameDetails) i).nickname;
-                   assert (this._c1.get (Trf.OntologyDefs.NCO_NICKNAME) ==
-                       nickname);
-                   this._c1.unset (Trf.OntologyDefs.NCO_NICKNAME);
-
                    string family = sname.family_name ;
                    assert (this._c1.get (Trf.OntologyDefs.NCO_FAMILY) ==
                        family);
@@ -157,12 +150,7 @@ public class NameDetailsInterfaceTests : Folks.TestCase
                  {
                    this._c2.unset (Trf.OntologyDefs.NCO_FULLNAME);
 
-                   string nickname = ((Folks.NameDetails) i).nickname;
-                   assert (this._c2.get (Trf.OntologyDefs.NCO_NICKNAME) ==
-                       nickname);
-                   this._c2.unset (Trf.OntologyDefs.NCO_NICKNAME);
-
-                   assert (sname.is_empty () == true);
+                   assert (sname == null || sname.is_empty () == true);
                  }
             }
         }

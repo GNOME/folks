@@ -15,6 +15,7 @@ Bugs fixed:
 * Bug 645475 — Linker warnings for Tracker backend tests
 * Bug 645570 — Fix checks for empty and equal StructuredNames
 * Bug 645989 — Ensure add_persona_from_details handles the basic attribute
+* Bug 645413 — Write support for Tracker
 
 API changes:
 * Add equal () to StructuredName

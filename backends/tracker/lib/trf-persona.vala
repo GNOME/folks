@@ -30,6 +30,7 @@ using Tracker.Sparql;
  * A persona subclass which represents a single nco:Contact.
  */
 public class Trf.Persona : Folks.Persona,
+    AliasDetails,
     AvatarDetails,
     BirthdayDetails,
     EmailDetails,
@@ -43,6 +44,8 @@ public class Trf.Persona : Folks.Persona,
     RoleDetails,
     UrlDetails
 {
+  private string _alias;
+  private bool _is_favourite;
   private const string[] _linkable_properties =
       {"im-addresses", "email-addresses"};
   private GLib.List<FieldDetails> _phone_numbers;
@@ -51,19 +54,41 @@ public class Trf.Persona : Folks.Persona,
   private string _tracker_id;
 
   /**
+   * An alias for the Persona.
+   *
+   * See {@link Folks.AliasDetails.alias}.
+   */
+  public string alias
+    {
+      get { return this._alias; }
+
+      set
+        {
+          if (this._alias == value)
+            return;
+          this._alias = value;
+          this.notify_property ("alias");
+          ((Trf.PersonaStore) this.store)._set_alias (this, value);
+        }
+    }
+
+  /**
    * {@inheritDoc}
    */
   public GLib.List<FieldDetails> phone_numbers
     {
       get { return this._phone_numbers; }
-      private set
+      public set
         {
-          this._phone_numbers = new GLib.List<FieldDetails> ();
-          foreach (unowned FieldDetails ps in value)
+          var _temp = new GLib.List<FieldDetails> ();
+          foreach (unowned FieldDetails e in value)
             {
-              this._phone_numbers.prepend (ps);
+              _temp.prepend (e);
             }
-          this._phone_numbers.reverse ();
+          _temp.reverse ();
+
+          ((Trf.PersonaStore) this.store)._set_phones (this,
+              (owned) _temp);
         }
     }
 
@@ -73,14 +98,17 @@ public class Trf.Persona : Folks.Persona,
   public GLib.List<FieldDetails> email_addresses
     {
       get { return this._email_addresses; }
-      private set
+      public set
         {
-          this._email_addresses = new GLib.List<FieldDetails> ();
+          var _temp = new GLib.List<FieldDetails> ();
           foreach (unowned FieldDetails e in value)
             {
-              this._email_addresses.prepend (e);
+              _temp.prepend (e);
             }
-          this._email_addresses.reverse ();
+          _temp.reverse ();
+
+          ((Trf.PersonaStore) this.store)._set_emails (this,
+              (owned) _temp);
         }
     }
 
@@ -92,22 +120,46 @@ public class Trf.Persona : Folks.Persona,
       get { return this._linkable_properties; }
     }
 
+  private File _avatar;
   /**
    * An avatar for the Persona.
    *
    * See {@link Folks.Avatar.avatar}.
    */
-  public File avatar { get; set; }
+  public File avatar
+    {
+      get { return this._avatar; }
+      public set
+        {
+          ((Trf.PersonaStore) this.store)._set_avatar (this, value);
+        }
+    }
 
+  private StructuredName _structured_name;
   /**
    * {@inheritDoc}
    */
-  public StructuredName structured_name { get; private set; }
+  public StructuredName structured_name
+    {
+      get { return this._structured_name; }
+      public set
+        {
+          ((Trf.PersonaStore) this.store)._set_structured_name (this, value);
+        }
+    }
 
+  private string _full_name;
   /**
    * {@inheritDoc}
    */
-  public string full_name { get; private set; }
+  public string full_name
+    {
+      get { return this._full_name; }
+      public set
+        {
+          ((Trf.PersonaStore) this.store)._set_full_name (this, value);
+        }
+    }
 
   private string _nickname;
   /**
@@ -115,16 +167,36 @@ public class Trf.Persona : Folks.Persona,
    */
   public string nickname { get { return this._nickname; } }
 
+  private Gender _gender;
   /**
    * {@inheritDoc}
    */
-  public Gender gender { get; private set; }
+  public Gender gender
+    {
+      get { return this._gender; }
+      public set
+        {
+          ((Trf.PersonaStore) this.store)._set_gender (this, value);
+        }
+    }
 
   private HashSet<Role> _roles =
       new HashSet<Role> ((GLib.HashFunc) Role.hash,
       (GLib.EqualFunc) Role.equal);
 
-  public DateTime birthday { get; set; }
+
+  private DateTime _birthday;
+  /**
+   * {@inheritDoc}
+   */
+  public DateTime birthday
+    {
+      get { return this._birthday; }
+      public set
+        {
+          ((Trf.PersonaStore) this.store)._set_birthday (this, value);
+        }
+    }
 
   public string calendar_event_id { get; set; }
 
@@ -134,10 +206,9 @@ public class Trf.Persona : Folks.Persona,
   public HashSet<Role> roles
     {
       get { return this._roles; }
-      private set
+      public set
         {
-          this._roles = value;
-          this.notify_property ("roles");
+          ((Trf.PersonaStore) this.store)._set_roles (this, value);
         }
     }
 
@@ -153,8 +224,7 @@ public class Trf.Persona : Folks.Persona,
       get { return this._notes; }
       private set
         {
-          this._notes = notes;
-          this.notify_property ("notes");
+          ((Trf.PersonaStore) this.store)._set_notes (this, value);
         }
     }
 
@@ -165,12 +235,15 @@ public class Trf.Persona : Folks.Persona,
   public GLib.List<FieldDetails> urls
     {
       get { return this._urls; }
-      private set
+      public set
         {
-          this._urls = new GLib.List<FieldDetails> ();
-          foreach (unowned FieldDetails ps in value)
-            this._urls.prepend (ps);
-          this._urls.reverse ();
+          var _temp = new GLib.List<FieldDetails> ();
+          foreach (unowned FieldDetails e in value)
+              _temp.prepend (e);
+          _temp.reverse ();
+
+          ((Trf.PersonaStore) this.store)._set_urls (this,
+              (owned) _temp);
         }
     }
 
@@ -184,11 +257,11 @@ public class Trf.Persona : Folks.Persona,
       get { return this._postal_addresses; }
       private set
         {
-          this._postal_addresses = new GLib.List<PostalAddress> ();
-          foreach (PostalAddress pa in value)
-            this._postal_addresses.prepend (pa);
-          this._postal_addresses.reverse ();
-          this.notify_property ("postal-addresses");
+          var _temp = new GLib.List<PostalAddress> ();
+          foreach (unowned PostalAddress e in value)
+              _temp.prepend (e);
+          ((Trf.PersonaStore) this.store)._set_postal_addresses (this,
+              (owned) _temp);
         }
     }
 
@@ -203,13 +276,32 @@ public class Trf.Persona : Folks.Persona,
   public HashTable<string, LinkedHashSet<string>> im_addresses
     {
       get { return this._im_addresses; }
-      private set {}
+      public set
+        {
+          ((Trf.PersonaStore) this.store)._set_im_addresses (this,
+              value);
+        }
     }
 
   /**
    * Whether this contact is a user-defined favourite.
    */
-  public bool is_favourite { get; set; }
+  public bool is_favourite
+      {
+        get { return this._is_favourite; }
+
+        set
+          {
+            if (this._is_favourite == value)
+              return;
+
+            /* Note:
+             * this property will be set (and notified)
+             * once we receive a notification event from Tracker
+             */
+            ((Trf.PersonaStore) this.store)._set_is_favourite (this, value);
+          }
+      }
 
   /**
    * Build a IID.
@@ -249,24 +341,29 @@ public class Trf.Persona : Folks.Persona,
             }
         }
 
-      debug ("Creating new Trf.Persona with id '%s'", fullname);
+      debug ("Creating new Trf.Persona with iid '%s'", iid);
 
       Object (display_id: fullname,
               uid: uid,
               iid: iid,
               store: store,
-              gender: Gender.UNSPECIFIED,
               is_user: is_user);
 
-      this.full_name = fullname;
+      this._gender = Gender.UNSPECIFIED;
+      this._full_name = fullname;
       this._tracker_id = tracker_id;
-      this.structured_name = new StructuredName (null, null, null, null, null);
+      this._structured_name = new StructuredName (null, null, null, null, null);
 
       if (cursor != null)
         {
           this._cursor = cursor;
           this._update ();
         }
+    }
+
+  internal string tracker_id ()
+    {
+      return this._tracker_id;
     }
 
   ~Persona ()
@@ -278,7 +375,8 @@ public class Trf.Persona : Folks.Persona,
     {
       if (fn != null && this.full_name != fn)
         {
-          this.full_name = fn;
+          this._full_name = fn;
+          this.notify_property ("full-name");
         }
     }
 
@@ -291,11 +389,21 @@ public class Trf.Persona : Folks.Persona,
         }
     }
 
+  internal void _update_alias (string? alias)
+    {
+      if (alias != null && this._alias != alias)
+        {
+          this._alias = alias;
+          this.notify_property ("alias");
+        }
+    }
+
   internal void _update_family_name (string? family_name)
     {
       if (family_name != null)
         {
-          this.structured_name.family_name = family_name;
+          this._structured_name.family_name = family_name;
+          this.notify_property ("structured-name");
         }
     }
 
@@ -303,7 +411,8 @@ public class Trf.Persona : Folks.Persona,
     {
       if (given_name != null)
         {
-          this.structured_name.given_name = given_name;
+          this._structured_name.given_name = given_name;
+          this.notify_property ("structured-name");
         }
     }
 
@@ -311,7 +420,8 @@ public class Trf.Persona : Folks.Persona,
     {
       if (additional_names != null)
         {
-          this.structured_name.additional_names = additional_names;
+          this._structured_name.additional_names = additional_names;
+          this.notify_property ("structured-name");
         }
     }
 
@@ -319,7 +429,8 @@ public class Trf.Persona : Folks.Persona,
     {
       if (prefixes != null)
         {
-          this.structured_name.prefixes = prefixes;
+          this._structured_name.prefixes = prefixes;
+          this.notify_property ("structured-name");
         }
     }
 
@@ -327,7 +438,8 @@ public class Trf.Persona : Folks.Persona,
     {
       if (suffixes != null)
         {
-          this.structured_name.suffixes = suffixes;
+          this._structured_name.suffixes = suffixes;
+          this.notify_property ("structured-name");
         }
     }
 
@@ -394,7 +506,7 @@ public class Trf.Persona : Folks.Persona,
         }
 
       postal_addresses.reverse ();
-      this.postal_addresses = (owned) postal_addresses;
+      this._postal_addresses = (owned) postal_addresses;
     }
 
   internal bool _add_postal_address (PostalAddress postal_address)
@@ -443,7 +555,7 @@ public class Trf.Persona : Folks.Persona,
     {
       if (gender_id == 0)
         {
-          this.gender = Gender.UNSPECIFIED;
+          this._gender = Gender.UNSPECIFIED;
         }
       else
         {
@@ -451,13 +563,15 @@ public class Trf.Persona : Folks.Persona,
 
           if (gender_id == trf_store.get_gender_male_id ())
             {
-              this.gender = Gender.MALE;
+              this._gender = Gender.MALE;
             }
           else if (gender_id == trf_store.get_gender_female_id ())
             {
-              this.gender = Gender.FEMALE;
+              this._gender = Gender.FEMALE;
             }
         }
+
+      this.notify_property ("gender");
     }
 
   private void _update_note ()
@@ -492,13 +606,15 @@ public class Trf.Persona : Folks.Persona,
         {
           TimeVal t = TimeVal ();
           t.from_iso8601 (birthday);
-          this.birthday = new DateTime.from_timeval_utc (t);
+          this._birthday = new DateTime.from_timeval_utc (t);
+          this.notify_property ("birthday");
         }
       else
         {
-          if (this.birthday != null)
+          if (this._birthday != null)
             {
-              this.birthday = null;
+              this._birthday = null;
+              this.notify_property ("birthday");
             }
         }
     }
@@ -564,8 +680,8 @@ public class Trf.Persona : Folks.Persona,
       string fullname = this._cursor.get_string (Trf.Fields.FULL_NAME).dup ();
       this._update_full_name (fullname);
 
-      string nickname = this._cursor.get_string (Trf.Fields.NICKNAME).dup ();
-      this._update_nickname (nickname);
+      string alias = this._cursor.get_string (Trf.Fields.ALIAS).dup ();
+      this._update_alias (alias);
 
       string family_name = this._cursor.get_string (
           Trf.Fields.FAMILY_NAME).dup ();
@@ -600,7 +716,8 @@ public class Trf.Persona : Folks.Persona,
         {
           _avatar = File.new_for_uri (avatar_url);
         }
-      this.avatar = _avatar;
+      this._avatar = _avatar;
+      this.notify_property ("avatar");
       return true;
     }
 
@@ -624,7 +741,9 @@ public class Trf.Persona : Folks.Persona,
           var tracker_id = addr_info[Trf.IMFields.TRACKER_ID];
           var proto = addr_info[Trf.IMFields.PROTO];
           var account_id = addr_info[Trf.IMFields.ID];
+          var nickname = addr_info[Trf.IMFields.IM_NICKNAME];
 
+          this._update_nickname (nickname);
           this._add_im_address (tracker_id, proto, account_id, false);
         }
 
@@ -737,7 +856,7 @@ public class Trf.Persona : Folks.Persona,
         }
 
       phones.reverse ();
-      this.phone_numbers = phones;
+      this._phone_numbers = (owned) phones;
     }
 
   internal bool _add_phone (string phone, string tracker_id)
@@ -865,7 +984,7 @@ public class Trf.Persona : Folks.Persona,
         }
 
       email_addresses.reverse ();
-      this.email_addresses = email_addresses;
+      this._email_addresses = (owned) email_addresses;
     }
 
   private void _update_urls ()
@@ -910,7 +1029,7 @@ public class Trf.Persona : Folks.Persona,
         }
 
       urls.reverse ();
-      this.urls = urls;
+      this._urls = (owned) urls;
     }
 
   internal bool _add_url (string url, string tracker_id, string type = "")
@@ -964,7 +1083,7 @@ public class Trf.Persona : Folks.Persona,
     {
       var favourite = this._cursor.get_string (Trf.Fields.FAVOURITE).dup ();
 
-      this.is_favourite = false;
+      this._is_favourite = false;
 
       if (favourite != null)
         {
@@ -974,9 +1093,21 @@ public class Trf.Persona : Folks.Persona,
             {
               if (int.parse (tag) == favorite_tracker_id)
                 {
-                  this.is_favourite = true;
+                  this._is_favourite = true;
                 }
             }
         }
+    }
+
+  /**
+   * This method sets the is_favourite attribute internally.
+   * That is, it should be used as a result of an event fired by
+   * Tracker since this method doesn't propagate changes back
+   * to Tracker again.
+   */
+  internal void _set_favourite (bool is_fav)
+    {
+      this._is_favourite = is_fav;
+      this.notify_property ("is-favourite");
     }
 }

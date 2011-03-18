@@ -118,6 +118,8 @@ public class SuffixNameUpdatesTests : Folks.TestCase
     {
       foreach (unowned Individual i in added)
         {
+          if (this._initial_fullname == i.full_name)
+            {
               var suffix_name = i.structured_name.suffixes;
               if (suffix_name == this._initial_suffix_name)
                 {
@@ -128,6 +130,7 @@ public class SuffixNameUpdatesTests : Folks.TestCase
                   this._tracker_backend.update_contact (this._contact_urn,
                       Trf.OntologyDefs.NCO_SUFFIX, this._updated_suffix_name);
                 }
+            }
         }
 
       assert (removed == null);

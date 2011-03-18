@@ -117,28 +117,27 @@ public class FamilyNameUpdatesTests : Folks.TestCase
     {
       foreach (unowned Individual i in added)
         {
-          i.structured_name.notify["family-name"].connect
-              (this._notify_family_name_cb);
-          var family_name = i.structured_name.family_name;
-          if (family_name == this._initial_family_name)
+          if (this._initial_fullname == i.full_name)
             {
-              this._individual_id = i.id;
-              this._initial_family_name_found = true;
-              this._tracker_backend.update_contact (this._contact_urn,
-                  Trf.OntologyDefs.NCO_FAMILY, this._updated_family_name);
+              i.structured_name.notify["family-name"].connect
+                (this._notify_family_name_cb);
+              var family_name = i.structured_name.family_name;
+              if (family_name == this._initial_family_name)
+                {
+                  this._individual_id = i.id;
+                  this._initial_family_name_found = true;
+                  this._tracker_backend.update_contact (this._contact_urn,
+                      Trf.OntologyDefs.NCO_FAMILY, this._updated_family_name);
+                }
             }
         }
-
-        assert (removed == null);
+      assert (removed == null);
     }
 
-  private void _notify_family_name_cb ()
+  private void _notify_family_name_cb (Object individual_obj, ParamSpec ps)
     {
-      var i = this._aggregator.individuals.lookup (this._individual_id);
-      if (i == null)
-        return;
-
-      var family_name = i.structured_name.family_name;
+      Folks.StructuredName sname = (Folks.StructuredName) individual_obj;
+      var family_name = sname.family_name;
       if (family_name == this._updated_family_name)
         {
           this._updated_family_name_found = true;

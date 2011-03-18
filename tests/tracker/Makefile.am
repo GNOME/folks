@@ -70,6 +70,22 @@ noinst_PROGRAMS = \
 	gender-details-interface  \
 	postal-address-details-interface  \
 	avatar-updates  \
+	add-persona  \
+	remove-persona  \
+	set-alias  \
+	set-favourite  \
+	set-phones  \
+	set-emails  \
+	set-avatar  \
+	set-structured-name  \
+	set-full-name  \
+	set-urls  \
+	set-im-addresses  \
+	set-postal-addresses  \
+	set-roles  \
+	set-notes  \
+	set-birthday  \
+	set-gender  \
 	$(NULL)
 
 backend_store_key_file=$(srcdir)/data/backend-tracker-only.ini
@@ -204,6 +220,70 @@ avatar_updates_SOURCES = \
 	avatar-updates.vala \
 	$(NULL)
 
+add_persona_SOURCES = \
+	add-persona.vala \
+	$(NULL)
+
+remove_persona_SOURCES = \
+	remove-persona.vala \
+	$(NULL)
+
+set_alias_SOURCES = \
+	set-alias.vala \
+	$(NULL)
+
+set_favourite_SOURCES = \
+	set-favourite.vala \
+	$(NULL)
+
+set_phones_SOURCES = \
+	set-phones.vala \
+	$(NULL)
+
+set_emails_SOURCES = \
+	set-emails.vala \
+	$(NULL)
+
+set_avatar_SOURCES = \
+	set-avatar.vala \
+	$(NULL)
+
+set_structured_name_SOURCES = \
+	set-structured-name.vala \
+	$(NULL)
+
+set_full_name_SOURCES = \
+	set-full-name.vala \
+	$(NULL)
+
+set_urls_SOURCES = \
+	set-urls.vala \
+	$(NULL)
+
+set_im_addresses_SOURCES = \
+	set-im-addresses.vala \
+	$(NULL)
+
+set_postal_addresses_SOURCES = \
+	set-postal-addresses.vala \
+	$(NULL)
+
+set_roles_SOURCES = \
+	set-roles.vala \
+	$(NULL)
+
+set_notes_SOURCES = \
+	set-notes.vala \
+	$(NULL)
+
+set_birthday_SOURCES = \
+	set-birthday.vala \
+	$(NULL)
+
+set_gender_SOURCES = \
+	set-gender.vala \
+	$(NULL)
+
 CLEANFILES = \
         *.pid \
         *.address \
@@ -242,6 +322,22 @@ MAINTAINERCLEANFILES = \
         gender_details_interface_vala.stamp \
         postal_address_details_interface_vala.stamp \
         avatar_updates_vala.stamp \
+        add_persona_vala.stamp \
+        remove_persona_vala.stamp \
+        set_alias_vala.stamp \
+        set_favourite_vala.stamp \
+        set_phones_vala.stamp \
+        set_emails_vala.stamp \
+        set_avatar_vala.stamp \
+        set_structured_name_vala.stamp \
+        set_full_name_vala.stamp \
+        set_urls_vala.stamp \
+        set_im_addresses_vala.stamp \
+        set_postal_addresses_vala.stamp \
+        set_roles_vala.stamp \
+        set_notes_vala.stamp \
+        set_birthday_vala.stamp \
+        set_gender_vala.stamp \
         $(NULL)
 
 EXTRA_DIST = \

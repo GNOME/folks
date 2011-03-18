@@ -23,21 +23,23 @@ using TrackerTest;
 using Folks;
 using Gee;
 
-public class AddContactTests : Folks.TestCase
+public class SetAvatarTests : Folks.TestCase
 {
+  private GLib.MainLoop _main_loop;
   private TrackerTest.Backend _tracker_backend;
-  private bool _contact_added;
   private IndividualAggregator _aggregator;
   private string _persona_fullname;
-  private GLib.MainLoop _main_loop;
+  private string _avatar_uri;
+  private File _avatar;
+  private bool _avatar_found;
 
-  public AddContactTests ()
+  public SetAvatarTests ()
     {
-      base ("AddContactTests");
+      base ("SetAvatarTests");
 
       this._tracker_backend = new TrackerTest.Backend ();
 
-      this.add_test ("test adding contacts ", this.test_add_contact);
+      this.add_test ("test setting avatar ", this.test_set_avatar);
     }
 
   public override void set_up ()
@@ -48,38 +50,43 @@ public class AddContactTests : Folks.TestCase
     {
     }
 
-  public void test_add_contact ()
+  public void test_set_avatar ()
     {
       this._main_loop = new GLib.MainLoop (null, false);
-      this._persona_fullname = "persona #1";
-      this._contact_added = false;
-
       Gee.HashMap<string, string> c1 = new Gee.HashMap<string, string> ();
+      this._persona_fullname = "persona #1";
+      this._avatar_uri = "file:///tmp/some-avatar.jpg";
+      this._avatar = File.new_for_uri (this._avatar_uri);
+
       c1.set (Trf.OntologyDefs.NCO_FULLNAME, this._persona_fullname);
       this._tracker_backend.add_contact (c1);
+
       this._tracker_backend.set_up ();
 
-      this._test_add_contact_async ();
+      this._avatar_found = false;
+
+      this._test_set_avatar_async ();
 
       Timeout.add_seconds (5, () =>
-          {
-            this._main_loop.quit ();
-            assert_not_reached ();
-          });
+        {
+          this._main_loop.quit ();
+          assert_not_reached ();
+        });
 
       this._main_loop.run ();
-      assert (this._contact_added == true);
-      this._tracker_backend.tear_down ();
+
+      assert (this._avatar_found);
+
+     this._tracker_backend.tear_down ();
     }
 
-  private async void _test_add_contact_async ()
+  private async void _test_set_avatar_async ()
     {
       var store = BackendStore.dup ();
       yield store.prepare ();
       this._aggregator = new IndividualAggregator ();
       this._aggregator.individuals_changed.connect
           (this._individuals_changed_cb);
-
       try
         {
           yield this._aggregator.prepare ();
@@ -99,34 +106,30 @@ public class AddContactTests : Folks.TestCase
     {
       foreach (unowned Individual i in added)
         {
-          string full_name = i.full_name;
-          i.notify["full-name"].connect (this._notify_full_name_cb);
-          if (full_name != null)
+          if (i.full_name == this._persona_fullname)
             {
-              if (full_name == this._persona_fullname)
-                {
-                  this._contact_added = true;
-                  this._main_loop.quit ();
-                }
+              i.notify["avatar"].connect (this._notify_avatar_cb);
+
+              Trf.Persona p = (Trf.Persona)i.personas.nth_data (0);
+              p.avatar = this._avatar;
             }
         }
 
-        assert (removed == null);
+      assert (removed == null);
     }
 
-  private void _notify_full_name_cb ()
+  private void _notify_avatar_cb (Object individual_obj, ParamSpec ps)
     {
-      GLib.List<Individual> individuals =
-          this._aggregator.individuals.get_values ();
-      foreach (unowned Individual i in individuals)
+      Folks.Individual i = (Folks.Individual) individual_obj;
+      if (i.full_name == this._persona_fullname)
         {
-          if (i.full_name == this._persona_fullname)
+          if (i.avatar.get_uri () == this._avatar_uri)
             {
-              this._contact_added = true;
+              this._avatar_found = true;
               this._main_loop.quit ();
             }
         }
-    }
+   }
 }
 
 public int main (string[] args)
@@ -134,7 +137,7 @@ public int main (string[] args)
   Test.init (ref args);
 
   TestSuite root = TestSuite.get_root ();
-  root.add_suite (new AddContactTests ().get_suite ());
+  root.add_suite (new SetAvatarTests ().get_suite ());
 
   Test.run ();
 

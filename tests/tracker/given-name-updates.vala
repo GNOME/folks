@@ -116,15 +116,18 @@ public class GivenNameUpdatesTests : Folks.TestCase
     {
       foreach (unowned Individual i in added)
         {
-          i.structured_name.notify["given-name"].connect
-              (this._notify_given_name_cb);
-          var given_name = i.structured_name.given_name;
-          if (given_name == this._initial_given_name)
+          if (this._initial_fullname == i.full_name)
             {
-              this._individual_id = i.id;
-              this._initial_given_name_found = true;
-              this._tracker_backend.update_contact (this._contact_urn,
-                  Trf.OntologyDefs.NCO_GIVEN, this._updated_given_name);
+              i.structured_name.notify["given-name"].connect
+                 (this._notify_given_name_cb);
+              var given_name = i.structured_name.given_name;
+              if (given_name == this._initial_given_name)
+                {
+                  this._individual_id = i.id;
+                  this._initial_given_name_found = true;
+                  this._tracker_backend.update_contact (this._contact_urn,
+                      Trf.OntologyDefs.NCO_GIVEN, this._updated_given_name);
+                }
             }
         }
 

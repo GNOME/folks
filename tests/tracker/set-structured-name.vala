@@ -23,21 +23,28 @@ using TrackerTest;
 using Folks;
 using Gee;
 
-public class AddContactTests : Folks.TestCase
+public class SetStructuredNameTests : Folks.TestCase
 {
+  private GLib.MainLoop _main_loop;
   private TrackerTest.Backend _tracker_backend;
-  private bool _contact_added;
   private IndividualAggregator _aggregator;
   private string _persona_fullname;
-  private GLib.MainLoop _main_loop;
+  private bool _sname_found;
+  private StructuredName _sname;
+  private string _family_name;
+  private string _given_name;
+  private string _additional_names;
+  private string _prefixes;
+  private string _suffixes;
 
-  public AddContactTests ()
+  public SetStructuredNameTests ()
     {
-      base ("AddContactTests");
+      base ("SetStructuredNameTests");
 
       this._tracker_backend = new TrackerTest.Backend ();
 
-      this.add_test ("test adding contacts ", this.test_add_contact);
+      this.add_test ("test setting structured name ",
+          this.test_set_structured_name);
     }
 
   public override void set_up ()
@@ -48,38 +55,49 @@ public class AddContactTests : Folks.TestCase
     {
     }
 
-  public void test_add_contact ()
+  public void test_set_structured_name ()
     {
       this._main_loop = new GLib.MainLoop (null, false);
-      this._persona_fullname = "persona #1";
-      this._contact_added = false;
-
       Gee.HashMap<string, string> c1 = new Gee.HashMap<string, string> ();
+      this._persona_fullname = "persona #1";
+      this._family_name = "family name";
+      this._given_name = "given name";
+      this._additional_names = "additional name";
+      this._prefixes = "prefixes";
+      this._suffixes = "suffixes";
+
+      this._sname = new StructuredName (this._family_name, this._given_name,
+          this._additional_names, this._prefixes, this._suffixes);
+
       c1.set (Trf.OntologyDefs.NCO_FULLNAME, this._persona_fullname);
       this._tracker_backend.add_contact (c1);
+
       this._tracker_backend.set_up ();
 
-      this._test_add_contact_async ();
+      this._sname_found = false;
+
+      this._test_set_structured_name_async ();
 
       Timeout.add_seconds (5, () =>
-          {
-            this._main_loop.quit ();
-            assert_not_reached ();
-          });
+        {
+          this._main_loop.quit ();
+          assert_not_reached ();
+        });
 
       this._main_loop.run ();
-      assert (this._contact_added == true);
+
+      assert (this._sname_found);
+
       this._tracker_backend.tear_down ();
     }
 
-  private async void _test_add_contact_async ()
+  private async void _test_set_structured_name_async ()
     {
       var store = BackendStore.dup ();
       yield store.prepare ();
       this._aggregator = new IndividualAggregator ();
       this._aggregator.individuals_changed.connect
           (this._individuals_changed_cb);
-
       try
         {
           yield this._aggregator.prepare ();
@@ -90,7 +108,7 @@ public class AddContactTests : Folks.TestCase
         }
     }
 
-  private void _individuals_changed_cb
+ private void _individuals_changed_cb
       (GLib.List<Individual>? added,
        GLib.List<Individual>? removed,
        string? message,
@@ -99,30 +117,26 @@ public class AddContactTests : Folks.TestCase
     {
       foreach (unowned Individual i in added)
         {
-          string full_name = i.full_name;
-          i.notify["full-name"].connect (this._notify_full_name_cb);
-          if (full_name != null)
+          if (i.full_name == this._persona_fullname)
             {
-              if (full_name == this._persona_fullname)
-                {
-                  this._contact_added = true;
-                  this._main_loop.quit ();
-                }
+              Trf.Persona p = (Trf.Persona)i.personas.nth_data (0);
+              p.notify["structured-name"].connect (this._notify_sname_cb);
+              p.structured_name = this._sname;
             }
         }
 
-        assert (removed == null);
+      assert (removed == null);
     }
 
-  private void _notify_full_name_cb ()
+  private void _notify_sname_cb (Object persona, ParamSpec ps)
     {
-      GLib.List<Individual> individuals =
-          this._aggregator.individuals.get_values ();
-      foreach (unowned Individual i in individuals)
+      Trf.Persona p = (Trf.Persona) persona;
+      if (p.full_name == this._persona_fullname)
         {
-          if (i.full_name == this._persona_fullname)
+          if (p.structured_name.is_empty () == false &&
+              p.structured_name.equal (this._sname) == true)
             {
-              this._contact_added = true;
+              this._sname_found = true;
               this._main_loop.quit ();
             }
         }
@@ -134,7 +148,7 @@ public int main (string[] args)
   Test.init (ref args);
 
   TestSuite root = TestSuite.get_root ();
-  root.add_suite (new AddContactTests ().get_suite ());
+  root.add_suite (new SetStructuredNameTests ().get_suite ());
 
   Test.run ();
 

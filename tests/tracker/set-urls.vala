@@ -23,25 +23,21 @@ using TrackerTest;
 using Folks;
 using Gee;
 
-public class NicknameUpdatesTests : Folks.TestCase
+public class SetURLsTests : Folks.TestCase
 {
+  private GLib.MainLoop _main_loop;
   private TrackerTest.Backend _tracker_backend;
   private IndividualAggregator _aggregator;
-  private bool _updated_nickname_found;
-  private string _updated_nickname;
-  private string _individual_id;
-  private GLib.MainLoop _main_loop;
-  private string _initial_fullname;
-  private string _contact_urn;
+  private string _persona_fullname;
+  Gee.HashMap<string, string> _urls;
 
-  public NicknameUpdatesTests ()
+  public SetURLsTests ()
     {
-      base ("NicknameUpdates");
+      base ("SetURLsTests");
 
       this._tracker_backend = new TrackerTest.Backend ();
-      this._tracker_backend.debug = false;
 
-      this.add_test ("nickname updates", this.test_nickname_updates);
+      this.add_test ("test setting urls ", this.test_set_urls);
     }
 
   public override void set_up ()
@@ -52,24 +48,22 @@ public class NicknameUpdatesTests : Folks.TestCase
     {
     }
 
-  public void test_nickname_updates ()
+  public void test_set_urls ()
     {
       this._main_loop = new GLib.MainLoop (null, false);
       Gee.HashMap<string, string> c1 = new Gee.HashMap<string, string> ();
-      this._initial_fullname = "persona #1";
-      this._updated_nickname = "updated nickname #1";
-      this._contact_urn = "<urn:contact001>";
+      this._persona_fullname = "persona #1";
+      this._urls = new Gee.HashMap<string, string> ();
+      this._urls.set ("blog", "http://one.example.org");
+      this._urls.set ("website", "http://two.example.org");
+      this._urls.set ("url", "http://three.example.org");
 
-      c1.set (TrackerTest.Backend.URN, this._contact_urn);
-      c1.set (Trf.OntologyDefs.NCO_FULLNAME, this._initial_fullname);
+      c1.set (Trf.OntologyDefs.NCO_FULLNAME, this._persona_fullname);
       this._tracker_backend.add_contact (c1);
 
       this._tracker_backend.set_up ();
 
-      this._updated_nickname_found = false;
-      this._individual_id = "";
-
-      this._test_nickname_updates_async ();
+      this._test_set_urls_async ();
 
       Timeout.add_seconds (5, () =>
         {
@@ -79,12 +73,12 @@ public class NicknameUpdatesTests : Folks.TestCase
 
       this._main_loop.run ();
 
-      assert (this._updated_nickname_found == true);
+      assert (this._urls.size == 0);
 
-      this._tracker_backend.tear_down ();
+     this._tracker_backend.tear_down ();
     }
 
-  private async void _test_nickname_updates_async ()
+  private async void _test_set_urls_async ()
     {
       var store = BackendStore.dup ();
       yield store.prepare ();
@@ -101,7 +95,7 @@ public class NicknameUpdatesTests : Folks.TestCase
         }
     }
 
-  private void _individuals_changed_cb
+ private void _individuals_changed_cb
       (GLib.List<Individual>? added,
        GLib.List<Individual>? removed,
        string? message,
@@ -110,39 +104,52 @@ public class NicknameUpdatesTests : Folks.TestCase
     {
       foreach (unowned Individual i in added)
         {
-          if (i.full_name == this._initial_fullname)
+          if (i.full_name == this._persona_fullname)
             {
-              i.notify["nickname"].connect (this._notify_nickname_cb);
-              this._individual_id = i.id;
+              i.notify["urls"].connect (this._notify_urls_cb);
 
-              var im_addr = "<urn:im-address>";
-              this._tracker_backend.insert_triplet (im_addr,
-                  "a", Trf.OntologyDefs.NCO_IMADDRESS,
-                  Trf.OntologyDefs.NCO_IM_NICKNAME, this._updated_nickname);
+              GLib.List<FieldDetails> urls = new GLib.List<FieldDetails> ();
+              var p1 = new FieldDetails (this._urls.get ("blog"));
+              p1.set_parameter ("type", "blog");
+              urls.prepend ((owned) p1);
+              var p2 = new FieldDetails (this._urls.get ("website"));
+              p2.set_parameter ("type", "website");
+              urls.prepend ((owned) p2);
+              var p3 = new FieldDetails (this._urls.get ("url"));
+              p3.set_parameter ("type", "url");
+              urls.prepend ((owned) p3);
 
-              var affl = "<urn:im-affl>";
-              this._tracker_backend.insert_triplet (affl,
-                  "a", Trf.OntologyDefs.NCO_AFFILIATION);
-
-               this._tracker_backend.insert_triplet (affl,
-                 Trf.OntologyDefs.NCO_HAS_IMADDRESS, im_addr);
-
-              this._tracker_backend.insert_triplet (this._contact_urn,
-                  Trf.OntologyDefs.NCO_HAS_AFFILIATION, affl);
+              Trf.Persona p = (Trf.Persona)i.personas.nth_data (0);
+              p.urls = (owned) urls;
             }
         }
 
       assert (removed == null);
     }
 
-  private void _notify_nickname_cb (Object individual_obj, ParamSpec ps)
+  private void _notify_urls_cb (Object individual_obj, ParamSpec ps)
     {
       Folks.Individual i = (Folks.Individual) individual_obj;
-      if (i.nickname == this._updated_nickname)
+      if (i.full_name == this._persona_fullname)
         {
-          this._updated_nickname_found = true;
-          this._main_loop.quit ();
+          foreach (unowned FieldDetails p in i.urls)
+            {
+              unowned GLib.List<string> type_p =
+                p.get_parameter_values ("type");
+              string type = type_p.nth_data (0);
+
+              if (type == "blog" && p.value == this._urls.get ("blog"))
+                this._urls.unset ("blog");
+              else if (type == "website" &&
+                  p.value == this._urls.get ("website"))
+                this._urls.unset ("website");
+              else if (type == "url" && p.value == this._urls.get ("url"))
+                this._urls.unset ("url");
+            }
         }
+
+      if (this._urls.size == 0)
+        this._main_loop.quit ();
     }
 }
 
@@ -151,7 +158,7 @@ public int main (string[] args)
   Test.init (ref args);
 
   TestSuite root = TestSuite.get_root ();
-  root.add_suite (new NicknameUpdatesTests ().get_suite ());
+  root.add_suite (new SetURLsTests ().get_suite ());
 
   Test.run ();
 

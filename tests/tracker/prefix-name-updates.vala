@@ -116,15 +116,18 @@ public class PrefixNameUpdatesTests : Folks.TestCase
     {
       foreach (unowned Individual i in added)
         {
-          var prefix_name = i.structured_name.prefixes;
-          if (prefix_name == this._initial_prefix_name)
+          if (this._initial_fullname == i.full_name)
             {
-              i.structured_name.notify["prefixes"].connect
-                   (this._notify_prefix_name_cb);
-              this._individual_id = i.id;
-              this._initial_prefix_name_found = true;
-              this._tracker_backend.update_contact (this._contact_urn,
-                  Trf.OntologyDefs.NCO_PREFIX, this._updated_prefix_name);
+              var prefix_name = i.structured_name.prefixes;
+              if (prefix_name == this._initial_prefix_name)
+                {
+                  i.structured_name.notify["prefixes"].connect
+                  (this._notify_prefix_name_cb);
+                  this._individual_id = i.id;
+                  this._initial_prefix_name_found = true;
+                  this._tracker_backend.update_contact (this._contact_urn,
+                      Trf.OntologyDefs.NCO_PREFIX, this._updated_prefix_name);
+                }
             }
         }
       assert (removed == null);
