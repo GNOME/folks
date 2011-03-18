@@ -212,11 +212,37 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       this._group_outgoing_adds = new HashMap<string, HashSet<Tpf.Persona>> ();
       this._group_outgoing_removes = new HashMap<string, HashSet<Tpf.Persona>> (
           );
-      this._publish = null;
-      this._stored = null;
-      this._subscribe = null;
+
+      if (this._publish != null)
+        {
+          this._publish.invalidated.disconnect (this._channel_invalidated_cb);
+          this._publish = null;
+        }
+
+      if (this._stored != null)
+        {
+          this._stored.invalidated.disconnect (this._channel_invalidated_cb);
+          this._stored = null;
+        }
+
+      if (this._subscribe != null)
+        {
+          this._subscribe.invalidated.disconnect (this._channel_invalidated_cb);
+          this._subscribe = null;
+        }
+
       this._standard_channels_unready = new HashMap<string, Channel> ();
       this._group_channels_unready = new HashMap<string, Channel> ();
+
+      if (this._groups != null)
+        {
+          foreach (var channel in this._groups.values)
+            {
+              if (channel != null)
+                channel.invalidated.disconnect (this._channel_invalidated_cb);
+            }
+        }
+
       this._groups = new HashMap<string, Channel> ();
       this._favourite_handles = new HashSet<uint> ();
       this._ll = new TpLowlevel ();
