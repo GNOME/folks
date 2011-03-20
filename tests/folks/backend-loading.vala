@@ -25,13 +25,33 @@ public class BackendLoadingTests : Folks.TestCase
       this._account_handle = this._tp_backend.add_account ("protocol",
           "me@example.com", "cm", "account");
 
-      FileUtils.remove (Path.build_filename (Environment.get_tmp_dir (),
-          this.STORE_FILE_PATH, null));
-
       /* Use a temporary key file for the BackendStore */
+      var kf_path = Path.build_filename (Environment.get_tmp_dir (),
+          this.STORE_FILE_PATH, null);
+
+      FileUtils.remove (kf_path);
+
+      GLib.KeyFile kf = new GLib.KeyFile ();
+      kf.set_boolean("all-others", "enabled", false);
+      kf.set_boolean("telepathy", "enabled", true);
+      kf.set_boolean("key-file", "enabled", true);
+
+      try
+        {
+          File backend_f = File.new_for_path (kf_path);
+          string data = kf.to_data ();
+          backend_f.replace_contents (data,
+              data.length, null, false, FileCreateFlags.PRIVATE,
+              null);
+        }
+      catch (Error e)
+        {
+          warning ("Could not write updated backend key file '%s': %s",
+              kf_path, e.message);
+        }
+
       Environment.set_variable ("FOLKS_BACKEND_STORE_KEY_FILE_PATH",
-          Path.build_filename (Environment.get_tmp_dir (),
-              this.STORE_FILE_PATH, null), true);
+          kf_path, true);
     }
 
   public override void tear_down ()
