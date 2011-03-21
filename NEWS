@@ -3,6 +3,7 @@ Overview of changes from libfolks 0.4.1 to libfolks 0.4.2
 
 Bugs fixed:
 * Bug 645430 — folks-inspect: Use LinkedHashSet to access im-addresses
+* Bug 645411 — folks-import segfaults on startup
 
 Overview of changes from libfolks 0.4.0 to libfolks 0.4.1
 =========================================================
