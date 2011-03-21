@@ -8,6 +8,7 @@ Bugs fixed:
   List<FieldDetails>
 * Bug 644527 - Add a Tracker backend
 * Bug 645430 - folks-inspect: Use LinkedHashSet to access im-addresses
+* Bug 645411 - folks-import segfaults on startup
 
 Overview of changes from libfolks 0.3.6 to libfolks 0.4.0
 =========================================================

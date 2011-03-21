@@ -167,8 +167,8 @@ public class Folks.Importers.Pidgin : Folks.Importer
   private async Persona? parse_contact (Xml.Node *contact_node)
     {
       string alias = null;
-      HashTable<string, GenericArray<string>> im_addresses =
-          new HashTable<string, GenericArray<string>> (str_hash, str_equal);
+      HashTable<string, LinkedHashSet<string>> im_addresses =
+          new HashTable<string, LinkedHashSet<string>> (str_hash, str_equal);
       string im_address_string = "";
 
       /* Parse the <buddy> elements beneath <contact> */
@@ -203,15 +203,15 @@ public class Folks.Importers.Pidgin : Folks.Importer
                    * for the linking to work. */
                   string im_address = subiter->get_content ();
 
-                  GenericArray<string> im_address_array =
+                  LinkedHashSet<string> im_address_set =
                       im_addresses.lookup (tp_protocol);
-                  if (im_address_array == null)
+                  if (im_address_set == null)
                     {
-                      im_address_array = new GenericArray<string> ();
-                      im_addresses.insert (tp_protocol, im_address_array);
+                      im_address_set = new LinkedHashSet<string> ();
+                      im_addresses.insert (tp_protocol, im_address_set);
                     }
 
-                  im_address_array.add (im_address);
+                  im_address_set.add (im_address);
                   im_address_string += "    %s\n".printf (im_address);
                 }
             }
