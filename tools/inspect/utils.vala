@@ -266,8 +266,9 @@ private class Folks.Inspect.Utils
         }
       else if (prop_name == "im-addresses")
         {
-          HashTable<string, GenericArray<string>> im_addresses =
-              (HashTable<string, GenericArray<string>>) prop_value.get_boxed ();
+          HashTable<string, LinkedHashSet<string>> im_addresses =
+              (HashTable<string, LinkedHashSet<string>>)
+              prop_value.get_boxed ();
           output_string = "{ ";
           bool first = true;
 
@@ -279,15 +280,15 @@ private class Folks.Inspect.Utils
               output_string += "'%s' : { ".printf ((string) k);
               first = false;
 
-              GenericArray<string> addresses = (GenericArray<string>) v;
+              LinkedHashSet<string> addresses = (LinkedHashSet<string>) v;
               bool _first = true;
-              addresses.foreach ((a) =>
+              foreach (var a in addresses)
                 {
                   if (_first == false)
                     output_string += ", ";
                   output_string += "'%s'".printf ((string) a);
                   _first = false;
-                });
+                }
 
               output_string += " }";
             });
