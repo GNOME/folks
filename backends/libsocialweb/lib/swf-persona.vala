@@ -89,12 +89,12 @@ public class Swf.Persona : Folks.Persona,
         }
     }
 
-  private HashTable<string, GenericArray<string>> _im_addresses =
-      new HashTable<string, GenericArray<string>> (str_hash, str_equal);
+  private HashTable<string, LinkedHashSet<string>> _im_addresses =
+      new HashTable<string, LinkedHashSet<string>> (str_hash, str_equal);
   /**
    * {@inheritDoc}
    */
-  public HashTable<string, GenericArray<string>> im_addresses
+  public HashTable<string, LinkedHashSet<string>> im_addresses
     {
       get { return this._im_addresses; }
       private set {}
@@ -139,12 +139,18 @@ public class Swf.Persona : Folks.Persona,
 
       if (facebook_jid != null)
         {
-          var im_address_array = new GenericArray<string> ();
+          var im_address_array = new LinkedHashSet<string> ();
           try
             {
-              im_address_array.add (normalise_im_address (facebook_jid,
-                    "jabber"));
-              this._im_addresses.insert ("jabber", im_address_array);
+              var facebook_jid_copy = facebook_jid.dup();
+              var normalised_addr = (owned) normalise_im_address
+                  ((owned) facebook_jid_copy, "jabber");
+              string im_proto = "jabber";
+              var proto_copy = im_proto.dup ();
+
+              im_address_array.add ((owned) normalised_addr);
+              this._im_addresses.insert ((owned) proto_copy,
+                  (owned) im_address_array);
             }
           catch (ImDetailsError e)
             {
