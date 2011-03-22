@@ -12,6 +12,9 @@ Bugs fixed:
 * Crasher when removing Personas
 * Crasher when reconnecting a Telepathy account
 
+API changes:
+* Add equal () to StructuredName
+
 Overview of changes from libfolks 0.3.6 to libfolks 0.4.0
 =========================================================
 

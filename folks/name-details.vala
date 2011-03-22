@@ -165,6 +165,23 @@ public class Folks.StructuredName : Object
     }
 
   /**
+   * Whether two StructuredNames are the same.
+   *
+   * @return `true` if all the components are the same, `false`
+   * otherwise.
+   *
+   * @since UNRELEASED
+   */
+  public bool equal (StructuredName other)
+    {
+      return this._family_name      == other.family_name &&
+             this._given_name       == other.given_name &&
+             this._additional_names == other.additional_names &&
+             this._prefixes         == other.prefixes &&
+             this._suffixes         == other.suffixes;
+    }
+
+  /**
    * Formatted version of the structured name.
    *
    * @since 0.4.0
