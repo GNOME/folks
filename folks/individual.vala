@@ -946,21 +946,29 @@ public class Folks.Individual : Object,
 
   private void _update_structured_name ()
     {
+      bool name_found = false;
+
       foreach (var persona in this._persona_list)
         {
           var name_details = persona as NameDetails;
           if (name_details != null)
             {
               var new_value = name_details.structured_name;
-              if (new_value != null)
+              if (new_value != null && !new_value.is_empty ())
                 {
-                  if (new_value != this.structured_name)
-                    this.structured_name = new_value;
-
-                  break;
+                  name_found = true;
+                  if (this.structured_name == null ||
+                      !this.structured_name.equal (new_value))
+                    {
+                      this.structured_name = new_value;
+                      return;
+                    }
                 }
             }
         }
+
+      if (name_found == false)
+        this.structured_name = null;
     }
 
   private void _update_full_name ()

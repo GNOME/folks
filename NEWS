@@ -13,6 +13,7 @@ Bugs fixed:
 * Crasher when reconnecting a Telepathy account
 * Bug 645680 — Use random integer IDs for Kf.Personas
 * Bug 645475 — Linker warnings for Tracker backend tests
+* Bug 645570 — Fix checks for empty and equal StructuredNames
 
 API changes:
 * Add equal () to StructuredName
