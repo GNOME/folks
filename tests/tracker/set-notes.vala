@@ -115,8 +115,10 @@ public class SetNotesTests : Folks.TestCase
               var n = new Note ("some note");
               notes.add ((owned) n);
 
-              Trf.Persona p = (Trf.Persona)i.personas.nth_data (0);
-              p.notes = (owned) notes;
+              foreach (var p in i.personas)
+                {
+                  ((NoteDetails) p).notes = notes;
+                }
             }
         }
 

@@ -118,8 +118,10 @@ public class SetBirthdayTests : Folks.TestCase
               t.from_iso8601 (this._birthday);
               DateTime bday = new  DateTime.from_timeval_utc (t);
 
-              Trf.Persona p = (Trf.Persona)i.personas.nth_data (0);
-              p.birthday = (owned) bday;
+              foreach (var p in i.personas)
+                {
+                  ((BirthdayDetails) p).birthday = bday;
+                }
             }
         }
 

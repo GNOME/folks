@@ -120,14 +120,16 @@ public class SetDuplicateEmailTests : Folks.TestCase
 
   private void _reset_email_address (Individual i)
     {
-      Trf.Persona p = (Trf.Persona) i.personas.nth_data (0);
-      if (this._has_email (p, this._email_1))
+      foreach (var p in i.personas)
         {
-          var emails1 = new HashSet<FieldDetails> ();
-          var email_1 = new FieldDetails (this._email_1);
-          emails1.add (email_1);
-          p.email_addresses = emails1;
-          p.notify["email-addresses"].connect (this._email_addresses_cb);
+          if (this._has_email ((Trf.Persona) p, this._email_1))
+            {
+              var emails1 = new HashSet<FieldDetails> ();
+              var email_1 = new FieldDetails (this._email_1);
+              emails1.add (email_1);
+              ((EmailDetails) p).email_addresses = emails1;
+              p.notify["email-addresses"].connect (this._email_addresses_cb);
+            }
         }
     }
 

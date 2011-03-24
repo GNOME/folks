@@ -119,8 +119,10 @@ public class SetURLsTests : Folks.TestCase
               p3.set_parameter ("type", "url");
               urls.add (p3);
 
-              Trf.Persona p = (Trf.Persona)i.personas.nth_data (0);
-              p.urls = urls;
+              foreach (var p in i.personas)
+                {
+                  ((UrlDetails) p).urls = urls;
+                }
             }
         }
 

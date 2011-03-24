@@ -118,8 +118,11 @@ public class SetPhonesTests : Folks.TestCase
               phones.add (p1);
               var p2 = new FieldDetails (this._phone_2);
               phones.add (p2);
-              Trf.Persona p = (Trf.Persona)i.personas.nth_data (0);
-              p.phone_numbers = phones;
+
+              foreach (var p in i.personas)
+                {
+                  ((PhoneDetails) p).phone_numbers = phones;
+                }
             }
         }
 

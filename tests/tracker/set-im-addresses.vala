@@ -119,8 +119,10 @@ public class SetIMAddressesTests : Folks.TestCase
               im_addresses.set ("yahoo", "three@example.org");
               im_addresses.set ("yahoo", "four@example.org");
 
-              Trf.Persona p = (Trf.Persona)i.personas.nth_data (0);
-              p.im_addresses = (owned) im_addresses;
+              foreach (var p in i.personas)
+                {
+                  ((ImDetails) p).im_addresses = im_addresses;
+                }
             }
         }
 

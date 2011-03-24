@@ -122,21 +122,26 @@ public class SetAliasTests : Folks.TestCase
                 {
                   this._initial_alias_found = true;
 
-                  Trf.Persona p = (Trf.Persona)i.personas.nth_data (0);
+                  foreach (var p in i.personas)
+                    {
 
-                  /*
-                   * We connect to the Persona's handler because
-                   * Individual won't forward the notification to us
-                   * unless it comes from a writeable store.
-                   */
-                  p.notify["alias"].connect (this._notify_alias_cb);
+                      /*
+                       * We connect to the Persona's handler because
+                       * Individual won't forward the notification to us
+                       * unless it comes from a writeable store.
+                       */
+                      p.notify["alias"].connect (this._notify_alias_cb);
 
-                  /* FIXME:
-                   * it would be nice if we could just do:
-                   *    i.alias = "foobar"
-                   * but we depend on:
-                   * https://bugzilla.gnome.org/show_bug.cgi?id=645441 */
-                  p.alias = this._modified_alias;
+                      /* FIXME:
+                       * it would be nice if we could just do:
+                       *    i.alias = "foobar"
+                       * but we depend on:
+                       * https://bugzilla.gnome.org/show_bug.cgi?id=645441 */
+                      if (p is AliasDetails)
+                        {
+                          ((AliasDetails) p).alias = this._modified_alias;
+                        }
+                    }
                 }
             }
         }

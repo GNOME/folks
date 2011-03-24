@@ -118,8 +118,11 @@ public class SetEmailsTests : Folks.TestCase
               emails.add (p1);
               var p2 = new FieldDetails (this._email_2);
               emails.add (p2);
-              Trf.Persona p = (Trf.Persona)i.personas.nth_data (0);
-              p.email_addresses = emails;
+
+              foreach (var p in i.personas)
+                {
+                  ((EmailDetails) p).email_addresses = emails;
+                }
             }
         }
 

@@ -95,7 +95,7 @@ public class AggregationTests : Folks.TestCase
               var id = parts[2];
 
               if (!i.is_user &&
-                  i.personas.length () == 2 &&
+                  i.personas.size == 2 &&
                   this._default_individuals.contains (id))
                 {
                   expected_individuals.add (id);
@@ -109,13 +109,25 @@ public class AggregationTests : Folks.TestCase
               var parts = i.id.split (":");
               var id = parts[2];
 
-              unowned GLib.List<Persona> personas = i.personas;
+              var personas = i.personas;
 
               /* We're not testing the user here */
-              if (!i.is_user && personas.length () == 2)
+              if (!i.is_user && personas.size == 2)
                 {
                   assert (expected_individuals.remove (id));
-                  assert (personas.data.iid == personas.next.data.iid);
+
+                  string iid = null;
+                  foreach (var persona in personas)
+                    {
+                      if (iid != null)
+                        {
+                          assert (persona.iid == iid);
+                        }
+                      else
+                        {
+                          iid = persona.iid;
+                        }
+                    }
                 }
             }
         });
@@ -198,7 +210,7 @@ public class AggregationTests : Folks.TestCase
         {
           foreach (Individual i in removed)
             {
-              if (!i.is_user && i.personas.length () == 5)
+              if (!i.is_user && i.personas.size == 5)
                 {
                   if (i == individual1)
                     {
@@ -218,7 +230,7 @@ public class AggregationTests : Folks.TestCase
 
           foreach (Individual i in added)
             {
-              if (!i.is_user && i.personas.length () == 5)
+              if (!i.is_user && i.personas.size == 5)
                 {
                   if (individual1 == null)
                     {
@@ -371,7 +383,7 @@ public class AggregationTests : Folks.TestCase
         {
           foreach (Individual i in removed)
             {
-              if (!i.is_user && i.personas.length () == 9)
+              if (!i.is_user && i.personas.size == 9)
                 {
                   if (i == individual1)
                     {
@@ -391,7 +403,7 @@ public class AggregationTests : Folks.TestCase
 
           foreach (Individual i in added)
             {
-              if (!i.is_user && i.personas.length () == 9)
+              if (!i.is_user && i.personas.size == 9)
                 {
                   if (individual1 == null)
                     {
@@ -560,11 +572,16 @@ public class AggregationTests : Folks.TestCase
       assert (aggregator.user == user_individual);
 
       /* The user individual should comprise personas from the two accounts */
-      assert (user_individual.personas.length () == 2);
-      assert ((user_individual.personas.data.display_id == "me@example.com" &&
-          user_individual.personas.next.data.display_id == "me2@example.com") ||
-          (user_individual.personas.data.display_id == "me2@example.com" &&
-          user_individual.personas.next.data.display_id == "me@example.com"));
+      assert (user_individual.personas.size == 2);
+
+      var display_ids = new HashSet<string> ();
+      foreach (var persona in user_individual.personas)
+        {
+          display_ids.add (persona.display_id);
+        }
+
+      assert (display_ids.contains ("me@example.com") &&
+          display_ids.contains ("me2@example.com"));
 
       /* Clean up for the next test */
       this._tp_backend.remove_account (account2_handle);
@@ -602,12 +619,12 @@ public class AggregationTests : Folks.TestCase
            * personas for the user). */
           foreach (Individual i in removed)
             {
-              assert (i.is_user || i.personas.length () == 1);
+              assert (i.is_user || i.personas.size == 1);
             }
 
           foreach (Individual i in added)
             {
-              assert (i.is_user || i.personas.length () == 1);
+              assert (i.is_user || i.personas.size == 1);
             }
         });
 

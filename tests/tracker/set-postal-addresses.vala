@@ -133,8 +133,10 @@ public class SetPostalAddressesTests : Folks.TestCase
 
               addresses.add (pa);
 
-              Trf.Persona p = (Trf.Persona)i.personas.nth_data (0);
-              p.postal_addresses = (owned) addresses;
+              foreach (var p in i.personas)
+                {
+                  ((PostalAddressDetails) p).postal_addresses = addresses;
+                }
             }
         }
 

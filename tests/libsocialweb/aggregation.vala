@@ -211,21 +211,31 @@ public class AggregationTests : Folks.TestCase
           assert (added.length () == 1);
           assert (removed.length () == 2);
           Individual i = added.nth_data (0);
-          assert (i.personas.length () == 3);
+          assert (i.personas.size == 3);
           debug ("individuals_changed: 1 individual containing %u personas",
-              i.personas.length ());
+              i.personas.size);
           main_loop.quit ();
         });
 
       /* Link personas */
-      GLib.List<unowned Persona> personas1 = new GLib.List<unowned Persona> ();
-      personas1.concat (individual_gathered[0].personas.copy ());
-      GLib.List<unowned Persona> personas2 = new GLib.List<unowned Persona> ();
-      personas2.concat (individual_gathered[1].personas.copy ());
-      GLib.List<unowned Persona> personas = new GLib.List<unowned Persona>();
-      personas.concat (personas1.copy ());
-      personas.concat (personas2.copy ());
+      var personas = new GLib.List<unowned Persona>();
+
+      var personas1 = new GLib.List<unowned Persona> ();
+      foreach (var p1 in individual_gathered[0].personas)
+        {
+          personas.append (p1);
+          personas1.append (p1);
+        }
+
+      var personas2 = new GLib.List<unowned Persona> ();
+      foreach (var p2 in individual_gathered[1].personas)
+        {
+          personas.append (p2);
+          personas2.append (p2);
+        }
+
       assert (personas.length () == 2);
+
       Idle.add (() =>
         {
           aggregator.link_personas (personas);

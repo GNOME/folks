@@ -111,8 +111,11 @@ public class RemoveContactTests : Folks.TestCase
             {
               this._contact_added = true;
               this._individual_id = i.id;
-              var contact_id = i.personas.nth_data (0).iid.split (":")[1];
-              this._tracker_backend.remove_contact (contact_id);
+              foreach (var persona in i.personas)
+                {
+                  var contact_id = persona.iid.split (":")[1];
+                  this._tracker_backend.remove_contact (contact_id);
+                }
             }
         }
 

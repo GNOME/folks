@@ -110,8 +110,10 @@ public class SetAvatarTests : Folks.TestCase
             {
               i.notify["avatar"].connect (this._notify_avatar_cb);
 
-              Trf.Persona p = (Trf.Persona)i.personas.nth_data (0);
-              p.avatar = this._avatar;
+              foreach (var p in i.personas)
+                {
+                  ((AvatarDetails) p).avatar = this._avatar;
+                }
             }
         }
 

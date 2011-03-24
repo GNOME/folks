@@ -166,7 +166,14 @@ public class RemovePersonaTests : Folks.TestCase
           if (i.full_name == this._persona_fullname)
             {
               this._individual_id = i.id;
-              this._persona_id = i.personas.nth_data (0).iid;
+
+              /* Only examine the first persona */
+              foreach (var p in i.personas)
+                {
+                  this._persona_id = p.iid;
+                  break;
+                }
+
               this._individual = i;
               if (this._pstore.personas.lookup (this._persona_id) != null)
                 {

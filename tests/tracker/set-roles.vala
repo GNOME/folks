@@ -115,8 +115,10 @@ public class SetRolesTests : Folks.TestCase
               var r = new Role ("some title", "some organisation");
               roles.add ((owned) r);
 
-              Trf.Persona p = (Trf.Persona)i.personas.nth_data (0);
-              p.roles = (owned) roles;
+              foreach (var p in i.personas)
+                {
+                  ((RoleDetails) p).roles = roles;
+                }
             }
         }
 

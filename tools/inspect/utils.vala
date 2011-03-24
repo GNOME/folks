@@ -107,7 +107,7 @@ private class Folks.Inspect.Utils
       bool show_personas)
     {
       Utils.print_line ("Individual '%s' with %u personas:",
-          individual.id, individual.personas.length ());
+          individual.id, individual.personas.size);
 
       /* List the Individual's properties */
       unowned ParamSpec[] properties =
@@ -223,9 +223,8 @@ private class Folks.Inspect.Utils
       /* Overrides for various known properties */
       if (object_type.is_a (typeof (Individual)) && prop_name == "personas")
         {
-          unowned GLib.List<Persona> personas =
-              (GLib.List<Persona>) prop_value.get_pointer ();
-          return "List of %u personas".printf (personas.length ());
+          Set<Persona> personas = (Set<Persona>) prop_value.get_object ();
+          return "List of %u personas".printf (personas.size);
         }
       else if (object_type.is_a (typeof (PersonaStore)) &&
           prop_name == "personas")
@@ -453,7 +452,7 @@ private class Folks.Inspect.Utils
 
   /* FIXME: This can't be in the individual_id_completion_cb() function because
    * Vala doesn't allow static local variables. Erk. */
-  private static unowned GLib.List<Persona>? persona_uid_iter = null;
+  private static Iterator<Persona>? persona_uid_iter = null;
 
   /* Complete an individual's ID, starting with @word. */
   public static string? persona_uid_completion_cb (string word,
@@ -474,16 +473,18 @@ private class Folks.Inspect.Utils
           if (Utils.persona_uid_iter == null)
             {
               assert (individual != null);
-              Utils.persona_uid_iter = individual.personas;
+              Utils.persona_uid_iter = individual.personas.iterator ();
             }
 
-          while (Utils.persona_uid_iter != null)
+          while (Utils.persona_uid_iter.next ())
             {
-              unowned Persona persona = (Persona) Utils.persona_uid_iter.data;
-              Utils.persona_uid_iter = Utils.persona_uid_iter.next;
+              var persona = Utils.persona_uid_iter.get ();
               if (persona.uid.has_prefix (word))
                 return persona.uid;
             }
+
+          /* Clean up */
+          Utils.persona_uid_iter = null;
         }
 
       /* Clean up */

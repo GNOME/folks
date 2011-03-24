@@ -123,7 +123,12 @@ public class IndividualPropertiesTests : Folks.TestCase
 
               /* the contact list this aggregator is based upon has exactly 1
                * Tpf.Persona per Individual */
-              var persona = i.personas.data;
+              Persona persona = null;
+              foreach (var p in i.personas)
+                {
+                  persona = i;
+                  break;
+                }
               assert (persona is Tpf.Persona);
 
               /* set the alias through Telepathy and wait for it to hit our
@@ -186,7 +191,12 @@ public class IndividualPropertiesTests : Folks.TestCase
 
               /* the contact list this aggregator is based upon has exactly 1
                * Tpf.Persona per Individual */
-              var persona = i.personas.data;
+              Persona persona = null;
+              foreach (var p in i.personas)
+                {
+                  persona = i;
+                  break;
+                }
               assert (persona is Tpf.Persona);
 
               /* set the alias through Telepathy and wait for it to hit our

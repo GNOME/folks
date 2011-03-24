@@ -51,11 +51,15 @@ public class IndividualRetrievalTests : Folks.TestCase
         {
           foreach (Individual i in added)
             {
-              assert (i.personas.length () == 1);
+              assert (i.personas.size == 1);
+
               /* Using the display ID is a little hacky, since we strictly
                * shouldn't assume anything about…but for the key-file backend,
                * we know it's equal to the group name. */
-              expected_individuals.remove (i.personas.data.display_id);
+              foreach (var persona in i.personas)
+                {
+                  expected_individuals.remove (persona.display_id);
+                }
             }
 
           assert (removed == null);

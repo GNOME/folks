@@ -129,19 +129,25 @@ public class SetFavouriteTests : Folks.TestCase
               if (i.is_favourite == false)
                 {
                   this._c1_initially_not_favourite = true;
-                  Trf.Persona p = (Trf.Persona)i.personas.nth_data (0);
-                  p.is_favourite  = true;
+
+                  foreach (var p in i.personas)
+                    {
+                      ((FavouriteDetails) p).is_favourite = true;
+                    }
                 }
             }
-         else if (i.full_name == this._initial_fullname_2)
-           {
-             if (i.is_favourite == true)
-               {
-                 this._c2_initially_favourite = true;
-                 Trf.Persona p = (Trf.Persona)i.personas.nth_data (0);
-                 p.is_favourite  = false;
-               }
-           }
+          else if (i.full_name == this._initial_fullname_2)
+            {
+              if (i.is_favourite == true)
+                {
+                  this._c2_initially_favourite = true;
+
+                  foreach (var p in i.personas)
+                    {
+                      ((FavouriteDetails) p).is_favourite = false;
+                    }
+                }
+            }
         }
 
       assert (removed == null);

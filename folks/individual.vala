@@ -429,6 +429,10 @@ public class Folks.Individual : Object,
   /**
    * The set of {@link Persona}s encapsulated by this Individual.
    *
+   * No order is specified over the set of personas, as such an order may be
+   * different across each of the properties implemented by the personas (e.g.
+   * should they be ordered by presence, name, star sign, etc.?).
+   *
    * Changing the set of personas may cause updates to the aggregated properties
    * provided by the Individual, resulting in property notifications for them.
    *
@@ -437,8 +441,10 @@ public class Folks.Individual : Object,
    * {@link IndividualAggregator.link_personas} or
    * {@link IndividualAggregator.unlink_individual}, which will ensure the link
    * changes are written to the appropriate backend.
+   *
+   * @since UNRELEASED
    */
-  public GLib.List<Persona> personas
+  public Set<Persona> personas
     {
       get { return this._persona_set; }
       set { this._set_personas (value, null); }
@@ -586,8 +592,10 @@ public class Folks.Individual : Object,
    * @param personas a list of {@link Persona}s to initialise the
    * {@link Individual} with, or `null`
    * @return a new Individual
+   *
+   * @since UNRELEASED
    */
-  public Individual (GLib.List<Persona>? personas)
+  public Individual (Set<Persona>? personas)
     {
       this._im_addresses = new HashMultiMap<string, string> ();
       this._web_service_addresses = new HashMultiMap<string, string> ();
@@ -779,7 +787,7 @@ public class Folks.Individual : Object,
             {
               favourite = ((FavouriteDetails) p).is_favourite;
               if (favourite == true)
-                return;
+                break;
             }
         }
 
@@ -1358,45 +1366,46 @@ public class Folks.Individual : Object,
       this.notify_property ("notes");
     }
 
-  private void _set_personas (GLib.List<Persona>? persona_list,
+  private void _set_personas (Set<Persona>? personas,
       Individual? replacement_individual)
     {
-      var persona_set = new HashSet<Persona> (null, null);
       GLib.List<Persona> added = null;
       GLib.List<Persona> removed = null;
 
-      /* Determine which Personas have been added */
-      foreach (var p in persona_list)
+      /* Determine which Personas have been added. If personas == null, we
+       * assume it's an empty set. */
+      if (personas != null)
         {
-          if (!this._persona_set.contains (p))
+          foreach (var p in personas)
             {
-              /* Keep track of how many Personas are users */
-              if (p.is_user)
-                this._persona_user_count++;
-
-              added.prepend (p);
-
-              this._persona_set.add (p);
-              this._connect_to_persona (p);
-
-              /* Increment the Persona count for this PersonaStore */
-              var store = p.store;
-              var num_from_store = this._stores.get (store);
-              if (num_from_store == 0)
+              if (!this._persona_set.contains (p))
                 {
-                  this._stores.set (store, num_from_store + 1);
-                }
-              else
-                {
-                  this._stores.set (store, 1);
+                  /* Keep track of how many Personas are users */
+                  if (p.is_user)
+                    this._persona_user_count++;
 
-                  store.removed.connect (this._store_removed_cb);
-                  store.personas_changed.connect (
-                      this._store_personas_changed_cb);
+                  added.prepend (p);
+
+                  this._persona_set.add (p);
+                  this._connect_to_persona (p);
+
+                  /* Increment the Persona count for this PersonaStore */
+                  var store = p.store;
+                  var num_from_store = this._stores.get (store);
+                  if (num_from_store == 0)
+                    {
+                      this._stores.set (store, num_from_store + 1);
+                    }
+                  else
+                    {
+                      this._stores.set (store, 1);
+
+                      store.removed.connect (this._store_removed_cb);
+                      store.personas_changed.connect (
+                          this._store_personas_changed_cb);
+                    }
                 }
             }
-
-          persona_set.add (p);
         }
 
       /* Determine which Personas have been removed */
@@ -1405,7 +1414,7 @@ public class Folks.Individual : Object,
         {
           var p = iter.get ();
 
-          if (!persona_set.contains (p))
+          if (personas == null || !personas.contains (p))
             {
               /* Keep track of how many Personas are users */
               if (p.is_user)

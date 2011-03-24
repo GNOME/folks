@@ -413,7 +413,7 @@ public class Folks.IndividualAggregator : Object
            * in the `final_individual`. */
           HashSet<Individual> candidate_inds = new HashSet<Individual> ();
 
-          GLib.List<Persona> final_personas = new GLib.List<Persona> ();
+          var final_personas = new HashSet<Persona> ();
           Individual final_individual = null;
 
           debug ("Aggregating persona '%s' on '%s'.", persona.uid, persona.iid);
@@ -482,8 +482,8 @@ public class Folks.IndividualAggregator : Object
                 }
             }
 
-          /* Ensure the original persona makes it into the final persona */
-          final_personas.prepend (persona);
+          /* Ensure the original persona makes it into the final individual */
+          final_personas.add (persona);
 
           if (candidate_inds.size > 0 && this._linking_enabled == true)
             {
@@ -494,17 +494,7 @@ public class Folks.IndividualAggregator : Object
                * Individuals so that the Individuals themselves are removed. */
               foreach (var individual in candidate_inds)
                 {
-                  /* FIXME: It would be faster to prepend a reversed copy of
-                   * `individual.personas`, then reverse the entire
-                   * `final_personas` list afterwards, but Vala won't let us.
-                   * We also have to reference each of `individual.personas`
-                   * manually, since copy() doesn't do that for us. */
-                  individual.personas.foreach ((p) =>
-                    {
-                      ((Persona) p).ref ();
-                    });
-
-                  final_personas.concat (individual.personas.copy ());
+                  final_personas.add_all (individual.personas);
                 }
             }
           else if (candidate_inds.size > 0)
@@ -520,9 +510,9 @@ public class Folks.IndividualAggregator : Object
           final_individual = new Individual (final_personas);
           debug ("    Created new individual '%s' with personas:",
               final_individual.id);
-          final_personas.foreach ((i) =>
+          foreach (var p in final_personas)
             {
-              var final_persona = (Persona) i;
+              var final_persona = (Persona) p;
 
               debug ("        %s (is user: %s, IID: %s)", final_persona.uid,
                   final_persona.is_user ? "yes" : "no", final_persona.iid);
@@ -567,7 +557,7 @@ public class Folks.IndividualAggregator : Object
                         });
                     }
                 }
-            });
+            }
 
           /* Remove the old Individuals. This has to be done here, as we need
            * the final_individual. */
@@ -807,7 +797,7 @@ public class Folks.IndividualAggregator : Object
         }
 
       /* If the individual has 0 personas, we've already signaled removal */
-      if (i.personas.length () > 0)
+      if (i.personas.size > 0)
         this.individuals_changed (null, i_list, null, null, 0);
       this.individuals.remove (i.id);
     }
@@ -872,10 +862,7 @@ public class Folks.IndividualAggregator : Object
 
       if (parent != null && persona != null)
         {
-          var personas = parent.personas.copy ();
-
-          personas.append (persona);
-          parent.personas = personas;
+          parent.personas.add (persona);
         }
 
       return persona;
@@ -902,17 +889,16 @@ public class Folks.IndividualAggregator : Object
    */
   public async void remove_individual (Individual individual) throws GLib.Error
     {
-      /* We have to iterate manually since using foreach() requires a sync
-       * lambda function, meaning we can't yield on the remove_persona() call.
-       *
-       * Furthermore, removing personas changes the persona list so we need to
-       * make a copy first */
-      var personas = individual.personas.copy ();
-      unowned GLib.List<unowned Persona> i;
-
-      for (i = personas; i != null; i = i.next)
+      /* Removing personas changes the persona set so we need to make a copy
+       * first */
+      var personas = new HashSet<Persona> ();
+      foreach (var p in individual.personas)
         {
-          var persona = (Persona) i.data;
+          personas.add (p);
+        }
+
+      foreach (var persona in personas)
+        {
           yield persona.store.remove_persona (persona);
         }
     }
@@ -1085,18 +1071,19 @@ public class Folks.IndividualAggregator : Object
           return;
         }
 
-      /* Remove all the Personas from writeable PersonaStores
-       * We have to iterate manually since using foreach() requires a sync
-       * lambda function, meaning we can't yield on the remove_persona() call */
       debug ("Unlinking Individual '%s', deleting Personas:", individual.id);
 
-      /* We have to take a copy of the Persona list before removing the
+      /* Remove all the Personas from writeable PersonaStores.
+       *
+       * We have to take a copy of the Persona list before removing the
        * Personas, as _personas_changed_cb() (which is called as a result of
        * calling _writeable_store.remove_persona()) messes around with Persona
        * lists. */
-      var personas = individual.personas.copy ();
-      foreach (var p in personas)
-        p.ref ();
+      var personas = new HashSet<Persona> ();
+      foreach (var p in individual.personas)
+        {
+          personas.add (p);
+        }
 
       foreach (var persona in personas)
         {

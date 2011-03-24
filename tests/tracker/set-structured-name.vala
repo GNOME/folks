@@ -119,9 +119,11 @@ public class SetStructuredNameTests : Folks.TestCase
         {
           if (i.full_name == this._persona_fullname)
             {
-              Trf.Persona p = (Trf.Persona)i.personas.nth_data (0);
-              p.notify["structured-name"].connect (this._notify_sname_cb);
-              p.structured_name = this._sname;
+              foreach (var p in i.personas)
+                {
+                  p.notify["structured-name"].connect (this._notify_sname_cb);
+                  ((NameDetails) p).structured_name = this._sname;
+                }
             }
         }
 

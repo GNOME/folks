@@ -107,8 +107,10 @@ public class SetGenderTests : Folks.TestCase
             {
               i.notify["gender"].connect (this._notify_gender_cb);
 
-              Trf.Persona p = (Trf.Persona)i.personas.nth_data (0);
-              p.gender = Gender.MALE;
+              foreach (var p in i.personas)
+                {
+                  ((GenderDetails) p).gender = Gender.MALE;
+                }
             }
         }
 

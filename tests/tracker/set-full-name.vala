@@ -110,9 +110,12 @@ public class SetFullNameTests : Folks.TestCase
           if (i.full_name == this._persona_fullname)
             {
               this._individual_id = i.id;
-              Trf.Persona p = (Trf.Persona)i.personas.nth_data (0);
               i.notify["full-name"].connect (this._notify_full_name_cb);
-              p.full_name = this._modified_fullname;
+
+              foreach (var p in i.personas)
+                {
+                  ((NameDetails) p).full_name = this._modified_fullname;
+                }
             }
         }
 

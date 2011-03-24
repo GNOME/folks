@@ -320,11 +320,14 @@ public class AddPersonaTests : Folks.TestCase
                *   because if only one of its property is updated
                *   Individual won't fire a notification.
                */
-              unowned Trf.Persona p = (Trf.Persona) i.personas.nth_data (0);
-              if (p.structured_name != null)
+              foreach (var p in i.personas)
                 {
-                  p.notify["structured-name"].connect
-                    (this._notify_persona_sname);
+                  if (p is NameDetails &&
+                      ((NameDetails) p).structured_name != null)
+                    {
+                      p.notify["structured-name"].connect
+                        (this._notify_persona_sname);
+                    }
                 }
 
               i.notify["full-name"].connect (this._notify_cb);
