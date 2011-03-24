@@ -404,16 +404,14 @@ public class Folks.IndividualAggregator : Object
           PersonaStoreTrust trust_level = persona.store.trust_level;
 
           /* These are the Individuals whose Personas will be linked together
-           * to form the `final_individual`. We keep a list of the Individuals
-           * for fast iteration, but also keep a set to ensure that we don't
-           * get duplicate Individuals in the list.
+           * to form the `final_individual`.
            * Since a given Persona can only be part of one Individual, and the
            * code in Persona._set_personas() ensures that there are no duplicate
            * Personas in a given Individual, ensuring that there are no
-           * duplicate Individuals in `candidate_inds` guarantees that there
-           * will be no duplicate Personas in the `final_individual`. */
-          GLib.List<Individual> candidate_inds = null;
-          HashSet<Individual> candidate_ind_set = new HashSet<Individual> ();
+           * duplicate Individuals in `candidate_inds` (by using a
+           * HashSet) guarantees that there will be no duplicate Personas
+           * in the `final_individual`. */
+          HashSet<Individual> candidate_inds = new HashSet<Individual> ();
 
           GLib.List<Persona> final_personas = new GLib.List<Persona> ();
           Individual final_individual = null;
@@ -425,8 +423,7 @@ public class Folks.IndividualAggregator : Object
           if (persona.is_user == true && user != null)
             {
               debug ("    Found candidate individual '%s' as user.", user.id);
-              candidate_inds.prepend (user);
-              candidate_ind_set.add (user);
+              candidate_inds.add (user);
             }
 
           /* If we don't trust the PersonaStore at all, we can't link the
@@ -436,12 +433,11 @@ public class Folks.IndividualAggregator : Object
               var candidate_ind = this._link_map.lookup (persona.iid);
               if (candidate_ind != null &&
                   candidate_ind.trust_level != TrustLevel.NONE &&
-                  !candidate_ind_set.contains (candidate_ind))
+                  !candidate_inds.contains (candidate_ind))
                 {
                   debug ("    Found candidate individual '%s' by IID '%s'.",
                       candidate_ind.id, persona.iid);
-                  candidate_inds.prepend (candidate_ind);
-                  candidate_ind_set.add (candidate_ind);
+                  candidate_inds.add (candidate_ind);
                 }
             }
 
@@ -475,13 +471,12 @@ public class Folks.IndividualAggregator : Object
 
                       if (candidate_ind != null &&
                           candidate_ind.trust_level != TrustLevel.NONE &&
-                          !candidate_ind_set.contains (candidate_ind))
+                          !candidate_inds.contains (candidate_ind))
                         {
                           debug ("    Found candidate individual '%s' by " +
                               "linkable property '%s' = '%s'.",
                               candidate_ind.id, prop_name, prop_linking_value);
-                          candidate_inds.prepend (candidate_ind);
-                          candidate_ind_set.add (candidate_ind);
+                          candidate_inds.add (candidate_ind);
                         }
                     });
                 }
@@ -490,17 +485,15 @@ public class Folks.IndividualAggregator : Object
           /* Ensure the original persona makes it into the final persona */
           final_personas.prepend (persona);
 
-          if (candidate_inds != null && this._linking_enabled == true)
+          if (candidate_inds.size > 0 && this._linking_enabled == true)
             {
               /* The Persona's IID or linkable properties match one or more
                * linkable fields which are already in the link map, so we link
                * together all the Individuals we found to form a new
                * final_individual. Later, we remove the Personas from the old
                * Individuals so that the Individuals themselves are removed. */
-              candidate_inds.foreach ((i) =>
+              foreach (var individual in candidate_inds)
                 {
-                  var individual = (Individual) i;
-
                   /* FIXME: It would be faster to prepend a reversed copy of
                    * `individual.personas`, then reverse the entire
                    * `final_personas` list afterwards, but Vala won't let us.
@@ -512,9 +505,9 @@ public class Folks.IndividualAggregator : Object
                     });
 
                   final_personas.concat (individual.personas.copy ());
-                });
+                }
             }
-          else if (candidate_inds != null)
+          else if (candidate_inds.size > 0)
             {
               debug ("    Linking disabled.");
             }
