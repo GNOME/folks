@@ -10,6 +10,8 @@ public class LinkedHashSetTests : Folks.TestCase
       this.add_test ("list properties", this.test_list_properties);
       this.add_test ("object elements", this.test_object_elements);
       this.add_test ("bgo640551", this.test_bgo640551);
+      this.add_test ("iterator", this.test_iterator);
+      this.add_test ("iterator removal", this.test_iterator_removal);
     }
 
   public override void set_up ()
@@ -280,6 +282,53 @@ public class LinkedHashSetTests : Folks.TestCase
 
           im_set.add_all (cur_addresses);
         });
+    }
+
+  /* Test that LinkedHashSet.iterator() works at a basic level */
+  public void test_iterator ()
+    {
+      HashSet<int> values = new HashSet<int> ();
+      LinkedHashSet<int> lhs = new LinkedHashSet<int> ();
+
+      /* Set up the values and insert them into the HashSet */
+      for (var i = 0; i < 10; i++)
+        {
+          values.add (i);
+          lhs.add (i);
+        }
+
+      /* We don't make any assertions about the order; just that exactly the
+       * right set of values is returned by the iterator. */
+      var iter = lhs.iterator ();
+
+      while (iter.next ())
+        {
+          var i = iter.get ();
+          assert (values.remove (i));
+        }
+
+      assert (values.size == 0);
+    }
+
+  public void test_iterator_removal ()
+    {
+      LinkedHashSet<int> lhs = new LinkedHashSet<int> ();
+
+      /* Set up the values and insert them into the HashSet */
+      for (var i = 0; i < 10; i++)
+        lhs.add (i);
+
+      /* Remove all the entries from the LinkedHashSet via Iterator.remove().
+       * Then, check that they've been removed. */
+      var iter = lhs.iterator ();
+
+      while (iter.next ())
+        iter.remove ();
+
+      assert (lhs.size == 0);
+
+      for (var i = 0; i < 10; i++)
+        assert (!lhs.contains (i));
     }
 }
 
