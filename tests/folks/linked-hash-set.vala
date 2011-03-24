@@ -12,6 +12,8 @@ public class LinkedHashSetTests : Folks.TestCase
       this.add_test ("bgo640551", this.test_bgo640551);
       this.add_test ("iterator", this.test_iterator);
       this.add_test ("iterator removal", this.test_iterator_removal);
+      this.add_test ("iterator empty", this.test_iterator_empty);
+      this.add_test ("iterator navigation", this.test_iterator_navigation);
     }
 
   public override void set_up ()
@@ -329,6 +331,63 @@ public class LinkedHashSetTests : Folks.TestCase
 
       for (var i = 0; i < 10; i++)
         assert (!lhs.contains (i));
+    }
+
+  public void test_iterator_empty ()
+    {
+      LinkedHashSet<int> lhs = new LinkedHashSet<int> ();
+      var _iter = lhs.iterator ();
+      assert (_iter is BidirIterator);
+      var iter = (BidirIterator<int>) _iter;
+
+      /* Check the iterator behaves correctly for an empty LinkedHashSet */
+      assert (!iter.next ());
+      assert (!iter.has_next ());
+      assert (!iter.first ());
+      assert (!iter.previous ());
+      assert (!iter.has_previous ());
+      assert (!iter.last ());
+    }
+
+  public void test_iterator_navigation ()
+    {
+      LinkedHashSet<int> lhs = new LinkedHashSet<int> ();
+
+      lhs.add (0);
+      lhs.add (1);
+      lhs.add (2);
+
+      var _iter = lhs.iterator ();
+      assert (_iter is BidirIterator);
+      var iter = (BidirIterator<int>) _iter;
+
+      assert (iter.has_next ());
+      assert (!iter.has_previous ());
+      assert (iter.next ());
+      assert (iter.get () == 0);
+
+      assert (iter.first ());
+      assert (iter.get () == 0);
+
+      assert (iter.has_next ());
+      assert (iter.next ());
+      assert (iter.has_previous ());
+      assert (iter.get () == 1);
+
+      assert (iter.first ());
+      assert (iter.get () == 0);
+
+      assert (iter.next ());
+      assert (iter.next ());
+      assert (iter.get () == 2);
+      assert (!iter.has_next ());
+      assert (iter.has_previous ());
+
+      assert (iter.last ());
+      assert (iter.get () == 2);
+
+      assert (iter.previous ());
+      assert (iter.get () == 1);
     }
 }
 
