@@ -33,6 +33,9 @@ public class Folks.LinkedHashSet<G> : AbstractList<G>,
   private HashSet<G> _hash_set;
   /* A linked list that maintains the order of the items. */
   private LinkedList<G> _linked_list;
+  /* A stamp which changes whenever either the hash set or the linked list are
+   * modified. */
+  private int _stamp = 0;
 
   /**
    * Constructs a new empty set.
@@ -93,6 +96,7 @@ public class Folks.LinkedHashSet<G> : AbstractList<G>,
   {
     if (this._hash_set.add (item))
       {
+        this._stamp++;
         this._linked_list.add (item);
         return true;
       }
@@ -114,6 +118,7 @@ public class Folks.LinkedHashSet<G> : AbstractList<G>,
   {
     if (this._hash_set.remove (item))
       {
+        this._stamp++;
         this._linked_list.remove (item);
         return true;
       }
@@ -131,6 +136,7 @@ public class Folks.LinkedHashSet<G> : AbstractList<G>,
    */
   public override void clear ()
   {
+    this._stamp++;
     this._hash_set.clear ();
     this._linked_list.clear ();
   }
@@ -197,7 +203,10 @@ public class Folks.LinkedHashSet<G> : AbstractList<G>,
   {
     G item = this._linked_list.remove_at (index);
     if (item != null)
-      this._hash_set.remove (item);
+      {
+        this._stamp++;
+        this._hash_set.remove (item);
+      }
     return item;
   }
 
