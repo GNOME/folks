@@ -84,13 +84,7 @@ public class Folks.Individual : Object,
   private bool _is_favourite;
   private string _alias;
   private HashSet<string> _groups;
-  /* These two data structures should store exactly the same set of Personas:
-   * the Personas contained in this Individual. The HashSet is used for fast
-   * lookups, whereas the List is used for iteration.
-   * The Individual's references to its Personas are kept by the HashSet;
-   * since the List contains the same set of Personas, it doesn't need an
-   * extra reference (and due to bgo#624249, this is a good thing). */
-  private GLib.List<unowned Persona> _persona_list;
+  /* Stores the Personas contained in this Individual. */
   private HashSet<Persona> _persona_set;
   /* Mapping from PersonaStore -> number of Personas from that store contained
    * in this Individual. There shouldn't be any entries with a number < 1.
@@ -197,7 +191,7 @@ public class Folks.Individual : Object,
 
           /* First, try to write it to only the writeable Personas… */
           var alias_changed = false;
-          this._persona_list.foreach ((p) =>
+          foreach (var p in this._persona_set)
             {
               if (p is AliasDetails &&
                   ((Persona) p).store.is_writeable == true)
@@ -207,13 +201,13 @@ public class Folks.Individual : Object,
                   ((AliasDetails) p).alias = value;
                   alias_changed = true;
                 }
-            });
+            }
 
           /* …but if there are no writeable Personas, we have to fall back to
            * writing it to every Persona. */
           if (alias_changed == false)
             {
-              this._persona_list.foreach ((p) =>
+              foreach (var p in this._persona_set)
                 {
                   if (p is AliasDetails)
                     {
@@ -221,7 +215,7 @@ public class Folks.Individual : Object,
                           ((Persona) p).uid);
                       ((AliasDetails) p).alias = value;
                     }
-                });
+                }
             }
         }
     }
@@ -382,7 +376,7 @@ public class Folks.Individual : Object,
               value ? "TRUE" : "FALSE");
 
           this._is_favourite = value;
-          this._persona_list.foreach ((p) =>
+          foreach (var p in this._persona_set)
             {
               if (p is FavouriteDetails)
                 {
@@ -392,7 +386,7 @@ public class Folks.Individual : Object,
                   SignalHandler.unblock_by_func (p,
                       (void*) this._notify_is_favourite_cb, this);
                 }
-            });
+            }
         }
     }
 
@@ -405,11 +399,11 @@ public class Folks.Individual : Object,
 
       set
         {
-          this._persona_list.foreach ((p) =>
+          foreach (var p in this._persona_set)
             {
               if (p is GroupDetails && ((Persona) p).store.is_writeable == true)
                 ((GroupDetails) p).groups = value;
-            });
+            }
           this._update_groups ();
         }
     }
@@ -446,7 +440,7 @@ public class Folks.Individual : Object,
    */
   public GLib.List<Persona> personas
     {
-      get { return this._persona_list; }
+      get { return this._persona_set; }
       set { this._set_personas (value, null); }
     }
 
@@ -552,11 +546,11 @@ public class Folks.Individual : Object,
    */
   public async void change_group (string group, bool is_member)
     {
-      this._persona_list.foreach ((p) =>
+      foreach (var p in this._persona_set)
         {
           if (p is GroupDetails)
             ((GroupDetails) p).change_group.begin (group, is_member);
-        });
+        }
 
       /* don't notify, since it hasn't happened in the persona backing stores
        * yet; react to that directly */
@@ -597,7 +591,8 @@ public class Folks.Individual : Object,
     {
       this._im_addresses = new HashMultiMap<string, string> ();
       this._web_service_addresses = new HashMultiMap<string, string> ();
-      this._persona_set = new HashSet<Persona> (null, null);
+      this._persona_set =
+          new HashSet<Persona> (direct_hash, direct_equal);
       this._stores = new HashMap<PersonaStore, uint> (null, null);
       this._gender = Gender.UNSPECIFIED;
       this.personas = personas;
@@ -612,7 +607,6 @@ public class Folks.Individual : Object,
           var persona = iter.get ();
 
           removed_personas.prepend (persona);
-          this._persona_list.remove (persona);
           iter.remove ();
         }
 
@@ -646,7 +640,6 @@ public class Folks.Individual : Object,
           if (this._persona_set.remove (p))
             {
               removed_personas.prepend (p);
-              this._persona_list.remove (p);
             }
         });
 
@@ -699,7 +692,7 @@ public class Folks.Individual : Object,
        * "groups-changed" on the store (with the set of personas), to allow the
        * back-end to optimize it (like Telepathy will for MembersChanged for the
        * groups channel list) */
-      this._persona_list.foreach ((p) =>
+      foreach (var p in this._persona_set)
         {
           if (p is GroupDetails)
             {
@@ -710,7 +703,7 @@ public class Folks.Individual : Object,
                   new_groups.add (group);
                 }
             }
-        });
+        }
 
       foreach (var group in new_groups)
         {
@@ -748,7 +741,7 @@ public class Folks.Individual : Object,
       var presence_type = Folks.PresenceType.UNSET;
 
       /* Choose the most available presence from our personas */
-      this._persona_list.foreach ((p) =>
+      foreach (var p in this._persona_set)
         {
           if (p is PresenceDetails)
             {
@@ -761,7 +754,7 @@ public class Folks.Individual : Object,
                   presence_message = presence.presence_message;
                 }
             }
-        });
+        }
 
       if (presence_message == null)
         presence_message = "";
@@ -780,7 +773,7 @@ public class Folks.Individual : Object,
 
       debug ("Running _update_is_favourite() on '%s'", this.id);
 
-      this._persona_list.foreach ((p) =>
+      foreach (var p in this._persona_set)
         {
           if (favourite == false && p is FavouriteDetails)
             {
@@ -788,7 +781,7 @@ public class Folks.Individual : Object,
               if (favourite == true)
                 return;
             }
-        });
+        }
 
       /* Only notify if the value has changed. We have to set the private member
        * and notify manually, or we'd end up propagating the new favourite
@@ -810,7 +803,7 @@ public class Folks.Individual : Object,
       /* Search for an alias from a writeable Persona, and use it as our first
        * choice if it's non-empty, since that's where the user-set alias is
        * stored. */
-      foreach (var p in this._persona_list)
+      foreach (var p in this._persona_set)
         {
           if (p is AliasDetails && p.store.is_writeable == true)
             {
@@ -832,7 +825,7 @@ public class Folks.Individual : Object,
        * one of those, fall back to one which is equal to the display ID. */
       if (alias == null)
         {
-          foreach (var p in this._persona_list)
+          foreach (var p in this._persona_set)
             {
               if (p is AliasDetails)
                 {
@@ -866,9 +859,13 @@ public class Folks.Individual : Object,
           /* We have to pick a display ID, since none of the personas have an
            * alias available. Pick the display ID from the first persona in the
            * list. */
-          alias = this._persona_list.data.display_id;
-          debug ("No aliases available for individual; using display ID " +
-              "instead: %s", alias);
+          foreach (var persona in this._persona_set)
+            {
+              alias = persona.display_id;
+              debug ("No aliases available for individual; using display ID " +
+                  "instead: %s", alias);
+              break;
+            }
         }
 
       /* Only notify if the value has changed. We have to set the private member
@@ -888,7 +885,7 @@ public class Folks.Individual : Object,
     {
       File avatar = null;
 
-      foreach (var p in this._persona_list)
+      foreach (var p in this._persona_set)
         {
           if (p is AvatarDetails)
             {
@@ -907,7 +904,7 @@ public class Folks.Individual : Object,
     {
       var trust_level = TrustLevel.PERSONAS;
 
-      foreach (var p in this._persona_list)
+      foreach (var p in this._persona_set)
         {
           if (p.is_user == false &&
               p.store.trust_level == PersonaStoreTrust.NONE)
@@ -924,7 +921,7 @@ public class Folks.Individual : Object,
       /* populate the IM addresses as the union of our Personas' addresses */
       this._im_addresses.clear ();
 
-      foreach (var persona in this.personas)
+      foreach (var persona in this._persona_set)
         {
           if (persona is ImDetails)
             {
@@ -1011,7 +1008,7 @@ public class Folks.Individual : Object,
     {
       bool name_found = false;
 
-      foreach (var persona in this._persona_list)
+      foreach (var persona in this._persona_set)
         {
           var name_details = persona as NameDetails;
           if (name_details != null)
@@ -1036,7 +1033,7 @@ public class Folks.Individual : Object,
 
   private void _update_full_name ()
     {
-      foreach (var persona in this._persona_list)
+      foreach (var persona in this._persona_set)
         {
           var name_details = persona as NameDetails;
           if (name_details != null)
@@ -1055,7 +1052,7 @@ public class Folks.Individual : Object,
 
   private void _update_nickname ()
     {
-      foreach (var persona in this._persona_list)
+      foreach (var persona in this._persona_set)
         {
           var name_details = persona as NameDetails;
           if (name_details != null)
@@ -1115,7 +1112,7 @@ public class Folks.Individual : Object,
 
   private void _update_gender ()
     {
-      foreach (var persona in this._persona_list)
+      foreach (var persona in this._persona_set)
         {
           var gender_details = persona as GenderDetails;
           if (gender_details != null)
@@ -1138,7 +1135,7 @@ public class Folks.Individual : Object,
       var urls_set = new HashMap<unowned string, unowned FieldDetails> ();
       var urls = new HashSet<FieldDetails> ();
 
-      foreach (var persona in this._persona_list)
+      foreach (var persona in this._persona_set)
         {
           var url_details = persona as UrlDetails;
           if (url_details != null)
@@ -1177,7 +1174,7 @@ public class Folks.Individual : Object,
           new HashMap<unowned string, unowned FieldDetails> ();
       var phones = new HashSet<FieldDetails> ();
 
-      foreach (var persona in this._persona_list)
+      foreach (var persona in this._persona_set)
         {
           var phone_details = persona as PhoneDetails;
           if (phone_details != null)
@@ -1214,7 +1211,7 @@ public class Folks.Individual : Object,
       var emails_set = new HashMap<unowned string, unowned FieldDetails> ();
       var emails = new HashSet<FieldDetails> ();
 
-      foreach (var persona in this._persona_list)
+      foreach (var persona in this._persona_set)
         {
           var email_details = persona as EmailDetails;
           if (email_details != null)
@@ -1249,7 +1246,7 @@ public class Folks.Individual : Object,
       HashSet<Role> roles = new HashSet<Role>
           ((GLib.HashFunc) Role.hash, (GLib.EqualFunc) Role.equal);
 
-      foreach (var persona in this._persona_list)
+      foreach (var persona in this._persona_set)
         {
           var role_details = persona as RoleDetails;
           if (role_details != null)
@@ -1272,7 +1269,7 @@ public class Folks.Individual : Object,
     {
       HashSet<string> _local_ids = new HashSet<string> ();
 
-      foreach (var persona in this._persona_list)
+      foreach (var persona in this._persona_set)
         {
           var local_ids_details = persona as LocalIdDetails;
           if (local_ids_details != null)
@@ -1292,7 +1289,7 @@ public class Folks.Individual : Object,
     {
       this._postal_addresses = new HashSet<PostalAddress> ();
       /* FIXME: Detect duplicates somehow? */
-      foreach (var persona in this._persona_list)
+      foreach (var persona in this._persona_set)
         {
           var address_details = persona as PostalAddressDetails;
           if (address_details != null)
@@ -1310,7 +1307,7 @@ public class Folks.Individual : Object,
       unowned DateTime bday = null;
       unowned string calendar_event_id = "";
 
-      foreach (var persona in this._persona_list)
+      foreach (var persona in this._persona_set)
         {
           var bday_owner = persona as BirthdayDetails;
           if (bday_owner != null)
@@ -1345,7 +1342,7 @@ public class Folks.Individual : Object,
       HashSet<Note> notes = new HashSet<Note>
           ((GLib.HashFunc) Note.hash, (GLib.EqualFunc) Note.equal);
 
-      foreach (var persona in this._persona_list)
+      foreach (var persona in this._persona_set)
         {
           var note_details = persona as NoteDetails;
           if (note_details != null)
@@ -1403,8 +1400,11 @@ public class Folks.Individual : Object,
         }
 
       /* Determine which Personas have been removed */
-      foreach (var p in this._persona_list)
+      var iter = this._persona_set.iterator ();
+      while (iter.next ())
         {
+          var p = iter.get ();
+
           if (!persona_set.contains (p))
             {
               /* Keep track of how many Personas are users */
@@ -1430,14 +1430,9 @@ public class Folks.Individual : Object,
                 }
 
               this._disconnect_from_persona (p);
-              this._persona_set.remove (p);
+              iter.remove ();
             }
         }
-
-      /* Update the Persona list. We just copy the list given to us to save
-       * repeated insertions/removals and also to ensure we retain the ordering
-       * of the Personas we were given. */
-      this._persona_list = persona_list.copy ();
 
       this.personas_changed (added, removed);
 
@@ -1454,8 +1449,14 @@ public class Folks.Individual : Object,
         }
 
       /* TODO: Base this upon our ID in permanent storage, once we have that. */
-      if (this.id == null && this._persona_list.data != null)
-        this.id = this._persona_list.data.uid;
+      if (this.id == null && this._persona_set.size > 0)
+        {
+          foreach (var persona in this._persona_set)
+            {
+              this.id = persona.uid;
+              break;
+            }
+        }
 
       /* Update our aggregated fields and notify the changes */
       this._update_fields ();
