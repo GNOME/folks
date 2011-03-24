@@ -281,16 +281,15 @@ public class Folks.LinkedHashSet<G> : AbstractList<G>,
   }
 
   /**
-   * Returns the ListIterator for this structure.
+   * Unimplemented method (incompatible with ordered set).
    *
-   * @return a {@link Gee.ListIterator} that can be used for iteration over this
-   * structure (as a list).
+   * @return nothing
    * @see Gee.ListIterator
    *
    * @since 0.3.4
    */
   public override ListIterator<G> list_iterator ()
   {
-    return this._linked_list.list_iterator ();
+    assert_not_reached ();
   }
 }
