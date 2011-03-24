@@ -381,7 +381,7 @@ public class Folks.IndividualAggregator : Object
       return type_id + ":" + id;
     }
 
-  private void _add_personas (GLib.List<Persona> added,
+  private void _add_personas (Set<Persona> added,
       ref GLib.List<Individual> added_individuals,
       ref HashMap<Individual, Individual> replaced_individuals,
       ref Individual user)
@@ -624,8 +624,8 @@ public class Folks.IndividualAggregator : Object
     }
 
   private void _personas_changed_cb (PersonaStore store,
-      GLib.List<Persona>? added,
-      GLib.List<Persona>? removed,
+      Set<Persona> added,
+      Set<Persona> removed,
       string? message,
       Persona? actor,
       GroupDetails.ChangeReason reason)
@@ -633,9 +633,7 @@ public class Folks.IndividualAggregator : Object
       var added_individuals = new GLib.List<Individual> ();
       GLib.List<Individual> removed_individuals = null;
       var replaced_individuals = new HashMap<Individual, Individual> ();
-      GLib.List<Persona> relinked_personas = null;
-      var relinked_personas_set = new HashSet<Persona> (direct_hash,
-          direct_equal);
+      var relinked_personas = new HashSet<Persona> ();
       var removed_personas = new HashSet<Persona> (direct_hash, direct_equal);
 
       /* We store the value of this.user locally and only update it at the end
@@ -643,7 +641,7 @@ public class Folks.IndividualAggregator : Object
        * property. */
       var user = this.user;
 
-      if (added != null)
+      if (added.size > 0)
         {
           this._add_personas (added, ref added_individuals,
               ref replaced_individuals, ref user);
@@ -651,10 +649,8 @@ public class Folks.IndividualAggregator : Object
 
       debug ("Removing Personas:");
 
-      removed.foreach ((p) =>
+      foreach (var persona in removed)
         {
-          var persona = (Persona) p;
-
           debug ("    %s (is user: %s, IID: %s)", persona.uid,
               persona.is_user ? "yes" : "no", persona.iid);
 
@@ -671,7 +667,7 @@ public class Folks.IndividualAggregator : Object
 
           /* Remove the Persona's links from the link map */
           this._remove_persona_from_link_map (persona);
-        });
+        }
 
       /* Remove the Individuals which were pointed to by the linkable properties
        * of the removed Personas. We can then re-link the other Personas in
@@ -694,11 +690,10 @@ public class Folks.IndividualAggregator : Object
           foreach (var persona in individual.personas)
             {
               if (removed_personas.contains (persona) == true ||
-                  relinked_personas_set.contains (persona) == true)
+                  relinked_personas.contains (persona) == true)
                 continue;
 
-              relinked_personas.prepend (persona);
-              relinked_personas_set.add (persona);
+              relinked_personas.add (persona);
 
               /* Remove links to the Persona */
               this._remove_persona_from_link_map (persona);

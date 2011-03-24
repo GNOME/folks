@@ -691,9 +691,14 @@ public class Trf.PersonaStore : Folks.PersonaStore
             {
               string filter = " FILTER(?_contact = <%s>) ".printf (contact_urn);
               string query = this._INITIAL_QUERY.printf (filter);
-              GLib.Queue<Persona> ret_personas;
-              ret_personas = yield this._do_add_contacts (query);
-              ret = ret_personas.pop_head ();
+              var ret_personas = yield this._do_add_contacts (query);
+
+              /* Return the first persona we find in the set */
+              foreach (var p in ret_personas)
+                {
+                  ret = p;
+                  break;
+                }
             }
           else
             {
@@ -1195,7 +1200,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
 
   private async void _handle_delete_events (owned VariantIter iter_del)
     {
-      var removed_personas = new GLib.Queue<Persona> ();
+      var removed_personas = new HashSet<Persona> ();
       var nco_person_id =
           this._prefix_tracker_id.get (Trf.OntologyDefs.NCO_PERSON);
       var rdf_type_id = this._prefix_tracker_id.get (Trf.OntologyDefs.RDF_TYPE);
@@ -1213,7 +1218,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
                   var removed_p = this._personas.lookup (p_id);
                   if (removed_p != null)
                     {
-                      removed_personas.push_tail (removed_p);
+                      removed_personas.add (removed_p);
                       _personas.remove (removed_p.iid);
                     }
                 }
@@ -1228,15 +1233,16 @@ public class Trf.PersonaStore : Folks.PersonaStore
             }
         }
 
-      if (removed_personas.length > 0)
+      if (removed_personas.size > 0)
         {
-          this.personas_changed (null, removed_personas.head, null, null, 0);
+          this.personas_changed (new HashSet<Persona> (), removed_personas,
+              null, null, 0);
         }
     }
 
   private async void _handle_insert_events (owned VariantIter iter_ins)
     {
-      var added_personas = new GLib.Queue<Persona> ();
+      var added_personas = new HashSet<Persona> ();
       Event e = Event ();
 
       while (iter_ins.next
@@ -1252,23 +1258,24 @@ public class Trf.PersonaStore : Folks.PersonaStore
                 {
                   persona = new Trf.Persona (this, subject_tracker_id);
                   this._personas.insert (persona.iid, persona);
-                  added_personas.push_tail (persona);
+                  added_personas.add (persona);
                 }
             }
           yield this._do_update (persona, e);
         }
 
-      if (added_personas.length > 0)
+      if (added_personas.size > 0)
         {
-          this.personas_changed (added_personas.head, null, null, null, 0);
+          this.personas_changed (added_personas, new HashSet<Persona> (),
+              null, null, 0);
         }
     }
 
-  private async GLib.Queue<Persona> _do_add_contacts (string query)
+  private async HashSet<Persona> _do_add_contacts (string query)
     {
-      var added_personas = new GLib.Queue<Persona> ();
+      var added_personas = new HashSet<Persona> ();
 
-     try {
+      try {
         Sparql.Cursor cursor = yield this._connection.query_async (query);
 
         while (cursor.next ())
@@ -1280,13 +1287,14 @@ public class Trf.PersonaStore : Folks.PersonaStore
                 var persona = new Trf.Persona (this,
                     tracker_id.to_string (), cursor);
                 this._personas.insert (persona.iid, persona);
-                added_personas.push_tail (persona);
+                added_personas.add (persona);
               }
           }
 
-        if (added_personas.length > 0)
+        if (added_personas.size > 0)
           {
-            this.personas_changed (added_personas.head, null, null, null, 0);
+            this.personas_changed (added_personas,
+                new HashSet<Persona> (), null, null, 0);
           }
       } catch (GLib.Error e) {
         warning ("Couldn't perform queries: %s %s", query, e.message);

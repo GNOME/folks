@@ -33,6 +33,7 @@ using Folks.Backends.Kf;
 public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
 {
   private HashTable<string, Persona> _personas;
+  private HashSet<Persona> _persona_set;
   private File _file;
   private GLib.KeyFile _key_file;
   private unowned Cancellable _save_key_file_cancellable = null;
@@ -127,6 +128,7 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
       this.trust_level = PersonaStoreTrust.FULL;
       this._file = key_file;
       this._personas = new HashTable<string, Persona> (str_hash, str_equal);
+      this._persona_set = new HashSet<Persona> ();
     }
 
   /**
@@ -231,13 +233,15 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
                   Persona persona = new Kf.Persona (this._key_file, persona_id,
                       this);
                   this._personas.insert (persona.iid, persona);
+                  this._persona_set.add (persona);
                 }
 
               if (this._personas.size () > 0)
                 {
                   /* FIXME: GroupDetails.ChangeReason is not the right enum to
                    * use here */
-                  this.personas_changed (this._personas.get_values (), null,
+                  this.personas_changed (this._persona_set,
+                      new HashSet<Persona> (),
                       null, null, GroupDetails.ChangeReason.NONE);
                 }
 
@@ -276,9 +280,11 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
           yield this.save_key_file ();
 
           /* Signal the removal of the Persona */
-          GLib.List<Folks.Persona> personas = new GLib.List<Folks.Persona> ();
-          personas.prepend (persona);
-          this.personas_changed (null, personas, null, null, 0);
+          var personas = new HashSet<Folks.Persona> ();
+          personas.add (persona);
+
+          this.personas_changed (new HashSet<Persona> (), personas,
+              null, null, 0);
         }
       catch (KeyFileError e)
         {
@@ -343,16 +349,18 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
        * key file */
       Persona persona = new Kf.Persona (this._key_file, persona_id, this);
       this._personas.insert (persona.iid, persona);
+      this._persona_set.add (persona);
       if (im_addresses_size > 0)
         persona.im_addresses = im_addresses;
       if (web_service_addresses_size > 0)
         persona.web_service_addresses = web_service_addresses;
 
       /* FIXME: GroupDetails.ChangeReason is not the right enum to use here */
-      GLib.List<Persona> personas = new GLib.List<Persona> ();
-      personas.prepend (persona);
-      this.personas_changed (personas, null, null, null,
-          GroupDetails.ChangeReason.NONE);
+      var personas = new HashSet<Persona> ();
+      personas.add (persona);
+
+      this.personas_changed (personas, new HashSet<Persona> (),
+          null, null, GroupDetails.ChangeReason.NONE);
 
       return persona;
     }

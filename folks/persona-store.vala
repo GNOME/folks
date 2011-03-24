@@ -19,6 +19,7 @@
  */
 
 using GLib;
+using Gee;
 
 /**
  * Trust level for a {@link PersonaStore}'s {@link Persona}s for linking
@@ -189,14 +190,16 @@ public abstract class Folks.PersonaStore : Object
    * This will not be emitted until after {@link PersonaStore.prepare} has been
    * called.
    *
-   * @param added a list of {@link Persona}s which have been removed
-   * @param removed a list of {@link Persona}s which have been removed
+   * @param added a set of {@link Persona}s which have been removed
+   * @param removed a set of {@link Persona}s which have been removed
    * @param message a string message from the backend, if any
    * @param actor the {@link Persona} who made the change, if known
    * @param reason the reason for the change
+   *
+   * @since UNRELEASED
    */
-  public signal void personas_changed (GLib.List<Persona>? added,
-      GLib.List<Persona>? removed,
+  public signal void personas_changed (Set<Persona> added,
+      Set<Persona> removed,
       string? message,
       Persona? actor,
       GroupDetails.ChangeReason reason);

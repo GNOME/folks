@@ -31,6 +31,7 @@ API changes:
     returns an owned variable.
 * Individual.personas now has type Set<Persona>
 * Individual.personas_changed now uses Set<Persona>-typed parameters
+* PersonaStore.personas_changed now uses Set<Persona>-typed parameters
 
 Overview of changes from libfolks 0.4.0 to libfolks 0.5.0
 =========================================================

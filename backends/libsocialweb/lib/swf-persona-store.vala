@@ -21,6 +21,7 @@
  */
 
 using GLib;
+using Gee;
 using Folks;
 using SocialWebClient;
 
@@ -211,21 +212,24 @@ public class Swf.PersonaStore : Folks.PersonaStore
         }
     }
 
-  private void contacts_added_cb (List<unowned Contact> contacts)
+  private void contacts_added_cb (GLib.List<unowned Contact> contacts)
     {
-      var added_personas = new Queue<Persona> ();
+      var added_personas = new HashSet<Persona> ();
       foreach (var contact in contacts)
         {
           var persona = new Persona(this, contact);
           _personas.insert(persona.iid, persona);
-          added_personas.push_tail(persona);
+          added_personas.add (persona);
         }
 
-      if (added_personas.length > 0)
-        this.personas_changed (added_personas.head, null, null, null, 0);
+      if (added_personas.size > 0)
+        {
+          this.personas_changed (added_personas, new HashSet<Persona> (),
+              null, null, 0);
+        }
     }
 
-  private void contacts_changed_cb (List<unowned Contact> contacts)
+  private void contacts_changed_cb (GLib.List<unowned Contact> contacts)
     {
       foreach (var contact in contacts)
         {
@@ -240,9 +244,9 @@ public class Swf.PersonaStore : Folks.PersonaStore
         }
     }
 
-  private void contacts_removed_cb (List<unowned Contact> contacts)
+  private void contacts_removed_cb (GLib.List<unowned Contact> contacts)
     {
-      var removed_personas = new Queue<Persona> ();
+      var removed_personas = new HashSet<Persona> ();
       foreach (var contact in contacts)
         {
           if (this._service.get_name () != contact.service)
@@ -253,12 +257,15 @@ public class Swf.PersonaStore : Folks.PersonaStore
           var persona = _personas.lookup(iid);
           if (persona != null)
             {
-              removed_personas.push_tail(persona);
+              removed_personas.add (persona);
               _personas.remove(persona.iid);
             }
         }
 
-      if (removed_personas.length > 0)
-        this.personas_changed (null, removed_personas.head, null, null, 0);
+      if (removed_personas.size > 0)
+        {
+          this.personas_changed (new HashSet<Persona> (), removed_personas,
+              null, null, 0);
+        }
     }
 }

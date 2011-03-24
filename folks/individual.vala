@@ -635,22 +635,20 @@ public class Folks.Individual : Object,
     }
 
   private void _store_personas_changed_cb (PersonaStore store,
-      GLib.List<Persona>? added,
-      GLib.List<Persona>? removed,
+      Set<Persona> added,
+      Set<Persona> removed,
       string? message,
       Persona? actor,
       GroupDetails.ChangeReason reason)
     {
       var removed_personas = new HashSet<Persona> ();
-      removed.foreach ((data) =>
+      foreach (var p in removed)
         {
-          var p = (Persona) data;
-
           if (this._persona_set.remove (p))
             {
               removed_personas.add (p);
             }
-        });
+        }
 
       if (removed_personas != null)
         this.personas_changed (new HashSet<Persona> (), removed_personas);

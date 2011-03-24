@@ -61,6 +61,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       };
 
   private HashTable<string, Persona> _personas;
+  private HashSet<Persona> _persona_set;
   /* universal, contact owner handles (not channel-specific) */
   private HashMap<uint, Persona> _handle_persona_map;
   private HashMap<Channel, HashSet<Persona>> _channel_group_personas_map;
@@ -203,6 +204,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
 
       this._personas = new HashTable<string, Persona> (str_hash,
           str_equal);
+      this._persona_set = new HashSet<Persona> ();
       this._conn = null;
       this._handle_persona_map = new HashMap<uint, Persona> ();
       this._channel_group_personas_map =
@@ -265,8 +267,8 @@ public class Tpf.PersonaStore : Folks.PersonaStore
                 {
                   if (this.account == a)
                     {
-                      this.personas_changed (null, this._personas.get_values (),
-                        null, null, 0);
+                      this.personas_changed (new HashSet<Persona> (),
+                          this._persona_set, null, null, 0);
                       this.removed ();
                     }
                 });
@@ -274,8 +276,8 @@ public class Tpf.PersonaStore : Folks.PersonaStore
                 {
                   if (this.account == a)
                     {
-                      this.personas_changed (null, this._personas.get_values (),
-                        null, null, 0);
+                      this.personas_changed (new HashSet<Persona> (),
+                          this._persona_set, null, null, 0);
                       this.removed ();
                     }
                 });
@@ -284,8 +286,8 @@ public class Tpf.PersonaStore : Folks.PersonaStore
                     {
                       if (!valid && this.account == a)
                         {
-                          this.personas_changed (null, this._personas.get_values
-                            (), null, null, 0);
+                          this.personas_changed (new HashSet<Persona> (),
+                              this._persona_set, null, null, 0);
                           this.removed ();
                         }
                     });
@@ -479,8 +481,8 @@ public class Tpf.PersonaStore : Folks.PersonaStore
           /* When disconnecting, we want the PersonaStore to remain alive, but
            * all its Personas to be removed. We do *not* want the PersonaStore
            * to be destroyed, as that makes coming back online hard. */
-          this.personas_changed (null, this._personas.get_values (), null, null,
-              0);
+          this.personas_changed (new HashSet<Persona> (),
+              this._persona_set, null, null, 0);
           this._reset ();
           return;
         }
@@ -638,11 +640,12 @@ public class Tpf.PersonaStore : Folks.PersonaStore
               Contact contact = contacts[0];
               Persona persona = this._add_persona_from_contact (contact, false);
 
-              GLib.List<Persona> personas = new GLib.List<Persona> ();
-              personas.prepend (persona);
+              var personas = new HashSet<Persona> ();
+              personas.add (persona);
 
               this._self_contact = contact;
-              this.personas_changed (personas, null, null, null, 0);
+              this.personas_changed (personas, new HashSet<Persona> (),
+                  null, null, 0);
             },
           this);
     }
@@ -984,10 +987,13 @@ public class Tpf.PersonaStore : Folks.PersonaStore
             members.remove (persona);
         }
 
-      var personas = new GLib.List<Persona> ();
-      personas.append (persona);
-      this.personas_changed (null, personas, message, actor, reason);
+      var personas = new HashSet<Persona> ();
+      personas.add (persona);
+
+      this.personas_changed (new HashSet<Persona> (), personas,
+          message, actor, reason);
       this._personas.remove (persona.iid);
+      this._persona_set.remove (persona);
     }
 
   /**
@@ -1309,7 +1315,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
         }
     }
 
-  private async GLib.List<Tpf.Persona>? _create_personas_from_contact_ids (
+  private async HashSet<Persona>? _create_personas_from_contact_ids (
       string[] contact_ids) throws GLib.Error
     {
       if (contact_ids.length > 0)
@@ -1318,7 +1324,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
               yield this._ll.connection_get_contacts_by_id_async (
                   this._conn, contact_ids, (uint[]) _contact_features);
 
-          GLib.List<Persona> personas = new GLib.List<Persona> ();
+          var personas = new HashSet<Persona> ();
           var err_count = 0;
           var err_string = "";
           unowned GLib.List<TelepathyGLib.Contact> l;
@@ -1330,7 +1336,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
 
               var persona = this._add_persona_from_contact (contact, true);
               if (persona != null)
-                personas.prepend (persona);
+                personas.add (persona);
             }
 
           if (err_count > 0)
@@ -1345,8 +1351,11 @@ public class Tpf.PersonaStore : Folks.PersonaStore
                   err_count, err_string);
             }
 
-          if (personas != null)
-            this.personas_changed (personas, null, null, null, 0);
+          if (personas.size > 0)
+            {
+              this.personas_changed (personas, new HashSet<Persona> (),
+                  null, null, 0);
+            }
 
           return personas;
         }
@@ -1368,6 +1377,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
           persona = new Tpf.Persona (contact, this);
 
           this._personas.insert (persona.iid, persona);
+          this._persona_set.add (persona);
           this._handle_persona_map[h] = persona;
 
           /* If the handle is a favourite, ensure the persona's marked
@@ -1409,18 +1419,22 @@ public class Tpf.PersonaStore : Folks.PersonaStore
 
   private void _add_new_personas_from_contacts (Contact[] contacts)
     {
-      GLib.List<Persona> personas = new GLib.List<Persona> ();
+      var personas = new HashSet<Persona> ();
+
       foreach (Contact contact in contacts)
         {
           var persona = this._add_persona_from_contact (contact, true);
           if (persona != null)
-            personas.prepend (persona);
+            personas.add (persona);
         }
 
       this._channel_groups_add_new_personas ();
 
-      if (personas != null)
-        this.personas_changed (personas, null, null, null, 0);
+      if (personas.size > 0)
+        {
+          this.personas_changed (personas, new HashSet<Persona> (),
+              null, null, 0);
+        }
     }
 
   private void _channel_groups_add_new_personas ()
@@ -1525,9 +1539,15 @@ public class Tpf.PersonaStore : Folks.PersonaStore
               /* the persona already existed */
               return null;
             }
-          else if (personas.length () == 1)
+          else if (personas.size == 1)
             {
-              var persona = personas.data;
+              /* Get the first (and only) Persona */
+              Persona persona = null;
+              foreach (var p in personas)
+                {
+                  persona = p;
+                  break;
+                }
 
               if (this._subscribe != null)
                 this._change_standard_contact_list_membership (this._subscribe,
@@ -1550,7 +1570,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
             {
               /* We ignore the case of an empty list, as it just means the
                * contact was already in our roster */
-              var num_personas = personas.length ();
+              var num_personas = personas.size;
               var message =
                   ngettext (
                       /* Translators: the parameter is the number of personas
