@@ -1325,8 +1325,6 @@ public class Tpf.PersonaStore : Folks.PersonaStore
                   this._conn, contact_ids, (uint[]) _contact_features);
 
           var personas = new HashSet<Persona> ();
-          var err_count = 0;
-          var err_string = "";
           unowned GLib.List<TelepathyGLib.Contact> l;
           for (l = contacts; l != null; l = l.next)
             {
@@ -1337,18 +1335,6 @@ public class Tpf.PersonaStore : Folks.PersonaStore
               var persona = this._add_persona_from_contact (contact, true);
               if (persona != null)
                 personas.add (persona);
-            }
-
-          if (err_count > 0)
-            {
-              throw new Folks.PersonaStoreError.CREATE_FAILED (
-                  /* Translators: the first parameter is the number of personas
-                   * which couldn't be created, and the second is a set of error
-                   * message lines, built using the "'%s' (%p): %s" string
-                   * above. */
-                  ngettext ("Failed to create %u persona:\n%s",
-                      "Failed to create %u personas:\n%s", err_count),
-                  err_count, err_string);
             }
 
           if (personas.size > 0)
