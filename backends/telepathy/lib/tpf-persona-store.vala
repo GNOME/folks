@@ -1315,38 +1315,37 @@ public class Tpf.PersonaStore : Folks.PersonaStore
         }
     }
 
-  private async HashSet<Persona>? _create_personas_from_contact_ids (
+  private async HashSet<Persona> _create_personas_from_contact_ids (
       string[] contact_ids) throws GLib.Error
     {
-      if (contact_ids.length > 0)
+      var personas = new HashSet<Persona> ();
+
+      if (contact_ids.length == 0)
+        return personas;
+
+      GLib.List<TelepathyGLib.Contact> contacts =
+          yield this._ll.connection_get_contacts_by_id_async (
+              this._conn, contact_ids, (uint[]) _contact_features);
+
+      unowned GLib.List<TelepathyGLib.Contact> l;
+      for (l = contacts; l != null; l = l.next)
         {
-          GLib.List<TelepathyGLib.Contact> contacts =
-              yield this._ll.connection_get_contacts_by_id_async (
-                  this._conn, contact_ids, (uint[]) _contact_features);
+          var contact = l.data;
 
-          var personas = new HashSet<Persona> ();
-          unowned GLib.List<TelepathyGLib.Contact> l;
-          for (l = contacts; l != null; l = l.next)
-            {
-              var contact = l.data;
+          debug ("Creating persona from contact '%s'", contact.identifier);
 
-              debug ("Creating persona from contact '%s'", contact.identifier);
-
-              var persona = this._add_persona_from_contact (contact, true);
-              if (persona != null)
-                personas.add (persona);
-            }
-
-          if (personas.size > 0)
-            {
-              this.personas_changed (personas, new HashSet<Persona> (),
-                  null, null, 0);
-            }
-
-          return personas;
+          var persona = this._add_persona_from_contact (contact, true);
+          if (persona != null)
+            personas.add (persona);
         }
 
-      return null;
+      if (personas.size > 0)
+        {
+          this.personas_changed (personas, new HashSet<Persona> (),
+              null, null, 0);
+        }
+
+      return personas;
     }
 
   private Tpf.Persona? _add_persona_from_contact (Contact contact,
@@ -1520,7 +1519,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
           var personas = yield this._create_personas_from_contact_ids (
               contact_ids);
 
-          if (personas == null)
+          if (personas.size == 0)
             {
               /* the persona already existed */
               return null;
