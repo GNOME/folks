@@ -6,9 +6,12 @@ Bugs fixed:
 * Bug 647562 — Don't crash on duplicate group channels
 * Bug 647121 — Crash in individual_store_contact_sort at
   empathy-individual-store.c line 1387
+* Bug 645684 — Implement Iterator on LinkedHashSet
 
 API changes:
 * LinkedHashSet.list_iterator() is now disallowed (causes an assertion failure)
+* LinkedHashSet.iterator() now returns a BidirIterator instead of just an
+  Iterator
 
 Overview of changes from libfolks 0.4.0 to libfolks 0.5.0
 =========================================================

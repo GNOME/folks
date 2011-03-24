@@ -276,7 +276,8 @@ public class Folks.LinkedHashSet<G> : AbstractList<G>,
 
 
   /**
-   * Returns the Iterator for this structure.
+   * Returns the Iterator for this structure. The iterator supports
+   * bi-directional iteration.
    *
    * @return a {@link Gee.Iterator} that can be used for iteration over this
    * structure.
@@ -286,7 +287,7 @@ public class Folks.LinkedHashSet<G> : AbstractList<G>,
    */
   public override Gee.Iterator<G> iterator ()
   {
-    return this._linked_list.iterator ();
+    return new Iterator<G> (this);
   }
 
   /**
@@ -300,5 +301,77 @@ public class Folks.LinkedHashSet<G> : AbstractList<G>,
   public override ListIterator<G> list_iterator ()
   {
     assert_not_reached ();
+  }
+
+
+  private class Iterator<G> : Object, Gee.Iterator<G>, BidirIterator<G>
+  {
+    private LinkedHashSet<G> _linked_hash_set;
+    private BidirIterator<G> _list_iterator;
+    private int _stamp;
+
+    public Iterator (LinkedHashSet<G> linked_hash_set)
+      {
+        this._linked_hash_set = linked_hash_set;
+        this._stamp = linked_hash_set._stamp;
+        this._list_iterator = linked_hash_set._linked_list.list_iterator ();
+      }
+
+    public bool next ()
+      {
+        assert (this._stamp == this._linked_hash_set._stamp);
+        return this._list_iterator.next ();
+      }
+
+    public bool has_next ()
+      {
+        assert (this._stamp == this._linked_hash_set._stamp);
+        return this._list_iterator.has_next ();
+      }
+
+    public bool first ()
+      {
+        assert (this._stamp == this._linked_hash_set._stamp);
+        return this._list_iterator.first ();
+      }
+
+    public bool previous ()
+      {
+        assert (this._stamp == this._linked_hash_set._stamp);
+        return this._list_iterator.previous ();
+      }
+
+    public bool has_previous ()
+      {
+        assert (this._stamp == this._linked_hash_set._stamp);
+        return this._list_iterator.has_previous ();
+      }
+
+    public bool last ()
+      {
+        assert (this._stamp == this._linked_hash_set._stamp);
+        return this._list_iterator.last ();
+      }
+
+    public new G? get ()
+      {
+        assert (this._stamp == this._linked_hash_set._stamp);
+        return this._list_iterator.get ();
+      }
+
+    public void remove ()
+      {
+        assert (this._stamp == this._linked_hash_set._stamp);
+
+        /* Remove the entry from the linked list *and* the hash set.
+         * Note that we can't do this by calling this._linked_hash_set.remove(),
+         * as that would change the LinkedHashSet's stamp. Removing the item
+         * from the hash set doesn't disrupt the iteration, as it's iterating
+         * over the linked list.*/
+        var item = this.get ();
+
+        this._list_iterator.remove ();
+        this._linked_hash_set._hash_set.remove (item);
+      }
   }
 }
