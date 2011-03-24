@@ -452,15 +452,16 @@ public class Folks.Individual : Object,
 
   /**
    * Emitted when one or more {@link Persona}s are added to or removed from
-   * the Individual.
+   * the Individual. As the parameters are (unordered) sets, the orders of their
+   * elements are undefined.
    *
-   * @param added a list of {@link Persona}s which have been added
-   * @param removed a list of {@link Persona}s which have been removed
+   * @param added a set of {@link Persona}s which have been added
+   * @param removed a set of {@link Persona}s which have been removed
    *
-   * @since 0.1.15
+   * @since UNRELEASED
    */
-  public signal void personas_changed (GLib.List<Persona>? added,
-      GLib.List<Persona>? removed);
+  public signal void personas_changed (Set<Persona> added,
+      Set<Persona> removed);
 
   private void _notify_alias_cb (Object obj, ParamSpec ps)
     {
@@ -608,18 +609,18 @@ public class Folks.Individual : Object,
 
   private void _store_removed_cb (PersonaStore store)
     {
-      GLib.List<Persona> removed_personas = null;
+      var removed_personas = new HashSet<Persona> ();
       var iter = this._persona_set.iterator ();
       while (iter.next ())
         {
           var persona = iter.get ();
 
-          removed_personas.prepend (persona);
+          removed_personas.add (persona);
           iter.remove ();
         }
 
       if (removed_personas != null)
-        this.personas_changed (null, removed_personas);
+        this.personas_changed (new HashSet<Persona> (), removed_personas);
 
       if (store != null)
         this._stores.unset (store);
@@ -640,19 +641,19 @@ public class Folks.Individual : Object,
       Persona? actor,
       GroupDetails.ChangeReason reason)
     {
-      GLib.List<Persona> removed_personas = null;
+      var removed_personas = new HashSet<Persona> ();
       removed.foreach ((data) =>
         {
           var p = (Persona) data;
 
           if (this._persona_set.remove (p))
             {
-              removed_personas.prepend (p);
+              removed_personas.add (p);
             }
         });
 
       if (removed_personas != null)
-        this.personas_changed (null, removed_personas);
+        this.personas_changed (new HashSet<Persona> (), removed_personas);
 
       if (this._persona_set.size < 1)
         {
@@ -1369,8 +1370,8 @@ public class Folks.Individual : Object,
   private void _set_personas (Set<Persona>? personas,
       Individual? replacement_individual)
     {
-      GLib.List<Persona> added = null;
-      GLib.List<Persona> removed = null;
+      var added = new HashSet<Persona> ();
+      var removed = new HashSet<Persona> ();
 
       /* Determine which Personas have been added. If personas == null, we
        * assume it's an empty set. */
@@ -1384,7 +1385,7 @@ public class Folks.Individual : Object,
                   if (p.is_user)
                     this._persona_user_count++;
 
-                  added.prepend (p);
+                  added.add (p);
 
                   this._persona_set.add (p);
                   this._connect_to_persona (p);
@@ -1420,7 +1421,7 @@ public class Folks.Individual : Object,
               if (p.is_user)
                 this._persona_user_count--;
 
-              removed.prepend (p);
+              removed.add (p);
 
               /* Decrement the Persona count for this PersonaStore */
               var store = p.store;
