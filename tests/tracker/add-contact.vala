@@ -91,13 +91,13 @@ public class AddContactTests : Folks.TestCase
     }
 
   private void _individuals_changed_cb
-      (GLib.List<Individual>? added,
-       GLib.List<Individual>? removed,
+      (Set<Individual> added,
+       Set<Individual> removed,
        string? message,
        Persona? actor,
        GroupDetails.ChangeReason reason)
     {
-      foreach (unowned Individual i in added)
+      foreach (var i in added)
         {
           string full_name = i.full_name;
           i.notify["full-name"].connect (this._notify_full_name_cb);
@@ -111,7 +111,7 @@ public class AddContactTests : Folks.TestCase
             }
         }
 
-        assert (removed == null);
+        assert (removed.size == 0);
     }
 
   private void _notify_full_name_cb ()

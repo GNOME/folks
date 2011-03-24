@@ -98,13 +98,13 @@ public class RemoveContactTests : Folks.TestCase
     }
 
   private void _individuals_changed_cb
-      (GLib.List<Individual>? added,
-       GLib.List<Individual>? removed,
+      (Set<Individual> added,
+       Set<Individual> removed,
        string? message,
        Persona? actor,
        GroupDetails.ChangeReason reason)
     {
-      foreach (unowned Individual i in added)
+      foreach (var i in added)
         {
           string full_name = i.full_name;
           if (full_name == this._persona_fullname)
@@ -119,7 +119,7 @@ public class RemoveContactTests : Folks.TestCase
             }
         }
 
-      foreach (unowned Individual i in added)
+      foreach (Individual i in added)
         {
           if (i.id == this._individual_id)
             {

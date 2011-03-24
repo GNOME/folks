@@ -110,13 +110,13 @@ public class AdditionalNamesUpdatesTests : Folks.TestCase
     }
 
   private void _individuals_changed_cb
-      (GLib.List<Individual>? added,
-       GLib.List<Individual>? removed,
+      (Set<Individual> added,
+       Set<Individual> removed,
        string? message,
        Persona? actor,
        GroupDetails.ChangeReason reason)
     {
-      foreach (unowned Individual i in added)
+      foreach (var i in added)
         {
           if (this._initial_fullname == i.full_name)
             {
@@ -134,7 +134,7 @@ public class AdditionalNamesUpdatesTests : Folks.TestCase
             }
         }
 
-      assert (removed == null);
+      assert (removed.size == 0);
     }
 
   private void _notify_additional_names_cb (Object sname_obj, ParamSpec ps)

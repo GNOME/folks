@@ -141,9 +141,9 @@ public class DummyLswTests : Folks.TestCase
           (added, removed, m, a, r) =>
         {
           debug ("Aggregator got some data!");
-          assert (added.length () == 2);
-          assert (removed.length () == 0);
-          foreach (Individual i in added)
+          assert (added.size == 2);
+          assert (removed.size == 0);
+          foreach (var i in added)
             {
               string nickname = ((Folks.NameDetails) i).nickname;
               if (nickname == "Gargantua")
@@ -233,9 +233,9 @@ public class DummyLswTests : Folks.TestCase
           (added, removed, m, a, r) =>
         {
           debug ("Aggregator deleted some data!");
-          assert (added.length () == 0);
-          assert (removed.length () == 2);
-          foreach (Individual i in removed)
+          assert (added.size == 0);
+          assert (removed.size == 2);
+          foreach (var i in removed)
             {
               string nickname = ((Folks.NameDetails) i).nickname;
               debug ("deleted nickname: %s", nickname);

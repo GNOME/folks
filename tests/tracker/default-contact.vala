@@ -99,13 +99,13 @@ public class DefaultContactTests : Folks.TestCase
     }
 
   private void _individuals_changed_cb
-      (GLib.List<Individual>? added,
-       GLib.List<Individual>? removed,
+      (Set<Individual> added,
+       Set<Individual> removed,
        string? message,
        Persona? actor,
        GroupDetails.ChangeReason reason)
     {
-      foreach (Individual i in added)
+      foreach (var i in added)
         {
           string full_name = i.full_name;
           if (full_name != null && full_name == this._fullname_persona
@@ -127,7 +127,7 @@ public class DefaultContactTests : Folks.TestCase
             this._found_default_user)
           this._main_loop.quit ();
 
-        assert (removed == null);
+        assert (removed.size == 0);
     }
 }
 

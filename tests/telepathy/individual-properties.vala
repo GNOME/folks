@@ -71,7 +71,7 @@ public class IndividualPropertiesTests : Folks.TestCase
               assert (i.groups.contains ("Francophones") == true);
             }
 
-          assert (removed == null);
+          assert (removed.size == 0);
         });
       aggregator.prepare ();
 
@@ -123,10 +123,10 @@ public class IndividualPropertiesTests : Folks.TestCase
 
               /* the contact list this aggregator is based upon has exactly 1
                * Tpf.Persona per Individual */
-              Persona persona = null;
+              Folks.Persona persona = null;
               foreach (var p in i.personas)
                 {
-                  persona = i;
+                  persona = p;
                   break;
                 }
               assert (persona is Tpf.Persona);
@@ -137,7 +137,7 @@ public class IndividualPropertiesTests : Folks.TestCase
               ((Tpf.Persona) persona).alias = new_alias;
             }
 
-          assert (removed == null);
+          assert (removed.size == 0);
         });
       aggregator.prepare ();
 
@@ -191,10 +191,10 @@ public class IndividualPropertiesTests : Folks.TestCase
 
               /* the contact list this aggregator is based upon has exactly 1
                * Tpf.Persona per Individual */
-              Persona persona = null;
+              Folks.Persona persona = null;
               foreach (var p in i.personas)
                 {
-                  persona = i;
+                  persona = p;
                   break;
                 }
               assert (persona is Tpf.Persona);
@@ -206,7 +206,7 @@ public class IndividualPropertiesTests : Folks.TestCase
               this.tp_backend.connection.manager.set_alias (handle, new_alias);
             }
 
-          assert (removed == null);
+          assert (removed.size == 0);
         });
       aggregator.prepare ();
 

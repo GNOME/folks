@@ -94,13 +94,13 @@ public class IndividualRetrievalTests : Folks.TestCase
     }
 
   private void _individuals_changed_cb
-      (GLib.List<Individual>? added,
-       GLib.List<Individual>? removed,
+      (Set<Individual> added,
+       Set<Individual> removed,
        string? message,
        Persona? actor,
        GroupDetails.ChangeReason reason)
     {
-      foreach (Individual i in added)
+      foreach (var i in added)
         {
           string full_name = ((Folks.NameDetails) i).full_name;
           if (full_name != null)
@@ -121,7 +121,7 @@ public class IndividualRetrievalTests : Folks.TestCase
             this._c2.size == 0)
           this._main_loop.quit ();
 
-        assert (removed == null);
+        assert (removed.size == 0);
     }
 }
 

@@ -102,20 +102,20 @@ public class SetDuplicateEmailTests : Folks.TestCase
     }
 
   private void _individuals_changed_cb
-      (GLib.List<Individual>? added,
-       GLib.List<Individual>? removed,
+      (Set<Individual> added,
+       Set<Individual> removed,
        string? message,
        Persona? actor,
        GroupDetails.ChangeReason reason)
     {
-      foreach (unowned Individual i in added)
+      foreach (var i in added)
         {
           if (i.full_name == this._persona_fullname_1)
             {
               this._reset_email_address (i);
             }
         }
-      assert (removed == null);
+      assert (removed.size == 0);
     }
 
   private void _reset_email_address (Individual i)

@@ -115,13 +115,13 @@ public class FavouriteDetailsInterfaceTests : Folks.TestCase
     }
 
   private void _individuals_changed_cb
-      (GLib.List<Individual>? added,
-       GLib.List<Individual>? removed,
+      (Set<Individual> added,
+       Set<Individual> removed,
        string? message,
        Persona? actor,
        GroupDetails.ChangeReason reason)
     {
-      foreach (Individual i in added)
+      foreach (var i in added)
         {
           string full_name = i.full_name;
           if (full_name != null)
@@ -144,7 +144,7 @@ public class FavouriteDetailsInterfaceTests : Folks.TestCase
             }
         }
 
-        assert (removed == null);
+        assert (removed.size == 0);
 
         if (this._found_p1 &&
             this._found_p2 &&

@@ -205,13 +205,13 @@ public class LinkPersonasTests : Folks.TestCase
     }
 
   private void _individuals_changed_cb
-      (GLib.List<Individual>? added,
-       GLib.List<Individual>? removed,
+      (Set<Individual> added,
+       Set<Individual> removed,
        string? message,
        Persona? actor,
        GroupDetails.ChangeReason reason)
     {
-      foreach (unowned Individual i in added)
+      foreach (var i in added)
         {
           /* Lets listen to notifications from those individuals
            * which aren't the default (Tracker) user */
@@ -223,8 +223,8 @@ public class LinkPersonasTests : Folks.TestCase
             }
         }
 
-      if (removed != null)
-        this._removed_individuals += (int) removed.length ();
+      if (removed.size > 0)
+        this._removed_individuals += (int) removed.size;
     }
 
   private void _notify_cb (Object individual_obj, ParamSpec ps)
@@ -245,19 +245,26 @@ public class LinkPersonasTests : Folks.TestCase
    */
   private void _check_personas (Individual i)
     {
+      Persona first_persona = null;
+      foreach (var p in i.personas)
+        {
+          first_persona = p;
+          break;
+        }
+
       if (i.full_name == this._persona_fullname_1 &&
           this._persona_iid_1 == "")
         {
-          this._persona_iid_1 = i.personas.nth_data (0).iid;
-          this._personas.prepend (i.personas.nth_data (0));
+          this._persona_iid_1 = first_persona.iid;
+          this._personas.prepend (first_persona);
         }
       else if (i.full_name == this._persona_fullname_2 &&
           this._persona_iid_2 == "")
         {
-          this._persona_iid_2 = i.personas.nth_data (0).iid;
-          this._personas.prepend (i.personas.nth_data (0));
+          this._persona_iid_2 = first_persona.iid;
+          this._personas.prepend (first_persona);
         }
-      else if (i.personas.length () > 1)
+      else if (i.personas.size > 1)
         {
           /* Lets check if it contains all the linking properties */
           foreach (var proto in i.im_addresses.get_keys ())

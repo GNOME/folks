@@ -130,9 +130,11 @@ public class Folks.IndividualAggregator : Object
    * @param message a string message from the backend, if any
    * @param actor the {@link Persona} who made the change, if known
    * @param reason the reason for the change
+   *
+   * @since UNRELEASED
    */
-  public signal void individuals_changed (GLib.List<Individual>? added,
-      GLib.List<Individual>? removed,
+  public signal void individuals_changed (Set<Individual> added,
+      Set<Individual> removed,
       string? message,
       Persona? actor,
       GroupDetails.ChangeReason reason);
@@ -382,7 +384,7 @@ public class Folks.IndividualAggregator : Object
     }
 
   private void _add_personas (Set<Persona> added,
-      ref GLib.List<Individual> added_individuals,
+      ref HashSet<Individual> added_individuals,
       ref HashMap<Individual, Individual> replaced_individuals,
       ref Individual user)
     {
@@ -585,7 +587,7 @@ public class Folks.IndividualAggregator : Object
         {
           /* Add the new Individual to the aggregator */
           i.removed.connect (this._individual_removed_cb);
-          added_individuals.prepend (i);
+          added_individuals.add (i);
           this.individuals.insert (i.id, i);
         }
     }
@@ -630,8 +632,8 @@ public class Folks.IndividualAggregator : Object
       Persona? actor,
       GroupDetails.ChangeReason reason)
     {
-      var added_individuals = new GLib.List<Individual> ();
-      GLib.List<Individual> removed_individuals = null;
+      var added_individuals = new HashSet<Individual> ();
+      var removed_individuals = new HashSet<Individual> ();
       var replaced_individuals = new HashMap<Individual, Individual> ();
       var relinked_personas = new HashSet<Persona> ();
       var removed_personas = new HashSet<Persona> (direct_hash, direct_equal);
@@ -663,7 +665,7 @@ public class Folks.IndividualAggregator : Object
            * removed will be re-linked into other Individuals). */
           var ind = this._link_map.lookup (persona.iid);
           if (ind != null)
-            removed_individuals.prepend (ind);
+            removed_individuals.add (ind);
 
           /* Remove the Persona's links from the link map */
           this._remove_persona_from_link_map (persona);
@@ -725,7 +727,7 @@ public class Folks.IndividualAggregator : Object
           MapIterator<Individual, Individual> iter =
               replaced_individuals.map_iterator ();
           while (iter.next () == true)
-            removed_individuals.prepend (iter.get_key ());
+            removed_individuals.add (iter.get_key ());
         }
 
       /* Notify of changes to this.user */
@@ -733,7 +735,7 @@ public class Folks.IndividualAggregator : Object
 
       /* Signal the addition of new individuals and removal of old ones to the
        * aggregator */
-      if (added_individuals != null || removed_individuals != null)
+      if (added_individuals.size > 0 || removed_individuals.size > 0)
         {
           this.individuals_changed (added_individuals, removed_individuals,
               null, null, 0);
@@ -778,8 +780,8 @@ public class Folks.IndividualAggregator : Object
       if (this.individuals.lookup (i.id) != i)
         return;
 
-      var i_list = new GLib.List<Individual> ();
-      i_list.append (i);
+      var individuals = new HashSet<Individual> ();
+      individuals.add (i);
 
       if (replacement != null)
         {
@@ -793,7 +795,11 @@ public class Folks.IndividualAggregator : Object
 
       /* If the individual has 0 personas, we've already signaled removal */
       if (i.personas.size > 0)
-        this.individuals_changed (null, i_list, null, null, 0);
+        {
+          this.individuals_changed (new HashSet<Individual> (),
+              individuals, null, null, 0);
+        }
+
       this.individuals.remove (i.id);
     }
 

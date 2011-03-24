@@ -69,7 +69,7 @@ public class IndividualRetrievalTests : Folks.TestCase
           foreach (Individual i in added)
             expected_individuals.remove (i.id);
 
-          assert (removed == null);
+          assert (removed.size == 0);
         });
 
       /* Kill the main loop after a few seconds. If there are still individuals
@@ -139,7 +139,7 @@ public class IndividualRetrievalTests : Folks.TestCase
                 }
             }
 
-          assert (removed == null);
+          assert (removed.size == 0);
         });
 
       /* Kill the main loop after a few seconds. If there are still individuals

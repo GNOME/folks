@@ -62,7 +62,7 @@ public class IndividualRetrievalTests : Folks.TestCase
                 }
             }
 
-          assert (removed == null);
+          assert (removed.size == 0);
         });
       aggregator.prepare ();
 
@@ -98,11 +98,14 @@ public class IndividualRetrievalTests : Folks.TestCase
         {
           individuals_changed_count++;
 
-          assert (added.length () == 1);
-          assert (removed == null);
+          assert (added.size == 1);
+          assert (removed.size == 0);
 
           /* Check properties */
-          assert (added.data.alias == "Brian Briansson");
+          foreach (var i in added)
+            {
+              assert (i.alias == "Brian Briansson");
+            }
         });
       aggregator.prepare ();
 

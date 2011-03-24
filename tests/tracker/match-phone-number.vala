@@ -104,13 +104,13 @@ public class MatchPhoneNumberTests : Folks.TestCase
     }
 
   private void _individuals_changed_cb
-      (GLib.List<Individual>? added,
-       GLib.List<Individual>? removed,
+      (Set<Individual> added,
+       Set<Individual> removed,
        string? message,
        Persona? actor,
        GroupDetails.ChangeReason reason)
     {
-      foreach (unowned Individual i in added)
+      foreach (var i in added)
         {
           if (i.full_name == this._persona_fullname_1)
             {
@@ -128,7 +128,7 @@ public class MatchPhoneNumberTests : Folks.TestCase
           this._try_potential_match ();
         }
 
-      assert (removed == null);
+      assert (removed.size == 0);
     }
 
   private void _try_potential_match ()

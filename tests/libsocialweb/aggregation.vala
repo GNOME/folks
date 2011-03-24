@@ -207,13 +207,17 @@ public class AggregationTests : Folks.TestCase
       aggregator.individuals_changed.connect ((added, removed, m, a, r) =>
         {
           debug ("individuals_changed after link: added:%u removed:%u",
-              added.length (), removed.length ());
-          assert (added.length () == 1);
-          assert (removed.length () == 2);
-          Individual i = added.nth_data (0);
-          assert (i.personas.size == 3);
-          debug ("individuals_changed: 1 individual containing %u personas",
-              i.personas.size);
+              added.size, removed.size);
+          assert (added.size == 1);
+          assert (removed.size == 2);
+
+          foreach (var i in added)
+            {
+              assert (i.personas.size == 3);
+              debug ("individuals_changed: 1 individual containing %u personas",
+                  i.personas.size);
+            }
+
           main_loop.quit ();
         });
 
