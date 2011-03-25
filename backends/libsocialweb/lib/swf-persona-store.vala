@@ -50,7 +50,7 @@ public class Swf.PersonaStore : Folks.PersonaStore
    *
    * See {@link Folks.PersonaStore.can_add_personas}.
    *
-   * @since 0.3.1
+   * @since UNRELEASED
    */
   public override MaybeBool can_add_personas
     {
@@ -62,7 +62,7 @@ public class Swf.PersonaStore : Folks.PersonaStore
    *
    * See {@link Folks.PersonaStore.can_alias_personas}.
    *
-   * @since 0.3.1
+   * @since UNRELEASED
    */
   public override MaybeBool can_alias_personas
     {
@@ -74,7 +74,7 @@ public class Swf.PersonaStore : Folks.PersonaStore
    *
    * See {@link Folks.PersonaStore.can_group_personas}.
    *
-   * @since 0.3.1
+   * @since UNRELEASED
    */
   public override MaybeBool can_group_personas
     {
@@ -86,7 +86,7 @@ public class Swf.PersonaStore : Folks.PersonaStore
    *
    * See {@link Folks.PersonaStore.can_remove_personas}.
    *
-   * @since 0.3.1
+   * @since UNRELEASED
    */
   public override MaybeBool can_remove_personas
     {
@@ -98,7 +98,7 @@ public class Swf.PersonaStore : Folks.PersonaStore
    *
    * See {@link Folks.PersonaStore.is_prepared}.
    *
-   * @since 0.3.0
+   * @since UNRELEASED
    */
   public override bool is_prepared
     {
