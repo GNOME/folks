@@ -139,8 +139,7 @@ public class Swf.PersonaStore : Folks.PersonaStore
   public override async Folks.Persona? add_persona_from_details (
       HashTable<string, Value?> details) throws Folks.PersonaStoreError
     {
-      // FIXME: There is no better error for this.
-      throw new PersonaStoreError.UNSUPPORTED_ON_USER (
+      throw new PersonaStoreError.READ_ONLY (
           "Personas cannot be added to this store.");
     }
 
@@ -152,8 +151,7 @@ public class Swf.PersonaStore : Folks.PersonaStore
   public override async void remove_persona (Folks.Persona persona)
       throws Folks.PersonaStoreError
     {
-      // FIXME: There is no better error for this.
-      throw new PersonaStoreError.UNSUPPORTED_ON_USER (
+      throw new PersonaStoreError.READ_ONLY (
           "Personas cannot be removed from this store.");
     }
 
