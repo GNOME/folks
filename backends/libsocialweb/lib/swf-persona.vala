@@ -109,7 +109,7 @@ public class Swf.Persona : Folks.Persona,
   public Persona (PersonaStore store, Contact contact)
     {
       var id = get_contact_id (contact);
-      var uid = this.build_uid ("folks", store.id, id);
+      var uid = this.build_uid (BACKEND_NAME, store.id, id);
 
       /* This is a hack so that Facebook contacts from libsocialweb are
        * automatically merged with Facebook contacts from Telepathy
