@@ -14,9 +14,13 @@ Bugs fixed:
 * Bug 645680 — Use random integer IDs for Kf.Personas
 * Bug 645475 — Linker warnings for Tracker backend tests
 * Bug 645570 — Fix checks for empty and equal StructuredNames
+* Bug 645989 — Ensure add_persona_from_details handles the basic attribute
 
 API changes:
 * Add equal () to StructuredName
+* Add detail_key () along with an enum PersonaDetail to PersonaStore
+  which together define the basic attributes that should be supported
+  by add_persona_from_details ().
 
 Overview of changes from libfolks 0.3.6 to libfolks 0.4.0
 =========================================================

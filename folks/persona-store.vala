@@ -101,6 +101,30 @@ public errordomain Folks.PersonaStoreError
 }
 
 /**
+ * Definition of the available fields to be looked up with
+ * {@link PersonaStore.detail_key}.
+ *
+ * @since UNRELEASED
+ */
+public enum Folks.PersonaDetail
+{
+  ALIAS,
+  FULL_NAME,
+  FAVOURITE,
+  STRUCTURED_NAME,
+  AVATAR,
+  BIRTHDAY,
+  GENDER,
+  EMAIL_ADDRESSES,
+  IM_ADDRESSES,
+  NOTES,
+  PHONE_NUMBERS,
+  POSTAL_ADDRESSES,
+  ROLES,
+  URLS
+}
+
+/**
  * A store for {@link Persona}s.
  *
  * After creating a PersonaStore instance, you must connect to the
@@ -112,6 +136,49 @@ public errordomain Folks.PersonaStoreError
 public abstract class Folks.PersonaStore : Object
 {
   /**
+   * The following list of properties are the basic keys
+   * that each PersonaStore with write capabilities should
+   * support for {@link Persona.add_persona_from_details}.
+   *
+   * Note that these aren't the only valid keys; backends are
+   * allowed to support keys beyond the ones defined here
+   * which might be specific to the backend in question.
+   *
+   * Should be kept in sync with {@link Folks.PersonaDetail}.
+   *
+   * @since UNRELEASED
+   */
+  private static const string _PERSONA_DETAIL[] = {
+    "alias",
+    "full-name",
+    "is-favourite",
+    "structured-name",
+    "avatar",
+    "birthday",
+    "gender",
+    "email-addresses",
+    "im-addresses",
+    "notes",
+    "phone-numbers",
+    "postal-addresses",
+    "roles",
+    "urls"
+  };
+
+  /**
+   * Returns the key corresponding to @detail, for use in
+   * the details param of {@link Persona.add_persona_from_details}.
+   *
+   * @param detail the {@link PersonaDetail} to lookup
+   *
+   * @since UNRELEASED
+   */
+  public unowned string detail_key (Folks.PersonaDetail detail)
+    {
+      return this._PERSONA_DETAIL[detail];
+    }
+
+ /**
    * Emitted when one or more {@link Persona}s are added to or removed from
    * the store.
    *
@@ -298,7 +365,7 @@ public abstract class Folks.PersonaStore : Object
    * Add a new {@link Persona} to the PersonaStore.
    *
    * The {@link Persona} will be created by the PersonaStore backend from the
-   * key-value pairs given in `details`. FIXME: These are backend-specific.
+   * key-value pairs given in `details`.
    *
    * All additions through this function will later be emitted through the
    * personas-changed signal to be notified of the new {@link Persona}. The
@@ -311,7 +378,9 @@ public abstract class Folks.PersonaStore : Object
    * offline adds work.
    *
    * If the details are not recognised or are invalid,
-   * {@link PersonaStoreError.INVALID_ARGUMENT} will be thrown.
+   * {@link PersonaStoreError.INVALID_ARGUMENT} will be thrown. A default set
+   * of possible details are defined by {@link Folks.PersonaDetail} but backends
+   * can either support a subset or superset of the suggested defaults.
    *
    * If a {@link Persona} with the given details already exists in the store, no
    * error will be thrown and this function will return `null`.
