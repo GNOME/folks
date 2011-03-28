@@ -215,9 +215,9 @@ public class Swf.Persona : Folks.Persona,
 
       var gender_string = contact.get_value ("x-gender");
       Gender gender;
-      if (gender_string == "male")
+      if (gender_string != null && gender_string.down() == "male")
         gender = Gender.MALE;
-      else if (gender_string == "female")
+      else if (gender_string != null && gender_string.down() == "female")
         gender = Gender.FEMALE;
       else
         gender = Gender.UNSPECIFIED;
