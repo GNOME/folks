@@ -2,6 +2,7 @@ AM_CPPFLAGS = \
 	$(GLIB_CFLAGS) \
 	$(GEE_CFLAGS) \
 	$(TRACKER_SPARQL_CFLAGS) \
+	$(GCONF2_CFLAGS) \
 	-I$(top_srcdir)/folks \
 	-I$(top_srcdir)/backends/tracker/lib \
 	-I$(top_srcdir)/tests/lib \
@@ -17,6 +18,7 @@ LDADD = \
 	$(GLIB_LIBS) \
 	$(GEE_LIBS) \
 	$(TRACKER_SPARQL_LIBS) \
+	$(GCONF2_LIBS) \
 	-L$(top_srcdir)/backends/tracker/lib \
 	$(NULL)
 
@@ -35,6 +37,7 @@ AM_VALAFLAGS = \
 	--pkg folks-test \
 	--pkg folks-tracker \
 	--pkg tracker-sparql-0.10 \
+	--pkg gconf-2.0 \
 	--pkg tracker-test \
 	$(NULL)
 
@@ -86,6 +89,7 @@ noinst_PROGRAMS = \
 	set-notes  \
 	set-birthday  \
 	set-gender  \
+	link-personas  \
 	$(NULL)
 
 backend_store_key_file=$(srcdir)/data/backend-tracker-only.ini
@@ -284,6 +288,10 @@ set_gender_SOURCES = \
 	set-gender.vala \
 	$(NULL)
 
+link_personas_SOURCES = \
+	link-personas.vala \
+	$(NULL)
+
 CLEANFILES = \
         *.pid \
         *.address \
@@ -338,6 +346,7 @@ MAINTAINERCLEANFILES = \
         set_notes_vala.stamp \
         set_birthday_vala.stamp \
         set_gender_vala.stamp \
+        link_personas_vala.stamp \
         $(NULL)
 
 EXTRA_DIST = \
