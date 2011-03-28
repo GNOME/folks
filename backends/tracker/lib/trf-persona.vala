@@ -47,7 +47,7 @@ public class Trf.Persona : Folks.Persona,
   private string _alias;
   private bool _is_favourite;
   private const string[] _linkable_properties =
-      {"im-addresses", "email-addresses"};
+      {"im-addresses"};
   private GLib.List<FieldDetails> _phone_numbers;
   private GLib.List<FieldDetails> _email_addresses;
   private weak Sparql.Cursor _cursor;
@@ -364,6 +364,31 @@ public class Trf.Persona : Folks.Persona,
   internal string tracker_id ()
     {
       return this._tracker_id;
+    }
+
+  /**
+   * {@inheritDoc}
+   */
+  public override void linkable_property_to_links (string prop_name,
+      Folks.Persona.LinkablePropertyCallback callback)
+    {
+      if (prop_name == "im-addresses")
+        {
+          this.im_addresses.foreach ((k, v) =>
+            {
+              unowned string protocol = (string) k;
+              unowned LinkedHashSet<string> im_addresses =
+                  (LinkedHashSet<string>) v;
+
+              foreach (string address in im_addresses)
+                  callback (protocol + ":" + address);
+            });
+        }
+      else
+        {
+          /* Chain up */
+          base.linkable_property_to_links (prop_name, callback);
+        }
     }
 
   ~Persona ()
