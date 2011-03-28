@@ -131,6 +131,13 @@ public class Swf.PersonaStore : Folks.PersonaStore
       this._personas = new HashTable<string, Persona> (str_hash, str_equal);
     }
 
+  ~PersonaStore ()
+    {
+      this._contact_view.contacts_added.disconnect (this.contacts_added_cb);
+      this._contact_view.contacts_changed.disconnect (this.contacts_changed_cb);
+      this._contact_view.contacts_removed.disconnect (this.contacts_removed_cb);
+    }
+
   /**
    * Add a new {@link Persona} to the PersonaStore.
    *
@@ -166,25 +173,39 @@ public class Swf.PersonaStore : Folks.PersonaStore
         {
           if (!this._is_prepared)
             {
-              var parameters = new HashTable<weak string, weak string> (
-                  str_hash, str_equal);
-              this._service.contacts_query_open_view("people", parameters,
-                  (query, contact_view) =>
+              this._service.get_static_capabilities (
+                  (service, caps, error) =>
                     {
-                      /* The D-Bus call could return an error. In this case,
-                       * contact_view is null */
-                      if (contact_view == null)
+                      if (caps == null)
                         return;
 
-                      contact_view.contacts_added.connect (this.contacts_added_cb);
-                      contact_view.contacts_changed.connect (this.contacts_changed_cb);
-                      contact_view.contacts_removed.connect (this.contacts_removed_cb);
+                      bool has_contacts = ClientService.has_cap (caps,
+                          "has-contacts-query-iface");
+                      if (!has_contacts)
+                        return;
+                      var parameters = new HashTable<weak string, weak string>
+                          (str_hash, str_equal);
+                      this._service.contacts_query_open_view
+                          ("people", parameters, (query, contact_view) =>
+                        {
+                          /* The D-Bus call could return an error. In this
+                           * case, contact_view is null */
+                          if (contact_view == null)
+                            return;
 
-                      this._contact_view = contact_view;
-                      this._is_prepared = true;
-                      this.notify_property ("is-prepared");
+                          contact_view.contacts_added.connect
+                              (this.contacts_added_cb);
+                          contact_view.contacts_changed.connect
+                              (this.contacts_changed_cb);
+                          contact_view.contacts_removed.connect
+                              (this.contacts_removed_cb);
 
-                      this._contact_view.start ();
+                          this._contact_view = contact_view;
+                          this._is_prepared = true;
+                          this.notify_property ("is-prepared");
+
+                          this._contact_view.start ();
+                        });
                     });
             }
         }
