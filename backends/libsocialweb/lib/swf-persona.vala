@@ -101,6 +101,55 @@ public class Swf.Persona : Folks.Persona,
     }
 
   /**
+   * Build the Facebook JID.
+   *
+   * @param store_id the {@link PersonaStore.id}
+   * @param lsw_id the lsw id
+   * @return the Facebook JID or null if it is not a Facebook contact
+   *
+   * @since UNRELEASED
+   */
+  internal static string? _build_facebook_jid (string store_id, string lsw_id)
+    {
+      string facebook_jid = null;
+      if (store_id == "facebook" && "facebook-" in lsw_id)
+        {
+          /* The lsw_id is in the form "facebook-XXXX", while the JID is
+           * "-XXXX@chat.facebook.com". */
+          facebook_jid = lsw_id.replace("facebook", "") + "@chat.facebook.com";
+        }
+      return facebook_jid;
+    }
+
+  /**
+   * Build a IID.
+   *
+   * @param store_id the {@link PersonaStore.id}
+   * @param lsw_id the lsw id
+   * @return a valid IID
+   *
+   * @since UNRELEASED
+   */
+  internal static string _build_iid (string store_id, string lsw_id)
+    {
+      /* This is a hack so that Facebook contacts from libsocialweb are
+       * automatically merged with Facebook contacts from Telepathy
+       * because they have the same iid. */
+      string facebook_jid = null;
+      string iid;
+      facebook_jid = _build_facebook_jid (store_id, lsw_id);
+      if (facebook_jid != null)
+        {
+          iid = "jabber:" + facebook_jid;
+        }
+      else
+        {
+          iid = store_id + ":" + lsw_id;
+        }
+      return iid;
+    }
+
+  /**
    * Create a new persona.
    *
    * Create a new persona for the {@link PersonaStore} `store`, representing
@@ -110,23 +159,7 @@ public class Swf.Persona : Folks.Persona,
     {
       var id = get_contact_id (contact);
       var uid = this.build_uid (BACKEND_NAME, store.id, id);
-
-      /* This is a hack so that Facebook contacts from libsocialweb are
-       * automatically merged with Facebook contacts from Telepathy
-       * because they have the same iid. */
-      string facebook_jid = null;
-      string iid;
-      if (store.id == "facebook" && "facebook-" in id)
-        {
-          /* The id is in the form "facebook-XXXX", while the JID is
-           * "-XXXX@chat.facebook.com". */
-          facebook_jid = id.replace("facebook", "") + "@chat.facebook.com";
-          iid = "jabber:" + facebook_jid;
-        }
-      else
-        {
-          iid = store.id + ":" + id;
-        }
+      var iid = this._build_iid (store.id, id);
 
       Object (display_id: id,
               uid: uid,
@@ -137,6 +170,7 @@ public class Swf.Persona : Folks.Persona,
       debug ("Creating new Sw.Persona '%s' for %s UID '%s': %p",
           uid, store.display_name, id, this);
 
+      var facebook_jid = this._build_facebook_jid (store.id, id);
       if (facebook_jid != null)
         {
           var im_address_array = new LinkedHashSet<string> ();
