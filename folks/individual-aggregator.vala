@@ -63,6 +63,9 @@ public class Folks.IndividualAggregator : Object
   private HashTable<string, Individual> _link_map;
   private bool _linking_enabled = true;
   private bool _is_prepared = false;
+  private string _configured_writeable_store_type_id;
+  private static const string _FOLKS_CONFIG_KEY =
+    "/system/folks/backends/primary_store";
 
   /**
    * Whether {@link IndividualAggregator.prepare} has successfully completed for
@@ -73,6 +76,23 @@ public class Folks.IndividualAggregator : Object
   public bool is_prepared
     {
       get { return this._is_prepared; }
+    }
+
+  /**
+   * Our configured primary (writeable) store.
+   *
+   * Which one to use is decided (in order or precedence)
+   * by:
+   *
+   * - the FOLKS_WRITEABLE_STORE env var (mostly for debugging)
+   * - the GConf key set in _FOLKS_CONFIG_KEY (system set store)
+   * - going with the `key-file` store as the fall-back option
+   *
+   * @since UNRELEASED
+   */
+  public PersonaStore primary_store
+    {
+      get { return this._writeable_store; }
     }
 
   /**
@@ -141,6 +161,28 @@ public class Folks.IndividualAggregator : Object
       this._link_map = new HashTable<string, Individual> (str_hash, str_equal);
 
       this._backends = new HashSet<Backend> ();
+
+      /* Check out the configured writeable store */
+      var store_type_id = Environment.get_variable ("FOLKS_WRITEABLE_STORE");
+      if (store_type_id != null)
+        {
+          this._configured_writeable_store_type_id = store_type_id;
+        }
+      else
+        {
+          this._configured_writeable_store_type_id = "key-file";
+          try
+            {
+              unowned GConf.Client client = GConf.Client.get_default ();
+              GConf.Value? val = client.get (this._FOLKS_CONFIG_KEY);
+              if (val != null)
+                this._configured_writeable_store_type_id = val.get_string ();
+            }
+          catch (GLib.Error e)
+            {
+              /* We ignore errors and go with the default store */
+            }
+        }
 
       var disable_linking = Environment.get_variable ("FOLKS_DISABLE_LINKING");
       if (disable_linking != null)
@@ -214,9 +256,9 @@ public class Folks.IndividualAggregator : Object
     {
       var store_id = this._get_store_full_id (store.type_id, store.id);
 
-      /* FIXME: We hardcode the key-file backend's singleton PersonaStore as the
-       * only trusted and writeable PersonaStore for now. */
-      if (store.type_id == "key-file")
+      /* We use the configured PersonaStore as the only trusted and writeable
+       * PersonaStore. */
+      if (store.type_id == this._configured_writeable_store_type_id)
         {
           store.is_writeable = true;
           store.trust_level = PersonaStoreTrust.FULL;
@@ -665,10 +707,10 @@ public class Folks.IndividualAggregator : Object
 
   private void _trust_level_changed_cb (Object object, ParamSpec pspec)
     {
-      /* FIXME: For the moment, assert that only the key-file backend's
-       * singleton PersonaStore is trusted. */
+      /* Only our writeable_store can be fully trusted. */
       var store = (PersonaStore) object;
-      if (store.type_id == "key-file")
+      if (this._writeable_store != null &&
+          store.type_id == this._writeable_store.type_id)
         assert (store.trust_level == PersonaStoreTrust.FULL);
       else
         assert (store.trust_level != PersonaStoreTrust.FULL);
@@ -861,8 +903,8 @@ public class Folks.IndividualAggregator : Object
 
       /* Create a new persona in the writeable store which links together the
        * given personas */
-      /* FIXME: We hardcode this to use the key-file backend for now */
-      assert (this._writeable_store.type_id == "key-file");
+      assert (this._writeable_store.type_id ==
+          this._configured_writeable_store_type_id);
 
       /* `protocols_addrs_set` will be passed to the new Kf.Persona */
       var protocols_addrs_set =

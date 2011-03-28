@@ -46,6 +46,7 @@ libfolks_la_VALAFLAGS = \
 	--pkg gmodule-2.0 \
 	--pkg gio-2.0 \
 	--pkg gee-1.0 \
+	--pkg gconf-2.0 \
 	--vapi folks.vapi \
 	-H folks.h \
 	$(NULL)
@@ -55,6 +56,7 @@ libfolks_la_CFLAGS = \
 	$(GLIB_CFLAGS) \
 	$(GMODULE_CFLAGS) \
 	$(GEE_CFLAGS) \
+	$(GCONF2_CFLAGS) \
 	$(NULL)
 
 libfolks_la_LIBADD = \
@@ -62,6 +64,7 @@ libfolks_la_LIBADD = \
 	$(GLIB_LIBS) \
 	$(GMODULE_LIBS) \
 	$(GEE_LIBS) \
+	$(GCONF2_LIBS) \
 	$(NULL)
 
 # The quoting here is unnecessary but harmless, and has the useful side-effect
