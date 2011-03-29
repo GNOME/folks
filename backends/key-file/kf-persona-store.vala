@@ -20,6 +20,7 @@
  */
 
 using GLib;
+using Gee;
 using Folks;
 using Folks.Backends.Kf;
 
@@ -290,6 +291,7 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
    *
    * Accepted keys for `details` are:
    * - PersonaStore.detail_key (PersonaDetail.IM_ADDRESSES)
+   * - PersonaStore.detail_key (PersonaDetail.WEB_SERVICE_ADDRESSES)
    *
    * See {@link Folks.PersonaStore.add_persona_from_details}.
    */
@@ -300,8 +302,15 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
             PersonaDetail.IM_ADDRESSES));
       unowned HashTable<string, LinkedHashSet<string>> im_addresses =
           (HashTable<string, LinkedHashSet<string>>) val.get_boxed ();
+      val = details.lookup (this.detail_key (PersonaDetail.WEB_SERVICE_ADDRESSES));
+      unowned HashMap<string, LinkedHashSet<string>> web_service_addresses =
+          (HashMap<string, LinkedHashSet<string>>) val.get_object ();
+      uint im_addresses_size = (im_addresses == null)
+          ? 0 : im_addresses.size ();
+      uint web_service_addresses_size = (web_service_addresses == null)
+          ? 0 : web_service_addresses.size;
 
-      if (im_addresses == null || im_addresses.size () == 0)
+      if (im_addresses_size + web_service_addresses_size == 0)
         {
           throw new PersonaStoreError.INVALID_ARGUMENT (
               /* Translators: the first two parameters are identifiers for the
@@ -325,11 +334,14 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
         }
       while (this._key_file.has_group (persona_id) == true);
 
-      /* Create a new persona and set its im-addresses property to update the
+      /* Create a new persona and set its addresses property to update the
        * key file */
       Persona persona = new Kf.Persona (this._key_file, persona_id, this);
       this._personas.insert (persona.iid, persona);
-      persona.im_addresses = im_addresses;
+      if (im_addresses_size > 0)
+        persona.im_addresses = im_addresses;
+      if (web_service_addresses_size > 0)
+        persona.web_service_addresses = web_service_addresses;
 
       /* FIXME: GroupDetails.ChangeReason is not the right enum to use here */
       GLib.List<Persona> personas = new GLib.List<Persona> ();

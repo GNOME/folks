@@ -22,6 +22,7 @@ libfolks_la_SOURCES = \
 	field-details.vala \
 	gender-details.vala \
 	group-details.vala \
+	web-service-details.vala \
 	im-details.vala \
 	name-details.vala \
 	note-details.vala \

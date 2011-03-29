@@ -20,6 +20,7 @@
  */
 
 using GLib;
+using Gee;
 using Folks;
 using SocialWebClient;
 
@@ -31,9 +32,14 @@ public class Swf.Persona : Folks.Persona,
     GenderDetails,
     ImDetails,
     NameDetails,
-    UrlDetails
+    UrlDetails,
+    WebServiceDetails
 {
-  private const string[] _linkable_properties = {};
+  private const string[] _linkable_properties =
+    {
+      "im-addresses",
+      "web-service-addresses"
+    };
 
   /**
    * The names of the Persona's linkable properties.
@@ -73,16 +79,16 @@ public class Swf.Persona : Folks.Persona,
    */
   public Gender gender { get; private set; }
 
-  private List<FieldDetails> _urls;
+  private GLib.List<FieldDetails> _urls;
   /**
    * {@inheritDoc}
    */
-  public List<FieldDetails> urls
+  public GLib.List<FieldDetails> urls
     {
       get { return this._urls; }
       private set
         {
-          this._urls = new List<FieldDetails> ();
+          this._urls = new GLib.List<FieldDetails> ();
           foreach (unowned FieldDetails ps in value)
             this._urls.prepend (ps);
           this._urls.reverse ();
@@ -91,12 +97,25 @@ public class Swf.Persona : Folks.Persona,
 
   private HashTable<string, LinkedHashSet<string>> _im_addresses =
       new HashTable<string, LinkedHashSet<string>> (str_hash, str_equal);
+
+  private HashMap<string, LinkedHashSet<string>> _web_service_addresses =
+      new HashMap<string, LinkedHashSet<string>> (str_hash, str_equal);
+
   /**
    * {@inheritDoc}
    */
   public HashTable<string, LinkedHashSet<string>> im_addresses
     {
       get { return this._im_addresses; }
+      private set {}
+    }
+
+  /**
+   * {@inheritDoc}
+   */
+  public HashMap<string, LinkedHashSet<string>> web_service_addresses
+    {
+      get { return this._web_service_addresses; }
       private set {}
     }
 
@@ -158,6 +177,7 @@ public class Swf.Persona : Folks.Persona,
   public Persona (PersonaStore store, Contact contact)
     {
       var id = get_contact_id (contact);
+      var service = contact.service.dup();
       var uid = this.build_uid (BACKEND_NAME, store.id, id);
       var iid = this._build_iid (store.id, id);
 
@@ -191,6 +211,11 @@ public class Swf.Persona : Folks.Persona,
               warning (e.message);
             }
         }
+
+      var web_service_address_array = new LinkedHashSet<string> ();
+      web_service_address_array.add (id);
+      this._web_service_addresses.set ((owned) service,
+          (owned) web_service_address_array);
 
       update (contact);
     }
@@ -233,7 +258,7 @@ public class Swf.Persona : Folks.Persona,
       if (this.full_name != full_name)
         this.full_name = full_name;
 
-      var urls = new List<FieldDetails> ();
+      var urls = new GLib.List<FieldDetails> ();
 
       var website = contact.get_value ("url");
       if (website != null)

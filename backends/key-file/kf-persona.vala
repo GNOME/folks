@@ -37,8 +37,13 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
    * GenericArray<string> here rather than just string[], as null-terminated
    * arrays aren't supported as generic types. */
   private HashTable<string, LinkedHashSet<string>> _im_addresses;
+  private HashMap<string, LinkedHashSet<string>> _web_service_addresses;
   private string _alias;
-  private const string[] _linkable_properties = { "im-addresses" };
+  private const string[] _linkable_properties =
+    {
+      "im-addresses",
+      "web-service-addresses"
+    };
 
   /**
    * {@inheritDoc}
@@ -143,6 +148,56 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
     }
 
   /**
+   * {@inheritDoc}
+   */
+  public HashMap<string, LinkedHashSet<string>> web_service_addresses
+    {
+      get
+        { return this._web_service_addresses; }
+
+      set
+        {
+          /* Remove the current web service addresses from the key file */
+          foreach (var web_service in this._web_service_addresses.keys)
+            {
+              try
+                {
+                  this._key_file.remove_key (this.display_id, "web-service." + web_service);
+                }
+              catch (KeyFileError e)
+                {
+                  /* Ignore the error, since it's just a group or key not found
+                   * error. */
+                }
+            }
+
+          /* Add the new web service addresses to the key file and build a
+           * table of them to set as the new property value */
+          HashMap<string, LinkedHashSet<string>> web_service_addresses =
+              new HashMap<string, LinkedHashSet<string>> (str_hash, str_equal);
+
+          foreach (var entry in value.entries)
+            {
+              unowned string web_service = (string) entry.key;
+              unowned LinkedHashSet<string?> addresses =
+                  (LinkedHashSet<string?>) entry.value;
+
+              string[] addrs = (string[]) addresses.to_array ();
+              addrs.length = addresses.size;
+
+              this._key_file.set_string_list (this.display_id,
+                  "web-service." + web_service, addrs);
+              web_service_addresses.set (web_service, addresses);
+            }
+
+          this._web_service_addresses = web_service_addresses;
+
+          /* Get the PersonaStore to save the key file */
+          ((Kf.PersonaStore) this.store).save_key_file.begin ();
+        }
+    }
+
+  /**
    * Create a new persona.
    *
    * Create a new persona for the {@link PersonaStore} `store`, representing
@@ -165,6 +220,9 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
       this._key_file = key_file;
       this._im_addresses = new HashTable<string, LinkedHashSet<string>> (
           str_hash, str_equal);
+      this._web_service_addresses
+          = new HashMap<string, LinkedHashSet<string>> (str_hash,
+              str_equal);
 
       /* Load the IM addresses from the key file */
       try
@@ -178,6 +236,26 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
                   this._alias = this._key_file.get_string (this.display_id,
                       key);
                   debug ("    Loaded alias '%s'.", this._alias);
+                  continue;
+                }
+
+              /* Web service addresses */
+              var decomposed_key = key.split(".", 2);
+              if (decomposed_key.length == 2 &&
+                  decomposed_key[0] == "web-service")
+                {
+                  unowned string web_service = decomposed_key[1];
+                  var web_service_addresses = this._key_file.get_string_list (
+                      this.display_id, web_service);
+    
+                  var address_set = new LinkedHashSet<string> ();
+    
+                  foreach (var web_service_address in web_service_addresses)
+                    {
+                      address_set.add (web_service_address);
+                    }
+    
+                  this._web_service_addresses.set (web_service, address_set);
                   continue;
                 }
 
@@ -202,7 +280,7 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
                       warning (e.message);
                       continue;
                     }
-                    address_set.add (address);
+                  address_set.add (address);
                 }
 
               this._im_addresses.insert (protocol, address_set);
@@ -239,6 +317,18 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
               foreach (string address in im_addresses)
                   callback (protocol + ":" + address);
             });
+        }
+      else if (prop_name == "web-service-addresses")
+        {
+          foreach (var entry in this.web_service_addresses.entries)
+            {
+              unowned string web_service = (string) entry.key;
+              unowned LinkedHashSet<string> web_service_addresses =
+                  (LinkedHashSet<string>) entry.value;
+
+              foreach (string address in web_service_addresses)
+                  callback (web_service + ":" + address);
+            }
         }
       else
         {

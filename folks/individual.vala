@@ -77,7 +77,8 @@ public class Folks.Individual : Object,
     PhoneDetails,
     PostalAddressDetails,
     RoleDetails,
-    UrlDetails
+    UrlDetails,
+    WebServiceDetails
 {
   private bool _is_favourite;
   private string _alias;
@@ -98,6 +99,7 @@ public class Folks.Individual : Object,
    * Persona.is_user == true. Iff this is > 0, Individual.is_user == true. */
   private uint _persona_user_count = 0;
   private HashTable<string, LinkedHashSet<string>> _im_addresses;
+  private HashMap<string, LinkedHashSet<string>> _web_service_addresses;
 
   /**
    * The trust level of the Individual.
@@ -410,6 +412,15 @@ public class Folks.Individual : Object,
     }
 
   /**
+   * {@inheritDoc}
+   */
+  public HashMap<string, LinkedHashSet<string>> web_service_addresses
+    {
+      get { return this._web_service_addresses; }
+      private set {}
+    }
+
+  /**
    * The set of {@link Persona}s encapsulated by this Individual.
    *
    * Changing the set of personas may cause updates to the aggregated properties
@@ -544,6 +555,11 @@ public class Folks.Individual : Object,
       this._update_im_addresses ();
     }
 
+  private void _notify_web_service_addresses_cb (Object obj, ParamSpec ps)
+    {
+      this._update_web_service_addresses ();
+    }
+
   private void _notify_is_favourite_cb (Object obj, ParamSpec ps)
     {
       this._update_is_favourite ();
@@ -564,6 +580,8 @@ public class Folks.Individual : Object,
     {
       this._im_addresses =
           new HashTable<string, LinkedHashSet<string>> (str_hash, str_equal);
+      this._web_service_addresses =
+          new HashMap<string, LinkedHashSet<string>> (str_hash, str_equal);
       this._persona_set = new HashSet<Persona> (null, null);
       this._stores = new HashMap<PersonaStore, uint> (null, null);
       this._gender = Gender.UNSPECIFIED;
@@ -638,6 +656,7 @@ public class Folks.Individual : Object,
       this._update_alias ();
       this._update_trust_level ();
       this._update_im_addresses ();
+      this._update_web_service_addresses ();
       this._update_structured_name ();
       this._update_full_name ();
       this._update_nickname ();
@@ -914,6 +933,36 @@ public class Folks.Individual : Object,
       this.notify_property ("im-addresses");
     }
 
+  private void _update_web_service_addresses ()
+    {
+      /* populate the web service addresses as the union of our Personas' addresses */
+      foreach (var persona in this.personas)
+        {
+          if (persona is WebServiceDetails)
+            {
+              var web_service_details = (WebServiceDetails) persona;
+              foreach (var entry in
+                  web_service_details.web_service_addresses.entries)
+                {
+                  var cur_web_service = (string) entry.key;
+                  var cur_addresses = (LinkedHashSet<string>) entry.value;
+                  var web_service_set = this._web_service_addresses.get
+                                            (cur_web_service);
+
+                  if (web_service_set == null)
+                    {
+                      web_service_set = new LinkedHashSet<string> ();
+                      this._web_service_addresses.set (cur_web_service,
+                                                       web_service_set);
+                    }
+
+                  web_service_set.add_all (cur_addresses);
+                }
+            }
+        }
+      this.notify_property ("web-service-addresses");
+    }
+
   private void _connect_to_persona (Persona persona)
     {
       persona.notify["alias"].connect (this._notify_alias_cb);
@@ -921,6 +970,8 @@ public class Folks.Individual : Object,
       persona.notify["presence-message"].connect (this._notify_presence_cb);
       persona.notify["presence-type"].connect (this._notify_presence_cb);
       persona.notify["im-addresses"].connect (this._notify_im_addresses_cb);
+      persona.notify["web-service-addresses"].connect
+              (this._notify_web_service_addresses_cb);
       persona.notify["is-favourite"].connect (this._notify_is_favourite_cb);
       persona.notify["structured-name"].connect (
           this._notify_structured_name_cb);
@@ -1021,6 +1072,8 @@ public class Folks.Individual : Object,
       persona.notify["presence-type"].disconnect (this._notify_presence_cb);
       persona.notify["im-addresses"].disconnect (
           this._notify_im_addresses_cb);
+      persona.notify["web-service-addresses"].disconnect (
+          this._notify_web_service_addresses_cb);
       persona.notify["is-favourite"].disconnect (
           this._notify_is_favourite_cb);
       persona.notify["structured-name"].disconnect (
