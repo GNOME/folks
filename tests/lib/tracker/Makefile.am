@@ -29,8 +29,9 @@ libtracker_test_la_CFLAGS = \
 libtracker_test_la_LIBADD = \
 	$(GLIB_LIBS) \
 	$(GEE_LIBS) \
+	$(TRACKER_SPARQL_LIBS) \
 	$(top_builddir)/folks/libfolks.la \
-	$(top_builddir)/backends/tracker/libfolks-backend-tracker.la \
+	$(top_builddir)/backends/tracker/lib/libfolks-tracker.la \
 	$(NULL)
 
 MAINTAINERCLEANFILES = \
