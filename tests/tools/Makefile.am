@@ -1,6 +1,6 @@
 EXTRA_DIST = \
 	with-session-bus.sh \
-	dbus-session.sh
+	dbus-session.sh \
 	manager-file.py \
 	$(NULL)
 
