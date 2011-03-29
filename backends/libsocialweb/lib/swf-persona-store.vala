@@ -24,12 +24,14 @@ using GLib;
 using Folks;
 using SocialWebClient;
 
+extern const string BACKEND_NAME;
+
 /**
  * A persona store which is associated with a single libsocialweb service.
  * It will create {@link Persona}s for each of the contacts known to that
  * service.
  */
-public class Folks.Backends.Sw.PersonaStore : Folks.PersonaStore
+public class Swf.PersonaStore : Folks.PersonaStore
 {
   private HashTable<string, Persona> _personas;
   private bool _is_prepared = false;
@@ -41,7 +43,7 @@ public class Folks.Backends.Sw.PersonaStore : Folks.PersonaStore
    *
    * See {@link Folks.PersonaStore.type_id}.
    */
-  public override string type_id { get { return "libsocialweb"; } }
+  public override string type_id { get { return BACKEND_NAME; } }
 
   /**
    * Whether this PersonaStore can add {@link Folks.Persona}s.
@@ -230,5 +232,4 @@ public class Folks.Backends.Sw.PersonaStore : Folks.PersonaStore
       if (removed_personas.length > 0)
         this.personas_changed (null, removed_personas.head, null, null, 0);
     }
-
 }

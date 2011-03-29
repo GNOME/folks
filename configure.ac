@@ -367,6 +367,9 @@ AC_CONFIG_FILES([
     backends/Makefile
     backends/key-file/Makefile
     backends/libsocialweb/Makefile
+    backends/libsocialweb/lib/Makefile
+    backends/libsocialweb/lib/folks-libsocialweb.pc
+    backends/libsocialweb/lib/folks-libsocialweb-uninstalled.pc
     backends/telepathy/Makefile
     backends/telepathy/lib/Makefile
     backends/tracker/Makefile

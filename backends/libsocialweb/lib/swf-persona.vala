@@ -26,7 +26,7 @@ using SocialWebClient;
 /**
  * A persona subclass which represents a single libsocialweb contact.
  */
-internal class Folks.Backends.Sw.Persona : Folks.Persona,
+public class Swf.Persona : Folks.Persona,
     AvatarDetails,
     GenderDetails,
     ImDetails,
@@ -132,7 +132,6 @@ internal class Folks.Backends.Sw.Persona : Folks.Persona,
               uid: uid,
               iid: iid,
               store: store,
-              gender: Gender.UNSPECIFIED,
               is_user: false);
 
       debug ("Creating new Sw.Persona '%s' for %s UID '%s': %p",

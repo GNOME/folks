@@ -116,7 +116,7 @@ public class Folks.Backends.Sw.Backend : Folks.Backend
       if (this._persona_stores.lookup (service_name) != null)
         return;
 
-      var store = new PersonaStore (this._client.get_service (service_name));
+      var store = new Swf.PersonaStore (this._client.get_service (service_name));
       this._persona_stores.insert (store.id, store);
       store.removed.connect (this.store_removed_cb);
       this.persona_store_added (store);
