@@ -202,7 +202,7 @@ public class LibsocialwebTest.LibsocialwebServiceTest : Object,
     LibsocialwebTest.LibsocialwebServiceCapabilitiesTest,
     LibsocialwebTest.LibsocialwebServiceQueryTest
 {
-  private int count = 0;
+  static int view_count = 0;
   private string service_name;
   public Gee.HashMap<string,LibsocialwebTest.LibsocialwebContactViewTest>
       contact_views;
@@ -217,7 +217,7 @@ public class LibsocialwebTest.LibsocialwebServiceTest : Object,
   public ObjectPath OpenView (string query, HashTable<string, string> p)
     {
       string path = LibsocialwebTest.Backend.LIBSOCIALWEB_PATH + "/View"
-          + count.to_string();
+          + view_count.to_string();
       try
         {
           var conn = Bus.get_sync (BusType.SESSION);
@@ -225,7 +225,7 @@ public class LibsocialwebTest.LibsocialwebServiceTest : Object,
               (query, p, path);
           conn.register_object (path, contact_view);
           contact_views[path] = contact_view;
-          this.count++;
+          this.view_count++;
         }
       catch (GLib.IOError e)
         {

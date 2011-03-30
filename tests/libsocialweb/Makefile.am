@@ -43,6 +43,7 @@ AM_VALAFLAGS = \
 # in order from least to most complex
 noinst_PROGRAMS = \
 	dummy-lsw \
+	aggregation \
 	$(NULL)
 
 SESSION_CONF = $(top_builddir)/tests/lib/libsocialweb/session.conf
@@ -60,6 +61,10 @@ dummy_lsw_SOURCES = \
 	dummy-lsw.vala \
 	$(NULL)
 
+aggregation_SOURCES = \
+	aggregation.vala \
+	$(NULL)
+
 CLEANFILES = \
         *.pid \
         *.address \
@@ -69,6 +74,7 @@ CLEANFILES = \
 MAINTAINERCLEANFILES = \
         $(addsuffix .c,$(noinst_PROGRAMS)) \
         dummy_lsw_vala.stamp \
+        aggregation_vala.stamp \
         $(NULL)
 
 EXTRA_DIST = \
