@@ -286,12 +286,18 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
     }
 
   /**
-   * {@inheritDoc}
+   * Add a new {@link Persona} to the PersonaStore.
+   *
+   * Accepted keys for `details` are:
+   * - PersonaStore.detail_key (PersonaDetail.IM_ADDRESSES)
+   *
+   * See {@link Folks.PersonaStore.add_persona_from_details}.
    */
   public override async Folks.Persona? add_persona_from_details (
       HashTable<string, Value?> details) throws Folks.PersonaStoreError
     {
-      unowned Value val = details.lookup ("im-addresses");
+      unowned Value val =
+        details.lookup (PersonaStore.detail_key (PersonaDetail.IM_ADDRESSES));
       unowned HashTable<string, LinkedHashSet<string>> im_addresses =
           (HashTable<string, LinkedHashSet<string>>) val.get_boxed ();
 
