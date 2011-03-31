@@ -297,7 +297,7 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
       HashTable<string, Value?> details) throws Folks.PersonaStoreError
     {
       unowned Value val =
-        details.lookup (PersonaStore.detail_key (PersonaDetail.IM_ADDRESSES));
+        details.lookup (this.detail_key (PersonaDetail.IM_ADDRESSES));
       unowned HashTable<string, LinkedHashSet<string>> im_addresses =
           (HashTable<string, LinkedHashSet<string>>) val.get_boxed ();
 
