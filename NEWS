@@ -1,6 +1,10 @@
 Overview of changes from libfolks 0.4.0 to libfolks 0.5.0
 =========================================================
 
+Major changes:
+* Add support to change primary (writeable) store either via
+  GConf or an env variable (bug 645441).
+
 Bugs fixed:
 * Bug 644968 - _update_phone_numbers() needs to create copies
   of each List<FieldDetails>
@@ -16,12 +20,14 @@ Bugs fixed:
 * Bug 645570 — Fix checks for empty and equal StructuredNames
 * Bug 645989 — Ensure add_persona_from_details handles the basic attribute
 * Bug 645413 — Write support for Tracker
+* Bug 645441 — Mechanism to specify primary backend
 
 API changes:
 * Add equal () to StructuredName
 * Add detail_key () along with an enum PersonaDetail to PersonaStore
   which together define the basic attributes that should be supported
   by add_persona_from_details ().
+* Add public primary_store to IndividualAggregator
 
 Overview of changes from libfolks 0.3.6 to libfolks 0.4.0
 =========================================================
