@@ -46,6 +46,7 @@ valadoc_flags = \
 # folks documentation
 folks_doc_files = $(top_srcdir)/folks/*.vala
 folks_doc_deps = \
+	gconf-2.0 \
 	gmodule-2.0 \
 	gio-2.0 \
 	gee-1.0 \
@@ -77,6 +78,7 @@ folks-gtk-doc: $(folks_doc_files)
 # folks-telepathy documentation
 folks_telepathy_doc_files = $(top_srcdir)/backends/telepathy/lib/*.vala
 folks_telepathy_doc_deps = \
+	gconf-2.0 \
 	gmodule-2.0 \
 	gio-2.0 \
 	gee-1.0 \
