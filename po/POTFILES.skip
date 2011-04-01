@@ -3,6 +3,7 @@ backends/key-file/kf-persona-store.c
 backends/key-file/kf-persona.c
 backends/telepathy/lib/tpf-persona-store.c
 backends/telepathy/lib/tpf-persona.c
+backends/tracker/lib/trf-persona-store.c
 docs/gtk-doc/folks-telepathy/ccomments/tp-lowlevel.c
 folks/backend-store.c
 folks/im-details.c
