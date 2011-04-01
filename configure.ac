@@ -74,6 +74,42 @@ AC_ARG_ENABLE(tracker-backend,
 
 AM_CONDITIONAL([ENABLE_TRACKER], [test "x$enable_tracker_backend" = "xyes"])
 
+# Automatically check the dependencies for the libsocialweb backend
+SW_CLIENT_REQUIRED=0.25.14
+AC_ARG_ENABLE(libsocialweb-backend,
+        AC_HELP_STRING([--enable-libsocialweb-backend=@<:@no/yes/auto@:>@],
+                       [build the Libsocialweb backend (default: auto)]),
+        enable_libsocialweb_backend=$enableval,
+        enable_libsocialweb_backend=auto )
+
+if test "x$enable_libsocialweb_backend" != "xno"; then
+  PKG_CHECK_MODULES([SW_CLIENT], [libsocialweb-client >= $SW_CLIENT_REQUIRED],
+      have_libsocialweb_backend="yes", have_libsocialweb_backend="no")
+  if test "x$have_libsocialweb_backend" = "xyes"; then
+    VALA_CHECK_PACKAGES([telepathy-glib
+                         dbus-glib-1
+                         gio-2.0
+                         gee-1.0
+                         libsocialweb-client],
+        ,
+        have_libsocialweb_backend="no")
+  fi
+
+  if test "x$have_libsocialweb_backend" = "xyes"; then
+    AC_DEFINE(HAVE_TELEPATHY, [], [Define if you have libsocialweb_backend])
+  fi
+else
+   have_libsocialweb_backend=no
+fi
+
+if test "x$enable_libsocialweb_backend" = "xyes" -a \
+  "x$have_libsocialweb_backend" != "xyes"; then
+    AC_MSG_ERROR([Cannot find libsocialweb dependencies.])
+fi
+
+AM_CONDITIONAL([ENABLE_LIBSOCIALWEB],
+        [test "x$have_libsocialweb_backend" = "xyes"])
+
 # -----------------------------------------------------------
 # Dependencies
 # -----------------------------------------------------------
@@ -84,7 +120,6 @@ VALA_REQUIRED=0.11.6
 VALADOC_REQUIRED=0.2.1
 TRACKER_SPARQL_REQUIRED=0.10
 GCONF2_REQUIRED=2.31
-SW_CLIENT_REQUIRED=0.25.14
 
 PKG_CHECK_MODULES([GLIB],
                   [glib-2.0 >= $GLIB_REQUIRED
@@ -102,13 +137,6 @@ if test x$enable_tracker_backend = xyes; then
         PKG_CHECK_MODULES([TRACKER_SPARQL],
                           [tracker-sparql-0.10 >= $TRACKER_SPARQL_REQUIRED])
 fi
-
-PKG_CHECK_MODULES([SW_CLIENT], [libsocialweb-client >= $SW_CLIENT_REQUIRED])
-VALA_CHECK_PACKAGES([telepathy-glib
-                     dbus-glib-1
-                     gio-2.0
-                     gee-1.0
-                     libsocialweb-client])
 
 #
 # Vala building options -- allows tarball builds without installing Vala
@@ -211,10 +239,13 @@ AC_SUBST([BACKEND_DIR])
 
 BACKEND_KF='$(top_builddir)/backends/key-file/.libs/libfolks-backend-key-file.so'
 AC_SUBST([BACKEND_KF])
-BACKEND_LIBSOCIALWEB='$(top_builddir)/backends/libsocialweb/.libs/libfolks-backend-libsocialweb.so'
-AC_SUBST([BACKEND_LIBSOCIALWEB])
 BACKEND_TP='$(top_builddir)/backends/telepathy/.libs/libfolks-backend-telepathy.so'
 AC_SUBST([BACKEND_TP])
+
+if test x$have_libsocialweb_backend = xyes; then
+  BACKEND_LIBSOCIALWEB='$(top_builddir)/backends/libsocialweb/.libs/libfolks-backend-libsocialweb.so'
+  AC_SUBST([BACKEND_LIBSOCIALWEB])
+fi
 
 if test x$enable_tracker_backend = xyes; then
   BACKEND_TRACKER='$(top_builddir)/backends/tracker/.libs/libfolks-backend-tracker.so'
@@ -222,7 +253,11 @@ if test x$enable_tracker_backend = xyes; then
 fi
 
 # All of the backend libraries in our tree; to be used by the tests
-BACKEND_UNINST_PATH='$(BACKEND_KF):$(BACKEND_TP):$(BACKEND_LIBSOCIALWEB)'
+BACKEND_UNINST_PATH='$(BACKEND_KF):$(BACKEND_TP)'
+if test x$have_libsocialweb_backend = xyes; then
+  LIBSOCIALWEB_BACKEND_UNINST_PATH='$(BACKEND_LIBSOCIALWEB)'
+  BACKEND_UNINST_PATH="$BACKEND_UNINST_PATH:$LIBSOCIALWEB_BACKEND_UNINST_PATH"
+fi
 if test x$enable_tracker_backend = xyes; then
   TRACKER_BACKEND_UNINST_PATH='$(BACKEND_TRACKER)'
   BACKEND_UNINST_PATH="$BACKEND_UNINST_PATH:$TRACKER_BACKEND_UNINST_PATH"
@@ -416,6 +451,7 @@ Configure summary:
         Import tool.................:  ${with_import_tool}
         Inspector tool..............:  ${with_inspect_tool}
         Tracker backend.............:  ${enable_tracker_backend}
+        Libsocialweb backend........:  ${have_libsocialweb_backend}
 
 
 "
