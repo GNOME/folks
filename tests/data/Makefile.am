@@ -5,15 +5,18 @@ EXTRA_DIST = \
 	$(NULL)
 
 clean-gconf:
-	rm -rf gconf.d gconf.path
+	rm -rf gconf.d
 
 clean-local: clean-gconf
 
 check: clean-gconf
 
+CLEANFILES = \
+	gconf.path \
+	$(NULL)
+
 GITIGNOREFILES = \
 	gconf.d \
-	gconf.path \
 	$(NULL)
 
 .PHONY: clean-gconf clean-local
