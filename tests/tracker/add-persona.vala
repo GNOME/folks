@@ -180,29 +180,31 @@ public class AddPersonaTests : Folks.TestCase
 
       Value? v1 = Value (typeof (string));
       v1.set_string (this._persona_fullname);
-      details.insert (this._pstore.detail_key (PersonaDetail.FULL_NAME),
-          (owned)v1);
+      details.insert (Folks.PersonaStore.detail_key (PersonaDetail.FULL_NAME),
+          (owned) v1);
 
       Value? v2 = Value (typeof (string));
       v2.set_string (this._persona_alias);
-      details.insert (this._pstore.detail_key (PersonaDetail.ALIAS), (owned)v2);
+      details.insert (Folks.PersonaStore.detail_key (PersonaDetail.ALIAS),
+          (owned) v2);
 
       Value? v3 = Value (typeof (bool));
       v3.set_boolean (true);
-      details.insert (this._pstore.detail_key (PersonaDetail.FAVOURITE),
+      details.insert (Folks.PersonaStore.detail_key (PersonaDetail.FAVOURITE),
           (owned) v3);
 
       Value? v4 = Value (typeof (StructuredName));
       StructuredName sname = new StructuredName (this._family_name,
           this._given_name, null, null, null);
       v4.set_object (sname);
-      details.insert (this._pstore.detail_key (PersonaDetail.STRUCTURED_NAME),
+      details.insert (
+          Folks.PersonaStore.detail_key (PersonaDetail.STRUCTURED_NAME),
           (owned) v4);
 
       Value? v5 = Value (typeof (File));
       File avatar = File.new_for_uri (this._file_uri);
       v5.set_object (avatar);
-      details.insert (this._pstore.detail_key (PersonaDetail.AVATAR),
+      details.insert (Folks.PersonaStore.detail_key (PersonaDetail.AVATAR),
           (owned) v5);
 
       Value? v6 = Value (typeof (DateTime));
@@ -210,12 +212,12 @@ public class AddPersonaTests : Folks.TestCase
       t.from_iso8601 (this._birthday);
       DateTime dobj = new  DateTime.from_timeval_utc (t);
       v6.set_boxed (dobj);
-      details.insert (this._pstore.detail_key (PersonaDetail.BIRTHDAY),
+      details.insert (Folks.PersonaStore.detail_key (PersonaDetail.BIRTHDAY),
           (owned) v6);
 
       Value? v7 = Value (typeof (Folks.Gender));
       v7.set_enum (Folks.Gender.MALE);
-      details.insert (this._pstore.detail_key (PersonaDetail.GENDER),
+      details.insert (Folks.PersonaStore.detail_key (PersonaDetail.GENDER),
           (owned) v7);
 
       Value? v8 = Value (typeof (GLib.List<FieldDetails>));
@@ -226,7 +228,8 @@ public class AddPersonaTests : Folks.TestCase
       var email_2 = new FieldDetails (this._email_2);
       emails.prepend ((owned) email_2);
       v8.set_pointer (emails);
-      details.insert (this._pstore.detail_key (PersonaDetail.EMAIL_ADDRESSES),
+      details.insert (
+          Folks.PersonaStore.detail_key (PersonaDetail.EMAIL_ADDRESSES),
           (owned) v8);
 
       Value? v9 = Value (typeof (HashTable<string, LinkedHashSet<string>>));
@@ -239,14 +242,15 @@ public class AddPersonaTests : Folks.TestCase
       proto2.add (this._im_addr_2);
       im_addrs.insert ("yahoo", proto2);
       v9.set_boxed (im_addrs);
-      details.insert (this._pstore.detail_key (PersonaDetail.IM_ADDRESSES), v9);
+      details.insert (
+          Folks.PersonaStore.detail_key (PersonaDetail.IM_ADDRESSES), v9);
 
       Value? v10 = Value (typeof (Gee.HashSet<Note>));
       Gee.HashSet<Note> notes = new Gee.HashSet<Note> ();
       Note n1 = new Note (this._note_1);
       notes.add (n1);
       v10.set_object (notes);
-      details.insert (this._pstore.detail_key (PersonaDetail.NOTES),
+      details.insert (Folks.PersonaStore.detail_key (PersonaDetail.NOTES),
           (owned) v10);
 
       Value? v11 = Value (typeof (GLib.List<FieldDetails>));
@@ -257,7 +261,8 @@ public class AddPersonaTests : Folks.TestCase
       var phone_2 = new FieldDetails (this._phone_2);
       phones.prepend ((owned) phone_2);
       v11.set_pointer (phones);
-      details.insert (this._pstore.detail_key (PersonaDetail.PHONE_NUMBERS),
+      details.insert (
+          Folks.PersonaStore.detail_key (PersonaDetail.PHONE_NUMBERS),
           (owned) v11);
 
       Value? v12 = Value (typeof (Gee.HashSet<Role>));
@@ -265,7 +270,7 @@ public class AddPersonaTests : Folks.TestCase
       Role r1 = new Role (this._title_1, this._organisation_1);
       roles.add (r1);
       v12.set_object (roles);
-      details.insert (this._pstore.detail_key (PersonaDetail.ROLES),
+      details.insert (Folks.PersonaStore.detail_key (PersonaDetail.ROLES),
           (owned) v12);
 
       Value? v13 = Value (typeof (GLib.List<PostalAddress>));
@@ -278,7 +283,8 @@ public class AddPersonaTests : Folks.TestCase
           this._postal_code, this._country, null, types, null);
       postal_addresses.prepend ((owned) postal_a);
       v13.set_pointer (postal_addresses);
-      details.insert (this._pstore.detail_key (PersonaDetail.POSTAL_ADDRESSES),
+      details.insert (
+          Folks.PersonaStore.detail_key (PersonaDetail.POSTAL_ADDRESSES),
           (owned) v13);
 
       Value? v14 = Value (typeof (GLib.List<FieldDetails>));
@@ -289,7 +295,8 @@ public class AddPersonaTests : Folks.TestCase
       var url_2 = new FieldDetails (this._url_2);
       urls.prepend ((owned) url_2);
       v14.set_pointer (urls);
-      details.insert (this._pstore.detail_key (PersonaDetail.URLS), (owned)v14);
+      details.insert (Folks.PersonaStore.detail_key (PersonaDetail.URLS),
+          (owned) v14);
 
       try
         {

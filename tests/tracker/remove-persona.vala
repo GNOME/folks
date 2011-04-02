@@ -128,7 +128,7 @@ public class RemovePersonaTests : Folks.TestCase
           (str_hash, str_equal);
       Value? v1 = Value (typeof (string));
       v1.set_string (this._persona_fullname);
-      details.insert (this._pstore.detail_key (PersonaDetail.FULL_NAME),
+      details.insert (Folks.PersonaStore.detail_key (PersonaDetail.FULL_NAME),
           (owned) v1);
 
       Value? v2 = Value (typeof (GLib.List<FieldDetails>));
@@ -139,7 +139,8 @@ public class RemovePersonaTests : Folks.TestCase
       var email_2 = new FieldDetails ("test-2@example.org");
       emails.prepend ((owned) email_2);
       v2.set_pointer (emails);
-      details.insert (this._pstore.detail_key (PersonaDetail.EMAIL_ADDRESSES),
+      details.insert (
+          Folks.PersonaStore.detail_key (PersonaDetail.EMAIL_ADDRESSES),
           (owned) v2);
 
       try

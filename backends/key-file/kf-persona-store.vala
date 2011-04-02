@@ -296,8 +296,8 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
   public override async Folks.Persona? add_persona_from_details (
       HashTable<string, Value?> details) throws Folks.PersonaStoreError
     {
-      unowned Value val =
-        details.lookup (this.detail_key (PersonaDetail.IM_ADDRESSES));
+      unowned Value val = details.lookup (Folks.PersonaStore.detail_key (
+            PersonaDetail.IM_ADDRESSES));
       unowned HashTable<string, LinkedHashSet<string>> im_addresses =
           (HashTable<string, LinkedHashSet<string>>) val.get_boxed ();
 

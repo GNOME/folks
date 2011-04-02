@@ -393,19 +393,21 @@ public class Trf.PersonaStore : Folks.PersonaStore
       foreach (var k in details.get_keys ())
         {
           Value? v = details.lookup (k);
-          if (k == this.detail_key (PersonaDetail.ALIAS))
+          if (k == Folks.PersonaStore.detail_key (PersonaDetail.ALIAS))
             {
               builder.subject ("_:p");
               builder.predicate (Trf.OntologyDefs.NCO_NICKNAME);
               builder.object_string (v.get_string ());
             }
-          else if (k == this.detail_key (PersonaDetail.FULL_NAME))
+          else if (k == Folks.PersonaStore.detail_key (
+                PersonaDetail.FULL_NAME))
             {
               builder.subject ("_:p");
               builder.predicate (Trf.OntologyDefs.NCO_FULLNAME);
               builder.object_string (v.get_string ());
             }
-          else if (k == this.detail_key (PersonaDetail.STRUCTURED_NAME))
+          else if (k == Folks.PersonaStore.detail_key (
+                PersonaDetail.STRUCTURED_NAME))
             {
               StructuredName sname = (StructuredName) v.get_object ();
               builder.subject ("_:p");
@@ -420,7 +422,8 @@ public class Trf.PersonaStore : Folks.PersonaStore
               builder.predicate (Trf.OntologyDefs.NCO_PREFIX);
               builder.object_string (sname.prefixes);
             }
-          else if (k == this.detail_key (PersonaDetail.FAVOURITE))
+          else if (k == Folks.PersonaStore.detail_key (
+                PersonaDetail.FAVOURITE))
             {
               if (v.get_boolean ())
                 {
@@ -429,7 +432,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
                   builder.object (Trf.OntologyDefs.NAO_FAVORITE);
                 }
             }
-          else if (k == this.detail_key (PersonaDetail.AVATAR))
+          else if (k == Folks.PersonaStore.detail_key (PersonaDetail.AVATAR))
             {
               var avatar = (File) v.get_object ();
               builder.subject ("_:photo");
@@ -441,7 +444,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
               builder.predicate (Trf.OntologyDefs.NCO_PHOTO);
               builder.object ("_:photo");
             }
-          else if (k == this.detail_key (PersonaDetail.BIRTHDAY))
+          else if (k == Folks.PersonaStore.detail_key (PersonaDetail.BIRTHDAY))
             {
               var birthday = (DateTime) v.get_boxed ();
               builder.subject ("_:p");
@@ -450,7 +453,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
               birthday.to_timeval (out tv);
               builder.object_string (tv.to_iso8601 ());
             }
-          else if (k == this.detail_key (PersonaDetail.GENDER))
+          else if (k == Folks.PersonaStore.detail_key (PersonaDetail.GENDER))
             {
               var gender = (Gender) v.get_enum ();
               if (gender != Gender.UNSPECIFIED)
@@ -463,7 +466,8 @@ public class Trf.PersonaStore : Folks.PersonaStore
                     builder.object (Trf.OntologyDefs.NCO_FEMALE);
                 }
             }
-          else if (k == this.detail_key (PersonaDetail.EMAIL_ADDRESSES))
+          else if (k == Folks.PersonaStore.detail_key (
+                PersonaDetail.EMAIL_ADDRESSES))
             {
               unowned GLib.List<FieldDetails> email_addresses =
                 (GLib.List<FieldDetails>) v.get_pointer ();
@@ -491,7 +495,8 @@ public class Trf.PersonaStore : Folks.PersonaStore
                   email_cnt++;
                 }
             }
-          else if (k == this.detail_key (PersonaDetail.IM_ADDRESSES))
+          else if (k == Folks.PersonaStore.detail_key (
+                PersonaDetail.IM_ADDRESSES))
             {
               var im_addresses =
                 (HashTable<string, LinkedHashSet<string>>) v.get_boxed ();
@@ -528,7 +533,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
                     }
                 }
             }
-          else if (k == this.detail_key (PersonaDetail.NOTES))
+          else if (k == Folks.PersonaStore.detail_key (PersonaDetail.NOTES))
             {
               var notes = (Gee.HashSet<Note>) v.get_object ();
               foreach (var n in notes)
@@ -538,7 +543,8 @@ public class Trf.PersonaStore : Folks.PersonaStore
                   builder.object_string (n.content);
                 }
             }
-          else if (k == this.detail_key (PersonaDetail.PHONE_NUMBERS))
+          else if (k == Folks.PersonaStore.detail_key (
+                PersonaDetail.PHONE_NUMBERS))
             {
               unowned GLib.List<FieldDetails> phone_numbers =
                 (GLib.List<FieldDetails>) v.get_pointer ();
@@ -567,7 +573,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
                   phone_cnt++;
                 }
             }
-          else if (k == this.detail_key (PersonaDetail.ROLES))
+          else if (k == Folks.PersonaStore.detail_key (PersonaDetail.ROLES))
             {
               var roles = (Gee.HashSet<Role>) v.get_object ();
 
@@ -591,7 +597,8 @@ public class Trf.PersonaStore : Folks.PersonaStore
                   roles_cnt++;
                 }
             }
-          else if (k == this.detail_key (PersonaDetail.POSTAL_ADDRESSES))
+          else if (k == Folks.PersonaStore.detail_key (
+                PersonaDetail.POSTAL_ADDRESSES))
             {
               unowned GLib.List<PostalAddress> postal_addresses =
                 (GLib.List<PostalAddress>) v.get_pointer ();
@@ -632,7 +639,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
                   postal_cnt++;
                 }
             }
-          else if (k == this.detail_key (PersonaDetail.URLS))
+          else if (k == Folks.PersonaStore.detail_key (PersonaDetail.URLS))
             {
               unowned GLib.List<FieldDetails> urls =
                 (GLib.List<FieldDetails>) v.get_pointer ();

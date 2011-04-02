@@ -173,9 +173,9 @@ public abstract class Folks.PersonaStore : Object
    *
    * @since UNRELEASED
    */
-  public unowned string detail_key (Folks.PersonaDetail detail)
+  public static unowned string detail_key (Folks.PersonaDetail detail)
     {
-      return this._PERSONA_DETAIL[detail];
+      return PersonaStore._PERSONA_DETAIL[detail];
     }
 
  /**
