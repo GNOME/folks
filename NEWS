@@ -21,6 +21,7 @@ Bugs fixed:
 * Bug 645989 — Ensure add_persona_from_details handles the basic attribute
 * Bug 645413 — Write support for Tracker
 * Bug 645441 — Mechanism to specify primary backend
+* Bug 638280 — Add a libsocialweb backend
 
 API changes:
 * Add equal () to StructuredName
