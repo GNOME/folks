@@ -18,11 +18,8 @@ DIST_SUBDIRS = \
     folks \
     key-file \
     telepathy \
+    tracker \
     $(NULL)
-
-if ENABLE_TRACKER
-DIST_SUBDIRS += tracker
-endif
 
 TESTS_ENVIRONMENT = \
     abs_top_builddir=@abs_top_builddir@ \

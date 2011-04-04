@@ -10,11 +10,8 @@ endif
 DIST_SUBDIRS = \
 	key-file \
 	telepathy \
+	tracker \
 	$(NULL)
-
-if ENABLE_TRACKER
-DIST_SUBDIRS += tracker
-endif
 
 noinst_LTLIBRARIES = libfolks-test.la
 

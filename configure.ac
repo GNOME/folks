@@ -351,6 +351,8 @@ AC_SUBST([ERROR_VALAFLAGS])
 AC_CONFIG_FILES([
     backends/telepathy/lib/folks-telepathy.pc
     backends/telepathy/lib/folks-telepathy-uninstalled.pc
+    backends/tracker/lib/folks-tracker.pc
+    backends/tracker/lib/folks-tracker-uninstalled.pc
     folks/folks.pc
     folks/folks-uninstalled.pc
     Makefile
@@ -358,6 +360,8 @@ AC_CONFIG_FILES([
     backends/key-file/Makefile
     backends/telepathy/Makefile
     backends/telepathy/lib/Makefile
+    backends/tracker/Makefile
+    backends/tracker/lib/Makefile
     folks/Makefile
     docs/Makefile
     po/Makefile.in
@@ -367,27 +371,18 @@ AC_CONFIG_FILES([
     tests/folks/Makefile
     tests/key-file/Makefile
     tests/telepathy/Makefile
+    tests/tracker/Makefile
     tests/lib/Makefile
     tests/lib/folks-test-uninstalled.pc
     tests/lib/key-file/Makefile
     tests/lib/telepathy/Makefile
+    tests/lib/tracker/Makefile
     tests/lib/telepathy/contactlist/Makefile
     tests/lib/telepathy/contactlist/session.conf
     tests/tools/Makefile
     tools/Makefile
     tools/inspect/Makefile
 ])
-
-if test x$enable_tracker_backend = xyes; then
-AC_CONFIG_FILES([
-    backends/tracker/lib/folks-tracker.pc
-    backends/tracker/lib/folks-tracker-uninstalled.pc
-    backends/tracker/Makefile
-    backends/tracker/lib/Makefile
-    tests/tracker/Makefile
-    tests/lib/tracker/Makefile
-])
-fi
 
 AC_OUTPUT
 

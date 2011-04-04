@@ -10,10 +10,7 @@ endif
 DIST_SUBDIRS = \
 	telepathy \
 	key-file \
+	tracker \
 	$(NULL)
-
-if ENABLE_TRACKER
-DIST_SUBDIRS += tracker
-endif
 
 -include $(top_srcdir)/git.mk
