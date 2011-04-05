@@ -90,6 +90,7 @@ noinst_PROGRAMS = \
 	set-birthday  \
 	set-gender  \
 	link-personas  \
+	duplicated-emails  \
 	$(NULL)
 
 backend_store_key_file=$(srcdir)/data/backend-tracker-only.ini
@@ -292,6 +293,10 @@ link_personas_SOURCES = \
 	link-personas.vala \
 	$(NULL)
 
+duplicated_emails_SOURCES = \
+	duplicated-emails.vala \
+	$(NULL)
+
 CLEANFILES = \
         *.pid \
         *.address \
@@ -347,6 +352,7 @@ MAINTAINERCLEANFILES = \
         set_birthday_vala.stamp \
         set_gender_vala.stamp \
         link_personas_vala.stamp \
+        duplicated_emails_vala.stamp \
         $(NULL)
 
 EXTRA_DIST = \
