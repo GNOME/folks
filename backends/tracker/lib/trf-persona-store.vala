@@ -475,12 +475,19 @@ public class Trf.PersonaStore : Folks.PersonaStore
               foreach (var e in email_addresses)
                 {
                   var email_affl = "_:email_affl%d".printf (email_cnt);
-                  var email = "_:email%d".printf (email_cnt);
-                  builder.subject (email);
-                  builder.predicate ("a");
-                  builder.object (Trf.OntologyDefs.NCO_EMAIL);
-                  builder.predicate (Trf.OntologyDefs.NCO_EMAIL_PROP);
-                  builder.object_string (e.value);
+                  var email = yield this._urn_from_property (
+                      Trf.OntologyDefs.NCO_EMAIL,
+                      Trf.OntologyDefs.NCO_EMAIL_PROP, e.value);
+
+                  if (email == "")
+                    {
+                      email = "_:email%d".printf (email_cnt);
+                      builder.subject (email);
+                      builder.predicate ("a");
+                      builder.object (Trf.OntologyDefs.NCO_EMAIL);
+                      builder.predicate (Trf.OntologyDefs.NCO_EMAIL_PROP);
+                      builder.object_string (e.value);
+                    }
 
                   builder.subject (email_affl);
                   builder.predicate ("a");
@@ -553,12 +560,19 @@ public class Trf.PersonaStore : Folks.PersonaStore
               foreach (var p in phone_numbers)
                 {
                   var phone_affl = "_:phone_affl%d".printf (phone_cnt);
-                  var phone = "_:phone%d".printf (phone_cnt);
-                  builder.subject (phone);
-                  builder.predicate ("a");
-                  builder.object (Trf.OntologyDefs.NCO_PHONE);
-                  builder.predicate (Trf.OntologyDefs.NCO_PHONE_PROP);
-                  builder.object_string (p.value);
+                  var phone = yield this._urn_from_property (
+                      Trf.OntologyDefs.NCO_PHONE,
+                      Trf.OntologyDefs.NCO_PHONE_PROP, p.value);
+
+                  if (phone == "")
+                      {
+                        phone = "_:phone%d".printf (phone_cnt);
+                        builder.subject (phone);
+                        builder.predicate ("a");
+                        builder.object (Trf.OntologyDefs.NCO_PHONE);
+                        builder.predicate (Trf.OntologyDefs.NCO_PHONE_PROP);
+                        builder.object_string (p.value);
+                      }
 
                   builder.subject (phone_affl);
                   builder.predicate ("a");
@@ -2218,5 +2232,26 @@ public class Trf.PersonaStore : Folks.PersonaStore
     {
       var id = ((Trf.Persona) persona).tracker_id ();
       return yield this._urn_from_tracker_id (id);
+    }
+
+  /**
+   * Helper method to figure out if a constrained property
+   * already exists.
+   */
+  private async string _urn_from_property (string class_name,
+      string property_name,
+      string property_value)
+    {
+      const string query_template = "SELECT " +
+        " fn:concat('<', ?o, '>') " +
+        "WHERE { " +
+        " ?o a %s ; " +
+        " %s ?prop_val . " +
+        "FILTER (?prop_val = '%s') " +
+        "}";
+
+      string query = query_template.printf (class_name,
+          property_name, property_value);
+      return yield this._single_value_query (query);
     }
 }

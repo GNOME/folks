@@ -22,6 +22,7 @@ Bugs fixed:
 * Bug 645413 — Write support for Tracker
 * Bug 645441 — Mechanism to specify primary backend
 * Bug 638280 — Add a libsocialweb backend
+* Deal with duplicated phones/e-mails in Tracker
 
 API changes:
 * Add equal () to StructuredName
