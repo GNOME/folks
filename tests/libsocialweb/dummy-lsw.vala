@@ -97,12 +97,13 @@ public class DummyLswTests : Folks.TestCase
       main_loop.run ();
       Source.remove (timer_id);
 
-      /* Ok, real test now */
-      debug ("Ok, real test now");
+      /* Test adding two contacts */
 
+      string view_path = "";
       mysocialnetwork.OpenViewCalled.connect((query, p, path) =>
         {
           debug ("mysocialnetwork.OpenViewCalled.connect");
+          view_path = path;
           mysocialnetwork.contact_views[path].StartCalled.connect ( (path) =>
             {
               debug ("OpenViewCalled.connect");
@@ -134,13 +135,21 @@ public class DummyLswTests : Folks.TestCase
         });
 
       var aggregator = new IndividualAggregator ();
-      aggregator.individuals_changed.connect ((added, removed, m, a, r) =>
+      Individual? i1 = null;
+      Individual? i2 = null;
+      var handler_id = aggregator.individuals_changed.connect (
+          (added, removed, m, a, r) =>
         {
           debug ("Aggregator got some data!");
+          assert (added.length () == 2);
+          assert (removed.length () == 0);
           foreach (Individual i in added)
             {
               string nickname = ((Folks.NameDetails) i).nickname;
-              debug ("nickname: %s", nickname);
+              if (nickname == "Gargantua")
+                i1 = i;
+              if (nickname == "Pantagruel")
+                i2 = i;
             }
           main_loop.quit ();
         });
@@ -152,6 +161,95 @@ public class DummyLswTests : Folks.TestCase
         });
       main_loop.run ();
       Source.remove (timer_id);
+      aggregator.disconnect (handler_id);
+      assert (i1 != null);
+      assert (i2 != null);
+
+      /* Test changing a contact */
+      Idle.add (() =>
+        {
+          string text = "([('mysocialnetwork', 'id01', %x, "
+              + "{'id': ['id01'], 'name': ['Rabelais']})],)";
+          Variant v = new Variant.parsed (text, 1300792581);
+          try
+            {
+              var conn = Bus.get_sync (BusType.SESSION);
+              conn.emit_signal (null, view_path,
+                  "com.meego.libsocialweb.ContactView",
+                  "ContactsChanged", v);
+            }
+          catch (GLib.IOError e)
+            {
+              assert_not_reached ();
+            }
+          catch (GLib.Error e)
+            {
+              assert_not_reached ();
+            }
+          return false;
+        });
+      handler_id = i1.notify["nickname"].connect (
+          () =>
+        {
+          debug ("Aggregator changed some data!");
+	  string nickname = ((Folks.NameDetails) i1).nickname;
+          assert (nickname == "Rabelais");
+          main_loop.quit ();
+        });
+
+      timer_id = Timeout.add_seconds (5, () =>
+        {
+          assert_not_reached ();
+        });
+      main_loop.run ();
+      Source.remove (timer_id);
+      i1.disconnect (handler_id);
+
+      /* Test deleting two contacts */
+      Idle.add (() =>
+        {
+          string text = "([('mysocialnetwork', 'id01'), "
+             + "('mysocialnetwork', 'id02')],)";
+          Variant v = new Variant.parsed (text);
+          try
+            {
+              var conn = Bus.get_sync (BusType.SESSION);
+              conn.emit_signal (null, view_path,
+                  "com.meego.libsocialweb.ContactView",
+                  "ContactsRemoved", v);
+            }
+          catch (GLib.IOError e)
+            {
+              assert_not_reached ();
+            }
+          catch (GLib.Error e)
+            {
+              assert_not_reached ();
+            }
+          return false;
+        });
+
+      handler_id = aggregator.individuals_changed.connect (
+          (added, removed, m, a, r) =>
+        {
+          debug ("Aggregator deleted some data!");
+          assert (added.length () == 0);
+          assert (removed.length () == 2);
+          foreach (Individual i in removed)
+            {
+              string nickname = ((Folks.NameDetails) i).nickname;
+              debug ("deleted nickname: %s", nickname);
+            }
+          main_loop.quit ();
+        });
+
+      timer_id = Timeout.add_seconds (5, () =>
+        {
+          assert_not_reached ();
+        });
+      main_loop.run ();
+      Source.remove (timer_id);
+      aggregator.disconnect (handler_id);
 
       this._lsw_backend.tear_down ();
     }

@@ -229,7 +229,12 @@ public class Swf.PersonaStore : Folks.PersonaStore
     {
       foreach (var contact in contacts)
         {
-          var persona = _personas.lookup(Persona.get_contact_id (contact));
+          if (this._service.get_name () != contact.service)
+            {
+              continue;
+            }
+          var iid = Swf.Persona._build_iid(contact.service, Persona.get_contact_id (contact));
+          var persona = _personas.lookup(iid);
           if (persona != null)
             persona.update (contact);
         }
@@ -240,7 +245,12 @@ public class Swf.PersonaStore : Folks.PersonaStore
       var removed_personas = new Queue<Persona> ();
       foreach (var contact in contacts)
         {
-          var persona = _personas.lookup(Persona.get_contact_id (contact));
+          if (this._service.get_name () != contact.service)
+            {
+              continue;
+            }
+          var iid = Swf.Persona._build_iid(contact.service, Persona.get_contact_id (contact));
+          var persona = _personas.lookup(iid);
           if (persona != null)
             {
               removed_personas.push_tail(persona);
