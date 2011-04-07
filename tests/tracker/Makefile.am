@@ -92,6 +92,7 @@ noinst_PROGRAMS = \
 	link-personas  \
 	duplicated-emails  \
 	duplicated-phones  \
+	link-personas-via-local-ids  \
 	$(NULL)
 
 backend_store_key_file=$(srcdir)/data/backend-tracker-only.ini
@@ -302,6 +303,10 @@ duplicated_phones_SOURCES = \
 	duplicated-phones.vala \
 	$(NULL)
 
+link_personas_via_local_ids_SOURCES = \
+	link-personas-via-local-ids.vala \
+	$(NULL)
+
 CLEANFILES = \
         *.pid \
         *.address \
@@ -359,6 +364,7 @@ MAINTAINERCLEANFILES = \
         link_personas_vala.stamp \
         duplicated_emails_vala.stamp \
         duplicated_phones_vala.stamp \
+        link_personas_via_local_ids_vala.stamp \
         $(NULL)
 
 EXTRA_DIST = \
