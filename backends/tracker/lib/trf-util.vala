@@ -112,6 +112,10 @@ public class Trf.OntologyDefs : Object
   public static const string NCO_BLOG = "nco:blogUrl";
   public static const string NAO_FAVORITE = "nao:predefined-tag-favorite";
   public static const string NAO_TAG = "nao:hasTag";
+  public static const string NAO_PROPERTY = "nao:Property";
+  public static const string NAO_HAS_PROPERTY = "nao:hasProperty";
+  public static const string NAO_PROPERTY_NAME = "nao:propertyName";
+  public static const string NAO_PROPERTY_VALUE = "nao:propertyValue";
   public static const string NCO_HAS_EMAIL = "nco:hasEmailAddress";
   public static const string NCO_EMAIL = "nco:EmailAddress";
   public static const string NCO_EMAIL_PROP = "nco:emailAddress";

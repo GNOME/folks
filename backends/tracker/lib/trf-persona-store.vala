@@ -49,7 +49,8 @@ internal enum Trf.Fields
   ROLES,
   NOTE,
   GENDER,
-  POSTAL_ADDRESS
+  POSTAL_ADDRESS,
+  LOCAL_IDS_PROPERTY
 }
 
 internal enum Trf.AfflInfoFields
@@ -265,6 +266,16 @@ public class Trf.PersonaStore : Folks.PersonaStore
     "'\\n') " +
     "WHERE { ?_contact nco:hasAffiliation " +
     "?affl . ?affl nco:hasPostalAddress ?postal }) " +
+
+    /* Linking between Trf.Personas */
+    "(SELECT " +
+    "GROUP_CONCAT " +
+    " (?prop_value,  " +
+    "',') " +
+    "WHERE { ?_contact nao:hasProperty ?prop . " +
+    " ?prop nao:propertyName ?prop_name . " +
+    " ?prop nao:propertyValue ?prop_value . " +
+    " FILTER (?prop_name = 'folks-linking-ids') } ) " +
 
     "{ ?_contact a nco:PersonContact . %s } " +
     "ORDER BY tracker:id(?_contact) ";
@@ -676,6 +687,23 @@ public class Trf.PersonaStore : Folks.PersonaStore
                   url_cnt++;
                 }
             }
+          else if (k == Folks.PersonaStore.detail_key (PersonaDetail.LOCAL_IDS))
+            {
+              var local_ids = (Gee.HashSet<string>) v.get_object ();
+              string ids = Trf.PersonaStore.serialize_local_ids (local_ids);
+
+              builder.subject ("_:folks_ids");
+              builder.predicate ("a");
+              builder.object (Trf.OntologyDefs.NAO_PROPERTY);
+              builder.predicate (Trf.OntologyDefs.NAO_PROPERTY_NAME);
+              builder.object_string ("folks-linking-ids");
+              builder.predicate (Trf.OntologyDefs.NAO_PROPERTY_VALUE);
+              builder.object_string (ids);
+
+              builder.subject ("_:p");
+              builder.predicate (Trf.OntologyDefs.NAO_HAS_PROPERTY);
+              builder.object ("_:folks_ids");
+            }
           else
             {
               throw new PersonaStoreError.INVALID_ARGUMENT (
@@ -708,6 +736,48 @@ public class Trf.PersonaStore : Folks.PersonaStore
         }
 
       return ret;
+    }
+
+ /**
+   * Transform HashSet<string> to "id1,id2,.."
+   *
+   * @since UNRELEASED
+   */
+  public  static string serialize_local_ids (Gee.HashSet<string> local_ids)
+    {
+      var str = "";
+
+      foreach (var id in local_ids)
+        {
+          if (str != "")
+            {
+              str += ",";
+            }
+          str += id;
+        }
+
+      return str;
+    }
+
+  /**
+   * Transform from id1,id2,.. to HashSet<string>
+   *
+   * @since UNRELEASED
+   */
+  public static Gee.HashSet<string> unserialize_local_ids (string local_ids)
+    {
+      Gee.HashSet<string> ids = new Gee.HashSet<string> ();
+
+      if (local_ids != "")
+        {
+          string[] ids_a = local_ids.split (",");
+          foreach (var id in ids_a)
+            {
+              ids.add (id);
+            }
+        }
+
+      return ids;
     }
 
   /**
@@ -1003,6 +1073,9 @@ public class Trf.PersonaStore : Folks.PersonaStore
          Trf.OntologyDefs.NCO_FEMALE);
       this._urn_prefix.set (Trf.OntologyDefs.NCO_URL_PREFIX + "nco#photo>",
          Trf.OntologyDefs.NCO_PHOTO);
+      this._urn_prefix.set (
+         Trf.OntologyDefs.NAO_URL_PREFIX + "nao#hasProperty>",
+         Trf.OntologyDefs.NAO_PROPERTY);
     }
 
   private void _graph_updated_cb (DBusConnection connection,
@@ -1364,6 +1437,16 @@ public class Trf.PersonaStore : Folks.PersonaStore
             }
           p._set_avatar (avatar_url);
         }
+      else if (e.pred_id == this._prefix_tracker_id.get
+          (Trf.OntologyDefs.NAO_PROPERTY))
+        {
+          string local_ids = "";
+          if (adding)
+            {
+              local_ids = yield this._get_local_ids (e.subject_id);
+            }
+          p._set_local_ids (local_ids);
+        }
     }
 
   private async string _get_property
@@ -1378,6 +1461,21 @@ public class Trf.PersonaStore : Folks.PersonaStore
 
       string query = query_template.printf (subject_type,
           property, subject_tracker_id);
+      return yield this._single_value_query (query);
+    }
+
+  private async string _get_local_ids (int subject_tracker_id)
+    {
+      const string query_t = "SELECT " +
+      " ?prop_value " +
+      "WHERE { " +
+      " ?p a " + Trf.OntologyDefs.NCO_PERSON + " ; " +
+        Trf.OntologyDefs.NAO_HAS_PROPERTY + " ?prop . " +
+      " ?prop " + Trf.OntologyDefs.NAO_PROPERTY_NAME + " ?prop_name . " +
+      " ?prop " + Trf.OntologyDefs.NAO_PROPERTY_VALUE + " ?prop_value . " +
+      " FILTER (tracker:id(?p) = %d && ?prop_name = 'folks-linking-ids' ) } ";
+
+      string query = query_t.printf(subject_tracker_id);
       return yield this._single_value_query (query);
     }
 
@@ -1557,6 +1655,8 @@ public class Trf.PersonaStore : Folks.PersonaStore
     {
       Gee.HashSet<string> ret = new Gee.HashSet<string> ();
 
+      debug ("[_multi_value_query] %s", query);
+
       try
         {
           Sparql.Cursor cursor = yield this._connection.query_async (query);
@@ -1608,6 +1708,33 @@ public class Trf.PersonaStore : Folks.PersonaStore
           persona.tracker_id ());
 
       yield this._tracker_update (query, "change_alias");
+    }
+
+  internal async void _set_local_ids (Trf.Persona persona,
+      Gee.HashSet<string> local_ids)
+    {
+      const string query_t = "DELETE " +
+      " { ?p " + Trf.OntologyDefs.NAO_HAS_PROPERTY + " ?prop } " +
+      "WHERE { " +
+      " ?p a " + Trf.OntologyDefs.NCO_PERSON + " ; " +
+        Trf.OntologyDefs.NAO_HAS_PROPERTY + " ?prop . " +
+      " ?prop " + Trf.OntologyDefs.NAO_PROPERTY_NAME + " ?prop_name . " +
+      " FILTER (tracker:id(?p) = %s && ?name = 'folks-linking-ids' ) } " +
+      "INSERT { " +
+      " _:prop a " + Trf.OntologyDefs.NAO_PROPERTY + " ; " +
+      Trf.OntologyDefs.NAO_PROPERTY_NAME + " 'folks-linking-ids' ; " +
+      Trf.OntologyDefs.NAO_PROPERTY_VALUE + " '%s' . " +
+      " ?p " + Trf.OntologyDefs.NAO_HAS_PROPERTY + " _:prop " +
+      "} " +
+      "WHERE { " +
+      " ?p a nco:PersonContact . " +
+      "FILTER (tracker:id(?p) = %s) } ";
+
+      string ids = Trf.PersonaStore.serialize_local_ids (local_ids);
+
+      string query = query_t.printf (persona.tracker_id (), ids,
+          persona.tracker_id ());
+      yield this._tracker_update (query, "_set_local_ids");
     }
 
   internal async void _set_is_favourite (Folks.Persona persona,

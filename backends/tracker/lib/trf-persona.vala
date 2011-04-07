@@ -37,6 +37,7 @@ public class Trf.Persona : Folks.Persona,
     FavouriteDetails,
     GenderDetails,
     ImDetails,
+    LocalIdDetails,
     NameDetails,
     NoteDetails,
     PhoneDetails,
@@ -47,7 +48,7 @@ public class Trf.Persona : Folks.Persona,
   private string _alias;
   private bool _is_favourite;
   private const string[] _linkable_properties =
-      {"im-addresses"};
+      {"im-addresses", "local-ids"};
   private GLib.List<FieldDetails> _phone_numbers;
   private GLib.List<FieldDetails> _email_addresses;
   private weak Sparql.Cursor _cursor;
@@ -303,6 +304,30 @@ public class Trf.Persona : Folks.Persona,
           }
       }
 
+  private HashSet<string> _local_ids = new HashSet<string> ();
+  /**
+   * IDs used to link {@link Trf.Persona}s.
+   */
+  public HashSet<string> local_ids
+    {
+      get
+        {
+          if (this._local_ids.contains (this.uid) == false)
+            {
+              this._local_ids.add (this.uid);
+            }
+          return this._local_ids;
+        }
+      set
+        {
+          if (value.contains (this.uid) == false)
+            {
+              value.add (this.uid);
+            }
+          ((Trf.PersonaStore) this.store)._set_local_ids (this, value);
+        }
+    }
+
   /**
    * Build a IID.
    *
@@ -383,6 +408,13 @@ public class Trf.Persona : Folks.Persona,
               foreach (string address in im_addresses)
                   callback (protocol + ":" + address);
             });
+        }
+      else if (prop_name == "local-ids")
+        {
+          foreach (var id in this._local_ids)
+            {
+              callback (id);
+            }
         }
       else
         {
@@ -482,6 +514,7 @@ public class Trf.Persona : Folks.Persona,
       this._update_note ();
       this._update_gender ();
       this._update_postal_addresses ();
+      this._update_local_ids ();
     }
 
   private void _update_postal_addresses ()
@@ -532,6 +565,19 @@ public class Trf.Persona : Folks.Persona,
 
       postal_addresses.reverse ();
       this._postal_addresses = (owned) postal_addresses;
+    }
+
+ private void _update_local_ids ()
+    {
+      string local_ids = this._cursor.get_string
+          (Trf.Fields.LOCAL_IDS_PROPERTY).dup ();
+
+     if (local_ids == null)
+        {
+          return;
+        }
+
+      this._set_local_ids (local_ids);
     }
 
   internal bool _add_postal_address (PostalAddress postal_address)
@@ -743,6 +789,13 @@ public class Trf.Persona : Folks.Persona,
         }
       this._avatar = _avatar;
       this.notify_property ("avatar");
+      return true;
+    }
+
+  internal bool _set_local_ids (string local_ids)
+    {
+      this._local_ids = Trf.PersonaStore.unserialize_local_ids (local_ids);
+      this.notify_property ("local-ids");
       return true;
     }
 
