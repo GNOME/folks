@@ -24,6 +24,7 @@ libfolks_la_SOURCES = \
 	group-details.vala \
 	web-service-details.vala \
 	im-details.vala \
+	local-id-details.vala \
 	name-details.vala \
 	note-details.vala \
 	phone-details.vala \
