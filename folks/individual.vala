@@ -71,6 +71,7 @@ public class Folks.Individual : Object,
     GenderDetails,
     GroupDetails,
     ImDetails,
+    LocalIdDetails,
     NameDetails,
     NoteDetails,
     PresenceDetails,
@@ -317,6 +318,20 @@ public class Folks.Individual : Object,
         }
     }
 
+  private HashSet<string> _local_ids;
+  /**
+   * {@inheritDoc}
+   */
+  public HashSet<string> local_ids
+    {
+      get { return this._local_ids; }
+      private set
+        {
+          this._local_ids = value;
+          this.notify_property ("local-ids");
+        }
+    }
+
   public DateTime birthday { get; set; }
 
   public string calendar_event_id { get; set; }
@@ -520,6 +535,11 @@ public class Folks.Individual : Object,
       this._update_notes ();
     }
 
+  private void _notify_local_ids_cb ()
+    {
+      this._update_local_ids ();
+    }
+
   /**
    * Add or remove the Individual from the specified group.
    *
@@ -668,6 +688,7 @@ public class Folks.Individual : Object,
       this._update_birthday ();
       this._update_notes ();
       this._update_postal_addresses ();
+      this._update_local_ids ();
     }
 
   private void _update_groups ()
@@ -987,6 +1008,9 @@ public class Folks.Individual : Object,
       persona.notify["notes"].connect (this._notify_notes_cb);
       persona.notify["postal-addresses"].connect
           (this._notify_postal_addresses_cb);
+      persona.notify["local-ids"].connect
+          (this._notify_local_ids_cb);
+
 
       if (persona is GroupDetails)
         {
@@ -1091,6 +1115,7 @@ public class Folks.Individual : Object,
       persona.notify["notes"].disconnect (this._notify_notes_cb);
       persona.notify["postal-addresses"].disconnect
           (this._notify_postal_addresses_cb);
+      persona.notify["local-ids"].disconnect (this._notify_local_ids_cb);
 
 
       if (persona is GroupDetails)
@@ -1257,6 +1282,26 @@ public class Folks.Individual : Object,
 
       this._roles = (owned) roles;
       this.notify_property ("roles");
+    }
+
+  private void _update_local_ids ()
+    {
+      HashSet<string> _local_ids = new HashSet<string> ();
+
+      foreach (var persona in this._persona_list)
+        {
+          var local_ids_details = persona as LocalIdDetails;
+          if (local_ids_details != null)
+            {
+              foreach (var id in local_ids_details.local_ids)
+                {
+                  _local_ids.add (id);
+                }
+            }
+        }
+
+      this._local_ids = (owned) _local_ids;
+      this.notify_property ("local-ids");
     }
 
   private void _update_postal_addresses ()
