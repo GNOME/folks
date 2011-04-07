@@ -912,6 +912,9 @@ public class Folks.IndividualAggregator : Object
       var web_service_addrs_set =
           new HashMap<string, LinkedHashSet<string>> (str_hash, str_equal);
 
+      /* List of local_ids */
+      var local_ids = new Gee.HashSet<string> ();
+
       foreach (var persona in personas)
         {
           if (persona is ImDetails)
@@ -952,6 +955,14 @@ public class Folks.IndividualAggregator : Object
                   address_set.add_all (addresses);
                 }
             }
+
+          if (persona is LocalIdDetails)
+            {
+              foreach (var id in ((LocalIdDetails) persona).local_ids)
+                {
+                  local_ids.add (id);
+                }
+            }
         }
 
       var details = new HashTable<string, Value?> (str_hash, str_equal);
@@ -971,6 +982,15 @@ public class Folks.IndividualAggregator : Object
           details.insert (PersonaStore.detail_key
               (PersonaDetail.WEB_SERVICE_ADDRESSES),
               web_service_addresses_value);
+        }
+
+      if (local_ids.size > 0)
+        {
+          var local_ids_value = Value (typeof (Gee.HashSet<string>));
+          local_ids_value.set_object (local_ids);
+          details.insert (
+              Folks.PersonaStore.detail_key (PersonaDetail.LOCAL_IDS),
+              local_ids_value);
         }
 
       yield this.add_persona_from_details (null,
