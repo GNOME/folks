@@ -4,6 +4,7 @@ Overview of changes from libfolks 0.4.0 to libfolks 0.5.0
 Major changes:
 * Add support to change primary (writeable) store either via
   GConf or an env variable (bug 645441).
+* Bumped Vala dependency to 0.12.0 for bug #646345
 
 Bugs fixed:
 * Bug 644968 - _update_phone_numbers() needs to create copies
@@ -23,6 +24,8 @@ Bugs fixed:
 * Bug 645441 — Mechanism to specify primary backend
 * Bug 638280 — Add a libsocialweb backend
 * Deal with duplicated phones/e-mails in Tracker
+* Bug 646944 — Fix libsocialweb updates and removals of contacts
+* Bug 644867 — add interface for linkable web service contact UIDs
 
 API changes:
 * Add equal () to StructuredName
