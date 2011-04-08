@@ -26,6 +26,7 @@ Bugs fixed:
 * Deal with duplicated phones/e-mails in Tracker
 * Bug 646944 — Fix libsocialweb updates and removals of contacts
 * Bug 644867 — add interface for linkable web service contact UIDs
+* Bug 647168 — print the "web-service-addresses" property correctly
 
 API changes:
 * Add equal () to StructuredName

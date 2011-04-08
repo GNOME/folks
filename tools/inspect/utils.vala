@@ -296,6 +296,39 @@ private class Folks.Inspect.Utils
           output_string += " }";
           return output_string;
         }
+      else if (prop_name == Folks.PersonaStore.detail_key
+          (PersonaDetail.WEB_SERVICE_ADDRESSES))
+        {
+          HashMap<string, LinkedHashSet<string>> web_service_addresses =
+              (HashMap<string, LinkedHashSet<string>>)
+              prop_value.get_object ();
+          output_string = "{ ";
+          bool first = true;
+
+          foreach (var entry in web_service_addresses.entries)
+            {
+              if (first == false)
+                output_string += ", ";
+              output_string += "'%s' : { ".printf ((string) entry.key);
+              first = false;
+
+              LinkedHashSet<string> addresses =
+                  (LinkedHashSet<string>) entry.value;
+              bool _first = true;
+              foreach (var a in addresses)
+                {
+                  if (_first == false)
+                    output_string += ", ";
+                  output_string += "'%s'".printf ((string) a);
+                  _first = false;
+                }
+
+              output_string += " }";
+            }
+
+          output_string += " }";
+          return output_string;
+        }
       else if (prop_name == "email-addresses" ||
                prop_name == "urls" ||
                prop_name == "phone-numbers")
