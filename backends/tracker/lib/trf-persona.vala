@@ -43,12 +43,13 @@ public class Trf.Persona : Folks.Persona,
     PhoneDetails,
     PostalAddressDetails,
     RoleDetails,
-    UrlDetails
+    UrlDetails,
+    WebServiceDetails
 {
   private string _alias;
   private bool _is_favourite;
   private const string[] _linkable_properties =
-      {"im-addresses", "local-ids"};
+      {"im-addresses", "local-ids", "web-service-addresses"};
   private GLib.List<FieldDetails> _phone_numbers;
   private GLib.List<FieldDetails> _email_addresses;
   private weak Sparql.Cursor _cursor;
@@ -328,6 +329,20 @@ public class Trf.Persona : Folks.Persona,
         }
     }
 
+  private HashMap<string, LinkedHashSet<string>> _web_service_addresses =
+      new HashMap<string, LinkedHashSet<string>> (str_hash, str_equal);
+  /**
+   * {@inheritDoc}
+   */
+  public HashMap<string, LinkedHashSet<string>> web_service_addresses
+    {
+      get { return this._web_service_addresses; }
+      set
+        {
+          ((Trf.PersonaStore) this.store)._set_web_service_addrs (this, value);
+        }
+    }
+
   /**
    * Build a IID.
    *
@@ -414,6 +429,18 @@ public class Trf.Persona : Folks.Persona,
           foreach (var id in this._local_ids)
             {
               callback (id);
+            }
+        }
+      else if (prop_name == "web-service-addresses")
+        {
+          foreach (var entry in this.web_service_addresses.entries)
+            {
+              unowned string web_service = (string) entry.key;
+              unowned LinkedHashSet<string> web_service_addresses =
+                  (LinkedHashSet<string>) entry.value;
+
+              foreach (string address in web_service_addresses)
+                  callback (web_service + ":" + address);
             }
         }
       else
@@ -796,6 +823,14 @@ public class Trf.Persona : Folks.Persona,
     {
       this._local_ids = Trf.PersonaStore.unserialize_local_ids (local_ids);
       this.notify_property ("local-ids");
+      return true;
+    }
+
+  internal bool _set_web_service_addrs (string ws_addrs)
+    {
+      this._web_service_addresses =
+        Trf.PersonaStore.unserialize_web_services (ws_addrs);
+      this.notify_property ("web-service-addresses");
       return true;
     }
 
