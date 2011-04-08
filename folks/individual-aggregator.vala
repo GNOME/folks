@@ -921,16 +921,14 @@ public class Folks.IndividualAggregator : Object
                   unowned string protocol = (string) k;
                   unowned LinkedHashSet<string> addresses =
                     (LinkedHashSet<string>) v;
-    
+
                   var address_set = protocols_addrs_set.lookup (protocol);
-    
                   if (address_set == null)
                     {
                       address_set = new LinkedHashSet<string> ();
-    
                       protocols_addrs_set.insert (protocol, address_set);
                     }
-    
+
                   address_set.add_all (addresses);
                 });
             }
@@ -943,35 +941,40 @@ public class Folks.IndividualAggregator : Object
                   unowned string web_service = (string) entry.key;
                   unowned LinkedHashSet<string> addresses =
                     (LinkedHashSet<string>) entry.value;
-    
+
                   var address_set = web_service_addrs_set.get (web_service);
-    
                   if (address_set == null)
                     {
                       address_set = new LinkedHashSet<string> ();
-    
                       web_service_addrs_set.set (web_service, address_set);
                     }
-    
+
                   address_set.add_all (addresses);
                 }
             }
         }
 
-      var im_addresses_value = Value (typeof (HashTable));
-      im_addresses_value.set_boxed (protocols_addrs_set);
-
-      var web_service_addresses_value = Value (typeof (HashMap));
-      web_service_addresses_value.set_object (web_service_addrs_set);
-
       var details = new HashTable<string, Value?> (str_hash, str_equal);
-      details.insert (PersonaStore.detail_key (PersonaDetail.IM_ADDRESSES),
-          im_addresses_value);
-      details.insert (PersonaStore.detail_key
-          (PersonaDetail.WEB_SERVICE_ADDRESSES), web_service_addresses_value);
 
-      yield this.add_persona_from_details (null, this._writeable_store,
-          details);
+      if (protocols_addrs_set.size () > 0)
+        {
+          var im_addresses_value = Value (typeof (HashTable));
+          im_addresses_value.set_boxed (protocols_addrs_set);
+          details.insert (PersonaStore.detail_key (PersonaDetail.IM_ADDRESSES),
+              im_addresses_value);
+        }
+
+      if (web_service_addrs_set.size > 0)
+        {
+          var web_service_addresses_value = Value (typeof (HashMap));
+          web_service_addresses_value.set_object (web_service_addrs_set);
+          details.insert (PersonaStore.detail_key
+              (PersonaDetail.WEB_SERVICE_ADDRESSES),
+              web_service_addresses_value);
+        }
+
+      yield this.add_persona_from_details (null,
+          this._writeable_store, details);
     }
 
   /**
