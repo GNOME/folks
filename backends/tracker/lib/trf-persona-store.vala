@@ -366,7 +366,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
    * - PersonaStore.detail_key (PersonaDetail.IM_ADDRESSES)
    * - PersonaStore.detail_key (PersonaDetail.ALIAS)
    * - PersonaStore.detail_key (PersonaDetail.FULL_NAME)
-   * - PersonaStore.detail_key (PersonaDetail.FAVOURITE)
+   * - PersonaStore.detail_key (PersonaDetail.IS_FAVOURITE)
    * - PersonaStore.detail_key (PersonaDetail.STRUCTURED_NAME)
    * - PersonaStore.detail_key (PersonaDetail.AVATAR)
    * - PersonaStore.detail_key (PersonaDetail.BIRTHDAY)
@@ -423,7 +423,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
               builder.object_string (sname.prefixes);
             }
           else if (k == Folks.PersonaStore.detail_key (
-                PersonaDetail.FAVOURITE))
+                PersonaDetail.IS_FAVOURITE))
             {
               if (v.get_boolean ())
                 {

@@ -109,20 +109,20 @@ public errordomain Folks.PersonaStoreError
 public enum Folks.PersonaDetail
 {
   ALIAS,
-  FULL_NAME,
-  FAVOURITE,
-  STRUCTURED_NAME,
   AVATAR,
   BIRTHDAY,
-  GENDER,
   EMAIL_ADDRESSES,
+  FULL_NAME,
+  GENDER,
   IM_ADDRESSES,
-  WEB_SERVICE_ADDRESSES,
+  IS_FAVOURITE,
   NOTES,
   PHONE_NUMBERS,
   POSTAL_ADDRESSES,
   ROLES,
-  URLS
+  STRUCTURED_NAME,
+  URLS,
+  WEB_SERVICE_ADDRESSES
 }
 
 /**
@@ -151,20 +151,20 @@ public abstract class Folks.PersonaStore : Object
    */
   private static const string _PERSONA_DETAIL[] = {
     "alias",
-    "full-name",
-    "is-favourite",
-    "structured-name",
     "avatar",
     "birthday",
-    "gender",
     "email-addresses",
+    "full-name",
+    "gender",
     "im-addresses",
-    "web-service-addresses",
+    "is-favourite",
     "notes",
     "phone-numbers",
     "postal-addresses",
     "roles",
-    "urls"
+    "structured-name",
+    "urls",
+    "web-service-addresses"
   };
 
   /**

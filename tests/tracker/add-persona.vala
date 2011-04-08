@@ -190,7 +190,8 @@ public class AddPersonaTests : Folks.TestCase
 
       Value? v3 = Value (typeof (bool));
       v3.set_boolean (true);
-      details.insert (Folks.PersonaStore.detail_key (PersonaDetail.FAVOURITE),
+      details.insert (
+          Folks.PersonaStore.detail_key (PersonaDetail.IS_FAVOURITE),
           (owned) v3);
 
       Value? v4 = Value (typeof (StructuredName));
