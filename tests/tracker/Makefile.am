@@ -96,6 +96,7 @@ noinst_PROGRAMS = \
 	match-im-addresses  \
 	match-email-addresses  \
 	match-known-emails  \
+	match-phone-number  \
 	$(NULL)
 
 backend_store_key_file=$(srcdir)/data/backend-tracker-only.ini
@@ -322,6 +323,11 @@ match_known_emails_SOURCES = \
 	match-known-emails.vala \
 	$(NULL)
 
+match_phone_number_SOURCES = \
+	match-phone-number.vala \
+	$(NULL)
+
+
 CLEANFILES = \
         *.pid \
         *.address \
@@ -383,6 +389,7 @@ MAINTAINERCLEANFILES = \
         match_im_addresses.stamp \
         match_email_addresses.stamp \
         match_known_emails.stamp \
+        match_phone_number.stamp \
         $(NULL)
 
 EXTRA_DIST = \
