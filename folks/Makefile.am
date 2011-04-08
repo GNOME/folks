@@ -39,6 +39,7 @@ libfolks_la_SOURCES = \
 	persona-store.vala \
 	types.vala \
 	debug.vala \
+	utils.vala \
 	$(NULL)
 
 libfolks_la_VALAFLAGS = \
