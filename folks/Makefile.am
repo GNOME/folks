@@ -40,6 +40,7 @@ libfolks_la_SOURCES = \
 	types.vala \
 	debug.vala \
 	utils.vala \
+	potential-match.vala \
 	$(NULL)
 
 libfolks_la_VALAFLAGS = \

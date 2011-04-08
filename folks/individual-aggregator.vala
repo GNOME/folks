@@ -225,6 +225,81 @@ public class Folks.IndividualAggregator : Object
         }
     }
 
+  /**
+   * Get all matches for a given {@link Individual}.
+   *
+   * @since UNRELEASED
+   */
+  public HashMap<Individual, MatchResult> get_potential_matches
+      (Individual matchee, MatchResult min_threshold = MatchResult.VERY_HIGH)
+    {
+      HashMap<Individual, MatchResult> matches =
+          new HashMap<Individual, MatchResult> ();
+      Folks.PotentialMatch matchObj = new Folks.PotentialMatch ();
+
+      foreach (var i in this.individuals.get_values ())
+        {
+          if (i.id == matchee.id)
+                continue;
+
+          var result = matchObj.potential_match (i, matchee);
+          if (result >= min_threshold)
+            {
+              matches.set (i, result);
+            }
+        }
+
+      return matches;
+    }
+
+  /**
+   * Get all combinations between all {@link Individual}s.
+   *
+   * @since UNRELEASED
+   */
+  public HashMap<Individual, HashMap<Individual, MatchResult>>
+      get_all_potential_matches
+        (MatchResult min_threshold = MatchResult.VERY_HIGH)
+    {
+      HashMap<Individual, HashMap<Individual, MatchResult>> matches =
+        new HashMap<Individual, HashMap<Individual, MatchResult>> ();
+      GLib.List<Individual> individuals = this.individuals.get_values ();
+      Folks.PotentialMatch matchObj = new Folks.PotentialMatch ();
+
+      for (unowned GLib.List<Individual> l = individuals;
+           l != null && l.next != null; l = l.next)
+        {
+          var a = l.data;
+          var matches_a = matches.get (a);
+          if (matches_a == null)
+            {
+              matches_a = new HashMap<Individual, MatchResult> ();
+              matches.set (a, matches_a);
+            }
+
+          for (unowned GLib.List<Individual> j=l.next; j != null; j = j.next)
+            {
+              var b = j.data;
+              var matches_b = matches.get (b);
+              if (matches_b == null)
+                {
+                  matches_b = new HashMap<Individual, MatchResult> ();
+                  matches.set (b, matches_b);
+                }
+
+              var result = matchObj.potential_match (a, b);
+
+              if (result >= min_threshold)
+                {
+                  matches_a.set (b, result);
+                  matches_b.set (b, result);
+                }
+            }
+        }
+
+      return matches;
+    }
+
   private async void _add_backend (Backend backend)
     {
       if (!this._backends.contains (backend))
