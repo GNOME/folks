@@ -75,7 +75,7 @@ AC_ARG_ENABLE(tracker-backend,
 AM_CONDITIONAL([ENABLE_TRACKER], [test "x$enable_tracker_backend" = "xyes"])
 
 # Automatically check the dependencies for the libsocialweb backend
-SW_CLIENT_REQUIRED=0.25.14
+SW_CLIENT_REQUIRED=0.25.15
 AC_ARG_ENABLE(libsocialweb-backend,
         AC_HELP_STRING([--enable-libsocialweb-backend=@<:@no/yes/auto@:>@],
                        [build the Libsocialweb backend (default: auto)]),
