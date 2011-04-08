@@ -268,7 +268,6 @@ public class LinkPersonasTests : Folks.TestCase
           /* Lets check if it contains all the linking properties */
           foreach (var proto in i.im_addresses.get_keys ())
             {
-              GLib.stdout.printf ("Got %s\n", proto);
               var addrs = i.im_addresses.lookup (proto);
               foreach (var a in addrs)
                 {
