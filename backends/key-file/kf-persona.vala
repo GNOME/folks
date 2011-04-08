@@ -30,7 +30,8 @@ using Folks.Backends.Kf;
  */
 public class Folks.Backends.Kf.Persona : Folks.Persona,
     AliasDetails,
-    ImDetails
+    ImDetails,
+    WebServiceDetails
 {
   private unowned GLib.KeyFile _key_file;
   /* FIXME: As described in the ImDetails interface, we have to use
