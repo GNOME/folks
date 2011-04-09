@@ -292,7 +292,7 @@ public class Folks.IndividualAggregator : Object
               if (result >= min_threshold)
                 {
                   matches_a.set (b, result);
-                  matches_b.set (b, result);
+                  matches_b.set (a, result);
                 }
             }
         }
