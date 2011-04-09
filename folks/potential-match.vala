@@ -134,7 +134,7 @@ public class Folks.PotentialMatch : Object
       switch (result)
         {
           case Folks.MatchResult.VERY_LOW:
-            match_level = "very unlikely";
+            match_level = "very low";
             break;
           case Folks.MatchResult.LOW:
             match_level = "low";
