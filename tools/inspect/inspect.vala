@@ -214,7 +214,6 @@ private abstract class Folks.Inspect.Command
 
   public abstract void run (string? command_string);
 
-  [CCode (array_length = false, array_null_terminated = true)]
   public virtual string[]? complete_subcommand (string subcommand)
     {
       /* Default implementation */

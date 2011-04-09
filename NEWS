@@ -29,6 +29,8 @@ Bugs fixed:
 * Bug 647168 — print the "web-service-addresses" property correctly
 * Bug 646831 — Setting an existing phone number or e-mail address on a
   Trf.Persona fails
+* Bug 647298 — folks-inspect gets SIGSEGV when trying to auto-complete
+  parameters
 
 API changes:
 * Add equal () to StructuredName
