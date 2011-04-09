@@ -128,7 +128,7 @@ public class Folks.PotentialMatch : Object
    *
    * @since UNRELEASED
    */
-  public string result_to_string (MatchResult result)
+  public static string result_to_string (MatchResult result)
     {
       string match_level = "";
       switch (result)
