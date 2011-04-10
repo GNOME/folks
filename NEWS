@@ -27,6 +27,8 @@ Bugs fixed:
 * Bug 646944 — Fix libsocialweb updates and removals of contacts
 * Bug 644867 — add interface for linkable web service contact UIDs
 * Bug 647168 — print the "web-service-addresses" property correctly
+* Bug 646831 — Setting an existing phone number or e-mail address on a
+  Trf.Persona fails
 
 API changes:
 * Add equal () to StructuredName
