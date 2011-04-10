@@ -99,6 +99,7 @@ noinst_PROGRAMS = \
 	match-phone-number  \
 	match-name  \
 	match-all  \
+	set-duplicate-email \
 	$(NULL)
 
 backend_store_key_file=$(srcdir)/data/backend-tracker-only.ini
@@ -337,6 +338,10 @@ match_all_SOURCES = \
 	match-all.vala \
 	$(NULL)
 
+set_duplicate_email_SOURCES = \
+	set-duplicate-email.vala \
+	$(NULL)
+
 CLEANFILES = \
         *.pid \
         *.address \
@@ -401,6 +406,7 @@ MAINTAINERCLEANFILES = \
         match_phone_number_vala.stamp \
         match_name_vala.stamp \
         match_all_vala.stamp \
+        set_duplicate_email_vala.stamp \
         $(NULL)
 
 EXTRA_DIST = \
