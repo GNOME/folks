@@ -40,12 +40,10 @@ AM_VALAFLAGS = \
 	--pkg libsocialweb-test \
 	$(NULL)
 
-# FIXME: temporarily disabled - see bgo#647200
-#	aggregation
-
 # in order from least to most complex
 noinst_PROGRAMS = \
 	dummy-lsw \
+	aggregation \
 	$(NULL)
 
 SESSION_CONF = $(top_builddir)/tests/lib/libsocialweb/session.conf
