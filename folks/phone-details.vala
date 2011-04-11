@@ -46,7 +46,6 @@ public interface Folks.PhoneDetails : Object
 
   /**
    * Normalise and compare two phone numbers.
-   * Based on: http://blog.barisione.org/2010-06/handling-phone-numbers/
    * @since UNRELEASED
    */
   public static bool numbers_equal (string number1, string number2)
@@ -56,7 +55,8 @@ public interface Folks.PhoneDetails : Object
       var n2 =
         PhoneDetails.drop_extension (PhoneDetails.normalise_number (number2));
 
-     if (n1.length >= 7 && n2.length >= 7)
+      /* Based on http://blog.barisione.org/2010-06/handling-phone-numbers/ */
+      if (n1.length >= 7 && n2.length >= 7)
         {
           var n1_reduced = n1.slice (-7, n1.length);
           var n2_reduced = n2.slice (-7, n2.length);
