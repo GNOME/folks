@@ -395,12 +395,12 @@ MAINTAINERCLEANFILES = \
         duplicated_emails_vala.stamp \
         duplicated_phones_vala.stamp \
         link_personas_via_local_ids_vala.stamp \
-        match_im_addresses.stamp \
-        match_email_addresses.stamp \
-        match_known_emails.stamp \
-        match_phone_number.stamp \
-        match_name.stamp \
-        match_all.stamp \
+        match_im_addresses_vala.stamp \
+        match_email_addresses_vala.stamp \
+        match_known_emails_vala.stamp \
+        match_phone_number_vala.stamp \
+        match_name_vala.stamp \
+        match_all_vala.stamp \
         $(NULL)
 
 EXTRA_DIST = \
