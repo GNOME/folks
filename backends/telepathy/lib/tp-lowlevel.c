@@ -644,6 +644,8 @@ iterate_on_channels (TpConnection *conn,
 
     if (callback)
       callback (channel, NULL, cb_obj);
+
+    g_object_unref (channel);
   }
 }
 

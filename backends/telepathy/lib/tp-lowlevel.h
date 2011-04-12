@@ -79,7 +79,7 @@ folks_tp_lowlevel_channel_group_change_membership (TpChannel *channel,
 
 /**
  * FolksTpLowlevelNewGroupChannelsCallback:
- * @channel: (allow-none): the new group #TpChannel
+ * @channel: (allow-none) (transfer none): the new group #TpChannel
  * @result: the #GAsyncResult to finish the async call with
  * @user_data: extra data to pass to the callback
  *
