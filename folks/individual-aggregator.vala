@@ -793,13 +793,13 @@ public class Folks.IndividualAggregator : Object
 
   private void _individual_removed_cb (Individual i, Individual? replacement)
     {
-      /* Only signal if the individual is still in this.individuals. This allows
-       * us to group removals together in, e.g., _personas_changed_cb(). */
-      if (this.individuals.lookup (i.id) == null)
-        return;
-
       if (this.user == i)
         this.user = null;
+
+      /* Only signal if the individual is still in this.individuals. This allows
+       * us to group removals together in, e.g., _personas_changed_cb(). */
+      if (this.individuals.lookup (i.id) != i)
+        return;
 
       var i_list = new GLib.List<Individual> ();
       i_list.append (i);
