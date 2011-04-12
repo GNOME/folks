@@ -88,7 +88,7 @@ public class Folks.IndividualAggregator : Object
    * - the GConf key set in _FOLKS_CONFIG_KEY (system set store)
    * - going with the `key-file` store as the fall-back option
    *
-   * @since UNRELEASED
+   * @since 0.5.0
    */
   public PersonaStore primary_store
     {
@@ -228,7 +228,7 @@ public class Folks.IndividualAggregator : Object
   /**
    * Get all matches for a given {@link Individual}.
    *
-   * @since UNRELEASED
+   * @since 0.5.0
    */
   public HashMap<Individual, MatchResult> get_potential_matches
       (Individual matchee, MatchResult min_threshold = MatchResult.VERY_HIGH)
@@ -255,7 +255,7 @@ public class Folks.IndividualAggregator : Object
   /**
    * Get all combinations between all {@link Individual}s.
    *
-   * @since UNRELEASED
+   * @since 0.5.0
    */
   public HashMap<Individual, HashMap<Individual, MatchResult>>
       get_all_potential_matches

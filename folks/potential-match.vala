@@ -39,7 +39,7 @@ public enum Folks.MatchResult
  * This class provides functionality to explore a potential match between
  * two individuals.
  *
- * @since UNRELEASED
+ * @since 0.5.0
  */
 public class Folks.PotentialMatch : Object
 {
@@ -65,7 +65,7 @@ public class Folks.PotentialMatch : Object
   /**
    * Whether two individuals are likely to be the same person.
    *
-   * @since UNRELEASED
+   * @since 0.5.0
    */
   public MatchResult potential_match (Individual a, Individual b)
     {
@@ -126,7 +126,7 @@ public class Folks.PotentialMatch : Object
   /**
    * Keep in sync with Folks.MatchResult.
    *
-   * @since UNRELEASED
+   * @since 0.5.0
    */
   public static string result_to_string (MatchResult result)
     {
@@ -156,7 +156,7 @@ public class Folks.PotentialMatch : Object
    * - taking in account family, given, prefix, suffix and additional names
    *   we give some points for each non-empty match
    *
-   * @since UNRELEASED
+   * @since 0.5.0
    */
   private void _name_similarity ()
     {
@@ -213,7 +213,7 @@ public class Folks.PotentialMatch : Object
   /**
    * Number of equal IM addresses between two individuals.
    *
-   * @since UNRELEASED
+   * @since 0.5.0
    */
   public void _inspect_im_addresses ()
     {
@@ -242,7 +242,7 @@ public class Folks.PotentialMatch : Object
   /**
    * Inspect email addresses.
    *
-   * @since UNRELEASED
+   * @since 0.5.0
    */
   private void _inspect_emails ()
     {

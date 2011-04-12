@@ -350,7 +350,7 @@ public class Trf.Persona : Folks.Persona,
    * @param tracker_id the tracker id belonging to nco:PersonContact
    * @return a valid IID
    *
-   * @since UNRELEASED
+   * @since 0.5.0
    */
   internal static string build_iid (string store_id, string tracker_id)
     {

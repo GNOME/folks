@@ -104,7 +104,7 @@ public errordomain Folks.PersonaStoreError
  * Definition of the available fields to be looked up with
  * {@link PersonaStore.detail_key}.
  *
- * @since UNRELEASED
+ * @since 0.5.0
  */
 public enum Folks.PersonaDetail
 {
@@ -148,7 +148,7 @@ public abstract class Folks.PersonaStore : Object
    *
    * Should be kept in sync with {@link Folks.PersonaDetail}.
    *
-   * @since UNRELEASED
+   * @since 0.5.0
    */
   private static const string _PERSONA_DETAIL[] = {
     "alias",
@@ -175,7 +175,7 @@ public abstract class Folks.PersonaStore : Object
    *
    * @param detail the {@link PersonaDetail} to lookup
    *
-   * @since UNRELEASED
+   * @since 0.5.0
    */
   public static unowned string detail_key (Folks.PersonaDetail detail)
     {

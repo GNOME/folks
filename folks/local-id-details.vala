@@ -26,7 +26,7 @@ using GLib;
  * to {@link Persona}s from backends with write support so
  * that they can be linked.
  *
- * @since UNRELEASED
+ * @since 0.5.0
  */
 public interface Folks.LocalIdDetails : Object
 {
@@ -34,7 +34,7 @@ public interface Folks.LocalIdDetails : Object
    * The IDs corresponding to contacts in a
    * backend that we fully trust.
    *
-   * @since UNRELEASED
+   * @since 0.5.0
    */
   public abstract HashSet<string> local_ids { get; set; }
 }

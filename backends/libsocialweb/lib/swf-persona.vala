@@ -126,7 +126,7 @@ public class Swf.Persona : Folks.Persona,
    * @param lsw_id the lsw id
    * @return the Facebook JID or null if it is not a Facebook contact
    *
-   * @since UNRELEASED
+   * @since 0.5.0
    */
   internal static string? _build_facebook_jid (string store_id, string lsw_id)
     {
@@ -147,7 +147,7 @@ public class Swf.Persona : Folks.Persona,
    * @param lsw_id the lsw id
    * @return a valid IID
    *
-   * @since UNRELEASED
+   * @since 0.5.0
    */
   internal static string _build_iid (string store_id, string lsw_id)
     {

@@ -24,7 +24,7 @@ using Gee;
  * web service addresses exposed by an object implementing
  * {@link PresenceDetails}.
  *
- * @since UNRELEASED
+ * @since 0.5.0
  */
 public interface Folks.WebServiceDetails : Object
 {
@@ -39,7 +39,7 @@ public interface Folks.WebServiceDetails : Object
    * Web service addresses are guaranteed to be unique per web service, but
    * not necessarily unique amongst all web services.
    *
-   * @since UNRELEASED
+   * @since 0.5.0
    */
   public abstract Gee.HashMap<string, LinkedHashSet<string>>
       web_service_addresses

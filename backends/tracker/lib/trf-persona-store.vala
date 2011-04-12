@@ -296,7 +296,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
    *
    * See {@link Folks.PersonaStore.can_add_personas}.
    *
-   * @since UNRELEASED
+   * @since 0.5.0
    */
   public override MaybeBool can_add_personas
     {
@@ -308,7 +308,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
    *
    * See {@link Folks.PersonaStore.can_alias_personas}.
    *
-   * @since UNRELEASED
+   * @since 0.5.0
    */
   public override MaybeBool can_alias_personas
     {
@@ -320,7 +320,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
    *
    * See {@link Folks.PersonaStore.can_group_personas}.
    *
-   * @since UNRELEASED
+   * @since 0.5.0
    */
   public override MaybeBool can_group_personas
     {
@@ -332,7 +332,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
    *
    * See {@link Folks.PersonaStore.can_remove_personas}.
    *
-   * @since UNRELEASED
+   * @since 0.5.0
    */
   public override MaybeBool can_remove_personas
     {
@@ -344,7 +344,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
    *
    * See {@link Folks.PersonaStore.is_prepared}.
    *
-   * @since UNRELEASED
+   * @since 0.5.0
    */
   public override bool is_prepared
     {
@@ -721,7 +721,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
  /**
    * Returns "service1:addr1,addr2;service2:addr3,.."
    *
-   * @since UNRELEASED
+   * @since 0.5.0
    */
    public static string serialize_web_services (HashMap<string,
       LinkedHashSet<string>> ws_obj)
@@ -758,7 +758,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
    * Transforms "service1:addr1,addr2;service2:addr3,.." to
    *   --->  HashMap<string, LinkedHashSet<string>>
    *
-   * @since UNRELEASED
+   * @since 0.5.0
    */
   public static HashMap<string, LinkedHashSet<string>> unserialize_web_services
       (string ws_addrs)
@@ -788,7 +788,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
  /**
    * Transform HashSet<string> to "id1,id2,.."
    *
-   * @since UNRELEASED
+   * @since 0.5.0
    */
   public  static string serialize_local_ids (Gee.HashSet<string> local_ids)
     {
@@ -809,7 +809,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
   /**
    * Transform from id1,id2,.. to HashSet<string>
    *
-   * @since UNRELEASED
+   * @since 0.5.0
    */
   public static Gee.HashSet<string> unserialize_local_ids (string local_ids)
     {

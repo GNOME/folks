@@ -170,7 +170,7 @@ public class Folks.StructuredName : Object
    * @return `true` if all the components are the same, `false`
    * otherwise.
    *
-   * @since UNRELEASED
+   * @since 0.5.0
    */
   public bool equal (StructuredName other)
     {
