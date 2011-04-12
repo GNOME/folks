@@ -40,6 +40,8 @@ API changes:
 * Add public primary_store to IndividualAggregator
 * Add LocalIdDetails interface for linking Personas based on local address book
   IDs (such as for the Tracker backend Personas)
+* Add WebServiceDetails interface for linking Personas based on web service
+  accounts (such as for the libsocialweb backend Personas)
 
 Overview of changes from libfolks 0.3.6 to libfolks 0.4.0
 =========================================================
