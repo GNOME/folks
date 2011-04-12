@@ -31,6 +31,7 @@ Bugs fixed:
   Trf.Persona fails
 * Bug 647298 — folks-inspect gets SIGSEGV when trying to auto-complete
   parameters
+* Bug 646948 — Support for potential matches
 
 API changes:
 * Add equal () to StructuredName
@@ -42,6 +43,9 @@ API changes:
   IDs (such as for the Tracker backend Personas)
 * Add WebServiceDetails interface for linking Personas based on web service
   accounts (such as for the libsocialweb backend Personas)
+* Add PotentialMatch class and IndividualAggregator.get_potential_matches() and
+  IndividualAggregator.get_all_potential_matches() to suggest Individuals that
+  may match the given Individual or all potential matches, respectively.
 
 Overview of changes from libfolks 0.3.6 to libfolks 0.4.0
 =========================================================
