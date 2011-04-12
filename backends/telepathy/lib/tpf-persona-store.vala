@@ -1109,6 +1109,23 @@ public class Tpf.PersonaStore : Folks.PersonaStore
           var c = (Channel) s;
           var name = c.get_identifier ();
 
+          var existing_channel = this._groups[name];
+          if (existing_channel != null)
+            {
+              /* Somehow, this group channel has already been set up. We have to
+               * hold a reference to the existing group while unsetting it in
+               * the group map so that unsetting it doesn't cause it to be
+               * destroyed. If that were to happen, channel_invalidated_cb()
+               * would remove it from the group map a second time, causing a
+               * double unref. */
+              existing_channel.ref ();
+              this._groups.unset (name);
+              existing_channel.unref ();
+            }
+
+          /* Drop all references before we set the new channel */
+          existing_channel = null;
+
           this._groups[name] = c;
           this._group_channels_unready.unset (name);
 
