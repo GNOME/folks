@@ -7,6 +7,11 @@
 
   <name xml:lang="en">Folks</name>
   <shortdesc xml:lang="en">People aggregation library</shortdesc>
+  <description>Folks is a contact aggregation library. It retrieves contacts
+  from various sources (including Telepathy IM accounts, libsocialweb web
+  service contacts, and local contact stores) and compiles them into
+  fully-fledged people objects. The ultimate goal is to provide the platform
+  with easy access to all of the user's contacts.</description>
   <homepage rdf:resource="http://telepathy.freedesktop.org/wiki/Folks" />
   <mailing-list rdf:resource="http://lists.freedesktop.org/mailman/listinfo/telepathy" />
 
