@@ -957,9 +957,7 @@ public class Trf.Persona : Folks.Persona,
 
       foreach (var p in this._phone_numbers)
         {
-          var current_tracker_id =
-              p.get_parameter_values ("tracker_id").nth_data (0);
-          if (tracker_id == current_tracker_id)
+          if (p.get_parameter_values ("tracker_id").contains (tracker_id))
             {
               found = true;
               break;
@@ -983,9 +981,7 @@ public class Trf.Persona : Folks.Persona,
 
       foreach (var p in this._phone_numbers)
         {
-          var current_tracker_id = p.get_parameter_values
-              ("tracker_id").nth_data(0);
-          if (tracker_id == current_tracker_id)
+          if (p.get_parameter_values ("tracker_id").contains (tracker_id))
             {
               this._phone_numbers.remove (p);
               found = true;
@@ -1007,9 +1003,7 @@ public class Trf.Persona : Folks.Persona,
 
       foreach (var e in this._email_addresses)
         {
-          var current_tracker_id =
-              e.get_parameter_values ("tracker_id").nth_data (0);
-          if (tracker_id == current_tracker_id)
+          if (e.get_parameter_values ("tracker_id").contains (tracker_id))
             {
               found = true;
               break;
@@ -1033,9 +1027,7 @@ public class Trf.Persona : Folks.Persona,
 
       foreach (var e in this._email_addresses)
         {
-          var current_tracker_id =
-              e.get_parameter_values ("tracker_id").nth_data(0);
-          if (tracker_id == current_tracker_id)
+          if (e.get_parameter_values ("tracker_id").contains (tracker_id))
             {
               this._email_addresses.remove (e);
               found = true;
@@ -1130,8 +1122,7 @@ public class Trf.Persona : Folks.Persona,
 
       foreach (var p in this._urls)
         {
-          var t_id = p.get_parameter_values ("tracker_id").nth_data (0);
-          if (tracker_id == t_id)
+          if (p.get_parameter_values ("tracker_id").contains (tracker_id))
             {
               found = true;
               break;
@@ -1156,9 +1147,7 @@ public class Trf.Persona : Folks.Persona,
 
       foreach (var u in this._urls)
         {
-          var current_tracker_id = u.get_parameter_values
-              ("tracker_id").nth_data(0);
-          if (tracker_id == current_tracker_id)
+          if (u.get_parameter_values ("tracker_id").contains (tracker_id))
             {
               this._urls.remove (u);
               found = true;

@@ -19,6 +19,7 @@
  */
 
 using GLib;
+using Gee;
 
 /**
  * Object representing a string value that can have some parameters
@@ -51,9 +52,9 @@ public class Folks.FieldDetails : Object
    * {@link Folks.FieldDetails.value}. The keys are the names of the
    * parameters, while the values are a list of strings.
    *
-   * @since 0.3.5
+   * @since UNRELEASED
    */
-  public HashTable<string, List<string>> parameters { get; set; }
+  public MultiMap<string, string> parameters { get; set; }
 
   /**
    * Create a new FieldDetails.
@@ -66,22 +67,26 @@ public class Folks.FieldDetails : Object
   public FieldDetails (string value)
     {
       this.value = value;
-      this.parameters = new HashTable<string, List<string>> (str_hash,
-          str_equal);
+      this.parameters = new HashMultiMap<string, string> ();
     }
 
   /**
    * Get the values for a parameter
    *
    * @param parameter_name the parameter name
-   * @return a list of values for `parameter_name` or `null` (i.e. an empty
-   * list) if there are no such parameters.
+   * @return a collection of values for `parameter_name` or `null` (i.e. no
+   * collection) if there are no such parameters.
    *
-   * @since 0.3.5
+   * @since UNRELEASED
    */
-  public unowned List<string> get_parameter_values (string parameter_name)
+  public Collection<string>? get_parameter_values (string parameter_name)
     {
-      return this.parameters.lookup (parameter_name);
+      if (this.parameters.contains (parameter_name) == false)
+        {
+          return null;
+        }
+
+      return this.parameters.get (parameter_name);
     }
 
   /**
@@ -97,18 +102,7 @@ public class Folks.FieldDetails : Object
    */
   public void add_parameter (string parameter_name, string parameter_value)
     {
-      unowned List<string> values = this.parameters.lookup (parameter_name);
-      if (values == null)
-        {
-          var new_values = new List<string> ();
-          new_values.append (parameter_value);
-          this.parameters.insert (parameter_name, (owned) new_values);
-        }
-      else
-        {
-          if (values.find_custom (parameter_value, strcmp) == null)
-            values.append (parameter_value);
-        }
+      this.parameters.set (parameter_name, parameter_value);
     }
 
   /**
@@ -124,9 +118,8 @@ public class Folks.FieldDetails : Object
    */
   public void set_parameter (string parameter_name, string parameter_value)
     {
-      var values = new List<string> ();
-      values.append (parameter_value);
-      this.parameters.insert (parameter_name, (owned) values);
+      this.parameters.remove_all (parameter_name);
+      this.parameters.set (parameter_name, parameter_value);
     }
 
   /**
@@ -136,17 +129,17 @@ public class Folks.FieldDetails : Object
    *
    * @param additional the parameters to add
    *
-   * @since 0.3.5
+   * @since UNRELEASED
    */
-  public void extend_parameters (HashTable<string, List<string>> additional)
+  public void extend_parameters (MultiMap<string, string> additional)
     {
-      var iter = HashTableIter<string, List<string>> (additional);
-      unowned string name;
-      unowned List<string> values;
-      while (iter.next (out name, out values))
+      foreach (var name in additional.get_keys ())
         {
-          foreach (unowned string val in values)
-            this.add_parameter (name, val);
+          var values = additional.get (name);
+          foreach (var val in values)
+            {
+              this.add_parameter (name, val);
+            }
         }
     }
 
@@ -159,6 +152,6 @@ public class Folks.FieldDetails : Object
    */
   public void remove_parameter_all (string parameter_name)
     {
-      this.parameters.remove (parameter_name);
+      this.parameters.remove_all (parameter_name);
     }
 }

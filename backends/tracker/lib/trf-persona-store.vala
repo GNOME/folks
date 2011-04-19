@@ -2331,18 +2331,14 @@ public class Trf.PersonaStore : Folks.PersonaStore
           else if (what == Trf.Attrib.URLS)
             {
               fd = (FieldDetails) p;
-              unowned GLib.List<string> type_p =
-                fd.get_parameter_values ("type");
-              if (type_p.length () > 0)
+              var type_p = fd.get_parameter_values ("type");
+              if (type_p.contains ("blog"))
                 {
-                  if (type_p.nth_data (0) == "blog")
-                    {
-                      related_connection = Trf.OntologyDefs.NCO_BLOG;
-                    }
-                  else if (type_p.nth_data (0) == "website")
-                    {
-                      related_connection = Trf.OntologyDefs.NCO_WEBSITE;
-                    }
+                  related_connection = Trf.OntologyDefs.NCO_BLOG;
+                }
+              else if (type_p.contains ("website"))
+                {
+                  related_connection = Trf.OntologyDefs.NCO_WEBSITE;
                 }
               attr = "'%s'".printf (fd.value);
             }

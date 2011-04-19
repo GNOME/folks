@@ -1,3 +1,4 @@
+using Gee;
 using Folks;
 
 public class FieldDetailsTests : Folks.TestCase
@@ -22,8 +23,7 @@ public class FieldDetailsTests : Folks.TestCase
       string[] values_1 = {"foo", "bar", "baz"};
       string[] values_2 = {"qux", "quxx"};
       FieldDetails details;
-      uint i;
-      unowned GLib.List<string> values;
+      Collection<string> values;
 
       details = new FieldDetails (param_name);
 
@@ -31,19 +31,16 @@ public class FieldDetailsTests : Folks.TestCase
         details.add_parameter (param_name, val);
 
       /* populate with first list of param values */
-      i = 0;
       values = details.get_parameter_values (param_name);
-      assert (values.length () == values_1.length);
-      for (unowned List<string> l = values; l != null; l = l.next, i++)
-        assert (l.data == values_1[i]);
+      assert (values.size == values_1.length);
+      foreach (var val in values_1)
+        assert (values.contains (val));
 
       /* replace the list of param values */
-      i = 0;
       details.set_parameter (param_name, values_2[0]);
       values = details.get_parameter_values (param_name);
-      assert (values.length () == 1);
-      for (unowned List<string> l = values; l != null; l = l.next, i++)
-          assert (l.data == values_2[i]);
+      assert (values.size == 1);
+      assert (values.contains (values_2[0]));
 
       /* clear the list */
       details.remove_parameter_all (param_name);
@@ -58,18 +55,17 @@ public class FieldDetailsTests : Folks.TestCase
       foreach (var val in values_2)
         values_2_list.append (val);
 
-      var param_table = new HashTable<string, unowned List<string>> (str_hash,
-          str_equal);
-      param_table.insert (param_name, values_2_list);
+      var param_table = new HashMultiMap<string, string> ();
+      foreach (var val in values_2_list)
+        param_table.set (param_name, val);
 
       details.extend_parameters (param_table);
       values = details.get_parameter_values (param_name);
-      assert (values.length () == (values_1.length + values_2.length));
-      i = 0;
-      for (; i < values_1.length; i++)
-        assert (values.nth_data (i) == values_1[i]);
-      for (; i < values_2.length; i++)
-        assert (values.nth_data (i) == values_2[i]);
+      assert (values.size == (values_1.length + values_2.length));
+      foreach (var val in values_1)
+        assert (values.contains (val));
+      foreach (var val in values_2)
+          assert (values.contains (val));
     }
 }
 

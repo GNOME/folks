@@ -134,17 +134,23 @@ public class SetURLsTests : Folks.TestCase
         {
           foreach (unowned FieldDetails p in i.urls)
             {
-              unowned GLib.List<string> type_p =
-                p.get_parameter_values ("type");
-              string type = type_p.nth_data (0);
+              var type_p = p.get_parameter_values ("type");
 
-              if (type == "blog" && p.value == this._urls.get ("blog"))
-                this._urls.unset ("blog");
-              else if (type == "website" &&
+              if (type_p.contains ("blog") &&
+                  p.value == this._urls.get ("blog"))
+                {
+                  this._urls.unset ("blog");
+                }
+              else if (type_p.contains ("website") &&
                   p.value == this._urls.get ("website"))
-                this._urls.unset ("website");
-              else if (type == "url" && p.value == this._urls.get ("url"))
-                this._urls.unset ("url");
+                {
+                  this._urls.unset ("website");
+                }
+              else if (type_p.contains ("url") &&
+                  p.value == this._urls.get ("url"))
+                {
+                  this._urls.unset ("url");
+                }
             }
         }
 
