@@ -236,22 +236,17 @@ private class Folks.Inspect.Utils
         }
       else if (prop_name == "groups")
         {
-          HashTable<string, bool> groups =
-              (HashTable<string, bool>) prop_value.get_boxed ();
+          Set<string> groups = (Set<string>) prop_value.get_object ();
           output_string = "{ ";
           bool first = true;
 
-          /* FIXME: This is rather inefficient */
-          groups.foreach ((k, v) =>
+          foreach (var group in groups)
             {
-              if ((bool) v == true)
-                {
-                  if (first == false)
-                    output_string += ", ";
-                  output_string += "'%s'".printf ((string) k);
-                  first = false;
-                }
-            });
+              if (first == false)
+                output_string += ", ";
+              output_string += "'%s'".printf (group);
+              first = false;
+            }
 
           output_string += " }";
           return output_string;

@@ -83,7 +83,7 @@ public class Folks.Individual : Object,
 {
   private bool _is_favourite;
   private string _alias;
-  private HashTable<string, bool> _groups;
+  private HashSet<string> _groups;
   /* These two data structures should store exactly the same set of Personas:
    * the Personas contained in this Individual. The HashSet is used for fast
    * lookups, whereas the List is used for iteration.
@@ -402,18 +402,18 @@ public class Folks.Individual : Object,
   /**
    * {@inheritDoc}
    */
-  public HashTable<string, bool> groups
+  public Set<string> groups
     {
       get { return this._groups; }
 
       set
         {
-          this._groups = value;
           this._persona_list.foreach ((p) =>
             {
               if (p is GroupDetails && ((Persona) p).store.is_writeable == true)
                 ((GroupDetails) p).groups = value;
             });
+          this._update_groups ();
         }
     }
 
@@ -691,11 +691,11 @@ public class Folks.Individual : Object,
 
   private void _update_groups ()
     {
-      var new_groups = new HashTable<string, bool> (str_hash, str_equal);
+      var new_groups = new HashSet<string> ();
 
       /* this._groups is null during initial construction */
       if (this._groups == null)
-        this._groups = new HashTable<string, bool> (str_hash, str_equal);
+        this._groups = new HashSet<string> ();
 
       /* FIXME: this should partition the personas by store (maybe we should
        * keep that mapping in general in this class), and execute
@@ -708,37 +708,34 @@ public class Folks.Individual : Object,
             {
               var persona = (GroupDetails) p;
 
-              persona.groups.foreach ((k, v) =>
+              foreach (var group in persona.groups)
                 {
-                  new_groups.insert ((string) k, true);
-                });
+                  new_groups.add (group);
+                }
             }
         });
 
-      new_groups.foreach ((k, v) =>
+      foreach (var group in new_groups)
         {
-          unowned string group = (string) k;
-          if (this._groups.lookup (group) != true)
+          if (!this._groups.contains (group))
             {
-              this._groups.insert (group, true);
-              this._groups.foreach ((k, v) =>
+              this._groups.add (group);
+              foreach (var g in this._groups)
                 {
-                  unowned string g = (string) k;
                   debug ("   %s", g);
-                });
+                }
 
               this.group_changed (group, true);
             }
-        });
+        }
 
       /* buffer the removals, so we don't remove while iterating */
       var removes = new GLib.List<string> ();
-      this._groups.foreach ((k, v) =>
+      foreach (var group in this._groups)
         {
-          unowned string group = (string) k;
-          if (new_groups.lookup (group) != true)
+          if (!new_groups.contains (group))
             removes.prepend (group);
-        });
+        }
 
       removes.foreach ((l) =>
         {

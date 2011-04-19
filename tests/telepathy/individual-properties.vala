@@ -66,9 +66,9 @@ public class IndividualPropertiesTests : Folks.TestCase
               assert (((PresenceDetails) i).is_online () == true);
 
               /* Check groups */
-              assert (i.groups.size () == 2);
-              assert (i.groups.lookup ("Montreal") == true);
-              assert (i.groups.lookup ("Francophones") == true);
+              assert (i.groups.size == 2);
+              assert (i.groups.contains ("Montreal") == true);
+              assert (i.groups.contains ("Francophones") == true);
             }
 
           assert (removed == null);

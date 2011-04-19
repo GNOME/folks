@@ -19,6 +19,7 @@
  */
 
 using GLib;
+using Gee;
 
 /**
  * Interface for {@link Persona}s or {@link Individual}s which can be grouped
@@ -117,8 +118,10 @@ public interface Folks.GroupDetails : Object
    *
    * Freeform group IDs are mapped to a boolean which is `true` if the
    * contact is a member of the group, and `false` otherwise.
+   *
+   * @since UNRELEASED
    */
-  public abstract HashTable<string, bool> groups { get; set; }
+  public abstract Set<string> groups { get; set; }
 
   /**
    * Add or remove the contact from the specified group.

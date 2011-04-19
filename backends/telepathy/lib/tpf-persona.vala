@@ -35,7 +35,7 @@ public class Tpf.Persona : Folks.Persona,
     ImDetails,
     PresenceDetails
 {
-  private HashTable<string, bool> _groups;
+  private HashSet<string> _groups;
   private bool _is_favourite;
   private string _alias;
   private HashMultiMap<string, string> _im_addresses;
@@ -146,25 +146,23 @@ public class Tpf.Persona : Folks.Persona,
    *
    * See {@link Folks.GroupDetails.groups}.
    */
-  public HashTable<string, bool> groups
+  public Set<string> groups
     {
       get { return this._groups; }
 
       set
         {
-          value.foreach ((k, v) =>
+          foreach (var group in value)
             {
-              unowned string group = (string) k;
-              if (this._groups.lookup (group) == false)
+              if (this._groups.contains (group) == false)
                 this._change_group (group, true);
-            });
+            }
 
-          this._groups.foreach ((k, v) =>
+          foreach (var group in this._groups)
             {
-              unowned string group = (string) k;
-              if (value.lookup (group) == false)
+              if (value.contains (group) == false)
                 this._change_group (group, true);
-            });
+            }
 
           /* Since we're only changing the members of this._groups, rather than
            * replacing it with a new instance, we have to manually emit the
@@ -193,9 +191,9 @@ public class Tpf.Persona : Folks.Persona,
 
       if (is_member)
         {
-          if (this._groups.lookup (group) != true)
+          if (!this._groups.contains (group))
             {
-              this._groups.insert (group, true);
+              this._groups.add (group);
               changed = true;
             }
         }
@@ -269,7 +267,7 @@ public class Tpf.Persona : Folks.Persona,
         }
 
       /* Groups */
-      this._groups = new HashTable<string, bool> (str_hash, str_equal);
+      this._groups = new HashSet<string> ();
 
       contact.notify["avatar-file"].connect ((s, p) =>
         {
