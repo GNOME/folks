@@ -280,14 +280,13 @@ public class AddPersonaTests : Folks.TestCase
           Folks.PersonaStore.detail_key (PersonaDetail.POSTAL_ADDRESSES),
           (owned) v13);
 
-      Value? v14 = Value (typeof (GLib.List<FieldDetails>));
-      GLib.List<FieldDetails> urls =
-        new GLib.List<FieldDetails> ();
+      Value? v14 = Value (typeof (Set<FieldDetails>));
+      var urls = new HashSet<FieldDetails> ();
       var url_1 = new FieldDetails (this._url_1);
-      urls.prepend ((owned) url_1);
+      urls.add (url_1);
       var url_2 = new FieldDetails (this._url_2);
-      urls.prepend ((owned) url_2);
-      v14.set_pointer (urls);
+      urls.add (url_2);
+      v14.set_object (urls);
       details.insert (Folks.PersonaStore.detail_key (PersonaDetail.URLS),
           (owned) v14);
 

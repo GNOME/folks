@@ -612,8 +612,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
             }
           else if (k == Folks.PersonaStore.detail_key (PersonaDetail.URLS))
             {
-              unowned GLib.List<FieldDetails> urls =
-                (GLib.List<FieldDetails>) v.get_pointer ();
+              Set<FieldDetails> urls = (Set<FieldDetails>) v.get_object ();
 
               int url_cnt = 0;
               foreach (var u in urls)
@@ -1970,9 +1969,9 @@ public class Trf.PersonaStore : Folks.PersonaStore
     }
 
   internal async void _set_urls (Folks.Persona persona,
-      owned GLib.List<FieldDetails> urls)
+      Set<FieldDetails> urls)
     {
-       yield this._set_attrib (persona, (owned) urls,
+       yield this._set_attrib_set (persona, urls,
           Trf.Attrib.URLS);
     }
 
@@ -2257,97 +2256,6 @@ public class Trf.PersonaStore : Folks.PersonaStore
    * - first we nuke old attribs
    * - we create new affls with the new attribs
    */
-  private async void _set_attrib (Folks.Persona persona,
-      owned GLib.List<Object> attribs, Trf.Attrib what)
-    {
-      var p_id = ((Trf.Persona) persona).tracker_id ();
-
-      unowned string? related_attrib = null;
-      unowned string? related_prop = null;
-      unowned string? related_prop_2 = null;
-      unowned string? related_connection = null;
-
-      switch (what)
-        {
-          case Trf.Attrib.URLS:
-            related_attrib = Trf.OntologyDefs.NCO_URL;
-            related_connection = Trf.OntologyDefs.NCO_URL;
-            break;
-          case Trf.Attrib.IM_ADDRESSES:
-            assert_not_reached ();
-          case Trf.Attrib.POSTAL_ADDRESSES:
-            assert_not_reached ();
-        }
-
-      var builder = new Tracker.Sparql.Builder.update ();
-      builder.insert_open (null);
-      int i = 0;
-      foreach (var p in attribs)
-        {
-          FieldDetails fd = null;
-
-          string affl = "_:a%d".printf (i);
-          string attr;
-
-          if (what == Trf.Attrib.URLS)
-            {
-              fd = (FieldDetails) p;
-              var type_p = fd.get_parameter_values ("type");
-              if (type_p.contains ("blog"))
-                {
-                  related_connection = Trf.OntologyDefs.NCO_BLOG;
-                }
-              else if (type_p.contains ("website"))
-                {
-                  related_connection = Trf.OntologyDefs.NCO_WEBSITE;
-                }
-              attr = "'%s'".printf (fd.value);
-            }
-          else
-            {
-              fd = (FieldDetails) p;
-              attr = "_:p%d".printf (i);
-              builder.subject (attr);
-              builder.predicate ("a");
-              builder.object (related_attrib);
-              builder.predicate (related_prop);
-              builder.object_string (fd.value);
-
-              if (what == Trf.Attrib.IM_ADDRESSES)
-                {
-                  builder.predicate (related_prop_2);
-                  var im_params = fd.get_parameter_values ("proto").to_array ();
-                  builder.object_string (im_params[0]);
-                }
-            }
-
-          builder.subject (affl);
-          builder.predicate ("a");
-          builder.object (Trf.OntologyDefs.NCO_AFFILIATION);
-          builder.predicate (related_connection);
-          builder.object (attr);
-          builder.subject ("?contact");
-          builder.predicate (Trf.OntologyDefs.NCO_HAS_AFFILIATION);
-          builder.object (affl);
-
-          i++;
-        }
-      builder.insert_close ();
-      builder.where_open ();
-      builder.subject ("?contact");
-      builder.predicate ("a");
-      builder.object (Trf.OntologyDefs.NCO_PERSON);
-      string filter = " FILTER(tracker:id(?contact) = %s) ".printf (p_id);
-      builder.append (filter);
-      builder.where_close ();
-
-      yield this._tracker_update (builder.result, "set_attrib");
-    }
-
-  /* NOTE:
-   * - first we nuke old attribs
-   * - we create new affls with the new attribs
-   */
   private async void _set_attrib_set (Folks.Persona persona,
       Set<Object> attribs, Trf.Attrib what)
     {
@@ -2375,7 +2283,9 @@ public class Trf.PersonaStore : Folks.PersonaStore
                 _REMOVE_POSTALS);
             break;
           case Trf.Attrib.URLS:
-            assert_not_reached ();
+            related_attrib = Trf.OntologyDefs.NCO_URL;
+            related_connection = Trf.OntologyDefs.NCO_URL;
+            break;
         }
 
       var builder = new Tracker.Sparql.Builder.update ();
@@ -2413,7 +2323,18 @@ public class Trf.PersonaStore : Folks.PersonaStore
                 builder.object_string (pa.region);
                 break;
               case Trf.Attrib.URLS:
-                assert_not_reached ();
+                fd = (FieldDetails) p;
+                var type_p = fd.get_parameter_values ("type");
+                if (type_p.contains ("blog"))
+                  {
+                    related_connection = Trf.OntologyDefs.NCO_BLOG;
+                  }
+                else if (type_p.contains ("website"))
+                  {
+                    related_connection = Trf.OntologyDefs.NCO_WEBSITE;
+                  }
+                attr = "'%s'".printf (fd.value);
+                break;
               case Trf.Attrib.IM_ADDRESSES:
               default:
                 fd = (FieldDetails) p;

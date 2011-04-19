@@ -108,19 +108,19 @@ public class SetURLsTests : Folks.TestCase
             {
               i.notify["urls"].connect (this._notify_urls_cb);
 
-              GLib.List<FieldDetails> urls = new GLib.List<FieldDetails> ();
+              var urls = new HashSet<FieldDetails> ();
               var p1 = new FieldDetails (this._urls.get ("blog"));
               p1.set_parameter ("type", "blog");
-              urls.prepend ((owned) p1);
+              urls.add (p1);
               var p2 = new FieldDetails (this._urls.get ("website"));
               p2.set_parameter ("type", "website");
-              urls.prepend ((owned) p2);
+              urls.add (p2);
               var p3 = new FieldDetails (this._urls.get ("url"));
               p3.set_parameter ("type", "url");
-              urls.prepend ((owned) p3);
+              urls.add (p3);
 
               Trf.Persona p = (Trf.Persona)i.personas.nth_data (0);
-              p.urls = (owned) urls;
+              p.urls = urls;
             }
         }
 
@@ -132,7 +132,7 @@ public class SetURLsTests : Folks.TestCase
       Folks.Individual i = (Folks.Individual) individual_obj;
       if (i.full_name == this._persona_fullname)
         {
-          foreach (unowned FieldDetails p in i.urls)
+          foreach (var p in i.urls)
             {
               var type_p = p.get_parameter_values ("type");
 

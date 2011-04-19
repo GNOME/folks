@@ -125,7 +125,7 @@ public class WebsiteUpdatesTests : Folks.TestCase
 
               this._individual_id = i.id;
 
-              foreach (unowned FieldDetails fd in i.urls)
+              foreach (var fd in i.urls)
                 {
                   var website = fd.value;
                   if (website == this._initial_website)
@@ -150,7 +150,7 @@ public class WebsiteUpdatesTests : Folks.TestCase
     {
       Folks.Individual i = (Folks.Individual) individual_obj;
 
-      foreach (unowned FieldDetails fd in i.urls)
+      foreach (var fd in i.urls)
         {
           var website = fd.value;
           if (website == this._updated_website)

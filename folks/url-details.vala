@@ -20,6 +20,7 @@
  */
 
 using GLib;
+using Gee;
 
 /**
  * Associates a list of URLs with a contact.
@@ -33,7 +34,7 @@ public interface Folks.UrlDetails : Object
    *
    * A list or websites associated to the contact.
    *
-   * @since 0.3.5
+   * @since UNRELEASED
    */
-  public abstract List<FieldDetails> urls { get; set; }
+  public abstract Set<FieldDetails> urls { get; set; }
 }

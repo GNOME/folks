@@ -256,19 +256,18 @@ public class Folks.Individual : Object,
         }
     }
 
-  private GLib.List<FieldDetails> _urls;
+  private HashSet<FieldDetails> _urls;
   /**
    * {@inheritDoc}
    */
-  public GLib.List<FieldDetails> urls
+  public Set<FieldDetails> urls
     {
       get { return this._urls; }
       private set
         {
-          this._urls = new GLib.List<FieldDetails> ();
-          foreach (unowned FieldDetails ps in value)
-            this._urls.prepend (ps);
-          this._urls.reverse ();
+          this._urls = new HashSet<FieldDetails> ();
+          foreach (var ps in value)
+            this._urls.add (ps);
         }
     }
 
@@ -1135,37 +1134,35 @@ public class Folks.Individual : Object,
   private void _update_urls ()
     {
       /* Populate the URLs as the union of our Personas' URLs.
-       * If the same URL exist multiple times we merge the parameters. */
-      var urls_set = new HashTable<unowned string, unowned FieldDetails> (
-          str_hash, str_equal);
-      var urls = new GLib.List<FieldDetails> ();
+       * If the same URL exists multiple times we merge the parameters. */
+      var urls_set = new HashMap<unowned string, unowned FieldDetails> ();
+      var urls = new HashSet<FieldDetails> ();
 
       foreach (var persona in this._persona_list)
         {
           var url_details = persona as UrlDetails;
           if (url_details != null)
             {
-              foreach (unowned FieldDetails ps in url_details.urls)
+              foreach (var ps in url_details.urls)
                 {
                   if (ps.value == null)
                     continue;
 
-                  var existing = urls_set.lookup (ps.value);
+                  var existing = urls_set.get (ps.value);
                   if (existing != null)
                     existing.extend_parameters (ps.parameters);
                   else
                     {
                       var new_ps = new FieldDetails (ps.value);
                       new_ps.extend_parameters (ps.parameters);
-                      urls_set.insert (ps.value, new_ps);
-                      urls.prepend ((owned) new_ps);
+                      urls_set.set (ps.value, new_ps);
+                      urls.add (new_ps);
                     }
                 }
             }
         }
-      /* Set the private member directly to avoid iterating this list again */
-      urls.reverse ();
-      this._urls = (owned) urls;
+      /* Set the private member directly to avoid iterating this set again */
+      this._urls = urls;
 
       this.notify_property ("urls");
     }

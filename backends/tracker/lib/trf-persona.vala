@@ -214,22 +214,17 @@ public class Trf.Persona : Folks.Persona,
         }
     }
 
-  private GLib.List<FieldDetails> _urls;
+  private HashSet<FieldDetails> _urls = new HashSet<FieldDetails> ();
+
   /**
    * {@inheritDoc}
    */
-  public GLib.List<FieldDetails> urls
+  public Set<FieldDetails> urls
     {
       get { return this._urls; }
       public set
         {
-          var _temp = new GLib.List<FieldDetails> ();
-          foreach (unowned FieldDetails e in value)
-              _temp.prepend (e);
-          _temp.reverse ();
-
-          ((Trf.PersonaStore) this.store)._set_urls (this,
-              (owned) _temp);
+          ((Trf.PersonaStore) this.store)._set_urls (this, value);
         }
     }
 
@@ -1050,7 +1045,7 @@ public class Trf.Persona : Folks.Persona,
 
   private void _update_urls ()
     {
-      var urls = new GLib.List<FieldDetails> ();
+      var urls = new HashSet<FieldDetails> ();
       var _urls_field = this._cursor.get_string (Trf.Fields.URLS).dup ();
 
       if (_urls_field == null)
@@ -1085,12 +1080,11 @@ public class Trf.Persona : Folks.Persona,
               var fd = new FieldDetails (u[i]);
               fd.set_parameter ("tracker_id", tracker_id);
               fd.set_parameter ("type", type);
-              urls.prepend ((owned) fd);
+              urls.add (fd);
             }
         }
 
-      urls.reverse ();
-      this._urls = (owned) urls;
+      this._urls = urls;
     }
 
   internal bool _add_url (string url, string tracker_id, string type = "")
@@ -1111,7 +1105,7 @@ public class Trf.Persona : Folks.Persona,
           var fd = new FieldDetails (url);
           fd.set_parameter ("tracker_id", tracker_id);
           fd.set_parameter ("type", type);
-          this._urls.prepend ((owned) fd);
+          this._urls.add (fd);
           this.notify_property ("urls");
         }
 

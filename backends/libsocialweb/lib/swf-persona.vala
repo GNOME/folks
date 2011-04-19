@@ -79,19 +79,19 @@ public class Swf.Persona : Folks.Persona,
    */
   public Gender gender { get; private set; }
 
-  private GLib.List<FieldDetails> _urls;
+  private HashSet<FieldDetails> _urls;
+
   /**
    * {@inheritDoc}
    */
-  public GLib.List<FieldDetails> urls
+  public Set<FieldDetails> urls
     {
       get { return this._urls; }
       private set
         {
-          this._urls = new GLib.List<FieldDetails> ();
-          foreach (unowned FieldDetails ps in value)
-            this._urls.prepend (ps);
-          this._urls.reverse ();
+          this._urls = new HashSet<FieldDetails> ();
+          foreach (var ps in value)
+            this._urls.add (ps);
         }
     }
 
@@ -251,16 +251,16 @@ public class Swf.Persona : Folks.Persona,
       if (this.full_name != full_name)
         this.full_name = full_name;
 
-      var urls = new GLib.List<FieldDetails> ();
+      var urls = new HashSet<FieldDetails> ();
 
       var website = contact.get_value ("url");
       if (website != null)
-        urls.prepend (new FieldDetails (website));
+        urls.add (new FieldDetails (website));
 
       /* https://bugzilla.gnome.org/show_bug.cgi?id=645139
       string[] websites = contact.get_value_all ("url");
       foreach (string website in websites)
-        urls.prepend (new FieldDetails (website));
+        urls.add (new FieldDetails (website));
       */
       if (this.urls != urls)
         this.urls = urls;

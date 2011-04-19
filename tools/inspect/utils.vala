@@ -321,32 +321,13 @@ private class Folks.Inspect.Utils
           return output_string;
         }
       else if (prop_name == "email-addresses" ||
-               prop_name == "phone-numbers")
+               prop_name == "phone-numbers" ||
+               prop_name == "urls")
         {
           output_string = "{ ";
           bool first = true;
           Set<FieldDetails> prop_list =
               (Set<FieldDetails>) prop_value.get_object ();
-
-          foreach (var p in prop_list)
-            {
-              if (!first)
-                {
-                  output_string += ", ";
-                }
-              output_string +=  p.value;
-              first = false;
-            }
-            output_string += " }";
-
-            return output_string;
-        }
-      else if (prop_name == "urls")
-        {
-          output_string = "{ ";
-          bool first = true;
-          unowned GLib.List<FieldDetails> prop_list =
-              (GLib.List<FieldDetails>) prop_value.get_pointer ();
 
           foreach (var p in prop_list)
             {
