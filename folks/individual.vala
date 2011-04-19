@@ -350,19 +350,18 @@ public class Folks.Individual : Object,
         }
     }
 
-  private GLib.List<PostalAddress> _postal_addresses;
+  private HashSet<PostalAddress> _postal_addresses;
   /**
    * {@inheritDoc}
    */
-  public GLib.List<PostalAddress> postal_addresses
+  public Set<PostalAddress> postal_addresses
     {
       get { return this._postal_addresses; }
       private set
         {
-          this._postal_addresses = new GLib.List<PostalAddress> ();
+          this._postal_addresses = new HashSet<PostalAddress> ();
           foreach (PostalAddress pa in value)
-            this._postal_addresses.prepend (pa);
-          this._postal_addresses.reverse ();
+            this._postal_addresses.add (pa);
         }
     }
 
@@ -1297,19 +1296,17 @@ public class Folks.Individual : Object,
 
   private void _update_postal_addresses ()
     {
-      this._postal_addresses = new GLib.List<PostalAddress> ();
+      this._postal_addresses = new HashSet<PostalAddress> ();
       /* FIXME: Detect duplicates somehow? */
       foreach (var persona in this._persona_list)
         {
           var address_details = persona as PostalAddressDetails;
           if (address_details != null)
             {
-              foreach (unowned PostalAddress pa in
-                  address_details.postal_addresses)
-                this._postal_addresses.append (pa);
+              foreach (var pa in address_details.postal_addresses)
+                this._postal_addresses.add (pa);
             }
         }
-      this._postal_addresses.reverse ();
 
       this.notify_property ("postal-addresses");
     }

@@ -583,8 +583,8 @@ public class Trf.PersonaStore : Folks.PersonaStore
           else if (k == Folks.PersonaStore.detail_key (
                 PersonaDetail.POSTAL_ADDRESSES))
             {
-              unowned GLib.List<PostalAddress> postal_addresses =
-                (GLib.List<PostalAddress>) v.get_pointer ();
+              Set<PostalAddress> postal_addresses =
+                (Set<PostalAddress>) v.get_object ();
 
               int postal_cnt = 0;
               foreach (var pa in postal_addresses)
@@ -2011,9 +2011,9 @@ public class Trf.PersonaStore : Folks.PersonaStore
     }
 
   internal async void _set_postal_addresses (Folks.Persona persona,
-      owned GLib.List<PostalAddress> postal_addresses)
+      Set<PostalAddress> postal_addresses)
     {
-       yield this._set_attrib (persona, (owned) postal_addresses,
+       yield this._set_attrib_set (persona, postal_addresses,
           Trf.Attrib.POSTAL_ADDRESSES);
     }
 
@@ -2288,11 +2288,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
           case Trf.Attrib.IM_ADDRESSES:
             assert_not_reached ();
           case Trf.Attrib.POSTAL_ADDRESSES:
-            related_attrib = Trf.OntologyDefs.NCO_POSTAL_ADDRESS;
-            related_connection = Trf.OntologyDefs.NCO_HAS_POSTAL_ADDRESS;
-            yield this._remove_attributes_from_persona (persona,
-                _REMOVE_POSTALS);
-            break;
+            assert_not_reached ();
         }
 
       var builder = new Tracker.Sparql.Builder.update ();
@@ -2301,34 +2297,11 @@ public class Trf.PersonaStore : Folks.PersonaStore
       foreach (var p in attribs)
         {
           FieldDetails fd = null;
-          PostalAddress pa = null;
 
           string affl = "_:a%d".printf (i);
           string attr;
 
-          if (what == Trf.Attrib.POSTAL_ADDRESSES)
-            {
-              pa = (PostalAddress) p;
-              attr = "_:p%d".printf (i);
-              builder.subject (attr);
-              builder.predicate ("a");
-              builder.object (related_attrib);
-              builder.predicate (Trf.OntologyDefs.NCO_POBOX);
-              builder.object_string (pa.po_box);
-              builder.predicate (Trf.OntologyDefs.NCO_LOCALITY);
-              builder.object_string (pa.locality);
-              builder.predicate (Trf.OntologyDefs.NCO_POSTALCODE);
-              builder.object_string (pa.postal_code);
-              builder.predicate (Trf.OntologyDefs.NCO_STREET_ADDRESS);
-              builder.object_string (pa.street);
-              builder.predicate (Trf.OntologyDefs.NCO_EXTENDED_ADDRESS);
-              builder.object_string (pa.extension);
-              builder.predicate (Trf.OntologyDefs.NCO_COUNTRY);
-              builder.object_string (pa.country);
-              builder.predicate (Trf.OntologyDefs.NCO_REGION);
-              builder.object_string (pa.region);
-            }
-          else if (what == Trf.Attrib.URLS)
+          if (what == Trf.Attrib.URLS)
             {
               fd = (FieldDetails) p;
               var type_p = fd.get_parameter_values ("type");
@@ -2408,6 +2381,11 @@ public class Trf.PersonaStore : Folks.PersonaStore
                 _REMOVE_IM_ADDRS);
             break;
           case Trf.Attrib.POSTAL_ADDRESSES:
+            related_attrib = Trf.OntologyDefs.NCO_POSTAL_ADDRESS;
+            related_connection = Trf.OntologyDefs.NCO_HAS_POSTAL_ADDRESS;
+            yield this._remove_attributes_from_persona (persona,
+                _REMOVE_POSTALS);
+            break;
           case Trf.Attrib.URLS:
             assert_not_reached ();
         }
@@ -2421,11 +2399,31 @@ public class Trf.PersonaStore : Folks.PersonaStore
           PostalAddress pa = null;
 
           string affl = "_:a%d".printf (i);
-          string attr;
+          string attr = null;
 
           switch (what)
             {
               case Trf.Attrib.POSTAL_ADDRESSES:
+                pa = (PostalAddress) p;
+                attr = "_:p%d".printf (i);
+                builder.subject (attr);
+                builder.predicate ("a");
+                builder.object (related_attrib);
+                builder.predicate (Trf.OntologyDefs.NCO_POBOX);
+                builder.object_string (pa.po_box);
+                builder.predicate (Trf.OntologyDefs.NCO_LOCALITY);
+                builder.object_string (pa.locality);
+                builder.predicate (Trf.OntologyDefs.NCO_POSTALCODE);
+                builder.object_string (pa.postal_code);
+                builder.predicate (Trf.OntologyDefs.NCO_STREET_ADDRESS);
+                builder.object_string (pa.street);
+                builder.predicate (Trf.OntologyDefs.NCO_EXTENDED_ADDRESS);
+                builder.object_string (pa.extension);
+                builder.predicate (Trf.OntologyDefs.NCO_COUNTRY);
+                builder.object_string (pa.country);
+                builder.predicate (Trf.OntologyDefs.NCO_REGION);
+                builder.object_string (pa.region);
+                break;
               case Trf.Attrib.URLS:
                 assert_not_reached ();
               case Trf.Attrib.IM_ADDRESSES:

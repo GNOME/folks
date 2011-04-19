@@ -120,8 +120,7 @@ public class SetPostalAddressesTests : Folks.TestCase
               i.notify["postal-addresses"].connect (this._notify_postal_cb);
 
               GLib.List<string> types =  new GLib.List<string> ();
-              GLib.List<PostalAddress> addresses =
-                new GLib.List<PostalAddress> ();
+              var addresses = new HashSet<PostalAddress> ();
               var pa = new Folks.PostalAddress (null, null, null, null, null,
                 null, null, null, types, null);
               pa.po_box = this._address.po_box;
@@ -132,7 +131,7 @@ public class SetPostalAddressesTests : Folks.TestCase
               pa.country = this._address.country;
               pa.region  = this._address.region;
 
-              addresses.prepend ((owned) pa);
+              addresses.add (pa);
 
               Trf.Persona p = (Trf.Persona)i.personas.nth_data (0);
               p.postal_addresses = (owned) addresses;
@@ -147,7 +146,7 @@ public class SetPostalAddressesTests : Folks.TestCase
       Folks.Individual i = (Folks.Individual) individual_obj;
       if (i.full_name == this._persona_fullname)
         {
-          foreach (unowned PostalAddress p in i.postal_addresses)
+          foreach (var p in i.postal_addresses)
             {
               /* we don't care if UIDs differ for this test */
               this._address.uid = p.uid;

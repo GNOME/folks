@@ -269,16 +269,15 @@ public class AddPersonaTests : Folks.TestCase
       details.insert (Folks.PersonaStore.detail_key (PersonaDetail.ROLES),
           (owned) v12);
 
-      Value? v13 = Value (typeof (GLib.List<PostalAddress>));
-      GLib.List<PostalAddress> postal_addresses =
-        new GLib.List<PostalAddress> ();
+      Value? v13 = Value (typeof (Set<PostalAddress>));
+      var postal_addresses = new HashSet<PostalAddress> ();
 
       GLib.List<string> types =  new GLib.List<string> ();
       PostalAddress postal_a = new PostalAddress (this._po_box,
           this._extension, this._street, this._locality, this._region,
           this._postal_code, this._country, null, types, null);
-      postal_addresses.prepend ((owned) postal_a);
-      v13.set_pointer (postal_addresses);
+      postal_addresses.add (postal_a);
+      v13.set_object (postal_addresses);
       details.insert (
           Folks.PersonaStore.detail_key (PersonaDetail.POSTAL_ADDRESSES),
           (owned) v13);

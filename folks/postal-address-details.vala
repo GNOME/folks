@@ -20,6 +20,7 @@
  */
 
 using GLib;
+using Gee;
 
 /**
  * Object representing a postal mail address.
@@ -127,19 +128,19 @@ public class Folks.PostalAddress : Object
       construct set { _address_format = (value != null ? value : ""); }
     }
 
-  private List<string> _types;
+  private GLib.List<string> _types;
   /**
    * The types of the address.
    *
    * The types of address, for instance an address can be a home or work
    * address.
    */
-  public List<string> types
+  public GLib.List<string> types
     {
       get { return this._types; }
       construct set
         {
-          this._types = new List<string> ();
+          this._types = new GLib.List<string> ();
           foreach (unowned string type in value)
             this._types.prepend (type);
           this._types.reverse ();
@@ -171,7 +172,7 @@ public class Folks.PostalAddress : Object
    */
   public PostalAddress (string? po_box, string? extension, string? street,
       string? locality, string? region, string? postal_code, string? country,
-      string? address_format, List<string> types, string? uid)
+      string? address_format, GLib.List<string> types, string? uid)
     {
       Object (po_box:         po_box,
               extension:      extension,
@@ -231,6 +232,8 @@ public interface Folks.PostalAddressDetails : Object
    * The postal addresses of the contact.
    *
    * A list of postal addresses associated to the contact.
+   *
+   * @since UNRELEASED
    */
-  public abstract List<PostalAddress> postal_addresses { get; set; }
+  public abstract Set<PostalAddress> postal_addresses { get; set; }
 }

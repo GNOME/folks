@@ -249,21 +249,18 @@ public class Trf.Persona : Folks.Persona,
         }
     }
 
-  private GLib.List<PostalAddress> _postal_addresses =
-      new GLib.List<PostalAddress> ();
+  private HashSet<PostalAddress> _postal_addresses =
+      new HashSet<PostalAddress> ();
+
   /**
    * {@inheritDoc}
    */
-  public GLib.List<PostalAddress> postal_addresses
+  public Set<PostalAddress> postal_addresses
     {
       get { return this._postal_addresses; }
       private set
         {
-          var _temp = new GLib.List<PostalAddress> ();
-          foreach (unowned PostalAddress e in value)
-              _temp.prepend (e);
-          ((Trf.PersonaStore) this.store)._set_postal_addresses (this,
-              (owned) _temp);
+          ((Trf.PersonaStore) this.store)._set_postal_addresses (this, value);
         }
     }
 
@@ -553,8 +550,7 @@ public class Trf.Persona : Folks.Persona,
           return;
         }
 
-      GLib.List<PostalAddress> postal_addresses =
-          new GLib.List<PostalAddress> ();
+      var postal_addresses = new HashSet<PostalAddress> ();
 
       string[] addresses_a = postal_field.split ("\n");
 
@@ -586,11 +582,10 @@ public class Trf.Persona : Folks.Persona,
               null, (owned) types,
               a_info[Trf.PostalAddressFields.TRACKER_ID]);
 
-          postal_addresses.prepend ((owned) pa);
+          postal_addresses.add (pa);
         }
 
-      postal_addresses.reverse ();
-      this._postal_addresses = (owned) postal_addresses;
+      this._postal_addresses = postal_addresses;
     }
 
  private void _update_local_ids ()
@@ -608,7 +603,7 @@ public class Trf.Persona : Folks.Persona,
 
   internal bool _add_postal_address (PostalAddress postal_address)
     {
-      foreach (unowned PostalAddress pa in this._postal_addresses)
+      foreach (var pa in this._postal_addresses)
         {
           if (postal_address.equal (pa))
             {
@@ -616,14 +611,14 @@ public class Trf.Persona : Folks.Persona,
             }
         }
 
-      this._postal_addresses.append (postal_address);
+      this._postal_addresses.add (postal_address);
       this.notify_property ("postal-addresses");
       return true;
     }
 
   internal bool _remove_postal_address (string tracker_id)
     {
-      foreach (unowned PostalAddress pa in this._postal_addresses)
+      foreach (var pa in this._postal_addresses)
         {
           if (pa.uid == tracker_id)
             {

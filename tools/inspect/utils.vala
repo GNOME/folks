@@ -354,8 +354,8 @@ private class Folks.Inspect.Utils
         {
           output_string = "{ ";
           bool first = true;
-          unowned GLib.List<PostalAddress> prop_list =
-              (GLib.List<PostalAddress>) prop_value.get_pointer ();
+          Set<PostalAddress> prop_list =
+              (Set<PostalAddress>) prop_value.get_object ();
 
           foreach (var p in prop_list)
             {
