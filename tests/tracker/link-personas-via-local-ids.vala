@@ -137,7 +137,7 @@ public class LinkPersonasViaLocalIDsTests : Folks.TestCase
           PersonaStore pstore = null;
           foreach (var backend in store.enabled_backends)
             {
-              pstore = backend.persona_stores.lookup ("tracker");
+              pstore = backend.persona_stores.get ("tracker");
               if (pstore != null)
                 break;
             }

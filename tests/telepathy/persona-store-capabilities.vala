@@ -54,7 +54,7 @@ public class PersonaStoreCapabilitiesTests : Folks.TestCase
                       this.set_up_persona_store (ps);
                     });
 
-                foreach (var store in b.persona_stores.get_values ())
+                foreach (var store in b.persona_stores.values)
                   {
                     this.set_up_persona_store (store);
                   }

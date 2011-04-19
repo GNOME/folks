@@ -312,11 +312,10 @@ public class Folks.IndividualAggregator : Object
               this._backend_persona_store_removed_cb);
 
           /* handle the stores that have already been signaled */
-          backend.persona_stores.foreach ((k, v) =>
+          foreach (var persona_store in backend.persona_stores.values)
               {
-                this._backend_persona_store_added_cb (backend,
-                  (PersonaStore) v);
-              });
+                this._backend_persona_store_added_cb (backend, persona_store);
+              }
         }
     }
 

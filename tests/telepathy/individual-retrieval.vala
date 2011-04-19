@@ -188,8 +188,7 @@ public class IndividualRetrievalTests : Folks.TestCase
                         }
                     });
 
-                  foreach (var store in
-                      backend.persona_stores.get_values ())
+                  foreach (var store in backend.persona_stores.values)
                     {
                       if (store is Tpf.PersonaStore && !adding_done)
                         {

@@ -16,6 +16,7 @@ API changes:
 * WebServiceDetails.web_service_addresses is now of type
   MultiMap<string, string>
 * Removed LinkedHashSet in favour of Gee.HashSet
+* Backend.persona_stores is now of type Map<string, PersonaStore>
 
 Overview of changes from libfolks 0.4.0 to libfolks 0.5.0
 =========================================================

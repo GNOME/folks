@@ -79,16 +79,15 @@ private class Folks.Inspect.Commands.Backends : Folks.Inspect.Command
 
           Utils.print_line ("Backend '%s' with %u persona stores " +
               "(type ID, ID ('display name')):",
-              backend.name, backend.persona_stores.size ());
+              backend.name, backend.persona_stores.size);
 
           /* List the backend's persona stores */
           Utils.indent ();
-          backend.persona_stores.foreach ((k, v) =>
+          foreach (var store in backend.persona_stores.values)
             {
-              PersonaStore store = (PersonaStore) v;
               Utils.print_line ("%s, %s ('%s')", store.type_id, store.id,
                   store.display_name);
-            });
+            }
           Utils.unindent ();
         }
     }

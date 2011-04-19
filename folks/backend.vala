@@ -19,6 +19,7 @@
  */
 
 using GLib;
+using Gee;
 
 /**
  * A single backend to libfolks, such as Telepathy or evolution-data-server.
@@ -59,8 +60,10 @@ public abstract class Folks.Backend : Object
    *
    * A backend may expose {@link Persona}s from multiple servers or accounts
    * (for example), so may have a {@link PersonaStore} for each.
+   *
+   * @since UNRELEASED
    */
-  public abstract HashTable<string, PersonaStore> persona_stores { get; }
+  public abstract Map<string, PersonaStore> persona_stores { get; }
 
   /**
    * Emitted when a {@link PersonaStore} is added to the backend.

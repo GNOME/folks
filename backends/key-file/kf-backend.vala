@@ -19,6 +19,7 @@
  */
 
 using GLib;
+using Gee;
 using Folks;
 using Folks.Backends.Kf;
 
@@ -34,7 +35,7 @@ extern const string BACKEND_NAME;
 public class Folks.Backends.Kf.Backend : Folks.Backend
 {
   private bool _is_prepared = false;
-  private HashTable<string, PersonaStore> _persona_stores;
+  private HashMap<string, PersonaStore> _persona_stores;
 
   /**
    * Whether this Backend has been prepared.
@@ -56,7 +57,7 @@ public class Folks.Backends.Kf.Backend : Folks.Backend
   /**
    * {@inheritDoc}
    */
-  public override HashTable<string, PersonaStore> persona_stores
+  public override Map<string, PersonaStore> persona_stores
     {
       get { return this._persona_stores; }
     }
@@ -66,8 +67,7 @@ public class Folks.Backends.Kf.Backend : Folks.Backend
    */
   public Backend ()
     {
-      this._persona_stores = new HashTable<string, PersonaStore> (str_hash,
-          str_equal);
+      this._persona_stores = new HashMap<string, PersonaStore> ();
     }
 
   /**
@@ -103,7 +103,7 @@ public class Folks.Backends.Kf.Backend : Folks.Backend
               /* Create the PersonaStore for the key file */
               PersonaStore store = new Kf.PersonaStore (file);
 
-              this._persona_stores.insert (store.id, store);
+              this._persona_stores.set (store.id, store);
               store.removed.connect (this._store_removed_cb);
               this.notify_property ("persona-stores");
 
@@ -120,12 +120,12 @@ public class Folks.Backends.Kf.Backend : Folks.Backend
    */
   public override async void unprepare () throws GLib.Error
     {
-      this._persona_stores.foreach ((k, v) =>
+      foreach (var persona_store in this._persona_stores.values)
         {
-          this.persona_store_removed ((PersonaStore) v);
-        });
+          this.persona_store_removed (persona_store);
+        }
 
-      this._persona_stores.remove_all ();
+      this._persona_stores.clear ();
       this.notify_property ("persona-stores");
 
       this._is_prepared = false;
@@ -135,7 +135,7 @@ public class Folks.Backends.Kf.Backend : Folks.Backend
   private void _store_removed_cb (Folks.PersonaStore store)
     {
       this.persona_store_removed (store);
-      this._persona_stores.remove (store.id);
+      this._persona_stores.unset (store.id);
       this.notify_property ("persona-stores");
     }
 }

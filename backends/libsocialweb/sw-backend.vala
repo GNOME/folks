@@ -20,6 +20,7 @@
  */
 
 using GLib;
+using Gee;
 using Folks;
 using Folks.Backends.Sw;
 using SocialWebClient;
@@ -34,8 +35,8 @@ public class Folks.Backends.Sw.Backend : Folks.Backend
 {
   private bool _is_prepared = false;
   private Client _client;
-  private HashTable<string, PersonaStore> _persona_stores =
-	  new HashTable<string, PersonaStore> (str_hash, str_equal);
+  private HashMap<string, PersonaStore> _persona_stores =
+      new HashMap<string, PersonaStore> ();
 
   /**
    * {@inheritDoc}
@@ -45,7 +46,7 @@ public class Folks.Backends.Sw.Backend : Folks.Backend
   /**
    * {@inheritDoc}
    */
-  public override HashTable<string, PersonaStore> persona_stores
+  public override Map<string, PersonaStore> persona_stores
     {
       get { return this._persona_stores; }
     }
@@ -95,16 +96,15 @@ public class Folks.Backends.Sw.Backend : Folks.Backend
    */
   public override async void unprepare () throws GLib.Error
     {
-      this._persona_stores.foreach ((k, v) =>
+      foreach (var store in this._persona_stores.values)
         {
-          PersonaStore store = v;
           store.removed.disconnect (this.store_removed_cb);
           this.persona_store_removed (store);
-        });
+        }
 
       this._client = null;
 
-      this._persona_stores.remove_all ();
+      this._persona_stores.clear ();
       this.notify_property ("persona-stores");
 
       this._is_prepared = false;
@@ -113,11 +113,11 @@ public class Folks.Backends.Sw.Backend : Folks.Backend
 
   private void add_service (string service_name)
     {
-      if (this._persona_stores.lookup (service_name) != null)
+      if (this._persona_stores.get (service_name) != null)
         return;
 
       var store = new Swf.PersonaStore (this._client.get_service (service_name));
-      this._persona_stores.insert (store.id, store);
+      this._persona_stores.set (store.id, store);
       store.removed.connect (this.store_removed_cb);
       this.persona_store_added (store);
     }
@@ -125,6 +125,6 @@ public class Folks.Backends.Sw.Backend : Folks.Backend
   private void store_removed_cb (Folks.PersonaStore store)
     {
       this.persona_store_removed (store);
-      this._persona_stores.remove (store.id);
+      this._persona_stores.unset (store.id);
     }
 }

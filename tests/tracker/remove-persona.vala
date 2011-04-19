@@ -92,7 +92,7 @@ public class RemovePersonaTests : Folks.TestCase
           this._pstore = null;
           foreach (var backend in store.enabled_backends)
             {
-              this._pstore = backend.persona_stores.lookup ("tracker");
+              this._pstore = backend.persona_stores.get ("tracker");
               if (this._pstore != null)
                 break;
             }

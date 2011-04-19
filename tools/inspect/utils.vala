@@ -525,7 +525,7 @@ private class Folks.Inspect.Utils
 
   /* FIXME: This can't be in the persona_store_id_completion_cb() function
    * because Vala doesn't allow static local variables. Erk. */
-  private static HashTableIter<string, PersonaStore>? persona_store_id_iter =
+  private static MapIterator<string, PersonaStore>? persona_store_id_iter =
       null;
 
   /* Complete a persona store's ID, starting with @word. */
@@ -547,13 +547,12 @@ private class Folks.Inspect.Utils
             {
               Backend backend = Utils.backend_name_iter.get ();
               Utils.persona_store_id_iter =
-                  HashTableIter<string, PersonaStore> (backend.persona_stores);
+                  backend.persona_stores.map_iterator ();
             }
 
-          string id;
-          PersonaStore store;
-          while (Utils.persona_store_id_iter.next (out id, out store) == true)
+          while (Utils.persona_store_id_iter.next () == true)
             {
+              var id = Utils.persona_store_id_iter.get_key ();
               if (id.has_prefix (word))
                 return id;
             }

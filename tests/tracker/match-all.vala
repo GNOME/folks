@@ -112,7 +112,7 @@ public class MatchAllTests : Folks.TestCase
           foreach (var backend in store.enabled_backends)
             {
               this._pstore =
-                (Trf.PersonaStore) backend.persona_stores.lookup ("tracker");
+                (Trf.PersonaStore) backend.persona_stores.get ("tracker");
               if (this._pstore != null)
                 break;
             }

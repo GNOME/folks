@@ -129,11 +129,10 @@ public class Folks.ImportTool : Object
         }
 
       /* Get its only PersonaStore */
-      PersonaStore destination_store;
-      GLib.List<unowned PersonaStore> stores =
-          kf_backend.persona_stores.get_values ();
+      PersonaStore destination_store = null;
+      var stores = kf_backend.persona_stores.values;
 
-      if (stores == null)
+      if (stores.size == 0)
         {
           stderr.printf (
               _("Couldn't load the 'key-file' backend's persona store.\n"));
@@ -142,7 +141,13 @@ public class Folks.ImportTool : Object
 
       try
         {
-          destination_store = stores.data;
+          /* Get the first persona store */
+          foreach (var persona_store in stores)
+            {
+              destination_store = persona_store;
+              break;
+            }
+
           yield destination_store.prepare ();
         }
       catch (GLib.Error e3)

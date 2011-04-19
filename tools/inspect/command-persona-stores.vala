@@ -63,13 +63,13 @@ private class Folks.Inspect.Commands.PersonaStores : Folks.Inspect.Command
 
           foreach (Backend backend in backends)
             {
-              HashTable<string, PersonaStore> stores = backend.persona_stores;
+              var stores = backend.persona_stores;
 
-              stores.foreach ((k, v) =>
+              foreach (var persona_store in stores.values)
                 {
-                  Utils.print_persona_store ((PersonaStore) v, false);
+                  Utils.print_persona_store (persona_store, false);
                   Utils.print_line ("");
-                });
+                }
             }
         }
       else
@@ -81,8 +81,8 @@ private class Folks.Inspect.Commands.PersonaStores : Folks.Inspect.Command
 
           foreach (Backend backend in backends)
             {
-              HashTable<string, PersonaStore> stores = backend.persona_stores;
-              store = stores.lookup (command_string);
+              var stores = backend.persona_stores;
+              store = stores.get (command_string);
               if (store != null)
                 break;
             }
