@@ -320,7 +320,8 @@ private class Folks.Inspect.Utils
           output_string += " }";
           return output_string;
         }
-      else if (prop_name == "email-addresses")
+      else if (prop_name == "email-addresses" ||
+               prop_name == "phone-numbers")
         {
           output_string = "{ ";
           bool first = true;
@@ -340,8 +341,7 @@ private class Folks.Inspect.Utils
 
             return output_string;
         }
-      else if (prop_name == "urls" ||
-               prop_name == "phone-numbers")
+      else if (prop_name == "urls")
         {
           output_string = "{ ";
           bool first = true;

@@ -272,19 +272,19 @@ public class Folks.Individual : Object,
         }
     }
 
-  private GLib.List<FieldDetails> _phone_numbers;
+  private HashSet<FieldDetails> _phone_numbers;
+
   /**
    * {@inheritDoc}
    */
-  public GLib.List<FieldDetails> phone_numbers
+  public Set<FieldDetails> phone_numbers
     {
       get { return this._phone_numbers; }
       private set
         {
-          this._phone_numbers = new GLib.List<FieldDetails> ();
-          foreach (unowned FieldDetails fd in value)
-            this._phone_numbers.prepend (fd);
-          this._phone_numbers.reverse ();
+          this._phone_numbers = new HashSet<FieldDetails> ();
+          foreach (var fd in value)
+            this._phone_numbers.add (fd);
         }
     }
 
@@ -1172,41 +1172,40 @@ public class Folks.Individual : Object,
 
   private void _update_phone_numbers ()
     {
-      /* Populate the phone numberss as the union of our Personas' numbers
-       * If the same number exist multiple times we merge the parameters. */
+      /* Populate the phone numbers as the union of our Personas' numbers
+       * If the same number exists multiple times we merge the parameters. */
       /* FIXME: We should handle phone numbers better, just string comparison
          doesn't work. */
       var phone_numbers_set =
-          new HashTable<unowned string, unowned FieldDetails> (
-              str_hash, str_equal);
-      var phones = new GLib.List<FieldDetails> ();
+          new HashMap<unowned string, unowned FieldDetails> ();
+      var phones = new HashSet<FieldDetails> ();
 
       foreach (var persona in this._persona_list)
         {
           var phone_details = persona as PhoneDetails;
           if (phone_details != null)
             {
-              foreach (unowned FieldDetails fd in phone_details.phone_numbers)
+              foreach (var fd in phone_details.phone_numbers)
                 {
                   if (fd.value == null)
                     continue;
 
-                  var existing = phone_numbers_set.lookup (fd.value);
+                  var existing = phone_numbers_set.get (fd.value);
                   if (existing != null)
                     existing.extend_parameters (fd.parameters);
                   else
                     {
                       var new_fd = new FieldDetails (fd.value);
                       new_fd.extend_parameters (fd.parameters);
-                      phone_numbers_set.insert (fd.value, new_fd);
-                      phones.prepend ((owned) new_fd);
+                      phone_numbers_set.set (fd.value, new_fd);
+                      phones.add (new_fd);
                     }
                 }
             }
         }
-      /* Set the private member directly to avoid iterating this list again */
-      phones.reverse ();
-      this._phone_numbers = (owned) phones;
+
+      /* Set the private member directly to avoid iterating this set again */
+      this._phone_numbers = phones;
 
       this.notify_property ("phone-numbers");
     }

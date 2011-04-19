@@ -20,6 +20,7 @@
  */
 
 using GLib;
+using Gee;
 
 /**
  * Interface for classes that can provide a phone number, such as
@@ -40,9 +41,9 @@ public interface Folks.PhoneDetails : Object
    *
    * A list of phone numbers associated to the contact.
    *
-   * @since 0.3.5
+   * @since UNRELEASED
    */
-  public abstract List<FieldDetails> phone_numbers { get; set; }
+  public abstract Set<FieldDetails> phone_numbers { get; set; }
 
   /**
    * Normalise and compare two phone numbers.

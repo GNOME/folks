@@ -113,13 +113,13 @@ public class SetPhonesTests : Folks.TestCase
             {
               i.notify["phone-numbers"].connect (this._notify_phones_cb);
 
-              GLib.List<FieldDetails> phones = new GLib.List<FieldDetails> ();
+              var phones = new HashSet<FieldDetails> ();
               var p1 = new FieldDetails (this._phone_1);
-              phones.prepend ((owned) p1);
+              phones.add (p1);
               var p2 = new FieldDetails (this._phone_2);
-              phones.prepend ((owned) p2);
+              phones.add (p2);
               Trf.Persona p = (Trf.Persona)i.personas.nth_data (0);
-              p.phone_numbers = (owned) phones;
+              p.phone_numbers = phones;
             }
         }
 
@@ -131,7 +131,7 @@ public class SetPhonesTests : Folks.TestCase
       Folks.Individual i = (Folks.Individual) individual_obj;
       if (i.full_name == this._persona_fullname)
         {
-          foreach (unowned FieldDetails p in i.phone_numbers)
+          foreach (var p in i.phone_numbers)
             {
               if (p.value == this._phone_1)
                 this._phone_1_found = true;

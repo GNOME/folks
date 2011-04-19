@@ -50,7 +50,7 @@ public class Trf.Persona : Folks.Persona,
   private bool _is_favourite;
   private const string[] _linkable_properties =
       {"im-addresses", "local-ids", "web-service-addresses"};
-  private GLib.List<FieldDetails> _phone_numbers;
+  private HashSet<FieldDetails> _phone_numbers = new HashSet<FieldDetails> ();
   private HashSet<FieldDetails> _email_addresses = new HashSet<FieldDetails> ();
   private weak Sparql.Cursor _cursor;
   private string _tracker_id;
@@ -77,20 +77,12 @@ public class Trf.Persona : Folks.Persona,
   /**
    * {@inheritDoc}
    */
-  public GLib.List<FieldDetails> phone_numbers
+  public Set<FieldDetails> phone_numbers
     {
       get { return this._phone_numbers; }
       public set
         {
-          var _temp = new GLib.List<FieldDetails> ();
-          foreach (unowned FieldDetails e in value)
-            {
-              _temp.prepend (e);
-            }
-          _temp.reverse ();
-
-          ((Trf.PersonaStore) this.store)._set_phones (this,
-              (owned) _temp);
+          ((Trf.PersonaStore) this.store)._set_phones (this, value);
         }
     }
 
@@ -919,7 +911,7 @@ public class Trf.Persona : Folks.Persona,
           return;
         }
 
-      var phones = new GLib.List<FieldDetails> ();
+      var phones = new HashSet<FieldDetails> ();
       string[] phones_a = phones_field.split ("\n");
 
       foreach (var p in phones_a)
@@ -930,12 +922,11 @@ public class Trf.Persona : Folks.Persona,
               var fd = new FieldDetails (p_info[Trf.PhoneFields.PHONE]);
               fd.set_parameter ("tracker_id",
                   p_info[Trf.PhoneFields.TRACKER_ID]);
-              phones.prepend ((owned) fd);
+              phones.add (fd);
             }
         }
 
-      phones.reverse ();
-      this._phone_numbers = (owned) phones;
+      this._phone_numbers = phones;
     }
 
   internal bool _add_phone (string phone, string tracker_id)
@@ -955,7 +946,7 @@ public class Trf.Persona : Folks.Persona,
         {
           var fd = new FieldDetails (phone);
           fd.set_parameter ("tracker_id", tracker_id);
-          this._phone_numbers.prepend ((owned) fd);
+          this._phone_numbers.add (fd);
           this.notify_property ("phone-numbers");
         }
 

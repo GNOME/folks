@@ -105,14 +105,12 @@ public class Folks.PotentialMatch : Object
 
   private void _inspect_phone_numbers ()
     {
-      unowned GLib.List<FieldDetails> list_a =
-        this._individual_a.phone_numbers;
-      unowned GLib.List<FieldDetails> list_b =
-        this._individual_b.phone_numbers;
+      var set_a = this._individual_a.phone_numbers;
+      var set_b = this._individual_b.phone_numbers;
 
-      foreach (var fd_a in list_a)
+      foreach (var fd_a in set_a)
         {
-          foreach (var fd_b in list_b)
+          foreach (var fd_b in set_b)
             {
               if (PhoneDetails.numbers_equal (fd_a.value, fd_b.value))
                 {

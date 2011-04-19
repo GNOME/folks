@@ -248,14 +248,13 @@ public class AddPersonaTests : Folks.TestCase
       details.insert (Folks.PersonaStore.detail_key (PersonaDetail.NOTES),
           (owned) v10);
 
-      Value? v11 = Value (typeof (GLib.List<FieldDetails>));
-      GLib.List<FieldDetails> phones =
-        new GLib.List<FieldDetails> ();
+      Value? v11 = Value (typeof (Set<FieldDetails>));
+      var phones = new HashSet<FieldDetails> ();
       var phone_1 = new FieldDetails (this._phone_1);
-      phones.prepend ((owned) phone_1);
+      phones.add (phone_1);
       var phone_2 = new FieldDetails (this._phone_2);
-      phones.prepend ((owned) phone_2);
-      v11.set_pointer (phones);
+      phones.add (phone_2);
+      v11.set_object (phones);
       details.insert (
           Folks.PersonaStore.detail_key (PersonaDetail.PHONE_NUMBERS),
           (owned) v11);
@@ -444,7 +443,7 @@ public class AddPersonaTests : Folks.TestCase
             }
         }
 
-      foreach (unowned FieldDetails e in i.phone_numbers)
+      foreach (var e in i.phone_numbers)
         {
           if (e.value == this._phone_1)
             {

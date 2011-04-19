@@ -166,12 +166,11 @@ public class DuplicatedPhonesTests : Folks.TestCase
       details1.insert (Folks.PersonaStore.detail_key (PersonaDetail.FULL_NAME),
           (owned) val);
 
-      val = Value (typeof (GLib.List<FieldDetails>));
-      GLib.List<FieldDetails> phones1 =
-        new GLib.List<FieldDetails> ();
+      val = Value (typeof (Set<FieldDetails>));
+      var phones1 = new HashSet<FieldDetails> ();
       var phone_1 = new FieldDetails (this._phone_1);
-      phones1.prepend ((owned) phone_1);
-      val.set_pointer (phones1);
+      phones1.add (phone_1);
+      val.set_object (phones1);
       details1.insert (
           Folks.PersonaStore.detail_key (PersonaDetail.PHONE_NUMBERS),
           (owned) val);
@@ -181,12 +180,11 @@ public class DuplicatedPhonesTests : Folks.TestCase
       details2.insert (Folks.PersonaStore.detail_key (PersonaDetail.FULL_NAME),
           (owned) val);
 
-      val = Value (typeof (GLib.List<FieldDetails>));
-      GLib.List<FieldDetails> phones2 =
-        new GLib.List<FieldDetails> ();
+      val = Value (typeof (Set<FieldDetails>));
+      var phones2 = new HashSet<FieldDetails> ();
       var phone_2 = new FieldDetails (this._phone_1);
-      phones2.prepend ((owned) phone_2);
-      val.set_pointer (phones2);
+      phones2.add (phone_2);
+      val.set_object (phones2);
       details2.insert (
           Folks.PersonaStore.detail_key (PersonaDetail.PHONE_NUMBERS),
           (owned) val);

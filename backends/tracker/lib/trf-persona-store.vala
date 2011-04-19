@@ -539,15 +539,9 @@ public class Trf.PersonaStore : Folks.PersonaStore
           else if (k == Folks.PersonaStore.detail_key (
                 PersonaDetail.PHONE_NUMBERS))
             {
-              unowned GLib.List<FieldDetails> phone_numbers =
-                (GLib.List<FieldDetails>) v.get_pointer ();
-              var phone_numbers_l = phone_numbers.copy ();
-              foreach (var phone_fd_obj in phone_numbers_l)
-                {
-                  phone_fd_obj.ref ();
-                }
-              yield this._build_update_query (builder,
-                  (owned) phone_numbers_l,
+              Set<FieldDetails> phone_numbers =
+                (Set<FieldDetails>) v.get_object ();
+              yield this._build_update_query_set (builder, phone_numbers,
                 "_:p", Trf.Attrib.PHONES);
             }
           else if (k == Folks.PersonaStore.detail_key (PersonaDetail.ROLES))
@@ -846,9 +840,9 @@ public class Trf.PersonaStore : Folks.PersonaStore
       return urn;
     }
 
-  private async void _build_update_query (
+  private async void _build_update_query_set (
       Tracker.Sparql.Builder builder,
-      owned GLib.List<FieldDetails> properties,
+      Set<FieldDetails> properties,
       string contact_var,
       Trf.Attrib attrib)
     {
@@ -867,57 +861,6 @@ public class Trf.PersonaStore : Folks.PersonaStore
             affl_var = "_:phone_affl%d";
             obj_var = "_:phone%d";
             break;
-          case Trf.Attrib.EMAILS:
-            assert_not_reached ();
-        }
-
-      int cnt = 0;
-      foreach (var p in properties)
-        {
-          var affl = affl_var.printf (cnt);
-          var obj = yield this._urn_from_property (
-              related_attrib, related_prop, p.value);
-
-          if (obj == "")
-            {
-              obj = obj_var.printf (cnt);
-              builder.subject (obj);
-              builder.predicate ("a");
-              builder.object (related_attrib);
-              builder.predicate (related_prop);
-              builder.object_string (p.value);
-            }
-
-          builder.subject (affl);
-          builder.predicate ("a");
-          builder.object (Trf.OntologyDefs.NCO_AFFILIATION);
-          builder.predicate (related_connection);
-          builder.object (obj);
-
-          builder.subject (contact_var);
-          builder.predicate (Trf.OntologyDefs.NCO_HAS_AFFILIATION);
-          builder.object (affl);
-
-          cnt++;
-        }
-    }
-
-  private async void _build_update_query_set (
-      Tracker.Sparql.Builder builder,
-      Set<FieldDetails> properties,
-      string contact_var,
-      Trf.Attrib attrib)
-    {
-      string? affl_var = null;
-      string? obj_var = null;
-      unowned string? related_attrib = null;
-      unowned string? related_prop = null;
-      unowned string? related_connection = null;
-
-      switch (attrib)
-        {
-          case Trf.Attrib.PHONES:
-            assert_not_reached ();
           case Trf.Attrib.EMAILS:
             related_attrib = Trf.OntologyDefs.NCO_EMAIL;
             related_prop = Trf.OntologyDefs.NCO_EMAIL_PROP;
@@ -1983,42 +1926,10 @@ public class Trf.PersonaStore : Folks.PersonaStore
     }
 
   internal async void _set_phones (Folks.Persona persona,
-      owned GLib.List<FieldDetails> phone_numbers)
+      Set<FieldDetails> phone_numbers)
     {
-      yield this._set_unique_attrib (persona, (owned) phone_numbers,
+      yield this._set_unique_attrib_set (persona, phone_numbers,
           Trf.Attrib.PHONES);
-    }
-
-  internal async void _set_unique_attrib (Folks.Persona persona,
-      owned GLib.List<FieldDetails> properties, Trf.Attrib attrib)
-    {
-      string? query_name = null;
-      var p_id = ((Trf.Persona) persona).tracker_id ();
-      var builder = new Tracker.Sparql.Builder.update ();
-      builder.insert_open (null);
-
-      switch (attrib)
-        {
-          case Trf.Attrib.PHONES:
-            query_name = "_set_phones";
-            yield this._remove_attributes_from_persona (persona,
-                _REMOVE_PHONES);
-            yield this._build_update_query (builder, (owned) properties,
-                "?contact", Trf.Attrib.PHONES);
-            break;
-          case Trf.Attrib.EMAILS:
-            assert_not_reached ();
-        }
-      builder.insert_close ();
-      builder.where_open ();
-      builder.subject ("?contact");
-      builder.predicate ("a");
-      builder.object (Trf.OntologyDefs.NCO_PERSON);
-      string filter = " FILTER(tracker:id(?contact) = %s) ".printf (p_id);
-      builder.append (filter);
-      builder.where_close ();
-
-      yield this._tracker_update (builder.result, query_name);
     }
 
   internal async void _set_unique_attrib_set (Folks.Persona persona,
@@ -2032,7 +1943,12 @@ public class Trf.PersonaStore : Folks.PersonaStore
       switch (attrib)
         {
           case Trf.Attrib.PHONES:
-            assert_not_reached ();
+            query_name = "_set_phones";
+            yield this._remove_attributes_from_persona (persona,
+                _REMOVE_PHONES);
+            yield this._build_update_query_set (builder, properties,
+                "?contact", Trf.Attrib.PHONES);
+            break;
           case Trf.Attrib.EMAILS:
             query_name = "_set_emailss";
             yield this._remove_attributes_from_persona (persona,

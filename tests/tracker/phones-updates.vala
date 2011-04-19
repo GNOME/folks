@@ -125,7 +125,7 @@ public class PhonesUpdatesTests : Folks.TestCase
 
               i.notify["phone-numbers"].connect (this._notify_phones_cb);
 
-              foreach (unowned FieldDetails fd in i.phone_numbers)
+              foreach (var fd in i.phone_numbers)
                 {
                   var phone = fd.value;
                   if (phone == this._phone_1)
@@ -142,7 +142,7 @@ public class PhonesUpdatesTests : Folks.TestCase
   private void _notify_phones_cb (Object individual_obj, ParamSpec ps)
     {
       Folks.Individual i = (Folks.Individual) individual_obj;
-      foreach (unowned FieldDetails fd in i.phone_numbers)
+      foreach (var fd in i.phone_numbers)
         {
           var phone = fd.value;
           if (phone == this._phone_1)

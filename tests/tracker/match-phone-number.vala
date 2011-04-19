@@ -173,11 +173,11 @@ public class MatchPhoneNumberTests : Folks.TestCase
       details1.insert (Folks.PersonaStore.detail_key (PersonaDetail.FULL_NAME),
           (owned) val);
 
-      val = Value (typeof (GLib.List<FieldDetails>));
-      var phone_numbers1 = new GLib.List<FieldDetails> ();
+      val = Value (typeof (Set<FieldDetails>));
+      var phone_numbers1 = new HashSet<FieldDetails> ();
       var phone_number_1 = new FieldDetails (this._phone_1);
-      phone_numbers1.prepend ((owned) phone_number_1);
-      val.set_pointer (phone_numbers1);
+      phone_numbers1.add (phone_number_1);
+      val.set_object (phone_numbers1);
       details1.insert (
           Folks.PersonaStore.detail_key (PersonaDetail.PHONE_NUMBERS),
           (owned) val);
@@ -187,11 +187,11 @@ public class MatchPhoneNumberTests : Folks.TestCase
       details2.insert (Folks.PersonaStore.detail_key (PersonaDetail.FULL_NAME),
           (owned) val);
 
-      val = Value (typeof (GLib.List<FieldDetails>));
-      var phone_numbers2 = new GLib.List<FieldDetails> ();
+      val = Value (typeof (Set<FieldDetails>));
+      var phone_numbers2 = new HashSet<FieldDetails> ();
       var phone_number_2 = new FieldDetails (this._phone_2);
-      phone_numbers2.prepend ((owned) phone_number_2);
-      val.set_pointer (phone_numbers2);
+      phone_numbers2.add (phone_number_2);
+      val.set_object (phone_numbers2);
       details2.insert (
           Folks.PersonaStore.detail_key (PersonaDetail.PHONE_NUMBERS),
           (owned) val);
