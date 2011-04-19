@@ -98,8 +98,8 @@ public class Swf.Persona : Folks.Persona,
   private HashMultiMap<string, string> _im_addresses =
       new HashMultiMap<string, string> ();
 
-  private HashMap<string, LinkedHashSet<string>> _web_service_addresses =
-      new HashMap<string, LinkedHashSet<string>> (str_hash, str_equal);
+  private HashMultiMap<string, string> _web_service_addresses =
+      new HashMultiMap<string, string> ();
 
   /**
    * {@inheritDoc}
@@ -113,7 +113,7 @@ public class Swf.Persona : Folks.Persona,
   /**
    * {@inheritDoc}
    */
-  public HashMap<string, LinkedHashSet<string>> web_service_addresses
+  public MultiMap<string, string> web_service_addresses
     {
       get { return this._web_service_addresses; }
       private set {}
@@ -208,10 +208,7 @@ public class Swf.Persona : Folks.Persona,
             }
         }
 
-      var web_service_address_array = new LinkedHashSet<string> ();
-      web_service_address_array.add (id);
-      this._web_service_addresses.set ((owned) service,
-          (owned) web_service_address_array);
+      this._web_service_addresses.set (service, id);
 
       update (contact);
     }

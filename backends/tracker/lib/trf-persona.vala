@@ -330,12 +330,13 @@ public class Trf.Persona : Folks.Persona,
         }
     }
 
-  private HashMap<string, LinkedHashSet<string>> _web_service_addresses =
-      new HashMap<string, LinkedHashSet<string>> (str_hash, str_equal);
+  private HashMultiMap<string, string> _web_service_addresses =
+      new HashMultiMap<string, string> ();
+
   /**
    * {@inheritDoc}
    */
-  public HashMap<string, LinkedHashSet<string>> web_service_addresses
+  public MultiMap<string, string> web_service_addresses
     {
       get { return this._web_service_addresses; }
       set
@@ -432,11 +433,10 @@ public class Trf.Persona : Folks.Persona,
         }
       else if (prop_name == "web-service-addresses")
         {
-          foreach (var entry in this.web_service_addresses.entries)
+          foreach (var web_service in this._web_service_addresses.get_keys ())
             {
-              unowned string web_service = (string) entry.key;
-              unowned LinkedHashSet<string> web_service_addresses =
-                  (LinkedHashSet<string>) entry.value;
+              var web_service_addresses =
+                  this._web_service_addresses.get (web_service);
 
               foreach (string address in web_service_addresses)
                   callback (web_service + ":" + address);
@@ -828,7 +828,8 @@ public class Trf.Persona : Folks.Persona,
   internal bool _set_web_service_addrs (string ws_addrs)
     {
       this._web_service_addresses =
-        Trf.PersonaStore.unserialize_web_services (ws_addrs);
+        (HashMultiMap<string, string>)
+            Trf.PersonaStore.unserialize_web_services (ws_addrs);
       this.notify_property ("web-service-addresses");
       return true;
     }

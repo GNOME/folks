@@ -983,8 +983,7 @@ public class Folks.IndividualAggregator : Object
 
       /* `protocols_addrs_set` will be passed to the new Kf.Persona */
       var protocols_addrs_set = new HashMultiMap<string, string> ();
-      var web_service_addrs_set =
-          new HashMap<string, LinkedHashSet<string>> (str_hash, str_equal);
+      var web_service_addrs_set = new HashMultiMap<string, string> ();
 
       /* List of local_ids */
       var local_ids = new Gee.HashSet<string> ();
@@ -1009,21 +1008,19 @@ public class Folks.IndividualAggregator : Object
 
           if (persona is WebServiceDetails)
             {
-              foreach (var entry in
-                  ((WebServiceDetails) persona).web_service_addresses.entries)
+              WebServiceDetails ws_details = (WebServiceDetails) persona;
+
+              /* web_service_addrs_set = union (all personas' WS addresses) */
+              foreach (var web_service in
+                  ws_details.web_service_addresses.get_keys ())
                 {
-                  unowned string web_service = (string) entry.key;
-                  unowned LinkedHashSet<string> addresses =
-                    (LinkedHashSet<string>) entry.value;
+                  var ws_addresses =
+                      ws_details.web_service_addresses.get (web_service);
 
-                  var address_set = web_service_addrs_set.get (web_service);
-                  if (address_set == null)
+                  foreach (var ws_address in ws_addresses)
                     {
-                      address_set = new LinkedHashSet<string> ();
-                      web_service_addrs_set.set (web_service, address_set);
+                      web_service_addrs_set.set (web_service, ws_address);
                     }
-
-                  address_set.add_all (addresses);
                 }
             }
 
@@ -1048,7 +1045,7 @@ public class Folks.IndividualAggregator : Object
 
       if (web_service_addrs_set.size > 0)
         {
-          var web_service_addresses_value = Value (typeof (HashMap));
+          var web_service_addresses_value = Value (typeof (MultiMap));
           web_service_addresses_value.set_object (web_service_addrs_set);
           details.insert (PersonaStore.detail_key
               (PersonaDetail.WEB_SERVICE_ADDRESSES),

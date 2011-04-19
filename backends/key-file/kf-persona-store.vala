@@ -306,9 +306,9 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
           : null;
       unowned Value? val2 = details.lookup
           (this.detail_key (PersonaDetail.WEB_SERVICE_ADDRESSES));
-      unowned HashMap<string, LinkedHashSet<string>> web_service_addresses
+      MultiMap<string, string> web_service_addresses
           = val2 != null
-          ? (HashMap<string, LinkedHashSet<string>>) val2.get_object ()
+          ? (MultiMap<string, string>) val2.get_object ()
           : null;
       uint im_addresses_size = (im_addresses == null)
           ? 0 : im_addresses.size;

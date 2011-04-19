@@ -666,8 +666,8 @@ public class Trf.PersonaStore : Folks.PersonaStore
               Folks.PersonaStore.detail_key (
                   PersonaDetail.WEB_SERVICE_ADDRESSES))
             {
-              HashMap<string, LinkedHashSet<string>> ws_obj =
-                (HashMap<string, LinkedHashSet<string>>) v.get_object ();
+              MultiMap<string, string> ws_obj =
+                (MultiMap<string, string>) v.get_object ();
 
               var ws_addrs = Trf.PersonaStore.serialize_web_services (ws_obj);
 
@@ -720,14 +720,14 @@ public class Trf.PersonaStore : Folks.PersonaStore
  /**
    * Returns "service1:addr1,addr2;service2:addr3,.."
    *
-   * @since 0.5.0
+   * @since UNRELEASED
    */
-   public static string serialize_web_services (HashMap<string,
-      LinkedHashSet<string>> ws_obj)
+  public static string serialize_web_services (
+      MultiMap<string, string> ws_obj)
     {
       var str = "";
 
-      foreach (var service in ws_obj.keys)
+      foreach (var service in ws_obj.get_keys ())
         {
           if (str != "")
             {
@@ -755,15 +755,14 @@ public class Trf.PersonaStore : Folks.PersonaStore
 
  /**
    * Transforms "service1:addr1,addr2;service2:addr3,.." to
-   *   --->  HashMap<string, LinkedHashSet<string>>
+   *   --->  HashMultiMap<string, string>
    *
-   * @since 0.5.0
+   * @since UNRELEASED
    */
-  public static HashMap<string, LinkedHashSet<string>> unserialize_web_services
+  public static MultiMap<string, string> unserialize_web_services
       (string ws_addrs)
     {
-      HashMap<string, LinkedHashSet<string>> ret =
-        new HashMap<string, LinkedHashSet<string>> ();
+      var ret = new HashMultiMap<string, string> ();
 
       var services = ws_addrs.split (";");
       foreach (var service_line in services)
@@ -772,12 +771,9 @@ public class Trf.PersonaStore : Folks.PersonaStore
             var service_name = service_t[0];
             var addrs = service_t[1].split (",");
 
-            var addrs_list = new LinkedHashSet<string> ();
-
-            ret.set (service_name, addrs_list);
             foreach (var a in addrs)
               {
-                addrs_list.add (a);
+                ret.set (service_name, a);
               }
           }
 
@@ -1867,7 +1863,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
     }
 
   internal async void _set_web_service_addrs (Trf.Persona persona,
-      HashMap<string, LinkedHashSet<string>> ws_obj)
+      MultiMap<string, string> ws_obj)
     {
       var ws_addrs = Trf.PersonaStore.serialize_web_services (ws_obj);
       yield this._set_tracker_property (persona,

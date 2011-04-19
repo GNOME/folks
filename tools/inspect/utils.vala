@@ -297,21 +297,19 @@ private class Folks.Inspect.Utils
       else if (prop_name == Folks.PersonaStore.detail_key
           (PersonaDetail.WEB_SERVICE_ADDRESSES))
         {
-          HashMap<string, LinkedHashSet<string>> web_service_addresses =
-              (HashMap<string, LinkedHashSet<string>>)
-              prop_value.get_object ();
+          MultiMap<string, string> web_service_addresses =
+              (MultiMap<string, string>) prop_value.get_object ();
           output_string = "{ ";
           bool first = true;
 
-          foreach (var entry in web_service_addresses.entries)
+          foreach (var web_service in web_service_addresses.get_keys ())
             {
               if (first == false)
                 output_string += ", ";
-              output_string += "'%s' : { ".printf ((string) entry.key);
+              output_string += "'%s' : { ".printf (web_service);
               first = false;
 
-              LinkedHashSet<string> addresses =
-                  (LinkedHashSet<string>) entry.value;
+              var addresses = web_service_addresses.get (web_service);
               bool _first = true;
               foreach (var a in addresses)
                 {

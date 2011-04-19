@@ -100,7 +100,7 @@ public class Folks.Individual : Object,
    * Persona.is_user == true. Iff this is > 0, Individual.is_user == true. */
   private uint _persona_user_count = 0;
   private HashMultiMap<string, string> _im_addresses;
-  private HashMap<string, LinkedHashSet<string>> _web_service_addresses;
+  private HashMultiMap<string, string> _web_service_addresses;
 
   /**
    * The trust level of the Individual.
@@ -429,7 +429,7 @@ public class Folks.Individual : Object,
   /**
    * {@inheritDoc}
    */
-  public HashMap<string, LinkedHashSet<string>> web_service_addresses
+  public MultiMap<string, string> web_service_addresses
     {
       get { return this._web_service_addresses; }
       private set {}
@@ -599,8 +599,7 @@ public class Folks.Individual : Object,
   public Individual (GLib.List<Persona>? personas)
     {
       this._im_addresses = new HashMultiMap<string, string> ();
-      this._web_service_addresses =
-          new HashMap<string, LinkedHashSet<string>> (str_hash, str_equal);
+      this._web_service_addresses = new HashMultiMap<string, string> ();
       this._persona_set = new HashSet<Persona> (null, null);
       this._stores = new HashMap<PersonaStore, uint> (null, null);
       this._gender = Gender.UNSPECIFIED;
@@ -954,27 +953,25 @@ public class Folks.Individual : Object,
   private void _update_web_service_addresses ()
     {
       /* populate the web service addresses as the union of our Personas' addresses */
+      this._web_service_addresses.clear ();
+
       foreach (var persona in this.personas)
         {
           if (persona is WebServiceDetails)
             {
               var web_service_details = (WebServiceDetails) persona;
-              foreach (var entry in
-                  web_service_details.web_service_addresses.entries)
+              foreach (var cur_web_service in
+                  web_service_details.web_service_addresses.get_keys ())
                 {
-                  var cur_web_service = (string) entry.key;
-                  var cur_addresses = (LinkedHashSet<string>) entry.value;
-                  var web_service_set = this._web_service_addresses.get
-                                            (cur_web_service);
+                  var cur_addresses =
+                      web_service_details.web_service_addresses.get (
+                          cur_web_service);
 
-                  if (web_service_set == null)
+                  foreach (var address in cur_addresses)
                     {
-                      web_service_set = new LinkedHashSet<string> ();
                       this._web_service_addresses.set (cur_web_service,
-                                                       web_service_set);
+                          address);
                     }
-
-                  web_service_set.add_all (cur_addresses);
                 }
             }
         }

@@ -29,20 +29,17 @@ using Gee;
 public interface Folks.WebServiceDetails : Object
 {
   /**
-   * A mapping of web service to an ordered set of web service addresses.
+   * A mapping of web service to an (unordered) set of web service addresses.
    *
    * Each mapping is from an arbitrary web service identifier to a set of web
-   * service addresses for the contact, listed in preference order.
-   * The most-preferred web service address for each web service comes first
-   * in that web service's list.
+   * service addresses for the contact, listed in no particular order.
    *
    * Web service addresses are guaranteed to be unique per web service, but
    * not necessarily unique amongst all web services.
    *
-   * @since 0.5.0
+   * @since UNRELEASED
    */
-  public abstract Gee.HashMap<string, LinkedHashSet<string>>
-      web_service_addresses
+  public abstract Gee.MultiMap<string, string> web_service_addresses
     {
       get; set;
     }

@@ -35,7 +35,7 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
 {
   private unowned GLib.KeyFile _key_file;
   private HashMultiMap<string, string> _im_addresses;
-  private HashMap<string, LinkedHashSet<string>> _web_service_addresses;
+  private HashMultiMap<string, string> _web_service_addresses;
   private string _alias;
   private const string[] _linkable_properties =
     {
@@ -144,7 +144,7 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
   /**
    * {@inheritDoc}
    */
-  public HashMap<string, LinkedHashSet<string>> web_service_addresses
+  public MultiMap<string, string> web_service_addresses
     {
       get
         { return this._web_service_addresses; }
@@ -152,7 +152,7 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
       set
         {
           /* Remove the current web service addresses from the key file */
-          foreach (var web_service in this._web_service_addresses.keys)
+          foreach (var web_service in this._web_service_addresses.get_keys ())
             {
               try
                 {
@@ -167,21 +167,22 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
 
           /* Add the new web service addresses to the key file and build a
            * table of them to set as the new property value */
-          HashMap<string, LinkedHashSet<string>> web_service_addresses =
-              new HashMap<string, LinkedHashSet<string>> (str_hash, str_equal);
+          var web_service_addresses = new HashMultiMap<string, string> ();
 
-          foreach (var entry in value.entries)
+          foreach (var web_service in value.get_keys ())
             {
-              unowned string web_service = (string) entry.key;
-              unowned LinkedHashSet<string?> addresses =
-                  (LinkedHashSet<string?>) entry.value;
+              var addresses = value.get (web_service);
 
               string[] addrs = (string[]) addresses.to_array ();
               addrs.length = addresses.size;
 
               this._key_file.set_string_list (this.display_id,
                   "web-service." + web_service, addrs);
-              web_service_addresses.set (web_service, addresses);
+
+              foreach (var address in addresses)
+                {
+                  web_service_addresses.set (web_service, address);
+                }
             }
 
           this._web_service_addresses = web_service_addresses;
@@ -213,9 +214,7 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
 
       this._key_file = key_file;
       this._im_addresses = new HashMultiMap<string, string> ();
-      this._web_service_addresses
-          = new HashMap<string, LinkedHashSet<string>> (str_hash,
-              str_equal);
+      this._web_service_addresses = new HashMultiMap<string, string> ();
 
       /* Load the IM addresses from the key file */
       try
@@ -240,15 +239,13 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
                   unowned string web_service = decomposed_key[1];
                   var web_service_addresses = this._key_file.get_string_list (
                       this.display_id, web_service);
-    
-                  var address_set = new LinkedHashSet<string> ();
-    
+
                   foreach (var web_service_address in web_service_addresses)
                     {
-                      address_set.add (web_service_address);
+                      this._web_service_addresses.set (web_service,
+                          web_service_address);
                     }
-    
-                  this._web_service_addresses.set (web_service, address_set);
+
                   continue;
                 }
 
@@ -308,11 +305,10 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
         }
       else if (prop_name == "web-service-addresses")
         {
-          foreach (var entry in this.web_service_addresses.entries)
+          foreach (var web_service in this.web_service_addresses.get_keys ())
             {
-              unowned string web_service = (string) entry.key;
-              unowned LinkedHashSet<string> web_service_addresses =
-                  (LinkedHashSet<string>) entry.value;
+              var web_service_addresses =
+                  this._web_service_addresses.get (web_service);
 
               foreach (string address in web_service_addresses)
                   callback (web_service + ":" + address);
