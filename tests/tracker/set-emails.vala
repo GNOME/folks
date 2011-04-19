@@ -113,13 +113,13 @@ public class SetEmailsTests : Folks.TestCase
             {
               i.notify["email-addresses"].connect (this._notify_emails_cb);
 
-              GLib.List<FieldDetails> emails = new GLib.List<FieldDetails> ();
+              var emails = new HashSet<FieldDetails> ();
               var p1 = new FieldDetails (this._email_1);
-              emails.prepend ((owned) p1);
+              emails.add (p1);
               var p2 = new FieldDetails (this._email_2);
-              emails.prepend ((owned) p2);
+              emails.add (p2);
               Trf.Persona p = (Trf.Persona)i.personas.nth_data (0);
-              p.email_addresses = (owned) emails;
+              p.email_addresses = emails;
             }
         }
 
@@ -131,7 +131,7 @@ public class SetEmailsTests : Folks.TestCase
       Folks.Individual i = (Folks.Individual) individual_obj;
       if (i.full_name == this._persona_fullname)
         {
-          foreach (unowned FieldDetails p in i.email_addresses)
+          foreach (var p in i.email_addresses)
             {
               if (p.value == this._email_1)
                 this._email_1_found = true;

@@ -288,19 +288,18 @@ public class Folks.Individual : Object,
         }
     }
 
-  private GLib.List<FieldDetails> _email_addresses;
+  private HashSet<FieldDetails> _email_addresses;
   /**
    * {@inheritDoc}
    */
-  public GLib.List<FieldDetails> email_addresses
+  public Set<FieldDetails> email_addresses
     {
       get { return this._email_addresses; }
       private set
         {
-          this._email_addresses = new GLib.List<FieldDetails> ();
-          foreach (unowned FieldDetails fd in value)
-            this._email_addresses.prepend (fd);
-          this._email_addresses.reverse ();
+          this._email_addresses = new HashSet<FieldDetails> ();
+          foreach (var fd in value)
+            this._email_addresses.add (fd);
         }
     }
 
@@ -1215,37 +1214,36 @@ public class Folks.Individual : Object,
   private void _update_email_addresses ()
     {
       /* Populate the email addresses as the union of our Personas' addresses.
-       * If the same URL exist multiple times we merge the parameters. */
-      var emails_set = new HashTable<unowned string, unowned FieldDetails> (
-          str_hash, str_equal);
-      var emails = new GLib.List<FieldDetails> ();
+       * If the same address exists multiple times we merge the parameters. */
+      var emails_set = new HashMap<unowned string, unowned FieldDetails> ();
+      var emails = new HashSet<FieldDetails> ();
 
       foreach (var persona in this._persona_list)
         {
           var email_details = persona as EmailDetails;
           if (email_details != null)
             {
-              foreach (unowned FieldDetails fd in email_details.email_addresses)
+              foreach (var fd in email_details.email_addresses)
                 {
                   if (fd.value == null)
                     continue;
 
-                  var existing = emails_set.lookup (fd.value);
+                  var existing = emails_set.get (fd.value);
                   if (existing != null)
                     existing.extend_parameters (fd.parameters);
                   else
                     {
                       var new_fd = new FieldDetails (fd.value);
                       new_fd.extend_parameters (fd.parameters);
-                      emails_set.insert (fd.value, new_fd);
-                      emails.prepend ((owned) new_fd);
+                      emails_set.set (fd.value, new_fd);
+                      emails.add (new_fd);
                     }
                 }
             }
         }
-      /* Set the private member directly to avoid iterating this list again */
-      emails.reverse ();
-      this._email_addresses = (owned) emails;
+
+      /* Set the private member directly to avoid iterating this set again */
+      this._email_addresses = emails;
 
       this.notify_property ("email-addresses");
     }

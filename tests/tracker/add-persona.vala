@@ -221,14 +221,13 @@ public class AddPersonaTests : Folks.TestCase
       details.insert (Folks.PersonaStore.detail_key (PersonaDetail.GENDER),
           (owned) v7);
 
-      Value? v8 = Value (typeof (GLib.List<FieldDetails>));
-      GLib.List<FieldDetails> emails =
-        new GLib.List<FieldDetails> ();
+      Value? v8 = Value (typeof (Set<FieldDetails>));
+      var emails = new HashSet<FieldDetails> ();
       var email_1 = new FieldDetails (this._email_1);
-      emails.prepend ((owned) email_1);
+      emails.add (email_1);
       var email_2 = new FieldDetails (this._email_2);
-      emails.prepend ((owned) email_2);
-      v8.set_pointer (emails);
+      emails.add (email_2);
+      v8.set_object (emails);
       details.insert (
           Folks.PersonaStore.detail_key (PersonaDetail.EMAIL_ADDRESSES),
           (owned) v8);
@@ -413,7 +412,7 @@ public class AddPersonaTests : Folks.TestCase
       if (i.gender == Gender.MALE)
         this._properties_found.replace ("gender", true);
 
-      foreach (unowned FieldDetails e in i.email_addresses)
+      foreach (var e in i.email_addresses)
         {
           if (e.value == this._email_1)
             {

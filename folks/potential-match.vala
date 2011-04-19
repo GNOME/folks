@@ -240,14 +240,12 @@ public class Folks.PotentialMatch : Object
    */
   private void _inspect_emails ()
     {
-      unowned GLib.List<FieldDetails> list_a =
-        this._individual_a.email_addresses;
-      unowned GLib.List<FieldDetails> list_b =
-        this._individual_b.email_addresses;
+      var set_a = this._individual_a.email_addresses;
+      var set_b = this._individual_b.email_addresses;
 
-      foreach (var fd_a in list_a)
+      foreach (var fd_a in set_a)
         {
-          foreach (var fd_b in list_b)
+          foreach (var fd_b in set_b)
             {
               string[] email_split_a = fd_a.value.split ("@");
               string[] email_split_b = fd_b.value.split ("@");

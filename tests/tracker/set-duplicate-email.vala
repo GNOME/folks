@@ -123,10 +123,10 @@ public class SetDuplicateEmailTests : Folks.TestCase
       Trf.Persona p = (Trf.Persona) i.personas.nth_data (0);
       if (this._has_email (p, this._email_1))
         {
-          var emails1 = new GLib.List<FieldDetails> ();
+          var emails1 = new HashSet<FieldDetails> ();
           var email_1 = new FieldDetails (this._email_1);
-          emails1.prepend ((owned) email_1);
-          p.email_addresses = (emails1);
+          emails1.add (email_1);
+          p.email_addresses = emails1;
           p.notify["email-addresses"].connect (this._email_addresses_cb);
         }
     }
@@ -191,11 +191,11 @@ public class SetDuplicateEmailTests : Folks.TestCase
       details1.insert (Folks.PersonaStore.detail_key (PersonaDetail.FULL_NAME),
           (owned) val);
 
-      val = Value (typeof (GLib.List<FieldDetails>));
-      var emails1 = new GLib.List<FieldDetails> ();
+      val = Value (typeof (Set<FieldDetails>));
+      var emails1 = new HashSet<FieldDetails> ();
       var email_1 = new FieldDetails (this._email_1);
-      emails1.prepend ((owned) email_1);
-      val.set_pointer (emails1);
+      emails1.add (email_1);
+      val.set_object (emails1);
       details1.insert (
           Folks.PersonaStore.detail_key (PersonaDetail.EMAIL_ADDRESSES),
           (owned) val);

@@ -166,11 +166,11 @@ public class DuplicatedEmailsTests : Folks.TestCase
       details1.insert (Folks.PersonaStore.detail_key (PersonaDetail.FULL_NAME),
           (owned) val);
 
-      val = Value (typeof (GLib.List<FieldDetails>));
-      var emails1 = new GLib.List<FieldDetails> ();
+      val = Value (typeof (Set<FieldDetails>));
+      var emails1 = new HashSet<FieldDetails> ();
       var email_1 = new FieldDetails (this._email_1);
-      emails1.prepend ((owned) email_1);
-      val.set_pointer (emails1);
+      emails1.add (email_1);
+      val.set_object (emails1);
       details1.insert (
           Folks.PersonaStore.detail_key (PersonaDetail.EMAIL_ADDRESSES),
           (owned) val);
@@ -180,11 +180,11 @@ public class DuplicatedEmailsTests : Folks.TestCase
       details2.insert (Folks.PersonaStore.detail_key (PersonaDetail.FULL_NAME),
           (owned) val);
 
-      val = Value (typeof (GLib.List<FieldDetails>));
-      var emails2 = new GLib.List<FieldDetails> ();
+      val = Value (typeof (Set<FieldDetails>));
+      var emails2 = new HashSet<FieldDetails> ();
       var email_2 = new FieldDetails (this._email_1);
-      emails2.prepend ((owned) email_2);
-      val.set_pointer (emails2);
+      emails2.add (email_2);
+      val.set_object (emails2);
       details2.insert (
           Folks.PersonaStore.detail_key (PersonaDetail.EMAIL_ADDRESSES),
           (owned) val);

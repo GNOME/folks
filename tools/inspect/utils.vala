@@ -320,8 +320,27 @@ private class Folks.Inspect.Utils
           output_string += " }";
           return output_string;
         }
-      else if (prop_name == "email-addresses" ||
-               prop_name == "urls" ||
+      else if (prop_name == "email-addresses")
+        {
+          output_string = "{ ";
+          bool first = true;
+          Set<FieldDetails> prop_list =
+              (Set<FieldDetails>) prop_value.get_object ();
+
+          foreach (var p in prop_list)
+            {
+              if (!first)
+                {
+                  output_string += ", ";
+                }
+              output_string +=  p.value;
+              first = false;
+            }
+            output_string += " }";
+
+            return output_string;
+        }
+      else if (prop_name == "urls" ||
                prop_name == "phone-numbers")
         {
           output_string = "{ ";

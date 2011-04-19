@@ -19,6 +19,7 @@
  */
 
 using GLib;
+using Gee;
 
 /**
  * Interface for classes that have email addresses, such as {@link Persona}
@@ -31,7 +32,7 @@ public interface Folks.EmailDetails : Object
   /**
    * The email addresses of the contact.
    *
-   * @since 0.3.5
+   * @since UNRELEASED
    */
-  public abstract List<FieldDetails> email_addresses { get; set; }
+  public abstract Set<FieldDetails> email_addresses { get; set; }
 }

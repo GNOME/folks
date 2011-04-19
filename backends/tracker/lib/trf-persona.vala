@@ -51,7 +51,7 @@ public class Trf.Persona : Folks.Persona,
   private const string[] _linkable_properties =
       {"im-addresses", "local-ids", "web-service-addresses"};
   private GLib.List<FieldDetails> _phone_numbers;
-  private GLib.List<FieldDetails> _email_addresses;
+  private HashSet<FieldDetails> _email_addresses = new HashSet<FieldDetails> ();
   private weak Sparql.Cursor _cursor;
   private string _tracker_id;
 
@@ -97,20 +97,12 @@ public class Trf.Persona : Folks.Persona,
   /**
    * {@inheritDoc}
    */
-  public GLib.List<FieldDetails> email_addresses
+  public Set<FieldDetails> email_addresses
     {
       get { return this._email_addresses; }
       public set
         {
-          var _temp = new GLib.List<FieldDetails> ();
-          foreach (unowned FieldDetails e in value)
-            {
-              _temp.prepend (e);
-            }
-          _temp.reverse ();
-
-          ((Trf.PersonaStore) this.store)._set_emails (this,
-              (owned) _temp);
+          ((Trf.PersonaStore) this.store)._set_emails (this, value);
         }
     }
 
@@ -1009,7 +1001,7 @@ public class Trf.Persona : Folks.Persona,
         {
           var fd = new FieldDetails (addr);
           fd.set_parameter ("tracker_id", tracker_id);
-          this._email_addresses.prepend ((owned) fd);
+          this._email_addresses.add (fd);
           this.notify_property ("email-addresses");
         }
 
@@ -1047,7 +1039,7 @@ public class Trf.Persona : Folks.Persona,
           return;
         }
 
-      var email_addresses = new GLib.List<FieldDetails> ();
+      var email_addresses = new HashSet<FieldDetails> ();
       string[] emails_a = emails_field.split (",");
 
       foreach (var e in emails_a)
@@ -1058,12 +1050,11 @@ public class Trf.Persona : Folks.Persona,
               var fd = new FieldDetails (id_addr[Trf.EmailFields.EMAIL]);
               fd.set_parameter ("tracker_id",
                   id_addr[Trf.EmailFields.TRACKER_ID]);
-              email_addresses.prepend ((owned) fd);
+              email_addresses.add (fd);
             }
         }
 
-      email_addresses.reverse ();
-      this._email_addresses = (owned) email_addresses;
+      this._email_addresses = email_addresses;
     }
 
   private void _update_urls ()

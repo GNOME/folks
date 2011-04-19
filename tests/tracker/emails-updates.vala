@@ -91,7 +91,7 @@ public class EmailsUpdatesTests : Folks.TestCase
       var i = this._aggregator.individuals.lookup (this._individual_id);
       if (i != null)
         {
-          foreach (unowned FieldDetails fd in i.email_addresses)
+          foreach (var fd in i.email_addresses)
             {
               var email = fd.value;
               if (email == this._email_1)
@@ -138,7 +138,7 @@ public class EmailsUpdatesTests : Folks.TestCase
               this._individual_id = i.id;
               i.notify["email-addresses"].connect (this._notify_email_cb);
 
-              foreach (unowned FieldDetails fd in i.email_addresses)
+              foreach (var fd in i.email_addresses)
                 {
                   var email = fd.value;
                   if (email == this._email_1)
@@ -182,7 +182,7 @@ public class EmailsUpdatesTests : Folks.TestCase
       if (this._individual_id != individual.id)
         return;
 
-      foreach (unowned FieldDetails fd in individual.email_addresses)
+      foreach (var fd in individual.email_addresses)
         {
           var email = fd.value;
           if (email == this._email_2)
