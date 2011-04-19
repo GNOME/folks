@@ -498,13 +498,12 @@ public class Trf.PersonaStore : Folks.PersonaStore
           else if (k == Folks.PersonaStore.detail_key (
                 PersonaDetail.IM_ADDRESSES))
             {
-              var im_addresses =
-                (HashTable<string, LinkedHashSet<string>>) v.get_boxed ();
+              var im_addresses = (MultiMap<string, string>) v.get_object ();
 
               int im_cnt = 0;
               foreach (var proto in im_addresses.get_keys ())
                 {
-                  var addrs_a = im_addresses.lookup (proto);
+                  var addrs_a = im_addresses.get (proto);
 
                   foreach (var addr in addrs_a)
                     {
@@ -1994,26 +1993,25 @@ public class Trf.PersonaStore : Folks.PersonaStore
     }
 
   internal async void _set_im_addresses (Folks.Persona persona,
-      owned HashTable<string, LinkedHashSet<string>> im_addresses)
+      MultiMap<string, string> im_addresses)
     {
       /* FIXME:
        * - this conversion should go away once we've switched to use the
        *   same data structure for each property that is a list of something.
        *   See: https://bugzilla.gnome.org/show_bug.cgi?id=646079 */
-      GLib.List <FieldDetails> ims = new GLib.List <FieldDetails> ();
+      var ims = new HashSet<FieldDetails> ();
       foreach (var proto in im_addresses.get_keys ())
         {
-          var addrs = im_addresses.lookup (proto);
+          var addrs = im_addresses.get (proto);
           foreach (var a in addrs)
             {
               var fd = new FieldDetails (a);
               fd.set_parameter ("proto", proto);
-              ims.prepend ((owned) fd);
+              ims.add (fd);
             }
         }
 
-       yield this._set_attrib (persona, (owned) ims,
-          Trf.Attrib.IM_ADDRESSES);
+       yield this._set_attrib_set (persona, ims, Trf.Attrib.IM_ADDRESSES);
     }
 
   internal async void _set_postal_addresses (Folks.Persona persona,
@@ -2292,13 +2290,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
             related_connection = Trf.OntologyDefs.NCO_URL;
             break;
           case Trf.Attrib.IM_ADDRESSES:
-            related_attrib = Trf.OntologyDefs.NCO_IMADDRESS;
-            related_prop = Trf.OntologyDefs.NCO_IMID;
-            related_prop_2 = Trf.OntologyDefs.NCO_IMPROTOCOL;
-            related_connection = Trf.OntologyDefs.NCO_HAS_IMADDRESS;
-            yield this._remove_attributes_from_persona (persona,
-                _REMOVE_IM_ADDRS);
-            break;
+            assert_not_reached ();
           case Trf.Attrib.POSTAL_ADDRESSES:
             related_attrib = Trf.OntologyDefs.NCO_POSTAL_ADDRESS;
             related_connection = Trf.OntologyDefs.NCO_HAS_POSTAL_ADDRESS;
@@ -2371,10 +2363,98 @@ public class Trf.PersonaStore : Folks.PersonaStore
               if (what == Trf.Attrib.IM_ADDRESSES)
                 {
                   builder.predicate (related_prop_2);
-                  unowned GLib.List<string> im_params =
-                      fd.get_parameter_values ("proto");
-                  builder.object_string (im_params.nth_data (0));
+                  var im_params = fd.get_parameter_values ("proto").to_array ();
+                  builder.object_string (im_params[0]);
                 }
+            }
+
+          builder.subject (affl);
+          builder.predicate ("a");
+          builder.object (Trf.OntologyDefs.NCO_AFFILIATION);
+          builder.predicate (related_connection);
+          builder.object (attr);
+          builder.subject ("?contact");
+          builder.predicate (Trf.OntologyDefs.NCO_HAS_AFFILIATION);
+          builder.object (affl);
+
+          i++;
+        }
+      builder.insert_close ();
+      builder.where_open ();
+      builder.subject ("?contact");
+      builder.predicate ("a");
+      builder.object (Trf.OntologyDefs.NCO_PERSON);
+      string filter = " FILTER(tracker:id(?contact) = %s) ".printf (p_id);
+      builder.append (filter);
+      builder.where_close ();
+
+      yield this._tracker_update (builder.result, "set_attrib");
+    }
+
+  /* NOTE:
+   * - first we nuke old attribs
+   * - we create new affls with the new attribs
+   */
+  private async void _set_attrib_set (Folks.Persona persona,
+      Set<Object> attribs, Trf.Attrib what)
+    {
+      var p_id = ((Trf.Persona) persona).tracker_id ();
+
+      unowned string? related_attrib = null;
+      unowned string? related_prop = null;
+      unowned string? related_prop_2 = null;
+      unowned string? related_connection = null;
+
+      switch (what)
+        {
+          case Trf.Attrib.IM_ADDRESSES:
+            related_attrib = Trf.OntologyDefs.NCO_IMADDRESS;
+            related_prop = Trf.OntologyDefs.NCO_IMID;
+            related_prop_2 = Trf.OntologyDefs.NCO_IMPROTOCOL;
+            related_connection = Trf.OntologyDefs.NCO_HAS_IMADDRESS;
+            yield this._remove_attributes_from_persona (persona,
+                _REMOVE_IM_ADDRS);
+            break;
+          case Trf.Attrib.POSTAL_ADDRESSES:
+          case Trf.Attrib.URLS:
+            assert_not_reached ();
+        }
+
+      var builder = new Tracker.Sparql.Builder.update ();
+      builder.insert_open (null);
+      int i = 0;
+      foreach (var p in attribs)
+        {
+          FieldDetails fd = null;
+          PostalAddress pa = null;
+
+          string affl = "_:a%d".printf (i);
+          string attr;
+
+          switch (what)
+            {
+              case Trf.Attrib.POSTAL_ADDRESSES:
+              case Trf.Attrib.URLS:
+                assert_not_reached ();
+              case Trf.Attrib.IM_ADDRESSES:
+              default:
+                fd = (FieldDetails) p;
+                attr = "_:p%d".printf (i);
+                builder.subject (attr);
+                builder.predicate ("a");
+                builder.object (related_attrib);
+                builder.predicate (related_prop);
+                builder.object_string (fd.value);
+
+                if (what == Trf.Attrib.IM_ADDRESSES)
+                  {
+                    builder.predicate (related_prop_2);
+                    var im_params =
+                        fd.get_parameter_values ("proto").to_array ();
+                    builder.object_string (im_params[0]);
+                  }
+
+                break;
             }
 
           builder.subject (affl);

@@ -270,12 +270,13 @@ public class Trf.Persona : Folks.Persona,
   private HashTable<string, HashTable<string, string>> _tracker_ids_ims =
   new HashTable<string, HashTable<string, string>> (str_hash, str_equal);
 
-  private HashTable<string, LinkedHashSet<string>> _im_addresses =
-      new HashTable<string, LinkedHashSet<string>> (str_hash, str_equal);
+  private HashMultiMap<string, string> _im_addresses =
+      new HashMultiMap<string, string> ();
+
   /**
    * {@inheritDoc}
    */
-  public HashTable<string, LinkedHashSet<string>> im_addresses
+  public MultiMap<string, string> im_addresses
     {
       get { return this._im_addresses; }
       public set
@@ -414,15 +415,13 @@ public class Trf.Persona : Folks.Persona,
     {
       if (prop_name == "im-addresses")
         {
-          this.im_addresses.foreach ((k, v) =>
+          foreach (var protocol in this._im_addresses.get_keys ())
             {
-              unowned string protocol = (string) k;
-              unowned LinkedHashSet<string> im_addresses =
-                  (LinkedHashSet<string>) v;
+              var im_addresses = this._im_addresses.get (protocol);
 
               foreach (string address in im_addresses)
                   callback (protocol + ":" + address);
-            });
+            }
         }
       else if (prop_name == "local-ids")
         {
@@ -844,7 +843,7 @@ public class Trf.Persona : Folks.Persona,
           return;
         }
 
-      this._im_addresses.remove_all ();
+      this._im_addresses.clear ();
 
       string[] addresses_a = addresses.split ("\n");
 
@@ -866,27 +865,13 @@ public class Trf.Persona : Folks.Persona,
   internal bool _add_im_address (string tracker_id, string im_proto,
       string account_id, bool notify = true)
     {
-      LinkedHashSet<string> im_address_array;
-
       try
         {
           var account_id_copy = account_id.dup ();
           var normalised_addr = (owned) normalise_im_address
               ((owned) account_id_copy, im_proto);
 
-          im_address_array = this._im_addresses.lookup (im_proto);
-          if (im_address_array == null)
-            {
-              im_address_array = new LinkedHashSet<string> ();
-              im_address_array.add ((owned) normalised_addr);
-              var proto_copy = im_proto.dup ();
-              this._im_addresses.insert ((owned) proto_copy,
-                  (owned) im_address_array);
-            }
-          else
-            {
-              im_address_array.add (normalised_addr);
-            }
+          this._im_addresses.set (im_proto, normalised_addr);
 
           var im_proto_hash = new HashTable<string, string> (str_hash,
               str_equal);
@@ -923,22 +908,15 @@ public class Trf.Persona : Folks.Persona,
       var proto = proto_im.get_keys ().nth_data (0);
       var im_addr = proto_im.lookup (proto);
 
-      var im_list = this._im_addresses.lookup (proto);
-      if (im_list != null)
+      if (this._im_addresses.remove (proto, im_addr))
         {
-          foreach (var addr_iter in im_list)
+          this._tracker_ids_ims.remove (tracker_id);
+          if (notify)
             {
-              if (addr_iter == im_addr)
-                {
-                  im_list.remove (im_addr);
-                  this._tracker_ids_ims.remove (tracker_id);
-                  if (notify)
-                    {
-                      this.notify_property ("im-addresses");
-                    }
-                  return true;
-                }
+              this.notify_property ("im-addresses");
             }
+
+          return true;
         }
 
       return false;

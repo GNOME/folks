@@ -95,8 +95,8 @@ public class Swf.Persona : Folks.Persona,
         }
     }
 
-  private HashTable<string, LinkedHashSet<string>> _im_addresses =
-      new HashTable<string, LinkedHashSet<string>> (str_hash, str_equal);
+  private HashMultiMap<string, string> _im_addresses =
+      new HashMultiMap<string, string> ();
 
   private HashMap<string, LinkedHashSet<string>> _web_service_addresses =
       new HashMap<string, LinkedHashSet<string>> (str_hash, str_equal);
@@ -104,7 +104,7 @@ public class Swf.Persona : Folks.Persona,
   /**
    * {@inheritDoc}
    */
-  public HashTable<string, LinkedHashSet<string>> im_addresses
+  public MultiMap<string, string> im_addresses
     {
       get { return this._im_addresses; }
       private set {}
@@ -193,18 +193,14 @@ public class Swf.Persona : Folks.Persona,
       var facebook_jid = this._build_facebook_jid (store.id, id);
       if (facebook_jid != null)
         {
-          var im_address_array = new LinkedHashSet<string> ();
           try
             {
               var facebook_jid_copy = facebook_jid.dup();
               var normalised_addr = (owned) normalise_im_address
                   ((owned) facebook_jid_copy, "jabber");
               string im_proto = "jabber";
-              var proto_copy = im_proto.dup ();
 
-              im_address_array.add ((owned) normalised_addr);
-              this._im_addresses.insert ((owned) proto_copy,
-                  (owned) im_address_array);
+              this._im_addresses.set (im_proto, normalised_addr);
             }
           catch (ImDetailsError e)
             {

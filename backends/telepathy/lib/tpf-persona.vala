@@ -38,7 +38,7 @@ public class Tpf.Persona : Folks.Persona,
   private HashTable<string, bool> _groups;
   private bool _is_favourite;
   private string _alias;
-  private HashTable<string, LinkedHashSet<string>> _im_addresses;
+  private HashMultiMap<string, string> _im_addresses;
   private const string[] _linkable_properties = { "im-addresses" };
 
   /* Whether we've finished being constructed; this is used to prevent
@@ -131,11 +131,11 @@ public class Tpf.Persona : Folks.Persona,
     }
 
   /**
-   * A mapping of IM protocol to an ordered set of IM addresses.
+   * A mapping of IM protocol to an (unordered) set of IM addresses.
    *
    * See {@link Folks.ImDetails.im_addresses}.
    */
-  public HashTable<string, LinkedHashSet<string>> im_addresses
+  public MultiMap<string, string> im_addresses
     {
       get { return this._im_addresses; }
       private set {}
@@ -255,21 +255,18 @@ public class Tpf.Persona : Folks.Persona,
       this._is_constructed = true;
 
       /* Set our single IM address */
-      LinkedHashSet<string> im_address_set = new LinkedHashSet<string> ();
+      this._im_addresses = new HashMultiMap<string, string> ();
+
       try
         {
-          im_address_set.add (ImDetails.normalise_im_address (id,
-              account.get_protocol ()));
+          this._im_addresses.set (account.get_protocol (),
+              ImDetails.normalise_im_address (id, account.get_protocol ()));
         }
       catch (ImDetailsError e)
         {
           /* This should never happen…but if it does, warn of it and continue */
           warning (e.message);
         }
-
-      this._im_addresses =
-          new HashTable<string, LinkedHashSet<string>> (str_hash, str_equal);
-      this._im_addresses.insert (account.get_protocol (), im_address_set);
 
       /* Groups */
       this._groups = new HashTable<string, bool> (str_hash, str_equal);

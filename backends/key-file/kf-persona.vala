@@ -34,10 +34,7 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
     WebServiceDetails
 {
   private unowned GLib.KeyFile _key_file;
-  /* FIXME: As described in the ImDetails interface, we have to use
-   * GenericArray<string> here rather than just string[], as null-terminated
-   * arrays aren't supported as generic types. */
-  private HashTable<string, LinkedHashSet<string>> _im_addresses;
+  private HashMultiMap<string, string> _im_addresses;
   private HashMap<string, LinkedHashSet<string>> _web_service_addresses;
   private string _alias;
   private const string[] _linkable_properties =
@@ -80,7 +77,7 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
   /**
    * {@inheritDoc}
    */
-  public HashTable<string, LinkedHashSet<string>> im_addresses
+  public MultiMap<string, string> im_addresses
     {
       get
         { return this._im_addresses; }
@@ -88,7 +85,7 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
       set
         {
           /* Remove the current IM addresses from the key file */
-          this._im_addresses.foreach ((protocol, v) =>
+          foreach (var protocol in this._im_addresses.get_keys ())
             {
               try
                 {
@@ -99,27 +96,23 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
                   /* Ignore the error, since it's just a group or key not found
                    * error. */
                 }
-            });
+            }
 
           /* Add the new IM addresses to the key file and build a normalised
            * table of them to set as the new property value */
-          HashTable<string, LinkedHashSet<string>> im_addresses =
-              new HashTable<string, LinkedHashSet<string>> (str_hash, str_equal);
+          var im_addresses = new HashMultiMap<string, string> ();
 
-          value.foreach ((k, v) =>
+          foreach (var protocol in value.get_keys ())
             {
-              unowned string protocol = (string) k;
-              unowned LinkedHashSet<string?> addresses =
-                  (LinkedHashSet<string?>) v;
-              LinkedHashSet<string> normalized_addresses =
-                  new LinkedHashSet<string> ();
+              var addresses = value.get (protocol);
+              var normalised_addresses = new HashSet<string> ();
 
               foreach (string address in addresses)
                 {
-                  string normalized_address;
+                  string normalised_address;
                   try
                     {
-                      normalized_address = ImDetails.normalise_im_address (
+                      normalised_address = ImDetails.normalise_im_address (
                           address, protocol);
                     }
                   catch (ImDetailsError e)
@@ -131,15 +124,15 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
                       continue;
                     }
 
-                    normalized_addresses.add (normalized_address);
+                  normalised_addresses.add (normalised_address);
+                  im_addresses.set (protocol, normalised_address);
                 }
 
-              string[] addrs = (string[]) normalized_addresses.to_array ();
-              addrs.length = normalized_addresses.size;
+              string[] addrs = (string[]) normalised_addresses.to_array ();
+              addrs.length = normalised_addresses.size;
 
               this._key_file.set_string_list (this.display_id, protocol, addrs);
-              im_addresses.insert (protocol, normalized_addresses);
-            });
+            }
 
           this._im_addresses = im_addresses;
 
@@ -219,8 +212,7 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
           id);
 
       this._key_file = key_file;
-      this._im_addresses = new HashTable<string, LinkedHashSet<string>> (
-          str_hash, str_equal);
+      this._im_addresses = new HashMultiMap<string, string> ();
       this._web_service_addresses
           = new HashMap<string, LinkedHashSet<string>> (str_hash,
               str_equal);
@@ -265,8 +257,6 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
               var im_addresses = this._key_file.get_string_list (
                   this.display_id, protocol);
 
-              var address_set = new LinkedHashSet<string> ();
-
               foreach (var im_address in im_addresses)
                 {
                   string address;
@@ -281,10 +271,9 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
                       warning (e.message);
                       continue;
                     }
-                  address_set.add (address);
-                }
 
-              this._im_addresses.insert (protocol, address_set);
+                  this._im_addresses.set (protocol, address);
+                }
             }
         }
       catch (KeyFileError e)
@@ -309,15 +298,13 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
     {
       if (prop_name == "im-addresses")
         {
-          this.im_addresses.foreach ((k, v) =>
+          foreach (var protocol in this._im_addresses.get_keys ())
             {
-              unowned string protocol = (string) k;
-              unowned LinkedHashSet<string> im_addresses =
-                  (LinkedHashSet<string>) v;
+              var im_addresses = this._im_addresses.get (protocol);
 
               foreach (string address in im_addresses)
                   callback (protocol + ":" + address);
-            });
+            }
         }
       else if (prop_name == "web-service-addresses")
         {

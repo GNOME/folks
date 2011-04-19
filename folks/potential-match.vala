@@ -219,21 +219,15 @@ public class Folks.PotentialMatch : Object
     {
       foreach (var proto in this._individual_a.im_addresses.get_keys ())
         {
-          var addrs_b = this._individual_b.im_addresses.lookup (proto);
-          if (addrs_b == null)
-            continue;
-
-          var addrs_a = this._individual_a.im_addresses.lookup (proto);
+          var addrs_a = this._individual_a.im_addresses.get (proto);
+          var addrs_b = this._individual_b.im_addresses.get (proto);
 
           foreach (var im_a in addrs_a)
             {
-              foreach (var im_b in addrs_b)
+              if (addrs_b.contains (im_a))
                 {
-                  if (im_a == im_b)
-                    {
-                      this._result = MatchResult.HIGH;
-                      return;
-                    }
+                  this._result = MatchResult.HIGH;
+                  return;
                 }
             }
         }

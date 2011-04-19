@@ -167,13 +167,10 @@ public class LinkPersonasTests : Folks.TestCase
     {
       HashTable<string, Value?> details1 = new HashTable<string, Value?>
           (str_hash, str_equal);
-      Value? v1 = Value (typeof (HashTable<string, LinkedHashSet<string>>));
-      HashTable<string, LinkedHashSet<string>> im_addrs1 =
-        new HashTable<string, LinkedHashSet<string>> (null, null);
-      LinkedHashSet<string> addrs1 = new LinkedHashSet<string> ();
-      addrs1.add (this._im_address_1);
-      im_addrs1.insert (this._proto, addrs1);
-      v1.set_boxed (im_addrs1);
+      Value? v1 = Value (typeof (MultiMap<string, string>));
+      var im_addrs1 = new HashMultiMap<string, string> ();
+      im_addrs1.set (this._proto, this._im_address_1);
+      v1.set_object (im_addrs1);
       details1.insert ("im-addresses", (owned) v1);
 
       Value? v2 = Value (typeof (string));
@@ -182,13 +179,10 @@ public class LinkPersonasTests : Folks.TestCase
 
       HashTable<string, Value?> details2 = new HashTable<string, Value?>
           (str_hash, str_equal);
-      Value? v3 = Value (typeof (HashTable<string, LinkedHashSet<string>>));
-      HashTable<string, LinkedHashSet<string>> im_addrs2 =
-        new HashTable<string, LinkedHashSet<string>> (null, null);
-      LinkedHashSet<string> addrs2 = new LinkedHashSet<string> ();
-      addrs2.add (this._im_address_2);
-      im_addrs2.insert (this._proto, addrs2);
-      v3.set_boxed (im_addrs2);
+      Value? v3 = Value (typeof (MultiMap<string, string>));
+      var im_addrs2 = new HashMultiMap<string, string> ();
+      im_addrs2.set (this._proto, this._im_address_2);
+      v3.set_object (im_addrs2);
       details2.insert ("im-addresses", (owned) v3);
 
       Value? v4 = Value (typeof (string));
@@ -268,7 +262,7 @@ public class LinkPersonasTests : Folks.TestCase
           /* Lets check if it contains all the linking properties */
           foreach (var proto in i.im_addresses.get_keys ())
             {
-              var addrs = i.im_addresses.lookup (proto);
+              var addrs = i.im_addresses.get (proto);
               foreach (var a in addrs)
                 {
                   if (a == this._linking_props.get ("prop1"))

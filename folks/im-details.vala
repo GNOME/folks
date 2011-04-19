@@ -19,6 +19,7 @@
  */
 
 using GLib;
+using Gee;
 
 /**
  * Errors related to IM addresses and IM address handling.
@@ -39,22 +40,20 @@ public errordomain Folks.ImDetailsError
 public interface Folks.ImDetails : Object
 {
   /**
-   * A mapping of IM protocol to an ordered set of IM addresses.
+   * A mapping of IM protocol to an (unordered) set of IM addresses.
    *
    * Each mapping is from an arbitrary protocol identifier to a set of IM
-   * addresses on that protocol for the contact, listed in preference order.
-   * The most-preferred IM address for each protocol comes first in that
-   * protocol's list.
+   * addresses on that protocol for the contact, listed in no particular order.
    *
-   * There must be no duplicate IM addresses in each ordered set, though a given
+   * There must be no duplicate IM addresses in each set, though a given
    * IM address may be present in the sets for different protocols.
    *
    * All the IM addresses must be normalised using
    * {@link ImDetails.normalise_im_address} before being added to this property.
    *
-   * @since 0.3.4
+   * @since UNRELEASED
    */
-  public abstract HashTable<string, LinkedHashSet<string>> im_addresses
+  public abstract MultiMap<string, string> im_addresses
     {
       get; set;
     }

@@ -167,8 +167,7 @@ public class Folks.Importers.Pidgin : Folks.Importer
   private async Persona? parse_contact (Xml.Node *contact_node)
     {
       string alias = null;
-      HashTable<string, LinkedHashSet<string>> im_addresses =
-          new HashTable<string, LinkedHashSet<string>> (str_hash, str_equal);
+      var im_addresses = new HashMultiMap<string, string> ();
       string im_address_string = "";
 
       /* Parse the <buddy> elements beneath <contact> */
@@ -202,23 +201,14 @@ public class Folks.Importers.Pidgin : Folks.Importer
                    * we need to insert into the Persona's im-addresses property
                    * for the linking to work. */
                   string im_address = subiter->get_content ();
-
-                  LinkedHashSet<string> im_address_set =
-                      im_addresses.lookup (tp_protocol);
-                  if (im_address_set == null)
-                    {
-                      im_address_set = new LinkedHashSet<string> ();
-                      im_addresses.insert (tp_protocol, im_address_set);
-                    }
-
-                  im_address_set.add (im_address);
+                  im_addresses.set (tp_protocol, im_address);
                   im_address_string += "    %s\n".printf (im_address);
                 }
             }
         }
 
       /* Don't bother if there's no alias and only one IM address */
-      if (im_addresses.size () < 2 &&
+      if (im_addresses.size < 2 &&
           (alias == null || alias.strip () == "" ||
            alias.strip () == im_address_string.strip ()))
         {
@@ -232,8 +222,8 @@ public class Folks.Importers.Pidgin : Folks.Importer
       /* Create or update the relevant Persona */
       HashTable<string, Value?> details =
           new HashTable<string, Value?> (str_hash, str_equal);
-      Value im_addresses_value = Value (typeof (HashTable));
-      im_addresses_value.set_boxed (im_addresses);
+      Value im_addresses_value = Value (typeof (MultiMap));
+      im_addresses_value.set_object (im_addresses);
       details.insert ("im-addresses", im_addresses_value);
 
       Persona persona;

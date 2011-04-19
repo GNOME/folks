@@ -123,11 +123,10 @@ public class IMAddressesUpdatesTests : Folks.TestCase
             {
               this._individual_id = i.id;
 
-              foreach (unowned string proto in i.im_addresses.get_keys ())
+              foreach (var proto in i.im_addresses.get_keys ())
                 {
-                  var addrs = i.im_addresses.lookup (proto);
-                  var im_address_iter = addrs.get (0);
-                  if (im_address_iter == this._imaddress_1)
+                  var addrs = i.im_addresses.get (proto);
+                  if (addrs.size == 1 && addrs.contains (this._imaddress_1))
                     {
                       i.notify["im-addresses"].connect (this._notify_im_cb);
                       this._initial_imaddress_found = true;
@@ -143,11 +142,10 @@ public class IMAddressesUpdatesTests : Folks.TestCase
   private void _notify_im_cb (Object individual_obj, ParamSpec ps)
     {
       Folks.Individual i = (Folks.Individual) individual_obj;
-      foreach (unowned string proto in i.im_addresses.get_keys ())
+      foreach (var proto in i.im_addresses.get_keys ())
         {
-          var addrs = i.im_addresses.lookup (proto);
-          var im_address_iter = addrs.get (0);
-          if (im_address_iter == this._imaddress_2)
+          var addrs = i.im_addresses.get (proto);
+          if (addrs.size == 1 && addrs.contains (this._imaddress_2))
             {
               this._updated_imaddr_found = true;
               this._main_loop.quit ();

@@ -116,7 +116,7 @@ public class ImDetailsInterfaceTests : Folks.TestCase
             {
               foreach (var proto in i.im_addresses.get_keys ())
                 {
-                  var addrs = i.im_addresses.lookup (proto);
+                  var addrs = i.im_addresses.get (proto);
 
                   if (proto == "jabber")
                     {

@@ -111,21 +111,13 @@ public class SetIMAddressesTests : Folks.TestCase
             {
               i.notify["im-addresses"].connect (this._notify_im_addresses_cb);
 
-              HashTable<string, LinkedHashSet<string>> im_addresses =
-                new HashTable<string, LinkedHashSet<string>>
-                  (str_hash, str_equal);
+              var im_addresses = new HashMultiMap<string, string> ();
 
-              var addrs_1 = new LinkedHashSet<string> ();
-              addrs_1.add ("one@example.org");
-              addrs_1.add ("two@example.org");
-              im_addresses.insert ("aim",
-                  (owned) addrs_1);
+              im_addresses.set ("aim", "one@example.org");
+              im_addresses.set ("aim", "two@example.org");
 
-              var addrs_2 = new LinkedHashSet<string> ();
-              addrs_2.add ("three@example.org");
-              addrs_2.add ("four@example.org");
-              im_addresses.insert ("yahoo",
-                  (owned) addrs_2);
+              im_addresses.set ("yahoo", "three@example.org");
+              im_addresses.set ("yahoo", "four@example.org");
 
               Trf.Persona p = (Trf.Persona)i.personas.nth_data (0);
               p.im_addresses = (owned) im_addresses;
@@ -142,7 +134,7 @@ public class SetIMAddressesTests : Folks.TestCase
         {
           foreach (var proto in i.im_addresses.get_keys ())
             {
-              var addrs = i.im_addresses.lookup (proto);
+              var addrs = i.im_addresses.get (proto);
               foreach (var a in addrs)
                 {
                   foreach (unowned string my_a in this._addresses)

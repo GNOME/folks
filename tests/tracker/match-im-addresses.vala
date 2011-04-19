@@ -165,23 +165,18 @@ public class MatchIMAddressesTests : Folks.TestCase
       HashTable<string, Value?> details2 = new HashTable<string, Value?>
           (str_hash, str_equal);
       Value? val;
-      HashTable<string, LinkedHashSet<string>> im_addrs;
-      LinkedHashSet<string> proto;
+      HashMultiMap<string, string> im_addrs;
 
       val = Value (typeof (string));
       val.set_string (this._persona_fullname_1);
       details1.insert (Folks.PersonaStore.detail_key (PersonaDetail.FULL_NAME),
           (owned) val);
 
-      val = Value (typeof (HashTable<string, LinkedHashSet<string>>));
-      im_addrs = new HashTable<string, LinkedHashSet<string>> (null, null);
-      proto = new LinkedHashSet<string> ();
-      proto.add (this._im_addr_1);
-      im_addrs.insert ("jabber", (owned) proto);
-      proto = new LinkedHashSet<string> ();
-      proto.add (this._im_addr_2);
-      im_addrs.insert ("yahoo", (owned) proto);
-      val.set_boxed ((owned) im_addrs);
+      val = Value (typeof (MultiMap<string, string>));
+      im_addrs = new HashMultiMap<string, string> ();
+      im_addrs.set ("jabber", this._im_addr_1);
+      im_addrs.set ("yahoo", this._im_addr_2);
+      val.set_object (im_addrs);
       details1.insert (
           Folks.PersonaStore.detail_key (PersonaDetail.IM_ADDRESSES),
           (owned) val);
@@ -191,12 +186,10 @@ public class MatchIMAddressesTests : Folks.TestCase
       details2.insert (Folks.PersonaStore.detail_key (PersonaDetail.FULL_NAME),
           (owned) val);
 
-      val = Value (typeof (HashTable<string, LinkedHashSet<string>>));
-      im_addrs = new HashTable<string, LinkedHashSet<string>> (null, null);
-      proto = new LinkedHashSet<string> ();
-      proto.add (this._im_addr_1);
-      im_addrs.insert ("jabber", (owned) proto);
-      val.set_boxed ((owned) im_addrs);
+      val = Value (typeof (MultiMap<string, string>));
+      im_addrs = new HashMultiMap<string, string> ();
+      im_addrs.set ("jabber", this._im_addr_1);
+      val.set_object (im_addrs);
       details2.insert (
           Folks.PersonaStore.detail_key (PersonaDetail.IM_ADDRESSES),
           (owned) val);

@@ -266,21 +266,19 @@ private class Folks.Inspect.Utils
         }
       else if (prop_name == "im-addresses")
         {
-          HashTable<string, LinkedHashSet<string>> im_addresses =
-              (HashTable<string, LinkedHashSet<string>>)
-              prop_value.get_boxed ();
+          MultiMap<string, string> im_addresses =
+              (MultiMap<string, string>) prop_value.get_object ();
           output_string = "{ ";
           bool first = true;
 
-          /* FIXME: This is rather inefficient */
-          im_addresses.foreach ((k, v) =>
+          foreach (var protocol in im_addresses.get_keys ())
             {
               if (first == false)
                 output_string += ", ";
-              output_string += "'%s' : { ".printf ((string) k);
+              output_string += "'%s' : { ".printf (protocol);
               first = false;
 
-              LinkedHashSet<string> addresses = (LinkedHashSet<string>) v;
+              var addresses = im_addresses.get (protocol);
               bool _first = true;
               foreach (var a in addresses)
                 {
@@ -291,7 +289,7 @@ private class Folks.Inspect.Utils
                 }
 
               output_string += " }";
-            });
+            }
 
           output_string += " }";
           return output_string;

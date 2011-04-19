@@ -233,16 +233,11 @@ public class AddPersonaTests : Folks.TestCase
           Folks.PersonaStore.detail_key (PersonaDetail.EMAIL_ADDRESSES),
           (owned) v8);
 
-      Value? v9 = Value (typeof (HashTable<string, LinkedHashSet<string>>));
-      HashTable<string, LinkedHashSet<string>> im_addrs =
-        new HashTable<string, LinkedHashSet<string>> (null, null);
-      LinkedHashSet<string> proto1 = new LinkedHashSet<string> ();
-      proto1.add (this._im_addr_1);
-      im_addrs.insert ("jabber", proto1);
-      LinkedHashSet<string> proto2 = new LinkedHashSet<string> ();
-      proto2.add (this._im_addr_2);
-      im_addrs.insert ("yahoo", proto2);
-      v9.set_boxed (im_addrs);
+      Value? v9 = Value (typeof (MultiMap<string, string>));
+      var im_addrs = new HashMultiMap<string, string> ();
+      im_addrs.set ("jabber", this._im_addr_1);
+      im_addrs.set ("yahoo", this._im_addr_2);
+      v9.set_object (im_addrs);
       details.insert (
           Folks.PersonaStore.detail_key (PersonaDetail.IM_ADDRESSES), v9);
 
@@ -433,7 +428,7 @@ public class AddPersonaTests : Folks.TestCase
 
       foreach (var proto in i.im_addresses.get_keys ())
         {
-          var addrs = i.im_addresses.lookup (proto);
+          var addrs = i.im_addresses.get (proto);
           foreach (var a in addrs)
             {
               if (a == this._im_addr_1)

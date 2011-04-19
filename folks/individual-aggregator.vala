@@ -982,8 +982,7 @@ public class Folks.IndividualAggregator : Object
           this._configured_writeable_store_type_id);
 
       /* `protocols_addrs_set` will be passed to the new Kf.Persona */
-      var protocols_addrs_set =
-          new HashTable<string, LinkedHashSet<string>> (str_hash, str_equal);
+      var protocols_addrs_set = new HashMultiMap<string, string> ();
       var web_service_addrs_set =
           new HashMap<string, LinkedHashSet<string>> (str_hash, str_equal);
 
@@ -994,21 +993,18 @@ public class Folks.IndividualAggregator : Object
         {
           if (persona is ImDetails)
             {
-              ((ImDetails) persona).im_addresses.foreach ((k, v) =>
+              ImDetails im_details = (ImDetails) persona;
+
+              /* protocols_addrs_set = union (all personas' IM addresses) */
+              foreach (var protocol in im_details.im_addresses.get_keys ())
                 {
-                  unowned string protocol = (string) k;
-                  unowned LinkedHashSet<string> addresses =
-                    (LinkedHashSet<string>) v;
+                  var im_addresses = im_details.im_addresses.get (protocol);
 
-                  var address_set = protocols_addrs_set.lookup (protocol);
-                  if (address_set == null)
+                  foreach (var im_address in im_addresses)
                     {
-                      address_set = new LinkedHashSet<string> ();
-                      protocols_addrs_set.insert (protocol, address_set);
+                      protocols_addrs_set.set (protocol, im_address);
                     }
-
-                  address_set.add_all (addresses);
-                });
+                }
             }
 
           if (persona is WebServiceDetails)
@@ -1042,10 +1038,10 @@ public class Folks.IndividualAggregator : Object
 
       var details = new HashTable<string, Value?> (str_hash, str_equal);
 
-      if (protocols_addrs_set.size () > 0)
+      if (protocols_addrs_set.size > 0)
         {
-          var im_addresses_value = Value (typeof (HashTable));
-          im_addresses_value.set_boxed (protocols_addrs_set);
+          var im_addresses_value = Value (typeof (MultiMap));
+          im_addresses_value.set_object (protocols_addrs_set);
           details.insert (PersonaStore.detail_key (PersonaDetail.IM_ADDRESSES),
               im_addresses_value);
         }

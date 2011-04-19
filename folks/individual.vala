@@ -99,7 +99,7 @@ public class Folks.Individual : Object,
   /* The number of Personas in this Individual which have
    * Persona.is_user == true. Iff this is > 0, Individual.is_user == true. */
   private uint _persona_user_count = 0;
-  private HashTable<string, LinkedHashSet<string>> _im_addresses;
+  private HashMultiMap<string, string> _im_addresses;
   private HashMap<string, LinkedHashSet<string>> _web_service_addresses;
 
   /**
@@ -420,7 +420,7 @@ public class Folks.Individual : Object,
   /**
    * {@inheritDoc}
    */
-  public HashTable<string, LinkedHashSet<string>> im_addresses
+  public MultiMap<string, string> im_addresses
     {
       get { return this._im_addresses; }
       private set {}
@@ -598,8 +598,7 @@ public class Folks.Individual : Object,
    */
   public Individual (GLib.List<Persona>? personas)
     {
-      this._im_addresses =
-          new HashTable<string, LinkedHashSet<string>> (str_hash, str_equal);
+      this._im_addresses = new HashMultiMap<string, string> ();
       this._web_service_addresses =
           new HashMap<string, LinkedHashSet<string>> (str_hash, str_equal);
       this._persona_set = new HashSet<Persona> (null, null);
@@ -930,25 +929,23 @@ public class Folks.Individual : Object,
   private void _update_im_addresses ()
     {
       /* populate the IM addresses as the union of our Personas' addresses */
+      this._im_addresses.clear ();
+
       foreach (var persona in this.personas)
         {
           if (persona is ImDetails)
             {
               var im_details = (ImDetails) persona;
-              im_details.im_addresses.foreach ((k, v) =>
+              foreach (var cur_protocol in im_details.im_addresses.get_keys ())
                 {
-                  var cur_protocol = (string) k;
-                  var cur_addresses = (LinkedHashSet<string>) v;
-                  var im_set = this._im_addresses.lookup (cur_protocol);
+                  var cur_addresses =
+                      im_details.im_addresses.get (cur_protocol);
 
-                  if (im_set == null)
+                  foreach (var address in cur_addresses)
                     {
-                      im_set = new LinkedHashSet<string> ();
-                      this._im_addresses.insert (cur_protocol, im_set);
+                      this._im_addresses.set (cur_protocol, address);
                     }
-
-                  im_set.add_all (cur_addresses);
-                });
+                }
             }
         }
       this.notify_property ("im-addresses");
