@@ -38,7 +38,7 @@ public class LinkPersonasTests : Folks.TestCase
   private bool _persona_found_2;
   private string _persona_iid_1 = "";
   private string _persona_iid_2 = "";
-  private GLib.List<Persona> _personas;
+  private HashSet<Persona> _personas;
   private int _removed_individuals = 0;
   private string _folks_config_key = "/system/folks/backends/primary_store";
   private unowned GConf.Client _gconf_client;
@@ -98,7 +98,7 @@ public class LinkPersonasTests : Folks.TestCase
       this._main_loop = new GLib.MainLoop (null, false);
       this._persona_fullname_1 = "persona #1";
       this._persona_fullname_2 = "persona #2";
-      this._personas = new GLib.List<Persona> ();
+      this._personas = new HashSet<Persona> ();
 
       this._persona_found_1 = false;
       this._persona_found_2 = false;
@@ -256,13 +256,13 @@ public class LinkPersonasTests : Folks.TestCase
           this._persona_iid_1 == "")
         {
           this._persona_iid_1 = first_persona.iid;
-          this._personas.prepend (first_persona);
+          this._personas.add (first_persona);
         }
       else if (i.full_name == this._persona_fullname_2 &&
           this._persona_iid_2 == "")
         {
           this._persona_iid_2 = first_persona.iid;
-          this._personas.prepend (first_persona);
+          this._personas.add (first_persona);
         }
       else if (i.personas.size > 1)
         {
@@ -291,7 +291,7 @@ public class LinkPersonasTests : Folks.TestCase
 
       /* We can try linking the personas only once we've got the
        * 2 initially created personas. */
-      if (this._personas.length () == 2 &&
+      if (this._personas.size == 2 &&
           this._linking_fired == false)
         {
           this._linking_fired = true;

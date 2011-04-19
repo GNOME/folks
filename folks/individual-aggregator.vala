@@ -928,16 +928,12 @@ public class Folks.IndividualAggregator : Object
    * before is signalled by {@link IndividualAggregator.individuals_changed} and
    * {@link Individual.removed}.
    *
-   * @param personas_in the {@link Persona}s to be linked
-   * @since 0.1.13
+   * @param personas the {@link Persona}s to be linked
+   * @since UNRELEASED
    */
-  public async void link_personas (void *personas_in)
+  public async void link_personas (Set<Persona> personas)
       throws IndividualAggregatorError
     {
-      /* FIXME: personas_in should be GLib.List<Persona>, but Vala won't allow
-       * it */
-      unowned GLib.List<Persona> personas = (GLib.List<Persona>) personas_in;
-
       if (this._writeable_store == null)
         {
           throw new IndividualAggregatorError.NO_WRITEABLE_STORE (
@@ -945,7 +941,7 @@ public class Folks.IndividualAggregator : Object
         }
 
       /* Don't bother linking if it's just one Persona */
-      if (personas.next == null)
+      if (personas.size <= 1)
         return;
 
       /* Disallow linking if it's disabled */

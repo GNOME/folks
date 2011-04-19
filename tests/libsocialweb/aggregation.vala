@@ -222,23 +222,23 @@ public class AggregationTests : Folks.TestCase
         });
 
       /* Link personas */
-      var personas = new GLib.List<unowned Persona>();
+      var personas = new HashSet<Persona> ();
 
       var personas1 = new GLib.List<unowned Persona> ();
       foreach (var p1 in individual_gathered[0].personas)
         {
-          personas.append (p1);
+          personas.add (p1);
           personas1.append (p1);
         }
 
       var personas2 = new GLib.List<unowned Persona> ();
       foreach (var p2 in individual_gathered[1].personas)
         {
-          personas.append (p2);
+          personas.add (p2);
           personas2.append (p2);
         }
 
-      assert (personas.length () == 2);
+      assert (personas.size == 2);
 
       Idle.add (() =>
         {
