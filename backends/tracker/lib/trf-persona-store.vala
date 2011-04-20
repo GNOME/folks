@@ -1700,11 +1700,11 @@ public class Trf.PersonaStore : Folks.PersonaStore
               var country = cursor.get_string
                   (Trf.AfflInfoFields.AFFL_COUNTRY).dup ();
 
-              GLib.List<string> types = new GLib.List<string> ();
+              var types = new HashSet<string> ();
 
               affl_info.postal_address = new Folks.PostalAddress (
                   po_box, extension, street, locality, region, postal_code,
-                  country, null, (owned) types, affl_info.affl_tracker_id);
+                  country, null, types, affl_info.affl_tracker_id);
 
               affl_info.email = cursor.get_string
                   (Trf.AfflInfoFields.AFFL_EMAIL).dup ();

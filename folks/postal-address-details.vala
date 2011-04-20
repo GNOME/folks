@@ -128,22 +128,22 @@ public class Folks.PostalAddress : Object
       construct set { _address_format = (value != null ? value : ""); }
     }
 
-  private GLib.List<string> _types;
+  private HashSet<string> _types;
+
   /**
    * The types of the address.
    *
    * The types of address, for instance an address can be a home or work
    * address.
    */
-  public GLib.List<string> types
+  public Set<string> types
     {
       get { return this._types; }
       construct set
         {
-          this._types = new GLib.List<string> ();
-          foreach (unowned string type in value)
-            this._types.prepend (type);
-          this._types.reverse ();
+          this._types = new HashSet<string> ();
+          foreach (var type in value)
+            this._types.add (type);
         }
     }
 
@@ -169,10 +169,11 @@ public class Folks.PostalAddress : Object
    * @param region the region (state or province) name
    * @param postal_code the postal code
    * @param address_format the address format
+   * @since UNRELEASED
    */
   public PostalAddress (string? po_box, string? extension, string? street,
       string? locality, string? region, string? postal_code, string? country,
-      string? address_format, GLib.List<string> types, string? uid)
+      string? address_format, Set<string> types, string? uid)
     {
       Object (po_box:         po_box,
               extension:      extension,
@@ -196,14 +197,16 @@ public class Folks.PostalAddress : Object
           this.postal_code != with.postal_code ||
           this.country != with.country ||
           this.address_format != with.address_format ||
-          this.types.length () != with.types.length () ||
+          this.types.size != with.types.size ||
           this.uid != with.uid)
         return false;
 
-      for (int i=0; i<this.types.length (); i++)
+      foreach (var type in this.types)
         {
-          if (this.types.nth_data (i) != with.types.nth_data (i))
-            return false;
+          if (with.types.contains (type) == false)
+            {
+              return false;
+            }
         }
 
       return true;

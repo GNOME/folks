@@ -96,7 +96,7 @@ public class AddPersonaTests : Folks.TestCase
       this._title_1 = "CFO";
       this._organisation_1 = "Example Inc.";
 
-      GLib.List<string> types =  new GLib.List<string> ();
+      var types =  new HashSet<string> ();
       this._address = new PostalAddress (this._po_box,
           this._extension, this._street, this._locality, this._region,
           this._postal_code, this._country, null, types, null);
@@ -270,7 +270,7 @@ public class AddPersonaTests : Folks.TestCase
       Value? v13 = Value (typeof (Set<PostalAddress>));
       var postal_addresses = new HashSet<PostalAddress> ();
 
-      GLib.List<string> types =  new GLib.List<string> ();
+      var types =  new HashSet<string> ();
       PostalAddress postal_a = new PostalAddress (this._po_box,
           this._extension, this._street, this._locality, this._region,
           this._postal_code, this._country, null, types, null);

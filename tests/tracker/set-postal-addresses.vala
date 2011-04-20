@@ -59,7 +59,7 @@ public class SetPostalAddressesTests : Folks.TestCase
       c1.set (Trf.OntologyDefs.NCO_FULLNAME, this._persona_fullname);
       this._tracker_backend.add_contact (c1);
 
-      GLib.List<string> types =  new GLib.List<string> ();
+      var types =  new HashSet<string> ();
       this._address = new PostalAddress (null, null, null, null, null,
           null, null, null, types, null);
       this._address.po_box = "12345";
@@ -119,7 +119,7 @@ public class SetPostalAddressesTests : Folks.TestCase
             {
               i.notify["postal-addresses"].connect (this._notify_postal_cb);
 
-              GLib.List<string> types =  new GLib.List<string> ();
+              var types =  new HashSet<string> ();
               var addresses = new HashSet<PostalAddress> ();
               var pa = new Folks.PostalAddress (null, null, null, null, null,
                 null, null, null, types, null);

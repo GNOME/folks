@@ -550,7 +550,7 @@ public class Trf.Persona : Folks.Persona,
           if (address_empty)
             continue;
 
-          GLib.List<string> types = new GLib.List<string> ();
+          var types = new HashSet<string> ();
 
           var pa = new PostalAddress (a_info[Trf.PostalAddressFields.POBOX],
               a_info[Trf.PostalAddressFields.EXTENDED_ADDRESS],
@@ -559,7 +559,7 @@ public class Trf.Persona : Folks.Persona,
               a_info[Trf.PostalAddressFields.REGION],
               a_info[Trf.PostalAddressFields.POSTALCODE],
               a_info[Trf.PostalAddressFields.COUNTRY],
-              null, (owned) types,
+              null, types,
               a_info[Trf.PostalAddressFields.TRACKER_ID]);
 
           postal_addresses.add (pa);

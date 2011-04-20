@@ -67,7 +67,7 @@ public class PostalAddressDetailsInterfaceTests : Folks.TestCase
       this._fullname = "persona #1";
       c1.set (Trf.OntologyDefs.NCO_FULLNAME, this._fullname);
 
-      GLib.List<string> types = new GLib.List<string> ();
+      var types = new HashSet<string> ();
       this._postal_address = new PostalAddress (
            this._pobox,
            this._extended,
