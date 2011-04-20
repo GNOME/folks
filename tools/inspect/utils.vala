@@ -233,7 +233,8 @@ private class Folks.Inspect.Utils
               (Map<string, Persona>) prop_value.get_object ();
           return "Set of %u personas".printf (personas.size);
         }
-      else if (prop_name == "groups")
+      else if (prop_name == "groups" ||
+               prop_name == "local-ids")
         {
           Set<string> groups = (Set<string>) prop_value.get_object ();
           output_string = "{ ";

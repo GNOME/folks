@@ -1029,7 +1029,7 @@ public class Folks.IndividualAggregator : Object
 
       if (local_ids.size > 0)
         {
-          var local_ids_value = Value (typeof (Gee.HashSet<string>));
+          var local_ids_value = Value (typeof (Set<string>));
           local_ids_value.set_object (local_ids);
           details.insert (
               Folks.PersonaStore.detail_key (PersonaDetail.LOCAL_IDS),

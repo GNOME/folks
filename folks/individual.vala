@@ -311,15 +311,18 @@ public class Folks.Individual : Object,
     }
 
   private HashSet<string> _local_ids;
+
   /**
    * {@inheritDoc}
    */
-  public HashSet<string> local_ids
+  public Set<string> local_ids
     {
       get { return this._local_ids; }
       private set
         {
-          this._local_ids = value;
+          this._local_ids = new HashSet<string> ();
+          foreach (var id in value)
+            this._local_ids.add (id);
           this.notify_property ("local-ids");
         }
     }

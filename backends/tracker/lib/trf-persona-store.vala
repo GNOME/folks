@@ -775,9 +775,9 @@ public class Trf.PersonaStore : Folks.PersonaStore
  /**
    * Transform HashSet<string> to "id1,id2,.."
    *
-   * @since 0.5.0
+   * @since UNRELEASED
    */
-  public  static string serialize_local_ids (Gee.HashSet<string> local_ids)
+  public static string serialize_local_ids (Set<string> local_ids)
     {
       var str = "";
 
@@ -796,11 +796,11 @@ public class Trf.PersonaStore : Folks.PersonaStore
   /**
    * Transform from id1,id2,.. to HashSet<string>
    *
-   * @since 0.5.0
+   * @since UNRELEASED
    */
-  public static Gee.HashSet<string> unserialize_local_ids (string local_ids)
+  public static Set<string> unserialize_local_ids (string local_ids)
     {
-      Gee.HashSet<string> ids = new Gee.HashSet<string> ();
+      var ids = new HashSet<string> ();
 
       if (local_ids != "")
         {
@@ -1849,7 +1849,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
     }
 
   internal async void _set_local_ids (Trf.Persona persona,
-      Gee.HashSet<string> local_ids)
+      Set<string> local_ids)
     {
       string ids = Trf.PersonaStore.serialize_local_ids (local_ids);
       yield this._set_tracker_property (persona,

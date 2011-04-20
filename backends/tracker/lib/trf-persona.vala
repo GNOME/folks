@@ -283,10 +283,11 @@ public class Trf.Persona : Folks.Persona,
       }
 
   private HashSet<string> _local_ids = new HashSet<string> ();
+
   /**
    * IDs used to link {@link Trf.Persona}s.
    */
-  public HashSet<string> local_ids
+  public Set<string> local_ids
     {
       get
         {
@@ -794,7 +795,8 @@ public class Trf.Persona : Folks.Persona,
 
   internal bool _set_local_ids (string local_ids)
     {
-      this._local_ids = Trf.PersonaStore.unserialize_local_ids (local_ids);
+      this._local_ids =
+          (HashSet<string>) Trf.PersonaStore.unserialize_local_ids (local_ids);
       this.notify_property ("local-ids");
       return true;
     }
