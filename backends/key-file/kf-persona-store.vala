@@ -32,8 +32,7 @@ using Folks.Backends.Kf;
  */
 public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
 {
-  private HashTable<string, Persona> _personas;
-  private HashSet<Persona> _persona_set;
+  private HashMap<string, Persona> _personas;
   private File _file;
   private GLib.KeyFile _key_file;
   private unowned Cancellable _save_key_file_cancellable = null;
@@ -107,7 +106,7 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
   /**
    * {@inheritDoc}
    */
-  public override HashTable<string, Persona> personas
+  public override Map<string, Persona> personas
     {
       get { return this._personas; }
     }
@@ -127,8 +126,7 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
 
       this.trust_level = PersonaStoreTrust.FULL;
       this._file = key_file;
-      this._personas = new HashTable<string, Persona> (str_hash, str_equal);
-      this._persona_set = new HashSet<Persona> ();
+      this._personas = new HashMap<string, Persona> ();
     }
 
   /**
@@ -228,19 +226,20 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
                * groups: each group is a persona which we have to create and
                * emit */
               var groups = this._key_file.get_groups ();
+              var added_personas = new HashSet<Persona> ();
               foreach (var persona_id in groups)
                 {
                   Persona persona = new Kf.Persona (this._key_file, persona_id,
                       this);
-                  this._personas.insert (persona.iid, persona);
-                  this._persona_set.add (persona);
+                  this._personas.set (persona.iid, persona);
+                  added_personas.add (persona);
                 }
 
-              if (this._personas.size () > 0)
+              if (this._personas.size > 0)
                 {
                   /* FIXME: GroupDetails.ChangeReason is not the right enum to
                    * use here */
-                  this.personas_changed (this._persona_set,
+                  this.personas_changed (added_personas,
                       new HashSet<Persona> (),
                       null, null, GroupDetails.ChangeReason.NONE);
                 }
@@ -348,8 +347,7 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
       /* Create a new persona and set its addresses property to update the
        * key file */
       Persona persona = new Kf.Persona (this._key_file, persona_id, this);
-      this._personas.insert (persona.iid, persona);
-      this._persona_set.add (persona);
+      this._personas.set (persona.iid, persona);
       if (im_addresses_size > 0)
         persona.im_addresses = im_addresses;
       if (web_service_addresses_size > 0)

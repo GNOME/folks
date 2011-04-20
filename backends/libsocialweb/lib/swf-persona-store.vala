@@ -34,7 +34,7 @@ extern const string BACKEND_NAME;
  */
 public class Swf.PersonaStore : Folks.PersonaStore
 {
-  private HashTable<string, Persona> _personas;
+  private HashMap<string, Persona> _personas;
   private bool _is_prepared = false;
   private ClientService _service;
   private ClientContactView _contact_view;
@@ -111,7 +111,7 @@ public class Swf.PersonaStore : Folks.PersonaStore
    *
    * See {@link Folks.PersonaStore.personas}.
    */
-  public override HashTable<string, Persona> personas
+  public override Map<string, Persona> personas
     {
       get { return this._personas; }
     }
@@ -129,7 +129,7 @@ public class Swf.PersonaStore : Folks.PersonaStore
 
       this.trust_level = PersonaStoreTrust.PARTIAL;
       this._service = service;
-      this._personas = new HashTable<string, Persona> (str_hash, str_equal);
+      this._personas = new HashMap<string, Persona> ();
     }
 
   ~PersonaStore ()
@@ -218,7 +218,7 @@ public class Swf.PersonaStore : Folks.PersonaStore
       foreach (var contact in contacts)
         {
           var persona = new Persona(this, contact);
-          _personas.insert(persona.iid, persona);
+          _personas.set (persona.iid, persona);
           added_personas.add (persona);
         }
 
@@ -238,7 +238,7 @@ public class Swf.PersonaStore : Folks.PersonaStore
               continue;
             }
           var iid = Swf.Persona._build_iid(contact.service, Persona.get_contact_id (contact));
-          var persona = _personas.lookup(iid);
+          var persona = _personas.get (iid);
           if (persona != null)
             persona.update (contact);
         }
@@ -254,11 +254,11 @@ public class Swf.PersonaStore : Folks.PersonaStore
               continue;
             }
           var iid = Swf.Persona._build_iid(contact.service, Persona.get_contact_id (contact));
-          var persona = _personas.lookup(iid);
+          var persona = _personas.get (iid);
           if (persona != null)
             {
               removed_personas.add (persona);
-              _personas.remove(persona.iid);
+              _personas.unset (persona.iid);
             }
         }
 

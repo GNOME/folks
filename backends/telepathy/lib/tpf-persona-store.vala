@@ -60,7 +60,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
         ContactFeature.PRESENCE
       };
 
-  private HashTable<string, Persona> _personas;
+  private HashMap<string, Persona> _personas;
   private HashSet<Persona> _persona_set;
   /* universal, contact owner handles (not channel-specific) */
   private HashMap<uint, Persona> _handle_persona_map;
@@ -170,7 +170,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
    *
    * See {@link Folks.PersonaStore.personas}.
    */
-  public override HashTable<string, Persona> personas
+  public override Map<string, Persona> personas
     {
       get { return this._personas; }
     }
@@ -202,8 +202,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       else
         this.trust_level = PersonaStoreTrust.PARTIAL;
 
-      this._personas = new HashTable<string, Persona> (str_hash,
-          str_equal);
+      this._personas = new HashMap<string, Persona> ();
       this._persona_set = new HashSet<Persona> ();
       this._conn = null;
       this._handle_persona_map = new HashMap<uint, Persona> ();
@@ -992,7 +991,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
 
       this.personas_changed (new HashSet<Persona> (), personas,
           message, actor, reason);
-      this._personas.remove (persona.iid);
+      this._personas.unset (persona.iid);
       this._persona_set.remove (persona);
     }
 
@@ -1361,7 +1360,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
         {
           persona = new Tpf.Persona (contact, this);
 
-          this._personas.insert (persona.iid, persona);
+          this._personas.set (persona.iid, persona);
           this._persona_set.add (persona);
           this._handle_persona_map[h] = persona;
 

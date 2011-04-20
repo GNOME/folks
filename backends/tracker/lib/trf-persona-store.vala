@@ -161,7 +161,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
   private const string _OBJECT_NAME = "org.freedesktop.Tracker1";
   private const string _OBJECT_IFACE = "org.freedesktop.Tracker1.Resources";
   private const string _OBJECT_PATH = "/org/freedesktop/Tracker1/Resources";
-  private HashTable<string, Persona> _personas;
+  private HashMap<string, Persona> _personas;
   private bool _is_prepared = false;
   private static const int _default_timeout = 100;
   private Resources _resources_object;
@@ -356,7 +356,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
    *
    * See {@link Folks.PersonaStore.personas}.
    */
-  public override HashTable<string, Persona> personas
+  public override Map<string, Persona> personas
     {
       get { return this._personas; }
     }
@@ -369,7 +369,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
   public PersonaStore ()
     {
       Object (id: BACKEND_NAME, display_name: BACKEND_NAME);
-      this._personas = new HashTable<string, Persona> (str_hash, str_equal);
+      this._personas = new HashMap<string, Persona> ();
       debug ("Initial query : \n%s\n", this._INITIAL_QUERY);
     }
 
@@ -1215,17 +1215,17 @@ public class Trf.PersonaStore : Folks.PersonaStore
             {
               lock (this._personas)
                 {
-                  var removed_p = this._personas.lookup (p_id);
+                  var removed_p = this._personas.get (p_id);
                   if (removed_p != null)
                     {
                       removed_personas.add (removed_p);
-                      _personas.remove (removed_p.iid);
+                      _personas.unset (removed_p.iid);
                     }
                 }
             }
           else
             {
-              var persona = this._personas.lookup (p_id);
+              var persona = this._personas.get (p_id);
               if (persona != null)
                 {
                   yield this._do_update (persona, e, false);
@@ -1253,11 +1253,11 @@ public class Trf.PersonaStore : Folks.PersonaStore
           Trf.Persona persona;
           lock (this._personas)
             {
-              persona = this._personas.lookup (p_id);
+              persona = this._personas.get (p_id);
               if (persona == null)
                 {
                   persona = new Trf.Persona (this, subject_tracker_id);
-                  this._personas.insert (persona.iid, persona);
+                  this._personas.set (persona.iid, persona);
                   added_personas.add (persona);
                 }
             }
@@ -1282,11 +1282,11 @@ public class Trf.PersonaStore : Folks.PersonaStore
           {
             int tracker_id = (int) cursor.get_integer (Trf.Fields.TRACKER_ID);
             var p_id = Trf.Persona.build_iid (this.id, tracker_id.to_string ());
-            if (this._personas.lookup (p_id) == null)
+            if (this._personas.get (p_id) == null)
               {
                 var persona = new Trf.Persona (this,
                     tracker_id.to_string (), cursor);
-                this._personas.insert (persona.iid, persona);
+                this._personas.set (persona.iid, persona);
                 added_personas.add (persona);
               }
           }

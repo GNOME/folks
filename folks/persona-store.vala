@@ -253,8 +253,10 @@ public abstract class Folks.PersonaStore : Object
 
   /**
    * The {@link Persona}s exposed by this PersonaStore.
+   *
+   * @since UNRELEASED
    */
-  public abstract HashTable<string, Persona> personas { get; }
+  public abstract Map<string, Persona> personas { get; }
 
   /**
    * Whether this {@link PersonaStore} can add {@link Persona}s.

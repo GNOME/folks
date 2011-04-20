@@ -175,7 +175,7 @@ public class RemovePersonaTests : Folks.TestCase
                 }
 
               this._individual = i;
-              if (this._pstore.personas.lookup (this._persona_id) != null)
+              if (this._pstore.personas.has_key (this._persona_id) == true)
                 {
                   this._pstore.personas_changed.connect (this._personas_cb);
                   this._aggregator.remove_individual (this._individual);
@@ -194,7 +194,7 @@ public class RemovePersonaTests : Folks.TestCase
 
   private void _personas_cb ()
     {
-      if (this._pstore.personas.lookup (this._persona_id) == null)
+      if (this._pstore.personas.has_key (this._persona_id) == false)
         {
           this._persona_removed = true;
           this._main_loop.quit ();

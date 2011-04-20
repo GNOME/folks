@@ -174,7 +174,7 @@ private class Folks.Inspect.Utils
       bool show_personas)
     {
       Utils.print_line ("Persona store '%s' with %u personas:",
-          store.id, store.personas.size ());
+          store.id, store.personas.size);
 
       /* List the store's properties */
       unowned ParamSpec[] properties =
@@ -205,10 +205,10 @@ private class Folks.Inspect.Utils
           Utils.print_line ("Personas:");
 
           Utils.indent ();
-          store.personas.foreach ((k, v) =>
+          foreach (var persona in store.personas.values)
             {
-              Utils.print_persona ((Persona) v);
-            });
+              Utils.print_persona (persona);
+            }
           Utils.unindent ();
         }
       Utils.unindent ();
@@ -229,9 +229,9 @@ private class Folks.Inspect.Utils
       else if (object_type.is_a (typeof (PersonaStore)) &&
           prop_name == "personas")
         {
-          unowned HashTable<string, Persona> personas =
-              (HashTable<string, Persona>) prop_value.get_boxed ();
-          return "Set of %u personas".printf (personas.size ());
+          Map<string, Persona> personas =
+              (Map<string, Persona>) prop_value.get_object ();
+          return "Set of %u personas".printf (personas.size);
         }
       else if (prop_name == "groups")
         {
