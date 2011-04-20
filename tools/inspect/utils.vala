@@ -424,7 +424,7 @@ private class Folks.Inspect.Utils
 
   /* FIXME: This can't be in the individual_id_completion_cb() function because
    * Vala doesn't allow static local variables. Erk. */
-  private static HashTableIter<string, Individual>? individual_id_iter = null;
+  private static MapIterator<string, Individual>? individual_id_iter = null;
 
   /* Complete an individual's ID, starting with @word. */
   public static string? individual_id_completion_cb (string word,
@@ -433,14 +433,13 @@ private class Folks.Inspect.Utils
       /* Initialise state. Whoever wrote the readline API should be shot. */
       if (state == 0)
         {
-          Utils.individual_id_iter = HashTableIter<string, Individual> (
-              main_client.aggregator.individuals);
+          Utils.individual_id_iter =
+              main_client.aggregator.individuals.map_iterator ();
         }
 
-      string id;
-      Individual individual;
-      while (Utils.individual_id_iter.next (out id, out individual) == true)
+      while (Utils.individual_id_iter.next () == true)
         {
+          var id = Utils.individual_id_iter.get_key ();
           if (id.has_prefix (word))
             return id;
         }
@@ -461,15 +460,16 @@ private class Folks.Inspect.Utils
       /* Initialise state. Whoever wrote the readline API should be shot. */
       if (state == 0)
         {
-          Utils.individual_id_iter = HashTableIter<string, Individual> (
-              main_client.aggregator.individuals);
+          Utils.individual_id_iter =
+              main_client.aggregator.individuals.map_iterator ();
           Utils.persona_uid_iter = null;
         }
 
-      Individual individual = null;
       while (Utils.persona_uid_iter != null ||
-          Utils.individual_id_iter.next (null, out individual) == true)
+          Utils.individual_id_iter.next () == true)
         {
+          var individual = Utils.individual_id_iter.get_value ();
+
           if (Utils.persona_uid_iter == null)
             {
               assert (individual != null);

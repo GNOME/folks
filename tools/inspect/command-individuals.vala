@@ -58,17 +58,17 @@ private class Folks.Inspect.Commands.Individuals : Folks.Inspect.Command
       if (command_string == null)
         {
           /* List all the individuals */
-          this.client.aggregator.individuals.foreach ((k, v) =>
+          foreach (var individual in this.client.aggregator.individuals.values)
             {
-              Utils.print_individual ((Individual) v, false);
+              Utils.print_individual (individual, false);
               Utils.print_line ("");
-            });
+            }
         }
       else
         {
           /* Display the details of a single individual */
-          Individual individual =
-              this.client.aggregator.individuals.lookup (command_string);
+          var individual =
+              this.client.aggregator.individuals.get (command_string);
 
           if (individual == null)
             {

@@ -116,9 +116,8 @@ public class AddContactTests : Folks.TestCase
 
   private void _notify_full_name_cb ()
     {
-      GLib.List<Individual> individuals =
-          this._aggregator.individuals.get_values ();
-      foreach (unowned Individual i in individuals)
+      var individuals = this._aggregator.individuals.values;
+      foreach (var i in individuals)
         {
           if (i.full_name == this._persona_fullname)
             {

@@ -54,10 +54,8 @@ private class Folks.Inspect.Commands.Personas : Folks.Inspect.Command
 
   public override void run (string? command_string)
     {
-      this.client.aggregator.individuals.foreach ((k, v) =>
+      foreach (var individual in this.client.aggregator.individuals.values)
         {
-          Individual individual = (Individual) v;
-
           foreach (Persona persona in individual.personas)
             {
               /* Either list all personas, or only list the one specified */
@@ -69,7 +67,7 @@ private class Folks.Inspect.Commands.Personas : Folks.Inspect.Command
               if (command_string == null)
                 Utils.print_line ("");
             }
-        });
+        }
     }
 
   public override string[]? complete_subcommand (string subcommand)

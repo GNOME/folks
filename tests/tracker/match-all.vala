@@ -166,7 +166,7 @@ public class MatchAllTests : Folks.TestCase
 
   private void _try_match_all ()
     {
-      var ind1 = this._aggregator.individuals.lookup (this._individual_id_1);
+      var ind1 = this._aggregator.individuals.get (this._individual_id_1);
       var matches_1 = this._aggregator.get_potential_matches (ind1,
           MatchResult.MEDIUM);
       this._matches_1 = matches_1.size;

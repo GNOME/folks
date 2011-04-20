@@ -139,8 +139,8 @@ public class MatchKnownEmailsTests : Folks.TestCase
 
   private void _try_potential_match ()
     {
-      var ind1 = this._aggregator.individuals.lookup (this._individual_id_1);
-      var ind2 = this._aggregator.individuals.lookup (this._individual_id_2);
+      var ind1 = this._aggregator.individuals.get (this._individual_id_1);
+      var ind2 = this._aggregator.individuals.get (this._individual_id_2);
 
       Folks.PotentialMatch matchObj = new Folks.PotentialMatch ();
       this._match = matchObj.potential_match (ind1, ind2);

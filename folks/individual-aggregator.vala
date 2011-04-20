@@ -96,7 +96,7 @@ public class Folks.IndividualAggregator : Object
     }
 
   /**
-   * A table mapping {@link Individual.id}s to their {@link Individual}s.
+   * A map from {@link Individual.id}s to their {@link Individual}s.
    *
    * This is the canonical set of {@link Individual}s provided by this
    * IndividualAggregator.
@@ -104,8 +104,10 @@ public class Folks.IndividualAggregator : Object
    * {@link Individual}s may be added or removed using
    * {@link IndividualAggregator.add_persona_from_details} and
    * {@link IndividualAggregator.remove_individual}, respectively.
+   *
+   * @since UNRELEASED
    */
-  public HashTable<string, Individual> individuals { get; private set; }
+  public Map<string, Individual> individuals { get; private set; }
 
   /**
    * The {@link Individual} representing the user.
@@ -158,8 +160,7 @@ public class Folks.IndividualAggregator : Object
   public IndividualAggregator ()
     {
       this._stores = new HashMap<string, PersonaStore> ();
-      this.individuals = new HashTable<string, Individual> (str_hash,
-          str_equal);
+      this.individuals = new HashMap<string, Individual> ();
       this._link_map = new HashTable<string, Individual> (str_hash, str_equal);
 
       this._backends = new HashSet<Backend> ();
@@ -239,7 +240,7 @@ public class Folks.IndividualAggregator : Object
           new HashMap<Individual, MatchResult> ();
       Folks.PotentialMatch matchObj = new Folks.PotentialMatch ();
 
-      foreach (var i in this.individuals.get_values ())
+      foreach (var i in this.individuals.values)
         {
           if (i.id == matchee.id)
                 continue;
@@ -265,13 +266,12 @@ public class Folks.IndividualAggregator : Object
     {
       HashMap<Individual, HashMap<Individual, MatchResult>> matches =
         new HashMap<Individual, HashMap<Individual, MatchResult>> ();
-      GLib.List<Individual> individuals = this.individuals.get_values ();
+      var individuals = this.individuals.values.to_array ();
       Folks.PotentialMatch matchObj = new Folks.PotentialMatch ();
 
-      for (unowned GLib.List<Individual> l = individuals;
-           l != null && l.next != null; l = l.next)
+      for (var i = 0; i < individuals.length; i++)
         {
-          var a = l.data;
+          var a = individuals[i];
           var matches_a = matches.get (a);
           if (matches_a == null)
             {
@@ -279,9 +279,9 @@ public class Folks.IndividualAggregator : Object
               matches.set (a, matches_a);
             }
 
-          for (unowned GLib.List<Individual> j=l.next; j != null; j = j.next)
+          for (var f = i + 1; f < individuals.length; f++)
             {
-              var b = j.data;
+              var b = individuals[f];
               var matches_b = matches.get (b);
               if (matches_b == null)
                 {
@@ -588,7 +588,7 @@ public class Folks.IndividualAggregator : Object
           /* Add the new Individual to the aggregator */
           i.removed.connect (this._individual_removed_cb);
           added_individuals.add (i);
-          this.individuals.insert (i.id, i);
+          this.individuals.set (i.id, i);
         }
     }
 
@@ -682,7 +682,7 @@ public class Folks.IndividualAggregator : Object
       foreach (var individual in removed_individuals)
         {
           /* Ensure we don't remove the same Individual twice */
-          if (this.individuals.lookup (individual.id) == null)
+          if (this.individuals.has_key (individual.id) == false)
             continue;
 
           debug ("    %s", individual.id);
@@ -704,7 +704,7 @@ public class Folks.IndividualAggregator : Object
           if (user == individual)
             user = null;
 
-          this.individuals.remove (individual.id);
+          this.individuals.unset (individual.id);
           individual.personas = null;
         }
 
@@ -777,7 +777,7 @@ public class Folks.IndividualAggregator : Object
 
       /* Only signal if the individual is still in this.individuals. This allows
        * us to group removals together in, e.g., _personas_changed_cb(). */
-      if (this.individuals.lookup (i.id) != i)
+      if (this.individuals.get (i.id) != i)
         return;
 
       var individuals = new HashSet<Individual> ();
@@ -800,7 +800,7 @@ public class Folks.IndividualAggregator : Object
               individuals, null, null, 0);
         }
 
-      this.individuals.remove (i.id);
+      this.individuals.unset (i.id);
     }
 
   /**

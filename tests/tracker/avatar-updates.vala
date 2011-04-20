@@ -151,7 +151,7 @@ public class AvatarUpdatesTests : Folks.TestCase
 
   private void _notify_avatar_cb ()
     {
-      var i = this._aggregator.individuals.lookup (this._individual_id);
+      var i = this._aggregator.individuals.get (this._individual_id);
       if (i == null)
         return;
 

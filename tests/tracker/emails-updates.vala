@@ -88,7 +88,7 @@ public class EmailsUpdatesTests : Folks.TestCase
 
       bool initial_email_found_again = false;
 
-      var i = this._aggregator.individuals.lookup (this._individual_id);
+      var i = this._aggregator.individuals.get (this._individual_id);
       if (i != null)
         {
           foreach (var fd in i.email_addresses)
