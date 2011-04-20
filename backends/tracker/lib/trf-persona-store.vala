@@ -2013,7 +2013,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
     }
 
   internal async void _set_roles (Folks.Persona persona,
-      owned Gee.HashSet<Role> roles)
+      Set<Role> roles)
     {
       const string del_t = "DELETE { " +
         " ?p " + Trf.OntologyDefs.NCO_HAS_AFFILIATION + " ?a " +

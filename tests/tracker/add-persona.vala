@@ -259,8 +259,8 @@ public class AddPersonaTests : Folks.TestCase
           Folks.PersonaStore.detail_key (PersonaDetail.PHONE_NUMBERS),
           (owned) v11);
 
-      Value? v12 = Value (typeof (Gee.HashSet<Role>));
-      Gee.HashSet<Role> roles = new Gee.HashSet<Role> ();
+      Value? v12 = Value (typeof (Set<Role>));
+      var roles = new HashSet<Role> ();
       Role r1 = new Role (this._title_1, this._organisation_1);
       roles.add (r1);
       v12.set_object (roles);

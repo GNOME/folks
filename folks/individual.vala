@@ -297,15 +297,18 @@ public class Folks.Individual : Object,
     }
 
   private HashSet<Role> _roles;
+
   /**
    * {@inheritDoc}
    */
-  public HashSet<Role> roles
+  public Set<Role> roles
     {
       get { return this._roles; }
       private set
         {
-          this._roles = value;
+          this._roles = new HashSet<Role> ();
+          foreach (var role in value)
+            this._roles.add (role);
           this.notify_property ("roles");
         }
     }

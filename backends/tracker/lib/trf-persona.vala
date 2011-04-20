@@ -189,7 +189,7 @@ public class Trf.Persona : Folks.Persona,
   /**
    * {@inheritDoc}
    */
-  public HashSet<Role> roles
+  public Set<Role> roles
     {
       get { return this._roles; }
       public set

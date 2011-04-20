@@ -43,6 +43,7 @@ API changes:
 * PersonaStore.personas now has type Map<string, Persona>
 * LocalIdDetails.local_ids now has type Set<string>
 * NoteDetails.notes now has type Set<Note>
+* RoleDetails.roles now has type Set<Role>
 
 Overview of changes from libfolks 0.4.0 to libfolks 0.5.0
 =========================================================
