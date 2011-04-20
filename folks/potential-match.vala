@@ -18,6 +18,7 @@
  *       Raul Gutierrez Segales <raul.gutierrez.segales@collabora.co.uk>
  */
 
+using Gee;
 
 /**
  * Likely-ness of a potential match.
@@ -46,7 +47,15 @@ public class Folks.PotentialMatch : Object
   MatchResult _result;
   private Folks.Individual _individual_a;
   private Folks.Individual _individual_b;
-  public static Gee.HashSet<string> known_email_aliases = null;
+
+  /**
+   * A set of e-mail addresses known to be aliases of each other, such as
+   * various forms of administrator address.
+   *
+   * @since UNRELEASED
+   */
+  public static Set<string> known_email_aliases = null;
+
   private static double _DIST_THRESHOLD = 0.70;
   private const string _SEPARATORS = "._-+";
 
