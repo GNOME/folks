@@ -230,9 +230,9 @@ public class Folks.IndividualAggregator : Object
   /**
    * Get all matches for a given {@link Individual}.
    *
-   * @since 0.5.0
+   * @since UNRELEASED
    */
-  public HashMap<Individual, MatchResult> get_potential_matches
+  public Map<Individual, MatchResult> get_potential_matches
       (Individual matchee, MatchResult min_threshold = MatchResult.VERY_HIGH)
     {
       HashMap<Individual, MatchResult> matches =
@@ -257,9 +257,9 @@ public class Folks.IndividualAggregator : Object
   /**
    * Get all combinations between all {@link Individual}s.
    *
-   * @since 0.5.0
+   * @since UNRELEASED
    */
-  public HashMap<Individual, HashMap<Individual, MatchResult>>
+  public Map<Individual, Map<Individual, MatchResult>>
       get_all_potential_matches
         (MatchResult min_threshold = MatchResult.VERY_HIGH)
     {
