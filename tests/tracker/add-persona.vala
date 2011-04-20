@@ -240,8 +240,8 @@ public class AddPersonaTests : Folks.TestCase
       details.insert (
           Folks.PersonaStore.detail_key (PersonaDetail.IM_ADDRESSES), v9);
 
-      Value? v10 = Value (typeof (Gee.HashSet<Note>));
-      Gee.HashSet<Note> notes = new Gee.HashSet<Note> ();
+      Value? v10 = Value (typeof (Set<Note>));
+      var notes = new HashSet<Note> ();
       Note n1 = new Note (this._note_1);
       notes.add (n1);
       v10.set_object (notes);

@@ -86,7 +86,7 @@ public interface Folks.NoteDetails : Object
   /**
    * The notes about the contact.
    *
-   * @since 0.4.0
+   * @since UNRELEASED
    */
-  public abstract HashSet<Note> notes { get; set; }
+  public abstract Set<Note> notes { get; set; }
 }

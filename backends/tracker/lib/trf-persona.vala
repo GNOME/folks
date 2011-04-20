@@ -205,7 +205,7 @@ public class Trf.Persona : Folks.Persona,
   /**
    * {@inheritDoc}
    */
-  public HashSet<Note> notes
+  public Set<Note> notes
     {
       get { return this._notes; }
       private set

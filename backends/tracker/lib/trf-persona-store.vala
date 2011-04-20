@@ -2062,7 +2062,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
    }
 
   internal async void _set_notes (Folks.Persona persona,
-      owned Gee.HashSet<Note> notes)
+      Set<Note> notes)
     {
       const string del_t = "DELETE { " +
         "?p " + Trf.OntologyDefs.NCO_NOTE  + " ?n " +

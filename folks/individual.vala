@@ -332,15 +332,18 @@ public class Folks.Individual : Object,
   public string calendar_event_id { get; set; }
 
   private HashSet<Note> _notes;
+
   /**
    * {@inheritDoc}
    */
-  public HashSet<Note> notes
+  public Set<Note> notes
     {
       get { return this._notes; }
       private set
         {
-          this._notes = value;
+          this._notes = new HashSet<Note> ();
+          foreach (var note in value)
+            this._notes.add (note);
           this.notify_property ("notes");
         }
     }

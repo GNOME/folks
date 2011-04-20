@@ -370,6 +370,26 @@ private class Folks.Inspect.Utils
 
             return output_string;
         }
+      else if (prop_name == "notes")
+        {
+          Set<Note> notes = (Set<Note>) prop_value.get_object ();
+
+          output_string = "{ ";
+          bool first = true;
+
+          foreach (var note in notes)
+            {
+              if (!first)
+                {
+                  output_string += ", ";
+                }
+              output_string += note.uid;
+              first = false;
+            }
+            output_string += " }";
+
+            return output_string;
+        }
       else if (prop_name == "structured-name")
         {
           unowned StructuredName sn = (StructuredName) prop_value.get_object ();
