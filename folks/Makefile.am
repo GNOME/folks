@@ -43,6 +43,8 @@ libfolks_la_SOURCES = \
 	$(NULL)
 
 libfolks_la_VALAFLAGS = \
+	--gir=Folks-$(API_VERSION).gir \
+	--library=folks \
 	--vapidir=. \
 	--pkg build-conf \
 	--pkg gobject-2.0 \
@@ -108,5 +110,24 @@ GITIGNOREFILES = \
 	$(libfolks_la_SOURCES:.vala=.c) \
 	libfolks_la_vala.stamp \
 	$(NULL)
+
+-include $(INTROSPECTION_MAKEFILE)
+INTROSPECTION_GIRS =
+INTROSPECTION_SCANNER_ARGS =
+INTROSPECTION_COMPILER_ARGS = -l libfolks.so
+
+if HAVE_INTROSPECTION
+Folks-$(API_VERSION).gir: libfolks.la
+GIRS = Folks-$(API_VERSION).gir
+
+girdir = $(datadir)/gir-1.0
+gir_DATA = $(GIRS)
+
+typelibdir = $(libdir)/girepository-1.0
+typelib_DATA = $(GIRS:.gir=.typelib)
+
+CLEANFILES += $(typelib_DATA)
+BUILT_SOURCES += $(gir_DATA)
+endif
 
 -include $(top_srcdir)/git.mk

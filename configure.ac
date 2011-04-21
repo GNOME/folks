@@ -66,6 +66,9 @@ AC_SUBST([LT_AGE])
 FOLKS_MAJOR_MINOR_VERSION=folks_major_minor_version
 AC_SUBST([FOLKS_MAJOR_MINOR_VERSION])
 
+API_VERSION=0.6
+AC_SUBST([API_VERSION])
+
 AC_ARG_ENABLE(tracker-backend,
         AC_HELP_STRING([--enable-tracker-backend],
                        [ build the Tracker backend]),
@@ -216,9 +219,10 @@ if test "x$enable_vala" = "xyes" ; then
           VALA_CHECK_PACKAGES([tracker-sparql-0.10])
         fi
 
-        # this will set HAVE_INTROSPECTION
-        GOBJECT_INTROSPECTION_REQUIRE([0.9.12])
 fi
+
+# this will set HAVE_INTROSPECTION
+GOBJECT_INTROSPECTION_REQUIRE([0.9.12])
 
 AM_CONDITIONAL([HAVE_VALA], [test "x$enable_vala" = "xyes"])
 
