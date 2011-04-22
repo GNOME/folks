@@ -42,15 +42,57 @@ public class Folks.Debug : Object
   private HashSet<string> _domains;
   private bool _all = false;
 
+  private bool _debug_output_enabled = true;
+
+  /**
+   * Whether debug output is enabled. This is orthogonal to the set of enabled
+   * debug domains; filtering of debug output as a whole is done after filtering
+   * by enabled domains.
+   *
+   * @since UNRELEASED
+   */
+  public bool debug_output_enabled
+    {
+      get
+        {
+          lock (this._debug_output_enabled)
+            {
+              return this._debug_output_enabled;
+            }
+        }
+
+      set
+        {
+          lock (this._debug_output_enabled)
+            {
+              this._debug_output_enabled = value;
+            }
+        }
+    }
+
+  private void _log_handler_cb (string? log_domain,
+      LogLevelFlags log_levels,
+      string message)
+    {
+      if (this.debug_output_enabled == false)
+        {
+          /* Don't output anything if debug output is disabled, even for
+           * enabled debug domains. */
+          return;
+        }
+
+      /* Otherwise, pass through to the default log handler */
+      Log.default_handler (log_domain, log_levels, message);
+    }
+
   /* turn off debug output for the given domain unless it was in the FOLKS_DEBUG
    * environment variable (or 'all' was set) */
   internal void _register_domain (string domain)
     {
       if (this._all || this._domains.contains (domain.down ()))
         {
-          /* FIXME: shouldn't need to cast. See bgo#638682 */
           Log.set_handler (domain, LogLevelFlags.LEVEL_MASK,
-              (LogFunc) Log.default_handler);
+              this._log_handler_cb);
           return;
         }
 
