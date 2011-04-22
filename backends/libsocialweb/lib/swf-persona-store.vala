@@ -134,9 +134,14 @@ public class Swf.PersonaStore : Folks.PersonaStore
 
   ~PersonaStore ()
     {
-      this._contact_view.contacts_added.disconnect (this.contacts_added_cb);
-      this._contact_view.contacts_changed.disconnect (this.contacts_changed_cb);
-      this._contact_view.contacts_removed.disconnect (this.contacts_removed_cb);
+      if (this._contact_view != null)
+        {
+          this._contact_view.contacts_added.disconnect (this.contacts_added_cb);
+          this._contact_view.contacts_changed.disconnect (
+              this.contacts_changed_cb);
+          this._contact_view.contacts_removed.disconnect (
+              this.contacts_removed_cb);
+        }
     }
 
   /**
