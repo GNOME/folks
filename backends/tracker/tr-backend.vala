@@ -114,6 +114,7 @@ public class Folks.Backends.Tr.Backend : Folks.Backend
 
   private void _store_removed_cb (Folks.PersonaStore store)
     {
+      store.removed.disconnect (this._store_removed_cb);
       this.persona_store_removed (store);
       this.persona_stores.unset (store.id);
     }
