@@ -149,6 +149,7 @@ public class Folks.Backends.Tp.Backend : Folks.Backend
 
   private void _store_removed_cb (PersonaStore store)
     {
+      store.removed.disconnect (this._store_removed_cb);
       this.persona_store_removed (store);
       this._persona_stores.remove (store.id);
       this.notify_property ("persona-stores");
