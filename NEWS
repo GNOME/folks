@@ -1,3 +1,9 @@
+Overview of changes from libfolks 0.4.3 to libfolks 0.4.4
+=========================================================
+
+Bugs fixed:
+* Bug 645186 — Make sure all connect() calls have appropriate disconnect() calls
+
 Overview of changes from libfolks 0.4.2 to libfolks 0.4.3
 =========================================================
 

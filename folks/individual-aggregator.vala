@@ -153,6 +153,13 @@ public class Folks.IndividualAggregator : Object
           this._backend_available_cb);
     }
 
+  ~IndividualAggregator ()
+    {
+      this._backend_store.backend_available.disconnect (
+          this._backend_available_cb);
+      this._backend_store = null;
+    }
+
   /**
    * Prepare the IndividualAggregator for use.
    *
@@ -263,6 +270,18 @@ public class Folks.IndividualAggregator : Object
   private string _get_store_full_id (string type_id, string id)
     {
       return type_id + ":" + id;
+    }
+
+  private void _connect_to_individual (Individual individual)
+    {
+      individual.removed.connect (this._individual_removed_cb);
+      this.individuals.insert (individual.id, individual);
+    }
+
+  private void _disconnect_from_individual (Individual individual)
+    {
+      this.individuals.remove (individual.id);
+      individual.removed.disconnect (this._individual_removed_cb);
     }
 
   private void _add_personas (GLib.List<Persona> added,
@@ -485,9 +504,8 @@ public class Folks.IndividualAggregator : Object
       foreach (var i in almost_added_individuals)
         {
           /* Add the new Individual to the aggregator */
-          i.removed.connect (this._individual_removed_cb);
           added_individuals.prepend (i);
-          this.individuals.insert (i.id, i);
+          this._connect_to_individual (i);
         }
     }
 
@@ -608,7 +626,7 @@ public class Folks.IndividualAggregator : Object
           if (user == individual)
             user = null;
 
-          this.individuals.remove (individual.id);
+          this._disconnect_from_individual (individual);
           individual.personas = null;
         }
 
@@ -700,7 +718,8 @@ public class Folks.IndividualAggregator : Object
       /* If the individual has 0 personas, we've already signaled removal */
       if (i.personas.length () > 0)
         this.individuals_changed (null, i_list, null, null, 0);
-      this.individuals.remove (i.id);
+
+      this._disconnect_from_individual (i);
     }
 
   /**
