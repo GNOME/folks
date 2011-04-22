@@ -204,7 +204,14 @@ public class Tpf.PersonaStore : Folks.PersonaStore
 
       this._personas = new HashMap<string, Persona> ();
       this._persona_set = new HashSet<Persona> ();
-      this._conn = null;
+
+      if (this._conn != null)
+        {
+          this._conn.notify["self-handle"].disconnect (
+              this._self_handle_changed_cb);
+          this._conn = null;
+        }
+
       this._handle_persona_map = new HashMap<uint, Persona> ();
       this._channel_group_personas_map =
           new HashMap<Channel, HashSet<Persona>> ();
@@ -216,19 +223,19 @@ public class Tpf.PersonaStore : Folks.PersonaStore
 
       if (this._publish != null)
         {
-          this._publish.invalidated.disconnect (this._channel_invalidated_cb);
+          this._disconnect_from_standard_channel (this._publish);
           this._publish = null;
         }
 
       if (this._stored != null)
         {
-          this._stored.invalidated.disconnect (this._channel_invalidated_cb);
+          this._disconnect_from_standard_channel (this._stored);
           this._stored = null;
         }
 
       if (this._subscribe != null)
         {
-          this._subscribe.invalidated.disconnect (this._channel_invalidated_cb);
+          this._disconnect_from_standard_channel (this._subscribe);
           this._subscribe = null;
         }
 
@@ -240,7 +247,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
           foreach (var channel in this._groups.values)
             {
               if (channel != null)
-                channel.invalidated.disconnect (this._channel_invalidated_cb);
+                this._disconnect_from_group_channel (channel);
             }
         }
 
@@ -770,6 +777,32 @@ public class Tpf.PersonaStore : Folks.PersonaStore
         });
     }
 
+  private void _disconnect_from_standard_channel (Channel channel)
+    {
+      var name = channel.get_identifier ();
+      debug ("Disconnecting from channel '%s'.", name);
+
+      channel.invalidated.disconnect (this._channel_invalidated_cb);
+
+      if (name == "publish")
+        {
+          channel.group_members_changed_detailed.disconnect (
+              this._publish_channel_group_members_changed_detailed_cb);
+        }
+      else if (name == "stored")
+        {
+          channel.group_members_changed_detailed.disconnect (
+              this._stored_channel_group_members_changed_detailed_cb);
+        }
+      else if (name == "subscribe")
+        {
+          channel.group_members_changed_detailed.disconnect (
+              this._subscribe_channel_group_members_changed_detailed_cb);
+          channel.group_flags_changed.disconnect (
+              this._subscribe_channel_group_flags_changed_cb);
+        }
+    }
+
   private void _publish_channel_group_members_changed_detailed_cb (
       Channel channel,
       /* FIXME: Array<uint> => Array<Handle>; parser bug */
@@ -1145,6 +1178,16 @@ public class Tpf.PersonaStore : Folks.PersonaStore
                 members.to_array (), false);
             }
         });
+    }
+
+  private void _disconnect_from_group_channel (Channel channel)
+    {
+      var name = channel.get_identifier ();
+      debug ("Disconnecting from group channel '%s'.", name);
+
+      channel.group_members_changed_detailed.disconnect (
+          this._channel_group_members_changed_detailed_cb);
+      channel.invalidated.disconnect (this._channel_invalidated_cb);
     }
 
   private void _channel_group_members_changed_detailed_cb (Channel channel,
