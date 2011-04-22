@@ -198,6 +198,13 @@ public class Folks.IndividualAggregator : Object
           this._backend_available_cb);
     }
 
+  ~IndividualAggregator ()
+    {
+      this._backend_store.backend_available.disconnect (
+          this._backend_available_cb);
+      this._backend_store = null;
+    }
+
   /**
    * Prepare the IndividualAggregator for use.
    *
@@ -381,6 +388,18 @@ public class Folks.IndividualAggregator : Object
   private string _get_store_full_id (string type_id, string id)
     {
       return type_id + ":" + id;
+    }
+
+  private void _connect_to_individual (Individual individual)
+    {
+      individual.removed.connect (this._individual_removed_cb);
+      this.individuals.set (individual.id, individual);
+    }
+
+  private void _disconnect_from_individual (Individual individual)
+    {
+      this.individuals.unset (individual.id);
+      individual.removed.disconnect (this._individual_removed_cb);
     }
 
   private void _add_personas (Set<Persona> added,
@@ -586,9 +605,8 @@ public class Folks.IndividualAggregator : Object
       foreach (var i in almost_added_individuals)
         {
           /* Add the new Individual to the aggregator */
-          i.removed.connect (this._individual_removed_cb);
           added_individuals.add (i);
-          this.individuals.set (i.id, i);
+          this._connect_to_individual (i);
         }
     }
 
@@ -704,7 +722,7 @@ public class Folks.IndividualAggregator : Object
           if (user == individual)
             user = null;
 
-          this.individuals.unset (individual.id);
+          this._disconnect_from_individual (individual);
           individual.personas = null;
         }
 
@@ -800,7 +818,7 @@ public class Folks.IndividualAggregator : Object
               individuals, null, null, 0);
         }
 
-      this.individuals.unset (i.id);
+      this._disconnect_from_individual (i);
     }
 
   /**
