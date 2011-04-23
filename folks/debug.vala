@@ -21,6 +21,16 @@
 using GLib;
 using Gee;
 
+/* We have to declare our own wrapping of g_log so that it doesn't have the
+ * [Diagnostics] attribute, which would cause valac to add the Vala source file
+ * name to the message format, which we don't want. This is used in
+ * Debug.print_line(). */
+[PrintfFormat]
+private extern void g_log (string? log_domain,
+    LogLevelFlags log_level,
+    string format,
+    ...);
+
 /**
  * Manage debug output and status reporting for all folks objects. All GLib
  * debug logging calls are passed through a log handler in this class, which
@@ -41,6 +51,40 @@ public class Folks.Debug : Object
   private static weak Debug _instance; /* needs to be locked when accessed */
   private HashSet<string> _domains; /* needs to be locked when accessed */
   private bool _all = false; /* needs _domains to be locked when accessed */
+
+  /* The current indentation level, in spaces */
+  private uint _indentation = 0;
+  private string _indentation_string = "";
+
+  private bool _colour_enabled = true;
+
+  /*
+   * Whether colour output is enabled. If true, debug output may include
+   * terminal colour escape codes. Disabled by the environment variable
+   * FOLKS_DEBUG_NO_COLOUR being set to anything except “0”.
+   *
+   * This property is thread-safe.
+   *
+   * @since UNRELEASED
+   */
+  public bool colour_enabled
+    {
+      get
+        {
+          lock (this._colour_enabled)
+            {
+              return this._colour_enabled;
+            }
+        }
+
+      set
+        {
+          lock (this._colour_enabled)
+            {
+              this._colour_enabled = value;
+            }
+        }
+    }
 
   private bool _debug_output_enabled = true;
 
@@ -138,12 +182,15 @@ public class Folks.Debug : Object
    * set of debug domains enabled. Otherwise, the existing instance will have
    * its set of enabled domains changed to the provided set.
    *
-   * @param debug_flags	A comma-separated list of debug domains to enable,
-   *			or null to disable debug output
-   * @return		Singleton {@link Debug} instance
+   * @param debug_flags		A comma-separated list of debug domains to
+   *				enable, or null to disable debug output
+   * @param colour_enabled	Whether debug output should be coloured using
+   *				terminal escape sequences
+   * @return			Singleton {@link Debug} instance
    * @since UNRELEASED
    */
-  public static Debug dup_with_flags (string? debug_flags)
+  public static Debug dup_with_flags (string? debug_flags,
+      bool colour_enabled)
     {
       var retval = Debug.dup ();
 
@@ -167,6 +214,8 @@ public class Folks.Debug : Object
             }
         }
 
+      retval.colour_enabled = colour_enabled;
+
       return retval;
     }
 
@@ -182,5 +231,182 @@ public class Folks.Debug : Object
         {
           Debug._instance = null;
         }
+    }
+
+  /**
+   * Increment the indentation level used when printing output through the
+   * object.
+   *
+   * This is intended to be used by backend libraries only.
+   *
+   * @since UNRELEASED
+   */
+  public void indent ()
+    {
+      /* We indent in increments of two spaces */
+      this._indentation++;
+      this._indentation_string = string.nfill (this._indentation * 2, ' ');
+    }
+
+  /**
+   * Decrement the indentation level used when printing output through the
+   * object.
+   *
+   * This is intended to be used by backend libraries only.
+   *
+   * @since UNRELEASED
+   */
+  public void unindent ()
+    {
+      this._indentation--;
+      this._indentation_string = string.nfill (this._indentation * 2, ' ');
+    }
+
+  /**
+   * Print a debug line with the current indentation level for the specified
+   * debug domain.
+   *
+   * This is intended to be used by backend libraries only.
+   *
+   * @param domain	The debug domain name
+   * @param level	A set of log level flags for the message
+   * @param format	A printf-style format string for the heading
+   * @param ...		Arguments for the format string
+   * @since UNRELEASED
+   */
+  [PrintfFormat ()]
+  public void print_line (string domain,
+      LogLevelFlags level,
+      string format,
+      ...)
+    {
+      /* FIXME: store the va_list temporarily to work around bgo#638308 */
+      var valist = va_list ();
+      string output = format.vprintf (valist);
+      g_log (domain, level, "%s%s", this._indentation_string, output);
+    }
+
+  /**
+   * Print a debug line as a heading. It will be coloured according to the
+   * current indentation level so that different levels of headings stand out.
+   *
+   * This is intended to be used by backend libraries only.
+   *
+   * @param domain	The debug domain name
+   * @param level	A set of log level flags for the message
+   * @param format	A printf-style format string for the heading
+   * @param ...		Arguments for the format string
+   * @since UNRELEASED
+   */
+  [PrintfFormat ()]
+  public void print_heading (string domain,
+      LogLevelFlags level,
+      string format,
+      ...)
+    {
+      /* Colour the heading according to the current indentation level.
+       * ANSI terminal colour codes. */
+      const int[] heading_colours =
+        {
+          31, /* red */
+          32, /* green */
+          34 /* blue */
+        };
+
+      var wrapper_format = "%s";
+      if (this.colour_enabled == true)
+        {
+          var indentation =
+              this._indentation.clamp (0, heading_colours.length - 1);
+          wrapper_format =
+              "\033[1;%im%%s\033[0m".printf (heading_colours[indentation]);
+        }
+
+      /* FIXME: store the va_list temporarily to work around bgo#638308 */
+      var valist = va_list ();
+      string output = format.vprintf (valist);
+      this.print_line (domain, level, wrapper_format, output);
+    }
+
+  /*
+   * Format a potentially null string for printing; if the string is null,
+   * “(null)” will be outputted. If coloured output is enabled, this output
+   * will be coloured brown. */
+  private string _format_nullable_string (string? input)
+    {
+      if (this.colour_enabled == true && input == null)
+        {
+          return "\033[1;36m(null)\033[0m"; /* cyan */
+        }
+      else if (input == null)
+        {
+          return "(null)";
+        }
+
+      return input;
+    }
+
+  struct KeyValuePair
+    {
+      string key;
+      string? val;
+    }
+
+  /**
+   * Print a set of key–value pairs in a table. The width of the key column is
+   * automatically set to the width of the longest key. The keys and values
+   * must be provided as a null-delimited list of alternating key–value varargs.
+   * Values may be null but keys may not.
+   *
+   * This is intended to be used by backend libraries only.
+   *
+   * The table will be printed at the current indentation level plus one.
+   *
+   * @param domain	The debug domain name
+   * @param level	A set of log level flags for the message
+   * @param ...		Alternating keys and values, terminated with null
+   * @since UNRELEASED
+   */
+  public void print_key_value_pairs (string domain,
+      LogLevelFlags level,
+      ...)
+    {
+      var valist = va_list ();
+      KeyValuePair[] lines = {};
+      uint max_key_length = 0;
+
+      /* Read in the arguments and calculate the longest key for alignment
+       * purposes */
+      while (true)
+        {
+          string? key = valist.arg ();
+          if (key == null)
+            {
+              break;
+            }
+
+          string? val = valist.arg ();
+
+          /* Keep track of the longest key we've seen */
+          max_key_length = uint.max (key.length, max_key_length);
+
+          lines += KeyValuePair ()
+            {
+              key = key,
+              val = val
+            };
+        }
+
+      this.indent ();
+
+      /* Print out the lines */
+      foreach (var line in lines)
+        {
+          var padding = string.nfill (max_key_length - line.key.length, ' ');
+          this.print_line (domain, level, "%s: %s%s", line.key, padding,
+              this._format_nullable_string (line.val));
+        }
+
+      this.unindent ();
     }
 }
