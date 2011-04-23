@@ -114,6 +114,38 @@ public class Folks.Debug : Object
         }
     }
 
+  /**
+   * Signal emitted in the main thread whenever objects should print their
+   * current status. All significant objects in the library should connect
+   * to this and print their current status in some suitable format when it's
+   * emitted.
+   *
+   * Client processes should emit this signal by calling
+   * {@link Debug.emit_print_status}.
+   *
+   * @since UNRELEASED
+   */
+  public signal void print_status ();
+
+  /**
+   * Log domain for the status messages logged as a result of calling
+   * {@link Debug.emit_print_status().
+   *
+   * This could be used in conjunction with a log handler to redirect the
+   * status information to a debug window or log file, for example.
+   *
+   * @since UNRELEASED
+   */
+  public const string STATUS_LOG_DOMAIN = "folks-status";
+
+  private void _print_status_log_handler_cb (string? log_domain,
+      LogLevelFlags log_levels,
+      string message)
+    {
+      /* Print directly to stdout without any adornments */
+      GLib.stdout.printf ("%s\n", message);
+    }
+
   private void _log_handler_cb (string? log_domain,
       LogLevelFlags log_levels,
       string message)
@@ -222,6 +254,11 @@ public class Folks.Debug : Object
   private Debug ()
     {
       /* Private constructor for singleton */
+
+      /* Install a log handler for log messages emitted as a result of
+       * Debug.print-status being emitted. */
+      Log.set_handler (Debug.STATUS_LOG_DOMAIN, LogLevelFlags.LEVEL_MASK,
+          this._print_status_log_handler_cb);
     }
 
   ~Debug ()
@@ -231,6 +268,19 @@ public class Folks.Debug : Object
         {
           Debug._instance = null;
         }
+    }
+
+  /**
+   * Causes all significant objects in the library to print their current
+   * status to standard output, obeying the options set on this
+   * {@link Debug} instance for colouring and other formatting.
+   *
+   * @since UNRELEASED
+   */
+  public void emit_print_status ()
+    {
+      print ("Dumping status information…\n");
+      this.print_status ();
     }
 
   /**

@@ -24,6 +24,7 @@ using Gee;
 using TelepathyGLib;
 using Folks;
 
+extern const string G_LOG_DOMAIN;
 extern const string BACKEND_NAME;
 
 /**
@@ -87,6 +88,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
   private MaybeBool _can_group_personas = MaybeBool.UNSET;
   private MaybeBool _can_remove_personas = MaybeBool.UNSET;
   private bool _is_prepared = false;
+  private Debug _debug;
 
   internal signal void group_members_changed (string group,
       GLib.List<Persona>? added, GLib.List<Persona>? removed);
@@ -190,7 +192,225 @@ public class Tpf.PersonaStore : Folks.PersonaStore
               display_name: account.display_name,
               id: account.get_object_path ());
 
+      this._debug = Debug.dup ();
+      this._debug.print_status.connect (this._debug_print_status);
+
       this._reset ();
+    }
+
+  ~PersonaStore ()
+    {
+      this._debug.print_status.disconnect (this._debug_print_status);
+      this._debug = null;
+    }
+
+  private string _format_maybe_bool (MaybeBool input)
+    {
+      switch (input)
+        {
+          case MaybeBool.UNSET:
+            return "unset";
+          case MaybeBool.TRUE:
+            return "true";
+          case MaybeBool.FALSE:
+            return "false";
+          default:
+            assert_not_reached ();
+        }
+    }
+
+  private void _debug_print_status (Debug debug)
+    {
+      const string domain = Debug.STATUS_LOG_DOMAIN;
+      const LogLevelFlags level = LogLevelFlags.LEVEL_INFO;
+
+      debug.print_heading (domain, level, "Tpf.PersonaStore (%p)", this);
+      debug.print_key_value_pairs (domain, level,
+          "ID", this.id,
+          "Prepared?", this._is_prepared ? "yes" : "no",
+          "Publish TpChannel", "%p".printf (this._publish),
+          "Stored TpChannel", "%p".printf (this._stored),
+          "Subscribe TpChannel", "%p".printf (this._subscribe),
+          "TpConnection", "%p".printf (this._conn),
+          "TpAccountManager", "%p".printf (this._account_manager),
+          "Self-TpContact", "%p".printf (this._self_contact),
+          "Can add personas?", this._format_maybe_bool (this._can_add_personas),
+          "Can alias personas?",
+              this._format_maybe_bool (this._can_alias_personas),
+          "Can group personas?",
+              this._format_maybe_bool (this._can_group_personas),
+          "Can remove personas?",
+              this._format_maybe_bool (this._can_remove_personas)
+      );
+
+      debug.print_line (domain, level, "%u Personas:", this._persona_set.size);
+      debug.indent ();
+
+      foreach (var persona in this._persona_set)
+        {
+          debug.print_heading (domain, level, "Persona (%p)", persona);
+          debug.print_key_value_pairs (domain, level,
+              "UID", persona.uid,
+              "IID", persona.iid,
+              "Display ID", persona.display_id,
+              "User?", persona.is_user ? "yes" : "no",
+              "In contact list?", persona.is_in_contact_list ? "yes" : "no",
+              "TpContact", "%p".printf (persona.contact)
+          );
+        }
+
+      debug.unindent ();
+
+      debug.print_line (domain, level, "%u handle–Persona mappings:",
+          this._handle_persona_map.size);
+      debug.indent ();
+
+      var iter1 = this._handle_persona_map.map_iterator ();
+      while (iter1.next () == true)
+        {
+          debug.print_line (domain, level,
+              "%u → %p", iter1.get_key (), iter1.get_value ());
+        }
+
+      debug.unindent ();
+
+      debug.print_line (domain, level, "%u channel group Persona sets:",
+          this._channel_group_personas_map.size);
+      debug.indent ();
+
+      var iter2 = this._channel_group_personas_map.map_iterator ();
+      while (iter2.next () == true)
+        {
+          debug.print_heading (domain, level,
+              "Channel (%p):", iter2.get_key ());
+
+          debug.indent ();
+
+          foreach (var persona in iter2.get_value ())
+            {
+              debug.print_line (domain, level, "%p", persona);
+            }
+
+          debug.unindent ();
+        }
+
+      debug.unindent ();
+
+      debug.print_line (domain, level, "%u channel group incoming handle sets:",
+          this._channel_group_incoming_adds.size);
+      debug.indent ();
+
+      var iter3 = this._channel_group_incoming_adds.map_iterator ();
+      while (iter3.next () == true)
+        {
+          debug.print_heading (domain, level,
+              "Channel (%p):", iter3.get_key ());
+
+          debug.indent ();
+
+          foreach (var handle in iter3.get_value ())
+            {
+              debug.print_line (domain, level, "%u", handle);
+            }
+
+          debug.unindent ();
+        }
+
+      debug.unindent ();
+
+      debug.print_line (domain, level, "%u group outgoing add sets:",
+          this._group_outgoing_adds.size);
+      debug.indent ();
+
+      var iter4 = this._group_outgoing_adds.map_iterator ();
+      while (iter4.next () == true)
+        {
+          debug.print_heading (domain, level, "Group (%s):", iter4.get_key ());
+
+          debug.indent ();
+
+          foreach (var persona in iter4.get_value ())
+            {
+              debug.print_line (domain, level, "%p", persona);
+            }
+
+          debug.unindent ();
+        }
+
+      debug.unindent ();
+
+      debug.print_line (domain, level, "%u group outgoing remove sets:",
+          this._group_outgoing_removes.size);
+      debug.indent ();
+
+      var iter5 = this._group_outgoing_removes.map_iterator ();
+      while (iter5.next () == true)
+        {
+          debug.print_heading (domain, level, "Group (%s):", iter5.get_key ());
+
+          debug.indent ();
+
+          foreach (var persona in iter5.get_value ())
+            {
+              debug.print_line (domain, level, "%p", persona);
+            }
+
+          debug.unindent ();
+        }
+
+      debug.unindent ();
+
+      debug.print_line (domain, level, "%u unready standard channels:",
+          this._standard_channels_unready.size);
+      debug.indent ();
+
+      var iter6 = this._standard_channels_unready.map_iterator ();
+      while (iter6.next () == true)
+        {
+          debug.print_line (domain, level,
+              "%s → %p", iter6.get_key (), iter6.get_value ());
+        }
+
+      debug.unindent ();
+
+      debug.print_line (domain, level, "%u unready group channels:",
+          this._group_channels_unready.size);
+      debug.indent ();
+
+      var iter7 = this._group_channels_unready.map_iterator ();
+      while (iter7.next () == true)
+        {
+          debug.print_line (domain, level,
+              "%s → %p", iter7.get_key (), iter7.get_value ());
+        }
+
+      debug.unindent ();
+
+      debug.print_line (domain, level, "%u ready group channels:",
+          this._groups.size);
+      debug.indent ();
+
+      var iter8 = this._groups.map_iterator ();
+      while (iter8.next () == true)
+        {
+          debug.print_line (domain, level,
+              "%s → %p", iter8.get_key (), iter8.get_value ());
+        }
+
+      debug.unindent ();
+
+      debug.print_line (domain, level, "%u favourite handles:",
+          this._favourite_handles.size);
+      debug.indent ();
+
+      foreach (var handle in this._favourite_handles)
+        {
+          debug.print_line (domain, level, "%u", handle);
+        }
+
+      debug.unindent ();
+
+      debug.print_line (domain, level, "");
     }
 
   private void _reset ()

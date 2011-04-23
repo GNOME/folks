@@ -139,6 +139,8 @@ public class Folks.BackendStore : Object {
       /* register the core debug messages */
       this._debug._register_domain (G_LOG_DOMAIN);
 
+      this._debug.print_status.connect (this._debug_print_status);
+
       this._modules = new HashMap<string,unowned Module> (str_hash, str_equal);
       this._backend_hash = new HashMap<string,Backend> (str_hash, str_equal);
       this._prepared_backends = new HashMap<string,Backend> (str_hash,
@@ -159,8 +161,75 @@ public class Folks.BackendStore : Object {
             }
         }
 
+      /* Disconnect from the debug handler */
+      this._debug.print_status.disconnect (this._debug_print_status);
+      this._debug = null;
+
       /* manually clear the singleton instance */
       _instance = null;
+    }
+
+  private void _debug_print_status (Debug debug)
+    {
+      const string domain = Debug.STATUS_LOG_DOMAIN;
+      const LogLevelFlags level = LogLevelFlags.LEVEL_INFO;
+
+      debug.print_heading (domain, level, "BackendStore (%p)", this);
+      debug.print_line (domain, level, "%u Backends:",
+          this._backend_hash.size);
+
+      debug.indent ();
+
+      foreach (var backend in this._backend_hash.values)
+        {
+          debug.print_heading (domain, level, "Backend (%p)", backend);
+          debug.print_key_value_pairs (domain, level,
+              "Ref. count", this.ref_count.to_string (),
+              "Name", backend.name,
+              "Prepared?", backend.is_prepared ? "yes" : "no"
+          );
+          debug.print_line (domain, level, "%u PersonaStores:",
+              backend.persona_stores.size);
+
+          debug.indent ();
+
+          foreach (var persona_store in backend.persona_stores.values)
+            {
+              string trust_level = null;
+
+              switch (persona_store.trust_level)
+                {
+                  case PersonaStoreTrust.NONE:
+                    trust_level = "none";
+                    break;
+                  case PersonaStoreTrust.PARTIAL:
+                    trust_level = "partial";
+                    break;
+                  case PersonaStoreTrust.FULL:
+                    trust_level = "full";
+                    break;
+                  default:
+                    assert_not_reached ();
+                }
+
+              debug.print_heading (domain, level, "PersonaStore (%p)",
+                  persona_store);
+              debug.print_key_value_pairs (domain, level,
+                  "Ref. count", this.ref_count.to_string (),
+                  "ID", persona_store.id,
+                  "Prepared?", persona_store.is_prepared ? "yes" : "no",
+                  "Writeable?", persona_store.is_writeable ? "yes" : "no",
+                  "Trust level", trust_level,
+                  "Persona count", persona_store.personas.size.to_string ()
+              );
+            }
+
+          debug.unindent ();
+        }
+
+      debug.unindent ();
+
+      debug.print_line (domain, level, "");
     }
 
   /**

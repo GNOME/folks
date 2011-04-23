@@ -63,6 +63,7 @@ public class Folks.IndividualAggregator : Object
   private HashTable<string, Individual> _link_map;
   private bool _linking_enabled = true;
   private bool _is_prepared = false;
+  private Debug _debug;
   private string _configured_writeable_store_type_id;
   private static const string _FOLKS_CONFIG_KEY =
     "/system/folks/backends/primary_store";
@@ -176,6 +177,8 @@ public class Folks.IndividualAggregator : Object
       this._link_map = new HashTable<string, Individual> (str_hash, str_equal);
 
       this._backends = new HashSet<Backend> ();
+      this._debug = Debug.dup ();
+      this._debug.print_status.connect (this._debug_print_status);
 
       /* Check out the configured writeable store */
       var store_type_id = Environment.get_variable ("FOLKS_WRITEABLE_STORE");
@@ -215,6 +218,88 @@ public class Folks.IndividualAggregator : Object
       this._backend_store.backend_available.disconnect (
           this._backend_available_cb);
       this._backend_store = null;
+
+      this._debug.print_status.disconnect (this._debug_print_status);
+    }
+
+  private void _debug_print_status (Debug debug)
+    {
+      const string domain = Debug.STATUS_LOG_DOMAIN;
+      const LogLevelFlags level = LogLevelFlags.LEVEL_INFO;
+
+      debug.print_heading (domain, level, "IndividualAggregator (%p)", this);
+      debug.print_key_value_pairs (domain, level,
+          "Ref. count", this.ref_count.to_string (),
+          "Writeable store", "%p".printf (this._writeable_store),
+          "Linking enabled?", this._linking_enabled ? "yes" : "no",
+          "Prepared?", this._is_prepared ? "yes" : "no"
+      );
+
+      debug.print_line (domain, level,
+          "%u Individuals:", this.individuals.size);
+      debug.indent ();
+
+      foreach (var individual in this.individuals.values)
+        {
+          string trust_level = null;
+
+          switch (individual.trust_level)
+            {
+              case TrustLevel.NONE:
+                trust_level = "none";
+                break;
+              case TrustLevel.PERSONAS:
+                trust_level = "personas";
+                break;
+              default:
+                assert_not_reached ();
+            }
+
+          debug.print_heading (domain, level, "Individual (%p)", individual);
+          debug.print_key_value_pairs (domain, level,
+              "Ref. count", individual.ref_count.to_string (),
+              "ID", individual.id,
+              "User?", individual.is_user ? "yes" : "no",
+              "Trust level", trust_level
+          );
+          debug.print_line (domain, level, "%u Personas:",
+              individual.personas.size);
+
+          debug.indent ();
+
+          foreach (var persona in individual.personas)
+            {
+              debug.print_heading (domain, level, "Persona (%p)", persona);
+              debug.print_key_value_pairs (domain, level,
+                  "Ref. count", persona.ref_count.to_string (),
+                  "UID", persona.uid,
+                  "IID", persona.iid,
+                  "Display ID", persona.display_id,
+                  "User?", persona.is_user ? "yes" : "no"
+              );
+            }
+
+          debug.unindent ();
+        }
+
+      debug.unindent ();
+
+      debug.print_line (domain, level, "%u entries in the link map:",
+          this._link_map.size ());
+      debug.indent ();
+
+      var iter = HashTableIter<string, Individual> (this._link_map);
+      string link_key;
+      Individual individual;
+      while (iter.next (out link_key, out individual) == true)
+        {
+          debug.print_line (domain, level,
+              "%s → %p", link_key, individual);
+        }
+
+      debug.unindent ();
+
+      debug.print_line (domain, level, "");
     }
 
   /**
