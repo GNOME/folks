@@ -39,8 +39,8 @@ public class Folks.Debug : Object
   }
 
   private static weak Debug _instance; /* needs to be locked when accessed */
-  private HashSet<string> _domains;
-  private bool _all = false;
+  private HashSet<string> _domains; /* needs to be locked when accessed */
+  private bool _all = false; /* needs _domains to be locked when accessed */
 
   private bool _debug_output_enabled = true;
 
@@ -89,11 +89,14 @@ public class Folks.Debug : Object
    * environment variable (or 'all' was set) */
   internal void _register_domain (string domain)
     {
-      if (this._all || this._domains.contains (domain.down ()))
+      lock (this._domains)
         {
-          Log.set_handler (domain, LogLevelFlags.LEVEL_MASK,
-              this._log_handler_cb);
-          return;
+          if (this._all || this._domains.contains (domain.down ()))
+            {
+              Log.set_handler (domain, LogLevelFlags.LEVEL_MASK,
+                  this._log_handler_cb);
+              return;
+            }
         }
 
       /* Install a log handler which will blackhole the log message.
@@ -104,18 +107,15 @@ public class Folks.Debug : Object
 
   /**
    * Create or return the singleton {@link Debug} class instance.
-   * If the instance doesn't exist already, it will be created with the given
-   * set of debug domains enabled. Otherwise, the existing instance will have
-   * its set of enabled domains changed to the provided set.
+   * If the instance doesn't exist already, it will be created with no debug
+   * domains enabled.
    *
    * This function is thread-safe.
    *
-   * @param debug_flags	A comma-separated list of debug domains to enable,
-   *			or null to disable debug output
    * @return		Singleton {@link Debug} instance
    * @since UNRELEASED
    */
-  public static Debug dup (string? debug_flags)
+  public static Debug dup ()
     {
       lock (Debug._instance)
         {
@@ -128,6 +128,27 @@ public class Folks.Debug : Object
               Debug._instance = retval;
             }
 
+          return retval;
+        }
+    }
+
+  /**
+   * Create or return the singleton {@link Debug} class instance.
+   * If the instance doesn't exist already, it will be created with the given
+   * set of debug domains enabled. Otherwise, the existing instance will have
+   * its set of enabled domains changed to the provided set.
+   *
+   * @param debug_flags	A comma-separated list of debug domains to enable,
+   *			or null to disable debug output
+   * @return		Singleton {@link Debug} instance
+   * @since UNRELEASED
+   */
+  public static Debug dup_with_flags (string? debug_flags)
+    {
+      var retval = Debug.dup ();
+
+      lock (retval._domains)
+        {
           retval._all = false;
           retval._domains = new HashSet<string> (str_hash, str_equal);
 
@@ -144,9 +165,9 @@ public class Folks.Debug : Object
                     retval._domains.add (domain_lower);
                 }
             }
-
-          return retval;
         }
+
+      return retval;
     }
 
   private Debug ()
