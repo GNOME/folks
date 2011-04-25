@@ -21,7 +21,15 @@
 using GLib;
 using Gee;
 
-internal class Folks.Debug : Object
+/**
+ * Manage debug output and status reporting for all folks objects. All GLib
+ * debug logging calls are passed through a log handler in this class, which
+ * allows debug domains to be outputted according to whether they've been
+ * enabled by being passed to {@link Debug.dup}.
+ *
+ * @since UNRELEASED
+ */
+public class Folks.Debug : Object
 {
   private enum Domains {
     /* Zero is used for "no debug spew" */
@@ -30,7 +38,7 @@ internal class Folks.Debug : Object
     KEY_FILE_BACKEND = 1 << 2
   }
 
-  private static weak Debug _instance;
+  private static weak Debug _instance; /* needs to be locked when accessed */
   private HashSet<string> _domains;
   private bool _all = false;
 
@@ -52,40 +60,64 @@ internal class Folks.Debug : Object
           (domain_arg, flags, message) => {});
     }
 
-  internal static Debug dup (string? debug_flags)
+  /**
+   * Create or return the singleton {@link Debug} class instance.
+   * If the instance doesn't exist already, it will be created with the given
+   * set of debug domains enabled. Otherwise, the existing instance will have
+   * its set of enabled domains changed to the provided set.
+   *
+   * This function is thread-safe.
+   *
+   * @param debug_flags	A comma-separated list of debug domains to enable,
+   *			or null to disable debug output
+   * @return		Singleton {@link Debug} instance
+   * @since UNRELEASED
+   */
+  public static Debug dup (string? debug_flags)
     {
-      var retval = _instance;
-
-      if (retval == null)
+      lock (Debug._instance)
         {
-          /* use an intermediate variable to force a strong reference */
-          retval = new Debug ();
-          _instance = retval;
-        }
+          var retval = Debug._instance;
 
-      retval._all = false;
-      retval._domains = new HashSet<string> (str_hash, str_equal);
-
-      if (debug_flags != null && debug_flags != "")
-        {
-          var domains_split = debug_flags.split (",");
-          foreach (var domain in domains_split)
+          if (retval == null)
             {
-              var domain_lower = domain.down ();
-
-              if (GLib.strcmp (domain_lower, "all") == 0)
-                retval._all = true;
-              else
-                retval._domains.add (domain_lower);
+              /* use an intermediate variable to force a strong reference */
+              retval = new Debug ();
+              Debug._instance = retval;
             }
-        }
 
-      return retval;
+          retval._all = false;
+          retval._domains = new HashSet<string> (str_hash, str_equal);
+
+          if (debug_flags != null && debug_flags != "")
+            {
+              var domains_split = debug_flags.split (",");
+              foreach (var domain in domains_split)
+                {
+                  var domain_lower = domain.down ();
+
+                  if (GLib.strcmp (domain_lower, "all") == 0)
+                    retval._all = true;
+                  else
+                    retval._domains.add (domain_lower);
+                }
+            }
+
+          return retval;
+        }
+    }
+
+  private Debug ()
+    {
+      /* Private constructor for singleton */
     }
 
   ~Debug ()
     {
-      /* manually clear the singleton _instance */
-      _instance = null;
+      /* Manually clear the singleton _instance */
+      lock (Debug._instance)
+        {
+          Debug._instance = null;
+        }
     }
 }

@@ -49,6 +49,7 @@ API changes:
 * RoleDetails.roles now has type Set<Role>
 * PotentialMatch.known_email_aliases now has type Set<string>
 * PostalAddress.types now has type Set<string>
+* Add Folks.Debug debug controller class
 
 Overview of changes from libfolks 0.4.0 to libfolks 0.5.0
 =========================================================
