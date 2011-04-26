@@ -7,6 +7,7 @@ Bugs fixed:
 * Bug 647121 — Crash in individual_store_contact_sort at
   empathy-individual-store.c line 1387
 * Bug 645684 — Implement Iterator on LinkedHashSet
+* Bug 640092 — Folks should minimize use of GLib.List (including its public API)
 
 API changes:
 * LinkedHashSet.list_iterator() is now disallowed (causes an assertion failure)
