@@ -10,6 +10,7 @@ Bugs fixed:
 * Bug 640092 — Folks should minimize use of GLib.List (including its public API)
 * Bug 648161 — Add GObject Introspection Support
 * Bug 645186 — Make sure all connect() calls have appropriate disconnect() calls
+* Bug 648533 — Add runtime debug signalling
 
 API changes:
 * LinkedHashSet.list_iterator() is now disallowed (causes an assertion failure)

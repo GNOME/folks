@@ -11,6 +11,7 @@ bin_PROGRAMS = folks-inspect
 
 folks_inspect_SOURCES = \
 	command-backends.vala \
+	command-debug.vala \
 	command-help.vala \
 	command-individuals.vala \
 	command-persona-stores.vala \
