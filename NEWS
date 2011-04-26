@@ -1,3 +1,12 @@
+Overview of changes from libfolks 0.4.2 to libfolks 0.4.3
+=========================================================
+
+Bugs fixed:
+* Bug 645680 — Use random integer IDs for Kf.Personas
+* Bug 647562 — Don't crash on duplicate group channels
+* Bug 647121 — Crash in individual_store_contact_sort at
+  empathy-individual-store.c line 1387
+
 Overview of changes from libfolks 0.4.1 to libfolks 0.4.2
 =========================================================
 
@@ -5,10 +14,6 @@ Bugs fixed:
 * Bug 645430 — folks-inspect: Use LinkedHashSet to access im-addresses
 * Bug 645411 — folks-import segfaults on startup
 * Crasher when removing Personas
-* Bug 645680 — Use random integer IDs for Kf.Personas
-* Bug 647562 — Don't crash on duplicate group channels
-* Bug 647121 — Crash in individual_store_contact_sort at
-  empathy-individual-store.c line 1387
 
 Overview of changes from libfolks 0.4.0 to libfolks 0.4.1
 =========================================================
