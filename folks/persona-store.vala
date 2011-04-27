@@ -204,6 +204,36 @@ public abstract class Folks.PersonaStore : Object
       Persona? actor,
       GroupDetails.ChangeReason reason);
 
+  /* Emit the personas-changed signal, turning null parameters into empty sets
+   * and only passing a read-only view to the signal handlers. */
+  protected void _emit_personas_changed (Set<Persona>? added,
+      Set<Persona>? removed,
+      string? message = null,
+      Persona? actor = null,
+      GroupDetails.ChangeReason reason = GroupDetails.ChangeReason.NONE)
+    {
+      var _added = added;
+      var _removed = removed;
+
+      if ((added == null || added.size == 0) &&
+          (removed == null || removed.size == 0))
+        {
+          /* Don't bother signalling if nothing's changed */
+          return;
+        }
+      else if (added == null)
+        {
+          _added = new HashSet<Persona> ();
+        }
+      else if (removed == null)
+        {
+          _removed = new HashSet<Persona> ();
+        }
+
+      this.personas_changed (_added.read_only_view, _removed.read_only_view,
+          message, actor, reason);
+    }
+
   /**
    * Emitted when the backing store for this PersonaStore has been removed.
    *

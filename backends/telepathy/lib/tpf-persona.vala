@@ -36,6 +36,7 @@ public class Tpf.Persona : Folks.Persona,
     PresenceDetails
 {
   private HashSet<string> _groups;
+  private Set<string> _groups_ro;
   private bool _is_favourite;
   private string _alias;
   private HashMultiMap<string, string> _im_addresses;
@@ -148,7 +149,7 @@ public class Tpf.Persona : Folks.Persona,
    */
   public Set<string> groups
     {
-      get { return this._groups; }
+      get { return this._groups_ro; }
 
       set
         {
@@ -268,6 +269,7 @@ public class Tpf.Persona : Folks.Persona,
 
       /* Groups */
       this._groups = new HashSet<string> ();
+      this._groups_ro = this._groups.read_only_view;
 
       contact.notify["avatar-file"].connect ((s, p) =>
         {

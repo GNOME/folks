@@ -61,6 +61,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       };
 
   private HashMap<string, Persona> _personas;
+  private Map<string, Persona> _personas_ro;
   private HashSet<Persona> _persona_set;
   /* universal, contact owner handles (not channel-specific) */
   private HashMap<uint, Persona> _handle_persona_map;
@@ -172,7 +173,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
    */
   public override Map<string, Persona> personas
     {
-      get { return this._personas; }
+      get { return this._personas_ro; }
     }
 
   /**
@@ -203,6 +204,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
         this.trust_level = PersonaStoreTrust.PARTIAL;
 
       this._personas = new HashMap<string, Persona> ();
+      this._personas_ro = this._personas.read_only_view;
       this._persona_set = new HashSet<Persona> ();
 
       if (this._conn != null)
@@ -273,8 +275,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
                 {
                   if (this.account == a)
                     {
-                      this.personas_changed (new HashSet<Persona> (),
-                          this._persona_set, null, null, 0);
+                      this._emit_personas_changed (null, this._persona_set);
                       this.removed ();
                     }
                 });
@@ -282,8 +283,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
                 {
                   if (this.account == a)
                     {
-                      this.personas_changed (new HashSet<Persona> (),
-                          this._persona_set, null, null, 0);
+                      this._emit_personas_changed (null, this._persona_set);
                       this.removed ();
                     }
                 });
@@ -292,8 +292,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
                     {
                       if (!valid && this.account == a)
                         {
-                          this.personas_changed (new HashSet<Persona> (),
-                              this._persona_set, null, null, 0);
+                          this._emit_personas_changed (null, this._persona_set);
                           this.removed ();
                         }
                     });
@@ -487,8 +486,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
           /* When disconnecting, we want the PersonaStore to remain alive, but
            * all its Personas to be removed. We do *not* want the PersonaStore
            * to be destroyed, as that makes coming back online hard. */
-          this.personas_changed (new HashSet<Persona> (),
-              this._persona_set, null, null, 0);
+          this._emit_personas_changed (null, this._persona_set);
           this._reset ();
           return;
         }
@@ -650,8 +648,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
               personas.add (persona);
 
               this._self_contact = contact;
-              this.personas_changed (personas, new HashSet<Persona> (),
-                  null, null, 0);
+              this._emit_personas_changed (personas, null);
             },
           this);
     }
@@ -1022,8 +1019,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       var personas = new HashSet<Persona> ();
       personas.add (persona);
 
-      this.personas_changed (new HashSet<Persona> (), personas,
-          message, actor, reason);
+      this._emit_personas_changed (null, personas, message, actor, reason);
       this._personas.unset (persona.iid);
       this._persona_set.remove (persona);
     }
@@ -1383,8 +1379,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
 
       if (personas.size > 0)
         {
-          this.personas_changed (personas, new HashSet<Persona> (),
-              null, null, 0);
+          this._emit_personas_changed (personas, null);
         }
 
       return personas;
@@ -1459,8 +1454,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
 
       if (personas.size > 0)
         {
-          this.personas_changed (personas, new HashSet<Persona> (),
-              null, null, 0);
+          this._emit_personas_changed (personas, null);
         }
     }
 

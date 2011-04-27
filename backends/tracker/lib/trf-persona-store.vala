@@ -162,6 +162,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
   private const string _OBJECT_IFACE = "org.freedesktop.Tracker1.Resources";
   private const string _OBJECT_PATH = "/org/freedesktop/Tracker1/Resources";
   private HashMap<string, Persona> _personas;
+  private Map<string, Persona> _personas_ro;
   private bool _is_prepared = false;
   private static const int _default_timeout = 100;
   private Resources _resources_object;
@@ -358,7 +359,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
    */
   public override Map<string, Persona> personas
     {
-      get { return this._personas; }
+      get { return this._personas_ro; }
     }
 
   /**
@@ -370,6 +371,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
     {
       Object (id: BACKEND_NAME, display_name: BACKEND_NAME);
       this._personas = new HashMap<string, Persona> ();
+      this._personas_ro = this._personas.read_only_view;
       debug ("Initial query : \n%s\n", this._INITIAL_QUERY);
     }
 
@@ -1235,8 +1237,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
 
       if (removed_personas.size > 0)
         {
-          this.personas_changed (new HashSet<Persona> (), removed_personas,
-              null, null, 0);
+          this._emit_personas_changed (null, removed_personas);
         }
     }
 
@@ -1266,8 +1267,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
 
       if (added_personas.size > 0)
         {
-          this.personas_changed (added_personas, new HashSet<Persona> (),
-              null, null, 0);
+          this._emit_personas_changed (added_personas, null);
         }
     }
 
@@ -1293,8 +1293,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
 
         if (added_personas.size > 0)
           {
-            this.personas_changed (added_personas,
-                new HashSet<Persona> (), null, null, 0);
+            this._emit_personas_changed (added_personas, null);
           }
       } catch (GLib.Error e) {
         warning ("Couldn't perform queries: %s %s", query, e.message);

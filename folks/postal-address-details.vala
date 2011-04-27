@@ -129,6 +129,7 @@ public class Folks.PostalAddress : Object
     }
 
   private HashSet<string> _types;
+  private Set<string> _types_ro;
 
   /**
    * The types of the address.
@@ -138,10 +139,11 @@ public class Folks.PostalAddress : Object
    */
   public Set<string> types
     {
-      get { return this._types; }
+      get { return this._types_ro; }
       construct set
         {
           this._types = new HashSet<string> ();
+          this._types_ro = this._types.read_only_view;
           foreach (var type in value)
             this._types.add (type);
         }

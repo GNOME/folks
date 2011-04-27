@@ -86,6 +86,8 @@ public class Folks.Individual : Object,
   private HashSet<string> _groups;
   /* Stores the Personas contained in this Individual. */
   private HashSet<Persona> _persona_set;
+  /* Read-only view of the above set */
+  private Set<Persona> _persona_set_ro;
   /* Mapping from PersonaStore -> number of Personas from that store contained
    * in this Individual. There shouldn't be any entries with a number < 1.
    * This is used for working out when to disconnect from store signals. */
@@ -455,7 +457,7 @@ public class Folks.Individual : Object,
    */
   public Set<Persona> personas
     {
-      get { return this._persona_set; }
+      get { return this._persona_set_ro; }
       set { this._set_personas (value, null); }
     }
 
@@ -611,9 +613,37 @@ public class Folks.Individual : Object,
       this._web_service_addresses = new HashMultiMap<string, string> ();
       this._persona_set =
           new HashSet<Persona> (direct_hash, direct_equal);
+      this._persona_set_ro = this._persona_set.read_only_view;
       this._stores = new HashMap<PersonaStore, uint> (null, null);
       this._gender = Gender.UNSPECIFIED;
       this.personas = personas;
+    }
+
+  /* Emit the personas-changed signal, turning null parameters into empty sets
+   * and ensuring that the signal is emitted with read-only views of the sets
+   * so that signal handlers can't modify the sets. */
+  private void _emit_personas_changed (Set<Persona>? added,
+      Set<Persona>? removed)
+    {
+      var _added = added;
+      var _removed = removed;
+
+      if ((added == null || added.size == 0) &&
+          (removed == null || removed.size == 0))
+        {
+          /* Emitting it with no added or removed personas is pointless */
+          return;
+        }
+      else if (added == null)
+        {
+          _added = new HashSet<Persona> ();
+        }
+      else if (removed == null)
+        {
+          _removed = new HashSet<Persona> ();
+        }
+
+      this.personas_changed (_added.read_only_view, _removed.read_only_view);
     }
 
   private void _store_removed_cb (PersonaStore store)
@@ -629,7 +659,7 @@ public class Folks.Individual : Object,
         }
 
       if (removed_personas != null)
-        this.personas_changed (new HashSet<Persona> (), removed_personas);
+        this._emit_personas_changed (null, removed_personas);
 
       if (store != null)
         this._stores.unset (store);
@@ -660,7 +690,7 @@ public class Folks.Individual : Object,
         }
 
       if (removed_personas != null)
-        this.personas_changed (new HashSet<Persona> (), removed_personas);
+        this._emit_personas_changed (null, removed_personas);
 
       if (this._persona_set.size < 1)
         {
@@ -1451,7 +1481,7 @@ public class Folks.Individual : Object,
             }
         }
 
-      this.personas_changed (added, removed);
+      this._emit_personas_changed (added, removed);
 
       /* Update this.is_user */
       var new_is_user = (this._persona_user_count > 0) ? true : false;

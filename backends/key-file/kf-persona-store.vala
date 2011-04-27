@@ -33,6 +33,7 @@ using Folks.Backends.Kf;
 public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
 {
   private HashMap<string, Persona> _personas;
+  private Map<string, Persona> _personas_ro;
   private File _file;
   private GLib.KeyFile _key_file;
   private unowned Cancellable _save_key_file_cancellable = null;
@@ -108,7 +109,7 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
    */
   public override Map<string, Persona> personas
     {
-      get { return this._personas; }
+      get { return this._personas_ro; }
     }
 
   /**
@@ -127,6 +128,7 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
       this.trust_level = PersonaStoreTrust.FULL;
       this._file = key_file;
       this._personas = new HashMap<string, Persona> ();
+      this._personas_ro = this._personas.read_only_view;
     }
 
   /**
@@ -239,9 +241,7 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
                 {
                   /* FIXME: GroupDetails.ChangeReason is not the right enum to
                    * use here */
-                  this.personas_changed (added_personas,
-                      new HashSet<Persona> (),
-                      null, null, GroupDetails.ChangeReason.NONE);
+                  this._emit_personas_changed (added_personas, null);
                 }
 
               this._is_prepared = true;
@@ -282,8 +282,7 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
           var personas = new HashSet<Folks.Persona> ();
           personas.add (persona);
 
-          this.personas_changed (new HashSet<Persona> (), personas,
-              null, null, 0);
+          this._emit_personas_changed (null, personas);
         }
       catch (KeyFileError e)
         {
@@ -357,8 +356,7 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
       var personas = new HashSet<Persona> ();
       personas.add (persona);
 
-      this.personas_changed (personas, new HashSet<Persona> (),
-          null, null, GroupDetails.ChangeReason.NONE);
+      this._emit_personas_changed (personas, null);
 
       return persona;
     }

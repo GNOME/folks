@@ -95,6 +95,9 @@ public class Folks.IndividualAggregator : Object
       get { return this._writeable_store; }
     }
 
+  private Map<string, Individual> _individuals;
+  private Map<string, Individual> _individuals_ro;
+
   /**
    * A map from {@link Individual.id}s to their {@link Individual}s.
    *
@@ -107,7 +110,15 @@ public class Folks.IndividualAggregator : Object
    *
    * @since UNRELEASED
    */
-  public Map<string, Individual> individuals { get; private set; }
+  public Map<string, Individual> individuals
+    {
+      get { return this._individuals_ro; }
+      private set
+        {
+          this._individuals = value;
+          this._individuals_ro = this._individuals.read_only_view;
+        }
+    }
 
   /**
    * The {@link Individual} representing the user.
@@ -160,7 +171,8 @@ public class Folks.IndividualAggregator : Object
   public IndividualAggregator ()
     {
       this._stores = new HashMap<string, PersonaStore> ();
-      this.individuals = new HashMap<string, Individual> ();
+      this._individuals = new HashMap<string, Individual> ();
+      this._individuals_ro = this._individuals.read_only_view;
       this._link_map = new HashTable<string, Individual> (str_hash, str_equal);
 
       this._backends = new HashSet<Backend> ();
@@ -247,7 +259,7 @@ public class Folks.IndividualAggregator : Object
           new HashMap<Individual, MatchResult> ();
       Folks.PotentialMatch matchObj = new Folks.PotentialMatch ();
 
-      foreach (var i in this.individuals.values)
+      foreach (var i in this._individuals.values)
         {
           if (i.id == matchee.id)
                 continue;
@@ -273,7 +285,7 @@ public class Folks.IndividualAggregator : Object
     {
       HashMap<Individual, HashMap<Individual, MatchResult>> matches =
         new HashMap<Individual, HashMap<Individual, MatchResult>> ();
-      var individuals = this.individuals.values.to_array ();
+      var individuals = this._individuals.values.to_array ();
       Folks.PotentialMatch matchObj = new Folks.PotentialMatch ();
 
       for (var i = 0; i < individuals.length; i++)
@@ -390,15 +402,46 @@ public class Folks.IndividualAggregator : Object
       return type_id + ":" + id;
     }
 
+  /* Emit the individuals-changed signal ensuring that null parameters are
+   * turned into empty sets, and both sets passed to signal handlers are
+   * read-only. */
+  private void _emit_individuals_changed (Set<Individual>? added,
+      Set<Individual>? removed,
+      string? message = null,
+      Persona? actor = null,
+      GroupDetails.ChangeReason reason = GroupDetails.ChangeReason.NONE)
+    {
+      var _added = added;
+      var _removed = removed;
+
+      if ((added == null || added.size == 0) &&
+          (removed == null || removed.size == 0))
+        {
+          /* Don't bother emitting it if nothing's changed */
+          return;
+        }
+      else if (added == null)
+        {
+          _added = new HashSet<Individual> ();
+        }
+      else if (removed == null)
+        {
+          _removed = new HashSet<Individual> ();
+        }
+
+      this.individuals_changed (_added.read_only_view, _removed.read_only_view,
+          message, actor, reason);
+    }
+
   private void _connect_to_individual (Individual individual)
     {
       individual.removed.connect (this._individual_removed_cb);
-      this.individuals.set (individual.id, individual);
+      this._individuals.set (individual.id, individual);
     }
 
   private void _disconnect_from_individual (Individual individual)
     {
-      this.individuals.unset (individual.id);
+      this._individuals.unset (individual.id);
       individual.removed.disconnect (this._individual_removed_cb);
     }
 
@@ -700,7 +743,7 @@ public class Folks.IndividualAggregator : Object
       foreach (var individual in removed_individuals)
         {
           /* Ensure we don't remove the same Individual twice */
-          if (this.individuals.has_key (individual.id) == false)
+          if (this._individuals.has_key (individual.id) == false)
             continue;
 
           debug ("    %s", individual.id);
@@ -755,8 +798,8 @@ public class Folks.IndividualAggregator : Object
        * aggregator */
       if (added_individuals.size > 0 || removed_individuals.size > 0)
         {
-          this.individuals_changed (added_individuals, removed_individuals,
-              null, null, 0);
+          this._emit_individuals_changed (added_individuals,
+              removed_individuals);
         }
 
       /* Signal the replacement of various Individuals as a consequence of
@@ -795,7 +838,7 @@ public class Folks.IndividualAggregator : Object
 
       /* Only signal if the individual is still in this.individuals. This allows
        * us to group removals together in, e.g., _personas_changed_cb(). */
-      if (this.individuals.get (i.id) != i)
+      if (this._individuals.get (i.id) != i)
         return;
 
       var individuals = new HashSet<Individual> ();
@@ -814,8 +857,7 @@ public class Folks.IndividualAggregator : Object
       /* If the individual has 0 personas, we've already signaled removal */
       if (i.personas.size > 0)
         {
-          this.individuals_changed (new HashSet<Individual> (),
-              individuals, null, null, 0);
+          this._emit_individuals_changed (null, individuals);
         }
 
       this._disconnect_from_individual (i);

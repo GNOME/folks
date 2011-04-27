@@ -50,8 +50,10 @@ public class Trf.Persona : Folks.Persona,
   private bool _is_favourite;
   private const string[] _linkable_properties =
       {"im-addresses", "local-ids", "web-service-addresses"};
-  private HashSet<FieldDetails> _phone_numbers = new HashSet<FieldDetails> ();
-  private HashSet<FieldDetails> _email_addresses = new HashSet<FieldDetails> ();
+  private HashSet<FieldDetails> _phone_numbers;
+  private Set<FieldDetails> _phone_numbers_ro;
+  private HashSet<FieldDetails> _email_addresses;
+  private Set<FieldDetails> _email_addresses_ro;
   private weak Sparql.Cursor _cursor;
   private string _tracker_id;
 
@@ -79,7 +81,7 @@ public class Trf.Persona : Folks.Persona,
    */
   public Set<FieldDetails> phone_numbers
     {
-      get { return this._phone_numbers; }
+      get { return this._phone_numbers_ro; }
       public set
         {
           ((Trf.PersonaStore) this.store)._set_phones (this, value);
@@ -91,7 +93,7 @@ public class Trf.Persona : Folks.Persona,
    */
   public Set<FieldDetails> email_addresses
     {
-      get { return this._email_addresses; }
+      get { return this._email_addresses_ro; }
       public set
         {
           ((Trf.PersonaStore) this.store)._set_emails (this, value);
@@ -166,11 +168,6 @@ public class Trf.Persona : Folks.Persona,
         }
     }
 
-  private HashSet<Role> _roles =
-      new HashSet<Role> ((GLib.HashFunc) Role.hash,
-      (GLib.EqualFunc) Role.equal);
-
-
   private DateTime _birthday;
   /**
    * {@inheritDoc}
@@ -186,57 +183,60 @@ public class Trf.Persona : Folks.Persona,
 
   public string calendar_event_id { get; set; }
 
+  private HashSet<Role> _roles;
+  private Set<Role> _roles_ro;
+
   /**
    * {@inheritDoc}
    */
   public Set<Role> roles
     {
-      get { return this._roles; }
+      get { return this._roles_ro; }
       public set
         {
           ((Trf.PersonaStore) this.store)._set_roles (this, value);
         }
     }
 
-  private HashSet<Note> _notes =
-      new HashSet<Note> ((GLib.HashFunc) Note.hash,
-      (GLib.EqualFunc) Note.equal);
+  private HashSet<Note> _notes;
+  private Set<Note> _notes_ro;
 
   /**
    * {@inheritDoc}
    */
   public Set<Note> notes
     {
-      get { return this._notes; }
+      get { return this._notes_ro; }
       private set
         {
           ((Trf.PersonaStore) this.store)._set_notes (this, value);
         }
     }
 
-  private HashSet<FieldDetails> _urls = new HashSet<FieldDetails> ();
+  private HashSet<FieldDetails> _urls;
+  private Set<FieldDetails> _urls_ro;
 
   /**
    * {@inheritDoc}
    */
   public Set<FieldDetails> urls
     {
-      get { return this._urls; }
+      get { return this._urls_ro; }
       public set
         {
           ((Trf.PersonaStore) this.store)._set_urls (this, value);
         }
     }
 
-  private HashSet<PostalAddress> _postal_addresses =
-      new HashSet<PostalAddress> ();
+  private HashSet<PostalAddress> _postal_addresses;
+  private Set<PostalAddress> _postal_addresses_ro;
 
   /**
    * {@inheritDoc}
    */
   public Set<PostalAddress> postal_addresses
     {
-      get { return this._postal_addresses; }
+      get { return this._postal_addresses_ro; }
       private set
         {
           ((Trf.PersonaStore) this.store)._set_postal_addresses (this, value);
@@ -282,7 +282,8 @@ public class Trf.Persona : Folks.Persona,
           }
       }
 
-  private HashSet<string> _local_ids = new HashSet<string> ();
+  private HashSet<string> _local_ids;
+  private Set<string> _local_ids_ro;
 
   /**
    * IDs used to link {@link Trf.Persona}s.
@@ -295,7 +296,7 @@ public class Trf.Persona : Folks.Persona,
             {
               this._local_ids.add (this.uid);
             }
-          return this._local_ids;
+          return this._local_ids_ro;
         }
       set
         {
@@ -372,6 +373,22 @@ public class Trf.Persona : Folks.Persona,
       this._full_name = fullname;
       this._tracker_id = tracker_id;
       this._structured_name = new StructuredName (null, null, null, null, null);
+      this._phone_numbers = new HashSet<FieldDetails> ();
+      this._phone_numbers_ro = this._phone_numbers.read_only_view;
+      this._email_addresses = new HashSet<FieldDetails> ();
+      this._email_addresses_ro = this._email_addresses.read_only_view;
+      this._roles = new HashSet<Role> ((GLib.HashFunc) Role.hash,
+          (GLib.EqualFunc) Role.equal);
+      this._roles_ro = this._roles.read_only_view;
+      this._notes = new HashSet<Note> ((GLib.HashFunc) Note.hash,
+          (GLib.EqualFunc) Note.equal);
+      this._notes_ro = this._notes.read_only_view;
+      this._urls = new HashSet<FieldDetails> ();
+      this._urls_ro = this._urls.read_only_view;
+      this._postal_addresses = new HashSet<PostalAddress> ();
+      this._postal_addresses_ro = this._postal_addresses.read_only_view;
+      this._local_ids = new HashSet<string> ();
+      this._local_ids_ro = this._local_ids.read_only_view;
 
       if (cursor != null)
         {
@@ -566,6 +583,7 @@ public class Trf.Persona : Folks.Persona,
         }
 
       this._postal_addresses = postal_addresses;
+      this._postal_addresses_ro = this._postal_addresses.read_only_view;
     }
 
  private void _update_local_ids ()
@@ -719,6 +737,7 @@ public class Trf.Persona : Folks.Persona,
         }
 
       this._roles = roles;
+      this._roles_ro = this._roles.read_only_view;
     }
 
   internal bool _add_role (string tracker_id, string? title, string? org)
@@ -797,6 +816,7 @@ public class Trf.Persona : Folks.Persona,
     {
       this._local_ids =
           (HashSet<string>) Trf.PersonaStore.unserialize_local_ids (local_ids);
+      this._local_ids_ro = this._local_ids.read_only_view;
       this.notify_property ("local-ids");
       return true;
     }
@@ -924,6 +944,7 @@ public class Trf.Persona : Folks.Persona,
         }
 
       this._phone_numbers = phones;
+      this._phone_numbers_ro = this._phone_numbers.read_only_view;
     }
 
   internal bool _add_phone (string phone, string tracker_id)
@@ -1043,6 +1064,7 @@ public class Trf.Persona : Folks.Persona,
         }
 
       this._email_addresses = email_addresses;
+      this._email_addresses_ro = this._email_addresses.read_only_view;
     }
 
   private void _update_urls ()
@@ -1087,6 +1109,7 @@ public class Trf.Persona : Folks.Persona,
         }
 
       this._urls = urls;
+      this._urls_ro = this._urls.read_only_view;
     }
 
   internal bool _add_url (string url, string tracker_id, string type = "")

@@ -44,6 +44,7 @@ public class Folks.BackendStore : Object {
   /* this contains all backends, regardless of enabled or prepared state */
   private HashMap<string,Backend> _backend_hash;
   private HashMap<string, Backend> _prepared_backends;
+  private Map<string, Backend> _prepared_backends_ro;
   private File _config_file;
   private GLib.KeyFile _backends_key_file;
   private HashMap<string,unowned Module> _modules;
@@ -91,7 +92,8 @@ public class Folks.BackendStore : Object {
    */
   public Map<string, Backend> enabled_backends
     {
-      get { return this._prepared_backends; }
+      /* Return a read-only view of the map */
+      get { return this._prepared_backends_ro; }
 
       private set {}
     }
@@ -138,6 +140,7 @@ public class Folks.BackendStore : Object {
       this._backend_hash = new HashMap<string,Backend> (str_hash, str_equal);
       this._prepared_backends = new HashMap<string,Backend> (str_hash,
           str_equal);
+      this._prepared_backends_ro = this._prepared_backends.read_only_view;
     }
 
   ~BackendStore ()
@@ -403,7 +406,7 @@ public class Folks.BackendStore : Object {
    */
   public Collection<Backend> list_backends ()
     {
-      return this._backend_hash.values;
+      return this._backend_hash.values.read_only_view;
     }
 
   /**

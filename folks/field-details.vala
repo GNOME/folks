@@ -86,7 +86,7 @@ public class Folks.FieldDetails : Object
           return null;
         }
 
-      return this.parameters.get (parameter_name);
+      return this.parameters.get (parameter_name).read_only_view;
     }
 
   /**

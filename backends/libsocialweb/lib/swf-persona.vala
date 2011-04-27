@@ -80,16 +80,18 @@ public class Swf.Persona : Folks.Persona,
   public Gender gender { get; private set; }
 
   private HashSet<FieldDetails> _urls;
+  private Set<FieldDetails> _urls_ro;
 
   /**
    * {@inheritDoc}
    */
   public Set<FieldDetails> urls
     {
-      get { return this._urls; }
+      get { return this._urls_ro; }
       private set
         {
           this._urls = new HashSet<FieldDetails> ();
+          this._urls_ro = this._urls.read_only_view;
           foreach (var ps in value)
             this._urls.add (ps);
         }

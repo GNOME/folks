@@ -36,6 +36,7 @@ public class Folks.Backends.Kf.Backend : Folks.Backend
 {
   private bool _is_prepared = false;
   private HashMap<string, PersonaStore> _persona_stores;
+  private Map<string, PersonaStore> _persona_stores_ro;
 
   /**
    * Whether this Backend has been prepared.
@@ -59,7 +60,7 @@ public class Folks.Backends.Kf.Backend : Folks.Backend
    */
   public override Map<string, PersonaStore> persona_stores
     {
-      get { return this._persona_stores; }
+      get { return this._persona_stores_ro; }
     }
 
   /**
@@ -68,6 +69,7 @@ public class Folks.Backends.Kf.Backend : Folks.Backend
   public Backend ()
     {
       this._persona_stores = new HashMap<string, PersonaStore> ();
+      this._persona_stores_ro = this._persona_stores.read_only_view;
     }
 
   /**
