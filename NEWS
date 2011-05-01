@@ -12,6 +12,7 @@ Bugs fixed:
 * Bug 645186 — Make sure all connect() calls have appropriate disconnect() calls
 * Bug 648533 — Add runtime debug signalling
 * Bug 649790 — Vala uses the wrong includes
+* Bug 649088 — Combining contacts doesn't work with german Umlauts
 
 API changes:
 * LinkedHashSet.list_iterator() is now disallowed (causes an assertion failure)
