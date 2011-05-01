@@ -12,6 +12,7 @@ Bugs fixed:
 * Bug 647562 — Don't crash on duplicate group channels
 * Bug 647121 — Crash in individual_store_contact_sort at
   empathy-individual-store.c line 1387
+* Bug 649088 — Combining contacts doesn't work with german Umlauts
 
 Overview of changes from libfolks 0.4.1 to libfolks 0.4.2
 =========================================================

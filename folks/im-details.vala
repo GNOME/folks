@@ -80,16 +80,14 @@ public interface Folks.ImDetails : Object
   public static string normalise_im_address (string im_address, string protocol)
       throws Folks.ImDetailsError
     {
-      string normalised;
-
       if (protocol == "aim" || protocol == "myspace")
         {
-          normalised = im_address.replace (" ", "").down ();
+          return im_address.replace (" ", "").down ().normalize ();
         }
       else if (protocol == "irc" || protocol == "yahoo" ||
           protocol == "yahoojp" || protocol == "groupwise")
         {
-          normalised = im_address.down ();
+          return im_address.down ().normalize ();
         }
       else if (protocol == "jabber")
         {
@@ -145,6 +143,8 @@ public interface Folks.ImDetails : Object
             node = node.down ();
 
           /* Build a new JID */
+          string normalised = null;
+
           if (node != null && resource != null)
             {
               normalised = "%s@%s/%s".printf (node, domain, resource);
@@ -164,13 +164,13 @@ public interface Folks.ImDetails : Object
                   _("The IM address '%s' could not be understood."),
                   im_address);
             }
+
+          return normalised.normalize (-1, NormalizeMode.NFKC);
         }
       else
         {
           /* Fallback */
-          normalised = im_address;
+          return im_address.normalize ();
         }
-
-      return normalised.normalize ();
     }
 }
