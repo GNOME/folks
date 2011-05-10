@@ -45,6 +45,7 @@ libfolks_tracker_la_VALAFLAGS = \
 	--pkg gio-2.0 \
 	--pkg gee-1.0 \
 	--pkg tracker-sparql-0.10 \
+	--includedir folks \
 	--vapi folks-tracker.vapi \
 	-H folks-tracker.h \
 	$(NULL)

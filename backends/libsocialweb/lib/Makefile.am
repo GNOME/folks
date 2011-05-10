@@ -46,6 +46,7 @@ libfolks_libsocialweb_la_VALAFLAGS = \
         --pkg gee-1.0 \
         --pkg dbus-glib-1 \
         --pkg libsocialweb-client \
+        --includedir folks \
         --vapi folks-libsocialweb.vapi \
         -H folks-libsocialweb.h \
         $(NULL)

@@ -112,6 +112,7 @@ libfolks_telepathy_la_VALAFLAGS = \
 	--pkg gee-1.0 \
 	--pkg dbus-glib-1 \
 	--pkg telepathy-glib \
+	--includedir folks \
 	--vapi folks-telepathy.vapi \
 	-H folks-telepathy.h \
 	$(NULL)

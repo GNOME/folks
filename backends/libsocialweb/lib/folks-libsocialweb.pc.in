@@ -12,4 +12,4 @@ Description: Libsocialweb support library for the Folks meta-contacts library
 Version: @VERSION@
 Requires: folks glib-2.0 gobject-2.0 gee-1.0 libsocialweb-client
 Libs: -L${libdir} -lfolks-libsocialweb
-Cflags: -I${includedir} -I${includedir}/folks
+Cflags: -I${includedir}
