@@ -22,6 +22,7 @@ using LibsocialwebTest;
 using Folks;
 using Gee;
 using GLib;
+using SocialWebClient;
 
 public class DummyLswTests : Folks.TestCase
 {
@@ -110,7 +111,8 @@ public class DummyLswTests : Folks.TestCase
               Idle.add (() =>
                 {
                   string text = "([('mysocialnetwork', 'id01', %x, "
-                      + "{'id': ['id01'], 'name': ['Gargantua']}), "
+                      + "{'id': ['id01'], 'name': ['Gargantua'], "
+                       + "'X-foo': ['secret']}), "
                      + "('mysocialnetwork', 'id02', %x, "
                       + "{'id': ['id02'], 'name': ['Pantagruel']})],)";
                   Variant v = new Variant.parsed (text, 1300792578, 1300792579);
@@ -164,12 +166,37 @@ public class DummyLswTests : Folks.TestCase
       aggregator.disconnect (handler_id);
       assert (i1 != null);
       assert (i2 != null);
+      Folks.Persona persona1 = null;
+      Folks.Persona persona2 = null;
+      foreach (var p1 in i1.personas)
+        {
+          persona1 = p1;
+          break;
+        }
+      foreach (var p2 in i2.personas)
+        {
+          persona2 = p2;
+          break;
+        }
+      assert (persona1 is Swf.Persona);
+      assert (persona2 is Swf.Persona);
+      Contact contact1 = ((Swf.Persona) persona1).lsw_contact;
+      Contact contact2 = ((Swf.Persona) persona2).lsw_contact;
+      assert (contact1 != null);
+      assert (contact2 != null);
+      assert (contact1.get_value ("id") == "id01");
+      assert (contact1.get_value ("X-foo") == "secret");
+      assert (contact1.get_value ("X-bar") == null);
+      assert (contact2.get_value ("id") == "id02");
+      assert (contact2.get_value ("X-foo") == null);
+
 
       /* Test changing a contact */
       Idle.add (() =>
         {
           string text = "([('mysocialnetwork', 'id01', %x, "
-              + "{'id': ['id01'], 'name': ['Rabelais']})],)";
+              + "{'id': ['id01'], 'name': ['Rabelais'], "
+               + "'X-foo': ['secret'], 'X-bar': ['bar']})],)";
           Variant v = new Variant.parsed (text, 1300792581);
           try
             {
@@ -194,6 +221,9 @@ public class DummyLswTests : Folks.TestCase
           debug ("Aggregator changed some data!");
 	  string nickname = ((Folks.NameDetails) i1).nickname;
           assert (nickname == "Rabelais");
+	  assert (contact1.get_value ("id") == "id01");
+	  assert (contact1.get_value ("X-foo") == "secret");
+	  assert (contact1.get_value ("X-bar") == "bar");
           main_loop.quit ();
         });
 

@@ -121,6 +121,24 @@ public class Swf.Persona : Folks.Persona,
       private set {}
     }
 
+  private Contact _lsw_contact;
+
+  /**
+   * The Contact from libsocialweb
+   */
+  public Contact lsw_contact
+    {
+      get { return this._lsw_contact; }
+      private set
+        {
+          if (_lsw_contact != null && _lsw_contact != value)
+            {
+              _lsw_contact.unref ();
+            }
+          this._lsw_contact = value.ref ();
+        }
+    }
+
   /**
    * Build the Facebook JID.
    *
@@ -188,6 +206,7 @@ public class Swf.Persona : Folks.Persona,
               iid: iid,
               store: store,
               is_user: false);
+      this.lsw_contact = contact;
 
       debug ("Creating new Sw.Persona '%s' for %s UID '%s': %p",
           uid, store.display_name, id, this);
@@ -218,6 +237,8 @@ public class Swf.Persona : Folks.Persona,
   ~Persona ()
     {
       debug ("Destroying Sw.Persona '%s': %p", this.uid, this);
+      this._lsw_contact.unref ();
+      this._lsw_contact = null;
     }
 
   public static string? get_contact_id (Contact contact)
