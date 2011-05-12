@@ -143,9 +143,12 @@ public class Folks.PostalAddress : Object
       construct set
         {
           this._types = new HashSet<string> ();
-          this._types_ro = this._types.read_only_view;
-          foreach (var type in value)
-            this._types.add (type);
+          if (value != null)
+            {
+              this._types_ro = this._types.read_only_view;
+              foreach (var type in value)
+                this._types.add (type);
+            }
         }
     }
 
@@ -175,7 +178,7 @@ public class Folks.PostalAddress : Object
    */
   public PostalAddress (string? po_box, string? extension, string? street,
       string? locality, string? region, string? postal_code, string? country,
-      string? address_format, Set<string> types, string? uid)
+      string? address_format, Set<string>? types, string? uid)
     {
       Object (po_box:         po_box,
               extension:      extension,
