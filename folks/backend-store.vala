@@ -88,7 +88,7 @@ public class Folks.BackendStore : Object {
    *
    * The backends in this list have been prepared and are ready to use.
    *
-   * @since UNRELEASED
+   * @since 0.5.1
    */
   public Map<string, Backend> enabled_backends
     {

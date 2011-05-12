@@ -34,7 +34,7 @@ public interface Folks.UrlDetails : Object
    *
    * A list or websites associated to the contact.
    *
-   * @since UNRELEASED
+   * @since 0.5.1
    */
   public abstract Set<FieldDetails> urls { get; set; }
 }

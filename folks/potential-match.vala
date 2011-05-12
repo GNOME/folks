@@ -52,7 +52,7 @@ public class Folks.PotentialMatch : Object
    * A set of e-mail addresses known to be aliases of each other, such as
    * various forms of administrator address.
    *
-   * @since UNRELEASED
+   * @since 0.5.1
    */
   public static Set<string> known_email_aliases = null;
 

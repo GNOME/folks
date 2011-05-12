@@ -34,7 +34,7 @@ public interface Folks.LocalIdDetails : Object
    * The IDs corresponding to contacts in a
    * backend that we fully trust.
    *
-   * @since UNRELEASED
+   * @since 0.5.1
    */
   public abstract Set<string> local_ids { get; set; }
 }

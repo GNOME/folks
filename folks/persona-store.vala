@@ -196,7 +196,7 @@ public abstract class Folks.PersonaStore : Object
    * @param actor the {@link Persona} who made the change, if known
    * @param reason the reason for the change
    *
-   * @since UNRELEASED
+   * @since 0.5.1
    */
   public signal void personas_changed (Set<Persona> added,
       Set<Persona> removed,
@@ -284,7 +284,7 @@ public abstract class Folks.PersonaStore : Object
   /**
    * The {@link Persona}s exposed by this PersonaStore.
    *
-   * @since UNRELEASED
+   * @since 0.5.1
    */
   public abstract Map<string, Persona> personas { get; }
 

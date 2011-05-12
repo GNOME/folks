@@ -52,7 +52,7 @@ public class Folks.FieldDetails : Object
    * {@link Folks.FieldDetails.value}. The keys are the names of the
    * parameters, while the values are a list of strings.
    *
-   * @since UNRELEASED
+   * @since 0.5.1
    */
   public MultiMap<string, string> parameters { get; set; }
 
@@ -77,7 +77,7 @@ public class Folks.FieldDetails : Object
    * @return a collection of values for `parameter_name` or `null` (i.e. no
    * collection) if there are no such parameters.
    *
-   * @since UNRELEASED
+   * @since 0.5.1
    */
   public Collection<string>? get_parameter_values (string parameter_name)
     {
@@ -129,7 +129,7 @@ public class Folks.FieldDetails : Object
    *
    * @param additional the parameters to add
    *
-   * @since UNRELEASED
+   * @since 0.5.1
    */
   public void extend_parameters (MultiMap<string, string> additional)
     {

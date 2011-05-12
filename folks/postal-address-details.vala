@@ -174,7 +174,7 @@ public class Folks.PostalAddress : Object
    * @param region the region (state or province) name
    * @param postal_code the postal code
    * @param address_format the address format
-   * @since UNRELEASED
+   * @since 0.5.1
    */
   public PostalAddress (string? po_box, string? extension, string? street,
       string? locality, string? region, string? postal_code, string? country,
@@ -241,7 +241,7 @@ public interface Folks.PostalAddressDetails : Object
    *
    * A list of postal addresses associated to the contact.
    *
-   * @since UNRELEASED
+   * @since 0.5.1
    */
   public abstract Set<PostalAddress> postal_addresses { get; set; }
 }

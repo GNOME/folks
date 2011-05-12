@@ -117,7 +117,7 @@ public interface Folks.RoleDetails : Object
   /**
    * The roles of the contact.
    *
-   * @since UNRELEASED
+   * @since 0.5.1
    */
   public abstract Set<Role> roles { get; set; }
 }

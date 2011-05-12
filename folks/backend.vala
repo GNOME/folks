@@ -61,7 +61,7 @@ public abstract class Folks.Backend : Object
    * A backend may expose {@link Persona}s from multiple servers or accounts
    * (for example), so may have a {@link PersonaStore} for each.
    *
-   * @since UNRELEASED
+   * @since 0.5.1
    */
   public abstract Map<string, PersonaStore> persona_stores { get; }
 

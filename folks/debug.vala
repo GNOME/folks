@@ -37,7 +37,7 @@ private extern void g_log (string? log_domain,
  * allows debug domains to be outputted according to whether they've been
  * enabled by being passed to {@link Debug.dup}.
  *
- * @since UNRELEASED
+ * @since 0.5.1
  */
 public class Folks.Debug : Object
 {
@@ -65,7 +65,7 @@ public class Folks.Debug : Object
    *
    * This property is thread-safe.
    *
-   * @since UNRELEASED
+   * @since 0.5.1
    */
   public bool colour_enabled
     {
@@ -93,7 +93,7 @@ public class Folks.Debug : Object
    * debug domains; filtering of debug output as a whole is done after filtering
    * by enabled domains.
    *
-   * @since UNRELEASED
+   * @since 0.5.1
    */
   public bool debug_output_enabled
     {
@@ -123,7 +123,7 @@ public class Folks.Debug : Object
    * Client processes should emit this signal by calling
    * {@link Debug.emit_print_status}.
    *
-   * @since UNRELEASED
+   * @since 0.5.1
    */
   public signal void print_status ();
 
@@ -134,7 +134,7 @@ public class Folks.Debug : Object
    * This could be used in conjunction with a log handler to redirect the
    * status information to a debug window or log file, for example.
    *
-   * @since UNRELEASED
+   * @since 0.5.1
    */
   public const string STATUS_LOG_DOMAIN = "folks-status";
 
@@ -189,7 +189,7 @@ public class Folks.Debug : Object
    * This function is thread-safe.
    *
    * @return  Singleton {@link Debug} instance
-   * @since UNRELEASED
+   * @since 0.5.1
    */
   public static Debug dup ()
     {
@@ -219,7 +219,7 @@ public class Folks.Debug : Object
    * @param colour_enabled Whether debug output should be coloured using
    * terminal escape sequences
    * @return Singleton {@link Debug} instance
-   * @since UNRELEASED
+   * @since 0.5.1
    */
   public static Debug dup_with_flags (string? debug_flags,
       bool colour_enabled)
@@ -275,7 +275,7 @@ public class Folks.Debug : Object
    * status to standard output, obeying the options set on this
    * {@link Debug} instance for colouring and other formatting.
    *
-   * @since UNRELEASED
+   * @since 0.5.1
    */
   public void emit_print_status ()
     {
@@ -289,7 +289,7 @@ public class Folks.Debug : Object
    *
    * This is intended to be used by backend libraries only.
    *
-   * @since UNRELEASED
+   * @since 0.5.1
    */
   public void indent ()
     {
@@ -304,7 +304,7 @@ public class Folks.Debug : Object
    *
    * This is intended to be used by backend libraries only.
    *
-   * @since UNRELEASED
+   * @since 0.5.1
    */
   public void unindent ()
     {
@@ -322,7 +322,7 @@ public class Folks.Debug : Object
    * @param level A set of log level flags for the message
    * @param format A printf-style format string for the heading
    * @param ... Arguments for the format string
-   * @since UNRELEASED
+   * @since 0.5.1
    */
   [PrintfFormat ()]
   public void print_line (string domain,
@@ -346,7 +346,7 @@ public class Folks.Debug : Object
    * @param level A set of log level flags for the message
    * @param format A printf-style format string for the heading
    * @param ... Arguments for the format string
-   * @since UNRELEASED
+   * @since 0.5.1
    */
   [PrintfFormat ()]
   public void print_heading (string domain,
@@ -415,7 +415,7 @@ public class Folks.Debug : Object
    * @param domain The debug domain name
    * @param level A set of log level flags for the message
    * @param ... Alternating keys and values, terminated with null
-   * @since UNRELEASED
+   * @since 0.5.1
    */
   public void print_key_value_pairs (string domain,
       LogLevelFlags level,

@@ -453,7 +453,7 @@ public class Folks.Individual : Object,
    * {@link IndividualAggregator.unlink_individual}, which will ensure the link
    * changes are written to the appropriate backend.
    *
-   * @since UNRELEASED
+   * @since 0.5.1
    */
   public Set<Persona> personas
     {
@@ -469,7 +469,7 @@ public class Folks.Individual : Object,
    * @param added a set of {@link Persona}s which have been added
    * @param removed a set of {@link Persona}s which have been removed
    *
-   * @since UNRELEASED
+   * @since 0.5.1
    */
   public signal void personas_changed (Set<Persona> added,
       Set<Persona> removed);
@@ -605,7 +605,7 @@ public class Folks.Individual : Object,
    * {@link Individual} with, or `null`
    * @return a new Individual
    *
-   * @since UNRELEASED
+   * @since 0.5.1
    */
   public Individual (Set<Persona>? personas)
     {

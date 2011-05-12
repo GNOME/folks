@@ -109,7 +109,7 @@ public class Folks.IndividualAggregator : Object
    * {@link IndividualAggregator.add_persona_from_details} and
    * {@link IndividualAggregator.remove_individual}, respectively.
    *
-   * @since UNRELEASED
+   * @since 0.5.1
    */
   public Map<string, Individual> individuals
     {
@@ -145,7 +145,7 @@ public class Folks.IndividualAggregator : Object
    * @param actor the {@link Persona} who made the change, if known
    * @param reason the reason for the change
    *
-   * @since UNRELEASED
+   * @since 0.5.1
    */
   public signal void individuals_changed (Set<Individual> added,
       Set<Individual> removed,
@@ -335,7 +335,7 @@ public class Folks.IndividualAggregator : Object
   /**
    * Get all matches for a given {@link Individual}.
    *
-   * @since UNRELEASED
+   * @since 0.5.1
    */
   public Map<Individual, MatchResult> get_potential_matches
       (Individual matchee, MatchResult min_threshold = MatchResult.VERY_HIGH)
@@ -362,7 +362,7 @@ public class Folks.IndividualAggregator : Object
   /**
    * Get all combinations between all {@link Individual}s.
    *
-   * @since UNRELEASED
+   * @since 0.5.1
    */
   public Map<Individual, Map<Individual, MatchResult>>
       get_all_potential_matches
@@ -1074,7 +1074,7 @@ public class Folks.IndividualAggregator : Object
    * {@link Individual.removed}.
    *
    * @param personas the {@link Persona}s to be linked
-   * @since UNRELEASED
+   * @since 0.5.1
    */
   public async void link_personas (Set<Persona> personas)
       throws IndividualAggregatorError

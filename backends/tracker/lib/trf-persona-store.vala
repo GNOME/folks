@@ -714,7 +714,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
  /**
    * Returns "service1:addr1,addr2;service2:addr3,.."
    *
-   * @since UNRELEASED
+   * @since 0.5.1
    */
   public static string serialize_web_services (
       MultiMap<string, string> ws_obj)
@@ -751,7 +751,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
    * Transforms "service1:addr1,addr2;service2:addr3,.." to
    *   --->  HashMultiMap<string, string>
    *
-   * @since UNRELEASED
+   * @since 0.5.1
    */
   public static MultiMap<string, string> unserialize_web_services
       (string ws_addrs)
@@ -777,7 +777,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
  /**
    * Transform HashSet<string> to "id1,id2,.."
    *
-   * @since UNRELEASED
+   * @since 0.5.1
    */
   public static string serialize_local_ids (Set<string> local_ids)
     {
@@ -798,7 +798,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
   /**
    * Transform from id1,id2,.. to HashSet<string>
    *
-   * @since UNRELEASED
+   * @since 0.5.1
    */
   public static Set<string> unserialize_local_ids (string local_ids)
     {

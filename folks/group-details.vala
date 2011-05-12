@@ -119,7 +119,7 @@ public interface Folks.GroupDetails : Object
    * Freeform group IDs are mapped to a boolean which is `true` if the
    * contact is a member of the group, and `false` otherwise.
    *
-   * @since UNRELEASED
+   * @since 0.5.1
    */
   public abstract Set<string> groups { get; set; }
 

@@ -41,7 +41,7 @@ public interface Folks.PhoneDetails : Object
    *
    * A list of phone numbers associated to the contact.
    *
-   * @since UNRELEASED
+   * @since 0.5.1
    */
   public abstract Set<FieldDetails> phone_numbers { get; set; }
 

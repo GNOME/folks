@@ -51,7 +51,7 @@ public interface Folks.ImDetails : Object
    * All the IM addresses must be normalised using
    * {@link ImDetails.normalise_im_address} before being added to this property.
    *
-   * @since UNRELEASED
+   * @since 0.5.1
    */
   public abstract MultiMap<string, string> im_addresses
     {

@@ -32,7 +32,7 @@ public interface Folks.EmailDetails : Object
   /**
    * The email addresses of the contact.
    *
-   * @since UNRELEASED
+   * @since 0.5.1
    */
   public abstract Set<FieldDetails> email_addresses { get; set; }
 }

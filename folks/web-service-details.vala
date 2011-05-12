@@ -37,7 +37,7 @@ public interface Folks.WebServiceDetails : Object
    * Web service addresses are guaranteed to be unique per web service, but
    * not necessarily unique amongst all web services.
    *
-   * @since UNRELEASED
+   * @since 0.5.1
    */
   public abstract Gee.MultiMap<string, string> web_service_addresses
     {
