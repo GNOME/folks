@@ -129,7 +129,7 @@ public class Folks.Debug : Object
 
   /**
    * Log domain for the status messages logged as a result of calling
-   * {@link Debug.emit_print_status().
+   * {@link Debug.emit_print_status}.
    *
    * This could be used in conjunction with a log handler to redirect the
    * status information to a debug window or log file, for example.
@@ -188,7 +188,7 @@ public class Folks.Debug : Object
    *
    * This function is thread-safe.
    *
-   * @return		Singleton {@link Debug} instance
+   * @return  Singleton {@link Debug} instance
    * @since UNRELEASED
    */
   public static Debug dup ()
@@ -214,11 +214,11 @@ public class Folks.Debug : Object
    * set of debug domains enabled. Otherwise, the existing instance will have
    * its set of enabled domains changed to the provided set.
    *
-   * @param debug_flags		A comma-separated list of debug domains to
-   *				enable, or null to disable debug output
-   * @param colour_enabled	Whether debug output should be coloured using
-   *				terminal escape sequences
-   * @return			Singleton {@link Debug} instance
+   * @param debug_flags A comma-separated list of debug domains to enable, or
+   * null to disable debug output
+   * @param colour_enabled Whether debug output should be coloured using
+   * terminal escape sequences
+   * @return Singleton {@link Debug} instance
    * @since UNRELEASED
    */
   public static Debug dup_with_flags (string? debug_flags,
@@ -318,10 +318,10 @@ public class Folks.Debug : Object
    *
    * This is intended to be used by backend libraries only.
    *
-   * @param domain	The debug domain name
-   * @param level	A set of log level flags for the message
-   * @param format	A printf-style format string for the heading
-   * @param ...		Arguments for the format string
+   * @param domain The debug domain name
+   * @param level A set of log level flags for the message
+   * @param format A printf-style format string for the heading
+   * @param ... Arguments for the format string
    * @since UNRELEASED
    */
   [PrintfFormat ()]
@@ -342,10 +342,10 @@ public class Folks.Debug : Object
    *
    * This is intended to be used by backend libraries only.
    *
-   * @param domain	The debug domain name
-   * @param level	A set of log level flags for the message
-   * @param format	A printf-style format string for the heading
-   * @param ...		Arguments for the format string
+   * @param domain The debug domain name
+   * @param level A set of log level flags for the message
+   * @param format A printf-style format string for the heading
+   * @param ... Arguments for the format string
    * @since UNRELEASED
    */
   [PrintfFormat ()]
@@ -412,9 +412,9 @@ public class Folks.Debug : Object
    *
    * The table will be printed at the current indentation level plus one.
    *
-   * @param domain	The debug domain name
-   * @param level	A set of log level flags for the message
-   * @param ...		Alternating keys and values, terminated with null
+   * @param domain The debug domain name
+   * @param level A set of log level flags for the message
+   * @param ... Alternating keys and values, terminated with null
    * @since UNRELEASED
    */
   public void print_key_value_pairs (string domain,
