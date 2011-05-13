@@ -54,6 +54,10 @@ distclean-local:
 		rm -f ChangeLog; \
 	fi
 
+distcleancheck_listfiles = \
+	find . -type f -exec sh -c 'test -f $(srcdir)/$$1 || echo $$1' \
+		sh '{}' ';'
+
 ChangeLog:
 	@echo Creating $@
 	@if test -d "$(srcdir)/.git"; then \
