@@ -127,8 +127,14 @@ dist_gir_DATA = $(GIRS)
 typelibdir = $(libdir)/girepository-1.0
 dist_typelib_DATA = $(GIRS:.gir=.typelib)
 
-CLEANFILES += $(dist_typelib_DATA)
-BUILT_SOURCES += $(dist_gir_DATA)
+BUILT_SOURCES += \
+	$(dist_gir_DATA) \
+	$(dist_typelib_DATA) \
+	$(NULL)
 endif
+
+MAINTAINERCLEANFILES = \
+	$(BUILT_SOURCES) \
+	$(NULL)
 
 -include $(top_srcdir)/git.mk
