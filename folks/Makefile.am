@@ -122,13 +122,13 @@ Folks-$(API_VERSION).gir: libfolks.la
 GIRS = Folks-$(API_VERSION).gir
 
 girdir = $(datadir)/gir-1.0
-gir_DATA = $(GIRS)
+dist_gir_DATA = $(GIRS)
 
 typelibdir = $(libdir)/girepository-1.0
-typelib_DATA = $(GIRS:.gir=.typelib)
+dist_typelib_DATA = $(GIRS:.gir=.typelib)
 
-CLEANFILES += $(typelib_DATA)
-BUILT_SOURCES += $(gir_DATA)
+CLEANFILES += $(dist_typelib_DATA)
+BUILT_SOURCES += $(dist_gir_DATA)
 endif
 
 -include $(top_srcdir)/git.mk
