@@ -5,6 +5,7 @@ BACKEND_NAME = "tracker"
 AM_CPPFLAGS = \
 	-I$(top_srcdir)/folks \
 	-I$(top_srcdir)/backends/tracker/lib \
+	-I$(top_srcdir)/backends/tracker/lib/folks \
 	-include $(CONFIG_HEADER) \
 	-DPACKAGE_DATADIR=\"$(pkgdatadir)\" \
 	-DBACKEND_NAME=\"$(BACKEND_NAME)\" \

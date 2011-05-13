@@ -48,7 +48,7 @@ libfolks_libsocialweb_la_VALAFLAGS = \
         --pkg libsocialweb-client \
         --includedir folks \
         --vapi folks-libsocialweb.vapi \
-        -H folks-libsocialweb.h \
+        -H folks/folks-libsocialweb.h \
         $(NULL)
 
 folks_backend_libsocialweb_deps = \
@@ -82,7 +82,7 @@ libfolks_libsocialweb_la_LDFLAGS = \
 
 folks_libsocialweb_includedir = $(includedir)/folks
 folks_libsocialweb_include_HEADERS = \
-	folks-libsocialweb.h \
+	folks/folks-libsocialweb.h \
 	$(NULL)
 
 vapidir = $(datadir)/vala/vapi
@@ -103,7 +103,7 @@ CLEANFILES += \
 MAINTAINERCLEANFILES = \
 	$(folks_libsocialweb_valasources:.vala=.c) \
 	libfolks_libsocialweb_la_vala.stamp \
-	folks-libsocialweb.h \
+	folks/folks-libsocialweb.h \
 	folks-libsocialweb.vapi \
 	$(NULL)
 

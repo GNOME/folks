@@ -47,7 +47,7 @@ libfolks_tracker_la_VALAFLAGS = \
 	--pkg tracker-sparql-0.10 \
 	--includedir folks \
 	--vapi folks-tracker.vapi \
-	-H folks-tracker.h \
+	-H folks/folks-tracker.h \
 	$(NULL)
 
 folks_backend_tracker_deps = \
@@ -83,7 +83,7 @@ libfolks_tracker_la_LDFLAGS = \
 
 folks_tracker_includedir = $(includedir)/folks
 folks_tracker_include_HEADERS = \
-	folks-tracker.h \
+	folks/folks-tracker.h \
 	$(NULL)
 
 vapidir = $(datadir)/vala/vapi
@@ -104,7 +104,7 @@ CLEANFILES += \
 MAINTAINERCLEANFILES = \
 	$(folks_tracker_valasources:.vala=.c) \
 	libfolks_tracker_la_vala.stamp \
-	folks-tracker.h \
+	folks/folks-tracker.h \
 	folks-tracker.vapi \
 	$(NULL)
 

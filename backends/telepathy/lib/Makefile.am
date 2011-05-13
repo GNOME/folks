@@ -114,7 +114,7 @@ libfolks_telepathy_la_VALAFLAGS = \
 	--pkg telepathy-glib \
 	--includedir folks \
 	--vapi folks-telepathy.vapi \
-	-H folks-telepathy.h \
+	-H folks/folks-telepathy.h \
 	$(NULL)
 
 libfolks_telepathy_la_CFLAGS = \
@@ -144,7 +144,7 @@ libfolks_telepathy_la_LDFLAGS = \
 
 folks_telepathy_includedir = $(includedir)/folks
 folks_telepathy_include_HEADERS = \
-	folks-telepathy.h \
+	folks/folks-telepathy.h \
 	$(NULL)
 
 vapidir = $(datadir)/vala/vapi
@@ -166,7 +166,7 @@ MAINTAINERCLEANFILES = \
 	$(folks_telepathy_valasources:.vala=.c) \
 	libfolks_telepathy_la_vala.stamp \
 	libtp_lowlevel_la_vala.stamp \
-	folks-telepathy.h \
+	folks/folks-telepathy.h \
 	folks-telepathy.vapi \
 	$(dist_noinst_DATA) \
 	$(NULL)
