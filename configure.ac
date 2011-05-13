@@ -167,7 +167,6 @@ if test \
         ! -e ${sd}tests/folks/aggregation_vala.stamp -o \
         ! -e ${sd}tests/folks/backend_loading_vala.stamp -o \
         ! -e ${sd}tests/folks/field_details_vala.stamp -o \
-        ! -e ${sd}tests/folks/linked_hash_set_vala.stamp -o \
         ! -e ${sd}tests/key-file/individual_retrieval_vala.stamp -o \
         ! -e ${sd}tests/lib/folks-test.vapi -o \
         ! -e ${sd}tests/lib/key-file/kf-test.vapi -o \
