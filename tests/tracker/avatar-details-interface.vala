@@ -131,8 +131,8 @@ public class AvatarDetailsInterfaceTests : Folks.TestCase
 
   private bool _compare_files (File a, File b)
     {
-      string content_a = "a";
-      string content_b = "b";
+      uint8 *content_a;
+      uint8 *content_b;
 
       try
         {
@@ -152,7 +152,7 @@ public class AvatarDetailsInterfaceTests : Folks.TestCase
           GLib.warning ("couldn't load file b");
         }
 
-      return content_a == content_b;
+      return ((string) content_a) == ((string) content_b);
     }
 }
 

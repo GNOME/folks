@@ -695,14 +695,15 @@ public class Folks.BackendStore : Object {
       this._backends_key_file = new GLib.KeyFile ();
       try
         {
-          string contents = null;
-          size_t length = 0;
+          uint8 *contents = null;
 
-          yield file.load_contents_async (null, out contents, out length);
-          if (length > 0)
+          yield file.load_contents_async (null, out contents, null);
+          var contents_s = (string) contents;
+
+          if (contents_s.length > 0)
             {
-              this._backends_key_file.load_from_data (contents, length,
-                  KeyFileFlags.KEEP_COMMENTS);
+              this._backends_key_file.load_from_data (contents_s,
+                  contents_s.length, KeyFileFlags.KEEP_COMMENTS);
             }
         }
       catch (Error e1)

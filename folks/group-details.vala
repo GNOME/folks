@@ -34,7 +34,7 @@ public interface Folks.GroupDetails : Object
    * [[http://telepathy.freedesktop.org/spec/Channel_Interface_Group.html#Channel_Group_Change_Reason|Channel_Group_Change_Reason]]
    * interface in the Telepathy specification.
    */
-  public static enum ChangeReason
+  public enum ChangeReason
     {
       /**
        * No reason was provided for this change.

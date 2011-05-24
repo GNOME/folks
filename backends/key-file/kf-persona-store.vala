@@ -151,14 +151,16 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
                    * below and try to create it instead. */
                   try
                     {
-                      string contents = null;
-                      size_t length = 0;
+                      uint8 *contents = null;
 
                       yield this._file.load_contents_async (null, out contents,
-                          out length);
-                      if (length > 0)
+                          null);
+                      var contents_s = (string) contents;
+
+                      if (contents_s.length > 0)
                         {
-                          this._key_file.load_from_data (contents, length,
+                          this._key_file.load_from_data (contents_s,
+                              contents_s.length,
                               KeyFileFlags.KEEP_COMMENTS);
                         }
                       break;
