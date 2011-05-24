@@ -2166,17 +2166,18 @@ public class Trf.PersonaStore : Folks.PersonaStore
     }
 
   internal async void _set_avatar (Folks.Persona persona,
-      File avatar)
+      File? avatar)
     {
-      const string query_t = "DELETE {" +
+      const string query_d = "DELETE {" +
         " ?c " + Trf.OntologyDefs.NCO_PHOTO  + " ?p " +
         " } " +
         "WHERE { " +
         " ?c a " + Trf.OntologyDefs.NCO_PERSON  + " ; " +
         Trf.OntologyDefs.NCO_PHOTO + " ?p . " +
         " FILTER(tracker:id(?c) = %s) " +
-        "} " +
-        "INSERT { " +
+        "} ";
+
+      const string query_i = "INSERT { " +
         " _:i a " + Trf.OntologyDefs.NFO_IMAGE  + ", " +
         Trf.OntologyDefs.NIE_DATAOBJECT + " ; " +
         Trf.OntologyDefs.NIE_URL + " '%s' . " +
@@ -2194,7 +2195,11 @@ public class Trf.PersonaStore : Folks.PersonaStore
       if (image_urn != "")
         this._delete_resource ("<%s>".printf (image_urn));
 
-      string query = query_t.printf (p_id, avatar.get_uri (), p_id);
+      string query = query_d.printf (p_id);
+      if (avatar != null)
+        {
+          query += query_i.printf (avatar.get_uri (), p_id);
+        }
       yield this._tracker_update (query, "_set_avatar");
     }
 
