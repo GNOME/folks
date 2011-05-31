@@ -90,7 +90,7 @@ folks_telepathy_doc_deps = \
 	$(NULL)
 valadoc_flags_folks_telepathy = \
 	$(valadoc_flags) \
-	-X $(top_srcdir)/backends/telepathy/lib/folks-telepathy.h \
+	-X $(top_srcdir)/backends/telepathy/lib/folks/folks-telepathy.h \
 	$(addprefix --pkg=,$(folks_telepathy_doc_deps)) \
 	--vapidir=$(top_srcdir)/folks \
 	--vapidir=$(top_srcdir)/backends/telepathy/lib \
