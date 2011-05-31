@@ -88,7 +88,8 @@ AC_ARG_ENABLE(libsocialweb-backend,
 if test "x$enable_libsocialweb_backend" != "xno"; then
   PKG_CHECK_MODULES([SW_CLIENT], [libsocialweb-client >= $SW_CLIENT_REQUIRED],
       have_libsocialweb_backend="yes", have_libsocialweb_backend="no")
-  if test "x$have_libsocialweb_backend" = "xyes"; then
+  if test "x$have_libsocialweb_backend" = "xyes" -a \
+          "x$enable_vala" = "xyes"; then
     VALA_CHECK_PACKAGES([telepathy-glib
                          dbus-glib-1
                          gio-2.0
