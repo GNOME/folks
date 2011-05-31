@@ -320,10 +320,8 @@ AC_ARG_ENABLE([docs],
 AM_CONDITIONAL([ENABLE_DOCS], [test x$enable_docs = xyes])
 
 AS_IF([test "x$enable_docs" != xno],
-      [PKG_CHECK_MODULES([VALADOC_PC], [valadoc-1.0 >= $VALADOC_REQUIRED])
-       AC_PATH_PROG([VALADOC], [valadoc], [:])
-       AS_IF([test "$VALADOC" != :],
-             have_valadoc=yes)])
+      [AC_PATH_PROG([VALADOC], [valadoc], [:])
+       AS_IF([test "$VALADOC" != :], have_valadoc=yes)])
 AM_CONDITIONAL([HAVE_VALADOC], [test x$have_valadoc = xyes])
 
 # -----------------------------------------------------------
