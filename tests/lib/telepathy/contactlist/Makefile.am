@@ -64,11 +64,13 @@ tp_test_contactlist_gir_FILES = $(libtp_test_contactlist_la_SOURCES)
 tp_test_contactlist_gir_NAMESPACE = TpTest
 INTROSPECTION_GIRS += tp-test-contactlist.gir
 
+if HAVE_VALA
 tp-test-contactlist.vapi: tp-test-contactlist.gir
 	$(MAKE) $(AM_MAKEFLAGS) tp-test-contactlist.gir
 	$(AM_V_GEN)$(VAPIGEN) $(VAPIGENFLAGS) --library tp-test-contactlist \
 		tp-test-contactlist.gir
 	touch $@
+endif
 
 dist_noinst_DATA = \
 	tp-test-contactlist.gir \
