@@ -100,7 +100,8 @@ if test "x$enable_libsocialweb_backend" != "xno"; then
   fi
 
   if test "x$have_libsocialweb_backend" = "xyes"; then
-    AC_DEFINE(HAVE_TELEPATHY, [], [Define if you have libsocialweb_backend])
+    AC_DEFINE(HAVE_LIBSOCIALWEB, [],
+              [Define if you have the libsocialweb backend])
   fi
 else
    have_libsocialweb_backend=no
