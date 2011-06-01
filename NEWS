@@ -1,6 +1,10 @@
 Overview of changes from libfolks 0.5.1 to libfolks 0.5.2
 =========================================================
 
+Bugs fixed:
+* Bug 650067 — Tracker backend warns when setting a NULL avatar (ie, unsetting
+  the avatar)
+
 Overview of changes from libfolks 0.5.0 to libfolks 0.5.1
 =========================================================
 
@@ -16,8 +20,6 @@ Bugs fixed:
 * Bug 648533 — Add runtime debug signalling
 * Bug 649790 — Vala uses the wrong includes
 * Bug 649088 — Combining contacts doesn't work with german Umlauts
-* Bug 650067 — Tracker backend warns when setting a NULL avatar (ie, unsetting
-  the avatar)
 
 API changes:
 * LinkedHashSet.list_iterator() is now disallowed (causes an assertion failure)
