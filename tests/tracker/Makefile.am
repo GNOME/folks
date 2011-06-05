@@ -104,7 +104,7 @@ noinst_PROGRAMS = \
 	$(NULL)
 
 backend_store_key_file=$(srcdir)/data/backend-tracker-only.ini
-avatar_file=$(srcdir)/data/avatar-01.jpg
+avatar_file=@abs_top_srcdir@/tests/data/avatar-01.jpg
 TESTS_ENVIRONMENT = \
 	GCONF_DEFAULT_SOURCE_PATH=@abs_top_srcdir@/tests/data/gconf.path \
 	FOLKS_BACKEND_PATH=$(BACKEND_UNINST_PATH) \
@@ -418,7 +418,6 @@ MAINTAINERCLEANFILES = \
 EXTRA_DIST = \
 	$(MAINTAINERCLEANFILES) \
 	$(backend_store_key_file) \
-	$(srcdir)/data/avatar-01.jpg \
 	$(NULL)
 
 -include $(top_srcdir)/git.mk

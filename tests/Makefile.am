@@ -33,4 +33,8 @@ TESTS_ENVIRONMENT = \
     G_DEBUG=fatal_warnings,fatal_criticals \
     PYTHONPATH=@abs_top_srcdir@/tools
 
+EXTRA_DIST = \
+	$(srcdir)/data/avatar-01.jpg \
+	$(NULL)
+
 -include $(top_srcdir)/git.mk
