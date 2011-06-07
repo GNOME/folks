@@ -47,6 +47,7 @@ internal class Logger : GLib.Object
 {
   private static LoggerIface _logger;
   private string _account_path;
+  private uint _logger_watch_id;
 
   public signal void invalidated ();
   public signal void favourite_contacts_changed (string[] added,
@@ -57,29 +58,22 @@ internal class Logger : GLib.Object
       this._account_path = account_path;
     }
 
-  public async bool prepare ()
+  ~Logger ()
+    {
+      Bus.unwatch_name (this._logger_watch_id);
+    }
+
+  public async bool prepare () throws GLib.Error
     {
       bool retval = false;
 
       if (this._logger == null)
         {
           /* Create a logger proxy for favourites support */
-          /* FIXME: This should be ported to the Vala GDBus stuff and made
-           * async, but that depends on
-           * https://bugzilla.gnome.org/show_bug.cgi?id=622611 being fixed.
-           * FIXME: If this is made async, race conditions may appear in
-           * TpfPersonaStore, which will need to be prevented. e.g.
-           * change_is_favourite() may get called before logger initialisation
-           * is complete; favourites-change requests should be queued. */
-          /* FIXME: Before being ported to use GDBus, this should use
-           * dbus_conn.get_object_for_name_owner() so that it behaves better if
-           * the logger service disappears. This is, however, blocked by:
-           * https://bugzilla.gnome.org/show_bug.cgi?id=623198 */
-          var dbus_conn = DBus.Bus.get (DBus.BusType.SESSION);
-          this._logger = dbus_conn.get_object (
+          var dbus_conn = yield Bus.get (BusType.SESSION);
+          this._logger = yield dbus_conn.get_proxy<LoggerIface> (
               "org.freedesktop.Telepathy.Logger",
-              "/org/freedesktop/Telepathy/Logger",
-              "org.freedesktop.Telepathy.Logger.DRAFT") as LoggerIface;
+              "/org/freedesktop/Telepathy/Logger");
 
           /* Failure? */
           if (this._logger == null)
@@ -88,13 +82,9 @@ internal class Logger : GLib.Object
               return retval;
             }
 
-          this._logger.destroy.connect (() =>
-            {
-              /* We've lost the connection to the logger service, so invalidate
-               * this logger proxy (and all the others too). */
-              this._logger = null;
-              this.invalidated ();
-            });
+          this._logger_watch_id = Bus.watch_name_on_connection (dbus_conn,
+              "org.freedesktop.Telepathy.Logger", BusNameWatcherFlags.NONE,
+              null, this._logger_vanished);
 
           retval = true;
         }
@@ -110,13 +100,23 @@ internal class Logger : GLib.Object
       return retval;
     }
 
+  private void _logger_vanished (DBusConnection conn, string name)
+    {
+      /* The logger has vanished on the bus, so it and we are no longer valid */
+      this._logger = null;
+      this.invalidated ();
+    }
+
   public async string[] get_favourite_contacts () throws GLib.Error
     {
       /* Invalidated */
       if (this._logger == null)
         return {};
 
-      AccountFavourites[] favs = yield this._logger.get_favourite_contacts ();
+      /* Use an intermediate, since this._logger could disappear before this
+       * async function finishes */
+      var logger = this._logger;
+      AccountFavourites[] favs = yield logger.get_favourite_contacts ();
 
       foreach (AccountFavourites account in favs)
         {
@@ -134,7 +134,10 @@ internal class Logger : GLib.Object
       if (this._logger == null)
         return;
 
-      yield this._logger.add_favourite_contact (
+      /* Use an intermediate, since this._logger could disappear before this
+       * async function finishes */
+      var logger = this._logger;
+      yield logger.add_favourite_contact (
           new ObjectPath (this._account_path), id);
     }
 
@@ -144,7 +147,10 @@ internal class Logger : GLib.Object
       if (this._logger == null)
         return;
 
-      yield this._logger.remove_favourite_contact (
+      /* Use an intermediate, since this._logger could disappear before this
+       * async function finishes */
+      var logger = this._logger;
+      yield logger.remove_favourite_contact (
           new ObjectPath (this._account_path), id);
     }
 }
