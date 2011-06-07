@@ -25,7 +25,7 @@ using Folks;
 
 private struct AccountFavourites
 {
-  DBus.ObjectPath account_path;
+  ObjectPath account_path;
   string[] ids;
 }
 
@@ -35,12 +35,12 @@ private interface LoggerIface : DBus.Object
   public abstract async AccountFavourites[] get_favourite_contacts ()
       throws DBus.Error;
   public abstract async void add_favourite_contact (
-      DBus.ObjectPath account_path, string id) throws DBus.Error;
+      ObjectPath account_path, string id) throws DBus.Error;
   public abstract async void remove_favourite_contact (
-      DBus.ObjectPath account_path, string id) throws DBus.Error;
+      ObjectPath account_path, string id) throws DBus.Error;
 
   public abstract signal void favourite_contacts_changed (
-      DBus.ObjectPath account_path, string[] added, string[] removed);
+      ObjectPath account_path, string[] added, string[] removed);
 }
 
 internal class Logger : GLib.Object
@@ -125,7 +125,7 @@ internal class Logger : GLib.Object
         return;
 
       yield this._logger.add_favourite_contact (
-          new DBus.ObjectPath (this._account_path), id);
+          new ObjectPath (this._account_path), id);
     }
 
   public async void remove_favourite_contact (string id) throws DBus.Error
@@ -135,6 +135,6 @@ internal class Logger : GLib.Object
         return;
 
       yield this._logger.remove_favourite_contact (
-          new DBus.ObjectPath (this._account_path), id);
+          new ObjectPath (this._account_path), id);
     }
 }
