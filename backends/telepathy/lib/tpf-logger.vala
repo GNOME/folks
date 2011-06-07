@@ -30,7 +30,7 @@ private struct AccountFavourites
 }
 
 [DBus (name = "org.freedesktop.Telepathy.Logger.DRAFT")]
-private interface LoggerIface : DBus.Object
+private interface LoggerIface : Object
 {
   public abstract async AccountFavourites[] get_favourite_contacts ()
       throws DBus.Error;
