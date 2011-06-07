@@ -111,7 +111,6 @@ libfolks_telepathy_la_VALAFLAGS = \
 	--pkg gobject-2.0 \
 	--pkg gio-2.0 \
 	--pkg gee-1.0 \
-	--pkg dbus-glib-1 \
 	--pkg telepathy-glib \
 	--includedir folks \
 	--vapi folks-telepathy.vapi \
@@ -121,7 +120,6 @@ libfolks_telepathy_la_VALAFLAGS = \
 libfolks_telepathy_la_CFLAGS = \
 	$(GIO_CFLAGS) \
 	$(GLIB_CFLAGS) \
-	$(DBUS_GLIB_CFLAGS) \
 	$(GEE_CFLAGS) \
 	$(TP_GLIB_CFLAGS) \
 	$(NULL)
@@ -129,7 +127,6 @@ libfolks_telepathy_la_CFLAGS = \
 libfolks_telepathy_la_LIBADD = \
 	$(GIO_LIBS) \
 	$(GLIB_LIBS) \
-	$(DBUS_GLIB_LIBS) \
 	$(GEE_LIBS) \
 	$(TP_GLIB_LIBS) \
 	$(top_builddir)/folks/libfolks.la \

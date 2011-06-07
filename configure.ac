@@ -91,7 +91,6 @@ if test "x$enable_libsocialweb_backend" != "xno"; then
   if test "x$have_libsocialweb_backend" = "xyes" -a \
           "x$enable_vala" = "xyes"; then
     VALA_CHECK_PACKAGES([telepathy-glib
-                         dbus-glib-1
                          gio-2.0
                          gee-1.0
                          libsocialweb-client],
@@ -131,7 +130,6 @@ PKG_CHECK_MODULES([GLIB],
                    gobject-2.0 >= $GLIB_REQUIRED])
 PKG_CHECK_MODULES([GMODULE], [gmodule-no-export-2.0])
 PKG_CHECK_MODULES([GIO], [gio-2.0 >= $GLIB_REQUIRED])
-PKG_CHECK_MODULES([DBUS_GLIB], [dbus-glib-1])
 PKG_CHECK_MODULES([GCONF2], [gconf-2.0 >= $GCONF2_REQUIRED])
 
 # FIXME: We depend on libgee < 0.7 because 0.7 breaks API. bgo#627746
@@ -212,7 +210,6 @@ if test "x$enable_vala" = "xyes" ; then
         AC_SUBST([VAPIDIR])
 
         VALA_CHECK_PACKAGES([telepathy-glib
-                             dbus-glib-1
                              gio-2.0
                              gee-1.0])
 
