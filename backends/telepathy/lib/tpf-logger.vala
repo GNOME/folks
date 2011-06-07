@@ -52,8 +52,15 @@ internal class Logger : GLib.Object
   public signal void favourite_contacts_changed (string[] added,
       string[] removed);
 
-  public Logger (string account_path) throws TelepathyGLib.DBusError
+  public Logger (string account_path)
     {
+      this._account_path = account_path;
+    }
+
+  public async bool prepare ()
+    {
+      bool retval = false;
+
       if (this._logger == null)
         {
           /* Create a logger proxy for favourites support */
@@ -88,9 +95,10 @@ internal class Logger : GLib.Object
               this._logger = null;
               this.invalidated ();
             });
+
+          retval = true;
         }
 
-      this._account_path = account_path;
       this._logger.favourite_contacts_changed.connect ((ap, a, r) =>
         {
           if (ap != this._account_path)
@@ -98,6 +106,8 @@ internal class Logger : GLib.Object
 
           this.favourite_contacts_changed (a, r);
         });
+
+      return retval;
     }
 
   public async string[] get_favourite_contacts () throws GLib.Error

@@ -534,6 +534,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
               try
                 {
                   this._logger = new Logger (this.id);
+                  yield this._logger.prepare ();
                   this._logger.invalidated.connect (() =>
                     {
                       warning (
