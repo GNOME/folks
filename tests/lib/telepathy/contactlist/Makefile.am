@@ -75,6 +75,7 @@ endif
 dist_noinst_DATA = \
 	tp-test-contactlist.gir \
 	tp-test-contactlist.vapi \
+	tp-test-contactlist.deps \
 	$(NULL)
 
 CLEANFILES = \
