@@ -33,11 +33,11 @@ private struct AccountFavourites
 private interface LoggerIface : Object
 {
   public abstract async AccountFavourites[] get_favourite_contacts ()
-      throws DBus.Error;
+      throws GLib.Error;
   public abstract async void add_favourite_contact (
-      ObjectPath account_path, string id) throws DBus.Error;
+      ObjectPath account_path, string id) throws GLib.Error;
   public abstract async void remove_favourite_contact (
-      ObjectPath account_path, string id) throws DBus.Error;
+      ObjectPath account_path, string id) throws GLib.Error;
 
   public abstract signal void favourite_contacts_changed (
       ObjectPath account_path, string[] added, string[] removed);
@@ -52,7 +52,7 @@ internal class Logger : GLib.Object
   public signal void favourite_contacts_changed (string[] added,
       string[] removed);
 
-  public Logger (string account_path) throws DBus.Error
+  public Logger (string account_path) throws TelepathyGLib.DBusError
     {
       if (this._logger == null)
         {
@@ -100,7 +100,7 @@ internal class Logger : GLib.Object
         });
     }
 
-  public async string[] get_favourite_contacts () throws DBus.Error
+  public async string[] get_favourite_contacts () throws GLib.Error
     {
       /* Invalidated */
       if (this._logger == null)
@@ -118,7 +118,7 @@ internal class Logger : GLib.Object
       return {};
     }
 
-  public async void add_favourite_contact (string id) throws DBus.Error
+  public async void add_favourite_contact (string id) throws GLib.Error
     {
       /* Invalidated */
       if (this._logger == null)
@@ -128,7 +128,7 @@ internal class Logger : GLib.Object
           new ObjectPath (this._account_path), id);
     }
 
-  public async void remove_favourite_contact (string id) throws DBus.Error
+  public async void remove_favourite_contact (string id) throws GLib.Error
     {
       /* Invalidated */
       if (this._logger == null)

@@ -543,7 +543,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
                   this._logger.favourite_contacts_changed.connect (
                       this._favourite_contacts_changed_cb);
                 }
-              catch (DBus.Error e)
+              catch (GLib.Error e)
                 {
                   warning (
                       _("Couldn't connect to the telepathy-logger service."));
@@ -593,7 +593,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
            * seems to swap the order of user_data and weak_object in the
            * callback. */
         }
-      catch (DBus.Error e)
+      catch (GLib.Error e)
         {
           /* Translators: the parameter is an error message. */
           warning (_("Couldn't get list of favorite contacts: %s"), e.message);
@@ -1863,7 +1863,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
           else
             yield this._logger.remove_favourite_contact (id);
         }
-      catch (DBus.Error e)
+      catch (GLib.Error e)
         {
           warning (_("Failed to change a persona's favorite status."));
         }
