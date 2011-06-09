@@ -224,7 +224,7 @@ public class Tpf.Persona : Folks.Persona,
   public Persona (Contact contact, PersonaStore store)
     {
       unowned string id = contact.get_identifier ();
-      unowned Connection connection = contact.connection;
+      var connection = contact.connection;
       var account = this._account_for_connection (connection);
       var uid = this.build_uid (store.type_id, store.id, id);
 
