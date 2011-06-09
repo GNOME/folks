@@ -84,7 +84,8 @@ CLEANFILES = \
 	$(NULL)
 
 MAINTAINERCLEANFILES = \
-	$(dist_noinst_DATA) \
+	tp-test-contactlist.gir \
+	tp-test-contactlist.vapi \
 	$(NULL)
 
 EXTRA_DIST = \
