@@ -421,3 +421,4 @@ EXTRA_DIST = \
 	$(NULL)
 
 -include $(top_srcdir)/git.mk
+-include $(top_srcdir)/check.mk

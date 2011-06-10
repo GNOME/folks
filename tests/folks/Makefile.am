@@ -87,3 +87,4 @@ EXTRA_DIST = \
 
 -include $(top_srcdir)/git.mk
 -include $(top_srcdir)/valgrind.mk
+-include $(top_srcdir)/check.mk
