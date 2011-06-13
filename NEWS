@@ -10,6 +10,7 @@ Bugs fixed:
 * Bug 652472 — Handle failure in getting the logger service better
 * Bug 629716 — Migrate Folks to GDBus
 * Bug 652660 — Make Individual.id more stable and well-defined
+* Bug 652449 — Folks.Individual's property getters should be read only
 
 API changes:
 * Swf.Persona retains and exposes its libsocialweb Contact

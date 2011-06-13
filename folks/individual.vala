@@ -84,6 +84,7 @@ public class Folks.Individual : Object,
   private bool _is_favourite;
   private string _alias;
   private HashSet<string> _groups;
+  private Set<string> _groups_ro;
   /* Stores the Personas contained in this Individual. */
   private HashSet<Persona> _persona_set;
   /* Read-only view of the above set */
@@ -268,62 +269,68 @@ public class Folks.Individual : Object,
     }
 
   private HashSet<FieldDetails> _urls;
+  private Set<FieldDetails> _urls_ro;
+
   /**
    * {@inheritDoc}
    */
   public Set<FieldDetails> urls
     {
-      get { return this._urls; }
+      get { return this._urls_ro; }
       private set
         {
-          this._urls = new HashSet<FieldDetails> ();
+          this._urls.clear ();
           foreach (var ps in value)
             this._urls.add (ps);
         }
     }
 
   private HashSet<FieldDetails> _phone_numbers;
+  private Set<FieldDetails> _phone_numbers_ro;
 
   /**
    * {@inheritDoc}
    */
   public Set<FieldDetails> phone_numbers
     {
-      get { return this._phone_numbers; }
+      get { return this._phone_numbers_ro; }
       private set
         {
-          this._phone_numbers = new HashSet<FieldDetails> ();
+          this._phone_numbers.clear ();
           foreach (var fd in value)
             this._phone_numbers.add (fd);
         }
     }
 
   private HashSet<FieldDetails> _email_addresses;
+  private Set<FieldDetails> _email_addresses_ro;
+
   /**
    * {@inheritDoc}
    */
   public Set<FieldDetails> email_addresses
     {
-      get { return this._email_addresses; }
+      get { return this._email_addresses_ro; }
       private set
         {
-          this._email_addresses = new HashSet<FieldDetails> ();
+          this._email_addresses.clear ();
           foreach (var fd in value)
             this._email_addresses.add (fd);
         }
     }
 
   private HashSet<Role> _roles;
+  private Set<Role> _roles_ro;
 
   /**
    * {@inheritDoc}
    */
   public Set<Role> roles
     {
-      get { return this._roles; }
+      get { return this._roles_ro; }
       private set
         {
-          this._roles = new HashSet<Role> ();
+          this._roles.clear ();
           foreach (var role in value)
             this._roles.add (role);
           this.notify_property ("roles");
@@ -331,16 +338,17 @@ public class Folks.Individual : Object,
     }
 
   private HashSet<string> _local_ids;
+  private Set<string> _local_ids_ro;
 
   /**
    * {@inheritDoc}
    */
   public Set<string> local_ids
     {
-      get { return this._local_ids; }
+      get { return this._local_ids_ro; }
       private set
         {
-          this._local_ids = new HashSet<string> ();
+          this._local_ids.clear ();
           foreach (var id in value)
             this._local_ids.add (id);
           this.notify_property ("local-ids");
@@ -352,16 +360,17 @@ public class Folks.Individual : Object,
   public string calendar_event_id { get; set; }
 
   private HashSet<Note> _notes;
+  private Set<Note> _notes_ro;
 
   /**
    * {@inheritDoc}
    */
   public Set<Note> notes
     {
-      get { return this._notes; }
+      get { return this._notes_ro; }
       private set
         {
-          this._notes = new HashSet<Note> ();
+          this._notes.clear ();
           foreach (var note in value)
             this._notes.add (note);
           this.notify_property ("notes");
@@ -369,15 +378,17 @@ public class Folks.Individual : Object,
     }
 
   private HashSet<PostalAddress> _postal_addresses;
+  private Set<PostalAddress> _postal_addresses_ro;
+
   /**
    * {@inheritDoc}
    */
   public Set<PostalAddress> postal_addresses
     {
-      get { return this._postal_addresses; }
+      get { return this._postal_addresses_ro; }
       private set
         {
-          this._postal_addresses = new HashSet<PostalAddress> ();
+          this._postal_addresses.clear ();
           foreach (PostalAddress pa in value)
             this._postal_addresses.add (pa);
         }
@@ -421,7 +432,7 @@ public class Folks.Individual : Object,
    */
   public Set<string> groups
     {
-      get { return this._groups; }
+      get { return this._groups_ro; }
 
       set
         {
@@ -632,14 +643,21 @@ public class Folks.Individual : Object,
       this._stores = new HashMap<PersonaStore, uint> (null, null);
       this._gender = Gender.UNSPECIFIED;
       this._urls = new HashSet<FieldDetails> ();
+      this._urls_ro = this._urls.read_only_view;
       this._phone_numbers = new HashSet<FieldDetails> ();
+      this._phone_numbers_ro = this._phone_numbers.read_only_view;
       this._email_addresses = new HashSet<FieldDetails> ();
+      this._email_addresses_ro = this._email_addresses.read_only_view;
       this._roles = new HashSet<Role>
           ((GLib.HashFunc) Role.hash, (GLib.EqualFunc) Role.equal);
+      this._roles_ro = this._roles.read_only_view;
       this._local_ids = new HashSet<string> ();
+      this._local_ids_ro = this._local_ids.read_only_view;
       this._postal_addresses = new HashSet<PostalAddress> ();
+      this._postal_addresses_ro = this._postal_addresses.read_only_view;
       this._notes = new HashSet<Note>
           ((GLib.HashFunc) Note.hash, (GLib.EqualFunc) Note.equal);
+      this._notes_ro = this._notes.read_only_view;
 
       this.personas = personas;
     }
@@ -756,7 +774,10 @@ public class Folks.Individual : Object,
 
       /* this._groups is null during initial construction */
       if (this._groups == null)
-        this._groups = new HashSet<string> ();
+        {
+          this._groups = new HashSet<string> ();
+          this._groups_ro = this._groups.read_only_view;
+        }
 
       /* FIXME: this should partition the personas by store (maybe we should
        * keep that mapping in general in this class), and execute
