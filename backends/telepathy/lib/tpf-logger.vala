@@ -74,6 +74,13 @@ internal class Logger : GLib.Object
               "/org/freedesktop/Telepathy/Logger",
               "org.freedesktop.Telepathy.Logger.DRAFT") as LoggerIface;
 
+          /* Failure? */
+          if (this._logger == null)
+            {
+              this.invalidated ();
+              return retval;
+            }
+
           this._logger.destroy.connect (() =>
             {
               /* We've lost the connection to the logger service, so invalidate
