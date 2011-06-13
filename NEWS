@@ -3,6 +3,7 @@ Overview of changes from libfolks 0.5.2 to libfolks 0.5.3
 
 Bugs fixed:
 * Bug 649925 — expose SocialWebClient.Contact in Swf.Persona
+* Bug 646244 — Incomplete logic to handle attribute updates in Folks.Individual
 
 API changes:
 * Swf.Persona retains and exposes its libsocialweb Contact

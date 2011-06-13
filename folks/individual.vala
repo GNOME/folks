@@ -616,6 +616,16 @@ public class Folks.Individual : Object,
       this._persona_set_ro = this._persona_set.read_only_view;
       this._stores = new HashMap<PersonaStore, uint> (null, null);
       this._gender = Gender.UNSPECIFIED;
+      this._urls = new HashSet<FieldDetails> ();
+      this._phone_numbers = new HashSet<FieldDetails> ();
+      this._email_addresses = new HashSet<FieldDetails> ();
+      this._roles = new HashSet<Role>
+          ((GLib.HashFunc) Role.hash, (GLib.EqualFunc) Role.equal);
+      this._local_ids = new HashSet<string> ();
+      this._postal_addresses = new HashSet<PostalAddress> ();
+      this._notes = new HashSet<Note>
+          ((GLib.HashFunc) Note.hash, (GLib.EqualFunc) Note.equal);
+
       this.personas = personas;
     }
 
@@ -1079,42 +1089,48 @@ public class Folks.Individual : Object,
 
   private void _update_full_name ()
     {
+      string? new_full_name = null;
+
       foreach (var persona in this._persona_set)
         {
           var name_details = persona as NameDetails;
           if (name_details != null)
             {
               var new_value = name_details.full_name;
-              if (new_value != null)
+              if (new_value != null && new_value != "")
                 {
-                  if (new_value != this.full_name)
-                    this.full_name = new_value;
-
+                  new_full_name = new_value;
                   break;
                 }
             }
         }
+
+      if (new_full_name != this.full_name)
+        this.full_name = new_full_name;
     }
 
   private void _update_nickname ()
     {
+      string? new_nickname = null;
+
       foreach (var persona in this._persona_set)
         {
           var name_details = persona as NameDetails;
           if (name_details != null)
             {
               var new_value = name_details.nickname;
-              if (new_value != null)
+              if (new_value != null && new_value != "")
                 {
-                  if (new_value != this._nickname)
-                    {
-                      this._nickname = new_value;
-                      this.notify_property ("nickname");
-                    }
-
+                  new_nickname = new_value;
                   break;
                 }
             }
+        }
+
+      if (new_nickname != this._nickname)
+        {
+          this._nickname = new_nickname;
+          this.notify_property ("nickname");
         }
     }
 
@@ -1158,6 +1174,8 @@ public class Folks.Individual : Object,
 
   private void _update_gender ()
     {
+      Gender new_gender = Gender.UNSPECIFIED;
+
       foreach (var persona in this._persona_set)
         {
           var gender_details = persona as GenderDetails;
@@ -1166,12 +1184,14 @@ public class Folks.Individual : Object,
               var new_value = gender_details.gender;
               if (new_value != Gender.UNSPECIFIED)
                 {
-                  if (new_value != this.gender)
-                    this.gender = new_value;
+                  new_gender = new_value;
                   break;
                 }
             }
         }
+
+      if (new_gender != this.gender)
+        this.gender = new_gender;
     }
 
   private void _update_urls ()
@@ -1179,7 +1199,8 @@ public class Folks.Individual : Object,
       /* Populate the URLs as the union of our Personas' URLs.
        * If the same URL exists multiple times we merge the parameters. */
       var urls_set = new HashMap<unowned string, unowned FieldDetails> ();
-      var urls = new HashSet<FieldDetails> ();
+
+      this._urls.clear ();
 
       foreach (var persona in this._persona_set)
         {
@@ -1199,13 +1220,11 @@ public class Folks.Individual : Object,
                       var new_ps = new FieldDetails (ps.value);
                       new_ps.extend_parameters (ps.parameters);
                       urls_set.set (ps.value, new_ps);
-                      urls.add (new_ps);
+                      this._urls.add (new_ps);
                     }
                 }
             }
         }
-      /* Set the private member directly to avoid iterating this set again */
-      this._urls = urls;
 
       this.notify_property ("urls");
     }
@@ -1218,7 +1237,8 @@ public class Folks.Individual : Object,
          doesn't work. */
       var phone_numbers_set =
           new HashMap<unowned string, unowned FieldDetails> ();
-      var phones = new HashSet<FieldDetails> ();
+
+      this._phone_numbers.clear ();
 
       foreach (var persona in this._persona_set)
         {
@@ -1238,14 +1258,11 @@ public class Folks.Individual : Object,
                       var new_fd = new FieldDetails (fd.value);
                       new_fd.extend_parameters (fd.parameters);
                       phone_numbers_set.set (fd.value, new_fd);
-                      phones.add (new_fd);
+                      this._phone_numbers.add (new_fd);
                     }
                 }
             }
         }
-
-      /* Set the private member directly to avoid iterating this set again */
-      this._phone_numbers = phones;
 
       this.notify_property ("phone-numbers");
     }
@@ -1255,7 +1272,8 @@ public class Folks.Individual : Object,
       /* Populate the email addresses as the union of our Personas' addresses.
        * If the same address exists multiple times we merge the parameters. */
       var emails_set = new HashMap<unowned string, unowned FieldDetails> ();
-      var emails = new HashSet<FieldDetails> ();
+
+      this._email_addresses.clear ();
 
       foreach (var persona in this._persona_set)
         {
@@ -1275,22 +1293,18 @@ public class Folks.Individual : Object,
                       var new_fd = new FieldDetails (fd.value);
                       new_fd.extend_parameters (fd.parameters);
                       emails_set.set (fd.value, new_fd);
-                      emails.add (new_fd);
+                      this._email_addresses.add (new_fd);
                     }
                 }
             }
         }
-
-      /* Set the private member directly to avoid iterating this set again */
-      this._email_addresses = emails;
 
       this.notify_property ("email-addresses");
     }
 
   private void _update_roles ()
     {
-      HashSet<Role> roles = new HashSet<Role>
-          ((GLib.HashFunc) Role.hash, (GLib.EqualFunc) Role.equal);
+      this._roles.clear ();
 
       foreach (var persona in this._persona_set)
         {
@@ -1299,21 +1313,17 @@ public class Folks.Individual : Object,
             {
               foreach (var r in role_details.roles)
                 {
-                  if (roles.contains (r) == false)
-                    {
-                      roles.add (r);
-                    }
+                  this._roles.add (r);
                 }
             }
         }
 
-      this._roles = (owned) roles;
       this.notify_property ("roles");
     }
 
   private void _update_local_ids ()
     {
-      HashSet<string> _local_ids = new HashSet<string> ();
+      this._local_ids.clear ();
 
       foreach (var persona in this._persona_set)
         {
@@ -1322,18 +1332,18 @@ public class Folks.Individual : Object,
             {
               foreach (var id in local_ids_details.local_ids)
                 {
-                  _local_ids.add (id);
+                  this._local_ids.add (id);
                 }
             }
         }
 
-      this._local_ids = (owned) _local_ids;
       this.notify_property ("local-ids");
     }
 
   private void _update_postal_addresses ()
     {
-      this._postal_addresses = new HashSet<PostalAddress> ();
+      this._postal_addresses.clear ();
+
       /* FIXME: Detect duplicates somehow? */
       foreach (var persona in this._persona_set)
         {
@@ -1385,8 +1395,7 @@ public class Folks.Individual : Object,
 
   private void _update_notes ()
     {
-      HashSet<Note> notes = new HashSet<Note>
-          ((GLib.HashFunc) Note.hash, (GLib.EqualFunc) Note.equal);
+      this._notes.clear ();
 
       foreach (var persona in this._persona_set)
         {
@@ -1395,12 +1404,11 @@ public class Folks.Individual : Object,
             {
               foreach (var n in note_details.notes)
                 {
-                  notes.add (n);
+                  this._notes.add (n);
                 }
             }
         }
 
-      this._notes = (owned) notes;
       this.notify_property ("notes");
     }
 
