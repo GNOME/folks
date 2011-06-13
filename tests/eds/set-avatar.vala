@@ -29,7 +29,7 @@ public class SetAvatarTests : Folks.TestCase
   private GLib.MainLoop _main_loop;
   private bool _found_before_update;
   private bool _found_after_update;
-  private File _avatar;
+  private LoadableIcon _avatar;
 
   public SetAvatarTests ()
     {
@@ -55,7 +55,7 @@ public class SetAvatarTests : Folks.TestCase
       Gee.HashMap<string, Value?> c1 = new Gee.HashMap<string, Value?> ();
       this._main_loop = new GLib.MainLoop (null, false);
       var avatar_path = Environment.get_variable ("AVATAR_FILE_PATH");
-      this._avatar = File.new_for_path (avatar_path);
+      this._avatar = new FileIcon (File.new_for_path (avatar_path));
       Value? v;
 
       this._found_before_update = false;
@@ -132,23 +132,10 @@ public class SetAvatarTests : Folks.TestCase
       var name = (Folks.NameDetails) i;
       if (name.full_name == "bernie h. innocenti")
         {
-          uint8[] content_a;
-          uint8[] content_b;
-
-          try
+          if (this._avatar.equal (i.avatar) == true)
             {
-              i.avatar.load_contents (null, out content_a);
-              this._avatar.load_contents (null, out content_b);
-
-             if (((string) content_a) == ((string) content_b))
-                {
-                  this._found_after_update = true;
-                  this._main_loop.quit ();
-                }
-            }
-          catch (GLib.Error e)
-            {
-              GLib.warning ("Couldn't compare avatars: %s\n", e.message);
+              this._found_after_update = true;
+              this._main_loop.quit ();
             }
         }
     }

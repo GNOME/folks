@@ -30,7 +30,7 @@ public class SetAvatarTests : Folks.TestCase
   private IndividualAggregator _aggregator;
   private string _persona_fullname;
   private string _avatar_uri;
-  private File _avatar;
+  private LoadableIcon _avatar;
   private bool _avatar_found;
 
   public SetAvatarTests ()
@@ -56,7 +56,7 @@ public class SetAvatarTests : Folks.TestCase
       Gee.HashMap<string, string> c1 = new Gee.HashMap<string, string> ();
       this._persona_fullname = "persona #1";
       this._avatar_uri = "file:///tmp/some-avatar.jpg";
-      this._avatar = File.new_for_uri (this._avatar_uri);
+      this._avatar = new FileIcon (File.new_for_uri (this._avatar_uri));
 
       c1.set (Trf.OntologyDefs.NCO_FULLNAME, this._persona_fullname);
       this._tracker_backend.add_contact (c1);
@@ -125,7 +125,7 @@ public class SetAvatarTests : Folks.TestCase
       Folks.Individual i = (Folks.Individual) individual_obj;
       if (i.full_name == this._persona_fullname)
         {
-          if (i.avatar.get_uri () == this._avatar_uri)
+          if (i.avatar.equal (this._avatar))
             {
               this._avatar_found = true;
               this._main_loop.quit ();

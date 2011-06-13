@@ -40,6 +40,7 @@ libfolks_la_SOURCES = \
 	debug.vala \
 	utils.vala \
 	potential-match.vala \
+	avatar-cache.vala \
 	$(NULL)
 
 libfolks_la_VALAFLAGS = \

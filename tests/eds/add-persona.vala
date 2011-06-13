@@ -164,8 +164,8 @@ public class AddPersonaTests : Folks.TestCase
           Folks.PersonaStore.detail_key (PersonaDetail.EMAIL_ADDRESSES),
           (owned) v2);
 
-      Value? v3 = Value (typeof (File));
-      File avatar = File.new_for_path (this._avatar_path);
+      Value? v3 = Value (typeof (LoadableIcon));
+      var avatar = new FileIcon (File.new_for_path (this._avatar_path));
       v3.set_object (avatar);
       details.insert (Folks.PersonaStore.detail_key (PersonaDetail.AVATAR),
           (owned) v3);
@@ -300,24 +300,11 @@ public class AddPersonaTests : Folks.TestCase
 
       if (i.avatar != null)
         {
-          uint8[] content_a;
-          uint8[] content_b;
-          var b = File.new_for_path (this._avatar_path);
+          var b = new FileIcon (File.new_for_path (this._avatar_path));
 
-          try
+          if (b.equal (i.avatar) == true)
             {
-              i.avatar.load_contents (null, out content_a);
-              b.load_contents (null, out content_b);
-
-              if (((string) content_a) == ((string) content_b))
-                {
-                  this._properties_found.replace ("avatar", true);
-                }
-            }
-          catch (GLib.Error e)
-            {
-              GLib.warning ("Couldn't load avatars: %s",
-                  e.message);
+              this._properties_found.replace ("avatar", true);
             }
         }
 

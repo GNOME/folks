@@ -30,7 +30,10 @@ public interface Folks.AvatarDetails : Object
    * An avatar for the contact.
    *
    * An avatar is a small image file which represents the contact. It may be
-   * `null` if unset.
+   * `null` if unset. Otherwise, the image data may be asynchronously loaded
+   * using the methods of the {@link LoadableIcon} implementation.
+   *
+   * @since UNRELEASED
    */
-  public abstract File avatar { get; set; }
+  public abstract LoadableIcon? avatar { get; set; }
 }

@@ -29,6 +29,7 @@ libfolks_eds_la_vala.stamp:
 folks_eds_valasources = \
 	edsf-persona.vala \
 	edsf-persona-store.vala \
+	memory-icon.vala \
 	$(NULL)
 
 libfolks_eds_la_SOURCES = \

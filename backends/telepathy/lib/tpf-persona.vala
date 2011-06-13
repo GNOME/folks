@@ -70,8 +70,10 @@ public class Tpf.Persona : Folks.Persona,
    * An avatar for the Persona.
    *
    * See {@link Folks.AvatarDetails.avatar}.
+   *
+   * @since UNRELEASED
    */
-  public File avatar { get; private set; }
+  public LoadableIcon? avatar { get; private set; }
 
   /**
    * The Persona's presence type.
@@ -416,7 +418,12 @@ public class Tpf.Persona : Folks.Persona,
   private void _contact_notify_avatar ()
     {
       var file = this.contact.avatar_file;
-      if (this.avatar != file)
-        this.avatar = file;
+      Icon? icon = null;
+
+      if (file != null)
+        icon = new FileIcon (file);
+
+      if (this.avatar == null || icon == null || !this.avatar.equal (icon))
+        this.avatar = (LoadableIcon) icon;
     }
 }

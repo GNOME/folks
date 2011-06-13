@@ -66,8 +66,10 @@ public class Swf.Persona : Folks.Persona,
    * An avatar for the Persona.
    *
    * See {@link Folks.AvatarOwner.avatar}.
+   *
+   * @since UNRELEASED
    */
-  public File avatar { get; private set; }
+  public LoadableIcon? avatar { get; private set; }
 
   /**
    * {@inheritDoc}
@@ -273,9 +275,13 @@ public class Swf.Persona : Folks.Persona,
       var avatar_path = contact.get_value ("icon");
       if (avatar_path != null)
         {
-          var avatar_file = File.new_for_path (avatar_path);
-          if (this.avatar != avatar_file)
-            this.avatar = avatar_file;
+          var icon = new FileIcon (File.new_for_path (avatar_path));
+          if (this.avatar == null || !this.avatar.equal (icon))
+            this.avatar = icon;
+        }
+      else
+        {
+          this.avatar = null;
         }
 
       var structured_name = new StructuredName.simple (

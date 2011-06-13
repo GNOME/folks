@@ -117,24 +117,12 @@ public class AvatarDetailsTests : Folks.TestCase
 
           if (i.full_name == "bernie h. innocenti")
             {
-              uint8[] content_a;
-              uint8[] content_b;
-              var b = File.new_for_path (this._avatar_path);
+              var b = new FileIcon (File.new_for_path (this._avatar_path));
 
-              try
+              if (b.equal (i.avatar) == true)
                 {
-                  i.avatar.load_contents (null, out content_a);
-                  b.load_contents (null, out content_b);
-
-                  if (((string) content_a) == ((string) content_b))
-                    {
-                      this._avatars_are_equal = true;
-                      this._main_loop.quit ();
-                    }
-                }
-              catch (GLib.Error e)
-                {
-                  GLib.warning ("couldn't load file a");
+                  this._avatars_are_equal = true;
+                  this._main_loop.quit ();
                 }
             }
         }

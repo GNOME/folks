@@ -264,9 +264,19 @@ private class Folks.Inspect.Utils
       else if (prop_name == "avatar")
         {
           string ret = null;
-          File avatar = (File) prop_value.get_object ();
-          if (avatar != null)
-            ret = avatar.get_uri ();
+          LoadableIcon? avatar = (LoadableIcon) prop_value.get_object ();
+
+          if (avatar != null &&
+              avatar is FileIcon && ((FileIcon) avatar).get_file () != null)
+            {
+              ret = "%p (file: %s)".printf (avatar,
+                  ((FileIcon) avatar).get_file ().get_uri ());
+            }
+          else if (avatar != null)
+            {
+              ret = "%p".printf (avatar);
+            }
+
           return ret;
         }
       else if (prop_name == "im-addresses")

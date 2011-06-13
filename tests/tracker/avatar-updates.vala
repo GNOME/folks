@@ -28,12 +28,13 @@ public class AvatarUpdatesTests : Folks.TestCase
   private TrackerTest.Backend _tracker_backend;
   private IndividualAggregator _aggregator;
   private bool _updated_avatar_found;
-  private string _updated_avatar;
+  private string _updated_avatar_uri;
+  private LoadableIcon _updated_avatar;
   private string _individual_id;
   private GLib.MainLoop _main_loop;
   private bool _initial_avatar_found;
   private string _initial_fullname;
-  private string _initial_avatar;
+  private string _initial_avatar_uri;
   private string _contact_urn;
   private string _photo_urn;
 
@@ -60,14 +61,16 @@ public class AvatarUpdatesTests : Folks.TestCase
       this._main_loop = new GLib.MainLoop (null, false);
       Gee.HashMap<string, string> c1 = new Gee.HashMap<string, string> ();
       this._initial_fullname = "persona #1";
-      this._initial_avatar = "file:///tmp/avatar-01";
+      this._initial_avatar_uri = "file:///tmp/avatar-01";
       this._contact_urn = "<urn:contact001>";
-      this._photo_urn = "<" + this._initial_avatar + ">";
-      this._updated_avatar = "file:///tmp/avatar-02";
+      this._photo_urn = "<" + this._initial_avatar_uri + ">";
+      this._updated_avatar_uri = "file:///tmp/avatar-02";
+      this._updated_avatar =
+          new FileIcon (File.new_for_uri (this._updated_avatar_uri));
 
       c1.set (TrackerTest.Backend.URN, this._contact_urn);
       c1.set (Trf.OntologyDefs.NCO_FULLNAME, this._initial_fullname);
-      c1.set (Trf.OntologyDefs.NCO_PHOTO, this._initial_avatar);
+      c1.set (Trf.OntologyDefs.NCO_PHOTO, this._initial_avatar_uri);
       this._tracker_backend.add_contact (c1);
 
       this._tracker_backend.set_up ();
@@ -123,20 +126,22 @@ public class AvatarUpdatesTests : Folks.TestCase
               i.notify["avatar"].connect (this._notify_avatar_cb);
               this._individual_id = i.id;
 
-              if (i.avatar != null &&
-                  i.avatar.get_uri () == this._initial_avatar)
+              var initial_avatar =
+                  new FileIcon (File.new_for_uri (this._initial_avatar_uri));
+
+              if (i.avatar != null && i.avatar.equal (initial_avatar) == true)
                 {
                   this._initial_avatar_found = true;
 
                   this._tracker_backend.remove_triplet (this._contact_urn,
                       Trf.OntologyDefs.NCO_PHOTO, this._photo_urn);
 
-                  string photo_urn_2 = "<" + this._updated_avatar;
+                  string photo_urn_2 = "<" + this._updated_avatar_uri;
                   photo_urn_2 += ">";
                   this._tracker_backend.insert_triplet (photo_urn_2,
                       "a", "nfo:Image, nie:DataObject",
                       Trf.OntologyDefs.NIE_URL,
-                      this._updated_avatar);
+                      this._updated_avatar_uri);
 
                   this._tracker_backend.insert_triplet
                       (this._contact_urn,
@@ -156,7 +161,7 @@ public class AvatarUpdatesTests : Folks.TestCase
         return;
 
       if (i.avatar != null &&
-          i.avatar.get_uri () == this._updated_avatar)
+          i.avatar.equal (this._updated_avatar))
         {
           this._main_loop.quit ();
           this._updated_avatar_found = true;

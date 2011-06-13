@@ -211,7 +211,7 @@ public class Edsf.Persona : Folks.Persona,
       get { return this._writeable_properties; }
     }
 
-  private File _avatar;
+  private LoadableIcon? _avatar = null;
   /**
    * An avatar for the Persona.
    *
@@ -219,7 +219,7 @@ public class Edsf.Persona : Folks.Persona,
    *
    * @since 0.5.UNRELEASED
    */
-  public File avatar
+  public LoadableIcon? avatar
     {
       get { return this._avatar; }
       set
@@ -623,49 +623,90 @@ public class Edsf.Persona : Folks.Persona,
         }
     }
 
+  private LoadableIcon? _contact_photo_to_loadable_icon (ContactPhoto? p)
+    {
+      if (p == null)
+        {
+          return null;
+        }
+
+      switch (p.type)
+        {
+          case ContactPhotoType.URI:
+            if (p.get_uri () == null)
+              {
+                return null;
+              }
+
+            return new FileIcon (File.new_for_uri (p.get_uri ()));
+          case ContactPhotoType.INLINED:
+            if (p.get_mime_type () == null || p.get_inlined () == null)
+              {
+                return null;
+              }
+
+            return new Edsf.MemoryIcon (p.get_mime_type (), p.get_inlined ());
+          default:
+            return null;
+        }
+    }
+
   private void _update_avatar ()
     {
-      string filename = this.uid.delimit (Path.DIR_SEPARATOR.to_string (), '-');
-      string cached_avatar_path = GLib.Path.build_filename (
-          GLib.Environment.get_user_cache_dir (), "folks",
-          "avatars", filename);
       E.ContactPhoto? p = (E.ContactPhoto) this._get_property ("photo");
 
-      this._avatar = File.new_for_path (cached_avatar_path);
+      var cache = AvatarCache.dup ();
+      var cache_uri = cache.build_uri_for_avatar (this.uid);
 
-      if (p != null)
+      /* Check the avatar isn't being set by our PersonaStore; if it is, just
+       * notify the property and bail. This avoids circular updates to the
+       * cache. */
+      if (p != null &&
+          p.type == ContactPhotoType.URI && p.get_uri () == cache_uri)
         {
-          var content_old = this.get_avatar_content ();
-          var content_new = this._get_avatar_content_from_contact (p);
+          this.notify_property ("avatar");
+          return;
+        }
 
-          if (content_old != content_new)
+      // Convert the ContactPhoto to a LoadableIcon and store or update it.
+      var new_avatar = this._contact_photo_to_loadable_icon (p);
+
+      if (this._avatar != null && new_avatar == null)
+        {
+          // Remove the old cached avatar, ignoring errors.
+          cache.remove_avatar.begin (this.uid, (obj, res) =>
             {
               try
                 {
-                  this._avatar.replace_contents (content_new,
-                      content_new.length,
-                      null, false, FileCreateFlags.REPLACE_DESTINATION,
-                      null);
-                  this.notify_property ("avatar");
+                  cache.remove_avatar.end (res);
                 }
-              catch (GLib.Error e)
-                {
-                  GLib.warning ("Can't write avatar: %s\n", e.message);
-                }
-            }
-        }
-      else
-        {
-          try
-            {
-              this._avatar.delete ();
-            }
-          catch (GLib.Error e) {}
-          finally
-            {
-              this._avatar = null;
+              catch (GLib.Error e1) {}
+
+              this._avatar = new_avatar;
               this.notify_property ("avatar");
-            }
+            });
+        }
+      else if ((this.avatar == null && new_avatar != null) ||
+          (this.avatar != null && new_avatar != null &&
+           this._avatar.equal (new_avatar) == false))
+        {
+          // Store the new avatar in the cache.
+          cache.store_avatar.begin (this.uid, new_avatar, (obj, res) =>
+            {
+              try
+                {
+                  cache.store_avatar.end (res);
+                }
+              catch (GLib.Error e2)
+                {
+                  warning ("Couldn't cache avatar for Edsf.Persona '%s': %s",
+                      this.uid, e2.message);
+                  new_avatar = null; /* failure */
+                }
+
+              this._avatar = new_avatar;
+              this.notify_property ("avatar");
+            });
         }
     }
 
@@ -763,60 +804,6 @@ public class Edsf.Persona : Folks.Persona,
           this.notify_property ("groups");
         }
    }
-
-  /**
-   * Get the avatars content
-   *
-   * @since 0.5.UNRELEASED
-   */
-  public string get_avatar_content ()
-    {
-      string content = "";
-
-      if (this._avatar != null &&
-          this._avatar.query_exists ())
-        {
-          try
-            {
-              uint8[] content_temp;
-              this._avatar.load_contents (null, out content_temp);
-              content = (string) content_temp;
-            }
-          catch (GLib.Error e)
-            {
-              GLib.warning ("Can't compare avatars: %s\n", e.message);
-            }
-        }
-
-      return content;
-    }
-
-  private string _get_avatar_content_from_contact (E.ContactPhoto p)
-    {
-      string content = "";
-
-      if (p.type == ContactPhotoType.INLINED)
-        {
-          content = (string) p.get_inlined ();
-        }
-      else if (p.type == ContactPhotoType.URI)
-        {
-          try
-            {
-              uint8[] temp_content;
-              var file = File.new_for_uri (p.get_uri ());
-              file.load_contents (null, out temp_content);
-              content = (string) temp_content;
-            }
-          catch (GLib.Error e)
-            {
-              GLib.warning ("Couldn't load content for avatar: %s\n",
-                  p.get_uri ());
-            }
-        }
-
-      return content;
-    }
 
   /**
    * build a table of im protocols / im protocol aliases

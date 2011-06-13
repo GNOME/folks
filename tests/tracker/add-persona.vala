@@ -34,6 +34,7 @@ public class AddPersonaTests : Folks.TestCase
   private string _given_name;
   private HashTable<string, bool> _properties_found;
   private string _persona_iid;
+  private LoadableIcon _avatar;
   private string _file_uri;
   private string _birthday;
   private DateTime _bday;
@@ -85,6 +86,7 @@ public class AddPersonaTests : Folks.TestCase
       this._given_name = "given";
       this._persona_iid = "";
       this._file_uri = "file:///tmp/some-avatar.jpg";
+      this._avatar = new FileIcon (File.new_for_uri (this._file_uri));
       this._birthday = "2001-10-26T20:32:52Z";
       this._email_1 = "someone-1@example.org";
       this._email_2 = "someone-2@example.org";
@@ -202,9 +204,8 @@ public class AddPersonaTests : Folks.TestCase
           Folks.PersonaStore.detail_key (PersonaDetail.STRUCTURED_NAME),
           (owned) v4);
 
-      Value? v5 = Value (typeof (File));
-      File avatar = File.new_for_uri (this._file_uri);
-      v5.set_object (avatar);
+      Value? v5 = Value (typeof (LoadableIcon));
+      v5.set_object (this._avatar);
       details.insert (Folks.PersonaStore.detail_key (PersonaDetail.AVATAR),
           (owned) v5);
 
@@ -403,7 +404,7 @@ public class AddPersonaTests : Folks.TestCase
         }
 
       if (i.avatar != null &&
-          i.avatar.get_uri () == this._file_uri)
+          i.avatar.equal (this._avatar))
         this._properties_found.replace ("avatar", true);
 
       if (i.birthday != null &&

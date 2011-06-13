@@ -43,14 +43,17 @@ noinst_PROGRAMS = \
 	utils \
 	backend-loading \
 	aggregation \
+	avatar-cache \
 	$(NULL)
 
 SESSION_CONF = $(top_builddir)/tests/lib/telepathy/contactlist/session.conf
 backend_store_key_file=$(top_srcdir)/tests/data/backend-store-all.ini
+avatar_file=@abs_top_srcdir@/tests/data/avatar-01.jpg
 TESTS_ENVIRONMENT = \
 	GCONF_DEFAULT_SOURCE_PATH=@abs_top_srcdir@/tests/data/gconf.path \
 	FOLKS_BACKEND_PATH=$(BACKEND_UNINST_PATH) \
 	FOLKS_BACKEND_STORE_KEY_FILE_PATH=$(backend_store_key_file) \
+	AVATAR_FILE_PATH=$(avatar_file) \
 	$(RUN_WITH_PRIVATE_BUS) \
 	--config-file=$(SESSION_CONF) \
 	--
@@ -73,6 +76,10 @@ utils_SOURCES = \
 	utils.vala \
 	$(NULL)
 
+avatar_cache_SOURCES = \
+	avatar-cache.vala \
+	$(NULL)
+
 CLEANFILES = \
         *.pid \
         *.address \
@@ -85,6 +92,7 @@ MAINTAINERCLEANFILES = \
         aggregation_vala.stamp \
         field_details_vala.stamp \
         utils_vala.stamp \
+        avatar_cache_vala.stamp \
         $(NULL)
 
 EXTRA_DIST = \

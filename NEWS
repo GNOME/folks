@@ -21,6 +21,7 @@ Bugs fixed:
 * Bug 645549 — Add a way to get the individual from a persona
 * Bug 650422 — Add API for easily checking whether details are writeable
 * Bug 655019 — Don't notify twice for nickname changes
+* Bug 650414 — Need better APIs to handle image data
 
 API changes:
 * Swf.Persona retains and exposes its libsocialweb Contact
@@ -35,6 +36,8 @@ API changes:
   Persona subclasses
 * Make BirthdayDetails.calendar_event_id nullable
 * Make Folks.Utils public and add Gee structure equality functions
+* AvatarDetails.avatar is now of type LoadableIcon?
+* Add AvatarCache class
 
 Overview of changes from libfolks 0.5.1 to libfolks 0.5.2
 =========================================================

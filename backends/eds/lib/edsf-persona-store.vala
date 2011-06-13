@@ -242,7 +242,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
             }
           else if (k == Folks.PersonaStore.detail_key (PersonaDetail.AVATAR))
             {
-              var avatar = (File) v.get_object ();
+              var avatar = (LoadableIcon?) v.get_object ();
               yield this._set_contact_avatar (contact, avatar);
             }
           else if (k == Folks.PersonaStore.detail_key (
@@ -471,57 +471,13 @@ public class Edsf.PersonaStore : Folks.PersonaStore
         }
     }
 
-  internal async void _set_avatar (Edsf.Persona persona, File? avatar)
+  internal async void _set_avatar (Edsf.Persona persona, LoadableIcon? avatar)
     {
       /* Return early if there will be no change */
       if ((persona.avatar == null && avatar == null) ||
           (persona.avatar != null && persona.avatar.equal (avatar)))
         {
           return;
-        }
-      else
-        {
-          if (persona.avatar != null && avatar != null)
-            {
-              try
-                {
-                  var persona_avatar_input = yield persona.avatar.read_async ();
-                  var persona_avatar_info =
-                      yield persona_avatar_input.query_info_async (
-                        FILE_ATTRIBUTE_STANDARD_SIZE, FileQueryInfoFlags.NONE);
-                  var persona_avatar_size =
-                      persona_avatar_info.get_attribute_uint32 (
-                        FILE_ATTRIBUTE_STANDARD_SIZE);
-
-                  var avatar_input = yield avatar.read_async ();
-                  var avatar_info = yield avatar_input.query_info_async (
-                        FILE_ATTRIBUTE_STANDARD_SIZE, FileQueryInfoFlags.NONE);
-                  var avatar_size = avatar_info.get_attribute_uint32 (
-                        FILE_ATTRIBUTE_STANDARD_SIZE);
-
-                  if (persona_avatar_size == avatar_size)
-                    {
-                      var persona_avatar_data = new uint8[persona_avatar_size];
-                      var avatar_data = new uint8[avatar_size];
-                      yield persona_avatar_input.read_async (
-                          persona_avatar_data);
-                      yield avatar_input.read_async (avatar_data);
-
-                      var persona_avatar_sum = Checksum.compute_for_data (
-                          ChecksumType.MD5, persona_avatar_data);
-                      var avatar_sum = Checksum.compute_for_data (
-                          ChecksumType.MD5, avatar_data);
-
-                      if (persona_avatar_sum == avatar_sum)
-                        return;
-                    }
-                }
-              catch (GLib.Error e1)
-                {
-                  warning ("Failed to read an avatar file for comparison: %s",
-                      e1.message);
-                }
-            }
         }
 
       try
@@ -612,27 +568,40 @@ public class Edsf.PersonaStore : Folks.PersonaStore
     }
 
   private async void _set_contact_avatar (E.Contact contact,
-      File? avatar)
+      LoadableIcon? avatar)
     {
-      try
-        {
-          uint8[] photo_content;
-          var cp = new ContactPhoto ();
+      var uid = Folks.Persona.build_uid (BACKEND_NAME, this.id,
+          (string) Edsf.Persona._get_property_from_contact (contact, "id"));
 
-          if (avatar != null)
+      var cache = AvatarCache.dup ();
+      if (avatar != null)
+        {
+          try
             {
-              yield avatar.load_contents_async (null, out photo_content);
+              // Cache the avatar so that it has a URI
+              var uri = yield cache.store_avatar (uid, avatar);
 
-              cp.type = ContactPhotoType.INLINED;
-              cp.set_inlined (photo_content);
+              // Set the avatar on the contact
+              var cp = new ContactPhoto ();
+              cp.type = ContactPhotoType.URI;
+              cp.set_uri (uri);
+
+              contact.set (ContactField.PHOTO, cp);
             }
-
-          contact.set (E.Contact.field_id ("photo"), cp);
+          catch (GLib.Error e1)
+            {
+              warning ("Couldn't cache avatar for Edsf.Persona '%s': %s",
+                  uid, e1.message);
+            }
         }
-      catch (GLib.Error e_avatar)
+      else
         {
-          GLib.warning ("Can't load avatar %s: %s\n\n", avatar.get_path (),
-              e_avatar.message);
+          // Delete any old avatar from the cache, ignoring errors
+          try
+            {
+              yield cache.remove_avatar (uid);
+            }
+          catch (GLib.Error e2) {}
         }
     }
 

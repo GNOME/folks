@@ -401,6 +401,10 @@ public class Trf.PersonaStore : Folks.PersonaStore
   public override async Folks.Persona? add_persona_from_details (
       HashTable<string, Value?> details) throws Folks.PersonaStoreError
     {
+      /* We have to set the avatar after pushing the new persona to Tracker,
+       * as we need a UID so that we can cache the avatar. */
+      LoadableIcon? avatar = null;
+
       var builder = new Tracker.Sparql.Builder.update ();
       builder.insert_open (null);
       builder.subject ("_:p");
@@ -451,15 +455,13 @@ public class Trf.PersonaStore : Folks.PersonaStore
             }
           else if (k == Folks.PersonaStore.detail_key (PersonaDetail.AVATAR))
             {
-              var avatar = (File) v.get_object ();
-              builder.subject ("_:photo");
-              builder.predicate ("a");
-              builder.object ("nfo:Image, nie:DataObject");
-              builder.predicate (Trf.OntologyDefs.NIE_URL);
-              builder.object_string (avatar.get_uri ());
-              builder.subject ("_:p");
-              builder.predicate (Trf.OntologyDefs.NCO_PHOTO);
-              builder.object ("_:photo");
+              /* Update the avatar which we'll set later (once we have the
+               * persona's UID) */
+              var new_avatar = (LoadableIcon) v.get_object ();
+              if (new_avatar != null)
+                {
+                  avatar = new_avatar;
+                }
             }
           else if (k == Folks.PersonaStore.detail_key (PersonaDetail.BIRTHDAY))
             {
@@ -706,6 +708,12 @@ public class Trf.PersonaStore : Folks.PersonaStore
             {
               debug ("Failed to inserting the new persona  into Tracker.");
             }
+        }
+
+      // Set the avatar on the persona now that we know the persona's UID
+      if (ret != null && avatar != null)
+        {
+          yield this._set_avatar (ret, avatar);
         }
 
       return ret;
@@ -1532,7 +1540,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
               avatar_url = yield this._get_property (e.object_id,
                   Trf.OntologyDefs.NIE_URL, Trf.OntologyDefs.NFO_IMAGE);
             }
-          p._set_avatar (avatar_url);
+          p._set_avatar_from_uri (avatar_url);
         }
       else if (e.pred_id == this._prefix_tracker_id.get
           (Trf.OntologyDefs.NAO_PROPERTY))
@@ -2166,7 +2174,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
     }
 
   internal async void _set_avatar (Folks.Persona persona,
-      File? avatar)
+      LoadableIcon? avatar)
     {
       const string query_d = "DELETE {" +
         " ?c " + Trf.OntologyDefs.NCO_PHOTO  + " ?p " +
@@ -2196,10 +2204,34 @@ public class Trf.PersonaStore : Folks.PersonaStore
         this._delete_resource ("<%s>".printf (image_urn));
 
       string query = query_d.printf (p_id);
+
+      var cache = AvatarCache.dup ();
       if (avatar != null)
         {
-          query += query_i.printf (avatar.get_uri (), p_id);
+          try
+            {
+              // Cache the avatar so that it has a URI
+              var uri = yield cache.store_avatar (persona.uid, avatar);
+
+              // Add the avatar to the query
+              query += query_i.printf (uri , p_id);
+            }
+          catch (GLib.Error e1)
+            {
+              warning ("Couldn't cache avatar for Trf.Persona '%s': %s",
+                  persona.uid, e1.message);
+            }
         }
+      else
+        {
+          // Delete any old avatar from the cache, ignoring errors
+          try
+            {
+              yield cache.remove_avatar (persona.uid);
+            }
+          catch (GLib.Error e2) {}
+        }
+
       yield this._tracker_update (query, "_set_avatar");
     }
 

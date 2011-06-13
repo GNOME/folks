@@ -112,8 +112,8 @@ public class AvatarDetailsInterfaceTests : Folks.TestCase
               if (i.avatar != null)
                 {
                   var src_avatar = File.new_for_uri (this._avatar_uri);
-                  this._avatars_are_equal =
-                      this._compare_files (src_avatar, i.avatar);
+                  var src_icon = new FileIcon (src_avatar);
+                  this._avatars_are_equal = src_icon.equal (i.avatar);
                   this._main_loop.quit ();
                 }
             }
@@ -124,35 +124,9 @@ public class AvatarDetailsInterfaceTests : Folks.TestCase
     {
       Folks.Individual individual = (Folks.Individual) individual_obj;
       var src_avatar = File.new_for_uri (this._avatar_uri);
-      this._avatars_are_equal = this._compare_files (src_avatar,
-          individual.avatar);
+      var src_icon = new FileIcon (src_avatar);
+      this._avatars_are_equal = src_icon.equal (individual.avatar);
       this._main_loop.quit ();
-    }
-
-  private bool _compare_files (File a, File b)
-    {
-      uint8 *content_a;
-      uint8 *content_b;
-
-      try
-        {
-          a.load_contents (null, out content_a);
-        }
-      catch (GLib.Error e)
-        {
-          GLib.warning ("couldn't load file a");
-        }
-
-      try
-        {
-          b.load_contents (null, out content_b);
-        }
-      catch (GLib.Error e)
-        {
-          GLib.warning ("couldn't load file b");
-        }
-
-      return ((string) content_a) == ((string) content_b);
     }
 }
 

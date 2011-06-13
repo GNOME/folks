@@ -115,8 +115,10 @@ public class Folks.Individual : Object,
 
   /**
    * {@inheritDoc}
+   *
+   * @since UNRELEASED
    */
-  public File avatar { get; private set; }
+  public LoadableIcon? avatar { get; private set; }
 
   /**
    * {@inheritDoc}
@@ -1013,7 +1015,7 @@ public class Folks.Individual : Object,
 
   private void _update_avatar ()
     {
-      File avatar = null;
+      LoadableIcon? avatar = null;
 
       foreach (var p in this._persona_set)
         {
@@ -1026,7 +1028,7 @@ public class Folks.Individual : Object,
         }
 
       /* only notify if the value has changed */
-      if (this.avatar != avatar)
+      if (this.avatar == null || !this.avatar.equal (avatar))
         this.avatar = avatar;
     }
 

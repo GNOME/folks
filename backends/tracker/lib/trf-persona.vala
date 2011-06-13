@@ -135,13 +135,15 @@ public class Trf.Persona : Folks.Persona,
       get { return this._writeable_properties; }
     }
 
-  private File _avatar;
+  private LoadableIcon? _avatar = null;
   /**
    * An avatar for the Persona.
    *
    * See {@link Folks.Avatar.avatar}.
+   *
+   * @since UNRELEASED
    */
-  public File avatar
+  public LoadableIcon? avatar
     {
       get { return this._avatar; }
       public set
@@ -817,17 +819,25 @@ public class Trf.Persona : Folks.Persona,
     {
       string avatar_url = this._cursor.get_string (
           Trf.Fields.AVATAR_URL).dup ();
-      this._set_avatar (avatar_url);
+      this._set_avatar_from_uri (avatar_url);
     }
 
-  internal bool _set_avatar (string? avatar_url)
+  internal bool _set_avatar_from_uri (string? avatar_url)
     {
-      File _avatar = null;
+      LoadableIcon _avatar = null;
       if (avatar_url != null && avatar_url != "")
         {
-          _avatar = File.new_for_uri (avatar_url);
+          _avatar = new FileIcon (File.new_for_uri (avatar_url));
         }
-      this._avatar = _avatar;
+
+      this._set_avatar (_avatar);
+
+      return true;
+    }
+
+  internal bool _set_avatar (LoadableIcon? avatar)
+    {
+      this._avatar = avatar;
       this.notify_property ("avatar");
       return true;
     }
