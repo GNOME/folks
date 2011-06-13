@@ -16,8 +16,6 @@ VAPIGENFLAGS += \
 folks_libsocialwebdir = $(libdir)
 folks_libsocialweb_LTLIBRARIES = libfolks-libsocialweb.la
 
-CLEANFILES =
-
 ##################################################################
 # Support library
 ##################################################################
@@ -94,11 +92,6 @@ dist_vapi_DATA = \
 ##################################################################
 # General
 ##################################################################
-
-CLEANFILES += \
-	$(pkgconfig_in:.in=) \
-	folks-libsocialweb-uninstalled.pc \
-	$(NULL)
 
 MAINTAINERCLEANFILES = \
 	$(folks_libsocialweb_valasources:.vala=.c) \

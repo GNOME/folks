@@ -97,11 +97,6 @@ EXTRA_DIST = \
 	build-conf.vapi \
 	$(NULL)
 
-CLEANFILES = \
-	$(pkgconfig_DATA) \
-	folks-uninstalled.pc \
-	$(NULL)
-
 BUILT_SOURCES = \
 	folks.h \
 	folks.vapi \

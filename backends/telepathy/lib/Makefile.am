@@ -56,7 +56,6 @@ INTROSPECTION_SCANNER_ARGS = \
 	$(NULL)
 
 INTROSPECTION_COMPILER_ARGS = --includedir=$(srcdir)
-CLEANFILES =
 
 tp-lowlevel.gir: $(libtp_lowlevel_la_SOURCES) $(tp_lowlevel_headers) \
 	libtp-lowlevel.la
@@ -158,11 +157,6 @@ dist_vapi_DATA = \
 ##################################################################
 # General
 ##################################################################
-
-CLEANFILES += \
-	$(pkgconfig_in:.in=) \
-	folks-telepathy-uninstalled.pc \
-	$(NULL)
 
 MAINTAINERCLEANFILES = \
 	$(folks_telepathy_valasources:.vala=.c) \

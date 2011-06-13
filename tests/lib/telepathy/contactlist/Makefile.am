@@ -88,10 +88,14 @@ MAINTAINERCLEANFILES = \
 	tp-test-contactlist.vapi \
 	$(NULL)
 
+DISTCLEANFILES = \
+	session.conf \
+	$(NULL)
+
 EXTRA_DIST = \
 	$(MAINTAINERCLEANFILES) \
 	manager-file.py \
-	session.conf \
+	session.conf.in \
 	tp-test-contactlist.h \
 	$(NULL)
 

@@ -15,8 +15,6 @@ VAPIGENFLAGS += \
 folks_trackerdir = $(libdir)
 folks_tracker_LTLIBRARIES = libfolks-tracker.la
 
-CLEANFILES =
-
 ##################################################################
 # Support library
 ##################################################################
@@ -95,11 +93,6 @@ dist_vapi_DATA = \
 ##################################################################
 # General
 ##################################################################
-
-CLEANFILES += \
-	$(pkgconfig_in:.in=) \
-	folks-tracker-uninstalled.pc \
-	$(NULL)
 
 MAINTAINERCLEANFILES = \
 	$(folks_tracker_valasources:.vala=.c) \

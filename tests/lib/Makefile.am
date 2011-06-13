@@ -31,10 +31,6 @@ libfolks_test_la_VALAFLAGS = \
 	-H folks-test.h \
 	$(NULL)
 
-CLEANFILES = \
-	folks-test-uninstalled.pc \
-	$(NULL)
-
 MAINTAINERCLEANFILES = \
 	$(libfolks_test_la_SOURCES:.vala=.c) \
 	libfolks_test_la_vala.stamp \

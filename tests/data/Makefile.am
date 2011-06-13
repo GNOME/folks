@@ -11,7 +11,7 @@ clean-local: clean-gconf
 
 check: clean-gconf
 
-CLEANFILES = \
+DISTCLEANFILES = \
 	gconf.path \
 	$(NULL)
 
