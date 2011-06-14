@@ -75,6 +75,15 @@ public class Tpf.Persona : Folks.Persona,
   public Folks.PresenceType presence_type { get; private set; }
 
   /**
+   * The Persona's presence status.
+   *
+   * See {@link Folks.PresenceDetails.presence_status}.
+   *
+   * @since 0.5.UNRELEASED
+   */
+  public string presence_status { get; private set; }
+
+  /**
    * The Persona's presence message.
    *
    * See {@link Folks.PresenceDetails.presence_message}.
@@ -285,8 +294,13 @@ public class Tpf.Persona : Folks.Persona,
         {
           this._contact_notify_presence_type ();
         });
+      contact.notify["presence-status"].connect ((s, p) =>
+        {
+          this._contact_notify_presence_status ();
+        });
       this._contact_notify_presence_message ();
       this._contact_notify_presence_type ();
+      this._contact_notify_presence_status ();
 
       ((Tpf.PersonaStore) this.store).group_members_changed.connect (
           (s, group, added, removed) =>
@@ -348,6 +362,11 @@ public class Tpf.Persona : Folks.Persona,
     {
       this.presence_type = Tpf.Persona._folks_presence_type_from_tp (
           this.contact.get_presence_type ());
+    }
+
+  private void _contact_notify_presence_status ()
+    {
+      this.presence_status = this.contact.get_presence_status ();
     }
 
   private static PresenceType _folks_presence_type_from_tp (

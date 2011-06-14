@@ -123,6 +123,13 @@ public class Folks.Individual : Object,
 
   /**
    * {@inheritDoc}
+   *
+   * @since 0.5.UNRELEASED
+   */
+  public string presence_status { get; private set; }
+
+  /**
+   * {@inheritDoc}
    */
   public string presence_message { get; private set; }
 
@@ -794,6 +801,7 @@ public class Folks.Individual : Object,
   private void _update_presence ()
     {
       var presence_message = "";
+      var presence_status = "";
       var presence_type = Folks.PresenceType.UNSET;
 
       /* Choose the most available presence from our personas */
@@ -808,12 +816,15 @@ public class Folks.Individual : Object,
                 {
                   presence_type = presence.presence_type;
                   presence_message = presence.presence_message;
+                  presence_status = presence.presence_status;
                 }
             }
         }
 
       if (presence_message == null)
         presence_message = "";
+      if (presence_status == null)
+        presence_status = "";
 
       /* only notify if the value has changed */
       if (this.presence_message != presence_message)
@@ -821,6 +832,9 @@ public class Folks.Individual : Object,
 
       if (this.presence_type != presence_type)
         this.presence_type = presence_type;
+
+      if (this.presence_status != presence_status)
+        this.presence_status = presence_status;
     }
 
   private void _update_is_favourite ()

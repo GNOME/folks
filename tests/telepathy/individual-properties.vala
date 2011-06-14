@@ -62,6 +62,7 @@ public class IndividualPropertiesTests : Folks.TestCase
               /* Check properties */
               assert (i.alias == "Olivier");
               assert (i.presence_message == "");
+              assert (i.presence_status == "away");
               assert (i.presence_type == PresenceType.AWAY);
               assert (((PresenceDetails) i).is_online () == true);
 

@@ -6,9 +6,11 @@ Bugs fixed:
 * Bug 646244 — Incomplete logic to handle attribute updates in Folks.Individual
 * Bug 652463 — Tidy up CLEANFILES
 * Bug 652434 — Add ability to run any tests through gdb
+* Bug 648071 — Add support for presence status from Telepathy
 
 API changes:
 * Swf.Persona retains and exposes its libsocialweb Contact
+* Add a PresenceDetails.presence_status property
 
 Overview of changes from libfolks 0.5.1 to libfolks 0.5.2
 =========================================================

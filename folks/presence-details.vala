@@ -99,6 +99,18 @@ public interface Folks.PresenceDetails : Object
    */
   public abstract string presence_message { get; set; default = ""; }
 
+  /**
+   * The contact's detailed presence status.
+   *
+   * This is a more detailed representation of the contact's presence than
+   * {@link PresenceDetails.presence_type}. It may be empty, or one of a
+   * well-known set of strings, as defined in the Telepathy specification:
+   * {@link http://telepathy.freedesktop.org/spec/Connection_Interface_Simple_Presence.html#description}
+   *
+   * @since 0.5.UNRELEASED
+   */
+  public abstract string presence_status { get; set; default = ""; }
+
   /* Rank the presence types for comparison purposes, with higher numbers
    * meaning more available */
   private static int _type_availability (PresenceType type)
