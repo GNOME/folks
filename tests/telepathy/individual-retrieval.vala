@@ -10,8 +10,6 @@ public class IndividualRetrievalTests : Folks.TestCase
   private TpTest.Backend tp_backend;
   private void* _account_handle;
   private HashSet<string> default_individuals;
-  private string individual_id_prefix =
-      "telepathy:/org/freedesktop/Telepathy/Account/cm/protocol/account:";
   private int _test_timeout = 3;
 
   public IndividualRetrievalTests ()
@@ -20,18 +18,33 @@ public class IndividualRetrievalTests : Folks.TestCase
 
       this.tp_backend = new TpTest.Backend ();
 
-      /* Create a set of the individuals we expect to see */
+      /* IDs of the individuals we expect to see.
+       * These are externally opaque, but internally are SHA-1 hashes of the
+       * concatenated UIDs of the Personas in the Individual. In these cases,
+       * each default_individual contains one Persona.
+       * e.g.
+       *  telepathy:/org/freedesktop/Telepathy/Account/cm/protocol/account:me@example.com
+       * only in each Individual. */
       this.default_individuals = new HashSet<string> (str_hash, str_equal);
 
-      var prefix = this.individual_id_prefix;
-      default_individuals.add (prefix + "travis@example.com");
-      default_individuals.add (prefix + "olivier@example.com");
-      default_individuals.add (prefix + "guillaume@example.com");
-      default_individuals.add (prefix + "sjoerd@example.com");
-      default_individuals.add (prefix + "christian@example.com");
-      default_individuals.add (prefix + "wim@example.com");
-      default_individuals.add (prefix + "helen@example.com");
-      default_individuals.add (prefix + "geraldine@example.com");
+      /* me@example.com */
+      default_individuals.add ("48fa372a81026063187255e3f5c184665d2ed7ce");
+      /* travis@example.com */
+      default_individuals.add ("60c91326018f6a60604f8d260fc24a60a5b8512c");
+      /* guillaume@example.com */
+      default_individuals.add ("6380b17dc511b21a1defd4811f1add97b278f92c");
+      /* olivier@example.com */
+      default_individuals.add ("0e46c5e74f61908f49550d241f2a1651892a1695");
+      /* sjoerd@example.com */
+      default_individuals.add ("6b08188cb2ef8cbaca140b277780069b5af8add6");
+      /* geraldine@example.com */
+      default_individuals.add ("f948d4d2af79085ab860f0ef67bf0c201c4602d4");
+      /* helen@example.com */
+      default_individuals.add ("f34529a442577b840a75271b464e90666c38c464");
+      /* wim@example.com */
+      default_individuals.add ("467d13f955e62bf30ebf9620fa052aaee2160260");
+      /* christian@example.com */
+      default_individuals.add ("07b913b8977c04d2f2011e26a46ea3e3dcfe3e3d");
 
       this.add_test ("aggregator", this.test_aggregator);
       this.add_test ("aggregator:add", this.test_aggregator_add);

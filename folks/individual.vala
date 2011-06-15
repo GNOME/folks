@@ -163,9 +163,17 @@ public class Folks.Individual : Object,
    * A unique identifier for the Individual.
    *
    * This uniquely identifies the Individual, and persists across
-   * {@link IndividualAggregator} instances.
+   * {@link IndividualAggregator} instances. It may not persist across linking
+   * the Individual with other Individuals.
    *
-   * FIXME: Will this.id actually be the persistent ID for storage?
+   * This is an opaque string and has no structure.
+   *
+   * If an identifier is required which will be used for a long-lived link
+   * between different stored data, it may be more desirable to use the
+   * {@link Persona.uid} of the most relevant {@link Persona} in the Individual
+   * instead. For example, if storing references to Individuals who are tagged
+   * in a photo, it may be safer to store the UID of the Persona whose backend
+   * provided the photo (e.g. Facebook).
    */
   public string id { get; private set; }
 
@@ -1517,14 +1525,54 @@ public class Folks.Individual : Object,
           return;
         }
 
-      /* TODO: Base this upon our ID in permanent storage, once we have that. */
-      if (this.id == null && this._persona_set.size > 0)
+      /* Update the ID. We choose the most interesting Persona in the
+       * Individual and hash their UID. This is guaranteed to be globally
+       * unique, and may not change (for one of the two Individuals) if we link
+       * two Individuals together, which is nice though we can't rely on this
+       * behaviour.
+       *
+       * This method of constructing an ID ensures that it'll be unique and
+       * stable for a given Individual once the IndividualAggregator reaches
+       * a quiescent state after startup. It guarantees that the ID will be
+       * the same every time folks is used, until the Individual is linked
+       * or unlinked to another Individual.
+       *
+       * We choose the most interesting Persona by ranking all the Personas
+       * in the Individual by:
+       *  1. store.is-writeable
+       *  2. store.trust-level
+       *  3. store.id (alphabetically)
+       *
+       * Note that this heuristic shouldn't be changed without careful thought,
+       * since stored references to IDs may be broken by the change.
+       */
+      if (this._persona_set.size > 0)
         {
+          Persona? chosen_persona = null;
+
           foreach (var persona in this._persona_set)
             {
-              this.id = persona.uid;
-              break;
+              if (chosen_persona == null ||
+                  (chosen_persona.store.is_writeable == false &&
+                      persona.store.is_writeable == true) ||
+                  (chosen_persona.store.is_writeable ==
+                          persona.store.is_writeable &&
+                      chosen_persona.store.trust_level >
+                          persona.store.trust_level) ||
+                  (chosen_persona.store.is_writeable ==
+                          persona.store.is_writeable &&
+                      chosen_persona.store.trust_level ==
+                          persona.store.trust_level &&
+                      chosen_persona.store.id > persona.store.id)
+                 )
+               {
+                 chosen_persona = persona;
+               }
             }
+
+          // Hash the chosen persona's UID
+          this.id = Checksum.compute_for_string (ChecksumType.SHA1,
+              chosen_persona.uid);
         }
 
       /* Update our aggregated fields and notify the changes */

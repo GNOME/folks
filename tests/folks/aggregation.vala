@@ -6,7 +6,7 @@ public class AggregationTests : Folks.TestCase
 {
   private KfTest.Backend _kf_backend;
   private TpTest.Backend _tp_backend;
-  private HashSet<string> _default_individuals;
+  private HashSet<string> _default_personas;
   private int _test_timeout = 3;
 
   public AggregationTests ()
@@ -17,16 +17,16 @@ public class AggregationTests : Folks.TestCase
       this._tp_backend = new TpTest.Backend ();
 
       /* Create a set of the individuals we expect to see */
-      this._default_individuals = new HashSet<string> (str_hash, str_equal);
+      this._default_personas = new HashSet<string> (str_hash, str_equal);
 
-      this._default_individuals.add ("travis@example.com");
-      this._default_individuals.add ("olivier@example.com");
-      this._default_individuals.add ("guillaume@example.com");
-      this._default_individuals.add ("sjoerd@example.com");
-      this._default_individuals.add ("christian@example.com");
-      this._default_individuals.add ("wim@example.com");
-      this._default_individuals.add ("helen@example.com");
-      this._default_individuals.add ("geraldine@example.com");
+      this._default_personas.add ("travis@example.com");
+      this._default_personas.add ("olivier@example.com");
+      this._default_personas.add ("guillaume@example.com");
+      this._default_personas.add ("sjoerd@example.com");
+      this._default_personas.add ("christian@example.com");
+      this._default_personas.add ("wim@example.com");
+      this._default_personas.add ("helen@example.com");
+      this._default_personas.add ("geraldine@example.com");
 
       /* Set up the tests */
       this.add_test ("IID", this.test_iid);
@@ -69,9 +69,37 @@ public class AggregationTests : Folks.TestCase
       void* account2_handle = this._tp_backend.add_account ("protocol",
           "me2@example.com", "cm", "account2");
 
+      /* IDs of the individuals we expect to see.
+       * These are externally opaque, but internally are SHA-1 hashes of the
+       * concatenated UIDs of the Personas in the Individual. In these cases,
+       * each default_individual contains two Personas with the same IID.
+       * e.g.
+       *  telepathy:/org/freedesktop/Telepathy/Account/cm/protocol/account2:sjoerd@example.com
+       * and
+       *  telepathy:/org/freedesktop/Telepathy/Account/cm/protocol/account:sjoerd@example.com
+       * in a single Individual. */
+      var default_individuals = new HashSet<string> ();
+
+      /* guillaume@example.com */
+      default_individuals.add ("6380b17dc511b21a1defd4811f1add97b278f92c");
+      /* sjoerd@example.com */
+      default_individuals.add ("6b08188cb2ef8cbaca140b277780069b5af8add6");
+      /* travis@example.com */
+      default_individuals.add ("60c91326018f6a60604f8d260fc24a60a5b8512c");
+      /* olivier@example.com */
+      default_individuals.add ("0e46c5e74f61908f49550d241f2a1651892a1695");
+      /* christian@example.com */
+      default_individuals.add ("07b913b8977c04d2f2011e26a46ea3e3dcfe3e3d");
+      /* geraldine@example.com */
+      default_individuals.add ("f948d4d2af79085ab860f0ef67bf0c201c4602d4");
+      /* helen@example.com */
+      default_individuals.add ("f34529a442577b840a75271b464e90666c38c464");
+      /* wim@example.com */
+      default_individuals.add ("467d13f955e62bf30ebf9620fa052aaee2160260");
+
       /* Work on a copy of the set of individuals so we can mangle it */
       HashSet<string> expected_individuals = new HashSet<string> ();
-      foreach (var id in this._default_individuals)
+      foreach (var id in default_individuals)
         {
           expected_individuals.add (id);
         }
@@ -84,14 +112,11 @@ public class AggregationTests : Folks.TestCase
            * individuals (if they were originally on it) */
           foreach (Individual i in removed)
             {
-              var parts = i.id.split (":");
-              var id = parts[2];
-
               if (!i.is_user &&
                   i.personas.size == 2 &&
-                  this._default_individuals.contains (id))
+                  default_individuals.contains (i.id))
                 {
-                  expected_individuals.add (id);
+                  expected_individuals.add (i.id);
                 }
             }
 
@@ -99,15 +124,12 @@ public class AggregationTests : Folks.TestCase
            * from the set of expected individuals. */
           foreach (Individual i in added)
             {
-              var parts = i.id.split (":");
-              var id = parts[2];
-
               var personas = i.personas;
 
               /* We're not testing the user here */
               if (!i.is_user && personas.size == 2)
                 {
-                  assert (expected_individuals.remove (id));
+                  assert (expected_individuals.remove (i.id));
 
                   string iid = null;
                   foreach (var persona in personas)
@@ -441,7 +463,7 @@ public class AggregationTests : Folks.TestCase
        * from a different persona store. */
       var expected_personas1 = new HashSet<string> ();
       var expected_personas2 = new HashSet<string> ();
-      foreach (var id in this._default_individuals)
+      foreach (var id in this._default_personas)
         {
           expected_personas1.add (id);
           expected_personas2.add (id);

@@ -9,8 +9,6 @@ public class IndividualPropertiesTests : Folks.TestCase
 {
   private TpTest.Backend tp_backend;
   private void* _account_handle;
-  private string individual_id_prefix =
-      "telepathy:/org/freedesktop/Telepathy/Account/cm/protocol/account:";
   private int _test_timeout = 3;
 
   public IndividualPropertiesTests ()
@@ -53,8 +51,9 @@ public class IndividualPropertiesTests : Folks.TestCase
         {
           foreach (Individual i in added)
             {
-              /* We only check one */
-              if (i.id != (this.individual_id_prefix + "olivier@example.com"))
+              /* We only check one (singleton Individual containing just
+               * olivier@example.com) */
+              if (i.id != "0e46c5e74f61908f49550d241f2a1651892a1695")
                 {
                   continue;
                 }
@@ -104,8 +103,9 @@ public class IndividualPropertiesTests : Folks.TestCase
 
           foreach (Individual i in added)
             {
-              /* We only check one */
-              if (i.id != (this.individual_id_prefix + "olivier@example.com"))
+              /* We only check one (singleton Individual containing just
+               * olivier@example.com) */
+              if (i.id != "0e46c5e74f61908f49550d241f2a1651892a1695")
                 {
                   continue;
                 }
@@ -172,8 +172,9 @@ public class IndividualPropertiesTests : Folks.TestCase
 
           foreach (Individual i in added)
             {
-              /* We only check one */
-              if (i.id != (this.individual_id_prefix + "olivier@example.com"))
+              /* We only check one (singleton Individual containing just
+               * olivier@example.com) */
+              if (i.id != "0e46c5e74f61908f49550d241f2a1651892a1695")
                 {
                   continue;
                 }
