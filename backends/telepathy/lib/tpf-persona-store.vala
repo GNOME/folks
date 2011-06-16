@@ -82,7 +82,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
   private TpLowlevel _ll;
   private AccountManager _account_manager;
   private Logger _logger;
-  private Contact _self_contact;
+  private Contact? _self_contact;
   private MaybeBool _can_add_personas = MaybeBool.UNSET;
   private MaybeBool _can_alias_personas = MaybeBool.UNSET;
   private MaybeBool _can_group_personas = MaybeBool.UNSET;
@@ -477,6 +477,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
 
       this._groups = new HashMap<string, Channel> ();
       this._favourite_handles = new HashSet<uint> ();
+      this._self_contact = null;
       this._ll = new TpLowlevel ();
     }
 
