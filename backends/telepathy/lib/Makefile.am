@@ -96,6 +96,7 @@ folks_telepathy_valasources = \
 	tpf-persona.vala \
 	tpf-persona-store.vala \
 	tpf-logger.vala \
+	tpf-persona-store-cache.vala \
 	$(NULL)
 
 libfolks_telepathy_la_SOURCES = \

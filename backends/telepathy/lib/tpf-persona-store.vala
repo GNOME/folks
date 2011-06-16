@@ -89,6 +89,9 @@ public class Tpf.PersonaStore : Folks.PersonaStore
   private MaybeBool _can_remove_personas = MaybeBool.UNSET;
   private bool _is_prepared = false;
   private Debug _debug;
+  private PersonaStoreCache _cache;
+  private Cancellable? _load_cache_cancellable = null;
+  private bool _cached = false;
 
   internal signal void group_members_changed (string group,
       GLib.List<Persona>? added, GLib.List<Persona>? removed);
@@ -194,6 +197,9 @@ public class Tpf.PersonaStore : Folks.PersonaStore
 
       this._debug = Debug.dup ();
       this._debug.print_status.connect (this._debug_print_status);
+
+      // Set up the cache
+      this._cache = new PersonaStoreCache (this);
 
       this._reset ();
     }
@@ -498,8 +504,12 @@ public class Tpf.PersonaStore : Folks.PersonaStore
                 {
                   if (this.account == a)
                     {
-                      this._emit_personas_changed (null, this._persona_set);
-                      this.removed ();
+                      this._store_cache.begin ((o, r) =>
+                        {
+                          this._store_cache.end (r);
+                          this._emit_personas_changed (null, this._persona_set);
+                          this.removed ();
+                        });
                     }
                 });
               this._account_manager.account_removed.connect ((a) =>
@@ -507,6 +517,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
                   if (this.account == a)
                     {
                       this._emit_personas_changed (null, this._persona_set);
+                      this._cache.clear_cache ();
                       this.removed ();
                     }
                 });
@@ -516,6 +527,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
                       if (!valid && this.account == a)
                         {
                           this._emit_personas_changed (null, this._persona_set);
+                          this._cache.clear_cache ();
                           this.removed ();
                         }
                     });
@@ -532,6 +544,12 @@ public class Tpf.PersonaStore : Folks.PersonaStore
                   this._account_status_changed_cb (
                       TelepathyGLib.ConnectionStatus.DISCONNECTED, status,
                       reason, null, null);
+                }
+              else
+                {
+                  /* If we're disconnected, advertise personas from the cache
+                   * instead. */
+                  yield this._load_cache ();
                 }
 
               try
@@ -713,13 +731,31 @@ public class Tpf.PersonaStore : Folks.PersonaStore
         {
           /* When disconnecting, we want the PersonaStore to remain alive, but
            * all its Personas to be removed. We do *not* want the PersonaStore
-           * to be destroyed, as that makes coming back online hard. */
-          this._emit_personas_changed (null, this._persona_set);
-          this._reset ();
+           * to be destroyed, as that makes coming back online hard.
+           *
+           * We have to start advertising personas from the cache instead.
+           * This will implicitly notify about removal of the existing persona
+           * set and call this._reset().
+           *
+           * Before we do this, we store the current set of personas to the
+           * cache. */
+          this._store_cache.begin ((o, r) =>
+            {
+              this._store_cache.end (r);
+
+              this._load_cache.begin ((o2, r2) =>
+                {
+                  this._load_cache.end (r2);
+                });
+            });
+
           return;
         }
       else if (new_status != TelepathyGLib.ConnectionStatus.CONNECTED)
         return;
+
+      // We're connected, so can stop advertising personas from the cache
+      this._unload_cache ();
 
       var conn = this.account.connection;
       conn.notify["connection-ready"].connect (this._connection_ready_cb);
@@ -834,6 +870,81 @@ public class Tpf.PersonaStore : Folks.PersonaStore
 
       /* We can only initialise the favourite contacts once _conn is prepared */
       this._initialise_favourite_contacts.begin ();
+    }
+
+  /**
+   * If our account is disconnected, we want to continue to export a static
+   * view of personas from the cache.
+   */
+  private async void _load_cache ()
+    {
+      var cancellable = new Cancellable ();
+
+      if (this._load_cache_cancellable != null)
+        {
+          this._load_cache_cancellable.cancel ();
+        }
+
+      this._load_cache_cancellable = cancellable;
+
+      // Load the persona set from the cache and notify of the change
+      var cached_personas = yield this._cache.load_objects (cancellable);
+      var old_personas = this._persona_set;
+
+      /* If the load operation was cancelled, don't change the state
+       * of the persona store at all. */
+      if (cancellable.is_cancelled () == true)
+        {
+          return;
+        }
+
+      this._reset ();
+      this._cached = true;
+
+      this._persona_set = new HashSet<Persona> ();
+      if (cached_personas != null)
+        {
+          foreach (var p in cached_personas)
+            {
+              this._persona_set.add (p);
+            }
+        }
+
+      this._emit_personas_changed (cached_personas, old_personas,
+          null, null, GroupDetails.ChangeReason.NONE);
+
+      this._can_add_personas = MaybeBool.FALSE;
+      this._can_alias_personas = MaybeBool.FALSE;
+      this._can_group_personas = MaybeBool.FALSE;
+      this._can_remove_personas = MaybeBool.FALSE;
+    }
+
+  /**
+   * When we're about to disconnect, store the current set of personas to the
+   * cache file so that we can access them once offline.
+   */
+  private async void _store_cache ()
+    {
+      yield this._cache.store_objects (this._persona_set);
+    }
+
+  /**
+   * When our account is connected again, we can unload the the personas which
+   * we're advertising from the cache.
+   */
+  private void _unload_cache ()
+    {
+      // If we're in the process of loading from the cache, cancel that
+      if (this._load_cache_cancellable != null)
+        {
+          this._load_cache_cancellable.cancel ();
+        }
+
+      this._emit_personas_changed (null, this._persona_set, null, null,
+          GroupDetails.ChangeReason.NONE);
+
+      this._reset ();
+      this._cached = false;
     }
 
   private void _self_handle_changed_cb (Object s, ParamSpec? p)

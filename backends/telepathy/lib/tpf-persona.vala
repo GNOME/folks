@@ -236,8 +236,14 @@ public class Tpf.Persona : Folks.Persona,
 
   /**
    * The Telepathy contact represented by this persona.
+   *
+   * Note that this may be `null` if the {@link PersonaStore} providing this
+   * {@link Persona} isn't currently available (e.g. due to not being connected
+   * to the network). In this case, most other properties of the {@link Persona}
+   * are being retrieved from a cache and may not be current (though there's no
+   * way to tell this).
    */
-  public Contact contact { get; construct; }
+  public Contact? contact { get; construct; }
 
   /**
    * Create a new persona.
@@ -341,10 +347,64 @@ public class Tpf.Persona : Folks.Persona,
                    error.code != TelepathyGLib.DBusError.OBJECT_REMOVED))
                 {
                   debug ("Group invalidated: %s", error.message);
+                  this._change_group (group, false);
                 }
-
-              this._change_group (group, false);
             });
+    }
+
+  /**
+   * Create a new persona for the {@link PersonaStore} `store`, representing
+   * a cached contact for which we currently have no Telepathy contact.
+   *
+   * @param store The persona store to place the persona in.
+   * @param uid The cached UID of the persona.
+   * @param iid The cached IID of the persona.
+   * @param im_address The cached IM address of the persona (excluding
+   * protocol).
+   * @param protocol The cached protocol of the persona.
+   * @param groups The cached set of groups the persona is in.
+   * @param is_favourite Whether the persona is a favourite.
+   * @param alias The cached alias for the persona.
+   * @param is_in_contact_list Whether the persona is in the user's contact
+   * list.
+   * @param is_user Whether the persona is the user.
+   * @param avatar The icon for the persona's cached avatar, or `null` if they
+   * have no avatar.
+   * @return A new {@link Tpf.Persona} representing the cached persona.
+   *
+   * @since 0.5.UNRELEASED
+   */
+  internal Persona.from_cache (PersonaStore store, string uid, string iid,
+      string im_address, string protocol, HashSet<string> groups,
+      bool is_favourite, string alias, bool is_in_contact_list, bool is_user,
+      LoadableIcon? avatar)
+    {
+      Object (contact: null,
+              display_id: im_address,
+              iid: iid,
+              uid: uid,
+              store: store,
+              is_user: is_user);
+
+      debug ("Creating new Tpf.Persona '%s' from cache: %p", uid, this);
+
+      // IM addresses
+      this._im_addresses = new HashMultiMap<string, string> ();
+      this._im_addresses.set (protocol, im_address);
+
+      // Groups
+      this._groups = groups;
+      this._groups_ro = this._groups.read_only_view;
+
+      // Other properties
+      this._alias = alias;
+      this._is_favourite = is_favourite;
+      this.is_in_contact_list = is_in_contact_list;
+      this.avatar = avatar;
+
+      // Make the persona appear offline
+      this.presence_type = PresenceType.OFFLINE;
+      this.presence_message = "";
     }
 
   ~Persona ()
