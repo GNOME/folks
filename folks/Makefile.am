@@ -41,6 +41,7 @@ libfolks_la_SOURCES = \
 	utils.vala \
 	potential-match.vala \
 	avatar-cache.vala \
+	object-cache.vala \
 	$(NULL)
 
 libfolks_la_VALAFLAGS = \
