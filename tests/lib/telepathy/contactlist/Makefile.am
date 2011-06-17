@@ -72,9 +72,13 @@ tp-test-contactlist.vapi: tp-test-contactlist.gir
 	touch $@
 endif
 
-dist_noinst_DATA = \
-	tp-test-contactlist.gir \
+introspection_files = \
+	$(INTROSPECTION_GIRS) \
 	tp-test-contactlist.vapi \
+	$(NULL)
+
+dist_noinst_DATA = \
+	$(introspection_files) \
 	tp-test-contactlist.deps \
 	$(NULL)
 
@@ -84,8 +88,7 @@ CLEANFILES = \
 	$(NULL)
 
 MAINTAINERCLEANFILES = \
-	tp-test-contactlist.gir \
-	tp-test-contactlist.vapi \
+	$(introspection_files) \
 	$(NULL)
 
 DISTCLEANFILES = \
