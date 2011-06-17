@@ -96,7 +96,6 @@ DISTCLEANFILES = \
 	$(NULL)
 
 EXTRA_DIST = \
-	$(MAINTAINERCLEANFILES) \
 	manager-file.py \
 	session.conf.in \
 	tp-test-contactlist.h \
