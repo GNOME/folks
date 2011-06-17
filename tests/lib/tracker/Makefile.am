@@ -34,6 +34,10 @@ libtracker_test_la_LIBADD = \
 	$(top_builddir)/backends/tracker/lib/libfolks-tracker.la \
 	$(NULL)
 
+# XXX: automake's Vala support should make these unnecessary
+tracker-test.vapi: libtracker_test_la_vala.stamp
+tracker-test.h: libtracker_test_la_vala.stamp
+
 dist_noinst_DATA = \
 	tracker-test.vapi \
 	$(NULL)
