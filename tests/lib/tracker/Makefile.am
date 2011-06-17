@@ -34,6 +34,10 @@ libtracker_test_la_LIBADD = \
 	$(top_builddir)/backends/tracker/lib/libfolks-tracker.la \
 	$(NULL)
 
+dist_noinst_DATA = \
+	tracker-test.vapi \
+	$(NULL)
+
 MAINTAINERCLEANFILES = \
 	tracker-test.vapi \
 	tracker-test.h \
