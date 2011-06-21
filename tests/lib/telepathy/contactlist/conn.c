@@ -178,7 +178,7 @@ tp_test_contact_list_normalize_contact (TpHandleRepoIface *repo,
                                         gpointer context,
                                         GError **error)
 {
-  if (id[0] == '\0')
+  if (id == NULL || id[0] == '\0')
     {
       g_set_error (error, TP_ERRORS, TP_ERROR_INVALID_HANDLE,
           "Contact ID must not be empty");
@@ -194,7 +194,7 @@ tp_test_contact_list_normalize_group (TpHandleRepoIface *repo,
                                       gpointer context,
                                       GError **error)
 {
-  if (id[0] == '\0')
+  if (id == NULL || id[0] == '\0')
     {
       g_set_error (error, TP_ERRORS, TP_ERROR_INVALID_HANDLE,
           "Contact group name cannot be empty");
