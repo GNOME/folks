@@ -62,13 +62,6 @@ public class AggregationTests : Folks.TestCase
     {
       var main_loop = new GLib.MainLoop (null, false);
 
-      /* Ignore the error caused by not running the logger */
-      Test.log_set_fatal_handler ((d, l, m) =>
-        {
-          return !m.has_suffix ("The name org.freedesktop.Telepathy.Logger " +
-              "was not provided by any .service files");
-        });
-
       this._kf_backend.set_up ("");
 
       void* account1_handle = this._tp_backend.add_account ("protocol",
@@ -181,13 +174,6 @@ public class AggregationTests : Folks.TestCase
   public void test_linkable_properties_same_store ()
     {
       var main_loop = new GLib.MainLoop (null, false);
-
-      /* Ignore the error caused by not running the logger */
-      Test.log_set_fatal_handler ((d, l, m) =>
-        {
-          return !m.has_suffix ("The name org.freedesktop.Telepathy.Logger " +
-              "was not provided by any .service files");
-        });
 
       this._kf_backend.set_up ("[0]\n" +
           "protocol=travis@example.com;olivier@example.com;" +
@@ -349,13 +335,6 @@ public class AggregationTests : Folks.TestCase
     {
       var main_loop = new GLib.MainLoop (null, false);
 
-      /* Ignore the error caused by not running the logger */
-      Test.log_set_fatal_handler ((d, l, m) =>
-        {
-          return !m.has_suffix ("The name org.freedesktop.Telepathy.Logger " +
-              "was not provided by any .service files");
-        });
-
       this._kf_backend.set_up ("[0]\n" +
           "protocol=travis@example.com;olivier@example.com;" +
               "guillaume@example.com;sjoerd@example.com\n" +
@@ -497,13 +476,6 @@ public class AggregationTests : Folks.TestCase
     {
       var main_loop = new GLib.MainLoop (null, false);
 
-      /* Ignore the error caused by not running the logger */
-      Test.log_set_fatal_handler ((d, l, m) =>
-        {
-          return !m.has_suffix ("The name org.freedesktop.Telepathy.Logger " +
-              "was not provided by any .service files");
-        });
-
       this._kf_backend.set_up ("");
 
       void* account1_handle = this._tp_backend.add_account ("protocol",
@@ -596,13 +568,6 @@ public class AggregationTests : Folks.TestCase
   public void test_untrusted_store ()
     {
       var main_loop = new GLib.MainLoop (null, false);
-
-      /* Ignore the error caused by not running the logger */
-      Test.log_set_fatal_handler ((d, l, m) =>
-        {
-          return !m.has_suffix ("The name org.freedesktop.Telepathy.Logger " +
-              "was not provided by any .service files");
-        });
 
       this._kf_backend.set_up ("");
 
