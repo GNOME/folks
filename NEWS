@@ -5,6 +5,7 @@ Bugs fixed:
 * Bug 649925 — expose SocialWebClient.Contact in Swf.Persona
 * Bug 646244 — Incomplete logic to handle attribute updates in Folks.Individual
 * Bug 652463 — Tidy up CLEANFILES
+* Bug 652434 — Add ability to run any tests through gdb
 
 API changes:
 * Swf.Persona retains and exposes its libsocialweb Contact
