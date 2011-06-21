@@ -202,6 +202,8 @@ public class Tpf.PersonaStore : Folks.PersonaStore
     {
       this._debug.print_status.disconnect (this._debug_print_status);
       this._debug = null;
+      if (this._logger != null)
+        this._logger.invalidated.disconnect (this._logger_invalidated_cb);
     }
 
   private string _format_maybe_bool (MaybeBool input)
@@ -535,12 +537,8 @@ public class Tpf.PersonaStore : Folks.PersonaStore
                 {
                   this._logger = new Logger (this.id);
                   yield this._logger.prepare ();
-                  this._logger.invalidated.connect (() =>
-                    {
-                      warning (
-                          _("Lost connection to the telepathy-logger service."));
-                      this._logger = null;
-                    });
+                  this._logger.invalidated.connect (
+                      this._logger_invalidated_cb);
                   this._logger.favourite_contacts_changed.connect (
                       this._favourite_contacts_changed_cb);
                 }
@@ -555,6 +553,14 @@ public class Tpf.PersonaStore : Folks.PersonaStore
               this.notify_property ("is-prepared");
             }
         }
+    }
+
+  private void _logger_invalidated_cb ()
+    {
+      this._logger.invalidated.disconnect (this._logger_invalidated_cb);
+
+      warning (_("Lost connection to the telepathy-logger service."));
+      this._logger = null;
     }
 
   private async void _initialise_favourite_contacts ()
