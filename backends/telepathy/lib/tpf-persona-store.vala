@@ -865,7 +865,8 @@ public class Tpf.PersonaStore : Folks.PersonaStore
               Persona persona = this._add_persona_from_contact (contact, false);
 
               var personas = new HashSet<Persona> ();
-              personas.add (persona);
+              if (persona != null)
+                personas.add (persona);
 
               this._self_contact = contact;
               this._emit_personas_changed (personas, null);
