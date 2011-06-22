@@ -82,7 +82,6 @@ folks_telepathy_doc_deps = \
 	gmodule-2.0 \
 	gio-2.0 \
 	gee-1.0 \
-	dbus-glib-1 \
 	telepathy-glib \
 	tp-lowlevel \
 	build-conf \

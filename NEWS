@@ -8,6 +8,7 @@ Bugs fixed:
 * Bug 652434 — Add ability to run any tests through gdb
 * Bug 648071 — Add support for presence status from Telepathy
 * Bug 652472 — Handle failure in getting the logger service better
+* Bug 629716 — Migrate Folks to GDBus
 
 API changes:
 * Swf.Persona retains and exposes its libsocialweb Contact
