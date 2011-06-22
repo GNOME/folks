@@ -105,7 +105,7 @@ public interface Folks.PresenceDetails : Object
    * This is a more detailed representation of the contact's presence than
    * {@link PresenceDetails.presence_type}. It may be empty, or one of a
    * well-known set of strings, as defined in the Telepathy specification:
-   * {@link http://telepathy.freedesktop.org/spec/Connection_Interface_Simple_Presence.html#description}
+   * [[http://telepathy.freedesktop.org/spec/Connection_Interface_Simple_Presence.html#description|Telepathy Specification]]
    *
    * @since 0.5.UNRELEASED
    */
