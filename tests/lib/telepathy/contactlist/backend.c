@@ -136,9 +136,18 @@ _log_should_suppress (const char *domain,
    GLogLevelFlags flags,
    const char *message)
 {
-  /* Ignore the error caused by not running the logger */
-  return g_str_has_suffix (message,
+  gboolean suppress = FALSE;
+
+  /* Ignore the error caused by not running the logger through dbus-glib */
+  suppress |= g_str_has_suffix (message,
+      "The name org.freedesktop.Telepathy.Logger was not provided by any "
+      ".service files");
+
+  /* And again for GDBus */
+  suppress |= g_str_has_suffix (message,
       "Lost connection to the telepathy-logger service.");
+
+  return suppress;
 }
 
 static void
