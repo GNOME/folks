@@ -42,7 +42,6 @@ libfolks_libsocialweb_la_VALAFLAGS = \
         --pkg gobject-2.0 \
         --pkg gio-2.0 \
         --pkg gee-1.0 \
-        --pkg dbus-glib-1 \
         --pkg libsocialweb-client \
         --includedir folks \
         --vapi folks-libsocialweb.vapi \
