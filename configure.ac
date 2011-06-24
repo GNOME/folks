@@ -323,6 +323,10 @@ AS_IF([test "x$enable_docs" != xno],
        AS_IF([test "$VALADOC" != :], have_valadoc=yes)])
 AM_CONDITIONAL([HAVE_VALADOC], [test x$have_valadoc = xyes])
 
+if test "x$enable_docs" = "xyes" -a "x$have_valadoc" != "xyes"; then
+    AC_MSG_ERROR([Doc building requested but valadoc not installed.])
+fi
+
 # -----------------------------------------------------------
 # Gettext
 # -----------------------------------------------------------
