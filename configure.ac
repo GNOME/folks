@@ -448,7 +448,6 @@ Configure summary:
         Prefix......................:  ${prefix}
         Bugreporting URL............:  ${PACKAGE_BUGREPORT}
         Documentation...............:  ${have_valadoc}
-        Tests.......................:  ${have_tp_glib_for_tests}
         Import tool.................:  ${with_import_tool}
         Inspector tool..............:  ${with_inspect_tool}
         Tracker backend.............:  ${enable_tracker_backend}
