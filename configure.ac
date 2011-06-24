@@ -317,6 +317,7 @@ AC_ARG_ENABLE([docs],
               [enable_docs=$enableval], [enable_docs=no])
 AM_CONDITIONAL([ENABLE_DOCS], [test x$enable_docs = xyes])
 
+have_valadoc=no
 AS_IF([test "x$enable_docs" != xno],
       [AC_PATH_PROG([VALADOC], [valadoc], [:])
        AS_IF([test "$VALADOC" != :], have_valadoc=yes)])
@@ -446,7 +447,7 @@ Configure summary:
         C Compiler Flags............:  ${CFLAGS} ${ERROR_CFLAGS}
         Prefix......................:  ${prefix}
         Bugreporting URL............:  ${PACKAGE_BUGREPORT}
-        Documentation...............:  ${HAVE_VALADOC}
+        Documentation...............:  ${have_valadoc}
         Tests.......................:  ${have_tp_glib_for_tests}
         Import tool.................:  ${with_import_tool}
         Inspector tool..............:  ${with_inspect_tool}
