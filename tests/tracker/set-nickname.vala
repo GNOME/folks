@@ -23,24 +23,24 @@ using TrackerTest;
 using Folks;
 using Gee;
 
-public class SetAliasTests : Folks.TestCase
+public class SetNicknameTests : Folks.TestCase
 {
   private GLib.MainLoop _main_loop;
   private TrackerTest.Backend _tracker_backend;
   private IndividualAggregator _aggregator;
   private string _persona_fullname;
-  private string _initial_alias;
-  private string _modified_alias;
-  private bool _initial_alias_found;
-  private bool _modified_alias_found;
+  private string _initial_nickname;
+  private string _modified_nickname;
+  private bool _initial_nickname_found;
+  private bool _modified_nickname_found;
 
-  public SetAliasTests ()
+  public SetNicknameTests ()
     {
-      base ("SetAliasTests");
+      base ("SetNicknameTests");
 
       this._tracker_backend = new TrackerTest.Backend ();
 
-      this.add_test ("test setting alias ", this.test_set_alias);
+      this.add_test ("test setting nickname ", this.test_set_nickname);
     }
 
   public override void set_up ()
@@ -51,30 +51,24 @@ public class SetAliasTests : Folks.TestCase
     {
     }
 
-  public void test_set_alias ()
+  public void test_set_nickname ()
     {
       this._main_loop = new GLib.MainLoop (null, false);
       Gee.HashMap<string, string> c1 = new Gee.HashMap<string, string> ();
       this._persona_fullname = "persona #1";
-      this._initial_alias = "initial alias";
-      this._modified_alias = "modified alias";
+      this._initial_nickname = "initial nickname";
+      this._modified_nickname = "modified nickname";
 
       c1.set (Trf.OntologyDefs.NCO_FULLNAME, this._persona_fullname);
-
-      /* Note:
-       *
-       * we treat the nco:nickname associated to an nco:PersonContact
-       * as the alias, and the nco:nickname(s) associated to IM accounts
-       * as possible nicknames. */
-      c1.set (Trf.OntologyDefs.NCO_NICKNAME, this._initial_alias);
+      c1.set (Trf.OntologyDefs.NCO_NICKNAME, this._initial_nickname);
       this._tracker_backend.add_contact (c1);
 
       this._tracker_backend.set_up ();
 
-      this._initial_alias_found = false;
-      this._modified_alias_found = false;
+      this._initial_nickname_found = false;
+      this._modified_nickname_found = false;
 
-      this._test_set_alias_async ();
+      this._test_set_nickname_async ();
 
       Timeout.add_seconds (5, () =>
         {
@@ -84,13 +78,13 @@ public class SetAliasTests : Folks.TestCase
 
       this._main_loop.run ();
 
-      assert (this._initial_alias_found == true);
-      assert (this._modified_alias_found == true);
+      assert (this._initial_nickname_found == true);
+      assert (this._modified_nickname_found == true);
 
       this._tracker_backend.tear_down ();
     }
 
-  private async void _test_set_alias_async ()
+  private async void _test_set_nickname_async ()
     {
       var store = BackendStore.dup ();
       yield store.prepare ();
@@ -118,9 +112,9 @@ public class SetAliasTests : Folks.TestCase
         {
           if (i.full_name == this._persona_fullname)
             {
-              if (i.alias == this._initial_alias)
+              if (i.nickname == this._initial_nickname)
                 {
-                  this._initial_alias_found = true;
+                  this._initial_nickname_found = true;
 
                   foreach (var p in i.personas)
                     {
@@ -130,16 +124,16 @@ public class SetAliasTests : Folks.TestCase
                        * Individual won't forward the notification to us
                        * unless it comes from a writeable store.
                        */
-                      p.notify["alias"].connect (this._notify_alias_cb);
+                      p.notify["nickname"].connect (this._notify_nickname_cb);
 
                       /* FIXME:
                        * it would be nice if we could just do:
-                       *    i.alias = "foobar"
+                       *    i.nickname = "foobar"
                        * but we depend on:
                        * https://bugzilla.gnome.org/show_bug.cgi?id=645441 */
-                      if (p is AliasDetails)
+                      if (p is NameDetails)
                         {
-                          ((AliasDetails) p).alias = this._modified_alias;
+                          ((NameDetails) p).nickname = this._modified_nickname;
                         }
                     }
                 }
@@ -149,12 +143,12 @@ public class SetAliasTests : Folks.TestCase
       assert (removed.size == 0);
     }
 
-  private void _notify_alias_cb (Object persona, ParamSpec ps)
+  private void _notify_nickname_cb (Object persona, ParamSpec ps)
     {
       Trf.Persona p = (Trf.Persona) persona;
-      if (p.alias == this._modified_alias)
+      if (p.nickname == this._modified_nickname)
         {
-          this._modified_alias_found = true;
+          this._modified_nickname_found = true;
           this._main_loop.quit ();
         }
     }
@@ -165,7 +159,7 @@ public int main (string[] args)
   Test.init (ref args);
 
   TestSuite root = TestSuite.get_root ();
-  root.add_suite (new SetAliasTests ().get_suite ());
+  root.add_suite (new SetNicknameTests ().get_suite ());
 
   Test.run ();
 

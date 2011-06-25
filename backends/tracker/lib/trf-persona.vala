@@ -30,7 +30,6 @@ using Tracker.Sparql;
  * A persona subclass which represents a single nco:Contact.
  */
 public class Trf.Persona : Folks.Persona,
-    AliasDetails,
     AvatarDetails,
     BirthdayDetails,
     EmailDetails,
@@ -46,7 +45,7 @@ public class Trf.Persona : Folks.Persona,
     UrlDetails,
     WebServiceDetails
 {
-  private string _alias;
+  private string _nickname;
   private bool _is_favourite;
   private const string[] _linkable_properties =
       {"im-addresses", "local-ids", "web-service-addresses"};
@@ -58,21 +57,21 @@ public class Trf.Persona : Folks.Persona,
   private string _tracker_id;
 
   /**
-   * An alias for the Persona.
+   * A nickname for the Persona.
    *
-   * See {@link Folks.AliasDetails.alias}.
+   * See {@link Folks.NameDetails.nickname}.
    */
-  public string alias
+  public string nickname
     {
-      get { return this._alias; }
+      get { return this._nickname; }
 
       set
         {
-          if (this._alias == value)
+          if (this._nickname == value)
             return;
-          this._alias = value;
-          this.notify_property ("alias");
-          ((Trf.PersonaStore) this.store)._set_alias (this, value);
+          this._nickname = value;
+          this.notify_property ("nickname");
+          ((Trf.PersonaStore) this.store)._set_nickname (this, value);
         }
     }
 
@@ -148,12 +147,6 @@ public class Trf.Persona : Folks.Persona,
           ((Trf.PersonaStore) this.store)._set_full_name (this, value);
         }
     }
-
-  private string _nickname;
-  /**
-   * {@inheritDoc}
-   */
-  public string nickname { get { return this._nickname; } }
 
   private Gender _gender;
   /**
@@ -466,15 +459,6 @@ public class Trf.Persona : Folks.Persona,
         }
     }
 
-  internal void _update_alias (string? alias)
-    {
-      if (alias != null && this._alias != alias)
-        {
-          this._alias = alias;
-          this.notify_property ("alias");
-        }
-    }
-
   internal void _update_family_name (string? family_name)
     {
       if (family_name != null)
@@ -771,8 +755,8 @@ public class Trf.Persona : Folks.Persona,
       string fullname = this._cursor.get_string (Trf.Fields.FULL_NAME).dup ();
       this._update_full_name (fullname);
 
-      string alias = this._cursor.get_string (Trf.Fields.ALIAS).dup ();
-      this._update_alias (alias);
+      string nickname = this._cursor.get_string (Trf.Fields.NICKNAME).dup ();
+      this._update_nickname (nickname);
 
       string family_name = this._cursor.get_string (
           Trf.Fields.FAMILY_NAME).dup ();

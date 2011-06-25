@@ -75,7 +75,7 @@ noinst_PROGRAMS = \
 	avatar-updates  \
 	add-persona  \
 	remove-persona  \
-	set-alias  \
+	set-nickname  \
 	set-favourite  \
 	set-phones  \
 	set-emails  \
@@ -243,8 +243,8 @@ remove_persona_SOURCES = \
 	remove-persona.vala \
 	$(NULL)
 
-set_alias_SOURCES = \
-	set-alias.vala \
+set_nickname_SOURCES = \
+	set-nickname.vala \
 	$(NULL)
 
 set_favourite_SOURCES = \
@@ -387,7 +387,7 @@ MAINTAINERCLEANFILES = \
         avatar_updates_vala.stamp \
         add_persona_vala.stamp \
         remove_persona_vala.stamp \
-        set_alias_vala.stamp \
+        set_nickname_vala.stamp \
         set_favourite_vala.stamp \
         set_phones_vala.stamp \
         set_emails_vala.stamp \

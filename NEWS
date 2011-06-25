@@ -16,11 +16,13 @@ Bugs fixed:
 * Bug 653746 — mismatch between hash and equals in Note
 * Bug 638281 — Add an EDS backend
 * Bug 654509 — Folks master not building
+* Bug 652048 — Make nickname writable
 
 API changes:
 * Swf.Persona retains and exposes its libsocialweb Contact
 * Add a PresenceDetails.presence_status property
 * Make NameDetails.nickname settable
+* Drop AliasDetails support from Trf.Persona
 
 Overview of changes from libfolks 0.5.1 to libfolks 0.5.2
 =========================================================

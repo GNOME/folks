@@ -29,7 +29,7 @@ public class AddPersonaTests : Folks.TestCase
   private TrackerTest.Backend _tracker_backend;
   private IndividualAggregator _aggregator;
   private string _persona_fullname;
-  private string _persona_alias;
+  private string _persona_nickname;
   private string _family_name;
   private string _given_name;
   private HashTable<string, bool> _properties_found;
@@ -80,7 +80,7 @@ public class AddPersonaTests : Folks.TestCase
     {
       this._main_loop = new GLib.MainLoop (null, false);
       this._persona_fullname = "persona #1";
-      this._persona_alias = "alias";
+      this._persona_nickname = "nickname";
       this._family_name = "family";
       this._given_name = "given";
       this._persona_iid = "";
@@ -108,7 +108,7 @@ public class AddPersonaTests : Folks.TestCase
       this._properties_found = new HashTable<string, bool>
           (str_hash, str_equal);
       this._properties_found.insert ("full_name", false);
-      this._properties_found.insert ("alias", false);
+      this._properties_found.insert ("nickname", false);
       this._properties_found.insert ("is_favourite", false);
       this._properties_found.insert ("structured_name", false);
       this._properties_found.insert ("avatar", false);
@@ -184,8 +184,8 @@ public class AddPersonaTests : Folks.TestCase
           (owned) v1);
 
       Value? v2 = Value (typeof (string));
-      v2.set_string (this._persona_alias);
-      details.insert (Folks.PersonaStore.detail_key (PersonaDetail.ALIAS),
+      v2.set_string (this._persona_nickname);
+      details.insert (Folks.PersonaStore.detail_key (PersonaDetail.NICKNAME),
           (owned) v2);
 
       Value? v3 = Value (typeof (bool));
@@ -331,7 +331,7 @@ public class AddPersonaTests : Folks.TestCase
                 }
 
               i.notify["full-name"].connect (this._notify_cb);
-              i.notify["alias"].connect (this._notify_cb);
+              i.notify["nickname"].connect (this._notify_cb);
               i.notify["avatar"].connect (this._notify_cb);
               i.notify["is-favourite"].connect (this._notify_cb);
               i.notify["structured-name"].connect (this._notify_cb);
@@ -391,8 +391,8 @@ public class AddPersonaTests : Folks.TestCase
       if (i.full_name == this._persona_fullname)
         this._properties_found.replace ("full_name", true);
 
-      if (i.alias == this._persona_alias)
-        this._properties_found.replace ("alias", true);
+      if (i.nickname == this._persona_nickname)
+        this._properties_found.replace ("nickname", true);
 
       if (i.is_favourite)
         this._properties_found.replace ("is_favourite", true);

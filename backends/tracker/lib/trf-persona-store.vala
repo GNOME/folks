@@ -38,7 +38,7 @@ internal enum Trf.Fields
   ADDITIONAL_NAMES,
   PREFIXES,
   SUFFIXES,
-  ALIAS,
+  NICKNAME,
   BIRTHDAY,
   AVATAR_URL,
   IM_ADDRESSES,
@@ -380,7 +380,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
    *
    * Accepted keys for `details` are:
    * - PersonaStore.detail_key (PersonaDetail.IM_ADDRESSES)
-   * - PersonaStore.detail_key (PersonaDetail.ALIAS)
+   * - PersonaStore.detail_key (PersonaDetail.NICKNAME)
    * - PersonaStore.detail_key (PersonaDetail.FULL_NAME)
    * - PersonaStore.detail_key (PersonaDetail.IS_FAVOURITE)
    * - PersonaStore.detail_key (PersonaDetail.STRUCTURED_NAME)
@@ -410,7 +410,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
       foreach (var k in details.get_keys ())
         {
           Value? v = details.lookup (k);
-          if (k == Folks.PersonaStore.detail_key (PersonaDetail.ALIAS))
+          if (k == Folks.PersonaStore.detail_key (PersonaDetail.NICKNAME))
             {
               builder.subject ("_:p");
               builder.predicate (Trf.OntologyDefs.NCO_NICKNAME);
@@ -1319,14 +1319,14 @@ public class Trf.PersonaStore : Folks.PersonaStore
       else if (e.pred_id ==
                this._prefix_tracker_id.get (Trf.OntologyDefs.NCO_NICKNAME))
         {
-          string alias = "";
+          string nickname = "";
           if (adding)
             {
-              alias =
+              nickname =
                 yield this._get_property (
                     e.subject_id, Trf.OntologyDefs.NCO_NICKNAME);
             }
-          p._update_alias (alias);
+          p._update_nickname (nickname);
         }
       else if (e.pred_id ==
                this._prefix_tracker_id.get (Trf.OntologyDefs.NCO_FAMILY))
@@ -1823,7 +1823,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
       return yield this._single_value_query (query.printf (tracker_id));
     }
 
-  internal async void _set_alias (Trf.Persona persona, string alias)
+  internal async void _set_nickname (Trf.Persona persona, string nickname)
     {
       const string query_t = "DELETE { "+
         " ?p " + Trf.OntologyDefs.NCO_NICKNAME + " ?n  " +
@@ -1841,10 +1841,10 @@ public class Trf.PersonaStore : Folks.PersonaStore
         "FILTER (tracker:id(?p) = %s) " +
         "} ";
 
-      string query = query_t.printf (persona.tracker_id (), alias,
+      string query = query_t.printf (persona.tracker_id (), nickname,
           persona.tracker_id ());
 
-      yield this._tracker_update (query, "change_alias");
+      yield this._tracker_update (query, "change_nickname");
     }
 
   internal async void _set_local_ids (Trf.Persona persona,
