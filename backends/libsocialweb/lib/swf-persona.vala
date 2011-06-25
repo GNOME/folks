@@ -72,7 +72,11 @@ public class Swf.Persona : Folks.Persona,
   /**
    * {@inheritDoc}
    */
-  public string nickname { get { return this._nickname; } }
+  public string nickname
+    {
+      get { return this._nickname; }
+      private set {}
+    }
 
   /**
    * {@inheritDoc}

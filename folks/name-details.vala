@@ -242,7 +242,11 @@ public interface Folks.NameDetails : Object
    * different from {@link AliasDetails.alias} as aliases can be chosen by
    * the user and not by the contacts themselves.
    *
+   * Consequently, setting the nickname only makes sense in the context of an
+   * address book when updating the information a contact has specified about
+   * themselves.
+   *
    * @since 0.3.5
    */
-  public abstract string nickname { get; }
+  public abstract string nickname { get; set; }
 }

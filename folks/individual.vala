@@ -98,6 +98,7 @@ public class Folks.Individual : Object,
   private uint _persona_user_count = 0;
   private HashMultiMap<string, string> _im_addresses;
   private HashMultiMap<string, string> _web_service_addresses;
+  private string _nickname = "";
 
   /**
    * The trust level of the Individual.
@@ -248,11 +249,57 @@ public class Folks.Individual : Object,
    */
   public string full_name { get; private set; }
 
-  private string _nickname;
   /**
    * {@inheritDoc}
    */
-  public string nickname { get { return this._nickname; } }
+  public string nickname
+    {
+      get { return this._nickname; }
+
+      set
+        {
+          // Normalise null values to the empty string
+          if (value == null)
+            value = "";
+
+          if (this._nickname == value)
+            return;
+
+          this._nickname = value;
+
+          debug ("Setting nickname of individual '%s' to '%s'…", this.id,
+              value);
+
+          /* First, try to write it to only the writeable Personas… */
+          var nickname_changed = false;
+          foreach (var p in this._persona_set)
+            {
+              if (p is NameDetails &&
+                  ((Persona) p).store.is_writeable == true)
+                {
+                  debug ("    written to writeable persona '%s'",
+                      ((Persona) p).uid);
+                  ((NameDetails) p).nickname = value;
+                  nickname_changed = true;
+                }
+            }
+
+          /* …but if there are no writeable Personas, we have to fall back to
+           * writing it to every Persona. */
+          if (nickname_changed == false)
+            {
+              foreach (var p in this._persona_set)
+                {
+                  if (p is NameDetails)
+                    {
+                      debug ("    written to non-writeable persona '%s'",
+                          ((Persona) p).uid);
+                      ((NameDetails) p).nickname = value;
+                    }
+                }
+            }
+        }
+    }
 
   private Gender _gender;
   /**
@@ -1154,7 +1201,7 @@ public class Folks.Individual : Object,
 
   private void _update_nickname ()
     {
-      string? new_nickname = null;
+      string new_nickname = "";
 
       foreach (var persona in this._persona_set)
         {

@@ -107,6 +107,8 @@ public errordomain Folks.PersonaStoreError
  *
  * @since 0.5.0
  */
+/* NOTE: Must be kept in sync with
+ * {@link Folks.PersonaStore._PERSONA_DETAIL}. */
 public enum Folks.PersonaDetail
 {
   ALIAS,
@@ -118,6 +120,7 @@ public enum Folks.PersonaDetail
   IM_ADDRESSES,
   IS_FAVOURITE,
   LOCAL_IDS,
+  NICKNAME,
   NOTES,
   PHONE_NUMBERS,
   POSTAL_ADDRESSES,
@@ -147,7 +150,7 @@ public abstract class Folks.PersonaStore : Object
    * allowed to support keys beyond the ones defined here
    * which might be specific to the backend in question.
    *
-   * Should be kept in sync with {@link Folks.PersonaDetail}.
+   * NOTE: MUST be kept in sync with {@link Folks.PersonaDetail}.
    *
    * @since 0.5.0
    */
@@ -161,6 +164,7 @@ public abstract class Folks.PersonaStore : Object
     "im-addresses",
     "is-favourite",
     "local-ids",
+    "nickname",
     "notes",
     "phone-numbers",
     "postal-addresses",
