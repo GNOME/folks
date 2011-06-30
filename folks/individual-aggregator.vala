@@ -139,7 +139,7 @@ public class Folks.IndividualAggregator : Object
    * This will not be emitted until after {@link IndividualAggregator.prepare}
    * has been called.
    *
-   * @param added a list of {@link Individual}s which have been removed
+   * @param added a list of {@link Individual}s which have been added
    * @param removed a list of {@link Individual}s which have been removed
    * @param message a string message from the backend, if any
    * @param actor the {@link Persona} who made the change, if known
