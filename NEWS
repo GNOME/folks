@@ -13,6 +13,7 @@ Bugs fixed:
 * Bug 652449 — Folks.Individual's property getters should be read only
 * Bug 653325 — Build system does not complain if trying to build docs without
   vala-doc installed
+* Bug 653746 — mismatch between hash and equals in Note
 
 API changes:
 * Swf.Persona retains and exposes its libsocialweb Contact

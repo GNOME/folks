@@ -59,11 +59,12 @@ public class Folks.Note : Object
     }
 
   /**
-   * Compare if 2 notes are equal
+   * Compare if 2 notes are equal. This compares both their {@link Note.content}
+   * and {@link Note.uid} (if set).
    */
   public static bool equal (Note a, Note b)
     {
-      return (a.content == b.content);
+      return (a.uid == b.uid && a.content == b.content);
     }
 
   /**
