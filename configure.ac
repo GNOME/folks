@@ -130,6 +130,7 @@ PKG_CHECK_MODULES([GLIB],
                    gobject-2.0 >= $GLIB_REQUIRED])
 PKG_CHECK_MODULES([GMODULE], [gmodule-no-export-2.0])
 PKG_CHECK_MODULES([GIO], [gio-2.0 >= $GLIB_REQUIRED])
+PKG_CHECK_MODULES([DBUS_GLIB], [dbus-glib-1])
 PKG_CHECK_MODULES([GCONF2], [gconf-2.0 >= $GCONF2_REQUIRED])
 
 # FIXME: We depend on libgee < 0.7 because 0.7 breaks API. bgo#627746
