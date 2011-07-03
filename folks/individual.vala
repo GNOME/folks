@@ -738,29 +738,19 @@ public class Folks.Individual : Object,
 
   private void _store_removed_cb (PersonaStore store)
     {
-      var removed_personas = new HashSet<Persona> ();
-      var iter = this._persona_set.iterator ();
-      while (iter.next ())
-        {
-          var persona = iter.get ();
+      var remaining_personas = new HashSet<Persona> ();
 
-          removed_personas.add (persona);
-          iter.remove ();
+      /* Build a set of the remaining personas (those which weren't in the
+       * removed store. */
+      foreach (var persona in this._persona_set)
+        {
+          if (persona.store != store)
+            {
+              remaining_personas.add (persona);
+            }
         }
 
-      if (removed_personas != null)
-        this._emit_personas_changed (null, removed_personas);
-
-      if (store != null)
-        this._stores.unset (store);
-
-      if (this._persona_set.size < 1)
-        {
-          this.removed (null);
-          return;
-        }
-
-      this._update_fields ();
+      this._set_personas (remaining_personas, null);
     }
 
   private void _store_personas_changed_cb (PersonaStore store,
@@ -770,25 +760,19 @@ public class Folks.Individual : Object,
       Persona? actor,
       GroupDetails.ChangeReason reason)
     {
-      var removed_personas = new HashSet<Persona> ();
-      foreach (var p in removed)
+      var remaining_personas = new HashSet<Persona> ();
+
+      /* Build a set of the remaining personas (those which aren't in the
+       * set of removed personas). */
+      foreach (var persona in this._persona_set)
         {
-          if (this._persona_set.remove (p))
+          if (!removed.contains (persona))
             {
-              removed_personas.add (p);
+              remaining_personas.add (persona);
             }
         }
 
-      if (removed_personas != null)
-        this._emit_personas_changed (null, removed_personas);
-
-      if (this._persona_set.size < 1)
-        {
-          this.removed (null);
-          return;
-        }
-
-      this._update_fields ();
+      this._set_personas (remaining_personas, null);
     }
 
   private void _update_fields ()
