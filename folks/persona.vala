@@ -30,6 +30,8 @@ using GLib;
  */
 public abstract class Folks.Persona : Object
 {
+  private weak Individual _individual;
+
   /**
    * The internal ID used to represent the Persona for linking.
    *
@@ -103,6 +105,33 @@ public abstract class Folks.Persona : Object
    * The {@link PersonaStore} which contains this Persona.
    */
   public weak PersonaStore store { get; construct; }
+
+  /**
+   * The {@link Individual} which contains this Persona.
+   *
+   * This may be `null`, but should only ever be so when the Persona has just
+   * been created, when its {@link PersonaStore} is being destroyed, or when
+   * it's moving between {@link Individual}s.
+   *
+   * @since UNRELEASED
+   */
+  public weak Individual? individual
+    {
+      get
+        {
+          assert (this._individual == null ||
+              this._individual.personas.contains (this));
+
+          return this._individual;
+        }
+
+      internal set
+        {
+          assert (value == null || value.personas.contains (this));
+
+          this._individual = value;
+        }
+    }
 
   /**
    * The names of the properties of this Persona which are linkable.

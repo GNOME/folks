@@ -1101,6 +1101,8 @@ public class Folks.Individual : Object,
 
   private void _connect_to_persona (Persona persona)
     {
+      persona.individual = this;
+
       persona.notify["alias"].connect (this._notify_alias_cb);
       persona.notify["avatar"].connect (this._notify_avatar_cb);
       persona.notify["presence-message"].connect (this._notify_presence_cb);
@@ -1208,7 +1210,8 @@ public class Folks.Individual : Object,
         }
     }
 
-  private void _disconnect_from_persona (Persona persona)
+  private void _disconnect_from_persona (Persona persona,
+      Individual? replacement_individual)
     {
       persona.notify["alias"].disconnect (this._notify_alias_cb);
       persona.notify["avatar"].disconnect (this._notify_avatar_cb);
@@ -1244,6 +1247,8 @@ public class Folks.Individual : Object,
           ((GroupDetails) persona).group_changed.disconnect (
               this._persona_group_changed_cb);
         }
+
+      persona.individual = replacement_individual;
     }
 
   private void _update_gender ()
@@ -1558,7 +1563,7 @@ public class Folks.Individual : Object,
                   this._stores.unset (store);
                 }
 
-              this._disconnect_from_persona (p);
+              this._disconnect_from_persona (p, replacement_individual);
               iter.remove ();
             }
         }
