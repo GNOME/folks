@@ -746,27 +746,24 @@ public class Trf.PersonaStore : Folks.PersonaStore
       builder.insert_close ();
 
       Trf.Persona ret = null;
-      lock (this._personas)
+      string? contact_urn = yield this._insert_persona (builder.result,
+          "p");
+      if (contact_urn != null)
         {
-          string? contact_urn = yield this._insert_persona (builder.result,
-              "p");
-          if (contact_urn != null)
-            {
-              string filter = " FILTER(?_contact = <%s>) ".printf (contact_urn);
-              string query = this._INITIAL_QUERY.printf (filter);
-              var ret_personas = yield this._do_add_contacts (query);
+          string filter = " FILTER(?_contact = <%s>) ".printf (contact_urn);
+          string query = this._INITIAL_QUERY.printf (filter);
+          var ret_personas = yield this._do_add_contacts (query);
 
-              /* Return the first persona we find in the set */
-              foreach (var p in ret_personas)
-                {
-                  ret = p;
-                  break;
-                }
-            }
-          else
+          /* Return the first persona we find in the set */
+          foreach (var p in ret_personas)
             {
-              debug ("Failed to inserting the new persona  into Tracker.");
+              ret = p;
+              break;
             }
+        }
+      else
+        {
+          debug ("Failed to inserting the new persona  into Tracker.");
         }
 
       // Set the avatar on the persona now that we know the persona's UID
@@ -1391,16 +1388,21 @@ public class Trf.PersonaStore : Folks.PersonaStore
       try {
         Sparql.Cursor cursor = yield this._connection.query_async (query);
 
-        while (cursor.next ())
+        lock (this._personas)
           {
-            int tracker_id = (int) cursor.get_integer (Trf.Fields.TRACKER_ID);
-            var p_id = Trf.Persona.build_iid (this.id, tracker_id.to_string ());
-            if (this._personas.get (p_id) == null)
+            while (cursor.next ())
               {
-                var persona = new Trf.Persona (this,
-                    tracker_id.to_string (), cursor);
-                this._personas.set (persona.iid, persona);
-                added_personas.add (persona);
+                int tracker_id =
+                    (int) cursor.get_integer (Trf.Fields.TRACKER_ID);
+                var p_id =
+                    Trf.Persona.build_iid (this.id, tracker_id.to_string ());
+                if (this._personas.get (p_id) == null)
+                  {
+                    var persona = new Trf.Persona (this,
+                        tracker_id.to_string (), cursor);
+                    this._personas.set (persona.iid, persona);
+                    added_personas.add (persona);
+                  }
               }
           }
 
