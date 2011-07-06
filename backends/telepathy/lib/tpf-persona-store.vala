@@ -565,6 +565,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
                   "(ID: %s)", this.id);
 
               this._is_prepared = true;
+              this._prepare_pending = false;
               this.notify_property ("is-prepared");
             }
           finally

@@ -1144,6 +1144,10 @@ public class Trf.PersonaStore : Folks.PersonaStore
                   this.removed ();
                   throw new PersonaStoreError.INVALID_ARGUMENT (e3.message);
                 }
+              finally
+                {
+                  this._prepare_pending = false;
+                }
             }
           finally
             {

@@ -235,6 +235,7 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
                               _("The relationship key file '%s' could not be loaded: %s"),
                               filename, e1.message);
                           this.removed ();
+                          this._prepare_pending = false;
                           return;
                         }
                     }
@@ -257,6 +258,7 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
                               _("The relationship key file directory '%s' could not be created: %s"),
                               parent_dir.get_path (), e3.message);
                           this.removed ();
+                          this._prepare_pending = false;
                           return;
                         }
                     }
@@ -281,6 +283,7 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
                               _("The relationship key file '%s' could not be created: %s"),
                               filename, e2.message);
                           this.removed ();
+                          this._prepare_pending = false;
                           return;
                         }
                     }
@@ -306,6 +309,7 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
                 }
 
               this._is_prepared = true;
+              this._prepare_pending = false;
               this.notify_property ("is-prepared");
 
               /* We've finished loading all the personas we know about */
