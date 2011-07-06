@@ -45,6 +45,7 @@ AM_VALAFLAGS = \
 # in order from least to most complex
 noinst_PROGRAMS = \
 	abstract-field-details \
+	async-locking \
 	utils \
 	backend-loading \
 	aggregation \
@@ -79,6 +80,10 @@ abstract_field_details_SOURCES = \
 	abstract-field-details.vala \
 	$(NULL)
 
+async_locking_SOURCES = \
+	async-locking.vala \
+	$(NULL)
+
 utils_SOURCES = \
 	utils.vala \
 	$(NULL)
@@ -106,6 +111,7 @@ MAINTAINERCLEANFILES = \
         backend_loading_vala.stamp \
         aggregation_vala.stamp \
         abstract_field_details_vala.stamp \
+        async_locking_vala.stamp \
         utils_vala.stamp \
         avatar_cache_vala.stamp \
         object_cache_vala.stamp \
