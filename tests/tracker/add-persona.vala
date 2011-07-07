@@ -393,14 +393,10 @@ public class AddPersonaTests : Folks.TestCase
 
   private void _try_to_add ()
     {
-      lock (this._added_persona)
+      if (this._pstore.is_prepared && this._added_persona == false)
         {
-          if (this._pstore.is_prepared &&
-              this._added_persona == false)
-            {
-              this._added_persona = true;
-              this._add_persona ();
-            }
+          this._added_persona = true;
+          this._add_persona ();
         }
     }
 

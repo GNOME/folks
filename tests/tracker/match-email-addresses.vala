@@ -153,14 +153,10 @@ public class MatchEmailAddressesTests : Folks.TestCase
 
   private async void _try_to_add ()
     {
-      lock (this._added_personas)
+      if (this._pstore.is_prepared && this._added_personas == false)
         {
-          if (this._pstore.is_prepared &&
-              this._added_personas == false)
-            {
-              this._added_personas = true;
-              yield this._add_personas ();
-            }
+          this._added_personas = true;
+          yield this._add_personas ();
         }
     }
 
