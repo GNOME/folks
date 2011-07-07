@@ -318,101 +318,98 @@ public class Swf.PersonaStore : Folks.PersonaStore
     {
       Internal.profiling_start ("preparing Swf.PersonaStore (ID: %s)", this.id);
 
-      lock (this._is_prepared)
+      if (!this._is_prepared && !this._prepare_pending)
         {
-          if (!this._is_prepared && !this._prepare_pending)
+          this._prepare_pending = true;
+
+          /* Get the service's capabilities. */
+          string[]? caps = null;
+
+          try
             {
-              this._prepare_pending = true;
+              caps = yield this._get_static_capabilities ();
 
-              /* Get the service's capabilities. */
-              string[]? caps = null;
+              Internal.profiling_point ("got capabilities in " +
+                  "Swf.PersonaStore (ID: %s)", this.id);
 
-              try
+              if (caps == null)
                 {
-                  caps = yield this._get_static_capabilities ();
-
-                  Internal.profiling_point ("got capabilities in " +
-                      "Swf.PersonaStore (ID: %s)", this.id);
-
-                  if (caps == null)
-                    {
-                      throw new PersonaStoreError.INVALID_ARGUMENT (
-                          /* Translators: the parameter is an error message. */
-                          _("Couldn’t prepare libsocialweb service: %s"),
-                          _("No capabilities were found."));
-                    }
-                }
-              catch (GLib.Error e1)
-                {
-                  /* Remove the persona store on error */
-                  this.removed ();
-                  this._prepare_pending = false;
-
-                  throw e1;
-                }
-
-              /* Check for the contacts query interface. */
-              bool has_contacts = ClientService.has_cap (caps,
-                  "has-contacts-query-iface");
-              if (!has_contacts)
-                {
-                  /* Remove the persona store on error */
-                  this.removed ();
-                  this._prepare_pending = false;
-
                   throw new PersonaStoreError.INVALID_ARGUMENT (
                       /* Translators: the parameter is an error message. */
                       _("Couldn’t prepare libsocialweb service: %s"),
-                      _("No contacts capability was found."));
+                      _("No capabilities were found."));
                 }
-
-              /* Open a contacts query view. */
-              var contact_view = yield this._contacts_query_open_view ("people",
-                  new HashTable<weak string, weak string> (str_hash,
-                      str_equal));
-
-              Internal.profiling_point ("opened view in Swf.PersonaStore " +
-                  "(ID: %s)", this.id);
-
-              /* Propagate errors from the contacts_query_open_view()
-               * callback. */
-              if (contact_view == null)
-                {
-                  /* Remove the persona store on error */
-                  this.removed ();
-                  this._prepare_pending = false;
-
-                  throw new PersonaStoreError.INVALID_ARGUMENT (
-                      /* Translators: the parameter is an error message. */
-                      _("Couldn’t prepare libsocialweb service: %s"),
-                      _("Error opening contacts view."));
-                }
-
-              contact_view.contacts_added.connect (this.contacts_added_cb);
-              contact_view.contacts_changed.connect (this.contacts_changed_cb);
-              contact_view.contacts_removed.connect (this.contacts_removed_cb);
-
-              this._contact_view = contact_view;
-              this._is_prepared = true;
-              this._prepare_pending = false;
-              this.notify_property ("is-prepared");
-
-              /* FIXME: for lsw Stores with 0 contacts or badly configured (or
-               * not authenticated, etc) we are condemned to never reach
-               * quiescence if we wait for contacts to be added. A possible way
-               * around this would be, if libsocialweb provided such properties,
-               * to query the social client to see if it's available
-               * (authenticated and ready) and the number of contacts that we
-               * would (eventually) get. That is the only way we could ever
-               * reach quiescence without waiting for eternity.
-               *
-               * See: https://bugzilla.gnome.org/show_bug.cgi?id=658445
-               */
-              this._is_quiescent = true;
-              this.notify_property ("is-quiescent");
-
-              this._contact_view.start ();
             }
+          catch (GLib.Error e1)
+            {
+              /* Remove the persona store on error */
+              this.removed ();
+              this._prepare_pending = false;
+
+              throw e1;
+            }
+
+          /* Check for the contacts query interface. */
+          bool has_contacts = ClientService.has_cap (caps,
+              "has-contacts-query-iface");
+          if (!has_contacts)
+            {
+              /* Remove the persona store on error */
+              this.removed ();
+              this._prepare_pending = false;
+
+              throw new PersonaStoreError.INVALID_ARGUMENT (
+                  /* Translators: the parameter is an error message. */
+                  _("Couldn’t prepare libsocialweb service: %s"),
+                  _("No contacts capability was found."));
+            }
+
+          /* Open a contacts query view. */
+          var contact_view = yield this._contacts_query_open_view ("people",
+              new HashTable<weak string, weak string> (str_hash,
+                  str_equal));
+
+          Internal.profiling_point ("opened view in Swf.PersonaStore " +
+              "(ID: %s)", this.id);
+
+          /* Propagate errors from the contacts_query_open_view()
+           * callback. */
+          if (contact_view == null)
+            {
+              /* Remove the persona store on error */
+              this.removed ();
+              this._prepare_pending = false;
+
+              throw new PersonaStoreError.INVALID_ARGUMENT (
+                  /* Translators: the parameter is an error message. */
+                  _("Couldn’t prepare libsocialweb service: %s"),
+                  _("Error opening contacts view."));
+            }
+
+          contact_view.contacts_added.connect (this.contacts_added_cb);
+          contact_view.contacts_changed.connect (this.contacts_changed_cb);
+          contact_view.contacts_removed.connect (this.contacts_removed_cb);
+
+          this._contact_view = contact_view;
+          this._is_prepared = true;
+          this._prepare_pending = false;
+          this.notify_property ("is-prepared");
+
+          /* FIXME: for lsw Stores with 0 contacts or badly configured (or
+           * not authenticated, etc) we are condemned to never reach
+           * quiescence if we wait for contacts to be added. A possible way
+           * around this would be, if libsocialweb provided such properties,
+           * to query the social client to see if it's available
+           * (authenticated and ready) and the number of contacts that we
+           * would (eventually) get. That is the only way we could ever
+           * reach quiescence without waiting for eternity.
+           *
+           * See: https://bugzilla.gnome.org/show_bug.cgi?id=658445
+           */
+          this._is_quiescent = true;
+          this.notify_property ("is-quiescent");
+
+          this._contact_view.start ();
         }
 
       Internal.profiling_end ("preparing Swf.PersonaStore (ID: %s)", this.id);
