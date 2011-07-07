@@ -544,6 +544,7 @@ public class Folks.IndividualAggregator : Object
               this._non_quiescent_backend_count--;
 
               this._is_prepared = true;
+              this._prepare_pending = false;
               this.notify_property ("is-prepared");
 
               /* Mark the aggregator as having reached a quiescent state if
