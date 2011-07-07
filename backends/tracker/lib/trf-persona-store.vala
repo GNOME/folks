@@ -1066,93 +1066,90 @@ public class Trf.PersonaStore : Folks.PersonaStore
     {
       Internal.profiling_start ("preparing Trf.PersonaStore (ID: %s)", this.id);
 
-      lock (this._is_prepared)
+      if (this._is_prepared || this._prepare_pending)
         {
-          if (this._is_prepared || this._prepare_pending)
-            {
-              return;
-            }
+          return;
+        }
+
+      try
+        {
+          this._prepare_pending = true;
 
           try
             {
-              this._prepare_pending = true;
+              this._connection =
+                yield Tracker.Sparql.Connection.get_async ();
 
-              try
-                {
-                  this._connection =
-                    yield Tracker.Sparql.Connection.get_async ();
+              Internal.profiling_point ("got connection in " +
+                  "Trf.PersonaStore (ID: %s)", this.id);
 
-                  Internal.profiling_point ("got connection in " +
-                      "Trf.PersonaStore (ID: %s)", this.id);
+              yield this._build_predicates_table ();
 
-                  yield this._build_predicates_table ();
+              Internal.profiling_point ("build predicates table in " +
+                  "Trf.PersonaStore (ID: %s)", this.id);
 
-                  Internal.profiling_point ("build predicates table in " +
-                      "Trf.PersonaStore (ID: %s)", this.id);
+              yield this._do_add_contacts (this._INITIAL_QUERY.printf (""));
 
-                  yield this._do_add_contacts (this._INITIAL_QUERY.printf (""));
+              Internal.profiling_point ("added contacts in " +
+                  "Trf.PersonaStore (ID: %s)", this.id);
 
-                  Internal.profiling_point ("added contacts in " +
-                      "Trf.PersonaStore (ID: %s)", this.id);
+              /* Don't add a match rule for all signals from Tracker but
+               * only for GraphUpdated with the specific class we need. We
+               * don't want to be woken up for irrelevent updates on the
+               * graph.
+               */
+              this._resources_object = yield GLib.Bus.get_proxy<Resources> (
+                  BusType.SESSION,
+                  this._OBJECT_NAME,
+                  this._OBJECT_PATH,
+                  DBusProxyFlags.DO_NOT_CONNECT_SIGNALS |
+                    DBusProxyFlags.DO_NOT_LOAD_PROPERTIES);
+              this._resources_object.g_connection.signal_subscribe
+                  (this._OBJECT_NAME, this._OBJECT_IFACE,
+                  "GraphUpdated", this._OBJECT_PATH,
+                  Trf.OntologyDefs.PERSON_CLASS, GLib.DBusSignalFlags.NONE,
+                  this._graph_updated_cb);
 
-                  /* Don't add a match rule for all signals from Tracker but
-                   * only for GraphUpdated with the specific class we need. We
-                   * don't want to be woken up for irrelevent updates on the
-                   * graph.
-                   */
-                  this._resources_object = yield GLib.Bus.get_proxy<Resources> (
-                      BusType.SESSION,
-                      this._OBJECT_NAME,
-                      this._OBJECT_PATH,
-                      DBusProxyFlags.DO_NOT_CONNECT_SIGNALS |
-                        DBusProxyFlags.DO_NOT_LOAD_PROPERTIES);
-                  this._resources_object.g_connection.signal_subscribe
-                      (this._OBJECT_NAME, this._OBJECT_IFACE,
-                      "GraphUpdated", this._OBJECT_PATH,
-                      Trf.OntologyDefs.PERSON_CLASS, GLib.DBusSignalFlags.NONE,
-                      this._graph_updated_cb);
+              Internal.profiling_point ("got resources proxy in " +
+                  "Trf.PersonaStore (ID: %s)", this.id);
 
-                  Internal.profiling_point ("got resources proxy in " +
-                      "Trf.PersonaStore (ID: %s)", this.id);
+              this._is_prepared = true;
+              this.notify_property ("is-prepared");
 
-                  this._is_prepared = true;
-                  this.notify_property ("is-prepared");
-
-                  /* By this time (due to having done the INITIAL_QUERY above)
-                   * we have already reached a quiescent state. */
-                  this._is_quiescent = true;
-                  this.notify_property ("is-quiescent");
-                }
-              catch (GLib.IOError e1)
-                {
-                  warning ("Could not connect to D-Bus service: %s",
-                           e1.message);
-                  this.removed ();
-                  throw new PersonaStoreError.INVALID_ARGUMENT (e1.message);
-                }
-              catch (Tracker.Sparql.Error e2)
-                {
-                  warning ("Error fetching SPARQL connection handler: %s",
-                           e2.message);
-                  this.removed ();
-                  throw new PersonaStoreError.INVALID_ARGUMENT (e2.message);
-                }
-              catch (GLib.DBusError e3)
-                {
-                  warning ("Could not connect to D-Bus service: %s",
-                           e3.message);
-                  this.removed ();
-                  throw new PersonaStoreError.INVALID_ARGUMENT (e3.message);
-                }
-              finally
-                {
-                  this._prepare_pending = false;
-                }
+              /* By this time (due to having done the INITIAL_QUERY above)
+               * we have already reached a quiescent state. */
+              this._is_quiescent = true;
+              this.notify_property ("is-quiescent");
+            }
+          catch (GLib.IOError e1)
+            {
+              warning ("Could not connect to D-Bus service: %s",
+                       e1.message);
+              this.removed ();
+              throw new PersonaStoreError.INVALID_ARGUMENT (e1.message);
+            }
+          catch (Tracker.Sparql.Error e2)
+            {
+              warning ("Error fetching SPARQL connection handler: %s",
+                       e2.message);
+              this.removed ();
+              throw new PersonaStoreError.INVALID_ARGUMENT (e2.message);
+            }
+          catch (GLib.DBusError e3)
+            {
+              warning ("Could not connect to D-Bus service: %s",
+                       e3.message);
+              this.removed ();
+              throw new PersonaStoreError.INVALID_ARGUMENT (e3.message);
             }
           finally
             {
               this._prepare_pending = false;
             }
+        }
+      finally
+        {
+          this._prepare_pending = false;
         }
 
       Internal.profiling_end ("preparing Trf.PersonaStore (ID: %s)", this.id);
