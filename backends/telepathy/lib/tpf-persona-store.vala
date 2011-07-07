@@ -448,130 +448,127 @@ public class Tpf.PersonaStore : Folks.PersonaStore
     {
       Internal.profiling_start ("preparing Tpf.PersonaStore (ID: %s)", this.id);
 
-      lock (this._is_prepared)
+      if (this._is_prepared || this._prepare_pending)
         {
-          if (this._is_prepared || this._prepare_pending)
+          return;
+        }
+
+      try
+        {
+          this._prepare_pending = true;
+
+          this._account_manager = AccountManager.dup ();
+
+          /* FIXME: Add all contact features on AM's factory. We should not
+           * force preparing all features but let app define what it needs,
+           * but this is for backward compatibility.
+           * Note that if application already prepared TpContacts before
+           * preparing this store, this will have no effect on existing
+           * contacts. */
+          var factory = this._account_manager.get_factory ();
+          factory.add_contact_features ({
+              ContactFeature.ALIAS,
+              ContactFeature.AVATAR_DATA,
+              ContactFeature.AVATAR_TOKEN,
+              ContactFeature.CAPABILITIES,
+              ContactFeature.CLIENT_TYPES,
+              ContactFeature.PRESENCE,
+              ContactFeature.CONTACT_INFO,
+              ContactFeature.CONTACT_GROUPS
+          });
+
+          this._account_manager.invalidated.connect (
+              this._account_manager_invalidated_cb);
+
+          /* Note: For the three signal handlers below, we do *not* need to
+           * store personas to the cache before removing the store, as
+           * _remove_store() deletes the cache file. */
+          this._account_manager.account_removed.connect ((a) =>
             {
-              return;
-            }
-
-          try
-            {
-              this._prepare_pending = true;
-
-              this._account_manager = AccountManager.dup ();
-
-              /* FIXME: Add all contact features on AM's factory. We should not
-               * force preparing all features but let app define what it needs,
-               * but this is for backward compatibility.
-               * Note that if application already prepared TpContacts before
-               * preparing this store, this will have no effect on existing
-               * contacts. */
-              var factory = this._account_manager.get_factory ();
-              factory.add_contact_features ({
-                  ContactFeature.ALIAS,
-                  ContactFeature.AVATAR_DATA,
-                  ContactFeature.AVATAR_TOKEN,
-                  ContactFeature.CAPABILITIES,
-                  ContactFeature.CLIENT_TYPES,
-                  ContactFeature.PRESENCE,
-                  ContactFeature.CONTACT_INFO,
-                  ContactFeature.CONTACT_GROUPS
-              });
-
-              this._account_manager.invalidated.connect (
-                  this._account_manager_invalidated_cb);
-
-              /* Note: For the three signal handlers below, we do *not* need to
-               * store personas to the cache before removing the store, as
-               * _remove_store() deletes the cache file. */
-              this._account_manager.account_removed.connect ((a) =>
+              if (this.account == a)
                 {
-                  if (this.account == a)
+                  debug ("Account %p (‘%s’) removed.", a, a.display_name);
+                  this._remove_store ();
+                }
+            });
+          this._account_manager.account_validity_changed.connect (
+              (a, valid) =>
+                {
+                  if (!valid && this.account == a)
                     {
-                      debug ("Account %p (‘%s’) removed.", a, a.display_name);
+                      debug ("Account %p (‘%s’) invalid.", a,
+                          a.display_name);
                       this._remove_store ();
                     }
                 });
-              this._account_manager.account_validity_changed.connect (
-                  (a, valid) =>
-                    {
-                      if (!valid && this.account == a)
-                        {
-                          debug ("Account %p (‘%s’) invalid.", a,
-                              a.display_name);
-                          this._remove_store ();
-                        }
-                    });
-              this._account_manager.account_disabled.connect ((a) =>
-                {
-                  if (this.account == a)
-                    {
-                      debug ("Account %p (‘%s’) disabled.", a, a.display_name);
-                      this._remove_store ();
-                    }
-                });
-
-              Internal.profiling_point ("created account manager in " +
-                  "Tpf.PersonaStore (ID: %s)", this.id);
-
-              this._avatars.clear ();
-
-              this._favourite_ids.clear ();
-              this._logger = new Logger (this.id);
-              this._logger.invalidated.connect (
-                  this._logger_invalidated_cb);
-              this._logger.favourite_contacts_changed.connect (
-                  this._favourite_contacts_changed_cb);
-              Internal.profiling_start ("initialising favourite contacts in " +
-                  "Tpf.PersonaStore (ID: %s)", this.id);
-              this._initialise_favourite_contacts.begin ((o, r) =>
-                {
-                  try
-                    {
-                      this._initialise_favourite_contacts.end (r);
-                      Internal.profiling_end ("initialising favourite " +
-                          "contacts in Tpf.PersonaStore (ID: %s)", this.id);
-                    }
-                  catch (GLib.Error e)
-                    {
-                      debug ("Failed to initialise favourite contacts: %s",
-                          e.message);
-                      this._logger = null;
-                    }
-                });
-
-              Internal.profiling_point ("created logger in Tpf.PersonaStore " +
-                  "(ID: %s)", this.id);
-
-              this.account.notify["connection"].connect (
-                  this._notify_connection_cb);
-
-              /* immediately handle accounts which are not currently being
-               * disconnected */
-              if (this.account.connection != null)
-                {
-                  this._notify_connection_cb (this.account, null);
-                }
-              else
-                {
-                  /* If we're disconnected, advertise personas from the cache
-                   * instead. */
-                  yield this._load_cache (null);
-                  this._force_quiescent ();
-                }
-
-              Internal.profiling_point ("loaded cache in Tpf.PersonaStore " +
-                  "(ID: %s)", this.id);
-
-              this._is_prepared = true;
-              this._prepare_pending = false;
-              this.notify_property ("is-prepared");
-            }
-          finally
+          this._account_manager.account_disabled.connect ((a) =>
             {
-              this._prepare_pending = false;
+              if (this.account == a)
+                {
+                  debug ("Account %p (‘%s’) disabled.", a, a.display_name);
+                  this._remove_store ();
+                }
+            });
+
+          Internal.profiling_point ("created account manager in " +
+              "Tpf.PersonaStore (ID: %s)", this.id);
+
+          this._avatars.clear ();
+
+          this._favourite_ids.clear ();
+          this._logger = new Logger (this.id);
+          this._logger.invalidated.connect (
+              this._logger_invalidated_cb);
+          this._logger.favourite_contacts_changed.connect (
+              this._favourite_contacts_changed_cb);
+          Internal.profiling_start ("initialising favourite contacts in " +
+              "Tpf.PersonaStore (ID: %s)", this.id);
+          this._initialise_favourite_contacts.begin ((o, r) =>
+            {
+              try
+                {
+                  this._initialise_favourite_contacts.end (r);
+                  Internal.profiling_end ("initialising favourite " +
+                      "contacts in Tpf.PersonaStore (ID: %s)", this.id);
+                }
+              catch (GLib.Error e)
+                {
+                  debug ("Failed to initialise favourite contacts: %s",
+                      e.message);
+                  this._logger = null;
+                }
+            });
+
+          Internal.profiling_point ("created logger in Tpf.PersonaStore " +
+              "(ID: %s)", this.id);
+
+          this.account.notify["connection"].connect (
+              this._notify_connection_cb);
+
+          /* immediately handle accounts which are not currently being
+           * disconnected */
+          if (this.account.connection != null)
+            {
+              this._notify_connection_cb (this.account, null);
             }
+          else
+            {
+              /* If we're disconnected, advertise personas from the cache
+               * instead. */
+              yield this._load_cache (null);
+              this._force_quiescent ();
+            }
+
+          Internal.profiling_point ("loaded cache in Tpf.PersonaStore " +
+              "(ID: %s)", this.id);
+
+          this._is_prepared = true;
+          this._prepare_pending = false;
+          this.notify_property ("is-prepared");
+        }
+      finally
+        {
+          this._prepare_pending = false;
         }
 
       Internal.profiling_end ("preparing Tpf.PersonaStore (ID: %s)", this.id);
