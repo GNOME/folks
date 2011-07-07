@@ -49,6 +49,8 @@ API changes:
 * Add ObjectCache class
 * Remove leaked internal PotentialMatch.result_to_string() method
 * Add RoleDetails:role property
+* Rebase FieldDetails upon AbstractFieldDetails (requiring the use of the
+  equivalent AbstractFieldDetails functions in place of the FieldDetails ones).
 
 Overview of changes from libfolks 0.5.1 to libfolks 0.5.2
 =========================================================

@@ -2348,7 +2348,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
       int i = 0;
       foreach (var p in attribs)
         {
-          FieldDetails fd = null;
+          AbstractFieldDetails fd = null;
           PostalAddress pa = null;
 
           string affl = "_:a%d".printf (i);
@@ -2388,7 +2388,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
                   {
                     related_connection = Trf.OntologyDefs.NCO_WEBSITE;
                   }
-                attr = "'%s'".printf (fd.value);
+                attr = "'%s'".printf (((FieldDetails) fd).value);
                 break;
               case Trf.Attrib.IM_ADDRESSES:
               default:
