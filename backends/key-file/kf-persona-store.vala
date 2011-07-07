@@ -183,143 +183,139 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
     {
       Internal.profiling_start ("preparing Kf.PersonaStore (ID: %s)", this.id);
 
-      lock (this._is_prepared)
+      if (this._is_prepared || this._prepare_pending)
         {
-          if (this._is_prepared || this._prepare_pending)
+          return;
+        }
+
+      try
+        {
+          this._prepare_pending = true;
+
+          var filename = this.file.get_path ();
+          this._key_file = new GLib.KeyFile ();
+
+          /* Load or create the file */
+          while (true)
             {
-              return;
-            }
-
-          try
-            {
-              this._prepare_pending = true;
-
-              var filename = this.file.get_path ();
-              this._key_file = new GLib.KeyFile ();
-
-              /* Load or create the file */
-              while (true)
+              /* Load the file; if this fails due to the file not existing
+               * or having been deleted in the meantime, we can continue
+               * below and try to create it instead. */
+              try
                 {
-                  /* Load the file; if this fails due to the file not existing
-                   * or having been deleted in the meantime, we can continue
-                   * below and try to create it instead. */
-                  try
+                  uint8[] contents;
+
+                  yield this.file.load_contents_async (null, out contents,
+                      null);
+                  unowned string contents_s = (string) contents;
+
+                  Internal.profiling_point ("loaded file in " +
+                      "Kf.PersonaStore (ID: %s)", this.id);
+
+                  if (contents_s.length > 0)
                     {
-                      uint8[] contents;
+                      this._key_file.load_from_data (contents_s,
+                          contents_s.length,
+                          KeyFileFlags.KEEP_COMMENTS);
 
-                      yield this.file.load_contents_async (null, out contents,
-                          null);
-                      unowned string contents_s = (string) contents;
-
-                      Internal.profiling_point ("loaded file in " +
+                      Internal.profiling_point ("parsed data in " +
                           "Kf.PersonaStore (ID: %s)", this.id);
-
-                      if (contents_s.length > 0)
-                        {
-                          this._key_file.load_from_data (contents_s,
-                              contents_s.length,
-                              KeyFileFlags.KEEP_COMMENTS);
-
-                          Internal.profiling_point ("parsed data in " +
-                              "Kf.PersonaStore (ID: %s)", this.id);
-                        }
-                      break;
                     }
-                  catch (Error e1)
-                    {
-                      if (!(e1 is IOError.NOT_FOUND))
-                        {
-                          warning (
-                              /* Translators: the first parameter is a filename,
-                               * and the second is an error message. */
-                              _("The relationship key file '%s' could not be loaded: %s"),
-                              filename, e1.message);
-                          this.removed ();
-                          this._prepare_pending = false;
-                          return;
-                        }
-                    }
-
-                  /* Ensure the parent directory tree exists for the new file */
-                  File parent_dir = this.file.get_parent ();
-
-                  try
-                    {
-                      /* Recursively create the directory */
-                      parent_dir.make_directory_with_parents ();
-                    }
-                  catch (Error e3)
-                    {
-                      if (!(e3 is IOError.EXISTS))
-                        {
-                          warning (
-                              /* Translators: the first parameter is a path, and
-                               * the second is an error message. */
-                              _("The relationship key file directory '%s' could not be created: %s"),
-                              parent_dir.get_path (), e3.message);
-                          this.removed ();
-                          this._prepare_pending = false;
-                          return;
-                        }
-                    }
-
-                  /* Create a new file; if this fails due to the file having
-                   * been created in the meantime, we can loop back round and
-                   * try and load it. */
-                  try
-                    {
-                      /* Create the file */
-                      FileOutputStream stream = yield this.file.create_async (
-                          FileCreateFlags.PRIVATE, Priority.DEFAULT);
-                      yield stream.close_async (Priority.DEFAULT);
-                    }
-                  catch (Error e2)
-                    {
-                      if (!(e2 is IOError.EXISTS))
-                        {
-                          warning (
-                              /* Translators: the first parameter is a filename,
-                               * and the second is an error message. */
-                              _("The relationship key file '%s' could not be created: %s"),
-                              filename, e2.message);
-                          this.removed ();
-                          this._prepare_pending = false;
-                          return;
-                        }
-                    }
+                  break;
                 }
-
-              /* We've loaded or created a key file by now, so cycle through the
-               * groups: each group is a persona which we have to create and
-               * emit */
-              var groups = this._key_file.get_groups ();
-              var added_personas = new HashSet<Persona> ();
-              foreach (var persona_id in groups)
+              catch (Error e1)
                 {
-                  Persona persona = new Kf.Persona (persona_id, this);
-                  this._personas.set (persona.iid, persona);
-                  added_personas.add (persona);
+                  if (!(e1 is IOError.NOT_FOUND))
+                    {
+                      warning (
+                          /* Translators: the first parameter is a filename, and
+                           * the second is an error message. */
+                          _("The relationship key file '%s' could not be loaded: %s"),
+                          filename, e1.message);
+                      this.removed ();
+                      this._prepare_pending = false;
+                      return;
+                    }
                 }
 
-              if (this._personas.size > 0)
+                /* Ensure the parent directory tree exists for the new file */
+                File parent_dir = this.file.get_parent ();
+        
+              try
                 {
-                  /* FIXME: GroupDetails.ChangeReason is not the right enum to
-                   * use here */
-                  this._emit_personas_changed (added_personas, null);
+                  /* Recursively create the directory */
+                  parent_dir.make_directory_with_parents ();
+                }
+              catch (Error e3)
+                {
+                  if (!(e3 is IOError.EXISTS))
+                    {
+                      warning (
+                          /* Translators: the first parameter is a path, and the
+                           * second is an error message. */
+                          _("The relationship key file directory '%s' could not be created: %s"),
+                          parent_dir.get_path (), e3.message);
+                      this.removed ();
+                      this._prepare_pending = false;
+                      return;
+                    }
                 }
 
-              this._is_prepared = true;
-              this._prepare_pending = false;
-              this.notify_property ("is-prepared");
-
-              /* We've finished loading all the personas we know about */
-              this._is_quiescent = true;
-              this.notify_property ("is-quiescent");
+              /* Create a new file; if this fails due to the file having been
+               * created in the meantime, we can loop back round and try and
+               * load it. */
+              try
+                {
+                  /* Create the file */
+                  FileOutputStream stream = yield this.file.create_async (
+                  FileCreateFlags.PRIVATE, Priority.DEFAULT);
+                  yield stream.close_async (Priority.DEFAULT);
+                }
+              catch (Error e2)
+                {
+                  if (!(e2 is IOError.EXISTS))
+                    {
+                      warning (
+                          /* Translators: the first parameter is a filename, and
+                           * the second is an error message. */
+                          _("The relationship key file '%s' could not be created: %s"),
+                          filename, e2.message);
+                      this.removed ();
+                      this._prepare_pending = false;
+                      return;
+                    }
+                }
             }
-          finally
+
+          /* We've loaded or created a key file by now, so cycle through the
+           * groups: each group is a persona which we have to create and emit */
+          var groups = this._key_file.get_groups ();
+          var added_personas = new HashSet<Persona> ();
+          foreach (var persona_id in groups)
             {
-              this._prepare_pending = false;
+              Persona persona = new Kf.Persona (persona_id, this);
+              this._personas.set (persona.iid, persona);
+              added_personas.add (persona);
             }
+
+          if (this._personas.size > 0)
+            {
+              /* FIXME: GroupDetails.ChangeReason is not the right enum to
+               * use here */
+              this._emit_personas_changed (added_personas, null);
+            }
+
+          this._is_prepared = true;
+          this._prepare_pending = false;
+          this.notify_property ("is-prepared");
+
+          /* We've finished loading all the personas we know about */
+          this._is_quiescent = true;
+          this.notify_property ("is-quiescent");
+        }
+      finally
+        {
+          this._prepare_pending = false;
         }
 
       Internal.profiling_end ("preparing Kf.PersonaStore (ID: %s)", this.id);
