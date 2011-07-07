@@ -36,7 +36,8 @@ using Gee;
  */
 public class Folks.FieldDetails : Object
 {
-  /* The value of the field.
+  /**
+   * The value of the field.
    *
    * The value of the field, the exact content depends on what the structure is
    * used for.
