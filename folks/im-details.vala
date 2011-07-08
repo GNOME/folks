@@ -66,8 +66,8 @@ public interface Folks.ImDetails : Object
    * of IM addresses to work, the IM addresses must be normalised beforehand.
    *
    * If the provided IM address is invalid,
-   * {@link Folks.ImDetailsError.INVALID_IM_ADDRESS} will be thrown. Note that this
-   * isn't guaranteed to be thrown for all invalid addresses, but if it is
+   * {@link Folks.ImDetailsError.INVALID_IM_ADDRESS} will be thrown. Note that
+   * this isn't guaranteed to be thrown for all invalid addresses, but if it is
    * thrown, the address is guaranteed to be invalid.
    *
    * @param im_address the address to normalise
