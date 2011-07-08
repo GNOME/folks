@@ -274,8 +274,8 @@ public class Trf.Persona : Folks.Persona,
         }
     }
 
-  private HashTable<string, HashTable<string, string>> _tracker_ids_ims =
-  new HashTable<string, HashTable<string, string>> (str_hash, str_equal);
+  private HashMap<string, HashMap<string, string>> _tracker_ids_ims =
+      new HashMap<string, HashMap<string, string>> ();
 
   private HashMultiMap<string, string> _im_addresses =
       new HashMultiMap<string, string> ();
@@ -913,15 +913,9 @@ public class Trf.Persona : Folks.Persona,
 
           this._im_addresses.set (im_proto, normalised_addr);
 
-          var im_proto_hash = new HashTable<string, string> (str_hash,
-              str_equal);
-          var proto_copy_2 = im_proto.dup ();
-          var account_id_copy_2 = account_id.dup ();
-          im_proto_hash.insert ((owned) proto_copy_2,
-              (owned) account_id_copy_2);
-          var tracker_id_copy = tracker_id.dup ();
-          this._tracker_ids_ims.insert ((owned) tracker_id_copy,
-                  (owned) im_proto_hash);
+          var im_proto_map = new HashMap<string, string> ();
+          im_proto_map.set (im_proto, account_id);
+          this._tracker_ids_ims.set (tracker_id, im_proto_map);
 
           if (notify)
             {
@@ -940,17 +934,24 @@ public class Trf.Persona : Folks.Persona,
 
   internal bool _remove_im_address (string tracker_id, bool notify = true)
     {
-      var proto_im = this._tracker_ids_ims.lookup (tracker_id);
+      var proto_im = this._tracker_ids_ims.get (tracker_id);
 
       if (proto_im == null)
         return false;
 
-      var proto = proto_im.get_keys ().nth_data (0);
-      var im_addr = proto_im.lookup (proto);
-
-      if (this._im_addresses.remove (proto, im_addr))
+      string proto = null;
+      string im_addr = null;
+      foreach (var pr in proto_im.keys)
         {
-          this._tracker_ids_ims.remove (tracker_id);
+          proto = pr;
+          im_addr = proto_im[proto];
+          break;
+        }
+
+      if (proto != null && im_addr != null &&
+          this._im_addresses.remove (proto, im_addr))
+        {
+          this._tracker_ids_ims.unset (tracker_id);
           if (notify)
             {
               this.notify_property ("im-addresses");
