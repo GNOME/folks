@@ -205,7 +205,7 @@ public class Trf.Persona : Folks.Persona,
   /**
    * {@inheritDoc}
    */
-  public string calendar_event_id
+  public string? calendar_event_id
     {
       /* Unsupported */
       get { return null; }

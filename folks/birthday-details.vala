@@ -37,9 +37,11 @@ public interface Folks.BirthdayDetails : Object
   public abstract DateTime birthday { get; set; }
 
   /**
-   * The event id from the source calenar
+   * The event ID of the birthday event from the source calendar.
+   *
+   * If this is `null`, the birthday event is unknown.
    *
    * @since 0.4.0
    */
-  public abstract string calendar_event_id { get; set; }
+  public abstract string? calendar_event_id { get; set; }
 }
