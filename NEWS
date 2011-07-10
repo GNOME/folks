@@ -25,6 +25,8 @@ API changes:
 * Make NameDetails.nickname settable
 * Drop AliasDetails support from Trf.Persona
 * Add PersonaStoreError.PERMISSION_DENIED and PersonaStoreError.REMOVE_FAILED
+* Change the error domain of PersonaStore.remove_persona() from GLib.Error to
+  Folks.PersonaStoreError
 
 Overview of changes from libfolks 0.5.1 to libfolks 0.5.2
 =========================================================
