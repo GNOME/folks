@@ -67,7 +67,7 @@ public class Swf.Persona : Folks.Persona,
    *
    * See {@link Folks.AvatarOwner.avatar}.
    */
-  public File avatar { get; set; }
+  public File avatar { get; private set; }
 
   /**
    * {@inheritDoc}

@@ -71,7 +71,7 @@ public class Tpf.Persona : Folks.Persona,
    *
    * See {@link Folks.AvatarDetails.avatar}.
    */
-  public File avatar { get; set; }
+  public File avatar { get; private set; }
 
   /**
    * The Persona's presence type.
