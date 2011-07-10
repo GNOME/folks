@@ -99,6 +99,22 @@ public errordomain Folks.PersonaStoreError
    * @since 0.3.4
    */
   READ_ONLY,
+
+  /**
+   * The operation was denied due to not having sufficient permissions.
+   *
+   * @since UNRELEASED
+   */
+  PERMISSION_DENIED,
+
+  /**
+   * Removal of a {@link Persona} failed. This is a generic error which is used
+   * if no other error code (such as, e.g.,
+   * {@link PersonaStoreError.PERMISSION_DENIED}) is applicable.
+   *
+   * @since UNRELEASED
+   */
+  REMOVE_FAILED,
 }
 
 /**
