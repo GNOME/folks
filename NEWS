@@ -19,6 +19,7 @@ Bugs fixed:
 * Bug 652048 — Make nickname writable
 * Bug 652425 — Failure codes for removing personas needed in PersonaStoreError
 * Bug 645549 — Add a way to get the individual from a persona
+* Bug 650422 — Add API for easily checking whether details are writeable
 
 API changes:
 * Swf.Persona retains and exposes its libsocialweb Contact
@@ -29,6 +30,8 @@ API changes:
 * Change the error domain of PersonaStore.remove_persona() from GLib.Error to
   Folks.PersonaStoreError
 * Add a Persona.individual property
+* Add a Persona.writeable_properties property and implement it in all the
+  Persona subclasses
 
 Overview of changes from libfolks 0.5.1 to libfolks 0.5.2
 =========================================================

@@ -41,6 +41,12 @@ public class Tpf.Persona : Folks.Persona,
   private string _alias;
   private HashMultiMap<string, string> _im_addresses;
   private const string[] _linkable_properties = { "im-addresses" };
+  private const string[] _writeable_properties =
+    {
+      "alias",
+      "is-favourite",
+      "groups"
+    };
 
   /* Whether we've finished being constructed; this is used to prevent
    * unnecessary trips to the Telepathy service to tell it about properties
@@ -98,6 +104,16 @@ public class Tpf.Persona : Folks.Persona,
   public override string[] linkable_properties
     {
       get { return this._linkable_properties; }
+    }
+
+  /**
+   * {@inheritDoc}
+   *
+   * @since UNRELEASED
+   */
+  public override string[] writeable_properties
+    {
+      get { return this._writeable_properties; }
     }
 
   /**

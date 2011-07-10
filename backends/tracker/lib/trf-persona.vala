@@ -55,6 +55,24 @@ public class Trf.Persona : Folks.Persona,
   private Set<FieldDetails> _email_addresses_ro;
   private weak Sparql.Cursor _cursor;
   private string _tracker_id;
+  private const string[] _writeable_properties =
+    {
+      "alias",
+      "phone-numbers",
+      "email-addresses",
+      "avatar",
+      "structured-name",
+      "full-name",
+      "gender",
+      "birthday",
+      "roles",
+      "notes",
+      "urls",
+      "im-addresses",
+      "is-favourite",
+      "local-ids",
+      "web-service-addresses"
+    };
 
   /**
    * A nickname for the Persona.
@@ -105,6 +123,16 @@ public class Trf.Persona : Folks.Persona,
   public override string[] linkable_properties
     {
       get { return this._linkable_properties; }
+    }
+
+  /**
+   * {@inheritDoc}
+   *
+   * @since UNRELEASED
+   */
+  public override string[] writeable_properties
+    {
+      get { return this._writeable_properties; }
     }
 
   private File _avatar;

@@ -42,6 +42,12 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
       "im-addresses",
       "web-service-addresses"
     };
+  private const string[] _writeable_properties =
+    {
+      "alias",
+      "im-addresses",
+      "web-service-addresses"
+    };
 
   /**
    * {@inheritDoc}
@@ -49,6 +55,16 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
   public override string[] linkable_properties
     {
       get { return this._linkable_properties; }
+    }
+
+  /**
+   * {@inheritDoc}
+   *
+   * @since UNRELEASED
+   */
+  public override string[] writeable_properties
+    {
+      get { return this._writeable_properties; }
     }
 
   /**

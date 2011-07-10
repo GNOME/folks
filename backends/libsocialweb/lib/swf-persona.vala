@@ -40,6 +40,7 @@ public class Swf.Persona : Folks.Persona,
       "im-addresses",
       "web-service-addresses"
     };
+  private const string[] _writeable_properties = {}; // No writeable properties
 
   /**
    * The names of the Persona's linkable properties.
@@ -49,6 +50,16 @@ public class Swf.Persona : Folks.Persona,
   public override string[] linkable_properties
     {
       get { return this._linkable_properties; }
+    }
+
+  /**
+   * {@inheritDoc}
+   *
+   * @since UNRELEASED
+   */
+  public override string[] writeable_properties
+    {
+      get { return this._writeable_properties; }
     }
 
   /**

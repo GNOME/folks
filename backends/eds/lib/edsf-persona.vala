@@ -61,6 +61,21 @@ public class Edsf.Persona : Folks.Persona,
   private const string[] _linkable_properties = { "im-addresses",
                                                   "local-ids",
                                                   "web-service-addresses" };
+  private const string[] _writeable_properties =
+    {
+      "web-service-addresses",
+      "local-ids",
+      "postal-addresses",
+      "phone-numbers",
+      "email-addresses",
+      "notes",
+      "avatar",
+      "structured-name",
+      "full-name",
+      "nickname",
+      "im-addresses",
+      "groups"
+    };
   private HashSet<FieldDetails> _phone_numbers;
   private Set<FieldDetails> _phone_numbers_ro;
   private HashSet<FieldDetails> _email_addresses;
@@ -184,6 +199,16 @@ public class Edsf.Persona : Folks.Persona,
   public override string[] linkable_properties
     {
       get { return this._linkable_properties; }
+    }
+
+  /**
+   * {@inheritDoc}
+   *
+   * @since UNRELEASED
+   */
+  public override string[] writeable_properties
+    {
+      get { return this._writeable_properties; }
     }
 
   private File _avatar;

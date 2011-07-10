@@ -153,6 +153,21 @@ public abstract class Folks.Persona : Object
   public abstract string[] linkable_properties { get; }
 
   /**
+   * The names of the properties of this Persona which are writeable.
+   *
+   * If a property name is in this list, setting the property should result in
+   * the updated value being stored in the backend's permanent storage (unless
+   * it gets rejected due to being invalid, or a different error occurs).
+   *
+   * It's intended that this property value will be constant for a given Persona
+   * subclass, but this isn't guaranteed; it's possible that Persona subclasses
+   * may vary the value of this property at run time.
+   *
+   * @since UNRELEASED
+   */
+  public abstract string[] writeable_properties { get; }
+
+  /**
    * Callback into the aggregator to manipulate a link mapping.
    *
    * This is a callback provided by the {@link IndividualAggregator} whenever
