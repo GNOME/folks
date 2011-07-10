@@ -202,7 +202,15 @@ public class Trf.Persona : Folks.Persona,
         }
     }
 
-  public string calendar_event_id { get; set; }
+  /**
+   * {@inheritDoc}
+   */
+  public string calendar_event_id
+    {
+      /* Unsupported */
+      get { return null; }
+      private set {}
+    }
 
   private HashSet<Role> _roles;
   private Set<Role> _roles_ro;
