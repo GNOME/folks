@@ -266,7 +266,7 @@ public class Trf.Persona : Folks.Persona,
   public Set<PostalAddress> postal_addresses
     {
       get { return this._postal_addresses_ro; }
-      private set
+      public set
         {
           ((Trf.PersonaStore) this.store)._set_postal_addresses (this, value);
         }
