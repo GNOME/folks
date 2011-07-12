@@ -26,6 +26,7 @@ public class FieldDetailsTests : Folks.TestCase
     {
       base ("FieldDetails");
       this.add_test ("parameter replacement", this.test_param_replacement);
+      this.add_test ("simple equality", this.test_simple_equality);
     }
 
   public override void set_up ()
@@ -85,6 +86,19 @@ public class FieldDetailsTests : Folks.TestCase
         assert (values.contains (val));
       foreach (var val in values_2)
           assert (values.contains (val));
+    }
+
+  public void test_simple_equality ()
+    {
+      FieldDetails details_a_1 = new FieldDetails ("foo");
+      FieldDetails details_a_2 = new FieldDetails ("foo");
+      FieldDetails details_b_1 = new FieldDetails ("bar");
+
+      /* Very-basic comparisons */
+      assert (details_a_1.equal (details_a_2));
+      assert (!details_a_1.equal (details_b_1));
+      assert (!details_b_1.equal (details_a_1));
+      assert (!details_b_1.equal (details_a_2));
     }
 }
 
