@@ -168,4 +168,92 @@ public abstract class Folks.AbstractFieldDetails<T> : Object
     {
       this.parameters.remove_all (parameter_name);
     }
+
+  /**
+   * An equality function for {@link AbstractFieldDetails}.
+   *
+   * This defaults to string comparison of the
+   * {@link AbstractFieldDetails.value}s if the generic type is string;
+   * otherwise, direct pointer comparison of the
+   * {@link AbstractFieldDetails.value}s.
+   *
+   * @param that another {@link AbstractFieldDetails}
+   *
+   * @return whether the elements are equal
+   *
+   * @since UNRELEASED
+   */
+  public virtual bool equal (AbstractFieldDetails<T> that)
+    {
+      EqualFunc equal_func = direct_equal;
+
+      if (typeof (T) == typeof (string))
+        equal_func = str_equal;
+
+      if ((this.get_type () != that.get_type ()) ||
+          !equal_func (this.value, that.value))
+        {
+          return false;
+        }
+
+      /* Check that the parameter names and their values match exactly in both
+       * AbstractFieldDetails objects. */
+      if (this.parameters.size != that.parameters.size)
+        return false;
+
+      foreach (var param in this.parameters.get_keys ())
+        {
+          /* Since these parameters are meant to model vCard parameters, we
+           * should compare on a case-insensitive basis. However, this leads to
+           * ambiguity in the case:
+           *
+           *   this.parameters = {"foo": {"bar"}}
+           *   that.parameters = {"foo": {"bar"}, "FOO": {"qux"}}
+           *
+           * So parameter names should normalised elsewhere (either in the
+           * insertion functions (with a big warning for the clients) or in the
+           * clients themselves).
+           *
+           * Note that parameter values can't be normalised in general, since
+           * they can be user-set labels.
+           */
+          if (!that.parameters.contains (param))
+            return false;
+
+          var this_param_values = this.parameters.get_values ();
+          var that_param_values = that.parameters.get_values ();
+
+          if (this_param_values.size != that_param_values.size)
+            return false;
+
+          foreach (var param_val in this.parameters.get_values ())
+            {
+              if (!that_param_values.contains (param_val))
+                return false;
+            }
+        }
+
+      return true;
+    }
+
+  /**
+   * A hash function for the {@link AbstractFieldDetails}.
+   *
+   * This defaults to a string hash of the
+   * {@link AbstractFieldDetails.value} if the generic type is string;
+   * otherwise, direct hash of the {@link AbstractFieldDetails.value}.
+   *
+   * @return the hash value
+   *
+   * @since UNRELEASED
+   */
+  public virtual uint hash ()
+    {
+      HashFunc hash_func = direct_hash;
+
+      if (typeof (T) == typeof (string))
+        hash_func = str_hash;
+
+      return hash_func (this.value);
+    }
 }
