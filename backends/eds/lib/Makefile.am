@@ -14,8 +14,6 @@ VAPIGENFLAGS += \
 folks_edsdir = $(libdir)
 folks_eds_LTLIBRARIES = libfolks-eds.la
 
-CLEANFILES =
-
 ##################################################################
 # Support library
 ##################################################################
@@ -95,11 +93,6 @@ dist_vapi_DATA = \
 ##################################################################
 # General
 ##################################################################
-
-CLEANFILES += \
-	$(pkgconfig_in:.in=) \
-	folks-eds-uninstalled.pc \
-	$(NULL)
 
 MAINTAINERCLEANFILES = \
 	$(folks_eds_valasources:.vala=.c) \
