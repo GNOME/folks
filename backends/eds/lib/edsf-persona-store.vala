@@ -340,7 +340,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
    *
    * @since 0.5.UNRELEASED
    */
-  public override async void prepare ()
+  public override async void prepare () throws PersonaStoreError
     {
       /* FIXME: https://bugzilla.gnome.org/show_bug.cgi?id=652637 */
       lock (this._is_prepared)
