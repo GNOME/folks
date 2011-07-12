@@ -84,30 +84,12 @@ public class Folks.Backends.Eds.Backend : Folks.Backend
         {
           if (!this._is_prepared)
             {
-              string[] use_addressbooks = this._get_addressbooks_from_env ();
               this._create_avatars_cache_dir ();
 
               E.BookClient.get_sources (out this._ab_sources);
-              unowned GLib.SList<weak E.SourceGroup> groups =
-                  this._ab_sources.peek_groups ();
-
-              foreach (var g in groups)
-                {
-                  foreach (E.Source s in g.peek_sources ())
-                    {
-                      if (use_addressbooks.length > 0)
-                        {
-                          if (s.peek_name () in use_addressbooks)
-                            {
-                              this._add_addressbook (s);
-                            }
-                        }
-                      else
-                        {
-                          this._add_addressbook (s);
-                        }
-                    }
-                }
+              this._ab_sources.changed.connect (
+                  this._ab_source_list_changed_cb);
+              this._ab_source_list_changed_cb (this._ab_sources);
 
               this._is_prepared = true;
               this.notify_property ("is-prepared");
@@ -139,6 +121,74 @@ public class Folks.Backends.Eds.Backend : Folks.Backend
       DirUtils.create_with_parents (avatars_dir, 0700);
     }
 
+  /* Called every time the list of E.Sources changes. Note that there may be
+   * cases where it's called but we don't have to do anything. For example, if
+   * an address book is renamed, we don't have to add or remove any persona
+   * stores since we don't use the address book names. */
+  private void _ab_source_list_changed_cb (E.SourceList list)
+    {
+      string[] use_addressbooks = this._get_addressbooks_from_env ();
+      unowned GLib.SList<weak E.SourceGroup> groups =
+          this._ab_sources.peek_groups ();
+
+      debug ("Address book source list changed.");
+
+      /* Collapse the updated list of groups down into a set of current address
+       * books we're interested in, excluding the ones currently in the
+       * backend. */
+      var new_sources = new HashMap<string, E.Source> ();
+
+      foreach (var g in groups)
+        {
+          foreach (E.Source s in g.peek_sources ())
+            {
+              /* If we've been told to use just a specific set of address
+               * books, we must ignore all others. */
+              if (use_addressbooks.length > 0 &&
+                  !(s.peek_name () in use_addressbooks))
+                {
+                  continue;
+                }
+
+              new_sources.set (s.peek_relative_uri (), s);
+            }
+        }
+
+      /* Remove address books which no longer exist from the backend. */
+      var removed_sources = new LinkedList<string> ();
+
+      foreach (var source_uri in this._persona_stores.keys)
+        {
+          if (!new_sources.has_key (source_uri))
+            {
+              removed_sources.add (source_uri);
+            }
+        }
+
+      /* Add address books which didn't previously exist in the backend. */
+      var added_sources = new LinkedList<string> ();
+
+      foreach (var source_uri in new_sources.keys)
+        {
+          if (!this._persona_stores.has_key (source_uri))
+            {
+              added_sources.add (source_uri);
+            }
+        }
+
+      /* Actually apply the changes to our state. We can't do this any earlier
+       * or we'll mess up the calculation of what's been added and removed. */
+      foreach (var source_uri in removed_sources)
+        {
+          this._store_removed_cb (this._persona_stores.get (source_uri));
+        }
+
+      foreach (var source_uri in added_sources)
+        {
+          this._add_addressbook (new_sources.get (source_uri));
+        }
+    }
+
   /**
    * Add a new addressbook connected to a Persona Store.
    */
@@ -149,6 +199,8 @@ public class Folks.Backends.Eds.Backend : Folks.Backend
       if (this._persona_stores.has_key (relative_uri))
         return;
 
+      debug ("Adding address book '%s'.", relative_uri);
+
       var store = new Edsf.PersonaStore (s);
       this._persona_stores.set (store.id, store);
       store.removed.connect (this._store_removed_cb);
@@ -158,6 +210,8 @@ public class Folks.Backends.Eds.Backend : Folks.Backend
 
   private void _store_removed_cb (Folks.PersonaStore store)
     {
+      debug ("Removing address book '%s'.", store.id);
+
       store.removed.disconnect (this._store_removed_cb);
       this.persona_store_removed (store);
       this.persona_stores.unset (store.id);
