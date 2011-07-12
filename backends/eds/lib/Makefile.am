@@ -39,8 +39,9 @@ VALAFLAGS = \
 	--vapidir=. \
 	--vapidir=$(top_srcdir)/folks \
 	$(addprefix --pkg ,$(folks_backend_eds_deps)) \
+	--includedir folks \
 	--vapi folks-eds.vapi \
-	-H folks-eds.h \
+	-H folks/folks-eds.h \
 	$(NULL)
 
 folks_backend_eds_deps = \
@@ -82,7 +83,7 @@ libfolks_eds_la_LDFLAGS = \
 
 folks_eds_includedir = $(includedir)/folks
 folks_eds_include_HEADERS = \
-	folks-eds.h \
+	folks/folks-eds.h \
 	$(NULL)
 
 vapidir = $(datadir)/vala/vapi
@@ -103,7 +104,7 @@ CLEANFILES += \
 MAINTAINERCLEANFILES = \
 	$(folks_eds_valasources:.vala=.c) \
 	libfolks_eds_la_vala.stamp \
-	folks-eds.h \
+	folks/folks-eds.h \
 	folks-eds.vapi \
 	$(NULL)
 

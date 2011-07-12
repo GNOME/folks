@@ -3,6 +3,7 @@ SUBDIRS = lib
 AM_CPPFLAGS = \
 	-I$(top_srcdir)/folks \
 	-I$(top_srcdir)/backends/eds/lib \
+	-I$(top_srcdir)/backends/eds/lib/folks \
 	-include $(CONFIG_HEADER) \
 	-DPACKAGE_DATADIR=\"$(pkgdatadir)\" \
 	-DBACKEND_NAME=\"$(BACKEND_NAME)\" \

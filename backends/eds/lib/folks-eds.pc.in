@@ -12,4 +12,4 @@ Description: Evolution Data Server support library for the Folks meta-contacts l
 Version: @VERSION@
 Requires: folks glib-2.0 gobject-2.0 gee-1.0 libebook-1.2 libedataserver-1.2
 Libs: -L${libdir} -lfolks-eds
-Cflags: -I${includedir} -I${includedir}/folks
+Cflags: -I${includedir}
