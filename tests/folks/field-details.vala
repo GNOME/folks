@@ -28,6 +28,8 @@ public class FieldDetailsTests : Folks.TestCase
       this.add_test ("parameter replacement", this.test_param_replacement);
       this.add_test ("simple equality", this.test_simple_equality);
       this.add_test ("parameter equality", this.test_params_equality);
+      this.add_test ("ImFieldDetails equality",
+          this.test_im_field_details_equality);
     }
 
   public override void set_up ()
@@ -147,6 +149,21 @@ public class FieldDetailsTests : Folks.TestCase
       /* Remove parameter and values; ensure inequality */
       details_a_2.parameters.remove_all ("bar");
       assert (!details_a_1.equal (details_a_2));
+    }
+
+  public void test_im_field_details_equality ()
+    {
+      ImFieldDetails details_a_1 = new ImFieldDetails ("foo@example.org");
+      ImFieldDetails details_a_2 = new ImFieldDetails ("foo@example.org");
+      ImFieldDetails details_b_1 = new ImFieldDetails ("bar@other.example.org");
+
+      /* Very-basic comparisons */
+      assert (details_a_1.equal (details_a_2));
+      assert (!details_a_1.equal (details_b_1));
+
+      /* Comparing different derived classes */
+      FieldDetails details_c_1 = new FieldDetails ("foo@example.org");
+      assert (!details_a_1.equal (details_c_1));
     }
 }
 
