@@ -1,5 +1,7 @@
 SUBDIRS = lib
 
+BACKEND_NAME = "eds"
+
 AM_CPPFLAGS = \
 	-I$(top_srcdir)/folks \
 	-I$(top_srcdir)/backends/eds/lib \

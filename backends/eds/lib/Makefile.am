@@ -1,3 +1,5 @@
+BACKEND_NAME = "eds"
+
 AM_CPPFLAGS = \
 	-I$(top_srcdir)/folks \
 	-include $(CONFIG_HEADER) \
