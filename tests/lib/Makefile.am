@@ -11,11 +11,16 @@ if ENABLE_TRACKER
 SUBDIRS += tracker
 endif
 
+if ENABLE_EDS
+SUBDIRS += eds
+endif
+
 DIST_SUBDIRS = \
 	key-file \
 	telepathy \
 	libsocialweb \
 	tracker \
+	eds \
 	$(NULL)
 
 noinst_LTLIBRARIES = libfolks-test.la

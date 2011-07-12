@@ -1,0 +1,15 @@
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+libdir=@libdir@
+bindir=@bindir@
+includedir=@includedir@
+datarootdir=@datarootdir@
+datadir=@datadir@
+vapidir=@datadir@/vala/vapi
+
+Name: Folks e-d-s support library
+Description: Evolution Data Server support library for the Folks meta-contacts library
+Version: @VERSION@
+Requires: folks glib-2.0 gobject-2.0 gee-1.0 libebook-1.2 libedataserver-1.2
+Libs: -L${libdir} -lfolks-eds
+Cflags: -I${includedir} -I${includedir}/folks

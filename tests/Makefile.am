@@ -15,6 +15,10 @@ if ENABLE_TRACKER
 SUBDIRS += tracker
 endif
 
+if ENABLE_EDS
+SUBDIRS += eds
+endif
+
 DIST_SUBDIRS = \
     data \
     lib \
@@ -24,6 +28,7 @@ DIST_SUBDIRS = \
     telepathy \
     libsocialweb \
     tracker \
+    eds \
     $(NULL)
 
 TESTS_ENVIRONMENT = \

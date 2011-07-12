@@ -77,6 +77,14 @@ AC_ARG_ENABLE(tracker-backend,
 
 AM_CONDITIONAL([ENABLE_TRACKER], [test "x$enable_tracker_backend" = "xyes"])
 
+AC_ARG_ENABLE(eds-backend,
+        AC_HELP_STRING([--enable-eds-backend],
+                       [ build the E-D-S backend]),
+        enable_eds_backend=$enableval,
+        enable_eds_backend=no )
+
+AM_CONDITIONAL([ENABLE_EDS], [test "x$enable_eds_backend" = "xyes"])
+
 # Automatically check the dependencies for the libsocialweb backend
 SW_CLIENT_REQUIRED=0.25.15
 AC_ARG_ENABLE(libsocialweb-backend,
@@ -124,6 +132,8 @@ VALA_REQUIRED=0.12.0
 VALADOC_REQUIRED=0.2.1
 TRACKER_SPARQL_REQUIRED=0.10
 GCONF2_REQUIRED=2.31
+EBOOK_REQUIRED=3.0.1
+EDATASERVER_REQUIRED=3.0.1
 
 PKG_CHECK_MODULES([GLIB],
                   [glib-2.0 >= $GLIB_REQUIRED
@@ -140,6 +150,11 @@ PKG_CHECK_MODULES([TP_GLIB], [telepathy-glib >= $TP_GLIB_REQUIRED])
 if test x$enable_tracker_backend = xyes; then
         PKG_CHECK_MODULES([TRACKER_SPARQL],
                           [tracker-sparql-0.10 >= $TRACKER_SPARQL_REQUIRED])
+fi
+
+if test x$enable_eds_backend = xyes; then
+        PKG_CHECK_MODULES([EBOOK], [libebook-1.2 >= $EBOOK_REQUIRED])
+        PKG_CHECK_MODULES([EDATASERVER], [libedataserver-1.2 >= $EDATASERVER_REQUIRED])
 fi
 
 #
@@ -218,6 +233,9 @@ if test "x$enable_vala" = "xyes" ; then
           VALA_CHECK_PACKAGES([tracker-sparql-0.10])
         fi
 
+        if test x$enable_eds_backend = xyes; then
+          VALA_CHECK_PACKAGES([libxml-2.0])
+        fi
 fi
 
 # this will set HAVE_INTROSPECTION
@@ -244,6 +262,8 @@ BACKEND_KF='$(top_builddir)/backends/key-file/.libs/libfolks-backend-key-file.so
 AC_SUBST([BACKEND_KF])
 BACKEND_TP='$(top_builddir)/backends/telepathy/.libs/libfolks-backend-telepathy.so'
 AC_SUBST([BACKEND_TP])
+BACKEND_EDS='$(top_builddir)/backends/eds/.libs/libfolks-backend-eds.so'
+AC_SUBST([BACKEND_EDS])
 
 if test x$have_libsocialweb_backend = xyes; then
   BACKEND_LIBSOCIALWEB='$(top_builddir)/backends/libsocialweb/.libs/libfolks-backend-libsocialweb.so'
@@ -255,6 +275,11 @@ if test x$enable_tracker_backend = xyes; then
   AC_SUBST([BACKEND_TRACKER])
 fi
 
+if test x$enable_eds_backend = xyes; then
+  BACKEND_EDS='$(top_builddir)/backends/eds/.libs/libfolks-backend-eds.so'
+  AC_SUBST([BACKEND_EDS])
+fi
+
 # All of the backend libraries in our tree; to be used by the tests
 BACKEND_UNINST_PATH='$(BACKEND_KF):$(BACKEND_TP)'
 if test x$have_libsocialweb_backend = xyes; then
@@ -264,6 +289,10 @@ fi
 if test x$enable_tracker_backend = xyes; then
   TRACKER_BACKEND_UNINST_PATH='$(BACKEND_TRACKER)'
   BACKEND_UNINST_PATH="$BACKEND_UNINST_PATH:$TRACKER_BACKEND_UNINST_PATH"
+fi
+if test x$enable_eds_backend = xyes; then
+  EDS_BACKEND_UNINST_PATH='$(BACKEND_EDS)'
+  BACKEND_UNINST_PATH="$BACKEND_UNINST_PATH:$EDS_BACKEND_UNINST_PATH"
 fi
 AC_SUBST([BACKEND_UNINST_PATH])
 
@@ -404,6 +433,8 @@ AC_CONFIG_FILES([
     backends/telepathy/lib/folks-telepathy-uninstalled.pc
     backends/tracker/lib/folks-tracker.pc
     backends/tracker/lib/folks-tracker-uninstalled.pc
+    backends/eds/lib/folks-eds.pc
+    backends/eds/lib/folks-eds-uninstalled.pc
     folks/folks.pc
     folks/folks-uninstalled.pc
     Makefile
@@ -417,6 +448,8 @@ AC_CONFIG_FILES([
     backends/telepathy/lib/Makefile
     backends/tracker/Makefile
     backends/tracker/lib/Makefile
+    backends/eds/Makefile
+    backends/eds/lib/Makefile
     folks/Makefile
     docs/Makefile
     po/Makefile.in
@@ -433,6 +466,8 @@ AC_CONFIG_FILES([
     tests/lib/key-file/Makefile
     tests/lib/libsocialweb/Makefile
     tests/lib/libsocialweb/session.conf
+    tests/eds/Makefile
+    tests/lib/eds/Makefile
     tests/lib/telepathy/Makefile
     tests/lib/tracker/Makefile
     tests/lib/telepathy/contactlist/Makefile
@@ -457,6 +492,6 @@ Configure summary:
         Inspector tool..............:  ${with_inspect_tool}
         Tracker backend.............:  ${enable_tracker_backend}
         Libsocialweb backend........:  ${have_libsocialweb_backend}
-
+        E-D-S backend...............:  ${enable_eds_backend}
 
 "
