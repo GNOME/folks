@@ -15,6 +15,7 @@ Bugs fixed:
   vala-doc installed
 * Bug 653746 — mismatch between hash and equals in Note
 * Bug 638281 — Add an EDS backend
+* Bug 654509 — Folks master not building
 
 API changes:
 * Swf.Persona retains and exposes its libsocialweb Contact
