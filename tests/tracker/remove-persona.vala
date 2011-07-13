@@ -132,7 +132,8 @@ public class RemovePersonaTests : Folks.TestCase
           (owned) v1);
 
       Value? v2 = Value (typeof (Set<FieldDetails>));
-      var emails = new HashSet<FieldDetails> ();
+      var emails = new HashSet<FieldDetails> ((GLib.HashFunc) FieldDetails.hash,
+          (GLib.EqualFunc) FieldDetails.equal);
       var email_1 = new FieldDetails ("test-1@example.org");
       emails.add (email_1);
       var email_2 = new FieldDetails ("test-2@example.org");

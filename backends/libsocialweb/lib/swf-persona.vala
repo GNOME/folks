@@ -107,7 +107,9 @@ public class Swf.Persona : Folks.Persona,
       get { return this._urls_ro; }
       private set
         {
-          this._urls = new HashSet<FieldDetails> ();
+          this._urls = new HashSet<FieldDetails> (
+              (GLib.HashFunc) FieldDetails.hash,
+              (GLib.EqualFunc) FieldDetails.equal);
           this._urls_ro = this._urls.read_only_view;
           foreach (var ps in value)
             this._urls.add (ps);
@@ -295,7 +297,8 @@ public class Swf.Persona : Folks.Persona,
       if (this.full_name != full_name)
         this.full_name = full_name;
 
-      var urls = new HashSet<FieldDetails> ();
+      var urls = new HashSet<FieldDetails> ((GLib.HashFunc) FieldDetails.hash,
+          (GLib.EqualFunc) FieldDetails.equal);
 
       var website = contact.get_value ("url");
       if (website != null)

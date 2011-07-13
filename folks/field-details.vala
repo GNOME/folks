@@ -49,4 +49,24 @@ public class Folks.FieldDetails : AbstractFieldDetails<string>
     {
       this.value = value;
     }
+
+  /**
+   * {@inheritDoc}
+   *
+   * @since UNRELEASED
+   */
+  public override bool equal (AbstractFieldDetails<string> that)
+    {
+      return base.equal<string> (that);
+    }
+
+  /**
+   * {@inheritDoc}
+   *
+   * @since UNRELEASED
+   */
+  public override uint hash ()
+    {
+      return base.hash ();
+    }
 }

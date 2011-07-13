@@ -108,7 +108,9 @@ public class SetURLsTests : Folks.TestCase
             {
               i.notify["urls"].connect (this._notify_urls_cb);
 
-              var urls = new HashSet<FieldDetails> ();
+              var urls = new HashSet<FieldDetails> (
+                  (GLib.HashFunc) FieldDetails.hash,
+                  (GLib.EqualFunc) FieldDetails.equal);
               var p1 = new FieldDetails (this._urls.get ("blog"));
               p1.set_parameter ("type", "blog");
               urls.add (p1);

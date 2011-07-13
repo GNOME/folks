@@ -225,7 +225,8 @@ public class AddPersonaTests : Folks.TestCase
           (owned) v7);
 
       Value? v8 = Value (typeof (Set<FieldDetails>));
-      var emails = new HashSet<FieldDetails> ();
+      var emails = new HashSet<FieldDetails> ((GLib.HashFunc) FieldDetails.hash,
+          (GLib.EqualFunc) FieldDetails.equal);
       var email_1 = new FieldDetails (this._email_1);
       emails.add (email_1);
       var email_2 = new FieldDetails (this._email_2);
@@ -252,7 +253,8 @@ public class AddPersonaTests : Folks.TestCase
           (owned) v10);
 
       Value? v11 = Value (typeof (Set<FieldDetails>));
-      var phones = new HashSet<FieldDetails> ();
+      var phones = new HashSet<FieldDetails> ((GLib.HashFunc) FieldDetails.hash,
+          (GLib.EqualFunc) FieldDetails.equal);
       var phone_1 = new FieldDetails (this._phone_1);
       phones.add (phone_1);
       var phone_2 = new FieldDetails (this._phone_2);
@@ -285,7 +287,8 @@ public class AddPersonaTests : Folks.TestCase
           (owned) v13);
 
       Value? v14 = Value (typeof (Set<FieldDetails>));
-      var urls = new HashSet<FieldDetails> ();
+      var urls = new HashSet<FieldDetails> ((GLib.HashFunc) FieldDetails.hash,
+          (GLib.EqualFunc) FieldDetails.equal);
       var url_1 = new FieldDetails (this._url_1);
       urls.add (url_1);
       var url_2 = new FieldDetails (this._url_2);

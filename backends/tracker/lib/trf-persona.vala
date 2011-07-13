@@ -404,9 +404,13 @@ public class Trf.Persona : Folks.Persona,
       this._full_name = fullname;
       this._tracker_id = tracker_id;
       this._structured_name = new StructuredName (null, null, null, null, null);
-      this._phone_numbers = new HashSet<FieldDetails> ();
+      this._phone_numbers = new HashSet<FieldDetails> (
+          (GLib.HashFunc) FieldDetails.hash,
+          (GLib.EqualFunc) FieldDetails.equal);
       this._phone_numbers_ro = this._phone_numbers.read_only_view;
-      this._email_addresses = new HashSet<FieldDetails> ();
+      this._email_addresses = new HashSet<FieldDetails> (
+          (GLib.HashFunc) FieldDetails.hash,
+          (GLib.EqualFunc) FieldDetails.equal);
       this._email_addresses_ro = this._email_addresses.read_only_view;
       this._roles = new HashSet<Role> ((GLib.HashFunc) Role.hash,
           (GLib.EqualFunc) Role.equal);
@@ -414,7 +418,8 @@ public class Trf.Persona : Folks.Persona,
       this._notes = new HashSet<Note> ((GLib.HashFunc) Note.hash,
           (GLib.EqualFunc) Note.equal);
       this._notes_ro = this._notes.read_only_view;
-      this._urls = new HashSet<FieldDetails> ();
+      this._urls = new HashSet<FieldDetails> ((GLib.HashFunc) FieldDetails.hash,
+          (GLib.EqualFunc) FieldDetails.equal);
       this._urls_ro = this._urls.read_only_view;
       this._postal_addresses = new HashSet<PostalAddress> ();
       this._postal_addresses_ro = this._postal_addresses.read_only_view;
@@ -962,7 +967,8 @@ public class Trf.Persona : Folks.Persona,
           return;
         }
 
-      var phones = new HashSet<FieldDetails> ();
+      var phones = new HashSet<FieldDetails> ((GLib.HashFunc) FieldDetails.hash,
+          (GLib.EqualFunc) FieldDetails.equal);
       string[] phones_a = phones_field.split ("\n");
 
       foreach (var p in phones_a)
@@ -1082,7 +1088,9 @@ public class Trf.Persona : Folks.Persona,
           return;
         }
 
-      var email_addresses = new HashSet<FieldDetails> ();
+      var email_addresses = new HashSet<FieldDetails> (
+          (GLib.HashFunc) FieldDetails.hash,
+          (GLib.EqualFunc) FieldDetails.equal);
       string[] emails_a = emails_field.split (",");
 
       foreach (var e in emails_a)
@@ -1103,7 +1111,8 @@ public class Trf.Persona : Folks.Persona,
 
   private void _update_urls ()
     {
-      var urls = new HashSet<FieldDetails> ();
+      var urls = new HashSet<FieldDetails> ((GLib.HashFunc) FieldDetails.hash,
+          (GLib.EqualFunc) FieldDetails.equal);
       var _urls_field = this._cursor.get_string (Trf.Fields.URLS).dup ();
 
       if (_urls_field == null)

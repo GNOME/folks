@@ -694,11 +694,16 @@ public class Folks.Individual : Object,
       this._persona_set_ro = this._persona_set.read_only_view;
       this._stores = new HashMap<PersonaStore, uint> (null, null);
       this._gender = Gender.UNSPECIFIED;
-      this._urls = new HashSet<FieldDetails> ();
+      this._urls = new HashSet<FieldDetails> ((GLib.HashFunc) FieldDetails.hash,
+          (GLib.EqualFunc) FieldDetails.equal);
       this._urls_ro = this._urls.read_only_view;
-      this._phone_numbers = new HashSet<FieldDetails> ();
+      this._phone_numbers = new HashSet<FieldDetails> (
+          (GLib.HashFunc) FieldDetails.hash,
+          (GLib.EqualFunc) FieldDetails.equal);
       this._phone_numbers_ro = this._phone_numbers.read_only_view;
-      this._email_addresses = new HashSet<FieldDetails> ();
+      this._email_addresses = new HashSet<FieldDetails> (
+          (GLib.HashFunc) FieldDetails.hash,
+          (GLib.EqualFunc) FieldDetails.equal);
       this._email_addresses_ro = this._email_addresses.read_only_view;
       this._roles = new HashSet<Role>
           ((GLib.HashFunc) Role.hash, (GLib.EqualFunc) Role.equal);
@@ -1298,7 +1303,8 @@ public class Folks.Individual : Object,
     {
       /* Populate the URLs as the union of our Personas' URLs.
        * If the same URL exists multiple times we merge the parameters. */
-      var urls_set = new HashMap<unowned string, unowned FieldDetails> ();
+      var urls_set = new HashMap<unowned string, unowned FieldDetails> (
+          null, null, (GLib.EqualFunc) FieldDetails.equal);
 
       this._urls.clear ();
 
@@ -1336,7 +1342,8 @@ public class Folks.Individual : Object,
       /* FIXME: We should handle phone numbers better, just string comparison
          doesn't work. */
       var phone_numbers_set =
-          new HashMap<unowned string, unowned FieldDetails> ();
+          new HashMap<unowned string, unowned FieldDetails> (
+              null, null, (GLib.EqualFunc) FieldDetails.equal);
 
       this._phone_numbers.clear ();
 
@@ -1371,7 +1378,8 @@ public class Folks.Individual : Object,
     {
       /* Populate the email addresses as the union of our Personas' addresses.
        * If the same address exists multiple times we merge the parameters. */
-      var emails_set = new HashMap<unowned string, unowned FieldDetails> ();
+      var emails_set = new HashMap<unowned string, unowned FieldDetails> (
+          null, null, (GLib.EqualFunc) FieldDetails.equal);
 
       this._email_addresses.clear ();
 
