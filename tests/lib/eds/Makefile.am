@@ -31,7 +31,7 @@ libeds_test_la_CFLAGS = \
 
 libeds_test_la_LIBADD = \
 	$(top_builddir)/folks/libfolks.la \
-	$(top_builddir)/backends/eds/libfolks-backend-eds.la \
+	$(top_builddir)/backends/eds/lib/libfolks-eds.la \
 	$(EBOOK_LIBS) \
 	$(EDATASERVER_LIBS) \
 	$(GLIB_LIBS) \
