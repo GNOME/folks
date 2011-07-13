@@ -52,6 +52,13 @@ public class Edsf.PersonaStore : Folks.PersonaStore
    */
   public override string type_id { get { return BACKEND_NAME; } }
 
+  private void _address_book_notify_read_only_cb (Object address_book,
+      ParamSpec pspec)
+    {
+      this.notify_property ("can-add-personas");
+      this.notify_property ("can-remove-personas");
+    }
+
   /**
    * Whether this PersonaStore can add {@link Folks.Persona}s.
    *
@@ -61,7 +68,15 @@ public class Edsf.PersonaStore : Folks.PersonaStore
    */
   public override MaybeBool can_add_personas
     {
-      get { return MaybeBool.TRUE; }
+      get
+        {
+          if (this._addressbook == null)
+            {
+              return MaybeBool.FALSE;
+            }
+
+          return this._addressbook.readonly ? MaybeBool.FALSE : MaybeBool.TRUE;
+        }
     }
 
   /**
@@ -97,7 +112,15 @@ public class Edsf.PersonaStore : Folks.PersonaStore
    */
   public override MaybeBool can_remove_personas
     {
-      get { return MaybeBool.TRUE; }
+      get
+        {
+          if (this._addressbook == null)
+            {
+              return MaybeBool.FALSE;
+            }
+
+          return this._addressbook.readonly ? MaybeBool.FALSE : MaybeBool.TRUE;
+        }
     }
 
   /**
@@ -161,7 +184,13 @@ public class Edsf.PersonaStore : Folks.PersonaStore
               this._ebookview = null;
             }
 
-          this._addressbook = null;
+          if (this._addressbook != null)
+            {
+              this._addressbook.notify["readonly"].disconnect (
+                  this._address_book_notify_read_only_cb);
+
+              this._addressbook = null;
+            }
         }
       catch (GLib.Error e)
         {
@@ -361,6 +390,9 @@ public class Edsf.PersonaStore : Folks.PersonaStore
               throw new PersonaStoreError.INVALID_ARGUMENT (
                   "Couldn't get BookClient: %s\n", e1.message);
             }
+
+          this._addressbook.notify["readonly"].connect (
+              this._address_book_notify_read_only_cb);
 
           try
             {
