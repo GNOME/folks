@@ -98,7 +98,7 @@ public class EdsTest.Backend
           this._addressbook.open_sync (false, null);
           this._addressbook_name =
             this._addressbook.get_source ().peek_name ();
-          Environment.set_variable ("FOLKS_BACKEND_EDS_USE_ADDRESSBOOKS",
+          Environment.set_variable ("FOLKS_BACKEND_EDS_USE_ADDRESS_BOOKS",
                                     this._addressbook_name, true);
         }
       catch (GLib.Error e)
@@ -251,7 +251,7 @@ public class EdsTest.Backend
 
   public void tear_down ()
     {
-      Environment.set_variable ("FOLKS_BACKEND_EDS_USE_ADDRESSBOOKS",
+      Environment.set_variable ("FOLKS_BACKEND_EDS_USE_ADDRESS_BOOKS",
           "", true);
 
       try

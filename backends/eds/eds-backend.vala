@@ -34,8 +34,8 @@ extern const string BACKEND_NAME;
  */
 public class Folks.Backends.Eds.Backend : Folks.Backend
 {
-  public static const string use_addressbooks =
-      "FOLKS_BACKEND_EDS_USE_ADDRESSBOOKS";
+  private static const string _use_address_books =
+      "FOLKS_BACKEND_EDS_USE_ADDRESS_BOOKS";
   private bool _is_prepared = false;
   private HashMap<string, PersonaStore> _persona_stores;
   private Map<string, PersonaStore> _persona_stores_ro;
@@ -237,7 +237,7 @@ public class Folks.Backends.Eds.Backend : Folks.Backend
   private string[] _get_addressbooks_from_env ()
     {
       string[] addressbooks = {};
-      string ab_list = Environment.get_variable (this.use_addressbooks);
+      string ab_list = Environment.get_variable (this._use_address_books);
 
       if (ab_list != null && ab_list != "")
         {
