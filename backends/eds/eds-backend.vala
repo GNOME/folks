@@ -102,16 +102,22 @@ public class Folks.Backends.Eds.Backend : Folks.Backend
    */
   public override async void unprepare () throws GLib.Error
     {
-      foreach (var persona_store in this._persona_stores.values)
+      lock (this._is_prepared)
         {
-          this.persona_store_removed (persona_store);
+          if (this._is_prepared)
+            {
+              foreach (var persona_store in this._persona_stores.values)
+                {
+                  this._remove_address_book (persona_store);
+                }
+
+              this._ab_sources.changed.disconnect (this._ab_source_list_changed_cb);
+              this._ab_sources = null;
+
+              this._is_prepared = false;
+              this.notify_property ("is-prepared");
+            }
         }
-
-      this._persona_stores.clear ();
-      this.notify_property ("persona-stores");
-
-      this._is_prepared = false;
-      this.notify_property ("is-prepared");
     }
 
   private void _create_avatars_cache_dir ()
@@ -180,19 +186,19 @@ public class Folks.Backends.Eds.Backend : Folks.Backend
        * or we'll mess up the calculation of what's been added and removed. */
       foreach (var source_uri in removed_sources)
         {
-          this._store_removed_cb (this._persona_stores.get (source_uri));
+          this._remove_address_book (this._persona_stores.get (source_uri));
         }
 
       foreach (var source_uri in added_sources)
         {
-          this._add_addressbook (new_sources.get (source_uri));
+          this._add_address_book (new_sources.get (source_uri));
         }
     }
 
   /**
    * Add a new addressbook connected to a Persona Store.
    */
-  private void _add_addressbook (E.Source s)
+  private void _add_address_book (E.Source s)
     {
       string relative_uri = s.peek_relative_uri ();
 
@@ -202,19 +208,30 @@ public class Folks.Backends.Eds.Backend : Folks.Backend
       debug ("Adding address book '%s'.", relative_uri);
 
       var store = new Edsf.PersonaStore (s);
-      this._persona_stores.set (store.id, store);
+
       store.removed.connect (this._store_removed_cb);
+
+      this._persona_stores.set (store.id, store);
       this.notify_property ("persona-stores");
+
       this.persona_store_added (store);
+    }
+
+  private void _remove_address_book (Folks.PersonaStore store)
+    {
+      debug ("Removing address book '%s'.", store.id);
+
+      this.persona_store_removed (store);
+
+      this.persona_stores.unset (store.id);
+      this.notify_property ("persona-stores");
+
+      store.removed.disconnect (this._store_removed_cb);
     }
 
   private void _store_removed_cb (Folks.PersonaStore store)
     {
-      debug ("Removing address book '%s'.", store.id);
-
-      store.removed.disconnect (this._store_removed_cb);
-      this.persona_store_removed (store);
-      this.persona_stores.unset (store.id);
+      this._remove_address_book (store);
     }
 
   private string[] _get_addressbooks_from_env ()
