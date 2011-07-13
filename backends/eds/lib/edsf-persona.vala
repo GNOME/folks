@@ -33,6 +33,7 @@ public class Edsf.Persona : Folks.Persona,
     AvatarDetails,
     EmailDetails,
     GenderDetails,
+    GroupDetails,
     ImDetails,
     LocalIdDetails,
     NameDetails,
@@ -292,6 +293,57 @@ public class Edsf.Persona : Folks.Persona,
         }
     }
 
+  private HashSet<string> _groups;
+  private Set<string> _groups_ro;
+
+  /**
+   * {@inheritDoc}
+   *
+   * @since 0.5.UNRELEASED
+   */
+  public Set<string> groups
+    {
+      get { return this._groups_ro; }
+      set
+        {
+          ((Edsf.PersonaStore) this.store)._set_groups (this, value);
+        }
+    }
+
+  /**
+   * {@inheritDoc}
+   *
+   * @since 0.5.UNRELEASED
+   */
+  public async void change_group (string group, bool is_member)
+      throws GLib.Error
+    {
+      /* Nothing to do? */
+      if ((is_member == true && this._groups.contains (group) == true) ||
+          (is_member == false && this._groups.contains (group) == false))
+        {
+          return;
+        }
+
+      /* Replace the current set of groups with a modified one. */
+      var new_groups = new HashSet<string> ();
+      foreach (var category_name in this._groups)
+        {
+          new_groups.add (category_name);
+        }
+
+      if (is_member == false)
+        {
+          new_groups.remove (group);
+        }
+      else
+        {
+          new_groups.add (group);
+        }
+
+      this.groups = new_groups;
+    }
+
   /**
    * Build a IID.
    *
@@ -366,6 +418,8 @@ public class Edsf.Persona : Folks.Persona,
       this._local_ids = new HashSet<string> ();
       this._local_ids_ro = this._local_ids.read_only_view;
       this._web_service_addresses = new HashMultiMap<string, string> ();
+      this._groups = new HashSet<string> ();
+      this._groups_ro = this._groups.read_only_view;
 
       this._update (contact);
     }
@@ -432,6 +486,7 @@ public class Edsf.Persona : Folks.Persona,
       this._update_addresses ();
       this._update_emails ();
       this._update_im_addresses ();
+      this._update_groups ();
       this._update_notes ();
       this._update_local_ids ();
       this._update_web_services_addresses ();
@@ -626,6 +681,55 @@ public class Edsf.Persona : Folks.Persona,
 
       this.notify_property ("im-addresses");
     }
+
+  private void _update_groups ()
+    {
+      unowned GLib.List<string> category_names =
+          (GLib.List<string>) this._contact.get (E.ContactField.CATEGORY_LIST);
+      var new_categories = new HashSet<string> ();
+      var added_categories = new LinkedList<string> ();
+
+      foreach (var category_name in category_names)
+        {
+          new_categories.add (category_name);
+
+          /* Is this a new category? */
+          if (!this._groups.contains (category_name))
+            {
+              added_categories.add (category_name);
+            }
+        }
+
+      /* Work out which categories have been removed. */
+      var removed_categories = new LinkedList<string> ();
+
+      foreach (var category_name in this._groups)
+        {
+          if (!new_categories.contains (category_name))
+            {
+              removed_categories.add (category_name);
+            }
+        }
+
+      /* Make the changes to this._groups and emit signals. */
+      foreach (var category_name in removed_categories)
+        {
+          this.group_changed (category_name, false);
+          this._groups.remove (category_name);
+        }
+
+      foreach (var category_name in added_categories)
+        {
+          this._groups.add (category_name);
+          this.group_changed (category_name, true);
+        }
+
+      /* Notify if anything's changed. */
+      if (added_categories.size != 0 || removed_categories.size != 0)
+        {
+          this.notify_property ("groups");
+        }
+   }
 
   /**
    * Get the avatars content

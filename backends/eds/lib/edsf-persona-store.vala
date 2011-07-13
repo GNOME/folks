@@ -42,6 +42,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
   private string _addressbook_uri = null;
   private E.Source _source;
   private string _query_str;
+  private bool _groups_supported = false;
 
   /**
    * The type of persona store this is.
@@ -100,7 +101,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
    */
   public override MaybeBool can_group_personas
     {
-      get { return MaybeBool.FALSE; }
+      get { return this._groups_supported ? MaybeBool.TRUE : MaybeBool.FALSE; }
     }
 
   /**
@@ -408,6 +409,29 @@ public class Edsf.PersonaStore : Folks.PersonaStore
             {
               throw new PersonaStoreError.INVALID_ARGUMENT (
                   "Couldn't open addressbook\n");
+            }
+
+          /* Determine which fields the address book supports. This is necessary
+           * to work out whether we can support groups. */
+          string supported_fields;
+          try
+            {
+              yield this._addressbook.get_backend_property ("supported-fields",
+                  out supported_fields, null);
+
+              /* We get a comma-separated list of fields back. */
+              if (supported_fields != null)
+                {
+                  string[] fields = supported_fields.split (",");
+
+                  this._groups_supported =
+                      (Contact.field_name (ContactField.CATEGORIES) in fields);
+                }
+            }
+          catch (GLib.Error e5)
+            {
+              throw new PersonaStoreError.INVALID_ARGUMENT (
+                  "Couldn't get address book capabilities: %s", e5.message);
             }
 
           bool got_view = false;
@@ -781,6 +805,44 @@ public class Edsf.PersonaStore : Folks.PersonaStore
              contact.set_attributes (field_id_t, attributes);
            }
        }
+    }
+
+  internal async void _set_groups (Edsf.Persona persona,
+      Set<string> groups)
+    {
+      if (this._groups_supported == false)
+        {
+          /* Give up. */
+          return;
+        }
+
+      try
+        {
+          E.Contact contact = ((Edsf.Persona) persona).contact;
+          yield this._set_contact_groups (contact, groups);
+          yield this._addressbook.modify_contact (contact);
+        }
+      catch (GLib.Error error)
+        {
+          GLib.warning ("Can't update groups: %s\n", error.message);
+        }
+    }
+
+  private async void _set_contact_groups (E.Contact contact, Set<string> groups)
+    {
+      var categories = new GLib.List<string> ();
+
+      foreach (var group in groups)
+        {
+          if (group == "")
+            {
+              continue;
+            }
+
+          categories.prepend (group);
+        }
+
+      contact.set (ContactField.CATEGORY_LIST, categories);
     }
 
   private void _contacts_added_cb (GLib.List<E.Contact> contacts)
