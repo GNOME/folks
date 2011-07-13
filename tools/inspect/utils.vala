@@ -173,6 +173,16 @@ private class Folks.Inspect.Utils
   public static void print_persona_store (PersonaStore store,
       bool show_personas)
     {
+      if (store.is_prepared == false)
+        {
+          Utils.print_line ("Persona store '%s':", store.id);
+          Utils.indent ();
+          Utils.print_line ("Not prepared.");
+          Utils.unindent ();
+
+          return;
+        }
+
       Utils.print_line ("Persona store '%s' with %u personas:",
           store.id, store.personas.size);
 
