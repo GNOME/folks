@@ -264,10 +264,10 @@ public class Edsf.PersonaStore : Folks.PersonaStore
           else if (k == Folks.PersonaStore.detail_key (
                 PersonaDetail.POSTAL_ADDRESSES))
             {
-              Set<PostalAddress> postal_addresses =
-                (Set<PostalAddress>) v.get_object ();
+              Set<PostalAddressFieldDetails> postal_fds =
+                (Set<PostalAddressFieldDetails>) v.get_object ();
                 yield this._set_contact_postal_addresses (contact,
-                    postal_addresses);
+                    postal_fds);
             }
           else if (k == Folks.PersonaStore.detail_key (
                 PersonaDetail.STRUCTURED_NAME))
@@ -814,13 +814,13 @@ public class Edsf.PersonaStore : Folks.PersonaStore
     }
 
   internal async void _set_postal_addresses (Edsf.Persona persona,
-      Set<PostalAddress> addresses)
+      Set<PostalAddressFieldDetails> postal_fds)
     {
       try
         {
           E.Contact contact = ((Edsf.Persona) persona).contact;
           yield this._set_contact_postal_addresses (contact,
-              addresses);
+              postal_fds);
           yield this._addressbook.modify_contact (contact);
         }
       catch (GLib.Error error)
@@ -831,25 +831,29 @@ public class Edsf.PersonaStore : Folks.PersonaStore
     }
 
   private async void _set_contact_postal_addresses (E.Contact contact,
-      Set<PostalAddress> addresses)
+      Set<PostalAddressFieldDetails> postal_fds)
     {
-      foreach (var pa in addresses)
+      foreach (var fd in postal_fds)
         {
+          if (fd == null || fd.value == null)
+            continue;
+
           var address = new E.ContactAddress ();
 
-          address.po = pa.po_box;
-          address.ext = pa.extension;
-          address.street = pa.street;
-          address.locality = pa.locality;
-          address.region = pa.region;
-          address.code = pa.postal_code;
-          address.country = pa.country;
-          address.address_format = pa.address_format;
+          address.po = fd.value.po_box;
+          address.ext = fd.value.extension;
+          address.street = fd.value.street;
+          address.locality = fd.value.locality;
+          address.region = fd.value.region;
+          address.code = fd.value.postal_code;
+          address.country = fd.value.country;
+          address.address_format = fd.value.address_format;
 
-          if (pa.types.size > 0)
+          var types = fd.parameters.get ("type");
+          if (types.size > 0)
             {
-              var pa_type = pa.types.to_array ()[0];
-              contact.set (E.Contact.field_id (pa_type), address);
+              var type = types.to_array ()[0];
+              contact.set (E.Contact.field_id (type), address);
             }
           else
             {

@@ -128,30 +128,6 @@ public class Folks.PostalAddress : Object
       construct set { _address_format = (value != null ? value : ""); }
     }
 
-  private HashSet<string> _types;
-  private Set<string> _types_ro;
-
-  /**
-   * The types of the address.
-   *
-   * The types of address, for instance an address can be a home or work
-   * address.
-   */
-  public Set<string> types
-    {
-      get { return this._types_ro; }
-      construct set
-        {
-          this._types = new HashSet<string> ();
-          if (value != null)
-            {
-              this._types_ro = this._types.read_only_view;
-              foreach (var type in value)
-                this._types.add (type);
-            }
-        }
-    }
-
   private string _uid = "";
   /**
    * The UID of the Postal Address (if any).
@@ -181,7 +157,7 @@ public class Folks.PostalAddress : Object
    */
   public PostalAddress (string? po_box, string? extension, string? street,
       string? locality, string? region, string? postal_code, string? country,
-      string? address_format, Set<string>? types, string? uid)
+      string? address_format, string? uid)
     {
       Object (po_box:         po_box,
               extension:      extension,
@@ -191,7 +167,6 @@ public class Folks.PostalAddress : Object
               postal_code:    postal_code,
               country:        country,
               address_format: address_format,
-              types:          types,
               uid:            uid);
     }
 
@@ -213,17 +188,8 @@ public class Folks.PostalAddress : Object
           this.postal_code != with.postal_code ||
           this.country != with.country ||
           this.address_format != with.address_format ||
-          this.types.size != with.types.size ||
           this.uid != with.uid)
         return false;
-
-      foreach (var type in this.types)
-        {
-          if (with.types.contains (type) == false)
-            {
-              return false;
-            }
-        }
 
       return true;
     }
@@ -245,6 +211,61 @@ public class Folks.PostalAddress : Object
 }
 
 /**
+ * Object representing a PostalAddress value that can have some parameters
+ * associated with it.
+ *
+ * See {@link Folks.AbstractFieldDetails}.
+ *
+ * @since UNRELEASED
+ */
+public class Folks.PostalAddressFieldDetails :
+    AbstractFieldDetails<PostalAddress>
+{
+  /**
+   * Create a new PostalAddressFieldDetails.
+   *
+   * @param value the value of the field
+   * @param parameters initial parameters. See
+   * {@link AbstractFieldDetails.parameters}. A `null` value is equivalent to an
+   * empty map of parameters.
+   *
+   *
+   * @return a new PostalAddressFieldDetails
+   *
+   * @since UNRELEASED
+   */
+  public PostalAddressFieldDetails (PostalAddress value,
+      MultiMap<string, string>? parameters = null)
+    {
+      this.value = value;
+      if (parameters != null)
+        this.parameters = parameters;
+    }
+
+  /**
+   * {@inheritDoc}
+   *
+   * @since UNRELEASED
+   */
+  public override bool equal (AbstractFieldDetails<PostalAddress> that)
+    {
+      /* This is fairly-dumb but smart matching is an i10n nightmare. */
+      return this.value.to_string () == that.value.to_string ();
+    }
+
+  /**
+   * {@inheritDoc}
+   *
+   * @since UNRELEASED
+   */
+  public override uint hash ()
+    {
+      /* This is basic because smart matching is very hard (see equal()). */
+      return str_hash (this.value.to_string ());
+    }
+}
+
+/**
  * Interface for classes that can provide postal addresses, such as
  * {@link Persona} and {@link Individual}.
  */
@@ -257,5 +278,5 @@ public interface Folks.PostalAddressDetails : Object
    *
    * @since 0.5.1
    */
-  public abstract Set<PostalAddress> postal_addresses { get; set; }
+  public abstract Set<PostalAddressFieldDetails> postal_addresses { get; set; }
 }

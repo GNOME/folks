@@ -56,7 +56,7 @@ internal class Trf.AfflInfo : Object
 
   public string role { get; set; }
 
-  public Folks.PostalAddress postal_address;
+  public Folks.PostalAddressFieldDetails postal_address_fd;
 
   public string email { get; set; }
 

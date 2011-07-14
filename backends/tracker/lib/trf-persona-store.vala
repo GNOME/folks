@@ -580,12 +580,13 @@ public class Trf.PersonaStore : Folks.PersonaStore
           else if (k == Folks.PersonaStore.detail_key (
                 PersonaDetail.POSTAL_ADDRESSES))
             {
-              Set<PostalAddress> postal_addresses =
-                (Set<PostalAddress>) v.get_object ();
+              Set<PostalAddressFieldDetails> postal_addresses =
+                (Set<PostalAddressFieldDetails>) v.get_object ();
 
               int postal_cnt = 0;
-              foreach (var pa in postal_addresses)
+              foreach (var pafd in postal_addresses)
                 {
+                  var pa = pafd.value;
                   var postal_affl = "_:postal_affl%d".printf (postal_cnt);
                   var postal = "_:postal%d".printf (postal_cnt);
                   builder.subject (postal);
@@ -1471,8 +1472,8 @@ public class Trf.PersonaStore : Folks.PersonaStore
                     }
                 }
 
-              if (affl_info.postal_address != null)
-                p._add_postal_address (affl_info.postal_address);
+              if (affl_info.postal_address_fd != null)
+                p._add_postal_address (affl_info.postal_address_fd);
 
               if (affl_info.phone != null)
                 p._add_phone (affl_info.phone, e.object_id.to_string ());
@@ -1715,11 +1716,11 @@ public class Trf.PersonaStore : Folks.PersonaStore
               var country = cursor.get_string
                   (Trf.AfflInfoFields.AFFL_COUNTRY).dup ();
 
-              var types = new HashSet<string> ();
-
-              affl_info.postal_address = new Folks.PostalAddress (
+              var postal_address = new Folks.PostalAddress (
                   po_box, extension, street, locality, region, postal_code,
-                  country, null, types, affl_info.affl_tracker_id);
+                  country, null, affl_info.affl_tracker_id);
+              affl_info.postal_address_fd =
+                  new Folks.PostalAddressFieldDetails (postal_address);
 
               affl_info.email = cursor.get_string
                   (Trf.AfflInfoFields.AFFL_EMAIL).dup ();
@@ -2021,7 +2022,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
     }
 
   internal async void _set_postal_addresses (Folks.Persona persona,
-      Set<PostalAddress> postal_addresses)
+      Set<PostalAddressFieldDetails> postal_addresses)
     {
        yield this._set_attrib_set (persona, postal_addresses,
           Trf.Attrib.POSTAL_ADDRESSES);
@@ -2349,6 +2350,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
       foreach (var p in attribs)
         {
           AbstractFieldDetails fd = null;
+          PostalAddressFieldDetails pafd = null;
           PostalAddress pa = null;
 
           string affl = "_:a%d".printf (i);
@@ -2357,7 +2359,8 @@ public class Trf.PersonaStore : Folks.PersonaStore
           switch (what)
             {
               case Trf.Attrib.POSTAL_ADDRESSES:
-                pa = (PostalAddress) p;
+                pafd = (PostalAddressFieldDetails) p;
+                pa = pafd.value;
                 attr = "_:p%d".printf (i);
                 builder.subject (attr);
                 builder.predicate ("a");

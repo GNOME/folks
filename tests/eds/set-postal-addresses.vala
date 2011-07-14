@@ -29,7 +29,7 @@ public class SetPostalAddressesTests : Folks.TestCase
   private GLib.MainLoop _main_loop;
   private bool _found_before_update;
   private bool _found_after_update;
-  private PostalAddress _postal;
+  private PostalAddressFieldDetails _pa_fd;
 
   public SetPostalAddressesTests ()
     {
@@ -56,11 +56,11 @@ public class SetPostalAddressesTests : Folks.TestCase
       Gee.HashMap<string, Value?> c1 = new Gee.HashMap<string, Value?> ();
       this._main_loop = new GLib.MainLoop (null, false);
       Value? v;
-      var types = new HashSet<string> ();
-      types.add ("address_other");
-      this._postal = new PostalAddress ("123", "extension", "street",
+      var pa = new PostalAddress ("123", "extension", "street",
           "locality", "region", "postal code", "country", "",
-          types, "123");
+          "123");
+      this._pa_fd = new PostalAddressFieldDetails (pa);
+      this._pa_fd.add_parameter ("type", "address_other");
 
       this._found_before_update = false;
       this._found_after_update = false;
@@ -123,14 +123,14 @@ public class SetPostalAddressesTests : Folks.TestCase
 
               foreach (var p in i.personas)
                 {
-                  var addresses = new HashSet<PostalAddress> ();
-                  var types = new HashSet<string> ();
-                  types.add ("address_other");
-                  var addr1 = new PostalAddress ("123", "extension", "street",
+                  var pa_fds = new HashSet<PostalAddressFieldDetails> ();
+                  var pa_1 = new PostalAddress ("123", "extension", "street",
                       "locality", "region", "postal code", "country", "format",
-                      types, "123");
-                  addresses.add (addr1);
-                  ((PostalAddressDetails) p).postal_addresses = addresses;
+                      "123");
+                  var pa_fd_1 = new PostalAddressFieldDetails (pa_1);
+                  pa_fd_1.add_parameter ("type", "address_other");
+                  pa_fds.add (pa_fd_1);
+                  ((PostalAddressDetails) p).postal_addresses = pa_fds;
                 }
             }
         }
@@ -141,10 +141,10 @@ public class SetPostalAddressesTests : Folks.TestCase
   private void _notify_postal_addresses_cb (Object individual_obj, ParamSpec ps)
     {
       Folks.Individual i = (Folks.Individual) individual_obj;
-      foreach (var p in i.postal_addresses)
+      foreach (var pa_fd in i.postal_addresses)
         {
-          p.uid = this._postal.uid;
-          if (p.equal (this._postal))
+          pa_fd.value.uid = this._pa_fd.value.uid;
+          if (pa_fd.equal (this._pa_fd))
             {
               this._found_after_update = true;
               this._main_loop.quit ();

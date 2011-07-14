@@ -33,7 +33,7 @@ public class PostalAddressDetailsTests : Folks.TestCase
   private string _extended = "example extended address";
   private string _country = "example country";
   private string _region = "example region";
-  private PostalAddress _postal_address;
+  private PostalAddressFieldDetails _postal_address;
   private bool _found_postal_address;
   private string _fullname;
 
@@ -64,9 +64,7 @@ public class PostalAddressDetailsTests : Folks.TestCase
       this._fullname = "persona #1";
       Value? v;
 
-      var types = new HashSet<string> ();
-      types.add (Edsf.Persona.address_fields[0]);
-      this._postal_address = new PostalAddress (
+      var pa = new PostalAddress (
            this._pobox,
            this._extended,
            this._street,
@@ -74,14 +72,15 @@ public class PostalAddressDetailsTests : Folks.TestCase
            this._region,
            this._postalcode,
            this._country,
-           null, types, "eds_id");
+           null, "eds_id");
+      this._postal_address = new PostalAddressFieldDetails (pa);
+      this._postal_address.add_parameter ("type",
+          Edsf.Persona.address_fields[0]);
 
       v = Value (typeof (string));
       v.set_string (this._fullname);
       c1.set ("full_name", (owned) v);
-      var types1 = new HashSet<string> ();
-      types1.add (Edsf.Persona.address_fields[0]);
-      var postal_address_copy = new PostalAddress (
+      var pa_copy = new PostalAddress (
            this._pobox,
            this._extended,
            this._street,
@@ -89,9 +88,11 @@ public class PostalAddressDetailsTests : Folks.TestCase
            this._region,
            this._postalcode,
            this._country,
-           null, types1, "eds_id");
-      v = Value (typeof (PostalAddress));
-      v.set_object (postal_address_copy);
+           null, "eds_id");
+      var pa_fd_copy = new PostalAddressFieldDetails (pa_copy);
+      pa_fd_copy.add_parameter ("type", Edsf.Persona.address_fields[0]);
+      v = Value (typeof (PostalAddressFieldDetails));
+      v.set_object (pa_fd_copy);
       c1.set (Edsf.Persona.address_fields[0], (owned) v);
 
       this._eds_backend.add_contact (c1);
@@ -143,15 +144,15 @@ public class PostalAddressDetailsTests : Folks.TestCase
         {
           if (i.full_name == this._fullname)
             {
-              foreach (var p in i.postal_addresses)
+              foreach (var pa_fd in i.postal_addresses)
               {
                 /* We copy the uid - we don't know it.
                  * Although we could get it from the 1st
                  * personas iid; there is no real need.
                  */
-                this._postal_address.uid = p.uid;
+                this._postal_address.value.uid = pa_fd.value.uid;
 
-                if (p.equal (this._postal_address))
+                if (pa_fd.equal (this._postal_address))
                   {
                     this._found_postal_address = true;
                     this._main_loop.quit ();

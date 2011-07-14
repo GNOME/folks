@@ -259,13 +259,13 @@ public class Trf.Persona : Folks.Persona,
         }
     }
 
-  private HashSet<PostalAddress> _postal_addresses;
-  private Set<PostalAddress> _postal_addresses_ro;
+  private HashSet<PostalAddressFieldDetails> _postal_addresses;
+  private Set<PostalAddressFieldDetails> _postal_addresses_ro;
 
   /**
    * {@inheritDoc}
    */
-  public Set<PostalAddress> postal_addresses
+  public Set<PostalAddressFieldDetails> postal_addresses
     {
       get { return this._postal_addresses_ro; }
       public set
@@ -421,7 +421,9 @@ public class Trf.Persona : Folks.Persona,
       this._urls = new HashSet<FieldDetails> ((GLib.HashFunc) FieldDetails.hash,
           (GLib.EqualFunc) FieldDetails.equal);
       this._urls_ro = this._urls.read_only_view;
-      this._postal_addresses = new HashSet<PostalAddress> ();
+      this._postal_addresses = new HashSet<PostalAddressFieldDetails> (
+          (GLib.HashFunc) PostalAddressFieldDetails.hash,
+          (GLib.EqualFunc) PostalAddressFieldDetails.equal);
       this._postal_addresses_ro = this._postal_addresses.read_only_view;
       this._local_ids = new HashSet<string> ();
       this._local_ids_ro = this._local_ids.read_only_view;
@@ -574,7 +576,9 @@ public class Trf.Persona : Folks.Persona,
           return;
         }
 
-      var postal_addresses = new HashSet<PostalAddress> ();
+      var postal_addresses = new HashSet<PostalAddressFieldDetails> (
+          (GLib.HashFunc) PostalAddressFieldDetails.hash,
+          (GLib.EqualFunc) PostalAddressFieldDetails.equal);
 
       string[] addresses_a = postal_field.split ("\n");
 
@@ -594,8 +598,6 @@ public class Trf.Persona : Folks.Persona,
           if (address_empty)
             continue;
 
-          var types = new HashSet<string> ();
-
           var pa = new PostalAddress (a_info[Trf.PostalAddressFields.POBOX],
               a_info[Trf.PostalAddressFields.EXTENDED_ADDRESS],
               a_info[Trf.PostalAddressFields.STREET_ADDRESS],
@@ -603,10 +605,11 @@ public class Trf.Persona : Folks.Persona,
               a_info[Trf.PostalAddressFields.REGION],
               a_info[Trf.PostalAddressFields.POSTALCODE],
               a_info[Trf.PostalAddressFields.COUNTRY],
-              null, types,
+              null,
               a_info[Trf.PostalAddressFields.TRACKER_ID]);
+          var pafd = new PostalAddressFieldDetails (pa);
 
-          postal_addresses.add (pa);
+          postal_addresses.add (pafd);
         }
 
       this._postal_addresses = postal_addresses;
@@ -626,28 +629,29 @@ public class Trf.Persona : Folks.Persona,
       this._set_local_ids (local_ids);
     }
 
-  internal bool _add_postal_address (PostalAddress postal_address)
+  internal bool _add_postal_address (
+      PostalAddressFieldDetails postal_address_fd)
     {
-      foreach (var pa in this._postal_addresses)
+      foreach (var pafd_cur in this._postal_addresses)
         {
-          if (postal_address.equal (pa))
+          if (postal_address_fd.value.equal (pafd_cur.value))
             {
               return false;
             }
         }
 
-      this._postal_addresses.add (postal_address);
+      this._postal_addresses.add (postal_address_fd);
       this.notify_property ("postal-addresses");
       return true;
     }
 
   internal bool _remove_postal_address (string tracker_id)
     {
-      foreach (var pa in this._postal_addresses)
+      foreach (var pafd in this._postal_addresses)
         {
-          if (pa.uid == tracker_id)
+          if (pafd.value.uid == tracker_id)
             {
-              this._postal_addresses.remove (pa);
+              this._postal_addresses.remove (pafd);
               this.notify_property ("postal-addresses");
               return true;
             }

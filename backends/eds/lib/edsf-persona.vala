@@ -121,8 +121,8 @@ public class Edsf.Persona : Folks.Persona,
   private Set<Note> _notes_ro;
   private static HashTable<string, E.ContactField> _im_eds_map = null;
 
-  private HashSet<PostalAddress> _postal_addresses;
-  private Set<PostalAddress> _postal_addresses_ro;
+  private HashSet<PostalAddressFieldDetails> _postal_addresses;
+  private Set<PostalAddressFieldDetails> _postal_addresses_ro;
 
   private HashSet<string> _local_ids;
   private Set<string> _local_ids_ro;
@@ -177,7 +177,7 @@ public class Edsf.Persona : Folks.Persona,
    *
    * @since 0.5.UNRELEASED
    */
-  public Set<PostalAddress> postal_addresses
+  public Set<PostalAddressFieldDetails> postal_addresses
     {
       get { return this._postal_addresses_ro; }
       set
@@ -490,7 +490,9 @@ public class Edsf.Persona : Folks.Persona,
       this._notes_ro = this._notes.read_only_view;
       this._urls = new HashSet<FieldDetails> ();
       this._urls_ro = this._urls.read_only_view;
-      this._postal_addresses = new HashSet<PostalAddress> ();
+      this._postal_addresses = new HashSet<PostalAddressFieldDetails> (
+          (GLib.HashFunc) PostalAddressFieldDetails.hash,
+          (GLib.EqualFunc) PostalAddressFieldDetails.equal);
       this._postal_addresses_ro = this._postal_addresses.read_only_view;
       this._local_ids = new HashSet<string> ();
       this._local_ids_ro = this._local_ids.read_only_view;
@@ -955,13 +957,13 @@ public class Edsf.Persona : Folks.Persona,
               var po_box = a.po;
               var region = a.region;
               var street = a.street;
-              var types = new HashSet<string> ();
-              types.add (afield);
 
-              PostalAddress pa = new PostalAddress (po_box, extension, street,
+              var pa = new PostalAddress (po_box, extension, street,
                   locality, region, postal_code, country,
-                  address_format, types, null);
-              this._postal_addresses.add (pa);
+                  address_format, null);
+              var pa_fd = new PostalAddressFieldDetails (pa);
+              pa_fd.add_parameter ("type", afield);
+              this._postal_addresses.add (pa_fd);
             }
         }
 

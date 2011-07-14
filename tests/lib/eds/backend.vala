@@ -225,7 +225,8 @@ public class EdsTest.Backend
             }
           else if (k == Edsf.Persona.address_fields[0])
             {
-              var pa = (PostalAddress) c.get (k).get_object ();
+              var pa_fd = (PostalAddressFieldDetails) c.get (k).get_object ();
+              var pa = (PostalAddress) pa_fd.value;
               var address = new E.ContactAddress ();
               address.po = pa.po_box;
               address.ext = pa.extension;

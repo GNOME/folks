@@ -38,7 +38,7 @@ public class PostalAddressDetailsInterfaceTests : Folks.TestCase
   private string _extended = "example extended address";
   private string _country = "example country";
   private string _region = "example region";
-  private PostalAddress _postal_address;
+  private PostalAddressFieldDetails _postal_address_fd;
   private bool _found_postal_address;
   private string _fullname;
 
@@ -67,8 +67,7 @@ public class PostalAddressDetailsInterfaceTests : Folks.TestCase
       this._fullname = "persona #1";
       c1.set (Trf.OntologyDefs.NCO_FULLNAME, this._fullname);
 
-      var types = new HashSet<string> ();
-      this._postal_address = new PostalAddress (
+      var pa = new PostalAddress (
            this._pobox,
            this._extended,
            this._street,
@@ -76,7 +75,8 @@ public class PostalAddressDetailsInterfaceTests : Folks.TestCase
            this._region,
            this._postalcode,
            this._country,
-           null, types, "tracker_id");
+           null, "tracker_id");
+      this._postal_address_fd = new PostalAddressFieldDetails (pa);
 
       // nco:pobox, nco:district, nco:county, nco:locality, nco:postalcode,
       // nco:streetAddress
@@ -142,15 +142,15 @@ public class PostalAddressDetailsInterfaceTests : Folks.TestCase
         {
           if (i.full_name == this._fullname)
             {
-              foreach (var p in i.postal_addresses)
+              foreach (var pafd in i.postal_addresses)
               {
                 /* We copy the tracker_id - we don't know it.
                  * Although we could get it from the 1st
                  * personas iid; there is no real need.
                  */
-                this._postal_address.uid = p.uid;
+                this._postal_address_fd.value.uid = pafd.value.uid;
 
-                if (p.equal (this._postal_address))
+                if (pafd.value.equal (this._postal_address_fd.value))
                   {
                     this._found_postal_address = true;
                     this._main_loop.quit ();

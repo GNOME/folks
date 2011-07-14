@@ -30,7 +30,7 @@ public class SetPostalAddressesTests : Folks.TestCase
   private IndividualAggregator _aggregator;
   private string _persona_fullname;
   private bool _postal_address_found;
-  private PostalAddress _address;
+  private PostalAddressFieldDetails _postal_address_fd;
 
   public SetPostalAddressesTests ()
     {
@@ -59,16 +59,16 @@ public class SetPostalAddressesTests : Folks.TestCase
       c1.set (Trf.OntologyDefs.NCO_FULLNAME, this._persona_fullname);
       this._tracker_backend.add_contact (c1);
 
-      var types =  new HashSet<string> ();
-      this._address = new PostalAddress (null, null, null, null, null,
-          null, null, null, types, null);
-      this._address.po_box = "12345";
-      this._address.locality = "locality";
-      this._address.postal_code = "code";
-      this._address.street = "some street";
-      this._address.extension = "some extension";
-      this._address.country = "some country";
-      this._address.region = "some region";
+      var pa = new PostalAddress (null, null, null, null, null,
+          null, null, null, null);
+      pa.po_box = "12345";
+      pa.locality = "locality";
+      pa.postal_code = "code";
+      pa.street = "some street";
+      pa.extension = "some extension";
+      pa.country = "some country";
+      pa.region = "some region";
+      this._postal_address_fd = new PostalAddressFieldDetails (pa);
 
       this._tracker_backend.set_up ();
 
@@ -119,19 +119,21 @@ public class SetPostalAddressesTests : Folks.TestCase
             {
               i.notify["postal-addresses"].connect (this._notify_postal_cb);
 
-              var types =  new HashSet<string> ();
-              var addresses = new HashSet<PostalAddress> ();
-              var pa = new Folks.PostalAddress (null, null, null, null, null,
-                null, null, null, types, null);
-              pa.po_box = this._address.po_box;
-              pa.locality = this._address.locality;
-              pa.postal_code =this._address.postal_code;
-              pa.street = this._address.street;
-              pa.extension = this._address.extension;
-              pa.country = this._address.country;
-              pa.region  = this._address.region;
+              var addresses = new HashSet<PostalAddressFieldDetails> (
+                  (GLib.HashFunc) PostalAddressFieldDetails.hash,
+                  (GLib.EqualFunc) PostalAddressFieldDetails.equal);
+              var pa = new PostalAddress (null, null, null, null, null,
+                null, null, null, null);
+              pa.po_box = this._postal_address_fd.value.po_box;
+              pa.locality = this._postal_address_fd.value.locality;
+              pa.postal_code =this._postal_address_fd.value.postal_code;
+              pa.street = this._postal_address_fd.value.street;
+              pa.extension = this._postal_address_fd.value.extension;
+              pa.country = this._postal_address_fd.value.country;
+              pa.region  = this._postal_address_fd.value.region;
+              var pafd = new PostalAddressFieldDetails (pa);
 
-              addresses.add (pa);
+              addresses.add (pafd);
 
               foreach (var p in i.personas)
                 {
@@ -148,11 +150,11 @@ public class SetPostalAddressesTests : Folks.TestCase
       Folks.Individual i = (Folks.Individual) individual_obj;
       if (i.full_name == this._persona_fullname)
         {
-          foreach (var p in i.postal_addresses)
+          foreach (var pafd in i.postal_addresses)
             {
               /* we don't care if UIDs differ for this test */
-              this._address.uid = p.uid;
-              if (p.equal (this._address))
+              this._postal_address_fd.value.uid = pafd.value.uid;
+              if (pafd.value.equal (this._postal_address_fd.value))
                 {
                   this._postal_address_found = true;
                   this._main_loop.quit ();

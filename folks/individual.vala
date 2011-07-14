@@ -426,20 +426,20 @@ public class Folks.Individual : Object,
         }
     }
 
-  private HashSet<PostalAddress> _postal_addresses;
-  private Set<PostalAddress> _postal_addresses_ro;
+  private HashSet<PostalAddressFieldDetails> _postal_addresses;
+  private Set<PostalAddressFieldDetails> _postal_addresses_ro;
 
   /**
    * {@inheritDoc}
    */
-  public Set<PostalAddress> postal_addresses
+  public Set<PostalAddressFieldDetails> postal_addresses
     {
       get { return this._postal_addresses_ro; }
       private set
         {
           this._postal_addresses.clear ();
-          foreach (PostalAddress pa in value)
-            this._postal_addresses.add (pa);
+          foreach (PostalAddressFieldDetails pafd in value)
+            this._postal_addresses.add (pafd);
         }
     }
 
@@ -710,7 +710,9 @@ public class Folks.Individual : Object,
       this._roles_ro = this._roles.read_only_view;
       this._local_ids = new HashSet<string> ();
       this._local_ids_ro = this._local_ids.read_only_view;
-      this._postal_addresses = new HashSet<PostalAddress> ();
+      this._postal_addresses = new HashSet<PostalAddressFieldDetails> (
+          (GLib.HashFunc) PostalAddressFieldDetails.hash,
+          (GLib.EqualFunc) PostalAddressFieldDetails.equal);
       this._postal_addresses_ro = this._postal_addresses.read_only_view;
       this._notes = new HashSet<Note>
           ((GLib.HashFunc) Note.hash, (GLib.EqualFunc) Note.equal);
@@ -1458,8 +1460,8 @@ public class Folks.Individual : Object,
           var address_details = persona as PostalAddressDetails;
           if (address_details != null)
             {
-              foreach (var pa in address_details.postal_addresses)
-                this._postal_addresses.add (pa);
+              foreach (var pafd in address_details.postal_addresses)
+                this._postal_addresses.add (pafd);
             }
         }
 

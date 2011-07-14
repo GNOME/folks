@@ -36,7 +36,7 @@ public class AddPersonaTests : Folks.TestCase
   private string _im_addr_2;
   private string _phone_1;
   private string _phone_2;
-  private PostalAddress _address;
+  private PostalAddressFieldDetails _address;
   private string _po_box = "12345";
   private string _locality = "locality";
   private string _postal_code = "code";
@@ -80,11 +80,11 @@ public class AddPersonaTests : Folks.TestCase
       this._family_name = "family";
       this._given_name = "given";
 
-      var types =  new HashSet<string> ();
-      types.add (Edsf.Persona.address_fields[0]);
-      this._address = new PostalAddress (this._po_box,
+      var pa = new PostalAddress (this._po_box,
           this._extension, this._street, this._locality, this._region,
-          this._postal_code, this._country, null, types, null);
+          this._postal_code, this._country, null, null);
+      this._address = new PostalAddressFieldDetails (pa);
+      this._address.add_parameter ("type", Edsf.Persona.address_fields[0]);
 
       this._properties_found = new HashTable<string, bool>
           (str_hash, str_equal);
@@ -192,15 +192,17 @@ public class AddPersonaTests : Folks.TestCase
           (owned) v5);
 
       Value? v6 = Value (typeof (Set<PostalAddress>));
-      var postal_addresses = new HashSet<PostalAddress> ();
+      var pa_fds = new HashSet<PostalAddressFieldDetails> (
+          (GLib.HashFunc) PostalAddressFieldDetails.hash,
+          (GLib.EqualFunc) PostalAddressFieldDetails.equal);
 
-      var types =  new HashSet<string> ();
-      types.add (Edsf.Persona.address_fields[0]);
-      PostalAddress postal_a = new PostalAddress (this._po_box,
+      PostalAddress pa_a = new PostalAddress (this._po_box,
           this._extension, this._street, this._locality, this._region,
-          this._postal_code, this._country, null, types, null);
-      postal_addresses.add (postal_a);
-      v6.set_object (postal_addresses);
+          this._postal_code, this._country, null, null);
+      var pa_fd_a = new PostalAddressFieldDetails (pa_a);
+      pa_fd_a.add_parameter ("types", Edsf.Persona.address_fields[0]);
+      pa_fds.add (pa_fd_a);
+      v6.set_object (pa_fds);
       details.insert (
           Folks.PersonaStore.detail_key (PersonaDetail.POSTAL_ADDRESSES),
           (owned) v6);
@@ -332,10 +334,10 @@ public class AddPersonaTests : Folks.TestCase
             }
         }
 
-      foreach (var pa in i.postal_addresses)
+      foreach (var pa_fd in i.postal_addresses)
         {
-          this._address.uid = pa.uid;
-          if (pa.equal (this._address))
+          this._address.value.uid = pa_fd.value.uid;
+          if (pa_fd.equal (this._address))
             this._properties_found.replace ("postal-address-1", true);
         }
 
