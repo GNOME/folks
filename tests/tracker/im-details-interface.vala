@@ -120,18 +120,26 @@ public class ImDetailsInterfaceTests : Folks.TestCase
 
                   if (proto == "jabber")
                     {
-                      if (addrs.contains ("test1@example.org"))
+                      foreach (var im_fd in addrs)
                         {
-                          this._found_addr_1 = true;
-                          this._num_addrs++;
+                          if (im_fd.value == "test1@example.org")
+                            {
+                              this._found_addr_1 = true;
+                              this._num_addrs++;
+                              break;
+                            }
                         }
                     }
                   else if (proto == "aim")
                     {
-                      if (addrs.contains ("test2@example.org"))
+                      foreach (var im_fd in addrs)
                         {
-                          this._found_addr_2 = true;
-                          this._num_addrs++;
+                          if (im_fd.value == "test2@example.org")
+                            {
+                              this._found_addr_2 = true;
+                              this._num_addrs++;
+                              break;
+                            }
                         }
                     }
                 }

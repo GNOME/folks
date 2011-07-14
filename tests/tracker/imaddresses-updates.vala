@@ -126,7 +126,17 @@ public class IMAddressesUpdatesTests : Folks.TestCase
               foreach (var proto in i.im_addresses.get_keys ())
                 {
                   var addrs = i.im_addresses.get (proto);
-                  if (addrs.size == 1 && addrs.contains (this._imaddress_1))
+                  bool contains_addr_1 = false;
+                  foreach (var im_fd in addrs)
+                    {
+                      if (im_fd.value == this._imaddress_1)
+                        {
+                          contains_addr_1 = true;
+                          break;
+                        }
+                    }
+
+                  if (addrs.size == 1 && contains_addr_1)
                     {
                       i.notify["im-addresses"].connect (this._notify_im_cb);
                       this._initial_imaddress_found = true;
@@ -145,7 +155,17 @@ public class IMAddressesUpdatesTests : Folks.TestCase
       foreach (var proto in i.im_addresses.get_keys ())
         {
           var addrs = i.im_addresses.get (proto);
-          if (addrs.size == 1 && addrs.contains (this._imaddress_2))
+          bool contains_addr_2 = false;
+          foreach (var im_fd in addrs)
+            {
+              if (im_fd.value == this._imaddress_2)
+                {
+                  contains_addr_2 = true;
+                  break;
+                }
+            }
+
+          if (addrs.size == 1 && contains_addr_2)
             {
               this._updated_imaddr_found = true;
               this._main_loop.quit ();

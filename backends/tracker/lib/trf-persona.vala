@@ -277,13 +277,15 @@ public class Trf.Persona : Folks.Persona,
   private HashMap<string, HashMap<string, string>> _tracker_ids_ims =
       new HashMap<string, HashMap<string, string>> ();
 
-  private HashMultiMap<string, string> _im_addresses =
-      new HashMultiMap<string, string> ();
+  private HashMultiMap<string, ImFieldDetails> _im_addresses =
+      new HashMultiMap<string, ImFieldDetails> (null, null,
+          (GLib.HashFunc) ImFieldDetails.hash,
+          (GLib.EqualFunc) ImFieldDetails.equal);
 
   /**
    * {@inheritDoc}
    */
-  public MultiMap<string, string> im_addresses
+  public MultiMap<string, ImFieldDetails> im_addresses
     {
       get { return this._im_addresses; }
       public set
@@ -450,10 +452,10 @@ public class Trf.Persona : Folks.Persona,
         {
           foreach (var protocol in this._im_addresses.get_keys ())
             {
-              var im_addresses = this._im_addresses.get (protocol);
+              var im_fds = this._im_addresses.get (protocol);
 
-              foreach (string address in im_addresses)
-                  callback (protocol + ":" + address);
+              foreach (var im_fd in im_fds)
+                  callback (protocol + ":" + im_fd.value);
             }
         }
       else if (prop_name == "local-ids")
@@ -910,8 +912,9 @@ public class Trf.Persona : Folks.Persona,
           var account_id_copy = account_id.dup ();
           var normalised_addr = (owned) normalise_im_address
               ((owned) account_id_copy, im_proto);
+          var im_fd = new ImFieldDetails (normalised_addr);
 
-          this._im_addresses.set (im_proto, normalised_addr);
+          this._im_addresses.set (im_proto, im_fd);
 
           var im_proto_map = new HashMap<string, string> ();
           im_proto_map.set (im_proto, account_id);
@@ -948,8 +951,9 @@ public class Trf.Persona : Folks.Persona,
           break;
         }
 
+      var im_fd = new ImFieldDetails (im_addr);
       if (proto != null && im_addr != null &&
-          this._im_addresses.remove (proto, im_addr))
+          this._im_addresses.remove (proto, im_fd))
         {
           this._tracker_ids_ims.unset (tracker_id);
           if (notify)

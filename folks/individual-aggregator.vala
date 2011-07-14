@@ -63,6 +63,7 @@ public class Folks.IndividualAggregator : Object
   private HashTable<string, Individual> _link_map;
   private bool _linking_enabled = true;
   private bool _is_prepared = false;
+  private bool _prepare_pending = false;
   private Debug _debug;
   private string _configured_writeable_store_type_id;
   private string _configured_writeable_store_id;
@@ -341,10 +342,12 @@ public class Folks.IndividualAggregator : Object
 
       lock (this._is_prepared)
         {
-          if (!this._is_prepared)
+          if (!this._is_prepared && !this._prepare_pending)
             {
+              this._prepare_pending = true;
               yield this._backend_store.load_backends ();
               this._is_prepared = true;
+              this._prepare_pending = false;
               this.notify_property ("is-prepared");
             }
         }
@@ -1149,7 +1152,7 @@ public class Folks.IndividualAggregator : Object
           this._configured_writeable_store_type_id);
 
       /* `protocols_addrs_set` will be passed to the new Kf.Persona */
-      var protocols_addrs_set = new HashMultiMap<string, string> ();
+      var protocols_addrs_set = new HashMultiMap<string, ImFieldDetails> ();
       var web_service_addrs_set = new HashMultiMap<string, string> ();
 
       /* List of local_ids */

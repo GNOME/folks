@@ -499,14 +499,15 @@ public class Trf.PersonaStore : Folks.PersonaStore
           else if (k == Folks.PersonaStore.detail_key (
                 PersonaDetail.IM_ADDRESSES))
             {
-              var im_addresses = (MultiMap<string, string>) v.get_object ();
+              var im_addresses =
+                  (MultiMap<string, ImFieldDetails>) v.get_object ();
 
               int im_cnt = 0;
               foreach (var proto in im_addresses.get_keys ())
                 {
                   var addrs_a = im_addresses.get (proto);
 
-                  foreach (var addr in addrs_a)
+                  foreach (var im_fd in addrs_a)
                     {
                       var im_affl = "_:im_affl%d".printf (im_cnt);
                       var im = "_:im%d".printf (im_cnt);
@@ -515,7 +516,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
                       builder.predicate ("a");
                       builder.object (Trf.OntologyDefs.NCO_IMADDRESS);
                       builder.predicate (Trf.OntologyDefs.NCO_IMID);
-                      builder.object_string (addr);
+                      builder.object_string (im_fd.value);
                       builder.predicate (Trf.OntologyDefs.NCO_IMPROTOCOL);
                       builder.object_string (proto);
 
@@ -2000,21 +2001,17 @@ public class Trf.PersonaStore : Folks.PersonaStore
     }
 
   internal async void _set_im_addresses (Folks.Persona persona,
-      MultiMap<string, string> im_addresses)
+      MultiMap<string, ImFieldDetails> im_addresses)
     {
-      /* FIXME:
-       * - this conversion should go away once we've switched to use the
-       *   same data structure for each property that is a list of something.
-       *   See: https://bugzilla.gnome.org/show_bug.cgi?id=646079 */
-      var ims = new HashSet<FieldDetails> ();
+      var ims = new HashSet<ImFieldDetails> ();
       foreach (var proto in im_addresses.get_keys ())
         {
           var addrs = im_addresses.get (proto);
-          foreach (var a in addrs)
+          foreach (var im_fd in addrs)
             {
-              var fd = new FieldDetails (a);
-              fd.set_parameter ("proto", proto);
-              ims.add (fd);
+              var new_im_fd = new ImFieldDetails (im_fd.value);
+              new_im_fd.set_parameter ("proto", proto);
+              ims.add (new_im_fd);
             }
         }
 
@@ -2395,13 +2392,13 @@ public class Trf.PersonaStore : Folks.PersonaStore
                 break;
               case Trf.Attrib.IM_ADDRESSES:
               default:
-                fd = (FieldDetails) p;
+                fd = (ImFieldDetails) p;
                 attr = "_:p%d".printf (i);
                 builder.subject (attr);
                 builder.predicate ("a");
                 builder.object (related_attrib);
                 builder.predicate (related_prop);
-                builder.object_string (fd.value);
+                builder.object_string (((ImFieldDetails) fd).value);
 
                 if (what == Trf.Attrib.IM_ADDRESSES)
                   {

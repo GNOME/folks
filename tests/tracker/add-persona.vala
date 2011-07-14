@@ -236,10 +236,12 @@ public class AddPersonaTests : Folks.TestCase
           Folks.PersonaStore.detail_key (PersonaDetail.EMAIL_ADDRESSES),
           (owned) v8);
 
-      Value? v9 = Value (typeof (MultiMap<string, string>));
-      var im_addrs = new HashMultiMap<string, string> ();
-      im_addrs.set ("jabber", this._im_addr_1);
-      im_addrs.set ("yahoo", this._im_addr_2);
+      Value? v9 = Value (typeof (MultiMap<string, ImFieldDetails>));
+      var im_addrs = new HashMultiMap<string, ImFieldDetails> (null, null,
+          (GLib.HashFunc) ImFieldDetails.hash,
+          (GLib.EqualFunc) ImFieldDetails.equal);
+      im_addrs.set ("jabber", new ImFieldDetails (this._im_addr_1));
+      im_addrs.set ("yahoo", new ImFieldDetails (this._im_addr_2));
       v9.set_object (im_addrs);
       details.insert (
           Folks.PersonaStore.detail_key (PersonaDetail.IM_ADDRESSES), v9);
@@ -440,9 +442,9 @@ public class AddPersonaTests : Folks.TestCase
           var addrs = i.im_addresses.get (proto);
           foreach (var a in addrs)
             {
-              if (a == this._im_addr_1)
+              if (a.value == this._im_addr_1)
                 this._properties_found.replace ("im-addr-1", true);
-              else if (a == this._im_addr_2)
+              else if (a.value == this._im_addr_2)
                 this._properties_found.replace ("im-addr-2", true);
             }
         }

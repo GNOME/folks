@@ -167,9 +167,11 @@ public class LinkPersonasTests : Folks.TestCase
     {
       HashTable<string, Value?> details1 = new HashTable<string, Value?>
           (str_hash, str_equal);
-      Value? v1 = Value (typeof (MultiMap<string, string>));
-      var im_addrs1 = new HashMultiMap<string, string> ();
-      im_addrs1.set (this._proto, this._im_address_1);
+      Value? v1 = Value (typeof (MultiMap<string, ImFieldDetails>));
+      var im_addrs1 = new HashMultiMap<string, ImFieldDetails> (null, null,
+          (GLib.HashFunc) ImFieldDetails.hash,
+          (GLib.EqualFunc) ImFieldDetails.equal);
+      im_addrs1.set (this._proto, new ImFieldDetails (this._im_address_1));
       v1.set_object (im_addrs1);
       details1.insert ("im-addresses", (owned) v1);
 
@@ -179,9 +181,11 @@ public class LinkPersonasTests : Folks.TestCase
 
       HashTable<string, Value?> details2 = new HashTable<string, Value?>
           (str_hash, str_equal);
-      Value? v3 = Value (typeof (MultiMap<string, string>));
-      var im_addrs2 = new HashMultiMap<string, string> ();
-      im_addrs2.set (this._proto, this._im_address_2);
+      Value? v3 = Value (typeof (MultiMap<string, ImFieldDetails>));
+      var im_addrs2 = new HashMultiMap<string, ImFieldDetails> (null, null,
+          (GLib.HashFunc) ImFieldDetails.hash,
+          (GLib.EqualFunc) ImFieldDetails.equal);
+      im_addrs2.set (this._proto, new ImFieldDetails (this._im_address_2));
       v3.set_object (im_addrs2);
       details2.insert ("im-addresses", (owned) v3);
 
@@ -272,11 +276,11 @@ public class LinkPersonasTests : Folks.TestCase
               var addrs = i.im_addresses.get (proto);
               foreach (var a in addrs)
                 {
-                  if (a == this._linking_props.get ("prop1"))
+                  if (a.value == this._linking_props.get ("prop1"))
                     {
                       this._linking_props.unset ("prop1");
                     }
-                  else if (a == this._linking_props.get ("prop2"))
+                  else if (a.value == this._linking_props.get ("prop2"))
                     {
                       this._linking_props.unset ("prop2");
                     }

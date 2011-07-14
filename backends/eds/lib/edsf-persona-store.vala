@@ -249,8 +249,8 @@ public class Edsf.PersonaStore : Folks.PersonaStore
           else if (k == Folks.PersonaStore.detail_key (
                 PersonaDetail.IM_ADDRESSES))
             {
-              var im_addresses = (MultiMap<string, string>) v.get_object ();
-              yield this._set_contact_im_addrs (contact, im_addresses);
+              var im_fds = (MultiMap<string, ImFieldDetails>) v.get_object ();
+              yield this._set_contact_im_fds (contact, im_fds);
             }
           else if (k == Folks.PersonaStore.detail_key (
                 PersonaDetail.PHONE_NUMBERS))
@@ -988,16 +988,16 @@ public class Edsf.PersonaStore : Folks.PersonaStore
       contact.set (E.Contact.field_id ("name"), contact_name);
     }
 
-  internal async void _set_im_addrs  (Edsf.Persona persona,
-      MultiMap<string, string> im_addrs)
+  internal async void _set_im_fds  (Edsf.Persona persona,
+      MultiMap<string, ImFieldDetails> im_fds)
     {
-      if (Utils.multi_map_str_str_equal (persona.im_addresses, im_addrs))
+      if (Utils.multi_map_str_afd_equal (persona.im_addresses, im_fds))
         return;
 
       try
         {
           E.Contact contact = ((Edsf.Persona) persona).contact;
-          yield this._set_contact_im_addrs (contact, im_addrs);
+          yield this._set_contact_im_fds (contact, im_fds);
           yield this._addressbook.modify_contact (contact);
         }
       catch (GLib.Error error)
@@ -1007,8 +1007,8 @@ public class Edsf.PersonaStore : Folks.PersonaStore
     }
 
   /* TODO: this could be smarter & more efficient. */
-  private async void _set_contact_im_addrs (E.Contact contact,
-      MultiMap<string, string> im_addrs)
+  private async void _set_contact_im_fds (E.Contact contact,
+      MultiMap<string, ImFieldDetails> im_fds)
     {
       var im_eds_map = Edsf.Persona._get_im_eds_map ();
 
@@ -1022,16 +1022,16 @@ public class Edsf.PersonaStore : Folks.PersonaStore
             }
         }
 
-     foreach (var proto in im_addrs.get_keys ())
+     foreach (var proto in im_fds.get_keys ())
        {
          var attributes = new GLib.List <E.VCardAttribute>();
          var attrib_name = ("X-" + proto).up ();
          bool added = false;
 
-         foreach (var im in im_addrs.get (proto))
+         foreach (var im_fd in im_fds.get (proto))
            {
              var attr_n = new E.VCardAttribute (null, attrib_name);
-             attr_n.add_value (im);
+             attr_n.add_value (im_fd.value);
              attributes.prepend (attr_n);
              added = true;
            }

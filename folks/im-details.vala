@@ -33,6 +33,57 @@ public errordomain Folks.ImDetailsError
 }
 
 /**
+ * Object representing an IM address value that can have some parameters
+ * associated with it.
+ *
+ * See {@link Folks.AbstractFieldDetails}.
+ *
+ * @since UNRELEASED
+ */
+public class Folks.ImFieldDetails : AbstractFieldDetails<string>
+{
+  /**
+   * Create a new ImFieldDetails.
+   *
+   * @param value the value of the field
+   * @param parameters initial parameters. See
+   * {@link AbstractFieldDetails.parameters}. A `null` value is equivalent to an
+   * empty map of parameters.
+   *
+   * @return a new ImFieldDetails
+   *
+   * @since UNRELEASED
+   */
+  public ImFieldDetails (string value,
+      MultiMap<string, string>? parameters = null)
+    {
+      this.value = value;
+      if (parameters != null)
+        this.parameters = parameters;
+    }
+
+  /**
+   * {@inheritDoc}
+   *
+   * @since UNRELEASED
+   */
+  public override bool equal (AbstractFieldDetails<string> that)
+    {
+      return base.equal<string> (that);
+    }
+
+  /**
+   * {@inheritDoc}
+   *
+   * @since UNRELEASED
+   */
+  public override uint hash ()
+    {
+      return base.hash ();
+    }
+}
+
+/**
  * IM addresses exposed by an object implementing {@link PresenceDetails}.
  *
  * @since 0.1.13
@@ -53,7 +104,7 @@ public interface Folks.ImDetails : Object
    *
    * @since 0.5.1
    */
-  public abstract MultiMap<string, string> im_addresses
+  public abstract MultiMap<string, ImFieldDetails> im_addresses
     {
       get; set;
     }

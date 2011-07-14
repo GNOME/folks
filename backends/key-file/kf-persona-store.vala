@@ -306,9 +306,9 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
     {
       unowned Value? val = details.lookup (Folks.PersonaStore.detail_key (
             PersonaDetail.IM_ADDRESSES));
-      MultiMap<string, string> im_addresses
+      MultiMap<string, ImFieldDetails> im_addresses
           = val != null
-          ? (MultiMap<string, string>) val.get_object ()
+          ? (MultiMap<string, ImFieldDetails>) val.get_object ()
           : null;
       unowned Value? val2 = details.lookup
           (this.detail_key (PersonaDetail.WEB_SERVICE_ADDRESSES));

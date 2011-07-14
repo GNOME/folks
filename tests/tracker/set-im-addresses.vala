@@ -111,13 +111,18 @@ public class SetIMAddressesTests : Folks.TestCase
             {
               i.notify["im-addresses"].connect (this._notify_im_addresses_cb);
 
-              var im_addresses = new HashMultiMap<string, string> ();
+              var im_addresses = new HashMultiMap<string, ImFieldDetails> (
+                  null, null,
+                  (GLib.HashFunc)ImFieldDetails.hash,
+                  (GLib.EqualFunc) ImFieldDetails.equal);
 
-              im_addresses.set ("aim", "one@example.org");
-              im_addresses.set ("aim", "two@example.org");
+              im_addresses.set ("aim", new ImFieldDetails ("one@example.org"));
+              im_addresses.set ("aim", new ImFieldDetails ("two@example.org"));
 
-              im_addresses.set ("yahoo", "three@example.org");
-              im_addresses.set ("yahoo", "four@example.org");
+              im_addresses.set ("yahoo",
+                  new ImFieldDetails ("three@example.org"));
+              im_addresses.set ("yahoo",
+                  new ImFieldDetails ("four@example.org"));
 
               foreach (var p in i.personas)
                 {
@@ -136,12 +141,12 @@ public class SetIMAddressesTests : Folks.TestCase
         {
           foreach (var proto in i.im_addresses.get_keys ())
             {
-              var addrs = i.im_addresses.get (proto);
-              foreach (var a in addrs)
+              var im_fds = i.im_addresses.get (proto);
+              foreach (var im_fd in im_fds)
                 {
                   foreach (unowned string my_a in this._addresses)
                     {
-                      if (my_a == a)
+                      if (my_a == im_fd.value)
                         {
                           this._addresses.remove (my_a);
                           break;

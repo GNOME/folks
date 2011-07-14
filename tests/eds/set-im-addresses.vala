@@ -116,8 +116,12 @@ public class SetIMAddressesTests : Folks.TestCase
 
               foreach (var p in i.personas)
                 {
-                  var im_addrs = new HashMultiMap<string, string> ();
-                  im_addrs.set ("jabber", "bernie@example.org");
+                  var im_addrs = new HashMultiMap<string, ImFieldDetails> (
+                      null, null,
+                      (GLib.HashFunc) ImFieldDetails.hash,
+                      (GLib.EqualFunc) ImFieldDetails.equal);
+                  im_addrs.set ("jabber",
+                      new ImFieldDetails ("bernie@example.org"));
                   ((ImDetails) p).im_addresses = im_addrs;
                 }
             }
@@ -131,9 +135,9 @@ public class SetIMAddressesTests : Folks.TestCase
       Folks.Individual i = (Folks.Individual) individual_obj;
       foreach (var proto in i.im_addresses.get_keys ())
         {
-          foreach (var im in i.im_addresses.get (proto))
+          foreach (var im_fd in i.im_addresses.get (proto))
             {
-              if (im == "bernie@example.org")
+              if (im_fd.equal (new ImFieldDetails ("bernie@example.org")))
                 {
                   this._found_after_update = true;
                   this._main_loop.quit ();

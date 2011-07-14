@@ -116,8 +116,9 @@ public class Swf.Persona : Folks.Persona,
         }
     }
 
-  private HashMultiMap<string, string> _im_addresses =
-      new HashMultiMap<string, string> ();
+  private HashMultiMap<string, ImFieldDetails> _im_addresses =
+      new HashMultiMap<string, ImFieldDetails> (null, null,
+          ImFieldDetails.hash, (EqualFunc) ImFieldDetails.equal);
 
   private HashMultiMap<string, string> _web_service_addresses =
       new HashMultiMap<string, string> ();
@@ -125,7 +126,7 @@ public class Swf.Persona : Folks.Persona,
   /**
    * {@inheritDoc}
    */
-  public MultiMap<string, string> im_addresses
+  public MultiMap<string, ImFieldDetails> im_addresses
     {
       get { return this._im_addresses; }
       private set {}
@@ -239,8 +240,9 @@ public class Swf.Persona : Folks.Persona,
               var normalised_addr = (owned) normalise_im_address
                   ((owned) facebook_jid_copy, "jabber");
               string im_proto = "jabber";
+              var im_fd = new ImFieldDetails (normalised_addr);
 
-              this._im_addresses.set (im_proto, normalised_addr);
+              this._im_addresses.set (im_proto, im_fd);
             }
           catch (ImDetailsError e)
             {

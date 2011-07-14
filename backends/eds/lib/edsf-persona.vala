@@ -353,20 +353,22 @@ public class Edsf.Persona : Folks.Persona,
         }
     }
 
-  private HashMultiMap<string, string> _im_addresses =
-      new HashMultiMap<string, string> ();
+  private HashMultiMap<string, ImFieldDetails> _im_addresses =
+      new HashMultiMap<string, ImFieldDetails> (null, null,
+          (GLib.HashFunc) ImFieldDetails.hash,
+          (GLib.EqualFunc) ImFieldDetails.equal);
 
   /**
    * {@inheritDoc}
    *
    * @since 0.5.UNRELEASED
    */
-  public MultiMap<string, string> im_addresses
+  public MultiMap<string, ImFieldDetails> im_addresses
     {
       get { return this._im_addresses; }
       set
         {
-          ((Edsf.PersonaStore) this.store)._set_im_addrs (this, value);
+          ((Edsf.PersonaStore) this.store)._set_im_fds (this, value);
         }
     }
 
@@ -515,10 +517,10 @@ public class Edsf.Persona : Folks.Persona,
         {
           foreach (var protocol in this._im_addresses.get_keys ())
             {
-              var im_addresses = this._im_addresses.get (protocol);
+              var im_fds = this._im_addresses.get (protocol);
 
-              foreach (string address in im_addresses)
-                  callback (protocol + ":" + address);
+              foreach (var im_fd in im_fds)
+                  callback (protocol + ":" + im_fd.value);
             }
         }
       else if (prop_name == "local-ids")
@@ -805,18 +807,19 @@ public class Edsf.Persona : Folks.Persona,
       var im_eds_map = this._get_im_eds_map ();
       this._im_addresses.clear ();
 
-      foreach (var proto in im_eds_map.get_keys ())
+      foreach (var im_proto in im_eds_map.get_keys ())
         {
           var addresses = this.contact.get_attributes (
-              im_eds_map.lookup (proto));
+              im_eds_map.lookup (im_proto));
           foreach (var attr in addresses)
             {
               try
                 {
                   var addr = attr.get_value ();
-                  string address = (owned) ImDetails.normalise_im_address (addr,
-                      proto);
-                  this._im_addresses.set (proto, address);
+                  string normalised_addr =
+                    (owned) ImDetails.normalise_im_address (addr, im_proto);
+                  var im_fd = new ImFieldDetails (normalised_addr);
+                  this._im_addresses.set (im_proto, im_fd);
                 }
               catch (Folks.ImDetailsError e)
                 {

@@ -127,9 +127,10 @@ public class ImDetailsTests : Folks.TestCase
                 {
                   var addrs = i.im_addresses.get (proto);
 
-                 if (proto == "jabber")
+                  if (proto == "jabber")
                     {
-                      if (addrs.contains ("test1@example.org"))
+                      if (addrs.contains (
+                            new ImFieldDetails ("test1@example.org")))
                         {
                           this._found_addr_1 = true;
                           this._num_addrs++;
@@ -137,7 +138,8 @@ public class ImDetailsTests : Folks.TestCase
                     }
                   else if (proto == "yahoo")
                     {
-                      if (addrs.contains ("test2@example.org"))
+                      if (addrs.contains (
+                            new ImFieldDetails ("test2@example.org")))
                         {
                           this._found_addr_2 = true;
                           this._num_addrs++;

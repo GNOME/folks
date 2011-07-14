@@ -34,7 +34,7 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
     WebServiceDetails
 {
   private unowned GLib.KeyFile _key_file;
-  private HashMultiMap<string, string> _im_addresses;
+  private HashMultiMap<string, ImFieldDetails> _im_addresses;
   private HashMultiMap<string, string> _web_service_addresses;
   private string _alias;
   private const string[] _linkable_properties =
@@ -93,7 +93,7 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
   /**
    * {@inheritDoc}
    */
-  public MultiMap<string, string> im_addresses
+  public MultiMap<string, ImFieldDetails> im_addresses
     {
       get
         { return this._im_addresses; }
@@ -116,20 +116,23 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
 
           /* Add the new IM addresses to the key file and build a normalised
            * table of them to set as the new property value */
-          var im_addresses = new HashMultiMap<string, string> ();
+          var im_addresses = new HashMultiMap<string, ImFieldDetails> (
+              null, null,
+              (GLib.HashFunc) ImFieldDetails.hash,
+              (GLib.EqualFunc) ImFieldDetails.equal);
 
           foreach (var protocol in value.get_keys ())
             {
               var addresses = value.get (protocol);
               var normalised_addresses = new HashSet<string> ();
 
-              foreach (string address in addresses)
+              foreach (var im_fd in addresses)
                 {
                   string normalised_address;
                   try
                     {
                       normalised_address = ImDetails.normalise_im_address (
-                          address, protocol);
+                          im_fd.value, protocol);
                     }
                   catch (ImDetailsError e)
                     {
@@ -141,7 +144,8 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
                     }
 
                   normalised_addresses.add (normalised_address);
-                  im_addresses.set (protocol, normalised_address);
+                  var new_im_fd = new ImFieldDetails (normalised_address);
+                  im_addresses.set (protocol, new_im_fd);
                 }
 
               string[] addrs = (string[]) normalised_addresses.to_array ();
@@ -229,7 +233,8 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
           id);
 
       this._key_file = key_file;
-      this._im_addresses = new HashMultiMap<string, string> ();
+      this._im_addresses = new HashMultiMap<string, ImFieldDetails> (
+          null, null, ImFieldDetails.hash, (EqualFunc) ImFieldDetails.equal);
       this._web_service_addresses = new HashMultiMap<string, string> ();
 
       /* Load the IM addresses from the key file */
@@ -285,7 +290,8 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
                       continue;
                     }
 
-                  this._im_addresses.set (protocol, address);
+                  var im_fd = new ImFieldDetails (address);
+                  this._im_addresses.set (protocol, im_fd);
                 }
             }
         }
@@ -315,8 +321,8 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
             {
               var im_addresses = this._im_addresses.get (protocol);
 
-              foreach (string address in im_addresses)
-                  callback (protocol + ":" + address);
+              foreach (var im_fd in im_addresses)
+                  callback (protocol + ":" + im_fd.value);
             }
         }
       else if (prop_name == "web-service-addresses")

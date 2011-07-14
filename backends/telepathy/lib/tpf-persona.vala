@@ -39,7 +39,7 @@ public class Tpf.Persona : Folks.Persona,
   private Set<string> _groups_ro;
   private bool _is_favourite;
   private string _alias;
-  private HashMultiMap<string, string> _im_addresses;
+  private HashMultiMap<string, ImFieldDetails> _im_addresses;
   private const string[] _linkable_properties = { "im-addresses" };
   private const string[] _writeable_properties =
     {
@@ -163,7 +163,7 @@ public class Tpf.Persona : Folks.Persona,
    *
    * See {@link Folks.ImDetails.im_addresses}.
    */
-  public MultiMap<string, string> im_addresses
+  public MultiMap<string, ImFieldDetails> im_addresses
     {
       get { return this._im_addresses; }
       private set {}
@@ -287,12 +287,17 @@ public class Tpf.Persona : Folks.Persona,
       this._is_constructed = true;
 
       /* Set our single IM address */
-      this._im_addresses = new HashMultiMap<string, string> ();
+      this._im_addresses = new HashMultiMap<string, ImFieldDetails> (
+          null, null,
+          (GLib.HashFunc) ImFieldDetails.hash,
+          (GLib.EqualFunc) ImFieldDetails.equal);
 
       try
         {
-          this._im_addresses.set (account.get_protocol (),
-              ImDetails.normalise_im_address (id, account.get_protocol ()));
+          var im_addr = ImDetails.normalise_im_address (id,
+              account.get_protocol ());
+          var im_fd = new ImFieldDetails (im_addr);
+          this._im_addresses.set (account.get_protocol (), im_fd);
         }
       catch (ImDetailsError e)
         {
@@ -389,8 +394,12 @@ public class Tpf.Persona : Folks.Persona,
       debug ("Creating new Tpf.Persona '%s' from cache: %p", uid, this);
 
       // IM addresses
-      this._im_addresses = new HashMultiMap<string, string> ();
-      this._im_addresses.set (protocol, im_address);
+      this._im_addresses = new HashMultiMap<string, ImFieldDetails> (null, null,
+          (GLib.HashFunc) ImFieldDetails.hash,
+          (GLib.EqualFunc) ImFieldDetails.equal);
+
+      var im_fd = new ImFieldDetails (im_address);
+      this._im_addresses.set (protocol, im_fd);
 
       // Groups
       this._groups = groups;

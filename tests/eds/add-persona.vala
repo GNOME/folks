@@ -170,11 +170,11 @@ public class AddPersonaTests : Folks.TestCase
       details.insert (Folks.PersonaStore.detail_key (PersonaDetail.AVATAR),
           (owned) v3);
 
-      Value? v4 = Value (typeof (MultiMap<string, string>));
-      var im_addrs = new HashMultiMap<string, string> ();
-      im_addrs.set ("jabber", this._im_addr_1);
-      im_addrs.set ("yahoo", this._im_addr_2);
-      v4.set_object (im_addrs);
+      Value? v4 = Value (typeof (MultiMap<string, ImFieldDetails>));
+      var im_fds = new HashMultiMap<string, ImFieldDetails> ();
+      im_fds.set ("jabber", new ImFieldDetails (this._im_addr_1));
+      im_fds.set ("yahoo", new ImFieldDetails (this._im_addr_2));
+      v4.set_object (im_fds);
       details.insert (
          Folks.PersonaStore.detail_key (PersonaDetail.IM_ADDRESSES), v4);
 
@@ -312,12 +312,12 @@ public class AddPersonaTests : Folks.TestCase
 
       foreach (var proto in i.im_addresses.get_keys ())
         {
-          var addrs = i.im_addresses.get (proto);
-          foreach (var a in addrs)
+          var im_fds = i.im_addresses.get (proto);
+          foreach (var im_fd in im_fds)
             {
-              if (a == this._im_addr_1)
+              if (im_fd.value == this._im_addr_1)
                 this._properties_found.replace ("im-addr-1", true);
-              else if (a == this._im_addr_2)
+              else if (im_fd.value == this._im_addr_2)
                 this._properties_found.replace ("im-addr-2", true);
             }
         }

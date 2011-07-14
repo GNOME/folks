@@ -165,17 +165,19 @@ public class MatchIMAddressesTests : Folks.TestCase
       HashTable<string, Value?> details2 = new HashTable<string, Value?>
           (str_hash, str_equal);
       Value? val;
-      HashMultiMap<string, string> im_addrs;
+      HashMultiMap<string, ImFieldDetails> im_addrs;
 
       val = Value (typeof (string));
       val.set_string (this._persona_fullname_1);
       details1.insert (Folks.PersonaStore.detail_key (PersonaDetail.FULL_NAME),
           (owned) val);
 
-      val = Value (typeof (MultiMap<string, string>));
-      im_addrs = new HashMultiMap<string, string> ();
-      im_addrs.set ("jabber", this._im_addr_1);
-      im_addrs.set ("yahoo", this._im_addr_2);
+      val = Value (typeof (MultiMap<string, ImFieldDetails>));
+      im_addrs = new HashMultiMap<string, ImFieldDetails> (null, null,
+          (GLib.HashFunc) ImFieldDetails.hash,
+          (GLib.EqualFunc) ImFieldDetails.equal);
+      im_addrs.set ("jabber", new ImFieldDetails (this._im_addr_1));
+      im_addrs.set ("yahoo", new ImFieldDetails (this._im_addr_2));
       val.set_object (im_addrs);
       details1.insert (
           Folks.PersonaStore.detail_key (PersonaDetail.IM_ADDRESSES),
@@ -186,9 +188,11 @@ public class MatchIMAddressesTests : Folks.TestCase
       details2.insert (Folks.PersonaStore.detail_key (PersonaDetail.FULL_NAME),
           (owned) val);
 
-      val = Value (typeof (MultiMap<string, string>));
-      im_addrs = new HashMultiMap<string, string> ();
-      im_addrs.set ("jabber", this._im_addr_1);
+      val = Value (typeof (MultiMap<string, ImFieldDetails>));
+      im_addrs = new HashMultiMap<string, ImFieldDetails> (null, null,
+          (GLib.HashFunc) ImFieldDetails.hash,
+          (GLib.EqualFunc) ImFieldDetails.equal);
+      im_addrs.set ("jabber", new ImFieldDetails (this._im_addr_1));
       val.set_object (im_addrs);
       details2.insert (
           Folks.PersonaStore.detail_key (PersonaDetail.IM_ADDRESSES),

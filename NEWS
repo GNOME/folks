@@ -32,6 +32,8 @@ Bugs fixed:
 * Bug 653619 — Add company details
 * Bug 653679 — Change PostalAddressDetails.postal_addresses to support
   vCard-like arbitrary parameters
+* Bug 653680 — Change ImDetails.im_addresses to support vCard-like arbitrary
+  parameters
 
 API changes:
 * Swf.Persona retains and exposes its libsocialweb Contact
@@ -58,6 +60,7 @@ API changes:
 * Add parameters as an optional argument for the FieldDetails constructor
 * Use PostalAddressFieldDetails for PostalAddressDetails.postal_addresses
 * Remove PostalAddress.types (obsoleted by PostalAddressFieldDetails.parameters)
+* Add and use ImFieldDetails for ImDetails.im_addresses
 
 Overview of changes from libfolks 0.5.1 to libfolks 0.5.2
 =========================================================

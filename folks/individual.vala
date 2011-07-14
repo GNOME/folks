@@ -96,7 +96,7 @@ public class Folks.Individual : Object,
   /* The number of Personas in this Individual which have
    * Persona.is_user == true. Iff this is > 0, Individual.is_user == true. */
   private uint _persona_user_count = 0;
-  private HashMultiMap<string, string> _im_addresses;
+  private HashMultiMap<string, ImFieldDetails> _im_addresses;
   private HashMultiMap<string, string> _web_service_addresses;
   private string _nickname = "";
 
@@ -497,7 +497,7 @@ public class Folks.Individual : Object,
   /**
    * {@inheritDoc}
    */
-  public MultiMap<string, string> im_addresses
+  public MultiMap<string, ImFieldDetails> im_addresses
     {
       get { return this._im_addresses; }
       private set {}
@@ -687,7 +687,8 @@ public class Folks.Individual : Object,
       debug ("Creating new Individual with %u Personas: %p",
           (personas != null ? personas.size : 0), this);
 
-      this._im_addresses = new HashMultiMap<string, string> ();
+      this._im_addresses = new HashMultiMap<string, ImFieldDetails> (
+          null, null, ImFieldDetails.hash, (EqualFunc) ImFieldDetails.equal);
       this._web_service_addresses = new HashMultiMap<string, string> ();
       this._persona_set =
           new HashSet<Persona> (direct_hash, direct_equal);
