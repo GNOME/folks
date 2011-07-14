@@ -61,10 +61,12 @@ public abstract class Folks.AbstractFieldDetails<T> : Object
       set { this._value = value; }
     }
 
+  private MultiMap<string, string> _parameters =
+      new HashMultiMap<string, string> ();
   /**
    * The parameters associated with the value.
    *
-   * A hash table of the parameters associated with
+   * A multi-map of the parameters associated with
    * {@link Folks.AbstractFieldDetails.value}. The keys are the names of
    * the parameters, while the values are a list of strings.
    *

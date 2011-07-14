@@ -37,19 +37,6 @@ using Gee;
  */
 public class Folks.FieldDetails : AbstractFieldDetails<string>
 {
-  private MultiMap<string, string> _parameters;
-  /**
-   * The parameters of this FieldDetails.
-   *
-   * See {@link Folks.AbstractFieldDetails.parameters}.
-   * @since 0.5.1
-   */
-  public override MultiMap<string, string> parameters
-    {
-      get { return this._parameters; }
-      set { this._parameters = value; }
-    }
-
   /**
    * Create a new FieldDetails.
    *
@@ -61,6 +48,5 @@ public class Folks.FieldDetails : AbstractFieldDetails<string>
   public FieldDetails (string value)
     {
       this.value = value;
-      this._parameters = new HashMultiMap<string, string> ();
     }
 }
