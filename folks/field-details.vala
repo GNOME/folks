@@ -41,13 +41,20 @@ public class Folks.FieldDetails : AbstractFieldDetails<string>
    * Create a new FieldDetails.
    *
    * @param value the value of the field
+   * @param parameters initial parameters. See
+   * {@link AbstractFieldDetails.parameters}. A `null` value is equivalent to an
+   * empty map of parameters.
+   *
    * @return a new FieldDetails
    *
    * @since 0.3.5
    */
-  public FieldDetails (string value)
+  public FieldDetails (string value,
+      MultiMap<string, string>? parameters = null)
     {
       this.value = value;
+      if (parameters != null)
+        this.parameters = parameters;
     }
 
   /**
