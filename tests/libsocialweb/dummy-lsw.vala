@@ -56,7 +56,6 @@ public class DummyLswTests : Folks.TestCase
       uint timer_id = Timeout.add_seconds (5, () =>
         {
           assert_not_reached ();
-          return false;
         });
       this._lsw_backend.set_up ();
       main_loop.run ();
