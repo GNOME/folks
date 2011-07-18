@@ -35,23 +35,23 @@ libfolks_eds_la_SOURCES = \
 	$(folks_eds_valasources) \
 	$(NULL)
 
-VALAFLAGS = \
+# XXX: it would be nice to do something like this below:
+#    $(addprefix --pkg ,$(folks_backend_eds_deps)) \
+# to factor out repetition, but automake's Vala support doesn't like it
+# because it assumes it can simply match every flag in any _VALAFLAGS string.
+libfolks_eds_la_VALAFLAGS = \
 	--vapidir=. \
 	--vapidir=$(top_srcdir)/folks \
-	$(addprefix --pkg ,$(folks_backend_eds_deps)) \
+	--pkg folks \
+	--pkg gee-1.0 \
+	--pkg gio-2.0 \
+	--pkg gobject-2.0 \
+	--pkg libebook-1.2 \
+	--pkg libedataserver-1.2 \
+	--pkg libxml-2.0 \
 	--includedir folks \
 	--vapi folks-eds.vapi \
 	-H folks/folks-eds.h \
-	$(NULL)
-
-folks_backend_eds_deps = \
-	folks \
-	gee-1.0 \
-	gio-2.0 \
-	gobject-2.0 \
-	libebook-1.2 \
-	libedataserver-1.2 \
-	libxml-2.0 \
 	$(NULL)
 
 libfolks_eds_la_CFLAGS = \
