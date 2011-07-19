@@ -250,7 +250,19 @@ public class Edsf.Persona : Folks.Persona,
    *
    * @since 0.5.UNRELEASED
    */
-  public string nickname { get { return this._nickname; } }
+  public string nickname
+    {
+      get { return this._nickname; }
+
+      set
+        {
+          if (this._nickname == value)
+            return;
+          this._nickname = value;
+          this.notify_property ("nickname");
+          ((Edsf.PersonaStore) this.store)._set_nickname (this, value);
+        }
+    }
 
   /**
    * {@inheritDoc}

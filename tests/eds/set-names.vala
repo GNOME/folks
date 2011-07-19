@@ -22,22 +22,24 @@ using EdsTest;
 using Folks;
 using Gee;
 
-public class SetFullNameTests : Folks.TestCase
+public class SetNamesTests : Folks.TestCase
 {
   private EdsTest.Backend _eds_backend;
   private IndividualAggregator _aggregator;
   private GLib.MainLoop _main_loop;
-  private bool _found_before_update;
-  private bool _found_after_update;
+  private bool _full_name_found_before_update;
+  private bool _full_name_found_after_update;
+  private bool _nickname_found_before_update;
+  private bool _nickname_found_after_update;
 
-  public SetFullNameTests ()
+  public SetNamesTests ()
     {
-      base ("SetFullName");
+      base ("SetNames");
 
       this._eds_backend = new EdsTest.Backend ();
 
       this.add_test ("setting full name on e-d-s persona",
-          this.test_set_full_name);
+          this.test_set_names);
     }
 
   public override void set_up ()
@@ -50,23 +52,28 @@ public class SetFullNameTests : Folks.TestCase
       this._eds_backend.tear_down ();
     }
 
-  void test_set_full_name ()
+  void test_set_names ()
     {
       Gee.HashMap<string, Value?> c1 = new Gee.HashMap<string, Value?> ();
       this._main_loop = new GLib.MainLoop (null, false);
       Value? v;
 
-      this._found_before_update = false;
-      this._found_after_update = false;
+      this._full_name_found_before_update = false;
+      this._full_name_found_after_update = false;
+      this._nickname_found_before_update = false;
+      this._nickname_found_after_update = false;
 
       this._eds_backend.reset ();
 
       v = Value (typeof (string));
       v.set_string ("bernie h. innocenti");
       c1.set ("full_name", (owned) v);
+      v = Value (typeof (string));
+      v.set_string ("foo bar");
+      c1.set ("nickname", (owned) v);
       this._eds_backend.add_contact (c1);
 
-      this._test_set_full_name_async ();
+      this._test_set_names_async ();
 
       Timeout.add_seconds (5, () => {
             this._main_loop.quit ();
@@ -75,19 +82,21 @@ public class SetFullNameTests : Folks.TestCase
 
       this._main_loop.run ();
 
-      assert (this._found_before_update);
-      assert (this._found_after_update);
+      assert (this._full_name_found_before_update);
+      assert (this._full_name_found_after_update);
+      assert (this._nickname_found_before_update);
+      assert (this._nickname_found_after_update);
     }
 
-  private async void _test_set_full_name_async ()
+  private async void _test_set_names_async ()
     {
       yield this._eds_backend.commit_contacts_to_addressbook ();
 
       var store = BackendStore.dup ();
       yield store.prepare ();
       this._aggregator = new IndividualAggregator ();
-      this._aggregator.individuals_changed.connect
-          (this._individuals_changed_cb);
+      this._aggregator.individuals_changed.connect (
+          this._set_names_individuals_changed_cb);
       try
         {
           yield this._aggregator.prepare ();
@@ -98,7 +107,7 @@ public class SetFullNameTests : Folks.TestCase
         }
     }
 
-  private void _individuals_changed_cb
+  private void _set_names_individuals_changed_cb
       (Set<Individual> added,
        Set<Individual> removed,
        string? message,
@@ -111,12 +120,23 @@ public class SetFullNameTests : Folks.TestCase
 
           if (name.full_name == "bernie h. innocenti")
             {
-              i.notify["full-name"].connect (this._notify_full_name_cb);
-              this._found_before_update = true;
-
+              i.notify["full-name"].connect (
+                  this._set_names_notify_full_name_cb);
+              this._full_name_found_before_update = true;
               foreach (var p in i.personas)
                 {
                   ((NameDetails) p).full_name = "bernie";
+                }
+            }
+
+          if (name.nickname == "foo bar")
+            {
+              i.notify["nickname"].connect (
+                  this._set_names_notify_nickname_cb);
+              this._nickname_found_before_update = true;
+              foreach (var p in i.personas)
+                {
+                  ((NameDetails) p).nickname = "bar baz";
                 }
             }
         }
@@ -124,13 +144,37 @@ public class SetFullNameTests : Folks.TestCase
       assert (removed.size == 0);
     }
 
-  private void _notify_full_name_cb (Object individual_obj, ParamSpec ps)
+  private void _set_names_notify_full_name_cb (
+      Object individual_obj,
+      ParamSpec ps)
     {
       Folks.Individual i = (Folks.Individual) individual_obj;
       var name = (Folks.NameDetails) i;
       if (name.full_name == "bernie")
         {
-          this._found_after_update = true;
+          this._full_name_found_after_update = true;
+          this._quit_if_complete ();
+        }
+    }
+
+  private void _set_names_notify_nickname_cb (
+      Object individual_obj,
+      ParamSpec ps)
+    {
+      Folks.Individual i = (Folks.Individual) individual_obj;
+      var name = (Folks.NameDetails) i;
+      if (name.nickname == "bar baz")
+        {
+          this._nickname_found_after_update = true;
+          this._quit_if_complete ();
+        }
+    }
+
+  private void _quit_if_complete ()
+    {
+      if (this._full_name_found_after_update &&
+          this._nickname_found_after_update)
+        {
           this._main_loop.quit ();
         }
     }
@@ -141,7 +185,7 @@ public int main (string[] args)
   Test.init (ref args);
 
   TestSuite root = TestSuite.get_root ();
-  root.add_suite (new SetFullNameTests ().get_suite ());
+  root.add_suite (new SetNamesTests ().get_suite ());
 
   Test.run ();
 

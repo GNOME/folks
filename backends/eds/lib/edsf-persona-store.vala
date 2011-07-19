@@ -695,6 +695,20 @@ public class Edsf.PersonaStore : Folks.PersonaStore
         }
     }
 
+  internal async void _set_nickname (Edsf.Persona persona, string nickname)
+    {
+      try
+        {
+          E.Contact contact = ((Edsf.Persona) persona).contact;
+          contact.set (E.Contact.field_id ("nickname"), nickname);
+          yield this._addressbook.modify_contact (contact);
+        }
+      catch (GLib.Error error)
+        {
+          GLib.warning ("Can't update nickname: %s\n", error.message);
+        }
+    }
+
   internal async void _set_notes (Edsf.Persona persona,
       Set<Note> notes)
     {

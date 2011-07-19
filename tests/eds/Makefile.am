@@ -58,7 +58,7 @@ noinst_PROGRAMS = \
 	set-avatar \
 	set-emails \
 	set-im-addresses \
-	set-full-name \
+	set-names \
 	set-structured-name \
 	set-phones \
 	set-postal-addresses \
@@ -142,8 +142,8 @@ set_im_addresses_SOURCES = \
 	set-im-addresses.vala \
 	$(NULL)
 
-set_full_name_SOURCES = \
-	set-full-name.vala \
+set_names_SOURCES = \
+	set-names.vala \
 	$(NULL)
 
 set_structured_name_SOURCES = \
@@ -193,7 +193,7 @@ MAINTAINERCLEANFILES = \
         set_avatar_vala.stamp \
         set_emails_vala.stamp \
         set_im_addresses_vala.stamp \
-        set_full_name_vala.stamp \
+        set_names_vala.stamp \
         set_structured_name_vala.stamp \
         set_phones_vala.stamp \
         set_postal_addresses_vala.stamp \
