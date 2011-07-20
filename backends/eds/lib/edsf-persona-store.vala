@@ -360,17 +360,77 @@ public class Edsf.PersonaStore : Folks.PersonaStore
         }
       catch (GLib.Error e)
         {
-          /* FIXME: https://bugzilla.gnome.org/show_bug.cgi?id=652425 */
-          throw new PersonaStoreError.INVALID_ARGUMENT (
-              "Can't remove contact: %s\n", e.message);
+          if (e.domain == BookClient.error_quark ())
+            {
+              switch ((BookClientError) e.code)
+                {
+                  case BookClientError.CONTACT_NOT_FOUND:
+                    /* Not an error, since we've got nothing to do! */
+                    return;
+                  /* We don't expect to receive any of the error codes below: */
+                  case BookClientError.NO_SUCH_BOOK:
+                  case BookClientError.CONTACT_ID_ALREADY_EXISTS:
+                  case BookClientError.NO_SUCH_SOURCE:
+                  case BookClientError.NO_SPACE:
+                  default:
+                    /* Fall out */
+                    break;
+                }
+            }
+          else if (e.domain == Client.error_quark ())
+            {
+              switch ((ClientError) e.code)
+                {
+                  case ClientError.REPOSITORY_OFFLINE:
+                    throw new PersonaStoreError.STORE_OFFLINE (
+                        /* Translators: the first parameter is an address book
+                         * URI and the second is a persona UID. */
+                        _("Address book ‘%s’ is offline, so contact ‘%s’ cannot be removed."),
+                            this.id, persona.uid);
+                  case ClientError.PERMISSION_DENIED:
+                    throw new PersonaStoreError.PERMISSION_DENIED (
+                        /* Translators: the first parameter is an address book
+                         * URI and the second is an error message. */
+                        _("Permission denied to remove contact ‘%s’: %s"),
+                        persona.uid, e.message);
+                  case ClientError.NOT_SUPPORTED:
+                    throw new PersonaStoreError.READ_ONLY (
+                        /* Translators: the parameter is an error message. */
+                        _("Removing contacts isn't supported by this persona store: %s"),
+                            e.message);
+                  case ClientError.AUTHENTICATION_REQUIRED:
+                    /* TODO: Support authentication. bgo#653339 */
+                  /* We expect to receive these, but they don't need special
+                   * error codes: */
+                  case ClientError.INVALID_ARG:
+                  case ClientError.BUSY:
+                  case ClientError.DBUS_ERROR:
+                  case ClientError.OTHER_ERROR:
+                    /* Fall through. */
+                  /* We don't expect to receive any of the error codes below: */
+                  case ClientError.COULD_NOT_CANCEL:
+                  case ClientError.AUTHENTICATION_FAILED:
+                  case ClientError.TLS_NOT_AVAILABLE:
+                  case ClientError.OFFLINE_UNAVAILABLE:
+                  case ClientError.UNSUPPORTED_AUTHENTICATION_METHOD:
+                  case ClientError.SEARCH_SIZE_LIMIT_EXCEEDED:
+                  case ClientError.SEARCH_TIME_LIMIT_EXCEEDED:
+                  case ClientError.INVALID_QUERY:
+                  case ClientError.QUERY_REFUSED:
+                  default:
+                    /* Fall out */
+                    break;
+                }
+            }
+
+          /* Fallback error. */
+          throw new PersonaStoreError.REMOVE_FAILED (
+              _("Can't remove contact ‘%s’: %s"), persona.uid, e.message);
         }
     }
 
   /**
    * Prepare the PersonaStore for use.
-   *
-   * TODO: we should throw different errors depending on what went wrong when
-   * we were setting up the PersonaStore.
    *
    * See {@link Folks.PersonaStore.prepare}.
    *
@@ -386,35 +446,87 @@ public class Edsf.PersonaStore : Folks.PersonaStore
               return;
             }
 
-          /* FIXME: we need better error codes */
-
           try
             {
               this._addressbook = new E.BookClient (this._source);
+
+              this._addressbook.notify["readonly"].connect (
+                  this._address_book_notify_read_only_cb);
+
+              yield this._addressbook.open (true, null);
             }
           catch (GLib.Error e1)
             {
-              throw new PersonaStoreError.INVALID_ARGUMENT (
-                  "Couldn't get BookClient: %s\n", e1.message);
-            }
+              if (e1.domain == BookClient.error_quark ())
+                {
+                  switch ((BookClientError) e1.code)
+                    {
+                      /* We don't expect to receive any of the error codes
+                       * below: */
+                      case BookClientError.NO_SUCH_BOOK:
+                      case BookClientError.NO_SUCH_SOURCE:
+                      case BookClientError.CONTACT_NOT_FOUND:
+                      case BookClientError.CONTACT_ID_ALREADY_EXISTS:
+                      case BookClientError.NO_SPACE:
+                      default:
+                        /* Fall out */
+                        break;
+                    }
+                }
+              else if (e1.domain == Client.error_quark ())
+                {
+                  switch ((ClientError) e1.code)
+                    {
+                      case ClientError.REPOSITORY_OFFLINE:
+                        throw new PersonaStoreError.STORE_OFFLINE (
+                            /* Translators: the parameter is an address book
+                             * URI. */
+                            _("Address book ‘%s’ is offline."), this.id);
+                      case ClientError.PERMISSION_DENIED:
+                        throw new PersonaStoreError.PERMISSION_DENIED (
+                            /* Translators: the first parameter is an address
+                             * book URI and the second is an error message. */
+                            _("Permission denied to open address book ‘%s’: %s"),
+                            this.id, e1.message);
+                      case ClientError.AUTHENTICATION_REQUIRED:
+                        /* TODO: Support authentication. bgo#653339 */
+                      /* We expect to receive these, but they don't need special
+                       * error codes: */
+                      case ClientError.NOT_SUPPORTED:
+                      case ClientError.INVALID_ARG:
+                      case ClientError.BUSY:
+                      case ClientError.DBUS_ERROR:
+                      case ClientError.OTHER_ERROR:
+                        /* Fall through. */
+                      /* We don't expect to receive any of the error codes
+                       * below: */
+                      case ClientError.COULD_NOT_CANCEL:
+                      case ClientError.AUTHENTICATION_FAILED:
+                      case ClientError.TLS_NOT_AVAILABLE:
+                      case ClientError.OFFLINE_UNAVAILABLE:
+                      case ClientError.UNSUPPORTED_AUTHENTICATION_METHOD:
+                      case ClientError.SEARCH_SIZE_LIMIT_EXCEEDED:
+                      case ClientError.SEARCH_TIME_LIMIT_EXCEEDED:
+                      case ClientError.INVALID_QUERY:
+                      case ClientError.QUERY_REFUSED:
+                      default:
+                        /* Fall out */
+                        break;
+                    }
+                }
 
-          this._addressbook.notify["readonly"].connect (
-              this._address_book_notify_read_only_cb);
-
-          try
-            {
-              yield this._addressbook.open (true, null);
-            }
-          catch (GLib.Error e2)
-            {
+              /* Fallback error */
               throw new PersonaStoreError.INVALID_ARGUMENT (
-                  "Couldn't open addressbook: %s\n", e2.message);
+                  /* Translators: the first parameter is an address book URI
+                   * and the second is an error message. */
+                  _("Couldn't open address book ‘%s’: %s"), this.id, e1.message);
             }
 
           if (this._addressbook.is_opened () == false)
             {
               throw new PersonaStoreError.INVALID_ARGUMENT (
-                  "Couldn't open addressbook\n");
+                  /* Translators: the parameter is an address book URI. */
+                  _("Couldn't open address book ‘%s’."), this.id);
             }
 
           /* Determine which fields the address book supports. This is necessary
@@ -434,10 +546,11 @@ public class Edsf.PersonaStore : Folks.PersonaStore
                       (Contact.field_name (ContactField.CATEGORIES) in fields);
                 }
             }
-          catch (GLib.Error e5)
+          catch (GLib.Error e2)
             {
               throw new PersonaStoreError.INVALID_ARGUMENT (
-                  "Couldn't get address book capabilities: %s", e5.message);
+                  /* Translators: the parameteter is an error message. */
+                  _("Couldn't get address book capabilities: %s"), e2.message);
             }
 
           bool got_view = false;
@@ -445,31 +558,87 @@ public class Edsf.PersonaStore : Folks.PersonaStore
             {
               got_view = yield this._addressbook.get_view (this._query_str,
                   out this._ebookview);
+
+              if (got_view == false)
+                {
+                  throw new PersonaStoreError.INVALID_ARGUMENT (
+                      /* Translators: the parameter is an address book URI. */
+                      _("Couldn't get view for address book ‘%s’."),
+                          this.id);
+                }
+
+              this._ebookview.objects_added.connect (this._contacts_added_cb);
+              this._ebookview.objects_removed.connect (this._contacts_removed_cb);
+              this._ebookview.objects_modified.connect (this._contacts_changed_cb);
+
+              this._ebookview.start ();
             }
           catch (GLib.Error e3)
             {
-              throw new PersonaStoreError.INVALID_ARGUMENT (
-                  "Couldn't get book view: %s\n", e3.message);
-            }
+              if (e3.domain == BookClient.error_quark ())
+                {
+                  switch ((BookClientError) e3.code)
+                    {
+                      /* We don't expect to receive any of the error codes
+                       * below: */
+                      case BookClientError.NO_SUCH_BOOK:
+                      case BookClientError.NO_SUCH_SOURCE:
+                      case BookClientError.CONTACT_NOT_FOUND:
+                      case BookClientError.CONTACT_ID_ALREADY_EXISTS:
+                      case BookClientError.NO_SPACE:
+                      default:
+                        /* Fall out */
+                        break;
+                    }
+                }
+              else if (e3.domain == Client.error_quark ())
+                {
+                  switch ((ClientError) e3.code)
+                    {
+                      case ClientError.REPOSITORY_OFFLINE:
+                        throw new PersonaStoreError.STORE_OFFLINE (
+                            /* Translators: the parameter is an address book
+                             * URI. */
+                            _("Address book ‘%s’ is offline."), this.id);
+                      case ClientError.PERMISSION_DENIED:
+                        throw new PersonaStoreError.PERMISSION_DENIED (
+                            /* Translators: the first parameter is an address
+                             * book URI and the second is an error message. */
+                            _("Permission denied to open address book ‘%s’: %s"),
+                            this.id, e3.message);
+                      case ClientError.AUTHENTICATION_REQUIRED:
+                        /* TODO: Support authentication. bgo#653339 */
+                      /* We expect to receive these, but they don't need special
+                       * error codes: */
+                      case ClientError.NOT_SUPPORTED:
+                      case ClientError.INVALID_ARG:
+                      case ClientError.BUSY:
+                      case ClientError.DBUS_ERROR:
+                      case ClientError.OTHER_ERROR:
+                      case ClientError.SEARCH_SIZE_LIMIT_EXCEEDED:
+                      case ClientError.SEARCH_TIME_LIMIT_EXCEEDED:
+                      case ClientError.QUERY_REFUSED:
+                        /* Fall through. */
+                      /* We don't expect to receive any of the error codes
+                       * below: */
+                      case ClientError.COULD_NOT_CANCEL:
+                      case ClientError.AUTHENTICATION_FAILED:
+                      case ClientError.TLS_NOT_AVAILABLE:
+                      case ClientError.OFFLINE_UNAVAILABLE:
+                      case ClientError.UNSUPPORTED_AUTHENTICATION_METHOD:
+                      case ClientError.INVALID_QUERY:
+                      default:
+                        /* Fall out */
+                        break;
+                    }
+                }
 
-          if (got_view == false)
-            {
+              /* Fallback error */
               throw new PersonaStoreError.INVALID_ARGUMENT (
-                  "Couldn't get book view\n");
-            }
-
-          this._ebookview.objects_added.connect (this._contacts_added_cb);
-          this._ebookview.objects_removed.connect (this._contacts_removed_cb);
-          this._ebookview.objects_modified.connect (this._contacts_changed_cb);
-
-          try
-            {
-              this._ebookview.start ();
-            }
-          catch (GLib.Error e4)
-            {
-              throw new PersonaStoreError.INVALID_ARGUMENT (
-                  "Couldn't start bookview: %s\n", e4.message);
+                  /* Translators: the first parameter is an address book URI
+                   * and the second is an error message. */
+                  _("Couldn't get view for address book ‘%s’: %s"),
+                  this.id, e3.message);
             }
 
           this._is_prepared = true;

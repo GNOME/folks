@@ -1,4 +1,5 @@
 [encoding: UTF-8]
+backends/eds/lib/edsf-persona-store.vala
 backends/key-file/kf-backend-factory.vala
 backends/key-file/kf-persona-store.vala
 backends/key-file/kf-persona.vala

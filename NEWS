@@ -28,6 +28,7 @@ Bugs fixed:
 * Bug 655745 — Implement read/write support for gender property
 * Bug 649296 — Folks backend files shouldn't begin with "lib"
 * Bug 652657 — Allow writing to properties of all personas
+* Bug 655008 — Tidy up error handling in eds backend
 
 API changes:
 * Swf.Persona retains and exposes its libsocialweb Contact
