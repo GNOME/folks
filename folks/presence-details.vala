@@ -28,7 +28,8 @@ using GLib;
  * [[http://telepathy.freedesktop.org/spec/Connection_Interface_Simple_Presence.html#Connection_Presence_Type|SimplePresence]]
  * interface in the Telepathy specification.
  */
-public enum Folks.PresenceType {
+public enum Folks.PresenceType
+{
   /**
    * never set
    */
