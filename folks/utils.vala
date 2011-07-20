@@ -16,13 +16,53 @@
  *
  * Authors:
  *       Raul Gutierrez Segales <raul.gutierrez.segales@collabora.co.uk>
+ *       Travis Reitter <travis.reitter@collabora.co.uk>
  */
 
+using Gee;
 
-internal class Folks.Utils : Object
+public class Folks.Utils : Object
 {
   internal static bool _str_equal_safe (string a, string b)
     {
       return (a != "" && b != "" && a.down () == b.down ());
+    }
+
+  public static bool multi_map_str_str_equal (
+      MultiMap<string, string> a,
+      MultiMap<string, string> b)
+    {
+      if (a == b)
+        return true;
+
+      if (a.size == b.size)
+        {
+          foreach (var key in a.get_keys ())
+            {
+              if (b.contains (key))
+                {
+                  var a_values = a.get (key);
+                  var b_values = b.get (key);
+                  if (a_values.size != b_values.size)
+                    return false;
+
+                  foreach (var a_value in a_values)
+                    {
+                      if (!b_values.contains (a_value))
+                        return false;
+                    }
+                }
+              else
+                {
+                  return false;
+                }
+            }
+        }
+      else
+        {
+          return false;
+        }
+
+      return true;
     }
 }

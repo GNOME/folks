@@ -40,6 +40,7 @@ AM_VALAFLAGS = \
 # in order from least to most complex
 noinst_PROGRAMS = \
 	field-details \
+	utils \
 	backend-loading \
 	aggregation \
 	$(NULL)
@@ -68,6 +69,10 @@ field_details_SOURCES = \
 	field-details.vala \
 	$(NULL)
 
+utils_SOURCES = \
+	utils.vala \
+	$(NULL)
+
 CLEANFILES = \
         *.pid \
         *.address \
@@ -79,6 +84,7 @@ MAINTAINERCLEANFILES = \
         backend_loading_vala.stamp \
         aggregation_vala.stamp \
         field_details_vala.stamp \
+        utils_vala.stamp \
         $(NULL)
 
 EXTRA_DIST = \
