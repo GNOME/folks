@@ -473,6 +473,57 @@ public class Edsf.PersonaStore : Folks.PersonaStore
 
   internal async void _set_avatar (Edsf.Persona persona, File? avatar)
     {
+      /* Return early if there will be no change */
+      if ((persona.avatar == null && avatar == null) ||
+          (persona.avatar != null && persona.avatar.equal (avatar)))
+        {
+          return;
+        }
+      else
+        {
+          if (persona.avatar != null && avatar != null)
+            {
+              try
+                {
+                  var persona_avatar_input = yield persona.avatar.read_async ();
+                  var persona_avatar_info =
+                      yield persona_avatar_input.query_info_async (
+                        FILE_ATTRIBUTE_STANDARD_SIZE, FileQueryInfoFlags.NONE);
+                  var persona_avatar_size =
+                      persona_avatar_info.get_attribute_uint32 (
+                        FILE_ATTRIBUTE_STANDARD_SIZE);
+
+                  var avatar_input = yield avatar.read_async ();
+                  var avatar_info = yield avatar_input.query_info_async (
+                        FILE_ATTRIBUTE_STANDARD_SIZE, FileQueryInfoFlags.NONE);
+                  var avatar_size = avatar_info.get_attribute_uint32 (
+                        FILE_ATTRIBUTE_STANDARD_SIZE);
+
+                  if (persona_avatar_size == avatar_size)
+                    {
+                      var persona_avatar_data = new uint8[persona_avatar_size];
+                      var avatar_data = new uint8[avatar_size];
+                      yield persona_avatar_input.read_async (
+                          persona_avatar_data);
+                      yield avatar_input.read_async (avatar_data);
+
+                      var persona_avatar_sum = Checksum.compute_for_data (
+                          ChecksumType.MD5, persona_avatar_data);
+                      var avatar_sum = Checksum.compute_for_data (
+                          ChecksumType.MD5, avatar_data);
+
+                      if (persona_avatar_sum == avatar_sum)
+                        return;
+                    }
+                }
+              catch (GLib.Error e1)
+                {
+                  warning ("Failed to read an avatar file for comparison: %s",
+                      e1.message);
+                }
+            }
+        }
+
       try
         {
           E.Contact contact = ((Edsf.Persona) persona).contact;
@@ -488,6 +539,10 @@ public class Edsf.PersonaStore : Folks.PersonaStore
   internal async void _set_web_service_addresses (Edsf.Persona persona,
       MultiMap<string, string> web_service_addresses)
     {
+      if (Utils.multi_map_str_str_equal (persona.web_service_addresses,
+            web_service_addresses))
+        return;
+
       try
         {
           E.Contact contact = ((Edsf.Persona) persona).contact;
@@ -687,6 +742,9 @@ public class Edsf.PersonaStore : Folks.PersonaStore
   internal async void _set_full_name (Edsf.Persona persona,
       string full_name)
     {
+      if (persona.full_name == full_name)
+        return;
+
       try
         {
           E.Contact contact = ((Edsf.Persona) persona).contact;
@@ -701,6 +759,9 @@ public class Edsf.PersonaStore : Folks.PersonaStore
 
   internal async void _set_nickname (Edsf.Persona persona, string nickname)
     {
+      if (persona.nickname == nickname)
+        return;
+
       try
         {
           E.Contact contact = ((Edsf.Persona) persona).contact;
@@ -746,6 +807,10 @@ public class Edsf.PersonaStore : Folks.PersonaStore
   internal async void _set_structured_name (Edsf.Persona persona,
       StructuredName? sname)
     {
+      if (persona.structured_name != null &&
+          persona.structured_name.equal (sname))
+        return;
+
       try
         {
           E.Contact contact = ((Edsf.Persona) persona).contact;
@@ -778,6 +843,9 @@ public class Edsf.PersonaStore : Folks.PersonaStore
   internal async void _set_im_addrs  (Edsf.Persona persona,
       MultiMap<string, string> im_addrs)
     {
+      if (Utils.multi_map_str_str_equal (persona.im_addresses, im_addrs))
+        return;
+
       try
         {
           E.Contact contact = ((Edsf.Persona) persona).contact;
