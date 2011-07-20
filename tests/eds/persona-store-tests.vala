@@ -193,7 +193,7 @@ public class PersonaStoreTests : Folks.TestCase
 
       if (store.can_group_personas != MaybeBool.UNSET)
         {
-          assert (store.can_group_personas == MaybeBool.FALSE);
+          assert (store.can_group_personas == MaybeBool.TRUE);
 
           store.notify["can-group-personas"].disconnect (
               this.can_group_personas_cb);
