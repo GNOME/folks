@@ -20,6 +20,7 @@ Bugs fixed:
 * Bug 652425 — Failure codes for removing personas needed in PersonaStoreError
 * Bug 645549 — Add a way to get the individual from a persona
 * Bug 650422 — Add API for easily checking whether details are writeable
+* Bug 655019 — Don't notify twice for nickname changes
 
 API changes:
 * Swf.Persona retains and exposes its libsocialweb Contact

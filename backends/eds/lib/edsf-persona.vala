@@ -281,10 +281,6 @@ public class Edsf.Persona : Folks.Persona,
 
       set
         {
-          if (this._nickname == value)
-            return;
-          this._nickname = value;
-          this.notify_property ("nickname");
           ((Edsf.PersonaStore) this.store)._set_nickname (this, value);
         }
     }
