@@ -471,7 +471,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
         }
     }
 
-  internal async void _set_avatar (Edsf.Persona persona, File avatar)
+  internal async void _set_avatar (Edsf.Persona persona, File? avatar)
     {
       try
         {
@@ -557,16 +557,20 @@ public class Edsf.PersonaStore : Folks.PersonaStore
     }
 
   private async void _set_contact_avatar (E.Contact contact,
-      File avatar)
+      File? avatar)
     {
       try
         {
           uint8[] photo_content;
-          yield avatar.load_contents_async (null, out photo_content);
-
           var cp = new ContactPhoto ();
-          cp.type = ContactPhotoType.INLINED;
-          cp.set_inlined (photo_content);
+
+          if (avatar != null)
+            {
+              yield avatar.load_contents_async (null, out photo_content);
+
+              cp.type = ContactPhotoType.INLINED;
+              cp.set_inlined (photo_content);
+            }
 
           contact.set (E.Contact.field_id ("photo"), cp);
         }
