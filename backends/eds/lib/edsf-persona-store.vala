@@ -744,7 +744,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
     }
 
   internal async void _set_structured_name (Edsf.Persona persona,
-      StructuredName sname)
+      StructuredName? sname)
     {
       try
         {
@@ -759,15 +759,18 @@ public class Edsf.PersonaStore : Folks.PersonaStore
     }
 
   private async void _set_contact_name (E.Contact contact,
-      StructuredName sname)
+      StructuredName? sname)
     {
       E.ContactName contact_name = new E.ContactName ();
 
-      contact_name.family = sname.family_name;
-      contact_name.given = sname.given_name;
-      contact_name.additional = sname.additional_names;
-      contact_name.suffixes = sname.suffixes;
-      contact_name.prefixes = sname.prefixes;
+      if (sname != null)
+        {
+          contact_name.family = sname.family_name;
+          contact_name.given = sname.given_name;
+          contact_name.additional = sname.additional_names;
+          contact_name.suffixes = sname.suffixes;
+          contact_name.prefixes = sname.prefixes;
+        }
 
       contact.set (E.Contact.field_id ("name"), contact_name);
     }
