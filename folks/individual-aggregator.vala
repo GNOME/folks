@@ -65,6 +65,7 @@ public class Folks.IndividualAggregator : Object
   private bool _is_prepared = false;
   private Debug _debug;
   private string _configured_writeable_store_type_id;
+  private string _configured_writeable_store_id;
   private static const string _FOLKS_CONFIG_KEY =
     "/system/folks/backends/primary_store";
 
@@ -181,20 +182,22 @@ public class Folks.IndividualAggregator : Object
       this._debug.print_status.connect (this._debug_print_status);
 
       /* Check out the configured writeable store */
-      var store_type_id = Environment.get_variable ("FOLKS_WRITEABLE_STORE");
-      if (store_type_id != null)
+      var store_config_ids = Environment.get_variable ("FOLKS_WRITEABLE_STORE");
+      if (store_config_ids != null)
         {
-          this._configured_writeable_store_type_id = store_type_id;
+          this._set_writeable_store (store_config_ids);
         }
       else
         {
           this._configured_writeable_store_type_id = "key-file";
+          this._configured_writeable_store_id = "";
+
           try
             {
               unowned GConf.Client client = GConf.Client.get_default ();
               GConf.Value? val = client.get (this._FOLKS_CONFIG_KEY);
               if (val != null)
-                this._configured_writeable_store_type_id = val.get_string ();
+                this._set_writeable_store (val.get_string ());
             }
           catch (GLib.Error e)
             {
@@ -220,6 +223,21 @@ public class Folks.IndividualAggregator : Object
       this._backend_store = null;
 
       this._debug.print_status.disconnect (this._debug_print_status);
+    }
+
+  private void _set_writeable_store (string store_config_ids)
+    {
+      if (store_config_ids.str (":") != null)
+        {
+          var ids = store_config_ids.split (":", 2);
+          this._configured_writeable_store_type_id = ids[0];
+          this._configured_writeable_store_id = ids[1];
+        }
+      else
+        {
+          this._configured_writeable_store_type_id = store_config_ids;
+          this._configured_writeable_store_id = "";
+        }
     }
 
   private void _debug_print_status (Debug debug)
@@ -449,12 +467,22 @@ public class Folks.IndividualAggregator : Object
       var store_id = this._get_store_full_id (store.type_id, store.id);
 
       /* We use the configured PersonaStore as the only trusted and writeable
-       * PersonaStore. */
+       * PersonaStore.
+       *
+       * If the type_id is `eds` we *must* know the actual store
+       * (address book) we are talking about or we might end up using
+       * a random store on every run.
+       */
       if (store.type_id == this._configured_writeable_store_type_id)
         {
-          store.is_writeable = true;
-          store.trust_level = PersonaStoreTrust.FULL;
-          this._writeable_store = store;
+          if ((store.type_id != "eds" &&
+                  this._configured_writeable_store_id == "") ||
+              this._configured_writeable_store_id == store.id)
+            {
+              store.is_writeable = true;
+              store.trust_level = PersonaStoreTrust.FULL;
+              this._writeable_store = store;
+            }
         }
 
       this._stores.set (store_id, store);

@@ -374,7 +374,13 @@ public abstract class Folks.PersonaStore : Object
    * This is guaranteed to always be available; even before
    * {@link PersonaStore.prepare} is called.
    */
-  public abstract string type_id { get; }
+  public abstract string type_id
+    {
+      /* Note: the type_id must not contain colons because the primary writeable
+       * store is configured, either via GConf or the FOLKS_WRITEABLE_STORE
+       * env variable, with a string of the form 'type_id:store_id'. */
+      get;
+    }
 
   /**
    * The human-readable, service-specific name used to represent the
