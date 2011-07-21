@@ -404,7 +404,7 @@ public class Folks.Individual : Object,
 
   public DateTime birthday { get; set; }
 
-  public string calendar_event_id { get; set; }
+  public string? calendar_event_id { get; set; }
 
   private HashSet<Note> _notes;
   private Set<Note> _notes_ro;
