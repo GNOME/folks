@@ -214,7 +214,8 @@ public class Folks.PostalAddress : Object
  * Object representing a PostalAddress value that can have some parameters
  * associated with it.
  *
- * See {@link Folks.AbstractFieldDetails}.
+ * See {@link Folks.AbstractFieldDetails} for details on common parameter names
+ * and values.
  *
  * @since UNRELEASED
  */
