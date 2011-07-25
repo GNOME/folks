@@ -294,7 +294,14 @@ public enum Folks.PersonaDetail
    *
    * @since 0.7.1
    */
-  LAST_CALL_INTERACTION_DATETIME
+  LAST_CALL_INTERACTION_DATETIME,
+
+  /**
+   * Field for {@link AntiLinkable.anti_links}.
+   *
+   * @since UNRELEASED
+   */
+  ANTI_LINKS,
 }
 
 /**
@@ -353,7 +360,8 @@ public abstract class Folks.PersonaStore : Object
     "im-interaction-count",
     "last-im-interaction-datetime",
     "call-interaction-count",
-    "last-call-interaction-datetime"
+    "last-call-interaction-datetime",
+    "anti-links"
   };
 
   /**

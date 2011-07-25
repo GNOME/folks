@@ -34,7 +34,8 @@ public enum Folks.MatchResult
    *
    * This is used in situations where two individuals should never be linked,
    * such as when one of them has a {@link Individual.trust_level} of
-   * {@link TrustLevel.NONE}.
+   * {@link TrustLevel.NONE}, or when the individuals are explicitly
+   * anti-linked.
    *
    * @since 0.6.8
    */
@@ -124,6 +125,13 @@ public class Folks.PotentialMatch : Object
        * trusted (e.g. due to containing link-local XMPP personas, which can be
        * spoofed). */
       if (a.trust_level == TrustLevel.NONE || b.trust_level == TrustLevel.NONE)
+        {
+          return result;
+        }
+
+      /* Similarly, immediately discount a match if the individuals have been
+       * anti-linked by the user. */
+      if (a.has_anti_link_with_individual (b))
         {
           return result;
         }

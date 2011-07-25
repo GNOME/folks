@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2010 Collabora Ltd.
+ * Copyright (C) 2012 Philip Withnall
  *
  * This library is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -16,6 +17,7 @@
  *
  * Authors:
  *       Travis Reitter <travis.reitter@collabora.co.uk>
+ *       Philip Withnall <philip@tecnocode.co.uk>
  */
 
 using Gee;
@@ -976,7 +978,8 @@ public class Folks.IndividualAggregator : Object
 
           /* If the Persona is the user, we *always* want to link it to the
            * existing this.user. */
-          if (persona.is_user == true && user != null)
+          if (persona.is_user == true && user != null &&
+              ((!) user).has_anti_link_with_persona (persona) == false)
             {
               debug ("    Found candidate individual '%s' as user.",
                   ((!) user).id);
@@ -994,6 +997,8 @@ public class Folks.IndividualAggregator : Object
                     {
                       if (candidate_ind != null &&
                           ((!) candidate_ind).trust_level != TrustLevel.NONE &&
+                          ((!) candidate_ind).has_anti_link_with_persona (
+                              persona) == false &&
                           candidate_inds.add ((!) candidate_ind))
                         {
                           debug ("    Found candidate individual '%s' by " +
@@ -1038,6 +1043,9 @@ public class Folks.IndividualAggregator : Object
                               if (candidate_ind != null &&
                                   ((!) candidate_ind).trust_level !=
                                       TrustLevel.NONE &&
+                                  ((!) candidate_ind).
+                                      has_anti_link_with_persona (
+                                          persona) == false &&
                                   candidate_inds.add ((!) candidate_ind))
                                 {
                                   debug ("    Found candidate individual '%s'" +
@@ -1165,6 +1173,24 @@ public class Folks.IndividualAggregator : Object
           null, null, GroupDetails.ChangeReason.NONE);
     }
 
+  private void _persona_anti_links_changed_cb (Object obj, ParamSpec pspec)
+    {
+      var persona = obj as Persona;
+
+      /* The anti-links associated with the persona has changed, so that persona
+       * might require re-linking. We do this in a simplistic and hacky way
+       * (which should work) by simply treating the persona as if it's been
+       * removed and re-added. */
+      debug ("Anti-links changed for persona '%s' (is user: %s, IID: %s).",
+          persona.uid, persona.is_user ? "yes" : "no", persona.iid);
+
+      var persona_set = new HashSet<Persona> ();
+      persona_set.add (persona);
+
+      this._personas_changed_cb (persona.store, persona_set, persona_set,
+          null, null, GroupDetails.ChangeReason.NONE);
+    }
+
   private void _connect_to_persona (Persona persona)
     {
       foreach (var prop_name in persona.linkable_properties)
@@ -1172,10 +1198,23 @@ public class Folks.IndividualAggregator : Object
           persona.notify[prop_name].connect (
               this._persona_linkable_property_changed_cb);
         }
+
+      var al = persona as AntiLinkable;
+      if (al != null)
+        {
+          al.notify["anti-links"].connect (this._persona_anti_links_changed_cb);
+        }
     }
 
   private void _disconnect_from_persona (Persona persona)
     {
+      var al = persona as AntiLinkable;
+      if (al != null)
+        {
+          al.notify["anti-links"].disconnect (
+              this._persona_anti_links_changed_cb);
+        }
+
       foreach (var prop_name in persona.linkable_properties)
         {
           persona.notify[prop_name].disconnect (
@@ -1787,6 +1826,25 @@ public class Folks.IndividualAggregator : Object
           return;
         }
 
+      /* Remove all edges in the connected graph between the personas from the
+       * anti-link map to ensure that linking the personas actually succeeds. */
+      foreach (var p in personas)
+        {
+          var al = p as AntiLinkable;
+          if (al != null)
+            {
+              try
+                {
+                  yield ((!) al).remove_anti_links (personas);
+                }
+              catch (PropertyError e)
+                {
+                  throw new IndividualAggregatorError.PROPERTY_NOT_WRITEABLE (
+                      _("Anti-links can't be removed between personas being linked."));
+                }
+            }
+        }
+
       /* Create a new persona in the primary store which links together the
        * given personas */
       assert (((!) this._primary_store).type_id ==
@@ -1921,29 +1979,50 @@ public class Folks.IndividualAggregator : Object
           return;
         }
 
-      debug ("Unlinking Individual '%s', deleting Personas:", individual.id);
+      debug ("Unlinking Individual '%s':", individual.id);
 
-      /* Remove all the Personas from writeable PersonaStores.
+      /* Add all edges in the connected graph between the personas to the
+       * anti-link map to ensure that unlinking the personas actually succeeds,
+       * and that they aren't immediately re-linked.
        *
-       * We have to take a copy of the Persona list before removing the
-       * Personas, as _personas_changed_cb() (which is called as a result of
-       * calling _primary_store.remove_persona()) messes around with Persona
-       * lists. */
-      var personas = new HashSet<Persona> ();
-      foreach (var p in individual.personas)
-        {
-          personas.add (p);
-        }
+       * Perversely, this requires that we ensure the anti-links property is
+       * writeable on all personas before continuing. Ignore errors from it in
+       * the hope that everything works anyway.
+       *
+       * In the worst case, this will double the number of personas, since if
+       * none of the personas have anti-links writeable, each will have to be
+       * linked with a new writeable persona. */
+      var individual_personas = new HashSet<Persona> (); /* as we modify it */
+      individual_personas.add_all (individual.personas);
 
-      foreach (var persona in personas)
+      debug ("    Inserting anti-links:");
+      foreach (var pers in individual_personas)
         {
-          /* Since persona.store != null, we know that
-           * this._primary_store != null. */
-          if (persona.store == this._primary_store)
+          try
             {
-              debug ("    %s (is user: %s, IID: %s)", persona.uid,
-                  persona.is_user ? "yes" : "no", persona.iid);
-              yield ((!) this._primary_store).remove_persona (persona);
+              var personas = new HashSet<Persona> ();
+              personas.add (pers);
+              message ("Anti-linking persona '%s' (%p)", pers.uid, pers);
+
+              var writeable_persona =
+                  yield this._ensure_personas_property_writeable (personas,
+                      "anti-links");
+              message ("Writeable persona '%s' (%p)", writeable_persona.uid, writeable_persona);
+
+              /* Make sure not to anti-link the new persona to pers. */
+              var anti_link_personas = new HashSet<Persona> ();
+              anti_link_personas.add_all (individual_personas);
+              anti_link_personas.remove (pers);
+
+              var al = writeable_persona as AntiLinkable;
+              assert (al != null);
+              yield ((!) al).add_anti_links (anti_link_personas);
+              message ("");
+            }
+          catch (IndividualAggregatorError e1)
+            {
+              debug ("    Failed to ensure anti-links property is writeable " +
+                  "(continuing anyway): %s", e1.message);
             }
         }
     }

@@ -6,9 +6,10 @@ Dependencies:
 
 Bugs fixed:
 • Bug 673918 — Port to newer libgee
+• Bug 629537 — Support anti-linking
 
 API changes:
-
+• Add AntiLinkable interface and implement it on Kf.Persona and Edsf.Persona
 
 Overview of changes from libfolks 0.7.1 to libfolks 0.7.2
 =========================================================

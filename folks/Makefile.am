@@ -90,6 +90,7 @@ libfolks_la_SOURCES = \
 	potential-match.vala \
 	avatar-cache.vala \
 	object-cache.vala \
+	anti-linkable.vala \
 	$(NULL)
 
 if ENABLE_EDS

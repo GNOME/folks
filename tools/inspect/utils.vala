@@ -252,7 +252,8 @@ private class Folks.Inspect.Utils
         }
       else if (prop_name == "groups" ||
                prop_name == "local-ids" ||
-               prop_name == "supported-fields")
+               prop_name == "supported-fields" ||
+               prop_name == "anti-links")
         {
           Set<string> groups = (Set<string>) prop_value.get_object ();
           output_string = "{ ";

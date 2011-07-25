@@ -2213,4 +2213,64 @@ public class Folks.Individual : Object,
     {
       this._set_personas (null, replacement_individual);
     }
+
+  /**
+   * Anti-linked with a persona?
+   *
+   * Check whether this individual is anti-linked to {@link Persona} `p` at all.
+   * If so, `true` will be returned — `false` will be returned otherwise.
+   *
+   * Note that this will check for anti-links in either direction, since
+   * anti-links are not necessarily symmetric.
+   *
+   * @param p persona to check for anti-links with
+   * @return `true` if this individual is anti-linked with persona `p`; `false`
+   * otherwise
+   * @since UNRELEASED
+   */
+  public bool has_anti_link_with_persona (Persona p)
+    {
+      var al = p as AntiLinkable;
+
+      foreach (var persona in this._persona_set)
+        {
+          var pl = persona as AntiLinkable;
+
+          if ((al != null && ((!) al).has_anti_link_with_persona (persona)) ||
+              (pl != null && ((!) pl).has_anti_link_with_persona (p)))
+            {
+              return true;
+            }
+        }
+
+      return false;
+    }
+
+  /**
+   * Anti-linked with an individual?
+   *
+   * Check whether this individual is anti-linked to any of the {@link Persona}s
+   * in {@link Individual} `i`. If so, `true` will be returned — `false` will be
+   * returned otherwise.
+   *
+   * Note that this will check for anti-links in either direction, since
+   * anti-links are not necessarily symmetric.
+   *
+   * @param i individual to check for anti-links with
+   * @return `true` if this individual is anti-linked with individual `i`;
+   * `false` otherwise
+   * @since UNRELEASED
+   */
+  public bool has_anti_link_with_individual (Individual i)
+    {
+      foreach (var p in i.personas)
+        {
+          if (this.has_anti_link_with_persona (p) == true)
+            {
+              return true;
+            }
+        }
+
+      return false;
+    }
 }
