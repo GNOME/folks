@@ -789,12 +789,6 @@ public class Folks.IndividualAggregator : Object
        * property. */
       var user = this.user;
 
-      if (added.size > 0)
-        {
-          this._add_personas (added, ref added_individuals,
-              ref replaced_individuals, ref user);
-        }
-
       debug ("Removing Personas:");
 
       foreach (var persona in removed)
@@ -852,6 +846,19 @@ public class Folks.IndividualAggregator : Object
 
           this._disconnect_from_individual (individual);
           individual.personas = null;
+        }
+
+      debug ("Adding Personas:");
+      foreach (var persona in added)
+        {
+          debug ("    %s (is user: %s, IID: %s)", persona.uid,
+              persona.is_user ? "yes" : "no", persona.iid);
+        }
+
+      if (added.size > 0)
+        {
+          this._add_personas (added, ref added_individuals,
+              ref replaced_individuals, ref user);
         }
 
       debug ("Relinking Personas:");
