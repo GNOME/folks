@@ -35,7 +35,6 @@ public class AddPersonaTests : Folks.TestCase
   private HashTable<string, bool> _properties_found;
   private string _persona_iid;
   private LoadableIcon _avatar;
-  private string _file_uri;
   private string _birthday;
   private DateTime _bday;
   private string _email_1;
@@ -86,8 +85,8 @@ public class AddPersonaTests : Folks.TestCase
       this._family_name = "family";
       this._given_name = "given";
       this._persona_iid = "";
-      this._file_uri = "file:///tmp/some-avatar.jpg";
-      this._avatar = new FileIcon (File.new_for_uri (this._file_uri));
+      var _avatar_path = Environment.get_variable ("AVATAR_FILE_PATH");
+      this._avatar = new FileIcon (File.new_for_path (_avatar_path));
       this._birthday = "2001-10-26T20:32:52Z";
       this._email_1 = "someone-1@example.org";
       this._email_2 = "someone-2@example.org";
@@ -423,10 +422,6 @@ public class AddPersonaTests : Folks.TestCase
           this._check_sname (i.structured_name);
         }
 
-      if (i.avatar != null &&
-          i.avatar.equal (this._avatar))
-        this._properties_found.replace ("avatar", true);
-
       if (i.birthday != null &&
           i.birthday.compare (this._bday) == 0)
         this._properties_found.replace ("birthday", true);
@@ -500,6 +495,20 @@ public class AddPersonaTests : Folks.TestCase
             this._properties_found.replace ("url-1", true);
           if (u.value == this._url_2)
             this._properties_found.replace ("url-2", true);
+        }
+
+      if (i.avatar != null)
+        {
+          /* arbitrary icon size, but it might as well be on the small side */
+          TestUtils.loadable_icons_content_equal.begin (i.avatar,
+              this._avatar, 100,
+              (obj, result) =>
+            {
+              if (TestUtils.loadable_icons_content_equal.end (result))
+                this._properties_found.replace ("avatar", true);
+
+              this._exit_if_all_properties_found ();
+            });
         }
 
       this._exit_if_all_properties_found ();

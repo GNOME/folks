@@ -132,11 +132,16 @@ public class SetAvatarTests : Folks.TestCase
       var name = (Folks.NameDetails) i;
       if (name.full_name == "bernie h. innocenti")
         {
-          if (this._avatar.equal (i.avatar) == true)
+          TestUtils.loadable_icons_content_equal.begin (i.avatar,
+              this._avatar, -1,
+              (obj, result) =>
             {
-              this._found_after_update = true;
-              this._main_loop.quit ();
-            }
+              if (TestUtils.loadable_icons_content_equal.end (result))
+                {
+                  this._found_after_update = true;
+                  this._main_loop.quit ();
+                }
+            });
         }
     }
 }

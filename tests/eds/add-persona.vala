@@ -342,16 +342,6 @@ public class AddPersonaTests : Folks.TestCase
             }
         }
 
-      if (i.avatar != null)
-        {
-          var b = new FileIcon (File.new_for_path (this._avatar_path));
-
-          if (b.equal (i.avatar) == true)
-            {
-              this._properties_found.replace ("avatar", true);
-            }
-        }
-
       foreach (var proto in i.im_addresses.get_keys ())
         {
           var im_fds = i.im_addresses.get (proto);
@@ -395,6 +385,20 @@ public class AddPersonaTests : Folks.TestCase
               this._properties_found.replace ("note", true);
               break;
             }
+        }
+
+      if (i.avatar != null)
+        {
+          var b = new FileIcon (File.new_for_path (this._avatar_path));
+
+          TestUtils.loadable_icons_content_equal.begin (b, i.avatar, -1,
+              (obj, result) =>
+            {
+              if (TestUtils.loadable_icons_content_equal.end (result))
+                this._properties_found.replace ("avatar", true);
+
+              this._exit_if_all_properties_found ();
+            });
         }
 
       this._exit_if_all_properties_found ();

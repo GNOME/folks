@@ -29,7 +29,6 @@ public class SetAvatarTests : Folks.TestCase
   private TrackerTest.Backend _tracker_backend;
   private IndividualAggregator _aggregator;
   private string _persona_fullname;
-  private string _avatar_uri;
   private LoadableIcon _avatar;
   private bool _avatar_found;
 
@@ -55,8 +54,8 @@ public class SetAvatarTests : Folks.TestCase
       this._main_loop = new GLib.MainLoop (null, false);
       Gee.HashMap<string, string> c1 = new Gee.HashMap<string, string> ();
       this._persona_fullname = "persona #1";
-      this._avatar_uri = "file:///tmp/some-avatar.jpg";
-      this._avatar = new FileIcon (File.new_for_uri (this._avatar_uri));
+      var _avatar_path = Environment.get_variable ("AVATAR_FILE_PATH");
+      this._avatar = new FileIcon (File.new_for_path (_avatar_path));
 
       c1.set (Trf.OntologyDefs.NCO_FULLNAME, this._persona_fullname);
       this._tracker_backend.add_contact (c1);
@@ -125,11 +124,17 @@ public class SetAvatarTests : Folks.TestCase
       Folks.Individual i = (Folks.Individual) individual_obj;
       if (i.full_name == this._persona_fullname)
         {
-          if (i.avatar.equal (this._avatar))
+          /* arbitrary icon size, but it might as well be on the small side */
+          TestUtils.loadable_icons_content_equal.begin (i.avatar,
+              this._avatar, 100,
+              (obj, result) =>
             {
-              this._avatar_found = true;
-              this._main_loop.quit ();
-            }
+              if (TestUtils.loadable_icons_content_equal.end (result))
+                {
+                  this._avatar_found = true;
+                  this._main_loop.quit ();
+                }
+            });
         }
    }
 }

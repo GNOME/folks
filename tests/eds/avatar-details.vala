@@ -119,11 +119,13 @@ public class AvatarDetailsTests : Folks.TestCase
             {
               var b = new FileIcon (File.new_for_path (this._avatar_path));
 
-              if (b.equal (i.avatar) == true)
+              Utils.loadable_icons_content_equal (b, i.avatar, -1,
+                  (object, result) =>
                 {
-                  this._avatars_are_equal = true;
+                  this._avatars_are_equal =
+                      Utils.loadable_icons_content_equal.end (result);
                   this._main_loop.quit ();
-                }
+                });
             }
         }
    }

@@ -3,6 +3,7 @@ Overview of changes from libfolks 0.6.0 to libfolks 0.6.1
 
 Bugs fixed:
 * Bug 656659 — Use vcards for postal addresses
+* Bug 655374 — Un-break avatar tests
 
 Overview of changes from libfolks 0.5.2 to libfolks 0.5.3
 =========================================================

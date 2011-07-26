@@ -113,44 +113,6 @@ public class AvatarCacheTests : Folks.TestCase
         }
     }
 
-  protected bool _avatars_equal (LoadableIcon avatar1,
-      LoadableIcon avatar2)
-    {
-      if (avatar1.equal (avatar2) == true)
-        {
-          return true;
-        }
-
-      // Compare content instead.
-      try
-        {
-          var stream1 = avatar1.load (-1, null, null);
-          var stream2 = avatar2.load (-1, null, null);
-
-          var content1 = new uint8[512];
-          var content2 = new uint8[512];
-
-          ssize_t read1 = -1;
-          do
-            {
-              read1 = stream1.read (content1, null);
-              var read2 = stream2.read (content2, null);
-
-              if (read1 != read2 || Memory.cmp (content1, content2, read1) != 0)
-                {
-                  return false;
-                }
-            }
-          while (read1 > 0);
-        }
-      catch (GLib.Error e)
-        {
-          return false;
-        }
-
-      return true;
-    }
-
   protected void _assert_store_avatar (string id, LoadableIcon avatar)
     {
       this._cache.store_avatar.begin (id, avatar, (obj, res) =>
@@ -212,6 +174,17 @@ public class AvatarCacheTests : Folks.TestCase
       this._main_loop.run ();
     }
 
+  protected void _assert_avatars_equal (LoadableIcon a, LoadableIcon b)
+    {
+      TestUtils.loadable_icons_content_equal (a, b, -1, (object, result) =>
+        {
+          assert (TestUtils.loadable_icons_content_equal.end (result));
+          this._main_loop.quit ();
+        });
+
+      this._main_loop.run ();
+    }
+
   public void test_store_and_load_avatar ()
     {
       // Store the avatar.
@@ -223,7 +196,7 @@ public class AvatarCacheTests : Folks.TestCase
       // Check the avatar's OK
       assert (avatar != null);
       assert (avatar is LoadableIcon);
-      assert (this._avatars_equal (this._avatar, avatar) == true);
+      this._assert_avatars_equal (this._avatar, avatar);
     }
 
   public void test_store_avatar_overwrite ()
@@ -238,7 +211,7 @@ public class AvatarCacheTests : Folks.TestCase
       // Check the avatar's OK
       assert (avatar != null);
       assert (avatar is LoadableIcon);
-      assert (this._avatars_equal (this._avatar, avatar) == true);
+      this._assert_avatars_equal (this._avatar, avatar);
     }
 
   public void test_load_avatar_non_existent ()
