@@ -684,6 +684,9 @@ public class Folks.Individual : Object,
    */
   public Individual (Set<Persona>? personas)
     {
+      debug ("Creating new Individual with %u Personas: %p",
+          (personas != null ? personas.size : 0), this);
+
       this._im_addresses = new HashMultiMap<string, string> ();
       this._web_service_addresses = new HashMultiMap<string, string> ();
       this._persona_set =
@@ -709,6 +712,11 @@ public class Folks.Individual : Object,
       this._notes_ro = this._notes.read_only_view;
 
       this.personas = personas;
+    }
+
+  ~Individual ()
+    {
+      debug ("Destroying Individual '%s': %p", this.id, this);
     }
 
   /* Emit the personas-changed signal, turning null parameters into empty sets
