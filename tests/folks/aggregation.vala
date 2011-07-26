@@ -55,6 +55,7 @@ public class AggregationTests : Folks.TestCase
           this.test_linkable_properties_different_stores);
       this.add_test ("user", this.test_user);
       this.add_test ("untrusted store", this.test_untrusted_store);
+      this.add_test ("refcounting", this.test_linked_individual_refcounting);
 
       if (Environment.get_variable ("FOLKS_TEST_VALGRIND") != null)
           this._test_timeout = 10;
@@ -669,6 +670,149 @@ public class AggregationTests : Folks.TestCase
       this._tp_backend.remove_account (account1_handle);
       this._kf_backend.tear_down ();
       aggregator = null;
+    }
+
+  private enum IndividualState
+    {
+      ADDED, /* Individual has been added to aggregator but not removed */
+      REMOVED, /* removed from aggregator but not yet finalised */
+      FINALISED /* removed from aggregator and finalised */
+    }
+
+  /* Test that individuals are refcounted correctly when added to and removed
+   * from the individual aggregator, and when linked together (in a basic
+   * fashion).
+   *
+   * We do this by tracking all the individuals added to and removed from the
+   * individual aggregator, and checking that they're all finalised at the
+   * correct times by maintaining weak references to them. */
+  public void test_linked_individual_refcounting ()
+    {
+      var main_loop = new GLib.MainLoop (null, false);
+
+      this._kf_backend.set_up ("[0]\n" +
+          "protocol=travis@example.com;olivier@example.com;" +
+              "guillaume@example.com;sjoerd@example.com\n" +
+          "[1]\n" +
+          "protocol=christian@example.com;wim@example.com;" +
+              "helen@example.com;geraldine@example.com");
+
+      void* account_handle = this._tp_backend.add_account ("protocol",
+          "me@example.com", "cm", "account");
+
+      /* Weakly track all the individuals we see, and assert that they're
+       * all finalised correctly. This is a map from the Individual to their
+       * state. We use this to track when the Individuals are finalised.
+       *
+       * Note that Individuals are used as the keys, rather than the
+       * Individuals' IDs. This is because it's valid for several different
+       * instances of Folks.Individual to have the same ID (as long as they
+       * contain the same Personas). This is fine, since this is a refconuting
+       * test, so is entirely concerned with specific object instances. */
+      var individuals_map = new HashMap<unowned Individual, IndividualState> ();
+
+      /* Set up the aggregator */
+      var aggregator = new IndividualAggregator ();
+      var aggregator_is_finalising = false;
+
+      aggregator.individuals_changed.connect ((added, removed, m, a, r) =>
+        {
+          foreach (Individual i in removed)
+            {
+              assert (individuals_map.has_key (i) == true);
+              assert (individuals_map.get (i) == IndividualState.ADDED);
+
+              individuals_map.set (i, IndividualState.REMOVED);
+            }
+
+          foreach (Individual i in added)
+            {
+              assert (individuals_map.has_key (i) == false);
+
+              individuals_map.set (i, IndividualState.ADDED);
+
+              /* Weakly reference the Individual so we can track when it's
+               * finalised. We normally assert that an Individual is removed
+               * from the aggregator before it's finalised, but if we're
+               * shutting the aggregator down we allow Individuals to
+               * transition straight from ADDED to FINALISED. */
+              i.weak_ref ((obj) =>
+                {
+                  unowned Individual ind = (Individual) obj;
+
+                  assert (individuals_map.has_key (ind) == true);
+                  var state = individuals_map.get (ind);
+                  assert (state == IndividualState.REMOVED ||
+                      (aggregator_is_finalising == true &&
+                          state == IndividualState.ADDED));
+
+                  individuals_map.set (ind, IndividualState.FINALISED);
+                });
+            }
+        });
+
+      /* Kill the main loop after a few seconds. We can assume that we've
+       * reached a quiescent state by this point. */
+      Timeout.add_seconds (this._test_timeout, () =>
+        {
+          main_loop.quit ();
+          return false;
+        });
+
+      Idle.add (() =>
+        {
+          aggregator.prepare.begin ((s,r) =>
+            {
+              try
+                {
+                  aggregator.prepare.end (r);
+                }
+              catch (GLib.Error e1)
+                {
+                  GLib.critical ("Failed to prepare aggregator: %s",
+                    e1.message);
+                  assert_not_reached ();
+                }
+            });
+
+          return false;
+        });
+
+      main_loop.run ();
+
+      /* Check that all Individuals are either ADDED or FINALISED. There should
+       * be no Individuals which are REMOVED (but not yet finalised). */
+      var iter = individuals_map.map_iterator ();
+      while (iter.next () == true)
+        {
+          var state = iter.get_value ();
+          assert (state == IndividualState.ADDED ||
+                  state == IndividualState.FINALISED);
+        }
+
+      /* Remove all the individuals (hopefully) */
+      this._tp_backend.remove_account (account_handle);
+      this._kf_backend.tear_down ();
+      aggregator_is_finalising = true;
+      aggregator = null;
+
+      /* Kill the main loop after a few seconds. We can assume that we've
+       * reached another quiescent state by this point. */
+      Timeout.add_seconds (this._test_timeout, () =>
+        {
+          main_loop.quit ();
+          return false;
+        });
+
+      main_loop.run ();
+
+      /* Now that the backends have been finalised, all the Individuals should
+       * have been finalised too. */
+      iter = individuals_map.map_iterator ();
+      while (iter.next () == true)
+        {
+          assert (iter.get_value () == IndividualState.FINALISED);
+        }
     }
 }
 
