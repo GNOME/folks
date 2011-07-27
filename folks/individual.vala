@@ -1258,7 +1258,18 @@ public class Folks.Individual : Object,
               this._persona_group_changed_cb);
         }
 
-      persona.individual = replacement_individual;
+      /* Don't update the individual if the persona's been added to the new one
+       * already (and thus the new individual has already changed
+       * persona.individual).
+       *
+       * FIXME: Ideally, we'd assert that a persona can't be added to a new
+       * individual before it's removed from the old one. However, this
+       * currently isn't possible due to the way the aggregator works. When the
+       * aggregator's rewritten, it would be nice to fix this. */
+      if (persona.individual == this)
+        {
+          persona.individual = replacement_individual;
+        }
     }
 
   private void _update_gender ()
@@ -1504,6 +1515,8 @@ public class Folks.Individual : Object,
   private void _set_personas (Set<Persona>? personas,
       Individual? replacement_individual)
     {
+      assert (replacement_individual == null || replacement_individual != this);
+
       var added = new HashSet<Persona> ();
       var removed = new HashSet<Persona> ();
 
