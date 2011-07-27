@@ -91,6 +91,7 @@ public class Folks.Inspect.Client : Object
       this.commands.set ("quit", new Commands.Quit (this));
       this.commands.set ("help", new Commands.Help (this));
       this.commands.set ("individuals", new Commands.Individuals (this));
+      this.commands.set ("linking", new Commands.Linking (this));
       this.commands.set ("personas", new Commands.Personas (this));
       this.commands.set ("backends", new Commands.Backends (this));
       this.commands.set ("persona-stores", new Commands.PersonaStores (this));

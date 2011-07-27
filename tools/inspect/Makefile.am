@@ -14,6 +14,7 @@ folks_inspect_SOURCES = \
 	command-debug.vala \
 	command-help.vala \
 	command-individuals.vala \
+	command-linking.vala \
 	command-persona-stores.vala \
 	command-personas.vala \
 	command-quit.vala \

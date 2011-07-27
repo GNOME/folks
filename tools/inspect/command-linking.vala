@@ -1,0 +1,280 @@
+/*
+ * Copyright (C) 2011 Philip Withnall
+ *
+ * This library is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 2.1 of the License, or
+ * (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Authors:
+ *       Philip Withnall <philip@tecnocode.co.uk>
+ */
+
+using Folks;
+using Gee;
+using GLib;
+
+private class Folks.Inspect.Commands.Linking : Folks.Inspect.Command
+{
+  public override string name
+    {
+      get { return "linking"; }
+    }
+
+  public override string description
+    {
+      get
+        {
+          return "Link and unlink personas";
+        }
+    }
+
+  public override string help
+    {
+      get
+        {
+          return "linking link-personas [persona 1 UID] [persona 2 UID] …    " +
+                  "Link the given personas.\n" +
+              "linking unlink-individual [individual ID]                  " +
+                  "Unlink the given individual.";
+        }
+    }
+
+  public Linking (Client client)
+    {
+      base (client);
+    }
+
+  public override void run (string? command_string)
+    {
+      string[] parts = {};
+
+      if (command_string != null)
+        {
+          /* Parse subcommands */
+          parts = command_string.split (" ");
+        }
+
+      if (parts.length < 1 ||
+          (parts[0] != "link-personas" && parts[0] != "unlink-individual"))
+        {
+          Utils.print_line ("Unrecognised 'linking' command '%s'.",
+            command_string);
+          return;
+        }
+
+      if (parts[0] == "link-personas")
+        {
+          var personas = new HashSet<Persona> (); /* set of personas to link */
+
+          if (parts.length < 2)
+            {
+              Utils.print_line ("Must pass at least one persona to a " +
+                  "'link-personas' subcommand.");
+              return;
+            }
+
+          /* Link the given personas. We must have at least one. */
+          for (uint i = 1; i < parts.length; i++)
+            {
+              if (parts[i] == null || parts[i].strip () == "")
+                {
+                  Utils.print_line ("Unrecognised persona UID '%s'.", parts[i]);
+                  return;
+                }
+
+              var found = false;
+              var uid = parts[i].strip ();
+
+              foreach (var individual in
+                  this.client.aggregator.individuals.values)
+                {
+                  foreach (Persona persona in individual.personas)
+                    {
+                      if (persona.uid == uid)
+                        {
+                          personas.add (persona);
+                          found = true;
+                          break;
+                        }
+                    }
+
+                  if (found == true)
+                    {
+                      break;
+                    }
+                }
+
+              if (found == false)
+                {
+                  Utils.print_line ("Unrecognised persona UID '%s'.", parts[i]);
+                  return;
+                }
+            }
+
+          /* Link the personas */
+          this.client.aggregator.link_personas.begin (personas, (obj, res) =>
+            {
+              try
+                {
+                  this.client.aggregator.link_personas.end (res);
+                }
+              catch (IndividualAggregatorError e)
+                {
+                  Utils.print_line ("Error (domain: %u, code: %u) linking %u " +
+                          "personas: %s",
+                      e.domain, e.code, personas.size, e.message);
+                }
+
+              /* We can't print out the individual which was produced, as
+               * more than one may have been produced (due to anti-links)
+               * or several others may have been consumed in the process.
+               *
+               * Chaos, really. */
+              Utils.print_line ("Linking of %u personas was successful.",
+                  personas.size);
+            });
+        }
+      else if (parts[0] == "unlink-individual")
+        {
+          if (parts.length != 2)
+            {
+              Utils.print_line ("Must pass exactly one individual ID to an " +
+                  "'unlink-individual' subcommand.");
+              return;
+            }
+
+          var ind = this.client.aggregator.individuals.get (parts[1]);
+
+          if (ind == null)
+            {
+              Utils.print_line ("Unrecognised individual ID '%s'.", parts[1]);
+              return;
+            }
+
+          /* Unlink the individual. */
+          this.client.aggregator.unlink_individual.begin (ind, (obj, res) =>
+            {
+              try
+                {
+                  this.client.aggregator.unlink_individual.end (res);
+                }
+              catch (Error e)
+                {
+                  Utils.print_line ("Error (domain: %u, code: %u) unlinking " +
+                          "individual '%s': %s",
+                      e.domain, e.code, ind.id, e.message);
+                }
+
+              /* Success! */
+              Utils.print_line ("Unlinking of individual '%s' was successful.",
+                  ind.id);
+            });
+        }
+      else
+        {
+          assert_not_reached ();
+        }
+    }
+
+  /* FIXME: These can't be in the subcommand_name_completion_cb() function
+   * because Vala doesn't allow static local variables. Erk. */
+  [CCode (array_length = false, array_null_terminated = true)]
+  private static string[] subcommand_completions;
+  private static uint completion_count;
+  private static string prefix;
+
+  /* Complete a subcommand name (either “link-personas” or “unlink-individual”),
+   * starting with @word. */
+  public static string? subcommand_name_completion_cb (string word,
+      int state)
+    {
+      /* Initialise state. I may have said this before, but whoever wrote the
+       * readline API should be shot. */
+      if (state == 0)
+        {
+          string[] parts = word.split (" ");
+
+          if (parts.length > 0 && parts[0] == "link-personas")
+            {
+              var last_part = parts[parts.length - 1];
+
+              subcommand_completions =
+                  Readline.completion_matches (last_part,
+                      Utils.persona_uid_completion_cb);
+
+              if (last_part == "")
+                {
+                  prefix = word;
+                }
+              else
+                {
+                  prefix = word[0:-last_part.length];
+                }
+            }
+          else if (parts.length > 0 && parts[0] == "unlink-individual")
+            {
+              /* Only accepts one argument */
+              if (parts.length != 2)
+                {
+                  /* Clean up */
+                  subcommand_completions = null;
+                  completion_count = 0;
+                  prefix = "";
+
+                  return null;
+                }
+
+              subcommand_completions =
+                  Readline.completion_matches (parts[1],
+                      Utils.individual_id_completion_cb);
+              prefix = "unlink-individual ";
+            }
+          else
+            {
+              subcommand_completions =
+                  { "link-personas", "unlink-individual", null };
+              prefix = "";
+            }
+
+          completion_count = 0;
+        }
+
+      while (completion_count < subcommand_completions.length)
+        {
+          var completion = subcommand_completions[completion_count];
+          var candidate = prefix + completion;
+          completion_count++;
+
+          if (completion != null && completion != "" &&
+              candidate.has_prefix (word))
+            {
+              return completion;
+            }
+        }
+
+      /* Clean up */
+      subcommand_completions = null;
+      completion_count = 0;
+      prefix = "";
+
+      return null;
+    }
+
+  public override string[]? complete_subcommand (string subcommand)
+    {
+      /* @subcommand should be either “link-personas” or “unlink-individual” */
+      return Readline.completion_matches (subcommand,
+          this.subcommand_name_completion_cb);
+    }
+}
+
+/* vim: filetype=vala textwidth=80 tabstop=2 expandtab: */
