@@ -16,6 +16,8 @@ endif
 
 SUBDIRS += key-file
 
+# XXX: keep Tracker at the end, since it's the most likely to fail (in ways we
+# can't easily control)
 if ENABLE_TRACKER
 SUBDIRS += tracker
 endif
