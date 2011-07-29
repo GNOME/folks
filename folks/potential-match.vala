@@ -162,35 +162,6 @@ public class Folks.PotentialMatch : Object
         }
     }
 
-  /**
-   * Keep in sync with Folks.MatchResult.
-   *
-   * @since 0.5.0
-   */
-  public static string result_to_string (MatchResult result)
-    {
-      string match_level = "";
-      switch (result)
-        {
-          case Folks.MatchResult.VERY_LOW:
-            match_level = "very low";
-            break;
-          case Folks.MatchResult.LOW:
-            match_level = "low";
-            break;
-          case Folks.MatchResult.MEDIUM:
-            match_level = "medium";
-            break;
-          case Folks.MatchResult.HIGH:
-            match_level = "high";
-            break;
-          case Folks.MatchResult.VERY_HIGH:
-            match_level = "very high";
-            break;
-        }
-      return match_level;
-    }
-
   /* Approach:
    * - taking in account family, given, prefix, suffix and additional names
    *   we give some points for each non-empty match
