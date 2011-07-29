@@ -127,22 +127,123 @@ public errordomain Folks.PersonaStoreError
  * {@link Folks.PersonaStore._PERSONA_DETAIL}. */
 public enum Folks.PersonaDetail
 {
+  /**
+   * Field for {@link AliasDetails.alias}.
+   *
+   * @since 0.5.0
+   */
   ALIAS,
+
+  /**
+   * Field for {@link AvatarDetails.avatar}.
+   *
+   * @since 0.5.0
+   */
   AVATAR,
+
+  /**
+   * Field for {@link BirthdayDetails.birthday}.
+   *
+   * @since 0.5.0
+   */
   BIRTHDAY,
+
+  /**
+   * Field for {@link EmailDetails.email_addresses}.
+   *
+   * @since 0.5.0
+   */
   EMAIL_ADDRESSES,
+
+  /**
+   * Field for {@link NameDetails.full_name}.
+   *
+   * @since 0.5.0
+   */
   FULL_NAME,
+
+  /**
+   * Field for {@link GenderDetails.gender}.
+   *
+   * @since 0.5.0
+   */
   GENDER,
+
+  /**
+   * Field for {@link ImDetails.im_addresses}.
+   *
+   * @since 0.5.0
+   */
   IM_ADDRESSES,
+
+  /**
+   * Field for {@link FavouriteDetails.is_favourite}.
+   *
+   * @since 0.5.0
+   */
   IS_FAVOURITE,
+
+  /**
+   * Field for {@link LocalIdDetails.local_ids}.
+   *
+   * @since 0.5.0
+   */
   LOCAL_IDS,
+
+  /**
+   * Field for {@link NameDetails.nickname}.
+   *
+   * @since 0.5.0
+   */
   NICKNAME,
+
+  /**
+   * Field for {@link NoteDetails.notes}.
+   *
+   * @since 0.5.0
+   */
   NOTES,
+
+  /**
+   * Field for {@link PhoneDetails.phone_numbers}.
+   *
+   * @since 0.5.0
+   */
   PHONE_NUMBERS,
+
+  /**
+   * Field for {@link PostalAddressDetails.postal_addresses}.
+   *
+   * @since 0.5.0
+   */
   POSTAL_ADDRESSES,
+
+  /**
+   * Field for {@link RoleDetails.roles}.
+   *
+   * @since 0.5.0
+   */
   ROLES,
+
+  /**
+   * Field for {@link NameDetails.structured_name}.
+   *
+   * @since 0.5.0
+   */
   STRUCTURED_NAME,
+
+  /**
+   * Field for {@link UrlDetails.urls}.
+   *
+   * @since 0.5.0
+   */
   URLS,
+
+  /**
+   * Field for {@link WebServiceDetails.web_service_addresses}.
+   *
+   * @since 0.5.0
+   */
   WEB_SERVICE_ADDRESSES
 }
 
@@ -160,7 +261,7 @@ public abstract class Folks.PersonaStore : Object
   /**
    * The following list of properties are the basic keys
    * that each PersonaStore with write capabilities should
-   * support for {@link Persona.add_persona_from_details}.
+   * support for {@link PersonaStore.add_persona_from_details}.
    *
    * Note that these aren't the only valid keys; backends are
    * allowed to support keys beyond the ones defined here
@@ -192,7 +293,7 @@ public abstract class Folks.PersonaStore : Object
 
   /**
    * Returns the key corresponding to @detail, for use in
-   * the details param of {@link Persona.add_persona_from_details}.
+   * the details param of {@link PersonaStore.add_persona_from_details}.
    *
    * @param detail the {@link PersonaDetail} to lookup
    *

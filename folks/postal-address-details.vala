@@ -173,7 +173,10 @@ public class Folks.PostalAddress : Object
    * @param locality the locality (city, town or village) name
    * @param region the region (state or province) name
    * @param postal_code the postal code
+   * @param country the country name
    * @param address_format the address format
+   * @param types set of types for the address (such as "personal" or "work")
+   * @param uid external UID for the address instance
    * @since 0.5.1
    */
   public PostalAddress (string? po_box, string? extension, string? street,
@@ -192,6 +195,14 @@ public class Folks.PostalAddress : Object
               uid:            uid);
     }
 
+  /**
+   * Compare if two postal addresses are equal. Addresses are equal if all their
+   * components are equal (where `null` compares equal only with `null`) and
+   * they have the same set of types (or both have no types).
+   *
+   * @param with another postal address to compare with
+   * @return `true` if the addresses are equal, `false` otherwise
+   */
   public bool equal (PostalAddress with)
     {
       if (this.po_box != with.po_box ||
@@ -218,7 +229,10 @@ public class Folks.PostalAddress : Object
     }
 
   /**
-   * Returns a formatted address.
+   * Get a formatted version of the address. The format is localised, and by
+   * default is comma-separated.
+   *
+   * @return a formatted address.
    *
    * @since 0.4.0
    */

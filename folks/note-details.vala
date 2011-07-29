@@ -61,6 +61,10 @@ public class Folks.Note : Object
   /**
    * Compare if 2 notes are equal. This compares both their {@link Note.content}
    * and {@link Note.uid} (if set).
+   *
+   * @param a a note to compare
+   * @param b another note to compare
+   * @return `true` if the roles are equal, `false` otherwise
    */
   public static bool equal (Note a, Note b)
     {
@@ -68,7 +72,10 @@ public class Folks.Note : Object
     }
 
   /**
-   * Hash function for the class.
+   * Hash function for the class. Suitable for use as a hash table key.
+   *
+   * @param r a note to hash
+   * @return hash value for the note instance
    */
   public static uint hash (Note r)
     {

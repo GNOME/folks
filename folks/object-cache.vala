@@ -25,7 +25,7 @@ using Gee;
  * A generic abstract cache for sets of objects. This can be used by subclasses
  * to implement caching of homogeneous sets of objects. Subclasses simply have
  * to implement serialisation and deserialisation of the objects to and from
- * {@link Variant}s.
+ * {@link GLib.Variant}s.
  *
  * It's intended that this class be used for providing caching layers for
  * {@link PersonaStore}s, for example.
@@ -56,7 +56,7 @@ public abstract class Folks.ObjectCache<T> : Object
   private File _cache_file;
 
   /**
-   * Get the {@link VariantType} of the serialised form of an object stored
+   * Get the {@link GLib.VariantType} of the serialised form of an object stored
    * in this cache.
    *
    * If a smooth upgrade path is needed in future due to cache file format
@@ -77,9 +77,12 @@ public abstract class Folks.ObjectCache<T> : Object
   protected abstract uint8 get_serialised_object_version ();
 
   /**
-   * Serialise the given `object` to a {@link Variant} and return the variant.
-   * The variant must be of the type returned by
-   * {@link ObjectCache.get_serialised_object_type()}.
+   * Serialise the given `object` to a {@link GLib.Variant} and return the
+   * variant. The variant must be of the type returned by
+   * {@link ObjectCache.get_serialised_object_type}.
+   *
+   * @param object the object to serialise
+   * @return serialised form of `object`
    *
    * @since UNRELEASED
    */
@@ -88,7 +91,10 @@ public abstract class Folks.ObjectCache<T> : Object
   /**
    * Deserialise the given `variant` to a new instance of an object. The variant
    * is guaranteed to have the type returned by
-   * {@link ObjectCache.get_serialised_object_type()}.
+   * {@link ObjectCache.get_serialised_object_type}.
+   *
+   * @param variant the serialised form to deserialise
+   * @return the deserialised object
    *
    * @since UNRELEASED
    */
@@ -138,7 +144,7 @@ public abstract class Folks.ObjectCache<T> : Object
    * If any errors are encountered while loading the objects, warnings will be
    * logged as appropriate and `null` will be returned.
    *
-   * @param cancellable A {@link Cancellable} for the operation, or `null`.
+   * @param cancellable A {@link GLib.Cancellable} for the operation, or `null`.
    * @return A set of objects from the cache, or `null`.
    *
    * @since UNRELEASED
@@ -270,7 +276,7 @@ public abstract class Folks.ObjectCache<T> : Object
    *
    * @param objects A set of objects to store. This may be empty, but may not
    * be `null`.
-   * @cancellable A {@link Cancellable} for the operation, or `null`.
+   * @param cancellable A {@link GLib.Cancellable} for the operation, or `null`.
    *
    * @since UNRELEASED
    */

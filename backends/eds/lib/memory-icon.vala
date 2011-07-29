@@ -22,8 +22,8 @@ using GLib;
 
 /**
  * A wrapper around a blob of image data (with an associated content type) which
- * presents it as a {@link LoadableIcon}. This allows inlined avatars to be
- * returned as {@link LoadableIcon}s.
+ * presents it as a {@link GLib.LoadableIcon}. This allows inlined avatars to be
+ * returned as {@link GLib.LoadableIcon}s.
  *
  * @since UNRELEASED
  */

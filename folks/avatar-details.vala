@@ -31,7 +31,7 @@ public interface Folks.AvatarDetails : Object
    *
    * An avatar is a small image file which represents the contact. It may be
    * `null` if unset. Otherwise, the image data may be asynchronously loaded
-   * using the methods of the {@link LoadableIcon} implementation.
+   * using the methods of the {@link GLib.LoadableIcon} implementation.
    *
    * @since UNRELEASED
    */

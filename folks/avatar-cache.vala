@@ -157,8 +157,8 @@ public class Folks.AvatarCache : Object
 
   /**
    * Remove an avatar from the cache, if it exists in the cache. If the avatar
-   * exists in the cache but there is a problem in removing it, an
-   * {@link IOError} will be thrown.
+   * exists in the cache but there is a problem in removing it, a
+   * {@link GLib.Error} will be thrown.
    *
    * @param id the globally unique ID for the avatar
    * @throws GLib.Error if deleting the cache file failed

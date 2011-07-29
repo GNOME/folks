@@ -335,6 +335,12 @@ public class Folks.IndividualAggregator : Object
   /**
    * Get all matches for a given {@link Individual}.
    *
+   * @param matchee the individual to find matches for
+   * @param min_threshold the threshold for accepting a match
+   * @return a map from matched individuals to the degree with which they match
+   * `matchee` (which is guaranteed to at least equal `min_threshold`);
+   * if no matches could be found, an empty map is returned
+   *
    * @since 0.5.1
    */
   public Map<Individual, MatchResult> get_potential_matches
@@ -361,6 +367,12 @@ public class Folks.IndividualAggregator : Object
 
   /**
    * Get all combinations between all {@link Individual}s.
+   *
+   * @param min_threshold the threshold for accepting a match
+   * @return a map from each individual in the aggregator to a map of the
+   * other individuals in the aggregator which can be matched with that
+   * individual, mapped to the degree with which they match the original
+   * individual (which is guaranteed to at least equal `min_threshold`)
    *
    * @since 0.5.1
    */

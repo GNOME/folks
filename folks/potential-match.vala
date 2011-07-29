@@ -24,15 +24,44 @@ using Gee;
  * Likely-ness of a potential match.
  *
  * Note that the order should be maintained.
+ *
+ * @since 0.5.0
  */
 public enum Folks.MatchResult
 {
+  /**
+   * Very low likelihood of a match.
+   */
   VERY_LOW,
+
+  /**
+   * Low likelihood of a match.
+   */
   LOW,
+
+  /**
+   * Medium likelihood of a match.
+   */
   MEDIUM,
+
+  /**
+   * High likelihood of a match.
+   */
   HIGH,
+
+  /**
+   * Very high likelihood of a match.
+   */
   VERY_HIGH,
+
+  /**
+   * Minimum likelihood of a match.
+   */
   MIN = VERY_LOW,
+
+  /**
+   * Maximum likelihood of a match.
+   */
   MAX = VERY_HIGH
 }
 
@@ -73,6 +102,9 @@ public class Folks.PotentialMatch : Object
 
   /**
    * Whether two individuals are likely to be the same person.
+   *
+   * @param a an individual to compare
+   * @param b another individual to compare
    *
    * @since 0.5.0
    */

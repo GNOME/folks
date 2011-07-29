@@ -167,6 +167,7 @@ public class Folks.StructuredName : Object
   /**
    * Whether two StructuredNames are the same.
    *
+   * @param other the other structured name to compare with
    * @return `true` if all the components are the same, `false`
    * otherwise.
    *

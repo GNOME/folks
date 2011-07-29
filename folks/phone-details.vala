@@ -47,6 +47,11 @@ public interface Folks.PhoneDetails : Object
 
   /**
    * Normalise and compare two phone numbers.
+   *
+   * @param number1 a phone number to compare
+   * @param number2 another phone number to compare
+   * @return `true` if the phone numbers are equal, `false` otherwise
+   *
    * @since 0.5.0
    */
   public static bool numbers_equal (string number1, string number2)
@@ -75,10 +80,12 @@ public interface Folks.PhoneDetails : Object
    * Normalise a given phone number.
    *
    * Typical normalisations:
+   *  - `1-800-123-4567` → `18001234567`
+   *  - `+1-800-123-4567` → `18001234567`
+   *  - `+1-800-123-4567P123` → `18001234567P123`
    *
-   *  - 1-800-123-4567 --> 18001234567
-   *  - +1-800-123-4567 --> 18001234567
-   *  - +1-800-123-4567P123 --> 18001234567P123
+   * @param number the phone number to normalise
+   * @return the normalised form of `number`
    *
    * @since 0.5.0
    */
@@ -130,7 +137,11 @@ public interface Folks.PhoneDetails : Object
     }
 
   /**
-   * Returns the given number without it's extension (if any).
+   * Returns the given number without its extension (if any).
+   *
+   * @param number the phone number to process
+   * @return the number without its extension; if the number didn't have an
+   * extension in the first place, the number is returned unmodified
    *
    * @since 0.5.0
    */

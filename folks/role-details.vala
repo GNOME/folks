@@ -78,7 +78,12 @@ public class Folks.Role : Object
     }
 
   /**
-   * Compare if 2 roles are equal
+   * Compare if two roles are equal. Roles are equal if their titles and
+   * organisation names are equal.
+   *
+   * @param a a role to compare
+   * @param b another role to compare
+   * @return `true` if the roles are equal, `false` otherwise
    */
   public static bool equal (Role a, Role b)
     {
@@ -87,7 +92,10 @@ public class Folks.Role : Object
     }
 
   /**
-   * Hash function for the class.
+   * Hash function for the class. Suitable for use as a hash table key.
+   *
+   * @param r a role to hash
+   * @return hash value for the role instance
    */
   public static uint hash (Role r)
     {

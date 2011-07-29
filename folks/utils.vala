@@ -28,6 +28,17 @@ public class Folks.Utils : Object
       return (a != "" && b != "" && a.down () == b.down ());
     }
 
+  /**
+   * Check whether two multi-maps of strings to strings are equal. This performs
+   * a deep check for equality, checking whether both maps are of the same size,
+   * and that each key maps to the same set of values in both maps.
+   *
+   * @param a a multi-map to compare
+   * @param b another multi-map to compare
+   * @return `true` if the multi-maps are equal, `false` otherwise
+   *
+   * @since UNRELEASED
+   */
   public static bool multi_map_str_str_equal (
       MultiMap<string, string> a,
       MultiMap<string, string> b)
