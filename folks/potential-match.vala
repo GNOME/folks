@@ -389,7 +389,7 @@ public class Folks.PotentialMatch : Object
    * m = matching characters
    * t = number of transpositions
    */
-  public double jaro_dist (string s1, string s2)
+  private double jaro_dist (string s1, string s2)
     {
       double distance;
       int max = s1.length > s2.length ? s1.length : s2.length;
