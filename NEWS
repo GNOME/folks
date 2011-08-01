@@ -23,6 +23,7 @@ Bugs fixed:
 * Bug 655019 — Don't notify twice for nickname changes
 * Bug 650414 — Need better APIs to handle image data
 * Bug 652643 — Add PersonaStore cache
+* Bug 655510 — Make truly-writeable *Details property setters public
 
 API changes:
 * Swf.Persona retains and exposes its libsocialweb Contact

@@ -238,7 +238,7 @@ public class Trf.Persona : Folks.Persona,
   public Set<Note> notes
     {
       get { return this._notes_ro; }
-      private set
+      set
         {
           ((Trf.PersonaStore) this.store)._set_notes (this, value);
         }

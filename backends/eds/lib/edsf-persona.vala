@@ -143,7 +143,7 @@ public class Edsf.Persona : Folks.Persona,
   public Set<PostalAddress> postal_addresses
     {
       get { return this._postal_addresses_ro; }
-      private set
+      set
         {
           ((Edsf.PersonaStore) this.store)._set_postal_addresses (this, value);
         }
@@ -157,7 +157,7 @@ public class Edsf.Persona : Folks.Persona,
   public Set<FieldDetails> phone_numbers
     {
       get { return this._phone_numbers_ro; }
-      private set
+      set
         {
           ((Edsf.PersonaStore) this.store)._set_phones (this, value);
         }
@@ -171,7 +171,7 @@ public class Edsf.Persona : Folks.Persona,
   public Set<FieldDetails> email_addresses
     {
       get { return this._email_addresses_ro; }
-      private set
+      set
         {
           ((Edsf.PersonaStore) this.store)._set_emails (this, value);
         }
@@ -185,7 +185,7 @@ public class Edsf.Persona : Folks.Persona,
   public Set<Note> notes
     {
       get { return this._notes_ro; }
-      private set
+      set
         {
           ((Edsf.PersonaStore) this.store)._set_notes (this, value);
         }
