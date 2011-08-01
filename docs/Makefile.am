@@ -4,6 +4,13 @@ distclean_dirs = \
 	gtk-doc \
 	$(NULL)
 
+phony_deps = \
+	folks-doc \
+	folks-gtk-doc \
+	folks-telepathy-doc \
+	folks-telepathy-gtk-doc \
+	$(NULL)
+
 folksdocdir=$(datadir)/devhelp/references/folks
 folksimgdir=$(datadir)/devhelp/references/folks/img
 folkstelepathydocdir=$(datadir)/devhelp/references/folks-telepathy
@@ -119,7 +126,7 @@ folks-telepathy-gtk-doc: $(folks_telepathy_doc_files)
 		$(valadoc_flags_folks_telepathy) \
 		$(NULL)
 
-.PHONY: folks-doc folks-gtk-doc folks-telepathy-doc folks-telepathy-gtk-doc
+.PHONY: $(phony_deps)
 
 distclean-local: distclean-docs
 distclean-docs:
