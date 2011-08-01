@@ -338,9 +338,9 @@ public class Edsf.PersonaStore : Folks.PersonaStore
   /**
    * Remove a {@link Persona} from the PersonaStore.
    *
-   * @param persona the that should be removed
-   *
    * See {@link Folks.PersonaStore.remove_persona}.
+   *
+   * @param persona the persona that should be removed
    *
    * @since 0.5.UNRELEASED
    */
