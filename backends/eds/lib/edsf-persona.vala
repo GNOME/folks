@@ -215,7 +215,7 @@ public class Edsf.Persona : Folks.Persona,
   /**
    * An avatar for the Persona.
    *
-   * See {@link Folks.Avatar.avatar}.
+   * See {@link Folks.AvatarDetails.avatar}.
    *
    * @since 0.5.UNRELEASED
    */
