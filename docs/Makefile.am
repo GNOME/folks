@@ -127,6 +127,74 @@ folks-telepathy-gtk-doc: $(folks_telepathy_doc_files)
 		$(NULL)
 
 #####################
+# EDS docs #
+#####################
+if ENABLE_EDS
+folksedsdocdir=$(datadir)/devhelp/references/folks-eds
+folksedsimgdir=$(datadir)/devhelp/references/folks-eds/img
+folksedsgtkdocdir=$(datadir)/gtk-doc/html/folks-eds
+
+folksedsdoc_DATA = \
+	folks-eds/folks-eds/folks-eds.devhelp2 \
+	$(addprefix folks-eds/folks-eds/,$(common_doc_files))\
+	$(NULL)
+
+folksedsgtkdoc_DATA = gtk-doc/folks-eds/html/*
+
+folksedsimg_DATA = \
+	folks-eds/folks-eds/img/*.png \
+	$(NULL)
+
+$(folksedsdoc_DATA) $(folksedsimg_DATA): \
+	folks-eds-doc \
+	$(NULL)
+$(folksedsgtkdoc_DATA): folks-eds-gtk-doc
+
+folks_eds_doc_files = $(top_srcdir)/backends/eds/lib/*.vala
+folks_eds_doc_deps = \
+	gconf-2.0 \
+	gmodule-2.0 \
+	gio-2.0 \
+	gee-1.0 \
+	libebook-1.2 \
+	libedataserver-1.2 \
+	build-conf \
+	folks \
+	$(NULL)
+valadoc_flags_folks_eds = \
+	$(valadoc_flags) \
+	-X $(top_srcdir)/backends/eds/lib/folks/folks-eds.h \
+	$(addprefix --pkg=,$(folks_eds_doc_deps)) \
+	--vapidir=$(top_srcdir)/folks \
+	--vapidir=$(top_srcdir)/backends/eds/lib \
+	$(folks_eds_doc_files) \
+	$(NULL)
+
+folks-eds-doc: $(folks_eds_doc_files)
+	$(AM_V_GEN)$(VALADOC) \
+		-o folks-eds/ \
+		--doclet=devhelp \
+		$(valadoc_flags_folks_eds) \
+		$(NULL)
+
+folks-eds-gtk-doc: $(folks_eds_doc_files)
+	$(AM_V_GEN)$(VALADOC) \
+		-X -l -X $(top_builddir)/folks/.libs/libfolks.so \
+		-X -l -X $(top_builddir)/backends/eds/lib/.libs/libfolks-eds.so \
+		-o gtk-doc/folks-eds \
+		--doclet=gtkdoc \
+		$(valadoc_flags_folks_eds) \
+		$(NULL)
+
+distclean_dirs += folks-eds
+phony_deps += \
+	folks-eds-doc \
+	folks-eds-gtk-doc \
+	$(NULL)
+
+endif # ENABLE_EDS
+
+#####################
 # libsocialweb docs #
 #####################
 if ENABLE_LIBSOCIALWEB
@@ -205,6 +273,7 @@ distclean-docs:
 
 GITIGNOREFILES = \
 	folks/ \
+	folks-eds/ \
 	folks-libsocialweb/ \
 	folks-telepathy/ \
 	gtk-doc/ \
