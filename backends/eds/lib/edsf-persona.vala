@@ -549,7 +549,7 @@ public class Edsf.Persona : Folks.Persona,
     {
       this._email_addresses.clear ();
 
-      var attrs = _contact.get_attributes (E.ContactField.EMAIL);
+      var attrs = this.contact.get_attributes (E.ContactField.EMAIL);
       foreach (var attr in attrs)
         {
           var fd = new FieldDetails (attr.get_value ());
@@ -840,7 +840,7 @@ public class Edsf.Persona : Folks.Persona,
     {
       this._phone_numbers.clear ();
 
-      var attrs = _contact.get_attributes (E.ContactField.TEL);
+      var attrs = this.contact.get_attributes (E.ContactField.TEL);
       foreach (var attr in attrs)
         {
           var fd = new FieldDetails (attr.get_value ());
