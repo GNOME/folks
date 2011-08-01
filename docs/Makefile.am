@@ -126,6 +126,77 @@ folks-telepathy-gtk-doc: $(folks_telepathy_doc_files)
 		$(valadoc_flags_folks_telepathy) \
 		$(NULL)
 
+#####################
+# libsocialweb docs #
+#####################
+if ENABLE_LIBSOCIALWEB
+folkslibsocialwebdocdir=$(datadir)/devhelp/references/folks-libsocialweb
+folkslibsocialwebimgdir=$(datadir)/devhelp/references/folks-libsocialweb/img
+folkslibsocialwebgtkdocdir=$(datadir)/gtk-doc/html/folks-libsocialweb
+
+folkslibsocialwebdoc_DATA = \
+	folks-libsocialweb/folks-libsocialweb/folks-libsocialweb.devhelp2 \
+	$(addprefix folks-libsocialweb/folks-libsocialweb/,$(common_doc_files))\
+	$(NULL)
+
+folkslibsocialwebgtkdoc_DATA = gtk-doc/folks-libsocialweb/html/*
+
+folkslibsocialwebimg_DATA = \
+	folks-libsocialweb/folks-libsocialweb/img/*.png \
+	$(NULL)
+
+$(folkslibsocialwebdoc_DATA) $(folkslibsocialwebimg_DATA): \
+	folks-libsocialweb-doc \
+	$(NULL)
+$(folkslibsocialwebgtkdoc_DATA): folks-libsocialweb-gtk-doc
+
+folks_libsocialweb_doc_files = $(top_srcdir)/backends/libsocialweb/lib/*.vala
+folks_libsocialweb_doc_deps = \
+	gconf-2.0 \
+	gmodule-2.0 \
+	gio-2.0 \
+	gee-1.0 \
+	libsocialweb-client \
+	build-conf \
+	folks \
+	$(NULL)
+valadoc_flags_folks_libsocialweb = \
+	$(valadoc_flags) \
+	-X $(top_srcdir)/backends/libsocialweb/lib/folks/folks-libsocialweb.h \
+	$(addprefix --pkg=,$(folks_libsocialweb_doc_deps)) \
+	--vapidir=$(top_srcdir)/folks \
+	--vapidir=$(top_srcdir)/backends/libsocialweb/lib \
+	$(folks_libsocialweb_doc_files) \
+	$(NULL)
+
+folks-libsocialweb-doc: $(folks_libsocialweb_doc_files)
+	$(AM_V_GEN)$(VALADOC) \
+		-o folks-libsocialweb/ \
+		--doclet=devhelp \
+		$(valadoc_flags_folks_libsocialweb) \
+		$(NULL)
+
+folks-libsocialweb-gtk-doc: $(folks_libsocialweb_doc_files)
+	$(AM_V_GEN)$(VALADOC) \
+		-X -l -X $(top_builddir)/folks/.libs/libfolks.so \
+		-X -l -X $(top_builddir)/backends/libsocialweb/lib/.libs/libfolks-libsocialweb.so \
+		-o gtk-doc/folks-libsocialweb \
+		--doclet=gtkdoc \
+		$(valadoc_flags_folks_libsocialweb) \
+		$(NULL)
+
+distclean_dirs += folks-libsocialweb
+phony_deps += \
+	folks-libsocialweb-doc \
+	folks-libsocialweb-gtk-doc \
+	$(NULL)
+
+endif # ENABLE_LIBSOCIALWEB
+
+#####################
+# end optional docs #
+#####################
+
 .PHONY: $(phony_deps)
 
 distclean-local: distclean-docs
@@ -134,6 +205,7 @@ distclean-docs:
 
 GITIGNOREFILES = \
 	folks/ \
+	folks-libsocialweb/ \
 	folks-telepathy/ \
 	gtk-doc/ \
 	$(NULL)
