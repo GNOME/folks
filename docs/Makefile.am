@@ -1,3 +1,9 @@
+distclean_dirs = \
+	folks \
+	folks-telepathy \
+	gtk-doc \
+	$(NULL)
+
 folksdocdir=$(datadir)/devhelp/references/folks
 folksimgdir=$(datadir)/devhelp/references/folks/img
 folkstelepathydocdir=$(datadir)/devhelp/references/folks-telepathy
@@ -117,9 +123,7 @@ folks-telepathy-gtk-doc: $(folks_telepathy_doc_files)
 
 distclean-local: distclean-docs
 distclean-docs:
-	rm -rf folks && \
-	rm -rf folks-telepathy && \
-	rm -rf gtk-doc
+	rm -rf $(distclean_dirs)
 
 GITIGNOREFILES = \
 	folks/ \
