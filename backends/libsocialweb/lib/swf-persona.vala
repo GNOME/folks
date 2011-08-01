@@ -65,7 +65,7 @@ public class Swf.Persona : Folks.Persona,
   /**
    * An avatar for the Persona.
    *
-   * See {@link Folks.AvatarOwner.avatar}.
+   * See {@link Folks.AvatarDetails.avatar}.
    *
    * @since UNRELEASED
    */
