@@ -363,8 +363,8 @@ public class Edsf.PersonaStore : Folks.PersonaStore
   /**
    * Prepare the PersonaStore for use.
    *
-   * TODO: we should throw different errors dependening on what went wrong
-   *       when we were trying to setup the PersonaStore.
+   * TODO: we should throw different errors depending on what went wrong when
+   * we were setting up the PersonaStore.
    *
    * See {@link Folks.PersonaStore.prepare}.
    *
