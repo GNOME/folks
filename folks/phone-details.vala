@@ -80,6 +80,7 @@ public interface Folks.PhoneDetails : Object
    * Normalise a given phone number.
    *
    * Typical normalisations:
+   *
    *  - `1-800-123-4567` → `18001234567`
    *  - `+1-800-123-4567` → `18001234567`
    *  - `+1-800-123-4567P123` → `18001234567P123`
