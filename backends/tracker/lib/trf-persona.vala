@@ -139,7 +139,7 @@ public class Trf.Persona : Folks.Persona,
   /**
    * An avatar for the Persona.
    *
-   * See {@link Folks.Avatar.avatar}.
+   * See {@link Folks.AvatarDetails.avatar}.
    *
    * @since UNRELEASED
    */
