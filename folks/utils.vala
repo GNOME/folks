@@ -76,4 +76,55 @@ public class Folks.Utils : Object
 
       return true;
     }
+
+  /**
+   * Check whether two multi-maps of strings to AbstractFieldDetails are equal.
+   *
+   * This performs a deep check for equality, checking whether both maps are of
+   * the same size, and that each key maps to the same set of values in both
+   * maps.
+   *
+   * @param a a multi-map to compare
+   * @param b another multi-map to compare
+   * @return `true` if the multi-maps are equal, `false` otherwise
+   *
+   * @since UNRELEASED
+   */
+  public static bool multi_map_str_afd_equal (
+      MultiMap<string, AbstractFieldDetails> a,
+      MultiMap<string, AbstractFieldDetails> b)
+    {
+      if (a == b)
+        return true;
+
+      if (a.size == b.size)
+        {
+          foreach (var key in a.get_keys ())
+            {
+              if (b.contains (key))
+                {
+                  var a_values = a.get (key);
+                  var b_values = b.get (key);
+                  if (a_values.size != b_values.size)
+                    return false;
+
+                  foreach (var a_value in a_values)
+                    {
+                      if (!b_values.contains (a_value))
+                        return false;
+                    }
+                }
+              else
+                {
+                  return false;
+                }
+            }
+        }
+      else
+        {
+          return false;
+        }
+
+      return true;
+    }
 }
