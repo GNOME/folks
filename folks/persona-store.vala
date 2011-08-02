@@ -466,8 +466,14 @@ public abstract class Folks.PersonaStore : Object
    /**
    * Whether the PersonaStore is writeable.
    *
-   * Only if a PersonaStore is writeable will changes to its {@link Persona}s'
-   * properties be written out to the relevant backing store.
+   * Only if a PersonaStore is writeable will its {@link Persona}s be updated by
+   * changes to the {@link Individual}s containing them, and those changes then
+   * be written out to the relevant backing store.
+   *
+   * If this property is `false`, it doesn't mean that {@link Persona}s in this
+   * persona store aren't writeable at all. If their properties are updated
+   * through the {@link Persona}, rather than through the {@link Individual}
+   * containing that persona, changes may be propagated to the backing store.
    *
    * PersonaStores must not set this property themselves; it will be set as
    * appropriate by the {@link IndividualAggregator}.
