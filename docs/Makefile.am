@@ -11,6 +11,13 @@ phony_deps = \
 	folks-telepathy-gtk-doc \
 	$(NULL)
 
+upload_docs = \
+	upload-docs-c-folks \
+	upload-docs-vala-folks \
+	upload-docs-c-folks-telepathy \
+	upload-docs-vala-folks-telepathy \
+	$(NULL)
+
 folksdocdir=$(datadir)/devhelp/references/folks
 folksimgdir=$(datadir)/devhelp/references/folks/img
 folkstelepathydocdir=$(datadir)/devhelp/references/folks-telepathy
@@ -191,6 +198,7 @@ phony_deps += \
 	folks-eds-doc \
 	folks-eds-gtk-doc \
 	$(NULL)
+upload_docs += upload-docs-c-folks-eds upload-docs-vala-folks-eds
 
 endif # ENABLE_EDS
 
@@ -258,6 +266,10 @@ phony_deps += \
 	folks-libsocialweb-doc \
 	folks-libsocialweb-gtk-doc \
 	$(NULL)
+upload_docs += \
+	upload-docs-c-folks-libsocialweb \
+	upload-docs-vala-folks-libsocialweb \
+	$(NULL)
 
 endif # ENABLE_LIBSOCIALWEB
 
@@ -266,6 +278,24 @@ endif # ENABLE_LIBSOCIALWEB
 #####################
 
 .PHONY: $(phony_deps)
+
+doc_host = telepathy.freedesktop.org
+doc_host_dir = /srv/telepathy.freedesktop.org/www/doc
+
+upload-docs-check-%: %
+	ssh $(doc_host) "test -e $(doc_host_dir)/$< || mkdir $(doc_host_dir)/$<"
+
+# adapted from telepathy-glib
+upload-docs-c-%: gtk-doc/% upload-docs-check-%
+	rsync -rvzPp --chmod=Dg+s,ug+rwX,o=rX $(top_srcdir)/docs/$</html/ \
+		$(doc_host):$(doc_host_dir)/$(<F)/c
+
+upload-docs-vala-%: % upload-docs-check-%
+	rsync -rvzPp --chmod=Dg+s,ug+rwX,o=rX $(top_srcdir)/docs/$</$</ \
+		$(doc_host):$(doc_host_dir)/$</vala
+
+maintainer-upload-release: _maintainer-upload-release-local
+_maintainer-upload-release-local: $(upload_docs)
 
 distclean-local: distclean-docs
 distclean-docs:

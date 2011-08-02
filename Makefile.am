@@ -58,6 +58,9 @@ distcleancheck_listfiles = \
 	find . -type f -exec sh -c 'test -f $(srcdir)/$$1 || echo $$1' \
 		sh '{}' ';'
 
+maintainer-upload-release:
+	$(MAKE) -C docs maintainer-upload-release
+
 ChangeLog:
 	@echo Creating $@
 	@if test -d "$(srcdir)/.git"; then \
