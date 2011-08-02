@@ -16,18 +16,18 @@ VALAFLAGS += \
 	--vapidir=. \
 	--vapidir=$(top_builddir)/backends/eds/lib \
 	--vapidir=$(top_srcdir)/folks \
-	$(addprefix --pkg ,$(folks_backend_eds_deps)) \
+	$(addprefix --pkg ,$(eds_deps)) \
 	$(NULL)
 
 backenddir = $(BACKEND_DIR)/eds
-backend_LTLIBRARIES = libfolks-backend-eds.la
+backend_LTLIBRARIES = eds.la
 
-libfolks_backend_eds_la_SOURCES = \
+eds_la_SOURCES = \
 	eds-backend.vala \
 	eds-backend-factory.vala \
 	$(NULL)
 
-folks_backend_eds_deps = \
+eds_deps = \
 	folks \
 	folks-eds \
 	gee-1.0 \
@@ -38,7 +38,7 @@ folks_backend_eds_deps = \
 	libxml-2.0 \
 	$(NULL)
 
-libfolks_backend_eds_la_CFLAGS = \
+eds_la_CFLAGS = \
 	$(GIO_CFLAGS) \
 	$(GLIB_CFLAGS) \
 	$(GEE_CFLAGS) \
@@ -47,7 +47,7 @@ libfolks_backend_eds_la_CFLAGS = \
 	$(LIBXML_CFLAGS) \
 	$(NULL)
 
-libfolks_backend_eds_la_LIBADD = \
+eds_la_LIBADD = \
 	lib/libfolks-eds.la \
 	$(top_builddir)/folks/libfolks.la \
 	$(GIO_LIBS) \
@@ -58,12 +58,12 @@ libfolks_backend_eds_la_LIBADD = \
 	$(LIBXML_LIBS) \
 	$(NULL)
 
-libfolks_backend_eds_la_LDFLAGS = -shared -fPIC -module -avoid-version
+eds_la_LDFLAGS = -shared -fPIC -module -avoid-version
 
 GITIGNOREFILES = \
 	folks-backend-eds.vapi \
-	$(libfolks_backend_eds_la_SOURCES:.vala=.c) \
-	libfolks_backend_eds_la_vala.stamp \
+	$(eds_la_SOURCES:.vala=.c) \
+	eds_la_vala.stamp \
 	$(NULL)
 
 -include backend.mk

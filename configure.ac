@@ -258,25 +258,25 @@ AC_DEFINE([MODULE_VERSION], "folks_module_version", [Module interface version])
 BACKEND_DIR='$(libdir)/folks/$(FOLKS_MODULE_VERSION)/backends'
 AC_SUBST([BACKEND_DIR])
 
-BACKEND_KF='$(top_builddir)/backends/key-file/.libs/libfolks-backend-key-file.so'
+BACKEND_KF='$(top_builddir)/backends/key-file/.libs/key-file.so'
 AC_SUBST([BACKEND_KF])
-BACKEND_TP='$(top_builddir)/backends/telepathy/.libs/libfolks-backend-telepathy.so'
+BACKEND_TP='$(top_builddir)/backends/telepathy/.libs/telepathy.so'
 AC_SUBST([BACKEND_TP])
-BACKEND_EDS='$(top_builddir)/backends/eds/.libs/libfolks-backend-eds.so'
+BACKEND_EDS='$(top_builddir)/backends/eds/.libs/eds.so'
 AC_SUBST([BACKEND_EDS])
 
 if test x$have_libsocialweb_backend = xyes; then
-  BACKEND_LIBSOCIALWEB='$(top_builddir)/backends/libsocialweb/.libs/libfolks-backend-libsocialweb.so'
+  BACKEND_LIBSOCIALWEB='$(top_builddir)/backends/libsocialweb/.libs/libsocialweb.so'
   AC_SUBST([BACKEND_LIBSOCIALWEB])
 fi
 
 if test x$enable_tracker_backend = xyes; then
-  BACKEND_TRACKER='$(top_builddir)/backends/tracker/.libs/libfolks-backend-tracker.so'
+  BACKEND_TRACKER='$(top_builddir)/backends/tracker/.libs/tracker.so'
   AC_SUBST([BACKEND_TRACKER])
 fi
 
 if test x$enable_eds_backend = xyes; then
-  BACKEND_EDS='$(top_builddir)/backends/eds/.libs/libfolks-backend-eds.so'
+  BACKEND_EDS='$(top_builddir)/backends/eds/.libs/eds.so'
   AC_SUBST([BACKEND_EDS])
 fi
 

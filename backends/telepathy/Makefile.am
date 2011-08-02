@@ -16,18 +16,18 @@ VALAFLAGS += \
 	--vapidir=. \
 	--vapidir=$(top_builddir)/backends/telepathy/lib \
 	--vapidir=$(top_srcdir)/folks \
-	$(addprefix --pkg ,$(folks_backend_telepathy_deps)) \
+	$(addprefix --pkg ,$(telepathy_deps)) \
 	$(NULL)
 
 backenddir = $(BACKEND_DIR)/telepathy
-backend_LTLIBRARIES = libfolks-backend-telepathy.la
+backend_LTLIBRARIES = telepathy.la
 
-libfolks_backend_telepathy_la_SOURCES = \
+telepathy_la_SOURCES = \
 	tp-backend.vala \
 	tp-backend-factory.vala \
 	$(NULL)
 
-folks_backend_telepathy_deps = \
+telepathy_deps = \
 	folks \
 	folks-telepathy \
 	gee-1.0 \
@@ -36,14 +36,14 @@ folks_backend_telepathy_deps = \
 	telepathy-glib \
 	$(NULL)
 
-libfolks_backend_telepathy_la_CFLAGS = \
+telepathy_la_CFLAGS = \
 	$(GIO_CFLAGS) \
 	$(GLIB_CFLAGS) \
 	$(GEE_CFLAGS) \
 	$(TP_GLIB_CFLAGS) \
 	$(NULL)
 
-libfolks_backend_telepathy_la_LIBADD = \
+telepathy_la_LIBADD = \
 	$(GIO_LIBS) \
 	$(GLIB_LIBS) \
 	$(GEE_LIBS) \
@@ -52,12 +52,12 @@ libfolks_backend_telepathy_la_LIBADD = \
 	lib/libfolks-telepathy.la \
 	$(NULL)
 
-libfolks_backend_telepathy_la_LDFLAGS = -shared -fPIC -module -avoid-version
+telepathy_la_LDFLAGS = -shared -fPIC -module -avoid-version
 
 GITIGNOREFILES = \
 	folks-backend-telepathy.vapi \
-	$(libfolks_backend_telepathy_la_SOURCES:.vala=.c) \
-	libfolks_backend_telepathy_la_vala.stamp \
+	$(telepathy_la_SOURCES:.vala=.c) \
+	telepathy_la_vala.stamp \
 	$(NULL)
 
 -include $(top_srcdir)/git.mk

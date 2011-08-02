@@ -9,16 +9,16 @@ AM_CPPFLAGS = \
 	$(NULL)
 
 backenddir = $(BACKEND_DIR)/key-file
-backend_LTLIBRARIES = libfolks-backend-key-file.la
+backend_LTLIBRARIES = key-file.la
 
-libfolks_backend_key_file_la_SOURCES = \
+key_file_la_SOURCES = \
 	kf-backend.vala \
 	kf-backend-factory.vala \
 	kf-persona.vala \
 	kf-persona-store.vala \
 	$(NULL)
 
-libfolks_backend_key_file_la_VALAFLAGS = \
+key_file_la_VALAFLAGS = \
 	$(ERROR_VALAFLAGS) \
 	--vapidir=. \
 	--vapidir=$(top_srcdir)/folks \
@@ -28,25 +28,25 @@ libfolks_backend_key_file_la_VALAFLAGS = \
 	--pkg gobject-2.0 \
 	$(NULL)
 
-libfolks_backend_key_file_la_CFLAGS = \
+key_file_la_CFLAGS = \
 	$(GIO_CFLAGS) \
 	$(GLIB_CFLAGS) \
 	$(GEE_CFLAGS) \
 	$(NULL)
 
-libfolks_backend_key_file_la_LIBADD = \
+key_file_la_LIBADD = \
 	$(GIO_LIBS) \
 	$(GLIB_LIBS) \
 	$(GEE_LIBS) \
 	$(top_builddir)/folks/libfolks.la \
 	$(NULL)
 
-libfolks_backend_key_file_la_LDFLAGS = -shared -fPIC -module -avoid-version
+key_file_la_LDFLAGS = -shared -fPIC -module -avoid-version
 
 GITIGNOREFILES = \
 	folks-backend-key-file.vapi \
-	$(libfolks_backend_key_file_la_SOURCES:.vala=.c) \
-	libfolks_backend_key_file_la_vala.stamp \
+	$(key_file_la_SOURCES:.vala=.c) \
+	key_file_la_vala.stamp \
 	$(NULL)
 
 -include $(top_srcdir)/git.mk

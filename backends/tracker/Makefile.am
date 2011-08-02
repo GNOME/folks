@@ -17,18 +17,18 @@ VALAFLAGS += \
 	--vapidir=vapi \
 	--vapidir=$(top_builddir)/backends/tracker/lib \
 	--vapidir=$(top_srcdir)/folks \
-	$(addprefix --pkg ,$(folks_backend_tracker_deps)) \
+	$(addprefix --pkg ,$(tracker_deps)) \
 	$(NULL)
 
 backenddir = $(BACKEND_DIR)/tracker
-backend_LTLIBRARIES = libfolks-backend-tracker.la
+backend_LTLIBRARIES = tracker.la
 
-libfolks_backend_tracker_la_SOURCES = \
+tracker_la_SOURCES = \
 	tr-backend.vala \
 	tr-backend-factory.vala \
 	$(NULL)
 
-folks_backend_tracker_deps = \
+tracker_deps = \
 	folks \
 	folks-tracker \
 	gee-1.0 \
@@ -37,14 +37,14 @@ folks_backend_tracker_deps = \
 	tracker-sparql-0.10 \
 	$(NULL)
 
-libfolks_backend_tracker_la_CFLAGS = \
+tracker_la_CFLAGS = \
 	$(GIO_CFLAGS) \
 	$(GLIB_CFLAGS) \
 	$(GEE_CFLAGS) \
 	$(TRACKER_SPARQL_CFLAGS) \
 	$(NULL)
 
-libfolks_backend_tracker_la_LIBADD = \
+tracker_la_LIBADD = \
 	$(GIO_LIBS) \
 	$(GLIB_LIBS) \
 	$(GEE_LIBS) \
@@ -53,12 +53,12 @@ libfolks_backend_tracker_la_LIBADD = \
 	lib/libfolks-tracker.la \
 	$(NULL)
 
-libfolks_backend_tracker_la_LDFLAGS = -shared -fPIC -module -avoid-version
+tracker_la_LDFLAGS = -shared -fPIC -module -avoid-version
 
 GITIGNOREFILES = \
 	folks-backend-tracker.vapi \
-	$(libfolks_backend_tracker_la_SOURCES:.vala=.c) \
-	libfolks_backend_tracker_la_vala.stamp \
+	$(tracker_la_SOURCES:.vala=.c) \
+	tracker_la_vala.stamp \
 	$(NULL)
 
 -include $(top_srcdir)/git.mk

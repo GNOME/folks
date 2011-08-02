@@ -26,6 +26,7 @@ Bugs fixed:
 * Bug 655510 — Make truly-writeable *Details property setters public
 * Bug 654907 — The writable store shouldn't be set by type_id
 * Bug 655745 — Implement read/write support for gender property
+* Bug 649296 — Folks backend files shouldn't begin with "lib"
 
 API changes:
 * Swf.Persona retains and exposes its libsocialweb Contact
