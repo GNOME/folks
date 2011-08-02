@@ -206,6 +206,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
    * - PersonaStore.detail_key (PersonaDetail.AVATAR)
    * - PersonaStore.detail_key (PersonaDetail.EMAIL_ADDRESSES)
    * - PersonaStore.detail_key (PersonaDetail.FULL_NAME)
+   * - PersonaStore.detail_key (PersonaDetail.GENDER)
    * - PersonaStore.detail_key (PersonaDetail.IM_ADDRESSES)
    * - PersonaStore.detail_key (PersonaDetail.PHONE_NUMBERS)
    * - PersonaStore.detail_key (PersonaDetail.POSTAL_ADDRESSES)
@@ -291,6 +292,11 @@ public class Edsf.PersonaStore : Folks.PersonaStore
             {
               var notes = (Gee.HashSet<Note>) v.get_object ();
               yield this._set_contact_notes (contact, notes);
+            }
+          else if (k == Folks.PersonaStore.detail_key (PersonaDetail.GENDER))
+            {
+              var gender = (Gender) v.get_enum ();
+              yield this._set_contact_gender (contact, gender);
             }
         }
 
@@ -901,6 +907,49 @@ public class Edsf.PersonaStore : Folks.PersonaStore
         }
 
       contact.set (ContactField.CATEGORY_LIST, categories);
+    }
+
+  internal async void _set_gender (Edsf.Persona persona,
+      Gender gender)
+    {
+      try
+        {
+          E.Contact contact = ((Edsf.Persona) persona).contact;
+          yield this._set_contact_gender (contact, gender);
+          yield this._addressbook.modify_contact (contact);
+        }
+      catch (GLib.Error e)
+        {
+          GLib.warning ("Can't set gender: %s", e.message);
+        }
+    }
+
+  private async void _set_contact_gender (E.Contact contact,
+      Gender gender)
+    {
+      var attr = contact.get_attribute (Edsf.Persona.gender_attribute_name);
+      if (attr != null)
+        {
+          contact.remove_attribute (attr);
+        }
+
+      switch (gender)
+        {
+          case Gender.UNSPECIFIED:
+            break;
+          case Gender.MALE:
+            attr = new VCardAttribute (null,
+                Edsf.Persona.gender_attribute_name);
+            attr.add_value (Edsf.Persona.gender_male);
+            contact.add_attribute (attr);
+            break;
+          case Gender.FEMALE:
+            attr = new VCardAttribute (null,
+                Edsf.Persona.gender_attribute_name);
+            attr.add_value (Edsf.Persona.gender_female);
+            contact.add_attribute (attr);
+            break;
+        }
     }
 
   private void _contacts_added_cb (GLib.List<E.Contact> contacts)

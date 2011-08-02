@@ -25,6 +25,7 @@ Bugs fixed:
 * Bug 652643 — Add PersonaStore cache
 * Bug 655510 — Make truly-writeable *Details property setters public
 * Bug 654907 — The writable store shouldn't be set by type_id
+* Bug 655745 — Implement read/write support for gender property
 
 API changes:
 * Swf.Persona retains and exposes its libsocialweb Contact

@@ -58,6 +58,43 @@ public class Edsf.Persona : Folks.Persona,
   public static const string[] url_properties = {
     "blog_url", "fburl", "homepage_url", "video_url"
   };
+
+  /**
+   * The vCard attribute used to specify a Contact's gender
+   *
+   * Based on:
+   * http://tools.ietf.org/html/draft-ietf-vcarddav-vcardrev-22
+   *
+   * Note that the above document is a draft and the gender property
+   * is still considered experimental, hence the "X-" prefix in the
+   * attribute name. So this might change.
+   *
+   * @since UNRELEASED
+   */
+  public static const string gender_attribute_name = "X-GENDER";
+
+  /**
+   * The value used to define the male gender for the
+   * X-GENDER vCard property.
+   *
+   * Based on:
+   * http://tools.ietf.org/html/draft-ietf-vcarddav-vcardrev-22
+   *
+   * @since UNRELEASED
+   */
+  public static const string gender_male = "M";
+
+  /**
+   * The value used to define the female gender for the
+   * X-GENDER vCard property.
+   *
+   * Based on:
+   * http://tools.ietf.org/html/draft-ietf-vcarddav-vcardrev-22
+   *
+   * @since UNRELEASED
+   */
+  public static const string gender_female = "F";
+
   private const string[] _linkable_properties = { "im-addresses",
                                                   "local-ids",
                                                   "web-service-addresses" };
@@ -285,16 +322,23 @@ public class Edsf.Persona : Folks.Persona,
         }
     }
 
+  private Gender _gender;
   /**
    * {@inheritDoc}
    *
-   * @since 0.5.UNRELEASED
+   * @since UNRELEASED
    */
-  public Gender gender { get; private set; }
+  public Gender gender
+    {
+      get { return this._gender; }
+      public set
+        {
+          ((Edsf.PersonaStore) this.store)._set_gender (this, value);
+        }
+    }
 
   private HashSet<FieldDetails> _urls;
   private Set<FieldDetails> _urls_ro;
-
   /**
    * {@inheritDoc}
    *
@@ -434,9 +478,9 @@ public class Edsf.Persona : Folks.Persona,
               uid: uid,
               iid: iid,
               store: store,
-              gender: Gender.UNSPECIFIED,
               is_user: is_user);
 
+      this._gender = Gender.UNSPECIFIED;
       this.contact_id = contact_id;
       this._phone_numbers = new HashSet<FieldDetails> ();
       this._phone_numbers_ro = this._phone_numbers.read_only_view;
@@ -523,6 +567,34 @@ public class Edsf.Persona : Folks.Persona,
       this._update_notes ();
       this._update_local_ids ();
       this._update_web_services_addresses ();
+      this._update_gender ();
+    }
+
+  private void _update_gender ()
+    {
+      var gender = Gender.UNSPECIFIED;
+      var gender_attr =
+          this.contact.get_attribute (Edsf.Persona.gender_attribute_name);
+
+      if (gender_attr != null)
+        {
+          var gender_str = gender_attr.get_value ().up ();
+
+          if (gender_str == Edsf.Persona.gender_male)
+            {
+              gender = Gender.MALE;
+            }
+          else if (gender_str == Edsf.Persona.gender_female)
+            {
+              gender = Gender.FEMALE;
+            }
+        }
+
+      if (this._gender != gender)
+        {
+          this._gender = gender;
+          this.notify_property ("gender");
+        }
     }
 
   private void _update_web_services_addresses ()
