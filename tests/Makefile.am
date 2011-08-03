@@ -3,7 +3,6 @@ SUBDIRS = \
     lib \
     tools \
     folks \
-    key-file \
     telepathy \
     $(NULL)
 
@@ -14,6 +13,8 @@ endif
 if ENABLE_EDS
 SUBDIRS += eds
 endif
+
+SUBDIRS += key-file
 
 if ENABLE_TRACKER
 SUBDIRS += tracker
