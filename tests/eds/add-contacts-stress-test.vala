@@ -29,7 +29,8 @@ public class AddContactsStressTestTests : Folks.TestCase
   private Edsf.PersonaStore _pstore;
   private bool _added_contacts = false;
   private HashTable<string, bool> _contacts_found;
-  private int _contacts_cnt = 150;
+  private int _contacts_cnt = 1000;
+  private DateTime _start_time;
 
   public AddContactsStressTestTests ()
     {
@@ -56,22 +57,24 @@ public class AddContactsStressTestTests : Folks.TestCase
     {
       this._main_loop = new GLib.MainLoop (null, false);
 
-     this._contacts_found = new HashTable<string, bool> (str_hash, str_equal);
-     for (var i=0; i<this._contacts_cnt; i++)
-       {
-         var persona_name = "full_name -%d".printf (i);
-         this._contacts_found.insert (persona_name, false);
-       }
+      this._contacts_found = new HashTable<string, bool> (str_hash, str_equal);
+      for (var i = 0; i < this._contacts_cnt; i++)
+        {
+          var persona_name = "full_name -%d".printf (i);
+          this._contacts_found.insert (persona_name, false);
+        }
+
+      this._start_time = new DateTime.now_utc ();
 
       this._test_add_persona_async ();
 
-      Timeout.add_seconds (5, () =>
-        {
-          this._main_loop.quit ();
-          assert_not_reached ();
-        });
-
       this._main_loop.run ();
+
+      var now = new DateTime.now_utc ();
+      var difference = now.difference (this._start_time);
+
+      int diff = difference / TimeSpan.SECOND;
+      GLib.stdout.printf ("(Elapsed time: %d secs) ", diff);
 
       int found = 0;
       foreach (var k in this._contacts_found.get_values ())
