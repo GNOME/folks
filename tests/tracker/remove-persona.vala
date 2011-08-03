@@ -131,12 +131,13 @@ public class RemovePersonaTests : Folks.TestCase
       details.insert (Folks.PersonaStore.detail_key (PersonaDetail.FULL_NAME),
           (owned) v1);
 
-      Value? v2 = Value (typeof (Set<FieldDetails>));
-      var emails = new HashSet<FieldDetails> ((GLib.HashFunc) FieldDetails.hash,
-          (GLib.EqualFunc) FieldDetails.equal);
-      var email_1 = new FieldDetails ("test-1@example.org");
+      Value? v2 = Value (typeof (Set<EmailFieldDetails>));
+      var emails = new HashSet<EmailFieldDetails> (
+          (GLib.HashFunc) EmailFieldDetails.hash,
+          (GLib.EqualFunc) EmailFieldDetails.equal);
+      var email_1 = new EmailFieldDetails ("test-1@example.org");
       emails.add (email_1);
-      var email_2 = new FieldDetails ("test-2@example.org");
+      var email_2 = new EmailFieldDetails ("test-2@example.org");
       emails.add (email_2);
       v2.set_object (emails);
       details.insert (

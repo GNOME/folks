@@ -171,11 +171,11 @@ public class MatchEmailAddressesTests : Folks.TestCase
       details1.insert (Folks.PersonaStore.detail_key (PersonaDetail.FULL_NAME),
           (owned) val);
 
-      val = Value (typeof (Set<FieldDetails>));
-      var emails1 = new HashSet<FieldDetails> (
-          (GLib.HashFunc) FieldDetails.hash,
-          (GLib.EqualFunc) FieldDetails.equal);
-      var email_1 = new FieldDetails (this._email_1);
+      val = Value (typeof (Set<EmailFieldDetails>));
+      var emails1 = new HashSet<EmailFieldDetails> (
+          (GLib.HashFunc) EmailFieldDetails.hash,
+          (GLib.EqualFunc) EmailFieldDetails.equal);
+      var email_1 = new EmailFieldDetails (this._email_1);
       emails1.add (email_1);
       val.set_object (emails1);
       details1.insert (
@@ -187,11 +187,11 @@ public class MatchEmailAddressesTests : Folks.TestCase
       details2.insert (Folks.PersonaStore.detail_key (PersonaDetail.FULL_NAME),
           (owned) val);
 
-      val = Value (typeof (Set<FieldDetails>));
-      var emails2 = new HashSet<FieldDetails> (
-          (GLib.HashFunc) FieldDetails.hash,
-          (GLib.EqualFunc) FieldDetails.equal);
-      var email_2 = new FieldDetails (this._email_1);
+      val = Value (typeof (Set<EmailFieldDetails>));
+      var emails2 = new HashSet<EmailFieldDetails> (
+          (GLib.HashFunc) EmailFieldDetails.hash,
+          (GLib.EqualFunc) EmailFieldDetails.equal);
+      var email_2 = new EmailFieldDetails (this._email_1);
       emails2.add (email_2);
       val.set_object (emails2);
       details2.insert (

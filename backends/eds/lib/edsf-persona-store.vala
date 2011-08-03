@@ -236,8 +236,8 @@ public class Edsf.PersonaStore : Folks.PersonaStore
           else if (k == Folks.PersonaStore.detail_key (
                 PersonaDetail.EMAIL_ADDRESSES))
             {
-              Set<FieldDetails> email_addresses =
-                (Set<FieldDetails>) v.get_object ();
+              Set<EmailFieldDetails> email_addresses =
+                (Set<EmailFieldDetails>) v.get_object ();
               yield this._set_contact_attributes (contact, email_addresses,
                   "EMAIL", E.ContactField.EMAIL);
             }
@@ -781,7 +781,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
     }
 
   internal async void _set_emails (Edsf.Persona persona,
-      Set<FieldDetails> emails)
+      Set<EmailFieldDetails> emails)
     {
       try
         {
@@ -863,7 +863,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
     }
 
   private async void _set_contact_attributes (E.Contact contact,
-      Set<FieldDetails> new_attributes,
+      Set<AbstractFieldDetails<string>> new_attributes,
       string attrib_name, E.ContactField field_id)
     {
       var attributes = new GLib.List <E.VCardAttribute>();

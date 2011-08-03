@@ -124,10 +124,10 @@ public class SetDuplicateEmailTests : Folks.TestCase
         {
           if (this._has_email ((Trf.Persona) p, this._email_1))
             {
-              var emails1 = new HashSet<FieldDetails> (
-                  (GLib.HashFunc) FieldDetails.hash,
-                  (GLib.EqualFunc) FieldDetails.equal);
-              var email_1 = new FieldDetails (this._email_1);
+              var emails1 = new HashSet<EmailFieldDetails> (
+                  (GLib.HashFunc) EmailFieldDetails.hash,
+                  (GLib.EqualFunc) EmailFieldDetails.equal);
+              var email_1 = new EmailFieldDetails (this._email_1);
               emails1.add (email_1);
               ((EmailDetails) p).email_addresses = emails1;
               p.notify["email-addresses"].connect (this._email_addresses_cb);
@@ -195,11 +195,11 @@ public class SetDuplicateEmailTests : Folks.TestCase
       details1.insert (Folks.PersonaStore.detail_key (PersonaDetail.FULL_NAME),
           (owned) val);
 
-      val = Value (typeof (Set<FieldDetails>));
-      var emails1 = new HashSet<FieldDetails> (
-          (GLib.HashFunc) FieldDetails.hash,
-          (GLib.EqualFunc) FieldDetails.equal);
-      var email_1 = new FieldDetails (this._email_1);
+      val = Value (typeof (Set<EmailFieldDetails>));
+      var emails1 = new HashSet<EmailFieldDetails> (
+          (GLib.HashFunc) EmailFieldDetails.hash,
+          (GLib.EqualFunc) EmailFieldDetails.equal);
+      var email_1 = new EmailFieldDetails (this._email_1);
       emails1.add (email_1);
       val.set_object (emails1);
       details1.insert (

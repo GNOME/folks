@@ -224,12 +224,13 @@ public class AddPersonaTests : Folks.TestCase
       details.insert (Folks.PersonaStore.detail_key (PersonaDetail.GENDER),
           (owned) v7);
 
-      Value? v8 = Value (typeof (Set<FieldDetails>));
-      var emails = new HashSet<FieldDetails> ((GLib.HashFunc) FieldDetails.hash,
-          (GLib.EqualFunc) FieldDetails.equal);
-      var email_1 = new FieldDetails (this._email_1);
+      Value? v8 = Value (typeof (Set<EmailFieldDetails>));
+      var emails = new HashSet<EmailFieldDetails> (
+          (GLib.HashFunc) EmailFieldDetails.hash,
+          (GLib.EqualFunc) EmailFieldDetails.equal);
+      var email_1 = new EmailFieldDetails (this._email_1);
       emails.add (email_1);
-      var email_2 = new FieldDetails (this._email_2);
+      var email_2 = new EmailFieldDetails (this._email_2);
       emails.add (email_2);
       v8.set_object (emails);
       details.insert (

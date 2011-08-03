@@ -491,8 +491,8 @@ public class Trf.PersonaStore : Folks.PersonaStore
           else if (k == Folks.PersonaStore.detail_key (
                 PersonaDetail.EMAIL_ADDRESSES))
             {
-              Set<FieldDetails> email_addresses =
-                (Set<FieldDetails>) v.get_object ();
+              Set<EmailFieldDetails> email_addresses =
+                (Set<EmailFieldDetails>) v.get_object ();
               yield this._build_update_query_set (builder, email_addresses,
                   "_:p", Trf.Attrib.EMAILS);
             }
@@ -863,7 +863,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
 
   private async void _build_update_query_set (
       Tracker.Sparql.Builder builder,
-      Set<FieldDetails> properties,
+      Set<AbstractFieldDetails<string>> properties,
       string contact_var,
       Trf.Attrib attrib)
     {
@@ -1943,7 +1943,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
     }
 
   internal async void _set_emails (Folks.Persona persona,
-      Set<FieldDetails> emails)
+      Set<EmailFieldDetails> emails)
     {
       yield this._set_unique_attrib_set (persona, emails,
           Trf.Attrib.EMAILS);
@@ -1957,7 +1957,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
     }
 
   internal async void _set_unique_attrib_set (Folks.Persona persona,
-      Set<FieldDetails> properties, Trf.Attrib attrib)
+      Set<AbstractFieldDetails<string>> properties, Trf.Attrib attrib)
     {
       string? query_name = null;
       var p_id = ((Trf.Persona) persona).tracker_id ();

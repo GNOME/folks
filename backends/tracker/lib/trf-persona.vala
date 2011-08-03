@@ -51,8 +51,8 @@ public class Trf.Persona : Folks.Persona,
       {"im-addresses", "local-ids", "web-service-addresses"};
   private HashSet<FieldDetails> _phone_numbers;
   private Set<FieldDetails> _phone_numbers_ro;
-  private HashSet<FieldDetails> _email_addresses;
-  private Set<FieldDetails> _email_addresses_ro;
+  private HashSet<EmailFieldDetails> _email_addresses;
+  private Set<EmailFieldDetails> _email_addresses_ro;
   private weak Sparql.Cursor _cursor;
   private string _tracker_id;
   private const string[] _writeable_properties =
@@ -108,7 +108,7 @@ public class Trf.Persona : Folks.Persona,
   /**
    * {@inheritDoc}
    */
-  public Set<FieldDetails> email_addresses
+  public Set<EmailFieldDetails> email_addresses
     {
       get { return this._email_addresses_ro; }
       public set
@@ -410,9 +410,9 @@ public class Trf.Persona : Folks.Persona,
           (GLib.HashFunc) FieldDetails.hash,
           (GLib.EqualFunc) FieldDetails.equal);
       this._phone_numbers_ro = this._phone_numbers.read_only_view;
-      this._email_addresses = new HashSet<FieldDetails> (
-          (GLib.HashFunc) FieldDetails.hash,
-          (GLib.EqualFunc) FieldDetails.equal);
+      this._email_addresses = new HashSet<EmailFieldDetails> (
+          (GLib.HashFunc) EmailFieldDetails.hash,
+          (GLib.EqualFunc) EmailFieldDetails.equal);
       this._email_addresses_ro = this._email_addresses.read_only_view;
       this._roles = new HashSet<Role> ((GLib.HashFunc) Role.hash,
           (GLib.EqualFunc) Role.equal);
@@ -1046,9 +1046,10 @@ public class Trf.Persona : Folks.Persona,
     {
       bool found = false;
 
-      foreach (var e in this._email_addresses)
+      foreach (var email_fd in this._email_addresses)
         {
-          if (e.get_parameter_values ("tracker_id").contains (tracker_id))
+          if (email_fd.get_parameter_values ("tracker_id").contains (
+                tracker_id))
             {
               found = true;
               break;
@@ -1057,9 +1058,9 @@ public class Trf.Persona : Folks.Persona,
 
       if (!found)
         {
-          var fd = new FieldDetails (addr);
-          fd.set_parameter ("tracker_id", tracker_id);
-          this._email_addresses.add (fd);
+          var email_fd = new EmailFieldDetails (addr);
+          email_fd.set_parameter ("tracker_id", tracker_id);
+          this._email_addresses.add (email_fd);
           this.notify_property ("email-addresses");
         }
 
@@ -1070,11 +1071,12 @@ public class Trf.Persona : Folks.Persona,
     {
       bool found = false;
 
-      foreach (var e in this._email_addresses)
+      foreach (var email_fd in this._email_addresses)
         {
-          if (e.get_parameter_values ("tracker_id").contains (tracker_id))
+          if (email_fd.get_parameter_values ("tracker_id").contains (
+                tracker_id))
             {
-              this._email_addresses.remove (e);
+              this._email_addresses.remove (email_fd);
               found = true;
               break;
             }
@@ -1097,9 +1099,9 @@ public class Trf.Persona : Folks.Persona,
           return;
         }
 
-      var email_addresses = new HashSet<FieldDetails> (
-          (GLib.HashFunc) FieldDetails.hash,
-          (GLib.EqualFunc) FieldDetails.equal);
+      var email_addresses = new HashSet<EmailFieldDetails> (
+          (GLib.HashFunc) EmailFieldDetails.hash,
+          (GLib.EqualFunc) EmailFieldDetails.equal);
       string[] emails_a = emails_field.split (",");
 
       foreach (var e in emails_a)
@@ -1107,7 +1109,7 @@ public class Trf.Persona : Folks.Persona,
           if (e != null && e != "")
             {
               string[] id_addr = e.split ("\t");
-              var fd = new FieldDetails (id_addr[Trf.EmailFields.EMAIL]);
+              var fd = new EmailFieldDetails (id_addr[Trf.EmailFields.EMAIL]);
               fd.set_parameter ("tracker_id",
                   id_addr[Trf.EmailFields.TRACKER_ID]);
               email_addresses.add (fd);

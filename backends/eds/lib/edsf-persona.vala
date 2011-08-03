@@ -115,8 +115,8 @@ public class Edsf.Persona : Folks.Persona,
     };
   private HashSet<FieldDetails> _phone_numbers;
   private Set<FieldDetails> _phone_numbers_ro;
-  private HashSet<FieldDetails> _email_addresses;
-  private Set<FieldDetails> _email_addresses_ro;
+  private HashSet<EmailFieldDetails> _email_addresses;
+  private Set<EmailFieldDetails> _email_addresses_ro;
   private HashSet<Note> _notes;
   private Set<Note> _notes_ro;
   private static HashTable<string, E.ContactField> _im_eds_map = null;
@@ -205,7 +205,7 @@ public class Edsf.Persona : Folks.Persona,
    *
    * @since 0.5.UNRELEASED
    */
-  public Set<FieldDetails> email_addresses
+  public Set<EmailFieldDetails> email_addresses
     {
       get { return this._email_addresses_ro; }
       set
@@ -486,7 +486,9 @@ public class Edsf.Persona : Folks.Persona,
       this.contact_id = contact_id;
       this._phone_numbers = new HashSet<FieldDetails> ();
       this._phone_numbers_ro = this._phone_numbers.read_only_view;
-      this._email_addresses = new HashSet<FieldDetails> ();
+      this._email_addresses = new HashSet<EmailFieldDetails> (
+          (GLib.HashFunc) EmailFieldDetails.hash,
+          (GLib.EqualFunc) EmailFieldDetails.equal);
       this._email_addresses_ro = this._email_addresses.read_only_view;
       this._notes = new HashSet<Note> ();
       this._notes_ro = this._notes.read_only_view;
@@ -628,16 +630,16 @@ public class Edsf.Persona : Folks.Persona,
       var attrs = this.contact.get_attributes (E.ContactField.EMAIL);
       foreach (var attr in attrs)
         {
-          var fd = new FieldDetails (attr.get_value ());
+          var email_fd = new EmailFieldDetails (attr.get_value ());
           foreach (var param in attr.get_params ())
             {
               string param_name = param.get_name ().down ();
               foreach (var param_value in param.get_values ())
                 {
-                  fd.add_parameter (param_name, param_value);
+                  email_fd.add_parameter (param_name, param_value);
                 }
             }
-          this._email_addresses.add (fd);
+          this._email_addresses.add (email_fd);
         }
 
       this.notify_property ("email-addresses");

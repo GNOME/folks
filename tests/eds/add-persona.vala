@@ -154,9 +154,11 @@ public class AddPersonaTests : Folks.TestCase
       details.insert (Folks.PersonaStore.detail_key (PersonaDetail.FULL_NAME),
           (owned) v1);
 
-      Value? v2 = Value (typeof (Set<FieldDetails>));
-      var emails = new HashSet<FieldDetails> ();
-      var email_1 = new FieldDetails (this._email_1);
+      Value? v2 = Value (typeof (Set<EmailFieldDetails>));
+      var emails = new HashSet<EmailFieldDetails> (
+          (GLib.HashFunc) EmailFieldDetails.hash,
+          (GLib.EqualFunc) EmailFieldDetails.equal);
+      var email_1 = new EmailFieldDetails (this._email_1);
       email_1.set_parameter ("type", Edsf.Persona.email_fields[0]);
       emails.add (email_1);
       v2.set_object (emails);

@@ -351,20 +351,20 @@ public class Folks.Individual : Object,
         }
     }
 
-  private HashSet<FieldDetails> _email_addresses;
-  private Set<FieldDetails> _email_addresses_ro;
+  private HashSet<EmailFieldDetails> _email_addresses;
+  private Set<EmailFieldDetails> _email_addresses_ro;
 
   /**
    * {@inheritDoc}
    */
-  public Set<FieldDetails> email_addresses
+  public Set<EmailFieldDetails> email_addresses
     {
       get { return this._email_addresses_ro; }
       private set
         {
           this._email_addresses.clear ();
-          foreach (var fd in value)
-            this._email_addresses.add (fd);
+          foreach (var email_fd in value)
+            this._email_addresses.add (email_fd);
         }
     }
 
@@ -702,9 +702,9 @@ public class Folks.Individual : Object,
           (GLib.HashFunc) FieldDetails.hash,
           (GLib.EqualFunc) FieldDetails.equal);
       this._phone_numbers_ro = this._phone_numbers.read_only_view;
-      this._email_addresses = new HashSet<FieldDetails> (
-          (GLib.HashFunc) FieldDetails.hash,
-          (GLib.EqualFunc) FieldDetails.equal);
+      this._email_addresses = new HashSet<EmailFieldDetails> (
+          (GLib.HashFunc) EmailFieldDetails.hash,
+          (GLib.EqualFunc) EmailFieldDetails.equal);
       this._email_addresses_ro = this._email_addresses.read_only_view;
       this._roles = new HashSet<Role>
           ((GLib.HashFunc) Role.hash, (GLib.EqualFunc) Role.equal);
@@ -1381,8 +1381,8 @@ public class Folks.Individual : Object,
     {
       /* Populate the email addresses as the union of our Personas' addresses.
        * If the same address exists multiple times we merge the parameters. */
-      var emails_set = new HashMap<unowned string, unowned FieldDetails> (
-          null, null, (GLib.EqualFunc) FieldDetails.equal);
+      var emails_set = new HashMap<unowned string, unowned EmailFieldDetails> (
+          null, null, (GLib.EqualFunc) EmailFieldDetails.equal);
 
       this._email_addresses.clear ();
 
@@ -1391,20 +1391,20 @@ public class Folks.Individual : Object,
           var email_details = persona as EmailDetails;
           if (email_details != null)
             {
-              foreach (var fd in email_details.email_addresses)
+              foreach (var email_fd in email_details.email_addresses)
                 {
-                  if (fd.value == null)
+                  if (email_fd.value == null)
                     continue;
 
-                  var existing = emails_set.get (fd.value);
+                  var existing = emails_set.get (email_fd.value);
                   if (existing != null)
-                    existing.extend_parameters (fd.parameters);
+                    existing.extend_parameters (email_fd.parameters);
                   else
                     {
-                      var new_fd = new FieldDetails (fd.value);
-                      new_fd.extend_parameters (fd.parameters);
-                      emails_set.set (fd.value, new_fd);
-                      this._email_addresses.add (new_fd);
+                      var new_email_fd = new EmailFieldDetails (email_fd.value,
+                          email_fd.parameters);
+                      emails_set.set (email_fd.value, new_email_fd);
+                      this._email_addresses.add (new_email_fd);
                     }
                 }
             }

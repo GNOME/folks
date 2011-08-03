@@ -115,8 +115,10 @@ public class SetEmailsTests : Folks.TestCase
 
               foreach (var p in i.personas)
                 {
-                  var emails = new HashSet<FieldDetails> ();
-                  var email_1 = new FieldDetails ("bernie@example.org");
+                  var emails = new HashSet<EmailFieldDetails> (
+                      (GLib.HashFunc) EmailFieldDetails.hash,
+                      (GLib.EqualFunc) EmailFieldDetails.equal);
+                  var email_1 = new EmailFieldDetails ("bernie@example.org");
                   email_1.set_parameter ("type", "OTHER");
                   emails.add (email_1);
                   ((EmailDetails) p).email_addresses = emails;
