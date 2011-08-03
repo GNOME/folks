@@ -63,7 +63,7 @@ public class Edsf.Persona : Folks.Persona,
    * The vCard attribute used to specify a Contact's gender
    *
    * Based on:
-   * http://tools.ietf.org/html/draft-ietf-vcarddav-vcardrev-22
+   * [[http://tools.ietf.org/html/draft-ietf-vcarddav-vcardrev-22]]
    *
    * Note that the above document is a draft and the gender property
    * is still considered experimental, hence the "X-" prefix in the
@@ -78,7 +78,7 @@ public class Edsf.Persona : Folks.Persona,
    * X-GENDER vCard property.
    *
    * Based on:
-   * http://tools.ietf.org/html/draft-ietf-vcarddav-vcardrev-22
+   * [[http://tools.ietf.org/html/draft-ietf-vcarddav-vcardrev-22]]
    *
    * @since UNRELEASED
    */
@@ -89,7 +89,7 @@ public class Edsf.Persona : Folks.Persona,
    * X-GENDER vCard property.
    *
    * Based on:
-   * http://tools.ietf.org/html/draft-ietf-vcarddav-vcardrev-22
+   * [[http://tools.ietf.org/html/draft-ietf-vcarddav-vcardrev-22]]
    *
    * @since UNRELEASED
    */
