@@ -11,12 +11,12 @@ if ENABLE_LIBSOCIALWEB
 SUBDIRS += libsocialweb
 endif
 
-if ENABLE_TRACKER
-SUBDIRS += tracker
-endif
-
 if ENABLE_EDS
 SUBDIRS += eds
+endif
+
+if ENABLE_TRACKER
+SUBDIRS += tracker
 endif
 
 DIST_SUBDIRS = \
