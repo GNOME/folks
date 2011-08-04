@@ -751,17 +751,6 @@ public class Edsf.Persona : Folks.Persona,
       E.ContactPhoto? p = (E.ContactPhoto) this._get_property ("photo");
 
       var cache = AvatarCache.dup ();
-      var cache_uri = cache.build_uri_for_avatar (this.uid);
-
-      /* Check the avatar isn't being set by our PersonaStore; if it is, just
-       * notify the property and bail. This avoids circular updates to the
-       * cache. */
-      if (p != null &&
-          p.type == ContactPhotoType.URI && p.get_uri () == cache_uri)
-        {
-          this.notify_property ("avatar");
-          return;
-        }
 
       // Convert the ContactPhoto to a LoadableIcon and store or update it.
       var new_avatar = this._contact_photo_to_loadable_icon (p);
