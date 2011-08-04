@@ -77,6 +77,7 @@ TESTS_ENVIRONMENT = \
 	FOLKS_BACKEND_PATH=$(BACKEND_UNINST_PATH) \
         FOLKS_BACKEND_STORE_KEY_FILE_PATH=$(backend_store_key_file) \
 	AVATAR_FILE_PATH=$(avatar_file) \
+	FOLKS_WRITEABLE_STORE="eds:local://test" \
 	$(RUN_WITH_PRIVATE_BUS) \
 	--session \
 	--
