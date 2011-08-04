@@ -780,6 +780,8 @@ public class Edsf.Persona : Folks.Persona,
               try
                 {
                   cache.store_avatar.end (res);
+                  this._avatar = new_avatar;
+                  this.notify_property ("avatar");
                 }
               catch (GLib.Error e2)
                 {
@@ -787,9 +789,6 @@ public class Edsf.Persona : Folks.Persona,
                       this.uid, e2.message);
                   new_avatar = null; /* failure */
                 }
-
-              this._avatar = new_avatar;
-              this.notify_property ("avatar");
             });
         }
     }
