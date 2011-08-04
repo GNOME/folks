@@ -841,38 +841,45 @@ public class Edsf.PersonaStore : Folks.PersonaStore
   private async void _set_contact_avatar (E.Contact contact,
       LoadableIcon? avatar)
     {
-      var uid = Folks.Persona.build_uid (BACKEND_NAME, this.id,
-          (string) Edsf.Persona._get_property_from_contact (contact, "id"));
-
-      var cache = AvatarCache.dup ();
-      if (avatar != null)
+      if (avatar == null)
         {
-          try
+          unowned VCardAttribute attr = contact.get_attribute ("PHOTO");
+          if (attr != null)
             {
-              // Cache the avatar so that it has a URI
-              var uri = yield cache.store_avatar (uid, avatar);
-
-              // Set the avatar on the contact
-              var cp = new ContactPhoto ();
-              cp.type = ContactPhotoType.URI;
-              cp.set_uri (uri);
-
-              contact.set (ContactField.PHOTO, cp);
-            }
-          catch (GLib.Error e1)
-            {
-              warning ("Couldn't cache avatar for Edsf.Persona '%s': %s",
-                  uid, e1.message);
+              contact.remove_attribute (attr);
             }
         }
       else
         {
-          // Delete any old avatar from the cache, ignoring errors
           try
             {
-              yield cache.remove_avatar (uid);
+              /* Set the avatar on the contact */
+              var cp = new ContactPhoto ();
+              cp.type = ContactPhotoType.INLINED;
+              var input_s = yield avatar.load_async (-1, null, null);
+
+              uint8[] image_data = new uint8[0];
+              uint8[] buffer = new uint8[4096];
+              while (true)
+                {
+                  var size_read = yield input_s.read_async (buffer);
+                  if (size_read <= 0)
+                    {
+                      break;
+                    }
+                  var read_cur = image_data.length;
+                  image_data.resize (read_cur + (int)size_read);
+                  Memory.copy (&image_data[read_cur], buffer, size_read);
+                }
+
+              cp.set_inlined (image_data);
+              contact.set (ContactField.PHOTO, cp);
             }
-          catch (GLib.Error e2) {}
+          catch (GLib.Error e1)
+            {
+              warning ("Couldn't set avatar on the EContact : %s",
+                  e1.message);
+            }
         }
     }
 
