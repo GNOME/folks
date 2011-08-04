@@ -766,7 +766,7 @@ public class Edsf.Persona : Folks.Persona,
                 }
               catch (GLib.Error e1) {}
 
-              this._avatar = new_avatar;
+              this._avatar = null;
               this.notify_property ("avatar");
             });
         }
