@@ -32,6 +32,7 @@ errordomain EdsTest.BackendSetupError
 
 public class EdsTest.Backend
 {
+  public const string address_book_uri = "local://test";
   private string _addressbook_name;
   private E.BookClient _addressbook;
   private GLib.List<string> _e_contacts;
@@ -112,7 +113,7 @@ public class EdsTest.Backend
       var base_uri = "local:";
       this._source_group = new E.SourceGroup ("Test", base_uri);
 
-      this._source = new E.Source ("Test", "local://test");
+      this._source = new E.Source ("Test", this.address_book_uri);
       if (this._source_group.add_source (this._source, -1))
         {
           try
