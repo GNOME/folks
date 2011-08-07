@@ -81,7 +81,7 @@ AC_ARG_ENABLE(eds-backend,
         AC_HELP_STRING([--enable-eds-backend],
                        [ build the E-D-S backend]),
         enable_eds_backend=$enableval,
-        enable_eds_backend=no )
+        enable_eds_backend=yes )
 
 AM_CONDITIONAL([ENABLE_EDS], [test "x$enable_eds_backend" = "xyes"])
 
