@@ -73,8 +73,8 @@ public class AddContactsStressTestTests : Folks.TestCase
       var now = new DateTime.now_utc ();
       var difference = now.difference (this._start_time);
 
-      int diff = difference / TimeSpan.SECOND;
-      GLib.stdout.printf ("(Elapsed time: %d secs) ", diff);
+      var diff = difference / TimeSpan.SECOND;
+      GLib.stdout.printf ("(Elapsed time: %" + diff.FORMAT + " secs) ", diff);
 
       int found = 0;
       foreach (var k in this._contacts_found.get_values ())
