@@ -47,6 +47,7 @@ public class AddPersonaTests : Folks.TestCase
   private string _family_name;
   private string _given_name;
   private string _note = "This is a note.";
+  private Individual _individual_received;
 
   public AddPersonaTests ()
     {
@@ -247,24 +248,58 @@ public class AddPersonaTests : Folks.TestCase
        Persona? actor,
        GroupDetails.ChangeReason reason)
     {
+      uint num_replaces = 0;
+
       foreach (var i in added)
         {
-          if (i.is_user == false)
-            {
-              i.notify["full-name"].connect (this._notify_cb);
-              i.notify["email-addresses"].connect (this._notify_cb);
-              i.notify["avatar"].connect (this._notify_cb);
-              i.notify["im-addresses"].connect (this._notify_cb);
-              i.notify["phone-numbers"].connect (this._notify_cb);
-              i.notify["postal-addresses"].connect (this._notify_cb);
-              i.notify["structured-name"].connect (this._notify_cb);
-              i.notify["notes"].connect (this._notify_cb);
-
-              this._check_properties (i);
-            }
+          num_replaces = this._track_individual (i);
         }
 
-      assert (removed.size == 0);
+      assert (removed.size <= num_replaces);
+    }
+
+  private uint _track_individual (Individual i)
+    {
+      uint retval = 0;
+
+      if (i.is_user == false)
+        {
+          /* we assume that there will be exactly one (unique) individual
+           * received */
+          assert (this._individual_received == null ||
+              this._individual_received.id == i.id);
+
+          /* handle replacement */
+          if (this._individual_received != null)
+            {
+              i.notify["full-name"].disconnect (this._notify_cb);
+              i.notify["email-addresses"].disconnect (this._notify_cb);
+              i.notify["avatar"].disconnect (this._notify_cb);
+              i.notify["im-addresses"].disconnect (this._notify_cb);
+              i.notify["phone-numbers"].disconnect (this._notify_cb);
+              i.notify["postal-addresses"].disconnect (this._notify_cb);
+              i.notify["structured-name"].disconnect (this._notify_cb);
+              i.notify["notes"].disconnect (this._notify_cb);
+
+              this._properties_found.remove_all ();
+            }
+
+          this._individual_received = i;
+          retval++;
+
+          i.notify["full-name"].connect (this._notify_cb);
+          i.notify["email-addresses"].connect (this._notify_cb);
+          i.notify["avatar"].connect (this._notify_cb);
+          i.notify["im-addresses"].connect (this._notify_cb);
+          i.notify["phone-numbers"].connect (this._notify_cb);
+          i.notify["postal-addresses"].connect (this._notify_cb);
+          i.notify["structured-name"].connect (this._notify_cb);
+          i.notify["notes"].connect (this._notify_cb);
+
+          this._check_properties (i);
+        }
+
+      return retval;
     }
 
   private void _notify_cb (Object individual_obj, ParamSpec ps)
