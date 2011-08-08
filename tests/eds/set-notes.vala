@@ -117,8 +117,8 @@ public class SetNotesTests : Folks.TestCase
 
               foreach (var p in i.personas)
                 {
-                  var notes = new HashSet<Note> ();
-                  var note = new Note(this._note);
+                  var notes = new HashSet<NoteFieldDetails> ();
+                  var note = new NoteFieldDetails (this._note);
                   notes.add (note);
                   ((NoteDetails) p).notes = notes;
                 }
@@ -133,7 +133,7 @@ public class SetNotesTests : Folks.TestCase
       Folks.Individual i = (Folks.Individual) individual_obj;
       foreach (var note in i.notes)
         {
-          if (note.content == this._note)
+          if (note.equal (new NoteFieldDetails (this._note)))
             {
               this._found_after_update = true;
               this._main_loop.quit ();

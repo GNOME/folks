@@ -290,7 +290,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
             }
           else if (k == Folks.PersonaStore.detail_key (PersonaDetail.NOTES))
             {
-              var notes = (Gee.HashSet<Note>) v.get_object ();
+              var notes = (Gee.HashSet<NoteFieldDetails>) v.get_object ();
               yield this._set_contact_notes (contact, notes);
             }
           else if (k == Folks.PersonaStore.detail_key (PersonaDetail.GENDER))
@@ -923,7 +923,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
     }
 
   internal async void _set_notes (Edsf.Persona persona,
-      Set<Note> notes)
+      Set<NoteFieldDetails> notes)
     {
       try
         {
@@ -937,7 +937,8 @@ public class Edsf.PersonaStore : Folks.PersonaStore
         }
     }
 
-  private async void _set_contact_notes (E.Contact contact, Set<Note> notes)
+  private async void _set_contact_notes (E.Contact contact,
+      Set<NoteFieldDetails> notes)
     {
       string note_str = "";
       foreach (var note in notes)
@@ -946,7 +947,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
             {
               note_str += ". ";
             }
-          note_str += note.content;
+          note_str += note.value;
         }
 
       contact.set (E.Contact.field_id ("note"), note_str);

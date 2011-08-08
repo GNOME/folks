@@ -392,7 +392,8 @@ private class Folks.Inspect.Utils
         }
       else if (prop_name == "notes")
         {
-          Set<Note> notes = (Set<Note>) prop_value.get_object ();
+          Set<NoteFieldDetails> notes =
+              prop_value.get_object () as Set<NoteFieldDetails>;
 
           output_string = "{ ";
           bool first = true;

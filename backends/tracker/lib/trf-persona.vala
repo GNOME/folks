@@ -229,13 +229,13 @@ public class Trf.Persona : Folks.Persona,
         }
     }
 
-  private HashSet<Note> _notes;
-  private Set<Note> _notes_ro;
+  private HashSet<NoteFieldDetails> _notes;
+  private Set<NoteFieldDetails> _notes_ro;
 
   /**
    * {@inheritDoc}
    */
-  public Set<Note> notes
+  public Set<NoteFieldDetails> notes
     {
       get { return this._notes_ro; }
       set
@@ -417,8 +417,9 @@ public class Trf.Persona : Folks.Persona,
       this._roles = new HashSet<Role> ((GLib.HashFunc) Role.hash,
           (GLib.EqualFunc) Role.equal);
       this._roles_ro = this._roles.read_only_view;
-      this._notes = new HashSet<Note> ((GLib.HashFunc) Note.hash,
-          (GLib.EqualFunc) Note.equal);
+      this._notes = new HashSet<NoteFieldDetails> (
+          (GLib.HashFunc) NoteFieldDetails.hash,
+          (GLib.EqualFunc) NoteFieldDetails.equal);
       this._notes_ro = this._notes.read_only_view;
       this._urls = new HashSet<FieldDetails> ((GLib.HashFunc) FieldDetails.hash,
           (GLib.EqualFunc) FieldDetails.equal);
@@ -707,7 +708,7 @@ public class Trf.Persona : Folks.Persona,
     {
       if (note_content != null)
         {
-          var note = new Note (note_content);
+          var note = new NoteFieldDetails (note_content);
           this._notes.add ((owned) note);
         }
       else

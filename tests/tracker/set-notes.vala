@@ -30,7 +30,7 @@ public class SetNotesTests : Folks.TestCase
   private IndividualAggregator _aggregator;
   private string _persona_fullname;
   private bool _note_found;
-  private Note _note;
+  private NoteFieldDetails _note;
 
   public SetNotesTests ()
     {
@@ -59,7 +59,7 @@ public class SetNotesTests : Folks.TestCase
       c1.set (Trf.OntologyDefs.NCO_FULLNAME, this._persona_fullname);
       this._tracker_backend.add_contact (c1);
 
-      this._note = new Note ("some note");
+      this._note = new NoteFieldDetails ("some note");
 
       this._tracker_backend.set_up ();
 
@@ -110,9 +110,11 @@ public class SetNotesTests : Folks.TestCase
             {
               i.notify["notes"].connect (this._notify_notes_cb);
 
-              Gee.HashSet<Note> notes = new HashSet<Note>
-                  ((GLib.HashFunc) Note.hash, (GLib.EqualFunc) Note.equal);
-              var n = new Note ("some note");
+              Gee.HashSet<NoteFieldDetails> notes =
+                  new HashSet<NoteFieldDetails> (
+                          (GLib.HashFunc) NoteFieldDetails.hash,
+                          (GLib.EqualFunc) NoteFieldDetails.equal);
+              var n = new NoteFieldDetails ("some note");
               notes.add ((owned) n);
 
               foreach (var p in i.personas)
@@ -132,7 +134,7 @@ public class SetNotesTests : Folks.TestCase
         {
           foreach (var n in i.notes)
             {
-              if (Note.equal (n, this._note))
+              if (n.equal (this._note))
                 {
                   this._note_found = true;
                   this._main_loop.quit ();

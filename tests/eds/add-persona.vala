@@ -217,9 +217,11 @@ public class AddPersonaTests : Folks.TestCase
           Folks.PersonaStore.detail_key (PersonaDetail.STRUCTURED_NAME),
           (owned) v7);
 
-      Value? v8 = Value (typeof (Set<Note>));
-      var notes = new HashSet<Note> ();
-      var note = new Note(this._note);
+      Value? v8 = Value (typeof (Set<NoteFieldDetails>));
+      var notes = new HashSet<NoteFieldDetails> (
+          (GLib.HashFunc) NoteFieldDetails.hash,
+          (GLib.EqualFunc) NoteFieldDetails.equal);
+      var note = new NoteFieldDetails (this._note);
       notes.add (note);
       v8.set_object (notes);
       details.insert (
@@ -350,7 +352,7 @@ public class AddPersonaTests : Folks.TestCase
 
       foreach (var note in i.notes)
         {
-          if (note.content == this._note)
+          if (note.equal (new NoteFieldDetails (this._note)))
             {
               this._properties_found.replace ("note", true);
               break;

@@ -536,12 +536,12 @@ public class Trf.PersonaStore : Folks.PersonaStore
             }
           else if (k == Folks.PersonaStore.detail_key (PersonaDetail.NOTES))
             {
-              var notes = (Gee.HashSet<Note>) v.get_object ();
+              var notes = (Gee.HashSet<NoteFieldDetails>) v.get_object ();
               foreach (var n in notes)
                 {
                   builder.subject ("_:p");
                   builder.predicate (Trf.OntologyDefs.NCO_NOTE);
-                  builder.object_string (n.content);
+                  builder.object_string (n.value);
                 }
             }
           else if (k == Folks.PersonaStore.detail_key (
@@ -2078,7 +2078,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
    }
 
   internal async void _set_notes (Folks.Persona persona,
-      Set<Note> notes)
+      Set<NoteFieldDetails> notes)
     {
       const string del_t = "DELETE { " +
         "?p " + Trf.OntologyDefs.NCO_NOTE  + " ?n " +
@@ -2099,7 +2099,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
         {
           builder.subject ("?contact");
           builder.predicate (Trf.OntologyDefs.NCO_NOTE);
-          builder.object_string (n.content);
+          builder.object_string (n.value);
         }
 
       builder.insert_close ();

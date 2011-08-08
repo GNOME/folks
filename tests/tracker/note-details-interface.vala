@@ -112,7 +112,7 @@ public class NoteDetailsInterfaceTests : Folks.TestCase
               i.notify["notes"].connect (this._notify_note_cb);
               foreach (var n in i.notes)
                 {
-                  if (n.content == this._note)
+                  if (n.equal (new NoteFieldDetails (this._note)))
                     {
                       this._found_note = true;
                       this._main_loop.quit ();
@@ -129,7 +129,7 @@ public class NoteDetailsInterfaceTests : Folks.TestCase
       Folks.Individual individual = (Folks.Individual) individual_obj;
       foreach (var n in individual.notes)
         {
-          if (n.content == this._note)
+          if (n.equal (new NoteFieldDetails (this._note)))
             {
               this._found_note = true;
               this._main_loop.quit ();

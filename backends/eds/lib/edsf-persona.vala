@@ -117,8 +117,8 @@ public class Edsf.Persona : Folks.Persona,
   private Set<FieldDetails> _phone_numbers_ro;
   private HashSet<EmailFieldDetails> _email_addresses;
   private Set<EmailFieldDetails> _email_addresses_ro;
-  private HashSet<Note> _notes;
-  private Set<Note> _notes_ro;
+  private HashSet<NoteFieldDetails> _notes;
+  private Set<NoteFieldDetails> _notes_ro;
   private static HashTable<string, E.ContactField> _im_eds_map = null;
 
   private HashSet<PostalAddressFieldDetails> _postal_addresses;
@@ -219,7 +219,7 @@ public class Edsf.Persona : Folks.Persona,
    *
    * @since 0.5.UNRELEASED
    */
-  public Set<Note> notes
+  public Set<NoteFieldDetails> notes
     {
       get { return this._notes_ro; }
       set
@@ -490,7 +490,9 @@ public class Edsf.Persona : Folks.Persona,
           (GLib.HashFunc) EmailFieldDetails.hash,
           (GLib.EqualFunc) EmailFieldDetails.equal);
       this._email_addresses_ro = this._email_addresses.read_only_view;
-      this._notes = new HashSet<Note> ();
+      this._notes = new HashSet<NoteFieldDetails> (
+          (GLib.HashFunc) NoteFieldDetails.hash,
+          (GLib.EqualFunc) NoteFieldDetails.equal);
       this._notes_ro = this._notes.read_only_view;
       this._urls = new HashSet<FieldDetails> ();
       this._urls_ro = this._urls.read_only_view;
@@ -652,7 +654,7 @@ public class Edsf.Persona : Folks.Persona,
       string n = (string) this._get_property ("note");
       if (n != null && n != "")
         {
-          var note = new Note (n);
+          var note = new NoteFieldDetails (n);
           this._notes.add (note);
         }
 

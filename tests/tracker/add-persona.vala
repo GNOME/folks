@@ -247,10 +247,12 @@ public class AddPersonaTests : Folks.TestCase
       details.insert (
           Folks.PersonaStore.detail_key (PersonaDetail.IM_ADDRESSES), v9);
 
-      Value? v10 = Value (typeof (Set<Note>));
-      var notes = new HashSet<Note> ();
-      Note n1 = new Note (this._note_1);
-      notes.add (n1);
+      Value? v10 = Value (typeof (Set<NoteFieldDetails>));
+      var notes = new HashSet<NoteFieldDetails> (
+          (GLib.HashFunc) NoteFieldDetails.hash,
+          (GLib.EqualFunc) NoteFieldDetails.equal);
+      NoteFieldDetails note_fd_1 = new NoteFieldDetails (this._note_1);
+      notes.add (note_fd_1);
       v10.set_object (notes);
       details.insert (Folks.PersonaStore.detail_key (PersonaDetail.NOTES),
           (owned) v10);
@@ -452,7 +454,7 @@ public class AddPersonaTests : Folks.TestCase
 
       foreach (var n in i.notes)
         {
-          if (n.content == this._note_1)
+          if (n.equal (new NoteFieldDetails (this._note_1)))
             {
               this._properties_found.replace ("note-1", true);
             }

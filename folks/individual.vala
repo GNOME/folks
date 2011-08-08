@@ -408,13 +408,13 @@ public class Folks.Individual : Object,
 
   public string? calendar_event_id { get; set; }
 
-  private HashSet<Note> _notes;
-  private Set<Note> _notes_ro;
+  private HashSet<NoteFieldDetails> _notes;
+  private Set<NoteFieldDetails> _notes_ro;
 
   /**
    * {@inheritDoc}
    */
-  public Set<Note> notes
+  public Set<NoteFieldDetails> notes
     {
       get { return this._notes_ro; }
       private set
@@ -715,8 +715,9 @@ public class Folks.Individual : Object,
           (GLib.HashFunc) PostalAddressFieldDetails.hash,
           (GLib.EqualFunc) PostalAddressFieldDetails.equal);
       this._postal_addresses_ro = this._postal_addresses.read_only_view;
-      this._notes = new HashSet<Note>
-          ((GLib.HashFunc) Note.hash, (GLib.EqualFunc) Note.equal);
+      this._notes = new HashSet<NoteFieldDetails> (
+          (GLib.HashFunc) NoteFieldDetails.hash,
+          (GLib.EqualFunc) NoteFieldDetails.equal);
       this._notes_ro = this._notes.read_only_view;
 
       this.personas = personas;

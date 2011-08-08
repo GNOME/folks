@@ -37,6 +37,8 @@ Bugs fixed:
 * Bug 655917 — Rebase EmailDetails.email_addresses upon an
   AbstractFieldDetails-derived class
 * Bug 655374 — Un-break avatar tests
+* Bug 655919 — Rebase NoteDetails.notes upon an AbstractFieldDetails-derived
+  class
 
 API changes:
 * Swf.Persona retains and exposes its libsocialweb Contact
@@ -65,6 +67,8 @@ API changes:
 * Remove PostalAddress.types (obsoleted by PostalAddressFieldDetails.parameters)
 * Add and use ImFieldDetails for ImDetails.im_addresses
 * Add and use EmailFieldDetails for EmailFieldDetails.email_addresses
+* Add and use NoteFieldDetails for NoteFieldDetails.notes
+* Remove Note class (obsoleted by NoteFieldDetails)
 
 Overview of changes from libfolks 0.5.1 to libfolks 0.5.2
 =========================================================

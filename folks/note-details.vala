@@ -22,64 +22,73 @@ using Gee;
 using GLib;
 
 /**
- * Representation of a Note that might be attached to a {@link Persona}.
+ * Object representing a note that can have some parameters associated with it.
  *
- * @since 0.4.0
+ * See {@link Folks.AbstractFieldDetails} for details on common parameter names
+ * and values.
+ *
+ * @since UNRELEASED
  */
-public class Folks.Note : Object
+public class Folks.NoteFieldDetails : AbstractFieldDetails<string>
 {
-  /**
-   * The note's content.
-   */
-  public string content { get; set; }
-
   /**
    * The UID of the note (if any).
    */
   public string uid { get; set; }
 
   /**
-   * Default constructor.
+   * Create a new NoteFieldDetails.
    *
-   * @param content the note's content
-   * @param uid the note's UID (may be null)
-   * @return a new Note
+   * @param value the value of the field
+   * @param parameters initial parameters. See
+   * {@link AbstractFieldDetails.parameters}. A `null` value is equivalent to a
+   * empty map of parameters.
    *
-   * @since 0.4.0
+   * @return a new NoteFieldDetails
+   *
+   * @since UNRELEASED
    */
-  public Note (string content, string? uid = null)
+  public NoteFieldDetails (string value,
+      MultiMap<string, string>? parameters = null,
+      string? uid = null)
     {
-      if (uid == null)
-        {
-          uid = "";
-        }
-
-      Object (uid:                  uid,
-              content:              content);
+      this.value = value;
+      if (parameters != null)
+        this.parameters = parameters;
+      this.uid = uid;
     }
 
   /**
-   * Compare if 2 notes are equal. This compares both their {@link Note.content}
-   * and {@link Note.uid} (if set).
+   * {@inheritDoc}
    *
-   * @param a a note to compare
-   * @param b another note to compare
-   * @return `true` if the notes are equal, `false` otherwise
+   * @since UNRELEASED
    */
-  public static bool equal (Note a, Note b)
+  public override bool equal (AbstractFieldDetails<string> that)
     {
-      return (a.uid == b.uid && a.content == b.content);
+      var that_nfd = that as NoteFieldDetails;
+
+      if (that_nfd == null)
+        return false;
+
+      return (this.uid == that_nfd.uid && this.value == that_nfd.value);
     }
 
   /**
-   * Hash function for the class. Suitable for use as a hash table key.
+   * {@inheritDoc}
    *
-   * @param r a note to hash
-   * @return hash value for the note instance
+   * @since UNRELEASED
    */
-  public static uint hash (Note r)
+  public override uint hash ()
     {
-      return r.uid.hash () + r.content.hash ();
+      uint retval = 0;
+
+      if (this.value != null)
+        retval += this.value.hash ();
+
+      if (this.uid != null)
+        retval += this.uid.hash ();
+
+      return retval;
     }
 }
 
@@ -96,5 +105,5 @@ public interface Folks.NoteDetails : Object
    *
    * @since 0.5.1
    */
-  public abstract Set<Note> notes { get; set; }
+  public abstract Set<NoteFieldDetails> notes { get; set; }
 }
