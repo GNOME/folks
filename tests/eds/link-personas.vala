@@ -212,9 +212,12 @@ public class LinkPersonasTests : Folks.TestCase
         }
       else if (this._linking_method == LinkingMethod.WEB_SERVICE_ADDRESSES)
         {
-          v1 = Value (typeof (MultiMap<string, string>));
-          var wsa1 = new HashMultiMap<string, string> ();
-          wsa1.set ("twitter", this._im_address_1);
+          v1 = Value (typeof (MultiMap<string, WebServiceFieldDetails>));
+          var wsa1 = new HashMultiMap<string, WebServiceFieldDetails> (
+              null, null,
+              (GLib.HashFunc) WebServiceFieldDetails.hash,
+              (GLib.EqualFunc) WebServiceFieldDetails.equal);
+          wsa1.set ("twitter", new WebServiceFieldDetails (this._im_address_1));
           v1.set_object (wsa1);
           details1.insert (wsk, (owned) v1);
         }
@@ -240,9 +243,12 @@ public class LinkPersonasTests : Folks.TestCase
         }
       else if (this._linking_method == LinkingMethod.WEB_SERVICE_ADDRESSES)
         {
-          v3 = Value (typeof (MultiMap<string, string>));
-          var wsa2 = new HashMultiMap<string, string> ();
-          wsa2.set ("lastfm", this._im_address_2);
+          v3 = Value (typeof (MultiMap<string, WebServiceFieldDetails>));
+          var wsa2 = new HashMultiMap<string, WebServiceFieldDetails> (
+              null, null,
+              (GLib.HashFunc) WebServiceFieldDetails.hash,
+              (GLib.EqualFunc) WebServiceFieldDetails.equal);
+          wsa2.set ("lastfm", new WebServiceFieldDetails (this._im_address_2));
           v3.set_object (wsa2);
           details2.insert (wsk, (owned) v3);
         }
@@ -362,14 +368,18 @@ public class LinkPersonasTests : Folks.TestCase
             {
               foreach (var service in i.web_service_addresses.get_keys ())
                 {
-                  var ws_ids = i.web_service_addresses.get (service);
-                  foreach (var ws_id in ws_ids)
+                  var ws_fds = i.web_service_addresses.get (service);
+                  foreach (var ws_fd in ws_fds)
                     {
-                      if (ws_id == this._linking_props.get ("prop1"))
+                      if (ws_fd.equal (
+                            new WebServiceFieldDetails (
+                                this._linking_props.get ("prop1"))))
                         {
                           this._linking_props.unset ("prop1");
                         }
-                      else if (ws_id == this._linking_props.get ("prop2"))
+                      else if (ws_fd.equal (
+                            new WebServiceFieldDetails (
+                                this._linking_props.get ("prop2"))))
                         {
                           this._linking_props.unset ("prop2");
                         }

@@ -97,7 +97,7 @@ public class Folks.Individual : Object,
    * Persona.is_user == true. Iff this is > 0, Individual.is_user == true. */
   private uint _persona_user_count = 0;
   private HashMultiMap<string, ImFieldDetails> _im_addresses;
-  private HashMultiMap<string, string> _web_service_addresses;
+  private HashMultiMap<string, WebServiceFieldDetails> _web_service_addresses;
   private string _nickname = "";
 
   /**
@@ -506,7 +506,7 @@ public class Folks.Individual : Object,
   /**
    * {@inheritDoc}
    */
-  public MultiMap<string, string> web_service_addresses
+  public MultiMap<string, WebServiceFieldDetails> web_service_addresses
     {
       get { return this._web_service_addresses; }
       private set {}
@@ -689,7 +689,11 @@ public class Folks.Individual : Object,
 
       this._im_addresses = new HashMultiMap<string, ImFieldDetails> (
           null, null, ImFieldDetails.hash, (EqualFunc) ImFieldDetails.equal);
-      this._web_service_addresses = new HashMultiMap<string, string> ();
+      this._web_service_addresses =
+        new HashMultiMap<string, WebServiceFieldDetails> (
+            null, null,
+            (GLib.HashFunc) WebServiceFieldDetails.hash,
+            (GLib.EqualFunc) WebServiceFieldDetails.equal);
       this._persona_set =
           new HashSet<Persona> (direct_hash, direct_equal);
       this._persona_set_ro = this._persona_set.read_only_view;
@@ -1107,11 +1111,8 @@ public class Folks.Individual : Object,
                       web_service_details.web_service_addresses.get (
                           cur_web_service);
 
-                  foreach (var address in cur_addresses)
-                    {
-                      this._web_service_addresses.set (cur_web_service,
-                          address);
-                    }
+                  foreach (var ws_fd in cur_addresses)
+                    this._web_service_addresses.set (cur_web_service, ws_fd);
                 }
             }
         }

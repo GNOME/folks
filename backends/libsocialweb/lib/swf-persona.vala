@@ -120,8 +120,11 @@ public class Swf.Persona : Folks.Persona,
       new HashMultiMap<string, ImFieldDetails> (null, null,
           ImFieldDetails.hash, (EqualFunc) ImFieldDetails.equal);
 
-  private HashMultiMap<string, string> _web_service_addresses =
-      new HashMultiMap<string, string> ();
+  private HashMultiMap<string, WebServiceFieldDetails> _web_service_addresses =
+      new HashMultiMap<string, WebServiceFieldDetails> (
+          null, null,
+          (GLib.HashFunc) WebServiceFieldDetails.hash,
+          (GLib.EqualFunc) WebServiceFieldDetails.equal);
 
   /**
    * {@inheritDoc}
@@ -250,7 +253,8 @@ public class Swf.Persona : Folks.Persona,
             }
         }
 
-      this._web_service_addresses.set (service, id);
+      this._web_service_addresses.set (service,
+          new WebServiceFieldDetails (id));
 
       update (contact);
     }

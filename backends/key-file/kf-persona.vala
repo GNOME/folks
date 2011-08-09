@@ -35,7 +35,7 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
 {
   private unowned GLib.KeyFile _key_file;
   private HashMultiMap<string, ImFieldDetails> _im_addresses;
-  private HashMultiMap<string, string> _web_service_addresses;
+  private HashMultiMap<string, WebServiceFieldDetails> _web_service_addresses;
   private string _alias;
   private const string[] _linkable_properties =
     {
@@ -164,7 +164,7 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
   /**
    * {@inheritDoc}
    */
-  public MultiMap<string, string> web_service_addresses
+  public MultiMap<string, WebServiceFieldDetails> web_service_addresses
     {
       get
         { return this._web_service_addresses; }
@@ -176,7 +176,8 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
             {
               try
                 {
-                  this._key_file.remove_key (this.display_id, "web-service." + web_service);
+                  this._key_file.remove_key (this.display_id,
+                      "web-service." + web_service);
                 }
               catch (KeyFileError e)
                 {
@@ -187,22 +188,25 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
 
           /* Add the new web service addresses to the key file and build a
            * table of them to set as the new property value */
-          var web_service_addresses = new HashMultiMap<string, string> ();
+          var web_service_addresses =
+            new HashMultiMap<string, WebServiceFieldDetails> (
+                null, null,
+                (GLib.HashFunc) WebServiceFieldDetails.hash,
+                (GLib.EqualFunc) WebServiceFieldDetails.equal);
 
           foreach (var web_service in value.get_keys ())
             {
-              var addresses = value.get (web_service);
+              var ws_fds = value.get (web_service);
 
-              string[] addrs = (string[]) addresses.to_array ();
-              addrs.length = addresses.size;
+              string[] addrs = new string[0];
+              foreach (var ws_fd in ws_fds)
+                addrs += ws_fd.value;
 
               this._key_file.set_string_list (this.display_id,
                   "web-service." + web_service, addrs);
 
-              foreach (var address in addresses)
-                {
-                  web_service_addresses.set (web_service, address);
-                }
+              foreach (var ws_fd in ws_fds)
+                web_service_addresses.set (web_service, ws_fd);
             }
 
           this._web_service_addresses = web_service_addresses;
@@ -235,7 +239,11 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
       this._key_file = key_file;
       this._im_addresses = new HashMultiMap<string, ImFieldDetails> (
           null, null, ImFieldDetails.hash, (EqualFunc) ImFieldDetails.equal);
-      this._web_service_addresses = new HashMultiMap<string, string> ();
+      this._web_service_addresses =
+        new HashMultiMap<string, WebServiceFieldDetails> (
+            null, null,
+            (GLib.HashFunc) WebServiceFieldDetails.hash,
+            (GLib.EqualFunc) WebServiceFieldDetails.equal);
 
       /* Load the IM addresses from the key file */
       try
@@ -264,7 +272,7 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
                   foreach (var web_service_address in web_service_addresses)
                     {
                       this._web_service_addresses.set (web_service,
-                          web_service_address);
+                          new WebServiceFieldDetails (web_service_address));
                     }
 
                   continue;
@@ -332,8 +340,8 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
               var web_service_addresses =
                   this._web_service_addresses.get (web_service);
 
-              foreach (string address in web_service_addresses)
-                  callback (web_service + ":" + address);
+              foreach (var ws_fd in web_service_addresses)
+                  callback (web_service + ":" + ws_fd.value);
             }
         }
       else

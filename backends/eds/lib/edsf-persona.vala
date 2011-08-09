@@ -127,7 +127,7 @@ public class Edsf.Persona : Folks.Persona,
   private HashSet<string> _local_ids;
   private Set<string> _local_ids_ro;
 
-  private HashMultiMap<string, string> _web_service_addresses;
+  private HashMultiMap<string, WebServiceFieldDetails> _web_service_addresses;
 
   /**
    * The e-d-s contact represented by this Persona
@@ -141,7 +141,7 @@ public class Edsf.Persona : Folks.Persona,
   /**
    * {@inheritDoc}
    */
-  public MultiMap<string, string> web_service_addresses
+  public MultiMap<string, WebServiceFieldDetails> web_service_addresses
     {
       get { return this._web_service_addresses; }
       set
@@ -504,7 +504,11 @@ public class Edsf.Persona : Folks.Persona,
       this._postal_addresses_ro = this._postal_addresses.read_only_view;
       this._local_ids = new HashSet<string> ();
       this._local_ids_ro = this._local_ids.read_only_view;
-      this._web_service_addresses = new HashMultiMap<string, string> ();
+      this._web_service_addresses =
+        new HashMultiMap<string, WebServiceFieldDetails> (
+            null, null,
+            (GLib.HashFunc) WebServiceFieldDetails.hash,
+            (GLib.EqualFunc) WebServiceFieldDetails.equal);
       this._groups = new HashSet<string> ();
       this._groups_ro = this._groups.read_only_view;
 
@@ -543,8 +547,8 @@ public class Edsf.Persona : Folks.Persona,
               var web_service_addresses =
                   this._web_service_addresses.get (web_service);
 
-              foreach (string address in web_service_addresses)
-                  callback (web_service + ":" + address);
+              foreach (var ws_fd in web_service_addresses)
+                  callback (web_service + ":" + ws_fd.value);
             }
         }
       else
@@ -619,7 +623,8 @@ public class Edsf.Persona : Folks.Persona,
               var service_name = service.get_name ().down ();
               foreach (var service_id in service.get_values ())
                 {
-                  this._web_service_addresses.set (service_name, service_id);
+                  this._web_service_addresses.set (service_name,
+                      new WebServiceFieldDetails (service_id));
                 }
             }
         }

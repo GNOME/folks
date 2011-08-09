@@ -1152,8 +1152,15 @@ public class Folks.IndividualAggregator : Object
           this._configured_writeable_store_type_id);
 
       /* `protocols_addrs_set` will be passed to the new Kf.Persona */
-      var protocols_addrs_set = new HashMultiMap<string, ImFieldDetails> ();
-      var web_service_addrs_set = new HashMultiMap<string, string> ();
+      var protocols_addrs_set = new HashMultiMap<string, ImFieldDetails> (
+            null, null,
+            (GLib.HashFunc) ImFieldDetails.hash,
+            (GLib.EqualFunc) ImFieldDetails.equal);
+      var web_service_addrs_set =
+        new HashMultiMap<string, WebServiceFieldDetails> (
+            null, null,
+            (GLib.HashFunc) WebServiceFieldDetails.hash,
+            (GLib.EqualFunc) WebServiceFieldDetails.equal);
 
       /* List of local_ids */
       var local_ids = new Gee.HashSet<string> ();
@@ -1187,10 +1194,8 @@ public class Folks.IndividualAggregator : Object
                   var ws_addresses =
                       ws_details.web_service_addresses.get (web_service);
 
-                  foreach (var ws_address in ws_addresses)
-                    {
-                      web_service_addrs_set.set (web_service, ws_address);
-                    }
+                  foreach (var ws_fd in ws_addresses)
+                    web_service_addrs_set.set (web_service, ws_fd);
                 }
             }
 

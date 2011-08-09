@@ -41,6 +41,8 @@ Bugs fixed:
   class
 * Bug 655920 — Rebase PhoneDetails.numbers upon an AbstractFieldDetails-derived
   class
+* Bug 653682 — Change WebServiceDetails.web_service_addresses to support
+  vCard-like arbitrary parameters
 
 API changes:
 * Swf.Persona retains and exposes its libsocialweb Contact
@@ -73,6 +75,8 @@ API changes:
 * Remove Note class (obsoleted by NoteFieldDetails)
 * Add and use PhoneFieldDetails for PhoneFieldDetails.phone_numbers
 * Remove all PhoneDetails functions (obsoleted by PhoneFieldDetails)
+* Add and use WebServiceFieldDetails for
+  WebServiceFieldDetails.web_service_addresses
 
 Overview of changes from libfolks 0.5.1 to libfolks 0.5.2
 =========================================================

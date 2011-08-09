@@ -283,8 +283,9 @@ public class Edsf.PersonaStore : Folks.PersonaStore
           else if (k == Folks.PersonaStore.detail_key
               (PersonaDetail.WEB_SERVICE_ADDRESSES))
             {
-              HashMultiMap<string, string> web_service_addresses =
-                (HashMultiMap<string, string>) v.get_object ();
+              HashMultiMap<string, WebServiceFieldDetails>
+                web_service_addresses =
+                (HashMultiMap<string, WebServiceFieldDetails>) v.get_object ();
               yield this._set_contact_web_service_addresses (contact,
                   web_service_addresses);
             }
@@ -668,9 +669,9 @@ public class Edsf.PersonaStore : Folks.PersonaStore
     }
 
   internal async void _set_web_service_addresses (Edsf.Persona persona,
-      MultiMap<string, string> web_service_addresses)
+      MultiMap<string, WebServiceFieldDetails> web_service_addresses)
     {
-      if (Utils.multi_map_str_str_equal (persona.web_service_addresses,
+      if (Utils.multi_map_str_afd_equal (persona.web_service_addresses,
             web_service_addresses))
         return;
 
@@ -688,7 +689,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
     }
 
   private async void _set_contact_web_service_addresses (E.Contact contact,
-      MultiMap<string, string> web_service_addresses)
+      MultiMap<string, WebServiceFieldDetails> web_service_addresses)
     {
       var attr = contact.get_attribute ("X-FOLKS-WEB-SERVICES-IDS");
       if (attr != null)
@@ -700,9 +701,9 @@ public class Edsf.PersonaStore : Folks.PersonaStore
       foreach (var service in web_service_addresses.get_keys ())
         {
           var param = new E.VCardAttributeParam (service);
-          foreach (var id in web_service_addresses.get (service))
+          foreach (var ws_fd in web_service_addresses.get (service))
             {
-              param.add_value (id);
+              param.add_value (ws_fd.value);
             }
           attr_n.add_param (param);
         }

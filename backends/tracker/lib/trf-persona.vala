@@ -341,13 +341,16 @@ public class Trf.Persona : Folks.Persona,
         }
     }
 
-  private HashMultiMap<string, string> _web_service_addresses =
-      new HashMultiMap<string, string> ();
+  private HashMultiMap<string, WebServiceFieldDetails> _web_service_addresses =
+      new HashMultiMap<string, WebServiceFieldDetails> (
+          null, null,
+          (GLib.HashFunc) WebServiceFieldDetails.hash,
+          (GLib.EqualFunc) WebServiceFieldDetails.equal);
 
   /**
    * {@inheritDoc}
    */
-  public MultiMap<string, string> web_service_addresses
+  public MultiMap<string, WebServiceFieldDetails> web_service_addresses
     {
       get { return this._web_service_addresses; }
       set
@@ -473,8 +476,8 @@ public class Trf.Persona : Folks.Persona,
               var web_service_addresses =
                   this._web_service_addresses.get (web_service);
 
-              foreach (string address in web_service_addresses)
-                  callback (web_service + ":" + address);
+              foreach (var ws_fd in web_service_addresses)
+                  callback (web_service + ":" + ws_fd.value);
             }
         }
       else
@@ -870,7 +873,7 @@ public class Trf.Persona : Folks.Persona,
   internal bool _set_web_service_addrs (string ws_addrs)
     {
       this._web_service_addresses =
-        (HashMultiMap<string, string>)
+        (HashMultiMap<string, WebServiceFieldDetails>)
             Trf.PersonaStore.unserialize_web_services (ws_addrs);
       this.notify_property ("web-service-addresses");
       return true;

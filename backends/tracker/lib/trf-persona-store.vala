@@ -664,8 +664,8 @@ public class Trf.PersonaStore : Folks.PersonaStore
               Folks.PersonaStore.detail_key (
                   PersonaDetail.WEB_SERVICE_ADDRESSES))
             {
-              MultiMap<string, string> ws_obj =
-                (MultiMap<string, string>) v.get_object ();
+              var ws_obj =
+                (MultiMap<string, WebServiceFieldDetails>) v.get_object ();
 
               var ws_addrs = Trf.PersonaStore.serialize_web_services (ws_obj);
 
@@ -732,7 +732,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
    * @since 0.5.1
    */
   public static string serialize_web_services (
-      MultiMap<string, string> ws_obj)
+      MultiMap<string, WebServiceFieldDetails> ws_obj)
     {
       var str = "";
 
@@ -745,16 +745,16 @@ public class Trf.PersonaStore : Folks.PersonaStore
 
           str += service + ":";
 
-          var addrs = ws_obj.get (service);
+          var ws_fds = ws_obj.get (service);
           bool first = true;
-          foreach (var addr in addrs)
+          foreach (var ws_fd in ws_fds)
             {
               if (first == false)
                 {
                   str += ",";
                 }
 
-              str += addr;
+              str += ws_fd.value;
               first = false;
             }
         }
@@ -768,10 +768,14 @@ public class Trf.PersonaStore : Folks.PersonaStore
    *
    * @since 0.5.1
    */
-  public static MultiMap<string, string> unserialize_web_services
-      (string ws_addrs)
+  public static
+    MultiMap<string, WebServiceFieldDetails> unserialize_web_services (
+        string ws_addrs)
     {
-      var ret = new HashMultiMap<string, string> ();
+      var ret = new HashMultiMap<string, WebServiceFieldDetails> (
+          null, null,
+          (GLib.HashFunc) WebServiceFieldDetails.hash,
+          (GLib.EqualFunc) WebServiceFieldDetails.equal);
 
       var services = ws_addrs.split (";");
       foreach (var service_line in services)
@@ -782,7 +786,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
 
             foreach (var a in addrs)
               {
-                ret.set (service_name, a);
+                ret.set (service_name, new WebServiceFieldDetails (a));
               }
           }
 
@@ -1875,7 +1879,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
     }
 
   internal async void _set_web_service_addrs (Trf.Persona persona,
-      MultiMap<string, string> ws_obj)
+      MultiMap<string, WebServiceFieldDetails> ws_obj)
     {
       var ws_addrs = Trf.PersonaStore.serialize_web_services (ws_obj);
       yield this._set_tracker_property (persona,

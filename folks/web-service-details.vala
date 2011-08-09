@@ -21,8 +21,58 @@
 using Gee;
 
 /**
- * web service addresses exposed by an object implementing
- * {@link PresenceDetails}.
+ * Object representing a web service contact that can have some parameters
+ * associated with it.
+ *
+ * See {@link Folks.AbstractFieldDetails}.
+ *
+ * @since UNRELEASED
+ */
+public class Folks.WebServiceFieldDetails : AbstractFieldDetails<string>
+{
+  /**
+   * Create a new WebServiceFieldDetails.
+   *
+   * @param value the value of the field
+   * @param parameters initial parameters. See
+   * {@link AbstractFieldDetails.parameters}. A `null` value is equivalent to an
+   * empty map of parameters.
+   *
+   * @return a new WebServiceFieldDetails
+   *
+   * @since UNRELEASED
+   */
+  public WebServiceFieldDetails (string value,
+      MultiMap<string, string>? parameters = null)
+    {
+      this.value = value;
+      if (parameters != null)
+        this.parameters = parameters;
+    }
+
+  /**
+   * {@inheritDoc}
+   *
+   * @since UNRELEASED
+   */
+  public override bool equal (AbstractFieldDetails<string> that)
+    {
+      return base.equal<string> (that);
+    }
+
+  /**
+   * {@inheritDoc}
+   *
+   * @since UNRELEASED
+   */
+  public override uint hash ()
+    {
+      return base.hash ();
+    }
+}
+
+/**
+ * Web service contact details.
  *
  * @since 0.5.0
  */
@@ -37,9 +87,10 @@ public interface Folks.WebServiceDetails : Object
    * Web service addresses are guaranteed to be unique per web service, but
    * not necessarily unique amongst all web services.
    *
-   * @since 0.5.1
+   * @since UNRELEASED
    */
-  public abstract Gee.MultiMap<string, string> web_service_addresses
+  public abstract
+    Gee.MultiMap<string, WebServiceFieldDetails> web_service_addresses
     {
       get; set;
     }
