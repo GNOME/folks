@@ -45,6 +45,15 @@ public errordomain Folks.IndividualAggregatorError
    * @since 0.3.0
    */
   STORE_OFFLINE,
+
+  /**
+   * The {@link PersonaStore} did not support writing to a property which the
+   * user requested to write to, or which was necessary to write to for storing
+   * linking information.
+   *
+   * @since UNRELEASED
+   */
+  PROPERTY_NOT_WRITEABLE,
 }
 
 /**
@@ -1300,5 +1309,126 @@ public class Folks.IndividualAggregator : Object
               yield this._writeable_store.remove_persona (persona);
             }
         }
+    }
+
+  /**
+   * Ensure that the given property is writeable for the given
+   * {@link Individual}.
+   *
+   * This makes sure that there is at least one {@link Persona} in the
+   * individual which has `property_name` in its
+   * {@link Persona.writeable_properties}. If no such persona exists in the
+   * individual, a new one will be created and linked to the individual. (Note
+   * that due to the design of the aggregator, this will result in the previous
+   * individual being removed and replaced by a new one with the new persona;
+   * listen to the {@link Individual.removed} signal to see the replacement.)
+   *
+   * It may not be possible to create a new persona which has the given property
+   * as writeable. In that case, a
+   * {@link IndividualAggregatorError.NO_WRITEABLE_STORE} or
+   * {@link IndividualAggregatorError.PROPERTY_NOT_WRITEABLE} error will be
+   * thrown.
+   *
+   * @param individual the individual for which `property_name` should be
+   * writeable
+   * @param property_name the name of the property which needs to be writeable
+   * (this should be in lower case using hyphens, e.g. “web-service-addresses”)
+   * @return a persona (new or existing) which has the given property as
+   * writeable
+   *
+   * @since UNRELEASED
+   */
+  public async Persona ensure_individual_property_writeable (
+      Individual individual, string property_name)
+      throws IndividualAggregatorError
+    {
+      debug ("ensure_individual_property_writeable: %s, %s",
+          individual.id, property_name);
+
+      /* See if the individual already contains the property we want. */
+      foreach (var p1 in individual.personas)
+        {
+          if (property_name in p1.writeable_properties)
+            {
+              debug ("    Returning existing persona: %s", p1.uid);
+              return p1;
+            }
+        }
+
+      /* Otherwise, create a new persona in the writeable store. If the
+       * writeable store doesn't exist or doesn't support writing to the given
+       * property, we try the other persona stores. */
+      var details = new HashTable<string, Value?> (str_hash, str_equal);
+      Persona? new_persona = null;
+
+      if (this._writeable_store != null &&
+          property_name in this._writeable_store.always_writeable_properties)
+        {
+          try
+            {
+              debug ("    Using writeable store");
+              new_persona = yield this.add_persona_from_details (null,
+                  this._writeable_store, details);
+            }
+          catch (IndividualAggregatorError e1)
+            {
+              /* Ignore it */
+              new_persona = null;
+            }
+        }
+
+      if (new_persona == null)
+        {
+          foreach (var s in this._stores.values)
+            {
+              if (s == this._writeable_store ||
+                  !(property_name in s.always_writeable_properties))
+                {
+                  /* Skip the store we've just tried */
+                  continue;
+                }
+
+              try
+                {
+                  debug ("    Using store %s", s.id);
+                  new_persona = yield this.add_persona_from_details (null, s,
+                      details);
+                }
+              catch (IndividualAggregatorError e2)
+                {
+                  /* Ignore it */
+                  new_persona = null;
+                  continue;
+                }
+            }
+        }
+
+      /* Throw an error if we haven't managed to find a suitable store */
+      if (new_persona == null && this._writeable_store == null)
+        {
+          throw new IndividualAggregatorError.NO_WRITEABLE_STORE (
+              _("Can't add personas with no writeable store."));
+        }
+      else if (new_persona == null)
+        {
+          throw new IndividualAggregatorError.PROPERTY_NOT_WRITEABLE (
+              _("Can't write to requested property (“%s”) of the writeable store."),
+              property_name);
+        }
+
+      /* Link the persona to the existing individual */
+      var linking_personas = new HashSet<Persona> ();
+      linking_personas.add (new_persona);
+
+      foreach (var p2 in individual.personas)
+        {
+          linking_personas.add (p2);
+        }
+
+      debug ("    Linking personas to ensure %s property is writeable.",
+          property_name);
+      yield this.link_personas (linking_personas);
+
+      return new_persona;
     }
 }

@@ -3,9 +3,13 @@ Overview of changes from libfolks 0.6.1 to libfolks 0.6.2
 
 Bugs fixed:
 * Bug 645056 — TpLowlevel library should have only static public functions
+* Bug 653777 — Would be nice to have a helper function to create a writable
+  persona
 
 API changes:
 * Add PersonaStore:always-writeable-properties property
+* Add IndividualAggregatorError.PROPERTY_NOT_WRITEABLE error
+* Add IndividualAggregator.ensure_individual_property_writeable()
 
 Overview of changes from libfolks 0.6.0 to libfolks 0.6.1
 =========================================================

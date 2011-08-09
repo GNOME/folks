@@ -56,6 +56,12 @@ public class AggregationTests : Folks.TestCase
       this.add_test ("user", this.test_user);
       this.add_test ("untrusted store", this.test_untrusted_store);
       this.add_test ("refcounting", this.test_linked_individual_refcounting);
+      this.add_test ("ensure individual property writeable:trivial",
+          this.test_ensure_individual_property_writeable_trivial);
+      this.add_test ("ensure individual property writeable:add persona",
+          this.test_ensure_individual_property_writeable_add_persona);
+      this.add_test ("ensure individual property writeable:failure",
+          this.test_ensure_individual_property_writeable_failure);
 
       if (Environment.get_variable ("FOLKS_TEST_VALGRIND") != null)
           this._test_timeout = 10;
@@ -813,6 +819,409 @@ public class AggregationTests : Folks.TestCase
         {
           assert (iter.get_value () == IndividualState.FINALISED);
         }
+    }
+
+  /* Test that if an individual contains a persona with a given writeable
+   * property, calling
+   * IndividualAggregator.ensure_individual_property_writeable() on that
+   * individual and property returns the existing persona.
+   * We do this by creating a single key file persona and ensuring that its
+   * alias property is writeable. */
+  public void test_ensure_individual_property_writeable_trivial ()
+    {
+      var main_loop = new GLib.MainLoop (null, false);
+
+      this._kf_backend.set_up ("[0]\n" +
+          "protocol=travis@example.com\n");
+
+      Individual? individual = null;
+
+      /* Set up the aggregator */
+      var aggregator = new IndividualAggregator ();
+      aggregator.individuals_changed.connect ((added, removed, m, a, r) =>
+        {
+          assert (removed.size == 0);
+          assert (added.size == 1);
+
+          foreach (Individual i in added)
+            {
+              assert (individual == null);
+
+              individual = i;
+              main_loop.quit ();
+            }
+        });
+
+      /* Kill the main loop after a few seconds. */
+      Timeout.add_seconds (this._test_timeout, () =>
+        {
+          main_loop.quit ();
+          return false;
+        });
+
+      Idle.add (() =>
+        {
+          aggregator.prepare.begin ((s,r) =>
+            {
+              try
+                {
+                  aggregator.prepare.end (r);
+                }
+              catch (GLib.Error e1)
+                {
+                  GLib.critical ("Failed to prepare aggregator: %s",
+                    e1.message);
+                  assert_not_reached ();
+                }
+            });
+
+          return false;
+        });
+
+      main_loop.run ();
+
+      /* Check we've got the individual we want */
+      assert (individual != null);
+
+      Persona? persona = null;
+      foreach (var p in individual.personas)
+        {
+          persona = p;
+          break;
+        }
+
+      /* Try and ensure that the alias property is writeable */
+      assert (persona != null);
+      assert ("alias" in persona.writeable_properties);
+
+      Persona? writeable_persona = null;
+
+      /* Kill the main loop after a few seconds. */
+      Timeout.add_seconds (this._test_timeout, () =>
+        {
+          main_loop.quit ();
+          return false;
+        });
+
+      Idle.add (() =>
+        {
+          aggregator.ensure_individual_property_writeable.begin (individual,
+              "alias", (obj, res) =>
+            {
+              try
+                {
+                  writeable_persona =
+                      aggregator.ensure_individual_property_writeable.end (res);
+
+                  main_loop.quit ();
+                }
+              catch (Error e1)
+                {
+                  critical ("Failed to ensure property writeable: %s",
+                      e1.message);
+                  assert_not_reached ();
+                }
+            });
+
+          return false;
+        });
+
+      main_loop.run ();
+
+      assert (writeable_persona != null);
+      assert (writeable_persona == persona);
+
+      /* Clean up for the next test */
+      this._kf_backend.tear_down ();
+      aggregator = null;
+    }
+
+  /* Test that if an individual doesn't contain a persona with a given
+   * writeable property, but a persona store exists which can create personas
+   * with that writeable property, calling
+   * IndividualAggregator.ensure_individual_property_writeable() on that
+   * individual and property will create a new persona and link it to the
+   * existing individual.
+   * We do this by creating an empty key file store and a normal Telepathy
+   * store. We ensure that the im-addresses property of the individual (which
+   * contains only a Tpf.Persona) is writeable, which should result in creating
+   * a Kf.Persona and linking it to the individual. */
+  public void test_ensure_individual_property_writeable_add_persona ()
+    {
+      var main_loop = new GLib.MainLoop (null, false);
+
+      this._kf_backend.set_up ("");
+      void* account_handle = this._tp_backend.add_account ("protocol",
+          "me@example.com", "cm", "account");
+
+      Individual? individual = null;
+
+      /* Set up the aggregator */
+      var aggregator = new IndividualAggregator ();
+      var individuals_changed_id =
+          aggregator.individuals_changed.connect ((added, removed, m, a, r) =>
+        {
+          assert (removed.size == 0);
+
+          foreach (Individual i in added)
+            {
+              /* olivier@example.com */
+              if (i.id == "0e46c5e74f61908f49550d241f2a1651892a1695")
+                {
+                  assert (individual == null);
+                  individual = i;
+                  return;
+                }
+            }
+        });
+
+      /* Kill the main loop after a few seconds. */
+      var timeout_id = Timeout.add_seconds (this._test_timeout, () =>
+        {
+          main_loop.quit ();
+          return false;
+        });
+
+      Idle.add (() =>
+        {
+          aggregator.prepare.begin ((s,r) =>
+            {
+              try
+                {
+                  aggregator.prepare.end (r);
+                }
+              catch (GLib.Error e1)
+                {
+                  GLib.critical ("Failed to prepare aggregator: %s",
+                    e1.message);
+                  assert_not_reached ();
+                }
+            });
+
+          return false;
+        });
+
+      main_loop.run ();
+
+      /* Check we've got the individual we want */
+      assert (individual != null);
+
+      Persona? persona = null;
+      foreach (var p in individual.personas)
+        {
+          persona = p;
+          break;
+        }
+
+      /* Try and ensure that the im-addresses property is not writeable */
+      assert (persona != null);
+      assert (!("im-addresses" in persona.writeable_properties));
+
+      Persona? writeable_persona = null;
+
+      /* Remove the signal handler */
+      aggregator.disconnect (individuals_changed_id);
+      Source.remove (timeout_id);
+      aggregator.individuals_changed.connect ((added, removed, m, a, r) =>
+        {
+          foreach (Individual i in removed)
+            {
+              assert (individual != null);
+              assert (i == individual);
+              individual = null;
+            }
+
+          foreach (Individual i in added)
+            {
+              var got_tpf = false;
+              var got_kf = false;
+
+              /* We can't check for the desired individual by ID, since it's
+               * based on a Kf.Persona UID which is randomly generated. Instead,
+               * we have to check for the personas themselves. */
+              foreach (var p in i.personas)
+                {
+                  if (p.uid == "telepathy:/org/freedesktop/Telepathy/Account/cm/protocol/account:olivier@example.com")
+                    {
+                      got_tpf = true;
+                    }
+                  else if (p.store.type_id == "key-file")
+                    {
+                      got_kf = true;
+                    }
+                }
+
+              if (got_tpf == true && got_kf == true)
+                {
+                  individual = i;
+                  return;
+                }
+            }
+        });
+
+      /* Kill the main loop after a few seconds. */
+      Timeout.add_seconds (this._test_timeout, () =>
+        {
+          main_loop.quit ();
+          return false;
+        });
+
+      Idle.add (() =>
+        {
+          aggregator.ensure_individual_property_writeable.begin (individual,
+              "im-addresses", (obj, res) =>
+            {
+              try
+                {
+                  writeable_persona =
+                      aggregator.ensure_individual_property_writeable.end (res);
+
+                  main_loop.quit ();
+                }
+              catch (Error e1)
+                {
+                  critical ("Failed to ensure property writeable: %s",
+                      e1.message);
+                  assert_not_reached ();
+                }
+            });
+
+          return false;
+        });
+
+      main_loop.run ();
+
+      assert (writeable_persona != null);
+      assert (writeable_persona != persona);
+
+      /* Clean up for the next test */
+      this._tp_backend.remove_account (account_handle);
+      this._kf_backend.tear_down ();
+      individual = null;
+      persona = null;
+      writeable_persona = null;
+      aggregator = null;
+    }
+
+  /* Test that if an individual doesn't contain a persona which has a given
+   * writeable property, and no persona store exists which can create personas
+   * with that writeable property, calling
+   * IndividualAggregator.ensure_individual_property_writeable() on that
+   * individual and property throws an error.
+   * We do this by creating a single key file persona and attempting to ensure
+   * that its is-favourite property is writeable. Since the key file backend
+   * doesn't support is-favourite, and no other backends are available, this
+   * should fail. */
+  public void test_ensure_individual_property_writeable_failure ()
+    {
+      var main_loop = new GLib.MainLoop (null, false);
+
+      this._kf_backend.set_up ("[0]\n" +
+          "protocol=travis@example.com\n");
+
+      Individual? individual = null;
+
+      /* Set up the aggregator */
+      var aggregator = new IndividualAggregator ();
+      aggregator.individuals_changed.connect ((added, removed, m, a, r) =>
+        {
+          assert (removed.size == 0);
+          assert (added.size == 1);
+
+          foreach (Individual i in added)
+            {
+              assert (individual == null);
+
+              individual = i;
+              main_loop.quit ();
+            }
+        });
+
+      /* Kill the main loop after a few seconds. */
+      Timeout.add_seconds (this._test_timeout, () =>
+        {
+          main_loop.quit ();
+          return false;
+        });
+
+      Idle.add (() =>
+        {
+          aggregator.prepare.begin ((s,r) =>
+            {
+              try
+                {
+                  aggregator.prepare.end (r);
+                }
+              catch (GLib.Error e1)
+                {
+                  GLib.critical ("Failed to prepare aggregator: %s",
+                    e1.message);
+                  assert_not_reached ();
+                }
+            });
+
+          return false;
+        });
+
+      main_loop.run ();
+
+      /* Check we've got the individual we want */
+      assert (individual != null);
+
+      Persona? persona = null;
+      foreach (var p in individual.personas)
+        {
+          persona = p;
+          break;
+        }
+
+      /* Try and ensure that the is-favourite property is writeable */
+      assert (persona != null);
+      assert (!("is-favourite" in persona.writeable_properties));
+
+      Persona? writeable_persona = null;
+
+      /* Kill the main loop after a few seconds. */
+      Timeout.add_seconds (this._test_timeout, () =>
+        {
+          main_loop.quit ();
+          return false;
+        });
+
+      Idle.add (() =>
+        {
+          aggregator.ensure_individual_property_writeable.begin (individual,
+              "is-favourite", (obj, res) =>
+            {
+              try
+                {
+                  writeable_persona =
+                      aggregator.ensure_individual_property_writeable.end (res);
+                  assert_not_reached ();
+                }
+              catch (Error e1)
+                {
+                  /* We expect this error */
+                  if (!(e1 is IndividualAggregatorError.PROPERTY_NOT_WRITEABLE))
+                    {
+                      critical ("Wrong error received: %s", e1.message);
+                      assert_not_reached ();
+                    }
+
+                  main_loop.quit ();
+                }
+            });
+
+          return false;
+        });
+
+      main_loop.run ();
+
+      assert (writeable_persona == null);
+
+      /* Clean up for the next test */
+      this._kf_backend.tear_down ();
+      aggregator = null;
     }
 }
 
