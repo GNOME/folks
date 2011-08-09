@@ -234,7 +234,7 @@ if test "x$enable_vala" = "xyes" ; then
         fi
 
         if test x$enable_eds_backend = xyes; then
-          VALA_CHECK_PACKAGES([libxml-2.0])
+          VALA_CHECK_PACKAGES([libebook-1.2 libedataserver-1.2 libxml-2.0])
         fi
 fi
 
