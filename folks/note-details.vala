@@ -64,7 +64,7 @@ public class Folks.Note : Object
    *
    * @param a a note to compare
    * @param b another note to compare
-   * @return `true` if the roles are equal, `false` otherwise
+   * @return `true` if the notes are equal, `false` otherwise
    */
   public static bool equal (Note a, Note b)
     {
