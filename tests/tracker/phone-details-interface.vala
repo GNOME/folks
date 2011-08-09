@@ -113,12 +113,12 @@ public class PhoneDetailsInterfaceTests : Folks.TestCase
             {
               foreach (var phone in i.phone_numbers)
               {
-                if (phone.value == "12345")
+                if (phone.equal (new PhoneFieldDetails ("12345")))
                   {
                     this._found_phone_1 = true;
                     this._num_phones++;
                   }
-                else if (phone.value == "54321")
+                else if (phone.equal (new PhoneFieldDetails ("54321")))
                   {
                     this._found_phone_2 = true;
                     this._num_phones++;

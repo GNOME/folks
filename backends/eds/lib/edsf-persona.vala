@@ -113,8 +113,8 @@ public class Edsf.Persona : Folks.Persona,
       "im-addresses",
       "groups"
     };
-  private HashSet<FieldDetails> _phone_numbers;
-  private Set<FieldDetails> _phone_numbers_ro;
+  private HashSet<PhoneFieldDetails> _phone_numbers;
+  private Set<PhoneFieldDetails> _phone_numbers_ro;
   private HashSet<EmailFieldDetails> _email_addresses;
   private Set<EmailFieldDetails> _email_addresses_ro;
   private HashSet<NoteFieldDetails> _notes;
@@ -191,7 +191,7 @@ public class Edsf.Persona : Folks.Persona,
    *
    * @since 0.5.UNRELEASED
    */
-  public Set<FieldDetails> phone_numbers
+  public Set<PhoneFieldDetails> phone_numbers
     {
       get { return this._phone_numbers_ro; }
       set
@@ -484,7 +484,9 @@ public class Edsf.Persona : Folks.Persona,
 
       this._gender = Gender.UNSPECIFIED;
       this.contact_id = contact_id;
-      this._phone_numbers = new HashSet<FieldDetails> ();
+      this._phone_numbers = new HashSet<PhoneFieldDetails> (
+          (GLib.HashFunc) PhoneFieldDetails.hash,
+          (GLib.EqualFunc) PhoneFieldDetails.equal);
       this._phone_numbers_ro = this._phone_numbers.read_only_view;
       this._email_addresses = new HashSet<EmailFieldDetails> (
           (GLib.HashFunc) EmailFieldDetails.hash,
@@ -924,16 +926,16 @@ public class Edsf.Persona : Folks.Persona,
       var attrs = this.contact.get_attributes (E.ContactField.TEL);
       foreach (var attr in attrs)
         {
-          var fd = new FieldDetails (attr.get_value ());
+          var phone_fd = new PhoneFieldDetails (attr.get_value ());
           foreach (var param in attr.get_params ())
             {
               string param_name = param.get_name ().down ();
               foreach (var param_value in param.get_values ())
                 {
-                  fd.add_parameter (param_name, param_value);
+                  phone_fd.add_parameter (param_name, param_value);
                 }
             }
-          this._phone_numbers.add (fd);
+          this._phone_numbers.add (phone_fd);
         }
 
      this.notify_property ("phone-numbers");

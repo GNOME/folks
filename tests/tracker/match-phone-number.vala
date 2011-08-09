@@ -173,11 +173,11 @@ public class MatchPhoneNumberTests : Folks.TestCase
       details1.insert (Folks.PersonaStore.detail_key (PersonaDetail.FULL_NAME),
           (owned) val);
 
-      val = Value (typeof (Set<FieldDetails>));
-      var phone_numbers1 = new HashSet<FieldDetails> (
-          (GLib.HashFunc) FieldDetails.hash,
-          (GLib.EqualFunc) FieldDetails.equal);
-      var phone_number_1 = new FieldDetails (this._phone_1);
+      val = Value (typeof (Set<PhoneFieldDetails>));
+      var phone_numbers1 = new HashSet<PhoneFieldDetails> (
+          (GLib.HashFunc) PhoneFieldDetails.hash,
+          (GLib.EqualFunc) PhoneFieldDetails.equal);
+      var phone_number_1 = new PhoneFieldDetails (this._phone_1);
       phone_numbers1.add (phone_number_1);
       val.set_object (phone_numbers1);
       details1.insert (
@@ -189,11 +189,11 @@ public class MatchPhoneNumberTests : Folks.TestCase
       details2.insert (Folks.PersonaStore.detail_key (PersonaDetail.FULL_NAME),
           (owned) val);
 
-      val = Value (typeof (Set<FieldDetails>));
-      var phone_numbers2 = new HashSet<FieldDetails> (
-          (GLib.HashFunc) FieldDetails.hash,
-          (GLib.EqualFunc) FieldDetails.equal);
-      var phone_number_2 = new FieldDetails (this._phone_2);
+      val = Value (typeof (Set<PhoneFieldDetails>));
+      var phone_numbers2 = new HashSet<PhoneFieldDetails> (
+          (GLib.HashFunc) PhoneFieldDetails.hash,
+          (GLib.EqualFunc) PhoneFieldDetails.equal);
+      var phone_number_2 = new PhoneFieldDetails (this._phone_2);
       phone_numbers2.add (phone_number_2);
       val.set_object (phone_numbers2);
       details2.insert (

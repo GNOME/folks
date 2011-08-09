@@ -181,12 +181,15 @@ public class AddPersonaTests : Folks.TestCase
       details.insert (
          Folks.PersonaStore.detail_key (PersonaDetail.IM_ADDRESSES), v4);
 
-      Value? v5 = Value (typeof (Set<FieldDetails>));
-      var phones = new HashSet<FieldDetails> ();
-      var phone_1 = new FieldDetails (this._phone_1);
+      Value? v5 = Value (typeof (Set<PhoneFieldDetails>));
+      var phones = new HashSet<PhoneFieldDetails> (
+          (GLib.HashFunc) PhoneFieldDetails.hash,
+          (GLib.EqualFunc) PhoneFieldDetails.equal);
+
+      var phone_1 = new PhoneFieldDetails (this._phone_1);
       phone_1.set_parameter ("type", Edsf.Persona.phone_fields[0]);
       phones.add (phone_1);
-      var phone_2 = new FieldDetails (this._phone_2);
+      var phone_2 = new PhoneFieldDetails (this._phone_2);
       phone_2.set_parameter ("type", Edsf.Persona.phone_fields[1]);
       phones.add (phone_2);
       v5.set_object (phones);
@@ -361,13 +364,13 @@ public class AddPersonaTests : Folks.TestCase
             }
         }
 
-      foreach (var e in i.phone_numbers)
+      foreach (var phone_fd in i.phone_numbers)
         {
-          if (e.value == this._phone_1)
+          if (phone_fd.equal (new PhoneFieldDetails (this._phone_1)))
             {
               this._properties_found.replace ("phone-1", true);
             }
-          else if (e.value == this._phone_2)
+          else if (phone_fd.equal (new PhoneFieldDetails (this._phone_2)))
             {
               this._properties_found.replace ("phone-2", true);
             }

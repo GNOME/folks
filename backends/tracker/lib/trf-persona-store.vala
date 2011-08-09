@@ -547,8 +547,8 @@ public class Trf.PersonaStore : Folks.PersonaStore
           else if (k == Folks.PersonaStore.detail_key (
                 PersonaDetail.PHONE_NUMBERS))
             {
-              Set<FieldDetails> phone_numbers =
-                (Set<FieldDetails>) v.get_object ();
+              Set<PhoneFieldDetails> phone_numbers =
+                (Set<PhoneFieldDetails>) v.get_object ();
               yield this._build_update_query_set (builder, phone_numbers,
                 "_:p", Trf.Attrib.PHONES);
             }
@@ -1950,7 +1950,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
     }
 
   internal async void _set_phones (Folks.Persona persona,
-      Set<FieldDetails> phone_numbers)
+      Set<PhoneFieldDetails> phone_numbers)
     {
       yield this._set_unique_attrib_set (persona, phone_numbers,
           Trf.Attrib.PHONES);

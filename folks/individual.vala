@@ -334,20 +334,20 @@ public class Folks.Individual : Object,
         }
     }
 
-  private HashSet<FieldDetails> _phone_numbers;
-  private Set<FieldDetails> _phone_numbers_ro;
+  private HashSet<PhoneFieldDetails> _phone_numbers;
+  private Set<PhoneFieldDetails> _phone_numbers_ro;
 
   /**
    * {@inheritDoc}
    */
-  public Set<FieldDetails> phone_numbers
+  public Set<PhoneFieldDetails> phone_numbers
     {
       get { return this._phone_numbers_ro; }
       private set
         {
           this._phone_numbers.clear ();
-          foreach (var fd in value)
-            this._phone_numbers.add (fd);
+          foreach (var phone_fd in value)
+            this._phone_numbers.add (phone_fd);
         }
     }
 
@@ -698,9 +698,9 @@ public class Folks.Individual : Object,
       this._urls = new HashSet<FieldDetails> ((GLib.HashFunc) FieldDetails.hash,
           (GLib.EqualFunc) FieldDetails.equal);
       this._urls_ro = this._urls.read_only_view;
-      this._phone_numbers = new HashSet<FieldDetails> (
-          (GLib.HashFunc) FieldDetails.hash,
-          (GLib.EqualFunc) FieldDetails.equal);
+      this._phone_numbers = new HashSet<PhoneFieldDetails> (
+          (GLib.HashFunc) PhoneFieldDetails.hash,
+          (GLib.EqualFunc) PhoneFieldDetails.equal);
       this._phone_numbers_ro = this._phone_numbers.read_only_view;
       this._email_addresses = new HashSet<EmailFieldDetails> (
           (GLib.HashFunc) EmailFieldDetails.hash,
@@ -1343,11 +1343,9 @@ public class Folks.Individual : Object,
     {
       /* Populate the phone numbers as the union of our Personas' numbers
        * If the same number exists multiple times we merge the parameters. */
-      /* FIXME: We should handle phone numbers better, just string comparison
-         doesn't work. */
       var phone_numbers_set =
-          new HashMap<unowned string, unowned FieldDetails> (
-              null, null, (GLib.EqualFunc) FieldDetails.equal);
+          new HashMap<unowned string, unowned PhoneFieldDetails> (
+              null, null, (GLib.EqualFunc) PhoneFieldDetails.equal);
 
       this._phone_numbers.clear ();
 
@@ -1356,19 +1354,19 @@ public class Folks.Individual : Object,
           var phone_details = persona as PhoneDetails;
           if (phone_details != null)
             {
-              foreach (var fd in phone_details.phone_numbers)
+              foreach (var phone_fd in phone_details.phone_numbers)
                 {
-                  if (fd.value == null)
+                  if (phone_fd.value == null)
                     continue;
 
-                  var existing = phone_numbers_set.get (fd.value);
+                  var existing = phone_numbers_set.get (phone_fd.value);
                   if (existing != null)
-                    existing.extend_parameters (fd.parameters);
+                    existing.extend_parameters (phone_fd.parameters);
                   else
                     {
-                      var new_fd = new FieldDetails (fd.value);
-                      new_fd.extend_parameters (fd.parameters);
-                      phone_numbers_set.set (fd.value, new_fd);
+                      var new_fd = new PhoneFieldDetails (phone_fd.value);
+                      new_fd.extend_parameters (phone_fd.parameters);
+                      phone_numbers_set.set (phone_fd.value, new_fd);
                       this._phone_numbers.add (new_fd);
                     }
                 }

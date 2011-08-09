@@ -23,12 +23,15 @@ using GLib;
 using Gee;
 
 /**
- * Interface for classes that can provide a phone number, such as
- * {@link Persona} and {@link Individual}.
+ * Object representing a phone number that can have some parameters associated
+ * with it.
  *
- * @since 0.3.5
+ * See {@link Folks.AbstractFieldDetails} for details on common parameter names
+ * and values.
+ *
+ * @since UNRELEASED
  */
-public interface Folks.PhoneDetails : Object
+public class Folks.PhoneFieldDetails : AbstractFieldDetails<string>
 {
   private const string[] _extension_chars = { "p", "P", "w", "W", "x", "X" };
   private const string[] _common_delimiters = { ",", ".", "(", ")", "-", " ",
@@ -37,29 +40,39 @@ public interface Folks.PhoneDetails : Object
       "5", "6", "7", "8", "9" };
 
   /**
-   * The phone numbers of the contact.
+   * Create a new PhoneFieldDetails.
    *
-   * A list of phone numbers associated to the contact.
+   * @param value the value of the field
+   * @param parameters initial parameters. See
+   * {@link AbstractFieldDetails.parameters}. A `null` value is equivalent to a
+   * empty map of parameters.
    *
-   * @since 0.5.1
+   * @return a new PhoneFieldDetails
+   *
+   * @since UNRELEASED
    */
-  public abstract Set<FieldDetails> phone_numbers { get; set; }
+  public PhoneFieldDetails (string value,
+      MultiMap<string, string>? parameters = null)
+    {
+      this.value = value;
+      if (parameters != null)
+        this.parameters = parameters;
+    }
 
   /**
-   * Normalise and compare two phone numbers.
+   * {@inheritDoc}
    *
-   * @param number1 a phone number to compare
-   * @param number2 another phone number to compare
-   * @return `true` if the phone numbers are equal, `false` otherwise
-   *
-   * @since 0.5.0
+   * @since UNRELEASED
    */
-  public static bool numbers_equal (string number1, string number2)
+  public override bool equal (AbstractFieldDetails<string> that)
     {
-      var n1 =
-        PhoneDetails.drop_extension (PhoneDetails.normalise_number (number1));
-      var n2 =
-        PhoneDetails.drop_extension (PhoneDetails.normalise_number (number2));
+      var that_fd = that as PhoneFieldDetails;
+
+      if (that_fd == null)
+        return false;
+
+      var n1 = this._drop_extension (this.get_normalised ());
+      var n2 = this._drop_extension (that_fd.get_normalised ());
 
       /* Based on http://blog.barisione.org/2010-06/handling-phone-numbers/ */
       if (n1.length >= 7 && n2.length >= 7)
@@ -73,11 +86,21 @@ public interface Folks.PhoneDetails : Object
           return  n1_reduced == n2_reduced;
         }
 
-      return false;
+      return n1 == n2;
     }
 
   /**
-   * Normalise a given phone number.
+   * {@inheritDoc}
+   *
+   * @since UNRELEASED
+   */
+  public override uint hash ()
+    {
+      return base.hash ();
+    }
+
+  /**
+   * Return this object's normalised phone number.
    *
    * Typical normalisations:
    *
@@ -85,56 +108,40 @@ public interface Folks.PhoneDetails : Object
    *  - `+1-800-123-4567` → `18001234567`
    *  - `+1-800-123-4567P123` → `18001234567P123`
    *
-   * @param number the phone number to normalise
    * @return the normalised form of `number`
    *
-   * @since 0.5.0
+   * @since UNRELEASED
    */
-  public static string normalise_number (string number)
+  public string get_normalised ()
     {
       string normalised_number = "";
 
-      for (int i=0; i<number.length; i++)
+      for (int i = 0; i < this.value.length; i++)
         {
-          var digit = number.slice (i, i + 1);
+          var digit = this.value.slice (i, i + 1);
 
           if (i == 0 && digit == "+")
             {
               /* we drop the initial + */
               continue;
             }
-          else if (PhoneDetails.is_extension_digit (digit) ||
-              PhoneDetails.is_valid_digit (digit))
+          else if (digit in this._extension_chars ||
+              digit in this._valid_digits)
             {
               /* lets keep valid digits */
               normalised_number += digit;
             }
-          else if (PhoneDetails.is_common_delimiter (digit))
+          else if (digit in this._common_delimiters)
             {
               continue;
             }
           else
             {
-              debug ("[PhoneDetails.normalise] unknown digit: %s", digit);
+              debug ("[PhoneDetails.get_normalised] unknown digit: %s", digit);
             }
        }
 
       return normalised_number.up ();
-    }
-
-  internal static bool is_extension_digit (string digit)
-    {
-      return digit in PhoneDetails._extension_chars;
-    }
-
-  internal static bool is_valid_digit (string digit)
-    {
-      return digit in PhoneDetails._valid_digits;
-    }
-
-  internal static bool is_common_delimiter  (string digit)
-    {
-      return digit in PhoneDetails._common_delimiters;
     }
 
   /**
@@ -144,18 +151,36 @@ public interface Folks.PhoneDetails : Object
    * @return the number without its extension; if the number didn't have an
    * extension in the first place, the number is returned unmodified
    *
-   * @since 0.5.0
+   * @since UNRELEASED
    */
-  internal static string drop_extension (string number)
+  internal static string _drop_extension (string number)
     {
-      for (var i=0; i < PhoneDetails._extension_chars.length; i++)
+      for (var i = 0; i < PhoneFieldDetails._extension_chars.length; i++)
         {
-          if (number.index_of (PhoneDetails._extension_chars[i]) >= 0)
+          if (number.index_of (PhoneFieldDetails._extension_chars[i]) >= 0)
             {
-              return number.split (PhoneDetails._extension_chars[i])[0];
+              return number.split (PhoneFieldDetails._extension_chars[i])[0];
             }
         }
 
       return number;
     }
+}
+
+/**
+ * Interface for classes that can provide a phone number, such as
+ * {@link Persona} and {@link Individual}.
+ *
+ * @since 0.3.5
+ */
+public interface Folks.PhoneDetails : Object
+{
+  /**
+   * The phone numbers of the contact.
+   *
+   * A list of phone numbers associated to the contact.
+   *
+   * @since UNRELEASED
+   */
+  public abstract Set<PhoneFieldDetails> phone_numbers { get; set; }
 }

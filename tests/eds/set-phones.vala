@@ -115,8 +115,10 @@ public class SetPhonesTests : Folks.TestCase
 
               foreach (var p in i.personas)
                 {
-                  var phones = new HashSet<FieldDetails> ();
-                  var phone_1 = new FieldDetails ("1234");
+                  var phones = new HashSet<PhoneFieldDetails> (
+                      (GLib.HashFunc) PhoneFieldDetails.hash,
+                      (GLib.EqualFunc) PhoneFieldDetails.equal);
+                  var phone_1 = new PhoneFieldDetails ("1234");
                   phone_1.set_parameter ("type", "HOME");
                   phones.add (phone_1);
                   ((PhoneDetails) p).phone_numbers = phones;
@@ -130,9 +132,9 @@ public class SetPhonesTests : Folks.TestCase
   private void _notify_phones_cb (Object individual_obj, ParamSpec ps)
     {
       Folks.Individual i = (Folks.Individual) individual_obj;
-      foreach (var p in i.phone_numbers)
+      foreach (var phone_fd in i.phone_numbers)
         {
-          if (p.value == "1234")
+          if (phone_fd.equal (new PhoneFieldDetails ("1234")))
             {
               this._found_after_update = true;
               this._main_loop.quit ();

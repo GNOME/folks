@@ -149,11 +149,11 @@ public class Folks.PotentialMatch : Object
       var set_a = this._individual_a.phone_numbers;
       var set_b = this._individual_b.phone_numbers;
 
-      foreach (var fd_a in set_a)
+      foreach (var phone_fd_a in set_a)
         {
-          foreach (var fd_b in set_b)
+          foreach (var phone_fd_b in set_b)
             {
-              if (PhoneDetails.numbers_equal (fd_a.value, fd_b.value))
+              if (phone_fd_a.equal (phone_fd_b))
                 {
                   this._result = MatchResult.HIGH;
                   return;

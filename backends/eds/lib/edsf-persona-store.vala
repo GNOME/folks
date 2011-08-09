@@ -255,8 +255,8 @@ public class Edsf.PersonaStore : Folks.PersonaStore
           else if (k == Folks.PersonaStore.detail_key (
                 PersonaDetail.PHONE_NUMBERS))
             {
-              Set<FieldDetails> phone_numbers =
-                (Set<FieldDetails>) v.get_object ();
+              Set<PhoneFieldDetails> phone_numbers =
+                (Set<PhoneFieldDetails>) v.get_object ();
               yield this._set_contact_attributes (contact,
                   phone_numbers, "TEL",
                   E.ContactField.TEL);
@@ -798,7 +798,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
     }
 
   internal async void _set_phones (Edsf.Persona persona,
-      Set<FieldDetails> phones)
+      Set<PhoneFieldDetails> phones)
     {
       try
         {

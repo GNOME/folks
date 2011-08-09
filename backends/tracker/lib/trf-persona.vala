@@ -49,8 +49,8 @@ public class Trf.Persona : Folks.Persona,
   private bool _is_favourite;
   private const string[] _linkable_properties =
       {"im-addresses", "local-ids", "web-service-addresses"};
-  private HashSet<FieldDetails> _phone_numbers;
-  private Set<FieldDetails> _phone_numbers_ro;
+  private HashSet<PhoneFieldDetails> _phone_numbers;
+  private Set<PhoneFieldDetails> _phone_numbers_ro;
   private HashSet<EmailFieldDetails> _email_addresses;
   private Set<EmailFieldDetails> _email_addresses_ro;
   private weak Sparql.Cursor _cursor;
@@ -96,7 +96,7 @@ public class Trf.Persona : Folks.Persona,
   /**
    * {@inheritDoc}
    */
-  public Set<FieldDetails> phone_numbers
+  public Set<PhoneFieldDetails> phone_numbers
     {
       get { return this._phone_numbers_ro; }
       public set
@@ -406,9 +406,9 @@ public class Trf.Persona : Folks.Persona,
       this._full_name = fullname;
       this._tracker_id = tracker_id;
       this._structured_name = new StructuredName (null, null, null, null, null);
-      this._phone_numbers = new HashSet<FieldDetails> (
-          (GLib.HashFunc) FieldDetails.hash,
-          (GLib.EqualFunc) FieldDetails.equal);
+      this._phone_numbers = new HashSet<PhoneFieldDetails> (
+          (GLib.HashFunc) PhoneFieldDetails.hash,
+          (GLib.EqualFunc) PhoneFieldDetails.equal);
       this._phone_numbers_ro = this._phone_numbers.read_only_view;
       this._email_addresses = new HashSet<EmailFieldDetails> (
           (GLib.HashFunc) EmailFieldDetails.hash,
@@ -977,8 +977,9 @@ public class Trf.Persona : Folks.Persona,
           return;
         }
 
-      var phones = new HashSet<FieldDetails> ((GLib.HashFunc) FieldDetails.hash,
-          (GLib.EqualFunc) FieldDetails.equal);
+      var phones = new HashSet<PhoneFieldDetails> (
+          (GLib.HashFunc) PhoneFieldDetails.hash,
+          (GLib.EqualFunc) PhoneFieldDetails.equal);
       string[] phones_a = phones_field.split ("\n");
 
       foreach (var p in phones_a)
@@ -986,10 +987,11 @@ public class Trf.Persona : Folks.Persona,
           if (p != null && p != "")
             {
               string[] p_info = p.split ("\t");
-              var fd = new FieldDetails (p_info[Trf.PhoneFields.PHONE]);
-              fd.set_parameter ("tracker_id",
+              var phone_fd =
+                new PhoneFieldDetails (p_info[Trf.PhoneFields.PHONE]);
+              phone_fd.set_parameter ("tracker_id",
                   p_info[Trf.PhoneFields.TRACKER_ID]);
-              phones.add (fd);
+              phones.add (phone_fd);
             }
         }
 
@@ -1012,9 +1014,9 @@ public class Trf.Persona : Folks.Persona,
 
       if (!found)
         {
-          var fd = new FieldDetails (phone);
-          fd.set_parameter ("tracker_id", tracker_id);
-          this._phone_numbers.add (fd);
+          var phone_fd = new PhoneFieldDetails (phone);
+          phone_fd.set_parameter ("tracker_id", tracker_id);
+          this._phone_numbers.add (phone_fd);
           this.notify_property ("phone-numbers");
         }
 

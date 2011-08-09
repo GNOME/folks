@@ -113,12 +113,13 @@ public class SetPhonesTests : Folks.TestCase
             {
               i.notify["phone-numbers"].connect (this._notify_phones_cb);
 
-              var phones = new HashSet<FieldDetails> (
-                  (GLib.HashFunc) FieldDetails.hash,
-                  (GLib.EqualFunc) FieldDetails.equal);
-              var p1 = new FieldDetails (this._phone_1);
+              var phones = new HashSet<PhoneFieldDetails> (
+                  (GLib.HashFunc) PhoneFieldDetails.hash,
+                  (GLib.EqualFunc) PhoneFieldDetails.equal);
+
+              var p1 = new PhoneFieldDetails (this._phone_1);
               phones.add (p1);
-              var p2 = new FieldDetails (this._phone_2);
+              var p2 = new PhoneFieldDetails (this._phone_2);
               phones.add (p2);
 
               foreach (var p in i.personas)
@@ -138,9 +139,9 @@ public class SetPhonesTests : Folks.TestCase
         {
           foreach (var p in i.phone_numbers)
             {
-              if (p.value == this._phone_1)
+              if (p.equal (new PhoneFieldDetails (this._phone_1)))
                 this._phone_1_found = true;
-              else if (p.value == this._phone_2)
+              else if (p.equal (new PhoneFieldDetails (this._phone_2)))
                 this._phone_2_found = true;
             }
         }

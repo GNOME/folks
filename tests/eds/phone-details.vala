@@ -160,10 +160,10 @@ public class PhoneDetailsTests : Folks.TestCase
 
           contact.unset ("full_name");
           var phone_numbers = (Folks.PhoneDetails) i;
-          foreach (var p in phone_numbers.phone_numbers)
+          foreach (var phone_fd in phone_numbers.phone_numbers)
             {
               this._phones_count++;
-              foreach (var t in p.get_parameter_values ("type"))
+              foreach (var t in phone_fd.get_parameter_values ("type"))
                 {
                   string? v = null;
 
@@ -186,7 +186,7 @@ public class PhoneDetailsTests : Folks.TestCase
                     }
 
                   this._phone_types.add (v);
-                  assert (contact.get (v).get_string () == p.value);
+                  assert (contact.get (v).get_string () == phone_fd.value);
                   contact.unset (v);
                 }
             }
