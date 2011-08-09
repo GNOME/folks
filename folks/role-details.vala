@@ -35,9 +35,20 @@ public class Folks.Role : Object
   public string organisation_name { get; set; }
 
   /**
-   * The name of the position held.
+   * The title of the position held.
+   *
+   * For example: “Director, Ministry of Silly Walks”
    */
   public string title { get; set; }
+
+  /**
+   * The role of the position.
+   *
+   * For example: “Programmer”
+   *
+   * @since UNRELEASED
+   */
+  public string role { get; set; }
 
   /**
    * The UID that distinguishes this role.
@@ -88,6 +99,7 @@ public class Folks.Role : Object
   public static bool equal (Role a, Role b)
     {
       return (a.title == b.title) &&
+          (a.role == b.role) &&
           (a.organisation_name == b.organisation_name);
     }
 
@@ -99,7 +111,7 @@ public class Folks.Role : Object
    */
   public static uint hash (Role r)
     {
-      return r.organisation_name.hash () + r.title.hash ();
+      return r.organisation_name.hash () ^ r.title.hash () ^ r.role.hash ();
     }
 
   /**
@@ -109,8 +121,8 @@ public class Folks.Role : Object
    */
   public string to_string ()
     {
-      var str = _("Title: %s , Organisation: %s");
-      return str.printf (this.title, this.organisation_name);
+      var str = _("Title: %s, Organisation: %s, Role: %s");
+      return str.printf (this.title, this.organisation_name, this.role);
     }
 }
 

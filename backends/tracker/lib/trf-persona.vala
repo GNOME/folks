@@ -751,21 +751,25 @@ public class Trf.Persona : Folks.Persona,
         {
           string[] r_info = r.split ("\t");
           var tracker_id = r_info[Trf.RoleFields.TRACKER_ID];
-          var title = r_info[Trf.RoleFields.ROLE];
+          var role = r_info[Trf.RoleFields.ROLE];
+          var title = r_info[Trf.RoleFields.TITLE];
           var organisation = r_info[Trf.RoleFields.DEPARTMENT];
 
-          var role = new Role (title, organisation, tracker_id);
-          roles.add (role);
+          var new_role = new Role (title, organisation, tracker_id);
+          new_role.role = role;
+          roles.add (new_role);
         }
 
       this._roles = roles;
       this._roles_ro = this._roles.read_only_view;
     }
 
-  internal bool _add_role (string tracker_id, string? title, string? org)
+  internal bool _add_role (string tracker_id, string? role, string? title, string? org)
     {
-      var role = new Role (title, org, tracker_id);
-      if (this._roles.add (role))
+      var new_role = new Role (title, org, tracker_id);
+      new_role.role = role;
+
+      if (this._roles.add (new_role))
         {
           this.notify_property ("roles");
           return true;

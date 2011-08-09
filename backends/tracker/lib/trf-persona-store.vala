@@ -62,6 +62,7 @@ internal enum Trf.AfflInfoFields
   AFFL_TRACKER_ID,
   AFFL_ROLE,
   AFFL_ORG,
+  AFFL_TITLE,
   AFFL_POBOX,
   AFFL_DISTRICT,
   AFFL_COUNTY,
@@ -107,7 +108,8 @@ internal enum Trf.RoleFields
 {
   TRACKER_ID,
   ROLE,
-  DEPARTMENT
+  DEPARTMENT,
+  TITLE
 }
 
 internal enum Trf.IMFields
@@ -236,7 +238,8 @@ public class Trf.PersonaStore : Folks.PersonaStore
     "GROUP_CONCAT " +
     " (fn:concat(tracker:id(?affl), '\t', " +
     "  tracker:coalesce(nco:role(?affl),''), '\t', " +
-    "  tracker:coalesce(nco:department(?affl),'')),  " +
+    "  tracker:coalesce(nco:department(?affl),''), '\t', " +
+    "  tracker:coalesce(nco:title(?affl),'')), " +
     "'\\n') " +
     "WHERE { ?_contact nco:hasAffiliation " +
     "?affl }) " +
@@ -561,9 +564,11 @@ public class Trf.PersonaStore : Folks.PersonaStore
                   builder.predicate ("a");
                   builder.object (Trf.OntologyDefs.NCO_AFFILIATION);
                   builder.predicate (Trf.OntologyDefs.NCO_ROLE);
-                  builder.object_string (r.title);
+                  builder.object_string (r.role);
                   builder.predicate (Trf.OntologyDefs.NCO_ORG);
                   builder.object_string (r.organisation_name);
+                  builder.predicate (Trf.OntologyDefs.NCO_TITLE);
+                  builder.object_string (r.title);
 
                   builder.subject ("_:p");
                   builder.predicate (Trf.OntologyDefs.NCO_HAS_AFFILIATION);
@@ -1461,8 +1466,8 @@ public class Trf.PersonaStore : Folks.PersonaStore
                   if (affl_info.title != null ||
                       affl_info.org != null)
                     {
-                      p._add_role (affl_info.affl_tracker_id, affl_info.title,
-                          affl_info.org);
+                      p._add_role (affl_info.affl_tracker_id, affl_info.role,
+                          affl_info.title, affl_info.org);
                     }
                 }
 
@@ -1639,6 +1644,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
         "tracker:id(?a) " +
         Trf.OntologyDefs.NCO_ROLE + "(?a) " +
         Trf.OntologyDefs.NCO_ORG + "(?a) " +
+        Trf.OntologyDefs.NCO_TITLE + "(?a) " +
         Trf.OntologyDefs.NCO_POBOX + "(?postal) " +
         Trf.OntologyDefs.NCO_DISTRICT + "(?postal) " +
         Trf.OntologyDefs.NCO_COUNTY + "(?postal) " +
@@ -1687,10 +1693,12 @@ public class Trf.PersonaStore : Folks.PersonaStore
 
               affl_info.affl_tracker_id = cursor.get_string
                   (Trf.AfflInfoFields.AFFL_TRACKER_ID).dup ();
-              affl_info.title = cursor.get_string
+              affl_info.role = cursor.get_string
                   (Trf.AfflInfoFields.AFFL_ROLE).dup ();
               affl_info.org = cursor.get_string
                   (Trf.AfflInfoFields.AFFL_ORG).dup ();
+              affl_info.title = cursor.get_string
+                  (Trf.AfflInfoFields.AFFL_TITLE).dup ();
 
               var po_box = cursor.get_string
                   (Trf.AfflInfoFields.AFFL_POBOX).dup ();
@@ -2030,6 +2038,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
         " " + Trf.OntologyDefs.NCO_HAS_AFFILIATION + " ?a . " +
         " OPTIONAL { ?a " + Trf.OntologyDefs.NCO_ORG +  " ?o } . " +
         " OPTIONAL { ?a " + Trf.OntologyDefs.NCO_ROLE + " ?r } . " +
+        " OPTIONAL { ?a " + Trf.OntologyDefs.NCO_TITLE + " ?t } . " +
         " FILTER(tracker:id(?p) = %s) " +
         "} ";
 
@@ -2048,9 +2057,11 @@ public class Trf.PersonaStore : Folks.PersonaStore
           builder.predicate ("a");
           builder.object (Trf.OntologyDefs.NCO_AFFILIATION);
           builder.predicate (Trf.OntologyDefs.NCO_ROLE);
-          builder.object_string (r.title);
+          builder.object_string (r.role);
           builder.predicate (Trf.OntologyDefs.NCO_ORG);
           builder.object_string (r.organisation_name);
+          builder.predicate (Trf.OntologyDefs.NCO_TITLE);
+          builder.object_string (r.title);
           builder.subject ("?contact");
           builder.predicate (Trf.OntologyDefs.NCO_HAS_AFFILIATION);
           builder.object (affl);

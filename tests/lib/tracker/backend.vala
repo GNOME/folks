@@ -304,7 +304,7 @@ public class TrackerTest.Backend
           " . <%smyaffiliation> nco:hasIMAddress " +
           " <%s>  ";
       const string af_t = " . <affl:001> a nco:Affiliation; " +
-          "nco:role '%s'; nco:department '%s' ";
+          "nco:title '%s'; nco:department '%s'; nco:role '%s' ";
       const string postal_t = " . <affl:001> a nco:Affiliation ; " +
           "nco:hasPostalAddress <postal:001> . " +
           " <postal:001> a nco:PostalAddress ; " +
@@ -485,7 +485,7 @@ public class TrackerTest.Backend
       if (affiliation != "")
         {
           string[] role_info = affiliation.split (",");
-          q += af_t.printf (role_info[0], role_info[1]);
+          q += af_t.printf (role_info[0], role_info[1], role_info[2]);
         }
 
       if (postal_address != "")

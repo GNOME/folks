@@ -60,6 +60,7 @@ public class SetRolesTests : Folks.TestCase
       this._tracker_backend.add_contact (c1);
 
       this._role = new Role ("some title", "some organisation");
+      this._role.role = "some role";
 
       this._tracker_backend.set_up ();
 
@@ -113,6 +114,7 @@ public class SetRolesTests : Folks.TestCase
               Gee.HashSet<Role> roles = new HashSet<Role>
                   ((GLib.HashFunc) Role.hash, (GLib.EqualFunc) Role.equal);
               var r = new Role ("some title", "some organisation");
+              r.role = "some role";
               roles.add ((owned) r);
 
               foreach (var p in i.personas)

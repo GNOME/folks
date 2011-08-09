@@ -54,6 +54,8 @@ internal class Trf.AfflInfo : Object
 
   public string org  { get; set; }
 
+  public string role { get; set; }
+
   public Folks.PostalAddress postal_address;
 
   public string email { get; set; }
@@ -151,6 +153,7 @@ public class Trf.OntologyDefs : Object
   public static const string NCO_COUNTRY = "nco:country";
   public static const string NCO_REGION = "nco:region";
   public static const string NCO_ROLE = "nco:role";
+  public static const string NCO_TITLE = "nco:title";
   public static const string NCO_ORG = "nco:org";
   public static const string NCO_URL_PREFIX =
       "<http://www.semanticdesktop.org/ontologies/2007/03/22/";

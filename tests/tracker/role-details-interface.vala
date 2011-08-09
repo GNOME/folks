@@ -56,7 +56,7 @@ public class RoleDetailsInterfaceTests : Folks.TestCase
       this._main_loop = new GLib.MainLoop (null, false);
       Gee.HashMap<string, string> c1 = new Gee.HashMap<string, string> ();
       this._fullname = "persona #1";
-      this._affiliaton = "boss,Company";
+      this._affiliaton = "boss,Company,Role";
 
       c1.set (Trf.OntologyDefs.NCO_FULLNAME, this._fullname);
       c1.set (Trf.OntologyDefs.NCO_HAS_AFFILIATION, this._affiliaton);
@@ -112,7 +112,8 @@ public class RoleDetailsInterfaceTests : Folks.TestCase
               foreach (var role in i.roles)
                 {
                   if (role.title == "boss" &&
-                      role.organisation_name == "Company")
+                      role.organisation_name == "Company" &&
+                      role.role == "Role")
                     {
                       this._found_role = true;
                       this._main_loop.quit ();

@@ -47,6 +47,7 @@ public class AddPersonaTests : Folks.TestCase
   private string _phone_2;
   private string _title_1;
   private string _organisation_1;
+  private string _role_1;
   private PostalAddress _address;
   private string _po_box = "12345";
   private string _locality = "locality";
@@ -97,6 +98,7 @@ public class AddPersonaTests : Folks.TestCase
       this._phone_2 = "54321";
       this._title_1 = "CFO";
       this._organisation_1 = "Example Inc.";
+      this._role_1 = "Role";
 
       var types =  new HashSet<string> ();
       this._address = new PostalAddress (this._po_box,
@@ -263,6 +265,7 @@ public class AddPersonaTests : Folks.TestCase
       Value? v12 = Value (typeof (Set<Role>));
       var roles = new HashSet<Role> ();
       Role r1 = new Role (this._title_1, this._organisation_1);
+      r1.role = this._role_1;
       roles.add (r1);
       v12.set_object (roles);
       details.insert (Folks.PersonaStore.detail_key (PersonaDetail.ROLES),
@@ -461,7 +464,8 @@ public class AddPersonaTests : Folks.TestCase
       foreach (var r in i.roles)
         {
           if (r.title == this._title_1 &&
-              r.organisation_name == this._organisation_1)
+              r.organisation_name == this._organisation_1 &&
+              r.role == this._role_1)
             {
               this._properties_found.replace ("role-1", true);
             }
