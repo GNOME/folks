@@ -20,11 +20,11 @@
 using Gee;
 using Folks;
 
-public class FieldDetailsTests : Folks.TestCase
+public class EmailFieldDetailsTests : Folks.TestCase
 {
-  public FieldDetailsTests ()
+  public EmailFieldDetailsTests ()
     {
-      base ("FieldDetails");
+      base ("EmailFieldDetails");
       this.add_test ("parameter replacement", this.test_param_replacement);
       this.add_test ("simple equality", this.test_simple_equality);
       this.add_test ("parameter equality", this.test_params_equality);
@@ -45,10 +45,10 @@ public class FieldDetailsTests : Folks.TestCase
       string param_name = "metasyntactic-variables";
       string[] values_1 = {"foo", "bar", "baz"};
       string[] values_2 = {"qux", "quxx"};
-      FieldDetails details;
+      EmailFieldDetails details;
       Collection<string> values;
 
-      details = new FieldDetails (param_name);
+      details = new EmailFieldDetails (param_name);
 
       foreach (var val in values_1)
         details.add_parameter (param_name, val);
@@ -93,9 +93,9 @@ public class FieldDetailsTests : Folks.TestCase
 
   public void test_simple_equality ()
     {
-      FieldDetails details_a_1 = new FieldDetails ("foo");
-      FieldDetails details_a_2 = new FieldDetails ("foo");
-      FieldDetails details_b_1 = new FieldDetails ("bar");
+      EmailFieldDetails details_a_1 = new EmailFieldDetails ("foo");
+      EmailFieldDetails details_a_2 = new EmailFieldDetails ("foo");
+      EmailFieldDetails details_b_1 = new EmailFieldDetails ("bar");
 
       /* Very-basic comparisons */
       assert (details_a_1.equal (details_a_2));
@@ -106,8 +106,8 @@ public class FieldDetailsTests : Folks.TestCase
 
   public void test_params_equality ()
     {
-      FieldDetails details_a_1 = new FieldDetails ("foo");
-      FieldDetails details_a_2 = new FieldDetails ("foo");
+      EmailFieldDetails details_a_1 = new EmailFieldDetails ("foo");
+      EmailFieldDetails details_a_2 = new EmailFieldDetails ("foo");
 
       /* Add the parameters differently to the two instances to ensure these
        * methods work as expected */
@@ -162,7 +162,7 @@ public class FieldDetailsTests : Folks.TestCase
       assert (!details_a_1.equal (details_b_1));
 
       /* Comparing different derived classes */
-      FieldDetails details_c_1 = new FieldDetails ("foo@example.org");
+      EmailFieldDetails details_c_1 = new EmailFieldDetails ("foo@example.org");
       assert (!details_a_1.equal (details_c_1));
     }
 }
@@ -172,7 +172,7 @@ public int main (string[] args)
   Test.init (ref args);
 
   TestSuite root = TestSuite.get_root ();
-  root.add_suite (new FieldDetailsTests ().get_suite ());
+  root.add_suite (new EmailFieldDetailsTests ().get_suite ());
 
   Test.run ();
 

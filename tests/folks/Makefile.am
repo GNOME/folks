@@ -39,7 +39,7 @@ AM_VALAFLAGS = \
 
 # in order from least to most complex
 noinst_PROGRAMS = \
-	field-details \
+	abstract-field-details \
 	utils \
 	backend-loading \
 	aggregation \
@@ -69,8 +69,8 @@ aggregation_SOURCES = \
 	aggregation.vala \
 	$(NULL)
 
-field_details_SOURCES = \
-	field-details.vala \
+abstract_field_details_SOURCES = \
+	abstract-field-details.vala \
 	$(NULL)
 
 utils_SOURCES = \
@@ -95,7 +95,7 @@ MAINTAINERCLEANFILES = \
         $(addsuffix .c,$(noinst_PROGRAMS)) \
         backend_loading_vala.stamp \
         aggregation_vala.stamp \
-        field_details_vala.stamp \
+        abstract_field_details_vala.stamp \
         utils_vala.stamp \
         avatar_cache_vala.stamp \
         object_cache_vala.stamp \

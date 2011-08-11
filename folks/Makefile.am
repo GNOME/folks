@@ -20,7 +20,6 @@ libfolks_la_SOURCES = \
 	birthday-details.vala \
 	email-details.vala \
 	favourite-details.vala \
-	field-details.vala \
 	gender-details.vala \
 	group-details.vala \
 	web-service-details.vala \

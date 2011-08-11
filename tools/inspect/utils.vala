@@ -346,8 +346,8 @@ private class Folks.Inspect.Utils
         {
           output_string = "{ ";
           bool first = true;
-          Set<FieldDetails> prop_list =
-              (Set<FieldDetails>) prop_value.get_object ();
+          var prop_list =
+              (Set<AbstractFieldDetails<string>>) prop_value.get_object ();
 
           foreach (var p in prop_list)
             {
