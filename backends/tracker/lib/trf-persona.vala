@@ -214,13 +214,13 @@ public class Trf.Persona : Folks.Persona,
       private set {}
     }
 
-  private HashSet<Role> _roles;
-  private Set<Role> _roles_ro;
+  private HashSet<RoleFieldDetails> _roles;
+  private Set<RoleFieldDetails> _roles_ro;
 
   /**
    * {@inheritDoc}
    */
-  public Set<Role> roles
+  public Set<RoleFieldDetails> roles
     {
       get { return this._roles_ro; }
       public set
@@ -417,8 +417,9 @@ public class Trf.Persona : Folks.Persona,
           (GLib.HashFunc) EmailFieldDetails.hash,
           (GLib.EqualFunc) EmailFieldDetails.equal);
       this._email_addresses_ro = this._email_addresses.read_only_view;
-      this._roles = new HashSet<Role> ((GLib.HashFunc) Role.hash,
-          (GLib.EqualFunc) Role.equal);
+      this._roles = new HashSet<RoleFieldDetails> (
+          (GLib.HashFunc) RoleFieldDetails.hash,
+          (GLib.EqualFunc) RoleFieldDetails.equal);
       this._roles_ro = this._roles.read_only_view;
       this._notes = new HashSet<NoteFieldDetails> (
           (GLib.HashFunc) NoteFieldDetails.hash,
@@ -756,9 +757,9 @@ public class Trf.Persona : Folks.Persona,
           return;
         }
 
-      HashSet<Role> roles = new HashSet<Role> (
-          (GLib.HashFunc) Role.hash,
-          (GLib.EqualFunc) Role.equal);
+      HashSet<RoleFieldDetails> role_fds = new HashSet<RoleFieldDetails> (
+          (GLib.HashFunc) RoleFieldDetails.hash,
+          (GLib.EqualFunc) RoleFieldDetails.equal);
 
       string[] roles_a = roles_field.split ("\n");
 
@@ -772,10 +773,11 @@ public class Trf.Persona : Folks.Persona,
 
           var new_role = new Role (title, organisation, tracker_id);
           new_role.role = role;
-          roles.add (new_role);
+          var role_fd = new RoleFieldDetails (new_role);
+          role_fds.add (role_fd);
         }
 
-      this._roles = roles;
+      this._roles = role_fds;
       this._roles_ro = this._roles.read_only_view;
     }
 
@@ -783,8 +785,8 @@ public class Trf.Persona : Folks.Persona,
     {
       var new_role = new Role (title, org, tracker_id);
       new_role.role = role;
-
-      if (this._roles.add (new_role))
+      var role_fd = new RoleFieldDetails (new_role);
+      if (this._roles.add (role_fd))
         {
           this.notify_property ("roles");
           return true;
@@ -794,11 +796,11 @@ public class Trf.Persona : Folks.Persona,
 
   internal bool _remove_role (string tracker_id)
     {
-      foreach (var r in this._roles)
+      foreach (var role_fd in this._roles)
         {
-          if (r.uid == tracker_id)
+          if (role_fd.value.uid == tracker_id)
             {
-              this._roles.remove (r);
+              this._roles.remove (role_fd);
               this.notify_property ("roles");
               return true;
             }

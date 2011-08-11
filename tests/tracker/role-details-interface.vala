@@ -109,11 +109,12 @@ public class RoleDetailsInterfaceTests : Folks.TestCase
         {
           if (i.full_name == this._fullname)
             {
-              foreach (var role in i.roles)
+              foreach (var role_fd in i.roles)
                 {
-                  if (role.title == "boss" &&
-                      role.organisation_name == "Company" &&
-                      role.role == "Role")
+                  var role_expected = new Role ("boss", "Company");
+                  role_expected.role = "Role";
+                  var role_fd_expected = new RoleFieldDetails (role_expected);
+                  if (role_fd.equal (role_fd_expected))
                     {
                       this._found_role = true;
                       this._main_loop.quit ();

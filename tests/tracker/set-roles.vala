@@ -30,7 +30,7 @@ public class SetRolesTests : Folks.TestCase
   private IndividualAggregator _aggregator;
   private string _persona_fullname;
   private bool _role_found;
-  private Role _role;
+  private RoleFieldDetails _role_fd;
 
   public SetRolesTests ()
     {
@@ -59,8 +59,9 @@ public class SetRolesTests : Folks.TestCase
       c1.set (Trf.OntologyDefs.NCO_FULLNAME, this._persona_fullname);
       this._tracker_backend.add_contact (c1);
 
-      this._role = new Role ("some title", "some organisation");
-      this._role.role = "some role";
+      var role = new Role ("some title", "some organisation");
+      role.role = "some role";
+      this._role_fd = new RoleFieldDetails (role);
 
       this._tracker_backend.set_up ();
 
@@ -111,15 +112,18 @@ public class SetRolesTests : Folks.TestCase
             {
               i.notify["roles"].connect (this._notify_roles_cb);
 
-              Gee.HashSet<Role> roles = new HashSet<Role>
-                  ((GLib.HashFunc) Role.hash, (GLib.EqualFunc) Role.equal);
-              var r = new Role ("some title", "some organisation");
-              r.role = "some role";
-              roles.add ((owned) r);
+              Gee.HashSet<RoleFieldDetails> role_fds =
+                new HashSet<RoleFieldDetails>
+                  ((GLib.HashFunc) RoleFieldDetails.hash,
+                   (GLib.EqualFunc) RoleFieldDetails.equal);
+              var role = new Role ("some title", "some organisation");
+              role.role = "some role";
+              var role_fd = new RoleFieldDetails (role);
+              role_fds.add ((owned) role_fd);
 
               foreach (var p in i.personas)
                 {
-                  ((RoleDetails) p).roles = roles;
+                  ((RoleDetails) p).roles = role_fds;
                 }
             }
         }
@@ -132,9 +136,9 @@ public class SetRolesTests : Folks.TestCase
       Folks.Individual i = (Folks.Individual) individual_obj;
       if (i.full_name == this._persona_fullname)
         {
-          foreach (var r in i.roles)
+          foreach (var role_fd in i.roles)
             {
-              if (Role.equal (r, this._role))
+              if (role_fd.equal (this._role_fd))
                 {
                   this._role_found = true;
                   this._main_loop.quit ();

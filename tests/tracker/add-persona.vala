@@ -272,11 +272,14 @@ public class AddPersonaTests : Folks.TestCase
           (owned) v11);
 
       Value? v12 = Value (typeof (Set<Role>));
-      var roles = new HashSet<Role> ();
-      Role r1 = new Role (this._title_1, this._organisation_1);
+      var role_fds = new HashSet<RoleFieldDetails> (
+          (GLib.HashFunc) RoleFieldDetails.hash,
+          (GLib.EqualFunc) RoleFieldDetails.equal);
+      var r1 = new Role (this._title_1, this._organisation_1);
       r1.role = this._role_1;
-      roles.add (r1);
-      v12.set_object (roles);
+      var role_fd1 = new RoleFieldDetails (r1);
+      role_fds.add (role_fd1);
+      v12.set_object (role_fds);
       details.insert (Folks.PersonaStore.detail_key (PersonaDetail.ROLES),
           (owned) v12);
 
@@ -474,14 +477,13 @@ public class AddPersonaTests : Folks.TestCase
             }
         }
 
-      foreach (var r in i.roles)
+      foreach (var role_fd in i.roles)
         {
-          if (r.title == this._title_1 &&
-              r.organisation_name == this._organisation_1 &&
-              r.role == this._role_1)
-            {
-              this._properties_found.replace ("role-1", true);
-            }
+          var role_expected = new Role (this._title_1, this._organisation_1);
+          role_expected.role = this._role_1;
+          var role_fd_expected = new RoleFieldDetails (role_expected);
+          if (role_fd.equal (role_fd_expected))
+            this._properties_found.replace ("role-1", true);
         }
 
       foreach (var pafd in i.postal_addresses)

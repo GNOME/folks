@@ -16,6 +16,7 @@
  *
  * Authors:
  *       Raul Gutierrez Segales <raul.gutierrez.segales@collabora.co.uk>
+ *       Travis Reitter <travis.reitter@collabora.co.uk>
  */
 
 using Gee;
@@ -127,6 +128,62 @@ public class Folks.Role : Object
 }
 
 /**
+ * Object representing details of a contact in an organisation which can have
+ * some parameters associated with it.
+ *
+ * See {@link Folks.AbstractFieldDetails}.
+ *
+ * @since UNRELEASED
+ */
+public class Folks.RoleFieldDetails : AbstractFieldDetails<Role>
+{
+  /**
+   * Create a new RoleFieldDetails.
+   *
+   * @param value the {@link Role}} of the field
+   * @param parameters initial parameters. See
+   * {@link AbstractFieldDetails.parameters}. A `null` value is equivalent to an
+   * empty map of parameters.
+   *
+   * @return a new RoleFieldDetails
+   *
+   * @since UNRELEASED
+   */
+  public RoleFieldDetails (Role value,
+      MultiMap<string, string>? parameters = null)
+    {
+      this.value = value;
+      if (parameters != null)
+        this.parameters = parameters;
+    }
+
+  /**
+   * {@inheritDoc}
+   *
+   * @since UNRELEASED 
+   */
+  public override bool equal (AbstractFieldDetails<string> that)
+    {
+      var that_fd = that as RoleFieldDetails;
+
+      if (that_fd == null)
+        return false;
+
+      return Role.equal (this.value, that_fd.value);
+    }
+
+  /**
+   * {@inheritDoc}
+   *
+   * @since UNRELEASED
+   */
+  public override uint hash ()
+    {
+      return str_hash (this.value.to_string ());
+    }
+}
+
+/**
  * This interfaces represents the list of roles a {@link Persona} and
  * {@link Individual} might have.
  *
@@ -137,7 +194,7 @@ public interface Folks.RoleDetails : Object
   /**
    * The roles of the contact.
    *
-   * @since 0.5.1
+   * @since UNRELEASED
    */
-  public abstract Set<Role> roles { get; set; }
+  public abstract Set<RoleFieldDetails> roles { get; set; }
 }

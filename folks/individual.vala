@@ -368,13 +368,13 @@ public class Folks.Individual : Object,
         }
     }
 
-  private HashSet<Role> _roles;
-  private Set<Role> _roles_ro;
+  private HashSet<RoleFieldDetails> _roles;
+  private Set<RoleFieldDetails> _roles_ro;
 
   /**
    * {@inheritDoc}
    */
-  public Set<Role> roles
+  public Set<RoleFieldDetails> roles
     {
       get { return this._roles_ro; }
       private set
@@ -710,8 +710,9 @@ public class Folks.Individual : Object,
           (GLib.HashFunc) EmailFieldDetails.hash,
           (GLib.EqualFunc) EmailFieldDetails.equal);
       this._email_addresses_ro = this._email_addresses.read_only_view;
-      this._roles = new HashSet<Role>
-          ((GLib.HashFunc) Role.hash, (GLib.EqualFunc) Role.equal);
+      this._roles = new HashSet<RoleFieldDetails> (
+          (GLib.HashFunc) RoleFieldDetails.hash,
+          (GLib.EqualFunc) RoleFieldDetails.equal);
       this._roles_ro = this._roles.read_only_view;
       this._local_ids = new HashSet<string> ();
       this._local_ids_ro = this._local_ids.read_only_view;
@@ -1422,9 +1423,9 @@ public class Folks.Individual : Object,
           var role_details = persona as RoleDetails;
           if (role_details != null)
             {
-              foreach (var r in role_details.roles)
+              foreach (var role_fd in role_details.roles)
                 {
-                  this._roles.add (r);
+                  this._roles.add (role_fd);
                 }
             }
         }

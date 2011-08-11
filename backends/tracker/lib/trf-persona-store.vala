@@ -554,10 +554,10 @@ public class Trf.PersonaStore : Folks.PersonaStore
             }
           else if (k == Folks.PersonaStore.detail_key (PersonaDetail.ROLES))
             {
-              var roles = (Gee.HashSet<Role>) v.get_object ();
+              var roles = (Gee.HashSet<RoleFieldDetails>) v.get_object ();
 
               int roles_cnt = 0;
-              foreach (var r in roles)
+              foreach (var role_fd in roles)
                 {
                   var role_affl = "_:role_affl%d".printf (roles_cnt);
 
@@ -565,11 +565,11 @@ public class Trf.PersonaStore : Folks.PersonaStore
                   builder.predicate ("a");
                   builder.object (Trf.OntologyDefs.NCO_AFFILIATION);
                   builder.predicate (Trf.OntologyDefs.NCO_ROLE);
-                  builder.object_string (r.role);
-                  builder.predicate (Trf.OntologyDefs.NCO_ORG);
-                  builder.object_string (r.organisation_name);
+                  builder.object_string (role_fd.value.role);
                   builder.predicate (Trf.OntologyDefs.NCO_TITLE);
-                  builder.object_string (r.title);
+                  builder.object_string (role_fd.value.title);
+                  builder.predicate (Trf.OntologyDefs.NCO_ORG);
+                  builder.object_string (role_fd.value.organisation_name);
 
                   builder.subject ("_:p");
                   builder.predicate (Trf.OntologyDefs.NCO_HAS_AFFILIATION);
@@ -2030,7 +2030,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
     }
 
   internal async void _set_roles (Folks.Persona persona,
-      Set<Role> roles)
+      Set<RoleFieldDetails> roles)
     {
       const string del_t = "DELETE { " +
         " ?p " + Trf.OntologyDefs.NCO_HAS_AFFILIATION + " ?a " +
@@ -2051,7 +2051,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
       builder.insert_open (null);
 
       int i = 0;
-      foreach (var r in roles)
+      foreach (var role_fd in roles)
         {
           string affl = "_:a%d".printf (i);
 
@@ -2059,11 +2059,11 @@ public class Trf.PersonaStore : Folks.PersonaStore
           builder.predicate ("a");
           builder.object (Trf.OntologyDefs.NCO_AFFILIATION);
           builder.predicate (Trf.OntologyDefs.NCO_ROLE);
-          builder.object_string (r.role);
-          builder.predicate (Trf.OntologyDefs.NCO_ORG);
-          builder.object_string (r.organisation_name);
+          builder.object_string (role_fd.value.role);
           builder.predicate (Trf.OntologyDefs.NCO_TITLE);
-          builder.object_string (r.title);
+          builder.object_string (role_fd.value.title);
+          builder.predicate (Trf.OntologyDefs.NCO_ORG);
+          builder.object_string (role_fd.value.organisation_name);
           builder.subject ("?contact");
           builder.predicate (Trf.OntologyDefs.NCO_HAS_AFFILIATION);
           builder.object (affl);
