@@ -498,6 +498,25 @@ public abstract class Folks.PersonaStore : Object
     }
 
   /**
+   * The names of the properties of the {@link Persona}s in this store which are
+   * always writeable.
+   *
+   * If a property name is in this list, setting the property on a persona
+   * should result in the updated value being stored in the backend's permanent
+   * storage (unless it gets rejected due to being invalid, or a different error
+   * occurs).
+   *
+   * This property value is guaranteed to be constant for a given persona store,
+   * but may vary between persona stores in the same backend. It's guaranteed
+   * that this will always be a subset of the value of
+   * {@link Persona.writeable_properties} for the personas in this persona
+   * store.
+   *
+   * @since UNRELEASED
+   */
+  public abstract string[] always_writeable_properties { get; }
+
+  /**
    * Prepare the PersonaStore for use.
    *
    * This connects the PersonaStore to whichever backend-specific services it

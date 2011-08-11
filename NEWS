@@ -4,6 +4,9 @@ Overview of changes from libfolks 0.6.1 to libfolks 0.6.2
 Bugs fixed:
 * Bug 645056 — TpLowlevel library should have only static public functions
 
+API changes:
+* Add PersonaStore:always-writeable-properties property
+
 Overview of changes from libfolks 0.6.0 to libfolks 0.6.1
 =========================================================
 

@@ -40,6 +40,14 @@ public class Swf.PersonaStore : Folks.PersonaStore
   private ClientService _service;
   private ClientContactView _contact_view;
 
+  /* No writeable properties
+   *
+   * FIXME: we can't mark this as const because Vala gets confused
+   *        and generates the wrong C output (char *arr[0] = {}
+   *        instead of char **arr = NULL)
+   */
+  private static string[] _always_writeable_properties = {};
+
   /**
    * The type of persona store this is.
    *
@@ -107,6 +115,15 @@ public class Swf.PersonaStore : Folks.PersonaStore
       get { return this._is_prepared; }
     }
 
+  /**
+   * {@inheritDoc}
+   *
+   * @since UNRELEASED
+   */
+  public override string[] always_writeable_properties
+    {
+      get { return this._always_writeable_properties; }
+    }
   /**
    * The {@link Persona}s exposed by this PersonaStore.
    *

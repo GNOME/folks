@@ -44,6 +44,22 @@ public class Edsf.PersonaStore : Folks.PersonaStore
   private string _query_str;
   private bool _groups_supported = false;
 
+  private const string[] _always_writeable_properties =
+    {
+      "web-service-addresses",
+      "local-ids",
+      "postal-addresses",
+      "phone-numbers",
+      "email-addresses",
+      "notes",
+      "avatar",
+      "structured-name",
+      "full-name",
+      "nickname",
+      "im-addresses",
+      "groups"
+    };
+
   /**
    * The type of persona store this is.
    *
@@ -134,6 +150,16 @@ public class Edsf.PersonaStore : Folks.PersonaStore
   public override bool is_prepared
     {
       get { return this._is_prepared; }
+    }
+
+  /**
+   * {@inheritDoc}
+   *
+   * @since UNRELEASED
+   */
+  public override string[] always_writeable_properties
+    {
+      get { return this._always_writeable_properties; }
     }
 
   /**

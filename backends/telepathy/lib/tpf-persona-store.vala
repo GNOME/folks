@@ -61,6 +61,11 @@ public class Tpf.PersonaStore : Folks.PersonaStore
         ContactFeature.PRESENCE
       };
 
+  private const string[] _always_writeable_properties =
+    {
+      "is-favourite"
+    };
+
   private HashMap<string, Persona> _personas;
   private Map<string, Persona> _personas_ro;
   private HashSet<Persona> _persona_set;
@@ -168,6 +173,16 @@ public class Tpf.PersonaStore : Folks.PersonaStore
   public override bool is_prepared
     {
       get { return this._is_prepared; }
+    }
+
+  /**
+   * {@inheritDoc}
+   *
+   * @since UNRELEASED
+   */
+  public override string[] always_writeable_properties
+    {
+      get { return this._always_writeable_properties; }
     }
 
   /**

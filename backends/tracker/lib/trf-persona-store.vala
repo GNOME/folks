@@ -287,6 +287,24 @@ public class Trf.PersonaStore : Folks.PersonaStore
     "{ ?_contact a nco:PersonContact . %s } " +
     "ORDER BY tracker:id(?_contact) ";
 
+  private const string[] _always_writeable_properties =
+    {
+      "alias",
+      "phone-numbers",
+      "email-addresses",
+      "avatar",
+      "structured-name",
+      "full-name",
+      "gender",
+      "birthday",
+      "roles",
+      "notes",
+      "urls",
+      "im-addresses",
+      "is-favourite",
+      "local-ids",
+      "web-service-addresses"
+    };
 
   /**
    * The type of persona store this is.
@@ -353,6 +371,16 @@ public class Trf.PersonaStore : Folks.PersonaStore
   public override bool is_prepared
     {
       get { return this._is_prepared; }
+    }
+
+  /**
+   * {@inheritDoc}
+   *
+   * @since UNRELEASED
+   */
+  public override string[] always_writeable_properties
+    {
+      get { return this._always_writeable_properties; }
     }
 
   /**
