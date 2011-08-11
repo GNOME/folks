@@ -337,14 +337,14 @@ public class Edsf.Persona : Folks.Persona,
         }
     }
 
-  private HashSet<FieldDetails> _urls;
-  private Set<FieldDetails> _urls_ro;
+  private HashSet<UrlFieldDetails> _urls;
+  private Set<UrlFieldDetails> _urls_ro;
   /**
    * {@inheritDoc}
    *
    * @since 0.5.UNRELEASED
    */
-  public Set<FieldDetails> urls
+  public Set<UrlFieldDetails> urls
     {
       get { return this._urls_ro; }
       set
@@ -496,7 +496,9 @@ public class Edsf.Persona : Folks.Persona,
           (GLib.HashFunc) NoteFieldDetails.hash,
           (GLib.EqualFunc) NoteFieldDetails.equal);
       this._notes_ro = this._notes.read_only_view;
-      this._urls = new HashSet<FieldDetails> ();
+      this._urls = new HashSet<UrlFieldDetails> (
+          (GLib.HashFunc) UrlFieldDetails.hash,
+          (GLib.EqualFunc) UrlFieldDetails.equal);
       this._urls_ro = this._urls.read_only_view;
       this._postal_addresses = new HashSet<PostalAddressFieldDetails> (
           (GLib.HashFunc) PostalAddressFieldDetails.hash,
@@ -806,7 +808,7 @@ public class Edsf.Persona : Folks.Persona,
           string u = (string) this._get_property (url_property);
           if (u != null && u != "")
             {
-              this._urls.add (new FieldDetails (u));
+              this._urls.add (new UrlFieldDetails (u));
             }
         }
 

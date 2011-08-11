@@ -23,6 +23,57 @@ using GLib;
 using Gee;
 
 /**
+ * Object representing a URL that can have some parameters associated with it.
+ *
+ * See {@link Folks.AbstractFieldDetails} for details on common parameter names
+ * and values.
+ *
+ * @since UNRELEASED
+ */
+public class Folks.UrlFieldDetails : AbstractFieldDetails<string>
+{
+  /**
+   * Create a new UrlFieldDetails.
+   *
+   * @param value the value of the field
+   * @param parameters initial parameters. See
+   * {@link AbstractFieldDetails.parameters}. A `null` value is equivalent to a
+   * empty map of parameters.
+   *
+   * @return a new UrlFieldDetails
+   *
+   * @since UNRELEASED
+   */
+  public UrlFieldDetails (string value,
+      MultiMap<string, string>? parameters = null)
+    {
+      this.value = value;
+      if (parameters != null)
+        this.parameters = parameters;
+    }
+
+  /**
+   * {@inheritDoc}
+   *
+   * @since UNRELEASED
+   */
+  public override bool equal (AbstractFieldDetails<string> that)
+    {
+      return base.equal<string> (that);
+    }
+
+  /**
+   * {@inheritDoc}
+   *
+   * @since UNRELEASED
+   */
+  public override uint hash ()
+    {
+      return base.hash ();
+    }
+}
+
+/**
  * Associates a list of URLs with a contact.
  *
  * @since 0.3.5
@@ -36,5 +87,5 @@ public interface Folks.UrlDetails : Object
    *
    * @since 0.5.1
    */
-  public abstract Set<FieldDetails> urls { get; set; }
+  public abstract Set<UrlFieldDetails> urls { get; set; }
 }

@@ -244,13 +244,13 @@ public class Trf.Persona : Folks.Persona,
         }
     }
 
-  private HashSet<FieldDetails> _urls;
-  private Set<FieldDetails> _urls_ro;
+  private HashSet<UrlFieldDetails> _urls;
+  private Set<UrlFieldDetails> _urls_ro;
 
   /**
    * {@inheritDoc}
    */
-  public Set<FieldDetails> urls
+  public Set<UrlFieldDetails> urls
     {
       get { return this._urls_ro; }
       public set
@@ -425,8 +425,9 @@ public class Trf.Persona : Folks.Persona,
           (GLib.HashFunc) NoteFieldDetails.hash,
           (GLib.EqualFunc) NoteFieldDetails.equal);
       this._notes_ro = this._notes.read_only_view;
-      this._urls = new HashSet<FieldDetails> ((GLib.HashFunc) FieldDetails.hash,
-          (GLib.EqualFunc) FieldDetails.equal);
+      this._urls = new HashSet<UrlFieldDetails> (
+          (GLib.HashFunc) UrlFieldDetails.hash,
+          (GLib.EqualFunc) UrlFieldDetails.equal);
       this._urls_ro = this._urls.read_only_view;
       this._postal_addresses = new HashSet<PostalAddressFieldDetails> (
           (GLib.HashFunc) PostalAddressFieldDetails.hash,
@@ -1130,8 +1131,9 @@ public class Trf.Persona : Folks.Persona,
 
   private void _update_urls ()
     {
-      var urls = new HashSet<FieldDetails> ((GLib.HashFunc) FieldDetails.hash,
-          (GLib.EqualFunc) FieldDetails.equal);
+      var url_fds = new HashSet<UrlFieldDetails> (
+          (GLib.HashFunc) UrlFieldDetails.hash,
+          (GLib.EqualFunc) UrlFieldDetails.equal);
       var _urls_field = this._cursor.get_string (Trf.Fields.URLS).dup ();
 
       if (_urls_field == null)
@@ -1163,14 +1165,14 @@ public class Trf.Persona : Folks.Persona,
                     break;
                 }
 
-              var fd = new FieldDetails (u[i]);
-              fd.set_parameter ("tracker_id", tracker_id);
-              fd.set_parameter ("type", type);
-              urls.add (fd);
+              var url_fd = new UrlFieldDetails (u[i]);
+              url_fd.set_parameter ("tracker_id", tracker_id);
+              url_fd.set_parameter ("type", type);
+              url_fds.add (url_fd);
             }
         }
 
-      this._urls = urls;
+      this._urls = url_fds;
       this._urls_ro = this._urls.read_only_view;
     }
 
@@ -1178,9 +1180,9 @@ public class Trf.Persona : Folks.Persona,
     {
       bool found = false;
 
-      foreach (var p in this._urls)
+      foreach (var url_fd in this._urls)
         {
-          if (p.get_parameter_values ("tracker_id").contains (tracker_id))
+          if (url_fd.get_parameter_values ("tracker_id").contains (tracker_id))
             {
               found = true;
               break;
@@ -1189,10 +1191,10 @@ public class Trf.Persona : Folks.Persona,
 
       if (!found)
         {
-          var fd = new FieldDetails (url);
-          fd.set_parameter ("tracker_id", tracker_id);
-          fd.set_parameter ("type", type);
-          this._urls.add (fd);
+          var url_fd = new UrlFieldDetails (url);
+          url_fd.set_parameter ("tracker_id", tracker_id);
+          url_fd.set_parameter ("type", type);
+          this._urls.add (url_fd);
           this.notify_property ("urls");
         }
 
@@ -1203,11 +1205,11 @@ public class Trf.Persona : Folks.Persona,
     {
       bool found = false;
 
-      foreach (var u in this._urls)
+      foreach (var url_fd in this._urls)
         {
-          if (u.get_parameter_values ("tracker_id").contains (tracker_id))
+          if (url_fd.get_parameter_values ("tracker_id").contains (tracker_id))
             {
-              this._urls.remove (u);
+              this._urls.remove (url_fd);
               found = true;
             }
         }

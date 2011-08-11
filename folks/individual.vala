@@ -317,20 +317,20 @@ public class Folks.Individual : Object,
         }
     }
 
-  private HashSet<FieldDetails> _urls;
-  private Set<FieldDetails> _urls_ro;
+  private HashSet<UrlFieldDetails> _urls;
+  private Set<UrlFieldDetails> _urls_ro;
 
   /**
    * {@inheritDoc}
    */
-  public Set<FieldDetails> urls
+  public Set<UrlFieldDetails> urls
     {
       get { return this._urls_ro; }
       private set
         {
           this._urls.clear ();
-          foreach (var ps in value)
-            this._urls.add (ps);
+          foreach (var url_fd in value)
+            this._urls.add (url_fd);
         }
     }
 
@@ -699,8 +699,9 @@ public class Folks.Individual : Object,
       this._persona_set_ro = this._persona_set.read_only_view;
       this._stores = new HashMap<PersonaStore, uint> (null, null);
       this._gender = Gender.UNSPECIFIED;
-      this._urls = new HashSet<FieldDetails> ((GLib.HashFunc) FieldDetails.hash,
-          (GLib.EqualFunc) FieldDetails.equal);
+      this._urls = new HashSet<UrlFieldDetails> (
+          (GLib.HashFunc) UrlFieldDetails.hash,
+          (GLib.EqualFunc) UrlFieldDetails.equal);
       this._urls_ro = this._urls.read_only_view;
       this._phone_numbers = new HashSet<PhoneFieldDetails> (
           (GLib.HashFunc) PhoneFieldDetails.hash,
@@ -1309,8 +1310,8 @@ public class Folks.Individual : Object,
     {
       /* Populate the URLs as the union of our Personas' URLs.
        * If the same URL exists multiple times we merge the parameters. */
-      var urls_set = new HashMap<unowned string, unowned FieldDetails> (
-          null, null, (GLib.EqualFunc) FieldDetails.equal);
+      var urls_set = new HashMap<unowned string, unowned UrlFieldDetails> (
+          null, null, (GLib.EqualFunc) UrlFieldDetails.equal);
 
       this._urls.clear ();
 
@@ -1319,20 +1320,20 @@ public class Folks.Individual : Object,
           var url_details = persona as UrlDetails;
           if (url_details != null)
             {
-              foreach (var ps in url_details.urls)
+              foreach (var url_fd in url_details.urls)
                 {
-                  if (ps.value == null)
+                  if (url_fd.value == null)
                     continue;
 
-                  var existing = urls_set.get (ps.value);
+                  var existing = urls_set.get (url_fd.value);
                   if (existing != null)
-                    existing.extend_parameters (ps.parameters);
+                    existing.extend_parameters (url_fd.parameters);
                   else
                     {
-                      var new_ps = new FieldDetails (ps.value);
-                      new_ps.extend_parameters (ps.parameters);
-                      urls_set.set (ps.value, new_ps);
-                      this._urls.add (new_ps);
+                      var new_url_fd = new UrlFieldDetails (url_fd.value);
+                      new_url_fd.extend_parameters (url_fd.parameters);
+                      urls_set.set (url_fd.value, new_url_fd);
+                      this._urls.add (new_url_fd);
                     }
                 }
             }

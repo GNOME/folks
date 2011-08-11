@@ -299,12 +299,13 @@ public class AddPersonaTests : Folks.TestCase
           Folks.PersonaStore.detail_key (PersonaDetail.POSTAL_ADDRESSES),
           (owned) v13);
 
-      Value? v14 = Value (typeof (Set<FieldDetails>));
-      var urls = new HashSet<FieldDetails> ((GLib.HashFunc) FieldDetails.hash,
-          (GLib.EqualFunc) FieldDetails.equal);
-      var url_1 = new FieldDetails (this._url_1);
+      Value? v14 = Value (typeof (Set<UrlFieldDetails>));
+      var urls = new HashSet<UrlFieldDetails> (
+          (GLib.HashFunc) UrlFieldDetails.hash,
+          (GLib.EqualFunc) UrlFieldDetails.equal);
+      var url_1 = new UrlFieldDetails (this._url_1);
       urls.add (url_1);
-      var url_2 = new FieldDetails (this._url_2);
+      var url_2 = new UrlFieldDetails (this._url_2);
       urls.add (url_2);
       v14.set_object (urls);
       details.insert (Folks.PersonaStore.detail_key (PersonaDetail.URLS),

@@ -96,23 +96,23 @@ public class Swf.Persona : Folks.Persona,
    */
   public Gender gender { get; private set; }
 
-  private HashSet<FieldDetails> _urls;
-  private Set<FieldDetails> _urls_ro;
+  private HashSet<UrlFieldDetails> _urls;
+  private Set<UrlFieldDetails> _urls_ro;
 
   /**
    * {@inheritDoc}
    */
-  public Set<FieldDetails> urls
+  public Set<UrlFieldDetails> urls
     {
       get { return this._urls_ro; }
       private set
         {
-          this._urls = new HashSet<FieldDetails> (
-              (GLib.HashFunc) FieldDetails.hash,
-              (GLib.EqualFunc) FieldDetails.equal);
+          this._urls = new HashSet<UrlFieldDetails> (
+              (GLib.HashFunc) UrlFieldDetails.hash,
+              (GLib.EqualFunc) UrlFieldDetails.equal);
           this._urls_ro = this._urls.read_only_view;
-          foreach (var ps in value)
-            this._urls.add (ps);
+          foreach (var url_fd in value)
+            this._urls.add (url_fd);
         }
     }
 
@@ -303,17 +303,18 @@ public class Swf.Persona : Folks.Persona,
       if (this.full_name != full_name)
         this.full_name = full_name;
 
-      var urls = new HashSet<FieldDetails> ((GLib.HashFunc) FieldDetails.hash,
-          (GLib.EqualFunc) FieldDetails.equal);
+      var urls = new HashSet<UrlFieldDetails> (
+          (GLib.HashFunc) UrlFieldDetails.hash,
+          (GLib.EqualFunc) UrlFieldDetails.equal);
 
       var website = contact.get_value ("url");
       if (website != null)
-        urls.add (new FieldDetails (website));
+        urls.add (new UrlFieldDetails (website));
 
       /* https://bugzilla.gnome.org/show_bug.cgi?id=645139
       string[] websites = contact.get_value_all ("url");
       foreach (string website in websites)
-        urls.add (new FieldDetails (website));
+        urls.add (new UrlFieldDetails (website));
       */
       if (this.urls != urls)
         this.urls = urls;

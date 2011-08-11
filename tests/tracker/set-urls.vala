@@ -108,22 +108,22 @@ public class SetURLsTests : Folks.TestCase
             {
               i.notify["urls"].connect (this._notify_urls_cb);
 
-              var urls = new HashSet<FieldDetails> (
-                  (GLib.HashFunc) FieldDetails.hash,
-                  (GLib.EqualFunc) FieldDetails.equal);
-              var p1 = new FieldDetails (this._urls.get ("blog"));
+              var url_fds = new HashSet<UrlFieldDetails> (
+                  (GLib.HashFunc) UrlFieldDetails.hash,
+                  (GLib.EqualFunc) UrlFieldDetails.equal);
+              var p1 = new UrlFieldDetails (this._urls.get ("blog"));
               p1.set_parameter ("type", "blog");
-              urls.add (p1);
-              var p2 = new FieldDetails (this._urls.get ("website"));
+              url_fds.add (p1);
+              var p2 = new UrlFieldDetails (this._urls.get ("website"));
               p2.set_parameter ("type", "website");
-              urls.add (p2);
-              var p3 = new FieldDetails (this._urls.get ("url"));
+              url_fds.add (p2);
+              var p3 = new UrlFieldDetails (this._urls.get ("url"));
               p3.set_parameter ("type", "url");
-              urls.add (p3);
+              url_fds.add (p3);
 
               foreach (var p in i.personas)
                 {
-                  ((UrlDetails) p).urls = urls;
+                  ((UrlDetails) p).urls = url_fds;
                 }
             }
         }

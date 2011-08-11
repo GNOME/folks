@@ -623,10 +623,11 @@ public class Trf.PersonaStore : Folks.PersonaStore
             }
           else if (k == Folks.PersonaStore.detail_key (PersonaDetail.URLS))
             {
-              Set<FieldDetails> urls = (Set<FieldDetails>) v.get_object ();
+              Set<UrlFieldDetails> url_fds =
+                (Set<UrlFieldDetails>) v.get_object ();
 
               int url_cnt = 0;
-              foreach (var u in urls)
+              foreach (var url_fd in url_fds)
                 {
                   var url_affl = "_:url_affl%d".printf (url_cnt);
 
@@ -634,7 +635,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
                   builder.predicate ("a");
                   builder.object (Trf.OntologyDefs.NCO_AFFILIATION);
                   builder.predicate (Trf.OntologyDefs.NCO_URL);
-                  builder.object_string (u.value);
+                  builder.object_string (url_fd.value);
 
                   builder.subject ("_:p");
                   builder.predicate (Trf.OntologyDefs.NCO_HAS_AFFILIATION);
@@ -1998,7 +1999,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
     }
 
   internal async void _set_urls (Folks.Persona persona,
-      Set<FieldDetails> urls)
+      Set<UrlFieldDetails> urls)
     {
        yield this._set_attrib_set (persona, urls,
           Trf.Attrib.URLS);
@@ -2382,7 +2383,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
                 builder.object_string (pa.region);
                 break;
               case Trf.Attrib.URLS:
-                fd = (FieldDetails) p;
+                fd = (UrlFieldDetails) p;
                 var type_p = fd.get_parameter_values ("type");
                 if (type_p.contains ("blog"))
                   {
@@ -2392,7 +2393,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
                   {
                     related_connection = Trf.OntologyDefs.NCO_WEBSITE;
                   }
-                attr = "'%s'".printf (((FieldDetails) fd).value);
+                attr = "'%s'".printf (((UrlFieldDetails) fd).value);
                 break;
               case Trf.Attrib.IM_ADDRESSES:
               default:

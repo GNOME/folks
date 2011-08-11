@@ -45,7 +45,7 @@ Bugs fixed:
   vCard-like arbitrary parameters
 * Bug 655921 — Change RoleDetails.roles to support vCard-like arbitrary
   parameters
-
+* Bug 655922 - Rebase UrlDetails.urls upon an AbstractFieldDetails-derived class 
 API changes:
 * Swf.Persona retains and exposes its libsocialweb Contact
 * Add a PresenceDetails.presence_status property
@@ -80,6 +80,7 @@ API changes:
 * Add and use WebServiceFieldDetails for
   WebServiceFieldDetails.web_service_addresses
 * Use RoleFieldDetails for RoleDetails.roles
+* Use UrlFieldDetails for UrlDetails.urls
 
 Overview of changes from libfolks 0.5.1 to libfolks 0.5.2
 =========================================================
