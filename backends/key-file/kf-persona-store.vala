@@ -333,20 +333,6 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
           = val2 != null
           ? (MultiMap<string, WebServiceFieldDetails>) val2.get_object ()
           : null;
-      uint im_addresses_size = (im_addresses == null)
-          ? 0 : im_addresses.size;
-      uint web_service_addresses_size = (web_service_addresses == null)
-          ? 0 : web_service_addresses.size;
-
-      if (im_addresses_size + web_service_addresses_size == 0)
-        {
-          throw new PersonaStoreError.INVALID_ARGUMENT (
-              /* Translators: the first two parameters are identifiers for the
-               * persona store. The third is a pointer address. Do not translate
-               * "im-addresses", as it's an object property name. */
-              _("Persona store (%s, %s) requires the following details:\n    im-addresses (provided: '%p')"),
-              this.type_id, this.id, im_addresses);
-        }
 
       debug ("Adding Persona from details.");
 
@@ -366,9 +352,9 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
        * key file */
       Persona persona = new Kf.Persona (this._key_file, persona_id, this);
       this._personas.set (persona.iid, persona);
-      if (im_addresses_size > 0)
+      if (im_addresses != null)
         persona.im_addresses = im_addresses;
-      if (web_service_addresses_size > 0)
+      if (web_service_addresses != null)
         persona.web_service_addresses = web_service_addresses;
 
       /* FIXME: GroupDetails.ChangeReason is not the right enum to use here */
