@@ -145,6 +145,70 @@ public class Folks.Individual : Object,
       set { this.change_avatar.begin (value); } /* not writeable */
     }
 
+  /*
+   * Change the individual's avatar.
+   *
+   * It's preferred to call this rather than setting {@link Individual.avatar}
+   * directly, as this method gives error notification and will only return once
+   * the avatar has been written to the relevant backing stores (or the
+   * operation's failed).
+   *
+   * Setting this property is only guaranteed to succeed (and be written to
+   * the backing store) if
+   * {@link IndividualAggregator.ensure_individual_property_writeable} has been
+   * called successfully on the individual for the property name `avatar`.
+   *
+   * @param avatar the new avatar (or `null` to unset the avatar)
+   * @throws PropertyError if setting the avatar failed
+   * @since UNRELEASED
+   */
+  public async void change_avatar (LoadableIcon? avatar) throws PropertyError
+    {
+      if ((this._avatar != null && this._avatar.equal (avatar)) ||
+          (this._avatar == null && avatar == null))
+        {
+          return;
+        }
+
+      debug ("Setting avatar of individual '%s' to '%p'…", this.id, avatar);
+
+      PropertyError? persona_error = null;
+      var avatar_changed = false;
+
+      /* Try to write it to only the writeable Personas which have the
+       * "avatar" property as writeable. */
+      foreach (var p in this._persona_set)
+        {
+          var a = p as AvatarDetails;
+          if (a != null && p.store.is_writeable == true &&
+              "avatar" in p.writeable_properties)
+            {
+              try
+                {
+                  yield a.change_avatar (avatar);
+                  debug ("    written to writeable persona '%s'", p.uid);
+                  avatar_changed = true;
+                }
+              catch (PropertyError e)
+                {
+                  /* Store the first error so we can throw it if setting the
+                   * avatar fails on every other persona. */
+                  if (persona_error == null)
+                    {
+                      persona_error = e;
+                    }
+                }
+            }
+        }
+
+      /* Failure? */
+      if (avatar_changed == false)
+        {
+          assert (persona_error != null);
+          throw persona_error;
+        }
+    }
+
   /**
    * {@inheritDoc}
    */

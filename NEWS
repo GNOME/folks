@@ -7,6 +7,11 @@ Bugs fixed:
 * Bug 658874 — Typo?
 * Bug 658730 — ngettext (Plural forms) needed for
   "Imported %u buddies from '%s'."
+* Bug 633781 — Allow to set avatar on individuals
+
+API changes:
+* Individual.avatar is now settable using Individual.change_avatar() (not new
+  API, but it no longer always returns an error)
 
 Overview of changes from libfolks 0.6.2 to libfolks 0.6.2.1
 ===========================================================

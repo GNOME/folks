@@ -38,6 +38,8 @@ public class SetAvatarTests : Folks.TestCase
       this._eds_backend = new EdsTest.Backend ();
 
       this.add_test ("setting avatar on e-d-s persona", this.test_set_avatar);
+      this.add_test ("setting avatar on e-d-s individual",
+          this.test_set_individual_avatar);
     }
 
   public override void set_up ()
@@ -70,7 +72,7 @@ public class SetAvatarTests : Folks.TestCase
 
       this._test_set_avatar_async ();
 
-      Timeout.add_seconds (5, () => {
+      var timeout_id = Timeout.add_seconds (5, () => {
             this._main_loop.quit ();
             assert_not_reached ();
           });
@@ -79,6 +81,10 @@ public class SetAvatarTests : Folks.TestCase
 
       assert (this._found_before_update);
       assert (this._found_after_update);
+
+      Source.remove (timeout_id);
+      this._aggregator = null;
+      this._main_loop = null;
     }
 
   private async void _test_set_avatar_async ()
@@ -149,6 +155,152 @@ public class SetAvatarTests : Folks.TestCase
                 }
             });
         }
+    }
+
+  void test_set_individual_avatar ()
+    {
+      var c1 = new Gee.HashMap<string, Value?> ();
+      this._main_loop = new GLib.MainLoop (null, false);
+      var avatar_path = Environment.get_variable ("AVATAR_FILE_PATH");
+      this._avatar = new FileIcon (File.new_for_path (avatar_path));
+      Value? v;
+
+      this._found_before_update = false;
+      this._found_after_update = false;
+
+      this._eds_backend.reset ();
+
+      v = Value (typeof (string));
+      v.set_string ("John McClane");
+      c1.set ("full_name", (owned) v);
+      this._eds_backend.add_contact (c1);
+
+      this._test_set_individual_avatar_async ();
+
+      var timeout_id = Timeout.add_seconds (5, () =>
+        {
+          this._main_loop.quit ();
+          assert_not_reached ();
+        });
+
+      this._main_loop.run ();
+
+      assert (this._found_before_update);
+      assert (this._found_after_update);
+
+      Source.remove (timeout_id);
+      this._aggregator = null;
+      this._main_loop = null;
+    }
+
+  private async void _test_set_individual_avatar_async ()
+    {
+      yield this._eds_backend.commit_contacts_to_addressbook ();
+
+      var store = BackendStore.dup ();
+      yield store.prepare ();
+
+      this._aggregator = new IndividualAggregator ();
+      this._aggregator.individuals_changed_detailed.connect ((changes) =>
+        {
+          var added = changes.get_values ();
+          var removed = changes.get_keys ();
+
+          foreach (Individual i in added)
+            {
+              assert (i != null);
+
+              var name = (Folks.NameDetails) i;
+
+              if (name.full_name == "John McClane")
+                {
+                  i.notify["avatar"].connect (
+                      this._notify_individual_avatar_cb);
+                  this._found_before_update = true;
+
+                  /* Just set the avatar on the individual */
+                  i.change_avatar.begin (this._avatar, (obj, res) =>
+                    {
+                      try
+                        {
+                          i.change_avatar.end (res);
+
+                          assert (this._found_before_update == true);
+                          assert (this._found_after_update == true);
+
+                          this._check_individual_has_avatar.begin (i,
+                              (obj, res) =>
+                            {
+                              assert (
+                                  this._check_individual_has_avatar.end (res)
+                                      == true);
+
+                              this._main_loop.quit ();
+                            });
+                        }
+                      catch (PropertyError e)
+                        {
+                          critical ("Unexpected error changing avatar: %s",
+                              e.message);
+                        }
+                    });
+                }
+            }
+
+          assert (removed.size == 1);
+
+          foreach (var i in removed)
+            {
+              assert (i == null);
+            }
+        });
+
+      try
+        {
+          yield this._aggregator.prepare ();
+        }
+      catch (GLib.Error e)
+        {
+          GLib.warning ("Error when calling prepare: %s\n", e.message);
+        }
+    }
+
+  private void _notify_individual_avatar_cb (Object individual_obj,
+      ParamSpec ps)
+    {
+      /* Note: we can't check whether the avatar's correct here, as that's an
+       * async operation, and if we start that operation in this signal
+       * callback it'll probably end up finishing after the rest of the code in
+       * _test_set_individual_avatar_async() has already failed. */
+      this._found_after_update = true;
+    }
+
+  private async bool _check_individual_has_avatar (Individual i)
+    {
+      var name = (Folks.NameDetails) i;
+
+      if (name.full_name == "John McClane")
+        {
+          var individual_equal = yield TestUtils.loadable_icons_content_equal (
+              i.avatar, this._avatar, -1);
+
+          if (individual_equal == true)
+            {
+              foreach (var p in i.personas)
+                {
+                  var persona_equal =
+                      yield TestUtils.loadable_icons_content_equal (
+                          (p as AvatarDetails).avatar, this._avatar, -1);
+
+                  if (p.store.type_id == "eds" && persona_equal == true)
+                    {
+                      return true;
+                    }
+                }
+            }
+        }
+
+      return false;
     }
 }
 
