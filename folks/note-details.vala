@@ -27,7 +27,7 @@ using GLib;
  * See {@link Folks.AbstractFieldDetails} for details on common parameter names
  * and values.
  *
- * @since UNRELEASED
+ * @since 0.6.0
  */
 public class Folks.NoteFieldDetails : AbstractFieldDetails<string>
 {
@@ -46,7 +46,7 @@ public class Folks.NoteFieldDetails : AbstractFieldDetails<string>
    *
    * @return a new NoteFieldDetails
    *
-   * @since UNRELEASED
+   * @since 0.6.0
    */
   public NoteFieldDetails (string value,
       MultiMap<string, string>? parameters = null,
@@ -61,7 +61,7 @@ public class Folks.NoteFieldDetails : AbstractFieldDetails<string>
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.6.0
    */
   public override bool equal (AbstractFieldDetails<string> that)
     {
@@ -76,7 +76,7 @@ public class Folks.NoteFieldDetails : AbstractFieldDetails<string>
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.6.0
    */
   public override uint hash ()
     {

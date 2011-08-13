@@ -26,7 +26,7 @@ using Gee;
  *
  * See {@link Folks.AbstractFieldDetails}.
  *
- * @since UNRELEASED
+ * @since 0.6.0
  */
 public class Folks.WebServiceFieldDetails : AbstractFieldDetails<string>
 {
@@ -40,7 +40,7 @@ public class Folks.WebServiceFieldDetails : AbstractFieldDetails<string>
    *
    * @return a new WebServiceFieldDetails
    *
-   * @since UNRELEASED
+   * @since 0.6.0
    */
   public WebServiceFieldDetails (string value,
       MultiMap<string, string>? parameters = null)
@@ -53,7 +53,7 @@ public class Folks.WebServiceFieldDetails : AbstractFieldDetails<string>
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.6.0
    */
   public override bool equal (AbstractFieldDetails<string> that)
     {
@@ -63,7 +63,7 @@ public class Folks.WebServiceFieldDetails : AbstractFieldDetails<string>
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.6.0
    */
   public override uint hash ()
     {
@@ -87,7 +87,7 @@ public interface Folks.WebServiceDetails : Object
    * Web service addresses are guaranteed to be unique per web service, but
    * not necessarily unique amongst all web services.
    *
-   * @since UNRELEASED
+   * @since 0.6.0
    */
   public abstract
     Gee.MultiMap<string, WebServiceFieldDetails> web_service_addresses

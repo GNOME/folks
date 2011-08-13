@@ -128,7 +128,7 @@ public class Trf.Persona : Folks.Persona,
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.6.0
    */
   public override string[] writeable_properties
     {
@@ -141,7 +141,7 @@ public class Trf.Persona : Folks.Persona,
    *
    * See {@link Folks.AvatarDetails.avatar}.
    *
-   * @since UNRELEASED
+   * @since 0.6.0
    */
   public LoadableIcon? avatar
     {

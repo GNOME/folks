@@ -38,7 +38,7 @@ using Folks;
  *  # In contact list? (`b`)
  *  # Avatar file URI (`s`)
  *
- * @since UNRELEASED
+ * @since 0.6.0
  */
 internal class Tpf.PersonaStoreCache : Folks.ObjectCache<Tpf.Persona>
 {

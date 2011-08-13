@@ -33,7 +33,7 @@ public interface Folks.AvatarDetails : Object
    * `null` if unset. Otherwise, the image data may be asynchronously loaded
    * using the methods of the {@link GLib.LoadableIcon} implementation.
    *
-   * @since UNRELEASED
+   * @since 0.6.0
    */
   public abstract LoadableIcon? avatar { get; set; }
 }

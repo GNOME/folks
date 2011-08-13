@@ -55,7 +55,7 @@ public class Swf.Persona : Folks.Persona,
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.6.0
    */
   public override string[] writeable_properties
     {
@@ -67,7 +67,7 @@ public class Swf.Persona : Folks.Persona,
    *
    * See {@link Folks.AvatarDetails.avatar}.
    *
-   * @since UNRELEASED
+   * @since 0.6.0
    */
   public LoadableIcon? avatar { get; private set; }
 

@@ -71,7 +71,7 @@ public class Tpf.Persona : Folks.Persona,
    *
    * See {@link Folks.AvatarDetails.avatar}.
    *
-   * @since UNRELEASED
+   * @since 0.6.0
    */
   public LoadableIcon? avatar { get; private set; }
 
@@ -87,7 +87,7 @@ public class Tpf.Persona : Folks.Persona,
    *
    * See {@link Folks.PresenceDetails.presence_status}.
    *
-   * @since 0.5.UNRELEASED
+   * @since 0.6.0
    */
   public string presence_status { get; private set; }
 
@@ -111,7 +111,7 @@ public class Tpf.Persona : Folks.Persona,
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.6.0
    */
   public override string[] writeable_properties
     {
@@ -377,7 +377,7 @@ public class Tpf.Persona : Folks.Persona,
    * have no avatar.
    * @return A new {@link Tpf.Persona} representing the cached persona.
    *
-   * @since 0.5.UNRELEASED
+   * @since 0.6.0
    */
   internal Persona.from_cache (PersonaStore store, string uid, string iid,
       string im_address, string protocol, HashSet<string> groups,

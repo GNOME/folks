@@ -108,7 +108,7 @@ public interface Folks.PresenceDetails : Object
    * well-known set of strings, as defined in the Telepathy specification:
    * [[http://telepathy.freedesktop.org/spec/Connection_Interface_Simple_Presence.html#description|Telepathy Specification]]
    *
-   * @since 0.5.UNRELEASED
+   * @since 0.6.0
    */
   public abstract string presence_status { get; set; default = ""; }
 

@@ -29,7 +29,7 @@ using Gee;
  * See {@link Folks.AbstractFieldDetails} for details on common parameter names
  * and values.
  *
- * @since UNRELEASED
+ * @since 0.6.0
  */
 public class Folks.PhoneFieldDetails : AbstractFieldDetails<string>
 {
@@ -49,7 +49,7 @@ public class Folks.PhoneFieldDetails : AbstractFieldDetails<string>
    *
    * @return a new PhoneFieldDetails
    *
-   * @since UNRELEASED
+   * @since 0.6.0
    */
   public PhoneFieldDetails (string value,
       MultiMap<string, string>? parameters = null)
@@ -62,7 +62,7 @@ public class Folks.PhoneFieldDetails : AbstractFieldDetails<string>
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.6.0
    */
   public override bool equal (AbstractFieldDetails<string> that)
     {
@@ -92,7 +92,7 @@ public class Folks.PhoneFieldDetails : AbstractFieldDetails<string>
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.6.0
    */
   public override uint hash ()
     {
@@ -110,7 +110,7 @@ public class Folks.PhoneFieldDetails : AbstractFieldDetails<string>
    *
    * @return the normalised form of `number`
    *
-   * @since UNRELEASED
+   * @since 0.6.0
    */
   public string get_normalised ()
     {
@@ -151,7 +151,7 @@ public class Folks.PhoneFieldDetails : AbstractFieldDetails<string>
    * @return the number without its extension; if the number didn't have an
    * extension in the first place, the number is returned unmodified
    *
-   * @since UNRELEASED
+   * @since 0.6.0
    */
   internal static string _drop_extension (string number)
     {
@@ -180,7 +180,7 @@ public interface Folks.PhoneDetails : Object
    *
    * A list of phone numbers associated to the contact.
    *
-   * @since UNRELEASED
+   * @since 0.6.0
    */
   public abstract Set<PhoneFieldDetails> phone_numbers { get; set; }
 }

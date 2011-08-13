@@ -49,7 +49,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
    *
    * See {@link Folks.PersonaStore.type_id}.
    *
-   * @since 0.5.UNRELEASED
+   * @since 0.6.0
    */
   public override string type_id { get { return BACKEND_NAME; } }
 
@@ -65,7 +65,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
    *
    * See {@link Folks.PersonaStore.can_add_personas}.
    *
-   * @since 0.5.UNRELEASED
+   * @since 0.6.0
    */
   public override MaybeBool can_add_personas
     {
@@ -85,7 +85,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
    *
    * See {@link Folks.PersonaStore.can_alias_personas}.
    *
-   * @since 0.5.UNRELEASED
+   * @since 0.6.0
    */
   public override MaybeBool can_alias_personas
     {
@@ -97,7 +97,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
    *
    * See {@link Folks.PersonaStore.can_group_personas}.
    *
-   * @since 0.5.UNRELEASED
+   * @since 0.6.0
    */
   public override MaybeBool can_group_personas
     {
@@ -109,7 +109,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
    *
    * See {@link Folks.PersonaStore.can_remove_personas}.
    *
-   * @since 0.5.UNRELEASED
+   * @since 0.6.0
    */
   public override MaybeBool can_remove_personas
     {
@@ -129,7 +129,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
    *
    * See {@link Folks.PersonaStore.is_prepared}.
    *
-   * @since 0.5.UNRELEASED
+   * @since 0.6.0
    */
   public override bool is_prepared
     {
@@ -141,7 +141,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
    *
    * See {@link Folks.PersonaStore.personas}.
    *
-   * @since 0.5.UNRELEASED
+   * @since 0.6.0
    */
   public override Map<string, Persona> personas
     {
@@ -155,7 +155,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
    *
    * @param s the e-d-s source being represented by the persona store
    *
-   * @since 0.5.UNRELEASED
+   * @since 0.6.0
    */
   public PersonaStore (E.Source s)
     {
@@ -218,7 +218,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
    *
    * See {@link Folks.PersonaStore.add_persona_from_details}.
    *
-   * @since 0.5.UNRELEASED
+   * @since 0.6.0
    */
   public override async Folks.Persona? add_persona_from_details (
       HashTable<string, Value?> details) throws Folks.PersonaStoreError
@@ -355,7 +355,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
    *
    * @param persona the persona that should be removed
    *
-   * @since 0.5.UNRELEASED
+   * @since 0.6.0
    */
   public override async void remove_persona (Folks.Persona persona)
       throws Folks.PersonaStoreError
@@ -441,7 +441,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
    *
    * See {@link Folks.PersonaStore.prepare}.
    *
-   * @since 0.5.UNRELEASED
+   * @since 0.6.0
    */
   public override async void prepare () throws PersonaStoreError
     {

@@ -69,7 +69,7 @@ public class Edsf.Persona : Folks.Persona,
    * is still considered experimental, hence the "X-" prefix in the
    * attribute name. So this might change.
    *
-   * @since UNRELEASED
+   * @since 0.6.0
    */
   public static const string gender_attribute_name = "X-GENDER";
 
@@ -80,7 +80,7 @@ public class Edsf.Persona : Folks.Persona,
    * Based on:
    * [[http://tools.ietf.org/html/draft-ietf-vcarddav-vcardrev-22]]
    *
-   * @since UNRELEASED
+   * @since 0.6.0
    */
   public static const string gender_male = "M";
 
@@ -91,7 +91,7 @@ public class Edsf.Persona : Folks.Persona,
    * Based on:
    * [[http://tools.ietf.org/html/draft-ietf-vcarddav-vcardrev-22]]
    *
-   * @since UNRELEASED
+   * @since 0.6.0
    */
   public static const string gender_female = "F";
 
@@ -175,7 +175,7 @@ public class Edsf.Persona : Folks.Persona,
    *
    * A list of postal addresses associated to the contact.
    *
-   * @since 0.5.UNRELEASED
+   * @since 0.6.0
    */
   public Set<PostalAddressFieldDetails> postal_addresses
     {
@@ -189,7 +189,7 @@ public class Edsf.Persona : Folks.Persona,
   /**
    * {@inheritDoc}
    *
-   * @since 0.5.UNRELEASED
+   * @since 0.6.0
    */
   public Set<PhoneFieldDetails> phone_numbers
     {
@@ -203,7 +203,7 @@ public class Edsf.Persona : Folks.Persona,
   /**
    * {@inheritDoc}
    *
-   * @since 0.5.UNRELEASED
+   * @since 0.6.0
    */
   public Set<EmailFieldDetails> email_addresses
     {
@@ -217,7 +217,7 @@ public class Edsf.Persona : Folks.Persona,
   /**
    * {@inheritDoc}
    *
-   * @since 0.5.UNRELEASED
+   * @since 0.6.0
    */
   public Set<NoteFieldDetails> notes
     {
@@ -231,7 +231,7 @@ public class Edsf.Persona : Folks.Persona,
   /**
    * {@inheritDoc}
    *
-   * @since 0.5.UNRELEASED
+   * @since 0.6.0
    */
   public override string[] linkable_properties
     {
@@ -241,7 +241,7 @@ public class Edsf.Persona : Folks.Persona,
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.6.0
    */
   public override string[] writeable_properties
     {
@@ -254,7 +254,7 @@ public class Edsf.Persona : Folks.Persona,
    *
    * See {@link Folks.AvatarDetails.avatar}.
    *
-   * @since 0.5.UNRELEASED
+   * @since 0.6.0
    */
   public LoadableIcon? avatar
     {
@@ -273,7 +273,7 @@ public class Edsf.Persona : Folks.Persona,
   /**
    * {@inheritDoc}
    *
-   * @since 0.5.UNRELEASED
+   * @since 0.6.0
    */
   public StructuredName structured_name
     {
@@ -287,7 +287,7 @@ public class Edsf.Persona : Folks.Persona,
   /**
    * The e-d-s contact uid
    *
-   * @since 0.5.UNRELEASED
+   * @since 0.6.0
    */
   public string contact_id { get; private set; }
 
@@ -295,7 +295,7 @@ public class Edsf.Persona : Folks.Persona,
   /**
    * {@inheritDoc}
    *
-   * @since 0.5.UNRELEASED
+   * @since 0.6.0
    */
   public string full_name
     {
@@ -310,7 +310,7 @@ public class Edsf.Persona : Folks.Persona,
   /**
    * {@inheritDoc}
    *
-   * @since 0.5.UNRELEASED
+   * @since 0.6.0
    */
   public string nickname
     {
@@ -326,7 +326,7 @@ public class Edsf.Persona : Folks.Persona,
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.6.0
    */
   public Gender gender
     {
@@ -342,7 +342,7 @@ public class Edsf.Persona : Folks.Persona,
   /**
    * {@inheritDoc}
    *
-   * @since 0.5.UNRELEASED
+   * @since 0.6.0
    */
   public Set<UrlFieldDetails> urls
     {
@@ -361,7 +361,7 @@ public class Edsf.Persona : Folks.Persona,
   /**
    * {@inheritDoc}
    *
-   * @since 0.5.UNRELEASED
+   * @since 0.6.0
    */
   public MultiMap<string, ImFieldDetails> im_addresses
     {
@@ -378,7 +378,7 @@ public class Edsf.Persona : Folks.Persona,
   /**
    * {@inheritDoc}
    *
-   * @since 0.5.UNRELEASED
+   * @since 0.6.0
    */
   public Set<string> groups
     {
@@ -392,7 +392,7 @@ public class Edsf.Persona : Folks.Persona,
   /**
    * {@inheritDoc}
    *
-   * @since 0.5.UNRELEASED
+   * @since 0.6.0
    */
   public async void change_group (string group, bool is_member)
       throws GLib.Error
@@ -430,7 +430,7 @@ public class Edsf.Persona : Folks.Persona,
    * @param contact the Contact
    * @return a valid IID
    *
-   * @since 0.5.UNRELEASED
+   * @since 0.6.0
    */
   internal static string build_iid_from_contact (string store_id,
       E.Contact contact)
@@ -447,7 +447,7 @@ public class Edsf.Persona : Folks.Persona,
    * @param contact_id the id belonging to the Contact
    * @return a valid IID
    *
-   * @since 0.5.UNRELEASED
+   * @since 0.6.0
    */
   internal static string build_iid (string store_id, string contact_id)
     {
@@ -461,7 +461,7 @@ public class Edsf.Persona : Folks.Persona,
    * Create a new persona for the {@link PersonaStore} `store`, representing
    * the EDS contact given by `contact`.
    *
-   * @since 0.5.UNRELEASED
+   * @since 0.6.0
    */
   public Persona (PersonaStore store, E.Contact contact)
     {
@@ -520,7 +520,7 @@ public class Edsf.Persona : Folks.Persona,
   /**
    * {@inheritDoc}
    *
-   * @since 0.5.UNRELEASED
+   * @since 0.6.0
    */
   public override void linkable_property_to_links (string prop_name,
       Folks.Persona.LinkablePropertyCallback callback)

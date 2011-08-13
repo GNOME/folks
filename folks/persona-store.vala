@@ -103,7 +103,7 @@ public errordomain Folks.PersonaStoreError
   /**
    * The operation was denied due to not having sufficient permissions.
    *
-   * @since UNRELEASED
+   * @since 0.6.0
    */
   PERMISSION_DENIED,
 
@@ -112,7 +112,7 @@ public errordomain Folks.PersonaStoreError
    * if no other error code (such as, e.g.,
    * {@link PersonaStoreError.PERMISSION_DENIED}) is applicable.
    *
-   * @since UNRELEASED
+   * @since 0.6.0
    */
   REMOVE_FAILED,
 }

@@ -113,7 +113,7 @@ public abstract class Folks.Persona : Object
    * been created, when its {@link PersonaStore} is being destroyed, or when
    * it's moving between {@link Individual}s.
    *
-   * @since UNRELEASED
+   * @since 0.6.0
    */
   public weak Individual? individual
     {
@@ -163,7 +163,7 @@ public abstract class Folks.Persona : Object
    * subclass, but this isn't guaranteed; it's possible that Persona subclasses
    * may vary the value of this property at run time.
    *
-   * @since UNRELEASED
+   * @since 0.6.0
    */
   public abstract string[] writeable_properties { get; }
 

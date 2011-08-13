@@ -37,7 +37,7 @@ public class Folks.Utils : Object
    * @param b another multi-map to compare
    * @return `true` if the multi-maps are equal, `false` otherwise
    *
-   * @since UNRELEASED
+   * @since 0.6.0
    */
   public static bool multi_map_str_str_equal (
       MultiMap<string, string> a,
@@ -88,7 +88,7 @@ public class Folks.Utils : Object
    * @param b another multi-map to compare
    * @return `true` if the multi-maps are equal, `false` otherwise
    *
-   * @since UNRELEASED
+   * @since 0.6.0
    */
   public static bool multi_map_str_afd_equal (
       MultiMap<string, AbstractFieldDetails> a,
@@ -139,7 +139,7 @@ public class Folks.Utils : Object
    * @param b another set to compare
    * @return `true` if the sets are equal, `false` otherwise
    *
-   * @since UNRELEASED
+   * @since 0.6.0
    */
   public static bool set_afd_equal (
       Set<AbstractFieldDetails> a,

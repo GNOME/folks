@@ -116,7 +116,7 @@ public class Folks.Individual : Object,
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.6.0
    */
   public LoadableIcon? avatar { get; private set; }
 
@@ -128,7 +128,7 @@ public class Folks.Individual : Object,
   /**
    * {@inheritDoc}
    *
-   * @since 0.5.UNRELEASED
+   * @since 0.6.0
    */
   public string presence_status { get; private set; }
 

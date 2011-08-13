@@ -47,7 +47,7 @@ public class Folks.Role : Object
    *
    * For example: “Programmer”
    *
-   * @since UNRELEASED
+   * @since 0.6.0
    */
   public string role { get; set; }
 
@@ -133,7 +133,7 @@ public class Folks.Role : Object
  *
  * See {@link Folks.AbstractFieldDetails}.
  *
- * @since UNRELEASED
+ * @since 0.6.0
  */
 public class Folks.RoleFieldDetails : AbstractFieldDetails<Role>
 {
@@ -147,7 +147,7 @@ public class Folks.RoleFieldDetails : AbstractFieldDetails<Role>
    *
    * @return a new RoleFieldDetails
    *
-   * @since UNRELEASED
+   * @since 0.6.0
    */
   public RoleFieldDetails (Role value,
       MultiMap<string, string>? parameters = null)
@@ -160,7 +160,7 @@ public class Folks.RoleFieldDetails : AbstractFieldDetails<Role>
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED 
+   * @since 0.6.0 
    */
   public override bool equal (AbstractFieldDetails<string> that)
     {
@@ -175,7 +175,7 @@ public class Folks.RoleFieldDetails : AbstractFieldDetails<Role>
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.6.0
    */
   public override uint hash ()
     {
@@ -194,7 +194,7 @@ public interface Folks.RoleDetails : Object
   /**
    * The roles of the contact.
    *
-   * @since UNRELEASED
+   * @since 0.6.0
    */
   public abstract Set<RoleFieldDetails> roles { get; set; }
 }

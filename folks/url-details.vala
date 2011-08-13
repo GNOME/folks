@@ -28,7 +28,7 @@ using Gee;
  * See {@link Folks.AbstractFieldDetails} for details on common parameter names
  * and values.
  *
- * @since UNRELEASED
+ * @since 0.6.0
  */
 public class Folks.UrlFieldDetails : AbstractFieldDetails<string>
 {
@@ -42,7 +42,7 @@ public class Folks.UrlFieldDetails : AbstractFieldDetails<string>
    *
    * @return a new UrlFieldDetails
    *
-   * @since UNRELEASED
+   * @since 0.6.0
    */
   public UrlFieldDetails (string value,
       MultiMap<string, string>? parameters = null)
@@ -55,7 +55,7 @@ public class Folks.UrlFieldDetails : AbstractFieldDetails<string>
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.6.0
    */
   public override bool equal (AbstractFieldDetails<string> that)
     {
@@ -65,7 +65,7 @@ public class Folks.UrlFieldDetails : AbstractFieldDetails<string>
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.6.0
    */
   public override uint hash ()
     {

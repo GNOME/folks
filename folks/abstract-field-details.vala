@@ -42,7 +42,7 @@ using Gee;
  * See [[http://www.ietf.org/rfc/rfc2426.txt|RFC2426]] for more details on
  * pre-defined parameter names and values.
  *
- * @since UNRELEASED
+ * @since 0.6.0
  */
 public abstract class Folks.AbstractFieldDetails<T> : Object
 {
@@ -53,7 +53,7 @@ public abstract class Folks.AbstractFieldDetails<T> : Object
    * The value of the field, the exact type and content of which depends on what
    * the structure is used for.
    *
-   * @since UNRELEASED
+   * @since 0.6.0
    */
   public virtual T @value
     {
@@ -70,7 +70,7 @@ public abstract class Folks.AbstractFieldDetails<T> : Object
    * {@link Folks.AbstractFieldDetails.value}. The keys are the names of
    * the parameters, while the values are a list of strings.
    *
-   * @since UNRELEASED
+   * @since 0.6.0
    */
   public virtual MultiMap<string, string> parameters
     {
@@ -91,7 +91,7 @@ public abstract class Folks.AbstractFieldDetails<T> : Object
    * @return a collection of values for `parameter_name` or `null` (i.e. no
    * collection) if there are no such parameters.
    *
-   * @since UNRELEASED
+   * @since 0.6.0
    */
   public Collection<string>? get_parameter_values (string parameter_name)
     {
@@ -112,7 +112,7 @@ public abstract class Folks.AbstractFieldDetails<T> : Object
    * @param parameter_name the name of the parameter
    * @param parameter_value the value to add
    *
-   * @since UNRELEASED
+   * @since 0.6.0
    */
   public void add_parameter (string parameter_name, string parameter_value)
     {
@@ -128,7 +128,7 @@ public abstract class Folks.AbstractFieldDetails<T> : Object
    * @param parameter_name the name of the parameter
    * @param parameter_value the value to add
    *
-   * @since UNRELEASED
+   * @since 0.6.0
    */
   public void set_parameter (string parameter_name, string parameter_value)
     {
@@ -143,7 +143,7 @@ public abstract class Folks.AbstractFieldDetails<T> : Object
    *
    * @param additional the parameters to add
    *
-   * @since UNRELEASED
+   * @since 0.6.0
    */
   public void extend_parameters (MultiMap<string, string> additional)
     {
@@ -162,7 +162,7 @@ public abstract class Folks.AbstractFieldDetails<T> : Object
    *
    * @param parameter_name the name of the parameter
    *
-   * @since UNRELEASED
+   * @since 0.6.0
    */
   public void remove_parameter_all (string parameter_name)
     {
@@ -181,7 +181,7 @@ public abstract class Folks.AbstractFieldDetails<T> : Object
    *
    * @return whether the elements are equal
    *
-   * @since UNRELEASED
+   * @since 0.6.0
    */
   public virtual bool equal (AbstractFieldDetails<T> that)
     {
@@ -245,7 +245,7 @@ public abstract class Folks.AbstractFieldDetails<T> : Object
    *
    * @return the hash value
    *
-   * @since UNRELEASED
+   * @since 0.6.0
    */
   public virtual uint hash ()
     {

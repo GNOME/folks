@@ -217,7 +217,7 @@ public class Folks.PostalAddress : Object
  * See {@link Folks.AbstractFieldDetails} for details on common parameter names
  * and values.
  *
- * @since UNRELEASED
+ * @since 0.6.0
  */
 public class Folks.PostalAddressFieldDetails :
     AbstractFieldDetails<PostalAddress>
@@ -233,7 +233,7 @@ public class Folks.PostalAddressFieldDetails :
    *
    * @return a new PostalAddressFieldDetails
    *
-   * @since UNRELEASED
+   * @since 0.6.0
    */
   public PostalAddressFieldDetails (PostalAddress value,
       MultiMap<string, string>? parameters = null)
@@ -246,7 +246,7 @@ public class Folks.PostalAddressFieldDetails :
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.6.0
    */
   public override bool equal (AbstractFieldDetails<PostalAddress> that)
     {
@@ -257,7 +257,7 @@ public class Folks.PostalAddressFieldDetails :
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.6.0
    */
   public override uint hash ()
     {

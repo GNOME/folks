@@ -28,7 +28,7 @@ using Gee;
  * See {@link Folks.AbstractFieldDetails} for details on common parameter names
  * and values.
  *
- * @since UNRELEASED
+ * @since 0.6.0
  */
 public class Folks.EmailFieldDetails : AbstractFieldDetails<string>
 {
@@ -43,7 +43,7 @@ public class Folks.EmailFieldDetails : AbstractFieldDetails<string>
    *
    * @return a new EmailFieldDetails
    *
-   * @since UNRELEASED
+   * @since 0.6.0
    */
   public EmailFieldDetails (string value,
       MultiMap<string, string>? parameters = null)
@@ -56,7 +56,7 @@ public class Folks.EmailFieldDetails : AbstractFieldDetails<string>
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.6.0
    */
   public override bool equal (AbstractFieldDetails<string> that)
     {
@@ -66,7 +66,7 @@ public class Folks.EmailFieldDetails : AbstractFieldDetails<string>
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.6.0
    */
   public override uint hash ()
     {
@@ -89,7 +89,7 @@ public interface Folks.EmailDetails : Object
    * “foo@bar.com”), rather than any other way of formatting an e-mail address
    * (such as “John Smith <foo@bar.com>”).
    *
-   * @since UNRELEASED
+   * @since 0.6.0
    */
   public abstract Set<EmailFieldDetails> email_addresses { get; set; }
 }

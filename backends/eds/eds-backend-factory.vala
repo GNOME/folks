@@ -32,7 +32,7 @@ private BackendFactory _backend_factory = null;
 /**
  * The eds backend module entry point.
  *
- * @since 0.5.UNRELEASED
+ * @since 0.6.0
  */
 public void module_init (BackendStore backend_store)
 {
@@ -42,7 +42,7 @@ public void module_init (BackendStore backend_store)
 /**
  * The eds backend module exit point.
  *
- * @since 0.5.UNRELEASED
+ * @since 0.6.0
  */
 public void module_finalize (BackendStore backend_store)
 {

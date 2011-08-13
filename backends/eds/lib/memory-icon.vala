@@ -25,7 +25,7 @@ using GLib;
  * presents it as a {@link GLib.LoadableIcon}. This allows inlined avatars to be
  * returned as {@link GLib.LoadableIcon}s.
  *
- * @since UNRELEASED
+ * @since 0.6.0
  */
 internal class Edsf.MemoryIcon : Object, Icon, LoadableIcon
 {
@@ -37,7 +37,7 @@ internal class Edsf.MemoryIcon : Object, Icon, LoadableIcon
    *
    * @param image_type the content type of the image
    * @param image_data the binary data of the image
-   * @since UNRELEASED
+   * @since 0.6.0
    */
   public MemoryIcon (string image_type, uint8[] image_data)
     {
@@ -52,7 +52,7 @@ internal class Edsf.MemoryIcon : Object, Icon, LoadableIcon
    *
    * @param icon2 the {@link MemoryIcon} instance to compare against
    * @return `true` if the instances are equal, `false` otherwise
-   * @since UNRELEASED
+   * @since 0.6.0
    */
   public bool equal (Icon icon2)
     {
@@ -71,7 +71,7 @@ internal class Edsf.MemoryIcon : Object, Icon, LoadableIcon
    * hash table key. This is not a cryptographic hash.
    *
    * @return hash value over the image type and data
-   * @since UNRELEASED
+   * @since 0.6.0
    */
   public uint hash ()
     {
@@ -103,7 +103,7 @@ internal class Edsf.MemoryIcon : Object, Icon, LoadableIcon
    * @param type return location for the content type of the image, or `null`
    * @param cancellable optional {@link GLib.Cancellable}, or `null`
    * @return an input stream providing access to the image data
-   * @since UNRELEASED
+   * @since 0.6.0
    */
   public InputStream load (int size, out string? type,
       Cancellable? cancellable = null)
@@ -120,7 +120,7 @@ internal class Edsf.MemoryIcon : Object, Icon, LoadableIcon
    * @param cancellable optional {@link GLib.Cancellable}, or `null`
    * @param type return location for the content type of the image, or `null`
    * @return an input stream providing access to the image data
-   * @since UNRELEASED
+   * @since 0.6.0
    */
   public async InputStream load_async (int size,
       GLib.Cancellable? cancellable, out string? type)

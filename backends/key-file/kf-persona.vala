@@ -60,7 +60,7 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.6.0
    */
   public override string[] writeable_properties
     {

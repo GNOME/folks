@@ -25,7 +25,7 @@ using GLib;
  * folks. Avatars may be added to the cache, and referred to by a persistent
  * URI from that point onwards.
  *
- * @since UNRELEASED
+ * @since 0.6.0
  */
 public class Folks.AvatarCache : Object
 {
@@ -36,7 +36,7 @@ public class Folks.AvatarCache : Object
    * Private constructor for an instance of the avatar cache. The singleton
    * instance should be retrieved by calling {@link AvatarCache.dup()} instead.
    *
-   * @since UNRELEASED
+   * @since 0.6.0
    */
   private AvatarCache ()
     {
@@ -53,7 +53,7 @@ public class Folks.AvatarCache : Object
    * This function is thread-safe.
    *
    * @return Singleton {@link AvatarCache} instance
-   * @since UNRELEASED
+   * @since 0.6.0
    */
   public static AvatarCache dup ()
     {
@@ -87,7 +87,7 @@ public class Folks.AvatarCache : Object
    * @param id the globally unique ID for the avatar
    * @return Avatar from the cache, or `null` if it doesn't exist in the cache
    * @throws GLib.Error if checking for existence of the cache file failed
-   * @since UNRELEASED
+   * @since 0.6.0
    */
   public async LoadableIcon? load_avatar (string id) throws GLib.Error
     {
@@ -113,7 +113,7 @@ public class Folks.AvatarCache : Object
    * @return a URI for the file storing the cached avatar
    * @throws GLib.Error if the avatar data couldn't be loaded, or if creating
    * the avatar directory or cache file failed
-   * @since UNRELEASED
+   * @since 0.6.0
    */
   public async string store_avatar (string id, LoadableIcon avatar)
       throws GLib.Error
@@ -162,7 +162,7 @@ public class Folks.AvatarCache : Object
    *
    * @param id the globally unique ID for the avatar
    * @throws GLib.Error if deleting the cache file failed
-   * @since UNRELEASED
+   * @since 0.6.0
    */
   public async void remove_avatar (string id) throws GLib.Error
     {
@@ -187,7 +187,7 @@ public class Folks.AvatarCache : Object
    *
    * @param id the globally unique ID for the avatar
    * @return URI of the avatar file with the given globally unique ID
-   * @since UNRELEASED
+   * @since 0.6.0
    */
   public string build_uri_for_avatar (string id)
     {

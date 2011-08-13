@@ -68,7 +68,7 @@ public class Folks.Backends.Eds.Backend : Folks.Backend
    *
    * See {@link Folks.Backend.is_prepared}.
    *
-   * @since 0.5.UNRELEASED
+   * @since 0.6.0
    */
   public override bool is_prepared
     {

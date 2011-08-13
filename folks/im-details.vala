@@ -38,7 +38,7 @@ public errordomain Folks.ImDetailsError
  *
  * See {@link Folks.AbstractFieldDetails}.
  *
- * @since UNRELEASED
+ * @since 0.6.0
  */
 public class Folks.ImFieldDetails : AbstractFieldDetails<string>
 {
@@ -52,7 +52,7 @@ public class Folks.ImFieldDetails : AbstractFieldDetails<string>
    *
    * @return a new ImFieldDetails
    *
-   * @since UNRELEASED
+   * @since 0.6.0
    */
   public ImFieldDetails (string value,
       MultiMap<string, string>? parameters = null)
@@ -65,7 +65,7 @@ public class Folks.ImFieldDetails : AbstractFieldDetails<string>
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.6.0
    */
   public override bool equal (AbstractFieldDetails<string> that)
     {
@@ -75,7 +75,7 @@ public class Folks.ImFieldDetails : AbstractFieldDetails<string>
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.6.0
    */
   public override uint hash ()
     {

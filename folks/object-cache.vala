@@ -30,7 +30,7 @@ using Gee;
  * It's intended that this class be used for providing caching layers for
  * {@link PersonaStore}s, for example.
  *
- * @since UNRELEASED
+ * @since 0.6.0
  */
 public abstract class Folks.ObjectCache<T> : Object
 {
@@ -62,7 +62,7 @@ public abstract class Folks.ObjectCache<T> : Object
    * If a smooth upgrade path is needed in future due to cache file format
    * changes, this may be modified to take a version parameter.
    *
-   * @since UNRELEASED
+   * @since 0.6.0
    */
   protected abstract VariantType get_serialised_object_type ();
 
@@ -72,7 +72,7 @@ public abstract class Folks.ObjectCache<T> : Object
    * every time the variant type changes so that old cache files aren't
    * misinterpreted.
    *
-   * @since UNRELEASED
+   * @since 0.6.0
    */
   protected abstract uint8 get_serialised_object_version ();
 
@@ -84,7 +84,7 @@ public abstract class Folks.ObjectCache<T> : Object
    * @param object the object to serialise
    * @return serialised form of `object`
    *
-   * @since UNRELEASED
+   * @since 0.6.0
    */
   protected abstract Variant serialise_object (T object);
 
@@ -96,7 +96,7 @@ public abstract class Folks.ObjectCache<T> : Object
    * @param variant the serialised form to deserialise
    * @return the deserialised object
    *
-   * @since UNRELEASED
+   * @since 0.6.0
    */
   protected abstract T deserialise_object (Variant variant);
 
@@ -112,7 +112,7 @@ public abstract class Folks.ObjectCache<T> : Object
    * can be an arbitrary non-empty string.
    * @return A new cache instance
    *
-   * @since UNRELEASED
+   * @since 0.6.0
    */
   protected ObjectCache (string type_id, string id)
     {
@@ -147,7 +147,7 @@ public abstract class Folks.ObjectCache<T> : Object
    * @param cancellable A {@link GLib.Cancellable} for the operation, or `null`.
    * @return A set of objects from the cache, or `null`.
    *
-   * @since UNRELEASED
+   * @since 0.6.0
    */
   public async Set<T>? load_objects (Cancellable? cancellable = null)
     {
@@ -278,7 +278,7 @@ public abstract class Folks.ObjectCache<T> : Object
    * be `null`.
    * @param cancellable A {@link GLib.Cancellable} for the operation, or `null`.
    *
-   * @since UNRELEASED
+   * @since 0.6.0
    */
   public async void store_objects (Set<T> objects,
       Cancellable? cancellable = null)
@@ -362,7 +362,7 @@ public abstract class Folks.ObjectCache<T> : Object
   /**
    * Clear this cache object, deleting its backing file.
    *
-   * @since UNRELEASED
+   * @since 0.6.0
    */
   public async void clear_cache ()
     {
