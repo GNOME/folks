@@ -279,58 +279,29 @@ private class Folks.Inspect.Utils
 
           return ret;
         }
-      else if (prop_name == "im-addresses")
+      else if (prop_name == "im-addresses" ||
+               prop_name == "web-service-addresses")
         {
-          MultiMap<string, string> im_addresses =
-              (MultiMap<string, string>) prop_value.get_object ();
+          var prop_list =
+              (MultiMap<string, AbstractFieldDetails<string>>)
+                  prop_value.get_object ();
           output_string = "{ ";
           bool first = true;
 
-          foreach (var protocol in im_addresses.get_keys ())
+          foreach (var k in prop_list.get_keys ())
             {
               if (first == false)
                 output_string += ", ";
-              output_string += "'%s' : { ".printf (protocol);
+              output_string += "'%s' : { ".printf (k);
               first = false;
 
-              var addresses = im_addresses.get (protocol);
+              var v = prop_list.get (k);
               bool _first = true;
-              foreach (var a in addresses)
+              foreach (var a in v)
                 {
                   if (_first == false)
                     output_string += ", ";
-                  output_string += "'%s'".printf ((string) a);
-                  _first = false;
-                }
-
-              output_string += " }";
-            }
-
-          output_string += " }";
-          return output_string;
-        }
-      else if (prop_name == Folks.PersonaStore.detail_key
-          (PersonaDetail.WEB_SERVICE_ADDRESSES))
-        {
-          MultiMap<string, string> web_service_addresses =
-              (MultiMap<string, string>) prop_value.get_object ();
-          output_string = "{ ";
-          bool first = true;
-
-          foreach (var web_service in web_service_addresses.get_keys ())
-            {
-              if (first == false)
-                output_string += ", ";
-              output_string += "'%s' : { ".printf (web_service);
-              first = false;
-
-              var addresses = web_service_addresses.get (web_service);
-              bool _first = true;
-              foreach (var a in addresses)
-                {
-                  if (_first == false)
-                    output_string += ", ";
-                  output_string += "'%s'".printf ((string) a);
+                  output_string += "'%s'".printf (a.value);
                   _first = false;
                 }
 
@@ -374,8 +345,8 @@ private class Folks.Inspect.Utils
         {
           output_string = "{ ";
           bool first = true;
-          Set<PostalAddress> prop_list =
-              (Set<PostalAddress>) prop_value.get_object ();
+          var prop_list =
+              (Set<PostalAddressFieldDetails>) prop_value.get_object ();
 
           foreach (var p in prop_list)
             {
@@ -383,7 +354,7 @@ private class Folks.Inspect.Utils
                 {
                   output_string += ". ";
                 }
-              output_string +=  p.to_string ();
+              output_string +=  p.value.to_string ();
               first = false;
             }
             output_string += " }";
@@ -413,7 +384,7 @@ private class Folks.Inspect.Utils
         }
       else if (prop_name == "roles")
         {
-          Set<Role> roles = (Set<Role>) prop_value.get_object ();
+          var roles = (Set<RoleFieldDetails>) prop_value.get_object ();
 
           output_string = "{ ";
           bool first = true;
@@ -424,7 +395,7 @@ private class Folks.Inspect.Utils
                 {
                   output_string += ", ";
                 }
-              output_string += role.to_string ();
+              output_string += role.value.to_string ();
               first = false;
             }
             output_string += " }";
