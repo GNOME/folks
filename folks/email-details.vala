@@ -85,9 +85,9 @@ public interface Folks.EmailDetails : Object
   /**
    * The email addresses of the contact.
    *
-   * Each of the {@link EmailFieldDetails.value}s in this property contains just
-   * an e-mail address (e.g. “foo@bar.com”), rather than any other way of
-   * formatting an e-mail address (such as “John Smith <foo@bar.com>”).
+   * Each of the values in this property contains just an e-mail address (e.g.
+   * “foo@bar.com”), rather than any other way of formatting an e-mail address
+   * (such as “John Smith <foo@bar.com>”).
    *
    * @since UNRELEASED
    */

@@ -140,7 +140,7 @@ public class Folks.RoleFieldDetails : AbstractFieldDetails<Role>
   /**
    * Create a new RoleFieldDetails.
    *
-   * @param value the {@link Role}} of the field
+   * @param value the {@link Role} of the field
    * @param parameters initial parameters. See
    * {@link AbstractFieldDetails.parameters}. A `null` value is equivalent to an
    * empty map of parameters.
