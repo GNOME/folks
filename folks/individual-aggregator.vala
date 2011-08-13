@@ -89,7 +89,7 @@ public class Folks.IndividualAggregator : Object
    *
    * - the FOLKS_WRITEABLE_STORE env var (mostly for debugging)
    * - the GConf key set in _FOLKS_CONFIG_KEY (system set store)
-   * - going with the `key-file` store as the fall-back option
+   * - going with the `key-file` or `eds` store as the fall-back option
    *
    * @since 0.5.0
    */
@@ -190,8 +190,13 @@ public class Folks.IndividualAggregator : Object
         }
       else
         {
+#if ENABLE_EDS
+          this._configured_writeable_store_type_id = "eds";
+          this._configured_writeable_store_id = "system";
+#else
           this._configured_writeable_store_type_id = "key-file";
           this._configured_writeable_store_id = "";
+#endif
 
           try
             {
