@@ -180,9 +180,9 @@ m4_if(folks_released, [1], [],
 # Force Vala if generated source is missing or outdated
 if test \
         ! -e ${sd}tools/folks_import_vala.stamp -o \
+        ! -e ${sd}tests/folks/abstract_field_details_vala.stamp -o \
         ! -e ${sd}tests/folks/aggregation_vala.stamp -o \
         ! -e ${sd}tests/folks/backend_loading_vala.stamp -o \
-        ! -e ${sd}tests/folks/field_details_vala.stamp -o \
         ! -e ${sd}tests/key-file/individual_retrieval_vala.stamp -o \
         ! -e ${sd}tests/lib/folks-test.vapi -o \
         ! -e ${sd}tests/lib/key-file/kf-test.vapi -o \
@@ -194,8 +194,8 @@ if test \
         ! -e ${sd}tests/telepathy/individual_retrieval_vala.stamp -o \
         ! -e ${sd}tests/telepathy/individual_properties_vala.stamp -o \
         ! -e ${sd}tests/folks/backend_loading_vala.stamp -o \
-        ! -e ${sd}backends/key-file/libfolks_backend_key_file_la_vala.stamp -o \
-        ! -e ${sd}backends/telepathy/libfolks_backend_telepathy_la_vala.stamp \
+        ! -e ${sd}backends/key-file/key_file_la_vala.stamp -o \
+        ! -e ${sd}backends/telepathy/telepathy_la_vala.stamp \
                 -o \
         ! -e ${sd}backends/telepathy/lib/folks-telepathy.vapi -o \
         ! -e ${sd}backends/telepathy/lib/tp-lowlevel.gir -o \
