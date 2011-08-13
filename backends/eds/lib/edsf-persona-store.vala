@@ -214,6 +214,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
    * - PersonaStore.detail_key (PersonaDetail.LOCAL_IDS)
    * - PersonaDetail.detail_key (PersonaDetail.WEB_SERVICE_ADDRESSES)
    * - PersonaStore.detail_key (PersonaDetail.NOTES)
+   * - PersonaStore.detail_key (PersonaDetail.URL)
    *
    * See {@link Folks.PersonaStore.add_persona_from_details}.
    *
@@ -298,6 +299,11 @@ public class Edsf.PersonaStore : Folks.PersonaStore
             {
               var gender = (Gender) v.get_enum ();
               yield this._set_contact_gender (contact, gender);
+            }
+          else if (k == Folks.PersonaStore.detail_key (PersonaDetail.URLS))
+            {
+              Set<UrlFieldDetails> urls = (Set<UrlFieldDetails>) v.get_object ();
+              yield this._set_contact_urls (contact, urls);
             }
         }
 
@@ -708,6 +714,92 @@ public class Edsf.PersonaStore : Folks.PersonaStore
           attr_n.add_param (param);
         }
       contact.add_attribute (attr_n);
+    }
+
+  internal async void _set_urls (Edsf.Persona persona,
+      Set<UrlFieldDetails> urls)
+    {
+      if (Utils.set_afd_equal (persona.urls, urls))
+        return;
+
+      try
+        {
+          E.Contact contact = ((Edsf.Persona) persona).contact;
+          yield this._set_contact_urls (contact, urls);
+          yield this._addressbook.modify_contact (contact);
+        }
+      catch (GLib.Error e)
+        {
+          GLib.warning ("Can't set urls: %s", e.message);
+        }
+    }
+
+  private async void _set_contact_urls (E.Contact contact,
+      Set<UrlFieldDetails> urls)
+    {
+      var vcard = (E.VCard) contact;
+      vcard.remove_attributes (null, "X-URIS");
+
+      foreach (var u in urls)
+        {
+          bool homepage = false;
+          bool blog = false;
+          bool fburl = false;
+          bool video = false;
+
+          var attr = new E.VCardAttribute (null, "X-URIS");
+          attr.add_value (u.value);
+          foreach (var param_name in u.parameters.get_keys ())
+            {
+              var param = new E.VCardAttributeParam (param_name.up ());
+              foreach (var param_val in u.parameters.get (param_name))
+                {
+                  if (param_name == "type")
+                    {
+                      /* Keep in sync with Edsf.Persona.url_properties */
+                      if (param_val == "homepage_url")
+                        {
+                          homepage = true;
+                        }
+                      else if (param_val == "blog_url")
+                        {
+                          blog = true;
+                        }
+                      else if (param_val == "fburl")
+                        {
+                          fburl = true;
+                        }
+                      else if (param_val == "video_url")
+                        {
+                          video = true;
+                        }
+                    }
+                  param.add_value (param_val);
+                }
+              attr.add_param (param);
+            }
+
+          if (homepage)
+            {
+              contact.set (E.Contact.field_id ("homepage_url"), u.value);
+            }
+          else if (blog)
+            {
+              contact.set (E.Contact.field_id ("blog_url"), u.value);
+            }
+          else if (fburl)
+            {
+              contact.set (E.Contact.field_id ("fburl"), u.value);
+            }
+          else if (video)
+            {
+              contact.set (E.Contact.field_id ("video_url"), u.value);
+            }
+          else
+            {
+              contact.add_attribute (attr);
+            }
+        }
     }
 
   internal async void _set_local_ids (Edsf.Persona persona,

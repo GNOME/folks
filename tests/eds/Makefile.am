@@ -66,6 +66,7 @@ noinst_PROGRAMS = \
 	set-notes \
 	add-contacts-stress-test \
 	set-gender \
+	set-urls \
 	$(NULL)
 
 RUN_WITH_PRIVATE_BUS = $(top_srcdir)/tests/tools/with-session-bus-eds.sh
@@ -176,6 +177,10 @@ set_gender_SOURCES = \
 	set-gender.vala \
 	$(NULL)
 
+set_urls_SOURCES = \
+	set-urls.vala \
+	$(NULL)
+
 CLEANFILES = \
         *.pid \
         *.address \
@@ -207,6 +212,7 @@ MAINTAINERCLEANFILES = \
         set_notes_vala.stamp \
 	add_contacts_stress_test_vala.stamp \
 	set_gender_vala.stamp \
+	set_urls_vala.stamp \
         $(NULL)
 
 EXTRA_DIST = \

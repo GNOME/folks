@@ -127,4 +127,42 @@ public class Folks.Utils : Object
 
       return true;
     }
+
+  /**
+   * Check whether a set of strings to AbstractFieldDetails are equal.
+   *
+   * This performs a deep check for equality, checking whether both sets are of
+   * the same size, and that each key maps to the same set of values in both
+   * maps.
+   *
+   * @param a a set to compare
+   * @param b another set to compare
+   * @return `true` if the sets are equal, `false` otherwise
+   *
+   * @since UNRELEASED
+   */
+  public static bool set_afd_equal (
+      Set<AbstractFieldDetails> a,
+      Set<AbstractFieldDetails> b)
+    {
+      if (a == b)
+        return true;
+
+      if (a.size == b.size)
+        {
+          foreach (var val in a)
+            {
+              if (!b.contains (val))
+                {
+                  return false;
+                }
+            }
+        }
+      else
+        {
+          return false;
+        }
+
+      return true;
+    }
 }

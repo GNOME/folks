@@ -349,7 +349,7 @@ public class Edsf.Persona : Folks.Persona,
       get { return this._urls_ro; }
       set
         {
-          GLib.warning ("Urls setting not supported yet\n");
+          ((Edsf.PersonaStore) this.store)._set_urls (this, value);
         }
     }
 
@@ -802,17 +802,50 @@ public class Edsf.Persona : Folks.Persona,
   private void _update_urls ()
     {
       this._urls.clear ();
+      var urls_temp = new HashSet<UrlFieldDetails> ();
 
+      /* First we get the standard Evo urls.. */
       foreach (string url_property in this.url_properties)
         {
           string u = (string) this._get_property (url_property);
           if (u != null && u != "")
             {
-              this._urls.add (new UrlFieldDetails (u));
+              var fd_u = new UrlFieldDetails (u);
+              fd_u.set_parameter("type", url_property);
+              urls_temp.add (fd_u);
             }
         }
 
-      this.notify_property ("urls");
+      /* Now we go for extra URLs */
+      var vcard = (E.VCard) this.contact;
+      foreach (unowned E.VCardAttribute attr in vcard.get_attributes ())
+        {
+          if (attr.get_name () == "X-URIS")
+            {
+              var url_fd = new UrlFieldDetails (attr.get_value ());
+              foreach (var param in attr.get_params ())
+                {
+                  string param_name = param.get_name ().down ();
+                  foreach (var param_value in param.get_values ())
+                    {
+                      url_fd.add_parameter (param_name, param_value);
+                    }
+                }
+              urls_temp.add (url_fd);
+            }
+        }
+
+      if (!Utils.set_afd_equal (urls_temp, this._urls))
+        {
+          this._urls.clear ();
+
+          foreach (var url_fd in urls_temp)
+            {
+              this._urls.add (url_fd);
+            }
+
+         this.notify_property ("urls");
+        }
     }
 
   private void _update_im_addresses ()
