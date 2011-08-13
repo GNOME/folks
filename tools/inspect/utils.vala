@@ -69,8 +69,10 @@ private class Folks.Inspect.Utils
       unowned string[] array = (string[]) src.get_boxed ();
       string output = "{ ";
       bool first = true;
-      foreach (string element in array)
+      /* FIXME: Work around bgo#656467 by using for() instead of foreach() */
+      for (uint i = 0; array[i] != null; i++)
         {
+          var element = array[i];
           if (first == false)
             output += ", ";
           output += "'%s'".printf (element);
