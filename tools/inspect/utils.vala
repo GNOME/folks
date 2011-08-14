@@ -44,43 +44,34 @@ private class Folks.Inspect.Utils
   private static void transform_object_to_string (Value src,
       out Value dest)
     {
-      /* FIXME: works around bgo#638363 */
-      Value dest_tmp = Value (typeof (string));
-      dest_tmp.take_string ("%p".printf (src.get_object ()));
-      dest = dest_tmp;
+      var output = "%p".printf (src.get_object ());
+      dest = (owned) output;
     }
 
   private static void transform_persona_store_to_string (Value src,
       out Value dest)
     {
-      /* FIXME: works around bgo#638363 */
-      Value dest_tmp = Value (typeof (string));
-      Folks.PersonaStore store = (Folks.PersonaStore) src.get_object ();
-      dest_tmp.take_string ("%p: %s, %s (%s)".printf (store, store.type_id,
-          store.id, store.display_name));
-      dest = dest_tmp;
+      var store = (Folks.PersonaStore) src;
+      var output = "%p: %s, %s (%s)".printf (store, store.type_id,
+          store.id, store.display_name);
+      dest = (owned) output;
     }
 
   private static void transform_string_array_to_string (Value src,
       out Value dest)
     {
-      /* FIXME: works around bgo#638363 */
-      Value dest_tmp = Value (typeof (string));
-      unowned string[] array = (string[]) src.get_boxed ();
+      unowned string[] array = (string[]) src;
       string output = "{ ";
       bool first = true;
-      /* FIXME: Work around bgo#656467 by using for() instead of foreach() */
-      for (uint i = 0; array[i] != null; i++)
+      foreach (var element in array)
         {
-          var element = array[i];
           if (first == false)
             output += ", ";
           output += "'%s'".printf (element);
           first = false;
         }
       output += " }";
-      dest_tmp.take_string (output);
-      dest = dest_tmp;
+      dest = (owned) output;
     }
 
   public static void indent ()
