@@ -117,18 +117,30 @@ public class AvatarDetailsTests : Folks.TestCase
 
           if (i.full_name == "bernie h. innocenti")
             {
-              var b = new FileIcon (File.new_for_path (this._avatar_path));
-
-              Utils.loadable_icons_content_equal (b, i.avatar, -1,
-                  (object, result) =>
-                {
-                  this._avatars_are_equal =
-                      Utils.loadable_icons_content_equal.end (result);
-                  this._main_loop.quit ();
-                });
+              i.notify["avatar"].connect (this._notify_cb);
+              this._check_avatar (i.avatar);
             }
         }
    }
+
+  private void _notify_cb (Object individual_obj, ParamSpec ps)
+    {
+      Folks.Individual i = (Folks.Individual) individual_obj;
+      this._check_avatar (i.avatar);
+    }
+
+  private async void _check_avatar (LoadableIcon? avatar)
+    {
+      if (avatar != null)
+        {
+          var b = new FileIcon (File.new_for_path (this._avatar_path));
+
+          this._avatars_are_equal =
+            yield TestUtils.loadable_icons_content_equal (
+                avatar, b, -1);
+          this._main_loop.quit ();
+        }
+    }
 }
 
 public int main (string[] args)
