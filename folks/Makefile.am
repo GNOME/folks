@@ -44,6 +44,10 @@ libfolks_la_SOURCES = \
 	object-cache.vala \
 	$(NULL)
 
+if ENABLE_EDS
+EDS_FLAGS = -D ENABLE_EDS
+endif
+
 libfolks_la_VALAFLAGS = \
 	--gir=Folks-$(API_VERSION).gir \
 	--library=folks \
@@ -57,6 +61,7 @@ libfolks_la_VALAFLAGS = \
 	--includedir folks \
 	--vapi folks.vapi \
 	-H folks.h \
+	$(EDS_FLAGS) \
 	$(NULL)
 
 libfolks_la_CFLAGS = \
