@@ -929,33 +929,18 @@ public class Edsf.PersonaStore : Folks.PersonaStore
   private async void _set_contact_postal_addresses (E.Contact contact,
       Set<PostalAddressFieldDetails> postal_fds)
     {
-      foreach (var fd in postal_fds)
-        {
-          if (fd == null || fd.value == null)
-            continue;
-
-          var address = new E.ContactAddress ();
-
-          address.po = fd.value.po_box;
-          address.ext = fd.value.extension;
-          address.street = fd.value.street;
-          address.locality = fd.value.locality;
-          address.region = fd.value.region;
-          address.code = fd.value.postal_code;
-          address.country = fd.value.country;
-          address.address_format = fd.value.address_format;
-
-          var types = fd.parameters.get ("type");
-          if (types.size > 0)
-            {
-              var type = types.to_array ()[0];
-              contact.set (E.Contact.field_id (type), address);
-            }
-          else
-            {
-              contact.set (E.ContactField.ADDRESS_OTHER, address);
-            }
-        }
+      yield this._set_contact_attributes<PostalAddress> (contact,
+          postal_fds,
+          (attr, address) => {
+            attr.add_value (address.po_box);
+            attr.add_value (address.extension);
+            attr.add_value (address.street);
+            attr.add_value (address.locality);
+            attr.add_value (address.region);
+            attr.add_value (address.postal_code);
+            attr.add_value (address.country);
+          },
+          "ADR", E.ContactField.ADDRESS);
     }
 
   delegate void FieldToAttribute<T> (E.VCardAttribute attr, T value);
