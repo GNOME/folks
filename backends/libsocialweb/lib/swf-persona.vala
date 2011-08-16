@@ -40,7 +40,14 @@ public class Swf.Persona : Folks.Persona,
       "im-addresses",
       "web-service-addresses"
     };
-  private const string[] _writeable_properties = {}; // No writeable properties
+
+  /* No writeable properties
+   *
+   * FIXME: we can't mark this as const because Vala gets confused
+   *        and generates the wrong C output (char *arr[0] = {}
+   *        instead of char **arr = NULL)
+   */
+  private static string[] _writeable_properties = {};
 
   /**
    * The names of the Persona's linkable properties.
