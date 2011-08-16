@@ -239,7 +239,8 @@ public class Edsf.PersonaStore : Folks.PersonaStore
             {
               Set<EmailFieldDetails> email_addresses =
                 (Set<EmailFieldDetails>) v.get_object ();
-              yield this._set_contact_attributes (contact, email_addresses,
+              yield this._set_contact_attributes_string (contact,
+                  email_addresses,
                   "EMAIL", E.ContactField.EMAIL);
             }
           else if (k == Folks.PersonaStore.detail_key (PersonaDetail.AVATAR))
@@ -258,7 +259,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
             {
               Set<PhoneFieldDetails> phone_numbers =
                 (Set<PhoneFieldDetails>) v.get_object ();
-              yield this._set_contact_attributes (contact,
+              yield this._set_contact_attributes_string (contact,
                   phone_numbers, "TEL",
                   E.ContactField.TEL);
             }
@@ -881,7 +882,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
       try
         {
           E.Contact contact = ((Edsf.Persona) persona).contact;
-          yield this._set_contact_attributes (contact, emails, "EMAIL",
+          yield this._set_contact_attributes_string (contact, emails, "EMAIL",
               E.ContactField.EMAIL);
           yield this._addressbook.modify_contact (contact);
         }
@@ -898,7 +899,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
       try
         {
           E.Contact contact = ((Edsf.Persona) persona).contact;
-          yield this._set_contact_attributes (contact, phones, "TEL",
+          yield this._set_contact_attributes_string (contact, phones, "TEL",
               E.ContactField.TEL);
           yield this._addressbook.modify_contact (contact);
         }
@@ -957,8 +958,11 @@ public class Edsf.PersonaStore : Folks.PersonaStore
         }
     }
 
-  private async void _set_contact_attributes (E.Contact contact,
-      Set<AbstractFieldDetails<string>> new_attributes,
+  delegate void FieldToAttribute<T> (E.VCardAttribute attr, T value);
+
+  private async void _set_contact_attributes<T> (E.Contact contact,
+      Set<AbstractFieldDetails<T>> new_attributes,
+      FieldToAttribute<T> fill_attribute,
       string attrib_name, E.ContactField field_id)
     {
       var attributes = new GLib.List <E.VCardAttribute>();
@@ -966,7 +970,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
       foreach (var e in new_attributes)
         {
           var attr = new E.VCardAttribute (null, attrib_name);
-          attr.add_value (e.value);
+          fill_attribute (attr, e.value);
           foreach (var param_name in e.parameters.get_keys ())
             {
               var param = new E.VCardAttributeParam (param_name.up ());
@@ -980,6 +984,15 @@ public class Edsf.PersonaStore : Folks.PersonaStore
         }
 
       contact.set_attributes (field_id, attributes);
+    }
+
+  private async void _set_contact_attributes_string (E.Contact contact,
+      Set<AbstractFieldDetails<string>> new_attributes,
+      string attrib_name, E.ContactField field_id)
+    {
+      _set_contact_attributes<string> (contact, new_attributes,
+          (attr, value) => { attr.add_value (value); },
+          attrib_name, field_id);
     }
 
   internal async void _set_full_name (Edsf.Persona persona,
