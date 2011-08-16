@@ -152,6 +152,10 @@ public class Folks.Inspect.Client : Object
       out string command_name,
       out string? subcommand)
     {
+      /* Default output */
+      command_name = "";
+      subcommand = null;
+
       string[] parts = command_line.split (" ", 2);
 
       if (parts.length < 1)

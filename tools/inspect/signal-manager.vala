@@ -386,12 +386,15 @@ public class Folks.Inspect.SignalManager : Object
     }
 
   private static void signal_meta_marshaller (Closure closure,
-      out Value return_value,
+      out Value? return_value,
       Value[] param_values,
       void *invocation_hint,
       void *marshal_data)
     {
       SignalInvocationHint* hint = (SignalInvocationHint*) invocation_hint;
+
+      /* Default output */
+      return_value = null;
 
       SignalQuery query_info;
       Signal.query (hint->signal_id, out query_info);

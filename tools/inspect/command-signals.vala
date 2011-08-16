@@ -209,6 +209,12 @@ private class Folks.Inspect.Commands.Signals : Folks.Inspect.Command
        */
       assert (input != null && input != "");
 
+      /* Default output */
+      class_type = Type.INVALID;
+      class_instance = null;
+      signal_name = null;
+      detail_string = null;
+
       string[] parts = input.split ("::", 3);
       string class_name_or_instance = parts[0];
       string signal_name_inner = (parts.length > 1) ? parts[1] : null;
