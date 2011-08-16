@@ -233,7 +233,7 @@ public class Folks.IndividualAggregator : Object
 
   private void _set_writeable_store (string store_config_ids)
     {
-      if (store_config_ids.str (":") != null)
+      if (store_config_ids.index_of (":") != -1)
         {
           var ids = store_config_ids.split (":", 2);
           this._configured_writeable_store_type_id = ids[0];
