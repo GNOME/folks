@@ -697,7 +697,8 @@ public class Edsf.PersonaStore : Folks.PersonaStore
   private async void _set_contact_web_service_addresses (E.Contact contact,
       MultiMap<string, WebServiceFieldDetails> web_service_addresses)
     {
-      var attr = contact.get_attribute ("X-FOLKS-WEB-SERVICES-IDS");
+      unowned VCardAttribute attr =
+          contact.get_attribute ("X-FOLKS-WEB-SERVICES-IDS");
       if (attr != null)
         {
           contact.remove_attribute (attr);
@@ -713,7 +714,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
             }
           attr_n.add_param (param);
         }
-      contact.add_attribute (attr_n);
+      contact.add_attribute ((owned) attr_n);
     }
 
   internal async void _set_urls (Edsf.Persona persona,
@@ -797,7 +798,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
             }
           else
             {
-              contact.add_attribute (attr);
+              contact.add_attribute ((owned) attr);
             }
         }
     }
@@ -820,19 +821,20 @@ public class Edsf.PersonaStore : Folks.PersonaStore
   private async void _set_contact_local_ids (E.Contact contact,
       Set<string> local_ids)
     {
-      var attr = contact.get_attribute ("X-FOLKS-CONTACTS-IDS");
+      unowned VCardAttribute attr =
+          contact.get_attribute ("X-FOLKS-CONTACTS-IDS");
       if (attr != null)
         {
           contact.remove_attribute (attr);
         }
 
-      attr = new VCardAttribute (null, "X-FOLKS-CONTACTS-IDS");
+      var new_attr = new VCardAttribute (null, "X-FOLKS-CONTACTS-IDS");
       foreach (var local_id in local_ids)
         {
-          attr.add_value (local_id);
+          new_attr.add_value (local_id);
         }
 
-      contact.add_attribute (attr);
+      contact.add_attribute ((owned) new_attr);
     }
 
   private async void _set_contact_avatar (E.Contact contact,
@@ -974,7 +976,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
                 }
               attr.add_param (param);
             }
-          attributes.prepend (attr);
+          attributes.prepend ((owned) attr);
         }
 
       contact.set_attributes (field_id, attributes);
@@ -1109,7 +1111,10 @@ public class Edsf.PersonaStore : Folks.PersonaStore
       /* First let's remove everything */
       foreach (var field_id in im_eds_map.get_values ())
         {
-          var attrs = contact.get_attributes (field_id);
+          /* Technically it's a (transfer full) list, but remove_attribute()
+           * swallows ownership. */
+          GLib.List<unowned VCardAttribute> attrs =
+              contact.get_attributes (field_id);
           foreach (var attr in attrs)
             {
               contact.remove_attribute (attr);
@@ -1126,7 +1131,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
            {
              var attr_n = new E.VCardAttribute (null, attrib_name);
              attr_n.add_value (im_fd.value);
-             attributes.prepend (attr_n);
+             attributes.prepend ((owned) attr_n);
              added = true;
            }
 
@@ -1194,27 +1199,27 @@ public class Edsf.PersonaStore : Folks.PersonaStore
   private async void _set_contact_gender (E.Contact contact,
       Gender gender)
     {
-      var attr = contact.get_attribute (Edsf.Persona.gender_attribute_name);
+      unowned VCardAttribute attr =
+          contact.get_attribute (Edsf.Persona.gender_attribute_name);
       if (attr != null)
         {
           contact.remove_attribute (attr);
         }
+
+      var new_attr =
+          new VCardAttribute (null, Edsf.Persona.gender_attribute_name);
 
       switch (gender)
         {
           case Gender.UNSPECIFIED:
             break;
           case Gender.MALE:
-            attr = new VCardAttribute (null,
-                Edsf.Persona.gender_attribute_name);
-            attr.add_value (Edsf.Persona.gender_male);
-            contact.add_attribute (attr);
+            new_attr.add_value (Edsf.Persona.gender_male);
+            contact.add_attribute ((owned) new_attr);
             break;
           case Gender.FEMALE:
-            attr = new VCardAttribute (null,
-                Edsf.Persona.gender_attribute_name);
-            attr.add_value (Edsf.Persona.gender_female);
-            contact.add_attribute (attr);
+            new_attr.add_value (Edsf.Persona.gender_female);
+            contact.add_attribute ((owned) new_attr);
             break;
         }
     }
