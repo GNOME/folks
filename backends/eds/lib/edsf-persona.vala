@@ -586,6 +586,19 @@ public class Edsf.Persona : Folks.Persona,
       this._update_gender ();
     }
 
+  private void _update_params (AbstractFieldDetails details,
+      E.VCardAttribute attr)
+    {
+      foreach (unowned E.VCardAttributeParam param in attr.get_params ())
+        {
+          string param_name = param.get_name ().down ();
+          foreach (unowned string param_value in param.get_values ())
+            {
+              details.add_parameter (param_name, param_value);
+            }
+        }
+    }
+
   private void _update_gender ()
     {
       var gender = Gender.UNSPECIFIED;
@@ -642,14 +655,7 @@ public class Edsf.Persona : Folks.Persona,
       foreach (var attr in attrs)
         {
           var email_fd = new EmailFieldDetails (attr.get_value ());
-          foreach (var param in attr.get_params ())
-            {
-              string param_name = param.get_name ().down ();
-              foreach (var param_value in param.get_values ())
-                {
-                  email_fd.add_parameter (param_name, param_value);
-                }
-            }
+          this._update_params (email_fd, attr);
           this._email_addresses.add (email_fd);
         }
 
@@ -823,14 +829,7 @@ public class Edsf.Persona : Folks.Persona,
           if (attr.get_name () == "X-URIS")
             {
               var url_fd = new UrlFieldDetails (attr.get_value ());
-              foreach (var param in attr.get_params ())
-                {
-                  string param_name = param.get_name ().down ();
-                  foreach (var param_value in param.get_values ())
-                    {
-                      url_fd.add_parameter (param_name, param_value);
-                    }
-                }
+              this._update_params (url_fd, attr);
               urls_temp.add (url_fd);
             }
         }
@@ -967,14 +966,7 @@ public class Edsf.Persona : Folks.Persona,
       foreach (var attr in attrs)
         {
           var phone_fd = new PhoneFieldDetails (attr.get_value ());
-          foreach (var param in attr.get_params ())
-            {
-              string param_name = param.get_name ().down ();
-              foreach (var param_value in param.get_values ())
-                {
-                  phone_fd.add_parameter (param_name, param_value);
-                }
-            }
+          this._update_params (phone_fd, attr);
           this._phone_numbers.add (phone_fd);
         }
 
