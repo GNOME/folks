@@ -973,6 +973,61 @@ public class Edsf.Persona : Folks.Persona,
      this.notify_property ("phone-numbers");
    }
 
+  private PostalAddress _postal_address_from_attribute (E.VCardAttribute attr)
+    {
+      unowned GLib.List<string?> values = attr.get_values();
+      unowned GLib.List<string?> l = values;
+
+      var address_format = "";
+      var po_box = "";
+      var extension = "";
+      var street = "";
+      var locality = "";
+      var region = "";
+      var postal_code = "";
+      var country = "";
+
+      if (l != null)
+        {
+          po_box = l.data;
+          l = l.next;
+        }
+      if (l != null)
+        {
+          extension = l.data;
+          l = l.next;
+        }
+      if (l != null)
+        {
+          street = l.data;
+          l = l.next;
+        }
+      if (l != null)
+        {
+          locality = l.data;
+          l = l.next;
+        }
+      if (l != null)
+        {
+          region = l.data;
+          l = l.next;
+        }
+      if (l != null)
+        {
+          postal_code = l.data;
+          l = l.next;
+        }
+      if (l != null)
+        {
+          country = l.data;
+          l = l.next;
+        }
+
+      return new PostalAddress (po_box, extension, street,
+                                locality, region, postal_code, country,
+                                address_format, null);
+    }
+
   /*
    * TODO: we should check if addresses corresponding to different types
    *       are the same and if so instantiate only one PostalAddress
@@ -982,30 +1037,13 @@ public class Edsf.Persona : Folks.Persona,
     {
       this._postal_addresses.clear ();
 
-      foreach (string afield in this.address_fields)
+      var attrs = this.contact.get_attributes (E.ContactField.ADDRESS);
+      foreach (unowned E.VCardAttribute attr in attrs)
         {
-          E.ContactAddress a =
-              (E.ContactAddress) this._get_property (afield);
-          if (a != null)
-            {
-              /* FIXME: might be my broken setup, but it looks like
-               * e-d-s is ignoring the address_format param */
-              var address_format = a.address_format;
-              var postal_code = a.code;
-              var country = a.country;
-              var extension = a.ext;
-              var locality = a.locality;
-              var po_box = a.po;
-              var region = a.region;
-              var street = a.street;
-
-              var pa = new PostalAddress (po_box, extension, street,
-                  locality, region, postal_code, country,
-                  address_format, null);
-              var pa_fd = new PostalAddressFieldDetails (pa);
-              pa_fd.add_parameter ("type", afield);
-              this._postal_addresses.add (pa_fd);
-            }
+          var pa_fd = new PostalAddressFieldDetails (
+              this._postal_address_from_attribute (attr));
+          this._update_params (pa_fd, attr);
+          this._postal_addresses.add (pa_fd);
         }
 
       this.notify_property ("postal-addresses");
