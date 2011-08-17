@@ -47,8 +47,7 @@ internal class Edsf.MemoryIcon : Object, Icon, LoadableIcon
 
   /**
    * Decide whether two {@link MemoryIcon} instances are equal. This compares
-   * their image types and image data, and only returns `true` if both are
-   * identical.
+   * their image data and returns `true` if they are identical.
    *
    * @param icon2 the {@link MemoryIcon} instance to compare against
    * @return `true` if the instances are equal, `false` otherwise
@@ -61,7 +60,6 @@ internal class Edsf.MemoryIcon : Object, Icon, LoadableIcon
       assert (icon != null);
 
       return (this._image_data.length == icon._image_data.length &&
-              this._image_type == icon._image_type &&
               Memory.cmp (this._image_data, icon._image_data,
                   this._image_data.length) == 0);
     }
