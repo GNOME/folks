@@ -304,7 +304,7 @@ public abstract class Folks.PersonaStore : Object
       return PersonaStore._PERSONA_DETAIL[detail];
     }
 
- /**
+  /**
    * Emitted when one or more {@link Persona}s are added to or removed from
    * the store.
    *
