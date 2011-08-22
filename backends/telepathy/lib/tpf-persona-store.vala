@@ -541,18 +541,6 @@ public class Tpf.PersonaStore : Folks.PersonaStore
             {
               this._account_manager = AccountManager.dup ();
 
-              this._account_manager.account_disabled.connect ((a) =>
-                {
-                  if (this.account == a)
-                    {
-                      this._store_cache.begin ((o, r) =>
-                        {
-                          this._store_cache.end (r);
-                          this._emit_personas_changed (null, this._persona_set);
-                          this.removed ();
-                        });
-                    }
-                });
               this._account_manager.account_removed.connect ((a) =>
                 {
                   if (this.account == a)
@@ -784,16 +772,32 @@ public class Tpf.PersonaStore : Folks.PersonaStore
            * set and call this._reset().
            *
            * Before we do this, we store the current set of personas to the
-           * cache. */
-          this._store_cache.begin ((o, r) =>
+           * cache, assuming we were connected before. */
+          if (old_status == TelepathyGLib.ConnectionStatus.CONNECTED)
             {
-              this._store_cache.end (r);
-
-              this._load_cache.begin ((o2, r2) =>
+              this._store_cache.begin ((o, r) =>
                 {
-                  this._load_cache.end (r2);
+                  this._store_cache.end (r);
+
+                  this._load_cache.begin ((o2, r2) =>
+                    {
+                      this._load_cache.end (r2);
+                    });
                 });
-            });
+            }
+
+          /* If the account was disabled, remove it. We do this here rather than
+           * in a handler for the AccountManager::account-disabled signal so
+           * that we can wait until the personas have been stored to the cache,
+           * which only happens once the account is disconnected (above). We can
+           * do this because it's guaranteed that the account will be
+           * disconnected after being disabled (if it was connected to begin
+           * with). */
+          if (this.account.enabled == false)
+            {
+              this._emit_personas_changed (null, this._persona_set);
+              this.removed ();
+            }
 
           /* If the persona store starts offline, we've reached a quiescent
            * state. */
@@ -930,10 +934,25 @@ public class Tpf.PersonaStore : Folks.PersonaStore
    */
   private async void _load_cache ()
     {
+      /* Only load from the cache if the account is enabled and valid. */
+      if (this.account.enabled == false || this.account.valid == false)
+        {
+          debug ("Skipping loading cache for Tpf.PersonaStore '%s': " +
+              "enabled: %s, valid: %s.", this.id,
+              this.account.enabled ? "yes" : "no",
+              this.account.valid ? "yes" : "no");
+
+          return;
+        }
+
+      debug ("Loading cache for Tpf.PersonaStore '%s'.", this.id);
+
       var cancellable = new Cancellable ();
 
       if (this._load_cache_cancellable != null)
         {
+          debug ("    Cancelling ongoing loading operation (cancellable: %p).",
+              this._load_cache_cancellable);
           this._load_cache_cancellable.cancel ();
         }
 
@@ -947,6 +966,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
        * of the persona store at all. */
       if (cancellable.is_cancelled () == true)
         {
+          debug ("    Cancelled (cancellable: %p).", cancellable);
           return;
         }
 
@@ -977,6 +997,8 @@ public class Tpf.PersonaStore : Folks.PersonaStore
    */
   private async void _store_cache ()
     {
+      debug ("Storing cache for Tpf.PersonaStore '%s'.", this.id);
+
       yield this._cache.store_objects (this._persona_set);
     }
 
@@ -986,9 +1008,13 @@ public class Tpf.PersonaStore : Folks.PersonaStore
    */
   private void _unload_cache ()
     {
+      debug ("Unloading cache for Tpf.PersonaStore '%s'.", this.id);
+
       // If we're in the process of loading from the cache, cancel that
       if (this._load_cache_cancellable != null)
         {
+          debug ("    Cancelling ongoing loading operation (cancellable: %p).",
+              this._load_cache_cancellable);
           this._load_cache_cancellable.cancel ();
         }
 

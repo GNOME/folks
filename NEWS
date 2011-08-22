@@ -11,6 +11,7 @@ Bugs fixed:
 * Bug 657142 — Automatically link e-d-s contacts with their contacts from
   telepathy
 * Bug 658002 — defective typelib
+* Bug 657065 — Cache keeps around contacts from disabled accounts
 
 API changes:
 * Individual.avatar is now settable using Individual.change_avatar() (not new
