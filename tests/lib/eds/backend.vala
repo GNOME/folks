@@ -58,9 +58,9 @@ public class EdsTest.Backend
       E.Contact contact;
       try
         {
-          yield this._addressbook.get_contact (uid, out contact);
+          yield this._addressbook.get_contact (uid, null, out contact);
           this._set_contact_fields (contact, updated_data);
-          yield this._addressbook.modify_contact (contact);
+          yield this._addressbook.modify_contact (contact, null);
         }
       catch (GLib.Error e)
         {
@@ -74,8 +74,8 @@ public class EdsTest.Backend
       E.Contact contact;
       try
         {
-          yield this._addressbook.get_contact (uid, out contact);
-          yield this._addressbook.remove_contact (contact);
+          yield this._addressbook.get_contact (uid, null, out contact);
+          yield this._addressbook.remove_contact (contact, null);
         }
       catch (GLib.Error e)
         {
@@ -143,7 +143,7 @@ public class EdsTest.Backend
             {
               string added_uid;
               yield this._addressbook.add_contact (contact,
-                  out added_uid);
+                  null, out added_uid);
               this._e_contacts.prepend ((owned) added_uid);
             }
           catch (GLib.Error e)

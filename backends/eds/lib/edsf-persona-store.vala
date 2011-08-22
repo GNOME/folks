@@ -314,6 +314,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
         {
           string added_uid;
           var result = yield this._addressbook.add_contact (contact,
+              null,
               out added_uid);
 
           if (result)
@@ -364,7 +365,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
       try
         {
           yield this._addressbook.remove_contact (
-              ((Edsf.Persona) persona).contact);
+              ((Edsf.Persona) persona).contact, null);
         }
       catch (GLib.Error e)
         {
@@ -543,7 +544,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
           try
             {
               yield this._addressbook.get_backend_property ("supported-fields",
-                  out supported_fields, null);
+                  null, out supported_fields);
 
               /* We get a comma-separated list of fields back. */
               if (supported_fields != null)
@@ -565,7 +566,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
           try
             {
               got_view = yield this._addressbook.get_view (this._query_str,
-                  out this._ebookview);
+                  null, out this._ebookview);
 
               if (got_view == false)
                 {
@@ -667,7 +668,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
         {
           E.Contact contact = ((Edsf.Persona) persona).contact;
           yield this._set_contact_avatar (contact, avatar);
-          yield this._addressbook.modify_contact (contact);
+          yield this._addressbook.modify_contact (contact, null);
         }
       catch (GLib.Error e)
         {
@@ -687,7 +688,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
           E.Contact contact = ((Edsf.Persona) persona).contact;
           yield this._set_contact_web_service_addresses (contact,
             web_service_addresses);
-          yield this._addressbook.modify_contact (contact);
+          yield this._addressbook.modify_contact (contact, null);
         }
       catch (GLib.Error e)
         {
@@ -728,7 +729,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
         {
           E.Contact contact = ((Edsf.Persona) persona).contact;
           yield this._set_contact_urls (contact, urls);
-          yield this._addressbook.modify_contact (contact);
+          yield this._addressbook.modify_contact (contact, null);
         }
       catch (GLib.Error e)
         {
@@ -811,7 +812,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
         {
           E.Contact contact = ((Edsf.Persona) persona).contact;
           yield this._set_contact_local_ids (contact, local_ids);
-          yield this._addressbook.modify_contact (contact);
+          yield this._addressbook.modify_contact (contact, null);
         }
       catch (GLib.Error e)
         {
@@ -891,7 +892,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
           E.Contact contact = ((Edsf.Persona) persona).contact;
           yield this._set_contact_attributes_string (contact, emails, "EMAIL",
               E.ContactField.EMAIL);
-          yield this._addressbook.modify_contact (contact);
+          yield this._addressbook.modify_contact (contact, null);
         }
       catch (GLib.Error error)
         {
@@ -908,7 +909,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
           E.Contact contact = ((Edsf.Persona) persona).contact;
           yield this._set_contact_attributes_string (contact, phones, "TEL",
               E.ContactField.TEL);
-          yield this._addressbook.modify_contact (contact);
+          yield this._addressbook.modify_contact (contact, null);
         }
       catch (GLib.Error error)
         {
@@ -924,7 +925,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
           E.Contact contact = ((Edsf.Persona) persona).contact;
           yield this._set_contact_postal_addresses (contact,
               postal_fds);
-          yield this._addressbook.modify_contact (contact);
+          yield this._addressbook.modify_contact (contact, null);
         }
       catch (GLib.Error error)
         {
@@ -997,7 +998,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
         {
           E.Contact contact = ((Edsf.Persona) persona).contact;
           contact.set (E.Contact.field_id ("full_name"), full_name);
-          yield this._addressbook.modify_contact (contact);
+          yield this._addressbook.modify_contact (contact, null);
         }
       catch (GLib.Error error)
         {
@@ -1014,7 +1015,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
         {
           E.Contact contact = ((Edsf.Persona) persona).contact;
           contact.set (E.Contact.field_id ("nickname"), nickname);
-          yield this._addressbook.modify_contact (contact);
+          yield this._addressbook.modify_contact (contact, null);
         }
       catch (GLib.Error error)
         {
@@ -1029,7 +1030,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
         {
           E.Contact contact = ((Edsf.Persona) persona).contact;
           yield this._set_contact_notes (contact, notes);
-          yield this._addressbook.modify_contact (contact);
+          yield this._addressbook.modify_contact (contact, null);
         }
       catch (GLib.Error error)
         {
@@ -1064,7 +1065,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
         {
           E.Contact contact = ((Edsf.Persona) persona).contact;
           yield this._set_contact_name (contact, sname);
-          yield this._addressbook.modify_contact (contact);
+          yield this._addressbook.modify_contact (contact, null);
         }
       catch (GLib.Error error)
         {
@@ -1099,7 +1100,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
         {
           E.Contact contact = ((Edsf.Persona) persona).contact;
           yield this._set_contact_im_fds (contact, im_fds);
-          yield this._addressbook.modify_contact (contact);
+          yield this._addressbook.modify_contact (contact, null);
         }
       catch (GLib.Error error)
         {
@@ -1161,7 +1162,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
         {
           E.Contact contact = ((Edsf.Persona) persona).contact;
           yield this._set_contact_groups (contact, groups);
-          yield this._addressbook.modify_contact (contact);
+          yield this._addressbook.modify_contact (contact, null);
         }
       catch (GLib.Error error)
         {
@@ -1193,7 +1194,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
         {
           E.Contact contact = ((Edsf.Persona) persona).contact;
           yield this._set_contact_gender (contact, gender);
-          yield this._addressbook.modify_contact (contact);
+          yield this._addressbook.modify_contact (contact, null);
         }
       catch (GLib.Error e)
         {
