@@ -141,6 +141,7 @@ public class Edsf.Persona : Folks.Persona,
   /**
    * {@inheritDoc}
    */
+  [CCode (notify = false)]
   public MultiMap<string, WebServiceFieldDetails> web_service_addresses
     {
       get { return this._web_service_addresses; }
@@ -154,6 +155,7 @@ public class Edsf.Persona : Folks.Persona,
   /**
    * IDs used to link {@link Edsf.Persona}s.
    */
+  [CCode (notify = false)]
   public Set<string> local_ids
     {
       get
@@ -177,6 +179,7 @@ public class Edsf.Persona : Folks.Persona,
    *
    * @since 0.6.0
    */
+  [CCode (notify = false)]
   public Set<PostalAddressFieldDetails> postal_addresses
     {
       get { return this._postal_addresses_ro; }
@@ -191,6 +194,7 @@ public class Edsf.Persona : Folks.Persona,
    *
    * @since 0.6.0
    */
+  [CCode (notify = false)]
   public Set<PhoneFieldDetails> phone_numbers
     {
       get { return this._phone_numbers_ro; }
@@ -205,6 +209,7 @@ public class Edsf.Persona : Folks.Persona,
    *
    * @since 0.6.0
    */
+  [CCode (notify = false)]
   public Set<EmailFieldDetails> email_addresses
     {
       get { return this._email_addresses_ro; }
@@ -219,6 +224,7 @@ public class Edsf.Persona : Folks.Persona,
    *
    * @since 0.6.0
    */
+  [CCode (notify = false)]
   public Set<NoteFieldDetails> notes
     {
       get { return this._notes_ro; }
@@ -256,6 +262,7 @@ public class Edsf.Persona : Folks.Persona,
    *
    * @since 0.6.0
    */
+  [CCode (notify = false)]
   public LoadableIcon? avatar
     {
       get { return this._avatar; }
@@ -275,6 +282,7 @@ public class Edsf.Persona : Folks.Persona,
    *
    * @since 0.6.0
    */
+  [CCode (notify = false)]
   public StructuredName structured_name
     {
       get { return this._structured_name; }
@@ -297,6 +305,7 @@ public class Edsf.Persona : Folks.Persona,
    *
    * @since 0.6.0
    */
+  [CCode (notify = false)]
   public string full_name
     {
       get { return this._full_name; }
@@ -312,6 +321,7 @@ public class Edsf.Persona : Folks.Persona,
    *
    * @since 0.6.0
    */
+  [CCode (notify = false)]
   public string nickname
     {
       get { return this._nickname; }
@@ -328,6 +338,7 @@ public class Edsf.Persona : Folks.Persona,
    *
    * @since 0.6.0
    */
+  [CCode (notify = false)]
   public Gender gender
     {
       get { return this._gender; }
@@ -344,6 +355,7 @@ public class Edsf.Persona : Folks.Persona,
    *
    * @since 0.6.0
    */
+  [CCode (notify = false)]
   public Set<UrlFieldDetails> urls
     {
       get { return this._urls_ro; }
@@ -363,6 +375,7 @@ public class Edsf.Persona : Folks.Persona,
    *
    * @since 0.6.0
    */
+  [CCode (notify = false)]
   public MultiMap<string, ImFieldDetails> im_addresses
     {
       get { return this._im_addresses; }
@@ -380,6 +393,7 @@ public class Edsf.Persona : Folks.Persona,
    *
    * @since 0.6.0
    */
+  [CCode (notify = false)]
   public Set<string> groups
     {
       get { return this._groups_ro; }
