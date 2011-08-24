@@ -10,6 +10,7 @@ Bugs fixed:
 * Bug 656184 — Add is-quiescent property
 * Bug 657971 — Need BirthdayDetails support in eds backend
 * Bug 657789 — Don't claim uneditable eds fields as writable
+* Bug 657282 — Add an IndividualAggregator.individuals_changed_detailed signal
 
 API changes:
 * Add PersonaStore:always-writeable-properties property
@@ -20,6 +21,8 @@ API changes:
 * Add IndividualAggregator:is-quiescent, Backend:is-quiescent and
   PersonaStore:is-quiescent
 * Add PersonaDetail.GROUPS and PersonaDetail.INVALID
+* Add IndividualAggregator.individuals_changed_detailed and deprecate
+  IndividualAggregator.individuals_changed (but not remove or break it)
 
 Overview of changes from libfolks 0.6.0 to libfolks 0.6.1
 =========================================================

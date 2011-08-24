@@ -176,6 +176,11 @@ public class Folks.IndividualAggregator : Object
    * Emitted when one or more {@link Individual}s are added to or removed from
    * the aggregator.
    *
+   * If more information about the relationships between {@link Individual}s
+   * which have been linked and unlinked is needed, consider connecting to
+   * {@link IndividualAggregator.individuals_changed_detailed} instead, which is
+   * emitted at the same time as this signal.
+   *
    * This will not be emitted until after {@link IndividualAggregator.prepare}
    * has been called.
    *
@@ -187,25 +192,67 @@ public class Folks.IndividualAggregator : Object
    *
    * @since 0.5.1
    */
+  [Deprecated (since = "UNRELEASED",
+      replacement = "IndividualAggregator.individuals_changed_detailed")]
   public signal void individuals_changed (Set<Individual> added,
       Set<Individual> removed,
       string? message,
       Persona? actor,
       GroupDetails.ChangeReason reason);
 
+  /**
+   * Emitted when one or more {@link Individual}s are added to or removed from
+   * the aggregator.
+   *
+   * This is emitted at the same time as
+   * {@link IndividualAggregator.individuals_changed}, but includes more
+   * information about the relationships between {@link Individual}s which have
+   * been linked and unlinked.
+   *
+   * Individuals which have been linked will be listed in the multi-map as
+   * mappings from the old individuals to the single new individual which
+   * replaces them (i.e. each of the old individuals will map to the same new
+   * individual). This new individual is the one which will be specified as the
+   * `replacement_individual` in the {@link Individual.removed} signal for the
+   * old individuals.
+   *
+   * Individuals which have been unlinked will be listed in the multi-map as
+   * a mapping from the unlinked individual to a set of one or more individuals
+   * which replace it.
+   *
+   * Individuals which have been added will be listed in the multi-map as a
+   * mapping from `null` to the set of added individuals. If `null` doesn't
+   * map to anything, no individuals have been added to the aggregator.
+   *
+   * Individuals which have been removed will be listed in the multi-map as
+   * mappings from the removed individual to `null`.
+   *
+   * This will not be emitted until after {@link IndividualAggregator.prepare}
+   * has been called.
+   *
+   * @param added a mapping of old {@link Individual}s to new
+   * {@link Individual}s for the individuals which have changed in the
+   * aggregator
+   *
+   * @since UNRELEASED
+   */
+  public signal void individuals_changed_detailed (
+      MultiMap<Individual?, Individual?> changes);
+
   /* FIXME: make this a singleton? */
   /**
    * Create a new IndividualAggregator.
    *
    * Clients should connect to the
-   * {@link IndividualAggregator.individuals_changed} signal, then call
-   * {@link IndividualAggregator.prepare} to load the backends and start
+   * {@link IndividualAggregator.individuals_changed} signal (or the
+   * {@link IndividualAggregator.individuals_changed_detailed} signal), then
+   * call {@link IndividualAggregator.prepare} to load the backends and start
    * aggregating individuals.
    *
    * An example of how to set up an IndividualAggregator:
    * {{{
    *   IndividualAggregator agg = new IndividualAggregator ();
-   *   agg.individuals_changed.connect (individuals_changed_cb);
+   *   agg.individuals_changed_detailed.connect (individuals_changed_cb);
    *   agg.prepare ();
    * }}}
    */
@@ -374,9 +421,10 @@ public class Folks.IndividualAggregator : Object
    *
    * This loads all the available backends and prepares them for use by the
    * IndividualAggregator. This should be called //after// connecting to the
-   * {@link IndividualAggregator.individuals_changed} signal, or a race
-   * condition could occur, with the signal being emitted before your code has
-   * connected to them, and {@link Individual}s getting "lost" as a result.
+   * {@link IndividualAggregator.individuals_changed} signal (or
+   * {@link IndividualAggregator.individuals_changed_detailed} signal), or a
+   * race condition could occur, with the signal being emitted before your code
+   * has connected to them, and {@link Individual}s getting "lost" as a result.
    *
    * This function is guaranteed to be idempotent (since version 0.3.0).
    *
@@ -621,15 +669,18 @@ public class Folks.IndividualAggregator : Object
    * read-only. */
   private void _emit_individuals_changed (Set<Individual>? added,
       Set<Individual>? removed,
+      MultiMap<Individual?, Individual?>? changes,
       string? message = null,
       Persona? actor = null,
       GroupDetails.ChangeReason reason = GroupDetails.ChangeReason.NONE)
     {
       var _added = added;
       var _removed = removed;
+      var _changes = changes;
 
       if ((added == null || added.size == 0) &&
-          (removed == null || removed.size == 0))
+          (removed == null || removed.size == 0) &&
+          (changes == null || changes.size == 0))
         {
           /* Don't bother emitting it if nothing's changed */
           return;
@@ -642,9 +693,14 @@ public class Folks.IndividualAggregator : Object
         {
           _removed = new HashSet<Individual> ();
         }
+      else if (changes == null)
+        {
+          _changes = new HashMultiMap<Individual?, Individual?> ();
+        }
 
       this.individuals_changed (_added.read_only_view, _removed.read_only_view,
           message, actor, reason);
+      this.individuals_changed_detailed (changes);
     }
 
   private void _connect_to_individual (Individual individual)
@@ -659,24 +715,9 @@ public class Folks.IndividualAggregator : Object
       individual.removed.disconnect (this._individual_removed_cb);
     }
 
-  private void _add_personas (Set<Persona> added,
-      ref HashSet<Individual> added_individuals,
-      ref HashMap<Individual, Individual> replaced_individuals,
-      ref Individual user)
+  private void _add_personas (Set<Persona> added, ref Individual user,
+      ref HashMultiMap<Individual?, Individual?> individuals_changes)
     {
-      /* Set of individuals which have been added as a result of the new
-       * personas. These will be returned in added_individuals, but have to be
-       * cached first so that we can ensure that we don't return any given
-       * individual in both added_individuals _and_ replaced_individuals. This
-       * can happen in the case that several of the added personas are linked
-       * together to form one final individual. In that case, a succession of
-       * newly linked individuals will be produced (one for each iteration of
-       * the loop over the added personas); only the *last one* of which should
-       * make its way into added_individuals. The rest should not even make
-       * their way into replaced_individuals, as they've existed only within the
-       * confines of this function call. */
-      HashSet<Individual> almost_added_individuals = new HashSet<Individual> ();
-
       foreach (var persona in added)
         {
           PersonaStoreTrust trust_level = persona.store.trust_level;
@@ -837,33 +878,55 @@ public class Folks.IndividualAggregator : Object
                 }
             }
 
-          /* Remove the old Individuals. This has to be done here, as we need
-           * the final_individual. */
           foreach (var i in candidate_inds)
             {
-              /* If the replaced individual was marked to be added to the
-               * aggregator, unmark it. */
-              if (almost_added_individuals.contains (i) == true)
-                almost_added_individuals.remove (i);
-              else
-                replaced_individuals.set (i, final_individual);
+              /* Transitively update the individuals_changes. We have to do this
+               * in two stages as we can't modify individuals_changes while
+               * iterating over it. */
+              var transitive_updates = new HashSet<Individual> ();
+
+              foreach (var k in individuals_changes.get_keys ())
+                {
+                  if (i in individuals_changes.get (k))
+                    {
+                      transitive_updates.add (k);
+                    }
+                }
+
+              foreach (var k in transitive_updates)
+                {
+                  assert (individuals_changes.remove (k, i) == true);
+
+                  /* If we're saying the final_individual is replacing some of
+                   * these candidate individuals, we don't also want to say that
+                   * it's been added (by also emitting a mapping from
+                   * null → final_individual). */
+                  if (k != null)
+                    {
+                      individuals_changes.set (k, final_individual);
+                    }
+                }
+
+              /* If there were no transitive changes to make, it's because this
+               * candidate individual existed before this call to
+               * _add_personas(), so it's safe to say it's being replaced by
+               * the final_individual. */
+              if (transitive_updates.size == 0)
+                {
+                  individuals_changes.set (i, final_individual);
+                }
+            }
+
+          /* If there were no candidate individuals, mark the final_individual
+           * as added. */
+          if (candidate_inds.size == 0)
+            {
+              individuals_changes.set (null, final_individual);
             }
 
           /* If the final Individual is the user, set them as such. */
           if (final_individual.is_user == true)
             user = final_individual;
-
-          /* Mark the final individual for addition later */
-          almost_added_individuals.add (final_individual);
-        }
-
-      /* Add the set of final individuals which weren't later replaced to the
-       * aggregator. */
-      foreach (var i in almost_added_individuals)
-        {
-          /* Add the new Individual to the aggregator */
-          added_individuals.add (i);
-          this._connect_to_individual (i);
         }
     }
 
@@ -907,11 +970,11 @@ public class Folks.IndividualAggregator : Object
       Persona? actor,
       GroupDetails.ChangeReason reason)
     {
-      var added_individuals = new HashSet<Individual> ();
       var removed_individuals = new HashSet<Individual> ();
-      var replaced_individuals = new HashMap<Individual, Individual> ();
+      var individuals_changes = new HashMultiMap<Individual?, Individual?> ();
       var relinked_personas = new HashSet<Persona> ();
       var removed_personas = new HashSet<Persona> (direct_hash, direct_equal);
+      var replaced_individuals = new HashMap<Individual, Individual> ();
 
       /* We store the value of this.user locally and only update it at the end
        * of the function to prevent spamming notifications of changes to the
@@ -934,7 +997,10 @@ public class Folks.IndividualAggregator : Object
            * removed will be re-linked into other Individuals). */
           var ind = this._link_map.lookup (persona.iid);
           if (ind != null)
-            removed_individuals.add (ind);
+            {
+              removed_individuals.add (ind);
+              individuals_changes.set (ind, null);
+            }
 
           /* Remove the Persona's links from the link map */
           this._remove_persona_from_link_map (persona);
@@ -986,8 +1052,7 @@ public class Folks.IndividualAggregator : Object
 
       if (added.size > 0)
         {
-          this._add_personas (added, ref added_individuals,
-              ref replaced_individuals, ref user);
+          this._add_personas (added, ref user, ref individuals_changes);
         }
 
       debug ("Relinking Personas:");
@@ -997,30 +1062,46 @@ public class Folks.IndividualAggregator : Object
               persona.is_user ? "yes" : "no", persona.iid);
         }
 
-      this._add_personas (relinked_personas, ref added_individuals,
-          ref replaced_individuals, ref user);
-
-      /* Signal the removal of the replaced_individuals at the same time as the
-       * removed_individuals. (The only difference between replaced individuals
-       * and removed ones is that replaced individuals specify a replacement
-       * when they emit their Individual:removed signal. */
-      if (replaced_individuals != null)
-        {
-          MapIterator<Individual, Individual> iter =
-              replaced_individuals.map_iterator ();
-          while (iter.next () == true)
-            removed_individuals.add (iter.get_key ());
-        }
+      this._add_personas (relinked_personas, ref user, ref individuals_changes);
 
       /* Notify of changes to this.user */
       this.user = user;
 
       /* Signal the addition of new individuals and removal of old ones to the
        * aggregator */
-      if (added_individuals.size > 0 || removed_individuals.size > 0)
+      if (individuals_changes.size > 0)
         {
+          var added_individuals = new HashSet<Individual> ();
+
+          /* Extract the deprecated added and removed sets from
+           * individuals_changes, to be used in the individuals_changed
+           * signal. */
+          foreach (var old_ind in individuals_changes.get_keys ())
+            {
+              foreach (var new_ind in individuals_changes.get (old_ind))
+                {
+                  assert (old_ind != null || new_ind != null);
+
+                  if (old_ind != null)
+                    {
+                      removed_individuals.add (old_ind);
+                    }
+
+                  if (new_ind != null)
+                    {
+                      added_individuals.add (new_ind);
+                      this._connect_to_individual (new_ind);
+                    }
+
+                  if (old_ind != null && new_ind != null)
+                    {
+                      replaced_individuals.set (old_ind, new_ind);
+                    }
+                }
+            }
+
           this._emit_individuals_changed (added_individuals,
-              removed_individuals);
+              removed_individuals, individuals_changes);
         }
 
       /* Signal the replacement of various Individuals as a consequence of
@@ -1093,9 +1174,6 @@ public class Folks.IndividualAggregator : Object
       if (this._individuals.get (i.id) != i)
         return;
 
-      var individuals = new HashSet<Individual> ();
-      individuals.add (i);
-
       if (replacement != null)
         {
           debug ("Individual '%s' removed (replaced by '%s')", i.id,
@@ -1109,7 +1187,13 @@ public class Folks.IndividualAggregator : Object
       /* If the individual has 0 personas, we've already signaled removal */
       if (i.personas.size > 0)
         {
-          this._emit_individuals_changed (null, individuals);
+          var changes = new HashMultiMap<Individual?, Individual?> ();
+          var individuals = new HashSet<Individual> ();
+
+          individuals.add (i);
+          changes.set (i, replacement);
+
+          this._emit_individuals_changed (null, individuals, changes);
         }
 
       this._disconnect_from_individual (i);
