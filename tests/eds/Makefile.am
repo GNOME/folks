@@ -67,6 +67,7 @@ noinst_PROGRAMS = \
 	add-contacts-stress-test \
 	set-gender \
 	set-urls \
+	set-properties-race \
 	$(NULL)
 
 RUN_WITH_PRIVATE_BUS = $(top_srcdir)/tests/tools/with-session-bus-eds.sh
@@ -161,6 +162,10 @@ set_postal_addresses_SOURCES = \
 	set-postal-addresses.vala \
 	$(NULL)
 
+set_properties_race_SOURCES = \
+	set-properties-race.vala \
+	$(NULL)
+
 link_personas_SOURCES = \
 	link-personas.vala \
 	$(NULL)
@@ -208,6 +213,7 @@ MAINTAINERCLEANFILES = \
         set_structured_name_vala.stamp \
         set_phones_vala.stamp \
         set_postal_addresses_vala.stamp \
+        set_properties_race_vala.stamp \
         link_personas_vala.stamp \
         set_notes_vala.stamp \
 	add_contacts_stress_test_vala.stamp \
