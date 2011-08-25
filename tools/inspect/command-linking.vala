@@ -41,9 +41,14 @@ private class Folks.Inspect.Commands.Linking : Folks.Inspect.Command
     {
       get
         {
-          return "linking link-personas [persona 1 UID] [persona 2 UID] …    " +
+          return "linking link-personas [persona 1 UID] " +
+              "[persona 2 UID] …           " +
                   "Link the given personas.\n" +
-              "linking unlink-individual [individual ID]                  " +
+              "linking link-individuals [individual 1 ID] " +
+                  "[individual 2 ID] …    " +
+                  "Link the personas in the given individuals.\n" +
+              "linking unlink-individual " +
+                  "[individual ID]                         " +
                   "Unlink the given individual.";
         }
     }
@@ -64,59 +69,111 @@ private class Folks.Inspect.Commands.Linking : Folks.Inspect.Command
         }
 
       if (parts.length < 1 ||
-          (parts[0] != "link-personas" && parts[0] != "unlink-individual"))
+          (parts[0] != "link-personas" && parts[0] != "link-individuals" &&
+           parts[0] != "unlink-individual"))
         {
           Utils.print_line ("Unrecognised 'linking' command '%s'.",
             command_string);
           return;
         }
 
-      if (parts[0] == "link-personas")
+      if (parts[0] == "link-personas" || parts[0] == "link-individuals")
         {
           var personas = new HashSet<Persona> (); /* set of personas to link */
 
           if (parts.length < 2)
             {
-              Utils.print_line ("Must pass at least one persona to a " +
-                  "'link-personas' subcommand.");
+              if (parts[0] == "link-personas")
+                {
+                  Utils.print_line ("Must pass at least one persona to a " +
+                      "'link-personas' subcommand.");
+                }
+              else
+                {
+                  Utils.print_line ("Must pass at least one individual to a " +
+                      "'link-individuals' subcommand.");
+                }
+
               return;
             }
 
-          /* Link the given personas. We must have at least one. */
+          /* Link the personas in the given individuals. We must have at least
+           * one. */
           for (uint i = 1; i < parts.length; i++)
             {
               if (parts[i] == null || parts[i].strip () == "")
                 {
-                  Utils.print_line ("Unrecognised persona UID '%s'.", parts[i]);
+                  if (parts[0] == "link-personas")
+                    {
+                      Utils.print_line ("Unrecognised persona UID '%s'.",
+                          parts[i]);
+                    }
+                  else
+                    {
+                      Utils.print_line ("Unrecognised individual ID '%s'.",
+                          parts[i]);
+                    }
+
                   return;
                 }
 
               var found = false;
-              var uid = parts[i].strip ();
 
-              foreach (var individual in
-                  this.client.aggregator.individuals.values)
+              if (parts[0] == "link-personas")
                 {
-                  foreach (Persona persona in individual.personas)
+                  var uid = parts[i].strip ();
+
+                  foreach (var individual in
+                      this.client.aggregator.individuals.values)
                     {
-                      if (persona.uid == uid)
+                      foreach (Persona persona in individual.personas)
                         {
-                          personas.add (persona);
+                          if (persona.uid == uid)
+                            {
+                              personas.add (persona);
+                              found = true;
+                              break;
+                            }
+                        }
+
+                      if (found == true)
+                        {
+                          break;
+                        }
+                    }
+
+                  if (found == false)
+                    {
+                      Utils.print_line ("Unrecognised persona UID '%s'.",
+                          parts[i]);
+                      return;
+                    }
+                }
+              else
+                {
+                  var id = parts[i].strip ();
+
+                  foreach (var individual in
+                      this.client.aggregator.individuals.values)
+                    {
+                      if (individual.id == id)
+                        {
+                          foreach (Persona persona in individual.personas)
+                            {
+                              personas.add (persona);
+                            }
+
                           found = true;
                           break;
                         }
                     }
 
-                  if (found == true)
+                  if (found == false)
                     {
-                      break;
+                      Utils.print_line ("Unrecognised individual ID '%s'.",
+                          parts[i]);
+                      return;
                     }
-                }
-
-              if (found == false)
-                {
-                  Utils.print_line ("Unrecognised persona UID '%s'.", parts[i]);
-                  return;
                 }
             }
 
@@ -192,8 +249,8 @@ private class Folks.Inspect.Commands.Linking : Folks.Inspect.Command
   private static uint completion_count;
   private static string prefix;
 
-  /* Complete a subcommand name (either “link-personas” or “unlink-individual”),
-   * starting with @word. */
+  /* Complete a subcommand name (either “link-personas”, “link-individuals”
+   * or “unlink-individual”), starting with @word. */
   public static string? subcommand_name_completion_cb (string word,
       int state)
     {
@@ -203,13 +260,23 @@ private class Folks.Inspect.Commands.Linking : Folks.Inspect.Command
         {
           string[] parts = word.split (" ");
 
-          if (parts.length > 0 && parts[0] == "link-personas")
+          if (parts.length > 0 &&
+              (parts[0] == "link-personas" || parts[0] == "link-individuals"))
             {
               var last_part = parts[parts.length - 1];
 
-              subcommand_completions =
-                  Readline.completion_matches (last_part,
-                      Utils.persona_uid_completion_cb);
+              if (parts[0] == "link-personas")
+                {
+                  subcommand_completions =
+                      Readline.completion_matches (last_part,
+                          Utils.persona_uid_completion_cb);
+                }
+              else
+                {
+                  subcommand_completions =
+                      Readline.completion_matches (last_part,
+                          Utils.individual_id_completion_cb);
+                }
 
               if (last_part == "")
                 {
@@ -241,7 +308,8 @@ private class Folks.Inspect.Commands.Linking : Folks.Inspect.Command
           else
             {
               subcommand_completions =
-                  { "link-personas", "unlink-individual", null };
+                  { "link-personas", "link-individuals",
+                    "unlink-individual", null };
               prefix = "";
             }
 
@@ -271,7 +339,8 @@ private class Folks.Inspect.Commands.Linking : Folks.Inspect.Command
 
   public override string[]? complete_subcommand (string subcommand)
     {
-      /* @subcommand should be either “link-personas” or “unlink-individual” */
+      /* @subcommand should be either “link-personas”, “link-individuals”
+       * or “unlink-individual” */
       return Readline.completion_matches (subcommand,
           this.subcommand_name_completion_cb);
     }
