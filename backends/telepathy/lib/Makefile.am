@@ -105,6 +105,7 @@ libfolks_telepathy_la_SOURCES = \
 	$(NULL)
 
 libfolks_telepathy_la_VALAFLAGS = \
+	$(ERROR_VALAFLAGS) \
 	--vapidir=. \
 	--vapidir=$(top_srcdir)/folks \
 	--pkg folks \

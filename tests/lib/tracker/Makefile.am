@@ -1,4 +1,5 @@
 VALAFLAGS += \
+	$(ERROR_VALAFLAGS) \
 	--library=tracker-test \
 	--header=tracker-test.h \
 	--vapidir=$(top_srcdir)/folks \

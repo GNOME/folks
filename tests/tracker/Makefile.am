@@ -25,6 +25,7 @@ LDADD = \
 RUN_WITH_PRIVATE_BUS = $(top_srcdir)/tests/tools/with-session-bus-tracker.sh
 
 AM_VALAFLAGS = \
+	$(ERROR_VALAFLAGS) \
 	--vapidir=. \
 	--vapidir=$(top_srcdir)/folks \
 	--vapidir=$(top_srcdir)/backends/tracker/lib \

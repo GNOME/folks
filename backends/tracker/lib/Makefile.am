@@ -36,6 +36,7 @@ libfolks_tracker_la_SOURCES = \
 	$(NULL)
 
 libfolks_tracker_la_VALAFLAGS = \
+	$(VALAFLAGS) \
 	--vapidir=. \
 	--vapidir=$(top_srcdir)/folks \
 	--pkg folks \

@@ -49,6 +49,7 @@ EDS_FLAGS = -D ENABLE_EDS
 endif
 
 libfolks_la_VALAFLAGS = \
+	$(ERROR_VALAFLAGS) \
 	--gir=Folks-$(API_VERSION).gir \
 	--library=folks \
 	--vapidir=. \
@@ -65,6 +66,7 @@ libfolks_la_VALAFLAGS = \
 	$(NULL)
 
 libfolks_la_CFLAGS = \
+	$(ERROR_CFLAGS) \
 	$(GIO_CFLAGS) \
 	$(GLIB_CFLAGS) \
 	$(GMODULE_CFLAGS) \

@@ -1,4 +1,5 @@
 VALAFLAGS += \
+	$(ERROR_VALAFLAGS) \
 	--library=eds-test \
 	--header=eds-test.h \
 	--vapidir=$(top_srcdir)/folks \

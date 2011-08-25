@@ -41,6 +41,7 @@ libfolks_eds_la_SOURCES = \
 # to factor out repetition, but automake's Vala support doesn't like it
 # because it assumes it can simply match every flag in any _VALAFLAGS string.
 libfolks_eds_la_VALAFLAGS = \
+	$(ERROR_VALAFLAGS) \
 	--vapidir=. \
 	--vapidir=$(top_srcdir)/folks \
 	--pkg folks \

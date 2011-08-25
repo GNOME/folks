@@ -1,4 +1,5 @@
 VALAFLAGS += \
+	$(ERROR_VALAFLAGS) \
 	--library=kf-test \
 	--header=kf-test.h \
 	--vapidir=. \

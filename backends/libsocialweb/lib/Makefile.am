@@ -36,6 +36,7 @@ libfolks_libsocialweb_la_SOURCES = \
 	$(NULL)
 
 libfolks_libsocialweb_la_VALAFLAGS = \
+	$(ERROR_VALAFLAGS) \
         --vapidir=. \
         --vapidir=$(top_srcdir)/folks \
         --pkg folks \

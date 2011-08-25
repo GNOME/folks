@@ -30,6 +30,7 @@ libfolks_test_la_CFLAGS = $(GLIB_CFLAGS) $(GIO_CFLAGS)
 libfolks_test_la_LIBADD = $(GLIB_LIBS) $(GIO_LIBS)
 
 libfolks_test_la_VALAFLAGS = \
+	$(ERROR_VALAFLAGS) \
 	$(VALAFLAGS) \
 	--pkg gobject-2.0 \
 	--pkg gio-2.0 \

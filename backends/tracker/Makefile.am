@@ -13,6 +13,7 @@ AM_CPPFLAGS = \
 	$(NULL)
 
 VALAFLAGS += \
+	$(ERROR_VALAFLAGS) \
 	--vapidir=. \
 	--vapidir=vapi \
 	--vapidir=$(top_builddir)/backends/tracker/lib \

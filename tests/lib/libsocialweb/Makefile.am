@@ -1,4 +1,5 @@
 VALAFLAGS += \
+	$(ERROR_VALAFLAGS) \
 	--library=libsocialweb-test \
 	--header=libsocialweb-test.h \
 	--vapidir=$(top_srcdir)/folks \

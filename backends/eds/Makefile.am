@@ -13,6 +13,7 @@ AM_CPPFLAGS = \
 	$(NULL)
 
 VALAFLAGS += \
+	$(ERROR_VALAFLAGS) \
 	--vapidir=. \
 	--vapidir=$(top_builddir)/backends/eds/lib \
 	--vapidir=$(top_srcdir)/folks \
