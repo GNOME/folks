@@ -10,6 +10,7 @@ VALAFLAGS += \
 	--pkg folks \
 	--pkg libsocialweb-client \
 	--pkg folks-libsocialweb \
+	-g \
 	$(NULL)
 
 noinst_LTLIBRARIES = libsocialweb-test.la

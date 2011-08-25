@@ -39,6 +39,7 @@ AM_VALAFLAGS = \
 	--pkg folks-eds \
 	--pkg eds-test \
 	--pkg gconf-2.0 \
+	-g \
 	$(NULL)
 
 # in order from least to most complex

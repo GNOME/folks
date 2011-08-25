@@ -35,6 +35,7 @@ AM_VALAFLAGS = \
 	--pkg folks-test \
 	--pkg kf-test \
 	--pkg tp-test-contactlist \
+	-g \
 	$(NULL)
 
 # in order from least to most complex

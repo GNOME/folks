@@ -38,6 +38,7 @@ AM_VALAFLAGS = \
 	--pkg folks-libsocialweb \
 	--pkg libsocialweb-client \
 	--pkg libsocialweb-test \
+	-g \
 	$(NULL)
 
 # in order from least to most complex

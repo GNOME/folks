@@ -39,6 +39,7 @@ AM_VALAFLAGS = \
 	--pkg tracker-sparql-0.10 \
 	--pkg gconf-2.0 \
 	--pkg tracker-test \
+	-g \
 	$(NULL)
 
 # in order from least to most complex

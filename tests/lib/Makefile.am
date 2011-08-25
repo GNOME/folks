@@ -35,6 +35,7 @@ libfolks_test_la_VALAFLAGS = \
 	--pkg gio-2.0 \
 	--library folks-test \
 	-H folks-test.h \
+	-g \
 	$(NULL)
 
 MAINTAINERCLEANFILES = \

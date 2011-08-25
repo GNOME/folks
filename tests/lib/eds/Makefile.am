@@ -13,6 +13,7 @@ VALAFLAGS += \
 	--pkg libedataserver-1.2 \
 	--pkg libxml-2.0 \
 	--pkg folks-eds \
+	-g \
 	$(NULL)
 
 noinst_LTLIBRARIES = libeds-test.la

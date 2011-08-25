@@ -2,6 +2,7 @@ VALAFLAGS += \
 	--library=kf-test \
 	--header=kf-test.h \
 	--vapidir=. \
+	-g \
 	$(NULL)
 
 noinst_LTLIBRARIES = libkf-test.la

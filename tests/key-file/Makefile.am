@@ -26,6 +26,7 @@ AM_VALAFLAGS = \
 	--pkg folks \
 	--pkg folks-test \
 	--pkg kf-test \
+	-g \
 	$(NULL)
 
 # in order from least to most complex

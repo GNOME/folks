@@ -10,6 +10,7 @@ VALAFLAGS += \
 	--pkg folks \
 	--pkg tracker-sparql-0.10 \
 	--pkg folks-tracker \
+	-g \
 	$(NULL)
 
 noinst_LTLIBRARIES = libtracker-test.la
