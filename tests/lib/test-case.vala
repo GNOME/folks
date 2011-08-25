@@ -59,7 +59,7 @@ public abstract class Folks.TestCase : Object
 	private class Adaptor
     {
       public string name { get; private set; }
-      private TestMethod _test;
+      private unowned TestMethod _test;
       private TestCase _test_case;
 
       public Adaptor (string name, TestMethod test, TestCase test_case)
