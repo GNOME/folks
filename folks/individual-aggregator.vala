@@ -58,7 +58,7 @@ public class Folks.IndividualAggregator : Object
 {
   private BackendStore _backend_store;
   private HashMap<string, PersonaStore> _stores;
-  private unowned PersonaStore _writeable_store;
+  private unowned PersonaStore? _writeable_store;
   private HashSet<Backend> _backends;
   private HashTable<string, Individual> _link_map;
   private bool _linking_enabled = true;
@@ -93,7 +93,7 @@ public class Folks.IndividualAggregator : Object
    *
    * @since 0.5.0
    */
-  public PersonaStore primary_store
+  public PersonaStore? primary_store
     {
       get { return this._writeable_store; }
     }
