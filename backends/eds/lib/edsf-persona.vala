@@ -111,7 +111,8 @@ public class Edsf.Persona : Folks.Persona,
       "full-name",
       "nickname",
       "im-addresses",
-      "groups"
+      "groups",
+      "urls"
     };
   private HashSet<PhoneFieldDetails> _phone_numbers;
   private Set<PhoneFieldDetails> _phone_numbers_ro;
