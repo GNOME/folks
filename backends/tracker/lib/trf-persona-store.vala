@@ -1162,6 +1162,8 @@ public class Trf.PersonaStore : Folks.PersonaStore
          Trf.OntologyDefs.NCO_WEBSITE);
       this._urn_prefix.set (Trf.OntologyDefs.NCO_URL_PREFIX + "nco#blogUrl>",
          Trf.OntologyDefs.NCO_BLOG);
+      this._urn_prefix.set (Trf.OntologyDefs.NCO_URL_PREFIX + "nco#url>",
+         Trf.OntologyDefs.NCO_URL);
       this._urn_prefix.set (
          Trf.OntologyDefs.NAO_URL_PREFIX + "nao#predefined-tag-favorite>",
          Trf.OntologyDefs.NAO_FAVORITE);
@@ -2392,6 +2394,10 @@ public class Trf.PersonaStore : Folks.PersonaStore
                 else if (type_p.contains ("website"))
                   {
                     related_connection = Trf.OntologyDefs.NCO_WEBSITE;
+                  }
+                else if (type_p.contains ("url"))
+                  {
+                    related_connection = Trf.OntologyDefs.NCO_URL;
                   }
                 attr = "'%s'".printf (((UrlFieldDetails) fd).value);
                 break;
