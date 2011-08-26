@@ -1,3 +1,4 @@
+backends/eds/lib/edsf-persona-store.c
 backends/key-file/kf-backend-factory.c
 backends/key-file/kf-persona-store.c
 backends/key-file/kf-persona.c
