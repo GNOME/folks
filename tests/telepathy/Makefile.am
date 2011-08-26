@@ -56,6 +56,7 @@ TESTS_ENVIRONMENT = \
 	FOLKS_BACKEND_PATH=$(BACKEND_UNINST_PATH) \
 	FOLKS_BACKEND_KEY_FILE_PATH=$(srcdir)/data/relationships-empty.ini \
 	FOLKS_BACKEND_STORE_KEY_FILE_PATH=$(backend_store_key_file) \
+	FOLKS_WRITEABLE_STORE=key-file \
 	$(RUN_WITH_PRIVATE_BUS) \
 	--config-file=$(SESSION_CONF) \
 	--
