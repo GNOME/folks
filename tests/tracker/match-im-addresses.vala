@@ -126,7 +126,8 @@ public class MatchIMAddressesTests : Folks.TestCase
           this._try_potential_match ();
         }
 
-      assert (removed.size == 0);
+      /* We can't assert (removed.size == 0) because these Personas will get
+       * auto-linked (and thus one Individual will get removed */
     }
 
   private void _try_potential_match ()
