@@ -490,6 +490,7 @@ public class Folks.IndividualAggregator : Object
               store.is_writeable = true;
               store.trust_level = PersonaStoreTrust.FULL;
               this._writeable_store = store;
+              this.notify_property ("primary-store");
             }
         }
 
@@ -526,7 +527,10 @@ public class Folks.IndividualAggregator : Object
        * necessary) */
 
       if (this._writeable_store == store)
-        this._writeable_store = null;
+        {
+          this._writeable_store = null;
+          this.notify_property ("primary-store");
+        }
       this._stores.unset (this._get_store_full_id (store.type_id, store.id));
     }
 
