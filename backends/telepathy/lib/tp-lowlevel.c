@@ -30,8 +30,6 @@
 
 #include "tp-lowlevel.h"
 
-G_DEFINE_TYPE (FolksTpLowlevel, folks_tp_lowlevel, G_TYPE_OBJECT);
-
 GQuark
 folks_tp_lowlevel_error_quark (void)
 {
@@ -76,7 +74,6 @@ connection_ensure_channel_cb (TpConnection *conn,
 
 void
 folks_tp_lowlevel_connection_open_contact_list_channel_async (
-    FolksTpLowlevel *tp_lowlevel,
     TpConnection *conn,
     const char *name,
     GAsyncReadyCallback callback,
@@ -100,7 +97,6 @@ folks_tp_lowlevel_connection_open_contact_list_channel_async (
 
 /**
  * folks_tp_lowlevel_connection_open_contact_list_channel_finish:
- * @lowlevel: a #FolksTpLowlevel
  * @result: a #GAsyncResult
  * @error: return location for a #GError, or %NULL
  *
@@ -111,7 +107,6 @@ folks_tp_lowlevel_connection_open_contact_list_channel_async (
  */
 TpChannel *
 folks_tp_lowlevel_connection_open_contact_list_channel_finish (
-    FolksTpLowlevel *lowlevel,
     GAsyncResult *result,
     GError **error)
 {
@@ -158,7 +153,6 @@ connection_get_alias_flags_cb (TpConnection *conn,
 
 void
 folks_tp_lowlevel_connection_get_alias_flags_async (
-    FolksTpLowlevel *tp_lowlevel,
     TpConnection *conn,
     GAsyncReadyCallback callback,
     gpointer user_data)
@@ -174,7 +168,6 @@ folks_tp_lowlevel_connection_get_alias_flags_async (
 
 /**
  * folks_tp_lowlevel_connection_get_alias_flags_finish:
- * @lowlevel: a #FolksTpLowlevel
  * @result: a #GAsyncResult
  * @error: return location for a #GError, or %NULL
  *
@@ -184,7 +177,6 @@ folks_tp_lowlevel_connection_get_alias_flags_async (
  */
 TpConnectionAliasFlags
 folks_tp_lowlevel_connection_get_alias_flags_finish (
-    FolksTpLowlevel *lowlevel,
     GAsyncResult *result,
     GError **error)
 {
@@ -241,7 +233,6 @@ get_contacts_by_handle_cb (TpConnection *conn,
 
 /**
  * folks_tp_lowlevel_connection_get_contacts_by_handle_async:
- * @tp_lowlevel: a #FolksTpLowlevel
  * @conn: the connection to use
  * @contact_handles: (array length=contact_handles_length): the contact handles
  * to get
@@ -255,7 +246,6 @@ get_contacts_by_handle_cb (TpConnection *conn,
  */
 void
 folks_tp_lowlevel_connection_get_contacts_by_handle_async (
-    FolksTpLowlevel *tp_lowlevel,
     TpConnection *conn,
     const guint *contact_handles,
     guint contact_handles_length,
@@ -282,7 +272,6 @@ folks_tp_lowlevel_connection_get_contacts_by_handle_async (
 
 /**
  * folks_tp_lowlevel_connection_get_contacts_by_handle_finish:
- * @tp_lowlevel: a #FolksTpLowlevel
  * @result: the async result
  * @error: a #GError, or %NULL
  *
@@ -294,7 +283,6 @@ folks_tp_lowlevel_connection_get_contacts_by_handle_async (
  */
 GList *
 folks_tp_lowlevel_connection_get_contacts_by_handle_finish (
-    FolksTpLowlevel *tp_lowlevel,
     GAsyncResult *result,
     GError **error)
 {
@@ -350,7 +338,6 @@ get_contacts_by_id_cb (TpConnection *conn,
 
 /**
  * folks_tp_lowlevel_connection_get_contacts_by_id_async:
- * @tp_lowlevel: a #FolksTpLowlevel
  * @conn: the connection to use
  * @contact_ids: (array length=contact_ids_length) (element-type utf8): the
  * contact IDs to get
@@ -364,7 +351,6 @@ get_contacts_by_id_cb (TpConnection *conn,
  */
 void
 folks_tp_lowlevel_connection_get_contacts_by_id_async (
-    FolksTpLowlevel *tp_lowlevel,
     TpConnection *conn,
     const char **contact_ids,
     guint contact_ids_length,
@@ -391,7 +377,6 @@ folks_tp_lowlevel_connection_get_contacts_by_id_async (
 
 /**
  * folks_tp_lowlevel_connection_get_contacts_by_id_finish:
- * @tp_lowlevel: a #FolksTpLowlevel
  * @result: the async result
  * @error: a #GError, or %NULL
  *
@@ -403,7 +388,6 @@ folks_tp_lowlevel_connection_get_contacts_by_id_async (
  */
 GList *
 folks_tp_lowlevel_connection_get_contacts_by_id_finish (
-    FolksTpLowlevel *tp_lowlevel,
     GAsyncResult *result,
     GError **error)
 {
@@ -452,7 +436,6 @@ connection_get_requestable_channel_classes_cb (TpProxy *conn,
 
 void
 folks_tp_lowlevel_connection_get_requestable_channel_classes_async (
-    FolksTpLowlevel *tp_lowlevel,
     TpConnection *conn,
     GAsyncReadyCallback callback,
     gpointer user_data)
@@ -470,7 +453,6 @@ folks_tp_lowlevel_connection_get_requestable_channel_classes_async (
 
 /**
  * folks_tp_lowlevel_connection_get_requestable_channel_classes_finish:
- * @tp_lowlevel: a #FolksTpLowlevel
  * @result: a #GAsyncResult
  * @error: return location for a #GError, or %NULL
  *
@@ -481,7 +463,6 @@ folks_tp_lowlevel_connection_get_requestable_channel_classes_async (
  */
 GPtrArray *
 folks_tp_lowlevel_connection_get_requestable_channel_classes_finish (
-    FolksTpLowlevel *tp_lowlevel,
     GAsyncResult *result,
     GError **error)
 {
@@ -531,7 +512,7 @@ group_request_handles_cb (
     const GArray *handles,
     const GError *error,
     gpointer user_data,
-    GObject *tp_lowlevel)
+    GObject *weak_object)
 {
   guint channel_handle;
 
@@ -550,12 +531,11 @@ group_request_handles_cb (
     TRUE,
     group_request_channel_cb,
     NULL, NULL,
-    tp_lowlevel);
+    weak_object);
 }
 
 void
 folks_tp_lowlevel_connection_create_group_async (
-    FolksTpLowlevel *tp_lowlevel,
     TpConnection *conn,
     const char *group)
 {
@@ -584,7 +564,6 @@ set_contact_alias_cb (TpConnection *conn,
 
 void
 folks_tp_lowlevel_connection_set_contact_alias (
-    FolksTpLowlevel *tp_lowlevel,
     TpConnection *conn,
     guint handle,
     const gchar *alias)
@@ -679,7 +658,6 @@ got_channels_cb (TpProxy *conn,
 
 /**
  * folks_tp_lowlevel_connection_connect_to_new_group_channels:
- * @lowlevel: a #FolksTpLowlevel
  * @conn: the connection to use
  * @callback: (scope call): function to call on completion
  * @user_data: (closure): user data to pass to @callback
@@ -688,7 +666,6 @@ got_channels_cb (TpProxy *conn,
  */
 void
 folks_tp_lowlevel_connection_connect_to_new_group_channels (
-    FolksTpLowlevel *lowlevel,
     TpConnection *conn,
     FolksTpLowlevelNewGroupChannelsCallback callback,
     gpointer user_data)
@@ -770,20 +747,4 @@ folks_tp_lowlevel_channel_group_change_membership (TpChannel *channel,
     }
 
   g_array_free (handles, TRUE);
-}
-
-static void
-folks_tp_lowlevel_class_init (FolksTpLowlevelClass *klass)
-{
-}
-
-static void
-folks_tp_lowlevel_init (FolksTpLowlevel *self)
-{
-}
-
-FolksTpLowlevel *
-folks_tp_lowlevel_new (void)
-{
-  return FOLKS_TP_LOWLEVEL (g_object_new (FOLKS_TYPE_TP_LOWLEVEL, NULL));
 }

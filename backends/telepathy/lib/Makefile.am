@@ -63,7 +63,8 @@ tp_lowlevel_gir_INCLUDES = GObject-2.0 TelepathyGLib-0.12
 tp_lowlevel_gir_CFLAGS = $(TP_GLIB_CFLAGS)
 tp_lowlevel_gir_LIBS = libtp-lowlevel.la
 tp_lowlevel_gir_FILES = $(libtp_lowlevel_la_SOURCES) $(tp_lowlevel_headers)
-tp_lowlevel_gir_NAMESPACE = Folks
+tp_lowlevel_gir_NAMESPACE = TpLowlevel
+tp_lowlevel_gir_SCANNERFLAGS = --identifier-prefix=FolksTpLowlevel
 INTROSPECTION_GIRS += tp-lowlevel.gir
 
 if HAVE_VALA

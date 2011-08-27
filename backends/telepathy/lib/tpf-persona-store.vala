@@ -79,7 +79,6 @@ public class Tpf.PersonaStore : Folks.PersonaStore
   private Channel _stored;
   private Channel _subscribe;
   private Connection _conn;
-  private TpLowlevel _ll;
   private AccountManager _account_manager;
   private Logger _logger;
   private Contact? _self_contact;
@@ -484,7 +483,6 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       this._groups = new HashMap<string, Channel> ();
       this._favourite_handles = new HashSet<uint> ();
       this._self_contact = null;
-      this._ll = new TpLowlevel ();
     }
 
   /**
@@ -775,15 +773,16 @@ public class Tpf.PersonaStore : Folks.PersonaStore
   private void _connection_ready_cb (Object s, ParamSpec? p)
     {
       var c = (Connection) s;
-      this._ll.connection_connect_to_new_group_channels (c,
+      FolksTpLowlevel.connection_connect_to_new_group_channels (c,
           this._new_group_channels_cb);
 
-      this._ll.connection_get_alias_flags_async.begin (c, (s2, res) =>
+      FolksTpLowlevel.connection_get_alias_flags_async.begin (c, (s2, res) =>
           {
             var new_can_alias = MaybeBool.FALSE;
             try
               {
-                var flags = this._ll.connection_get_alias_flags_async.end (res);
+                var flags =
+                    FolksTpLowlevel.connection_get_alias_flags_async.end (res);
                 if ((flags &
                     ConnectionAliasFlags.CONNECTION_ALIAS_FLAG_USER_SET) > 0)
                   {
@@ -804,18 +803,17 @@ public class Tpf.PersonaStore : Folks.PersonaStore
             this.notify_property ("can-alias-personas");
           });
 
-      this._ll.connection_get_requestable_channel_classes_async.begin (c,
+      FolksTpLowlevel.connection_get_requestable_channel_classes_async.begin (c,
           (s3, res3) =>
           {
             var new_can_group = MaybeBool.FALSE;
             try
               {
-                var ll = this._ll;
                 GenericArray<weak void*> v;
                 int i;
 
-                v = ll.connection_get_requestable_channel_classes_async.end (
-                  res3);
+                v = FolksTpLowlevel.
+                    connection_get_requestable_channel_classes_async.end (res3);
 
                 for (i = 0; i < v.length; i++)
                   {
@@ -1030,7 +1028,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
             {
               try
                 {
-                  this._ll.channel_group_change_membership (channel,
+                  FolksTpLowlevel.channel_group_change_membership (channel,
                       (Handle) persona.contact.handle, entry.value, null);
                 }
               catch (GLib.Error e)
@@ -1383,7 +1381,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
 
       try
         {
-          this._ll.channel_group_change_membership (this._stored,
+          FolksTpLowlevel.channel_group_change_membership (this._stored,
               (Handle) tp_persona.contact.handle, false, null);
         }
       catch (GLib.Error e1)
@@ -1399,7 +1397,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
 
       try
         {
-          this._ll.channel_group_change_membership (this._subscribe,
+          FolksTpLowlevel.channel_group_change_membership (this._subscribe,
               (Handle) tp_persona.contact.handle, false, null);
         }
       catch (GLib.Error e2)
@@ -1415,7 +1413,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
 
       try
         {
-          this._ll.channel_group_change_membership (this._publish,
+          FolksTpLowlevel.channel_group_change_membership (this._publish,
               (Handle) tp_persona.contact.handle, false, null);
         }
       catch (GLib.Error e3)
@@ -1560,7 +1558,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
         {
           /* the changes queued above will be resolve in the NewChannels handler
            */
-          this._ll.connection_create_group_async (this.account.connection,
+          FolksTpLowlevel.connection_create_group_async (this.account.connection,
               group);
         }
       else
@@ -1578,7 +1576,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
 
       try
         {
-          this._ll.channel_group_change_membership (channel,
+          FolksTpLowlevel.channel_group_change_membership (channel,
               (Handle) tp_persona.contact.handle, is_member, message);
         }
       catch (GLib.Error e)
@@ -1613,8 +1611,9 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       /* FIXME: handle the error GLib.Error from this function */
       try
         {
-          channel = yield this._ll.connection_open_contact_list_channel_async (
-              conn, name);
+          channel =
+              yield FolksTpLowlevel.connection_open_contact_list_channel_async (
+                  conn, name);
         }
       catch (GLib.Error e)
         {
@@ -1666,7 +1665,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
             return;
 
           GLib.List<TelepathyGLib.Contact> contacts =
-              yield this._ll.connection_get_contacts_by_handle_async (
+              yield FolksTpLowlevel.connection_get_contacts_by_handle_async (
                   this._conn, contact_handles, (uint[]) _contact_features);
 
           if (contacts == null || contacts.length () < 1)
@@ -1702,7 +1701,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
         return personas;
 
       GLib.List<TelepathyGLib.Contact> contacts =
-          yield this._ll.connection_get_contacts_by_id_async (
+          yield FolksTpLowlevel.connection_get_contacts_by_id_async (
               this._conn, contact_ids, (uint[]) _contact_features);
 
       unowned GLib.List<TelepathyGLib.Contact> l;
@@ -1992,7 +1991,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
     {
       debug ("Changing alias of persona %u to '%s'.", persona.contact.handle,
           alias);
-      this._ll.connection_set_contact_alias (this._conn,
+      FolksTpLowlevel.connection_set_contact_alias (this._conn,
           (Handle) persona.contact.handle, alias);
     }
 }
