@@ -517,10 +517,11 @@ public class Folks.Individual : Object,
   /**
    * {@inheritDoc}
    */
+  [CCode (notify = false)]
   public MultiMap<string, ImFieldDetails> im_addresses
     {
       get { return this._im_addresses; }
-      private set {}
+      set { this.change_im_addresses.begin (value); } /* not writeable */
     }
 
   /**

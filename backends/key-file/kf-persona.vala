@@ -103,72 +103,83 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
   /**
    * {@inheritDoc}
    */
+  [CCode (notify = false)]
   public MultiMap<string, ImFieldDetails> im_addresses
     {
-      get
-        { return this._im_addresses; }
+      get { return this._im_addresses; }
+      set { this.change_im_addresses.begin (value); }
+    }
 
-      set
+  /**
+   * {@inheritDoc}
+   *
+   * @since UNRELEASED
+   */
+  public async void change_im_addresses (
+      MultiMap<string, ImFieldDetails> im_addresses) throws PropertyError
+    {
+      /* Remove the current IM addresses from the key file */
+      foreach (var protocol1 in this._im_addresses.get_keys ())
         {
-          /* Remove the current IM addresses from the key file */
-          foreach (var protocol in this._im_addresses.get_keys ())
+          try
             {
+              this._key_file.remove_key (this.display_id, protocol1);
+            }
+          catch (KeyFileError e1)
+            {
+              /* Ignore the error, since it's just a group or key not found
+               * error. */
+            }
+        }
+
+      /* Add the new IM addresses to the key file and build a normalised
+       * table of them to set as the new property value */
+      var new_im_addresses = new HashMultiMap<string, ImFieldDetails> (
+          null, null,
+          (GLib.HashFunc) ImFieldDetails.hash,
+          (GLib.EqualFunc) ImFieldDetails.equal);
+
+      foreach (var protocol2 in im_addresses.get_keys ())
+        {
+          var addresses = im_addresses.get (protocol2);
+          var normalised_addresses = new HashSet<string> ();
+
+          foreach (var im_fd in addresses)
+            {
+              string normalised_address;
               try
                 {
-                  this._key_file.remove_key (this.display_id, protocol);
+                  normalised_address = ImDetails.normalise_im_address (
+                      im_fd.value, protocol2);
                 }
-              catch (KeyFileError e)
+               catch (ImDetailsError e2)
                 {
-                  /* Ignore the error, since it's just a group or key not found
-                   * error. */
+                  throw new PropertyError.INVALID_VALUE (
+                      /* Translators: this is an error message for if the user
+                       * provides an invalid IM address. The first parameter is
+                       * an IM address (e.g. “foo@jabber.org”), the second is
+                       * the name of a protocol (e.g. “jabber”) and the third is
+                       * an error message. */
+                      _("Invalid IM address ‘%s’ for protocol ‘%s’: %s"),
+                      im_fd.value, protocol2, e2.message);
                 }
+
+              normalised_addresses.add (normalised_address);
+              var new_im_fd = new ImFieldDetails (normalised_address);
+              new_im_addresses.set (protocol2, new_im_fd);
             }
 
-          /* Add the new IM addresses to the key file and build a normalised
-           * table of them to set as the new property value */
-          var im_addresses = new HashMultiMap<string, ImFieldDetails> (
-              null, null,
-              (GLib.HashFunc) ImFieldDetails.hash,
-              (GLib.EqualFunc) ImFieldDetails.equal);
+          string[] addrs = (string[]) normalised_addresses.to_array ();
+          addrs.length = normalised_addresses.size;
 
-          foreach (var protocol in value.get_keys ())
-            {
-              var addresses = value.get (protocol);
-              var normalised_addresses = new HashSet<string> ();
-
-              foreach (var im_fd in addresses)
-                {
-                  string normalised_address;
-                  try
-                    {
-                      normalised_address = ImDetails.normalise_im_address (
-                          im_fd.value, protocol);
-                    }
-                  catch (ImDetailsError e)
-                    {
-                      /* Somehow an error has crept into the user's
-                       * relationships.ini. Warn of it and ignore the IM
-                       * address. */
-                      warning (e.message);
-                      continue;
-                    }
-
-                  normalised_addresses.add (normalised_address);
-                  var new_im_fd = new ImFieldDetails (normalised_address);
-                  im_addresses.set (protocol, new_im_fd);
-                }
-
-              string[] addrs = (string[]) normalised_addresses.to_array ();
-              addrs.length = normalised_addresses.size;
-
-              this._key_file.set_string_list (this.display_id, protocol, addrs);
-            }
-
-          this._im_addresses = im_addresses;
-
-          /* Get the PersonaStore to save the key file */
-          ((Kf.PersonaStore) this.store).save_key_file.begin ();
+          this._key_file.set_string_list (this.display_id, protocol2, addrs);
         }
+
+      /* Get the PersonaStore to save the key file */
+      yield ((Kf.PersonaStore) this.store).save_key_file ();
+
+      this._im_addresses = new_im_addresses;
+      this.notify_property ("im-addresses");
     }
 
   /**

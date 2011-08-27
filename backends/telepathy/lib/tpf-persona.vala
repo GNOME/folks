@@ -176,10 +176,11 @@ public class Tpf.Persona : Folks.Persona,
    *
    * See {@link Folks.ImDetails.im_addresses}.
    */
+  [CCode (notify = false)]
   public MultiMap<string, ImFieldDetails> im_addresses
     {
       get { return this._im_addresses; }
-      private set {}
+      set { this.change_im_addresses.begin (value); }
     }
 
   /**

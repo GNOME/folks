@@ -284,14 +284,23 @@ public class Trf.Persona : Folks.Persona,
   /**
    * {@inheritDoc}
    */
+  [CCode (notify = false)]
   public MultiMap<string, ImFieldDetails> im_addresses
     {
       get { return this._im_addresses; }
-      public set
-        {
-          ((Trf.PersonaStore) this.store)._set_im_addresses (this,
-              value);
-        }
+      set { this.change_im_addresses.begin (value); }
+    }
+
+  /**
+   * {@inheritDoc}
+   *
+   * @since UNRELEASED
+   */
+  public async void change_im_addresses (
+      MultiMap<string, ImFieldDetails> im_addresses) throws PropertyError
+    {
+      yield ((Trf.PersonaStore) this.store)._set_im_addresses (this,
+          im_addresses);
     }
 
   /**

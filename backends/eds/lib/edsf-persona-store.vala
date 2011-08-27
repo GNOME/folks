@@ -1118,7 +1118,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
     }
 
   internal async void _set_im_fds  (Edsf.Persona persona,
-      MultiMap<string, ImFieldDetails> im_fds)
+      MultiMap<string, ImFieldDetails> im_fds) throws PropertyError
     {
       if (Utils.multi_map_str_afd_equal (persona.im_addresses, im_fds))
         return;
@@ -1129,9 +1129,9 @@ public class Edsf.PersonaStore : Folks.PersonaStore
           yield this._set_contact_im_fds (contact, im_fds);
           yield this._addressbook.modify_contact (contact, null);
         }
-      catch (GLib.Error error)
+      catch (GLib.Error e)
         {
-          GLib.warning ("Can't update IM addresses: %s\n", error.message);
+          throw this.e_client_error_to_property_error ("im-addresses", e);
         }
     }
 

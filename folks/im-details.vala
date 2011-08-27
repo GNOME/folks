@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2010 Collabora Ltd.
+ * Copyright (C) 2011 Philip Withnall
  *
  * This library is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -107,6 +108,26 @@ public interface Folks.ImDetails : Object
   public abstract MultiMap<string, ImFieldDetails> im_addresses
     {
       get; set;
+    }
+
+  /**
+   * Change the contact's set of IM addresses.
+   *
+   * It's preferred to call this rather than setting
+   * {@link ImDetails.im_addresses} directly, as this method gives error
+   * notification and will only return once the IM addresses have been written
+   * to the relevant backing store (or the operation's failed).
+   *
+   * @param im_addresses the new map of protocols to IM addresses
+   * @throws PropertyError if setting the IM addresses failed
+   * @since UNRELEASED
+   */
+  public virtual async void change_im_addresses (
+      MultiMap<string, ImFieldDetails> im_addresses) throws PropertyError
+    {
+      /* Default implementation. */
+      throw new PropertyError.NOT_WRITEABLE (
+          _("IM addresses are not writeable on this contact."));
     }
 
   /**

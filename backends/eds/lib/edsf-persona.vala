@@ -380,10 +380,18 @@ public class Edsf.Persona : Folks.Persona,
   public MultiMap<string, ImFieldDetails> im_addresses
     {
       get { return this._im_addresses; }
-      set
-        {
-          ((Edsf.PersonaStore) this.store)._set_im_fds (this, value);
-        }
+      set { this.change_im_addresses.begin (value); }
+    }
+
+  /**
+   * {@inheritDoc}
+   *
+   * @since UNRELEASED
+   */
+  public async void change_im_addresses (
+      MultiMap<string, ImFieldDetails> im_addresses) throws PropertyError
+    {
+      yield ((Edsf.PersonaStore) this.store)._set_im_fds (this, im_addresses);
     }
 
   private HashSet<string> _groups;

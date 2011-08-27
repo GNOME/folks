@@ -136,10 +136,11 @@ public class Swf.Persona : Folks.Persona,
   /**
    * {@inheritDoc}
    */
+  [CCode (notify = false)]
   public MultiMap<string, ImFieldDetails> im_addresses
     {
       get { return this._im_addresses; }
-      private set {}
+      set { this.change_im_addresses.begin (value); }
     }
 
   /**
