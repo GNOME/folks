@@ -123,19 +123,32 @@ public class Tpf.Persona : Folks.Persona,
    *
    * See {@link Folks.AliasDetails.alias}.
    */
+  [CCode (notify = false)]
   public string alias
     {
       get { return this._alias; }
+      set { this.change_alias.begin (value); }
+    }
 
-      set
+  /**
+   * {@inheritDoc}
+   *
+   * @since UNRELEASED
+   */
+  public async void change_alias (string alias) throws PropertyError
+    {
+      if (this._alias == alias)
         {
-          if (this._alias == value)
-            return;
-
-          if (this._is_constructed)
-            ((Tpf.PersonaStore) this.store).change_alias (this, value);
-          this._alias = value;
+          return;
         }
+
+      if (this._is_constructed)
+        {
+          yield ((Tpf.PersonaStore) this.store).change_alias (this, alias);
+        }
+
+      this._alias = alias;
+      this.notify_property ("alias");
     }
 
   /**

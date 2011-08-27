@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2010 Collabora Ltd.
+ * Copyright (C) 2011 Philip Withnall
  *
  * This library is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -16,6 +17,7 @@
  *
  * Authors:
  *       Travis Reitter <travis.reitter@collabora.co.uk>
+ *       Philip Withnall <philip@tecnocode.co.uk>
  */
 
 using GLib;
@@ -33,4 +35,23 @@ public interface Folks.AliasDetails : Object
    * represent the contact to the user.
    */
   public abstract string alias { get; set; }
+
+  /**
+   * Change the contact's alias.
+   *
+   * It's preferred to call this rather than setting {@link AliasDetails.alias}
+   * directly, as this method gives error notification and will only return
+   * once the alias has been written to the relevant backing store (or the
+   * operation's failed).
+   *
+   * @param alias the new alias
+   * @throws PropertyError if setting the alias failed
+   * @since UNRELEASED
+   */
+  public virtual async void change_alias (string alias) throws PropertyError
+    {
+      /* Default implementation. */
+      throw new PropertyError.NOT_WRITEABLE (
+          _("Alias is not writeable on this contact."));
+    }
 }

@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2010 Collabora Ltd.
+ * Copyright (C) 2011 Philip Withnall
  *
  * This library is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -16,6 +17,7 @@
  *
  * Authors:
  *       Travis Reitter <travis.reitter@collabora.co.uk>
+ *       Philip Withnall <philip@tecnocode.co.uk>
  */
 
 using Gee;
@@ -197,48 +199,66 @@ public class Folks.Individual : Object,
   /**
    * {@inheritDoc}
    */
+  [CCode (notify = false)]
   public string alias
     {
       get { return this._alias; }
+      set { this.change_alias.begin (value); }
+    }
 
-      set
+  /**
+   * {@inheritDoc}
+   *
+   * @since UNRELEASED
+   */
+  public async void change_alias (string alias) throws PropertyError
+    {
+      if (this._alias == alias)
         {
-          if (this._alias == value)
-            return;
+          return;
+        }
 
-          this._alias = value;
+      debug ("Setting alias of individual '%s' to '%s'…", this.id, alias);
 
-          debug ("Setting alias of individual '%s' to '%s'…", this.id, value);
+      PropertyError? persona_error = null;
+      var alias_changed = false;
 
-          /* First, try to write it to only the writeable Personas… */
-          var alias_changed = false;
-          foreach (var p in this._persona_set)
+      /* Try to write it to only the writeable Personas which have "alias"
+       * as a writeable property. */
+      foreach (var p in this._persona_set)
+        {
+          var a = p as AliasDetails;
+          if (a != null && p.store.is_writeable == true &&
+              "alias" in p.writeable_properties)
             {
-              if (p is AliasDetails &&
-                  ((Persona) p).store.is_writeable == true)
+              try
                 {
-                  debug ("    written to writeable persona '%s'",
-                      ((Persona) p).uid);
-                  ((AliasDetails) p).alias = value;
+                  yield a.change_alias (alias);
+                  debug ("    written to writeable persona '%s'", p.uid);
                   alias_changed = true;
                 }
-            }
-
-          /* …but if there are no writeable Personas, we have to fall back to
-           * writing it to every Persona. */
-          if (alias_changed == false)
-            {
-              foreach (var p in this._persona_set)
+              catch (PropertyError e)
                 {
-                  if (p is AliasDetails)
+                  /* Store the first error so we can throw it if setting the
+                   * alias fails on every other persona. */
+                  if (persona_error == null)
                     {
-                      debug ("    written to non-writeable persona '%s'",
-                          ((Persona) p).uid);
-                      ((AliasDetails) p).alias = value;
+                      persona_error = e;
                     }
                 }
             }
         }
+
+      /* Failure? */
+      if (alias_changed == false)
+        {
+          assert (persona_error != null);
+          throw persona_error;
+        }
+
+      /* Update our copy of the alias. */
+      this._alias = alias;
+      this.notify_property ("alias");
     }
 
   /**

@@ -72,22 +72,32 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
    *
    * @since 0.1.15
    */
+  [CCode (notify = false)]
   public string alias
     {
       get { return this._alias; }
+      set { this.change_alias.begin (value); }
+    }
 
-      set
+  /**
+   * {@inheritDoc}
+   *
+   * @since UNRELEASED
+   */
+  public async void change_alias (string alias) throws PropertyError
+    {
+      if (this._alias == alias)
         {
-          if (this._alias == value)
-            return;
-
-          debug ("Setting alias of Kf.Persona '%s' to '%s'.", this.uid, value);
-
-          this._alias = value;
-          this._key_file.set_string (this.display_id, "__alias", value);
-
-          ((Kf.PersonaStore) this.store).save_key_file.begin ();
+          return;
         }
+
+      debug ("Setting alias of Kf.Persona '%s' to '%s'.", this.uid, alias);
+
+      this._key_file.set_string (this.display_id, "__alias", alias);
+      yield ((Kf.PersonaStore) this.store).save_key_file ();
+
+      this._alias = alias;
+      this.notify_property ("alias");
     }
 
   /**

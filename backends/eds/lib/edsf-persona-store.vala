@@ -1314,4 +1314,76 @@ public class Edsf.PersonaStore : Folks.PersonaStore
            this._emit_personas_changed (null, removed_personas);
          }
     }
+
+  /* Convert an EClientError or EBookClientError to a Folks.PropertyError for
+   * property modifications. */
+  private PropertyError e_client_error_to_property_error (string property_name,
+      GLib.Error error_in)
+    {
+      if (error_in.domain == BookClient.error_quark ())
+        {
+          switch ((BookClientError) error_in.code)
+            {
+              /* We don't expect to receive any of the error codes below: */
+              case BookClientError.CONTACT_NOT_FOUND:
+              case BookClientError.NO_SUCH_BOOK:
+              case BookClientError.CONTACT_ID_ALREADY_EXISTS:
+              case BookClientError.NO_SUCH_SOURCE:
+              case BookClientError.NO_SPACE:
+              default:
+                /* Fall out */
+                break;
+            }
+        }
+      else if (error_in.domain == Client.error_quark ())
+        {
+          switch ((ClientError) error_in.code)
+            {
+              case ClientError.REPOSITORY_OFFLINE:
+              case ClientError.PERMISSION_DENIED:
+              case ClientError.NOT_SUPPORTED:
+              case ClientError.AUTHENTICATION_REQUIRED:
+                /* TODO: Support authentication. bgo#653339 */
+                return new PropertyError.NOT_WRITEABLE (
+                    /* Translators: the first parameter is a non-human-readable
+                     * property name and the second parameter is an error
+                     * message. */
+                    _("Property ‘%s’ is not writeable: %s"), property_name,
+                    error_in.message);
+              /* We expect to receive these, but they don't need special
+               * error codes: */
+              case ClientError.INVALID_ARG:
+                return new PropertyError.INVALID_VALUE (
+                    /* Translators: the first parameter is a non-human-readable
+                     * property name and the second parameter is an error
+                     * message. */
+                    _("Invalid value for property ‘%s’: %s"), property_name,
+                    error_in.message);
+              case ClientError.BUSY:
+              case ClientError.DBUS_ERROR:
+              case ClientError.OTHER_ERROR:
+                /* Fall through. */
+              /* We don't expect to receive any of the error codes below: */
+              case ClientError.COULD_NOT_CANCEL:
+              case ClientError.AUTHENTICATION_FAILED:
+              case ClientError.TLS_NOT_AVAILABLE:
+              case ClientError.OFFLINE_UNAVAILABLE:
+              case ClientError.UNSUPPORTED_AUTHENTICATION_METHOD:
+              case ClientError.SEARCH_SIZE_LIMIT_EXCEEDED:
+              case ClientError.SEARCH_TIME_LIMIT_EXCEEDED:
+              case ClientError.INVALID_QUERY:
+              case ClientError.QUERY_REFUSED:
+              default:
+                /* Fall out */
+                break;
+            }
+        }
+
+      /* Fallback error. */
+      return new PropertyError.UNKNOWN_ERROR (
+          /* Translators: the first parameter is a non-human-readable
+           * property name and the second parameter is an error message. */
+          _("Unknown error setting property ‘%s’: %s"), property_name,
+          error_in.message);
+    }
 }
