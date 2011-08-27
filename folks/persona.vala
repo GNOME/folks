@@ -21,6 +21,37 @@
 using GLib;
 
 /**
+ * Errors which can be thrown when asynchronously setting a property of a
+ * {@link Persona} using a setter method defined on an interface such as
+ * {@link AliasDetails}.
+ *
+ * @since UNRELEASED
+ */
+public errordomain Folks.PropertyError
+{
+  /**
+   * Property is not writeable for this particular object.
+   *
+   * @since UNRELEASED
+   */
+  NOT_WRITEABLE,
+
+  /**
+   * Value was invalid for the property.
+   *
+   * @since UNRELEASED
+   */
+  INVALID_VALUE,
+
+  /**
+   * Unknown error when setting the property.
+   *
+   * @since UNRELEASED
+   */
+  UNKNOWN_ERROR
+}
+
+/**
  * Represents a "shard" of a person from a single source (a single
  * {@link Backend}), such as an XMPP contact from Telepathy or a vCard contact
  * from evolution-data-server.
