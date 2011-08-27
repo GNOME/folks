@@ -57,7 +57,6 @@ public class Trf.Persona : Folks.Persona,
   private string _tracker_id;
   private const string[] _writeable_properties =
     {
-      "alias",
       "phone-numbers",
       "email-addresses",
       "avatar",
