@@ -431,9 +431,29 @@ public class Folks.Individual : Object,
         }
     }
 
-  public DateTime? birthday { get; private set; }
+  private DateTime? _birthday = null;
 
-  public string? calendar_event_id { get; set; }
+  /**
+   * {@inheritDoc}
+   */
+  [CCode (notify = false)]
+  public DateTime? birthday
+    {
+      get { return this._birthday; }
+      set { this.change_birthday.begin (value); } /* not writeable */
+    }
+
+  private string? _calendar_event_id = null;
+
+  /**
+   * {@inheritDoc}
+   */
+  [CCode (notify = false)]
+  public string? calendar_event_id
+    {
+      get { return this._calendar_event_id; }
+      set { this.change_calendar_event_id.begin (value); } /* not writeable */
+    }
 
   private HashSet<NoteFieldDetails> _notes;
   private Set<NoteFieldDetails> _notes_ro;
@@ -1514,8 +1534,8 @@ public class Folks.Individual : Object,
             {
               if (bday_owner.birthday != null)
                 {
-                  if (this.birthday == null ||
-                      bday_owner.birthday.compare (this.birthday) != 0)
+                  if (this._birthday == null ||
+                      bday_owner.birthday.compare (this._birthday) != 0)
                     {
                       bday = bday_owner.birthday;
                       calendar_event_id = bday_owner.calendar_event_id;
@@ -1525,15 +1545,25 @@ public class Folks.Individual : Object,
             }
         }
 
-      if (this.birthday != null && bday == null)
+      if (this._birthday != null && bday == null)
         {
-          this.birthday = null;
-          this.calendar_event_id = null;
+          this._birthday = null;
+          this._calendar_event_id = null;
+
+          this.freeze_notify ();
+          this.notify_property ("birthday");
+          this.notify_property ("calendar-event-id");
+          this.thaw_notify ();
         }
       else if (bday != null)
         {
-          this.birthday = bday;
-          this.calendar_event_id = calendar_event_id;
+          this._birthday = bday;
+          this._calendar_event_id = calendar_event_id;
+
+          this.freeze_notify ();
+          this.notify_property ("birthday");
+          this.notify_property ("calendar-event-id");
+          this.thaw_notify ();
         }
     }
 

@@ -202,23 +202,32 @@ public class Trf.Persona : Folks.Persona,
   /**
    * {@inheritDoc}
    */
+  [CCode (notify = false)]
   public DateTime? birthday
     {
       get { return this._birthday; }
-      public set
-        {
-          ((Trf.PersonaStore) this.store)._set_birthday (this, value);
-        }
+      set { this.change_birthday.begin (value); }
+    }
+
+  /**
+   * {@inheritDoc}
+   *
+   * @since UNRELEASED
+   */
+  public async void change_birthday (DateTime? birthday) throws PropertyError
+    {
+      yield ((Trf.PersonaStore) this.store)._set_birthday (this, birthday);
     }
 
   /**
    * {@inheritDoc}
    */
+  [CCode (notify = false)]
   public string? calendar_event_id
     {
       /* Unsupported */
       get { return null; }
-      private set {}
+      set { this.change_calendar_event_id.begin (value); } /* not writeable */
     }
 
   private HashSet<RoleFieldDetails> _roles;
