@@ -163,19 +163,33 @@ public class Tpf.Persona : Folks.Persona,
    *
    * See {@link Folks.FavouriteDetails.is_favourite}.
    */
+  [CCode (notify = false)]
   public bool is_favourite
     {
       get { return this._is_favourite; }
+      set { this.change_is_favourite.begin (value); }
+    }
 
-      set
+  /**
+   * {@inheritDoc}
+   *
+   * @since UNRELEASED
+   */
+  public async void change_is_favourite (bool is_favourite) throws PropertyError
+    {
+      if (this._is_favourite == is_favourite)
         {
-          if (this._is_favourite == value)
-            return;
-
-          if (this._is_constructed)
-            ((Tpf.PersonaStore) this.store).change_is_favourite (this, value);
-          this._is_favourite = value;
+          return;
         }
+
+      if (this._is_constructed)
+        {
+          yield ((Tpf.PersonaStore) this.store).change_is_favourite (this,
+              is_favourite);
+        }
+
+      this._is_favourite = is_favourite;
+      this.notify_property ("is-favourite");
     }
 
   /**

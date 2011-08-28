@@ -12,6 +12,7 @@ folks/avatar-details.vala
 folks/backend-store.vala
 folks/birthday-details.vala
 folks/email-details.vala
+folks/favourite-details.vala
 folks/im-details.vala
 folks/individual-aggregator.vala
 folks/postal-address-details.vala

@@ -492,31 +492,70 @@ public class Folks.Individual : Object,
    * This property is `true` if any of this Individual's {@link Persona}s are
    * favourites).
    */
+  [CCode (notify = false)]
   public bool is_favourite
     {
       get { return this._is_favourite; }
+      set { this.change_is_favourite.begin (value); }
+    }
 
-      set
+  /**
+   * {@inheritDoc}
+   *
+   * @since UNRELEASED
+   */
+  public async void change_is_favourite (bool is_favourite) throws PropertyError
+    {
+      if (this._is_favourite == is_favourite)
         {
-          if (this._is_favourite == value)
-            return;
+          return;
+        }
 
-          debug ("Setting '%s' favourite status to %s", this.id,
-              value ? "TRUE" : "FALSE");
+      debug ("Setting '%s' favourite status to %s…", this.id,
+        is_favourite ? "TRUE" : "FALSE");
 
-          this._is_favourite = value;
-          foreach (var p in this._persona_set)
+      PropertyError? persona_error = null;
+      var is_favourite_changed = false;
+
+      /* Try to write it to only the Personas which have "is-favourite" as a
+       * writeable property.
+       *
+       * NOTE: We don't check whether the persona's store is writeable, as we
+       * want is-favourite status to propagate to all stores, if possible. This
+       * is one property which is harmless to propagate. */
+      foreach (var p in this._persona_set)
+        {
+          var a = p as FavouriteDetails;
+          if (a != null && "is-favourite" in p.writeable_properties)
             {
-              if (p is FavouriteDetails)
+              try
                 {
-                  SignalHandler.block_by_func (p,
-                      (void*) this._notify_is_favourite_cb, this);
-                  ((FavouriteDetails) p).is_favourite = value;
-                  SignalHandler.unblock_by_func (p,
-                      (void*) this._notify_is_favourite_cb, this);
+                  yield a.change_is_favourite (is_favourite);
+                  debug ("    written to persona '%s'", p.uid);
+                  is_favourite_changed = true;
+                }
+              catch (PropertyError e)
+                {
+                  /* Store the first error so we can throw it if setting the
+                   * property fails on every other persona. */
+                  if (persona_error == null)
+                    {
+                      persona_error = e;
+                    }
                 }
             }
         }
+
+      /* Failure? */
+      if (is_favourite_changed == false)
+        {
+          assert (persona_error != null);
+          throw persona_error;
+        }
+
+      /* Update our copy of the property. */
+      this._is_favourite = is_favourite;
+      this.notify_property ("is-favourite");
     }
 
   /**

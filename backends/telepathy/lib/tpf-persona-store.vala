@@ -1972,17 +1972,16 @@ public class Tpf.PersonaStore : Folks.PersonaStore
    * Telepathy logger service, so may fail if that connection is not present.
    */
   internal async void change_is_favourite (Folks.Persona persona,
-      bool is_favourite)
+      bool is_favourite) throws PropertyError
     {
       /* It's possible for us to not be able to connect to the logger;
        * see _connection_ready_cb() */
       if (this._logger == null)
         {
-          warning (
+          throw new PropertyError.UNKNOWN_ERROR (
               /* Translators: "telepathy-logger" is the name of an application,
                * and should not be translated. */
               _("Failed to change favorite without a connection to the telepathy-logger service."));
-          return;
         }
 
       try
@@ -1998,7 +1997,8 @@ public class Tpf.PersonaStore : Folks.PersonaStore
         }
       catch (GLib.Error e)
         {
-          warning (_("Failed to change a persona's favorite status."));
+          throw new PropertyError.UNKNOWN_ERROR (
+              _("Failed to change a persona's favorite status."));
         }
     }
 

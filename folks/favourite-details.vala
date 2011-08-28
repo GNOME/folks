@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2010 Collabora Ltd.
+ * Copyright (C) 2011 Philip Withnall
  *
  * This library is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -30,4 +31,24 @@ public interface Folks.FavouriteDetails : Object
    * Whether this contact is a user-defined favourite.
    */
   public abstract bool is_favourite { get; set; }
+
+  /**
+   * Change whether the contact is a user-defined favourite.
+   *
+   * It's preferred to call this rather than setting
+   * {@link FavouriteDetails.is_favourite} directly, as this method gives error
+   * notification and will only return once the favouriteness has been written
+   * to the relevant backing store (or the operation's failed).
+   *
+   * @param is_favourite `true` if the contact is a favourite; `false` otherwise
+   * @throws PropertyError if setting the favouriteness failed
+   * @since UNRELEASED
+   */
+  public virtual async void change_is_favourite (bool is_favourite)
+      throws PropertyError
+    {
+      /* Default implementation. */
+      throw new PropertyError.NOT_WRITEABLE (
+          _("Favourite status is not writeable on this contact."));
+    }
 }

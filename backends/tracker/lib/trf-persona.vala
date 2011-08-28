@@ -332,22 +332,28 @@ public class Trf.Persona : Folks.Persona,
   /**
    * Whether this contact is a user-defined favourite.
    */
+  [CCode (notify = false)]
   public bool is_favourite
       {
         get { return this._is_favourite; }
-
-        set
-          {
-            if (this._is_favourite == value)
-              return;
-
-            /* Note:
-             * this property will be set (and notified)
-             * once we receive a notification event from Tracker
-             */
-            ((Trf.PersonaStore) this.store)._set_is_favourite (this, value);
-          }
+        set { this.change_is_favourite.begin (value); }
       }
+
+  /**
+   * {@inheritDoc}
+   *
+   * @since UNRELEASED
+   */
+  public async void change_is_favourite (bool is_favourite) throws PropertyError
+    {
+      if (this._is_favourite == is_favourite)
+        {
+          return;
+        }
+
+      yield ((Trf.PersonaStore) this.store)._set_is_favourite (this,
+          is_favourite);
+    }
 
   private HashSet<string> _local_ids;
   private Set<string> _local_ids_ro;
@@ -1259,8 +1265,7 @@ public class Trf.Persona : Folks.Persona,
   private void _update_favourite ()
     {
       var favourite = this._cursor.get_string (Trf.Fields.FAVOURITE).dup ();
-
-      this._is_favourite = false;
+      var is_favourite = false;
 
       if (favourite != null)
         {
@@ -1270,9 +1275,15 @@ public class Trf.Persona : Folks.Persona,
             {
               if (int.parse (tag) == favorite_tracker_id)
                 {
-                  this._is_favourite = true;
+                  is_favourite = true;
                 }
             }
+        }
+
+      if (is_favourite != this._is_favourite)
+        {
+          this._is_favourite = is_favourite;
+          this.notify_property ("is-favourite");
         }
     }
 
