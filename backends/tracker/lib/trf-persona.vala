@@ -142,13 +142,21 @@ public class Trf.Persona : Folks.Persona,
    *
    * @since 0.6.0
    */
+  [CCode (notify = false)]
   public LoadableIcon? avatar
     {
       get { return this._avatar; }
-      public set
-        {
-          ((Trf.PersonaStore) this.store)._set_avatar (this, value);
-        }
+      set { this.change_avatar.begin (value); }
+    }
+
+  /**
+   * {@inheritDoc}
+   *
+   * @since UNRELEASED
+   */
+  public async void change_avatar (LoadableIcon? avatar) throws PropertyError
+    {
+      yield ((Trf.PersonaStore) this.store)._set_avatar (this, avatar);
     }
 
   private StructuredName _structured_name;

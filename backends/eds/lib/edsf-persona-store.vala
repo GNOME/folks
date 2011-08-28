@@ -272,8 +272,16 @@ public class Edsf.PersonaStore : Folks.PersonaStore
             }
           else if (k == Folks.PersonaStore.detail_key (PersonaDetail.AVATAR))
             {
-              var avatar = (LoadableIcon?) v.get_object ();
-              yield this._set_contact_avatar (contact, avatar);
+              try
+                {
+                  var avatar = (LoadableIcon?) v.get_object ();
+                  yield this._set_contact_avatar (contact, avatar);
+                }
+              catch (PropertyError e1)
+                {
+                  warning ("Couldn't set avatar on the EContact: %s",
+                      e1.message);
+                }
             }
           else if (k == Folks.PersonaStore.detail_key (
                 PersonaDetail.IM_ADDRESSES))
@@ -683,6 +691,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
     }
 
   internal async void _set_avatar (Edsf.Persona persona, LoadableIcon? avatar)
+      throws PropertyError
     {
       /* Return early if there will be no change */
       if ((persona.avatar == null && avatar == null) ||
@@ -697,9 +706,13 @@ public class Edsf.PersonaStore : Folks.PersonaStore
           yield this._set_contact_avatar (contact, avatar);
           yield this._addressbook.modify_contact (contact, null);
         }
-      catch (GLib.Error e)
+      catch (PropertyError e1)
         {
-          GLib.warning ("Can't update avatar: %s\n", e.message);
+          throw e1;
+        }
+      catch (GLib.Error e2)
+        {
+          throw this.e_client_error_to_property_error ("avatar", e2);
         }
     }
 
@@ -867,7 +880,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
     }
 
   private async void _set_contact_avatar (E.Contact contact,
-      LoadableIcon? avatar)
+      LoadableIcon? avatar) throws PropertyError
     {
       if (avatar == null)
         {
@@ -905,8 +918,10 @@ public class Edsf.PersonaStore : Folks.PersonaStore
             }
           catch (GLib.Error e1)
             {
-              warning ("Couldn't set avatar on the EContact : %s",
-                  e1.message);
+              /* Loading/Reading the avatar failed. */
+              throw new PropertyError.INVALID_VALUE (
+                  /* Translators: the parameter is an error message. */
+                  _("Can't update avatar: %s"), e1.message);
             }
         }
     }

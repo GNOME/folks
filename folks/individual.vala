@@ -115,12 +115,19 @@ public class Folks.Individual : Object,
    */
   public TrustLevel trust_level { get; private set; }
 
+  private LoadableIcon? _avatar = null;
+
   /**
    * {@inheritDoc}
    *
    * @since 0.6.0
    */
-  public LoadableIcon? avatar { get; private set; }
+  [CCode (notify = false)]
+  public LoadableIcon? avatar
+    {
+      get { return this._avatar; }
+      set { this.change_avatar.begin (value); } /* not writeable */
+    }
 
   /**
    * {@inheritDoc}
@@ -1072,8 +1079,11 @@ public class Folks.Individual : Object,
         }
 
       /* only notify if the value has changed */
-      if (this.avatar == null || !this.avatar.equal (avatar))
-        this.avatar = avatar;
+      if (this._avatar == null || !this._avatar.equal (avatar))
+        {
+          this._avatar = avatar;
+          this.notify_property ("avatar");
+        }
     }
 
   private void _update_trust_level ()

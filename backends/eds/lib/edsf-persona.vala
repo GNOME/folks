@@ -267,13 +267,20 @@ public class Edsf.Persona : Folks.Persona,
   public LoadableIcon? avatar
     {
       get { return this._avatar; }
-      set
+      set { this.change_avatar.begin (value); }
+    }
+
+  /**
+   * {@inheritDoc}
+   *
+   * @since UNRELEASED
+   */
+  public async void change_avatar (LoadableIcon? avatar) throws PropertyError
+    {
+      if (this._avatar == null ||
+          !this._avatar.equal (avatar))
         {
-          if (this._avatar == null ||
-              !this._avatar.equal (value))
-            {
-              ((Edsf.PersonaStore) this.store)._set_avatar (this, value);
-            }
+          yield ((Edsf.PersonaStore) this.store)._set_avatar (this, avatar);
         }
     }
 

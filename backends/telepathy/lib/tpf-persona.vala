@@ -66,6 +66,8 @@ public class Tpf.Persona : Folks.Persona,
    */
   public bool is_in_contact_list { get; set; }
 
+  private LoadableIcon? _avatar = null;
+
   /**
    * An avatar for the Persona.
    *
@@ -73,7 +75,12 @@ public class Tpf.Persona : Folks.Persona,
    *
    * @since 0.6.0
    */
-  public LoadableIcon? avatar { get; private set; }
+  [CCode (notify = false)]
+  public LoadableIcon? avatar
+    {
+      get { return this._avatar; }
+      set { this.change_avatar.begin (value); } /* not writeable */
+    }
 
   /**
    * The Persona's presence type.
@@ -423,7 +430,7 @@ public class Tpf.Persona : Folks.Persona,
       this._alias = alias;
       this._is_favourite = is_favourite;
       this.is_in_contact_list = is_in_contact_list;
-      this.avatar = avatar;
+      this._avatar = avatar;
 
       // Make the persona appear offline
       this.presence_type = PresenceType.OFFLINE;
@@ -506,7 +513,10 @@ public class Tpf.Persona : Folks.Persona,
       if (file != null)
         icon = new FileIcon (file);
 
-      if (this.avatar == null || icon == null || !this.avatar.equal (icon))
-        this.avatar = (LoadableIcon) icon;
+      if (this._avatar == null || icon == null || !this._avatar.equal (icon))
+        {
+          this._avatar = (LoadableIcon) icon;
+          this.notify_property ("avatar");
+        }
     }
 }

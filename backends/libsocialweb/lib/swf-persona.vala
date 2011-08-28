@@ -69,6 +69,8 @@ public class Swf.Persona : Folks.Persona,
       get { return this._writeable_properties; }
     }
 
+  private LoadableIcon? _avatar = null;
+
   /**
    * An avatar for the Persona.
    *
@@ -76,7 +78,12 @@ public class Swf.Persona : Folks.Persona,
    *
    * @since 0.6.0
    */
-  public LoadableIcon? avatar { get; private set; }
+  [CCode (notify = false)]
+  public LoadableIcon? avatar
+    {
+      get { return this._avatar; }
+      set { this.change_avatar.begin (value); } /* not writeable */
+    }
 
   /**
    * {@inheritDoc}
@@ -292,12 +299,16 @@ public class Swf.Persona : Folks.Persona,
       if (avatar_path != null)
         {
           var icon = new FileIcon (File.new_for_path (avatar_path));
-          if (this.avatar == null || !this.avatar.equal (icon))
-            this.avatar = icon;
+          if (this._avatar == null || !this._avatar.equal (icon))
+            {
+              this._avatar = icon;
+              this.notify_property ("avatar");
+            }
         }
       else
         {
-          this.avatar = null;
+          this._avatar = null;
+          this.notify_property ("avatar");
         }
 
       var structured_name = new StructuredName.simple (
