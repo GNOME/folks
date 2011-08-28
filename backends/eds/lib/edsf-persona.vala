@@ -214,10 +214,19 @@ public class Edsf.Persona : Folks.Persona,
   public Set<EmailFieldDetails> email_addresses
     {
       get { return this._email_addresses_ro; }
-      set
-        {
-          ((Edsf.PersonaStore) this.store)._set_emails (this, value);
-        }
+      set { this.change_email_addresses.begin (value); }
+    }
+
+  /**
+   * {@inheritDoc}
+   *
+   * @since UNRELEASED
+   */
+  public async void change_email_addresses (
+      Set<EmailFieldDetails> email_addresses) throws PropertyError
+    {
+      yield ((Edsf.PersonaStore) this.store)._set_emails (this,
+          email_addresses);
     }
 
   /**

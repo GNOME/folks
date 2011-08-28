@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2011 Collabora Ltd.
+ * Copyright (C) 2011 Philip Withnall
  *
  * This library is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -16,6 +17,7 @@
  *
  * Authors:
  *       Marco Barisione <marco.barisione@collabora.co.uk>
+ *       Philip Withnall <philip@tecnocode.co.uk>
  */
 
 using GLib;
@@ -92,4 +94,24 @@ public interface Folks.EmailDetails : Object
    * @since 0.6.0
    */
   public abstract Set<EmailFieldDetails> email_addresses { get; set; }
+
+  /**
+   * Change the contact's set of e-mail addresses.
+   *
+   * It's preferred to call this rather than setting
+   * {@link EmailDetails.email_addresses} directly, as this method gives error
+   * notification and will only return once the e-mail addresses have been
+   * written to the relevant backing store (or the operation's failed).
+   *
+   * @param email_addresses the new set of e-mail addresses
+   * @throws PropertyError if setting the e-mail addresses failed
+   * @since UNRELEASED
+   */
+  public virtual async void change_email_addresses (
+      Set<EmailFieldDetails> email_addresses) throws PropertyError
+    {
+      /* Default implementation. */
+      throw new PropertyError.NOT_WRITEABLE (
+          _("E-mail addresses are not writeable on this contact."));
+    }
 }

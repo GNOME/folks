@@ -927,7 +927,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
     }
 
   internal async void _set_emails (Edsf.Persona persona,
-      Set<EmailFieldDetails> emails)
+      Set<EmailFieldDetails> emails) throws PropertyError
     {
       try
         {
@@ -936,10 +936,9 @@ public class Edsf.PersonaStore : Folks.PersonaStore
               E.ContactField.EMAIL);
           yield this._addressbook.modify_contact (contact, null);
         }
-      catch (GLib.Error error)
+      catch (GLib.Error e)
         {
-          GLib.warning ("Can't update email-addresses: %s\n",
-              error.message);
+          throw this.e_client_error_to_property_error ("email-addresses", e);
         }
     }
 

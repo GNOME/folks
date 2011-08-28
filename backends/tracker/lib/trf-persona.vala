@@ -107,13 +107,22 @@ public class Trf.Persona : Folks.Persona,
   /**
    * {@inheritDoc}
    */
+  [CCode (notify = false)]
   public Set<EmailFieldDetails> email_addresses
     {
       get { return this._email_addresses_ro; }
-      public set
-        {
-          ((Trf.PersonaStore) this.store)._set_emails (this, value);
-        }
+      set { this.change_email_addresses.begin (value); }
+    }
+
+  /**
+   * {@inheritDoc}
+   *
+   * @since UNRELEASED
+   */
+  public async void change_email_addresses (
+      Set<EmailFieldDetails> email_addresses) throws PropertyError
+    {
+      yield ((Trf.PersonaStore) this.store)._set_emails (this, email_addresses);
     }
 
   /**
@@ -1152,6 +1161,8 @@ public class Trf.Persona : Folks.Persona,
 
       this._email_addresses = email_addresses;
       this._email_addresses_ro = this._email_addresses.read_only_view;
+
+      this.notify_property ("email-addresses");
     }
 
   private void _update_urls ()

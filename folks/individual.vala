@@ -384,15 +384,11 @@ public class Folks.Individual : Object,
   /**
    * {@inheritDoc}
    */
+  [CCode (notify = false)]
   public Set<EmailFieldDetails> email_addresses
     {
       get { return this._email_addresses_ro; }
-      private set
-        {
-          this._email_addresses.clear ();
-          foreach (var email_fd in value)
-            this._email_addresses.add (email_fd);
-        }
+      set { this.change_email_addresses.begin (value); } /* not writeable */
     }
 
   private HashSet<RoleFieldDetails> _roles;
