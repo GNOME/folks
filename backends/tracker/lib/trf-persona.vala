@@ -198,11 +198,11 @@ public class Trf.Persona : Folks.Persona,
         }
     }
 
-  private DateTime _birthday;
+  private DateTime? _birthday = null;
   /**
    * {@inheritDoc}
    */
-  public DateTime birthday
+  public DateTime? birthday
     {
       get { return this._birthday; }
       public set

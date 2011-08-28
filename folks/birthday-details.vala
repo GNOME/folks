@@ -29,12 +29,13 @@ using GLib;
 public interface Folks.BirthdayDetails : Object
 {
   /**
-   * The birthday of the {@link Persona} and
-   * {@link Individual}
+   * The birthday of the {@link Persona} and {@link Individual}.
+   *
+   * If this is `null`, the contact's birthday isn't known.
    *
    * @since 0.4.0
    */
-  public abstract DateTime birthday { get; set; }
+  public abstract DateTime? birthday { get; set; }
 
   /**
    * The event ID of the birthday event from the source calendar.

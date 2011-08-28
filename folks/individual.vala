@@ -431,7 +431,7 @@ public class Folks.Individual : Object,
         }
     }
 
-  public DateTime birthday { get; set; }
+  public DateTime? birthday { get; private set; }
 
   public string? calendar_event_id { get; set; }
 
