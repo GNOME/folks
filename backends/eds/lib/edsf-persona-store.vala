@@ -239,7 +239,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
    * - PersonaStore.detail_key (PersonaDetail.POSTAL_ADDRESSES)
    * - PersonaStore.detail_key (PersonaDetail.STRUCTURED_NAME)
    * - PersonaStore.detail_key (PersonaDetail.LOCAL_IDS)
-   * - PersonaDetail.detail_key (PersonaDetail.WEB_SERVICE_ADDRESSES)
+   * - PersonaStore.detail_key (PersonaDetail.WEB_SERVICE_ADDRESSES)
    * - PersonaStore.detail_key (PersonaDetail.NOTES)
    * - PersonaStore.detail_key (PersonaDetail.URL)
    *
