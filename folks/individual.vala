@@ -271,7 +271,7 @@ public class Folks.Individual : Object,
   /**
    * {@inheritDoc}
    */
-  public StructuredName structured_name { get; private set; }
+  public StructuredName? structured_name { get; private set; }
 
   /**
    * {@inheritDoc}

@@ -2280,9 +2280,9 @@ public class Trf.PersonaStore : Folks.PersonaStore
     }
 
   internal async void _set_structured_name (Folks.Persona persona,
-      StructuredName sname)
+      StructuredName? sname)
     {
-      const string query_t = "DELETE { " +
+      const string query_d = "DELETE { " +
         " ?p " + Trf.OntologyDefs.NCO_FAMILY + " ?family . " +
         " ?p " + Trf.OntologyDefs.NCO_GIVEN + " ?given . " +
         " ?p " + Trf.OntologyDefs.NCO_ADDITIONAL + " ?adi . " +
@@ -2297,8 +2297,8 @@ public class Trf.PersonaStore : Folks.PersonaStore
         " OPTIONAL { ?p " + Trf.OntologyDefs.NCO_PREFIX + " ?prefix } . " +
         " OPTIONAL { ?p " + Trf.OntologyDefs.NCO_SUFFIX + " ?suffix } . " +
         " FILTER (tracker:id(?p) = %s) " +
-        "} " +
-        "INSERT { " +
+        "} ";
+      const string query_i = "INSERT { " +
         " ?p " + Trf.OntologyDefs.NCO_FAMILY + " '%s'; " +
         " " + Trf.OntologyDefs.NCO_GIVEN + " '%s'; " +
         " " + Trf.OntologyDefs.NCO_ADDITIONAL + " '%s'; " +
@@ -2311,8 +2311,14 @@ public class Trf.PersonaStore : Folks.PersonaStore
         "} ";
 
       var p_id = ((Trf.Persona) persona).tracker_id ();
-      string query = query_t.printf (p_id, sname.family_name, sname.given_name,
-          sname.additional_names, sname.prefixes, sname.suffixes, p_id);
+
+      string query = query_d.printf (p_id);
+      if (sname != null)
+        {
+          query = query_i.printf (sname.family_name, sname.given_name,
+              sname.additional_names, sname.prefixes, sname.suffixes, p_id);
+        }
+
       yield this._tracker_update (query, "_set_structured_name");
     }
 

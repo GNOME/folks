@@ -220,7 +220,7 @@ public interface Folks.NameDetails : Object
    *
    * @since 0.3.5
    */
-  public abstract StructuredName structured_name { get; set; }
+  public abstract StructuredName? structured_name { get; set; }
 
   /**
    * The full name of the contact.

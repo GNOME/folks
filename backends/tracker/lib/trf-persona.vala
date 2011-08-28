@@ -168,11 +168,11 @@ public class Trf.Persona : Folks.Persona,
       yield ((Trf.PersonaStore) this.store)._set_avatar (this, avatar);
     }
 
-  private StructuredName _structured_name;
+  private StructuredName? _structured_name = null;
   /**
    * {@inheritDoc}
    */
-  public StructuredName structured_name
+  public StructuredName? structured_name
     {
       get { return this._structured_name; }
       public set
@@ -466,7 +466,7 @@ public class Trf.Persona : Folks.Persona,
       this._gender = Gender.UNSPECIFIED;
       this._full_name = fullname;
       this._tracker_id = tracker_id;
-      this._structured_name = new StructuredName (null, null, null, null, null);
+      this._structured_name = null;
       this._phone_numbers = new HashSet<PhoneFieldDetails> (
           (GLib.HashFunc) PhoneFieldDetails.hash,
           (GLib.EqualFunc) PhoneFieldDetails.equal);
@@ -574,7 +574,16 @@ public class Trf.Persona : Folks.Persona,
     {
       if (family_name != null)
         {
-          this._structured_name.family_name = family_name;
+          if (this._structured_name == null)
+            {
+              this._structured_name =
+                  new StructuredName (family_name, null, null, null, null);
+            }
+          else
+            {
+              this._structured_name.family_name = family_name;
+            }
+
           this.notify_property ("structured-name");
         }
     }
@@ -583,7 +592,16 @@ public class Trf.Persona : Folks.Persona,
     {
       if (given_name != null)
         {
-          this._structured_name.given_name = given_name;
+          if (this._structured_name == null)
+            {
+              this._structured_name =
+                  new StructuredName (null, given_name, null, null, null);
+            }
+          else
+            {
+              this._structured_name.given_name = given_name;
+            }
+
           this.notify_property ("structured-name");
         }
     }
@@ -592,7 +610,16 @@ public class Trf.Persona : Folks.Persona,
     {
       if (additional_names != null)
         {
-          this._structured_name.additional_names = additional_names;
+          if (this._structured_name == null)
+            {
+              this._structured_name =
+                  new StructuredName (null, null, additional_names, null, null);
+            }
+          else
+            {
+              this._structured_name.additional_names = additional_names;
+            }
+
           this.notify_property ("structured-name");
         }
     }
@@ -601,7 +628,16 @@ public class Trf.Persona : Folks.Persona,
     {
       if (prefixes != null)
         {
-          this._structured_name.prefixes = prefixes;
+          if (this._structured_name == null)
+            {
+              this._structured_name =
+                  new StructuredName (null, null, null, prefixes, null);
+            }
+          else
+            {
+              this._structured_name.prefixes = prefixes;
+            }
+
           this.notify_property ("structured-name");
         }
     }
@@ -610,7 +646,16 @@ public class Trf.Persona : Folks.Persona,
     {
       if (suffixes != null)
         {
-          this._structured_name.suffixes = suffixes;
+          if (this._structured_name == null)
+            {
+              this._structured_name =
+                  new StructuredName (null, null, null, null, suffixes);
+            }
+          else
+            {
+              this._structured_name.suffixes = suffixes;
+            }
+
           this.notify_property ("structured-name");
         }
     }

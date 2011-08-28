@@ -88,7 +88,7 @@ public class Swf.Persona : Folks.Persona,
   /**
    * {@inheritDoc}
    */
-  public StructuredName structured_name { get; private set; }
+  public StructuredName? structured_name { get; private set; }
 
   /**
    * {@inheritDoc}

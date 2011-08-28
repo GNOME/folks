@@ -301,14 +301,14 @@ public class Edsf.Persona : Folks.Persona,
         }
     }
 
-  private StructuredName _structured_name;
+  private StructuredName? _structured_name = null;
   /**
    * {@inheritDoc}
    *
    * @since 0.6.0
    */
   [CCode (notify = false)]
-  public StructuredName structured_name
+  public StructuredName? structured_name
     {
       get { return this._structured_name; }
       set
