@@ -1030,7 +1030,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
     }
 
   internal async void _set_full_name (Edsf.Persona persona,
-      string full_name)
+      string full_name) throws PropertyError
     {
       if (persona.full_name == full_name)
         return;
@@ -1041,13 +1041,14 @@ public class Edsf.PersonaStore : Folks.PersonaStore
           contact.set (E.Contact.field_id ("full_name"), full_name);
           yield this._addressbook.modify_contact (contact, null);
         }
-      catch (GLib.Error error)
+      catch (GLib.Error e)
         {
-          GLib.warning ("Can't update full name: %s\n", error.message);
+          throw this.e_client_error_to_property_error ("full-name", e);
         }
     }
 
   internal async void _set_nickname (Edsf.Persona persona, string nickname)
+      throws PropertyError
     {
       if (persona.nickname == nickname)
         return;
@@ -1058,9 +1059,9 @@ public class Edsf.PersonaStore : Folks.PersonaStore
           contact.set (E.Contact.field_id ("nickname"), nickname);
           yield this._addressbook.modify_contact (contact, null);
         }
-      catch (GLib.Error error)
+      catch (GLib.Error e)
         {
-          GLib.warning ("Can't update nickname: %s\n", error.message);
+          throw this.e_client_error_to_property_error ("nickname", e);
         }
     }
 
@@ -1096,7 +1097,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
     }
 
   internal async void _set_structured_name (Edsf.Persona persona,
-      StructuredName? sname)
+      StructuredName? sname) throws PropertyError
     {
       if (persona.structured_name != null &&
           persona.structured_name.equal (sname))
@@ -1108,9 +1109,9 @@ public class Edsf.PersonaStore : Folks.PersonaStore
           yield this._set_contact_name (contact, sname);
           yield this._addressbook.modify_contact (contact, null);
         }
-      catch (GLib.Error error)
+      catch (GLib.Error e)
         {
-          GLib.warning ("Can't update structured name: %s\n", error.message);
+          throw this.e_client_error_to_property_error ("structured-name", e);
         }
     }
 

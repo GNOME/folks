@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2011 Collabora Ltd.
+ * Copyright (C) 2011 Philip Withnall
  *
  * This library is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,6 +18,7 @@
  * Authors:
  *       Marco Barisione <marco.barisione@collabora.co.uk>
  *       Raul Gutierrez Segales <raul.gutierrez.segales@collabora.co.uk>
+ *       Philip Withnall <philip@tecnocode.co.uk>
  */
 
 using GLib;
@@ -223,6 +225,26 @@ public interface Folks.NameDetails : Object
   public abstract StructuredName? structured_name { get; set; }
 
   /**
+   * Change the contact's structured name.
+   *
+   * It's preferred to call this rather than setting
+   * {@link NameDetails.structured_name} directly, as this method gives error
+   * notification and will only return once the name has been written to the
+   * relevant backing store (or the operation's failed).
+   *
+   * @param name the structured name (`null` to unset it)
+   * @throws PropertyError if setting the structured name failed
+   * @since UNRELEASED
+   */
+  public virtual async void change_structured_name (StructuredName? name)
+      throws PropertyError
+    {
+      /* Default implementation. */
+      throw new PropertyError.NOT_WRITEABLE (
+          _("Structured name is not writeable on this contact."));
+    }
+
+  /**
    * The full name of the contact.
    *
    * The full name is the name of the contact written in the way the contact
@@ -235,6 +257,26 @@ public interface Folks.NameDetails : Object
    * @since 0.3.5
    */
   public abstract string full_name { get; set; }
+
+  /**
+   * Change the contact's full name.
+   *
+   * It's preferred to call this rather than setting
+   * {@link NameDetails.full_name} directly, as this method gives error
+   * notification and will only return once the name has been written to the
+   * relevant backing store (or the operation's failed).
+   *
+   * @param full_name the full name (empty string to unset it)
+   * @throws PropertyError if setting the full name failed
+   * @since UNRELEASED
+   */
+  public virtual async void change_full_name (string full_name)
+      throws PropertyError
+    {
+      /* Default implementation. */
+      throw new PropertyError.NOT_WRITEABLE (
+          _("Full name is not writeable on this contact."));
+    }
 
   /**
    * The nickname of the contact.
@@ -250,4 +292,24 @@ public interface Folks.NameDetails : Object
    * @since 0.3.5
    */
   public abstract string nickname { get; set; }
+
+  /**
+   * Change the contact's nickname.
+   *
+   * It's preferred to call this rather than setting
+   * {@link NameDetails.nickname} directly, as this method gives error
+   * notification and will only return once the name has been written to the
+   * relevant backing store (or the operation's failed).
+   *
+   * @param nickname the nickname (empty string to unset it)
+   * @throws PropertyError if setting the nickname failed
+   * @since UNRELEASED
+   */
+  public virtual async void change_nickname (string nickname)
+      throws PropertyError
+    {
+      /* Default implementation. */
+      throw new PropertyError.NOT_WRITEABLE (
+          _("Nickname is not writeable on this contact."));
+    }
 }

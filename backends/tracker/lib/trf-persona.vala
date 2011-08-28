@@ -78,18 +78,21 @@ public class Trf.Persona : Folks.Persona,
    *
    * See {@link Folks.NameDetails.nickname}.
    */
+  [CCode (notify = false)]
   public string nickname
     {
       get { return this._nickname; }
+      set { this.change_nickname.begin (value); }
+    }
 
-      set
-        {
-          if (this._nickname == value)
-            return;
-          this._nickname = value;
-          this.notify_property ("nickname");
-          ((Trf.PersonaStore) this.store)._set_nickname (this, value);
-        }
+  /**
+   * {@inheritDoc}
+   *
+   * @since UNRELEASED
+   */
+  public async void change_nickname (string nickname) throws PropertyError
+    {
+      yield ((Trf.PersonaStore) this.store)._set_nickname (this, nickname);
     }
 
   /**
@@ -172,26 +175,44 @@ public class Trf.Persona : Folks.Persona,
   /**
    * {@inheritDoc}
    */
+  [CCode (notify = false)]
   public StructuredName? structured_name
     {
       get { return this._structured_name; }
-      public set
-        {
-          ((Trf.PersonaStore) this.store)._set_structured_name (this, value);
-        }
+      set { this.change_structured_name.begin (value); }
     }
 
-  private string _full_name;
+  /**
+   * {@inheritDoc}
+   *
+   * @since UNRELEASED
+   */
+  public async void change_structured_name (StructuredName? structured_name)
+      throws PropertyError
+    {
+      yield ((Trf.PersonaStore) this.store)._set_structured_name (this,
+          structured_name);
+    }
+
+  private string _full_name = "";
   /**
    * {@inheritDoc}
    */
+  [CCode (notify = false)]
   public string full_name
     {
       get { return this._full_name; }
-      public set
-        {
-          ((Trf.PersonaStore) this.store)._set_full_name (this, value);
-        }
+      set { this.change_full_name.begin (value); }
+    }
+
+  /**
+   * {@inheritDoc}
+   *
+   * @since UNRELEASED
+   */
+  public async void change_full_name (string full_name) throws PropertyError
+    {
+      yield ((Trf.PersonaStore) this.store)._set_full_name (this, full_name);
     }
 
   private Gender _gender;

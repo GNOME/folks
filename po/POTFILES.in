@@ -17,6 +17,7 @@ folks/gender-details.vala
 folks/im-details.vala
 folks/individual-aggregator.vala
 folks/local-id-details.vala
+folks/name-details.vala
 folks/postal-address-details.vala
 folks/role-details.vala
 tools/import-pidgin.vala

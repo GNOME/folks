@@ -85,24 +85,40 @@ public class Swf.Persona : Folks.Persona,
       set { this.change_avatar.begin (value); } /* not writeable */
     }
 
-  /**
-   * {@inheritDoc}
-   */
-  public StructuredName? structured_name { get; private set; }
+  private StructuredName? _structured_name = null;
 
   /**
    * {@inheritDoc}
    */
-  public string full_name { get; private set; }
+  [CCode (notify = false)]
+  public StructuredName? structured_name
+    {
+      get { return this._structured_name; }
+      set { this.change_structured_name.begin (value); } /* not writeable */
+    }
 
-  private string _nickname;
+  private string _full_name = "";
+
   /**
    * {@inheritDoc}
    */
+  [CCode (notify = false)]
+  public string full_name
+    {
+      get { return this._full_name; }
+      set { this.change_full_name.begin (value); } /* not writeable */
+    }
+
+  private string _nickname = "";
+
+  /**
+   * {@inheritDoc}
+   */
+  [CCode (notify = false)]
   public string nickname
     {
       get { return this._nickname; }
-      private set {}
+      set { this.change_nickname.begin (value); } /* not writeable */
     }
 
   private Gender _gender = Gender.UNSPECIFIED;
@@ -321,13 +337,22 @@ public class Swf.Persona : Folks.Persona,
       var structured_name = new StructuredName.simple (
           contact.get_value ("n.family"), contact.get_value ("n.given"));
       if (!structured_name.is_empty ())
-        this.structured_name = structured_name;
+        {
+          this._structured_name = structured_name;
+          this.notify_property ("structured-name");
+        }
       else if (this.structured_name != null)
-        this.structured_name = null;
+        {
+          this._structured_name = null;
+          this.notify_property ("structured-name");
+        }
 
       var full_name = contact.get_value ("fn");
-      if (this.full_name != full_name)
-        this.full_name = full_name;
+      if (this._full_name != full_name)
+        {
+          this._full_name = full_name;
+          this.notify_property ("full-name");
+        }
 
       var urls = new HashSet<UrlFieldDetails> (
           (GLib.HashFunc) UrlFieldDetails.hash,

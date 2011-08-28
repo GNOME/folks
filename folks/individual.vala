@@ -268,66 +268,99 @@ public class Folks.Individual : Object,
       this.notify_property ("alias");
     }
 
-  /**
-   * {@inheritDoc}
-   */
-  public StructuredName? structured_name { get; private set; }
+  private StructuredName? _structured_name = null;
 
   /**
    * {@inheritDoc}
    */
-  public string full_name { get; private set; }
+  [CCode (notify = false)]
+  public StructuredName? structured_name
+    {
+      get { return this._structured_name; }
+      set { this.change_structured_name.begin (value); } /* not writeable */
+    }
+
+  private string _full_name = "";
 
   /**
    * {@inheritDoc}
    */
+  [CCode (notify = false)]
+  public string full_name
+    {
+      get { return this._full_name; }
+      set { this.change_full_name.begin (value); } /* not writeable */
+    }
+
+  /**
+   * {@inheritDoc}
+   */
+  [CCode (notify = false)]
   public string nickname
     {
       get { return this._nickname; }
+      set { this.change_nickname.begin (value); }
+    }
 
-      set
+  /**
+   * {@inheritDoc}
+   *
+   * @since UNRELEASED
+   */
+  public async void change_nickname (string nickname) throws PropertyError
+    {
+      // Normalise null values to the empty string
+      if (nickname == null)
         {
-          // Normalise null values to the empty string
-          if (value == null)
-            value = "";
+          nickname = "";
+        }
 
-          if (this._nickname == value)
-            return;
+      if (this._nickname == nickname)
+        {
+          return;
+        }
 
-          this._nickname = value;
+      debug ("Setting nickname of individual '%s' to '%s'…", this.id, nickname);
 
-          debug ("Setting nickname of individual '%s' to '%s'…", this.id,
-              value);
+      PropertyError? persona_error = null;
+      var nickname_changed = false;
 
-          /* First, try to write it to only the writeable Personas… */
-          var nickname_changed = false;
-          foreach (var p in this._persona_set)
+      /* Try to write it to only the writeable Personas which have "nickname"
+       * as a writeable property. */
+      foreach (var p in this._persona_set)
+        {
+          var n = p as NameDetails;
+          if (n != null && p.store.is_writeable == true &&
+              "nickname" in p.writeable_properties)
             {
-              if (p is NameDetails &&
-                  ((Persona) p).store.is_writeable == true)
+              try
                 {
-                  debug ("    written to writeable persona '%s'",
-                      ((Persona) p).uid);
-                  ((NameDetails) p).nickname = value;
+                  yield n.change_nickname (nickname);
+                  debug ("    written to writeable persona '%s'", p.uid);
                   nickname_changed = true;
                 }
-            }
-
-          /* …but if there are no writeable Personas, we have to fall back to
-           * writing it to every Persona. */
-          if (nickname_changed == false)
-            {
-              foreach (var p in this._persona_set)
+              catch (PropertyError e)
                 {
-                  if (p is NameDetails)
+                  /* Store the first error so we can throw it if setting the
+                   * nickname fails on every other persona. */
+                  if (persona_error == null)
                     {
-                      debug ("    written to non-writeable persona '%s'",
-                          ((Persona) p).uid);
-                      ((NameDetails) p).nickname = value;
+                      persona_error = e;
                     }
                 }
             }
         }
+
+      /* Failure? */
+      if (nickname_changed == false)
+        {
+          assert (persona_error != null);
+          throw persona_error;
+        }
+
+      /* Update our copy of the nickname. */
+      this._nickname = nickname;
+      this.notify_property ("nickname");
     }
 
   private Gender _gender = Gender.UNSPECIFIED;
@@ -1252,15 +1285,19 @@ public class Folks.Individual : Object,
                   if (this.structured_name == null ||
                       !this.structured_name.equal (new_value))
                     {
-                      this.structured_name = new_value;
+                      this._structured_name = new_value;
+                      this.notify_property ("structured-name");
                       return;
                     }
                 }
             }
         }
 
-      if (name_found == false)
-        this.structured_name = null;
+      if (name_found == false && this._structured_name != null)
+        {
+          this._structured_name = null;
+          this.notify_property ("structured-name");
+        }
     }
 
   private void _update_full_name ()
@@ -1281,8 +1318,11 @@ public class Folks.Individual : Object,
             }
         }
 
-      if (new_full_name != this.full_name)
-        this.full_name = new_full_name;
+      if (new_full_name != this._full_name)
+        {
+          this._full_name = new_full_name;
+          this.notify_property ("full-name");
+        }
     }
 
   private void _update_nickname ()

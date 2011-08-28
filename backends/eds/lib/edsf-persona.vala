@@ -311,10 +311,19 @@ public class Edsf.Persona : Folks.Persona,
   public StructuredName? structured_name
     {
       get { return this._structured_name; }
-      set
-        {
-          ((Edsf.PersonaStore) this.store)._set_structured_name (this, value);
-        }
+      set { this.change_structured_name.begin (value); }
+    }
+
+  /**
+   * {@inheritDoc}
+   *
+   * @since UNRELEASED
+   */
+  public async void change_structured_name (StructuredName? structured_name)
+      throws PropertyError
+    {
+      yield ((Edsf.PersonaStore) this.store)._set_structured_name (this,
+          structured_name);
     }
 
   /**
@@ -324,7 +333,7 @@ public class Edsf.Persona : Folks.Persona,
    */
   public string contact_id { get; private set; }
 
-  private string _full_name;
+  private string _full_name = "";
   /**
    * {@inheritDoc}
    *
@@ -334,13 +343,20 @@ public class Edsf.Persona : Folks.Persona,
   public string full_name
     {
       get { return this._full_name; }
-      set
-        {
-          ((Edsf.PersonaStore) this.store)._set_full_name (this, value);
-        }
+      set { this.change_full_name.begin (value); }
     }
 
-  private string _nickname;
+  /**
+   * {@inheritDoc}
+   *
+   * @since UNRELEASED
+   */
+  public async void change_full_name (string full_name) throws PropertyError
+    {
+      yield ((Edsf.PersonaStore) this.store)._set_full_name (this, full_name);
+    }
+
+  private string _nickname = "";
   /**
    * {@inheritDoc}
    *
@@ -350,11 +366,17 @@ public class Edsf.Persona : Folks.Persona,
   public string nickname
     {
       get { return this._nickname; }
+      set { this.change_nickname.begin (value); }
+    }
 
-      set
-        {
-          ((Edsf.PersonaStore) this.store)._set_nickname (this, value);
-        }
+  /**
+   * {@inheritDoc}
+   *
+   * @since UNRELEASED
+   */
+  public async void change_nickname (string nickname) throws PropertyError
+    {
+      yield ((Edsf.PersonaStore) this.store)._set_nickname (this, nickname);
     }
 
   private Gender _gender;
