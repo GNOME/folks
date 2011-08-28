@@ -1229,7 +1229,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
     }
 
   internal async void _set_gender (Edsf.Persona persona,
-      Gender gender)
+      Gender gender) throws PropertyError
     {
       try
         {
@@ -1239,7 +1239,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
         }
       catch (GLib.Error e)
         {
-          GLib.warning ("Can't set gender: %s", e.message);
+          throw this.e_client_error_to_property_error ("gender", e);
         }
     }
 

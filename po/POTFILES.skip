@@ -12,6 +12,7 @@ folks/backend-store.c
 folks/birthday-details.c
 folks/email-details.c
 folks/favourite-details.c
+folks/gender-details.c
 folks/im-details.c
 folks/individual-aggregator.c
 folks/postal-address-details.c

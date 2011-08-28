@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2011 Collabora Ltd.
+ * Copyright (C) 2011 Philip Withnall
  *
  * This library is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,6 +18,7 @@
  * Authors:
  *       Marco Barisione <marco.barisione@collabora.co.uk>
  *       Travis Reitter <travis.reitter@collabora.co.uk>
+ *       Philip Withnall <philip@tecnocode.co.uk>
  */
 
 using GLib;
@@ -55,4 +57,23 @@ public interface Folks.GenderDetails : Object
    * @since 0.3.5
    */
   public abstract Gender gender { get; set; }
+
+  /**
+   * Change the contact's gender.
+   *
+   * It's preferred to call this rather than setting
+   * {@link GenderDetails.gender} directly, as this method gives error
+   * notification and will only return once the gender has been written to the
+   * relevant backing store (or the operation's failed).
+   *
+   * @param gender the contact's gender
+   * @throws PropertyError if setting the gender failed
+   * @since UNRELEASED
+   */
+  public virtual async void change_gender (Gender gender) throws PropertyError
+    {
+      /* Default implementation. */
+      throw new PropertyError.NOT_WRITEABLE (
+          _("Gender is not writeable on this contact."));
+    }
 }

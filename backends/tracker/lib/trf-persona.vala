@@ -198,13 +198,21 @@ public class Trf.Persona : Folks.Persona,
   /**
    * {@inheritDoc}
    */
+  [CCode (notify = false)]
   public Gender gender
     {
       get { return this._gender; }
-      public set
-        {
-          ((Trf.PersonaStore) this.store)._set_gender (this, value);
-        }
+      set { this.change_gender.begin (value); }
+    }
+
+  /**
+   * {@inheritDoc}
+   *
+   * @since UNRELEASED
+   */
+  public async void change_gender (Gender gender) throws PropertyError
+    {
+      yield ((Trf.PersonaStore) this.store)._set_gender (this, gender);
     }
 
   private DateTime? _birthday = null;

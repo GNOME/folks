@@ -330,18 +330,15 @@ public class Folks.Individual : Object,
         }
     }
 
-  private Gender _gender;
+  private Gender _gender = Gender.UNSPECIFIED;
   /**
    * {@inheritDoc}
    */
+  [CCode (notify = false)]
   public Gender gender
     {
       get { return this._gender; }
-      private set
-        {
-          this._gender = value;
-          this.notify_property ("gender");
-        }
+      set { this.change_gender.begin (value); } /* not writeable */
     }
 
   private HashSet<UrlFieldDetails> _urls;
@@ -1389,7 +1386,10 @@ public class Folks.Individual : Object,
         }
 
       if (new_gender != this.gender)
-        this.gender = new_gender;
+        {
+          this._gender = new_gender;
+          this.notify_property ("gender");
+        }
     }
 
   private void _update_urls ()

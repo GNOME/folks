@@ -105,10 +105,17 @@ public class Swf.Persona : Folks.Persona,
       private set {}
     }
 
+  private Gender _gender = Gender.UNSPECIFIED;
+
   /**
    * {@inheritDoc}
    */
-  public Gender gender { get; private set; }
+  [CCode (notify = false)]
+  public Gender gender
+    {
+      get { return this._gender; }
+      set { this.change_gender.begin (value); } /* not writeable */
+    }
 
   private HashSet<UrlFieldDetails> _urls;
   private Set<UrlFieldDetails> _urls_ro;
@@ -346,7 +353,10 @@ public class Swf.Persona : Folks.Persona,
         gender = Gender.FEMALE;
       else
         gender = Gender.UNSPECIFIED;
-      if (this.gender != gender)
-        this.gender = gender;
+      if (this._gender != gender)
+        {
+          this._gender = gender;
+          this.notify_property ("gender");
+        }
     }
 }

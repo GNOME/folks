@@ -359,10 +359,17 @@ public class Edsf.Persona : Folks.Persona,
   public Gender gender
     {
       get { return this._gender; }
-      public set
-        {
-          ((Edsf.PersonaStore) this.store)._set_gender (this, value);
-        }
+      set { this.change_gender.begin (value); }
+    }
+
+  /**
+   * {@inheritDoc}
+   *
+   * @since UNRELEASED
+   */
+  public async void change_gender (Gender gender) throws PropertyError
+    {
+      yield ((Edsf.PersonaStore) this.store)._set_gender (this, gender);
     }
 
   private HashSet<UrlFieldDetails> _urls;
