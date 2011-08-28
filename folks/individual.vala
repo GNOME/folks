@@ -412,16 +412,11 @@ public class Folks.Individual : Object,
   /**
    * {@inheritDoc}
    */
+  [CCode (notify = false)]
   public Set<string> local_ids
     {
       get { return this._local_ids_ro; }
-      private set
-        {
-          this._local_ids.clear ();
-          foreach (var id in value)
-            this._local_ids.add (id);
-          this.notify_property ("local-ids");
-        }
+      set { this.change_local_ids.begin (value); } /* not writeable */
     }
 
   private DateTime? _birthday = null;

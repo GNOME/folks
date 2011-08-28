@@ -369,6 +369,7 @@ public class Trf.Persona : Folks.Persona,
   /**
    * IDs used to link {@link Trf.Persona}s.
    */
+  [CCode (notify = false)]
   public Set<string> local_ids
     {
       get
@@ -379,14 +380,23 @@ public class Trf.Persona : Folks.Persona,
             }
           return this._local_ids_ro;
         }
-      set
+      set { this.change_local_ids.begin (value); }
+    }
+
+  /**
+   * {@inheritDoc}
+   *
+   * @since UNRELEASED
+   */
+  public async void change_local_ids (Set<string> local_ids)
+      throws PropertyError
+    {
+      if (local_ids.contains (this.uid) == false)
         {
-          if (value.contains (this.uid) == false)
-            {
-              value.add (this.uid);
-            }
-          ((Trf.PersonaStore) this.store)._set_local_ids (this, value);
+          local_ids.add (this.uid);
         }
+
+      yield ((Trf.PersonaStore) this.store)._set_local_ids (this, local_ids);
     }
 
   private HashMultiMap<string, WebServiceFieldDetails> _web_service_addresses =

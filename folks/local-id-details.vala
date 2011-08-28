@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2011 Collabora Ltd.
+ * Copyright (C) 2011 Philip Withnall
  *
  * This library is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -16,6 +17,7 @@
  *
  * Authors:
  *       Raul Gutierrez Segales <raul.gutierrez.segales@collabora.co.uk>
+ *       Philip Withnall <philip@tecnocode.co.uk>
  */
 
 using Gee;
@@ -41,4 +43,24 @@ public interface Folks.LocalIdDetails : Object
    * @since 0.5.1
    */
   public abstract Set<string> local_ids { get; set; }
+
+  /**
+   * Change the contact's local IDs.
+   *
+   * It's preferred to call this rather than setting
+   * {@link LocalIdDetails.local_ids} directly, as this method gives error
+   * notification and will only return once the local IDs have been written to
+   * the relevant backing store (or the operation's failed).
+   *
+   * @param local_ids the set of local IDs
+   * @throws PropertyError if setting the local IDs failed
+   * @since UNRELEASED
+   */
+  public virtual async void change_local_ids (Set<string> local_ids)
+      throws PropertyError
+    {
+      /* Default implementation. */
+      throw new PropertyError.NOT_WRITEABLE (
+          _("Local IDs are not writeable on this contact."));
+    }
 }

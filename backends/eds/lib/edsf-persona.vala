@@ -167,10 +167,18 @@ public class Edsf.Persona : Folks.Persona,
             }
           return this._local_ids_ro;
         }
-      set
-        {
-          ((Edsf.PersonaStore) this.store)._set_local_ids (this, value);
-        }
+      set { this.change_local_ids.begin (value); }
+    }
+
+  /**
+   * {@inheritDoc}
+   *
+   * @since UNRELEASED
+   */
+  public async void change_local_ids (Set<string> local_ids)
+      throws PropertyError
+    {
+      yield ((Edsf.PersonaStore) this.store)._set_local_ids (this, local_ids);
     }
 
   /**

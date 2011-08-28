@@ -15,6 +15,7 @@ folks/favourite-details.c
 folks/gender-details.c
 folks/im-details.c
 folks/individual-aggregator.c
+folks/local-id-details.c
 folks/postal-address-details.c
 folks/role-details.c
 tools/import-pidgin.c

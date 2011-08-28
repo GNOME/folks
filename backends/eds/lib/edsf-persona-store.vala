@@ -846,7 +846,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
     }
 
   internal async void _set_local_ids (Edsf.Persona persona,
-      Set<string> local_ids)
+      Set<string> local_ids) throws PropertyError
     {
       try
         {
@@ -856,7 +856,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
         }
       catch (GLib.Error e)
         {
-          GLib.warning ("Can't set local IDS: %s\n", e.message);
+          throw this.e_client_error_to_property_error ("local-ids", e);
         }
     }
 
