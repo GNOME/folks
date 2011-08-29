@@ -255,6 +255,11 @@ public class TrackerTest.Backend
           throw new BackendSetupError.ADD_CONTACT_FAILED
           ("Error fetching SPARQL connection handler : %s\n", e3.message);
         }
+      catch (GLib.SpawnError e4)
+        {
+          throw new BackendSetupError.ADD_CONTACT_FAILED
+          ("Error fetching SPARQL connection handler : %s\n", e4.message);
+        }
     }
 
   private void _add_contacts () throws BackendSetupError
