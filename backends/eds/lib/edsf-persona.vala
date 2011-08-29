@@ -552,7 +552,11 @@ public class Edsf.Persona : Folks.Persona,
         }
       else if (prop_name == "local-ids")
         {
-          foreach (var id in this._local_ids)
+          /* Note: we need to use this.local_ids and not this._local_ids,
+           * otherwise this can have a different  behaviour depending
+           * on the state of the current Persona depending on whether
+           * this.local_ids was called before or not. */
+          foreach (var id in this.local_ids)
             {
               callback (id);
             }
