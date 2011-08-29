@@ -123,54 +123,32 @@ public class AggregationTests : Folks.TestCase
       /* wim@example.com */
       default_individuals.add ("467d13f955e62bf30ebf9620fa052aaee2160260");
 
-      /* Work on a copy of the set of individuals so we can mangle it */
+      /* Work on a copy of the set of individuals so we can mangle it. We keep
+       * one copy of the set for the individuals_changed signal, and one for
+       * the individuals_changed_detailed signal so that we can compare their
+       * behaviour. */
       HashSet<string> expected_individuals = new HashSet<string> ();
+      var expected_individuals_detailed = new HashSet<string> ();
       foreach (var id in default_individuals)
         {
           expected_individuals.add (id);
+          expected_individuals_detailed.add (id);
         }
 
       /* Set up the aggregator */
       var aggregator = new IndividualAggregator ();
+      aggregator.individuals_changed_detailed.connect ((changes) =>
+        {
+          var removed = changes.get_keys ();
+          var added = changes.get_values ();
+
+          this._test_iid_individuals_changed (true, added, removed,
+              default_individuals, expected_individuals_detailed);
+        });
       aggregator.individuals_changed.connect ((added, removed, m, a, r) =>
         {
-          /* If an individual is removed, add them back to the set of expected
-           * individuals (if they were originally on it) */
-          foreach (Individual i in removed)
-            {
-              if (!i.is_user &&
-                  i.personas.size == 2 &&
-                  default_individuals.contains (i.id))
-                {
-                  expected_individuals.add (i.id);
-                }
-            }
-
-          /* If an individual is added (and has been fully linked), remove them
-           * from the set of expected individuals. */
-          foreach (Individual i in added)
-            {
-              var personas = i.personas;
-
-              /* We're not testing the user here */
-              if (!i.is_user && personas.size == 2)
-                {
-                  assert (expected_individuals.remove (i.id));
-
-                  string iid = null;
-                  foreach (var persona in personas)
-                    {
-                      if (iid != null)
-                        {
-                          assert (persona.iid == iid);
-                        }
-                      else
-                        {
-                          iid = persona.iid;
-                        }
-                    }
-                }
-            }
+          this._test_iid_individuals_changed (false, added, removed,
+              default_individuals, expected_individuals);
         });
 
       /* Kill the main loop after a few seconds. If there are still individuals
@@ -205,12 +183,68 @@ public class AggregationTests : Folks.TestCase
 
       /* We should have enumerated exactly the individuals in the set */
       assert (expected_individuals.size == 0);
+      assert (expected_individuals_detailed.size == 0);
 
       /* Clean up for the next test */
       this._tp_backend.remove_account (account2_handle);
       this._tp_backend.remove_account (account1_handle);
       this._kf_backend.tear_down ();
       aggregator = null;
+    }
+
+  private void _test_iid_individuals_changed (bool detailed,
+      Collection<Individual?> added, Set<Individual?> removed,
+      Set<string> default_individuals, Set<string> expected_individuals)
+    {
+      /* If an individual is removed, add them back to the set of expected
+       * individuals (if they were originally on it) */
+      foreach (Individual i in removed)
+        {
+          assert (i != null || detailed == true);
+          if (i == null)
+            {
+              continue;
+            }
+
+          if (!i.is_user &&
+              i.personas.size == 2 &&
+              default_individuals.contains (i.id))
+            {
+              expected_individuals.add (i.id);
+            }
+        }
+
+      /* If an individual is added (and has been fully linked), remove them
+       * from the set of expected individuals. */
+      foreach (Individual i in added)
+        {
+          assert (i != null || detailed == true);
+          if (i == null)
+            {
+              continue;
+            }
+
+          var personas = i.personas;
+
+          /* We're not testing the user here */
+          if (!i.is_user && personas.size == 2)
+            {
+              assert (expected_individuals.remove (i.id));
+
+              string iid = null;
+              foreach (var persona in personas)
+                {
+                  if (iid != null)
+                    {
+                      assert (persona.iid == iid);
+                    }
+                  else
+                    {
+                      iid = persona.iid;
+                    }
+                }
+            }
+        }
     }
 
   /* Test that personas from a single persona store are aggregated if their IIDs
@@ -236,51 +270,24 @@ public class AggregationTests : Folks.TestCase
       /* We expect two non-user individuals (each containing four Telepathy
        * personas and one key-file persona) */
       weak Individual individual1 = null;
+      weak Individual individual1_detailed = null;
       weak Individual individual2 = null;
+      weak Individual individual2_detailed = null;
 
       /* Set up the aggregator */
       var aggregator = new IndividualAggregator ();
+      aggregator.individuals_changed_detailed.connect ((changes) =>
+        {
+          var removed = changes.get_keys ();
+          var added = changes.get_values ();
+
+          this._test_linkable_properties_individuals_changed (true, 5, added,
+              removed, ref individual1_detailed, ref individual2_detailed);
+        });
       aggregator.individuals_changed.connect ((added, removed, m, a, r) =>
         {
-          foreach (Individual i in removed)
-            {
-              if (!i.is_user && i.personas.size == 5)
-                {
-                  if (i == individual1)
-                    {
-                      individual1 = null;
-                    }
-                  else if (i == individual2)
-                    {
-                      individual2 = null;
-                    }
-                  else
-                    {
-                      GLib.critical ("Unknown 5-persona individual: %s", i.id);
-                      assert_not_reached ();
-                    }
-                }
-            }
-
-          foreach (Individual i in added)
-            {
-              if (!i.is_user && i.personas.size == 5)
-                {
-                  if (individual1 == null)
-                    {
-                     individual1 = i;
-                    }
-                  else if (individual2 == null)
-                    {
-                      individual2 = i;
-                    }
-                  else
-                    {
-                      GLib.critical ("Unknown 5-persona individual: %s", i.id);
-                      assert_not_reached ();
-                    }
-                }
-            }
+          this._test_linkable_properties_individuals_changed (false, 5, added,
+              removed, ref individual1, ref individual2);
         });
 
       /* Kill the main loop after a few seconds. If there are still individuals
@@ -315,7 +322,9 @@ public class AggregationTests : Folks.TestCase
 
       /* Verify the two individuals we should have */
       assert (individual1 != null);
+      assert (individual1_detailed != null);
       assert (individual2 != null);
+      assert (individual2_detailed != null);
 
       var individual1_expected = new HashSet<string> ();
       individual1_expected.add ("0");
@@ -346,6 +355,16 @@ public class AggregationTests : Folks.TestCase
             }
 
           assert (set_in_use.remove (p.display_id));
+
+          var found_detailed = false;
+          foreach (var pd in individual1_detailed.personas)
+            {
+              if (pd.uid == p.uid)
+                {
+                  found_detailed = true;
+                }
+            }
+          assert (found_detailed == true);
         }
 
       assert (set_in_use.size == 0);
@@ -362,6 +381,16 @@ public class AggregationTests : Folks.TestCase
       foreach (var p in individual2.personas)
         {
           assert (set_in_use.remove (p.display_id));
+
+          var found_detailed = false;
+          foreach (var pd in individual2_detailed.personas)
+            {
+              if (pd.uid == p.uid)
+                {
+                  found_detailed = true;
+                }
+            }
+          assert (found_detailed == true);
         }
 
       assert (set_in_use.size == 0);
@@ -402,51 +431,24 @@ public class AggregationTests : Folks.TestCase
       /* We expect two non-user individuals (each containing four Telepathy
        * personas and one key-file persona) */
       weak Individual individual1 = null;
+      weak Individual individual1_detailed = null;
       weak Individual individual2 = null;
+      weak Individual individual2_detailed = null;
 
       /* Set up the aggregator */
       var aggregator = new IndividualAggregator ();
+      aggregator.individuals_changed_detailed.connect ((changes) =>
+        {
+          var removed = changes.get_keys ();
+          var added = changes.get_values ();
+
+          this._test_linkable_properties_individuals_changed (true, 9, added,
+              removed, ref individual1_detailed, ref individual2_detailed);
+        });
       aggregator.individuals_changed.connect ((added, removed, m, a, r) =>
         {
-          foreach (Individual i in removed)
-            {
-              if (!i.is_user && i.personas.size == 9)
-                {
-                  if (i == individual1)
-                    {
-                      individual1 = null;
-                    }
-                  else if (i == individual2)
-                    {
-                      individual2 = null;
-                    }
-                  else
-                    {
-                      GLib.critical ("Unknown 9-persona individual: %s", i.id);
-                      assert_not_reached ();
-                    }
-                }
-            }
-
-          foreach (Individual i in added)
-            {
-              if (!i.is_user && i.personas.size == 9)
-                {
-                  if (individual1 == null)
-                    {
-                     individual1 = i;
-                    }
-                  else if (individual2 == null)
-                    {
-                      individual2 = i;
-                    }
-                  else
-                    {
-                      GLib.critical ("Unknown 9-persona individual: %s", i.id);
-                      assert_not_reached ();
-                    }
-                }
-            }
+          this._test_linkable_properties_individuals_changed (false, 9, added,
+              removed, ref individual1, ref individual2);
         });
 
       /* Kill the main loop after a few seconds. If there are still individuals
@@ -481,18 +483,24 @@ public class AggregationTests : Folks.TestCase
 
       /* Verify the two individuals we should have */
       assert (individual1 != null);
+      assert (individual1_detailed != null);
       assert (individual2 != null);
+      assert (individual2_detailed != null);
 
       /* Work on a copy of the set of individuals so we can mangle it.
        * We expect the two individuals to each have exactly one of the default
        * personas, half of which should come from one persona store, and half
        * from a different persona store. */
       var expected_personas1 = new HashSet<string> ();
+      var expected_personas1_detailed = new HashSet<string> ();
       var expected_personas2 = new HashSet<string> ();
+      var expected_personas2_detailed = new HashSet<string> ();
       foreach (var id in this._default_personas)
         {
           expected_personas1.add (id);
+          expected_personas1_detailed.add (id);
           expected_personas2.add (id);
+          expected_personas2_detailed.add (id);
         }
 
       foreach (var p in individual1.personas)
@@ -503,6 +511,14 @@ public class AggregationTests : Folks.TestCase
 
       assert (expected_personas1.size == 0);
 
+      foreach (var p in individual1_detailed.personas)
+        {
+          assert (expected_personas1_detailed.remove (p.display_id) ||
+              p.display_id == "0" || p.display_id == "1");
+        }
+
+      assert (expected_personas1_detailed.size == 0);
+
       foreach (var p in individual2.personas)
         {
           assert (expected_personas2.remove (p.display_id) ||
@@ -511,11 +527,79 @@ public class AggregationTests : Folks.TestCase
 
       assert (expected_personas2.size == 0);
 
+      foreach (var p in individual2_detailed.personas)
+        {
+          assert (expected_personas2_detailed.remove (p.display_id) ||
+              p.display_id == "0" || p.display_id == "1");
+        }
+
+      assert (expected_personas2_detailed.size == 0);
+
       /* Clean up for the next test */
       this._tp_backend.remove_account (account2_handle);
       this._tp_backend.remove_account (account1_handle);
       this._kf_backend.tear_down ();
       aggregator = null;
+    }
+
+  private void _test_linkable_properties_individuals_changed (bool detailed,
+      uint num_personas, Collection<Individual?> added,
+      Set<Individual?> removed, ref weak Individual individual1,
+      ref weak Individual individual2)
+    {
+      foreach (Individual i in removed)
+        {
+          assert (i != null || detailed == true);
+          if (i == null)
+            {
+              continue;
+            }
+
+          if (!i.is_user && i.personas.size == num_personas)
+            {
+              if (i == individual1)
+                {
+                  individual1 = null;
+                }
+              else if (i == individual2)
+                {
+                  individual2 = null;
+                }
+              else
+                {
+                  GLib.critical ("Unknown %u-persona individual: %s",
+                      num_personas, i.id);
+                  assert_not_reached ();
+                }
+            }
+        }
+
+      foreach (Individual i in added)
+        {
+          assert (i != null || detailed == true);
+          if (i == null)
+            {
+              continue;
+            }
+
+          if (!i.is_user && i.personas.size == num_personas)
+            {
+              if (individual1 == null && individual2 != i)
+                {
+                  individual1 = i;
+                }
+              else if (individual2 == null && individual1 != i)
+                {
+                  individual2 = i;
+                }
+              else if (individual1 != i && individual2 != i)
+                {
+                  GLib.critical ("Unknown %u-persona individual: %s",
+                      num_personas, i.id);
+                  assert_not_reached ();
+                }
+            }
+        }
     }
 
   /* Test that the personas which have the is-user property marked as true
@@ -532,29 +616,22 @@ public class AggregationTests : Folks.TestCase
           "me2@example.com", "cm", "account2");
 
       Individual user_individual = null;
+      Individual user_individual_detailed = null;
 
       /* Set up the aggregator */
       var aggregator = new IndividualAggregator ();
+      aggregator.individuals_changed_detailed.connect ((changes) =>
+        {
+          var removed = changes.get_keys ();
+          var added = changes.get_values ();
+
+          this._test_user_individuals_changed (true, added, removed,
+              ref user_individual_detailed);
+        });
       aggregator.individuals_changed.connect ((added, removed, m, a, r) =>
         {
-          /* Keep track of the user individual */
-          foreach (Individual i in removed)
-            {
-              if (i.is_user)
-                {
-                  assert (user_individual == i);
-                  user_individual = null;
-                }
-            }
-
-          foreach (Individual i in added)
-            {
-              if (i.is_user)
-                {
-                  assert (user_individual == null);
-                  user_individual = i;
-                }
-            }
+          this._test_user_individuals_changed (false, added, removed,
+              ref user_individual);
         });
 
       /* Kill the main loop after a few seconds. If there are still individuals
@@ -590,9 +667,11 @@ public class AggregationTests : Folks.TestCase
       /* The user exported by the aggregator should be the same as the one
        * we've kept track of */
       assert (aggregator.user == user_individual);
+      assert (aggregator.user == user_individual_detailed);
 
       /* The user individual should comprise personas from the two accounts */
       assert (user_individual.personas.size == 2);
+      assert (user_individual_detailed.personas.size == 2);
 
       var display_ids = new HashSet<string> ();
       foreach (var persona in user_individual.personas)
@@ -603,11 +682,56 @@ public class AggregationTests : Folks.TestCase
       assert (display_ids.contains ("me@example.com") &&
           display_ids.contains ("me2@example.com"));
 
+      var display_ids_detailed = new HashSet<string> ();
+      foreach (var persona in user_individual_detailed.personas)
+        {
+          display_ids_detailed.add (persona.display_id);
+        }
+
+      assert (display_ids_detailed.contains ("me@example.com") &&
+          display_ids_detailed.contains ("me2@example.com"));
+
       /* Clean up for the next test */
       this._tp_backend.remove_account (account2_handle);
       this._tp_backend.remove_account (account1_handle);
       this._kf_backend.tear_down ();
       aggregator = null;
+    }
+
+  private void _test_user_individuals_changed (bool detailed,
+      Collection<Individual?> added, Set<Individual?> removed,
+      ref Individual user_individual)
+    {
+      /* Keep track of the user individual */
+      foreach (Individual i in removed)
+        {
+          assert (i != null || detailed == true);
+          if (i == null)
+            {
+              continue;
+            }
+
+          if (i.is_user)
+            {
+              assert (user_individual == i);
+              user_individual = null;
+            }
+        }
+
+      foreach (Individual i in added)
+        {
+          assert (i != null || detailed == true);
+          if (i == null)
+            {
+              continue;
+            }
+
+          if (i.is_user)
+            {
+              assert (user_individual == null);
+              user_individual = i;
+            }
+        }
     }
 
   /* Test that the personas from an untrusted store (e.g. one which represents
@@ -626,19 +750,17 @@ public class AggregationTests : Folks.TestCase
 
       /* Set up the aggregator */
       var aggregator = new IndividualAggregator ();
+      aggregator.individuals_changed_detailed.connect ((changes) =>
+        {
+          var removed = changes.get_keys ();
+          var added = changes.get_values ();
+
+          this._test_untrusted_store_individuals_changed (true, added, removed);
+        });
       aggregator.individuals_changed.connect ((added, removed, m, a, r) =>
         {
-          /* Assert that no aggregation occurs at all (except with the
-           * personas for the user). */
-          foreach (Individual i in removed)
-            {
-              assert (i.is_user || i.personas.size == 1);
-            }
-
-          foreach (Individual i in added)
-            {
-              assert (i.is_user || i.personas.size == 1);
-            }
+          this._test_untrusted_store_individuals_changed (false, added,
+              removed);
         });
 
       /* Kill the main loop after a few seconds. If there are still individuals
@@ -678,6 +800,34 @@ public class AggregationTests : Folks.TestCase
       aggregator = null;
     }
 
+  private void _test_untrusted_store_individuals_changed (bool detailed,
+      Collection<Individual?> added, Set<Individual?> removed)
+    {
+      /* Assert that no aggregation occurs at all (except with the
+       * personas for the user). */
+      foreach (Individual i in removed)
+        {
+          assert (i != null || detailed == true);
+          if (i == null)
+            {
+              continue;
+            }
+
+          assert (i.is_user || i.personas.size == 1);
+        }
+
+      foreach (Individual i in added)
+        {
+          assert (i != null || detailed == true);
+          if (i == null)
+            {
+              continue;
+            }
+
+          assert (i.is_user || i.personas.size == 1);
+        }
+    }
+
   private enum IndividualState
     {
       ADDED, /* Individual has been added to aggregator but not removed */
@@ -710,12 +860,15 @@ public class AggregationTests : Folks.TestCase
        * all finalised correctly. This is a map from the Individual to their
        * state. We use this to track when the Individuals are finalised.
        *
-       * Note that Individuals are used as the keys, rather than the
-       * Individuals' IDs. This is because it's valid for several different
-       * instances of Folks.Individual to have the same ID (as long as they
-       * contain the same Personas). This is fine, since this is a refconuting
-       * test, so is entirely concerned with specific object instances. */
-      var individuals_map = new HashMap<unowned Individual, IndividualState> ();
+       * Note that Individuals + their IDs are used as the keys, rather than
+       * just the Individuals' IDs. This is because it's valid for several
+       * different instances of Folks.Individual to have the same ID (as long as
+       * they contain the same Personas). However, it's also possible for the
+       * allocator to legitimately re-use an address during a test for an
+       * individual with a different ID. This is fine, since this is a
+       * refcounting test, so is entirely concerned with specific object
+       * instances. */
+      var individuals_map = new HashMap<string, IndividualState> ();
 
       /* Set up the aggregator */
       var aggregator = new IndividualAggregator ();
@@ -725,17 +878,21 @@ public class AggregationTests : Folks.TestCase
         {
           foreach (Individual i in removed)
             {
-              assert (individuals_map.has_key (i) == true);
-              assert (individuals_map.get (i) == IndividualState.ADDED);
+              var key = "%s:%p".printf (i.id, i);
 
-              individuals_map.set (i, IndividualState.REMOVED);
+              assert (individuals_map.has_key (key) == true);
+              assert (individuals_map.get (key) == IndividualState.ADDED);
+
+              individuals_map.set (key, IndividualState.REMOVED);
             }
 
           foreach (Individual i in added)
             {
-              assert (individuals_map.has_key (i) == false);
+              var key = "%s:%p".printf (i.id, i);
 
-              individuals_map.set (i, IndividualState.ADDED);
+              assert (individuals_map.has_key (key) == false);
+
+              individuals_map.set (key, IndividualState.ADDED);
 
               /* Weakly reference the Individual so we can track when it's
                * finalised. We normally assert that an Individual is removed
@@ -745,14 +902,15 @@ public class AggregationTests : Folks.TestCase
               i.weak_ref ((obj) =>
                 {
                   unowned Individual ind = (Individual) obj;
+                  var weak_key = "%s:%p".printf (ind.id, ind);
 
-                  assert (individuals_map.has_key (ind) == true);
-                  var state = individuals_map.get (ind);
+                  assert (individuals_map.has_key (weak_key) == true);
+                  var state = individuals_map.get (weak_key);
                   assert (state == IndividualState.REMOVED ||
                       (aggregator_is_finalising == true &&
                           state == IndividualState.ADDED));
 
-                  individuals_map.set (ind, IndividualState.FINALISED);
+                  individuals_map.set (weak_key, IndividualState.FINALISED);
                 });
             }
         });
@@ -838,17 +996,22 @@ public class AggregationTests : Folks.TestCase
 
       /* Set up the aggregator */
       var aggregator = new IndividualAggregator ();
-      aggregator.individuals_changed.connect ((added, removed, m, a, r) =>
+      aggregator.individuals_changed_detailed.connect ((changes) =>
         {
-          assert (removed.size == 0);
-          assert (added.size == 1);
+          assert (changes.size == 1);
 
-          foreach (Individual i in added)
+          foreach (var removed in changes.get_keys ())
             {
-              assert (individual == null);
+              assert (removed == null);
 
-              individual = i;
-              main_loop.quit ();
+              foreach (var i in changes.get (removed))
+                {
+                  assert (i != null);
+                  assert (individual == null);
+
+                  individual = i;
+                  main_loop.quit ();
+                }
             }
         });
 
@@ -959,12 +1122,15 @@ public class AggregationTests : Folks.TestCase
       /* Set up the aggregator */
       var aggregator = new IndividualAggregator ();
       var individuals_changed_id =
-          aggregator.individuals_changed.connect ((added, removed, m, a, r) =>
+          aggregator.individuals_changed_detailed.connect ((changes) =>
         {
-          assert (removed.size == 0);
+          var added = changes.get_values ();
+          var removed = changes.get_keys ();
 
           foreach (Individual i in added)
             {
+              assert (i != null);
+
               /* olivier@example.com */
               if (i.id == "0e46c5e74f61908f49550d241f2a1651892a1695")
                 {
@@ -972,6 +1138,13 @@ public class AggregationTests : Folks.TestCase
                   individual = i;
                   return;
                 }
+            }
+
+          assert (removed.size == 1);
+
+          foreach (var i in removed)
+            {
+              assert (i == null);
             }
         });
 
@@ -1022,10 +1195,18 @@ public class AggregationTests : Folks.TestCase
       /* Remove the signal handler */
       aggregator.disconnect (individuals_changed_id);
       Source.remove (timeout_id);
-      aggregator.individuals_changed.connect ((added, removed, m, a, r) =>
+      aggregator.individuals_changed_detailed.connect ((changes) =>
         {
+          var added = changes.get_values ();
+          var removed = changes.get_keys ();
+
           foreach (Individual i in removed)
             {
+              if (i == null)
+                {
+                  continue;
+                }
+
               assert (individual != null);
               assert (i == individual);
               individual = null;
@@ -1033,6 +1214,11 @@ public class AggregationTests : Folks.TestCase
 
           foreach (Individual i in added)
             {
+              if (i == null)
+                {
+                  continue;
+                }
+
               var got_tpf = false;
               var got_kf = false;
 
@@ -1123,17 +1309,22 @@ public class AggregationTests : Folks.TestCase
 
       /* Set up the aggregator */
       var aggregator = new IndividualAggregator ();
-      aggregator.individuals_changed.connect ((added, removed, m, a, r) =>
+      aggregator.individuals_changed_detailed.connect ((changes) =>
         {
-          assert (removed.size == 0);
-          assert (added.size == 1);
+          assert (changes.size == 1);
 
-          foreach (Individual i in added)
+          foreach (var removed in changes.get_keys ())
             {
-              assert (individual == null);
+              assert (removed == null);
 
-              individual = i;
-              main_loop.quit ();
+              foreach (var i in changes.get (removed))
+                {
+                  assert (i != null);
+                  assert (individual == null);
+
+                  individual = i;
+                  main_loop.quit ();
+                }
             }
         });
 
