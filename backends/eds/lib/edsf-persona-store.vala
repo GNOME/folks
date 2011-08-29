@@ -192,6 +192,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
       this._personas = new HashMap<string, Persona> ();
       this._personas_ro = this._personas.read_only_view;
       this._query_str = "(contains \"x-evolution-any-field\" \"\")";
+      this.trust_level = PersonaStoreTrust.PARTIAL;
     }
 
   ~PersonaStore ()
