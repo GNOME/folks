@@ -5,6 +5,7 @@ Bugs fixed:
 * Bug 645056 — TpLowlevel library should have only static public functions
 * Bug 653777 — Would be nice to have a helper function to create a writable
   persona
+* Bug 657635 — Linking personas from different (e-d-s) stores is not working
 
 API changes:
 * Add PersonaStore:always-writeable-properties property

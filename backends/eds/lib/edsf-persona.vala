@@ -161,9 +161,9 @@ public class Edsf.Persona : Folks.Persona,
     {
       get
         {
-          if (this._local_ids.contains (this.contact_id) == false)
+          if (this._local_ids.contains (this.iid) == false)
             {
-              this._local_ids.add (this.contact_id);
+              this._local_ids.add (this.iid);
             }
           return this._local_ids_ro;
         }
