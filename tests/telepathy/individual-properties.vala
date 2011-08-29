@@ -66,10 +66,15 @@ public class IndividualPropertiesTests : Folks.TestCase
 
       /* Set up the aggregator */
       var aggregator = new IndividualAggregator ();
-      aggregator.individuals_changed.connect ((added, removed, m, a, r) =>
+      aggregator.individuals_changed_detailed.connect ((changes) =>
         {
+          var added = changes.get_values ();
+          var removed = changes.get_keys ();
+
           foreach (Individual i in added)
             {
+              assert (i != null);
+
               /* We only check one (singleton Individual containing just
                * olivier@example.com) */
               if (i.id != "0e46c5e74f61908f49550d241f2a1651892a1695")
@@ -90,7 +95,12 @@ public class IndividualPropertiesTests : Folks.TestCase
               assert (i.groups.contains ("Francophones") == true);
             }
 
-          assert (removed.size == 0);
+          assert (removed.size == 1);
+
+          foreach (var i in removed)
+            {
+              assert (i == null);
+            }
         });
       aggregator.prepare ();
 
@@ -116,12 +126,17 @@ public class IndividualPropertiesTests : Folks.TestCase
 
       /* Set up the aggregator */
       var aggregator = new IndividualAggregator ();
-      aggregator.individuals_changed.connect ((added, removed, m, a, r) =>
+      aggregator.individuals_changed_detailed.connect ((changes) =>
         {
+          var added = changes.get_values ();
+          var removed = changes.get_keys ();
+
           var new_alias = "New Alias";
 
           foreach (Individual i in added)
             {
+              assert (i != null);
+
               /* We only check one (singleton Individual containing just
                * olivier@example.com) */
               if (i.id != "0e46c5e74f61908f49550d241f2a1651892a1695")
@@ -157,7 +172,12 @@ public class IndividualPropertiesTests : Folks.TestCase
               ((Tpf.Persona) persona).alias = new_alias;
             }
 
-          assert (removed.size == 0);
+          assert (removed.size == 1);
+
+          foreach (var i in removed)
+            {
+              assert (i == null);
+            }
         });
       aggregator.prepare ();
 
@@ -185,12 +205,17 @@ public class IndividualPropertiesTests : Folks.TestCase
 
       /* Set up the aggregator */
       var aggregator = new IndividualAggregator ();
-      aggregator.individuals_changed.connect ((added, removed, m, a, r) =>
+      aggregator.individuals_changed_detailed.connect ((changes) =>
         {
+          var added = changes.get_values ();
+          var removed = changes.get_keys ();
+
           var new_alias = "New Alias";
 
           foreach (Individual i in added)
             {
+              assert (i != null);
+
               /* We only check one (singleton Individual containing just
                * olivier@example.com) */
               if (i.id != "0e46c5e74f61908f49550d241f2a1651892a1695")
@@ -227,7 +252,12 @@ public class IndividualPropertiesTests : Folks.TestCase
               this.tp_backend.connection.manager.set_alias (handle, new_alias);
             }
 
-          assert (removed.size == 0);
+          assert (removed.size == 1);
+
+          foreach (var i in removed)
+            {
+              assert (i == null);
+            }
         });
       aggregator.prepare ();
 

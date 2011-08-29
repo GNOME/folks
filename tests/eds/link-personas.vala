@@ -174,7 +174,7 @@ public class LinkPersonasTests : Folks.TestCase
       var store = BackendStore.dup ();
       yield store.prepare ();
       this._aggregator = new IndividualAggregator ();
-      this._aggregator.individuals_changed.connect
+      this._aggregator.individuals_changed_detailed.connect
           (this._individuals_changed_cb);
       try
         {
@@ -304,20 +304,29 @@ public class LinkPersonasTests : Folks.TestCase
         }
     }
 
-  private void _individuals_changed_cb
-      (Set<Individual> added,
-       Set<Individual> removed,
-       string? message,
-       Persona? actor,
-       GroupDetails.ChangeReason reason)
+  private void _individuals_changed_cb (
+       MultiMap<Individual?, Individual?> changes)
     {
+      var added = changes.get_values ();
+      var removed = changes.get_keys ();
+
       foreach (var i in added)
         {
+          if (i == null)
+            {
+              continue;
+            }
+
           this._check_personas (i);
         }
 
-      if (removed.size > 0)
-        this._removed_individuals += (int) removed.size;
+      foreach (var i in removed)
+        {
+          if (i != null)
+            {
+              this._removed_individuals++;
+            }
+        }
     }
 
   /* As mentioned in _add_personas here we actually check

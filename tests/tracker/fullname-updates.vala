@@ -94,7 +94,7 @@ public class FullnameUpdatesTests : Folks.TestCase
       var store = BackendStore.dup ();
       yield store.prepare ();
       this._aggregator = new IndividualAggregator ();
-      this._aggregator.individuals_changed.connect
+      this._aggregator.individuals_changed_detailed.connect
           (this._individuals_changed_cb);
       try
         {
@@ -106,15 +106,16 @@ public class FullnameUpdatesTests : Folks.TestCase
         }
     }
 
-  private void _individuals_changed_cb
-      (Set<Individual> added,
-       Set<Individual> removed,
-       string? message,
-       Persona? actor,
-       GroupDetails.ChangeReason reason)
+  private void _individuals_changed_cb (
+       MultiMap<Individual?, Individual?> changes)
     {
+      var added = changes.get_values ();
+      var removed = changes.get_keys ();
+
       foreach (var i in added)
         {
+          assert (i != null);
+
           if (i.full_name == this._initial_fullname)
             {
               i.notify["full-name"].connect (this._notify_full_name_cb);
@@ -125,7 +126,12 @@ public class FullnameUpdatesTests : Folks.TestCase
             }
         }
 
-        assert (removed.size == 0);
+      assert (removed.size == 1);
+
+      foreach (var i in removed)
+        {
+          assert (i == null);
+        }
     }
 
   private void _notify_full_name_cb (Object individual_obj, ParamSpec ps)

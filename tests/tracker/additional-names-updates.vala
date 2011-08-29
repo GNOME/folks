@@ -97,7 +97,7 @@ public class AdditionalNamesUpdatesTests : Folks.TestCase
     {
       yield store.prepare ();
       this._aggregator = new IndividualAggregator ();
-      this._aggregator.individuals_changed.connect
+      this._aggregator.individuals_changed_detailed.connect
           (this._individuals_changed_cb);
       try
         {
@@ -109,15 +109,16 @@ public class AdditionalNamesUpdatesTests : Folks.TestCase
         }
     }
 
-  private void _individuals_changed_cb
-      (Set<Individual> added,
-       Set<Individual> removed,
-       string? message,
-       Persona? actor,
-       GroupDetails.ChangeReason reason)
+  private void _individuals_changed_cb (
+       MultiMap<Individual?, Individual?> changes)
     {
+      var added = changes.get_values ();
+      var removed = changes.get_keys ();
+
       foreach (var i in added)
         {
+          assert (i != null);
+
           if (this._initial_fullname == i.full_name)
             {
               var additional_names = i.structured_name.additional_names;
@@ -134,7 +135,12 @@ public class AdditionalNamesUpdatesTests : Folks.TestCase
             }
         }
 
-      assert (removed.size == 0);
+      assert (removed.size == 1);
+
+      foreach (var i in removed)
+        {
+          assert (i == null);
+        }
     }
 
   private void _notify_additional_names_cb (Object sname_obj, ParamSpec ps)

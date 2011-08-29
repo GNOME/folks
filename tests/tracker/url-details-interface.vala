@@ -91,7 +91,7 @@ public class UrlDetailsInterfaceTests : Folks.TestCase
       var store = BackendStore.dup ();
       yield store.prepare ();
       this._aggregator = new IndividualAggregator ();
-      this._aggregator.individuals_changed.connect
+      this._aggregator.individuals_changed_detailed.connect
           (this._individuals_changed_cb);
       try
         {
@@ -103,15 +103,16 @@ public class UrlDetailsInterfaceTests : Folks.TestCase
         }
     }
 
-  private void _individuals_changed_cb
-      (Set<Individual> added,
-       Set<Individual> removed,
-       string? message,
-       Persona? actor,
-       GroupDetails.ChangeReason reason)
+  private void _individuals_changed_cb (
+       MultiMap<Individual?, Individual?> changes)
     {
+      var added = changes.get_values ();
+      var removed = changes.get_keys ();
+
       foreach (var i in added)
         {
+          assert (i != null);
+
           string full_name = i.full_name;
           if (full_name != null)
             {
@@ -129,11 +130,16 @@ public class UrlDetailsInterfaceTests : Folks.TestCase
             }
         }
 
-      assert (removed.size == 0);
-
       if (this._found_blog &&
           this._found_website)
         this._main_loop.quit ();
+
+      assert (removed.size == 1);
+
+      foreach (var i in removed)
+        {
+          assert (i == null);
+        }
     }
 }
 

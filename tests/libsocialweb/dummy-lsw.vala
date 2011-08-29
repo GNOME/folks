@@ -138,12 +138,15 @@ public class DummyLswTests : Folks.TestCase
       var aggregator = new IndividualAggregator ();
       Individual? i1 = null;
       Individual? i2 = null;
-      var handler_id = aggregator.individuals_changed.connect (
-          (added, removed, m, a, r) =>
+      var handler_id =
+          aggregator.individuals_changed_detailed.connect ((changes) =>
         {
+          var added = changes.get_values ();
+          var removed = changes.get_keys ();
+
           debug ("Aggregator got some data!");
           assert (added.size == 2);
-          assert (removed.size == 0);
+          assert (removed.size == 1);
           foreach (var i in added)
             {
               string nickname = ((Folks.NameDetails) i).nickname;
@@ -152,6 +155,12 @@ public class DummyLswTests : Folks.TestCase
               if (nickname == "Pantagruel")
                 i2 = i;
             }
+
+          foreach (var i in removed)
+            {
+              assert (i == null);
+            }
+
           main_loop.quit ();
         });
       aggregator.prepare ();
@@ -258,17 +267,28 @@ public class DummyLswTests : Folks.TestCase
           return false;
         });
 
-      handler_id = aggregator.individuals_changed.connect (
-          (added, removed, m, a, r) =>
+      handler_id = aggregator.individuals_changed_detailed.connect ((changes) =>
         {
+          var added = changes.get_values ();
+          var removed = changes.get_keys ();
+
           debug ("Aggregator deleted some data!");
-          assert (added.size == 0);
+          assert (added.size == 2);
           assert (removed.size == 2);
+
           foreach (var i in removed)
             {
+              assert (i != null);
+
               string nickname = ((Folks.NameDetails) i).nickname;
               debug ("deleted nickname: %s", nickname);
             }
+
+          foreach (var i in added)
+            {
+              assert (i == null);
+            }
+
           main_loop.quit ();
         });
 

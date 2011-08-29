@@ -96,12 +96,23 @@ public class IndividualRetrievalTests : Folks.TestCase
 
       /* Set up the aggregator */
       var aggregator = new IndividualAggregator ();
-      aggregator.individuals_changed.connect ((added, removed, m, a, r) =>
+      aggregator.individuals_changed_detailed.connect ((changes) =>
         {
-          foreach (Individual i in added)
-            expected_individuals.remove (i.id);
+          var added = changes.get_values ();
+          var removed = changes.get_keys ();
 
-          assert (removed.size == 0);
+          foreach (Individual i in added)
+            {
+              assert (i != null);
+              expected_individuals.remove (i.id);
+            }
+
+          assert (removed.size == 1);
+
+          foreach (var i in removed)
+            {
+              assert (i == null);
+            }
         });
 
       /* Kill the main loop after a few seconds. If there are still individuals
@@ -153,12 +164,17 @@ public class IndividualRetrievalTests : Folks.TestCase
       /* Set up the aggregator */
       var aggregator = new IndividualAggregator ();
 
-      aggregator.individuals_changed.connect ((added, removed, m, a, r) =>
+      aggregator.individuals_changed_detailed.connect ((changes) =>
         {
+          var added = changes.get_values ();
+          var removed = changes.get_keys ();
+
           /* implicitly ignore the default Individuals, since that's covered in
            * other test(s) */
           foreach (Individual i in added)
             {
+              assert (i != null);
+
               /* If the Individual contains a Persona with an ID we provided,
                * mark it as recieved.
                * This intentionally avoids assuming that the Individual's ID is
@@ -171,7 +187,12 @@ public class IndividualRetrievalTests : Folks.TestCase
                 }
             }
 
-          assert (removed.size == 0);
+          assert (removed.size == 1);
+
+          foreach (var i in removed)
+            {
+              assert (i == null);
+            }
         });
 
       /* Kill the main loop after a few seconds. If there are still individuals

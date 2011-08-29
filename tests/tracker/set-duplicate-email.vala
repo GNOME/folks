@@ -78,7 +78,7 @@ public class SetDuplicateEmailTests : Folks.TestCase
       var store = BackendStore.dup ();
       yield store.prepare ();
       this._aggregator = new IndividualAggregator ();
-      this._aggregator.individuals_changed.connect
+      this._aggregator.individuals_changed_detailed.connect
           (this._individuals_changed_cb);
       try
         {
@@ -101,21 +101,28 @@ public class SetDuplicateEmailTests : Folks.TestCase
         }
     }
 
-  private void _individuals_changed_cb
-      (Set<Individual> added,
-       Set<Individual> removed,
-       string? message,
-       Persona? actor,
-       GroupDetails.ChangeReason reason)
+  private void _individuals_changed_cb (
+       MultiMap<Individual?, Individual?> changes)
     {
+      var added = changes.get_values ();
+      var removed = changes.get_keys ();
+
       foreach (var i in added)
         {
+          assert (i != null);
+
           if (i.full_name == this._persona_fullname_1)
             {
               this._reset_email_address (i);
             }
         }
-      assert (removed.size == 0);
+
+      assert (removed.size == 1);
+
+      foreach (var i in removed)
+        {
+          assert (i == null);
+        }
     }
 
   private void _reset_email_address (Individual i)

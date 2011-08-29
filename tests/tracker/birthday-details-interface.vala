@@ -89,7 +89,7 @@ public class BirthdayDetailsInterfaceTests : Folks.TestCase
       yield store.prepare ();
 
       this._aggregator = new IndividualAggregator ();
-      this._aggregator.individuals_changed.connect
+      this._aggregator.individuals_changed_detailed.connect
           (this._individuals_changed_cb);
       try
         {
@@ -101,15 +101,16 @@ public class BirthdayDetailsInterfaceTests : Folks.TestCase
         }
     }
 
-  private void _individuals_changed_cb
-      (Set<Individual> added,
-       Set<Individual> removed,
-       string? message,
-       Persona? actor,
-       GroupDetails.ChangeReason reason)
+  private void _individuals_changed_cb (
+       MultiMap<Individual?, Individual?> changes)
     {
+      var added = changes.get_values ();
+      var removed = changes.get_keys ();
+
       foreach (var i in added)
         {
+          assert (i != null);
+
           if (i.full_name == this._fullname)
             {
               i.notify["birthday"].connect (this._notify_birthday_cb);
@@ -123,7 +124,13 @@ public class BirthdayDetailsInterfaceTests : Folks.TestCase
                 }
             }
         }
-        assert (removed.size == 0);
+
+      assert (removed.size == 1);
+
+      foreach (var i in removed)
+        {
+          assert (i == null);
+        }
     }
 
   void _notify_birthday_cb (Object individual_obj, ParamSpec ps)

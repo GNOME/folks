@@ -176,11 +176,21 @@ public class AggregationTests : Folks.TestCase
 
       var aggregator = new IndividualAggregator ();
       Individual[] individual_gathered = new Individual[0];
-      var handler_id = aggregator.individuals_changed.connect ((added, removed, m, a, r) =>
+      var handler_id =
+          aggregator.individuals_changed_detailed.connect ((changes) =>
         {
+          var added = changes.get_values ();
+
           debug ("initial individuals_changed");
           foreach (Individual i in added)
-            individual_gathered += i;
+            {
+              if (i == null)
+                {
+                  continue;
+                }
+
+              individual_gathered += i;
+            }
           if (individual_gathered.length >= 2)
             main_loop.quit ();
         });
@@ -204,18 +214,33 @@ public class AggregationTests : Folks.TestCase
            && ((Folks.NameDetails) individual_gathered[1]).nickname == "Gargantua"));
 
       /* Check the result of link_personas */
-      aggregator.individuals_changed.connect ((added, removed, m, a, r) =>
+      aggregator.individuals_changed_detailed.connect ((changes) =>
         {
+          var added = changes.get_values ();
+          var removed = changes.get_keys ();
+
           debug ("individuals_changed after link: added:%u removed:%u",
               added.size, removed.size);
-          assert (added.size == 1);
+
+          assert (added.size == 2); /* should be identical */
           assert (removed.size == 2);
+
+          Individual? added_ind = null;
 
           foreach (var i in added)
             {
+              assert (i != null);
+              assert (added_ind == null || added_ind == i);
+              added_ind = i;
+
               assert (i.personas.size == 3);
               debug ("individuals_changed: 1 individual containing %u personas",
                   i.personas.size);
+            }
+
+          foreach (var i in removed)
+            {
+              assert (i != null);
             }
 
           main_loop.quit ();

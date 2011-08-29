@@ -87,7 +87,7 @@ public class SetGenderTests : Folks.TestCase
       var store = BackendStore.dup ();
       yield store.prepare ();
       this._aggregator = new IndividualAggregator ();
-      this._aggregator.individuals_changed.connect (
+      this._aggregator.individuals_changed_detailed.connect (
           this._individuals_changed_cb);
       try
         {
@@ -99,17 +99,16 @@ public class SetGenderTests : Folks.TestCase
         }
     }
 
-  private void _individuals_changed_cb
-      (Set<Individual> added,
-       Set<Individual> removed,
-       string? message,
-       Persona? actor,
-       GroupDetails.ChangeReason reason)
+  private void _individuals_changed_cb (
+       MultiMap<Individual?, Individual?> changes)
     {
-      assert (removed.size == 0);
+      var added = changes.get_values ();
+      var removed = changes.get_keys ();
 
       foreach (Individual i in added)
         {
+          assert (i != null);
+
           var name = (Folks.NameDetails) i;
 
           if (name.full_name == "jimmy neutron")
@@ -125,6 +124,13 @@ public class SetGenderTests : Folks.TestCase
                   ((GenderDetails) p).gender = Gender.MALE;
                 }
             }
+        }
+
+      assert (removed.size == 1);
+
+      foreach (var i in removed)
+        {
+          assert (i == null);
         }
     }
 

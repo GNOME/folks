@@ -66,10 +66,14 @@ public class IndividualRetrievalTests : Folks.TestCase
 
       /* Set up the aggregator */
       var aggregator = new IndividualAggregator ();
-      aggregator.individuals_changed.connect ((added, removed, m, a, r) =>
+      aggregator.individuals_changed_detailed.connect ((changes) =>
         {
+          var added = changes.get_values ();
+          var removed = changes.get_keys ();
+
           foreach (Individual i in added)
             {
+              assert (i != null);
               assert (i.personas.size == 1);
 
               /* Using the display ID is a little hacky, since we strictly
@@ -81,7 +85,12 @@ public class IndividualRetrievalTests : Folks.TestCase
                 }
             }
 
-          assert (removed.size == 0);
+          assert (removed.size == 1);
+
+          foreach (var i in removed)
+            {
+              assert (i == null);
+            }
         });
       aggregator.prepare ();
 
@@ -113,17 +122,25 @@ public class IndividualRetrievalTests : Folks.TestCase
       /* Set up the aggregator */
       var aggregator = new IndividualAggregator ();
       uint individuals_changed_count = 0;
-      aggregator.individuals_changed.connect ((added, removed, m, a, r) =>
+      aggregator.individuals_changed_detailed.connect ((changes) =>
         {
+          var added = changes.get_values ();
+          var removed = changes.get_keys ();
+
           individuals_changed_count++;
 
           assert (added.size == 1);
-          assert (removed.size == 0);
+          assert (removed.size == 1);
 
           /* Check properties */
           foreach (var i in added)
             {
               assert (i.alias == "Brian Briansson");
+            }
+
+          foreach (var i in removed)
+            {
+              assert (i == null);
             }
         });
       aggregator.prepare ();

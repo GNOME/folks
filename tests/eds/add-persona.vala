@@ -122,7 +122,7 @@ public class AddPersonaTests : Folks.TestCase
       var store = BackendStore.dup ();
       yield store.prepare ();
       this._aggregator = new IndividualAggregator ();
-      this._aggregator.individuals_changed.connect
+      this._aggregator.individuals_changed_detailed.connect
           (this._individuals_changed_cb);
       try
         {
@@ -251,21 +251,25 @@ public class AddPersonaTests : Folks.TestCase
         }
     }
 
-  private void _individuals_changed_cb
-      (Set<Individual> added,
-       Set<Individual> removed,
-       string? message,
-       Persona? actor,
-       GroupDetails.ChangeReason reason)
+  private void _individuals_changed_cb (
+       MultiMap<Individual?, Individual?> changes)
     {
+      var added = changes.get_values ();
+      var removed = changes.get_keys ();
+
       uint num_replaces = 0;
 
       foreach (var i in added)
         {
+          if (i == null)
+            {
+              continue;
+            }
+
           num_replaces = this._track_individual (i);
         }
 
-      assert (removed.size <= num_replaces);
+      assert (removed.size <= num_replaces + 1);
     }
 
   private uint _track_individual (Individual i)

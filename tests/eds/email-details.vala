@@ -128,7 +128,7 @@ public class EmailDetailsTests : Folks.TestCase
       var store = BackendStore.dup ();
       yield store.prepare ();
       this._aggregator = new IndividualAggregator ();
-      this._aggregator.individuals_changed.connect
+      this._aggregator.individuals_changed_detailed.connect
           (this._individuals_changed_cb);
       try
         {
@@ -140,15 +140,16 @@ public class EmailDetailsTests : Folks.TestCase
         }
     }
 
-  private void _individuals_changed_cb
-      (Set<Individual> added,
-       Set<Individual> removed,
-       string? message,
-       Persona? actor,
-       GroupDetails.ChangeReason reason)
+  private void _individuals_changed_cb (
+       MultiMap<Individual?, Individual?> changes)
     {
+      var added = changes.get_values ();
+      var removed = changes.get_keys ();
+
       foreach (Individual i in added)
         {
+          assert (i != null);
+
           unowned Gee.HashMap<string, Value?> contact = null;
           assert (i.personas.size == 1);
 
@@ -193,7 +194,12 @@ public class EmailDetailsTests : Folks.TestCase
             }
         }
 
-      assert (removed.size == 0);
+      assert (removed.size == 1);
+
+      foreach (var i in removed)
+        {
+          assert (i == null);
+        }
     }
 }
 
