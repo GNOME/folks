@@ -314,7 +314,7 @@ public class LinkPersonasTests : Folks.TestCase
           this._personas.add (first_persona);
           if (this._linking_method == LinkingMethod.LOCAL_IDS)
             {
-              var contact_id1 = ((Edsf.Persona) first_persona).contact_id;
+              var contact_id1 = ((Edsf.Persona) first_persona).iid;
               this._linking_props.set ("prop1", contact_id1);
             }
         }
@@ -325,7 +325,7 @@ public class LinkPersonasTests : Folks.TestCase
           this._personas.add (first_persona);
           if (this._linking_method == LinkingMethod.LOCAL_IDS)
             {
-              var contact_id2 = ((Edsf.Persona) first_persona).contact_id;
+              var contact_id2 = ((Edsf.Persona) first_persona).iid;
               this._linking_props.set ("prop2", contact_id2);
             }
         }
