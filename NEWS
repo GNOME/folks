@@ -13,7 +13,7 @@ Bugs fixed:
 * Bug 657067 — Can't build EDS backend using Vala master
 * Bug 657332 — Add linking link-individuals
 
-Overview of changes from libfolks 0.5.2 to libfolks 0.5.3
+Overview of changes from libfolks 0.5.2 to libfolks 0.6.0
 =========================================================
 
 Bugs fixed:
