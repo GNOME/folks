@@ -32,4 +32,11 @@
       <gnome:userid>pwithnall</gnome:userid>
     </foaf:Person>
   </maintainer>
+  <maintainer>
+    <foaf:Person>
+      <foaf:name>Raul Gutierrez Segales</foaf:name>
+      <foaf:mbox rdf:resource="mailto:rgs@collabora.co.uk" />
+      <gnome:userid>raulgs</gnome:userid>
+    </foaf:Person>
+  </maintainer>
 </Project>
