@@ -283,13 +283,22 @@ public class Trf.Persona : Folks.Persona,
   /**
    * {@inheritDoc}
    */
+  [CCode (notify = false)]
   public Set<RoleFieldDetails> roles
     {
       get { return this._roles_ro; }
-      public set
-        {
-          ((Trf.PersonaStore) this.store)._set_roles (this, value);
-        }
+      set { this.change_roles.begin (value); }
+    }
+
+  /**
+   * {@inheritDoc}
+   *
+   * @since UNRELEASED
+   */
+  public async void change_roles (Set<RoleFieldDetails> roles)
+      throws PropertyError
+    {
+      yield ((Trf.PersonaStore) this.store)._set_roles (this, roles);
     }
 
   private HashSet<NoteFieldDetails> _notes;
@@ -934,6 +943,8 @@ public class Trf.Persona : Folks.Persona,
 
       this._roles = role_fds;
       this._roles_ro = this._roles.read_only_view;
+
+      this.notify_property ("roles");
     }
 
   internal bool _add_role (string tracker_id, string? role, string? title, string? org)

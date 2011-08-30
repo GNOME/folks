@@ -423,16 +423,11 @@ public class Folks.Individual : Object,
   /**
    * {@inheritDoc}
    */
+  [CCode (notify = false)]
   public Set<RoleFieldDetails> roles
     {
       get { return this._roles_ro; }
-      private set
-        {
-          this._roles.clear ();
-          foreach (var role in value)
-            this._roles.add (role);
-          this.notify_property ("roles");
-        }
+      set { this.change_roles.begin (value); } /* not writeable */
     }
 
   private HashSet<string> _local_ids;

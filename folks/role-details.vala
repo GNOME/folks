@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2011 Collabora Ltd.
+ * Copyright (C) 2011 Philip Withnall
  *
  * This library is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,6 +18,7 @@
  * Authors:
  *       Raul Gutierrez Segales <raul.gutierrez.segales@collabora.co.uk>
  *       Travis Reitter <travis.reitter@collabora.co.uk>
+ *       Philip Withnall <philip@tecnocode.co.uk>
  */
 
 using Gee;
@@ -197,4 +199,24 @@ public interface Folks.RoleDetails : Object
    * @since 0.6.0
    */
   public abstract Set<RoleFieldDetails> roles { get; set; }
+
+  /**
+   * Change the contact's roles.
+   *
+   * It's preferred to call this rather than setting {@link RoleDetails.roles}
+   * directly, as this method gives error notification and will only return once
+   * the roles have been written to the relevant backing store (or the
+   * operation's failed).
+   *
+   * @param roles the set of roles
+   * @throws PropertyError if setting the roles failed
+   * @since UNRELEASED
+   */
+  public virtual async void change_roles (Set<RoleFieldDetails> roles)
+      throws PropertyError
+    {
+      /* Default implementation. */
+      throw new PropertyError.NOT_WRITEABLE (
+          _("Roles are not writeable on this contact."));
+    }
 }
