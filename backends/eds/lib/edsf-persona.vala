@@ -246,10 +246,18 @@ public class Edsf.Persona : Folks.Persona,
   public Set<NoteFieldDetails> notes
     {
       get { return this._notes_ro; }
-      set
-        {
-          ((Edsf.PersonaStore) this.store)._set_notes (this, value);
-        }
+      set { this.change_notes.begin (value); }
+    }
+
+  /**
+   * {@inheritDoc}
+   *
+   * @since UNRELEASED
+   */
+  public async void change_notes (Set<NoteFieldDetails> notes)
+      throws PropertyError
+    {
+      yield ((Edsf.PersonaStore) this.store)._set_notes (this, notes);
     }
 
   /**

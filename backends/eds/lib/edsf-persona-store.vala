@@ -1066,7 +1066,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
     }
 
   internal async void _set_notes (Edsf.Persona persona,
-      Set<NoteFieldDetails> notes)
+      Set<NoteFieldDetails> notes) throws PropertyError
     {
       try
         {
@@ -1074,9 +1074,9 @@ public class Edsf.PersonaStore : Folks.PersonaStore
           yield this._set_contact_notes (contact, notes);
           yield this._addressbook.modify_contact (contact, null);
         }
-      catch (GLib.Error error)
+      catch (GLib.Error e)
         {
-          GLib.warning ("Can't update notes: %s\n", error.message);
+          throw this.e_client_error_to_property_error ("notes", e);
         }
     }
 

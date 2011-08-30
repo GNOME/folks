@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2011 Collabora Ltd.
+ * Copyright (C) 2011 Philip Withnall
  *
  * This library is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -16,6 +17,7 @@
  *
  * Authors:
  *       Raul Gutierrez Segales <raul.gutierrez.segales@collabora.co.uk>
+ *       Philip Withnall <philip@tecnocode.co.uk>
  */
 
 using Gee;
@@ -106,4 +108,24 @@ public interface Folks.NoteDetails : Object
    * @since 0.5.1
    */
   public abstract Set<NoteFieldDetails> notes { get; set; }
+
+  /**
+   * Change the contact's notes.
+   *
+   * It's preferred to call this rather than setting {@link NoteDetails.notes}
+   * directly, as this method gives error notification and will only return once
+   * the notes have been written to the relevant backing store (or the
+   * operation's failed).
+   *
+   * @param notes the set of notes
+   * @throws PropertyError if setting the notes failed
+   * @since UNRELEASED
+   */
+  public virtual async void change_notes (Set<NoteFieldDetails> notes)
+      throws PropertyError
+    {
+      /* Default implementation. */
+      throw new PropertyError.NOT_WRITEABLE (
+          _("Notes are not writeable on this contact."));
+    }
 }

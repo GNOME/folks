@@ -482,16 +482,11 @@ public class Folks.Individual : Object,
   /**
    * {@inheritDoc}
    */
+  [CCode (notify = false)]
   public Set<NoteFieldDetails> notes
     {
       get { return this._notes_ro; }
-      private set
-        {
-          this._notes.clear ();
-          foreach (var note in value)
-            this._notes.add (note);
-          this.notify_property ("notes");
-        }
+      set { this.change_notes.begin (value); } /* not writeable */
     }
 
   private HashSet<PostalAddressFieldDetails> _postal_addresses;

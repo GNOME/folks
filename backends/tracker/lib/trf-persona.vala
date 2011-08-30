@@ -289,13 +289,22 @@ public class Trf.Persona : Folks.Persona,
   /**
    * {@inheritDoc}
    */
+  [CCode (notify = false)]
   public Set<NoteFieldDetails> notes
     {
       get { return this._notes_ro; }
-      set
-        {
-          ((Trf.PersonaStore) this.store)._set_notes (this, value);
-        }
+      set { this.change_notes.begin (value); }
+    }
+
+  /**
+   * {@inheritDoc}
+   *
+   * @since UNRELEASED
+   */
+  public async void change_notes (Set<NoteFieldDetails> notes)
+      throws PropertyError
+    {
+      yield ((Trf.PersonaStore) this.store)._set_notes (this, notes);
     }
 
   private HashSet<UrlFieldDetails> _urls;
