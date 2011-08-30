@@ -331,13 +331,21 @@ public class Trf.Persona : Folks.Persona,
   /**
    * {@inheritDoc}
    */
+  [CCode (notify = false)]
   public Set<UrlFieldDetails> urls
     {
       get { return this._urls_ro; }
-      public set
-        {
-          ((Trf.PersonaStore) this.store)._set_urls (this, value);
-        }
+      set { this.change_urls.begin (value); }
+    }
+
+  /**
+   * {@inheritDoc}
+   *
+   * @since UNRELEASED
+   */
+  public async void change_urls (Set<UrlFieldDetails> urls) throws PropertyError
+    {
+      yield ((Trf.PersonaStore) this.store)._set_urls (this, urls);
     }
 
   private HashSet<PostalAddressFieldDetails> _postal_addresses;
@@ -1343,6 +1351,8 @@ public class Trf.Persona : Folks.Persona,
 
       this._urls = url_fds;
       this._urls_ro = this._urls.read_only_view;
+
+      this.notify_property ("urls");
     }
 
   internal bool _add_url (string url, string tracker_id, string type = "")

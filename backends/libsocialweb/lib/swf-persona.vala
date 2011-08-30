@@ -139,18 +139,11 @@ public class Swf.Persona : Folks.Persona,
   /**
    * {@inheritDoc}
    */
+  [CCode (notify = false)]
   public Set<UrlFieldDetails> urls
     {
       get { return this._urls_ro; }
-      private set
-        {
-          this._urls = new HashSet<UrlFieldDetails> (
-              (GLib.HashFunc) UrlFieldDetails.hash,
-              (GLib.EqualFunc) UrlFieldDetails.equal);
-          this._urls_ro = this._urls.read_only_view;
-          foreach (var url_fd in value)
-            this._urls.add (url_fd);
-        }
+      set { this.change_urls.begin (value); } /* not writeable */
     }
 
   private HashMultiMap<string, ImFieldDetails> _im_addresses =
@@ -367,8 +360,12 @@ public class Swf.Persona : Folks.Persona,
       foreach (string website in websites)
         urls.add (new UrlFieldDetails (website));
       */
-      if (this.urls != urls)
-        this.urls = urls;
+      if (this._urls != urls)
+        {
+          this._urls = urls;
+          this._urls_ro = urls.read_only_view;
+          this.notify_property ("urls");
+        }
 
       var gender_string = contact.get_value ("x-gender");
       Gender gender;

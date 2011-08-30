@@ -380,15 +380,11 @@ public class Folks.Individual : Object,
   /**
    * {@inheritDoc}
    */
+  [CCode (notify = false)]
   public Set<UrlFieldDetails> urls
     {
       get { return this._urls_ro; }
-      private set
-        {
-          this._urls.clear ();
-          foreach (var url_fd in value)
-            this._urls.add (url_fd);
-        }
+      set { this.change_urls.begin (value); } /* not writeable */
     }
 
   private HashSet<PhoneFieldDetails> _phone_numbers;

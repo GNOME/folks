@@ -438,10 +438,17 @@ public class Edsf.Persona : Folks.Persona,
   public Set<UrlFieldDetails> urls
     {
       get { return this._urls_ro; }
-      set
-        {
-          ((Edsf.PersonaStore) this.store)._set_urls (this, value);
-        }
+      set { this.change_urls.begin (value); }
+    }
+
+  /**
+   * {@inheritDoc}
+   *
+   * @since UNRELEASED
+   */
+  public async void change_urls (Set<UrlFieldDetails> urls) throws PropertyError
+    {
+      yield ((Edsf.PersonaStore) this.store)._set_urls (this, urls);
     }
 
   private HashMultiMap<string, ImFieldDetails> _im_addresses =

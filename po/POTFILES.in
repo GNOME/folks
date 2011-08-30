@@ -22,5 +22,6 @@ folks/note-details.vala
 folks/phone-details.vala
 folks/postal-address-details.vala
 folks/role-details.vala
+folks/url-details.vala
 tools/import-pidgin.vala
 tools/import.vala

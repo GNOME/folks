@@ -21,5 +21,6 @@ folks/note-details.c
 folks/phone-details.c
 folks/postal-address-details.c
 folks/role-details.c
+folks/url-details.c
 tools/import-pidgin.c
 tools/import.c

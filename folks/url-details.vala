@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2011 Collabora Ltd.
+ * Copyright (C) 2011 Philip Withnall
  *
  * This library is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,6 +18,7 @@
  * Authors:
  *       Marco Barisione <marco.barisione@collabora.co.uk>
  *       Travis Reitter <travis.reitter@collabora.co.uk>
+ *       Philip Withnall <philip@tecnocode.co.uk>
  */
 
 using GLib;
@@ -88,4 +90,24 @@ public interface Folks.UrlDetails : Object
    * @since 0.5.1
    */
   public abstract Set<UrlFieldDetails> urls { get; set; }
+
+  /**
+   * Change the contact's URLs.
+   *
+   * It's preferred to call this rather than setting {@link UrlDetails.urls}
+   * directly, as this method gives error notification and will only return once
+   * the URLs have been written to the relevant backing store (or the
+   * operation's failed).
+   *
+   * @param urls the set of URLs
+   * @throws PropertyError if setting the URLs failed
+   * @since UNRELEASED
+   */
+  public virtual async void change_urls (Set<UrlFieldDetails> urls)
+      throws PropertyError
+    {
+      /* Default implementation. */
+      throw new PropertyError.NOT_WRITEABLE (
+          _("URLs are not writeable on this contact."));
+    }
 }

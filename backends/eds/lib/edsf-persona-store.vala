@@ -241,7 +241,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
    * - PersonaStore.detail_key (PersonaDetail.LOCAL_IDS)
    * - PersonaStore.detail_key (PersonaDetail.WEB_SERVICE_ADDRESSES)
    * - PersonaStore.detail_key (PersonaDetail.NOTES)
-   * - PersonaStore.detail_key (PersonaDetail.URL)
+   * - PersonaStore.detail_key (PersonaDetail.URLS)
    *
    * See {@link Folks.PersonaStore.add_persona_from_details}.
    *
@@ -760,7 +760,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
     }
 
   internal async void _set_urls (Edsf.Persona persona,
-      Set<UrlFieldDetails> urls)
+      Set<UrlFieldDetails> urls) throws PropertyError
     {
       if (Utils.set_afd_equal (persona.urls, urls))
         return;
@@ -773,7 +773,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
         }
       catch (GLib.Error e)
         {
-          GLib.warning ("Can't set urls: %s", e.message);
+          throw this.e_client_error_to_property_error ("urls", e);
         }
     }
 
