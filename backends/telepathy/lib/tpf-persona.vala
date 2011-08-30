@@ -209,29 +209,11 @@ public class Tpf.Persona : Folks.Persona,
    *
    * See {@link Folks.GroupDetails.groups}.
    */
+  [CCode (notify = false)]
   public Set<string> groups
     {
       get { return this._groups_ro; }
-
-      set
-        {
-          foreach (var group in value)
-            {
-              if (this._groups.contains (group) == false)
-                this._change_group (group, true);
-            }
-
-          foreach (var group in this._groups)
-            {
-              if (value.contains (group) == false)
-                this._change_group (group, true);
-            }
-
-          /* Since we're only changing the members of this._groups, rather than
-           * replacing it with a new instance, we have to manually emit the
-           * notification. */
-          this.notify_property ("groups");
-        }
+      set { this.change_groups.begin (value); }
     }
 
   /**
@@ -267,6 +249,30 @@ public class Tpf.Persona : Folks.Persona,
         this.group_changed (group, is_member);
 
       return changed;
+    }
+
+  /**
+   * {@inheritDoc}
+   *
+   * @since UNRELEASED
+   */
+  public async void change_groups (Set<string> groups) throws PropertyError
+    {
+      Tpf.PersonaStore store = (Tpf.PersonaStore) this.store;
+
+      foreach (var group1 in groups)
+        {
+          if (this._groups.contains (group1) == false)
+            yield store._change_group_membership (this, group1, true);
+        }
+
+      foreach (var group2 in this._groups)
+        {
+          if (groups.contains (group2) == false)
+            yield store._change_group_membership (this, group2, false);
+        }
+
+      this.notify_property ("groups");
     }
 
   /**

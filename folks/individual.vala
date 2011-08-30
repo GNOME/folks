@@ -564,19 +564,60 @@ public class Folks.Individual : Object,
   /**
    * {@inheritDoc}
    */
+  [CCode (notify = false)]
   public Set<string> groups
     {
       get { return this._groups_ro; }
+      set { this.change_groups.begin (value); }
+    }
 
-      set
+  /**
+   * {@inheritDoc}
+   *
+   * @since UNRELEASED
+   */
+  public async void change_groups (Set<string> groups) throws PropertyError
+    {
+      debug ("Setting '%s' groups…", this.id);
+
+      PropertyError? persona_error = null;
+      var groups_changed = false;
+
+      /* Try to write it to only the Personas which have "groups" as a
+       * writeable property. */
+      foreach (var p in this._persona_set)
         {
-          foreach (var p in this._persona_set)
+          var g = p as GroupDetails;
+          if (g != null && p.store.is_writeable == true &&
+              "groups" in p.writeable_properties)
             {
-              if (p is GroupDetails && ((Persona) p).store.is_writeable == true)
-                ((GroupDetails) p).groups = value;
+              try
+                {
+                  yield g.change_groups (groups);
+                  debug ("    written to persona '%s'", p.uid);
+                  groups_changed = true;
+                }
+              catch (PropertyError e)
+                {
+                  /* Store the first error so we can throw it if setting the
+                   * property fails on every other persona. */
+                  if (persona_error == null)
+                    {
+                      persona_error = e;
+                    }
+                }
             }
-          this._update_groups ();
         }
+
+      /* Failure? */
+      if (groups_changed == false)
+        {
+          assert (persona_error != null);
+          throw persona_error;
+        }
+
+      /* Update our copy of the property. */
+      this._update_groups ();
     }
 
   /**

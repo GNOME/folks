@@ -1193,7 +1193,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
     }
 
   internal async void _set_groups (Edsf.Persona persona,
-      Set<string> groups)
+      Set<string> groups) throws PropertyError
     {
       if (this._groups_supported == false)
         {
@@ -1207,9 +1207,9 @@ public class Edsf.PersonaStore : Folks.PersonaStore
           yield this._set_contact_groups (contact, groups);
           yield this._addressbook.modify_contact (contact, null);
         }
-      catch (GLib.Error error)
+      catch (GLib.Error e)
         {
-          GLib.warning ("Can't update groups: %s\n", error.message);
+          throw this.e_client_error_to_property_error ("groups", e);
         }
     }
 

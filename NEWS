@@ -6,12 +6,14 @@ Bugs fixed:
 * Bug 653777 — Would be nice to have a helper function to create a writable
   persona
 * Bug 657635 — Linking personas from different (e-d-s) stores is not working
+* Bug 657510 — Add asynchronous property setter methods
 
 API changes:
 * Add PersonaStore:always-writeable-properties property
 * Add IndividualAggregatorError.PROPERTY_NOT_WRITEABLE error
 * Add IndividualAggregator.ensure_individual_property_writeable()
 * Add Folks.PropertyError
+* Add *Details.change_*() virtual methods
 
 Overview of changes from libfolks 0.6.0 to libfolks 0.6.1
 =========================================================

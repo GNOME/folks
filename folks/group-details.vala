@@ -147,4 +147,24 @@ public interface Folks.GroupDetails : Object
    * @since 0.1.11
    */
   public async signal void group_changed (string group, bool is_member);
+
+  /**
+   * Change the contact's groups.
+   *
+   * It's preferred to call this rather than setting {@link GroupDetails.groups}
+   * directly, as this method gives error notification and will only return once
+   * the groups have been written to the relevant backing store (or the
+   * operation's failed).
+   *
+   * @param groups the complete set of groups the contact should be a member of
+   * @throws PropertyError if setting the groups failed
+   * @since UNRELEASED
+   */
+  public virtual async void change_groups (Set<string> groups)
+      throws PropertyError
+    {
+      /* Default implementation. */
+      throw new PropertyError.NOT_WRITEABLE (
+          _("Groups are not writeable on this contact."));
+    }
 }

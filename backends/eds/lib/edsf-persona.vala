@@ -500,10 +500,7 @@ public class Edsf.Persona : Folks.Persona,
   public Set<string> groups
     {
       get { return this._groups_ro; }
-      set
-        {
-          ((Edsf.PersonaStore) this.store)._set_groups (this, value);
-        }
+      set { this.change_groups.begin (value); }
     }
 
   /**
@@ -537,7 +534,17 @@ public class Edsf.Persona : Folks.Persona,
           new_groups.add (group);
         }
 
-      this.groups = new_groups;
+      yield this.change_groups (new_groups);
+    }
+
+  /**
+   * {@inheritDoc}
+   *
+   * @since UNRELEASED
+   */
+  public async void change_groups (Set<string> groups) throws PropertyError
+    {
+      yield ((Edsf.PersonaStore) this.store)._set_groups (this, groups);
     }
 
   /**
