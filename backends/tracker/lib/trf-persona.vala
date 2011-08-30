@@ -474,13 +474,24 @@ public class Trf.Persona : Folks.Persona,
   /**
    * {@inheritDoc}
    */
+  [CCode (notify = false)]
   public MultiMap<string, WebServiceFieldDetails> web_service_addresses
     {
       get { return this._web_service_addresses; }
-      set
-        {
-          ((Trf.PersonaStore) this.store)._set_web_service_addrs (this, value);
-        }
+      set { this.change_web_service_addresses.begin (value); }
+    }
+
+  /**
+   * {@inheritDoc}
+   *
+   * @since UNRELEASED
+   */
+  public async void change_web_service_addresses (
+      MultiMap<string, WebServiceFieldDetails> web_service_addresses)
+          throws PropertyError
+    {
+      yield ((Trf.PersonaStore) this.store)._set_web_service_addrs (this,
+          web_service_addresses);
     }
 
   /**

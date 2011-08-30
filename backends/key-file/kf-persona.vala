@@ -185,56 +185,65 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
   /**
    * {@inheritDoc}
    */
+  [CCode (notify = false)]
   public MultiMap<string, WebServiceFieldDetails> web_service_addresses
     {
-      get
-        { return this._web_service_addresses; }
+      get { return this._web_service_addresses; }
+      set { this.change_web_service_addresses.begin (value); }
+    }
 
-      set
+  /**
+   * {@inheritDoc}
+   *
+   * @since UNRELEASED
+   */
+  public async void change_web_service_addresses (
+      MultiMap<string, WebServiceFieldDetails> web_service_addresses)
+          throws PropertyError
+    {
+      /* Remove the current web service addresses from the key file */
+      foreach (var web_service1 in this._web_service_addresses.get_keys ())
         {
-          /* Remove the current web service addresses from the key file */
-          foreach (var web_service in this._web_service_addresses.get_keys ())
+          try
             {
-              try
-                {
-                  this._key_file.remove_key (this.display_id,
-                      "web-service." + web_service);
-                }
-              catch (KeyFileError e)
-                {
-                  /* Ignore the error, since it's just a group or key not found
-                   * error. */
-                }
+              this._key_file.remove_key (this.display_id,
+                  "web-service." + web_service1);
             }
-
-          /* Add the new web service addresses to the key file and build a
-           * table of them to set as the new property value */
-          var web_service_addresses =
-            new HashMultiMap<string, WebServiceFieldDetails> (
-                null, null,
-                (GLib.HashFunc) WebServiceFieldDetails.hash,
-                (GLib.EqualFunc) WebServiceFieldDetails.equal);
-
-          foreach (var web_service in value.get_keys ())
+          catch (KeyFileError e)
             {
-              var ws_fds = value.get (web_service);
-
-              string[] addrs = new string[0];
-              foreach (var ws_fd in ws_fds)
-                addrs += ws_fd.value;
-
-              this._key_file.set_string_list (this.display_id,
-                  "web-service." + web_service, addrs);
-
-              foreach (var ws_fd in ws_fds)
-                web_service_addresses.set (web_service, ws_fd);
+              /* Ignore the error, since it's just a group or key not found
+               * error. */
             }
-
-          this._web_service_addresses = web_service_addresses;
-
-          /* Get the PersonaStore to save the key file */
-          ((Kf.PersonaStore) this.store).save_key_file.begin ();
         }
+
+      /* Add the new web service addresses to the key file and build a
+       * table of them to set as the new property value */
+      var new_web_service_addresses =
+        new HashMultiMap<string, WebServiceFieldDetails> (
+            null, null,
+            (GLib.HashFunc) WebServiceFieldDetails.hash,
+            (GLib.EqualFunc) WebServiceFieldDetails.equal);
+
+      foreach (var web_service2 in web_service_addresses.get_keys ())
+        {
+          var ws_fds = web_service_addresses.get (web_service2);
+
+          string[] addrs = new string[0];
+          foreach (var ws_fd1 in ws_fds)
+            addrs += ws_fd1.value;
+
+          this._key_file.set_string_list (this.display_id,
+              "web-service." + web_service2, addrs);
+
+          foreach (var ws_fd2 in ws_fds)
+            new_web_service_addresses.set (web_service2, ws_fd2);
+        }
+
+      /* Get the PersonaStore to save the key file */
+      yield ((Kf.PersonaStore) this.store).save_key_file ();
+
+      this._web_service_addresses = new_web_service_addresses;
+      this.notify_property ("web-service-addresses");
     }
 
   /**

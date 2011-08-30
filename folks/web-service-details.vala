@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2011 Collabora Ltd.
+ * Copyright (C) 2011 Philip Withnall
  *
  * This library is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -16,6 +17,7 @@
  *
  * Authors:
  *       Alban Crequy <alban.crequy@collabora.co.uk>
+ *       Philip Withnall <philip@tecnocode.co.uk>
  */
 
 using Gee;
@@ -93,5 +95,26 @@ public interface Folks.WebServiceDetails : Object
     Gee.MultiMap<string, WebServiceFieldDetails> web_service_addresses
     {
       get; set;
+    }
+
+  /**
+   * Change the contact's web service addresses.
+   *
+   * It's preferred to call this rather than setting
+   * {@link WebServiceDetails.web_service_addresses} directly, as this method
+   * gives error notification and will only return once the addresses have been
+   * written to the relevant backing store (or the operation's failed).
+   *
+   * @param web_service_addresses the set of addresses
+   * @throws PropertyError if setting the addresses failed
+   * @since UNRELEASED
+   */
+  public virtual async void change_web_service_addresses (
+      MultiMap<string, WebServiceFieldDetails> web_service_addresses)
+          throws PropertyError
+    {
+      /* Default implementation. */
+      throw new PropertyError.NOT_WRITEABLE (
+          _("Web service addresses are not writeable on this contact."));
     }
 }

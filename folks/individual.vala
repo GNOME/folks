@@ -592,10 +592,12 @@ public class Folks.Individual : Object,
   /**
    * {@inheritDoc}
    */
+  [CCode (notify = false)]
   public MultiMap<string, WebServiceFieldDetails> web_service_addresses
     {
       get { return this._web_service_addresses; }
-      private set {}
+      /* Not writeable: */
+      set { this.change_web_service_addresses.begin (value); }
     }
 
   /**

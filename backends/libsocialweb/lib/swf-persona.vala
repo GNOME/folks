@@ -169,10 +169,12 @@ public class Swf.Persona : Folks.Persona,
   /**
    * {@inheritDoc}
    */
-  public MultiMap<string, string> web_service_addresses
+  [CCode (notify = false)]
+  public MultiMap<string, WebServiceFieldDetails> web_service_addresses
     {
       get { return this._web_service_addresses; }
-      private set {}
+      /* Not writeable: */
+      set { this.change_web_service_addresses.begin (value); }
     }
 
   private Contact _lsw_contact;

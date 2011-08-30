@@ -718,6 +718,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
 
   internal async void _set_web_service_addresses (Edsf.Persona persona,
       MultiMap<string, WebServiceFieldDetails> web_service_addresses)
+          throws PropertyError
     {
       if (Utils.multi_map_str_afd_equal (persona.web_service_addresses,
             web_service_addresses))
@@ -732,7 +733,8 @@ public class Edsf.PersonaStore : Folks.PersonaStore
         }
       catch (GLib.Error e)
         {
-          GLib.warning ("Can't set local IDS: %s\n", e.message);
+          throw this.e_client_error_to_property_error ("web-service-addresses",
+              e);
         }
     }
 
