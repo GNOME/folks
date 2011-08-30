@@ -397,15 +397,11 @@ public class Folks.Individual : Object,
   /**
    * {@inheritDoc}
    */
+  [CCode (notify = false)]
   public Set<PhoneFieldDetails> phone_numbers
     {
       get { return this._phone_numbers_ro; }
-      private set
-        {
-          this._phone_numbers.clear ();
-          foreach (var phone_fd in value)
-            this._phone_numbers.add (phone_fd);
-        }
+      set { this.change_phone_numbers.begin (value); } /* not writeable */
     }
 
   private HashSet<EmailFieldDetails> _email_addresses;

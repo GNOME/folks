@@ -98,13 +98,22 @@ public class Trf.Persona : Folks.Persona,
   /**
    * {@inheritDoc}
    */
+  [CCode (notify = false)]
   public Set<PhoneFieldDetails> phone_numbers
     {
       get { return this._phone_numbers_ro; }
-      public set
-        {
-          ((Trf.PersonaStore) this.store)._set_phones (this, value);
-        }
+      set { this.change_phone_numbers.begin (value); }
+    }
+
+  /**
+   * {@inheritDoc}
+   *
+   * @since UNRELEASED
+   */
+  public async void change_phone_numbers (Set<PhoneFieldDetails> phone_numbers)
+      throws PropertyError
+    {
+      yield ((Trf.PersonaStore) this.store)._set_phones (this, phone_numbers);
     }
 
   /**
@@ -1136,6 +1145,8 @@ public class Trf.Persona : Folks.Persona,
 
       this._phone_numbers = phones;
       this._phone_numbers_ro = this._phone_numbers.read_only_view;
+
+      this.notify_property ("phone-numbers");
     }
 
   internal bool _add_phone (string phone, string tracker_id)

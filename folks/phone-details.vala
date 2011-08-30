@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2011 Collabora Ltd.
+ * Copyright (C) 2011 Philip Withnall
  *
  * This library is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,6 +18,7 @@
  * Authors:
  *       Marco Barisione <marco.barisione@collabora.co.uk>
  *       Raul Gutierrez Segales <raul.gutierrez.segales@collabora.co.uk>
+ *       Philip Withnall <philip@tecnocode.co.uk>
  */
 
 using GLib;
@@ -183,4 +185,24 @@ public interface Folks.PhoneDetails : Object
    * @since 0.6.0
    */
   public abstract Set<PhoneFieldDetails> phone_numbers { get; set; }
+
+  /**
+   * Change the contact's phone numbers.
+   *
+   * It's preferred to call this rather than setting
+   * {@link PhoneDetails.phone_numbers} directly, as this method gives error
+   * notification and will only return once the phone numbers have been written
+   * to the relevant backing store (or the operation's failed).
+   *
+   * @param phone_numbers the set of phone numbers
+   * @throws PropertyError if setting the phone numbers failed
+   * @since UNRELEASED
+   */
+  public virtual async void change_phone_numbers (
+      Set<PhoneFieldDetails> phone_numbers) throws PropertyError
+    {
+      /* Default implementation. */
+      throw new PropertyError.NOT_WRITEABLE (
+          _("Phone numbers are not writeable on this contact."));
+    }
 }

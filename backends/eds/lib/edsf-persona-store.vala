@@ -943,7 +943,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
     }
 
   internal async void _set_phones (Edsf.Persona persona,
-      Set<PhoneFieldDetails> phones)
+      Set<PhoneFieldDetails> phones) throws PropertyError
     {
       try
         {
@@ -952,9 +952,9 @@ public class Edsf.PersonaStore : Folks.PersonaStore
               E.ContactField.TEL);
           yield this._addressbook.modify_contact (contact, null);
         }
-      catch (GLib.Error error)
+      catch (GLib.Error e)
         {
-          GLib.warning ("Can't update phones: %s\n", error.message);
+          throw this.e_client_error_to_property_error ("phone-numbers", e);
         }
     }
 

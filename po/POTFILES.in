@@ -19,6 +19,7 @@ folks/individual-aggregator.vala
 folks/local-id-details.vala
 folks/name-details.vala
 folks/note-details.vala
+folks/phone-details.vala
 folks/postal-address-details.vala
 folks/role-details.vala
 tools/import-pidgin.vala

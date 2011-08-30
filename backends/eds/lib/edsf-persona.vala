@@ -207,10 +207,18 @@ public class Edsf.Persona : Folks.Persona,
   public Set<PhoneFieldDetails> phone_numbers
     {
       get { return this._phone_numbers_ro; }
-      set
-        {
-          ((Edsf.PersonaStore) this.store)._set_phones (this, value);
-        }
+      set { this.change_phone_numbers.begin (value); }
+    }
+
+  /**
+   * {@inheritDoc}
+   *
+   * @since UNRELEASED
+   */
+  public async void change_phone_numbers (
+      Set<PhoneFieldDetails> phone_numbers) throws PropertyError
+    {
+      yield ((Edsf.PersonaStore) this.store)._set_phones (this, phone_numbers);
     }
 
   /**
