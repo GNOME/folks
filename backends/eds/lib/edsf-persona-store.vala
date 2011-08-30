@@ -959,7 +959,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
     }
 
   internal async void _set_postal_addresses (Edsf.Persona persona,
-      Set<PostalAddressFieldDetails> postal_fds)
+      Set<PostalAddressFieldDetails> postal_fds) throws PropertyError
     {
       try
         {
@@ -968,10 +968,9 @@ public class Edsf.PersonaStore : Folks.PersonaStore
               postal_fds);
           yield this._addressbook.modify_contact (contact, null);
         }
-      catch (GLib.Error error)
+      catch (GLib.Error e)
         {
-          GLib.warning ("Can't update postal addresses: %s\n",
-              error.message);
+          throw this.e_client_error_to_property_error ("postal-addresses", e);
         }
     }
 

@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2010 Collabora Ltd.
+ * Copyright (C) 2011 Philip Withnall
  *
  * This library is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,6 +18,7 @@
  * Authors:
  *       Marco Barisione <marco.barisione@collabora.co.uk>
  *       Raul Gutierrez Segales <raul.gutierrez.segales@collabora.co.uk>
+ *       Philip Withnall <philip@tecnocode.co.uk>
  */
 
 using GLib;
@@ -280,4 +282,24 @@ public interface Folks.PostalAddressDetails : Object
    * @since 0.5.1
    */
   public abstract Set<PostalAddressFieldDetails> postal_addresses { get; set; }
+
+  /**
+   * Change the contact's postal addresses.
+   *
+   * It's preferred to call this rather than setting
+   * {@link PostalAddressDetails.postal_addresses} directly, as this method
+   * gives error notification and will only return once the addresses have been
+   * written to the relevant backing store (or the operation's failed).
+   *
+   * @param postal_addresses the set of postal addresses
+   * @throws PropertyError if setting the addresses failed
+   * @since UNRELEASED
+   */
+  public virtual async void change_postal_addresses (
+      Set<PostalAddressFieldDetails> postal_addresses) throws PropertyError
+    {
+      /* Default implementation. */
+      throw new PropertyError.NOT_WRITEABLE (
+          _("Postal addresses are not writeable on this contact."));
+    }
 }

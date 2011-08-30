@@ -337,13 +337,23 @@ public class Trf.Persona : Folks.Persona,
   /**
    * {@inheritDoc}
    */
+  [CCode (notify = false)]
   public Set<PostalAddressFieldDetails> postal_addresses
     {
       get { return this._postal_addresses_ro; }
-      public set
-        {
-          ((Trf.PersonaStore) this.store)._set_postal_addresses (this, value);
-        }
+      set { this.change_postal_addresses.begin (value); }
+    }
+
+  /**
+   * {@inheritDoc}
+   *
+   * @since UNRELEASED
+   */
+  public async void change_postal_addresses (
+      Set<PostalAddressFieldDetails> postal_addresses) throws PropertyError
+    {
+      yield ((Trf.PersonaStore) this.store)._set_postal_addresses (this,
+          postal_addresses);
     }
 
   private HashMap<string, HashMap<string, string>> _tracker_ids_ims =
@@ -764,6 +774,8 @@ public class Trf.Persona : Folks.Persona,
 
       this._postal_addresses = postal_addresses;
       this._postal_addresses_ro = this._postal_addresses.read_only_view;
+
+      this.notify_property ("postal-addresses");
     }
 
  private void _update_local_ids ()

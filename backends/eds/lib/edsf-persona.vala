@@ -192,10 +192,19 @@ public class Edsf.Persona : Folks.Persona,
   public Set<PostalAddressFieldDetails> postal_addresses
     {
       get { return this._postal_addresses_ro; }
-      set
-        {
-          ((Edsf.PersonaStore) this.store)._set_postal_addresses (this, value);
-        }
+      set { this.change_postal_addresses.begin (value); }
+    }
+
+  /**
+   * {@inheritDoc}
+   *
+   * @since UNRELEASED
+   */
+  public async void change_postal_addresses (
+      Set<PostalAddressFieldDetails> postal_addresses) throws PropertyError
+    {
+      yield ((Edsf.PersonaStore) this.store)._set_postal_addresses (this,
+          postal_addresses);
     }
 
   /**

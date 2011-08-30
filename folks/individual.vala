@@ -491,15 +491,11 @@ public class Folks.Individual : Object,
   /**
    * {@inheritDoc}
    */
+  [CCode (notify = false)]
   public Set<PostalAddressFieldDetails> postal_addresses
     {
       get { return this._postal_addresses_ro; }
-      private set
-        {
-          this._postal_addresses.clear ();
-          foreach (PostalAddressFieldDetails pafd in value)
-            this._postal_addresses.add (pafd);
-        }
+      set { this.change_postal_addresses.begin (value); } /* not writeable */
     }
 
   /**
