@@ -26,6 +26,7 @@ cleanup ()
 {
     eds_stop
     dbus_stop
+    test -d ../data/gconf.d && rm -rf ../data/gconf.d
 }
 
 trap cleanup INT HUP TERM
