@@ -324,9 +324,9 @@ public class Trf.Persona : Folks.Persona,
     {
       get
         {
-          if (this._local_ids.contains (this.uid) == false)
+          if (this._local_ids.contains (this.iid) == false)
             {
-              this._local_ids.add (this.uid);
+              this._local_ids.add (this.iid);
             }
           return this._local_ids_ro;
         }
