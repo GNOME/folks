@@ -25,7 +25,8 @@ enum LinkingMethod
 {
   IM_ADDRESSES,
   LOCAL_IDS,
-  WEB_SERVICE_ADDRESSES
+  WEB_SERVICE_ADDRESSES,
+  LOCAL_IDS_DIFF_STORES
 }
 
 
@@ -33,6 +34,7 @@ public class LinkPersonasTests : Folks.TestCase
 {
   private GLib.MainLoop _main_loop;
   private EdsTest.Backend _eds_backend;
+  private EdsTest.Backend _eds_backend_other;
   private IndividualAggregator _aggregator;
   private string _persona_fullname_1;
   private string _persona_fullname_2;
@@ -55,6 +57,8 @@ public class LinkPersonasTests : Folks.TestCase
       base ("LinkPersonasTests");
 
       this._eds_backend = new EdsTest.Backend ();
+      this._eds_backend_other = new EdsTest.Backend ();
+      this._eds_backend_other.address_book_uri = "local://other";
 
       this.add_test ("test linking personas via IM addresses",
           this.test_linking_personas_via_im_addresses);
@@ -62,6 +66,8 @@ public class LinkPersonasTests : Folks.TestCase
           this.test_linking_personas_via_local_ids);
       this.add_test ("test linking personas via web service addresses",
           this.test_linking_personas_via_web_service_addresses);
+      this.add_test ("test linking via local IDs using different PersonaStores",
+          this.test_linking_via_local_ids_diff_stores);
     }
 
   public override void set_up ()
@@ -80,11 +86,13 @@ public class LinkPersonasTests : Folks.TestCase
         }
 
       this._eds_backend.set_up ();
+      this._eds_backend_other.set_up ();
     }
 
   public override void tear_down ()
     {
       this._eds_backend.tear_down ();
+      this._eds_backend_other.tear_down ();
 
       try
         {
@@ -111,6 +119,12 @@ public class LinkPersonasTests : Folks.TestCase
   public void test_linking_personas_via_web_service_addresses ()
     {
       this._linking_method = LinkingMethod.WEB_SERVICE_ADDRESSES;
+      this._test_linking_personas ();
+    }
+
+  public void test_linking_via_local_ids_diff_stores ()
+    {
+      this._linking_method = LinkingMethod.LOCAL_IDS_DIFF_STORES;
       this._test_linking_personas ();
     }
 
@@ -166,21 +180,36 @@ public class LinkPersonasTests : Folks.TestCase
         {
           yield this._aggregator.prepare ();
 
-          PersonaStore pstore = null;
-          foreach (var backend in store.enabled_backends.values)
-            {
-              pstore = backend.persona_stores.get ("local://test");
-              if (pstore != null)
-                break;
-            }
+          var pstore = this._get_store (store, "local://test");
+
           assert (pstore != null);
 
-          yield _add_personas (pstore);
+          if (this._linking_method == LinkingMethod.LOCAL_IDS_DIFF_STORES)
+            {
+              var pstore2 = this._get_store (store,
+                  this._eds_backend_other.address_book_uri);
+              assert (pstore2 != null);
+              yield this._add_personas (pstore, pstore2);
+            }
+          else
+            yield this._add_personas (pstore, pstore);
         }
       catch (GLib.Error e)
         {
           GLib.warning ("Error when calling prepare: %s\n", e.message);
         }
+    }
+
+  private PersonaStore? _get_store (BackendStore store, string store_id)
+    {
+      PersonaStore? pstore = null;
+      foreach (var backend in store.enabled_backends.values)
+        {
+          pstore = backend.persona_stores.get (store_id);
+          if (pstore != null)
+            break;
+        }
+      return pstore;
     }
 
   /* Here is how this test is expected to work:
@@ -190,8 +219,11 @@ public class LinkPersonasTests : Folks.TestCase
    *   from those individuals
    * - we wait for a new Individual which contains the linkable
    *   attributes of these 2 personas
+   *
+   * @param pstore1 the {@link PersonaStore} in which to add the 1st Persona
+   * @param pstore2 the {@link PersonaStore} in which to add the 1st Persona
    */
-  private async void _add_personas (PersonaStore pstore)
+  private async void _add_personas (PersonaStore pstore1, PersonaStore pstore2)
     {
       HashTable<string, Value?> details1 = new HashTable<string, Value?>
           (str_hash, str_equal);
@@ -260,10 +292,10 @@ public class LinkPersonasTests : Folks.TestCase
       try
         {
           yield this._aggregator.add_persona_from_details (null,
-              pstore, details1);
+              pstore1, details1);
 
           yield this._aggregator.add_persona_from_details (null,
-              pstore, details2);
+              pstore2, details2);
         }
       catch (Folks.IndividualAggregatorError e)
         {
