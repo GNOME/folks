@@ -22,16 +22,20 @@ using Gee;
 using GLib;
 
 /**
- * This interface represents the list of IDs corresponding
- * to {@link Persona}s from backends with write support so
- * that they can be linked.
+ * This interface represents the list of {@link Persona.iid}s
+ * corresponding to {@link Persona}s from backends with write
+ * support so that they can be linked.
+ *
+ * This is necessary so that personas from the same backend
+ * can be linked together even if they have no other linkeable
+ * properties set.
  *
  * @since 0.5.0
  */
 public interface Folks.LocalIdDetails : Object
 {
   /**
-   * The IDs corresponding to contacts in a
+   * The IIDs corresponding to {@link Persona}s in a
    * backend that we fully trust.
    *
    * @since 0.5.1
