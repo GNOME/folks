@@ -223,22 +223,25 @@ public class Folks.PotentialMatch : Object
   /**
    * Number of equal IM addresses between two individuals.
    *
+   * This compares the addresses without comparing their associated protocols.
+   *
    * @since 0.5.0
    */
   public void _inspect_im_addresses ()
     {
-      foreach (var proto in this._individual_a.im_addresses.get_keys ())
-        {
-          var addrs_a = this._individual_a.im_addresses.get (proto);
-          var addrs_b = this._individual_b.im_addresses.get (proto);
+      var addrs = new HashSet<string> ();
 
-          foreach (var im_a in addrs_a)
+      foreach (var im_a in this._individual_a.im_addresses.get_values ())
+        {
+          addrs.add (im_a.value);
+        }
+
+      foreach (var im_b in this._individual_b.im_addresses.get_values ())
+        {
+          if (addrs.contains (im_b.value) == true)
             {
-              if (addrs_b.contains (im_a))
-                {
-                  this._result = MatchResult.HIGH;
-                  return;
-                }
+              this._result = MatchResult.HIGH;
+              return;
             }
         }
     }

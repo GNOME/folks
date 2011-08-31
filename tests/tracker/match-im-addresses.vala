@@ -126,8 +126,7 @@ public class MatchIMAddressesTests : Folks.TestCase
           this._try_potential_match ();
         }
 
-      /* We can't assert (removed.size == 0) because these Personas will get
-       * auto-linked (and thus one Individual will get removed */
+      assert (removed.size == 0);
     }
 
   private void _try_potential_match ()
@@ -193,7 +192,7 @@ public class MatchIMAddressesTests : Folks.TestCase
       im_addrs = new HashMultiMap<string, ImFieldDetails> (null, null,
           (GLib.HashFunc) ImFieldDetails.hash,
           (GLib.EqualFunc) ImFieldDetails.equal);
-      im_addrs.set ("jabber", new ImFieldDetails (this._im_addr_1));
+      im_addrs.set ("jabber", new ImFieldDetails (this._im_addr_2));
       val.set_object (im_addrs);
       details2.insert (
           Folks.PersonaStore.detail_key (PersonaDetail.IM_ADDRESSES),
