@@ -32,13 +32,17 @@ errordomain EdsTest.BackendSetupError
 
 public class EdsTest.Backend
 {
-  public const string address_book_uri = "local://test";
   private string _addressbook_name;
   private E.BookClient _addressbook;
   private GLib.List<string> _e_contacts;
   private GLib.List<Gee.HashMap<string, Value?>> _contacts;
   E.SourceGroup _source_group;
   E.Source _source;
+
+  public string address_book_uri
+    {
+      get; set; default = "local://test";
+    }
 
   public Backend ()
     {

@@ -71,7 +71,7 @@ public class LinkPersonasTests : Folks.TestCase
       try
         {
           GConf.Value val = new GConf.Value (GConf.ValueType.STRING);
-          val.set_string ("eds:%s".printf (EdsTest.Backend.address_book_uri));
+          val.set_string ("eds:%s".printf (this._eds_backend.address_book_uri));
           this._gconf_client.set (this._folks_config_key, val);
         }
       catch (GLib.Error e)
