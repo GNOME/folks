@@ -44,7 +44,7 @@ public class EdsTest.Backend
     {
       this._contacts = new GLib.List<Gee.HashMap<string, Value?>> ();
       this._e_contacts = new GLib.List<string> ();
-   }
+    }
 
   public void add_contact (owned Gee.HashMap<string, Value?> c)
     {
