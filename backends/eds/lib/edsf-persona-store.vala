@@ -44,6 +44,10 @@ public class Edsf.PersonaStore : Folks.PersonaStore
   private string _query_str;
   private bool _groups_supported = false;
 
+  /* The timeout after which we consider a property change to have failed if we
+   * haven't received a property change notification for it. */
+  private const uint _property_change_timeout = 30; /* seconds */
+
   private const string[] _always_writeable_properties =
     {
       "web-service-addresses",
@@ -690,6 +694,81 @@ public class Edsf.PersonaStore : Folks.PersonaStore
         }
     }
 
+  /* Commit modified properties to the address book. This assumes you've already
+   * modified the persona's contact appropriately. It guarantees to only return
+   * once the modified property has been notified. */
+  private async void _commit_modified_property (Edsf.Persona persona,
+      string property_name) throws PropertyError
+    {
+      var contact = persona.contact;
+
+      ulong signal_id = 0;
+      uint timeout_id = 0;
+
+      try
+        {
+          var received_notification = false;
+          var has_yielded = false;
+
+          signal_id = persona.notify[property_name].connect ((obj, pspec) =>
+            {
+              /* Success! Return to _commit_modified_property(). */
+              received_notification = true;
+
+              if (has_yielded == true)
+                {
+                  this._commit_modified_property.callback ();
+                }
+            });
+
+          /* Commit the modification. */
+          yield this._addressbook.modify_contact (contact, null);
+
+          timeout_id = Timeout.add_seconds (this._property_change_timeout, () =>
+            {
+              /* Failure! Return to _commit_modified_property() without setting
+               * received_notification. */
+              if (has_yielded == true)
+                {
+                  this._commit_modified_property.callback ();
+                }
+
+              return false;
+            }, Priority.LOW);
+
+          /* Wait until we get a notification that the property's changed. We
+           * basically hold off on completing the GAsyncResult until the
+           * signal handler for notification of the property change (above).
+           * We only do this if we haven't already received a property change
+           * notification. We don't need locking around these variables because
+           * they can only be modified from the main loop. */
+          if (received_notification == false)
+            {
+              has_yielded = true;
+              yield;
+            }
+
+          /* If we hit the timeout instead of the property notification, throw
+           * an error. */
+          if (received_notification == false)
+            {
+              throw new PropertyError.UNKNOWN_ERROR (
+                  _("Changing the ‘%s’ property failed due to reaching the timeout."),
+                  property_name);
+            }
+        }
+      catch (GLib.Error e)
+        {
+          throw this.e_client_error_to_property_error (property_name, e);
+        }
+      finally
+        {
+          /* Remove the callbacks. */
+          persona.disconnect (signal_id);
+          GLib.Source.remove (timeout_id);
+        }
+    }
+
   internal async void _set_avatar (Edsf.Persona persona, LoadableIcon? avatar)
       throws PropertyError
     {
@@ -700,20 +779,8 @@ public class Edsf.PersonaStore : Folks.PersonaStore
           return;
         }
 
-      try
-        {
-          E.Contact contact = ((Edsf.Persona) persona).contact;
-          yield this._set_contact_avatar (contact, avatar);
-          yield this._addressbook.modify_contact (contact, null);
-        }
-      catch (PropertyError e1)
-        {
-          throw e1;
-        }
-      catch (GLib.Error e2)
-        {
-          throw this.e_client_error_to_property_error ("avatar", e2);
-        }
+      yield this._set_contact_avatar (persona.contact, avatar);
+      yield this._commit_modified_property (persona, "avatar");
     }
 
   internal async void _set_web_service_addresses (Edsf.Persona persona,
@@ -724,18 +791,9 @@ public class Edsf.PersonaStore : Folks.PersonaStore
             web_service_addresses))
         return;
 
-      try
-        {
-          E.Contact contact = ((Edsf.Persona) persona).contact;
-          yield this._set_contact_web_service_addresses (contact,
-            web_service_addresses);
-          yield this._addressbook.modify_contact (contact, null);
-        }
-      catch (GLib.Error e)
-        {
-          throw this.e_client_error_to_property_error ("web-service-addresses",
-              e);
-        }
+      yield this._set_contact_web_service_addresses (persona.contact,
+          web_service_addresses);
+      yield this._commit_modified_property (persona, "web-service-addresses");
     }
 
   private async void _set_contact_web_service_addresses (E.Contact contact,
@@ -767,16 +825,8 @@ public class Edsf.PersonaStore : Folks.PersonaStore
       if (Utils.set_afd_equal (persona.urls, urls))
         return;
 
-      try
-        {
-          E.Contact contact = ((Edsf.Persona) persona).contact;
-          yield this._set_contact_urls (contact, urls);
-          yield this._addressbook.modify_contact (contact, null);
-        }
-      catch (GLib.Error e)
-        {
-          throw this.e_client_error_to_property_error ("urls", e);
-        }
+      yield this._set_contact_urls (persona.contact, urls);
+      yield this._commit_modified_property (persona, "urls");
     }
 
   private async void _set_contact_urls (E.Contact contact,
@@ -850,16 +900,8 @@ public class Edsf.PersonaStore : Folks.PersonaStore
   internal async void _set_local_ids (Edsf.Persona persona,
       Set<string> local_ids) throws PropertyError
     {
-      try
-        {
-          E.Contact contact = ((Edsf.Persona) persona).contact;
-          yield this._set_contact_local_ids (contact, local_ids);
-          yield this._addressbook.modify_contact (contact, null);
-        }
-      catch (GLib.Error e)
-        {
-          throw this.e_client_error_to_property_error ("local-ids", e);
-        }
+      yield this._set_contact_local_ids (persona.contact, local_ids);
+      yield this._commit_modified_property (persona, "local-ids");
     }
 
   private async void _set_contact_local_ids (E.Contact contact,
@@ -931,49 +973,24 @@ public class Edsf.PersonaStore : Folks.PersonaStore
   internal async void _set_emails (Edsf.Persona persona,
       Set<EmailFieldDetails> emails) throws PropertyError
     {
-      try
-        {
-          E.Contact contact = ((Edsf.Persona) persona).contact;
-          yield this._set_contact_attributes_string (contact, emails, "EMAIL",
-              E.ContactField.EMAIL);
-          yield this._addressbook.modify_contact (contact, null);
-        }
-      catch (GLib.Error e)
-        {
-          throw this.e_client_error_to_property_error ("email-addresses", e);
-        }
+      yield this._set_contact_attributes_string (persona.contact, emails,
+          "EMAIL", E.ContactField.EMAIL);
+      yield this._commit_modified_property (persona, "email-addresses");
     }
 
   internal async void _set_phones (Edsf.Persona persona,
       Set<PhoneFieldDetails> phones) throws PropertyError
     {
-      try
-        {
-          E.Contact contact = ((Edsf.Persona) persona).contact;
-          yield this._set_contact_attributes_string (contact, phones, "TEL",
-              E.ContactField.TEL);
-          yield this._addressbook.modify_contact (contact, null);
-        }
-      catch (GLib.Error e)
-        {
-          throw this.e_client_error_to_property_error ("phone-numbers", e);
-        }
+      yield this._set_contact_attributes_string (persona.contact, phones, "TEL",
+          E.ContactField.TEL);
+      yield this._commit_modified_property (persona, "phone-numbers");
     }
 
   internal async void _set_postal_addresses (Edsf.Persona persona,
       Set<PostalAddressFieldDetails> postal_fds) throws PropertyError
     {
-      try
-        {
-          E.Contact contact = ((Edsf.Persona) persona).contact;
-          yield this._set_contact_postal_addresses (contact,
-              postal_fds);
-          yield this._addressbook.modify_contact (contact, null);
-        }
-      catch (GLib.Error e)
-        {
-          throw this.e_client_error_to_property_error ("postal-addresses", e);
-        }
+      yield this._set_contact_postal_addresses (persona.contact, postal_fds);
+      yield this._commit_modified_property (persona, "postal-addresses");
     }
 
   private async void _set_contact_postal_addresses (E.Contact contact,
@@ -1036,16 +1053,8 @@ public class Edsf.PersonaStore : Folks.PersonaStore
       if (persona.full_name == full_name)
         return;
 
-      try
-        {
-          E.Contact contact = ((Edsf.Persona) persona).contact;
-          contact.set (E.Contact.field_id ("full_name"), full_name);
-          yield this._addressbook.modify_contact (contact, null);
-        }
-      catch (GLib.Error e)
-        {
-          throw this.e_client_error_to_property_error ("full-name", e);
-        }
+      persona.contact.set (E.Contact.field_id ("full_name"), full_name);
+      yield this._commit_modified_property (persona, "full-name");
     }
 
   internal async void _set_nickname (Edsf.Persona persona, string nickname)
@@ -1054,31 +1063,15 @@ public class Edsf.PersonaStore : Folks.PersonaStore
       if (persona.nickname == nickname)
         return;
 
-      try
-        {
-          E.Contact contact = ((Edsf.Persona) persona).contact;
-          contact.set (E.Contact.field_id ("nickname"), nickname);
-          yield this._addressbook.modify_contact (contact, null);
-        }
-      catch (GLib.Error e)
-        {
-          throw this.e_client_error_to_property_error ("nickname", e);
-        }
+      persona.contact.set (E.Contact.field_id ("nickname"), nickname);
+      yield this._commit_modified_property (persona, "nickname");
     }
 
   internal async void _set_notes (Edsf.Persona persona,
       Set<NoteFieldDetails> notes) throws PropertyError
     {
-      try
-        {
-          E.Contact contact = ((Edsf.Persona) persona).contact;
-          yield this._set_contact_notes (contact, notes);
-          yield this._addressbook.modify_contact (contact, null);
-        }
-      catch (GLib.Error e)
-        {
-          throw this.e_client_error_to_property_error ("notes", e);
-        }
+      yield this._set_contact_notes (persona.contact, notes);
+      yield this._commit_modified_property (persona, "notes");
     }
 
   private async void _set_contact_notes (E.Contact contact,
@@ -1104,16 +1097,8 @@ public class Edsf.PersonaStore : Folks.PersonaStore
           persona.structured_name.equal (sname))
         return;
 
-      try
-        {
-          E.Contact contact = ((Edsf.Persona) persona).contact;
-          yield this._set_contact_name (contact, sname);
-          yield this._addressbook.modify_contact (contact, null);
-        }
-      catch (GLib.Error e)
-        {
-          throw this.e_client_error_to_property_error ("structured-name", e);
-        }
+      yield this._set_contact_name (persona.contact, sname);
+      yield this._commit_modified_property (persona, "structured-name");
     }
 
   private async void _set_contact_name (E.Contact contact,
@@ -1139,16 +1124,8 @@ public class Edsf.PersonaStore : Folks.PersonaStore
       if (Utils.multi_map_str_afd_equal (persona.im_addresses, im_fds))
         return;
 
-      try
-        {
-          E.Contact contact = ((Edsf.Persona) persona).contact;
-          yield this._set_contact_im_fds (contact, im_fds);
-          yield this._addressbook.modify_contact (contact, null);
-        }
-      catch (GLib.Error e)
-        {
-          throw this.e_client_error_to_property_error ("im-addresses", e);
-        }
+      yield this._set_contact_im_fds (persona.contact, im_fds);
+      yield this._commit_modified_property (persona, "im-addresses");
     }
 
   /* TODO: this could be smarter & more efficient. */
@@ -1201,16 +1178,8 @@ public class Edsf.PersonaStore : Folks.PersonaStore
           return;
         }
 
-      try
-        {
-          E.Contact contact = ((Edsf.Persona) persona).contact;
-          yield this._set_contact_groups (contact, groups);
-          yield this._addressbook.modify_contact (contact, null);
-        }
-      catch (GLib.Error e)
-        {
-          throw this.e_client_error_to_property_error ("groups", e);
-        }
+      yield this._set_contact_groups (persona.contact, groups);
+      yield this._commit_modified_property (persona, "groups");
     }
 
   private async void _set_contact_groups (E.Contact contact, Set<string> groups)
@@ -1233,16 +1202,8 @@ public class Edsf.PersonaStore : Folks.PersonaStore
   internal async void _set_gender (Edsf.Persona persona,
       Gender gender) throws PropertyError
     {
-      try
-        {
-          E.Contact contact = ((Edsf.Persona) persona).contact;
-          yield this._set_contact_gender (contact, gender);
-          yield this._addressbook.modify_contact (contact, null);
-        }
-      catch (GLib.Error e)
-        {
-          throw this.e_client_error_to_property_error ("gender", e);
-        }
+      yield this._set_contact_gender (persona.contact, gender);
+      yield this._commit_modified_property (persona, "gender");
     }
 
   private async void _set_contact_gender (E.Contact contact,
