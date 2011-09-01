@@ -159,6 +159,8 @@ if test x$enable_tracker_backend = xyes; then
                                              [tracker-sparql-0.10 >= $TRACKER_SPARQL_REQUIRED],
 					     [AM_CONDITIONAL(HAVE_NEW_TRACKER, [ test 0 == 1 ])])]
 			  )
+else
+	AM_CONDITIONAL(HAVE_NEW_TRACKER, [ test 0 == 1 ])
 fi
 
 if test x$enable_eds_backend = xyes; then
