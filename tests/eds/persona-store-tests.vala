@@ -25,7 +25,6 @@ using Gee;
 public class PersonaStoreTests : Folks.TestCase
 {
   private EdsTest.Backend _eds_backend;
-  private HashSet<string> group_flags_received;
 
   public PersonaStoreTests ()
     {
@@ -36,7 +35,6 @@ public class PersonaStoreTests : Folks.TestCase
 
   public override void set_up ()
     {
-      this.group_flags_received = new HashSet<string> (str_hash, str_equal);
       this._eds_backend.set_up ();
     }
 
