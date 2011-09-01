@@ -71,6 +71,7 @@ noinst_PROGRAMS = \
 	set-properties-race \
 	set-birthday \
 	set-roles \
+	change-primary-store \
 	$(NULL)
 
 RUN_WITH_PRIVATE_BUS = $(top_srcdir)/tests/tools/with-session-bus-eds.sh
@@ -201,6 +202,10 @@ set_roles_SOURCES = \
 	set-roles.vala \
 	$(NULL)
 
+change_primary_store_SOURCES = \
+	change-primary-store.vala \
+	$(NULL)
+
 CLEANFILES = \
         *.pid \
         *.address \
@@ -237,6 +242,7 @@ MAINTAINERCLEANFILES = \
 	set_urls_vala.stamp \
 	set_birthday_vala.stamp \
 	set_roles_vala.stamp \
+	change_primary_store_vala.stamp \
         $(NULL)
 
 EXTRA_DIST = \
