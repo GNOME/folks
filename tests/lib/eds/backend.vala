@@ -99,11 +99,11 @@ public class EdsTest.Backend
     }
 
   /* Create a temporary addressbook */
-  public void set_up ()
+  public void set_up (bool source_is_default = false)
     {
       try
         {
-          this._prepare_source ();
+          this._prepare_source (source_is_default);
           this._addressbook = new BookClient (this._source);
           this._addressbook.open_sync (false, null);
           this._addressbook_name =
@@ -117,12 +117,29 @@ public class EdsTest.Backend
         }
     }
 
-  private void _prepare_source ()
+  public void set_as_default ()
+    {
+      try
+        {
+          this._addressbook.set_default ();
+        }
+      catch (GLib.Error e)
+        {
+          GLib.warning ("Unable to set address book as default: %s",
+              e.message);
+        }
+    }
+
+  private void _prepare_source (bool is_default)
     {
       var base_uri = "local:";
       this._source_group = new E.SourceGroup ("Test", base_uri);
 
       this._source = new E.Source ("Test", this.address_book_uri);
+
+      if (is_default)
+        this._source.set_property ("default", "true");
+
       if (this._source_group.add_source (this._source, -1))
         {
           try
