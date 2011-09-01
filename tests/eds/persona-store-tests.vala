@@ -24,20 +24,20 @@ using Gee;
 
 public class PersonaStoreTests : Folks.TestCase
 {
-  private EdsTest.Backend eds_backend;
+  private EdsTest.Backend _eds_backend;
   private HashSet<string> group_flags_received;
 
   public PersonaStoreTests ()
     {
       base ("PersonaStoreTests");
-      this.eds_backend = new EdsTest.Backend ();
+      this._eds_backend = new EdsTest.Backend ();
       this.add_test ("persona store tests", this.test_persona_store);
     }
 
   public override void set_up ()
     {
       this.group_flags_received = new HashSet<string> (str_hash, str_equal);
-      this.eds_backend.set_up ();
+      this._eds_backend.set_up ();
     }
 
   public override void tear_down ()
@@ -51,7 +51,7 @@ public class PersonaStoreTests : Folks.TestCase
       var main_loop = new GLib.MainLoop (null, false);
       Value? v;
 
-      this.eds_backend.reset ();
+      this._eds_backend.reset ();
 
       v = Value (typeof (string));
       v.set_string ("bernie h. innocenti");
@@ -59,7 +59,7 @@ public class PersonaStoreTests : Folks.TestCase
       v = Value (typeof (string));
       v.set_string ("bernie@example.org");
       c1.set (Edsf.Persona.email_fields[0], (owned) v);
-      this.eds_backend.add_contact (c1);
+      this._eds_backend.add_contact (c1);
 
       v = Value (typeof (string));
       v.set_string ("richard m. stallman");
@@ -67,7 +67,7 @@ public class PersonaStoreTests : Folks.TestCase
       v = Value (typeof (string));
       v.set_string ("rms@example.org");
       c2.set (Edsf.Persona.email_fields[0], (owned) v);
-      this.eds_backend.add_contact (c2);
+      this._eds_backend.add_contact (c2);
 
       var backend_store = BackendStore.dup ();
       backend_store.prepare.begin ((o, r) =>
@@ -101,7 +101,7 @@ public class PersonaStoreTests : Folks.TestCase
 
       main_loop.run ();
 
-      this.eds_backend.tear_down ();
+      this._eds_backend.tear_down ();
     }
 
   private void set_up_persona_store (Folks.PersonaStore store)
