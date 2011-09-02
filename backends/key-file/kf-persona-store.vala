@@ -352,10 +352,24 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
        * key file */
       Persona persona = new Kf.Persona (this._key_file, persona_id, this);
       this._personas.set (persona.iid, persona);
-      if (im_addresses != null)
-        persona.im_addresses = im_addresses;
-      if (web_service_addresses != null)
-        persona.web_service_addresses = web_service_addresses;
+
+      try
+        {
+          if (im_addresses != null)
+            {
+              yield persona.change_im_addresses (im_addresses);
+            }
+          if (web_service_addresses != null)
+            {
+              yield persona.change_web_service_addresses (
+                  web_service_addresses);
+            }
+        }
+      catch (PropertyError e)
+        {
+          /* This should never happen. */
+          throw new PersonaStoreError.CREATE_FAILED (e.message);
+        }
 
       /* FIXME: GroupDetails.ChangeReason is not the right enum to use here */
       var personas = new HashSet<Persona> ();
