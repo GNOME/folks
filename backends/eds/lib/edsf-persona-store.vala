@@ -505,6 +505,9 @@ public class Edsf.PersonaStore : Folks.PersonaStore
             }
           catch (GLib.Error e1)
             {
+              /* Remove the persona store on error */
+              this.removed ();
+
               if (e1.domain == BookClient.error_quark ())
                 {
                   switch ((BookClientError) e1.code)
@@ -572,6 +575,9 @@ public class Edsf.PersonaStore : Folks.PersonaStore
 
           if (this._addressbook.is_opened () == false)
             {
+              /* Remove the persona store on error */
+              this.removed ();
+
               throw new PersonaStoreError.INVALID_ARGUMENT (
                   /* Translators: the parameter is an address book URI. */
                   _("Couldn't open address book ‘%s’."), this.id);
@@ -596,6 +602,9 @@ public class Edsf.PersonaStore : Folks.PersonaStore
             }
           catch (GLib.Error e2)
             {
+              /* Remove the persona store on error */
+              this.removed ();
+
               throw new PersonaStoreError.INVALID_ARGUMENT (
                   /* Translators: the parameteter is an error message. */
                   _("Couldn't get address book capabilities: %s"), e2.message);
@@ -623,6 +632,9 @@ public class Edsf.PersonaStore : Folks.PersonaStore
             }
           catch (GLib.Error e3)
             {
+              /* Remove the persona store on error */
+              this.removed ();
+
               if (e3.domain == BookClient.error_quark ())
                 {
                   switch ((BookClientError) e3.code)

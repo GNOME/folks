@@ -1076,18 +1076,21 @@ public class Trf.PersonaStore : Folks.PersonaStore
                 {
                   warning ("Could not connect to D-Bus service: %s",
                            e1.message);
+                  this.removed ();
                   throw new PersonaStoreError.INVALID_ARGUMENT (e1.message);
                 }
               catch (Tracker.Sparql.Error e2)
                 {
                   warning ("Error fetching SPARQL connection handler: %s",
                            e2.message);
+                  this.removed ();
                   throw new PersonaStoreError.INVALID_ARGUMENT (e2.message);
                 }
               catch (GLib.DBusError e3)
                 {
                   warning ("Could not connect to D-Bus service: %s",
                            e3.message);
+                  this.removed ();
                   throw new PersonaStoreError.INVALID_ARGUMENT (e3.message);
                 }
             }
