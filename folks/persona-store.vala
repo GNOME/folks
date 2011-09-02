@@ -463,6 +463,19 @@ public abstract class Folks.PersonaStore : Object
    */
   public abstract bool is_prepared { get; default = false; }
 
+  /**
+   * Whether the store has reached a quiescent state. This will happen at some
+   * point after {@link PersonaStore.prepare} has successfully completed for the
+   * store. A store is in a quiescent state when all the {@link Persona}s that
+   * it originally knows about have been loaded.
+   *
+   * It's guaranteed that this property's value will only ever change after
+   * {@link IndividualAggregator.is_prepared} has changed to `true`.
+   *
+   * @since UNRELEASED
+   */
+  public abstract bool is_quiescent { get; default = false; }
+
    /**
    * Whether the PersonaStore is writeable.
    *

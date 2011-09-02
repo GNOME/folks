@@ -44,6 +44,21 @@ public abstract class Folks.Backend : Object
   public abstract bool is_prepared { get; default = false; }
 
   /**
+   * Whether the backend has reached a quiescent state. This will happen at some
+   * point after {@link Backend.prepare} has successfully completed for the
+   * backend. A backend is in a quiescent state when all the
+   * {@link PersonaStore}s that it originally knows about have been loaded.
+   *
+   * It's guaranteed that this property's value will only ever change after
+   * {@link Backend.is_prepared} has changed to `true`.
+   *
+   * When {@link Backend.unprepare} is called, this will be reset to `false`.
+   *
+   * @since UNRELEASED
+   */
+  public abstract bool is_quiescent { get; default = false; }
+
+  /**
    * A unique name for the backend.
    *
    * This will be used to identify the backend, and should also be used as the

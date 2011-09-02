@@ -38,6 +38,7 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
   private GLib.KeyFile _key_file;
   private unowned Cancellable _save_key_file_cancellable = null;
   private bool _is_prepared = false;
+  private bool _is_quiescent = false;
 
   private const string[] _always_writeable_properties =
     {
@@ -109,6 +110,18 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
   public override bool is_prepared
     {
       get { return this._is_prepared; }
+    }
+
+  /**
+   * Whether this PersonaStore has reached a quiescent state.
+   *
+   * See {@link Folks.PersonaStore.is_quiescent}.
+   *
+   * @since UNRELEASED
+   */
+  public override bool is_quiescent
+    {
+      get { return this._is_quiescent; }
     }
 
   /**
@@ -265,6 +278,10 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
 
               this._is_prepared = true;
               this.notify_property ("is-prepared");
+
+              /* We've finished loading all the personas we know about */
+              this._is_quiescent = true;
+              this.notify_property ("is-quiescent");
             }
         }
     }

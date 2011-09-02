@@ -37,6 +37,7 @@ public class Swf.PersonaStore : Folks.PersonaStore
   private HashMap<string, Persona> _personas;
   private Map<string, Persona> _personas_ro;
   private bool _is_prepared = false;
+  private bool _is_quiescent = false;
   private ClientService _service;
   private ClientContactView _contact_view;
 
@@ -124,6 +125,19 @@ public class Swf.PersonaStore : Folks.PersonaStore
     {
       get { return this._always_writeable_properties; }
     }
+
+  /*
+   * Whether this PersonaStore has reached a quiescent state.
+   *
+   * See {@link Folks.PersonaStore.is_quiescent}.
+   *
+   * @since UNRELEASED
+   */
+  public override bool is_quiescent
+    {
+      get { return this._is_quiescent; }
+    }
+
   /**
    * The {@link Persona}s exposed by this PersonaStore.
    *
@@ -249,6 +263,15 @@ public class Swf.PersonaStore : Folks.PersonaStore
       if (added_personas.size > 0)
         {
           this._emit_personas_changed (added_personas, null);
+        }
+
+      /* If this is the first contacts-added notification, assume we've reached
+       * a quiescent state. We can't do any better, since libsocialweb doesn't
+       * expose an is-quiescent property (or similar). */
+      if (this._is_quiescent == false)
+        {
+          this._is_quiescent = true;
+          this.notify_property ("is-quiescent");
         }
     }
 

@@ -166,6 +166,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
   private HashMap<string, Persona> _personas;
   private Map<string, Persona> _personas_ro;
   private bool _is_prepared = false;
+  private bool _is_quiescent = false;
   private static const int _default_timeout = 100;
   private Resources _resources_object;
   private Tracker.Sparql.Connection _connection;
@@ -381,6 +382,18 @@ public class Trf.PersonaStore : Folks.PersonaStore
   public override string[] always_writeable_properties
     {
       get { return this._always_writeable_properties; }
+    }
+
+  /*
+   * Whether this PersonaStore has reached a quiescent state.
+   *
+   * See {@link Folks.PersonaStore.is_quiescent}.
+   *
+   * @since UNRELEASED
+   */
+  public override bool is_quiescent
+    {
+      get { return this._is_quiescent; }
     }
 
   /**
@@ -1071,6 +1084,11 @@ public class Trf.PersonaStore : Folks.PersonaStore
 
                   this._is_prepared = true;
                   this.notify_property ("is-prepared");
+
+                  /* By this time (due to having done the INITIAL_QUERY above)
+                   * we have already reached a quiescent state. */
+                  this._is_quiescent = true;
+                  this.notify_property ("is-quiescent");
                 }
               catch (GLib.IOError e1)
                 {

@@ -37,6 +37,7 @@ public class Folks.Backends.Eds.Backend : Folks.Backend
   private static const string _use_address_books =
       "FOLKS_BACKEND_EDS_USE_ADDRESS_BOOKS";
   private bool _is_prepared = false;
+  private bool _is_quiescent = false;
   private HashMap<string, PersonaStore> _persona_stores;
   private Map<string, PersonaStore> _persona_stores_ro;
   private E.SourceList _ab_sources;
@@ -76,6 +77,18 @@ public class Folks.Backends.Eds.Backend : Folks.Backend
     }
 
   /**
+   * Whether this Backend has reached a quiescent state.
+   *
+   * See {@link Folks.Backend.is_quiescent}.
+   *
+   * @since UNRELEASED
+   */
+  public override bool is_quiescent
+    {
+      get { return this._is_quiescent; }
+    }
+
+  /**
    * {@inheritDoc}
    */
   public override async void prepare () throws GLib.Error
@@ -93,6 +106,9 @@ public class Folks.Backends.Eds.Backend : Folks.Backend
 
               this._is_prepared = true;
               this.notify_property ("is-prepared");
+
+              this._is_quiescent = true;
+              this.notify_property ("is-quiescent");
             }
         }
     }
@@ -113,6 +129,9 @@ public class Folks.Backends.Eds.Backend : Folks.Backend
 
               this._ab_sources.changed.disconnect (this._ab_source_list_changed_cb);
               this._ab_sources = null;
+
+              this._is_quiescent = false;
+              this.notify_property ("is-quiescent");
 
               this._is_prepared = false;
               this.notify_property ("is-prepared");

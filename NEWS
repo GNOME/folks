@@ -7,6 +7,7 @@ Bugs fixed:
   persona
 * Bug 657635 — Linking personas from different (e-d-s) stores is not working
 * Bug 657510 — Add asynchronous property setter methods
+* Bug 656184 — Add is-quiescent property
 
 API changes:
 * Add PersonaStore:always-writeable-properties property
@@ -14,6 +15,8 @@ API changes:
 * Add IndividualAggregator.ensure_individual_property_writeable()
 * Add Folks.PropertyError
 * Add *Details.change_*() virtual methods
+* Add IndividualAggregator:is-quiescent, Backend:is-quiescent and
+  PersonaStore:is-quiescent
 
 Overview of changes from libfolks 0.6.0 to libfolks 0.6.1
 =========================================================

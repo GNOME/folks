@@ -37,6 +37,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
   private HashMap<string, Persona> _personas;
   private Map<string, Persona> _personas_ro;
   private bool _is_prepared = false;
+  private bool _is_quiescent = false;
   private E.BookClient _addressbook;
   private E.BookClientView _ebookview;
   private string _addressbook_uri = null;
@@ -164,6 +165,18 @@ public class Edsf.PersonaStore : Folks.PersonaStore
   public override string[] always_writeable_properties
     {
       get { return this._always_writeable_properties; }
+    }
+
+  /*
+   * Whether this PersonaStore has reached a quiescent state.
+   *
+   * See {@link Folks.PersonaStore.is_quiescent}.
+   *
+   * @since UNRELEASED
+   */
+  public override bool is_quiescent
+    {
+      get { return this._is_quiescent; }
     }
 
   /**
@@ -1267,6 +1280,14 @@ public class Edsf.PersonaStore : Folks.PersonaStore
       if (added_personas.size > 0)
         {
           this._emit_personas_changed (added_personas, null);
+        }
+
+      /* If this is the first contacts-added notification, assume we've reached
+       * a quiescent state. */
+      if (this._is_quiescent == false)
+        {
+          this._is_quiescent = true;
+          this.notify_property ("is-quiescent");
         }
     }
 

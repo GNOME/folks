@@ -92,6 +92,9 @@ public class Tpf.PersonaStore : Folks.PersonaStore
   private MaybeBool _can_group_personas = MaybeBool.UNSET;
   private MaybeBool _can_remove_personas = MaybeBool.UNSET;
   private bool _is_prepared = false;
+  private bool _is_quiescent = false;
+  private bool _got_stored_channel_members = false;
+  private bool _got_self_handle = false;
   private Debug _debug;
   private PersonaStoreCache _cache;
   private Cancellable? _load_cache_cancellable = null;
@@ -185,6 +188,29 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       get { return this._always_writeable_properties; }
     }
 
+  /*
+   * Whether this PersonaStore has reached a quiescent state.
+   *
+   * See {@link Folks.PersonaStore.is_quiescent}.
+   *
+   * @since UNRELEASED
+   */
+  public override bool is_quiescent
+    {
+      get { return this._is_quiescent; }
+    }
+
+  private void _notify_if_is_quiescent ()
+    {
+      if (this._got_stored_channel_members == true &&
+          this._got_self_handle == true &&
+          this._is_quiescent == false)
+        {
+          this._is_quiescent = true;
+          this.notify_property ("is-quiescent");
+        }
+    }
+
   /**
    * The {@link Persona}s exposed by this PersonaStore.
    *
@@ -250,6 +276,8 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       debug.print_key_value_pairs (domain, level,
           "ID", this.id,
           "Prepared?", this._is_prepared ? "yes" : "no",
+          "Has stored contact members?", this._got_stored_channel_members ? "yes" : "no",
+          "Has self handle?", this._got_self_handle ? "yes" : "no",
           "Publish TpChannel", "%p".printf (this._publish),
           "Stored TpChannel", "%p".printf (this._stored),
           "Subscribe TpChannel", "%p".printf (this._subscribe),
@@ -563,6 +591,11 @@ public class Tpf.PersonaStore : Folks.PersonaStore
                   /* If we're disconnected, advertise personas from the cache
                    * instead. */
                   yield this._load_cache ();
+
+                  /* We've reached a quiescent state. */
+                  this._got_self_handle = true;
+                  this._got_stored_channel_members = true;
+                  this._notify_if_is_quiescent ();
                 }
 
               try
@@ -761,6 +794,12 @@ public class Tpf.PersonaStore : Folks.PersonaStore
                   this._load_cache.end (r2);
                 });
             });
+
+          /* If the persona store starts offline, we've reached a quiescent
+           * state. */
+          this._got_self_handle = true;
+          this._got_stored_channel_members = true;
+          this._notify_if_is_quiescent ();
 
           return;
         }
@@ -969,7 +1008,14 @@ public class Tpf.PersonaStore : Folks.PersonaStore
         this._ignore_by_handle (this._self_contact.handle, null, null, 0);
 
       if (c.self_handle == 0)
-        return;
+        {
+          /* We can only claim to have reached a quiescent state once we've
+           * got the stored contact list and the self handle. */
+          this._got_self_handle = true;
+          this._notify_if_is_quiescent ();
+
+          return;
+        }
 
       uint[] contact_handles = { c.self_handle };
 
@@ -1002,6 +1048,9 @@ public class Tpf.PersonaStore : Folks.PersonaStore
 
               this._self_contact = contact;
               this._emit_personas_changed (personas, null);
+
+              this._got_self_handle = true;
+              this._notify_if_is_quiescent ();
             },
           this);
     }
@@ -1185,7 +1234,18 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       HashTable details)
     {
       if (added.length > 0)
-        this._channel_group_pend_incoming_adds.begin (channel, added, true);
+        {
+          this._channel_group_pend_incoming_adds.begin (channel, added, true,
+              (obj, res) =>
+            {
+              this._channel_group_pend_incoming_adds.end (res);
+
+              /* We can only claim to have reached a quiescent state once we've
+               * got the stored contact list and the self handle. */
+              this._got_stored_channel_members = true;
+              this._notify_if_is_quiescent ();
+            });
+        }
 
       for (var i = 0; i < removed.length; i++)
         {

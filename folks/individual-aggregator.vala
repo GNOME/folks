@@ -79,6 +79,18 @@ public class Folks.IndividualAggregator : Object
   private static const string _FOLKS_CONFIG_KEY =
     "/system/folks/backends/primary_store";
 
+  /* The number of persona stores and backends we're waiting to become
+   * quiescent. Once these both reach 0, we should be in a quiescent state.
+   * We have to count both of them so that we can handle the case where one
+   * backend becomes available, and its persona stores all become quiescent,
+   * long before any other backend becomes available. In this case, we want
+   * the aggregator to signal that it's reached a quiescent state only once
+   * all the other backends have also become available. */
+  private uint _non_quiescent_persona_store_count = 0;
+  /* Same for backends. */
+  private uint _non_quiescent_backend_count = 0;
+  private bool _is_quiescent = false;
+
   /**
    * Whether {@link IndividualAggregator.prepare} has successfully completed for
    * this aggregator.
@@ -88,6 +100,23 @@ public class Folks.IndividualAggregator : Object
   public bool is_prepared
     {
       get { return this._is_prepared; }
+    }
+
+  /**
+   * Whether the aggregator has reached a quiescent state. This will happen at
+   * some point after {@link IndividualAggregator.prepare} has successfully
+   * completed for the aggregator. An aggregator is in a quiescent state when
+   * all the {@link PersonaStore}s listed by its backends have reached a
+   * quiescent state.
+   *
+   * It's guaranteed that this property's value will only ever change after
+   * {@link IndividualAggregator.is_prepared} has changed to `true`.
+   *
+   * @since UNRELEASED
+   */
+  public bool is_quiescent
+    {
+      get { return this._is_quiescent; }
     }
 
   /**
@@ -265,7 +294,12 @@ public class Folks.IndividualAggregator : Object
           "Ref. count", this.ref_count.to_string (),
           "Writeable store", "%p".printf (this._writeable_store),
           "Linking enabled?", this._linking_enabled ? "yes" : "no",
-          "Prepared?", this._is_prepared ? "yes" : "no"
+          "Prepared?", this._is_prepared ? "yes" : "no",
+          "Quiescent?", this._is_quiescent
+              ? "yes"
+              : "no (%u backends, %u persona stores left)".printf (
+                  this._non_quiescent_backend_count,
+                  this._non_quiescent_persona_store_count)
       );
 
       debug.print_line (domain, level,
@@ -463,6 +497,8 @@ public class Folks.IndividualAggregator : Object
               this._backend_persona_store_added_cb);
           backend.persona_store_removed.connect (
               this._backend_persona_store_removed_cb);
+          backend.notify["is-quiescent"].connect (
+              this._backend_is_quiescent_changed_cb);
 
           /* handle the stores that have already been signaled */
           foreach (var persona_store in backend.persona_stores.values)
@@ -475,6 +511,16 @@ public class Folks.IndividualAggregator : Object
   private void _backend_available_cb (BackendStore backend_store,
       Backend backend)
     {
+      /* Increase the number of non-quiescent backends we're waiting for.
+       * If we've already reached a quiescent state, this is ignored. If we
+       * haven't, this delays us reaching a quiescent state until the
+       * _backend_is_quiescent_changed_cb() callback is called for this
+       * backend. */
+      if (backend.is_quiescent == false)
+        {
+          this._non_quiescent_backend_count++;
+        }
+
       this._add_backend.begin (backend);
     }
 
@@ -507,6 +553,18 @@ public class Folks.IndividualAggregator : Object
       store.personas_changed.connect (this._personas_changed_cb);
       store.notify["is-writeable"].connect (this._is_writeable_changed_cb);
       store.notify["trust-level"].connect (this._trust_level_changed_cb);
+      store.notify["is-quiescent"].connect (
+          this._persona_store_is_quiescent_changed_cb);
+
+      /* Increase the number of non-quiescent persona stores we're waiting for.
+       * If we've already reached a quiescent state, this is ignored. If we
+       * haven't, this delays us reaching a quiescent state until the
+       * _persona_store_is_quiescent_changed_cb() callback is called for this
+       * store. */
+      if (store.is_quiescent == false)
+        {
+          this._non_quiescent_persona_store_count++;
+        }
 
       store.prepare.begin ((obj, result) =>
         {
@@ -528,8 +586,18 @@ public class Folks.IndividualAggregator : Object
       PersonaStore store)
     {
       store.personas_changed.disconnect (this._personas_changed_cb);
+      store.notify["is-quiescent"].disconnect (
+          this._persona_store_is_quiescent_changed_cb);
       store.notify["trust-level"].disconnect (this._trust_level_changed_cb);
       store.notify["is-writeable"].disconnect (this._is_writeable_changed_cb);
+
+      /* If we were still waiting on this persona store to reach a quiescent
+       * state, stop waiting. */
+      if (this._is_quiescent == false && store.is_quiescent == false)
+        {
+          this._non_quiescent_persona_store_count--;
+          this._notify_if_is_quiescent ();
+        }
 
       /* no need to remove this store's personas from all the individuals, since
        * they'll do that themselves (and emit their own 'removed' signal if
@@ -982,6 +1050,37 @@ public class Folks.IndividualAggregator : Object
         assert (store.trust_level == PersonaStoreTrust.FULL);
       else
         assert (store.trust_level != PersonaStoreTrust.FULL);
+    }
+
+  private void _persona_store_is_quiescent_changed_cb (Object obj,
+      ParamSpec pspec)
+    {
+      /* Have we reached a quiescent state yet? */
+      if (this._non_quiescent_persona_store_count > 0)
+        {
+          this._non_quiescent_persona_store_count--;
+          this._notify_if_is_quiescent ();
+        }
+    }
+
+  private void _backend_is_quiescent_changed_cb (Object obj, ParamSpec pspec)
+    {
+      if (this._non_quiescent_backend_count > 0)
+        {
+          this._non_quiescent_backend_count--;
+          this._notify_if_is_quiescent ();
+        }
+    }
+
+  private void _notify_if_is_quiescent ()
+    {
+      if (this._non_quiescent_backend_count == 0 &&
+          this._non_quiescent_persona_store_count == 0 &&
+          this._is_quiescent == false)
+        {
+          this._is_quiescent = true;
+          this.notify_property ("is-quiescent");
+        }
     }
 
   private void _individual_removed_cb (Individual i, Individual? replacement)

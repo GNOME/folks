@@ -33,6 +33,7 @@ extern const string BACKEND_NAME;
 public class Folks.Backends.Tr.Backend : Folks.Backend
 {
   private bool _is_prepared = false;
+  private bool _is_quiescent = false;
   private HashMap<string, PersonaStore> _persona_stores;
   private Map<string, PersonaStore> _persona_stores_ro;
 
@@ -69,6 +70,18 @@ public class Folks.Backends.Tr.Backend : Folks.Backend
     }
 
   /**
+   * Whether this Backend has reached a quiescent state.
+   *
+   * See {@link Folks.Backend.is_quiescent}.
+   *
+   * @since UNRELEASED
+   */
+  public override bool is_quiescent
+    {
+      get { return this._is_quiescent; }
+    }
+
+  /**
    * {@inheritDoc}
    *
    */
@@ -79,8 +92,12 @@ public class Folks.Backends.Tr.Backend : Folks.Backend
           if (!this._is_prepared)
             {
               this._add_default_persona_store ();
+
               this._is_prepared = true;
               this.notify_property ("is-prepared");
+
+              this._is_quiescent = true;
+              this.notify_property ("is-quiescent");
             }
         }
     }
@@ -97,6 +114,9 @@ public class Folks.Backends.Tr.Backend : Folks.Backend
 
       this._persona_stores.clear ();
       this.notify_property ("persona-stores");
+
+      this._is_quiescent = false;
+      this.notify_property ("is-quiescent");
 
       this._is_prepared = false;
       this.notify_property ("is-prepared");

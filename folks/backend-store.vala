@@ -186,7 +186,8 @@ public class Folks.BackendStore : Object {
           debug.print_key_value_pairs (domain, level,
               "Ref. count", this.ref_count.to_string (),
               "Name", backend.name,
-              "Prepared?", backend.is_prepared ? "yes" : "no"
+              "Prepared?", backend.is_prepared ? "yes" : "no",
+              "Quiescent?", backend.is_quiescent ? "yes" : "no"
           );
           debug.print_line (domain, level, "%u PersonaStores:",
               backend.persona_stores.size);
@@ -219,6 +220,7 @@ public class Folks.BackendStore : Object {
                   "ID", persona_store.id,
                   "Prepared?", persona_store.is_prepared ? "yes" : "no",
                   "Writeable?", persona_store.is_writeable ? "yes" : "no",
+                  "Quiescent?", persona_store.is_quiescent ? "yes" : "no",
                   "Trust level", trust_level,
                   "Persona count", persona_store.personas.size.to_string ()
               );
