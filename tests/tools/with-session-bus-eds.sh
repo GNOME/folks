@@ -31,6 +31,9 @@ cleanup ()
 
 trap cleanup INT HUP TERM
 
+# In case the previous run left some junk around...
+test -d ../data/gconf.d && rm -rf ../data/gconf.d
+
 eds_init_settings
 dbus_init 0
 
