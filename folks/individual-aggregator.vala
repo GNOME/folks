@@ -978,7 +978,7 @@ public class Folks.IndividualAggregator : Object
       /* Only our writeable_store can be fully trusted. */
       var store = (PersonaStore) object;
       if (this._writeable_store != null &&
-          store.type_id == this._writeable_store.type_id)
+          store == this._writeable_store)
         assert (store.trust_level == PersonaStoreTrust.FULL);
       else
         assert (store.trust_level != PersonaStoreTrust.FULL);
