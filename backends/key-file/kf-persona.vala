@@ -36,7 +36,7 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
   private unowned GLib.KeyFile _key_file;
   private HashMultiMap<string, ImFieldDetails> _im_addresses;
   private HashMultiMap<string, WebServiceFieldDetails> _web_service_addresses;
-  private string _alias;
+  private string _alias = ""; /* must not be null */
   private const string[] _linkable_properties =
     {
       "im-addresses",
@@ -86,6 +86,12 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
    */
   public async void change_alias (string alias) throws PropertyError
     {
+      /* Deal with badly-behaved callers. */
+      if (alias == null)
+        {
+          alias = "";
+        }
+
       if (this._alias == alias)
         {
           return;
@@ -286,6 +292,12 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
                 {
                   this._alias = this._key_file.get_string (this.display_id,
                       key);
+
+                  if (this._alias == null)
+                    {
+                      this._alias = "";
+                    }
+
                   debug ("    Loaded alias '%s'.", this._alias);
                   continue;
                 }

@@ -266,8 +266,13 @@ public class Edsf.PersonaStore : Folks.PersonaStore
           if (k == Folks.PersonaStore.detail_key (
                 PersonaDetail.FULL_NAME))
             {
-              contact.set (E.Contact.field_id ("full_name"),
-                  v.get_string ());
+              var full_name = v.get_string ();
+              if (full_name == "")
+                {
+                  full_name = null;
+                }
+
+              contact.set (E.Contact.field_id ("full_name"), full_name);
             }
           else if (k == Folks.PersonaStore.detail_key (
                 PersonaDetail.EMAIL_ADDRESSES))
@@ -1296,6 +1301,11 @@ public class Edsf.PersonaStore : Folks.PersonaStore
   internal async void _set_full_name (Edsf.Persona persona,
       string full_name) throws PropertyError
     {
+      if (full_name == "")
+        {
+          full_name = null;
+        }
+
       if (persona.full_name == full_name)
         return;
 
@@ -1306,6 +1316,11 @@ public class Edsf.PersonaStore : Folks.PersonaStore
   internal async void _set_nickname (Edsf.Persona persona, string nickname)
       throws PropertyError
     {
+      if (nickname == "")
+        {
+          nickname = null;
+        }
+
       if (persona.nickname == nickname)
         return;
 

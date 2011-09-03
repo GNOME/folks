@@ -33,6 +33,8 @@ public interface Folks.AliasDetails : Object
    *
    * An alias is a user-given name, to be used in UIs as the sole way to
    * represent the contact to the user.
+   *
+   * This may not be `null`: an empty string represents an unset alias.
    */
   public abstract string alias { get; set; }
 

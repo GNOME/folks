@@ -307,7 +307,13 @@ public class Swf.Persona : Folks.Persona,
   public void update (Contact contact)
     {
       var nickname = contact.get_value ("name");
-      if (nickname != null && this._nickname != nickname)
+
+      if (nickname == null)
+        {
+          nickname = "";
+        }
+
+      if (this._nickname != nickname)
         {
           this._nickname = nickname;
           this.notify_property ("nickname");
@@ -343,6 +349,12 @@ public class Swf.Persona : Folks.Persona,
         }
 
       var full_name = contact.get_value ("fn");
+
+      if (full_name == null)
+        {
+          full_name = "";
+        }
+
       if (this._full_name != full_name)
         {
           this._full_name = full_name;

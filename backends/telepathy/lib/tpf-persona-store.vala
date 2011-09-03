@@ -2086,6 +2086,12 @@ public class Tpf.PersonaStore : Folks.PersonaStore
 
   internal async void change_alias (Tpf.Persona persona, string alias)
     {
+      /* Deal with badly-behaved callers */
+      if (alias == null)
+        {
+          alias = "";
+        }
+
       debug ("Changing alias of persona %u to '%s'.", persona.contact.handle,
           alias);
       FolksTpLowlevel.connection_set_contact_alias (this._conn,

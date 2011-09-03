@@ -254,6 +254,9 @@ public interface Folks.NameDetails : Object
    * The full name could or could not contain additional names (like a
    * middle name), prefixes or suffixes.
    *
+   * The full name must not be `null`: the empty string represents an unset full
+   * name.
+   *
    * @since 0.3.5
    */
   public abstract string full_name { get; set; }
@@ -288,6 +291,9 @@ public interface Folks.NameDetails : Object
    * Consequently, setting the nickname only makes sense in the context of an
    * address book when updating the information a contact has specified about
    * themselves.
+   *
+   * The nickname must not be `null`: the empty string represents an unset
+   * nickname.
    *
    * @since 0.3.5
    */

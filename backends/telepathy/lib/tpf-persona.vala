@@ -38,7 +38,7 @@ public class Tpf.Persona : Folks.Persona,
   private HashSet<string> _groups;
   private Set<string> _groups_ro;
   private bool _is_favourite;
-  private string _alias;
+  private string _alias; /* must never be null */
   private HashMultiMap<string, ImFieldDetails> _im_addresses;
   private const string[] _linkable_properties = { "im-addresses" };
   private const string[] _writeable_properties =
@@ -316,6 +316,9 @@ public class Tpf.Persona : Folks.Persona,
 
       contact.notify["alias"].connect ((s, p) =>
           {
+            /* Tp guarantees that aliases are always non-null. */
+            assert (this.contact.alias != null);
+
             if (this._alias != this.contact.alias)
               {
                 this._alias = this.contact.alias;
@@ -447,6 +450,12 @@ public class Tpf.Persona : Folks.Persona,
       this._groups_ro = this._groups.read_only_view;
 
       // Other properties
+      if (alias == null)
+        {
+          /* Deal with badly-behaved callers */
+          alias = "";
+        }
+
       this._alias = alias;
       this._is_favourite = is_favourite;
       this.is_in_contact_list = is_in_contact_list;

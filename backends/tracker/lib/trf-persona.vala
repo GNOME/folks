@@ -45,7 +45,7 @@ public class Trf.Persona : Folks.Persona,
     UrlDetails,
     WebServiceDetails
 {
-  private string _nickname;
+  private string _nickname; /* must never be null */
   private bool _is_favourite;
   private const string[] _linkable_properties =
       {"im-addresses", "local-ids", "web-service-addresses"};
@@ -525,6 +525,11 @@ public class Trf.Persona : Folks.Persona,
       if (cursor != null)
         {
           fullname = cursor.get_string (Trf.Fields.FULL_NAME).dup ();
+          if (fullname == null)
+            {
+              fullname = "";
+            }
+
           var contact_urn = cursor.get_string (Trf.Fields.CONTACT_URN);
           if (contact_urn == Trf.OntologyDefs.DEFAULT_CONTACT_URN)
             {
@@ -631,7 +636,12 @@ public class Trf.Persona : Folks.Persona,
 
   internal void _update_full_name (string? fn)
     {
-      if (fn != null && this.full_name != fn)
+      if (fn == null)
+        {
+          fn = "";
+        }
+
+      if (this._full_name != fn)
         {
           this._full_name = fn;
           this.notify_property ("full-name");
@@ -640,7 +650,12 @@ public class Trf.Persona : Folks.Persona,
 
   internal void _update_nickname (string? nickname)
     {
-      if (nickname != null && this._nickname != nickname)
+      if (nickname == null)
+        {
+          nickname = "";
+        }
+
+      if (this._nickname != nickname)
         {
           this._nickname = nickname;
           this.notify_property ("nickname");

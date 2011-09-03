@@ -1008,6 +1008,12 @@ public class Edsf.Persona : Folks.Persona,
   private void _update_names ()
     {
       string full_name = (string) this._get_property ("full_name");
+
+      if (full_name == null)
+        {
+          full_name = "";
+        }
+
       if (this._full_name != full_name)
         {
           this._full_name = full_name;
@@ -1015,7 +1021,13 @@ public class Edsf.Persona : Folks.Persona,
         }
 
       string nickname = (string) this._get_property ("nickname");
-      if (this.nickname != nickname)
+
+      if (nickname == null)
+        {
+          nickname = "";
+        }
+
+      if (this._nickname != nickname)
         {
           this._nickname = nickname;
           this.notify_property ("nickname");
