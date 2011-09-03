@@ -100,6 +100,7 @@ public class AddPersonaTests : Folks.TestCase
       this._properties_found.insert ("structured_name", false);
       this._properties_found.insert ("note", false);
       this._properties_found.insert ("birthday", false);
+      this._properties_found.insert ("role-1", false);
 
       this._test_add_persona_async ();
 
@@ -239,6 +240,18 @@ public class AddPersonaTests : Folks.TestCase
       details.insert (Folks.PersonaStore.detail_key (PersonaDetail.BIRTHDAY),
           (owned) v9);
 
+      Value? v10 = Value (typeof (Set<Role>));
+      var role_fds = new HashSet<RoleFieldDetails> (
+          (GLib.HashFunc) RoleFieldDetails.hash,
+          (GLib.EqualFunc) RoleFieldDetails.equal);
+      var r1 = new Role ("Dr.", "The Nut House Ltd");
+      r1.role = "The Manager";
+      var role_fd1 = new RoleFieldDetails (r1);
+      role_fds.add (role_fd1);
+      v10.set_object (role_fds);
+      details.insert (Folks.PersonaStore.detail_key (PersonaDetail.ROLES),
+          (owned) v10);
+
       try
         {
           yield this._aggregator.add_persona_from_details (null,
@@ -295,6 +308,7 @@ public class AddPersonaTests : Folks.TestCase
               i.notify["structured-name"].disconnect (this._notify_cb);
               i.notify["notes"].disconnect (this._notify_cb);
               i.notify["birthday"].disconnect (this._notify_cb);
+              i.notify["roles"].disconnect (this._notify_cb);
 
               this._properties_found.remove_all ();
             }
@@ -311,6 +325,7 @@ public class AddPersonaTests : Folks.TestCase
           i.notify["structured-name"].connect (this._notify_cb);
           i.notify["notes"].connect (this._notify_cb);
           i.notify["birthday"].connect (this._notify_cb);
+          i.notify["roles"].connect (this._notify_cb);
 
           this._check_properties (i);
         }
@@ -415,6 +430,15 @@ public class AddPersonaTests : Folks.TestCase
           DateTime dobj = new  DateTime.utc (1980, 1, 1, 0, 0, 0.0);
           if (i.birthday.equal (dobj))
             this._properties_found.replace ("birthday", true);
+        }
+
+      foreach (var role_fd in i.roles)
+        {
+          var r1 = new Role ("Dr.", "The Nut House Ltd");
+          r1.role = "The Manager";
+          var role_fd_expected = new RoleFieldDetails (r1);
+          if (role_fd.equal (role_fd_expected))
+            this._properties_found.replace ("role-1", true);
         }
 
       this._exit_if_all_properties_found ();
