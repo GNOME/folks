@@ -40,6 +40,7 @@ public class Edsf.Persona : Folks.Persona,
     NameDetails,
     NoteDetails,
     PhoneDetails,
+    RoleDetails,
     UrlDetails,
     PostalAddressDetails,
     WebServiceDetails
@@ -572,6 +573,32 @@ public class Edsf.Persona : Folks.Persona,
           bday);
     }
 
+  private HashSet<RoleFieldDetails> _roles;
+  private Set<RoleFieldDetails> _roles_ro;
+
+  /**
+   * {@inheritDoc}
+   *
+   * @since UNRELEASED
+   */
+  [CCode (notify = false)]
+  public Set<RoleFieldDetails> roles
+    {
+      get { return this._roles_ro; }
+      set { this.change_roles.begin (value); }
+    }
+
+  /**
+   * {@inheritDoc}
+   *
+   * @since UNRELEASED
+   */
+  public async void change_roles (Set<RoleFieldDetails> roles)
+      throws PropertyError
+    {
+      yield ((Edsf.PersonaStore) this.store)._set_roles (this, roles);
+    }
+
   /**
    * Build a IID.
    *
@@ -662,6 +689,10 @@ public class Edsf.Persona : Folks.Persona,
             (GLib.EqualFunc) WebServiceFieldDetails.equal);
       this._groups = new HashSet<string> ();
       this._groups_ro = this._groups.read_only_view;
+      this._roles = new HashSet<RoleFieldDetails> (
+          (GLib.HashFunc) RoleFieldDetails.hash,
+          (GLib.EqualFunc) RoleFieldDetails.equal);
+      this._roles_ro = this._roles.read_only_view;
 
       this._update (contact);
     }
@@ -738,6 +769,7 @@ public class Edsf.Persona : Folks.Persona,
       this._update_web_services_addresses ();
       this._update_gender ();
       this._update_birthday ();
+      this._update_roles ();
     }
 
   private void _update_params (AbstractFieldDetails details,
@@ -807,6 +839,120 @@ public class Edsf.Persona : Folks.Persona,
               this.notify_property ("birthday");
             }
         }
+    }
+
+  private void _update_roles ()
+    {
+      var new_roles = new HashSet<RoleFieldDetails> (
+          (GLib.HashFunc) RoleFieldDetails.hash,
+          (GLib.EqualFunc) RoleFieldDetails.equal);
+
+      var default_role_fd = this._get_default_role ();
+      if (default_role_fd != null)
+        {
+          new_roles.add (default_role_fd);
+        }
+
+      var vcard = (E.VCard) this.contact;
+      foreach (unowned E.VCardAttribute attr in vcard.get_attributes ())
+        {
+          if (attr.get_name () != "X-ROLES")
+            continue;
+
+          var role = new Role ("", "");
+          role.role = attr.get_value ();
+          var role_fd = new RoleFieldDetails (role);
+
+          foreach (unowned E.VCardAttributeParam param in
+              attr.get_params ())
+            {
+              string param_name = param.get_name ().down ();
+
+              if (param_name == "organisation_name")
+                {
+                  foreach (unowned string param_value in
+                      param.get_values ())
+                    {
+                      role.organisation_name = param_value;
+                      break;
+                    }
+                }
+              else if (param_name == "title")
+                {
+                  foreach (unowned string param_value in
+                      param.get_values ())
+                    {
+                      role.title = param_value;
+                      break;
+                    }
+                }
+              else
+                {
+                  foreach (unowned string param_value in
+                      param.get_values ())
+                    {
+                      role_fd.add_parameter (param_name, param_value);
+                    }
+                }
+            }
+
+            new_roles.add (role_fd);
+        }
+
+        if (new_roles.size > 0 &&
+            !Edsf.PersonaStore.equal_sets (new_roles, this._roles))
+          {
+            this._roles = new_roles;
+            this._roles_ro = new_roles.read_only_view;
+            this.notify_property ("roles");
+          }
+        else if (new_roles.size == 0)
+          {
+            this._roles.clear ();
+            this.notify_property ("roles");
+          }
+    }
+
+  private RoleFieldDetails? _get_default_role ()
+    {
+      RoleFieldDetails? default_role = null;
+
+      var org = (string?) this._get_property ("org");
+      var org_unit = (string?) this._get_property ("org_unit");
+      var office = (string?) this._get_property ("office");
+      var title = (string?) this._get_property ("title");
+      var role = (string?) this._get_property ("role");
+      var manager = (string?) this._get_property ("manager");
+      var assistant = (string?) this._get_property ("assistant");
+
+      if (org != null ||
+          org_unit != null ||
+          office != null ||
+          title != null ||
+          role != null ||
+          manager != null ||
+          assistant != null)
+        {
+          var new_role = new Role (title, org);
+          if (role != null)
+            new_role.role = role;
+
+          default_role = new RoleFieldDetails (new_role);
+
+          if (org_unit != null)
+            default_role.set_parameter ("org_unit", org_unit);
+
+          if (office != null)
+            default_role.set_parameter ("office", office);
+
+          if (manager != null)
+            default_role.set_parameter ("manager", manager);
+
+          if (assistant != null)
+            default_role.set_parameter ("assistant", assistant);
+        }
+
+      return default_role;
     }
 
   private void _update_web_services_addresses ()

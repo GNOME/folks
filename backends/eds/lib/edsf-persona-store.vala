@@ -244,6 +244,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
    * - PersonaStore.detail_key (PersonaDetail.IM_ADDRESSES)
    * - PersonaStore.detail_key (PersonaDetail.PHONE_NUMBERS)
    * - PersonaStore.detail_key (PersonaDetail.POSTAL_ADDRESSES)
+   * - PersonaStore.detail_key (PersonaDetail.ROLES)
    * - PersonaStore.detail_key (PersonaDetail.STRUCTURED_NAME)
    * - PersonaStore.detail_key (PersonaDetail.LOCAL_IDS)
    * - PersonaStore.detail_key (PersonaDetail.WEB_SERVICE_ADDRESSES)
@@ -352,6 +353,12 @@ public class Edsf.PersonaStore : Folks.PersonaStore
             {
               var birthday = (DateTime?) v.get_boxed ();
               yield this._set_contact_birthday (contact, birthday);
+            }
+          else if (k == Folks.PersonaStore.detail_key (PersonaDetail.ROLES))
+            {
+              Set<RoleFieldDetails> roles =
+                (Set<RoleFieldDetails>) v.get_object ();
+              yield this._set_contact_roles (contact, roles);
             }
         }
 
@@ -1362,6 +1369,101 @@ public class Edsf.PersonaStore : Folks.PersonaStore
       contact.set (E.Contact.field_id ("birth_date"), contact_bday);
     }
 
+  internal async void _set_roles (Edsf.Persona persona,
+      Set<RoleFieldDetails> roles) throws PropertyError
+    {
+      if (Edsf.PersonaStore.equal_sets (roles, persona.roles))
+        return;
+
+      yield this._set_contact_roles (persona.contact, roles);
+      yield this._commit_modified_property (persona, "roles");
+    }
+
+  private async void _set_contact_roles (E.Contact contact,
+      Set<RoleFieldDetails> roles)
+    {
+      var vcard = (E.VCard) contact;
+      vcard.remove_attributes (null, "X-ROLES");
+
+      string? org = null;
+      string? org_unit = null;
+      string? office = null;
+      string? title = null;
+      string? role = null;
+      string? manager = null;
+      string? assistant = null;
+
+      /* Because e-d-s supports only fields for one Role we save the
+       * first in the Set to the fields available and the rest goes
+       * to X-ROLES */
+      int count = 0;
+      foreach (var role_fd in roles)
+        {
+          if (count == 0)
+            {
+              org = role_fd.value.organisation_name;
+              title = role_fd.value.title;
+              role = role_fd.value.role;
+
+              /* FIXME: we are swallowing the extra parameter values */
+              var org_unit_values = role_fd.get_parameter_values ("org_unit");
+              if (org_unit_values != null &&
+                  org_unit_values.size > 0)
+                org_unit = org_unit_values.to_array ()[0];
+
+              var office_values = role_fd.get_parameter_values ("office");
+              if (office_values != null &&
+                  office_values.size > 0)
+                office = office_values.to_array ()[0];
+
+              var manager_values = role_fd.get_parameter_values ("manager");
+              if (manager_values != null &&
+                  manager_values.size > 0)
+                manager = manager_values.to_array ()[0];
+
+              var assistant_values = role_fd.get_parameter_values ("assistant");
+              if (assistant_values != null &&
+                  assistant_values.size > 0)
+                assistant = assistant_values.to_array ()[0];
+            }
+          else
+            {
+              var attr = new E.VCardAttribute (null, "X-ROLES");
+              attr.add_value (role_fd.value.role);
+
+              var param1 = new E.VCardAttributeParam ("organisation_name");
+              param1.add_value (role_fd.value.organisation_name);
+              attr.add_param (param1);
+
+              var param2 = new E.VCardAttributeParam ("title");
+              param2.add_value (role_fd.value.title);
+              attr.add_param (param2);
+
+              foreach (var param_name in role_fd.parameters.get_keys ())
+                {
+                  var param3 = new E.VCardAttributeParam (param_name.up ());
+                  foreach (var param_val in role_fd.parameters.get (param_name))
+                    {
+                      param3.add_value (param_val);
+                    }
+                  attr.add_param (param3);
+                }
+
+              contact.add_attribute ((owned) attr);
+            }
+
+          count++;
+        }
+
+      contact.set (E.Contact.field_id ("org"), org);
+      contact.set (E.Contact.field_id ("org_unit"), org_unit);
+      contact.set (E.Contact.field_id ("office"), office);
+      contact.set (E.Contact.field_id ("title"), title);
+      contact.set (E.Contact.field_id ("role"), role);
+      contact.set (E.Contact.field_id ("manager"), manager);
+      contact.set (E.Contact.field_id ("assistant"), assistant);
+    }
+
   internal async void _set_structured_name (Edsf.Persona persona,
       StructuredName? sname) throws PropertyError
     {
@@ -1642,5 +1744,38 @@ public class Edsf.PersonaStore : Folks.PersonaStore
            * property name and the second parameter is an error message. */
           _("Unknown error setting property ‘%s’: %s"), property_name,
           error_in.message);
+    }
+
+  internal static bool equal_sets (Set<RoleFieldDetails> a,
+      Set<RoleFieldDetails> b)
+    {
+      /* For the love of Dijkstra, there should be a more
+       * succint way of comparing Sets */
+
+      if (a.size == 0 &&
+          b.size == 0)
+        return true;
+
+      if (a.size != b.size)
+        return false;
+
+      bool same = false;
+      foreach (var new_role in a)
+        {
+          same = false;
+          foreach (var cur_role in b)
+            {
+              if (cur_role.equal (new_role))
+                {
+                  same = true;
+                  break;
+                }
+            }
+
+          if (!same)
+            return false;
+        }
+
+      return true;
     }
 }

@@ -11,6 +11,7 @@ Bugs fixed:
 * Bug 657971 — Need BirthdayDetails support in eds backend
 * Bug 657789 — Don't claim uneditable eds fields as writable
 * Bug 657282 — Add an IndividualAggregator.individuals_changed_detailed signal
+* Bug 657969 — Support RoleDetails in eds backend
 
 API changes:
 * Add PersonaStore:always-writeable-properties property
