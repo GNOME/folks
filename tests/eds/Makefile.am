@@ -70,6 +70,7 @@ noinst_PROGRAMS = \
 	set-gender \
 	set-urls \
 	set-properties-race \
+	set-birthday \
 	$(NULL)
 
 RUN_WITH_PRIVATE_BUS = $(top_srcdir)/tests/tools/with-session-bus-eds.sh
@@ -188,6 +189,10 @@ set_urls_SOURCES = \
 	set-urls.vala \
 	$(NULL)
 
+set_birthday_SOURCES = \
+	set-birthday.vala \
+	$(NULL)
+
 CLEANFILES = \
         *.pid \
         *.address \
@@ -221,6 +226,7 @@ MAINTAINERCLEANFILES = \
 	add_contacts_stress_test_vala.stamp \
 	set_gender_vala.stamp \
 	set_urls_vala.stamp \
+	set_birthday_vala.stamp \
         $(NULL)
 
 EXTRA_DIST = \
