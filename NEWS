@@ -8,6 +8,7 @@ Bugs fixed:
 * Bug 657635 — Linking personas from different (e-d-s) stores is not working
 * Bug 657510 — Add asynchronous property setter methods
 * Bug 656184 — Add is-quiescent property
+* Bug 657971 — Need BirthdayDetails support in eds backend
 
 API changes:
 * Add PersonaStore:always-writeable-properties property
