@@ -99,6 +99,7 @@ public class AddPersonaTests : Folks.TestCase
       this._properties_found.insert ("postal-address-1", false);
       this._properties_found.insert ("structured_name", false);
       this._properties_found.insert ("note", false);
+      this._properties_found.insert ("birthday", false);
 
       this._test_add_persona_async ();
 
@@ -232,6 +233,12 @@ public class AddPersonaTests : Folks.TestCase
           Folks.PersonaStore.detail_key (PersonaDetail.NOTES),
           (owned) v8);
 
+      Value? v9 = Value (typeof (DateTime));
+      DateTime dobj = new  DateTime.utc (1980, 1, 1, 0, 0, 0.0);
+      v9.set_boxed (dobj);
+      details.insert (Folks.PersonaStore.detail_key (PersonaDetail.BIRTHDAY),
+          (owned) v9);
+
       try
         {
           yield this._aggregator.add_persona_from_details (null,
@@ -283,6 +290,7 @@ public class AddPersonaTests : Folks.TestCase
               i.notify["postal-addresses"].disconnect (this._notify_cb);
               i.notify["structured-name"].disconnect (this._notify_cb);
               i.notify["notes"].disconnect (this._notify_cb);
+              i.notify["birthday"].disconnect (this._notify_cb);
 
               this._properties_found.remove_all ();
             }
@@ -298,6 +306,7 @@ public class AddPersonaTests : Folks.TestCase
           i.notify["postal-addresses"].connect (this._notify_cb);
           i.notify["structured-name"].connect (this._notify_cb);
           i.notify["notes"].connect (this._notify_cb);
+          i.notify["birthday"].connect (this._notify_cb);
 
           this._check_properties (i);
         }
@@ -399,6 +408,13 @@ public class AddPersonaTests : Folks.TestCase
 
               this._exit_if_all_properties_found ();
             });
+        }
+
+      if (i.birthday != null)
+        {
+          DateTime dobj = new  DateTime.utc (1980, 1, 1, 0, 0, 0.0);
+          if (i.birthday.equal (dobj))
+            this._properties_found.replace ("birthday", true);
         }
 
       this._exit_if_all_properties_found ();
