@@ -248,6 +248,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
    *
    * Accepted keys for `details` are:
    * - PersonaStore.detail_key (PersonaDetail.AVATAR)
+   * - PersonaStore.detail_key (PersonaDetail.BIRTHDAY)
    * - PersonaStore.detail_key (PersonaDetail.EMAIL_ADDRESSES)
    * - PersonaStore.detail_key (PersonaDetail.FULL_NAME)
    * - PersonaStore.detail_key (PersonaDetail.GENDER)
@@ -357,6 +358,11 @@ public class Edsf.PersonaStore : Folks.PersonaStore
             {
               Set<UrlFieldDetails> urls = (Set<UrlFieldDetails>) v.get_object ();
               yield this._set_contact_urls (contact, urls);
+            }
+          else if (k == Folks.PersonaStore.detail_key (PersonaDetail.BIRTHDAY))
+            {
+              var birthday = (DateTime?) v.get_boxed ();
+              yield this._set_contact_birthday (contact, birthday);
             }
         }
 
@@ -1113,6 +1119,39 @@ public class Edsf.PersonaStore : Folks.PersonaStore
         }
 
       contact.set (E.Contact.field_id ("note"), note_str);
+    }
+
+  internal async void _set_birthday (Edsf.Persona persona,
+      DateTime? bday) throws PropertyError
+    {
+      if (persona.birthday != null &&
+          bday != null &&
+          persona.birthday.equal (bday))
+        return;
+
+      /* Maybe the current and new b-day are unset */
+      if (persona.birthday == null &&
+          bday == null)
+        return;
+
+      yield this._set_contact_birthday (persona.contact, bday);
+      yield this._commit_modified_property (persona, "birthday");
+    }
+
+  private async void _set_contact_birthday (E.Contact contact,
+      DateTime? bday)
+    {
+      E.ContactDate? contact_bday = null;
+
+      if (bday != null)
+        {
+          contact_bday = new E.ContactDate ();
+          contact_bday.year = (uint) bday.get_year ();
+          contact_bday.month = (uint) bday.get_month ();
+          contact_bday.day = (uint) bday.get_day_of_month ();
+        }
+
+      contact.set (E.Contact.field_id ("birth_date"), contact_bday);
     }
 
   internal async void _set_structured_name (Edsf.Persona persona,

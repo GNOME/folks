@@ -31,6 +31,7 @@ using Xml;
  */
 public class Edsf.Persona : Folks.Persona,
     AvatarDetails,
+    BirthdayDetails,
     EmailDetails,
     GenderDetails,
     GroupDetails,
@@ -548,6 +549,45 @@ public class Edsf.Persona : Folks.Persona,
     }
 
   /**
+   * {@inheritDoc}
+   *
+   * e-d-s has no equivalent field, so this is unsupported.
+   *
+   * @since UNRELEASED
+   */
+  [CCode (notify = false)]
+  public string? calendar_event_id
+    {
+      get { return null; } /* unsupported */
+      set { this.change_calendar_event_id.begin (value); } /* not writeable */
+    }
+
+  private DateTime? _birthday = null;
+  /**
+   * {@inheritDoc}
+   *
+   * @since UNRELEASED
+   */
+  [CCode (notify = false)]
+  public DateTime? birthday
+    {
+      get { return this._birthday; }
+      set { this.change_birthday.begin (value); }
+    }
+
+  /**
+   * {@inheritDoc}
+   *
+   * @since UNRELEASED
+   */
+  public async void change_birthday (DateTime? bday)
+      throws PropertyError
+    {
+      yield ((Edsf.PersonaStore) this.store)._set_birthday (this,
+          bday);
+    }
+
+  /**
    * Build a IID.
    *
    * @param store_id the {@link PersonaStore.id}
@@ -712,6 +752,7 @@ public class Edsf.Persona : Folks.Persona,
       this._update_local_ids ();
       this._update_web_services_addresses ();
       this._update_gender ();
+      this._update_birthday ();
     }
 
   private void _update_params (AbstractFieldDetails details,
@@ -751,6 +792,35 @@ public class Edsf.Persona : Folks.Persona,
         {
           this._gender = gender;
           this.notify_property ("gender");
+        }
+    }
+
+  private void _update_birthday ()
+    {
+      E.ContactDate? bday = (E.ContactDate?) this._get_property ("birth_date");
+
+      if (bday != null)
+        {
+          /* Since e-d-s stores birthdays as a plain date, we take the
+           * given date in local time and convert it to UTC as mandated
+           * by the BirthdayDetails interface */
+          var d = new DateTime.local ((int) bday.year, (int) bday.month,
+              (int) bday.day, 0, 0, 0.0);
+          if (this._birthday == null ||
+              (this._birthday != null &&
+                  !this._birthday.equal (d.to_utc ())))
+            {
+              this._birthday = d.to_utc ();
+              this.notify_property ("birthday");
+            }
+        }
+      else
+        {
+          if (this._birthday != null)
+            {
+              this._birthday = null;
+              this.notify_property ("birthday");
+            }
         }
     }
 
