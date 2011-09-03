@@ -31,7 +31,8 @@ using GLib;
 public interface Folks.BirthdayDetails : Object
 {
   /**
-   * The birthday of the {@link Persona} and {@link Individual}.
+   * The birthday of the {@link Persona} and {@link Individual}. This
+   * is assumed to be in UTC.
    *
    * If this is `null`, the contact's birthday isn't known.
    *
