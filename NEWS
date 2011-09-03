@@ -12,6 +12,7 @@ Bugs fixed:
 * Bug 657789 — Don't claim uneditable eds fields as writable
 * Bug 657282 — Add an IndividualAggregator.individuals_changed_detailed signal
 * Bug 657969 — Support RoleDetails in eds backend
+* Bug 657783 — Prefer data from primary store when picking Individual values
 
 API changes:
 * Add PersonaStore:always-writeable-properties property

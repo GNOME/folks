@@ -63,6 +63,22 @@ public enum Folks.TrustLevel
 /**
  * A physical person, aggregated from the various {@link Persona}s the person
  * might have, such as their different IM addresses or vCard entries.
+ *
+ * When choosing the values of single-valued properties (such as
+ * {@link Individual.alias} and {@link Individual.avatar}; but not multi-valued
+ * properties such as {@link Individual.groups} and
+ * {@link Individual.im_addresses}) from the {@link Persona}s in the
+ * individual to present as the values of those properties of the individual,
+ * it is guaranteed that if the individual contains a persona from the primary
+ * persona store (see {@link IndividualAggregator.primary_store}), its property
+ * values will be chosen above all others. This means that any changes to
+ * property values made through folks (which are normally written to the primary
+ * store) will always be used by {@link Individual}s.
+ *
+ * No further guarantees are made about the order of preference used for
+ * choosing which property values to use for the {@link Individual}, other than
+ * that the order may vary between properties, but is guaranteed to be stable
+ * for a given property.
  */
 public class Folks.Individual : Object,
     AliasDetails,
@@ -953,6 +969,105 @@ public class Folks.Individual : Object,
       this._update_local_ids ();
     }
 
+  /* Delegate to update the value of a property on this individual from the
+   * given chosen persona. The chosen_persona may be null, in which case we have
+   * to set a default value.
+   *
+   * Used in _update_single_valued_property(), below. */
+  private delegate void SingleValuedPropertySetter (Persona? chosen_persona);
+
+  /*
+   * Update a single-valued property from the values in the personas.
+   *
+   * Single-valued properties are ones such as {@link Individual.alias} or
+   * {@link Individual.gender} — as opposed to multi-valued ones (which are
+   * generally sets) such as {@link Individual.im_addresses} or
+   * {@link Individual.groups}.
+   *
+   * This function uses the given comparison function to order the personas in
+   * this individual, with the highest-positioned persona finally being passed
+   * to the setter function to use in updating the individual's value for the
+   * given property. i.e. If `compare_func(a, b)` is called and returns > 0,
+   * persona `a` will be passed to the setter.
+   *
+   * At a level above `compare_func`, the function always prefers personas from
+   * the primary store (see {@link IndividualAggregator.primary_store}) over
+   * those which aren't.
+   *
+   * Note that if a suitable persona isn't found in the individual (if, for
+   * example, no personas in the individual implement the desired interface),
+   * `null` will be passed to `setter`, which should then set the individual's
+   * property to a default value.
+   *
+   * @param interface_type the type of interface which all personas under
+   * consideration must implement ({@link Persona} to select all personas)
+   * @param compare_func comparison function to order personas for selection
+   * @param setter function to update the individual with the chosen value
+   * @since UNRELEASED
+   */
+  private void _update_single_valued_property (Type interface_type,
+      CompareFunc<Persona> compare_func, SingleValuedPropertySetter setter)
+    {
+      CompareDataFunc<Persona> primary_compare_func = (a, b) =>
+        {
+          assert (a != null);
+          assert (b != null);
+
+          /* TODO: We (incorrectly?) assume that writeable == primary here.
+           * This will be fixed by bgo#657141. */
+          var a_is_primary = a.store.is_writeable;
+          var b_is_primary = b.store.is_writeable;
+
+          if (a_is_primary == b_is_primary)
+            {
+              /* Use the comparison function to get an ordering over a and b
+               * given that they're both from stores with the same is-primary
+               * value. If the comparison function gives them an equal order,
+               * we use the personas' UIDs to ensure that we end up with a total
+               * order over all personas in the individual (otherwise we might
+               * end up with unstable property values). */
+              var order = compare_func (a, b);
+
+              if (order == 0)
+                {
+                  order = strcmp (a.uid, b.uid);
+                }
+
+              return order;
+            }
+          else if (a_is_primary == true)
+            {
+              return -1;
+            }
+          else if (b_is_primary == true)
+            {
+              return 1;
+            }
+
+          assert_not_reached ();
+        };
+
+      Persona? candidate_p = null;
+
+      foreach (var p in this._persona_set)
+        {
+          /* We only care about personas implementing the given interface. */
+          if (p.get_type ().is_a (interface_type))
+            {
+              if (candidate_p == null ||
+                  primary_compare_func (p, candidate_p) > 0)
+                {
+                  candidate_p = p;
+                }
+            }
+        }
+
+      /* Update the property with the values from the best candidate persona we
+       * found. Note that it's possible for candidate_p to be null if (e.g.)
+       * none of this._persona_set implemented the interface. */
+      setter (candidate_p);
+    }
+
   private void _update_groups ()
     {
       var new_groups = new HashSet<string> ();
@@ -1014,177 +1129,137 @@ public class Folks.Individual : Object,
 
   private void _update_presence ()
     {
-      var presence_message = "";
-      var presence_status = "";
-      var presence_type = Folks.PresenceType.UNSET;
-
-      /* Choose the most available presence from our personas */
-      foreach (var p in this._persona_set)
+      this._update_single_valued_property (typeof (PresenceDetails), (a, b) =>
         {
-          if (p is PresenceDetails)
+          var a_presence = (a as PresenceDetails).presence_type;
+          var b_presence = (b as PresenceDetails).presence_type;
+
+          return PresenceDetails.typecmp (a_presence, b_presence);
+        }, (p) =>
+        {
+          var presence_message = ""; /* must not be null */
+          var presence_status = ""; /* must not be null */
+          var presence_type = Folks.PresenceType.UNSET;
+
+          if (p != null)
             {
-              unowned PresenceDetails presence = (PresenceDetails) p;
-
-              if (PresenceDetails.typecmp (presence.presence_type,
-                  presence_type) > 0)
-                {
-                  presence_type = presence.presence_type;
-                  presence_message = presence.presence_message;
-                  presence_status = presence.presence_status;
-                }
+              presence_type = (p as PresenceDetails).presence_type;
+              presence_message = (p as PresenceDetails).presence_message;
+              presence_status = (p as PresenceDetails).presence_status;
             }
-        }
 
-      if (presence_message == null)
-        presence_message = "";
-      if (presence_status == null)
-        presence_status = "";
-
-      /* only notify if the value has changed */
-      if (this.presence_message != presence_message)
-        this.presence_message = presence_message;
-
-      if (this.presence_type != presence_type)
-        this.presence_type = presence_type;
-
-      if (this.presence_status != presence_status)
-        this.presence_status = presence_status;
+          /* Only notify if any of the values have changed. */
+          if (this.presence_type != presence_type ||
+              this.presence_message != presence_message ||
+              this.presence_status != presence_status)
+            {
+              this.freeze_notify ();
+              this.presence_message = presence_message;
+              this.presence_type = presence_type;
+              this.presence_status = presence_status;
+              this.thaw_notify ();
+            }
+        });
     }
 
   private void _update_is_favourite ()
     {
-      var favourite = false;
-
-      debug ("Running _update_is_favourite() on '%s'", this.id);
-
-      foreach (var p in this._persona_set)
+      this._update_single_valued_property (typeof (FavouriteDetails), (a, b) =>
         {
-          if (favourite == false && p is FavouriteDetails)
+          var a_is_favourite = (a as FavouriteDetails).is_favourite;
+          var b_is_favourite = (b as FavouriteDetails).is_favourite;
+
+          return ((a_is_favourite == true) ? 1 : 0) -
+                 ((b_is_favourite == true) ? 1 : 0);
+        }, (p) =>
+        {
+          var favourite = false;
+
+          if (p != null)
             {
-              favourite = ((FavouriteDetails) p).is_favourite;
-              if (favourite == true)
-                break;
+              favourite = (p as FavouriteDetails).is_favourite;
             }
-        }
 
-      /* Only notify if the value has changed. We have to set the private member
-       * and notify manually, or we'd end up propagating the new favourite
-       * status back down to all our Personas. */
-      if (this._is_favourite != favourite)
-        {
-          this._is_favourite = favourite;
-          this.notify_property ("is-favourite");
-        }
+          /* Only notify if the value has changed. We have to set the private
+           * member and notify manually, or we'd end up propagating the new
+           * favourite status back down to all our Personas. */
+          if (this._is_favourite != favourite)
+            {
+              this._is_favourite = favourite;
+              this.notify_property ("is-favourite");
+            }
+        });
     }
 
   private void _update_alias ()
     {
-      string alias = null;
-      var alias_is_display_id = false;
-
-      debug ("Updating alias for individual '%s'", this.id);
-
-      /* Search for an alias from a writeable Persona, and use it as our first
-       * choice if it's non-empty, since that's where the user-set alias is
-       * stored. */
-      foreach (var p in this._persona_set)
+      this._update_single_valued_property (typeof (AliasDetails), (a, b) =>
         {
-          if (p is AliasDetails && p.store.is_writeable == true)
+          var a_alias = (a as AliasDetails).alias;
+          var b_alias = (b as AliasDetails).alias;
+
+          assert (a_alias != null);
+          assert (b_alias != null);
+
+          var a_is_empty = (a_alias.strip () == "") ? 1 : 0;
+          var b_is_empty = (b_alias.strip () == "") ? 1 : 0;
+
+          /* We prefer to not have an alias which is the same as the Persona's
+           * display-id, since having such an alias implies that it's the
+           * default. However, we prefer using such an alias to using the
+           * Persona's UID, which is our ultimate fallback (below). */
+          var a_is_display_id = (a_alias == a.display_id) ? 1 : 0;
+          var b_is_display_id = (b_alias == b.display_id) ? 1 : 0;
+
+          return (b_is_empty + b_is_display_id) -
+                 (a_is_empty + a_is_display_id);
+        }, (p) =>
+        {
+          string alias = ""; /* must not be null */
+
+          if (p != null)
             {
-              var a = (AliasDetails) p;
-
-              if (a.alias != null && a.alias.strip () != "")
-                {
-                  alias = a.alias;
-                  break;
-                }
+              alias = (p as AliasDetails).alias.strip ();
             }
-        }
 
-      debug ("    got alias '%s' from writeable personas", alias);
-
-      /* Since we can't find a non-empty alias from a writeable backend, try
-       * the aliases from other personas. Use a non-empty alias which isn't
-       * equal to the persona's display ID as our preference. If we can't find
-       * one of those, fall back to one which is equal to the display ID. */
-      if (alias == null)
-        {
-          foreach (var p in this._persona_set)
+          /* Only notify if the value has changed. We have to set the private
+           * member and notify manually, or we'd end up propagating the new
+           * alias back down to all our Personas, even if it's a fallback
+           * display ID or something else undesirable. */
+          if (this._alias != alias)
             {
-              if (p is AliasDetails)
-                {
-                  var a = (AliasDetails) p;
-
-                  if (a.alias == null || a.alias.strip () == "")
-                    continue;
-
-                  if (alias == null || alias_is_display_id == true)
-                    {
-                      /* We prefer to not have an alias which is the same as the
-                       * Persona's display-id, since having such an alias
-                       * implies that it's the default. However, we prefer using
-                       * such an alias to using the Persona's UID, which is our
-                       * ultimate fallback (below). */
-                      alias = a.alias;
-
-                      if (a.alias == p.display_id)
-                        alias_is_display_id = true;
-                      else if (alias != null)
-                        break;
-                    }
-                }
+              this._alias = alias;
+              this.notify_property ("alias");
             }
-        }
-
-      debug ("    got alias '%s' from non-writeable personas", alias);
-
-      if (alias == null)
-        {
-          /* We have to pick a display ID, since none of the personas have an
-           * alias available. Pick the display ID from the first persona in the
-           * list. */
-          foreach (var persona in this._persona_set)
-            {
-              alias = persona.display_id;
-              debug ("No aliases available for individual; using display ID " +
-                  "instead: %s", alias);
-              break;
-            }
-        }
-
-      /* Only notify if the value has changed. We have to set the private member
-       * and notify manually, or we'd end up propagating the new alias back
-       * down to all our Personas, even if it's a fallback display ID or
-       * something else undesirable. */
-      if (this._alias != alias)
-        {
-          debug ("Changing alias of individual '%s' from '%s' to '%s'.",
-              this.id, this._alias, alias);
-          this._alias = alias;
-          this.notify_property ("alias");
-        }
+        });
     }
 
   private void _update_avatar ()
     {
-      LoadableIcon? avatar = null;
-
-      foreach (var p in this._persona_set)
+      this._update_single_valued_property (typeof (AvatarDetails), (a, b) =>
         {
-          if (p is AvatarDetails)
+          var a_avatar = (a as AvatarDetails).avatar;
+          var b_avatar = (b as AvatarDetails).avatar;
+
+          return ((a_avatar != null) ? 1 : 0) - ((b_avatar != null) ? 1 : 0);
+        }, (p) =>
+        {
+          LoadableIcon? avatar = null;
+
+          if (p != null)
             {
-              avatar = ((AvatarDetails) p).avatar;
-              if (avatar != null)
-                break;
+              avatar = (p as AvatarDetails).avatar;
             }
-        }
 
-      /* only notify if the value has changed */
-      if (this._avatar == null || !this._avatar.equal (avatar))
-        {
-          this._avatar = avatar;
-          this.notify_property ("avatar");
-        }
+          /* only notify if the value has changed */
+          if ((this._avatar == null && avatar != null) ||
+              (this._avatar != null &&
+               (avatar == null || !this._avatar.equal (avatar))))
+            {
+              this._avatar = avatar;
+              this.notify_property ("avatar");
+            }
+        });
     }
 
   private void _update_trust_level ()
@@ -1292,83 +1367,99 @@ public class Folks.Individual : Object,
 
   private void _update_structured_name ()
     {
-      bool name_found = false;
-
-      foreach (var persona in this._persona_set)
+      this._update_single_valued_property (typeof (NameDetails), (a, b) =>
         {
-          var name_details = persona as NameDetails;
-          if (name_details != null)
+          var a_name = (a as NameDetails).structured_name;
+          var b_name = (b as NameDetails).structured_name;
+
+          var a_is_set = (a_name != null && !a_name.is_empty ()) ? 1 : 0;
+          var b_is_set = (b_name != null && !b_name.is_empty ()) ? 1 : 0;
+
+          return (a_is_set - b_is_set);
+        }, (p) =>
+        {
+          StructuredName? name = null;
+
+          if (p != null)
             {
-              var new_value = name_details.structured_name;
-              if (new_value != null && !new_value.is_empty ())
+              name = (p as NameDetails).structured_name;
+
+              if (name != null && name.is_empty ())
                 {
-                  name_found = true;
-                  if (this.structured_name == null ||
-                      !this.structured_name.equal (new_value))
-                    {
-                      this._structured_name = new_value;
-                      this.notify_property ("structured-name");
-                      return;
-                    }
+                  name = null;
                 }
             }
-        }
 
-      if (name_found == false && this._structured_name != null)
-        {
-          this._structured_name = null;
-          this.notify_property ("structured-name");
-        }
+          if ((this._structured_name == null && name != null) ||
+              (this._structured_name != null &&
+               (name == null || !this._structured_name.equal (name))))
+            {
+              this._structured_name = name;
+              this.notify_property ("structured-name");
+            }
+        });
     }
 
   private void _update_full_name ()
     {
-      string? new_full_name = null;
-
-      foreach (var persona in this._persona_set)
+      this._update_single_valued_property (typeof (NameDetails), (a, b) =>
         {
-          var name_details = persona as NameDetails;
-          if (name_details != null)
+          var a_name = (a as NameDetails).full_name;
+          var b_name = (b as NameDetails).full_name;
+
+          assert (a_name != null);
+          assert (b_name != null);
+
+          var a_is_set = (a_name.strip () != "") ? 1 : 0;
+          var b_is_set = (b_name.strip () != "") ? 1 : 0;
+
+          return (a_is_set - b_is_set);
+        }, (p) =>
+        {
+          string new_full_name = ""; /* must not be null */
+
+          if (p != null)
             {
-              var new_value = name_details.full_name;
-              if (new_value != null && new_value != "")
-                {
-                  new_full_name = new_value;
-                  break;
-                }
+              new_full_name = (p as NameDetails).full_name.strip ();
             }
-        }
 
-      if (new_full_name != this._full_name)
-        {
-          this._full_name = new_full_name;
-          this.notify_property ("full-name");
-        }
+          if (new_full_name != this._full_name)
+            {
+              this._full_name = new_full_name;
+              this.notify_property ("full-name");
+            }
+        });
     }
 
   private void _update_nickname ()
     {
-      string new_nickname = "";
-
-      foreach (var persona in this._persona_set)
+      this._update_single_valued_property (typeof (NameDetails), (a, b) =>
         {
-          var name_details = persona as NameDetails;
-          if (name_details != null)
+          var a_name = (a as NameDetails).nickname;
+          var b_name = (b as NameDetails).nickname;
+
+          assert (a_name != null);
+          assert (b_name != null);
+
+          var a_is_set = (a_name.strip () != "") ? 1 : 0;
+          var b_is_set = (b_name.strip () != "") ? 1 : 0;
+
+          return (a_is_set - b_is_set);
+        }, (p) =>
+        {
+          string new_nickname = ""; /* must not be null */
+
+          if (p != null)
             {
-              var new_value = name_details.nickname;
-              if (new_value != null && new_value != "")
-                {
-                  new_nickname = new_value;
-                  break;
-                }
+              new_nickname = (p as NameDetails).nickname.strip ();
             }
-        }
 
-      if (new_nickname != this._nickname)
-        {
-          this._nickname = new_nickname;
-          this.notify_property ("nickname");
-        }
+          if (new_nickname != this._nickname)
+            {
+              this._nickname = new_nickname;
+              this.notify_property ("nickname");
+            }
+        });
     }
 
   private void _disconnect_from_persona (Persona persona,
@@ -1425,27 +1516,30 @@ public class Folks.Individual : Object,
 
   private void _update_gender ()
     {
-      Gender new_gender = Gender.UNSPECIFIED;
-
-      foreach (var persona in this._persona_set)
+      this._update_single_valued_property (typeof (GenderDetails), (a, b) =>
         {
-          var gender_details = persona as GenderDetails;
-          if (gender_details != null)
+          var a_gender = (a as GenderDetails).gender;
+          var b_gender = (b as GenderDetails).gender;
+
+          var a_is_specified = (a_gender != Gender.UNSPECIFIED) ? 1 : 0;
+          var b_is_specified = (b_gender != Gender.UNSPECIFIED) ? 1 : 0;
+
+          return (a_is_specified - b_is_specified);
+        }, (p) =>
+        {
+          var new_gender = Gender.UNSPECIFIED;
+
+          if (p != null)
             {
-              var new_value = gender_details.gender;
-              if (new_value != Gender.UNSPECIFIED)
-                {
-                  new_gender = new_value;
-                  break;
-                }
+              new_gender = (p as GenderDetails).gender;
             }
-        }
 
-      if (new_gender != this.gender)
-        {
-          this._gender = new_gender;
-          this.notify_property ("gender");
-        }
+          if (new_gender != this.gender)
+            {
+              this._gender = new_gender;
+              this.notify_property ("gender");
+            }
+        });
     }
 
   private void _update_urls ()
@@ -1615,47 +1709,50 @@ public class Folks.Individual : Object,
 
   private void _update_birthday ()
     {
-      unowned DateTime bday = null;
-      unowned string calendar_event_id = "";
-
-      foreach (var persona in this._persona_set)
+      this._update_single_valued_property (typeof (BirthdayDetails), (a, b) =>
         {
-          var bday_owner = persona as BirthdayDetails;
-          if (bday_owner != null)
+          var a_birthday = (a as BirthdayDetails).birthday;
+          var b_birthday = (b as BirthdayDetails).birthday;
+          var a_event_id = (a as BirthdayDetails).calendar_event_id;
+          var b_event_id = (b as BirthdayDetails).calendar_event_id;
+
+          var a_birthday_is_set = (a_birthday != null) ? 1 : 0;
+          var b_birthday_is_set = (b_birthday != null) ? 1 : 0;
+
+          /* We consider the empty string as “set” because it's an opaque ID. */
+          var a_event_id_is_set = (a_event_id != null) ? 1 : 0;
+          var b_event_id_is_set = (b_event_id != null) ? 1 : 0;
+
+          /* Prefer personas which have both properties set over those who have
+           * only one set. We don't consider the case where the birthdays from
+           * different personas don't match, because that's just scary. */
+          return (a_birthday_is_set + a_event_id_is_set) -
+                 (b_birthday_is_set + b_event_id_is_set);
+        }, (p) =>
+        {
+          unowned DateTime? bday = null;
+          unowned string? calendar_event_id = null;
+
+          if (p != null)
             {
-              if (bday_owner.birthday != null)
-                {
-                  if (this._birthday == null ||
-                      bday_owner.birthday.compare (this._birthday) != 0)
-                    {
-                      bday = bday_owner.birthday;
-                      calendar_event_id = bday_owner.calendar_event_id;
-                      break;
-                    }
-                }
+              bday = (p as BirthdayDetails).birthday;
+              calendar_event_id = (p as BirthdayDetails).calendar_event_id;
             }
-        }
 
-      if (this._birthday != null && bday == null)
-        {
-          this._birthday = null;
-          this._calendar_event_id = null;
+          if ((this._birthday == null && bday != null) ||
+              (this._birthday != null &&
+               (bday == null || !this._birthday.equal (bday))) ||
+              (this._calendar_event_id != calendar_event_id))
+            {
+              this._birthday = bday;
+              this._calendar_event_id = calendar_event_id;
 
-          this.freeze_notify ();
-          this.notify_property ("birthday");
-          this.notify_property ("calendar-event-id");
-          this.thaw_notify ();
-        }
-      else if (bday != null)
-        {
-          this._birthday = bday;
-          this._calendar_event_id = calendar_event_id;
-
-          this.freeze_notify ();
-          this.notify_property ("birthday");
-          this.notify_property ("calendar-event-id");
-          this.thaw_notify ();
-        }
+              this.freeze_notify ();
+              this.notify_property ("birthday");
+              this.notify_property ("calendar-event-id");
+              this.thaw_notify ();
+            }
+        });
     }
 
   private void _update_notes ()
