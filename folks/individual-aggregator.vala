@@ -700,7 +700,7 @@ public class Folks.IndividualAggregator : Object
 
       this.individuals_changed (_added.read_only_view, _removed.read_only_view,
           message, actor, reason);
-      this.individuals_changed_detailed (changes);
+      this.individuals_changed_detailed (_changes);
     }
 
   private void _connect_to_individual (Individual individual)
