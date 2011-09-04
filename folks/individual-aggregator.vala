@@ -831,51 +831,7 @@ public class Folks.IndividualAggregator : Object
               final_individual.id);
           foreach (var p in final_personas)
             {
-              var final_persona = (Persona) p;
-
-              debug ("        %s (is user: %s, IID: %s)", final_persona.uid,
-                  final_persona.is_user ? "yes" : "no", final_persona.iid);
-
-              /* Add the Persona to the link map. Its trust level will be
-               * reflected in final_individual.trust_level, so other Personas
-               * won't be linked against it in error if the trust level is
-               * NONE. */
-              this._link_map.replace (final_persona.iid, final_individual);
-
-              /* Only allow linking on non-IID properties of the Persona if we
-               * fully trust the PersonaStore it came from. */
-              if (final_persona.store.trust_level == PersonaStoreTrust.FULL)
-                {
-                  debug ("        Inserting links:");
-
-                  /* Insert maps from the Persona's linkable properties to the
-                   * Individual. */
-                  foreach (unowned string prop_name in
-                      final_persona.linkable_properties)
-                    {
-                      /* FIXME: can't be var because of bgo#638208 */
-                      unowned ObjectClass pclass = final_persona.get_class ();
-                      if (pclass.find_property (prop_name) == null)
-                        {
-                          warning (
-                              /* Translators: the parameter is a property
-                               * name. */
-                              _("Unknown property '%s' in linkable property list."),
-                              prop_name);
-                          continue;
-                        }
-
-                      final_persona.linkable_property_to_links (prop_name,
-                          (l) =>
-                        {
-                          unowned string prop_linking_value = l;
-
-                          debug ("            %s", prop_linking_value);
-                          this._link_map.replace (prop_linking_value,
-                              final_individual);
-                        });
-                    }
-                }
+              this._add_persona_to_link_map (p, final_individual);
             }
 
           foreach (var i in candidate_inds)
@@ -930,6 +886,51 @@ public class Folks.IndividualAggregator : Object
         }
     }
 
+  private void _add_persona_to_link_map (Persona persona, Individual individual)
+    {
+      debug ("Connecting to Persona: %s (is user: %s, IID: %s)", persona.uid,
+          persona.is_user ? "yes" : "no", persona.iid);
+      debug ("    Mapping to Individual: %s", individual.id);
+
+      /* Add the Persona to the link map. Its trust level will be reflected in
+       * final_individual.trust_level, so other Personas won't be linked against
+       * it in error if the trust level is NONE. */
+      this._link_map.replace (persona.iid, individual);
+
+      /* Only allow linking on non-IID properties of the Persona if we fully
+       * trust the PersonaStore it came from. */
+      if (persona.store.trust_level == PersonaStoreTrust.FULL)
+        {
+          debug ("    Inserting links:");
+
+          /* Insert maps from the Persona's linkable properties to the
+           * Individual. */
+          foreach (unowned string prop_name in persona.linkable_properties)
+            {
+              debug ("        %s", prop_name);
+
+              /* FIXME: can't be var because of bgo#638208 */
+              unowned ObjectClass pclass = persona.get_class ();
+              if (pclass.find_property (prop_name) == null)
+                {
+                  warning (
+                      /* Translators: the parameter is a property name. */
+                      _("Unknown property '%s' in linkable property list."),
+                      prop_name);
+                  continue;
+                }
+
+              persona.linkable_property_to_links (prop_name, (l) =>
+                {
+                  unowned string prop_linking_value = l;
+
+                  debug ("            %s", prop_linking_value);
+                  this._link_map.replace (prop_linking_value, individual);
+                });
+            }
+        }
+    }
+
   private void _remove_persona_from_link_map (Persona persona)
     {
       this._link_map.remove (persona.iid);
@@ -943,6 +944,8 @@ public class Folks.IndividualAggregator : Object
            * removed. */
           foreach (unowned string prop_name in persona.linkable_properties)
             {
+              debug ("        %s", prop_name);
+
               /* FIXME: can't be var because of bgo#638208 */
               unowned ObjectClass pclass = persona.get_class ();
               if (pclass.find_property (prop_name) == null)
@@ -956,7 +959,7 @@ public class Folks.IndividualAggregator : Object
 
               persona.linkable_property_to_links (prop_name, (linking_value) =>
                 {
-                  debug ("        %s", linking_value);
+                  debug ("            %s", linking_value);
                   this._link_map.remove (linking_value);
                 });
             }
