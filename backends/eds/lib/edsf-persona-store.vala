@@ -43,27 +43,10 @@ public class Edsf.PersonaStore : Folks.PersonaStore
   private string _addressbook_uri = null;
   private E.Source _source;
   private string _query_str;
-  private bool _groups_supported = false;
 
   /* The timeout after which we consider a property change to have failed if we
    * haven't received a property change notification for it. */
   private const uint _property_change_timeout = 30; /* seconds */
-
-  private const string[] _always_writeable_properties =
-    {
-      "web-service-addresses",
-      "local-ids",
-      "postal-addresses",
-      "phone-numbers",
-      "email-addresses",
-      "notes",
-      "avatar",
-      "structured-name",
-      "full-name",
-      "nickname",
-      "im-addresses",
-      "groups"
-    };
 
   /**
    * The type of persona store this is.
@@ -122,7 +105,11 @@ public class Edsf.PersonaStore : Folks.PersonaStore
    */
   public override MaybeBool can_group_personas
     {
-      get { return this._groups_supported ? MaybeBool.TRUE : MaybeBool.FALSE; }
+      get
+        {
+          return ("groups" in this._always_writeable_properties)
+              ? MaybeBool.TRUE : MaybeBool.FALSE;
+        }
     }
 
   /**
@@ -156,6 +143,8 @@ public class Edsf.PersonaStore : Folks.PersonaStore
     {
       get { return this._is_prepared; }
     }
+
+  private string[] _always_writeable_properties = {};
 
   /**
    * {@inheritDoc}
@@ -603,21 +592,51 @@ public class Edsf.PersonaStore : Folks.PersonaStore
             }
 
           /* Determine which fields the address book supports. This is necessary
-           * to work out whether we can support groups. */
+           * to work out which writeable properties we can support.
+           *
+           * Note: We assume this is constant over the lifetime of the address
+           * book. This seems reasonable. */
           string supported_fields;
           try
             {
               yield this._addressbook.get_backend_property ("supported-fields",
                   null, out supported_fields);
 
+              var prop_set = new HashSet<string> ();
+
               /* We get a comma-separated list of fields back. */
               if (supported_fields != null)
                 {
                   string[] fields = supported_fields.split (",");
 
-                  this._groups_supported =
-                      (Contact.field_name (ContactField.CATEGORIES) in fields);
+                  /* We always support local-ids and web-service-addresses
+                   * because we use custom vCard attributes for them. */
+                  prop_set.add (Folks.PersonaStore.detail_key (
+                      PersonaDetail.LOCAL_IDS));
+                  prop_set.add (Folks.PersonaStore.detail_key (
+                      PersonaDetail.WEB_SERVICE_ADDRESSES));
+
+                  foreach (unowned string field in fields)
+                    {
+                      var prop = Folks.PersonaStore.detail_key (
+                          this._eds_field_name_to_folks_persona_detail (field));
+
+                      if (prop != null)
+                        {
+                          prop_set.add ((owned) prop);
+                        }
+                    }
                 }
+
+              /* Convert the property set to an array. We can't use .to_array()
+               * here because it fails to null-terminate the array. Sigh. */
+              this._always_writeable_properties = new string[prop_set.size + 1];
+              uint i = 0;
+              foreach (var final_prop in prop_set)
+                {
+                  this._always_writeable_properties[i++] = final_prop;
+                }
+              this._always_writeable_properties[i] = null;
             }
           catch (GLib.Error e2)
             {
@@ -722,6 +741,159 @@ public class Edsf.PersonaStore : Folks.PersonaStore
 
           this._is_prepared = true;
           this.notify_property ("is-prepared");
+        }
+    }
+
+  private PersonaDetail _eds_field_name_to_folks_persona_detail (
+      string eds_field_name)
+    {
+      var eds_field_id = Contact.field_id (eds_field_name);
+
+      switch (eds_field_id)
+        {
+          case ContactField.FULL_NAME:
+            return PersonaDetail.FULL_NAME;
+          case ContactField.GIVEN_NAME:
+          case ContactField.FAMILY_NAME:
+            return PersonaDetail.STRUCTURED_NAME;
+          case ContactField.NICKNAME:
+            return PersonaDetail.NICKNAME;
+          case ContactField.EMAIL_1:
+          case ContactField.EMAIL_2:
+          case ContactField.EMAIL_3:
+          case ContactField.EMAIL_4:
+          case ContactField.EMAIL:
+            return PersonaDetail.EMAIL_ADDRESSES;
+          case ContactField.ADDRESS_LABEL_HOME:
+          case ContactField.ADDRESS_LABEL_WORK:
+          case ContactField.ADDRESS_LABEL_OTHER:
+          case ContactField.ADDRESS:
+          case ContactField.ADDRESS_HOME:
+          case ContactField.ADDRESS_WORK:
+          case ContactField.ADDRESS_OTHER:
+            return PersonaDetail.POSTAL_ADDRESSES;
+          case ContactField.PHONE_ASSISTANT:
+          case ContactField.PHONE_BUSINESS:
+          case ContactField.PHONE_BUSINESS_2:
+          case ContactField.PHONE_BUSINESS_FAX:
+          case ContactField.PHONE_CALLBACK:
+          case ContactField.PHONE_CAR:
+          case ContactField.PHONE_COMPANY:
+          case ContactField.PHONE_HOME:
+          case ContactField.PHONE_HOME_2:
+          case ContactField.PHONE_HOME_FAX:
+          case ContactField.PHONE_ISDN:
+          case ContactField.PHONE_MOBILE:
+          case ContactField.PHONE_OTHER:
+          case ContactField.PHONE_OTHER_FAX:
+          case ContactField.PHONE_PAGER:
+          case ContactField.PHONE_PRIMARY:
+          case ContactField.PHONE_RADIO:
+          case ContactField.PHONE_TELEX:
+          case ContactField.PHONE_TTYTDD:
+          case ContactField.TEL:
+          case ContactField.SIP:
+            return PersonaDetail.PHONE_NUMBERS;
+          case ContactField.ORG:
+          case ContactField.ORG_UNIT:
+          case ContactField.OFFICE:
+          case ContactField.TITLE:
+          case ContactField.ROLE:
+          case ContactField.MANAGER:
+          case ContactField.ASSISTANT:
+            return PersonaDetail.ROLES;
+          case ContactField.HOMEPAGE_URL:
+          case ContactField.BLOG_URL:
+          case ContactField.FREEBUSY_URL:
+          case ContactField.VIDEO_URL:
+            return PersonaDetail.URLS;
+          case ContactField.CATEGORIES:
+          case ContactField.CATEGORY_LIST:
+            return PersonaDetail.GROUPS;
+          case ContactField.NOTE:
+            return PersonaDetail.NOTES;
+          case ContactField.IM_AIM_HOME_1:
+          case ContactField.IM_AIM_HOME_2:
+          case ContactField.IM_AIM_HOME_3:
+          case ContactField.IM_AIM_WORK_1:
+          case ContactField.IM_AIM_WORK_2:
+          case ContactField.IM_AIM_WORK_3:
+          case ContactField.IM_GROUPWISE_HOME_1:
+          case ContactField.IM_GROUPWISE_HOME_2:
+          case ContactField.IM_GROUPWISE_HOME_3:
+          case ContactField.IM_GROUPWISE_WORK_1:
+          case ContactField.IM_GROUPWISE_WORK_2:
+          case ContactField.IM_GROUPWISE_WORK_3:
+          case ContactField.IM_JABBER_HOME_1:
+          case ContactField.IM_JABBER_HOME_2:
+          case ContactField.IM_JABBER_HOME_3:
+          case ContactField.IM_JABBER_WORK_1:
+          case ContactField.IM_JABBER_WORK_2:
+          case ContactField.IM_JABBER_WORK_3:
+          case ContactField.IM_YAHOO_HOME_1:
+          case ContactField.IM_YAHOO_HOME_2:
+          case ContactField.IM_YAHOO_HOME_3:
+          case ContactField.IM_YAHOO_WORK_1:
+          case ContactField.IM_YAHOO_WORK_2:
+          case ContactField.IM_YAHOO_WORK_3:
+          case ContactField.IM_MSN_HOME_1:
+          case ContactField.IM_MSN_HOME_2:
+          case ContactField.IM_MSN_HOME_3:
+          case ContactField.IM_MSN_WORK_1:
+          case ContactField.IM_MSN_WORK_2:
+          case ContactField.IM_MSN_WORK_3:
+          case ContactField.IM_ICQ_HOME_1:
+          case ContactField.IM_ICQ_HOME_2:
+          case ContactField.IM_ICQ_HOME_3:
+          case ContactField.IM_ICQ_WORK_1:
+          case ContactField.IM_ICQ_WORK_2:
+          case ContactField.IM_ICQ_WORK_3:
+          case ContactField.IM_AIM:
+          case ContactField.IM_GROUPWISE:
+          case ContactField.IM_JABBER:
+          case ContactField.IM_YAHOO:
+          case ContactField.IM_MSN:
+          case ContactField.IM_ICQ:
+          case ContactField.IM_GADUGADU_HOME_1:
+          case ContactField.IM_GADUGADU_HOME_2:
+          case ContactField.IM_GADUGADU_HOME_3:
+          case ContactField.IM_GADUGADU_WORK_1:
+          case ContactField.IM_GADUGADU_WORK_2:
+          case ContactField.IM_GADUGADU_WORK_3:
+          case ContactField.IM_GADUGADU:
+          case ContactField.IM_SKYPE_HOME_1:
+          case ContactField.IM_SKYPE_HOME_2:
+          case ContactField.IM_SKYPE_HOME_3:
+          case ContactField.IM_SKYPE_WORK_1:
+          case ContactField.IM_SKYPE_WORK_2:
+          case ContactField.IM_SKYPE_WORK_3:
+          case ContactField.IM_SKYPE:
+            return PersonaDetail.IM_ADDRESSES;
+          case ContactField.PHOTO:
+            return PersonaDetail.AVATAR;
+          case ContactField.BIRTH_DATE:
+            return PersonaDetail.BIRTHDAY;
+          /* Unsupported */
+          case ContactField.UID:
+          case ContactField.FILE_AS:
+          case ContactField.BOOK_URI:
+          case ContactField.MAILER:
+          case ContactField.CALENDAR_URI:
+          case ContactField.ICS_CALENDAR:
+          case ContactField.SPOUSE:
+          case ContactField.REV:
+          case ContactField.NAME_OR_ORG:
+          case ContactField.LOGO:
+          case ContactField.NAME:
+          case ContactField.WANTS_HTML:
+          case ContactField.IS_LIST:
+          case ContactField.LIST_SHOW_ADDRESSES:
+          case ContactField.ANNIVERSARY:
+          case ContactField.X509_CERT:
+          case ContactField.GEO:
+          default:
+            debug ("Unsupported/Unknown EDS field name '%s'.", eds_field_name);
+            return PersonaDetail.INVALID;
         }
     }
 
@@ -1236,10 +1408,10 @@ public class Edsf.PersonaStore : Folks.PersonaStore
   internal async void _set_groups (Edsf.Persona persona,
       Set<string> groups) throws PropertyError
     {
-      if (this._groups_supported == false)
+      if (!("groups" in this._always_writeable_properties))
         {
-          /* Give up. */
-          return;
+          throw new PropertyError.NOT_WRITEABLE (
+              _("Groups are not writeable on this contact."));
         }
 
       yield this._set_contact_groups (persona.contact, groups);
