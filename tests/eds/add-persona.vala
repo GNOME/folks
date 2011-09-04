@@ -338,7 +338,7 @@ public class AddPersonaTests : Folks.TestCase
         }
     }
 
-  private void _check_properties (Individual i)
+  private async void _check_properties (Individual i)
     {
       if (i.full_name == this._persona_fullname)
         this._properties_found.replace ("full_name", true);
@@ -400,14 +400,10 @@ public class AddPersonaTests : Folks.TestCase
         {
           var b = new FileIcon (File.new_for_path (this._avatar_path));
 
-          TestUtils.loadable_icons_content_equal.begin (b, i.avatar, -1,
-              (obj, result) =>
-            {
-              if (TestUtils.loadable_icons_content_equal.end (result))
-                this._properties_found.replace ("avatar", true);
-
-              this._exit_if_all_properties_found ();
-            });
+          var same = yield TestUtils.loadable_icons_content_equal (b, i.avatar,
+              -1);
+          if (same)
+            this._properties_found.replace ("avatar", true);
         }
 
       if (i.birthday != null)
