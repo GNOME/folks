@@ -976,7 +976,6 @@ public class Folks.IndividualAggregator : Object
       var removed_individuals = new HashSet<Individual> ();
       var individuals_changes = new HashMultiMap<Individual?, Individual?> ();
       var relinked_personas = new HashSet<Persona> ();
-      var removed_personas = new HashSet<Persona> (direct_hash, direct_equal);
       var replaced_individuals = new HashMap<Individual, Individual> ();
 
       /* We store the value of this.user locally and only update it at the end
@@ -990,10 +989,6 @@ public class Folks.IndividualAggregator : Object
         {
           debug ("    %s (is user: %s, IID: %s)", persona.uid,
               persona.is_user ? "yes" : "no", persona.iid);
-
-          /* Build a hash table of the removed Personas so that we can quickly
-           * eliminate them from the list of Personas to relink, below. */
-          removed_personas.add (persona);
 
           /* Find the Individual containing the Persona (if any) and mark them
            * for removal (any other Personas they have which aren't being
@@ -1029,7 +1024,7 @@ public class Folks.IndividualAggregator : Object
            * include any of the Personas which have just been removed. */
           foreach (var persona in individual.personas)
             {
-              if (removed_personas.contains (persona) == true ||
+              if (removed.contains (persona) == true ||
                   relinked_personas.contains (persona) == true)
                 continue;
 
