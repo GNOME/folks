@@ -128,11 +128,18 @@ public errordomain Folks.PersonaStoreError
 public enum Folks.PersonaDetail
 {
   /**
+   * Invalid field for use in error returns.
+   *
+   * @since UNRELEASED
+   */
+  INVALID = -1,
+
+  /**
    * Field for {@link AliasDetails.alias}.
    *
    * @since 0.5.0
    */
-  ALIAS,
+  ALIAS = 0,
 
   /**
    * Field for {@link AvatarDetails.avatar}.
@@ -244,7 +251,14 @@ public enum Folks.PersonaDetail
    *
    * @since 0.5.0
    */
-  WEB_SERVICE_ADDRESSES
+  WEB_SERVICE_ADDRESSES,
+
+  /**
+   * Field for {@link GroupDetails.groups}.
+   *
+   * @since UNRELEASED
+   */
+  GROUPS
 }
 
 /**
@@ -288,7 +302,8 @@ public abstract class Folks.PersonaStore : Object
     "roles",
     "structured-name",
     "urls",
-    "web-service-addresses"
+    "web-service-addresses",
+    "groups"
   };
 
   /**
@@ -296,11 +311,18 @@ public abstract class Folks.PersonaStore : Object
    * the details param of {@link PersonaStore.add_persona_from_details}.
    *
    * @param detail the {@link PersonaDetail} to lookup
+   * @return the corresponding property name, or `null` if `detail` is invalid
    *
    * @since 0.5.0
    */
-  public static unowned string detail_key (Folks.PersonaDetail detail)
+  public static unowned string? detail_key (Folks.PersonaDetail detail)
     {
+      if (detail == PersonaDetail.INVALID ||
+          detail >= PersonaStore._PERSONA_DETAIL.length)
+        {
+          return null;
+        }
+
       return PersonaStore._PERSONA_DETAIL[detail];
     }
 
