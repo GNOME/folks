@@ -1,156 +1,273 @@
 # German translation of folks.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the folks package.
-# Mario Blättermann <mariobl@gnome.org>, 2010.
+# Mario Blättermann <mariobl@freenet.de>, 2010, 2011.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: folks master\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-11-06 20:23+0100\n"
-"PO-Revision-Date: 2010-11-06 20:34+0100\n"
-"Last-Translator: Mario Blättermann <mariobl@gnome.org>\n"
+"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
+"product=folks&keywords=I18N+L10N&component=general\n"
+"POT-Creation-Date: 2011-09-04 13:06+0000\n"
+"PO-Revision-Date: 2011-09-05 20:59+0100\n"
+"Last-Translator: Mario Blättermann <mariobl@freenet.de>\n"
 "Language-Team: German <gnome-de@gnome.org>\n"
-"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: \n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
 "X-Poedit-Language: German\n"
 "X-Poedit-Country: GERMANY\n"
 
+#. Translators: the first parameter is an address book
+#. * URI and the second is a persona UID.
+#: ../backends/eds/lib/edsf-persona-store.vala:444
+#, c-format
+msgid "Address book ‘%s’ is offline, so contact ‘%s’ cannot be removed."
+msgstr ""
+"Das Adressbuch »%s« ist nicht verfügbar, daher kann der Kontakt »%s« nicht "
+"entfernt werden."
+
+#. Translators: the first parameter is an address book
+#. * URI and the second is an error message.
+#: ../backends/eds/lib/edsf-persona-store.vala:450
+#, c-format
+msgid "Permission denied to remove contact ‘%s’: %s"
+msgstr "Kontakt »%s« kann nicht entfernt werden: %s"
+
+#. Translators: the parameter is an error message.
+#: ../backends/eds/lib/edsf-persona-store.vala:455
+#, c-format
+msgid "Removing contacts isn't supported by this persona store: %s"
+msgstr ""
+"Das Entfernen von Kontakten wird für diesen Personenspeicher nicht "
+"unterstützt: %s"
+
+#: ../backends/eds/lib/edsf-persona-store.vala:484
+#, c-format
+msgid "Can't remove contact ‘%s’: %s"
+msgstr "Kontakt »%s« konnte nicht entfernt werden: %s"
+
+#. Translators: the parameter is an address book
+#. * URI.
+#: ../backends/eds/lib/edsf-persona-store.vala:543
+#: ../backends/eds/lib/edsf-persona-store.vala:700
+#, c-format
+msgid "Address book ‘%s’ is offline."
+msgstr "Das Adressbuch »%s« ist nicht verfügbar."
+
+#. Translators: the first parameter is an address
+#. * book URI and the second is an error message.
+#: ../backends/eds/lib/edsf-persona-store.vala:548
+#: ../backends/eds/lib/edsf-persona-store.vala:705
+#, c-format
+msgid "Permission denied to open address book ‘%s’: %s"
+msgstr "Der Zugriff zum Öffnen des Adressbuchs »%s« wurde verweigert: %s"
+
+#. Translators: the first parameter is an address book URI
+#. * and the second is an error message.
+#: ../backends/eds/lib/edsf-persona-store.vala:581
+#, c-format
+msgid "Couldn't open address book ‘%s’: %s"
+msgstr "Adressbuch »%s« konnte nicht geöffnet werden: %s"
+
+#. Translators: the parameter is an address book URI.
+#: ../backends/eds/lib/edsf-persona-store.vala:591
+#, c-format
+msgid "Couldn't open address book ‘%s’."
+msgstr "Adressbuch »%s« konnte nicht geöffnet werden."
+
+#. Translators: the parameteter is an error message.
+#: ../backends/eds/lib/edsf-persona-store.vala:648
+#, c-format
+msgid "Couldn't get address book capabilities: %s"
+msgstr "Fähigkeiten des Adressbuchs konnten nicht ermittelt werden: %s"
+
+#. Translators: the parameter is an address book URI.
+#: ../backends/eds/lib/edsf-persona-store.vala:661
+#, c-format
+msgid "Couldn't get view for address book ‘%s’."
+msgstr "Ansicht für Adressbuch »%s« konnte nicht abgerufen werden."
+
+#. Translators: the first parameter is an address book URI
+#. * and the second is an error message.
+#: ../backends/eds/lib/edsf-persona-store.vala:738
+#, c-format
+msgid "Couldn't get view for address book ‘%s’: %s"
+msgstr "Ansicht für Adressbuch »%s« konnte nicht abgerufen werden: %s"
+
+#: ../backends/eds/lib/edsf-persona-store.vala:959
+#, c-format
+msgid "Changing the ‘%s’ property failed due to reaching the timeout."
+msgstr ""
+"Das Ändern der Eigenschaft »%s« ist wegen Zeitüberschreitung fehlgeschlagen."
+
+#. Translators: the parameter is an error message.
+#: ../backends/eds/lib/edsf-persona-store.vala:1171
+#, c-format
+msgid "Can't update avatar: %s"
+msgstr "Benutzerbild kann nicht aktualisiert werden: %s"
+
+#: ../backends/eds/lib/edsf-persona-store.vala:1414
+msgid "Groups are not writeable on this contact."
+msgstr "Gruppen sind für diesen Kontakt schreibgeschützt."
+
+#. Translators: the first parameter is a non-human-readable
+#. * property name and the second parameter is an error
+#. * message.
+#: ../backends/eds/lib/edsf-persona-store.vala:1572
+#, c-format
+msgid "Property ‘%s’ is not writeable: %s"
+msgstr "Die Eigenschaft »%s« ist schreibgeschützt: %s"
+
+#. Translators: the first parameter is a non-human-readable
+#. * property name and the second parameter is an error
+#. * message.
+#: ../backends/eds/lib/edsf-persona-store.vala:1581
+#, c-format
+msgid "Invalid value for property ‘%s’: %s"
+msgstr "Ungültiger Wert für Eigenschaft »%s«: %s"
+
+#. Translators: the first parameter is a non-human-readable
+#. * property name and the second parameter is an error message.
+#: ../backends/eds/lib/edsf-persona-store.vala:1607
+#, c-format
+msgid "Unknown error setting property ‘%s’: %s"
+msgstr "Unbekannter Fehler beim Setzen der Eigenschaft »%s«: %s"
+
 #. Translators: the first parameter is a filename,
 #. * and the second is an error message.
-#: ../backends/key-file/kf-persona-store.vala:179
+#: ../backends/key-file/kf-persona-store.vala:205
 #, c-format
 msgid "The relationship key file '%s' could not be loaded: %s"
-msgstr ""
+msgstr "Die Beziehungs-Schlüsseldatei »%s« konnte nicht geladen werden: %s"
 
 #. Translators: the first parameter is a path, and
 #. * the second is an error message.
-#: ../backends/key-file/kf-persona-store.vala:201
+#: ../backends/key-file/kf-persona-store.vala:227
 #, c-format
 msgid "The relationship key file directory '%s' could not be created: %s"
-msgstr ""
+msgstr "Die Beziehungs-Schlüsseldatei »%s« konnte nicht erzeugt werden: %s"
 
 #. Translators: the first parameter is a filename,
 #. * and the second is an error message.
-#: ../backends/key-file/kf-persona-store.vala:225
+#: ../backends/key-file/kf-persona-store.vala:251
 #, c-format
 msgid "The relationship key file '%s' could not be created: %s"
-msgstr ""
-
-#. Translators: the first two parameters are identifiers for the
-#. * persona store. The third is a pointer address. Do not translate
-#. * "im-addresses", as it's an object property name.
-#: ../backends/key-file/kf-persona-store.vala:316
-#, c-format
-msgid ""
-"Persona store (%s, %s) requires the following details:\n"
-"    im-addresses (provided: '%p')"
-msgstr ""
+msgstr "Die Beziehungs-Schlüsseldatei »%s« konnte nicht erzeugt werden: %s"
 
 #. Translators: the first parameter is a filename, the second is
 #. * an error message.
-#: ../backends/key-file/kf-persona-store.vala:378
+#: ../backends/key-file/kf-persona-store.vala:436
 #, c-format
 msgid "Could not write updated key file '%s': %s"
 msgstr "Aktualisierte Schlüsseldatei »%s« konnte nicht geschrieben werden: %s"
 
+#. Translators: this is an error message for if the user
+#. * provides an invalid IM address. The first parameter is
+#. * an IM address (e.g. “foo@jabber.org”), the second is
+#. * the name of a protocol (e.g. “jabber”) and the third is
+#. * an error message.
+#: ../backends/key-file/kf-persona.vala:163
+#, c-format
+msgid "Invalid IM address ‘%s’ for protocol ‘%s’: %s"
+msgstr "Ungültige Sofortnachrichtenadresse »%s« für Protokoll »%s«: %s"
+
 #. Translators: the parameter is an error message.
-#: ../backends/key-file/kf-persona.vala:199
+#: ../backends/key-file/kf-persona.vala:345
 #, c-format
 msgid "Couldn't load data from key file: %s"
 msgstr "Daten konnten nicht aus Schlüsseldatei geladen werden: %s"
 
 #. Translators: the parameter is an error message.
-#: ../backends/telepathy/lib/tp-lowlevel.c:517
+#: ../backends/telepathy/lib/tp-lowlevel.c:504
 #, c-format
 msgid "Error requesting a group channel: %s"
-msgstr ""
+msgstr "Fehler beim Anfordern eines Gruppenkanals: %s"
 
 #. Translators: the parameter is an error message.
-#: ../backends/telepathy/lib/tp-lowlevel.c:535
+#: ../backends/telepathy/lib/tp-lowlevel.c:522
 #, c-format
 msgid "Error requesting group handles: %s"
 msgstr ""
 
 #. Translators: the parameter is an error message.
-#: ../backends/telepathy/lib/tp-lowlevel.c:574
+#: ../backends/telepathy/lib/tp-lowlevel.c:560
 #, c-format
 msgid "Failed to change contact's alias: %s"
 msgstr "Alias des Kontakts konnte nicht geändert werden: %s"
 
 #. Translators: the parameter is an error message.
-#: ../backends/telepathy/lib/tp-lowlevel.c:634
+#: ../backends/telepathy/lib/tp-lowlevel.c:619
 #, c-format
 msgid "Failed to create group channel: %s"
-msgstr ""
+msgstr "Fehler bei der Erzeugung des Gruppenkanals: %s"
 
 #. Translators: the parameter is an error message.
-#: ../backends/telepathy/lib/tp-lowlevel.c:664
+#: ../backends/telepathy/lib/tp-lowlevel.c:651
 #, c-format
 msgid "Get Channels property failed: %s"
-msgstr ""
+msgstr "Kanal-Eigenschaft konnte nicht abgerufen werden: %s"
 
 #. Translators: the first parameter is a group channel identifier and the
 #. * second is an error message.
-#: ../backends/telepathy/lib/tp-lowlevel.c:708
+#: ../backends/telepathy/lib/tp-lowlevel.c:693
 #, c-format
 msgid "Failed to add contact to group '%s': %s"
 msgstr "Kontakt konnte nicht zu Gruppe »%s« hinzugefügt werden: %s"
 
 #. Translators: the first parameter is a group channel identifier and the
 #. * second is an error message.
-#: ../backends/telepathy/lib/tp-lowlevel.c:724
+#: ../backends/telepathy/lib/tp-lowlevel.c:709
 #, c-format
 msgid "Failed to remove contact from group '%s': %s"
 msgstr "Kontakt konnte nicht aus Gruppe »%s« entfernt werden: %s"
 
 #. Translators: the first parameter is a pointer address and the
 #. * second is a contact handle (numeric identifier).
-#: ../backends/telepathy/lib/tp-lowlevel.c:746
+#: ../backends/telepathy/lib/tp-lowlevel.c:732
 #, c-format
 msgid "Invalid group channel %p to add handle %d to."
 msgstr ""
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:295
-msgid "Lost connection to the telepathy-logger service."
-msgstr "Verbindung zum Dienst telepathy-logger wurde verloren."
-
-#: ../backends/telepathy/lib/tpf-persona-store.vala:304
+#: ../backends/telepathy/lib/tpf-persona-store.vala:613
 msgid "Couldn't connect to the telepathy-logger service."
 msgstr "Verbindung zum Dienst telepathy-logger konnte nicht aufgebaut werden."
 
+#: ../backends/telepathy/lib/tpf-persona-store.vala:627
+msgid "Lost connection to the telepathy-logger service."
+msgstr "Verbindung zum Dienst telepathy-logger wurde verloren."
+
 #. Translators: the parameter is an error message.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:342
-#: ../backends/telepathy/lib/tpf-persona-store.vala:354
+#: ../backends/telepathy/lib/tpf-persona-store.vala:659
+#: ../backends/telepathy/lib/tpf-persona-store.vala:671
 #, c-format
 msgid "Couldn't get list of favorite contacts: %s"
-msgstr ""
+msgstr "Liste der favorisierten Kontakte konnte nicht abgerufen werden: %s"
 
 #. Translators: the parameter is an identifier.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:390
+#: ../backends/telepathy/lib/tpf-persona-store.vala:708
 #, c-format
 msgid "Unknown persona '%s' in favorites list."
-msgstr ""
+msgstr "Unbekannte Person »%s« in Favoritenliste."
 
 #. Translators: the parameter is an error message.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:420
+#: ../backends/telepathy/lib/tpf-persona-store.vala:738
 #, c-format
 msgid "Couldn't add favorite contacts: %s"
-msgstr ""
+msgstr "Favorisierte Kontakte konnten nicht hinzugefügt werden: %s"
 
 #. Translators: the parameter is an error message.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:441
+#: ../backends/telepathy/lib/tpf-persona-store.vala:759
 #, c-format
 msgid "Couldn't remove favorite contacts: %s"
-msgstr ""
+msgstr "Favorisierte Kontakte konnten nicht entfernt werden: %s"
 
 #. Translators: the first parameter is the display name for
 #. * the Telepathy account, and the second is an error
 #. * message.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:510
+#: ../backends/telepathy/lib/tpf-persona-store.vala:852
 #, c-format
 msgid ""
 "Failed to determine whether we can set aliases on Telepathy account '%s': %s"
@@ -161,7 +278,7 @@ msgstr ""
 #. Translators: the first parameter is the display name for
 #. * the Telepathy account, and the second is an error
 #. * message.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:562
+#: ../backends/telepathy/lib/tpf-persona-store.vala:905
 #, c-format
 msgid ""
 "Failed to determine whether we can set groups on Telepathy account '%s': %s"
@@ -171,74 +288,67 @@ msgstr ""
 
 #. Translators: the first parameter is a Telepathy handle,
 #. * and the second is an error message.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:608
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1034
 #, c-format
 msgid "Failed to create contact for self handle '%u': %s"
 msgstr ""
 
-#. Translators: the first parameter is the contact's
-#. * alias, and the second is the location of the contact's
-#. * data in memory (for debugging).
-#: ../backends/telepathy/lib/tpf-persona-store.vala:631
-#, c-format
-msgid "Failed to create self persona from contact '%s' (%p)"
-msgstr ""
-
 #. Translators: do not translate "NewChannels", as it's a D-Bus
 #. * signal name.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:645
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1065
 msgid "Error creating channel for NewChannels signal."
 msgstr "Fehler beim Erstellen des Kanals für das NewChannels-Signal."
 
 #. Translators: the parameter is a persona identifier and
 #. * the second parameter is a group name.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:684
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1104
 #, c-format
 msgid "Failed to add persona '%s' to group '%s'."
-msgstr ""
+msgstr "Person »%s« konnte nicht zu Gruppe »%s« hinzugefügt werden."
 
 #. Translators: the parameter is a persona identifier
 #. * and the second parameter is a group name.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:692
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1112
 #, c-format
 msgid "Failed to remove persona '%s' from group '%s'."
-msgstr ""
+msgstr "Person »%s« konnte nicht aus Gruppe »%s« entfernt werden."
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:991
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1454
 msgid "Personas representing the local user may not be removed."
 msgstr ""
+"Personen, die den lokalen Benutzer verkörpern, können nicht entfernt werden."
 
 #. Translators: The first parameter is an identifier, the second
 #. * is the persona's alias and the third is an error message.
 #. * "stored" is the name of a program object, and shouldn't be
 #. * translated.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1006
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1469
 #, c-format
 msgid "Failed to remove persona '%s' (%s) from 'stored' list: %s"
-msgstr ""
+msgstr "Person »%s« (%s) konnte nicht aus »stored«-Liste entfernt werden: %s"
 
 #. Translators: The first parameter is an identifier, the second
 #. * is the persona's alias and the third is an error message.
 #. * "subscribe" is the name of a program object, and shouldn't be
 #. * translated.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1022
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1485
 #, c-format
 msgid "Failed to remove persona '%s' (%s) from 'subscribe' list: %s"
-msgstr ""
+msgstr "Person »%s« (%s) konnte nicht aus »subscribe«-Liste entfernt werden: %s"
 
 #. Translators: The first parameter is an identifier, the second
 #. * is the persona's alias and the third is an error message.
 #. * "publish" is the name of a program object, and shouldn't be
 #. * translated.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1038
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1501
 #, c-format
 msgid "Failed to remove persona '%s' (%s) from 'publish' list: %s"
-msgstr ""
+msgstr "Person »%s« (%s) konnte nicht aus »publish«-Liste entfernt werden: %s"
 
 #. Translators: the first parameter is a persona identifier,
 #. * the second is a contact list identifier and the third is
 #. * an error message.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1174
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1665
 #, c-format
 msgid "Failed to add persona '%s' to contact list '%s': %s"
 msgstr ""
@@ -246,174 +356,252 @@ msgstr ""
 #. Translators: the first parameter is a persona identifier,
 #. * the second is a contact list identifier and the third is
 #. * an error message.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1183
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1674
 #, c-format
 msgid "Failed to remove persona '%s' from contact list '%s': %s"
-msgstr ""
+msgstr "Person »%s« konnte nicht aus Kontaktliste »%s« entfernt werden: %s"
 
 #. Translators: the first parameter is a channel identifier and
 #. * the second is an error message..
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1258
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1765
 #, c-format
 msgid "Failed to create personas from incoming contacts in channel '%s': %s"
 msgstr ""
-
-#. Translators: format for lines in the error string below
-#. * "Failed to create %u personas:". The first parameter is
-#. * a contact alias, the second is a pointer address and
-#. * the third is an error message.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1295
-#, c-format
-msgid "'%s' (%p): %s"
-msgstr ""
-
-#. Translators: the first parameter is the number of personas
-#. * which couldn't be created, and the second is a set of error
-#. * message lines, built using the "'%s' (%p): %s" string
-#. * above.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1308
-#, c-format
-msgid ""
-"Failed to create %u persona:\n"
-"%s"
-msgid_plural ""
-"Failed to create %u personas:\n"
-"%s"
-msgstr[0] ""
-msgstr[1] ""
-
-#. Translators: the first parameter is a contact alias and the
-#. * second is a pointer address.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1363
-#, c-format
-msgid "Failed to create persona from contact '%s' (%p)."
-msgstr ""
+"Erzeugen von Personen aus eingehenden Kontakten im Kanal »%s« ist "
+"fehlgeschlagen: %s"
 
 #. Translators: the first two parameters are store identifiers and
 #. * the third is a contact identifier.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1445
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1946
 #, c-format
 msgid ""
 "Persona store (%s, %s) requires the following details:\n"
 "    contact (provided: '%s')\n"
 msgstr ""
+"Personenspeicher (%s, %s) erfordert die folgenden Details:\n"
+"    Kontakt (angegeben: »%s«)\n"
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1455
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1961
 msgid "Cannot create a new persona while offline."
-msgstr ""
+msgstr "Eine neue Person kann im Offline-Modus nicht erstellt werden."
 
 #. Translators: the parameter is the number of personas
 #. * which were returned.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1501
+#: ../backends/telepathy/lib/tpf-persona-store.vala:2013
 #, c-format
 msgid "Requested a single persona, but got %u persona back."
 msgid_plural "Requested a single persona, but got %u personas back."
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1512
+#: ../backends/telepathy/lib/tpf-persona-store.vala:2024
 #, c-format
 msgid "Failed to add a persona from details: %s"
 msgstr ""
 
 #. Translators: "telepathy-logger" is the name of an application,
 #. * and should not be translated.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1532
+#: ../backends/telepathy/lib/tpf-persona-store.vala:2044
 msgid ""
 "Failed to change favorite without a connection to the telepathy-logger "
 "service."
 msgstr ""
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1549
+#: ../backends/telepathy/lib/tpf-persona-store.vala:2061
 msgid "Failed to change a persona's favorite status."
-msgstr ""
+msgstr "Der Favoritenstatus der Person konnte nicht geändert werden."
 
-#: ../backends/telepathy/lib/tpf-persona.vala:215
-msgid "Contact has an invalid ID."
-msgstr "Kontakt hat eine ungültige Kennung."
+#. Translators: the first parameter identifies the
+#. * persona store and the second the unknown key
+#. * that was received with the details params.
+#: ../backends/tracker/lib/trf-persona-store.vala:732
+#, c-format
+msgid ""
+"Unrecognized parameter %s by the  %s PersonaStore:\n"
+"')"
+msgstr ""
+"Nicht erkannter Parameter %s im PersonaStore %s:\n"
+"')"
+
+#: ../folks/alias-details.vala:55
+msgid "Alias is not writeable on this contact."
+msgstr "Alias ist für diesen Kontakt schreibgschützt."
+
+#: ../folks/avatar-details.vala:59
+msgid "Avatar is not writeable on this contact."
+msgstr "Benutzerbild ist für diesen Kontakt schreibgschützt."
 
 #. Translators: the first parameter is a backend name, and the
 #. * second is an error message.
-#: ../folks/backend-store.vala:235
+#: ../folks/backend-store.vala:349
 #, c-format
 msgid "Error preparing Backend '%s': %s"
 msgstr "Fehler bei der Vorbereitung des Backends »%s«: %s"
 
 #. Translators: the first parameter is a folder path and the second
 #. * is an error message.
-#: ../folks/backend-store.vala:387
+#: ../folks/backend-store.vala:542
 #, c-format
 msgid "Error listing contents of folder '%s': %s"
 msgstr "Fehler beim Auflisten des Inhalts des Ordners »%s«: %s"
 
 #. Translators: the parameter is a filename.
-#: ../folks/backend-store.vala:420
+#: ../folks/backend-store.vala:575
 #, c-format
 msgid ""
 "The content type of '%s' could not be determined. Have you installed shared-"
 "mime-info?"
 msgstr ""
+"Der Inhaltstyp von »%s« konnte nicht ermittelt werden. Ist »shared-mime-info« "
+"auf Ihrem System installiert?"
 
 #. Translators: the first parameter is a filename and the second is an
 #. * error message.
-#: ../folks/backend-store.vala:443
+#: ../folks/backend-store.vala:598
 #, c-format
 msgid "Failed to load module from path '%s': %s"
-msgstr ""
+msgstr "Laden des Moduls aus Pfad »%s« schlug fehl: %s"
 
 #. Translators: the first parameter is a function name, the second is
 #. * a filename and the third is an error message.
-#: ../folks/backend-store.vala:458
+#: ../folks/backend-store.vala:613
 #, c-format
 msgid "Failed to find entry point function '%s' in '%s': %s"
-msgstr ""
+msgstr "Eintrittspunktsfunktion »%s« konnte nicht in »%s« gefunden werden:%s"
 
 #. Translators: the parameter is a filename.
-#: ../folks/backend-store.vala:495
+#: ../folks/backend-store.vala:654
 #, c-format
 msgid "File or directory '%s' does not exist."
 msgstr "Datei oder Ordner »%s« existiert nicht."
 
 #. Translators: the parameter is a filename.
-#: ../folks/backend-store.vala:501
+#: ../folks/backend-store.vala:660
 #, c-format
 msgid "Failed to get content type for '%s'."
+msgstr "Typ des Inhalts konnte für »%s« nicht abgefragt werden."
+
+#: ../folks/birthday-details.vala:60
+msgid "Birthday is not writeable on this contact."
+msgstr "Der Geburtstag ist für diesen Kontakt schreibgeschützt."
+
+#: ../folks/birthday-details.vala:89
+msgid "Birthday event ID is not writeable on this contact."
 msgstr ""
+"Die Geburtstags-Ereigniskennung ist für diesen Kontakt schreibgeschützt."
+
+#: ../folks/email-details.vala:115
+msgid "E-mail addresses are not writeable on this contact."
+msgstr "E-Mail-Adressen sind für diesen Kontakt schreibgeschützt."
+
+#: ../folks/favourite-details.vala:52
+msgid "Favourite status is not writeable on this contact."
+msgstr "Der Favoritenstatus ist für diesen Kontakt schreibgeschützt."
+
+#: ../folks/gender-details.vala:77
+msgid "Gender is not writeable on this contact."
+msgstr "Das Geschlecht ist für diesen Kontakt schreibgeschützt."
+
+#: ../folks/im-details.vala:130
+msgid "IM addresses are not writeable on this contact."
+msgstr "Sofortnachrichtenadressen sind für diesen Kontakt schreibgeschützt."
+
+#. Translators: the parameter is an IM address.
+#: ../folks/im-details.vala:172 ../folks/im-details.vala:186
+#: ../folks/im-details.vala:208 ../folks/im-details.vala:235
+#, c-format
+msgid "The IM address '%s' could not be understood."
+msgstr "Die Sofortnachrichtenadresse »%s« ist unverständlich."
 
 #. Translators: the first parameter is a persona store identifier
 #. * and the second is an error message.
-#: ../folks/individual-aggregator.vala:246
+#: ../folks/individual-aggregator.vala:579
 #, c-format
 msgid "Error preparing persona store '%s': %s"
-msgstr ""
+msgstr "Fehler beim Vorbereiten des Personenspeichers »%s«: %s"
 
 #. Translators: the parameter is a property name.
 #. Translators: the parameter is a property
 #. * name.
 #. Translators: the parameter is a property name.
-#: ../folks/individual-aggregator.vala:352
-#: ../folks/individual-aggregator.vala:447
-#: ../folks/individual-aggregator.vala:557
+#: ../folks/individual-aggregator.vala:739
+#: ../folks/individual-aggregator.vala:822
+#: ../folks/individual-aggregator.vala:889
 #, c-format
 msgid "Unknown property '%s' in linkable property list."
-msgstr ""
+msgstr "Unbekannte Eigenschaft »%s« in verknüpfbarer Eigenschaftsliste."
 
-#. Translators: the parameters are store identifiers.
-#: ../folks/individual-aggregator.vala:716
+#. Translators: the first parameter is a store identifier
+#. * and the second parameter is an error message.
+#: ../folks/individual-aggregator.vala:1171
 #, c-format
-msgid "No store known for type ID '%s' and ID '%s'."
+msgid "Failed to add contact for persona store ID '%s': %s"
 msgstr ""
 
-#. Translators: the first two parameters are store identifiers
-#. * and the third parameter is an error message.
-#: ../folks/individual-aggregator.vala:737
-#, c-format
-msgid "Failed to add contact for store type '%s', ID '%s': %s"
-msgstr ""
-
-#: ../folks/individual-aggregator.vala:820
+#: ../folks/individual-aggregator.vala:1252
 msgid "Can't link personas with no writeable store."
+msgstr "Ohne schreibbaren Speicher können Personen nicht verknüpft werden."
+
+#: ../folks/individual-aggregator.vala:1509
+msgid "Can't add personas with no writeable store."
+msgstr "Ohne schreibbaren Speicher können keine Personen hinzugefügt werden."
+
+#: ../folks/individual-aggregator.vala:1514
+#, c-format
+msgid "Can't write to requested property (“%s”) of the writeable store."
 msgstr ""
+"In angeforderte Eigenschaft (»%s«) des schreibbaren Speichers konnte nicht "
+"geschrieben werden."
+
+#: ../folks/local-id-details.vala:64
+msgid "Local IDs are not writeable on this contact."
+msgstr "Lokale Kennungen sind für diesen Kontakt schreibgeschützt."
+
+#: ../folks/name-details.vala:244
+msgid "Structured name is not writeable on this contact."
+msgstr "Der strukturierte Name ist für diesen Kontakt schreibgeschützt."
+
+#: ../folks/name-details.vala:278
+msgid "Full name is not writeable on this contact."
+msgstr "Der vollständige Name ist für diesen Kontakt schreibgeschützt."
+
+#: ../folks/name-details.vala:313
+msgid "Nickname is not writeable on this contact."
+msgstr "Der Spitzname ist für diesen Kontakt schreibgeschützt."
+
+#: ../folks/note-details.vala:129
+msgid "Notes are not writeable on this contact."
+msgstr "Notizen sind für diesen Kontakt schreibgeschützt."
+
+#: ../folks/phone-details.vala:206
+msgid "Phone numbers are not writeable on this contact."
+msgstr "Telefonnummern sind für diesen Kontakt schreibgeschützt."
+
+#: ../folks/postal-address-details.vala:209
+#, c-format
+msgid "%s, %s, %s, %s, %s, %s, %s"
+msgstr "%s, %s, %s, %s, %s, %s, %s"
+
+#: ../folks/postal-address-details.vala:303
+msgid "Postal addresses are not writeable on this contact."
+msgstr "Postanschriften sind für diesen Kontakt schreibgeschützt."
+
+#: ../folks/role-details.vala:127
+#, c-format
+msgid "Title: %s, Organisation: %s, Role: %s"
+msgstr "Titel: %s, Organisation: %s, Funktion: %s"
+
+#: ../folks/role-details.vala:220
+msgid "Roles are not writeable on this contact."
+msgstr "Funktionen sind für diesen Kontakt schreibgeschützt."
+
+#: ../folks/url-details.vala:111
+msgid "URLs are not writeable on this contact."
+msgstr "URLs sind für diesen Kontakt schreibgeschützt."
+
+#: ../folks/web-service-details.vala:118
+msgid "Web service addresses are not writeable on this contact."
+msgstr "Webdienst-Adressen sind für diesen Kontakt schreibgeschützt."
 
 #. Translators: the parameter is a filename.
 #: ../tools/import-pidgin.vala:48
@@ -426,7 +614,7 @@ msgstr "Datei %s existiert nicht."
 #: ../tools/import-pidgin.vala:64
 #, c-format
 msgid "Failed to get information about file %s: %s"
-msgstr ""
+msgstr "Es können keine Informationen zur Datei »%s« gefunden werden: %s"
 
 #. Translators: the parameter is a filename.
 #: ../tools/import-pidgin.vala:71
@@ -438,7 +626,7 @@ msgstr "Datei %s ist nicht lesbar."
 #: ../tools/import-pidgin.vala:81
 #, c-format
 msgid "The Pidgin buddy list file '%s' could not be loaded."
-msgstr ""
+msgstr "Die Buddylisten-Datei »%s« aus Pidgin konnte nicht geladen werden."
 
 #. Translators: the parameter is a filename.
 #: ../tools/import-pidgin.vala:96
@@ -447,30 +635,35 @@ msgid ""
 "The Pidgin buddy list file '%s' could not be loaded: the root element could "
 "not be found or was not recognised."
 msgstr ""
+"Die Buddylisten-Datei »%s« aus Pidgin konnte nicht geladen werden: Das "
+"Wurzelelement konnte nicht gefunden werden oder wurde nicht erkannt."
 
 #. Translators: the first parameter is the number of buddies which were
 #. * successfully imported, and the second is a filename.
 #: ../tools/import-pidgin.vala:115
 #, c-format
 msgid "Imported %u buddies from '%s'.\n"
-msgstr ""
+msgstr "%u Buddies wurden aus »%s« importiert.\n"
 
 #. Translators: the first parameter is a persona identifier,
 #. * and the second is an error message.
 #: ../tools/import-pidgin.vala:161
 #, c-format
 msgid "Error changing group of Pidgin.Persona '%s': %s\n"
-msgstr ""
+msgstr "Fehler beim Ändern der Gruppe von Pidgin.Persona »%s«: %s\n"
 
 #. Translators: the parameter is the buddy's IM address.
-#: ../tools/import-pidgin.vala:227
+#: ../tools/import-pidgin.vala:217
 #, c-format
 msgid ""
 "Ignoring buddy with no alias and only one IM address:\n"
 "%s"
 msgstr ""
+"Buddy ohne Alias und nur einer einzigen Sofortnachrichtenadresse wird "
+"ignoriert:\n"
+"%s"
 
-#: ../tools/import-pidgin.vala:251
+#: ../tools/import-pidgin.vala:241
 #, c-format
 msgid ""
 "Failed to create new persona for buddy with alias '%s' and IM addresses:\n"
@@ -481,7 +674,7 @@ msgstr ""
 #. Translators: the first parameter is a persona identifier, the
 #. * second is an alias for the persona, and the third is a set of IM
 #. * addresses each on a new line.
-#: ../tools/import-pidgin.vala:265
+#: ../tools/import-pidgin.vala:255
 #, c-format
 msgid ""
 "Created persona '%s' for buddy with alias '%s' and IM addresses:\n"
@@ -490,7 +683,7 @@ msgstr ""
 
 #: ../tools/import.vala:42
 msgid "Source backend name (default: 'pidgin')"
-msgstr ""
+msgstr "Name des Quell-Backends (Vorgabe: »pidgin«)"
 
 #: ../tools/import.vala:45
 msgid "Source filename (default: specific to source backend)"
@@ -504,44 +697,47 @@ msgstr ""
 #: ../tools/import.vala:65
 #, c-format
 msgid "Couldn't parse command line options: %s\n"
-msgstr ""
+msgstr "Befehlszeilenoptionen konnten nicht verarbeitet werden: %s\n"
 
 #. Translators: the parameter is an error message.
 #: ../tools/import.vala:106
 #, c-format
 msgid "Couldn't load the backends: %s\n"
-msgstr ""
+msgstr "Die Backends konnten nicht geladen werden: %s\n"
 
 #: ../tools/import.vala:115
 #, c-format
 msgid "Couldn't load the 'key-file' backend.\n"
-msgstr ""
+msgstr "»key-file«-Backend konnte nicht geladen werden.\n"
 
 #. Translators: the parameter is an error message.
 #: ../tools/import.vala:126
 #, c-format
 msgid "Couldn't prepare the 'key-file' backend: %s\n"
-msgstr ""
+msgstr "»key-file«-Backend konnte nicht vorbereitet werden: %s\n"
 
-#: ../tools/import.vala:139
+#: ../tools/import.vala:138
 #, c-format
 msgid "Couldn't load the 'key-file' backend's persona store.\n"
 msgstr ""
 
-#: ../tools/import.vala:152
+#: ../tools/import.vala:157
 #, c-format
 msgid "Couldn't prepare the 'key-file' backend's persona store: %s\n"
 msgstr ""
 
 #. Translators: the parameter is an error message.
-#: ../tools/import.vala:170
+#: ../tools/import.vala:175
 #, c-format
 msgid "Error importing personas: %s\n"
-msgstr ""
+msgstr "Fehler beim Importieren von Personen: %s\n"
 
-#: ../tools/import.vala:182
+#: ../tools/import.vala:187
 #, c-format
 msgid ""
 "Unrecognised source backend name '%s'. 'pidgin' is currently the only "
 "supported source backend.\n"
 msgstr ""
+
+#~ msgid "Contact has an invalid ID."
+#~ msgstr "Kontakt hat eine ungültige Kennung."
