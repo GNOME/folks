@@ -1168,7 +1168,19 @@ public class Tpf.PersonaStore : Folks.PersonaStore
           c.invalidated.connect (this._channel_invalidated_cb);
 
           unowned Intset? members = c.group_get_members ();
-          if (members != null)
+          if (members != null && name == "stored")
+            {
+              this._channel_group_pend_incoming_adds.begin (c,
+                  members.to_array (), true, (obj, res) =>
+                    {
+                      this._channel_group_pend_incoming_adds.end (res);
+
+                      /* We've got some members for the stored channel group. */
+                      this._got_stored_channel_members = true;
+                      this._notify_if_is_quiescent ();
+                    });
+            }
+          else if (members != null)
             {
               this._channel_group_pend_incoming_adds.begin (c,
                   members.to_array (), true);
