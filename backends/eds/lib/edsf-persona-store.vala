@@ -648,6 +648,33 @@ public class Edsf.PersonaStore : Folks.PersonaStore
                   _("Couldn't get address book capabilities: %s"), e2.message);
             }
 
+          /* Get the set of capabilities supported by the address book.
+           * Specifically, we're looking for do-initial-query, which signifies
+           * that we should expect an initial _contacts_added_cb() callback. */
+          var do_initial_query = false;
+          try
+            {
+              string capabilities;
+              yield this._addressbook.get_backend_property ("capabilities",
+                  null, out capabilities);
+
+              if (capabilities != null)
+                {
+                  string[] caps = capabilities.split (",");
+
+                  do_initial_query = ("do-initial-query" in caps);
+                }
+            }
+          catch (GLib.Error e4)
+            {
+              /* Remove the persona store on error */
+              this.removed ();
+
+              throw new PersonaStoreError.INVALID_ARGUMENT (
+                  /* Translators: the parameteter is an error message. */
+                  _("Couldn't get address book capabilities: %s"), e4.message);
+            }
+
           bool got_view = false;
           try
             {
@@ -741,6 +768,15 @@ public class Edsf.PersonaStore : Folks.PersonaStore
 
           this._is_prepared = true;
           this.notify_property ("is-prepared");
+
+          /* If the address book isn't going to do an initial query (i.e.
+           * because it's a search-only address book, such as LDAP), we reach
+           * a quiescent state immediately. */
+          if (do_initial_query == false && this._is_quiescent == false)
+            {
+              this._is_quiescent = true;
+              this.notify_property ("is-quiescent");
+            }
         }
     }
 
