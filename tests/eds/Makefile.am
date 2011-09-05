@@ -6,6 +6,7 @@ AM_CPPFLAGS = \
 	$(GCONF2_CFLAGS) \
 	-I$(top_srcdir)/folks \
 	-I$(top_srcdir)/backends/eds/lib \
+	-I$(top_srcdir)/backends/eds/lib/folks \
 	-I$(top_srcdir)/tests/lib \
 	-I$(top_srcdir)/tests/lib/eds \
 	-include $(CONFIG_HEADER) \

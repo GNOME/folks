@@ -5,6 +5,7 @@ AM_CPPFLAGS = \
 	$(SW_CLIENT_CFLAGS) \
 	-I$(top_srcdir)/folks \
 	-I$(top_srcdir)/backends/libsocialweb/lib \
+	-I$(top_srcdir)/backends/libsocialweb/lib/folks \
 	-I$(top_srcdir)/tests/lib \
 	-I$(top_srcdir)/tests/lib/libsocialweb \
 	-include $(CONFIG_HEADER) \

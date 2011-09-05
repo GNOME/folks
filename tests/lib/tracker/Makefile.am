@@ -31,6 +31,7 @@ libtracker_test_la_CFLAGS = \
 	$(TRACKER_SPARQL_CFLAGS) \
 	-I$(top_srcdir)/folks \
 	-I$(top_srcdir)/backends/tracker/lib \
+	-I$(top_srcdir)/backends/tracker/lib/folks \
 	$(NULL)
 
 libtracker_test_la_LIBADD = \

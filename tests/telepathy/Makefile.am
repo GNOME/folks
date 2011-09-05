@@ -5,6 +5,7 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir)/folks \
 	-I$(top_srcdir)/backends/telepathy \
 	-I$(top_srcdir)/backends/telepathy/lib \
+	-I$(top_srcdir)/backends/telepathy/lib/folks \
 	-I$(top_srcdir)/tests/lib \
 	-I$(top_srcdir)/tests/lib/telepathy/contactlist \
 	-include $(CONFIG_HEADER) \
