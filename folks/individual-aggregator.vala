@@ -892,6 +892,44 @@ public class Folks.IndividualAggregator : Object
         }
     }
 
+  private void _persona_linkable_property_changed_cb (Object obj,
+      ParamSpec pspec)
+    {
+      /* The value of one of the linkable properties of one the personas has
+       * changed, so that persona might require re-linking. We do this in a
+       * simplistic and hacky way (which should work) by simply treating the
+       * persona as if it's been removed and re-added. */
+      var persona = obj as Persona;
+
+      debug ("Linkable property '%s' changed for persona '%s' " +
+          "(is user: %s, IID: %s).", pspec.name, persona.uid,
+          persona.is_user ? "yes" : "no", persona.iid);
+
+      var persona_set = new HashSet<Persona> ();
+      persona_set.add (persona);
+
+      this._personas_changed_cb (persona.store, persona_set, persona_set,
+          null, null, GroupDetails.ChangeReason.NONE);
+    }
+
+  private void _connect_to_persona (Persona persona)
+    {
+      foreach (var prop_name in persona.linkable_properties)
+        {
+          persona.notify[prop_name].connect (
+              this._persona_linkable_property_changed_cb);
+        }
+    }
+
+  private void _disconnect_from_persona (Persona persona)
+    {
+      foreach (var prop_name in persona.linkable_properties)
+        {
+          persona.notify[prop_name].disconnect (
+              this._persona_linkable_property_changed_cb);
+        }
+    }
+
   private void _add_persona_to_link_map (Persona persona, Individual individual)
     {
       debug ("Connecting to Persona: %s (is user: %s, IID: %s)", persona.uid,
@@ -996,6 +1034,9 @@ public class Folks.IndividualAggregator : Object
               removed_individuals.add (ind);
             }
 
+          /* Stop listening to notifications about the persona's linkable
+           * properties. */
+          this._disconnect_from_persona (persona);
         }
 
       /* Remove the Individuals which were pointed to by the linkable properties
@@ -1039,6 +1080,10 @@ public class Folks.IndividualAggregator : Object
         {
           debug ("    %s (is user: %s, IID: %s)", persona.uid,
               persona.is_user ? "yes" : "no", persona.iid);
+
+          /* Connect to notifications about the persona's linkable
+           * properties. */
+          this._connect_to_persona (persona);
         }
 
       if (added.size > 0)
