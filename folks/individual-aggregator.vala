@@ -994,7 +994,6 @@ public class Folks.IndividualAggregator : Object
           if (ind != null)
             {
               removed_individuals.add (ind);
-              individuals_changes.set (ind, null);
             }
 
         }
@@ -1030,7 +1029,6 @@ public class Folks.IndividualAggregator : Object
             user = null;
 
           this._disconnect_from_individual (individual);
-          individual.personas = null;
 
           /* Remove the Individual's links from the link map */
           this._remove_individual_from_link_map (individual);
@@ -1056,6 +1054,31 @@ public class Folks.IndividualAggregator : Object
         }
 
       this._add_personas (relinked_personas, ref user, ref individuals_changes);
+
+      /* Work out which final individuals have replaced the removed_individuals
+       * and update individuals_changes accordingly. */
+      foreach (var individual in removed_individuals)
+        {
+          var added_mapping = false;
+
+          foreach (var persona in individual.personas)
+            {
+              if (!(persona in removed) || (persona in added))
+                {
+                  individuals_changes.remove (null, persona.individual);
+                  individuals_changes.set (individual, persona.individual);
+                  added_mapping = true;
+                }
+            }
+
+          /* Has the individual been removed entirely? */
+          if (added_mapping == false)
+            {
+              individuals_changes.set (individual, null);
+            }
+
+          individual.personas = null;
+        }
 
       /* Notify of changes to this.user */
       this.user = user;
