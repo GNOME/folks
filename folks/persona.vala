@@ -179,6 +179,9 @@ public abstract class Folks.Persona : Object
    * This list will have no effect if the Persona's {@link PersonaStore} trust
    * level is not {@link PersonaStoreTrust.FULL}.
    *
+   * This property value is guaranteed to be constant for a given persona,
+   * but may vary between personas in the same store.
+   *
    * @since 0.1.13
    */
   public abstract string[] linkable_properties { get; }
