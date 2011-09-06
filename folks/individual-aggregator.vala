@@ -827,10 +827,11 @@ public class Folks.IndividualAggregator : Object
 
           /* Create the final linked Individual */
           final_individual = new Individual (final_personas);
-          debug ("    Created new individual '%s' with personas:",
-              final_individual.id);
+          debug ("    Created new individual '%s' (%p) with personas:",
+              final_individual.id, final_individual);
           foreach (var p in final_personas)
             {
+              debug ("        %s (%p)", p.uid, p);
               this._add_persona_to_link_map (p, final_individual);
             }
 
@@ -1114,6 +1115,30 @@ public class Folks.IndividualAggregator : Object
       while (iter.next () == true)
         {
           iter.get_key ().replace (iter.get_value ());
+        }
+
+      /* Validate the link map. */
+      if (this._debug.debug_output_enabled == true)
+        {
+          var iter2 = HashTableIter<string, Individual> (this._link_map);
+          string link_key;
+          Individual individual;
+
+          while (iter2.next (out link_key, out individual) == true)
+            {
+              if (this._individuals.get (individual.id) != individual)
+                {
+                  warning ("Link map contains invalid mapping:\n" +
+                      "    %s → %s (%p)",
+                          link_key, individual.id, individual);
+                  warning ("Individual %s (%p) personas:", individual.id,
+                      individual);
+                  foreach (var p in individual.personas)
+                    {
+                      warning ("    %s (%p)", p.uid, p);
+                    }
+                }
+            }
         }
     }
 
