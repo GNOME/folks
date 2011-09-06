@@ -1706,6 +1706,16 @@ public class Tpf.PersonaStore : Folks.PersonaStore
         {
           debug ("Failed to add channel '%s': %s\n", name, e.message);
 
+          /* If the Connection doesn't support 'stored' channels we
+           * pretend we've received the stored channel members.
+           *
+           * When this happens it probably means the ConnectionManager doesn't
+           * implement the Channel.Type.ContactList interface.
+           *
+           * See: https://bugzilla.gnome.org/show_bug.cgi?id=656184 */
+           this._got_stored_channel_members = true;
+           this._notify_if_is_quiescent ();
+
           /* XXX: assuming there's no decent way to recover from this */
 
           return null;
