@@ -834,6 +834,8 @@ public class Folks.IndividualAggregator : Object
               this._add_persona_to_link_map (p, final_individual);
             }
 
+          uint num_mappings_added = 0;
+
           foreach (var i in candidate_inds)
             {
               /* Transitively update the individuals_changes. We have to do this
@@ -860,6 +862,7 @@ public class Folks.IndividualAggregator : Object
                   if (k != null)
                     {
                       individuals_changes.set (k, final_individual);
+                      num_mappings_added++;
                     }
                 }
 
@@ -870,12 +873,14 @@ public class Folks.IndividualAggregator : Object
               if (transitive_updates.size == 0)
                 {
                   individuals_changes.set (i, final_individual);
+                  num_mappings_added++;
                 }
             }
 
-          /* If there were no candidate individuals, mark the final_individual
-           * as added. */
-          if (candidate_inds.size == 0)
+          /* If there were no candidate individuals or they were all freshly
+           * added (i.e. mapped from null → candidate_individual), mark the
+           * final_individual as added. */
+          if (num_mappings_added == 0)
             {
               individuals_changes.set (null, final_individual);
             }
