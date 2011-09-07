@@ -39,7 +39,6 @@ public class LinkPersonasTests : Folks.TestCase
   private string _persona_iid_1 = "";
   private string _persona_iid_2 = "";
   private HashSet<Persona> _personas;
-  private int _removed_individuals = 0;
   private string _folks_config_key = "/system/folks/backends/primary_store";
   private unowned GConf.Client _gconf_client;
   private Gee.HashMap<string, string> _linking_props;
@@ -124,7 +123,6 @@ public class LinkPersonasTests : Folks.TestCase
       /* Check we get the new individual (containing the linked
        * personas) and that the previous ones were removed. */
       assert (this._linking_props.size == 0);
-      assert (this._removed_individuals == 2);
     }
 
   private async void _test_linking_personas_async ()
@@ -212,7 +210,6 @@ public class LinkPersonasTests : Folks.TestCase
        MultiMap<Individual?, Individual?> changes)
     {
       var added = changes.get_values ();
-      var removed = changes.get_keys ();
 
       foreach (var i in added)
         {
@@ -229,16 +226,6 @@ public class LinkPersonasTests : Folks.TestCase
               i.notify["full-name"].connect (this._notify_cb);
               i.notify["im-addresses"].connect (this._notify_cb);
             }
-        }
-
-      foreach (var i in removed)
-        {
-          if (i == null)
-            {
-              continue;
-            }
-
-          this._removed_individuals++;
         }
     }
 
