@@ -31,6 +31,7 @@ public class SetIMAddressesTests : Folks.TestCase
   private string _persona_fullname;
   private GLib.List<string> _addresses =
     new GLib.List<string> ();
+  private bool _initial_individual_found;
 
   public SetIMAddressesTests ()
     {
@@ -51,6 +52,7 @@ public class SetIMAddressesTests : Folks.TestCase
 
   public void test_set_im_addresses ()
     {
+      this._initial_individual_found = false;
       this._main_loop = new GLib.MainLoop (null, false);
       Gee.HashMap<string, string> c1 =
         new Gee.HashMap<string, string> ();
@@ -76,6 +78,7 @@ public class SetIMAddressesTests : Folks.TestCase
 
       this._main_loop.run ();
 
+      assert (this._initial_individual_found);
       assert (this._addresses.length () == 0);
 
       this._tracker_backend.tear_down ();
@@ -102,14 +105,17 @@ public class SetIMAddressesTests : Folks.TestCase
        MultiMap<Individual?, Individual?> changes)
     {
       var added = changes.get_values ();
-      var removed = changes.get_keys ();
 
       foreach (var i in added)
         {
           assert (i != null);
 
-          if (i.full_name == this._persona_fullname)
+          if (i.full_name != this._persona_fullname)
+            continue;
+
+          if (!this._initial_individual_found)
             {
+              this._initial_individual_found = true;
               i.notify["im-addresses"].connect (this._notify_im_addresses_cb);
 
               var im_addresses = new HashMultiMap<string, ImFieldDetails> (
@@ -130,41 +136,41 @@ public class SetIMAddressesTests : Folks.TestCase
                   ((ImDetails) p).im_addresses = im_addresses;
                 }
             }
-        }
-
-      assert (removed.size == 1);
-
-      foreach (var i in removed)
-        {
-          assert (i == null);
+          else
+            {
+              i.notify["im-addresses"].connect (this._notify_im_addresses_cb);
+              this._check_im_addresses (i);
+            }
         }
     }
 
   private void _notify_im_addresses_cb (Object individual_obj, ParamSpec ps)
     {
       Folks.Individual i = (Folks.Individual) individual_obj;
-      if (i.full_name == this._persona_fullname)
+      this._check_im_addresses (i);
+    }
+
+  private void _check_im_addresses (Individual i)
+    {
+      foreach (var proto in i.im_addresses.get_keys ())
         {
-          foreach (var proto in i.im_addresses.get_keys ())
+          var im_fds = i.im_addresses.get (proto);
+          foreach (var im_fd in im_fds)
             {
-              var im_fds = i.im_addresses.get (proto);
-              foreach (var im_fd in im_fds)
+              foreach (unowned string my_a in this._addresses)
                 {
-                  foreach (unowned string my_a in this._addresses)
+                  if (my_a == im_fd.value)
                     {
-                      if (my_a == im_fd.value)
-                        {
-                          this._addresses.remove (my_a);
-                          break;
-                        }
+                      this._addresses.remove (my_a);
+                      break;
                     }
                 }
             }
+        }
 
-            if (this._addresses.length () == 0)
-            {
-              this._main_loop.quit ();
-            }
+      if (this._addresses.length () == 0)
+        {
+          this._main_loop.quit ();
         }
     }
 }
