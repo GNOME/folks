@@ -103,9 +103,6 @@ public class SetRolesTests : Folks.TestCase
        MultiMap<Individual?, Individual?> changes)
     {
       var added = changes.get_values ();
-      var removed = changes.get_keys ();
-
-      assert (removed.size == 0);
 
       foreach (Individual i in added)
         {
