@@ -899,18 +899,19 @@ public class Edsf.Persona : Folks.Persona,
             new_roles.add (role_fd);
         }
 
-        if (new_roles.size > 0 &&
-            !Edsf.PersonaStore.equal_sets (new_roles, this._roles))
-          {
-            this._roles = new_roles;
-            this._roles_ro = new_roles.read_only_view;
-            this.notify_property ("roles");
-          }
-        else if (new_roles.size == 0)
-          {
-            this._roles.clear ();
-            this.notify_property ("roles");
-          }
+      var comp = new Edsf.SetComparator<RoleFieldDetails> ();
+      if (new_roles.size > 0 &&
+          !comp.equal (new_roles, this._roles))
+        {
+          this._roles = new_roles;
+          this._roles_ro = new_roles.read_only_view;
+          this.notify_property ("roles");
+        }
+      else if (new_roles.size == 0)
+        {
+          this._roles.clear ();
+          this.notify_property ("roles");
+        }
     }
 
   private RoleFieldDetails? _get_default_role ()

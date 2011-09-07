@@ -1387,7 +1387,8 @@ public class Edsf.PersonaStore : Folks.PersonaStore
   internal async void _set_roles (Edsf.Persona persona,
       Set<RoleFieldDetails> roles) throws PropertyError
     {
-      if (Edsf.PersonaStore.equal_sets (roles, persona.roles))
+      var comp = new Edsf.SetComparator<RoleFieldDetails> ();
+      if (comp.equal (roles, persona.roles))
         return;
 
       yield this._set_contact_roles (persona.contact, roles);
@@ -1759,38 +1760,5 @@ public class Edsf.PersonaStore : Folks.PersonaStore
            * property name and the second parameter is an error message. */
           _("Unknown error setting property ‘%s’: %s"), property_name,
           error_in.message);
-    }
-
-  internal static bool equal_sets (Set<RoleFieldDetails> a,
-      Set<RoleFieldDetails> b)
-    {
-      /* For the love of Dijkstra, there should be a more
-       * succint way of comparing Sets */
-
-      if (a.size == 0 &&
-          b.size == 0)
-        return true;
-
-      if (a.size != b.size)
-        return false;
-
-      bool same = false;
-      foreach (var new_role in a)
-        {
-          same = false;
-          foreach (var cur_role in b)
-            {
-              if (cur_role.equal (new_role))
-                {
-                  same = true;
-                  break;
-                }
-            }
-
-          if (!same)
-            return false;
-        }
-
-      return true;
     }
 }
