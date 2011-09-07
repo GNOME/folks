@@ -135,7 +135,7 @@ public class SetBirthdayTests : Folks.TestCase
     {
       Folks.Individual i = (Folks.Individual) individual_obj;
       var name = (Folks.NameDetails) i;
-      var dobj = new  DateTime.utc (1980, 1, 1, 0, 0, 0.0);
+      var dobj = new  DateTime.local (1980, 1, 1, 0, 0, 0.0).to_utc ();
       if (name.full_name == "John McClane" &&
           i.birthday != null &&
           i.birthday.equal (dobj))

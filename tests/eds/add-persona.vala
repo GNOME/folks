@@ -427,7 +427,7 @@ public class AddPersonaTests : Folks.TestCase
 
       if (i.birthday != null)
         {
-          DateTime dobj = new  DateTime.utc (1980, 1, 1, 0, 0, 0.0);
+          DateTime dobj = new DateTime.local (1980, 1, 1, 0, 0, 0.0).to_utc ();
           if (i.birthday.equal (dobj))
             this._properties_found.replace ("birthday", true);
         }
