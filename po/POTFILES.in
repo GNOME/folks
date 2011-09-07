@@ -14,6 +14,7 @@ folks/birthday-details.vala
 folks/email-details.vala
 folks/favourite-details.vala
 folks/gender-details.vala
+folks/group-details.vala
 folks/im-details.vala
 folks/individual-aggregator.vala
 folks/local-id-details.vala

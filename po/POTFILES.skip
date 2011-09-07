@@ -13,6 +13,7 @@ folks/birthday-details.c
 folks/email-details.c
 folks/favourite-details.c
 folks/gender-details.c
+folks/group-details.c
 folks/im-details.c
 folks/individual-aggregator.c
 folks/local-id-details.c
