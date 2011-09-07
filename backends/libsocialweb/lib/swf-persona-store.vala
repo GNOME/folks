@@ -255,7 +255,7 @@ public class Swf.PersonaStore : Folks.PersonaStore
                            * waiting for eternity.
                            *
                            * See:
-                           * https://bugzilla.gnome.org/show_bug.cgi?id=656184
+                           * https://bugzilla.gnome.org/show_bug.cgi?id=658445
                            */
                           this._is_quiescent = true;
                           this.notify_property ("is-quiescent");
