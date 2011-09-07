@@ -102,7 +102,6 @@ public class SetIMAddressesTests : Folks.TestCase
        MultiMap<Individual?, Individual?> changes)
     {
       var added = changes.get_values ();
-      var removed = changes.get_keys ();
 
       foreach (Individual i in added)
         {
@@ -110,9 +109,15 @@ public class SetIMAddressesTests : Folks.TestCase
 
           var name = (Folks.NameDetails) i;
 
-          if (name.full_name == "bernie h. innocenti")
+          if (name.full_name != "bernie h. innocenti")
+            continue;
+
+          /* Because we update a linkable property, we'll
+             get a new individual because re-linking has to
+             happen.
+          */
+          if (!this._found_before_update)
             {
-              i.notify["im-addresses"].connect (this._notify_im_addresses_cb);
               this._found_before_update = true;
 
               foreach (var p in i.personas)
@@ -126,27 +131,19 @@ public class SetIMAddressesTests : Folks.TestCase
                   ((ImDetails) p).im_addresses = im_addrs;
                 }
             }
-        }
-
-      assert (removed.size == 1);
-
-      foreach (var i in removed)
-        {
-          assert (i == null);
-        }
-    }
-
-  private void _notify_im_addresses_cb (Object individual_obj, ParamSpec ps)
-    {
-      Folks.Individual i = (Folks.Individual) individual_obj;
-      foreach (var proto in i.im_addresses.get_keys ())
-        {
-          foreach (var im_fd in i.im_addresses.get (proto))
+          else
             {
-              if (im_fd.equal (new ImFieldDetails ("bernie@example.org")))
+              foreach (var proto in i.im_addresses.get_keys ())
                 {
-                  this._found_after_update = true;
-                  this._main_loop.quit ();
+                  foreach (var im_fd in i.im_addresses.get (proto))
+                    {
+                      if (im_fd.equal (
+                              new ImFieldDetails ("bernie@example.org")))
+                        {
+                          this._found_after_update = true;
+                          this._main_loop.quit ();
+                        }
+                    }
                 }
             }
         }
