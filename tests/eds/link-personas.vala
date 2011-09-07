@@ -412,15 +412,15 @@ public class LinkPersonasTests : Folks.TestCase
                   var ws_fds = i.web_service_addresses.get (service);
                   foreach (var ws_fd in ws_fds)
                     {
-                      if (ws_fd.equal (
-                            new WebServiceFieldDetails (
-                                this._linking_props.get ("prop1"))))
+                      var prop1 = this._linking_props.get ("prop1");
+                      var prop2 = this._linking_props.get ("prop2");
+                      if (prop1 != null &&
+                          ws_fd.equal (new WebServiceFieldDetails (prop1)))
                         {
                           this._linking_props.unset ("prop1");
                         }
-                      else if (ws_fd.equal (
-                            new WebServiceFieldDetails (
-                                this._linking_props.get ("prop2"))))
+                      else if (prop2 != null &&
+                          ws_fd.equal (new WebServiceFieldDetails (prop2)))
                         {
                           this._linking_props.unset ("prop2");
                         }
