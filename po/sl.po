@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: folks master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=folks&keywords=I18N+L10N&component=general\n"
 "POT-Creation-Date: 2011-09-06 17:17+0000\n"
-"PO-Revision-Date: 2011-09-06 22:30+0100\n"
+"PO-Revision-Date: 2011-09-07 15:29+0100\n"
 "Last-Translator: Matej Urbančič <mateju@svn.gnome.org>\n"
 "Language-Team: Slovenščina <gnome-si@googlegroups.com>\n"
 "Language: \n"
@@ -451,15 +451,15 @@ msgstr "Iskanje funkcije vstopne točke '%s' v '%s' je spodletelo: %s"
 
 #. Translators: the parameter is a filename.
 #: ../folks/backend-store.vala:654
-#, fuzzy, c-format
+#, c-format
 msgid "File or directory '%s' does not exist."
-msgstr "Imenik dnevnika %s ne obstaja ali pa ni imenik."
+msgstr "Datoteka ali imenik '%s' ne obstaja."
 
 #. Translators: the parameter is a filename.
 #: ../folks/backend-store.vala:660
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to get content type for '%s'."
-msgstr "Poizvedba  o vrsti vsebine za '%s' je spodletela"
+msgstr "Pridobivanje vrste vsebine za '%s' je spodletelo."
 
 #: ../folks/birthday-details.vala:60
 msgid "Birthday is not writeable on this contact."
@@ -581,22 +581,22 @@ msgstr ""
 
 #. Translators: the parameter is a filename.
 #: ../tools/import-pidgin.vala:48
-#, fuzzy, c-format
+#, c-format
 msgid "File %s does not exist."
-msgstr "Datoteka \"%s\" ne obstaja"
+msgstr "Datoteka %s ne obstaja."
 
 #. Translators: the first parameter is a filename, and the second
 #. * is an error message.
 #: ../tools/import-pidgin.vala:64
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to get information about file %s: %s"
-msgstr "Ni mogoče pridobiti podrobnosti razpredelnice '%s'"
+msgstr "Ni mogoče pridobiti podrobnosti datoteke %s: %s"
 
 #. Translators: the parameter is a filename.
 #: ../tools/import-pidgin.vala:71
-#, fuzzy, c-format
+#, c-format
 msgid "File %s is not readable."
-msgstr "'%s' ni običajna datoteka."
+msgstr "Datoteka %s ni berljiva."
 
 #. Translators: the parameter is a filename.
 #: ../tools/import-pidgin.vala:81
@@ -669,15 +669,15 @@ msgstr ""
 
 #. Translators: the parameter is an error message.
 #: ../tools/import.vala:65
-#, fuzzy, c-format
+#, c-format
 msgid "Couldn't parse command line options: %s\n"
 msgstr "Ni mogoče razčleniti možnosti ukazne vrstice: %s\n"
 
 #. Translators: the parameter is an error message.
 #: ../tools/import.vala:106
-#, fuzzy, c-format
+#, c-format
 msgid "Couldn't load the backends: %s\n"
-msgstr "Bitne slike ni mogoče naložiti"
+msgstr "Ozadnjih programov ni mogoče naložiti: %s\n"
 
 #: ../tools/import.vala:115
 #, fuzzy, c-format
