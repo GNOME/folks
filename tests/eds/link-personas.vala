@@ -33,8 +33,8 @@ enum LinkingMethod
 public class LinkPersonasTests : Folks.TestCase
 {
   private GLib.MainLoop _main_loop;
-  private EdsTest.Backend _eds_backend;
-  private EdsTest.Backend _eds_backend_other;
+  private EdsTest.Backend? _eds_backend;
+  private EdsTest.Backend? _eds_backend_other;
   private IndividualAggregator _aggregator;
   private string _persona_fullname_1;
   private string _persona_fullname_2;
@@ -48,17 +48,13 @@ public class LinkPersonasTests : Folks.TestCase
   private HashSet<Persona> _personas;
   private int _removed_individuals;
   private string _folks_config_key = "/system/folks/backends/primary_store";
-  private unowned GConf.Client _gconf_client;
+  private unowned GConf.Client? _gconf_client;
   private Gee.HashMap<string, string> _linking_props;
   private LinkingMethod _linking_method;
 
   public LinkPersonasTests ()
     {
       base ("LinkPersonasTests");
-
-      this._eds_backend = new EdsTest.Backend ();
-      this._eds_backend_other = new EdsTest.Backend ();
-      this._eds_backend_other.address_book_uri = "local://other";
 
       this.add_test ("test linking personas via IM addresses",
           this.test_linking_personas_via_im_addresses);
@@ -72,6 +68,10 @@ public class LinkPersonasTests : Folks.TestCase
 
   public override void set_up ()
     {
+      this._eds_backend = new EdsTest.Backend ();
+      this._eds_backend_other = new EdsTest.Backend ();
+      this._eds_backend_other.address_book_uri = "local://other";
+
       /* We configure eds as the primary (writeable) store */
       this._gconf_client = GConf.Client.get_default ();
       try
@@ -94,6 +94,9 @@ public class LinkPersonasTests : Folks.TestCase
       this._eds_backend.tear_down ();
       this._eds_backend_other.tear_down ();
 
+      this._eds_backend = null;
+      this._eds_backend_other = null;
+
       try
         {
           this._gconf_client.unset (this._folks_config_key);
@@ -101,6 +104,10 @@ public class LinkPersonasTests : Folks.TestCase
       catch (GLib.Error e)
         {
           warning ("Couldn't unset primary store: %s\n", e.message);
+        }
+      finally
+        {
+          this._gconf_client = null;
         }
     }
 
