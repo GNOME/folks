@@ -957,6 +957,10 @@ public class Edsf.Persona : Folks.Persona,
 
   private void _update_web_services_addresses ()
     {
+      /* FIXME: we shouldn't immediately replace the current set of web
+       * services. Instead we should construct a new set, compare and then
+       * replace if they are actually different. Same applies for all other
+       * properties. */
       this._web_service_addresses.clear ();
 
       var services = this.contact.get_attribute ("X-FOLKS-WEB-SERVICES-IDS");
@@ -967,6 +971,9 @@ public class Edsf.Persona : Folks.Persona,
               var service_name = service.get_name ().down ();
               foreach (var service_id in service.get_values ())
                 {
+                  if (service_id == null)
+                    continue;
+
                   this._web_service_addresses.set (service_name,
                       new WebServiceFieldDetails (service_id));
                 }
