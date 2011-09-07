@@ -114,13 +114,15 @@ public class IMAddressesUpdatesTests : Folks.TestCase
        MultiMap<Individual?, Individual?> changes)
     {
       var added = changes.get_values ();
-      var removed = changes.get_keys ();
 
       foreach (var i in added)
         {
           assert (i != null);
 
-          if (i.full_name == this._initial_fullname_1)
+          if (i.full_name != this._initial_fullname_1)
+            continue;
+
+          if (!this._initial_imaddress_found)
             {
               this._individual_id = i.id;
 
@@ -139,42 +141,32 @@ public class IMAddressesUpdatesTests : Folks.TestCase
 
                   if (addrs.size == 1 && contains_addr_1)
                     {
-                      i.notify["im-addresses"].connect (this._notify_im_cb);
                       this._initial_imaddress_found = true;
                       this._do_im_addr_update ();
                     }
                 }
             }
-        }
-
-      assert (removed.size == 1);
-
-      foreach (var i in removed)
-        {
-          assert (i == null);
-        }
-    }
-
-  private void _notify_im_cb (Object individual_obj, ParamSpec ps)
-    {
-      Folks.Individual i = (Folks.Individual) individual_obj;
-      foreach (var proto in i.im_addresses.get_keys ())
-        {
-          var addrs = i.im_addresses.get (proto);
-          bool contains_addr_2 = false;
-          foreach (var im_fd in addrs)
+          else
             {
-              if (im_fd.value == this._imaddress_2)
+              foreach (var proto in i.im_addresses.get_keys ())
                 {
-                  contains_addr_2 = true;
-                  break;
-                }
-            }
+                  var addrs = i.im_addresses.get (proto);
+                  bool contains_addr_2 = false;
+                  foreach (var im_fd in addrs)
+                    {
+                      if (im_fd.value == this._imaddress_2)
+                        {
+                          contains_addr_2 = true;
+                          break;
+                        }
+                    }
 
-          if (addrs.size == 1 && contains_addr_2)
-            {
-              this._updated_imaddr_found = true;
-              this._main_loop.quit ();
+                  if (addrs.size == 1 && contains_addr_2)
+                    {
+                      this._updated_imaddr_found = true;
+                      this._main_loop.quit ();
+                    }
+                }
             }
         }
     }
