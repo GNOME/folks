@@ -958,11 +958,10 @@ public class Edsf.Persona : Folks.Persona,
 
   private void _update_web_services_addresses ()
     {
-      /* FIXME: we shouldn't immediately replace the current set of web
-       * services. Instead we should construct a new set, compare and then
-       * replace if they are actually different. Same applies for all other
-       * properties. */
-      this._web_service_addresses.clear ();
+      var new_services = new HashMultiMap<string, WebServiceFieldDetails> (
+          null, null,
+          (GLib.HashFunc) WebServiceFieldDetails.hash,
+          (GLib.EqualFunc) WebServiceFieldDetails.equal);
 
       var services = this.contact.get_attribute ("X-FOLKS-WEB-SERVICES-IDS");
       if (services != null)
@@ -975,13 +974,18 @@ public class Edsf.Persona : Folks.Persona,
                   if (service_id == null)
                     continue;
 
-                  this._web_service_addresses.set (service_name,
+                  new_services.set (service_name,
                       new WebServiceFieldDetails (service_id));
                 }
             }
         }
 
-      this.notify_property ("web-service-addresses");
+      if (!Utils.multi_map_str_afd_equal (new_services,
+              this._web_service_addresses))
+        {
+          this._web_service_addresses = new_services;
+          this.notify_property ("web-service-addresses");
+        }
     }
 
   private void _update_emails ()
@@ -1187,7 +1191,9 @@ public class Edsf.Persona : Folks.Persona,
   private void _update_im_addresses ()
     {
       var im_eds_map = this._get_im_eds_map ();
-      this._im_addresses.clear ();
+      var new_im_addresses = new HashMultiMap<string, ImFieldDetails> (null,
+          null, (GLib.HashFunc) ImFieldDetails.hash,
+          (GLib.EqualFunc) ImFieldDetails.equal);
 
       foreach (var im_proto in im_eds_map.get_keys ())
         {
@@ -1201,7 +1207,7 @@ public class Edsf.Persona : Folks.Persona,
                   string normalised_addr =
                     (owned) ImDetails.normalise_im_address (addr, im_proto);
                   var im_fd = new ImFieldDetails (normalised_addr);
-                  this._im_addresses.set (im_proto, im_fd);
+                  new_im_addresses.set (im_proto, im_fd);
                 }
               catch (Folks.ImDetailsError e)
                 {
@@ -1212,7 +1218,12 @@ public class Edsf.Persona : Folks.Persona,
             }
         }
 
-      this.notify_property ("im-addresses");
+      if (!Utils.multi_map_str_afd_equal (new_im_addresses,
+              this._im_addresses))
+        {
+          this._im_addresses = new_im_addresses;
+          this.notify_property ("im-addresses");
+        }
     }
 
   private void _update_groups ()
@@ -1388,7 +1399,7 @@ public class Edsf.Persona : Folks.Persona,
 
   private void _update_local_ids ()
     {
-      this._local_ids.clear ();
+      var new_local_ids = new HashSet<string> ();
 
       var ids = this.contact.get_attribute ("X-FOLKS-CONTACTS-IDS");
       if (ids != null)
@@ -1397,11 +1408,20 @@ public class Edsf.Persona : Folks.Persona,
 
           foreach (var local_id in ids_v)
             {
-              this._local_ids.add (local_id);
+              new_local_ids.add (local_id);
             }
         }
 
-      this.notify_property ("local-ids");
+      /* Make sure it includes our local id */
+      new_local_ids.add (this.iid);
+
+      var comp = new Edsf.SetComparator<string> ();
+      if (!comp.equal (new_local_ids, this.local_ids))
+        {
+          this._local_ids = new_local_ids;
+          this._local_ids_ro = this._local_ids.read_only_view;
+          this.notify_property ("local-ids");
+        }
     }
 
   internal static void * _get_property_from_contact (E.Contact contact,
