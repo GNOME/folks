@@ -15,6 +15,7 @@ Bugs fixed:
 * Bug 657783 — Prefer data from primary store when picking Individual values
 * Bug 658411 — Only emit notifications for linkable properties if they've
   actually changed
+* Bug 656689 — Re-link personas on linkable properties being changed
 
 API changes:
 * Add PersonaStore:always-writeable-properties property
