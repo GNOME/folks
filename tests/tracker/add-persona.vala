@@ -328,7 +328,6 @@ public class AddPersonaTests : Folks.TestCase
        MultiMap<Individual?, Individual?> changes)
     {
       var added = changes.get_values ();
-      var removed = changes.get_keys ();
 
       foreach (var i in added)
         {
@@ -371,13 +370,6 @@ public class AddPersonaTests : Folks.TestCase
 
               this._check_properties (i);
             }
-        }
-
-      assert (removed.size == 1);
-
-      foreach (var i in removed)
-        {
-          assert (i == null);
         }
     }
 
