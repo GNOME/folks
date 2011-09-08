@@ -105,7 +105,7 @@ public interface Folks.EmailDetails : Object
    *
    * @param email_addresses the new set of e-mail addresses
    * @throws PropertyError if setting the e-mail addresses failed
-   * @since UNRELEASED
+   * @since 0.6.2
    */
   public virtual async void change_email_addresses (
       Set<EmailFieldDetails> email_addresses) throws PropertyError

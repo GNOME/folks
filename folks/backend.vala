@@ -54,7 +54,7 @@ public abstract class Folks.Backend : Object
    *
    * When {@link Backend.unprepare} is called, this will be reset to `false`.
    *
-   * @since UNRELEASED
+   * @since 0.6.2
    */
   public abstract bool is_quiescent { get; default = false; }
 

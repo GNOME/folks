@@ -56,7 +56,7 @@ public class Folks.Backends.Kf.Backend : Folks.Backend
    *
    * See {@link Folks.Backend.is_quiescent}.
    *
-   * @since UNRELEASED
+   * @since 0.6.2
    */
   public override bool is_quiescent
     {

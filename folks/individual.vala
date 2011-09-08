@@ -232,7 +232,7 @@ public class Folks.Individual : Object,
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.6.2
    */
   public async void change_alias (string alias) throws PropertyError
     {
@@ -321,7 +321,7 @@ public class Folks.Individual : Object,
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.6.2
    */
   public async void change_nickname (string nickname) throws PropertyError
     {
@@ -521,7 +521,7 @@ public class Folks.Individual : Object,
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.6.2
    */
   public async void change_is_favourite (bool is_favourite) throws PropertyError
     {
@@ -590,7 +590,7 @@ public class Folks.Individual : Object,
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.6.2
    */
   public async void change_groups (Set<string> groups) throws PropertyError
     {
@@ -1003,7 +1003,7 @@ public class Folks.Individual : Object,
    * consideration must implement ({@link Persona} to select all personas)
    * @param compare_func comparison function to order personas for selection
    * @param setter function to update the individual with the chosen value
-   * @since UNRELEASED
+   * @since 0.6.2
    */
   private void _update_single_valued_property (Type interface_type,
       CompareFunc<Persona> compare_func, SingleValuedPropertySetter setter)

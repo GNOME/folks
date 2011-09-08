@@ -25,28 +25,28 @@ using GLib;
  * {@link Persona} using a setter method defined on an interface such as
  * {@link AliasDetails}.
  *
- * @since UNRELEASED
+ * @since 0.6.2
  */
 public errordomain Folks.PropertyError
 {
   /**
    * Property is not writeable for this particular object.
    *
-   * @since UNRELEASED
+   * @since 0.6.2
    */
   NOT_WRITEABLE,
 
   /**
    * Value was invalid for the property.
    *
-   * @since UNRELEASED
+   * @since 0.6.2
    */
   INVALID_VALUE,
 
   /**
    * Unknown error when setting the property.
    *
-   * @since UNRELEASED
+   * @since 0.6.2
    */
   UNKNOWN_ERROR
 }

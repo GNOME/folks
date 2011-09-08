@@ -54,7 +54,7 @@ public interface Folks.LocalIdDetails : Object
    *
    * @param local_ids the set of local IDs
    * @throws PropertyError if setting the local IDs failed
-   * @since UNRELEASED
+   * @since 0.6.2
    */
   public virtual async void change_local_ids (Set<string> local_ids)
       throws PropertyError

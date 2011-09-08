@@ -210,7 +210,7 @@ public interface Folks.RoleDetails : Object
    *
    * @param roles the set of roles
    * @throws PropertyError if setting the roles failed
-   * @since UNRELEASED
+   * @since 0.6.2
    */
   public virtual async void change_roles (Set<RoleFieldDetails> roles)
       throws PropertyError

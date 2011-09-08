@@ -51,7 +51,7 @@ public errordomain Folks.IndividualAggregatorError
    * user requested to write to, or which was necessary to write to for storing
    * linking information.
    *
-   * @since UNRELEASED
+   * @since 0.6.2
    */
   PROPERTY_NOT_WRITEABLE,
 }
@@ -112,7 +112,7 @@ public class Folks.IndividualAggregator : Object
    * It's guaranteed that this property's value will only ever change after
    * {@link IndividualAggregator.is_prepared} has changed to `true`.
    *
-   * @since UNRELEASED
+   * @since 0.6.2
    */
   public bool is_quiescent
     {
@@ -192,7 +192,7 @@ public class Folks.IndividualAggregator : Object
    *
    * @since 0.5.1
    */
-  [Deprecated (since = "UNRELEASED",
+  [Deprecated (since = "0.6.2",
       replacement = "IndividualAggregator.individuals_changed_detailed")]
   public signal void individuals_changed (Set<Individual> added,
       Set<Individual> removed,
@@ -234,7 +234,7 @@ public class Folks.IndividualAggregator : Object
    * {@link Individual}s for the individuals which have changed in the
    * aggregator
    *
-   * @since UNRELEASED
+   * @since 0.6.2
    */
   public signal void individuals_changed_detailed (
       MultiMap<Individual?, Individual?> changes);
@@ -1604,7 +1604,7 @@ public class Folks.IndividualAggregator : Object
    * @return a persona (new or existing) which has the given property as
    * writeable
    *
-   * @since UNRELEASED
+   * @since 0.6.2
    */
   public async Persona ensure_individual_property_writeable (
       Individual individual, string property_name)

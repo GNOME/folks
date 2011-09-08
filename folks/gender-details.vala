@@ -68,7 +68,7 @@ public interface Folks.GenderDetails : Object
    *
    * @param gender the contact's gender
    * @throws PropertyError if setting the gender failed
-   * @since UNRELEASED
+   * @since 0.6.2
    */
   public virtual async void change_gender (Gender gender) throws PropertyError
     {

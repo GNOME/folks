@@ -88,7 +88,7 @@ public class Trf.Persona : Folks.Persona,
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.6.2
    */
   public async void change_nickname (string nickname) throws PropertyError
     {
@@ -108,7 +108,7 @@ public class Trf.Persona : Folks.Persona,
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.6.2
    */
   public async void change_phone_numbers (Set<PhoneFieldDetails> phone_numbers)
       throws PropertyError
@@ -129,7 +129,7 @@ public class Trf.Persona : Folks.Persona,
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.6.2
    */
   public async void change_email_addresses (
       Set<EmailFieldDetails> email_addresses) throws PropertyError
@@ -173,7 +173,7 @@ public class Trf.Persona : Folks.Persona,
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.6.2
    */
   public async void change_avatar (LoadableIcon? avatar) throws PropertyError
     {
@@ -194,7 +194,7 @@ public class Trf.Persona : Folks.Persona,
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.6.2
    */
   public async void change_structured_name (StructuredName? structured_name)
       throws PropertyError
@@ -217,7 +217,7 @@ public class Trf.Persona : Folks.Persona,
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.6.2
    */
   public async void change_full_name (string full_name) throws PropertyError
     {
@@ -238,7 +238,7 @@ public class Trf.Persona : Folks.Persona,
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.6.2
    */
   public async void change_gender (Gender gender) throws PropertyError
     {
@@ -259,7 +259,7 @@ public class Trf.Persona : Folks.Persona,
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.6.2
    */
   public async void change_birthday (DateTime? birthday) throws PropertyError
     {
@@ -293,7 +293,7 @@ public class Trf.Persona : Folks.Persona,
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.6.2
    */
   public async void change_roles (Set<RoleFieldDetails> roles)
       throws PropertyError
@@ -317,7 +317,7 @@ public class Trf.Persona : Folks.Persona,
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.6.2
    */
   public async void change_notes (Set<NoteFieldDetails> notes)
       throws PropertyError
@@ -341,7 +341,7 @@ public class Trf.Persona : Folks.Persona,
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.6.2
    */
   public async void change_urls (Set<UrlFieldDetails> urls) throws PropertyError
     {
@@ -364,7 +364,7 @@ public class Trf.Persona : Folks.Persona,
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.6.2
    */
   public async void change_postal_addresses (
       Set<PostalAddressFieldDetails> postal_addresses) throws PropertyError
@@ -394,7 +394,7 @@ public class Trf.Persona : Folks.Persona,
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.6.2
    */
   public async void change_im_addresses (
       MultiMap<string, ImFieldDetails> im_addresses) throws PropertyError
@@ -416,7 +416,7 @@ public class Trf.Persona : Folks.Persona,
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.6.2
    */
   public async void change_is_favourite (bool is_favourite) throws PropertyError
     {
@@ -452,7 +452,7 @@ public class Trf.Persona : Folks.Persona,
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.6.2
    */
   public async void change_local_ids (Set<string> local_ids)
       throws PropertyError
@@ -484,7 +484,7 @@ public class Trf.Persona : Folks.Persona,
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.6.2
    */
   public async void change_web_service_addresses (
       MultiMap<string, WebServiceFieldDetails> web_service_addresses)

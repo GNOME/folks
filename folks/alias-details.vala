@@ -48,7 +48,7 @@ public interface Folks.AliasDetails : Object
    *
    * @param alias the new alias
    * @throws PropertyError if setting the alias failed
-   * @since UNRELEASED
+   * @since 0.6.2
    */
   public virtual async void change_alias (string alias) throws PropertyError
     {

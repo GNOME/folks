@@ -82,7 +82,7 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.6.2
    */
   public async void change_alias (string alias) throws PropertyError
     {
@@ -119,7 +119,7 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.6.2
    */
   public async void change_im_addresses (
       MultiMap<string, ImFieldDetails> im_addresses) throws PropertyError
@@ -201,7 +201,7 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.6.2
    */
   public async void change_web_service_addresses (
       MultiMap<string, WebServiceFieldDetails> web_service_addresses)

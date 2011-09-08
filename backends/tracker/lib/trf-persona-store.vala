@@ -377,7 +377,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.6.2
    */
   public override string[] always_writeable_properties
     {
@@ -389,7 +389,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
    *
    * See {@link Folks.PersonaStore.is_quiescent}.
    *
-   * @since UNRELEASED
+   * @since 0.6.2
    */
   public override bool is_quiescent
     {

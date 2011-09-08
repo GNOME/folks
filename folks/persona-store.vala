@@ -130,7 +130,7 @@ public enum Folks.PersonaDetail
   /**
    * Invalid field for use in error returns.
    *
-   * @since UNRELEASED
+   * @since 0.6.2
    */
   INVALID = -1,
 
@@ -256,7 +256,7 @@ public enum Folks.PersonaDetail
   /**
    * Field for {@link GroupDetails.groups}.
    *
-   * @since UNRELEASED
+   * @since 0.6.2
    */
   GROUPS
 }
@@ -494,7 +494,7 @@ public abstract class Folks.PersonaStore : Object
    * It's guaranteed that this property's value will only ever change after
    * {@link IndividualAggregator.is_prepared} has changed to `true`.
    *
-   * @since UNRELEASED
+   * @since 0.6.2
    */
   public abstract bool is_quiescent { get; default = false; }
 
@@ -547,7 +547,7 @@ public abstract class Folks.PersonaStore : Object
    * {@link Persona.writeable_properties} for the personas in this persona
    * store.
    *
-   * @since UNRELEASED
+   * @since 0.6.2
    */
   public abstract string[] always_writeable_properties { get; }
 

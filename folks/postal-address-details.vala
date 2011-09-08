@@ -293,7 +293,7 @@ public interface Folks.PostalAddressDetails : Object
    *
    * @param postal_addresses the set of postal addresses
    * @throws PropertyError if setting the addresses failed
-   * @since UNRELEASED
+   * @since 0.6.2
    */
   public virtual async void change_postal_addresses (
       Set<PostalAddressFieldDetails> postal_addresses) throws PropertyError

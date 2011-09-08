@@ -120,7 +120,7 @@ public interface Folks.ImDetails : Object
    *
    * @param im_addresses the new map of protocols to IM addresses
    * @throws PropertyError if setting the IM addresses failed
-   * @since UNRELEASED
+   * @since 0.6.2
    */
   public virtual async void change_im_addresses (
       MultiMap<string, ImFieldDetails> im_addresses) throws PropertyError

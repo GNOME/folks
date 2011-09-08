@@ -107,7 +107,7 @@ public interface Folks.WebServiceDetails : Object
    *
    * @param web_service_addresses the set of addresses
    * @throws PropertyError if setting the addresses failed
-   * @since UNRELEASED
+   * @since 0.6.2
    */
   public virtual async void change_web_service_addresses (
       MultiMap<string, WebServiceFieldDetails> web_service_addresses)

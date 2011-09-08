@@ -50,7 +50,7 @@ public interface Folks.BirthdayDetails : Object
    *
    * @param birthday the new birthday (or `null` to unset the birthday)
    * @throws PropertyError if setting the birthday failed
-   * @since UNRELEASED
+   * @since 0.6.2
    */
   public virtual async void change_birthday (DateTime? birthday)
       throws PropertyError
@@ -79,7 +79,7 @@ public interface Folks.BirthdayDetails : Object
    *
    * @param event_id the new birthday event ID (or `null` to unset the event ID)
    * @throws PropertyError if setting the birthday event ID failed
-   * @since UNRELEASED
+   * @since 0.6.2
    */
   public virtual async void change_calendar_event_id (string? event_id)
       throws PropertyError

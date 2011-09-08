@@ -196,7 +196,7 @@ public interface Folks.PhoneDetails : Object
    *
    * @param phone_numbers the set of phone numbers
    * @throws PropertyError if setting the phone numbers failed
-   * @since UNRELEASED
+   * @since 0.6.2
    */
   public virtual async void change_phone_numbers (
       Set<PhoneFieldDetails> phone_numbers) throws PropertyError

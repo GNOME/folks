@@ -158,7 +158,7 @@ public interface Folks.GroupDetails : Object
    *
    * @param groups the complete set of groups the contact should be a member of
    * @throws PropertyError if setting the groups failed
-   * @since UNRELEASED
+   * @since 0.6.2
    */
   public virtual async void change_groups (Set<string> groups)
       throws PropertyError

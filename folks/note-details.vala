@@ -119,7 +119,7 @@ public interface Folks.NoteDetails : Object
    *
    * @param notes the set of notes
    * @throws PropertyError if setting the notes failed
-   * @since UNRELEASED
+   * @since 0.6.2
    */
   public virtual async void change_notes (Set<NoteFieldDetails> notes)
       throws PropertyError

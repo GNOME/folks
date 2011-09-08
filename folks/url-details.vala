@@ -101,7 +101,7 @@ public interface Folks.UrlDetails : Object
    *
    * @param urls the set of URLs
    * @throws PropertyError if setting the URLs failed
-   * @since UNRELEASED
+   * @since 0.6.2
    */
   public virtual async void change_urls (Set<UrlFieldDetails> urls)
       throws PropertyError

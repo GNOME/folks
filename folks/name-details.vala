@@ -234,7 +234,7 @@ public interface Folks.NameDetails : Object
    *
    * @param name the structured name (`null` to unset it)
    * @throws PropertyError if setting the structured name failed
-   * @since UNRELEASED
+   * @since 0.6.2
    */
   public virtual async void change_structured_name (StructuredName? name)
       throws PropertyError
@@ -271,7 +271,7 @@ public interface Folks.NameDetails : Object
    *
    * @param full_name the full name (empty string to unset it)
    * @throws PropertyError if setting the full name failed
-   * @since UNRELEASED
+   * @since 0.6.2
    */
   public virtual async void change_full_name (string full_name)
       throws PropertyError
@@ -309,7 +309,7 @@ public interface Folks.NameDetails : Object
    *
    * @param nickname the nickname (empty string to unset it)
    * @throws PropertyError if setting the nickname failed
-   * @since UNRELEASED
+   * @since 0.6.2
    */
   public virtual async void change_nickname (string nickname)
       throws PropertyError

@@ -42,7 +42,7 @@ public interface Folks.FavouriteDetails : Object
    *
    * @param is_favourite `true` if the contact is a favourite; `false` otherwise
    * @throws PropertyError if setting the favouriteness failed
-   * @since UNRELEASED
+   * @since 0.6.2
    */
   public virtual async void change_is_favourite (bool is_favourite)
       throws PropertyError

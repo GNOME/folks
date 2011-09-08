@@ -140,7 +140,7 @@ public class Tpf.Persona : Folks.Persona,
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.6.2
    */
   public async void change_alias (string alias) throws PropertyError
     {
@@ -173,7 +173,7 @@ public class Tpf.Persona : Folks.Persona,
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.6.2
    */
   public async void change_is_favourite (bool is_favourite) throws PropertyError
     {
@@ -254,7 +254,7 @@ public class Tpf.Persona : Folks.Persona,
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.6.2
    */
   public async void change_groups (Set<string> groups) throws PropertyError
     {
