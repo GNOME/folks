@@ -213,13 +213,16 @@ public class Folks.BackendStore : Object {
                     assert_not_reached ();
                 }
 
+              var writeable_props = string.joinv (",",
+                  persona_store.always_writeable_properties);
+
               debug.print_heading (domain, level, "PersonaStore (%p)",
                   persona_store);
               debug.print_key_value_pairs (domain, level,
                   "Ref. count", this.ref_count.to_string (),
                   "ID", persona_store.id,
                   "Prepared?", persona_store.is_prepared ? "yes" : "no",
-                  "Writeable?", persona_store.is_writeable ? "yes" : "no",
+                  "Always writeable properties", writeable_props,
                   "Quiescent?", persona_store.is_quiescent ? "yes" : "no",
                   "Trust level", trust_level,
                   "Persona count", persona_store.personas.size.to_string ()
