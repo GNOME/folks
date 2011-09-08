@@ -1,6 +1,8 @@
-Overview of changes from libfolks 0.6.2 to libfolks 0.6.3
-=========================================================
+Overview of changes from libfolks 0.6.2 to libfolks 0.6.2.1
+===========================================================
 
+Bugs fixed:
+* Bug 658580 — Assertion in gee_hash_map_node_iterator_next with folks 0.6.2
 
 Overview of changes from libfolks 0.6.1 to libfolks 0.6.2
 =========================================================

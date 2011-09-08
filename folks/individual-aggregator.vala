@@ -548,8 +548,11 @@ public class Folks.IndividualAggregator : Object
           backend.notify["is-quiescent"].connect (
               this._backend_is_quiescent_changed_cb);
 
-          /* handle the stores that have already been signaled */
-          foreach (var persona_store in backend.persona_stores.values)
+          /* Handle the stores that have already been signaled. Since
+           * this might change while we are looping, get a copy first.
+           */
+          var stores = backend.persona_stores.values.to_array ();
+          foreach (var persona_store in stores)
               {
                 this._backend_persona_store_added_cb (backend, persona_store);
               }
