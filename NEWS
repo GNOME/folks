@@ -12,10 +12,13 @@ Bugs fixed:
   telepathy
 * Bug 658002 — defective typelib
 * Bug 657065 — Cache keeps around contacts from disabled accounts
+* Bug 658323 — Deprecate FOLKS_WRITEABLE_STORE in favour of FOLKS_PRIMARY_STORE
 
 API changes:
 * Individual.avatar is now settable using Individual.change_avatar() (not new
   API, but it no longer always returns an error)
+* We now use the FOLKS_PRIMARY_STORE env var instead of FOLKS_WRITEABLE_STORE
+  to configure the primary store
 
 Overview of changes from libfolks 0.6.2 to libfolks 0.6.2.1
 ===========================================================

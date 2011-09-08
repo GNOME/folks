@@ -399,7 +399,7 @@ public abstract class Folks.PersonaStore : Object
   public abstract string type_id
     {
       /* Note: the type_id must not contain colons because the primary writeable
-       * store is configured, either via GConf or the FOLKS_WRITEABLE_STORE
+       * store is configured, either via GConf or the FOLKS_PRIMARY_STORE
        * env variable, with a string of the form 'type_id:store_id'. */
       get;
     }

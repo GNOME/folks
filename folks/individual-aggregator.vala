@@ -125,7 +125,7 @@ public class Folks.IndividualAggregator : Object
    * Which one to use is decided (in order or precedence)
    * by:
    *
-   * - the FOLKS_WRITEABLE_STORE env var (mostly for debugging)
+   * - the FOLKS_PRIMARY_STORE env var (mostly for debugging)
    * - the GConf key set in _FOLKS_CONFIG_KEY (system set store)
    * - going with the `key-file` or `eds` store as the fall-back option
    *
@@ -267,8 +267,19 @@ public class Folks.IndividualAggregator : Object
       this._debug = Debug.dup ();
       this._debug.print_status.connect (this._debug_print_status);
 
-      /* Check out the configured writeable store */
-      var store_config_ids = Environment.get_variable ("FOLKS_WRITEABLE_STORE");
+      /* Check out the configured primary store */
+      var store_config_ids = Environment.get_variable ("FOLKS_PRIMARY_STORE");
+      if (store_config_ids == null)
+        {
+          store_config_ids = Environment.get_variable ("FOLKS_WRITEABLE_STORE");
+          if (store_config_ids != null)
+            {
+              var deprecated_warn = "FOLKS_WRITEABLE_STORE is deprecated, ";
+              deprecated_warn += "use FOLKS_PRIMARY_STORE";
+              warning (deprecated_warn);
+            }
+        }
+
       if (store_config_ids != null)
         {
           this._set_writeable_store (store_config_ids);
