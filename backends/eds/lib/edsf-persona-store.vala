@@ -1527,14 +1527,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
       /* First let's remove everything */
       foreach (var field_id in im_eds_map.get_values ())
         {
-          /* Technically it's a (transfer full) list, but remove_attribute()
-           * swallows ownership. */
-          GLib.List<unowned VCardAttribute> attrs =
-              contact.get_attributes (field_id);
-          foreach (var attr in attrs)
-            {
-              contact.remove_attribute (attr);
-            }
+          contact.remove_attributes (null, E.Contact.vcard_attribute (field_id));
         }
 
      foreach (var proto in im_fds.get_keys ())
