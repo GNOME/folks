@@ -756,6 +756,8 @@ public class Edsf.Persona : Folks.Persona,
     {
       this.contact = contact;
 
+      this.freeze_notify ();
+
       this._update_names ();
       this._update_avatar ();
       this._update_urls ();
@@ -770,6 +772,8 @@ public class Edsf.Persona : Folks.Persona,
       this._update_gender ();
       this._update_birthday ();
       this._update_roles ();
+
+      this.thaw_notify ();
     }
 
   private void _update_params (AbstractFieldDetails details,
