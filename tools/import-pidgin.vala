@@ -110,10 +110,12 @@ public class Folks.Importers.Pidgin : Folks.Importer
       /* Tidy up */
       delete xml_doc;
 
-      /* Translators: the first parameter is the number of buddies which were
-       * successfully imported, and the second is a filename. */
-      stdout.printf (_("Imported %u buddies from '%s'.\n"), this.persona_count,
-          filename);
+      stdout.printf (
+          /* Translators: the first parameter is the number of buddies which
+           * were successfully imported, and the second is a filename. */
+          ngettext ("Imported %u buddy from '%s'.",
+              "Imported %u buddies from '%s'.", this.persona_count) + "\n",
+          this.persona_count, filename);
 
       /* Return the number of Personas we imported */
       return this.persona_count;
