@@ -145,6 +145,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
     }
 
   private string[] _always_writeable_properties = {};
+  private static string[] _always_writeable_properties_empty = {}; /* oh Vala */
 
   /**
    * {@inheritDoc}
@@ -153,7 +154,15 @@ public class Edsf.PersonaStore : Folks.PersonaStore
    */
   public override string[] always_writeable_properties
     {
-      get { return this._always_writeable_properties; }
+      get
+        {
+          if (this._addressbook.readonly == true)
+            {
+              return this._always_writeable_properties_empty;
+            }
+
+          return this._always_writeable_properties;
+        }
     }
 
   /*
