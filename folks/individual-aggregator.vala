@@ -701,6 +701,43 @@ public class Folks.IndividualAggregator : Object
           _changes = new HashMultiMap<Individual?, Individual?> ();
         }
 
+      /* Debug output. */
+      if (this._debug.debug_output_enabled == true)
+        {
+          debug ("Emitting individuals-changed-detailed with %u mappings:",
+              _changes.size);
+
+          foreach (var removed_ind in _changes.get_keys ())
+            {
+              foreach (var added_ind in _changes.get (removed_ind))
+                {
+                  debug ("    %s (%p) → %s (%p)",
+                      (removed_ind != null) ? removed_ind.id : "", removed_ind,
+                      (added_ind != null) ? added_ind.id : "", added_ind);
+
+                  if (removed_ind != null)
+                    {
+                      debug ("      Removed individual's personas:");
+
+                      foreach (var p in removed_ind.personas)
+                        {
+                          debug ("        %s (%p)", p.uid, p);
+                        }
+                    }
+
+                  if (added_ind != null)
+                    {
+                      debug ("      Added individual's personas:");
+
+                      foreach (var p in added_ind.personas)
+                        {
+                          debug ("        %s (%p)", p.uid, p);
+                        }
+                    }
+                }
+            }
+        }
+
       this.individuals_changed (_added.read_only_view, _removed.read_only_view,
           message, actor, reason);
       this.individuals_changed_detailed (_changes);
@@ -1174,7 +1211,13 @@ public class Folks.IndividualAggregator : Object
       var iter = replaced_individuals.map_iterator ();
       while (iter.next () == true)
         {
-          iter.get_key ().replace (iter.get_value ());
+          var old_ind = iter.get_key ();
+          var new_ind = iter.get_value ();
+
+          debug ("    %s (%p) → %s (%p)", old_ind.id, old_ind,
+              (new_ind != null) ? new_ind.id : "", new_ind);
+
+          old_ind.replace (new_ind);
         }
 
       /* Validate the link map. */
