@@ -1510,7 +1510,19 @@ public class Folks.Individual : Object,
        * aggregator's rewritten, it would be nice to fix this. */
       if (persona.individual == this)
         {
-          persona.individual = replacement_individual;
+          /* It may be the case that the persona's being removed from the
+           * individual (i.e. the replacement individual is non-null, but
+           * doesn't contain this persona). In this case, we need to set the
+           * persona's individual to null. */
+          if (replacement_individual != null &&
+              persona in replacement_individual.personas)
+            {
+              persona.individual = replacement_individual;
+            }
+          else
+            {
+              persona.individual = null;
+            }
         }
     }
 
