@@ -515,6 +515,8 @@ public abstract class Folks.PersonaStore : Object
    *
    * @since 0.1.13
    */
+  [Deprecated (since = "UNRELEASED",
+      replacement = "PersonaStore.is_primary_store")]
   public bool is_writeable { get; set; default = false; }
 
   /**
@@ -635,4 +637,12 @@ public abstract class Folks.PersonaStore : Object
    */
   public abstract async void remove_persona (Persona persona)
       throws Folks.PersonaStoreError;
+
+  /**
+   * Whether this {@link PersonaStore} is the primary store which is
+   * to be used for linking {@link Persona}s and such.
+   *
+   * @since UNRELEASED
+   */
+  public bool is_primary_store { get; internal set; default = false; }
 }

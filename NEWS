@@ -19,6 +19,8 @@ API changes:
   API, but it no longer always returns an error)
 * We now use the FOLKS_PRIMARY_STORE env var instead of FOLKS_WRITEABLE_STORE
   to configure the primary store
+* Deprecate Folks.PersonaStore.is_writeable
+* Add Folks.PersonaStore.is_primary_store
 
 Overview of changes from libfolks 0.6.2 to libfolks 0.6.2.1
 ===========================================================
