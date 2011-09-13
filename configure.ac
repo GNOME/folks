@@ -44,7 +44,7 @@ AC_CONFIG_HEADERS(config.h)
 AC_CONFIG_SRCDIR([configure.ac])
 AM_INIT_AUTOMAKE([1.11 dist-bzip2 no-define
                   no-dist-gzip tar-ustar -Wno-portability])
-AM_MAINTAINER_MODE
+AM_MAINTAINER_MODE([enable])
 
 AC_PROG_CC
 AM_PROG_CC_C_O
