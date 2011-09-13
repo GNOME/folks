@@ -273,8 +273,6 @@ BACKEND_KF='$(top_builddir)/backends/key-file/.libs/key-file.so'
 AC_SUBST([BACKEND_KF])
 BACKEND_TP='$(top_builddir)/backends/telepathy/.libs/telepathy.so'
 AC_SUBST([BACKEND_TP])
-BACKEND_EDS='$(top_builddir)/backends/eds/.libs/eds.so'
-AC_SUBST([BACKEND_EDS])
 
 if test x$have_libsocialweb_backend = xyes; then
   BACKEND_LIBSOCIALWEB='$(top_builddir)/backends/libsocialweb/.libs/libsocialweb.so'
