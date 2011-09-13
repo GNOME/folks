@@ -93,6 +93,8 @@ public class Folks.AvatarCache : Object
     {
       var avatar_file = this._get_avatar_file (id);
 
+      debug ("Loading avatar '%s' from file '%s'.", id, avatar_file.get_uri ());
+
       // Return null if the avatar doesn't exist
       if (avatar_file.query_exists () == false)
         {
@@ -119,6 +121,9 @@ public class Folks.AvatarCache : Object
       throws GLib.Error
     {
       var dest_avatar_file = this._get_avatar_file (id);
+
+      debug ("Storing avatar '%s' in file '%s'.", id,
+          dest_avatar_file.get_uri ());
 
       // Copy the icon data into a file
       while (true)
@@ -167,6 +172,9 @@ public class Folks.AvatarCache : Object
   public async void remove_avatar (string id) throws GLib.Error
     {
       var avatar_file = this._get_avatar_file (id);
+
+      debug ("Removing avatar '%s' in file '%s'.", id, avatar_file.get_uri ());
+
       try
         {
           avatar_file.delete (null);
