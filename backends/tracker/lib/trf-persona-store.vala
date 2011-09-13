@@ -726,11 +726,11 @@ public class Trf.PersonaStore : Folks.PersonaStore
           else
             {
               throw new PersonaStoreError.INVALID_ARGUMENT (
-                  /* Translators: the first parameter identifies the
-                   * persona store and the second the unknown key
-                   * that was received with the details params. */
-                _("Unrecognized parameter %s by the  %s PersonaStore:\n')"),
-                this.type_id, k);
+                  /* Translators: the first parameter is the unknown key that
+                   * was received with the details params, and the second
+                   * identifies the persona store. */
+                _("Unrecognized parameter '%s' passed to persona store '%s'."),
+                k, this.id);
             }
         }
       builder.insert_close ();
