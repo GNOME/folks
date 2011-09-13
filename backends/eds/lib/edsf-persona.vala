@@ -764,7 +764,13 @@ public class Edsf.Persona : Folks.Persona,
       this._update_phones ();
       this._update_addresses ();
       this._update_emails ();
+
+      /* Note: because we assume certain e-mail addresses
+       * (@gmail, @msn, etc) to also be IM IDs we /must/
+       * update the latter after we've taken care of the former.
+       */
       this._update_im_addresses ();
+
       this._update_groups ();
       this._update_notes ();
       this._update_local_ids ();
@@ -1226,6 +1232,54 @@ public class Edsf.Persona : Folks.Persona,
             }
         }
 
+      /* We consider some e-mail addresses to be IM IDs too. This
+       * is pretty much a hack to make sure e-d-s contacts are
+       * automatically linked with their corresponding Telepathy
+       * Persona. As an undesired side effect we might end up having
+       * IM addresses that aren't actually used as such (i.e.: people
+       * who don't actually use GMail or MSN addresses for IM).
+       *
+       * See bgo#657142
+       */
+      foreach (var email in this.email_addresses)
+        {
+          var proto = this._im_proto_from_addr (email.value);
+          if (proto != null)
+            {
+              /* Has this already been added? */
+              var exists = false;
+              var current_im_addrs = this.im_addresses.get (proto);
+              if (current_im_addrs != null)
+                {
+                  foreach (var cur_im in current_im_addrs)
+                    {
+                      if (cur_im.value == email.value)
+                        {
+                          exists = true;
+                          break;
+                        }
+                    }
+                }
+
+              if (exists)
+                continue;
+
+              try
+                {
+                  string normalised_addr =
+                    (owned) ImDetails.normalise_im_address (email.value, proto);
+                  var im_fd = new ImFieldDetails (normalised_addr);
+                  new_im_addresses.set (proto, im_fd);
+                }
+              catch (Folks.ImDetailsError e)
+                {
+                  GLib.warning (
+                      "Problem when trying to normalise address: %s\n",
+                      e.message);
+                }
+            }
+        }
+
       if (!Utils.multi_map_str_afd_equal (new_im_addresses,
               this._im_addresses))
         {
@@ -1462,5 +1516,39 @@ public class Edsf.Persona : Folks.Persona,
     {
       return Edsf.Persona._get_property_from_contact (this.contact,
           prop_name);
+    }
+
+  private string? _im_proto_from_addr (string addr)
+    {
+      if (addr.index_of ("@") == -1)
+        return null;
+
+      var tokens = addr.split ("@", 2);
+
+      if (tokens.length != 2)
+        return null;
+
+      var domain = tokens[1];
+      if (domain.index_of (".") == -1)
+        return null;
+
+      tokens = domain.split (".", 2);
+
+      if (tokens.length != 2)
+        return null;
+
+      domain = tokens[0];
+
+      if (domain == "msn" ||
+          domain == "hotmail" ||
+          domain == "live")
+        return "msn";
+      else if (domain == "gmail" ||
+          domain == "googlemail")
+        return "jabber";
+      else if (domain == "yahoo")
+        return "yahoo";
+
+      return null;
     }
 }

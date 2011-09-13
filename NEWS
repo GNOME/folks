@@ -8,6 +8,8 @@ Bugs fixed:
 * Bug 658730 — ngettext (Plural forms) needed for
   "Imported %u buddies from '%s'."
 * Bug 633781 — Allow to set avatar on individuals
+* Bug 657142 — Automatically link e-d-s contacts with their contacts from
+  telepathy
 
 API changes:
 * Individual.avatar is now settable using Individual.change_avatar() (not new
