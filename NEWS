@@ -21,6 +21,9 @@ API changes:
   to configure the primary store
 * Deprecate Folks.PersonaStore.is_writeable
 * Add Folks.PersonaStore.is_primary_store
+* Add Folks.IndividualAggregatorError.NO_PRIMARY_STORE
+* In IndividualAggregator.ensure_individual_property_writeable we now throw
+  NO_PRIMARY_STORE instead of NO_WRITEABLE_STORE
 
 Overview of changes from libfolks 0.6.2 to libfolks 0.6.2.1
 ===========================================================

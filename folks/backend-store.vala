@@ -222,6 +222,8 @@ public class Folks.BackendStore : Object {
                   "Ref. count", this.ref_count.to_string (),
                   "ID", persona_store.id,
                   "Prepared?", persona_store.is_prepared ? "yes" : "no",
+                  "Is primary store?",
+                  persona_store.is_primary_store ? "yes" : "no",
                   "Always writeable properties", writeable_props,
                   "Quiescent?", persona_store.is_quiescent ? "yes" : "no",
                   "Trust level", trust_level,

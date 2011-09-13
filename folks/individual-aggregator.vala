@@ -37,6 +37,8 @@ public errordomain Folks.IndividualAggregatorError
    *
    * @since 0.1.13
    */
+  [Deprecated (since = "0.6.2.1",
+      replacement = "IndividualAggregatorError.NO_PRIMARY_STORE")]
   NO_WRITEABLE_STORE,
 
   /**
@@ -54,6 +56,14 @@ public errordomain Folks.IndividualAggregatorError
    * @since 0.6.2
    */
   PROPERTY_NOT_WRITEABLE,
+
+  /**
+   * An operation which required the use of a primary store failed because no
+   * primary store was available.
+   *
+   * @since UNRELEASED
+   */
+  NO_PRIMARY_STORE,
 }
 
 /**
@@ -67,15 +77,15 @@ public class Folks.IndividualAggregator : Object
 {
   private BackendStore _backend_store;
   private HashMap<string, PersonaStore> _stores;
-  private unowned PersonaStore? _writeable_store = null;
+  private unowned PersonaStore? _primary_store = null;
   private HashSet<Backend> _backends;
   private HashTable<string, Individual> _link_map;
   private bool _linking_enabled = true;
   private bool _is_prepared = false;
   private bool _prepare_pending = false;
   private Debug _debug;
-  private string _configured_writeable_store_type_id;
-  private string _configured_writeable_store_id;
+  private string _configured_primary_store_type_id;
+  private string _configured_primary_store_id;
   private static const string _FOLKS_CONFIG_KEY =
     "/system/folks/backends/primary_store";
 
@@ -133,7 +143,7 @@ public class Folks.IndividualAggregator : Object
    */
   public PersonaStore? primary_store
     {
-      get { return this._writeable_store; }
+      get { return this._primary_store; }
     }
 
   private Map<string, Individual> _individuals;
@@ -282,16 +292,16 @@ public class Folks.IndividualAggregator : Object
 
       if (store_config_ids != null)
         {
-          this._set_writeable_store (store_config_ids);
+          this._set_primary_store (store_config_ids);
         }
       else
         {
 #if ENABLE_EDS
-          this._configured_writeable_store_type_id = "eds";
-          this._configured_writeable_store_id = "system";
+          this._configured_primary_store_type_id = "eds";
+          this._configured_primary_store_id = "system";
 #else
-          this._configured_writeable_store_type_id = "key-file";
-          this._configured_writeable_store_id = "";
+          this._configured_primary_store_type_id = "key-file";
+          this._configured_primary_store_id = "";
 #endif
 
           try
@@ -299,7 +309,7 @@ public class Folks.IndividualAggregator : Object
               unowned GConf.Client client = GConf.Client.get_default ();
               GConf.Value? val = client.get (this._FOLKS_CONFIG_KEY);
               if (val != null)
-                this._set_writeable_store (val.get_string ());
+                this._set_primary_store (val.get_string ());
             }
           catch (GLib.Error e)
             {
@@ -327,18 +337,18 @@ public class Folks.IndividualAggregator : Object
       this._debug.print_status.disconnect (this._debug_print_status);
     }
 
-  private void _set_writeable_store (string store_config_ids)
+  private void _set_primary_store (string store_config_ids)
     {
       if (store_config_ids.index_of (":") != -1)
         {
           var ids = store_config_ids.split (":", 2);
-          this._configured_writeable_store_type_id = ids[0];
-          this._configured_writeable_store_id = ids[1];
+          this._configured_primary_store_type_id = ids[0];
+          this._configured_primary_store_id = ids[1];
         }
       else
         {
-          this._configured_writeable_store_type_id = store_config_ids;
-          this._configured_writeable_store_id = "";
+          this._configured_primary_store_type_id = store_config_ids;
+          this._configured_primary_store_id = "";
         }
     }
 
@@ -350,7 +360,7 @@ public class Folks.IndividualAggregator : Object
       debug.print_heading (domain, level, "IndividualAggregator (%p)", this);
       debug.print_key_value_pairs (domain, level,
           "Ref. count", this.ref_count.to_string (),
-          "Writeable store", "%p".printf (this._writeable_store),
+          "Primary store", "%p".printf (this._primary_store),
           "Linking enabled?", this._linking_enabled ? "yes" : "no",
           "Prepared?", this._is_prepared ? "yes" : "no",
           "Quiescent?", this._is_quiescent
@@ -591,29 +601,29 @@ public class Folks.IndividualAggregator : Object
     {
       var store_id = this._get_store_full_id (store.type_id, store.id);
 
-      /* We use the configured PersonaStore as the only trusted and writeable
-       * PersonaStore.
+      /* We use the configured PersonaStore as the primary PersonaStore.
        *
        * If the type_id is `eds` we *must* know the actual store
        * (address book) we are talking about or we might end up using
        * a random store on every run.
        */
-      if (store.type_id == this._configured_writeable_store_type_id)
+      if (store.type_id == this._configured_primary_store_type_id)
         {
           if ((store.type_id != "eds" &&
-                  this._configured_writeable_store_id == "") ||
-              this._configured_writeable_store_id == store.id)
+                  this._configured_primary_store_id == "") ||
+              this._configured_primary_store_id == store.id)
             {
-              store.is_writeable = true;
+              store.is_primary_store = true;
               store.trust_level = PersonaStoreTrust.FULL;
-              this._writeable_store = store;
+              this._primary_store = store;
               this.notify_property ("primary-store");
             }
         }
 
       this._stores.set (store_id, store);
       store.personas_changed.connect (this._personas_changed_cb);
-      store.notify["is-writeable"].connect (this._is_writeable_changed_cb);
+      store.notify["is-primary-store"].connect (
+          this._is_primary_store_changed_cb);
       store.notify["trust-level"].connect (this._trust_level_changed_cb);
       store.notify["is-quiescent"].connect (
           this._persona_store_is_quiescent_changed_cb);
@@ -651,7 +661,8 @@ public class Folks.IndividualAggregator : Object
       store.notify["is-quiescent"].disconnect (
           this._persona_store_is_quiescent_changed_cb);
       store.notify["trust-level"].disconnect (this._trust_level_changed_cb);
-      store.notify["is-writeable"].disconnect (this._is_writeable_changed_cb);
+      store.notify["is-primary-store"].disconnect (
+          this._is_primary_store_changed_cb);
 
       /* If we were still waiting on this persona store to reach a quiescent
        * state, stop waiting. */
@@ -665,9 +676,9 @@ public class Folks.IndividualAggregator : Object
        * they'll do that themselves (and emit their own 'removed' signal if
        * necessary) */
 
-      if (this._writeable_store == store)
+      if (this._primary_store == store)
         {
-          this._writeable_store = null;
+          this._primary_store = null;
           this.notify_property ("primary-store");
         }
       this._stores.unset (this._get_store_full_id (store.type_id, store.id));
@@ -1256,20 +1267,22 @@ public class Folks.IndividualAggregator : Object
         }
     }
 
-  private void _is_writeable_changed_cb (Object object, ParamSpec pspec)
+  private void _is_primary_store_changed_cb (Object object, ParamSpec pspec)
     {
-      /* Ensure that we only have one writeable PersonaStore */
+      /* Ensure that we only have one primary PersonaStore */
       var store = (PersonaStore) object;
-      assert ((store.is_writeable == true && store == this._writeable_store) ||
-          (store.is_writeable == false && store != this._writeable_store));
+      assert ((store.is_primary_store == true &&
+              store == this._primary_store) ||
+          (store.is_primary_store == false &&
+              store != this._primary_store));
     }
 
   private void _trust_level_changed_cb (Object object, ParamSpec pspec)
     {
-      /* Only our writeable_store can be fully trusted. */
+      /* Only our primary_store can be fully trusted. */
       var store = (PersonaStore) object;
-      if (this._writeable_store != null &&
-          store == this._writeable_store)
+      if (this._primary_store != null &&
+          store == this._primary_store)
         assert (store.trust_level == PersonaStoreTrust.FULL);
       else
         assert (store.trust_level != PersonaStoreTrust.FULL);
@@ -1472,10 +1485,10 @@ public class Folks.IndividualAggregator : Object
   public async void link_personas (Set<Persona> personas)
       throws IndividualAggregatorError
     {
-      if (this._writeable_store == null)
+      if (this._primary_store == null)
         {
-          throw new IndividualAggregatorError.NO_WRITEABLE_STORE (
-              _("Can't link personas with no writeable store."));
+          throw new IndividualAggregatorError.NO_PRIMARY_STORE (
+              _("Can't link personas with no primary store."));
         }
 
       /* Don't bother linking if it's just one Persona */
@@ -1489,10 +1502,10 @@ public class Folks.IndividualAggregator : Object
           return;
         }
 
-      /* Create a new persona in the writeable store which links together the
+      /* Create a new persona in the primary store which links together the
        * given personas */
-      assert (this._writeable_store.type_id ==
-          this._configured_writeable_store_type_id);
+      assert (this._primary_store.type_id ==
+          this._configured_primary_store_type_id);
 
       /* `protocols_addrs_set` will be passed to the new Kf.Persona */
       var protocols_addrs_set = new HashMultiMap<string, ImFieldDetails> (
@@ -1580,7 +1593,7 @@ public class Folks.IndividualAggregator : Object
         }
 
       yield this.add_persona_from_details (null,
-          this._writeable_store, details);
+          this._primary_store, details);
     }
 
   /**
@@ -1617,7 +1630,7 @@ public class Folks.IndividualAggregator : Object
        *
        * We have to take a copy of the Persona list before removing the
        * Personas, as _personas_changed_cb() (which is called as a result of
-       * calling _writeable_store.remove_persona()) messes around with Persona
+       * calling _primary_store.remove_persona()) messes around with Persona
        * lists. */
       var personas = new HashSet<Persona> ();
       foreach (var p in individual.personas)
@@ -1627,11 +1640,11 @@ public class Folks.IndividualAggregator : Object
 
       foreach (var persona in personas)
         {
-          if (persona.store == this._writeable_store)
+          if (persona.store == this._primary_store)
             {
               debug ("    %s (is user: %s, IID: %s)", persona.uid,
                   persona.is_user ? "yes" : "no", persona.iid);
-              yield this._writeable_store.remove_persona (persona);
+              yield this._primary_store.remove_persona (persona);
             }
         }
     }
@@ -1650,7 +1663,7 @@ public class Folks.IndividualAggregator : Object
    *
    * It may not be possible to create a new persona which has the given property
    * as writeable. In that case, a
-   * {@link IndividualAggregatorError.NO_WRITEABLE_STORE} or
+   * {@link IndividualAggregatorError.NO_PRIMARY_STORE} or
    * {@link IndividualAggregatorError.PROPERTY_NOT_WRITEABLE} error will be
    * thrown.
    *
@@ -1686,14 +1699,14 @@ public class Folks.IndividualAggregator : Object
       var details = new HashTable<string, Value?> (str_hash, str_equal);
       Persona? new_persona = null;
 
-      if (this._writeable_store != null &&
-          property_name in this._writeable_store.always_writeable_properties)
+      if (this._primary_store != null &&
+          property_name in this._primary_store.always_writeable_properties)
         {
           try
             {
               debug ("    Using writeable store");
               new_persona = yield this.add_persona_from_details (null,
-                  this._writeable_store, details);
+                  this._primary_store, details);
             }
           catch (IndividualAggregatorError e1)
             {
@@ -1706,7 +1719,7 @@ public class Folks.IndividualAggregator : Object
         {
           foreach (var s in this._stores.values)
             {
-              if (s == this._writeable_store ||
+              if (s == this._primary_store ||
                   !(property_name in s.always_writeable_properties))
                 {
                   /* Skip the store we've just tried */
@@ -1729,10 +1742,10 @@ public class Folks.IndividualAggregator : Object
         }
 
       /* Throw an error if we haven't managed to find a suitable store */
-      if (new_persona == null && this._writeable_store == null)
+      if (new_persona == null && this._primary_store == null)
         {
-          throw new IndividualAggregatorError.NO_WRITEABLE_STORE (
-              _("Can't add personas with no writeable store."));
+          throw new IndividualAggregatorError.NO_PRIMARY_STORE (
+              _("Can't add personas with no primary store."));
         }
       else if (new_persona == null)
         {
