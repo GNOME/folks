@@ -315,8 +315,7 @@ public class Folks.Individual : Object,
       foreach (var p in this._persona_set)
         {
           var a = p as AliasDetails;
-          if (a != null && p.store.is_writeable == true &&
-              "alias" in p.writeable_properties)
+          if (a != null && "alias" in p.writeable_properties)
             {
               try
                 {
@@ -410,8 +409,7 @@ public class Folks.Individual : Object,
       foreach (var p in this._persona_set)
         {
           var n = p as NameDetails;
-          if (n != null && p.store.is_writeable == true &&
-              "nickname" in p.writeable_properties)
+          if (n != null && "nickname" in p.writeable_properties)
             {
               try
                 {
@@ -668,8 +666,7 @@ public class Folks.Individual : Object,
       foreach (var p in this._persona_set)
         {
           var g = p as GroupDetails;
-          if (g != null && p.store.is_writeable == true &&
-              "groups" in p.writeable_properties)
+          if (g != null && "groups" in p.writeable_properties)
             {
               try
                 {
@@ -1077,10 +1074,8 @@ public class Folks.Individual : Object,
           assert (a != null);
           assert (b != null);
 
-          /* TODO: We (incorrectly?) assume that writeable == primary here.
-           * This will be fixed by bgo#657141. */
-          var a_is_primary = a.store.is_writeable;
-          var b_is_primary = b.store.is_writeable;
+          var a_is_primary = a.store.is_primary_store;
+          var b_is_primary = b.store.is_primary_store;
 
           if (a_is_primary == b_is_primary)
             {
@@ -1957,7 +1952,7 @@ public class Folks.Individual : Object,
        *
        * We choose the most interesting Persona by ranking all the Personas
        * in the Individual by:
-       *  1. store.is-writeable
+       *  1. store.is-primary-store
        *  2. store.trust-level
        *  3. store.id (alphabetically)
        *
@@ -1971,14 +1966,14 @@ public class Folks.Individual : Object,
           foreach (var persona in this._persona_set)
             {
               if (chosen_persona == null ||
-                  (chosen_persona.store.is_writeable == false &&
-                      persona.store.is_writeable == true) ||
-                  (chosen_persona.store.is_writeable ==
-                          persona.store.is_writeable &&
+                  (chosen_persona.store.is_primary_store == false &&
+                      persona.store.is_primary_store == true) ||
+                  (chosen_persona.store.is_primary_store ==
+                          persona.store.is_primary_store &&
                       chosen_persona.store.trust_level >
                           persona.store.trust_level) ||
-                  (chosen_persona.store.is_writeable ==
-                          persona.store.is_writeable &&
+                  (chosen_persona.store.is_primary_store ==
+                          persona.store.is_primary_store &&
                       chosen_persona.store.trust_level ==
                           persona.store.trust_level &&
                       chosen_persona.store.id > persona.store.id)
