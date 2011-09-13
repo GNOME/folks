@@ -904,16 +904,10 @@ public class Edsf.Persona : Folks.Persona,
         }
 
       var comp = new Edsf.SetComparator<RoleFieldDetails> ();
-      if (new_roles.size > 0 &&
-          !comp.equal (new_roles, this._roles))
+      if (!comp.equal (new_roles, this._roles))
         {
           this._roles = new_roles;
           this._roles_ro = new_roles.read_only_view;
-          this.notify_property ("roles");
-        }
-      else if (new_roles.size == 0)
-        {
-          this._roles.clear ();
           this.notify_property ("roles");
         }
     }
@@ -994,31 +988,47 @@ public class Edsf.Persona : Folks.Persona,
 
   private void _update_emails ()
     {
-      this._email_addresses.clear ();
+      var new_email_addresses = new HashSet<EmailFieldDetails> (
+          (GLib.HashFunc) EmailFieldDetails.hash,
+          (GLib.EqualFunc) EmailFieldDetails.equal);
 
       var attrs = this.contact.get_attributes (E.ContactField.EMAIL);
       foreach (var attr in attrs)
         {
           var email_fd = new EmailFieldDetails (attr.get_value ());
           this._update_params (email_fd, attr);
-          this._email_addresses.add (email_fd);
+          new_email_addresses.add (email_fd);
         }
 
-      this.notify_property ("email-addresses");
+      var comp = new Edsf.SetComparator<EmailFieldDetails> ();
+      if (!comp.equal (new_email_addresses, this._email_addresses))
+        {
+         this._email_addresses = new_email_addresses;
+         this._email_addresses_ro = new_email_addresses.read_only_view;
+         this.notify_property ("email-addresses");
+       }
     }
 
   private void _update_notes ()
     {
-      this._notes.clear ();
+      var new_notes = new HashSet<NoteFieldDetails> (
+          (GLib.HashFunc) NoteFieldDetails.hash,
+          (GLib.EqualFunc) NoteFieldDetails.equal);
 
       string n = (string) this._get_property ("note");
       if (n != null && n != "")
         {
           var note = new NoteFieldDetails (n);
-          this._notes.add (note);
+          new_notes.add (note);
         }
 
-      this.notify_property ("notes");
+      var comp = new Edsf.SetComparator<NoteFieldDetails> ();
+      if (!comp.equal (new_notes, this._notes))
+        {
+          this._notes = new_notes;
+          this._notes_ro = this._notes.read_only_view;
+          this.notify_property ("notes");
+        }
     }
 
   private void _update_names ()
@@ -1152,8 +1162,7 @@ public class Edsf.Persona : Folks.Persona,
 
   private void _update_urls ()
     {
-      this._urls.clear ();
-      var urls_temp = new HashSet<UrlFieldDetails> ();
+      var new_urls = new HashSet<UrlFieldDetails> ();
 
       /* First we get the standard Evo urls.. */
       foreach (string url_property in this.url_properties)
@@ -1163,7 +1172,7 @@ public class Edsf.Persona : Folks.Persona,
             {
               var fd_u = new UrlFieldDetails (u);
               fd_u.set_parameter("type", url_property);
-              urls_temp.add (fd_u);
+              new_urls.add (fd_u);
             }
         }
 
@@ -1175,20 +1184,15 @@ public class Edsf.Persona : Folks.Persona,
             {
               var url_fd = new UrlFieldDetails (attr.get_value ());
               this._update_params (url_fd, attr);
-              urls_temp.add (url_fd);
+              new_urls.add (url_fd);
             }
         }
 
-      if (!Utils.set_afd_equal (urls_temp, this._urls))
+      if (!Utils.set_afd_equal (new_urls, this._urls))
         {
-          this._urls.clear ();
-
-          foreach (var url_fd in urls_temp)
-            {
-              this._urls.add (url_fd);
-            }
-
-         this.notify_property ("urls");
+          this._urls = new_urls;
+          this._urls_ro = new_urls.read_only_view;
+          this.notify_property ("urls");
         }
     }
 
@@ -1312,17 +1316,25 @@ public class Edsf.Persona : Folks.Persona,
 
   private void _update_phones ()
     {
-      this._phone_numbers.clear ();
+      var new_phone_numbers = new HashSet<PhoneFieldDetails> (
+          (GLib.HashFunc) PhoneFieldDetails.hash,
+          (GLib.EqualFunc) PhoneFieldDetails.equal);
 
       var attrs = this.contact.get_attributes (E.ContactField.TEL);
       foreach (var attr in attrs)
         {
           var phone_fd = new PhoneFieldDetails (attr.get_value ());
           this._update_params (phone_fd, attr);
-          this._phone_numbers.add (phone_fd);
+          new_phone_numbers.add (phone_fd);
         }
 
-     this.notify_property ("phone-numbers");
+      var comp = new Edsf.SetComparator<PhoneFieldDetails> ();
+      if (!comp.equal (new_phone_numbers, this._phone_numbers))
+        {
+          this._phone_numbers = new_phone_numbers;
+          this._phone_numbers_ro = new_phone_numbers.read_only_view;
+          this.notify_property ("phone-numbers");
+        }
    }
 
   private PostalAddress _postal_address_from_attribute (E.VCardAttribute attr)
@@ -1387,7 +1399,9 @@ public class Edsf.Persona : Folks.Persona,
    */
   private void _update_addresses ()
     {
-      this._postal_addresses.clear ();
+      var new_postal_addresses = new HashSet<PostalAddressFieldDetails> (
+          (GLib.HashFunc) PhoneFieldDetails.hash,
+          (GLib.EqualFunc) PhoneFieldDetails.equal);
 
       var attrs = this.contact.get_attributes (E.ContactField.ADDRESS);
       foreach (unowned E.VCardAttribute attr in attrs)
@@ -1395,7 +1409,15 @@ public class Edsf.Persona : Folks.Persona,
           var pa_fd = new PostalAddressFieldDetails (
               this._postal_address_from_attribute (attr));
           this._update_params (pa_fd, attr);
-          this._postal_addresses.add (pa_fd);
+          new_postal_addresses.add (pa_fd);
+        }
+
+      var comp = new Edsf.SetComparator<PostalAddressFieldDetails> ();
+      if (!comp.equal (new_postal_addresses, this._postal_addresses))
+        {
+          this._postal_addresses = new_postal_addresses;
+          this._postal_addresses_ro = new_postal_addresses.read_only_view;
+          this.notify_property ("phone-numbers");
         }
 
       this.notify_property ("postal-addresses");
