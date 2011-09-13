@@ -26,7 +26,8 @@ enum LinkingMethod
   IM_ADDRESSES,
   LOCAL_IDS,
   WEB_SERVICE_ADDRESSES,
-  LOCAL_IDS_DIFF_STORES
+  LOCAL_IDS_DIFF_STORES,
+  EMAIL_AS_IM_ADDRESS
 }
 
 
@@ -40,6 +41,7 @@ public class LinkPersonasTests : Folks.TestCase
   private string _persona_fullname_2;
   private string _im_address_1 = "someone-1@jabber.example.org";
   private string _im_address_2 = "someone-2@jabber.example.org";
+  private string _auto_linkable_email = "the.cool.dude@gmail.tld";
   private bool _linking_fired;
   private bool _persona_found_1;
   private bool _persona_found_2;
@@ -64,6 +66,8 @@ public class LinkPersonasTests : Folks.TestCase
           this.test_linking_personas_via_web_service_addresses);
       this.add_test ("test linking via local IDs using different PersonaStores",
           this.test_linking_via_local_ids_diff_stores);
+      this.add_test ("test auto linking via e-mail address as IM address",
+          this.test_linking_via_email_as_im_address);
     }
 
   public override void set_up ()
@@ -135,6 +139,12 @@ public class LinkPersonasTests : Folks.TestCase
       this._test_linking_personas ();
     }
 
+  public void test_linking_via_email_as_im_address ()
+    {
+      this._linking_method = LinkingMethod.EMAIL_AS_IM_ADDRESS;
+      this._test_linking_personas ();
+    }
+
   private void _test_linking_personas ()
     {
       this._main_loop = new GLib.MainLoop (null, false);
@@ -155,6 +165,11 @@ public class LinkPersonasTests : Folks.TestCase
           this._linking_props.set ("prop1", this._im_address_1);
           this._linking_props.set ("prop2", this._im_address_2);
         }
+      else if (this._linking_method == LinkingMethod.EMAIL_AS_IM_ADDRESS)
+        {
+          this._linking_props.set ("prop1", this._auto_linkable_email);
+          this._linking_props.set ("prop2", this._auto_linkable_email);
+        }
 
       this._test_linking_personas_async ();
 
@@ -169,7 +184,8 @@ public class LinkPersonasTests : Folks.TestCase
       /* Check we get the new individual (containing the linked
        * personas) and that the previous ones were removed. */
       assert (this._linking_props.size == 0);
-      assert (this._removed_individuals == 2);
+      if (this._linking_method != LinkingMethod.EMAIL_AS_IM_ADDRESS)
+        assert (this._removed_individuals == 2);
 
       GLib.Source.remove (timer_id);
       this._aggregator = null;
@@ -238,14 +254,19 @@ public class LinkPersonasTests : Folks.TestCase
       var wsk =
         Folks.PersonaStore.detail_key (PersonaDetail.WEB_SERVICE_ADDRESSES);
 
-      if (this._linking_method == LinkingMethod.IM_ADDRESSES)
+      if (this._linking_method == LinkingMethod.IM_ADDRESSES ||
+          this._linking_method == LinkingMethod.EMAIL_AS_IM_ADDRESS)
         {
           v1 = Value (typeof (MultiMap<string,  ImFieldDetails>));
           var im_addrs1 = new HashMultiMap<string, ImFieldDetails> (
               null, null,
               (GLib.HashFunc) ImFieldDetails.hash,
               (GLib.EqualFunc) ImFieldDetails.equal);
-          im_addrs1.set ("jabber", new ImFieldDetails (this._im_address_1));
+          if (this._linking_method == LinkingMethod.EMAIL_AS_IM_ADDRESS)
+            im_addrs1.set ("jabber",
+                new ImFieldDetails (this._auto_linkable_email));
+          else
+            im_addrs1.set ("jabber", new ImFieldDetails (this._im_address_1));
           v1.set_object (im_addrs1);
           details1.insert ("im-addresses", (owned) v1);
         }
@@ -291,6 +312,19 @@ public class LinkPersonasTests : Folks.TestCase
           v3.set_object (wsa2);
           details2.insert (wsk, (owned) v3);
         }
+      else if (this._linking_method == LinkingMethod.EMAIL_AS_IM_ADDRESS)
+        {
+          v3 = Value (typeof (Set<EmailFieldDetails>));
+          var emails = new HashSet<EmailFieldDetails> (
+              (GLib.HashFunc) EmailFieldDetails.hash,
+              (GLib.EqualFunc) EmailFieldDetails.equal);
+          var email_1 = new EmailFieldDetails (this._auto_linkable_email);
+          emails.add (email_1);
+          v3.set_object (emails);
+          details2.insert (
+              Folks.PersonaStore.detail_key (PersonaDetail.EMAIL_ADDRESSES),
+              (owned) v3);
+        }
 
       Value? v4 = Value (typeof (string));
       v4.set_string (this._persona_fullname_2);
@@ -314,6 +348,12 @@ public class LinkPersonasTests : Folks.TestCase
   private void _individuals_changed_cb (
        MultiMap<Individual?, Individual?> changes)
     {
+      this._individuals_changed_async (changes);
+    }
+
+  private void _individuals_changed_async (
+       MultiMap<Individual?, Individual?> changes)
+    {
       var added = changes.get_values ();
       var removed = changes.get_keys ();
 
@@ -324,7 +364,10 @@ public class LinkPersonasTests : Folks.TestCase
               continue;
             }
 
-          this._check_personas (i);
+          if (this._linking_method == LinkingMethod.EMAIL_AS_IM_ADDRESS)
+            this._check_auto_linked_personas (i);
+          else
+            this._check_personas (i);
         }
 
       foreach (var i in removed)
@@ -455,6 +498,43 @@ public class LinkPersonasTests : Folks.TestCase
             {
               GLib.warning ("link_personas: %s\n", e.message);
             }
+        }
+    }
+
+  /* Certain e-mail addresses (i.e.: gmail, msn) will be added
+   * as IM addresses to their Persona so auto linking should
+   * happen.
+   *
+   * Hence, no need to call link_personas () here.
+   */
+  private async void _check_auto_linked_personas (Individual i)
+    {
+      if (i.personas.size > 1)
+        {
+          foreach (var email in i.email_addresses)
+            {
+              if (email.value == this._auto_linkable_email)
+                {
+                  this._linking_props.unset ("prop1");
+                }
+            }
+
+          foreach (var proto1 in i.im_addresses.get_keys ())
+            {
+              var im_fds1 = i.im_addresses.get (proto1);
+              foreach (var im_fd1 in im_fds1)
+                {
+                  if (im_fd1.value == this._auto_linkable_email)
+                    {
+                      this._linking_props.unset ("prop2");
+                    }
+                }
+            }
+        }
+
+      if (this._linking_props.size == 0)
+        {
+          this._main_loop.quit ();
         }
     }
 }
