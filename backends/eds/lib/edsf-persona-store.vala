@@ -530,7 +530,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
               this._addressbook.notify["readonly"].connect (
                   this._address_book_notify_read_only_cb);
 
-              yield this._addressbook.open (true, null);
+              yield this._addressbook.open (false, null);
             }
           catch (GLib.Error e1)
             {
