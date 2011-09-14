@@ -133,11 +133,11 @@ girdir = $(datadir)/gir-1.0
 dist_gir_DATA = $(GIRS)
 
 typelibdir = $(libdir)/girepository-1.0
-dist_typelib_DATA = $(GIRS:.gir=.typelib)
+nodist_typelib_DATA = $(GIRS:.gir=.typelib)
 
 BUILT_SOURCES += \
 	$(dist_gir_DATA) \
-	$(dist_typelib_DATA) \
+	$(nodist_typelib_DATA) \
 	$(NULL)
 endif
 

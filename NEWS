@@ -13,6 +13,7 @@ Bugs fixed:
 * Bug 658002 — defective typelib
 * Bug 657065 — Cache keeps around contacts from disabled accounts
 * Bug 658323 — Deprecate FOLKS_WRITEABLE_STORE in favour of FOLKS_PRIMARY_STORE
+* Bug 659095 — Don't distribute typelib file
 
 API changes:
 * Individual.avatar is now settable using Individual.change_avatar() (not new
