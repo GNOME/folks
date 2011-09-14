@@ -1045,10 +1045,11 @@ public class Folks.Individual : Object,
    * {@link Individual.groups}.
    *
    * This function uses the given comparison function to order the personas in
-   * this individual, with the highest-positioned persona finally being passed
-   * to the setter function to use in updating the individual's value for the
-   * given property. i.e. If `compare_func(a, b)` is called and returns > 0,
-   * persona `a` will be passed to the setter.
+   * this individual, with the highest-positioned persona (the “greatest”
+   * persona in the total order) finally being passed to the setter function to
+   * use in updating the individual's value for the given property. i.e. If
+   * `compare_func(a, b)` is called and returns > 0, persona `a` will be passed
+   * to the setter.
    *
    * At a level above `compare_func`, the function always prefers personas from
    * the primary store (see {@link IndividualAggregator.primary_store}) over
@@ -1062,11 +1063,14 @@ public class Folks.Individual : Object,
    * @param interface_type the type of interface which all personas under
    * consideration must implement ({@link Persona} to select all personas)
    * @param compare_func comparison function to order personas for selection
+   * @param prop_name name of the property being set, as used in
+   * {@link Persona.writeable_properties}
    * @param setter function to update the individual with the chosen value
    * @since 0.6.2
    */
   private void _update_single_valued_property (Type interface_type,
-      CompareFunc<Persona> compare_func, SingleValuedPropertySetter setter)
+      CompareFunc<Persona> compare_func, string prop_name,
+      SingleValuedPropertySetter setter)
     {
       CompareDataFunc<Persona> primary_compare_func = (a, b) =>
         {
@@ -1076,33 +1080,35 @@ public class Folks.Individual : Object,
           var a_is_primary = a.store.is_primary_store;
           var b_is_primary = b.store.is_primary_store;
 
-          if (a_is_primary == b_is_primary)
+          if (a_is_primary != b_is_primary)
             {
-              /* Use the comparison function to get an ordering over a and b
-               * given that they're both from stores with the same is-primary
-               * value. If the comparison function gives them an equal order,
-               * we use the personas' UIDs to ensure that we end up with a total
-               * order over all personas in the individual (otherwise we might
-               * end up with unstable property values). */
-              var order = compare_func (a, b);
-
-              if (order == 0)
-                {
-                  order = strcmp (a.uid, b.uid);
-                }
-
-              return order;
-            }
-          else if (a_is_primary == true)
-            {
-              return -1;
-            }
-          else if (b_is_primary == true)
-            {
-              return 1;
+              return (a_is_primary ? 1 : 0) - (b_is_primary ? 1 : 0);
             }
 
-          assert_not_reached ();
+          /* If both personas have the same is-primary value, prefer personas
+           * which have the given property as writeable over those which
+           * don't. */
+          var a_is_writeable = (prop_name in a.writeable_properties);
+          var b_is_writeable = (prop_name in b.writeable_properties);
+
+          if (a_is_writeable != b_is_writeable)
+            {
+              return (a_is_writeable ? 1 : 0) - (b_is_writeable ? 1 : 0);
+            }
+
+          /* If both personas have the same writeability for this property, fall
+           * back to the given comparison function. If the comparison function
+           * gives them an equal order, we use the personas' UIDs to ensure that
+           * we end up with a total order over all personas in the individual
+           * (otherwise we might end up with unstable property values). */
+          var order = compare_func (a, b);
+
+          if (order == 0)
+            {
+              order = strcmp (a.uid, b.uid);
+            }
+
+          return order;
         };
 
       Persona? candidate_p = null;
@@ -1193,7 +1199,7 @@ public class Folks.Individual : Object,
           var b_presence = (b as PresenceDetails).presence_type;
 
           return PresenceDetails.typecmp (a_presence, b_presence);
-        }, (p) =>
+        }, "presence", (p) =>
         {
           var presence_message = ""; /* must not be null */
           var presence_status = ""; /* must not be null */
@@ -1229,7 +1235,7 @@ public class Folks.Individual : Object,
 
           return ((a_is_favourite == true) ? 1 : 0) -
                  ((b_is_favourite == true) ? 1 : 0);
-        }, (p) =>
+        }, "is-favourite", (p) =>
         {
           var favourite = false;
 
@@ -1271,7 +1277,7 @@ public class Folks.Individual : Object,
 
           return (b_is_empty + b_is_display_id) -
                  (a_is_empty + a_is_display_id);
-        }, (p) =>
+        }, "alias", (p) =>
         {
           string alias = ""; /* must not be null */
 
@@ -1300,7 +1306,7 @@ public class Folks.Individual : Object,
           var b_avatar = (b as AvatarDetails).avatar;
 
           return ((a_avatar != null) ? 1 : 0) - ((b_avatar != null) ? 1 : 0);
-        }, (p) =>
+        }, "avatar", (p) =>
         {
           LoadableIcon? avatar = null;
 
@@ -1434,7 +1440,7 @@ public class Folks.Individual : Object,
           var b_is_set = (b_name != null && !b_name.is_empty ()) ? 1 : 0;
 
           return (a_is_set - b_is_set);
-        }, (p) =>
+        }, "structured-name", (p) =>
         {
           StructuredName? name = null;
 
@@ -1472,7 +1478,7 @@ public class Folks.Individual : Object,
           var b_is_set = (b_name.strip () != "") ? 1 : 0;
 
           return (a_is_set - b_is_set);
-        }, (p) =>
+        }, "full-name", (p) =>
         {
           string new_full_name = ""; /* must not be null */
 
@@ -1503,7 +1509,7 @@ public class Folks.Individual : Object,
           var b_is_set = (b_name.strip () != "") ? 1 : 0;
 
           return (a_is_set - b_is_set);
-        }, (p) =>
+        }, "nickname", (p) =>
         {
           string new_nickname = ""; /* must not be null */
 
@@ -1595,7 +1601,7 @@ public class Folks.Individual : Object,
           var b_is_specified = (b_gender != Gender.UNSPECIFIED) ? 1 : 0;
 
           return (a_is_specified - b_is_specified);
-        }, (p) =>
+        }, "gender", (p) =>
         {
           var new_gender = Gender.UNSPECIFIED;
 
@@ -1798,7 +1804,7 @@ public class Folks.Individual : Object,
            * different personas don't match, because that's just scary. */
           return (a_birthday_is_set + a_event_id_is_set) -
                  (b_birthday_is_set + b_event_id_is_set);
-        }, (p) =>
+        }, "birthday", (p) =>
         {
           unowned DateTime? bday = null;
           unowned string? calendar_event_id = null;
