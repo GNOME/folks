@@ -115,6 +115,9 @@ GITIGNOREFILES = \
 	libfolks_la_vala.stamp \
 	$(NULL)
 
+CLEANFILES =
+MAINTAINERCLEANFILES =
+
 # We have to extract our own dlname from libfolks.la; see bgo#658002.
 # This is what g-ir-scanner does.
 libfolks_dlname = \
@@ -132,16 +135,15 @@ GIRS = Folks-$(API_VERSION).gir
 girdir = $(datadir)/gir-1.0
 dist_gir_DATA = $(GIRS)
 
+MAINTAINERCLEANFILES += $(dist_gir_DATA)
+
 typelibdir = $(libdir)/girepository-1.0
 nodist_typelib_DATA = $(GIRS:.gir=.typelib)
 
-BUILT_SOURCES += \
-	$(dist_gir_DATA) \
-	$(nodist_typelib_DATA) \
-	$(NULL)
+CLEANFILES += $(nodist_typelib_DATA)
 endif
 
-MAINTAINERCLEANFILES = \
+MAINTAINERCLEANFILES += \
 	$(BUILT_SOURCES) \
 	$(NULL)
 
