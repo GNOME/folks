@@ -614,7 +614,6 @@ public class Folks.IndividualAggregator : Object
               this._configured_primary_store_id == store.id)
             {
               store.is_primary_store = true;
-              store.trust_level = PersonaStoreTrust.FULL;
               this._primary_store = store;
               this.notify_property ("primary-store");
             }
@@ -624,7 +623,6 @@ public class Folks.IndividualAggregator : Object
       store.personas_changed.connect (this._personas_changed_cb);
       store.notify["is-primary-store"].connect (
           this._is_primary_store_changed_cb);
-      store.notify["trust-level"].connect (this._trust_level_changed_cb);
       store.notify["is-quiescent"].connect (
           this._persona_store_is_quiescent_changed_cb);
 
@@ -660,7 +658,6 @@ public class Folks.IndividualAggregator : Object
       store.personas_changed.disconnect (this._personas_changed_cb);
       store.notify["is-quiescent"].disconnect (
           this._persona_store_is_quiescent_changed_cb);
-      store.notify["trust-level"].disconnect (this._trust_level_changed_cb);
       store.notify["is-primary-store"].disconnect (
           this._is_primary_store_changed_cb);
 
@@ -1275,17 +1272,6 @@ public class Folks.IndividualAggregator : Object
               store == this._primary_store) ||
           (store.is_primary_store == false &&
               store != this._primary_store));
-    }
-
-  private void _trust_level_changed_cb (Object object, ParamSpec pspec)
-    {
-      /* Only our primary_store can be fully trusted. */
-      var store = (PersonaStore) object;
-      if (this._primary_store != null &&
-          store == this._primary_store)
-        assert (store.trust_level == PersonaStoreTrust.FULL);
-      else
-        assert (store.trust_level != PersonaStoreTrust.FULL);
     }
 
   private void _persona_store_is_quiescent_changed_cb (Object obj,

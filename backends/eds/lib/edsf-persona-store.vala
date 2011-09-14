@@ -61,6 +61,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
   private void _address_book_notify_read_only_cb (Object address_book,
       ParamSpec pspec)
     {
+      this._update_trust_level ();
       this.notify_property ("can-add-personas");
       this.notify_property ("can-remove-personas");
     }
@@ -208,7 +209,6 @@ public class Edsf.PersonaStore : Folks.PersonaStore
       this._personas = new HashMap<string, Persona> ();
       this._personas_ro = this._personas.read_only_view;
       this._query_str = "(contains \"x-evolution-any-field\" \"\")";
-      this.trust_level = PersonaStoreTrust.PARTIAL;
     }
 
   ~PersonaStore ()
@@ -546,6 +546,8 @@ public class Edsf.PersonaStore : Folks.PersonaStore
                   this._address_book_notify_read_only_cb);
 
               yield this._addressbook.open (false, null);
+
+              this._update_trust_level ();
             }
           catch (GLib.Error e1)
             {
@@ -1820,5 +1822,33 @@ public class Edsf.PersonaStore : Folks.PersonaStore
           this._emit_personas_changed (null, removed_personas);
           this.removed ();
         }
+    }
+
+  /* This isn't perfect, since we want to base our trust of the address book on
+   * whether *other people* can write to it (and potentially maliciously affect
+   * the linking our aggregator does). However, since we can't know that, we
+   * assume that if we can write to the address book we're probably in full
+   * control of it. If we can't, either nobody/a sysadmin is (e.g. LDAP) or
+   * or somebody else (who we can't trust) is (e.g. a read-only view of someone
+   * else's WebDAV address book).
+   */
+  private void _update_trust_level ()
+    {
+      unowned SourceGroup? group = (SourceGroup?) this._source.peek_group ();
+      if (group != null)
+        {
+          var base_uri = group.peek_base_uri ();
+          /* base_uri should be ldap:// for LDAP based address books */
+          if (base_uri != null && base_uri.has_prefix("ldap"))
+            {
+              this.trust_level = PersonaStoreTrust.PARTIAL;
+              return;
+            }
+        }
+
+      if (this._addressbook.readonly)
+        this.trust_level = PersonaStoreTrust.PARTIAL;
+      else
+        this.trust_level = PersonaStoreTrust.FULL;
     }
 }

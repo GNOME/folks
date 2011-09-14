@@ -417,6 +417,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
       this._personas = new HashMap<string, Persona> ();
       this._personas_ro = this._personas.read_only_view;
       debug ("Initial query : \n%s\n", this._INITIAL_QUERY);
+      this.trust_level = PersonaStoreTrust.FULL;
     }
 
   /**
