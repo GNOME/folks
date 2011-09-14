@@ -10,6 +10,7 @@ Bugs fixed:
 * Bug 633781 — Allow to set avatar on individuals
 * Bug 657142 — Automatically link e-d-s contacts with their contacts from
   telepathy
+* Bug 658002 — defective typelib
 
 API changes:
 * Individual.avatar is now settable using Individual.change_avatar() (not new

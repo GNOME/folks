@@ -115,10 +115,15 @@ GITIGNOREFILES = \
 	libfolks_la_vala.stamp \
 	$(NULL)
 
+# We have to extract our own dlname from libfolks.la; see bgo#658002.
+# This is what g-ir-scanner does.
+libfolks_dlname = \
+	`$(SED) -n "s/^dlname='\([A-Za-z0-9.-+]\+\)'/\1/p" libfolks.la`
+
 -include $(INTROSPECTION_MAKEFILE)
 INTROSPECTION_GIRS =
 INTROSPECTION_SCANNER_ARGS =
-INTROSPECTION_COMPILER_ARGS = -l libfolks.so
+INTROSPECTION_COMPILER_ARGS = -l $(libfolks_dlname)
 
 if HAVE_INTROSPECTION
 Folks-$(API_VERSION).gir: libfolks.la
