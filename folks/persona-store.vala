@@ -645,4 +645,13 @@ public abstract class Folks.PersonaStore : Object
    * @since UNRELEASED
    */
   public bool is_primary_store { get; internal set; default = false; }
+
+  /**
+   * Whether this {@link PersonaStore} has been marked as the default
+   * store (in its backend) by the user. I.e.: a PersonaStore for the e-d-s
+   * backend would set this to true if it represents the default address book.
+   *
+   * @since UNRELEASED
+   */
+  public bool is_user_set_default { get; internal set; default = false; }
 }

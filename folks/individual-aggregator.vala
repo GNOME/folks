@@ -644,6 +644,7 @@ public class Folks.IndividualAggregator : Object
     {
       var store_id = this._get_store_full_id (store.type_id, store.id);
 
+      this._maybe_configure_as_primary (store);
       this._set_primary_store (store);
 
       this._stores.set (store_id, store);
@@ -652,6 +653,8 @@ public class Folks.IndividualAggregator : Object
           this._is_primary_store_changed_cb);
       store.notify["is-quiescent"].connect (
           this._persona_store_is_quiescent_changed_cb);
+      store.notify["is-user-set-default"].connect (
+          this._persona_store_is_user_set_default_changed_cb);
 
       /* Increase the number of non-quiescent persona stores we're waiting for.
        * If we've already reached a quiescent state, this is ignored. If we
@@ -687,6 +690,8 @@ public class Folks.IndividualAggregator : Object
           this._persona_store_is_quiescent_changed_cb);
       store.notify["is-primary-store"].disconnect (
           this._is_primary_store_changed_cb);
+      store.notify["is-user-set-default"].disconnect (
+          this._persona_store_is_user_set_default_changed_cb);
 
       /* If we were still waiting on this persona store to reach a quiescent
        * state, stop waiting. */
@@ -1330,6 +1335,29 @@ public class Folks.IndividualAggregator : Object
           this._is_quiescent = true;
           this.notify_property ("is-quiescent");
         }
+    }
+
+  private void _persona_store_is_user_set_default_changed_cb (Object obj,
+      ParamSpec pspec)
+    {
+      var store = (PersonaStore) obj;
+      if (this._maybe_configure_as_primary (store))
+        this._set_primary_store (store);
+    }
+
+  private bool _maybe_configure_as_primary (PersonaStore store)
+    {
+      var configured = false;
+
+      if (!this._user_configured_primary_store &&
+          store.is_user_set_default)
+        {
+          this._configured_primary_store_type_id = store.type_id;
+          this._configured_primary_store_id = store.id;
+          configured = true;
+        }
+
+      return configured;
     }
 
   private void _individual_removed_cb (Individual i, Individual? replacement)
