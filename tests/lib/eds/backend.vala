@@ -44,6 +44,11 @@ public class EdsTest.Backend
       get; set; default = "local://test";
     }
 
+  public string address_book_uid
+    {
+      get { return this._addressbook.get_source ().peek_uid (); }
+    }
+
   public Backend ()
     {
       this._contacts = new GLib.List<Gee.HashMap<string, Value?>> ();

@@ -41,6 +41,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
   private E.BookClient _addressbook;
   private E.BookClientView _ebookview;
   private string _addressbook_uri = null;
+  private E.SourceList? _source_list = null;
   private E.Source _source;
   private string _query_str;
 
@@ -233,6 +234,13 @@ public class Edsf.PersonaStore : Folks.PersonaStore
                   this._address_book_notify_read_only_cb);
 
               this._addressbook = null;
+            }
+
+          if (this._source_list != null)
+            {
+              this._source_list.changed.disconnect (
+                  this._source_list_changed_cb);
+              this._source_list = null;
             }
         }
       catch (GLib.Error e)
@@ -525,6 +533,13 @@ public class Edsf.PersonaStore : Folks.PersonaStore
 
           try
             {
+              /* Listen for removal signals for the address book. There's no
+               * need to check if we still exist in the list, as
+               * addressbook.open() will fail if we don't. */
+              E.BookClient.get_sources (out this._source_list);
+              this._source_list.changed.connect (this._source_list_changed_cb);
+
+              /* Connect to the address book. */
               this._addressbook = new E.BookClient (this._source);
 
               this._addressbook.notify["readonly"].connect (
@@ -1762,5 +1777,48 @@ public class Edsf.PersonaStore : Folks.PersonaStore
            * property name and the second parameter is an error message. */
           _("Unknown error setting property ‘%s’: %s"), property_name,
           error_in.message);
+    }
+
+  private bool _is_in_source_list ()
+    {
+      unowned GLib.SList<weak E.SourceGroup> groups =
+          this._source_list.peek_groups ();
+
+      foreach (var g in groups)
+        {
+          foreach (var s in g.peek_sources ())
+            {
+              if (s.peek_relative_uri () == this.id)
+                {
+                  /* We've found ourself. */
+                  return true;
+                }
+            }
+        }
+
+      return false;
+    }
+
+  /* Detect removal of the address book. We can't do this in Eds.Backend because
+   * it has no way to tell the PersonaStore that it's been removed without
+   * uglifying the store's public API. */
+  private void _source_list_changed_cb (E.SourceList list)
+    {
+      /* If we can't find our source, this persona store's address book has
+       * been removed. */
+      if (this._is_in_source_list () == false)
+        {
+          /* Marshal the personas from a Collection to a Set. */
+          var removed_personas = new HashSet<Persona> ();
+          var iter = this._personas.map_iterator ();
+
+          while (iter.next () == true)
+            {
+              removed_personas.add (iter.get_value ());
+            }
+
+          this._emit_personas_changed (null, removed_personas);
+          this.removed ();
+        }
     }
 }

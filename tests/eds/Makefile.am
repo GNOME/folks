@@ -43,6 +43,7 @@ AM_VALAFLAGS = \
 
 # in order from least to most complex
 noinst_PROGRAMS = \
+	store-removed \
 	persona-store-tests \
 	individual-retrieval \
 	phone-details \
@@ -87,6 +88,10 @@ TESTS_ENVIRONMENT = \
 	--
 
 TESTS = $(noinst_PROGRAMS)
+
+store_removed_SOURCES = \
+	store-removed.vala \
+	$(NULL)
 
 persona_store_tests_SOURCES = \
 	persona-store-tests.vala \
@@ -204,6 +209,7 @@ CLEANFILES = \
 
 MAINTAINERCLEANFILES = \
         $(addsuffix .c,$(noinst_PROGRAMS)) \
+        store_removed_vala.stamp \
         persona_store_tests_vala.stamp \
         individual_retrieval_vala.stamp \
         removing_contacts_vala.stamp \

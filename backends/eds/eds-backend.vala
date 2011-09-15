@@ -158,10 +158,10 @@ public class Folks.Backends.Eds.Backend : Folks.Backend
 
       debug ("Address book source list changed.");
 
-      /* Collapse the updated list of groups down into a set of current address
-       * books we're interested in, excluding the ones currently in the
-       * backend. */
-      var new_sources = new HashMap<string, E.Source> ();
+      /* Add address books which didn't previously exist in the backend.
+       * We don't deal with removals here: see _source_list_changed_cb() in
+       * Edsf.PersonaStore for that. */
+      var added_sources = new LinkedList<E.Source> ();
 
       foreach (var g in groups)
         {
@@ -175,42 +175,20 @@ public class Folks.Backends.Eds.Backend : Folks.Backend
                   continue;
                 }
 
-              new_sources.set (s.peek_relative_uri (), s);
-            }
-        }
+              var source_uri = s.peek_relative_uri ();
 
-      /* Remove address books which no longer exist from the backend. */
-      var removed_sources = new LinkedList<string> ();
-
-      foreach (var source_uri in this._persona_stores.keys)
-        {
-          if (!new_sources.has_key (source_uri))
-            {
-              removed_sources.add (source_uri);
-            }
-        }
-
-      /* Add address books which didn't previously exist in the backend. */
-      var added_sources = new LinkedList<string> ();
-
-      foreach (var source_uri in new_sources.keys)
-        {
-          if (!this._persona_stores.has_key (source_uri))
-            {
-              added_sources.add (source_uri);
+              if (!this._persona_stores.has_key (source_uri))
+                {
+                  added_sources.add (s);
+                }
             }
         }
 
       /* Actually apply the changes to our state. We can't do this any earlier
-       * or we'll mess up the calculation of what's been added and removed. */
-      foreach (var source_uri in removed_sources)
+       * or we'll mess up the calculation of what's been added. */
+      foreach (var source in added_sources)
         {
-          this._remove_address_book (this._persona_stores.get (source_uri));
-        }
-
-      foreach (var source_uri in added_sources)
-        {
-          this._add_address_book (new_sources.get (source_uri));
+          this._add_address_book (source);
         }
     }
 
