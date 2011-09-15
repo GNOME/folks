@@ -209,6 +209,8 @@ public class Edsf.PersonaStore : Folks.PersonaStore
       this._personas = new HashMap<string, Persona> ();
       this._personas_ro = this._personas.read_only_view;
       this._query_str = "(contains \"x-evolution-any-field\" \"\")";
+      this._source.changed.connect (this._source_changed_cb);
+      this._notify_if_default ();
     }
 
   ~PersonaStore ()
@@ -1850,5 +1852,24 @@ public class Edsf.PersonaStore : Folks.PersonaStore
         this.trust_level = PersonaStoreTrust.PARTIAL;
       else
         this.trust_level = PersonaStoreTrust.FULL;
+    }
+
+  private void _source_changed_cb ()
+    {
+      this._notify_if_default ();
+    }
+
+  private void _notify_if_default ()
+    {
+      bool is_default = false;
+      if (this._source.get_property ("default") == "true")
+        {
+          is_default = true;
+        }
+
+      if (is_default != this.is_user_set_default)
+        {
+          this.is_user_set_default = is_default;
+        }
     }
 }
