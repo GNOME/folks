@@ -180,8 +180,7 @@ public class Folks.Individual : Object,
       foreach (var p in this._persona_set)
         {
           var a = p as AvatarDetails;
-          if (a != null && p.store.is_writeable == true &&
-              "avatar" in p.writeable_properties)
+          if (a != null && "avatar" in p.writeable_properties)
             {
               try
                 {
