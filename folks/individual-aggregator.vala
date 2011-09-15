@@ -100,6 +100,11 @@ public class Folks.IndividualAggregator : Object
   /* Same for backends. */
   private uint _non_quiescent_backend_count = 0;
   private bool _is_quiescent = false;
+  /* We use this to know if the primary PersonaStore has been explicitly
+   * set by the user (either via GConf or an env variable). If that is the
+   * case, we don't want to override it with other PersonaStores that
+   * announce themselves as default (i.e.: default address book from e-d-s). */
+  private bool _user_configured_primary_store = false;
 
   /**
    * Whether {@link IndividualAggregator.prepare} has successfully completed for
@@ -292,7 +297,7 @@ public class Folks.IndividualAggregator : Object
 
       if (store_config_ids != null)
         {
-          this._set_primary_store (store_config_ids);
+          this._configure_primary_store (store_config_ids);
         }
       else
         {
@@ -309,7 +314,7 @@ public class Folks.IndividualAggregator : Object
               unowned GConf.Client client = GConf.Client.get_default ();
               GConf.Value? val = client.get (this._FOLKS_CONFIG_KEY);
               if (val != null)
-                this._set_primary_store (val.get_string ());
+                this._configure_primary_store (val.get_string ());
             }
           catch (GLib.Error e)
             {
@@ -337,8 +342,10 @@ public class Folks.IndividualAggregator : Object
       this._debug.print_status.disconnect (this._debug_print_status);
     }
 
-  private void _set_primary_store (string store_config_ids)
+  private void _configure_primary_store (string store_config_ids)
     {
+      this._user_configured_primary_store = true;
+
       if (store_config_ids.index_of (":") != -1)
         {
           var ids = store_config_ids.split (":", 2);
@@ -596,10 +603,10 @@ public class Folks.IndividualAggregator : Object
       this._add_backend.begin (backend);
     }
 
-  private void _backend_persona_store_added_cb (Backend backend,
-      PersonaStore store)
+  private void _set_primary_store (PersonaStore store)
     {
-      var store_id = this._get_store_full_id (store.type_id, store.id);
+      if (this._primary_store == store)
+        return;
 
       /* We use the configured PersonaStore as the primary PersonaStore.
        *
@@ -613,11 +620,31 @@ public class Folks.IndividualAggregator : Object
                   this._configured_primary_store_id == "") ||
               this._configured_primary_store_id == store.id)
             {
-              store.is_primary_store = true;
+              var previous_store = this._primary_store;
               this._primary_store = store;
+
+              this._primary_store.freeze_notify ();
+              if (previous_store != null)
+                {
+                  previous_store.freeze_notify ();
+                  previous_store.is_primary_store = false;
+                }
+              this._primary_store.is_primary_store = true;
+              if (previous_store != null)
+                previous_store.thaw_notify ();
+              this._primary_store.thaw_notify ();
+
               this.notify_property ("primary-store");
             }
         }
+    }
+
+  private void _backend_persona_store_added_cb (Backend backend,
+      PersonaStore store)
+    {
+      var store_id = this._get_store_full_id (store.type_id, store.id);
+
+      this._set_primary_store (store);
 
       this._stores.set (store_id, store);
       store.personas_changed.connect (this._personas_changed_cb);
