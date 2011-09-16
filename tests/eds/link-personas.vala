@@ -49,8 +49,6 @@ public class LinkPersonasTests : Folks.TestCase
   private string _persona_iid_2;
   private HashSet<Persona> _personas;
   private int _removed_individuals;
-  private string _folks_config_key = "/system/folks/backends/primary_store";
-  private unowned GConf.Client? _gconf_client;
   private Gee.HashMap<string, string> _linking_props;
   private LinkingMethod _linking_method;
 
@@ -76,18 +74,9 @@ public class LinkPersonasTests : Folks.TestCase
       this._eds_backend_other = new EdsTest.Backend ();
       this._eds_backend_other.address_book_uri = "local://other";
 
-      /* We configure eds as the primary (writeable) store */
-      this._gconf_client = GConf.Client.get_default ();
-      try
-        {
-          GConf.Value val = new GConf.Value (GConf.ValueType.STRING);
-          val.set_string ("eds:%s".printf (this._eds_backend.address_book_uri));
-          this._gconf_client.set (this._folks_config_key, val);
-        }
-      catch (GLib.Error e)
-        {
-          warning ("Couldn't set primary store: %s\n", e.message);
-        }
+      /* We configure eds as the primary store */
+      var config_val = "eds:%s".printf (this._eds_backend.address_book_uri);
+      Environment.set_variable ("FOLKS_PRIMARY_STORE", config_val, true);
 
       this._eds_backend.set_up ();
       this._eds_backend_other.set_up ();
@@ -98,21 +87,10 @@ public class LinkPersonasTests : Folks.TestCase
       this._eds_backend.tear_down ();
       this._eds_backend_other.tear_down ();
 
+      Environment.unset_variable ("FOLKS_PRIMARY_STORE");
+
       this._eds_backend = null;
       this._eds_backend_other = null;
-
-      try
-        {
-          this._gconf_client.unset (this._folks_config_key);
-        }
-      catch (GLib.Error e)
-        {
-          warning ("Couldn't unset primary store: %s\n", e.message);
-        }
-      finally
-        {
-          this._gconf_client = null;
-        }
     }
 
   public void test_linking_personas_via_im_addresses ()

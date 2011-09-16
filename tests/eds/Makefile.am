@@ -3,7 +3,6 @@ AM_CPPFLAGS = \
 	$(GEE_CFLAGS) \
 	$(EBOOK_CFLAGS) \
 	$(EDATASERVER_CFLAGS) \
-	$(GCONF2_CFLAGS) \
 	-I$(top_srcdir)/folks \
 	-I$(top_srcdir)/backends/eds/lib \
 	-I$(top_srcdir)/backends/eds/lib/folks \
@@ -19,7 +18,6 @@ LDADD = \
 	$(top_builddir)/folks/libfolks.la \
 	$(GLIB_LIBS) \
 	$(GEE_LIBS) \
-	$(GCONF2_LIBS) \
 	-L$(top_srcdir)/backends/eds/lib \
 	$(NULL)
 
@@ -40,7 +38,6 @@ AM_VALAFLAGS = \
 	--pkg libxml-2.0 \
 	--pkg folks-eds \
 	--pkg eds-test \
-	--pkg gconf-2.0 \
 	-g \
 	$(NULL)
 
