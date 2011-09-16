@@ -164,19 +164,20 @@ public class PhoneDetailsTests : Folks.TestCase
           foreach (var phone_fd in phone_numbers.phone_numbers)
             {
               this._phones_count++;
-              foreach (var t in phone_fd.get_parameter_values ("type"))
+              foreach (var t in phone_fd.get_parameter_values (
+                  phone_fd.PARAM_TYPE))
                 {
                   string? v = null;
 
-                  if (t == "CAR")
+                  if (t == "car")
                     {
                       v = "car_phone";
                     }
-                  else if (t == "HOME")
+                  else if (t == phone_fd.PARAM_TYPE_HOME)
                     {
                       v = "home_phone";
                     }
-                  else if (t == "X-EVOLUTION-COMPANY")
+                  else if (t == "x-evolution-company")
                     {
                       v = "company_phone";
                     }

@@ -33,9 +33,9 @@ using Gee;
  * a AbstractFieldDetails with value "(111) 555-1234" and with parameters
  * `['type': ('work', 'voice')]`.
  *
- * The parameter name "TYPE" with values "work", "home", or "other" are common
+ * The parameter name "type" with values "work", "home", or "other" are common
  * amongst most vCard attributes (and thus most AbstractFieldDetails-derived
- * classes). A TYPE of "pref" may be used to indicate a preferred
+ * classes). A "type" of "pref" may be used to indicate a preferred
  * {@link AbstractFieldDetails.value} amongst many. See specific classes for
  * information on additional parameters and values specific to that class.
  *
@@ -46,6 +46,46 @@ using Gee;
  */
 public abstract class Folks.AbstractFieldDetails<T> : Object
 {
+  /**
+   * Parameter name for classifying the type of value this field contains.
+   *
+   * For example, the value could be relevant to the contact's home life, or to
+   * their work life; values of {@link AbstractFieldDetails.PARAM_TYPE_HOME}
+   * and {@link AbstractFieldDetails.PARAM_TYPE_WORK} would be used for the
+   * {@link AbstractFieldDetails.PARAM_TYPE} parameter, respectively, in those
+   * cases.
+   *
+   * @since UNRELEASED
+   */
+  public static const string PARAM_TYPE = "type";
+
+  /**
+   * Parameter value for home-related field values.
+   *
+   * Value for a parameter with name {@link AbstractFieldDetails.PARAM_TYPE}.
+   *
+   * @since UNRELEASED
+   */
+  public static const string PARAM_TYPE_HOME = "home";
+
+  /**
+   * Parameter value for work-related field values.
+   *
+   * Value for a parameter with name {@link AbstractFieldDetails.PARAM_TYPE}.
+   *
+   * @since UNRELEASED
+   */
+  public static const string PARAM_TYPE_WORK = "work";
+
+  /**
+   * Parameter value for miscellaneous field values.
+   *
+   * Value for a parameter with name {@link AbstractFieldDetails.PARAM_TYPE}.
+   *
+   * @since UNRELEASED
+   */
+  public static const string PARAM_TYPE_OTHER = "other";
+
   private T _value;
   /**
    * The value of the field.

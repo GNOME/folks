@@ -57,9 +57,29 @@ public class Edsf.Persona : Folks.Persona,
   public static const string[] email_fields = {
     "email_1", "email_2", "email_3", "email_4"
   };
+
+  [Deprecated]
   public static const string[] url_properties = {
     "blog_url", "fburl", "homepage_url", "video_url"
   };
+
+  /* Some types of URLs are represented in EDS using custom vCard fields rather
+   * than the X-URIS field. Here are mappings between the custom vCard field
+   * names which EDS uses, and the TYPE values which folks uses which map to
+   * them. */
+  private struct UrlTypeMapping
+    {
+      string vcard_field_name;
+      string folks_type;
+    }
+
+  internal static const UrlTypeMapping[] _url_properties =
+    {
+      { "homepage_url", UrlFieldDetails.PARAM_TYPE_HOMEPAGE },
+      { "blog_url", UrlFieldDetails.PARAM_TYPE_BLOG },
+      { "fburl", "x-free-busy" },
+      { "video_url", "x-video" }
+    };
 
   /**
    * The vCard attribute used to specify a Contact's gender
@@ -790,7 +810,14 @@ public class Edsf.Persona : Folks.Persona,
           string param_name = param.get_name ().down ();
           foreach (unowned string param_value in param.get_values ())
             {
-              details.add_parameter (param_name, param_value);
+              if (param_name == AbstractFieldDetails.PARAM_TYPE)
+                {
+                  details.add_parameter (param_name, param_value.down ());
+                }
+              else
+                {
+                  details.add_parameter (param_name, param_value);
+                }
             }
         }
     }
@@ -1173,13 +1200,16 @@ public class Edsf.Persona : Folks.Persona,
       var new_urls = new HashSet<UrlFieldDetails> ();
 
       /* First we get the standard Evo urls.. */
-      foreach (string url_property in this.url_properties)
+      foreach (var mapping in this._url_properties)
         {
+          var url_property = mapping.vcard_field_name;
+          var folks_type = mapping.folks_type;
+
           string u = (string) this._get_property (url_property);
           if (u != null && u != "")
             {
               var fd_u = new UrlFieldDetails (u);
-              fd_u.set_parameter("type", url_property);
+              fd_u.set_parameter (fd_u.PARAM_TYPE, folks_type);
               new_urls.add (fd_u);
             }
         }

@@ -1541,15 +1541,16 @@ public class Trf.PersonaStore : Folks.PersonaStore
 
               if (affl_info.website != null)
                 p._add_url (affl_info.website,
-                    affl_info.affl_tracker_id, "website");
+                    affl_info.affl_tracker_id,
+                    UrlFieldDetails.PARAM_TYPE_HOMEPAGE);
 
               if (affl_info.blog != null)
                 p._add_url (affl_info.blog,
-                    affl_info.affl_tracker_id, "blog");
+                    affl_info.affl_tracker_id, UrlFieldDetails.PARAM_TYPE_BLOG);
 
               if (affl_info.url != null)
                 p._add_url (affl_info.url,
-                    affl_info.affl_tracker_id, "url");
+                    affl_info.affl_tracker_id, null);
             }
           else
             {
@@ -2442,19 +2443,23 @@ public class Trf.PersonaStore : Folks.PersonaStore
                 break;
               case Trf.Attrib.URLS:
                 fd = (UrlFieldDetails) p;
-                var type_p = fd.get_parameter_values ("type");
-                if (type_p.contains ("blog"))
+                var type_p = fd.get_parameter_values (fd.PARAM_TYPE);
+
+                if (type_p != null &&
+                    type_p.contains (UrlFieldDetails.PARAM_TYPE_BLOG))
                   {
                     related_connection = Trf.OntologyDefs.NCO_BLOG;
                   }
-                else if (type_p.contains ("website"))
+                else if (type_p != null &&
+                    type_p.contains (UrlFieldDetails.PARAM_TYPE_HOMEPAGE))
                   {
                     related_connection = Trf.OntologyDefs.NCO_WEBSITE;
                   }
-                else if (type_p.contains ("url"))
+                else
                   {
                     related_connection = Trf.OntologyDefs.NCO_URL;
                   }
+
                 attr = "'%s'".printf (((UrlFieldDetails) fd).value);
                 break;
               case Trf.Attrib.IM_ADDRESSES:

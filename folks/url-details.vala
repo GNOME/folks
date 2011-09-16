@@ -35,6 +35,43 @@ using Gee;
 public class Folks.UrlFieldDetails : AbstractFieldDetails<string>
 {
   /**
+   * Parameter value for URLs for the contact's home page.
+   *
+   * Value for a parameter with name {@link AbstractFieldDetails.PARAM_TYPE}.
+   *
+   * @since UNRELEASED
+   */
+  public static const string PARAM_TYPE_HOMEPAGE = "x-home-page";
+
+  /**
+   * Parameter value for URLs for the contact's personal or professional blog.
+   *
+   * Value for a parameter with name {@link AbstractFieldDetails.PARAM_TYPE}.
+   *
+   * @since UNRELEASED
+   */
+  public static const string PARAM_TYPE_BLOG = "x-blog";
+
+  /**
+   * Parameter value for URLs for the contact's social networking profile.
+   *
+   * Value for a parameter with name {@link AbstractFieldDetails.PARAM_TYPE}.
+   *
+   * @since UNRELEASED
+   */
+  public static const string PARAM_TYPE_PROFILE = "x-profile";
+
+  /**
+   * Parameter value for URLs for the contact's personal or professional FTP
+   * server.
+   *
+   * Value for a parameter with name {@link AbstractFieldDetails.PARAM_TYPE}.
+   *
+   * @since UNRELEASED
+   */
+  public static const string PARAM_TYPE_FTP = "x-ftp";
+
+  /**
    * Create a new UrlFieldDetails.
    *
    * @param value the value of the field

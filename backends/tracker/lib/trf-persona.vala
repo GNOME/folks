@@ -1351,23 +1351,28 @@ public class Trf.Persona : Folks.Persona,
               if (u[i] == null || u[i] == "")
                 continue;
 
-              string type = "";
+              string? type = null;
               switch (i)
                 {
                   case Trf.UrlsFields.BLOG:
-                    type = "blog";
+                    type = UrlFieldDetails.PARAM_TYPE_BLOG;
                     break;
                   case Trf.UrlsFields.WEBSITE:
-                    type = "website";
+                    type = UrlFieldDetails.PARAM_TYPE_HOMEPAGE;
                     break;
                   case Trf.UrlsFields.URL:
-                    type = "url";
+                    /* No specific type is appropriate. */
                     break;
                 }
 
               var url_fd = new UrlFieldDetails (u[i]);
               url_fd.set_parameter ("tracker_id", tracker_id);
-              url_fd.set_parameter ("type", type);
+
+              if (type != null)
+                {
+                  url_fd.set_parameter (url_fd.PARAM_TYPE, type);
+                }
+
               url_fds.add (url_fd);
             }
         }
@@ -1378,7 +1383,7 @@ public class Trf.Persona : Folks.Persona,
       this.notify_property ("urls");
     }
 
-  internal bool _add_url (string url, string tracker_id, string type = "")
+  internal bool _add_url (string url, string tracker_id, string? type = null)
     {
       bool found = false;
 
@@ -1395,7 +1400,12 @@ public class Trf.Persona : Folks.Persona,
         {
           var url_fd = new UrlFieldDetails (url);
           url_fd.set_parameter ("tracker_id", tracker_id);
-          url_fd.set_parameter ("type", type);
+
+          if (type != null)
+            {
+              url_fd.set_parameter (url_fd.PARAM_TYPE, type);
+            }
+
           this._urls.add (url_fd);
           this.notify_property ("urls");
         }

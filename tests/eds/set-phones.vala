@@ -120,7 +120,8 @@ public class SetPhonesTests : Folks.TestCase
                       (GLib.HashFunc) PhoneFieldDetails.hash,
                       (GLib.EqualFunc) PhoneFieldDetails.equal);
                   var phone_1 = new PhoneFieldDetails ("1234");
-                  phone_1.set_parameter ("type", "HOME");
+                  phone_1.set_parameter (phone_1.PARAM_TYPE,
+                      phone_1.PARAM_TYPE_HOME);
                   phones.add (phone_1);
                   ((PhoneDetails) p).phone_numbers = phones;
                 }

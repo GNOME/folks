@@ -1136,10 +1136,9 @@ public class Edsf.PersonaStore : Folks.PersonaStore
 
       foreach (var u in urls)
         {
-          bool homepage = false;
-          bool blog = false;
-          bool fburl = false;
-          bool video = false;
+          /* A way to escape from the inner loop, since Vala doesn't have
+           * "continue 3". */
+          var set_attr_already = false;
 
           var attr = new E.VCardAttribute (null, "X-URIS");
           attr.add_value (u.value);
@@ -1148,51 +1147,46 @@ public class Edsf.PersonaStore : Folks.PersonaStore
               var param = new E.VCardAttributeParam (param_name.up ());
               foreach (var param_val in u.parameters.get (param_name))
                 {
-                  if (param_name == "type")
+                  if (param_name == AbstractFieldDetails.PARAM_TYPE)
                     {
-                      /* Keep in sync with Edsf.Persona.url_properties */
-                      if (param_val == "homepage_url")
+                      /* Handle TYPEs which need mapping to custom vCard attrs
+                       * for EDS. */
+                      foreach (var mapping in Edsf.Persona._url_properties)
                         {
-                          homepage = true;
-                        }
-                      else if (param_val == "blog_url")
-                        {
-                          blog = true;
-                        }
-                      else if (param_val == "fburl")
-                        {
-                          fburl = true;
-                        }
-                      else if (param_val == "video_url")
-                        {
-                          video = true;
+                          if (param_val.down () == mapping.folks_type)
+                            {
+                              contact.set (
+                                  E.Contact.field_id (mapping.vcard_field_name),
+                                  u.value);
+
+                              set_attr_already = true;
+                              break;
+                            }
                         }
                     }
+
+                  if (set_attr_already == true)
+                    {
+                      break;
+                    }
+
                   param.add_value (param_val);
                 }
+
+              if (set_attr_already == true)
+                {
+                  break;
+                }
+
               attr.add_param (param);
             }
 
-          if (homepage)
+          if (set_attr_already == true)
             {
-              contact.set (E.Contact.field_id ("homepage_url"), u.value);
+              continue;
             }
-          else if (blog)
-            {
-              contact.set (E.Contact.field_id ("blog_url"), u.value);
-            }
-          else if (fburl)
-            {
-              contact.set (E.Contact.field_id ("fburl"), u.value);
-            }
-          else if (video)
-            {
-              contact.set (E.Contact.field_id ("video_url"), u.value);
-            }
-          else
-            {
-              contact.add_attribute ((owned) attr);
-            }
+
+          contact.add_attribute ((owned) attr);
         }
     }
 

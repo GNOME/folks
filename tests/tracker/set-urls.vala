@@ -54,9 +54,12 @@ public class SetURLsTests : Folks.TestCase
       Gee.HashMap<string, string> c1 = new Gee.HashMap<string, string> ();
       this._persona_fullname = "persona #1";
       this._urls = new Gee.HashMap<string, string> ();
-      this._urls.set ("blog", "http://one.example.org");
-      this._urls.set ("website", "http://two.example.org");
-      this._urls.set ("url", "http://three.example.org");
+      this._urls.set (UrlFieldDetails.PARAM_TYPE_BLOG,
+          "http://one.example.org");
+      this._urls.set (UrlFieldDetails.PARAM_TYPE_HOMEPAGE,
+          "http://two.example.org");
+      this._urls.set (AbstractFieldDetails.PARAM_TYPE_OTHER,
+          "http://three.example.org");
 
       c1.set (Trf.OntologyDefs.NCO_FULLNAME, this._persona_fullname);
       this._tracker_backend.add_contact (c1);
@@ -112,14 +115,16 @@ public class SetURLsTests : Folks.TestCase
               var url_fds = new HashSet<UrlFieldDetails> (
                   (GLib.HashFunc) UrlFieldDetails.hash,
                   (GLib.EqualFunc) UrlFieldDetails.equal);
-              var p1 = new UrlFieldDetails (this._urls.get ("blog"));
-              p1.set_parameter ("type", "blog");
+              var p1 = new UrlFieldDetails (
+                  this._urls.get (UrlFieldDetails.PARAM_TYPE_BLOG));
+              p1.set_parameter (p1.PARAM_TYPE, p1.PARAM_TYPE_BLOG);
               url_fds.add (p1);
-              var p2 = new UrlFieldDetails (this._urls.get ("website"));
-              p2.set_parameter ("type", "website");
+              var p2 = new UrlFieldDetails (
+                  this._urls.get (UrlFieldDetails.PARAM_TYPE_HOMEPAGE));
+              p2.set_parameter (p1.PARAM_TYPE, p1.PARAM_TYPE_HOMEPAGE);
               url_fds.add (p2);
-              var p3 = new UrlFieldDetails (this._urls.get ("url"));
-              p3.set_parameter ("type", "url");
+              var p3 = new UrlFieldDetails (
+                  this._urls.get (AbstractFieldDetails.PARAM_TYPE_OTHER));
               url_fds.add (p3);
 
               foreach (var p in i.personas)
@@ -144,22 +149,24 @@ public class SetURLsTests : Folks.TestCase
         {
           foreach (var p in i.urls)
             {
-              var type_p = p.get_parameter_values ("type");
+              var type_p = p.get_parameter_values (p.PARAM_TYPE);
 
-              if (type_p.contains ("blog") &&
-                  p.value == this._urls.get ("blog"))
+              if (type_p != null &&
+                  type_p.contains (p.PARAM_TYPE_BLOG) &&
+                  p.value == this._urls.get (p.PARAM_TYPE_BLOG))
                 {
-                  this._urls.unset ("blog");
+                  this._urls.unset (p.PARAM_TYPE_BLOG);
                 }
-              else if (type_p.contains ("website") &&
-                  p.value == this._urls.get ("website"))
+              else if (type_p != null &&
+                  type_p.contains (p.PARAM_TYPE_HOMEPAGE) &&
+                  p.value == this._urls.get (p.PARAM_TYPE_HOMEPAGE))
                 {
-                  this._urls.unset ("website");
+                  this._urls.unset (p.PARAM_TYPE_HOMEPAGE);
                 }
-              else if (type_p.contains ("url") &&
-                  p.value == this._urls.get ("url"))
+              else if (type_p == null &&
+                  p.value == this._urls.get (p.PARAM_TYPE_OTHER))
                 {
-                  this._urls.unset ("url");
+                  this._urls.unset (p.PARAM_TYPE_OTHER);
                 }
             }
         }

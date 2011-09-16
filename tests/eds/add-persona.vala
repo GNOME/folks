@@ -85,7 +85,8 @@ public class AddPersonaTests : Folks.TestCase
           this._extension, this._street, this._locality, this._region,
           this._postal_code, this._country, null, null);
       this._address = new PostalAddressFieldDetails (pa);
-      this._address.add_parameter ("type", Edsf.Persona.address_fields[0]);
+      this._address.add_parameter (this._address.PARAM_TYPE,
+          Edsf.Persona.address_fields[0]);
 
       this._properties_found = new HashTable<string, bool>
           (str_hash, str_equal);
@@ -162,7 +163,7 @@ public class AddPersonaTests : Folks.TestCase
           (GLib.HashFunc) EmailFieldDetails.hash,
           (GLib.EqualFunc) EmailFieldDetails.equal);
       var email_1 = new EmailFieldDetails (this._email_1);
-      email_1.set_parameter ("type", Edsf.Persona.email_fields[0]);
+      email_1.set_parameter (email_1.PARAM_TYPE, Edsf.Persona.email_fields[0]);
       emails.add (email_1);
       v2.set_object (emails);
       details.insert (
@@ -189,10 +190,10 @@ public class AddPersonaTests : Folks.TestCase
           (GLib.EqualFunc) PhoneFieldDetails.equal);
 
       var phone_1 = new PhoneFieldDetails (this._phone_1);
-      phone_1.set_parameter ("type", Edsf.Persona.phone_fields[0]);
+      phone_1.set_parameter (phone_1.PARAM_TYPE, Edsf.Persona.phone_fields[0]);
       phones.add (phone_1);
       var phone_2 = new PhoneFieldDetails (this._phone_2);
-      phone_2.set_parameter ("type", Edsf.Persona.phone_fields[1]);
+      phone_2.set_parameter (phone_2.PARAM_TYPE, Edsf.Persona.phone_fields[1]);
       phones.add (phone_2);
       v5.set_object (phones);
       details.insert (

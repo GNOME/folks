@@ -60,7 +60,8 @@ public class SetPostalAddressesTests : Folks.TestCase
           "locality", "region", "postal code", "country", "",
           "123");
       this._pa_fd = new PostalAddressFieldDetails (pa);
-      this._pa_fd.add_parameter ("type", "address_other");
+      this._pa_fd.add_parameter (this._pa_fd.PARAM_TYPE,
+          this._pa_fd.PARAM_TYPE_OTHER);
 
       this._found_before_update = false;
       this._found_after_update = false;
@@ -129,7 +130,8 @@ public class SetPostalAddressesTests : Folks.TestCase
                       "locality", "region", "postal code", "country", "format",
                       "123");
                   var pa_fd_1 = new PostalAddressFieldDetails (pa_1);
-                  pa_fd_1.add_parameter ("type", "address_other");
+                  pa_fd_1.add_parameter (pa_fd_1.PARAM_TYPE,
+                      pa_fd_1.PARAM_TYPE_OTHER);
                   pa_fds.add (pa_fd_1);
                   ((PostalAddressDetails) p).postal_addresses = pa_fds;
                 }

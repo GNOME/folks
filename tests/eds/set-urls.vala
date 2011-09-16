@@ -138,10 +138,10 @@ public class SetUrlsTests : Folks.TestCase
                   var p2 = new UrlFieldDetails (this._url_extra_2);
                   urls.add (p2);
                   var p3 = new UrlFieldDetails (this._url_home);
-                  p3.set_parameter("type", "homepage_url");
+                  p3.set_parameter(p3.PARAM_TYPE, p3.PARAM_TYPE_HOMEPAGE);
                   urls.add (p3);
                   var p4 = new UrlFieldDetails (this._url_blog);
-                  p4.set_parameter("type", "blog_url");
+                  p4.set_parameter(p3.PARAM_TYPE, p3.PARAM_TYPE_BLOG);
                   urls.add (p4);
 
                   ((UrlDetails) p).urls = urls;

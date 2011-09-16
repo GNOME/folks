@@ -116,7 +116,7 @@ public class EmailDetailsTests : Folks.TestCase
 
       foreach (var pt in this._email_types)
         {
-          assert (pt == "OTHER");
+          assert (pt == AbstractFieldDetails.PARAM_TYPE_OTHER);
         }
     }
 
@@ -187,7 +187,7 @@ public class EmailDetailsTests : Folks.TestCase
                   }
               }
               assert (found);
-              foreach (var v in e.get_parameter_values("type"))
+              foreach (var v in e.get_parameter_values (e.PARAM_TYPE))
                 {
                   this._email_types.add (v);
                 }
