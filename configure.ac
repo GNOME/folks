@@ -51,6 +51,7 @@ AM_PROG_CC_C_O
 AC_DISABLE_STATIC
 LT_INIT
 PKG_PROG_PKG_CONFIG([0.21])
+GLIB_GSETTINGS
 
 AC_SUBST([CFLAGS])
 AC_SUBST([CPPFLAGS])
@@ -144,13 +145,12 @@ AM_CONDITIONAL([ENABLE_LIBSOCIALWEB],
 # Dependencies
 # -----------------------------------------------------------
 
-GLIB_REQUIRED=2.24.0
+GLIB_REQUIRED=2.26.0
 TP_GLIB_REQUIRED=0.17.5
 VALA_REQUIRED=0.15.2
 VALADOC_REQUIRED=0.3.1
 TRACKER_SPARQL_MAJOR=0.14
 TRACKER_SPARQL_REQUIRED=0.13.1
-GCONF2_REQUIRED=2.31
 EBOOK_REQUIRED=3.1.5
 EDATASERVER_REQUIRED=3.1.5
 
@@ -162,7 +162,6 @@ PKG_CHECK_MODULES([GLIB],
 PKG_CHECK_MODULES([GMODULE], [gmodule-no-export-2.0])
 PKG_CHECK_MODULES([GIO], [gio-2.0 >= $GLIB_REQUIRED])
 PKG_CHECK_MODULES([DBUS_GLIB], [dbus-glib-1])
-PKG_CHECK_MODULES([GCONF2], [gconf-2.0 >= $GCONF2_REQUIRED])
 
 # FIXME: We depend on libgee < 0.7 because 0.7 breaks API. bgo#627746
 PKG_CHECK_MODULES([GEE], [gee-1.0 < 0.7],
@@ -507,6 +506,11 @@ AC_SUBST([ERROR_VALAFLAGS])
 # Final output
 # -----------------------------------------------------------
 
+# FIXME: We can't remove gconf.path until bgo#635379 is fixed, since we need to
+# safely contain EDS' use of GConf for the EDS backend tests.
+# Note that our use of gconf.path doesn't actually need GConf to be installed,
+# though, so it's not a hard dependency of folks.
+
 AC_CONFIG_FILES([
     backends/telepathy/lib/folks-telepathy.pc
     backends/telepathy/lib/folks-telepathy-uninstalled.pc
@@ -517,6 +521,7 @@ AC_CONFIG_FILES([
     backends/eds/lib/folks-eds-uninstalled.pc
     folks/folks.pc
     folks/folks-uninstalled.pc
+    folks/org.freedesktop.folks.gschema.xml.in
     Makefile
     backends/Makefile
     backends/key-file/Makefile

@@ -102,7 +102,6 @@ libfolks_la_VALAFLAGS = \
 	--pkg gmodule-2.0 \
 	--pkg gio-2.0 \
 	--pkg gee-1.0 \
-	--pkg gconf-2.0 \
 	--includedir folks \
 	--vapi folks.vapi \
 	-H folks.h \
@@ -116,7 +115,6 @@ libfolks_la_CFLAGS = \
 	$(GLIB_CFLAGS) \
 	$(GMODULE_CFLAGS) \
 	$(GEE_CFLAGS) \
-	$(GCONF2_CFLAGS) \
 	$(NULL)
 
 libfolks_la_LIBADD = \
@@ -125,7 +123,6 @@ libfolks_la_LIBADD = \
 	$(GLIB_LIBS) \
 	$(GMODULE_LIBS) \
 	$(GEE_LIBS) \
-	$(GCONF2_LIBS) \
 	libfolks-internal.la \
 	$(NULL)
 
@@ -204,5 +201,22 @@ endif
 MAINTAINERCLEANFILES += \
 	$(BUILT_SOURCES) \
 	$(NULL)
+
+##################################################
+# GSettings
+##################################################
+
+gsettings_SCHEMAS = org.freedesktop.folks.gschema.xml
+
+@GSETTINGS_RULES@
+@INTLTOOL_XML_NOMERGE_RULE@
+
+# Data migration tool
+convertdir = $(datadir)/GConf/gsettings
+convert_DATA = folks.convert
+
+EXTRA_DIST += $(convert_DATA)
+CLEANFILES += $(gsettings_SCHEMAS)
+GITIGNOREFILES += org.freedesktop.folks.gschema.valid
 
 -include $(top_srcdir)/git.mk

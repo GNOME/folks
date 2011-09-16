@@ -77,7 +77,6 @@ folks_doc_files = \
 	$(sort \
 	$(filter-out $(folks_doc_files_blacklist),$(folks_doc_files_all)))
 folks_doc_deps = \
-	gconf-2.0 \
 	gmodule-2.0 \
 	gio-2.0 \
 	gee-1.0 \
@@ -109,7 +108,6 @@ folks-gtk-doc: $(folks_doc_files)
 # folks-telepathy documentation
 folks_telepathy_doc_files = $(top_srcdir)/backends/telepathy/lib/*.vala
 folks_telepathy_doc_deps = \
-	gconf-2.0 \
 	gmodule-2.0 \
 	gio-2.0 \
 	gee-1.0 \
@@ -171,7 +169,6 @@ $(folksedsgtkdoc_DATA): folks-eds-gtk-doc
 
 folks_eds_doc_files = $(top_srcdir)/backends/eds/lib/*.vala
 folks_eds_doc_deps = \
-	gconf-2.0 \
 	gmodule-2.0 \
 	gio-2.0 \
 	gee-1.0 \
@@ -241,7 +238,6 @@ $(folkslibsocialwebgtkdoc_DATA): folks-libsocialweb-gtk-doc
 
 folks_libsocialweb_doc_files = $(top_srcdir)/backends/libsocialweb/lib/*.vala
 folks_libsocialweb_doc_deps = \
-	gconf-2.0 \
 	gmodule-2.0 \
 	gio-2.0 \
 	gee-1.0 \

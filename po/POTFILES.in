@@ -21,6 +21,7 @@ folks/individual-aggregator.vala
 folks/local-id-details.vala
 folks/name-details.vala
 folks/note-details.vala
+folks/org.freedesktop.folks.gschema.xml.in.in
 folks/phone-details.vala
 folks/postal-address-details.vala
 folks/role-details.vala

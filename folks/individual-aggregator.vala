@@ -86,8 +86,8 @@ public class Folks.IndividualAggregator : Object
   private Debug _debug;
   private string _configured_primary_store_type_id;
   private string _configured_primary_store_id;
-  private static const string _FOLKS_CONFIG_KEY =
-    "/system/folks/backends/primary_store";
+  private static const string _FOLKS_GSETTINGS_SCHEMA = "org.freedesktop.folks";
+  private static const string _PRIMARY_STORE_CONFIG_KEY = "primary-store";
 
   /* The number of persona stores and backends we're waiting to become
    * quiescent. Once these both reach 0, we should be in a quiescent state.
@@ -108,7 +108,7 @@ public class Folks.IndividualAggregator : Object
   private static const uint _QUIESCENT_TIMEOUT = 30; /* seconds */
 
   /* We use this to know if the primary PersonaStore has been explicitly
-   * set by the user (either via GConf or an env variable). If that is the
+   * set by the user (either via GSettings or an env variable). If that is the
    * case, we don't want to override it with other PersonaStores that
    * announce themselves as default (i.e.: default address book from e-d-s). */
   private bool _user_configured_primary_store = false;
@@ -148,7 +148,7 @@ public class Folks.IndividualAggregator : Object
    * by:
    *
    * - the FOLKS_PRIMARY_STORE env var (mostly for debugging)
-   * - the GConf key set in _FOLKS_CONFIG_KEY (system set store)
+   * - the GSettings key set in `_PRIMARY_STORE_CONFIG_KEY` (system set store)
    * - going with the `key-file` or `eds` store as the fall-back option
    *
    * @since 0.5.0
@@ -326,24 +326,12 @@ public class Folks.IndividualAggregator : Object
               this._configured_primary_store_id = "";
             }
 
-          try
+          var settings = new Settings (this._FOLKS_GSETTINGS_SCHEMA);
+          var val = settings.get_string (this._PRIMARY_STORE_CONFIG_KEY);
+          if (val != null && val != "")
             {
-              unowned GConf.Client client = GConf.Client.get_default ();
-              GConf.Value? val = client.get (this._FOLKS_CONFIG_KEY);
-              if (val != null)
-                {
-                  string? val_str = ((!) val).get_string ();
-
-                  if (val_str != null)
-                    {
-                      debug ("Setting primary store IDs from GConf.");
-                      this._configure_primary_store ((!) val_str);
-                    }
-                }
-            }
-          catch (GLib.Error e)
-            {
-              /* We ignore errors and go with the default store */
+              debug ("Setting primary store IDs from GSettings.");
+              this._configure_primary_store ((!) val);
             }
         }
 
@@ -1720,9 +1708,11 @@ public class Folks.IndividualAggregator : Object
           throw new IndividualAggregatorError.NO_PRIMARY_STORE (
               _("Can’t link personas with no primary store.") + "\n" +
               _("Persona store ‘%s:%s’ is configured as primary, but could not be found or failed to load.") + "\n" +
-              _("Check the service providing the persona store is running, or change the default store in that service or using the “%s” GConf key."),
+              _("Check the relevant service is running, or change the default store in that service or using the “%s” GSettings key."),
               this._configured_primary_store_type_id,
-              this._configured_primary_store_id, this._FOLKS_CONFIG_KEY);
+              this._configured_primary_store_id,
+              "%s %s".printf (this._FOLKS_GSETTINGS_SCHEMA,
+                  this._PRIMARY_STORE_CONFIG_KEY));
         }
 
       /* Don't bother linking if it's just one Persona */
@@ -1985,9 +1975,11 @@ public class Folks.IndividualAggregator : Object
           throw new IndividualAggregatorError.NO_PRIMARY_STORE (
               _("Can’t add personas with no primary store.") + "\n" +
               _("Persona store ‘%s:%s’ is configured as primary, but could not be found or failed to load.") + "\n" +
-              _("Check the service providing the persona store is running, or change the default store in that service or using the “%s” GConf key."),
+              _("Check the relevant service is running, or change the default store in that service or using the “%s” GSettings key."),
               this._configured_primary_store_type_id,
-              this._configured_primary_store_id, this._FOLKS_CONFIG_KEY);
+              this._configured_primary_store_id,
+              "%s %s".printf (this._FOLKS_GSETTINGS_SCHEMA,
+                  this._PRIMARY_STORE_CONFIG_KEY));
         }
       else if (new_persona == null)
         {

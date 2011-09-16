@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist>
+  <schema id="org.freedesktop.folks" path="/org/freedesktop/folks/" gettext-domain="@GETTEXT_PACKAGE@">
+    <key name="primary-store" type="s">
+      <default>''</default>
+      <_summary>Primary store ID</_summary>
+      <_description>The ID of the persona store which folks should use as primary (i.e. to store linking data in).
+          The type ID of the store may optionally be prepended, separated by a colon.
+          For example: “eds:system” or “key-file”.</_description>
+    </key>
+  </schema>
+</schemalist>
