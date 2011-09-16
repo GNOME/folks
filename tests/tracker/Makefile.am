@@ -2,7 +2,6 @@ AM_CPPFLAGS = \
 	$(GLIB_CFLAGS) \
 	$(GEE_CFLAGS) \
 	$(TRACKER_SPARQL_CFLAGS) \
-	$(GCONF2_CFLAGS) \
 	-I$(top_srcdir)/folks \
 	-I$(top_srcdir)/backends/tracker/lib \
 	-I$(top_srcdir)/backends/tracker/lib/folks \
@@ -19,7 +18,6 @@ LDADD = \
 	$(GLIB_LIBS) \
 	$(GEE_LIBS) \
 	$(TRACKER_SPARQL_LIBS) \
-	$(GCONF2_LIBS) \
 	-L$(top_srcdir)/backends/tracker/lib \
 	$(NULL)
 
@@ -39,7 +37,6 @@ AM_VALAFLAGS = \
 	--pkg folks-test \
 	--pkg folks-tracker \
 	--pkg tracker-sparql-0.10 \
-	--pkg gconf-2.0 \
 	--pkg tracker-test \
 	-g \
 	$(NULL)

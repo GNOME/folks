@@ -37,8 +37,6 @@ public class LinkPersonasViaLocalIDsTests : Folks.TestCase
   private string _persona_iid_2 = "";
   private HashSet<Persona> _personas;
   private int _removed_individuals = 0;
-  private string _folks_config_key = "/system/folks/backends/primary_store";
-  private unowned GConf.Client _gconf_client;
   private Gee.HashSet<string> _local_ids;
 
   public LinkPersonasViaLocalIDsTests ()
@@ -53,20 +51,7 @@ public class LinkPersonasViaLocalIDsTests : Folks.TestCase
 
   public override void set_up ()
     {
-      this._gconf_client = GConf.Client.get_default ();
-
-      /* We configure Tracker as the primary (writeable) store by
-       * setting the appropiate GConf key. */
-      try
-        {
-          GConf.Value val = new GConf.Value (GConf.ValueType.STRING);
-          val.set_string ("tracker");
-          this._gconf_client.set (this._folks_config_key, val);
-        }
-      catch (GLib.Error e)
-        {
-          warning ("Couldn't set primary store: %s\n", e.message);
-        }
+      Environment.set_variable ("FOLKS_PRIMARY_STORE", "tracker", true);
 
       /* FIXME: this set_up method takes care both of setting
        * the connection with Tracker and adding the contacts
@@ -79,16 +64,7 @@ public class LinkPersonasViaLocalIDsTests : Folks.TestCase
     {
       this._tracker_backend.tear_down ();
 
-      /* Clean-up GConf config (although we are running our own instance
-       * lets do the house-keeping anyways). */
-      try
-        {
-          this._gconf_client.unset (this._folks_config_key);
-        }
-      catch (GLib.Error e)
-        {
-          warning ("Couldn't unset primary store: %s\n", e.message);
-        }
+      Environment.unset_variable ("FOLKS_PRIMARY_STORE");
     }
 
   public void test_linking_personas_via_local_ids ()
