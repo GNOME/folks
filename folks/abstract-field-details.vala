@@ -35,9 +35,9 @@ using Gee;
  *
  * The parameter name "TYPE" with values "work", "home", or "other" are common
  * amongst most vCard attributes (and thus most AbstractFieldDetails-derived
- * classes). A TYPE of "perf" may be used to indicate a preferred
- * AbstractFieldDetails.value amongst many. See specific classes for information
- * on additional parameters and values specific to that class.
+ * classes). A TYPE of "pref" may be used to indicate a preferred
+ * {@link AbstractFieldDetails.value} amongst many. See specific classes for
+ * information on additional parameters and values specific to that class.
  *
  * See [[http://www.ietf.org/rfc/rfc2426.txt|RFC2426]] for more details on
  * pre-defined parameter names and values.
