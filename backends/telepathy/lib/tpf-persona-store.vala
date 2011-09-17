@@ -561,6 +561,25 @@ public class Tpf.PersonaStore : Folks.PersonaStore
                         }
                     });
 
+              /* We have to connect to the logger before dealing with the
+               * account status, because if the account's already connected we
+               * want to be able to query favourite information immediately. */
+              try
+                {
+                  this._logger = new Logger (this.id);
+                  yield this._logger.prepare ();
+                  this._logger.invalidated.connect (
+                      this._logger_invalidated_cb);
+                  this._logger.favourite_contacts_changed.connect (
+                      this._favourite_contacts_changed_cb);
+                }
+              catch (GLib.Error e)
+                {
+                  warning (
+                      _("Couldn't connect to the telepathy-logger service."));
+                  this._logger = null;
+                }
+
               this.account.status_changed.connect (
                   this._account_status_changed_cb);
 
@@ -584,22 +603,6 @@ public class Tpf.PersonaStore : Folks.PersonaStore
                   this._got_self_handle = true;
                   this._got_stored_channel_members = true;
                   this._notify_if_is_quiescent ();
-                }
-
-              try
-                {
-                  this._logger = new Logger (this.id);
-                  yield this._logger.prepare ();
-                  this._logger.invalidated.connect (
-                      this._logger_invalidated_cb);
-                  this._logger.favourite_contacts_changed.connect (
-                      this._favourite_contacts_changed_cb);
-                }
-              catch (GLib.Error e)
-                {
-                  warning (
-                      _("Couldn't connect to the telepathy-logger service."));
-                  this._logger = null;
                 }
 
               this._is_prepared = true;

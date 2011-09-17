@@ -23,6 +23,7 @@ Bugs fixed:
   misleading
 * Bug 658161 — Consistently use “contact” in translatable strings instead of
   “persona”
+* Bug 657738 — Favorite people are not always displayed
 
 API changes:
 * Individual.avatar is now settable using Individual.change_avatar() (not new
