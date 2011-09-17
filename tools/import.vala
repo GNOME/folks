@@ -36,6 +36,8 @@ public class Folks.ImportTool : Object
   private static string source;
   private static string source_filename;
 
+  private static const string DEFAULT_SOURCE = "pidgin";
+
   private static const OptionEntry[] options =
     {
       { "source", 's', 0, OptionArg.STRING, ref ImportTool.source,
@@ -62,14 +64,14 @@ public class Folks.ImportTool : Object
       catch (OptionError e)
         {
           /* Translators: the parameter is an error message. */
-          stderr.printf (_("Couldn't parse command line options: %s\n"),
+          stderr.printf (_("Couldn't parse command line options: %s") + "\n",
               e.message);
           return 1;
         }
 
       /* We only support importing from Pidgin at the moment */
       if (source == null || source.strip () == "")
-        source = "pidgin";
+        source = ImportTool.DEFAULT_SOURCE;
 
       /* FIXME: We need to create this, even though we don't use it, to prevent
        * debug message spew, as its constructor initialises the log handling.
@@ -103,7 +105,8 @@ public class Folks.ImportTool : Object
       catch (GLib.Error e1)
         {
           /* Translators: the parameter is an error message. */
-          stderr.printf (_("Couldn't load the backends: %s\n"), e1.message);
+          stderr.printf (_("Couldn't load the backends: %s") + "\n",
+              e1.message);
           return false;
         }
 
@@ -112,7 +115,9 @@ public class Folks.ImportTool : Object
 
       if (kf_backend == null)
         {
-          stderr.printf (_("Couldn't load the 'key-file' backend.\n"));
+          /* Translators: the parameter is a backend identifier. */
+          stderr.printf (_("Couldn't load the ‘%s’ backend.") + "\n",
+              "key-file");
           return false;
         }
 
@@ -122,9 +127,10 @@ public class Folks.ImportTool : Object
         }
       catch (GLib.Error e2)
         {
-          /* Translators: the parameter is an error message. */
-          stderr.printf (_("Couldn't prepare the 'key-file' backend: %s\n"),
-              e2.message);
+          /* Translators: the first parameter is a backend identifier and the
+           * second parameter is an error message. */
+          stderr.printf (_("Couldn't prepare the ‘%s’ backend: %s") + "\n",
+              "key-file", e2.message);
           return false;
         }
 
@@ -135,7 +141,9 @@ public class Folks.ImportTool : Object
       if (stores.size == 0)
         {
           stderr.printf (
-              _("Couldn't load the 'key-file' backend's persona store.\n"));
+              /* Translators: the parameter is a backend identifier. */
+              _("Couldn't load the ‘%s’ backend's persona store.") + "\n",
+              "key-file");
           return false;
         }
 
@@ -152,9 +160,10 @@ public class Folks.ImportTool : Object
         }
       catch (GLib.Error e3)
         {
-          /* Translators: the parameter is an error message. */
+          /* Translators: the first parameter is a backend identifier and the
+           * second parameter is an error message. */
           stderr.printf (
-              _("Couldn't prepare the 'key-file' backend's persona store: %s\n"),
+              _("Couldn't prepare the ‘%s’ backend's persona store: %s") + "\n",
               e3.message);
           return false;
         }
