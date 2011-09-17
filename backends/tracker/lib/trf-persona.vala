@@ -576,10 +576,24 @@ public class Trf.Persona : Folks.Persona,
       this._local_ids = new HashSet<string> ();
       this._local_ids_ro = this._local_ids.read_only_view;
 
+      /* Set the initial property values if we have a results cursor. */
       if (cursor != null)
         {
           this._cursor = cursor;
-          this._update ();
+
+          this._update_names ();
+          this._update_avatar ();
+          this._update_im_addresses ();
+          this._update_phones ();
+          this._update_email_addresses ();
+          this._update_urls ();
+          this._update_favourite ();
+          this._update_roles ();
+          this._update_bday ();
+          this._update_note ();
+          this._update_gender ();
+          this._update_postal_addresses ();
+          this._update_local_ids ();
         }
     }
 
@@ -750,23 +764,6 @@ public class Trf.Persona : Folks.Persona,
 
           this.notify_property ("structured-name");
         }
-    }
-
-  internal void _update ()
-    {
-      this._update_names ();
-      this._update_avatar ();
-      this._update_im_addresses ();
-      this._update_phones ();
-      this._update_email_addresses ();
-      this._update_urls ();
-      this._update_favourite ();
-      this._update_roles ();
-      this._update_bday ();
-      this._update_note ();
-      this._update_gender ();
-      this._update_postal_addresses ();
-      this._update_local_ids ();
     }
 
   private void _update_postal_addresses ()

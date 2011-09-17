@@ -19,6 +19,8 @@ Bugs fixed:
 * Bug 658531 — Sometimes avatar caching doesn't work
 * Bug 658328 — Return PropertyError.NOT_WRITEABLE from Persona property setters
   as appropriate
+* Bug 646847 — We should rename _update () in Trf.Persona to something more less
+  misleading
 
 API changes:
 * Individual.avatar is now settable using Individual.change_avatar() (not new
