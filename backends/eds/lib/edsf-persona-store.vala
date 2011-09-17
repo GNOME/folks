@@ -1051,6 +1051,12 @@ public class Edsf.PersonaStore : Folks.PersonaStore
   internal async void _set_avatar (Edsf.Persona persona, LoadableIcon? avatar)
       throws PropertyError
     {
+      if (!("avatar" in this._always_writeable_properties))
+        {
+          throw new PropertyError.NOT_WRITEABLE (
+              _("Avatar is not writeable on this contact."));
+        }
+
       /* Return early if there will be no change */
       if ((persona.avatar == null && avatar == null) ||
           (persona.avatar != null && persona.avatar.equal (avatar)))
@@ -1066,6 +1072,12 @@ public class Edsf.PersonaStore : Folks.PersonaStore
       MultiMap<string, WebServiceFieldDetails> web_service_addresses)
           throws PropertyError
     {
+      if (!("web-service-addresses" in this._always_writeable_properties))
+        {
+          throw new PropertyError.NOT_WRITEABLE (
+              _("Web service addresses are not writeable on this contact."));
+        }
+
       if (Utils.multi_map_str_afd_equal (persona.web_service_addresses,
             web_service_addresses))
         return;
@@ -1101,6 +1113,12 @@ public class Edsf.PersonaStore : Folks.PersonaStore
   internal async void _set_urls (Edsf.Persona persona,
       Set<UrlFieldDetails> urls) throws PropertyError
     {
+      if (!("urls" in this._always_writeable_properties))
+        {
+          throw new PropertyError.NOT_WRITEABLE (
+              _("URLs are not writeable on this contact."));
+        }
+
       if (Utils.set_afd_equal (persona.urls, urls))
         return;
 
@@ -1179,6 +1197,12 @@ public class Edsf.PersonaStore : Folks.PersonaStore
   internal async void _set_local_ids (Edsf.Persona persona,
       Set<string> local_ids) throws PropertyError
     {
+      if (!("local-ids" in this._always_writeable_properties))
+        {
+          throw new PropertyError.NOT_WRITEABLE (
+              _("Local IDs are not writeable on this contact."));
+        }
+
       yield this._set_contact_local_ids (persona.contact, local_ids);
       yield this._commit_modified_property (persona, "local-ids");
     }
@@ -1252,6 +1276,12 @@ public class Edsf.PersonaStore : Folks.PersonaStore
   internal async void _set_emails (Edsf.Persona persona,
       Set<EmailFieldDetails> emails) throws PropertyError
     {
+      if (!("email-addresses" in this._always_writeable_properties))
+        {
+          throw new PropertyError.NOT_WRITEABLE (
+              _("E-mail addresses are not writeable on this contact."));
+        }
+
       yield this._set_contact_attributes_string (persona.contact, emails,
           "EMAIL", E.ContactField.EMAIL);
       yield this._commit_modified_property (persona, "email-addresses");
@@ -1260,6 +1290,12 @@ public class Edsf.PersonaStore : Folks.PersonaStore
   internal async void _set_phones (Edsf.Persona persona,
       Set<PhoneFieldDetails> phones) throws PropertyError
     {
+      if (!("phone-numbers" in this._always_writeable_properties))
+        {
+          throw new PropertyError.NOT_WRITEABLE (
+              _("Phone numbers are not writeable on this contact."));
+        }
+
       yield this._set_contact_attributes_string (persona.contact, phones, "TEL",
           E.ContactField.TEL);
       yield this._commit_modified_property (persona, "phone-numbers");
@@ -1268,6 +1304,12 @@ public class Edsf.PersonaStore : Folks.PersonaStore
   internal async void _set_postal_addresses (Edsf.Persona persona,
       Set<PostalAddressFieldDetails> postal_fds) throws PropertyError
     {
+      if (!("postal-addresses" in this._always_writeable_properties))
+        {
+          throw new PropertyError.NOT_WRITEABLE (
+              _("Postal addresses are not writeable on this contact."));
+        }
+
       yield this._set_contact_postal_addresses (persona.contact, postal_fds);
       yield this._commit_modified_property (persona, "postal-addresses");
     }
@@ -1329,6 +1371,12 @@ public class Edsf.PersonaStore : Folks.PersonaStore
   internal async void _set_full_name (Edsf.Persona persona,
       string full_name) throws PropertyError
     {
+      if (!("full-name" in this._always_writeable_properties))
+        {
+          throw new PropertyError.NOT_WRITEABLE (
+              _("Full name is not writeable on this contact."));
+        }
+
       if (full_name == "")
         {
           full_name = null;
@@ -1344,6 +1392,12 @@ public class Edsf.PersonaStore : Folks.PersonaStore
   internal async void _set_nickname (Edsf.Persona persona, string nickname)
       throws PropertyError
     {
+      if (!("nickname" in this._always_writeable_properties))
+        {
+          throw new PropertyError.NOT_WRITEABLE (
+              _("Nickname is not writeable on this contact."));
+        }
+
       if (nickname == "")
         {
           nickname = null;
@@ -1359,6 +1413,12 @@ public class Edsf.PersonaStore : Folks.PersonaStore
   internal async void _set_notes (Edsf.Persona persona,
       Set<NoteFieldDetails> notes) throws PropertyError
     {
+      if (!("notes" in this._always_writeable_properties))
+        {
+          throw new PropertyError.NOT_WRITEABLE (
+              _("Notes are not writeable on this contact."));
+        }
+
       yield this._set_contact_notes (persona.contact, notes);
       yield this._commit_modified_property (persona, "notes");
     }
@@ -1382,6 +1442,12 @@ public class Edsf.PersonaStore : Folks.PersonaStore
   internal async void _set_birthday (Edsf.Persona persona,
       DateTime? bday) throws PropertyError
     {
+      if (!("birthday" in this._always_writeable_properties))
+        {
+          throw new PropertyError.NOT_WRITEABLE (
+              _("Birthday is not writeable on this contact."));
+        }
+
       if (persona.birthday != null &&
           bday != null &&
           persona.birthday.equal (bday))
@@ -1415,6 +1481,12 @@ public class Edsf.PersonaStore : Folks.PersonaStore
   internal async void _set_roles (Edsf.Persona persona,
       Set<RoleFieldDetails> roles) throws PropertyError
     {
+      if (!("roles" in this._always_writeable_properties))
+        {
+          throw new PropertyError.NOT_WRITEABLE (
+              _("Roles are not writeable on this contact."));
+        }
+
       var comp = new Edsf.SetComparator<RoleFieldDetails> ();
       if (comp.equal (roles, persona.roles))
         return;
@@ -1511,6 +1583,12 @@ public class Edsf.PersonaStore : Folks.PersonaStore
   internal async void _set_structured_name (Edsf.Persona persona,
       StructuredName? sname) throws PropertyError
     {
+      if (!("structured-name" in this._always_writeable_properties))
+        {
+          throw new PropertyError.NOT_WRITEABLE (
+              _("Structured name is not writeable on this contact."));
+        }
+
       if (persona.structured_name != null &&
           persona.structured_name.equal (sname))
         return;
@@ -1539,6 +1617,12 @@ public class Edsf.PersonaStore : Folks.PersonaStore
   internal async void _set_im_fds  (Edsf.Persona persona,
       MultiMap<string, ImFieldDetails> im_fds) throws PropertyError
     {
+      if (!("im-addresses" in this._always_writeable_properties))
+        {
+          throw new PropertyError.NOT_WRITEABLE (
+              _("IM addresses are not writeable on this contact."));
+        }
+
       if (Utils.multi_map_str_afd_equal (persona.im_addresses, im_fds))
         return;
 
@@ -1613,6 +1697,12 @@ public class Edsf.PersonaStore : Folks.PersonaStore
   internal async void _set_gender (Edsf.Persona persona,
       Gender gender) throws PropertyError
     {
+      if (!("gender" in this._always_writeable_properties))
+        {
+          throw new PropertyError.NOT_WRITEABLE (
+              _("Gender is not writeable on this contact."));
+        }
+
       yield this._set_contact_gender (persona.contact, gender);
       yield this._commit_modified_property (persona, "gender");
     }
