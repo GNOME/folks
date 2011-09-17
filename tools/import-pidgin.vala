@@ -93,7 +93,7 @@ public class Folks.Importers.Pidgin : Folks.Importer
           delete xml_doc;
           throw new ImportError.MALFORMED_INPUT (
               /* Translators: the parameter is a filename. */
-              _("The Pidgin buddy list file '%s' could not be loaded: the root element could not be found or was not recognised."),
+              _("The Pidgin buddy list file ‘%s’ could not be loaded: the root element could not be found or was not recognized."),
               filename);
         }
 

@@ -185,8 +185,9 @@ public class Folks.ImportTool : Object
       else
         {
           stderr.printf (
-              _("Unrecognised source backend name '%s'. 'pidgin' is currently the only supported source backend.\n"),
-              source);
+              /* Translators: both parameters are identifiers for backends. */
+              _("Unrecognized source backend name ‘%s’. ‘%s’ is currently the only supported source backend.") + "\n",
+              source, "pidgin");
           return false;
         }
     }

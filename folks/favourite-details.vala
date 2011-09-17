@@ -49,6 +49,6 @@ public interface Folks.FavouriteDetails : Object
     {
       /* Default implementation. */
       throw new PropertyError.NOT_WRITEABLE (
-          _("Favourite status is not writeable on this contact."));
+          _("Favorite status is not writeable on this contact."));
     }
 }
