@@ -16,6 +16,7 @@ Bugs fixed:
 * Bug 659095 — Don't distribute typelib file
 * Bug 659128 — If a persona store goes away we don't remove its personas
 * Bug 657141 — Backend should ask eds for the default backend, not hardcode it
+* Bug 658531 — Sometimes avatar caching doesn't work
 
 API changes:
 * Individual.avatar is now settable using Individual.change_avatar() (not new

@@ -125,21 +125,22 @@ public class Folks.AvatarCache : Object
       debug ("Storing avatar '%s' in file '%s'.", id,
           dest_avatar_file.get_uri ());
 
+      InputStream src_avatar_stream =
+          yield avatar.load_async (-1, null, null);
+
       // Copy the icon data into a file
       while (true)
         {
-          InputStream src_avatar_stream =
-              yield avatar.load_async (-1, null, null);
+          OutputStream? dest_avatar_stream = null;
 
           try
             {
-              OutputStream dest_avatar_stream =
+              dest_avatar_stream =
                   yield dest_avatar_file.replace_async (null, false,
                       FileCreateFlags.PRIVATE);
-
               yield dest_avatar_stream.splice_async (src_avatar_stream,
-                  OutputStreamSpliceFlags.CLOSE_SOURCE |
-                      OutputStreamSpliceFlags.CLOSE_TARGET);
+                  OutputStreamSpliceFlags.NONE);
+              yield dest_avatar_stream.close_async ();
 
               break;
             }
@@ -153,9 +154,16 @@ public class Folks.AvatarCache : Object
                   continue;
                 }
 
+              if (dest_avatar_stream != null)
+                {
+                  yield dest_avatar_stream.close_async ();
+                }
+
               throw e;
             }
         }
+
+      yield src_avatar_stream.close_async ();
 
       return this.build_uri_for_avatar (id);
     }
