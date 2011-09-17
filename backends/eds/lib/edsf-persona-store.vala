@@ -649,12 +649,14 @@ public class Edsf.PersonaStore : Folks.PersonaStore
                 {
                   string[] fields = supported_fields.split (",");
 
-                  /* We always support local-ids and web-service-addresses
-                   * because we use custom vCard attributes for them. */
+                  /* We always support local-ids, web-service-addresses and
+                   * gender because we use custom vCard attributes for them. */
                   prop_set.add (Folks.PersonaStore.detail_key (
                       PersonaDetail.LOCAL_IDS));
                   prop_set.add (Folks.PersonaStore.detail_key (
                       PersonaDetail.WEB_SERVICE_ADDRESSES));
+                  prop_set.add (Folks.PersonaStore.detail_key (
+                      PersonaDetail.GENDER));
 
                   foreach (unowned string field in fields)
                     {
