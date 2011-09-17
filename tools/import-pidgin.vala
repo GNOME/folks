@@ -160,7 +160,7 @@ public class Folks.Importers.Pidgin : Folks.Importer
               stderr.printf (
                   /* Translators: the first parameter is a persona identifier,
                    * and the second is an error message. */
-                  _("Error changing group of Pidgin.Persona '%s': %s\n"),
+                  _("Error changing group of contact ‘%s’: %s") + "\n",
                   persona.iid, e.message);
             }
         }
@@ -240,7 +240,7 @@ public class Folks.Importers.Pidgin : Folks.Importer
            * of IM addresses each on a new line, and the third is an error
            * message. */
           stderr.printf (
-              _("Failed to create new persona for buddy with alias '%s' and IM addresses:\n%s\nError: %s\n"),
+              _("Failed to create new contact for buddy with alias ‘%s’ and IM addresses:\n%s\nError: %s\n"),
               alias, im_address_string, e.message);
           return null;
         }
@@ -254,7 +254,7 @@ public class Folks.Importers.Pidgin : Folks.Importer
           /* Translators: the first parameter is a persona identifier, the
            * second is an alias for the persona, and the third is a set of IM
            * addresses each on a new line. */
-          _("Created persona '%s' for buddy with alias '%s' and IM addresses:\n%s"),
+          _("Created contact ‘%s’ for buddy with alias ‘%s’ and IM addresses:\n%s"),
           persona.uid, alias, im_address_string);
       this.persona_count++;
 

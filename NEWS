@@ -21,6 +21,8 @@ Bugs fixed:
   as appropriate
 * Bug 646847 — We should rename _update () in Trf.Persona to something more less
   misleading
+* Bug 658161 — Consistently use “contact” in translatable strings instead of
+  “persona”
 
 API changes:
 * Individual.avatar is now settable using Individual.change_avatar() (not new

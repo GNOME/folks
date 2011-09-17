@@ -693,7 +693,8 @@ public class Tpf.PersonaStore : Folks.PersonaStore
                     this._handle_persona_map.size > 1)))
             {
               /* Translators: the parameter is an identifier. */
-              warning (_("Unknown persona '%s' in favorites list."), ids[i]);
+              warning (_("Unknown Telepathy contact ‘%s’ in favorites list."),
+                  ids[i]);
               continue;
             }
 
@@ -1127,16 +1128,16 @@ public class Tpf.PersonaStore : Folks.PersonaStore
                     {
                       /* Translators: the parameter is a persona identifier and
                        * the second parameter is a group name. */
-                      warning (_("Failed to add persona '%s' to group '%s'."),
-                          persona.uid, group);
+                      warning (_("Failed to add Telepathy contact ‘%s’ to group ‘%s’."),
+                          persona.contact.identifier, group);
                     }
                   else
                     {
                       warning (
                           /* Translators: the parameter is a persona identifier
                            * and the second parameter is a group name. */
-                          _("Failed to remove persona '%s' from group '%s'."),
-                          persona.uid, group);
+                          _("Failed to remove Telepathy contact ‘%s’ from group ‘%s’."),
+                          persona.contact.identifier, group);
                     }
                 }
             }
@@ -1489,7 +1490,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
           tp_persona.is_in_contact_list == false)
         {
           throw new PersonaStoreError.UNSUPPORTED_ON_USER (
-              _("Personas representing the local user may not be removed."));
+              _("Telepathy contacts representing the local user may not be removed."));
         }
 
       try
@@ -1500,12 +1501,11 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       catch (GLib.Error e1)
         {
           warning (
-              /* Translators: The first parameter is an identifier, the second
-               * is the persona's alias and the third is an error message.
-               * "stored" is the name of a program object, and shouldn't be
-               * translated. */
-              _("Failed to remove persona '%s' (%s) from 'stored' list: %s"),
-              tp_persona.uid, tp_persona.alias, e1.message);
+              /* Translators: The first parameter is a contact identifier, the
+               * second is a contact list identifier and the third is an error
+               * message. */
+              _("Failed to remove Telepathy contact ‘%s’ from ‘%s’ list: %s"),
+              tp_persona.contact.identifier, "stored", e1.message);
         }
 
       try
@@ -1516,12 +1516,11 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       catch (GLib.Error e2)
         {
           warning (
-              /* Translators: The first parameter is an identifier, the second
-               * is the persona's alias and the third is an error message.
-               * "subscribe" is the name of a program object, and shouldn't be
-               * translated. */
-              _("Failed to remove persona '%s' (%s) from 'subscribe' list: %s"),
-              tp_persona.uid, tp_persona.alias, e2.message);
+              /* Translators: The first parameter is a contact identifier, the
+               * second is a contact list identifier and the third is an error
+               * message. */
+              _("Failed to remove Telepathy contact ‘%s’ from ‘%s’ list: %s"),
+              tp_persona.contact.identifier, "subscribe", e2.message);
         }
 
       try
@@ -1532,12 +1531,11 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       catch (GLib.Error e3)
         {
           warning (
-              /* Translators: The first parameter is an identifier, the second
-               * is the persona's alias and the third is an error message.
-               * "publish" is the name of a program object, and shouldn't be
-               * translated. */
-              _("Failed to remove persona '%s' (%s) from 'publish' list: %s"),
-              tp_persona.uid, tp_persona.alias, e3.message);
+              /* Translators: The first parameter is a contact identifier, the
+               * second is a contact list identifier and the third is an error
+               * message. */
+              _("Failed to remove Telepathy contact ‘%s’ from ‘%s’ list: %s"),
+              tp_persona.contact.identifier, "publish", e3.message);
         }
 
       /* the contact will be actually removed (and signaled) when we hear back
@@ -1697,20 +1695,22 @@ public class Tpf.PersonaStore : Folks.PersonaStore
           if (is_member == true)
             {
               warning (
-                  /* Translators: the first parameter is a persona identifier,
-                   * the second is a contact list identifier and the third is
-                   * an error message. */
-                  _("Failed to add persona '%s' to contact list '%s': %s"),
-                  persona.uid, channel.get_identifier (), e.message);
+                  /* Translators: The first parameter is a contact identifier,
+                   * the second is a contact list identifier and the third is an
+                   * error message. */
+                  _("Failed to add Telepathy contact ‘%s’ to ‘%s’ list: %s"),
+                  tp_persona.contact.identifier, channel.get_identifier (),
+                  e.message);
             }
           else
             {
               warning (
-                  /* Translators: the first parameter is a persona identifier,
-                   * the second is a contact list identifier and the third is
-                   * an error message. */
-                  _("Failed to remove persona '%s' from contact list '%s': %s"),
-                  persona.uid, channel.get_identifier (), e.message);
+                  /* Translators: The first parameter is a contact identifier,
+                   * the second is a contact list identifier and the third is an
+                   * error message. */
+                  _("Failed to remove Telepathy contact ‘%s’ from ‘%s’ list: %s"),
+                  tp_persona.contact.identifier, channel.get_identifier (),
+                  e.message);
             }
         }
     }
@@ -1810,7 +1810,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
           warning (
               /* Translators: the first parameter is a channel identifier and
                * the second is an error message.. */
-              _("Failed to create personas from incoming contacts in channel '%s': %s"),
+              _("Failed to create incoming Telepathy contacts from channel ‘%s’: %s"),
               channel.get_identifier (), e.message);
         }
     }
@@ -2006,7 +2006,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
           this._conn == null)
         {
           throw new PersonaStoreError.STORE_OFFLINE (
-              _("Cannot create a new persona while offline."));
+              _("Cannot create a new Telepathy contact while offline."));
         }
 
       var contact_ids = new string[1];
@@ -2106,7 +2106,9 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       catch (GLib.Error e)
         {
           throw new PropertyError.UNKNOWN_ERROR (
-              _("Failed to change a persona's favorite status."));
+              /* Translators: the parameter is a contact identifier. */
+              _("Failed to change favorite status for Telepathy contact ‘%s’."),
+              ((Tpf.Persona) persona).contact.identifier);
         }
     }
 

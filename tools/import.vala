@@ -172,7 +172,8 @@ public class Folks.ImportTool : Object
           catch (ImportError e)
             {
               /* Translators: the parameter is an error message. */
-              stderr.printf (_("Error importing personas: %s\n"), e.message);
+              stderr.printf (_("Error importing contacts: %s") + "\n",
+                  e.message);
               return false;
             }
 
