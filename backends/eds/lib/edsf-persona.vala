@@ -315,11 +315,7 @@ public class Edsf.Persona : Folks.Persona,
    */
   public async void change_avatar (LoadableIcon? avatar) throws PropertyError
     {
-      if (this._avatar == null ||
-          !this._avatar.equal (avatar))
-        {
-          yield ((Edsf.PersonaStore) this.store)._set_avatar (this, avatar);
-        }
+      yield ((Edsf.PersonaStore) this.store)._set_avatar (this, avatar);
     }
 
   private StructuredName? _structured_name = null;
