@@ -548,6 +548,10 @@ public class Edsf.Persona : Folks.Persona,
       set { this.change_calendar_event_id.begin (value); } /* not writeable */
     }
 
+  /* We cache the timezone we use for converting birthdays to UTC since creating
+   * it requires mmapping /etc/localtime, which means lots of syscalls. */
+  private static TimeZone _local_time_zone = new TimeZone.local ();
+
   private DateTime? _birthday = null;
   /**
    * {@inheritDoc}
@@ -830,9 +834,11 @@ public class Edsf.Persona : Folks.Persona,
         {
           /* Since e-d-s stores birthdays as a plain date, we take the
            * given date in local time and convert it to UTC as mandated
-           * by the BirthdayDetails interface */
-          var d = new DateTime.local ((int) bday.year, (int) bday.month,
-              (int) bday.day, 0, 0, 0.0);
+           * by the BirthdayDetails interface.
+           * We cache the timezone since creating it requires mmapping
+           * /etc/localtime, which means lots of syscalls. */
+          var d = new DateTime (this._local_time_zone,
+              (int) bday.year, (int) bday.month, (int) bday.day, 0, 0, 0.0);
           if (this._birthday == null ||
               (this._birthday != null &&
                   !this._birthday.equal (d.to_utc ())))
