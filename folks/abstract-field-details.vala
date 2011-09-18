@@ -55,7 +55,7 @@ public abstract class Folks.AbstractFieldDetails<T> : Object
    * {@link AbstractFieldDetails.PARAM_TYPE} parameter, respectively, in those
    * cases.
    *
-   * @since UNRELEASED
+   * @since 0.6.3
    */
   public static const string PARAM_TYPE = "type";
 
@@ -64,7 +64,7 @@ public abstract class Folks.AbstractFieldDetails<T> : Object
    *
    * Value for a parameter with name {@link AbstractFieldDetails.PARAM_TYPE}.
    *
-   * @since UNRELEASED
+   * @since 0.6.3
    */
   public static const string PARAM_TYPE_HOME = "home";
 
@@ -73,7 +73,7 @@ public abstract class Folks.AbstractFieldDetails<T> : Object
    *
    * Value for a parameter with name {@link AbstractFieldDetails.PARAM_TYPE}.
    *
-   * @since UNRELEASED
+   * @since 0.6.3
    */
   public static const string PARAM_TYPE_WORK = "work";
 
@@ -82,7 +82,7 @@ public abstract class Folks.AbstractFieldDetails<T> : Object
    *
    * Value for a parameter with name {@link AbstractFieldDetails.PARAM_TYPE}.
    *
-   * @since UNRELEASED
+   * @since 0.6.3
    */
   public static const string PARAM_TYPE_OTHER = "other";
 

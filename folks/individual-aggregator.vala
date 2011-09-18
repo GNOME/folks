@@ -61,7 +61,7 @@ public errordomain Folks.IndividualAggregatorError
    * An operation which required the use of a primary store failed because no
    * primary store was available.
    *
-   * @since UNRELEASED
+   * @since 0.6.3
    */
   NO_PRIMARY_STORE,
 }

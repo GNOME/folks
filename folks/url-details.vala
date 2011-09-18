@@ -39,7 +39,7 @@ public class Folks.UrlFieldDetails : AbstractFieldDetails<string>
    *
    * Value for a parameter with name {@link AbstractFieldDetails.PARAM_TYPE}.
    *
-   * @since UNRELEASED
+   * @since 0.6.3
    */
   public static const string PARAM_TYPE_HOME_PAGE = "x-home-page";
 
@@ -48,7 +48,7 @@ public class Folks.UrlFieldDetails : AbstractFieldDetails<string>
    *
    * Value for a parameter with name {@link AbstractFieldDetails.PARAM_TYPE}.
    *
-   * @since UNRELEASED
+   * @since 0.6.3
    */
   public static const string PARAM_TYPE_BLOG = "x-blog";
 
@@ -57,7 +57,7 @@ public class Folks.UrlFieldDetails : AbstractFieldDetails<string>
    *
    * Value for a parameter with name {@link AbstractFieldDetails.PARAM_TYPE}.
    *
-   * @since UNRELEASED
+   * @since 0.6.3
    */
   public static const string PARAM_TYPE_PROFILE = "x-profile";
 
@@ -67,7 +67,7 @@ public class Folks.UrlFieldDetails : AbstractFieldDetails<string>
    *
    * Value for a parameter with name {@link AbstractFieldDetails.PARAM_TYPE}.
    *
-   * @since UNRELEASED
+   * @since 0.6.3
    */
   public static const string PARAM_TYPE_FTP = "x-ftp";
 

@@ -515,7 +515,7 @@ public abstract class Folks.PersonaStore : Object
    *
    * @since 0.1.13
    */
-  [Deprecated (since = "UNRELEASED",
+  [Deprecated (since = "0.6.3",
       replacement = "PersonaStore.is_primary_store")]
   public bool is_writeable { get; set; default = false; }
 
@@ -642,7 +642,7 @@ public abstract class Folks.PersonaStore : Object
    * Whether this {@link PersonaStore} is the primary store which is
    * to be used for linking {@link Persona}s and such.
    *
-   * @since UNRELEASED
+   * @since 0.6.3
    */
   public bool is_primary_store { get; internal set; default = false; }
 
@@ -651,7 +651,7 @@ public abstract class Folks.PersonaStore : Object
    * store (in its backend) by the user. I.e.: a PersonaStore for the e-d-s
    * backend would set this to true if it represents the default address book.
    *
-   * @since UNRELEASED
+   * @since 0.6.3
    */
   public bool is_user_set_default { get; internal set; default = false; }
 }

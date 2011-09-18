@@ -1,6 +1,11 @@
 Overview of changes from libfolks 0.6.2.1 to libfolks 0.6.3
 ===========================================================
 
+Major changes:
+* Cleanup of the definition of “writeable” which involves a couple of API
+  deprecations and additions, and some internal re-working.
+* Beginnings of standardising TYPE values for AbstractFieldDetails
+
 Bugs fixed:
 * Bug 658631 — crash at empathy startup
 * Bug 658331 — Ensure read-only PersonaStores have empty writeable-properties

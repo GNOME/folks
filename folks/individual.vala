@@ -160,7 +160,7 @@ public class Folks.Individual : Object,
    *
    * @param avatar the new avatar (or `null` to unset the avatar)
    * @throws PropertyError if setting the avatar failed
-   * @since UNRELEASED
+   * @since 0.6.3
    */
   public async void change_avatar (LoadableIcon? avatar) throws PropertyError
     {
