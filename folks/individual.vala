@@ -1036,6 +1036,11 @@ public class Folks.Individual : Object,
    * Used in _update_single_valued_property(), below. */
   private delegate void SingleValuedPropertySetter (Persona? chosen_persona);
 
+  /* Delegate to filter a persona based on whether a given property is set.
+   *
+   * Used in _update_single_valued_property(), below. */
+  private delegate bool PropertyFilter (Persona persona);
+
   /*
    * Update a single-valued property from the values in the personas.
    *
@@ -1069,6 +1074,7 @@ public class Folks.Individual : Object,
    * @since 0.6.2
    */
   private void _update_single_valued_property (Type interface_type,
+      PropertyFilter filter_func,
       CompareFunc<Persona> compare_func, string prop_name,
       SingleValuedPropertySetter setter)
     {
@@ -1076,6 +1082,15 @@ public class Folks.Individual : Object,
         {
           assert (a != null);
           assert (b != null);
+
+          /* Always prefer values which are set over those which aren't. */
+          var a_is_set = filter_func (a);
+          var b_is_set = filter_func (b);
+
+          if (a_is_set != b_is_set)
+            {
+              return (a_is_set ? 1 : 0) - (b_is_set ? 1 : 0);
+            }
 
           var a_is_primary = a.store.is_primary_store;
           var b_is_primary = b.store.is_primary_store;
@@ -1193,7 +1208,10 @@ public class Folks.Individual : Object,
 
   private void _update_presence ()
     {
-      this._update_single_valued_property (typeof (PresenceDetails), (a, b) =>
+      this._update_single_valued_property (typeof (PresenceDetails), (p) =>
+        {
+          return (p as PresenceDetails).presence_type != PresenceType.UNSET;
+        }, (a, b) =>
         {
           var a_presence = (a as PresenceDetails).presence_type;
           var b_presence = (b as PresenceDetails).presence_type;
@@ -1228,7 +1246,10 @@ public class Folks.Individual : Object,
 
   private void _update_is_favourite ()
     {
-      this._update_single_valued_property (typeof (FavouriteDetails), (a, b) =>
+      this._update_single_valued_property (typeof (FavouriteDetails), (p) =>
+        {
+          return true;
+        }, (a, b) =>
         {
           var a_is_favourite = (a as FavouriteDetails).is_favourite;
           var b_is_favourite = (b as FavouriteDetails).is_favourite;
@@ -1257,7 +1278,13 @@ public class Folks.Individual : Object,
 
   private void _update_alias ()
     {
-      this._update_single_valued_property (typeof (AliasDetails), (a, b) =>
+      this._update_single_valued_property (typeof (AliasDetails), (p) =>
+        {
+          var alias = (p as AliasDetails).alias;
+          assert (alias != null);
+
+          return (alias.strip () != ""); /* empty aliases are unset */
+        }, (a, b) =>
         {
           var a_alias = (a as AliasDetails).alias;
           var b_alias = (b as AliasDetails).alias;
@@ -1300,12 +1327,13 @@ public class Folks.Individual : Object,
 
   private void _update_avatar ()
     {
-      this._update_single_valued_property (typeof (AvatarDetails), (a, b) =>
+      this._update_single_valued_property (typeof (AvatarDetails), (p) =>
         {
-          var a_avatar = (a as AvatarDetails).avatar;
-          var b_avatar = (b as AvatarDetails).avatar;
-
-          return ((a_avatar != null) ? 1 : 0) - ((b_avatar != null) ? 1 : 0);
+          return (p as AvatarDetails).avatar != null;
+        }, (a, b) =>
+        {
+          /* We can't compare two set avatars efficiently. See: bgo#652721. */
+          return 0;
         }, "avatar", (p) =>
         {
           LoadableIcon? avatar = null;
@@ -1431,15 +1459,14 @@ public class Folks.Individual : Object,
 
   private void _update_structured_name ()
     {
-      this._update_single_valued_property (typeof (NameDetails), (a, b) =>
+      this._update_single_valued_property (typeof (NameDetails), (p) =>
         {
-          var a_name = (a as NameDetails).structured_name;
-          var b_name = (b as NameDetails).structured_name;
-
-          var a_is_set = (a_name != null && !a_name.is_empty ()) ? 1 : 0;
-          var b_is_set = (b_name != null && !b_name.is_empty ()) ? 1 : 0;
-
-          return (a_is_set - b_is_set);
+          var name = (p as NameDetails).structured_name;
+          return (name != null && !name.is_empty ());
+        }, (a, b) =>
+        {
+          /* Can't compare two set names. */
+          return 0;
         }, "structured-name", (p) =>
         {
           StructuredName? name = null;
@@ -1466,18 +1493,16 @@ public class Folks.Individual : Object,
 
   private void _update_full_name ()
     {
-      this._update_single_valued_property (typeof (NameDetails), (a, b) =>
+      this._update_single_valued_property (typeof (NameDetails), (p) =>
         {
-          var a_name = (a as NameDetails).full_name;
-          var b_name = (b as NameDetails).full_name;
+          var name = (p as NameDetails).full_name;
+          assert (name != null);
 
-          assert (a_name != null);
-          assert (b_name != null);
-
-          var a_is_set = (a_name.strip () != "") ? 1 : 0;
-          var b_is_set = (b_name.strip () != "") ? 1 : 0;
-
-          return (a_is_set - b_is_set);
+          return (name.strip () != ""); /* empty names are unset */
+        }, (a, b) =>
+        {
+          /* Can't compare two set names. */
+          return 0;
         }, "full-name", (p) =>
         {
           string new_full_name = ""; /* must not be null */
@@ -1497,18 +1522,16 @@ public class Folks.Individual : Object,
 
   private void _update_nickname ()
     {
-      this._update_single_valued_property (typeof (NameDetails), (a, b) =>
+      this._update_single_valued_property (typeof (NameDetails), (p) =>
         {
-          var a_name = (a as NameDetails).nickname;
-          var b_name = (b as NameDetails).nickname;
+          var nickname = (p as NameDetails).nickname;
+          assert (nickname != null);
 
-          assert (a_name != null);
-          assert (b_name != null);
-
-          var a_is_set = (a_name.strip () != "") ? 1 : 0;
-          var b_is_set = (b_name.strip () != "") ? 1 : 0;
-
-          return (a_is_set - b_is_set);
+          return (nickname.strip () != ""); /* empty names are unset */
+        }, (a, b) =>
+        {
+          /* Can't compare two set names. */
+          return 0;
         }, "nickname", (p) =>
         {
           string new_nickname = ""; /* must not be null */
@@ -1592,15 +1615,15 @@ public class Folks.Individual : Object,
 
   private void _update_gender ()
     {
-      this._update_single_valued_property (typeof (GenderDetails), (a, b) =>
+      this._update_single_valued_property (typeof (GenderDetails), (p) =>
         {
-          var a_gender = (a as GenderDetails).gender;
-          var b_gender = (b as GenderDetails).gender;
-
-          var a_is_specified = (a_gender != Gender.UNSPECIFIED) ? 1 : 0;
-          var b_is_specified = (b_gender != Gender.UNSPECIFIED) ? 1 : 0;
-
-          return (a_is_specified - b_is_specified);
+          return (p as GenderDetails).gender != Gender.UNSPECIFIED;
+        }, (a, b) =>
+        {
+          /* It would be sexist to rank one gender over another.
+           * Besides, how often will we see two personas in the same individual
+           * which have different genders? */
+          return 0;
         }, "gender", (p) =>
         {
           var new_gender = Gender.UNSPECIFIED;
@@ -1785,7 +1808,11 @@ public class Folks.Individual : Object,
 
   private void _update_birthday ()
     {
-      this._update_single_valued_property (typeof (BirthdayDetails), (a, b) =>
+      this._update_single_valued_property (typeof (BirthdayDetails), (p) =>
+        {
+          var details = (p as BirthdayDetails);
+          return details.birthday != null && details.calendar_event_id != null;
+        }, (a, b) =>
         {
           var a_birthday = (a as BirthdayDetails).birthday;
           var b_birthday = (b as BirthdayDetails).birthday;
