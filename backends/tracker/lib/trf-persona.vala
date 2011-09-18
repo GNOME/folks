@@ -1358,7 +1358,7 @@ public class Trf.Persona : Folks.Persona,
                     type = UrlFieldDetails.PARAM_TYPE_BLOG;
                     break;
                   case Trf.UrlsFields.WEBSITE:
-                    type = UrlFieldDetails.PARAM_TYPE_HOMEPAGE;
+                    type = UrlFieldDetails.PARAM_TYPE_HOME_PAGE;
                     break;
                   case Trf.UrlsFields.URL:
                     /* No specific type is appropriate. */

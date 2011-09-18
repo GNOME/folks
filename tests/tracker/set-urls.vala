@@ -56,7 +56,7 @@ public class SetURLsTests : Folks.TestCase
       this._urls = new Gee.HashMap<string, string> ();
       this._urls.set (UrlFieldDetails.PARAM_TYPE_BLOG,
           "http://one.example.org");
-      this._urls.set (UrlFieldDetails.PARAM_TYPE_HOMEPAGE,
+      this._urls.set (UrlFieldDetails.PARAM_TYPE_HOME_PAGE,
           "http://two.example.org");
       this._urls.set (AbstractFieldDetails.PARAM_TYPE_OTHER,
           "http://three.example.org");
@@ -120,8 +120,8 @@ public class SetURLsTests : Folks.TestCase
               p1.set_parameter (p1.PARAM_TYPE, p1.PARAM_TYPE_BLOG);
               url_fds.add (p1);
               var p2 = new UrlFieldDetails (
-                  this._urls.get (UrlFieldDetails.PARAM_TYPE_HOMEPAGE));
-              p2.set_parameter (p1.PARAM_TYPE, p1.PARAM_TYPE_HOMEPAGE);
+                  this._urls.get (UrlFieldDetails.PARAM_TYPE_HOME_PAGE));
+              p2.set_parameter (p1.PARAM_TYPE, p1.PARAM_TYPE_HOME_PAGE);
               url_fds.add (p2);
               var p3 = new UrlFieldDetails (
                   this._urls.get (AbstractFieldDetails.PARAM_TYPE_OTHER));
@@ -158,10 +158,10 @@ public class SetURLsTests : Folks.TestCase
                   this._urls.unset (p.PARAM_TYPE_BLOG);
                 }
               else if (type_p != null &&
-                  type_p.contains (p.PARAM_TYPE_HOMEPAGE) &&
-                  p.value == this._urls.get (p.PARAM_TYPE_HOMEPAGE))
+                  type_p.contains (p.PARAM_TYPE_HOME_PAGE) &&
+                  p.value == this._urls.get (p.PARAM_TYPE_HOME_PAGE))
                 {
-                  this._urls.unset (p.PARAM_TYPE_HOMEPAGE);
+                  this._urls.unset (p.PARAM_TYPE_HOME_PAGE);
                 }
               else if (type_p == null &&
                   p.value == this._urls.get (p.PARAM_TYPE_OTHER))

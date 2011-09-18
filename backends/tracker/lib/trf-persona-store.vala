@@ -1542,7 +1542,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
               if (affl_info.website != null)
                 p._add_url (affl_info.website,
                     affl_info.affl_tracker_id,
-                    UrlFieldDetails.PARAM_TYPE_HOMEPAGE);
+                    UrlFieldDetails.PARAM_TYPE_HOME_PAGE);
 
               if (affl_info.blog != null)
                 p._add_url (affl_info.blog,
@@ -2451,7 +2451,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
                     related_connection = Trf.OntologyDefs.NCO_BLOG;
                   }
                 else if (type_p != null &&
-                    type_p.contains (UrlFieldDetails.PARAM_TYPE_HOMEPAGE))
+                    type_p.contains (UrlFieldDetails.PARAM_TYPE_HOME_PAGE))
                   {
                     related_connection = Trf.OntologyDefs.NCO_WEBSITE;
                   }

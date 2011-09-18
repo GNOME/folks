@@ -41,7 +41,7 @@ public class Folks.UrlFieldDetails : AbstractFieldDetails<string>
    *
    * @since UNRELEASED
    */
-  public static const string PARAM_TYPE_HOMEPAGE = "x-home-page";
+  public static const string PARAM_TYPE_HOME_PAGE = "x-home-page";
 
   /**
    * Parameter value for URLs for the contact's personal or professional blog.

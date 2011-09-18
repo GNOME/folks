@@ -39,7 +39,7 @@ API changes:
 * Add Folks.PersonaStore.user_set_default
 * Add AbstractFieldDetails.PARAM_TYPE, .PARAM_TYPE_HOME, .PARAM_TYPE_WORK,
   .PARAM_TYPE_OTHER
-* Add UrlFieldDetails.PARAM_TYPE_HOMEPAGE, .PARAM_TYPE_BLOG,
+* Add UrlFieldDetails.PARAM_TYPE_HOME_PAGE, .PARAM_TYPE_BLOG,
   .PARAM_TYPE_PROFILE, .PARAM_TYPE_FTP
 
 Overview of changes from libfolks 0.6.2 to libfolks 0.6.2.1

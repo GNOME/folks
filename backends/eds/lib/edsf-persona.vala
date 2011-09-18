@@ -75,7 +75,7 @@ public class Edsf.Persona : Folks.Persona,
 
   internal static const UrlTypeMapping[] _url_properties =
     {
-      { "homepage_url", UrlFieldDetails.PARAM_TYPE_HOMEPAGE },
+      { "homepage_url", UrlFieldDetails.PARAM_TYPE_HOME_PAGE },
       { "blog_url", UrlFieldDetails.PARAM_TYPE_BLOG },
       { "fburl", "x-free-busy" },
       { "video_url", "x-video" }
