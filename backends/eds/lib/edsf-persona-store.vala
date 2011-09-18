@@ -1878,7 +1878,8 @@ public class Edsf.PersonaStore : Folks.PersonaStore
         {
           foreach (var s in g.peek_sources ())
             {
-              if (s.peek_relative_uri () == this.id)
+              if (s.peek_relative_uri () == this.id &&
+                  s.peek_uid () == this._addressbook.get_source ().peek_uid ())
                 {
                   /* We've found ourself. */
                   return true;
