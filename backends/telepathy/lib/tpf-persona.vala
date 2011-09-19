@@ -33,6 +33,7 @@ public class Tpf.Persona : Folks.Persona,
     FavouriteDetails,
     GroupDetails,
     ImDetails,
+    PhoneDetails,
     PresenceDetails
 {
   private HashSet<string> _groups;
@@ -286,6 +287,21 @@ public class Tpf.Persona : Folks.Persona,
    */
   public Contact? contact { get; construct; }
 
+  private HashSet<PhoneFieldDetails> _phone_numbers;
+  private Set<PhoneFieldDetails> _phone_numbers_ro;
+
+  /**
+   * {@inheritDoc}
+   *
+   * @since UNRELEASED
+   */
+  [CCode (notify = false)]
+  public Set<PhoneFieldDetails> phone_numbers
+    {
+      get { return this._phone_numbers_ro; }
+      set { this.change_phone_numbers.begin (value); }
+    }
+
   /**
    * Create a new persona.
    *
@@ -353,6 +369,11 @@ public class Tpf.Persona : Folks.Persona,
       this._groups = new HashSet<string> ();
       this._groups_ro = this._groups.read_only_view;
 
+      this._phone_numbers = new HashSet<PhoneFieldDetails> (
+          (GLib.HashFunc) PhoneFieldDetails.hash,
+          (GLib.EqualFunc) PhoneFieldDetails.equal);
+      this._phone_numbers_ro = this._phone_numbers.read_only_view;
+
       contact.notify["avatar-file"].connect ((s, p) =>
         {
           this._contact_notify_avatar ();
@@ -374,6 +395,12 @@ public class Tpf.Persona : Folks.Persona,
       this._contact_notify_presence_message ();
       this._contact_notify_presence_type ();
       this._contact_notify_presence_status ();
+
+      contact.notify["contact-info"].connect ((s, p) =>
+        {
+          this._contact_notify_phones ();
+        });
+      this._contact_notify_phones ();
 
       ((Tpf.PersonaStore) this.store).group_members_changed.connect (
           (s, group, added, removed) =>
@@ -399,6 +426,56 @@ public class Tpf.Persona : Folks.Persona,
                   this._change_group (group, false);
                 }
             });
+    }
+
+  private void _contact_notify_phones ()
+    {
+      var new_phone_numbers = new HashSet<PhoneFieldDetails> (
+          (GLib.HashFunc) PhoneFieldDetails.hash,
+          (GLib.EqualFunc) PhoneFieldDetails.equal);
+
+      var contact_info = this.contact.get_contact_info ();
+      foreach (var info in contact_info)
+        {
+          if (info.field_name != "tel")
+            continue;
+
+          foreach (var phone_num in info.field_value)
+            {
+              var parameters = this._afd_params_from_strv (info.parameters);
+              var phone_fd = new PhoneFieldDetails (phone_num, parameters);
+              new_phone_numbers.add (phone_fd);
+            }
+        }
+
+      if (!Folks.PersonaStore.equal_sets<PhoneFieldDetails> (new_phone_numbers,
+              this._phone_numbers))
+        {
+          this._phone_numbers = new_phone_numbers;
+          this._phone_numbers_ro = new_phone_numbers.read_only_view;
+          this.notify_property ("phone-numbers");
+        }
+    }
+
+  private MultiMap<string, string> _afd_params_from_strv (string[] parameters)
+    {
+      var retval = new HashMultiMap<string, string> ();
+
+      foreach (var entry in parameters)
+        {
+          var tokens = entry.split ("=", 2);
+          if (tokens.length == 2)
+            {
+              retval.set (tokens[0], tokens[1]);
+            }
+          else
+            {
+              warning ("Failed to parse vCard parameter from string '%s'",
+                  entry);
+            }
+        }
+
+      return retval;
     }
 
   /**

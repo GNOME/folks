@@ -58,7 +58,8 @@ public class Tpf.PersonaStore : Folks.PersonaStore
         ContactFeature.AVATAR_TOKEN,
         ContactFeature.CAPABILITIES,
         ContactFeature.CLIENT_TYPES,
-        ContactFeature.PRESENCE
+        ContactFeature.PRESENCE,
+        ContactFeature.CONTACT_INFO
       };
 
   private const string[] _always_writeable_properties =

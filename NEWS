@@ -3,6 +3,12 @@ Overview of changes from libfolks 0.6.3.2 to libfolks 0.6.4
 Bugs fixed:
 * Bug 660217 — folks-0.6.3.2 requires tracker-0.12, but configure.ac calls
   VALA_CHECK_PACKAGES([tracker-sparql-0.12])
+* Bug 657602 — Telepathy backend fails to set Personas' phone numbers from
+  ContactInfo
+
+API changes:
+* Implement PhoneDetails on Tpf.Persona
+* Implement NameDetails on Tpf.Persona
 
 Overview of changes from libfolks 0.6.3.1 to libfolks 0.6.3.2
 =============================================================
