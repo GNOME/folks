@@ -9,16 +9,16 @@ msgstr ""
 "Project-Id-Version: folks master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=folks&keywords=I18N+L10N&component=general\n"
 "POT-Creation-Date: 2011-09-17 11:06+0000\n"
-"PO-Revision-Date: 2011-09-17 17:29+0100\n"
+"PO-Revision-Date: 2011-09-19 09:37+0100\n"
 "Last-Translator: Matej Urbančič <mateju@svn.gnome.org>\n"
-"Language-Team: Slovenščina <gnome-si@googlegroups.com>\n"
-"Language: \n"
+"Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=4; plural=(n%100==1 ? 1 : n%100==2 ? 2 : n%100==3 || n%100==4 ? 3 : 0)\n"
+"Language: Slovenian\n"
+"Plural-Forms: nplurals=4; plural=(n%100==1 ? 1 : n%100==2 ? 2 : n%100==3 || n%100==4 ? 3 : 0);\n"
+"X-Poedit-Country: SLOVENIA\n"
 "X-Poedit-Language: Slovenian\n"
-"X-Poedit-Country: Slovenia\n"
 "X-Poedit-SourceCharset: utf-8\n"
 
 #. Translators: the first parameter is an address book
@@ -26,7 +26,7 @@ msgstr ""
 #: ../backends/eds/lib/edsf-persona-store.vala:475
 #, c-format
 msgid "Address book ‘%s’ is offline, so contact ‘%s’ cannot be removed."
-msgstr ""
+msgstr "Imenik ‘%s’ ni povezan, zato stika ‘%s’ ni mogoče odstraniti."
 
 #. Translators: the first parameter is an address book
 #. * URI and the second is an error message.
@@ -35,11 +35,13 @@ msgstr ""
 msgid "Permission denied to remove contact ‘%s’: %s"
 msgstr "Ni ustreznega dovoljenja za odstranjevanje stika ‘%s’: %s"
 
+# oseba ima več "person", torej več računov, IM, lalaa
+# oseba ima torej več "stikov"
 #. Translators: the parameter is an error message.
 #: ../backends/eds/lib/edsf-persona-store.vala:486
 #, c-format
 msgid "Removing contacts isn't supported by this persona store: %s"
-msgstr ""
+msgstr "Odstranjevanje stikov ni podprto s strani zaloge stikov: %s"
 
 #: ../backends/eds/lib/edsf-persona-store.vala:515
 #, c-format
@@ -78,9 +80,9 @@ msgstr "Ni mogoče odpreti imenika ‘%s’."
 #. Translators: the parameteter is an error message.
 #: ../backends/eds/lib/edsf-persona-store.vala:688
 #: ../backends/eds/lib/edsf-persona-store.vala:715
-#, fuzzy, c-format
+#, c-format
 msgid "Couldn't get address book capabilities: %s"
-msgstr "Ni mogoče pridobiti pogleda za imenik ‘%s’."
+msgstr "Ni mogoče pridobiti podatkov o zmožnosti imenika: %s"
 
 #. Translators: the parameter is an address book URI.
 #: ../backends/eds/lib/edsf-persona-store.vala:728
@@ -98,13 +100,13 @@ msgstr "Ni mogoče pridobiti pogleda za imenik ‘%s’: %s"
 #: ../backends/eds/lib/edsf-persona-store.vala:1035
 #, c-format
 msgid "Changing the ‘%s’ property failed due to reaching the timeout."
-msgstr ""
+msgstr "Spreminjanje lastnosti ‘%s’ je spodletelo zaradi časovne omejitve."
 
 #. Translators: the parameter is an error message.
 #: ../backends/eds/lib/edsf-persona-store.vala:1247
-#, fuzzy, c-format
+#, c-format
 msgid "Can't update avatar: %s"
-msgstr "Posodobi pogled projekta ..."
+msgstr "Podobe ni mogoče posodobiti: %s"
 
 #: ../backends/eds/lib/edsf-persona-store.vala:1589
 #: ../folks/group-details.vala:168
@@ -123,44 +125,45 @@ msgstr "Lastnost '%s' ni zapisljiva: %s"
 #. * property name and the second parameter is an error
 #. * message.
 #: ../backends/eds/lib/edsf-persona-store.vala:1756
-#, fuzzy, c-format
+#, c-format
 msgid "Invalid value for property ‘%s’: %s"
-msgstr "Najnižja možna vrednost za lastnost \"Položaj\""
+msgstr "Neveljavna vrednost za lastnost ‘%s’: %s"
 
 #. Translators: the first parameter is a non-human-readable
 #. * property name and the second parameter is an error message.
 #: ../backends/eds/lib/edsf-persona-store.vala:1782
-#, fuzzy, c-format
+#, c-format
 msgid "Unknown error setting property ‘%s’: %s"
-msgstr "Predmet MediaPlayer 2 zahteva neznano lastnost ‘%s’"
+msgstr "Neznana napaka med nastavljanjem lastnosti ‘%s’: %s"
 
 #. Translators: the first parameter is a filename,
 #. * and the second is an error message.
 #: ../backends/key-file/kf-persona-store.vala:205
-#, fuzzy, c-format
+#, c-format
 msgid "The relationship key file '%s' could not be loaded: %s"
-msgstr "Datoteke uporabniškega vmesnika “%s” ni bilo mogoče naložiti."
+msgstr "Datoteke ključa sorodnosti stikov '%s' ni mogoče naložiti: %s "
 
 #. Translators: the first parameter is a path, and
 #. * the second is an error message.
 #: ../backends/key-file/kf-persona-store.vala:227
 #, c-format
 msgid "The relationship key file directory '%s' could not be created: %s"
-msgstr ""
+msgstr "Mape datoteke ključa sorodnosti stikov '%s' ni mogoče ustvariti: %s"
 
+# relationship keyfile = allows linking of Personas from other backends by creating a Kf.Persona containing linkable properties which can be matched against the Personas being linked together
 #. Translators: the first parameter is a filename,
 #. * and the second is an error message.
 #: ../backends/key-file/kf-persona-store.vala:251
-#, fuzzy, c-format
+#, c-format
 msgid "The relationship key file '%s' could not be created: %s"
-msgstr "Ni mogoče (ponovno) pripraviti kazala datoteke, upravljalnika ni mogoče ustvariti, %s "
+msgstr "Datoteke ključa sorodnosti stikov '%s' ni mogoče ustvariti: %s "
 
 #. Translators: the first parameter is a filename, the second is
 #. * an error message.
 #: ../backends/key-file/kf-persona-store.vala:436
-#, fuzzy, c-format
+#, c-format
 msgid "Could not write updated key file '%s': %s"
-msgstr "Ni mogoče pisati v začasno datoteko '%s': %s"
+msgstr "Ni mogoče zapisati posodobljene datoteke ključa '%s': %s"
 
 #. Translators: this is an error message for if the user
 #. * provides an invalid IM address. The first parameter is
@@ -170,31 +173,31 @@ msgstr "Ni mogoče pisati v začasno datoteko '%s': %s"
 #: ../backends/key-file/kf-persona.vala:169
 #, c-format
 msgid "Invalid IM address ‘%s’ for protocol ‘%s’: %s"
-msgstr ""
+msgstr "Neveljaven naslov hipne povezave ‘%s’ za protokol ‘%s’: %s"
 
 #. Translators: the parameter is an error message.
 #: ../backends/key-file/kf-persona.vala:357
-#, fuzzy, c-format
+#, c-format
 msgid "Couldn't load data from key file: %s"
-msgstr "Ni mogoče prebrati podatkov s strežnika"
+msgstr "Ni mogoče naložiti podatkov iz datoteke ključa: %s"
 
 #. Translators: the parameter is an error message.
 #: ../backends/telepathy/lib/tp-lowlevel.c:504
-#, fuzzy, c-format
+#, c-format
 msgid "Error requesting a group channel: %s"
-msgstr "Napaka med izpisovanjem kategorij kanala"
+msgstr "Napaka med podajanjem zahteve za skupinski kanala: %s"
 
 #. Translators: the parameter is an error message.
 #: ../backends/telepathy/lib/tp-lowlevel.c:522
-#, fuzzy, c-format
+#, c-format
 msgid "Error requesting group handles: %s"
-msgstr "Napaka med zaganjanjem skupine nosilcev"
+msgstr "Napaka med podajanjem zahteve za skupinske ročnike: %s"
 
 #. Translators: the parameter is an error message.
 #: ../backends/telepathy/lib/tp-lowlevel.c:560
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to change contact's alias: %s"
-msgstr "Ni mogoče vzpostaviti povezave s strežnikom LDAP: %s"
+msgstr "Spreminjanje vzdevka stika je spodletelo: %s"
 
 #. Translators: the parameter is an error message.
 #: ../backends/telepathy/lib/tp-lowlevel.c:619
@@ -227,15 +230,15 @@ msgstr "Odstranjevanje stika iz skupine '%s' je spodletelo: %s"
 #: ../backends/telepathy/lib/tp-lowlevel.c:732
 #, c-format
 msgid "Invalid group channel %p to add handle %d to."
-msgstr ""
+msgstr "Neveljaven skupinski kanal %p za dodelitev ročnika %d."
 
 #: ../backends/telepathy/lib/tpf-persona-store.vala:601
 msgid "Couldn't connect to the telepathy-logger service."
-msgstr ""
+msgstr "Ni se mogoče povezati s storitvijo telepathy-logger."
 
 #: ../backends/telepathy/lib/tpf-persona-store.vala:615
 msgid "Lost connection to the telepathy-logger service."
-msgstr ""
+msgstr "Povezava s storitvijo telepathy-logger je izgubljena."
 
 #. Translators: the parameter is an error message.
 #: ../backends/telepathy/lib/tpf-persona-store.vala:647
@@ -246,9 +249,9 @@ msgstr "Ni mogoče pridobiti seznama priljubljenih stikov: %s"
 
 #. Translators: the parameter is an identifier.
 #: ../backends/telepathy/lib/tpf-persona-store.vala:696
-#, fuzzy, c-format
+#, c-format
 msgid "Unknown persona '%s' in favorites list."
-msgstr "Neznana lastnost '%s' v seznamu povezljivih lastnosti."
+msgstr "Neznan stik '%s' na seznamu priljubljenih."
 
 #. Translators: the parameter is an error message.
 #: ../backends/telepathy/lib/tpf-persona-store.vala:726
@@ -268,7 +271,7 @@ msgstr "Ni mogoče odstraniti priljubljenega stika: %s"
 #: ../backends/telepathy/lib/tpf-persona-store.vala:856
 #, c-format
 msgid "Failed to determine whether we can set aliases on Telepathy account '%s': %s"
-msgstr ""
+msgstr "Določevanje ali je mogoče določiti vzdevke računa Telepathy '%s' je spodletelo: %s"
 
 #. Translators: the first parameter is the display name for
 #. * the Telepathy account, and the second is an error
@@ -276,38 +279,38 @@ msgstr ""
 #: ../backends/telepathy/lib/tpf-persona-store.vala:909
 #, c-format
 msgid "Failed to determine whether we can set groups on Telepathy account '%s': %s"
-msgstr ""
+msgstr "Določevanje ali je mogoče določiti skupine računa Telepathy '%s' je spodletelo: %s"
 
 #. Translators: the first parameter is a Telepathy handle,
 #. * and the second is an error message.
 #: ../backends/telepathy/lib/tpf-persona-store.vala:1060
 #, c-format
 msgid "Failed to create contact for self handle '%u': %s"
-msgstr ""
+msgstr "Ustvarjanje stika za ročnik '%u': %s"
 
 #. Translators: do not translate "NewChannels", as it's a D-Bus
 #. * signal name.
 #: ../backends/telepathy/lib/tpf-persona-store.vala:1091
 msgid "Error creating channel for NewChannels signal."
-msgstr ""
+msgstr "Napaka ustvarjanja kanala za signal NewChannels."
 
 #. Translators: the parameter is a persona identifier and
 #. * the second parameter is a group name.
 #: ../backends/telepathy/lib/tpf-persona-store.vala:1130
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to add persona '%s' to group '%s'."
-msgstr "Dodajanje stika v skupino '%s' je spodletelo: %s"
+msgstr "Dodajanje stika '%s' v skupino '%s' je spodletelo."
 
 #. Translators: the parameter is a persona identifier
 #. * and the second parameter is a group name.
 #: ../backends/telepathy/lib/tpf-persona-store.vala:1138
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to remove persona '%s' from group '%s'."
-msgstr "Odstranjevanje stika iz skupine '%s' je spodletelo: %s"
+msgstr "Odstranjevanje stika '%s' iz skupine '%s' je spodletelo."
 
 #: ../backends/telepathy/lib/tpf-persona-store.vala:1492
 msgid "Personas representing the local user may not be removed."
-msgstr ""
+msgstr "Stikov, ki predstavljajo krajevnega uporabnika ni mogoče odstraniti."
 
 #. Translators: The first parameter is an identifier, the second
 #. * is the persona's alias and the third is an error message.
@@ -316,7 +319,7 @@ msgstr ""
 #: ../backends/telepathy/lib/tpf-persona-store.vala:1507
 #, c-format
 msgid "Failed to remove persona '%s' (%s) from 'stored' list: %s"
-msgstr ""
+msgstr "Odstranjevanje stika '%s' (%s) iz seznama 'zaloge' je spodletelo: %s"
 
 #. Translators: The first parameter is an identifier, the second
 #. * is the persona's alias and the third is an error message.
@@ -325,7 +328,7 @@ msgstr ""
 #: ../backends/telepathy/lib/tpf-persona-store.vala:1523
 #, c-format
 msgid "Failed to remove persona '%s' (%s) from 'subscribe' list: %s"
-msgstr ""
+msgstr "Odstranjevanje stika '%s' (%s) iz seznama 'naročil' je spodletelo: %s"
 
 #. Translators: The first parameter is an identifier, the second
 #. * is the persona's alias and the third is an error message.
@@ -334,7 +337,7 @@ msgstr ""
 #: ../backends/telepathy/lib/tpf-persona-store.vala:1539
 #, c-format
 msgid "Failed to remove persona '%s' (%s) from 'publish' list: %s"
-msgstr ""
+msgstr "Odstranjevanje stika '%s' (%s) iz seznama 'objave' je spodletelo: %s"
 
 #. Translators: the first parameter is a persona identifier,
 #. * the second is a contact list identifier and the third is
@@ -342,7 +345,7 @@ msgstr ""
 #: ../backends/telepathy/lib/tpf-persona-store.vala:1703
 #, c-format
 msgid "Failed to add persona '%s' to contact list '%s': %s"
-msgstr ""
+msgstr "Dodajanje stika '%s' na seznam stikov '%s' je spodletelo: %s"
 
 #. Translators: the first parameter is a persona identifier,
 #. * the second is a contact list identifier and the third is
@@ -350,14 +353,14 @@ msgstr ""
 #: ../backends/telepathy/lib/tpf-persona-store.vala:1712
 #, c-format
 msgid "Failed to remove persona '%s' from contact list '%s': %s"
-msgstr ""
+msgstr "Odstranjevanje stika '%s' s seznama stikov '%s' je spodletelo: %s"
 
 #. Translators: the first parameter is a channel identifier and
 #. * the second is an error message..
 #: ../backends/telepathy/lib/tpf-persona-store.vala:1813
 #, c-format
 msgid "Failed to create personas from incoming contacts in channel '%s': %s"
-msgstr ""
+msgstr "Ustvarjanje prihajajočih stikov preko kanala '%s' je spodletelo: %s"
 
 #. Translators: the first two parameters are store identifiers and
 #. * the third is a contact identifier.
@@ -367,10 +370,12 @@ msgid ""
 "Persona store (%s, %s) requires the following details:\n"
 "    contact (provided: '%s')\n"
 msgstr ""
+"Zaloga stika (%s, %s) zahteva naslednje podatke:\n"
+"    stik (ponujen: '%s')\n"
 
 #: ../backends/telepathy/lib/tpf-persona-store.vala:2009
 msgid "Cannot create a new persona while offline."
-msgstr ""
+msgstr "Novega stika brez povezave ni mogoče ustvariti."
 
 #. Translators: the parameter is the number of personas
 #. * which were returned.
@@ -378,25 +383,25 @@ msgstr ""
 #, c-format
 msgid "Requested a single persona, but got %u persona back."
 msgid_plural "Requested a single persona, but got %u personas back."
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "Podana je zahteva za podatke enega stika, vrnjenih pa je %u stikov."
+msgstr[1] "Podana je zahteva za podatke enega stika, vrnjen pa je %u stik."
+msgstr[2] "Podana je zahteva za podatke enega stika, vrnjena pa sta %u stika."
+msgstr[3] "Podana je zahteva za podatke enega stika, vrnjeni pa so %u stiki."
 
 #: ../backends/telepathy/lib/tpf-persona-store.vala:2072
 #, c-format
 msgid "Failed to add a persona from details: %s"
-msgstr ""
+msgstr "Dodajanje stika iz podatkov je spodletelo: %s"
 
 #. Translators: "telepathy-logger" is the name of an application,
 #. * and should not be translated.
 #: ../backends/telepathy/lib/tpf-persona-store.vala:2092
 msgid "Failed to change favorite without a connection to the telepathy-logger service."
-msgstr ""
+msgstr "Spreminjanje priljubljenih ni mogoče brez povezave s storitvijo telepathy-logger."
 
 #: ../backends/telepathy/lib/tpf-persona-store.vala:2109
 msgid "Failed to change a persona's favorite status."
-msgstr ""
+msgstr "Spreminjanje priljubljenega stanja stika je spodletelo."
 
 #. Translators: the first parameter is the unknown key that
 #. * was received with the details params, and the second
@@ -404,17 +409,15 @@ msgstr ""
 #: ../backends/tracker/lib/trf-persona-store.vala:733
 #, c-format
 msgid "Unrecognized parameter '%s' passed to persona store '%s'."
-msgstr ""
+msgstr "Poslan je neprepoznan parameter '%s' v zalogo stikov '%s'."
 
 #: ../folks/alias-details.vala:57
-#, fuzzy
 msgid "Alias is not writeable on this contact."
-msgstr "Rojstni datum tega stika ni zapisljiv."
+msgstr "Vzdevek tega stika ni zapisljiv."
 
 #: ../folks/avatar-details.vala:59
-#, fuzzy
 msgid "Avatar is not writeable on this contact."
-msgstr "Rojstni datum tega stika ni zapisljiv."
+msgstr "Podoba tega stika ni zapisljiva."
 
 #. Translators: the first parameter is a backend name, and the
 #. * second is an error message.
@@ -434,7 +437,7 @@ msgstr "Napaka med izpisovanjem vsebine mape '%s': %s"
 #: ../folks/backend-store.vala:580
 #, c-format
 msgid "The content type of '%s' could not be determined. Have you installed shared-mime-info?"
-msgstr ""
+msgstr "Vrste vsebine '%s' ni mogoče določiti. Ali je nameščen paket shared-mime-info?"
 
 #. Translators: the first parameter is a filename and the second is an
 #. * error message.
@@ -468,7 +471,7 @@ msgstr "Rojstni datum tega stika ni zapisljiv."
 
 #: ../folks/birthday-details.vala:89
 msgid "Birthday event ID is not writeable on this contact."
-msgstr ""
+msgstr "ID dogodka rojstnega dne za ta stik ni zapisljiv."
 
 #: ../folks/email-details.vala:115
 msgid "E-mail addresses are not writeable on this contact."
@@ -498,9 +501,9 @@ msgstr "Naslova hipnega stika '%s' ni mogoče razumeti."
 #. Translators: the first parameter is a persona store identifier
 #. * and the second is an error message.
 #: ../folks/individual-aggregator.vala:679
-#, fuzzy, c-format
+#, c-format
 msgid "Error preparing persona store '%s': %s"
-msgstr "Napaka med pripravljanjem nalagalnika \"%s\"."
+msgstr "Napaka med pripravljanjem zaloge stikov '%s': %s."
 
 #. Translators: the parameter is a property name.
 #: ../folks/individual-aggregator.vala:871
@@ -514,20 +517,20 @@ msgstr "Neznana lastnost '%s' v seznamu povezljivih lastnosti."
 #: ../folks/individual-aggregator.vala:1451
 #, c-format
 msgid "Failed to add contact for persona store ID '%s': %s"
-msgstr ""
+msgstr "Dodajanje stika za ID zalogo stikov '%s' je spodletelo: %s"
 
 #: ../folks/individual-aggregator.vala:1532
 msgid "Can't link personas with no primary store."
-msgstr ""
+msgstr "Ni mogoče povezati stikov brez osnovne zaloge osebe."
 
 #: ../folks/individual-aggregator.vala:1789
 msgid "Can't add personas with no primary store."
-msgstr ""
+msgstr "Ni mogoče dodati stikov brez osnovne zaloge osebe."
 
 #: ../folks/individual-aggregator.vala:1794
 #, c-format
 msgid "Can't write to requested property (“%s”) of the writeable store."
-msgstr ""
+msgstr "Ni mogoče pisati v zahtevano lastnost (“%s”) zapisljive zaloge."
 
 #: ../folks/local-id-details.vala:64
 msgid "Local IDs are not writeable on this contact."
@@ -577,7 +580,7 @@ msgstr "Naslovi URL za ta stik niso zapisljivi."
 
 #: ../folks/web-service-details.vala:118
 msgid "Web service addresses are not writeable on this contact."
-msgstr ""
+msgstr "Naslovi spletnih storitev za ta stik niso zapisljivi."
 
 #. Translators: the parameter is a filename.
 #: ../tools/import-pidgin.vala:48
@@ -602,47 +605,31 @@ msgstr "Datoteka %s ni berljiva."
 #: ../tools/import-pidgin.vala:81
 #, c-format
 msgid "The Pidgin buddy list file '%s' could not be loaded."
-msgstr ""
+msgstr "Datoteke oseb Pidgin '%s' ni mogoče naložiti."
 
 #. Translators: the parameter is a filename.
 #: ../tools/import-pidgin.vala:96
 #, c-format
 msgid "The Pidgin buddy list file '%s' could not be loaded: the root element could not be found or was not recognised."
-msgstr ""
+msgstr "Datoteke oseb Pidgin '%s' ni mogoče naložiti: korenskega predmeta ni mogoče najti ali pa ni prepoznan."
 
 #. Translators: the first parameter is the number of buddies which
 #. * were successfully imported, and the second is a filename.
 #: ../tools/import-pidgin.vala:116
-#, fuzzy, c-format
+#, c-format
 msgid "Imported %u buddy from '%s'."
 msgid_plural "Imported %u buddies from '%s'."
-msgstr[0] ""
-"\n"
-"\n"
-"Vnos uvožen iz \"%s\":\n"
-"\n"
-msgstr[1] ""
-"\n"
-"\n"
-"Vnos uvožen iz \"%s\":\n"
-"\n"
-msgstr[2] ""
-"\n"
-"\n"
-"Vnos uvožen iz \"%s\":\n"
-"\n"
-msgstr[3] ""
-"\n"
-"\n"
-"Vnos uvožen iz \"%s\":\n"
-"\n"
+msgstr[0] "Uvoženih je %u stikov iz '%s'."
+msgstr[1] "Uvožen je %u stik iz '%s'."
+msgstr[2] "Uvožena sta %u stika iz '%s'."
+msgstr[3] "Uvoženi so %u stiki iz '%s'."
 
 #. Translators: the first parameter is a persona identifier,
 #. * and the second is an error message.
 #: ../tools/import-pidgin.vala:163
 #, c-format
 msgid "Error changing group of Pidgin.Persona '%s': %s\n"
-msgstr ""
+msgstr "Napaka med spreminjanjem skupine Pidgin.Persona '%s': %s\n"
 
 #. Translators: the parameter is the buddy's IM address.
 #: ../tools/import-pidgin.vala:219
@@ -651,6 +638,8 @@ msgid ""
 "Ignoring buddy with no alias and only one IM address:\n"
 "%s"
 msgstr ""
+"Prezrte so osebe brez vzdevkov in le enim hipnim naslovom:\n"
+"%s"
 
 #: ../tools/import-pidgin.vala:243
 #, c-format
@@ -659,6 +648,9 @@ msgid ""
 "%s\n"
 "Error: %s\n"
 msgstr ""
+"Spodletelo je ustvarjanje novega stika osebe z vzdevkom '%s' in hipnimi naslovi:\n"
+"%s\n"
+"Napaka: %s\n"
 
 #. Translators: the first parameter is a persona identifier, the
 #. * second is an alias for the persona, and the third is a set of IM
@@ -669,6 +661,8 @@ msgid ""
 "Created persona '%s' for buddy with alias '%s' and IM addresses:\n"
 "%s"
 msgstr ""
+"Ustvarjen je stik '%s' za osebo '%s' in hipni naslov:\n"
+"%s"
 
 #: ../tools/import.vala:42
 msgid "Source backend name (default: 'pidgin')"
@@ -676,11 +670,11 @@ msgstr "Ime izvornega ozadnjega programa (privzeto je to 'pidgin')"
 
 #: ../tools/import.vala:45
 msgid "Source filename (default: specific to source backend)"
-msgstr ""
+msgstr "Ime datoteke vira (privzeto: določeno z ozadnjim programom vira)"
 
 #: ../tools/import.vala:55
 msgid "— import meta-contact information to libfolks"
-msgstr ""
+msgstr "— uvoz metapodatkov stikov v knjižnico libfolks"
 
 #. Translators: the parameter is an error message.
 #: ../tools/import.vala:65
@@ -703,26 +697,26 @@ msgstr "Ni mogoče naložiti ozadnjega programa'datoteke-ključa'.\n"
 #: ../tools/import.vala:126
 #, c-format
 msgid "Couldn't prepare the 'key-file' backend: %s\n"
-msgstr ""
+msgstr "Ni mogoče pripraviti ozadnjega programa 'datoteke-ključa': %s\n"
 
 #: ../tools/import.vala:138
 #, c-format
 msgid "Couldn't load the 'key-file' backend's persona store.\n"
-msgstr ""
+msgstr "Ni mogoče naložiti zaloge stika ozadnjega programa 'datoteke-ključa'.\n"
 
 #: ../tools/import.vala:157
 #, c-format
 msgid "Couldn't prepare the 'key-file' backend's persona store: %s\n"
-msgstr ""
+msgstr "Ni mogoče pripraviti zaloge stika ozadnjega programa 'datoteke-ključa': %s\n"
 
 #. Translators: the parameter is an error message.
 #: ../tools/import.vala:175
-#, fuzzy, c-format
+#, c-format
 msgid "Error importing personas: %s\n"
-msgstr "Napaka med uvažanjem: %s"
+msgstr "Napaka med uvažanjem stikov: %s\n"
 
 #: ../tools/import.vala:187
 #, c-format
 msgid "Unrecognised source backend name '%s'. 'pidgin' is currently the only supported source backend.\n"
-msgstr ""
+msgstr "Neprepoznano ime ozadnjega programa vira '%s'. Trenutno je podprt le ozadnji program vira 'pidgin'.\n"
 
