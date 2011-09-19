@@ -1481,8 +1481,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
               _("Roles are not writeable on this contact."));
         }
 
-      var comp = new Edsf.SetComparator<RoleFieldDetails> ();
-      if (comp.equal (roles, persona.roles))
+      if (Folks.PersonaStore.equal_sets<RoleFieldDetails> (roles, persona.roles))
         return;
 
       yield this._set_contact_roles (persona.contact, roles);

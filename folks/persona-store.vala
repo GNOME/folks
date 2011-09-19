@@ -658,4 +658,18 @@ public abstract class Folks.PersonaStore : Object
    * @since 0.6.3
    */
   public bool is_user_set_default { get; internal set; default = false; }
+
+  public static bool equal_sets<G> (Set<G> a, Set<G> b)
+    {
+      if (a.size != b.size)
+        return false;
+
+      foreach (var a_elem in a)
+        {
+          if (!b.contains (a_elem))
+            return false;
+        }
+
+      return true;
+    }
 }

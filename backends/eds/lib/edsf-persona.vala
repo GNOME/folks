@@ -938,8 +938,7 @@ public class Edsf.Persona : Folks.Persona,
             new_roles.add (role_fd);
         }
 
-      var comp = new Edsf.SetComparator<RoleFieldDetails> ();
-      if (!comp.equal (new_roles, this._roles))
+      if (!Folks.PersonaStore.equal_sets<RoleFieldDetails> (new_roles, this._roles))
         {
           this._roles = new_roles;
           this._roles_ro = new_roles.read_only_view;
@@ -1035,8 +1034,8 @@ public class Edsf.Persona : Folks.Persona,
           new_email_addresses.add (email_fd);
         }
 
-      var comp = new Edsf.SetComparator<EmailFieldDetails> ();
-      if (!comp.equal (new_email_addresses, this._email_addresses))
+      if (!Folks.PersonaStore.equal_sets<EmailFieldDetails> (new_email_addresses,
+              this._email_addresses))
         {
          this._email_addresses = new_email_addresses;
          this._email_addresses_ro = new_email_addresses.read_only_view;
@@ -1057,8 +1056,7 @@ public class Edsf.Persona : Folks.Persona,
           new_notes.add (note);
         }
 
-      var comp = new Edsf.SetComparator<NoteFieldDetails> ();
-      if (!comp.equal (new_notes, this._notes))
+      if (!Folks.PersonaStore.equal_sets<NoteFieldDetails>  (new_notes, this._notes))
         {
           this._notes = new_notes;
           this._notes_ro = this._notes.read_only_view;
@@ -1414,8 +1412,8 @@ public class Edsf.Persona : Folks.Persona,
           new_phone_numbers.add (phone_fd);
         }
 
-      var comp = new Edsf.SetComparator<PhoneFieldDetails> ();
-      if (!comp.equal (new_phone_numbers, this._phone_numbers))
+      if (!Folks.PersonaStore.equal_sets<PhoneFieldDetails>  (new_phone_numbers,
+              this._phone_numbers))
         {
           this._phone_numbers = new_phone_numbers;
           this._phone_numbers_ro = new_phone_numbers.read_only_view;
@@ -1498,8 +1496,9 @@ public class Edsf.Persona : Folks.Persona,
           new_postal_addresses.add (pa_fd);
         }
 
-      var comp = new Edsf.SetComparator<PostalAddressFieldDetails> ();
-      if (!comp.equal (new_postal_addresses, this._postal_addresses))
+      if (!Folks.PersonaStore.equal_sets<PostalAddressFieldDetails>  (
+              new_postal_addresses,
+              this._postal_addresses))
         {
           this._postal_addresses = new_postal_addresses;
           this._postal_addresses_ro = new_postal_addresses.read_only_view;
@@ -1527,8 +1526,7 @@ public class Edsf.Persona : Folks.Persona,
       /* Make sure it includes our local id */
       new_local_ids.add (this.iid);
 
-      var comp = new Edsf.SetComparator<string> ();
-      if (!comp.equal (new_local_ids, this.local_ids))
+      if (!Folks.PersonaStore.equal_sets<string>  (new_local_ids, this.local_ids))
         {
           this._local_ids = new_local_ids;
           this._local_ids_ro = this._local_ids.read_only_view;
