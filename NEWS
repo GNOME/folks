@@ -1,5 +1,13 @@
 Overview of changes from libfolks 0.6.3 to libfolks 0.6.4
 ===========================================================
+Bugs fixed:
+* Bug 658631 — Deprecate PersonaStore.can-[alias|group]-personas
+
+API changes:
+* Deprecate Folks.PersonaStore.can_[alias, group]_personas.
+  Applications should use Folks.PersonaStore#always-writeable-properties
+  and Folks.Persona#writeable-properties to check availability of "alias"
+  and "groups" properties.
 
 Overview of changes from libfolks 0.6.2.1 to libfolks 0.6.3
 ===========================================================

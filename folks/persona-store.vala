@@ -449,6 +449,8 @@ public abstract class Folks.PersonaStore : Object
    *
    * @since 0.3.1
    */
+  [Deprecated (since = "UNRELEASED",
+      replacement = "PersonaStore.always_writeable_properties")]
   public abstract MaybeBool can_alias_personas
     {
       get;
@@ -460,6 +462,8 @@ public abstract class Folks.PersonaStore : Object
    *
    * @since 0.3.1
    */
+  [Deprecated (since = "UNRELEASED",
+      replacement = "PersonaStore.always_writeable_properties")]
   public abstract MaybeBool can_group_personas
     {
       get;
