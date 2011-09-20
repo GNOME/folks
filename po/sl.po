@@ -374,14 +374,14 @@ msgstr "Napaka ustvarjanja kanala za signal NewChannels."
 #: ../backends/telepathy/lib/tpf-persona-store.vala:1134
 #, c-format
 msgid "Failed to add Telepathy contact ‘%s’ to group ‘%s’."
-msgstr "Dodajanje stika Telepathy '%s' v skupino '%s' je spodletelo."
+msgstr "Dodajanje stika Telepathy ‘%s’ v skupino ‘%s’ je spodletelo."
 
 #. Translators: the parameter is a persona identifier
 #. * and the second parameter is a group name.
 #: ../backends/telepathy/lib/tpf-persona-store.vala:1142
 #, c-format
 msgid "Failed to remove Telepathy contact ‘%s’ from group ‘%s’."
-msgstr "Odstranjevanje stika Telepathy '%s' iz skupine '%s' je spodletelo."
+msgstr "Odstranjevanje stika Telepathy ‘%s’ iz skupine ‘%s’ je spodletelo."
 
 #: ../backends/telepathy/lib/tpf-persona-store.vala:1496
 msgid "Telepathy contacts representing the local user may not be removed."
@@ -399,7 +399,7 @@ msgstr "Stikov Telepathy, ki predstavljajo krajevnega uporabnika ni mogoče odst
 #: ../backends/telepathy/lib/tpf-persona-store.vala:1714
 #, c-format
 msgid "Failed to remove Telepathy contact ‘%s’ from ‘%s’ list: %s"
-msgstr "Odstranjevanje stika Telepathy iz skupine '%s' je spodletelo: %s"
+msgstr "Odstranjevanje stika Telepathy ‘%s’ iz seznama ‘%s’ je spodletelo: %s"
 
 #. Translators: The first parameter is a contact identifier,
 #. * the second is a contact list identifier and the third is an
@@ -407,14 +407,14 @@ msgstr "Odstranjevanje stika Telepathy iz skupine '%s' je spodletelo: %s"
 #: ../backends/telepathy/lib/tpf-persona-store.vala:1704
 #, c-format
 msgid "Failed to add Telepathy contact ‘%s’ to ‘%s’ list: %s"
-msgstr "Dodajanje stika Telepathy '%s' na seznam stikov '%s' je spodletelo: %s"
+msgstr "Dodajanje stika Telepathy ‘%s’ na seznam stikov ‘%s’ je spodletelo: %s"
 
 #. Translators: the first parameter is a channel identifier and
 #. * the second is an error message..
 #: ../backends/telepathy/lib/tpf-persona-store.vala:1816
 #, c-format
 msgid "Failed to create incoming Telepathy contacts from channel ‘%s’: %s"
-msgstr "Ustvarjanje prihajajočih stikov Telepathy preko kanala '%s' je spodletelo: %s"
+msgstr "Ustvarjanje prihajajočih stikov Telepathy preko kanala ‘%s’ je spodletelo: %s"
 
 #. Translators: the first two parameters are store identifiers and
 #. * the third is a contact identifier.
@@ -625,7 +625,7 @@ msgstr[3] "Uvoženi so %u stiki iz '%s'."
 #: ../tools/import-pidgin.vala:163
 #, c-format
 msgid "Error changing group of contact ‘%s’: %s"
-msgstr "Napaka med spreminjanjem skupine stika '%s': %s\n"
+msgstr "Napaka med spreminjanjem skupine stika ‘%s’: %s"
 
 #. Translators: the parameter is the buddy's IM address.
 #: ../tools/import-pidgin.vala:219
@@ -644,7 +644,7 @@ msgid ""
 "%s\n"
 "Error: %s\n"
 msgstr ""
-"Spodletelo je ustvarjanje novega stika osebe z vzdevkom '%s' in hipnimi naslovi:\n"
+"Spodletelo je ustvarjanje novega stika osebe z vzdevkom ‘%s’ in hipnimi naslovi:\n"
 "%s\n"
 "Napaka: %s\n"
 
@@ -657,7 +657,7 @@ msgid ""
 "Created contact ‘%s’ for buddy with alias ‘%s’ and IM addresses:\n"
 "%s"
 msgstr ""
-"Ustvarjen je stik '%s' za osebo z vzdevkom '%s' in hipnimi naslovi:\n"
+"Ustvarjen je stik ‘%s’ za osebo z vzdevkom ‘%s’ in hipnimi naslovi:\n"
 "%s"
 
 #: ../tools/import.vala:44
@@ -695,18 +695,18 @@ msgstr "Ni mogoče naložiti ozadnrga programa ‘%s’."
 #: ../tools/import.vala:132
 #, c-format
 msgid "Couldn't prepare the ‘%s’ backend: %s"
-msgstr "Ni mogoče pripraviti ozadnjega programa ‘%s’: %s\n"
+msgstr "Ni mogoče pripraviti ozadnjega programa ‘%s’: %s"
 
 #. Translators: the parameter is a backend identifier.
 #: ../tools/import.vala:145
 #, c-format
 msgid "Couldn't load the ‘%s’ backend's persona store."
-msgstr "Ni mogoče naložiti zaloge stika ozadnjega programa ‘%s’.\n"
+msgstr "Ni mogoče naložiti zaloge stika ozadnjega programa ‘%s’."
 
 #: ../tools/import.vala:166
 #, c-format
 msgid "Couldn't prepare the ‘%s’ backend's persona store: %s"
-msgstr "Ni mogoče pripraviti zaloge stika ozadnjega programa ‘%s’: %s\n"
+msgstr "Ni mogoče pripraviti zaloge stika ozadnjega programa ‘%s’: %s"
 
 #. Translators: the parameter is an error message.
 #: ../tools/import.vala:184
@@ -718,25 +718,4 @@ msgstr "Napaka med uvažanjem stikov: %s"
 #: ../tools/import.vala:198
 #, c-format
 msgid "Unrecognized source backend name ‘%s’. ‘%s’ is currently the only supported source backend."
-msgstr "Neprepoznano ime ozadnjega programa vira '%s'. Trenutno je podprt le ozadnji program vira ‘%s’.\n"
-
-#~ msgid "Failed to remove persona '%s' (%s) from 'stored' list: %s"
-#~ msgstr ""
-#~ "Odstranjevanje stika '%s' (%s) iz seznama 'zaloge' je spodletelo: %s"
-
-#~ msgid "Failed to remove persona '%s' (%s) from 'subscribe' list: %s"
-#~ msgstr ""
-#~ "Odstranjevanje stika '%s' (%s) iz seznama 'naročil' je spodletelo: %s"
-
-#~ msgid "Failed to remove persona '%s' (%s) from 'publish' list: %s"
-#~ msgstr ""
-#~ "Odstranjevanje stika '%s' (%s) iz seznama 'objave' je spodletelo: %s"
-
-#~ msgid "Failed to remove persona '%s' from contact list '%s': %s"
-#~ msgstr "Odstranjevanje stika '%s' s seznama stikov '%s' je spodletelo: %s"
-
-#~ msgid "Failed to change a persona's favorite status."
-#~ msgstr "Spreminjanje priljubljenega stanja stika je spodletelo."
-
-#~ msgid "Couldn't load the 'key-file' backend.\n"
-#~ msgstr "Ni mogoče naložiti ozadnjega programa'datoteke-ključa'.\n"
+msgstr "Neprepoznano ime ozadnjega programa vira '%s'. Trenutno je podprt le ozadnji program vira ‘%s’."
