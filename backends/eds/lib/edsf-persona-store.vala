@@ -40,7 +40,6 @@ public class Edsf.PersonaStore : Folks.PersonaStore
   private bool _is_quiescent = false;
   private E.BookClient _addressbook;
   private E.BookClientView _ebookview;
-  private string _addressbook_uri = null;
   private E.SourceList? _source_list = null;
   private E.Source _source;
   private string _query_str;
@@ -202,10 +201,9 @@ public class Edsf.PersonaStore : Folks.PersonaStore
    */
   public PersonaStore (E.Source s)
     {
-      string uri = s.peek_relative_uri ();
-      Object (id: uri, display_name: uri);
+      string eds_uid = s.peek_uid ();
+      Object (id: eds_uid, display_name: eds_uid);
       this._source = s;
-      this._addressbook_uri =  uri;
       this._personas = new HashMap<string, Persona> ();
       this._personas_ro = this._personas.read_only_view;
       this._query_str = "(contains \"x-evolution-any-field\" \"\")";
@@ -1878,8 +1876,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
         {
           foreach (var s in g.peek_sources ())
             {
-              if (s.peek_relative_uri () == this.id &&
-                  s.peek_uid () == this._addressbook.get_source ().peek_uid ())
+              if (s.peek_uid () == this.id)
                 {
                   /* We've found ourself. */
                   return true;

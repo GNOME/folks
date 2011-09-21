@@ -175,9 +175,8 @@ public class Folks.Backends.Eds.Backend : Folks.Backend
                   continue;
                 }
 
-              var source_uri = s.peek_relative_uri ();
-
-              if (!this._persona_stores.has_key (source_uri))
+              var uid = s.peek_uid ();
+              if (!this._persona_stores.has_key (uid))
                 {
                   added_sources.add (s);
                 }
@@ -197,12 +196,11 @@ public class Folks.Backends.Eds.Backend : Folks.Backend
    */
   private void _add_address_book (E.Source s)
     {
-      string relative_uri = s.peek_relative_uri ();
-
-      if (this._persona_stores.has_key (relative_uri))
+      string uid = s.peek_uid ();
+      if (this._persona_stores.has_key (uid))
         return;
 
-      debug ("Adding address book '%s'.", relative_uri);
+      debug ("Adding address book '%s'.", uid);
 
       var store = new Edsf.PersonaStore (s);
 
