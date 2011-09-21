@@ -121,7 +121,7 @@ MAINTAINERCLEANFILES =
 # We have to extract our own dlname from libfolks.la; see bgo#658002.
 # This is what g-ir-scanner does.
 libfolks_dlname = \
-	`$(SED) -n "s/^dlname='\([A-Za-z0-9.-+]\+\)'/\1/p" libfolks.la`
+	`$(SED) -n "s/^dlname='\([A-Za-z0-9.+-]\+\)'/\1/p" libfolks.la`
 
 -include $(INTROSPECTION_MAKEFILE)
 INTROSPECTION_GIRS =
