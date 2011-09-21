@@ -88,8 +88,10 @@ public class ChangePrimaryStoreTests : Folks.TestCase
         {
           yield this._aggregator.prepare ();
 
-          this._pstore1 = this._get_persona_store (store, "system");
-          this._pstore2 = this._get_persona_store (store, "other");
+          this._pstore1 = this._get_persona_store (store,
+              this._eds_backend.address_book_uid);
+          this._pstore2 = this._get_persona_store (store,
+              this._eds_backend_other.address_book_uid);
 
           assert (this._pstore1 != null);
           assert (this._pstore2 != null);

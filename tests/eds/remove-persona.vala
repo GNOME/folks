@@ -91,7 +91,9 @@ public class RemovePersonaTests : Folks.TestCase
           this._pstore = null;
           foreach (var backend in store.enabled_backends.values)
             {
-              this._pstore = backend.persona_stores.get ("local://test");
+              this._pstore =
+                (Edsf.PersonaStore) backend.persona_stores.get (
+                    this._eds_backend.address_book_uid);
               if (this._pstore != null)
                 break;
             }

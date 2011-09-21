@@ -134,7 +134,8 @@ public class AddPersonaTests : Folks.TestCase
           foreach (var backend in store.enabled_backends.values)
             {
               this._pstore =
-                (Edsf.PersonaStore) backend.persona_stores.get ("local://test");
+                (Edsf.PersonaStore) backend.persona_stores.get (
+                    this._eds_backend.address_book_uid);
               if (this._pstore != null)
                 break;
             }
