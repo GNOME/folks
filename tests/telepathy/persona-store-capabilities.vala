@@ -94,6 +94,8 @@ public class PersonaStoreCapabilitiesTests : Folks.TestCase
 
       assert (this.group_flags_received.contains ("can-add-personas"));
       assert (this.group_flags_received.contains ("can-remove-personas"));
+      assert (!this.group_flags_received.contains ("can-alias-personas"));
+      assert (!this.group_flags_received.contains ("can-group-personas"));
     }
 
   private void set_up_persona_store (Folks.PersonaStore store)

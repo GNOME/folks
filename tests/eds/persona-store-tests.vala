@@ -25,6 +25,7 @@ using Gee;
 public class PersonaStoreTests : Folks.TestCase
 {
   private EdsTest.Backend _eds_backend;
+  private HashSet<string> _capabilities_received;
 
   public PersonaStoreTests ()
     {
@@ -35,6 +36,8 @@ public class PersonaStoreTests : Folks.TestCase
 
   public override void set_up ()
     {
+      this._capabilities_received = new HashSet<string> ();
+
       this._eds_backend.set_up ();
     }
 
@@ -99,6 +102,11 @@ public class PersonaStoreTests : Folks.TestCase
 
       main_loop.run ();
 
+      assert (this._capabilities_received.contains ("can-add-personas"));
+      assert (this._capabilities_received.contains ("can-remove-personas"));
+      assert (!this._capabilities_received.contains ("can-alias-personas"));
+      assert (this._capabilities_received.contains ("can-group-personas"));
+
       this._eds_backend.tear_down ();
     }
 
@@ -145,6 +153,8 @@ public class PersonaStoreTests : Folks.TestCase
         {
           assert (store.can_add_personas == MaybeBool.TRUE);
 
+          this._capabilities_received.add ("can-add-personas");
+
           store.notify["can-add-personas"].disconnect (
               this._can_add_personas_cb);
         }
@@ -159,6 +169,8 @@ public class PersonaStoreTests : Folks.TestCase
         {
           assert (store.can_remove_personas == MaybeBool.TRUE);
 
+          this._capabilities_received.add ("can-remove-personas");
+
           store.notify["can-remove-personas"].disconnect (
               this._can_remove_personas_cb);
         }
@@ -171,6 +183,7 @@ public class PersonaStoreTests : Folks.TestCase
 
       if ("alias" in store.always_writeable_properties)
         {
+          this._capabilities_received.add ("can-alias-personas");
         }
     }
 
@@ -181,6 +194,7 @@ public class PersonaStoreTests : Folks.TestCase
 
       if ("groups" in store.always_writeable_properties)
         {
+          this._capabilities_received.add ("can-group-personas");
         }
     }
 }
