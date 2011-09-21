@@ -122,17 +122,11 @@ public class PersonaStoreTests : Folks.TestCase
                 store.notify["can-remove-personas"].connect (
                     this._can_remove_personas_cb);
 
-              if (store.can_alias_personas != MaybeBool.UNSET)
-                this._can_alias_personas_cb (store, null);
-              else
-                store.notify["can-alias-personas"].connect (
-                    this._can_alias_personas_cb);
+              if ("alias" in store.always_writeable_properties)
+                this._check_can_alias_personas (store, null);
 
-              if (store.can_group_personas != MaybeBool.UNSET)
-                this._can_group_personas_cb (store, null);
-              else
-                store.notify["can-group-personas"].connect (
-                    this._can_group_personas_cb);
+              if ("groups" in store.always_writeable_properties)
+                this._check_can_group_personas (store, null);
             }
           catch (GLib.Error e)
             {
@@ -170,31 +164,23 @@ public class PersonaStoreTests : Folks.TestCase
         }
     }
 
-  private void _can_alias_personas_cb (GLib.Object s, ParamSpec? p)
+  private void _check_can_alias_personas (GLib.Object s, ParamSpec? p)
     {
       assert (s is Edsf.PersonaStore);
       var store = (Edsf.PersonaStore) s;
 
-      if (store.can_alias_personas != MaybeBool.UNSET)
+      if ("alias" in store.always_writeable_properties)
         {
-          assert (store.can_alias_personas == MaybeBool.FALSE);
-
-          store.notify["can-alias-personas"].disconnect (
-              this._can_alias_personas_cb);
         }
     }
 
-  private void _can_group_personas_cb (GLib.Object s, ParamSpec? p)
+  private void _check_can_group_personas (GLib.Object s, ParamSpec? p)
     {
       assert (s is Edsf.PersonaStore);
       var store = (Edsf.PersonaStore) s;
 
-      if (store.can_group_personas != MaybeBool.UNSET)
+      if ("groups" in store.always_writeable_properties)
         {
-          assert (store.can_group_personas == MaybeBool.TRUE);
-
-          store.notify["can-group-personas"].disconnect (
-              this._can_group_personas_cb);
         }
     }
 }

@@ -116,17 +116,11 @@ public class PersonaStoreCapabilitiesTests : Folks.TestCase
                 store.notify["can-remove-personas"].connect (
                     this.can_remove_personas_cb);
 
-              if (store.can_alias_personas != MaybeBool.UNSET)
-                can_alias_personas_cb (store, null);
-              else
-                store.notify["can-alias-personas"].connect (
-                    this.can_alias_personas_cb);
+              if ("alias" in store.always_writeable_properties)
+                check_can_alias_personas (store, null);
 
-              if (store.can_group_personas != MaybeBool.UNSET)
-                can_group_personas_cb (store, null);
-              else
-                store.notify["can-group-personas"].connect (
-                    this.can_group_personas_cb);
+              if ("groups" in store.always_writeable_properties)
+                check_can_group_personas_cb (store, null);
             }
           catch (GLib.Error e)
             {
@@ -168,36 +162,22 @@ public class PersonaStoreCapabilitiesTests : Folks.TestCase
         }
     }
 
-  private void can_alias_personas_cb (GLib.Object s, ParamSpec? p)
+  private void check_can_alias_personas (GLib.Object s, ParamSpec? p)
     {
       assert (s is Tpf.PersonaStore);
       var store = (Tpf.PersonaStore) s;
 
-      if (store.can_alias_personas != MaybeBool.UNSET)
-        {
-          assert (store.can_alias_personas == MaybeBool.TRUE);
-
-          this.group_flags_received.add ("can-alias-personas");
-
-          store.notify["can-alias-personas"].disconnect (
-              this.can_alias_personas_cb);
-        }
+      if ("alias" in store.always_writeable_properties)
+        this.group_flags_received.add ("can-alias-personas");
     }
 
-  private void can_group_personas_cb (GLib.Object s, ParamSpec? p)
+  private void check_can_group_personas_cb (GLib.Object s, ParamSpec? p)
     {
       assert (s is Tpf.PersonaStore);
       var store = (Tpf.PersonaStore) s;
 
-      if (store.can_group_personas != MaybeBool.UNSET)
-        {
-          assert (store.can_group_personas == MaybeBool.TRUE);
-
-          this.group_flags_received.add ("can-group-personas");
-
-          store.notify["can-group-personas"].disconnect (
-              this.can_group_personas_cb);
-        }
+      if ("groups" in store.always_writeable_properties)
+        this.group_flags_received.add ("can-group-personas");
     }
 }
 

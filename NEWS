@@ -3,6 +3,7 @@ Overview of changes from libfolks 0.6.3 to libfolks 0.6.4
 Bugs fixed:
 * Bug 658631 — Deprecate PersonaStore.can-[alias|group]-personas
 * Bug 658002 — defective typelib
+* Bug 659737 — tests fail due to usage of deprecated methods
 
 API changes:
 * Deprecate Folks.PersonaStore.can_[alias, group]_personas.
