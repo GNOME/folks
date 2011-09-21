@@ -98,11 +98,7 @@ public class Folks.Backends.Tp.Backend : Folks.Backend
               this._account_manager.account_enabled.connect (
                   this._account_enabled_cb);
               this._account_manager.account_validity_changed.connect (
-                  (a, valid) =>
-                    {
-                      if (valid)
-                        this._account_enabled_cb (a);
-                    });
+                  this._account_validity_changed_cb);
 
               GLib.List<unowned Account> accounts =
                   this._account_manager.get_valid_accounts ();
