@@ -28,7 +28,7 @@ public class PersonaStoreCapabilitiesTests : Folks.TestCase
 {
   private TpTest.Backend tp_backend;
   private void* _account_handle;
-  private HashSet<string> group_flags_received;
+  private HashSet<string> _capabilities_received;
   private int _test_timeout = 3;
 
   public PersonaStoreCapabilitiesTests ()
@@ -46,7 +46,7 @@ public class PersonaStoreCapabilitiesTests : Folks.TestCase
 
   public override void set_up ()
     {
-      this.group_flags_received = new HashSet<string> (str_hash, str_equal);
+      this._capabilities_received = new HashSet<string> ();
 
       this.tp_backend.set_up ();
       this._account_handle = this.tp_backend.add_account ("protocol",
@@ -92,10 +92,10 @@ public class PersonaStoreCapabilitiesTests : Folks.TestCase
 
       main_loop.run ();
 
-      assert (this.group_flags_received.contains ("can-add-personas"));
-      assert (this.group_flags_received.contains ("can-remove-personas"));
-      assert (!this.group_flags_received.contains ("can-alias-personas"));
-      assert (!this.group_flags_received.contains ("can-group-personas"));
+      assert (this._capabilities_received.contains ("can-add-personas"));
+      assert (this._capabilities_received.contains ("can-remove-personas"));
+      assert (!this._capabilities_received.contains ("can-alias-personas"));
+      assert (!this._capabilities_received.contains ("can-group-personas"));
     }
 
   private void set_up_persona_store (Folks.PersonaStore store)
@@ -141,7 +141,7 @@ public class PersonaStoreCapabilitiesTests : Folks.TestCase
         {
           assert (store.can_add_personas == MaybeBool.TRUE);
 
-          this.group_flags_received.add ("can-add-personas");
+          this._capabilities_received.add ("can-add-personas");
 
           store.notify["can-add-personas"].disconnect (
               this.can_add_personas_cb);
@@ -157,7 +157,7 @@ public class PersonaStoreCapabilitiesTests : Folks.TestCase
         {
           assert (store.can_remove_personas == MaybeBool.TRUE);
 
-          this.group_flags_received.add ("can-remove-personas");
+          this._capabilities_received.add ("can-remove-personas");
 
           store.notify["can-remove-personas"].disconnect (
               this.can_remove_personas_cb);
@@ -170,7 +170,7 @@ public class PersonaStoreCapabilitiesTests : Folks.TestCase
       var store = (Tpf.PersonaStore) s;
 
       if ("alias" in store.always_writeable_properties)
-        this.group_flags_received.add ("can-alias-personas");
+        this._capabilities_received.add ("can-alias-personas");
     }
 
   private void check_can_group_personas_cb (GLib.Object s, ParamSpec? p)
@@ -179,7 +179,7 @@ public class PersonaStoreCapabilitiesTests : Folks.TestCase
       var store = (Tpf.PersonaStore) s;
 
       if ("groups" in store.always_writeable_properties)
-        this.group_flags_received.add ("can-group-personas");
+        this._capabilities_received.add ("can-group-personas");
     }
 }
 
