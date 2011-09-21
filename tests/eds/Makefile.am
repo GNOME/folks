@@ -72,6 +72,7 @@ noinst_PROGRAMS = \
 	set-birthday \
 	set-roles \
 	change-primary-store \
+	link-personas-diff-stores \
 	$(NULL)
 
 RUN_WITH_PRIVATE_BUS = $(top_srcdir)/tests/tools/with-session-bus-eds.sh
@@ -206,6 +207,10 @@ change_primary_store_SOURCES = \
 	change-primary-store.vala \
 	$(NULL)
 
+link_personas_diff_stores_SOURCES = \
+	link-personas-diff-stores.vala \
+	$(NULL)
+
 CLEANFILES = \
         *.pid \
         *.address \
@@ -243,6 +248,7 @@ MAINTAINERCLEANFILES = \
 	set_birthday_vala.stamp \
 	set_roles_vala.stamp \
 	change_primary_store_vala.stamp \
+	link_personas_diff_stores_vala.stamp \
         $(NULL)
 
 EXTRA_DIST = \

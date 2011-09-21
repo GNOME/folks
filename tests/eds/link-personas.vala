@@ -26,7 +26,6 @@ enum LinkingMethod
   IM_ADDRESSES,
   LOCAL_IDS,
   WEB_SERVICE_ADDRESSES,
-  LOCAL_IDS_DIFF_STORES,
   EMAIL_AS_IM_ADDRESS
 }
 
@@ -35,7 +34,6 @@ public class LinkPersonasTests : Folks.TestCase
 {
   private GLib.MainLoop _main_loop;
   private EdsTest.Backend? _eds_backend;
-  private EdsTest.Backend? _eds_backend_other;
   private IndividualAggregator _aggregator;
   private string _persona_fullname_1;
   private string _persona_fullname_2;
@@ -48,7 +46,6 @@ public class LinkPersonasTests : Folks.TestCase
   private string _persona_iid_1;
   private string _persona_iid_2;
   private HashSet<Persona> _personas;
-  private int _removed_individuals;
   private Gee.HashMap<string, string> _linking_props;
   private LinkingMethod _linking_method;
 
@@ -62,8 +59,6 @@ public class LinkPersonasTests : Folks.TestCase
           this.test_linking_personas_via_local_ids);
       this.add_test ("test linking personas via web service addresses",
           this.test_linking_personas_via_web_service_addresses);
-      this.add_test ("test linking via local IDs using different PersonaStores",
-          this.test_linking_via_local_ids_diff_stores);
       this.add_test ("test auto linking via e-mail address as IM address",
           this.test_linking_via_email_as_im_address);
     }
@@ -71,26 +66,20 @@ public class LinkPersonasTests : Folks.TestCase
   public override void set_up ()
     {
       this._eds_backend = new EdsTest.Backend ();
-      this._eds_backend_other = new EdsTest.Backend ();
-      this._eds_backend_other.address_book_uri = "local://other";
+      this._eds_backend.set_up ();
 
       /* We configure eds as the primary store */
-      var config_val = "eds:%s".printf (this._eds_backend.address_book_uri);
+      var config_val = "eds:%s".printf (this._eds_backend.address_book_uid);
       Environment.set_variable ("FOLKS_PRIMARY_STORE", config_val, true);
-
-      this._eds_backend.set_up ();
-      this._eds_backend_other.set_up ();
     }
 
   public override void tear_down ()
     {
       this._eds_backend.tear_down ();
-      this._eds_backend_other.tear_down ();
 
       Environment.unset_variable ("FOLKS_PRIMARY_STORE");
 
       this._eds_backend = null;
-      this._eds_backend_other = null;
     }
 
   public void test_linking_personas_via_im_addresses ()
@@ -111,12 +100,6 @@ public class LinkPersonasTests : Folks.TestCase
       this._test_linking_personas ();
     }
 
-  public void test_linking_via_local_ids_diff_stores ()
-    {
-      this._linking_method = LinkingMethod.LOCAL_IDS_DIFF_STORES;
-      this._test_linking_personas ();
-    }
-
   public void test_linking_via_email_as_im_address ()
     {
       this._linking_method = LinkingMethod.EMAIL_AS_IM_ADDRESS;
@@ -129,7 +112,6 @@ public class LinkPersonasTests : Folks.TestCase
       this._persona_fullname_1 = "persona #1";
       this._persona_fullname_2 = "persona #2";
       this._personas = new HashSet<Persona> ();
-      this._removed_individuals = 0;
       this._persona_found_1 = false;
       this._persona_found_2 = false;
       this._linking_fired = false;
@@ -159,12 +141,6 @@ public class LinkPersonasTests : Folks.TestCase
 
       this._main_loop.run ();
 
-      /* Check we get the new individual (containing the linked
-       * personas) and that the previous ones were removed. */
-      assert (this._linking_props.size == 0);
-      if (this._linking_method != LinkingMethod.EMAIL_AS_IM_ADDRESS)
-        assert (this._removed_individuals == 2);
-
       GLib.Source.remove (timer_id);
       this._aggregator = null;
       this._main_loop = null;
@@ -181,24 +157,24 @@ public class LinkPersonasTests : Folks.TestCase
         {
           yield this._aggregator.prepare ();
 
-          var pstore = this._get_store (store, "local://test");
-
+          var pstore = this._get_store (store,
+              this._eds_backend.address_book_uid);
           assert (pstore != null);
 
-          if (this._linking_method == LinkingMethod.LOCAL_IDS_DIFF_STORES)
-            {
-              var pstore2 = this._get_store (store,
-                  this._eds_backend_other.address_book_uri);
-              assert (pstore2 != null);
-              yield this._add_personas (pstore, pstore2);
-            }
-          else
+          pstore.notify["is-prepared"].connect (this._notify_pstore_cb);
+          if (pstore.is_prepared)
             yield this._add_personas (pstore, pstore);
         }
       catch (GLib.Error e)
         {
           GLib.warning ("Error when calling prepare: %s\n", e.message);
         }
+    }
+
+  private void _notify_pstore_cb (Object _pstore, ParamSpec ps)
+    {
+      var pstore = (PersonaStore) _pstore;
+      this._add_personas (pstore, pstore);
     }
 
   private PersonaStore? _get_store (BackendStore store, string store_id)
@@ -333,7 +309,6 @@ public class LinkPersonasTests : Folks.TestCase
        MultiMap<Individual?, Individual?> changes)
     {
       var added = changes.get_values ();
-      var removed = changes.get_keys ();
 
       foreach (var i in added)
         {
@@ -346,14 +321,6 @@ public class LinkPersonasTests : Folks.TestCase
             this._check_auto_linked_personas (i);
           else
             this._check_personas (i);
-        }
-
-      foreach (var i in removed)
-        {
-          if (i != null)
-            {
-              this._removed_individuals++;
-            }
         }
     }
 
@@ -369,6 +336,13 @@ public class LinkPersonasTests : Folks.TestCase
    */
   private async void _check_personas (Individual i)
     {
+      if (this._linking_props.size == 0 &&
+          this._linking_fired)
+        {
+          /* All is done. */
+          return;
+        }
+
       Persona first_persona = null;
       foreach (var p in i.personas)
         {
@@ -487,6 +461,12 @@ public class LinkPersonasTests : Folks.TestCase
    */
   private async void _check_auto_linked_personas (Individual i)
     {
+      if (this._linking_props.size == 0)
+        {
+          /* Don't even bother. */
+          return;
+        }
+
       if (i.personas.size > 1)
         {
           foreach (var email in i.email_addresses)
