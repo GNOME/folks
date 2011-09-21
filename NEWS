@@ -12,6 +12,8 @@ Bugs fixed:
 * Bug 662314 — Gnome-shell restarts if I change my user status to
   disconnected/unavailable
 * Bug 663798 — Add AbstractFieldDetails.value_type
+* Bug 659585 — GLib-GIO-CRITICAL **: g_bus_unwatch_name: assertion
+  `watcher_id > 0' failed
 
 API changes:
 * Add AbstractFieldDetails.id to identify instances of details

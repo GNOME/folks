@@ -60,7 +60,11 @@ internal class Logger : GLib.Object
 
   ~Logger ()
     {
-      Bus.unwatch_name (this._logger_watch_id);
+      /* Can only be 0 if prepare() hasn't been called. */
+      if (this._logger_watch_id > 0)
+        {
+          Bus.unwatch_name (this._logger_watch_id);
+        }
     }
 
   public async bool prepare () throws GLib.Error
