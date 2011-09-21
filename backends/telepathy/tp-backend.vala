@@ -125,6 +125,9 @@ public class Folks.Backends.Tp.Backend : Folks.Backend
    */
   public override async void unprepare () throws GLib.Error
     {
+      if (!this._is_prepared)
+        return;
+
       this._account_manager.account_enabled.disconnect (
           this._account_enabled_cb);
       this._account_manager.account_validity_changed.disconnect (
