@@ -178,10 +178,13 @@ public class LinkPersonasDiffStoresTests : Folks.TestCase
   private void _individuals_changed_cb (
        MultiMap<Individual?, Individual?> changes)
     {
-      this._individuals_changed_async (changes);
+      this._individuals_changed_async.begin (changes, (object, result) =>
+          {
+            this._individuals_changed_async.end (result);
+          });
     }
 
-  private void _individuals_changed_async (
+  private async void _individuals_changed_async (
        MultiMap<Individual?, Individual?> changes)
     {
       var added = changes.get_values ();
@@ -193,7 +196,7 @@ public class LinkPersonasDiffStoresTests : Folks.TestCase
               continue;
             }
 
-          this._check_personas (i);
+          yield this._check_personas (i);
         }
     }
 
