@@ -209,6 +209,10 @@ public class LinkPersonasDiffStoresTests : Folks.TestCase
    */
   private async void _check_personas (Individual i)
     {
+      /* Exit early if this is a lingering callback */
+      if (this._linked_individual_found == true)
+        return;
+
       Persona first_persona = null;
       foreach (var p in i.personas)
         {
