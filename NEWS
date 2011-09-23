@@ -7,6 +7,8 @@ Bugs fixed:
 * Bug 658631 — Deprecate PersonaStore.can-[alias|group]-personas
 * Bug 658002 — defective typelib
 * Bug 659737 — tests fail due to usage of deprecated methods
+* Bug 659732 — Gnome fails to load and crashes when the Evolution-exchange
+  plugin is configured
 
 API changes:
 * Deprecate Folks.PersonaStore.can_[alias, group]_personas.
