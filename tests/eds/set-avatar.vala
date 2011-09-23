@@ -151,7 +151,11 @@ public class SetAvatarTests : Folks.TestCase
               if (TestUtils.loadable_icons_content_equal.end (result))
                 {
                   this._found_after_update = true;
-                  this._main_loop.quit ();
+
+                  /* we can reach this point multiple times, so we need to make
+                   * sure the main loop is still valid */
+                  if (this._main_loop != null)
+                    this._main_loop.quit ();
                 }
             });
         }
@@ -235,7 +239,11 @@ public class SetAvatarTests : Folks.TestCase
                                   this._check_individual_has_avatar.end (res)
                                       == true);
 
-                              this._main_loop.quit ();
+                              /* we can reach this point multiple times, so we
+                               * need to make sure the main loop is still valid
+                               */
+                              if (this._main_loop != null)
+                                this._main_loop.quit ();
                             });
                         }
                       catch (PropertyError e)
