@@ -533,7 +533,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
    *
    * See {@link Folks.PersonaStore.prepare}.
    */
-  public override async void prepare ()
+  public override async void prepare () throws GLib.Error
     {
       lock (this._is_prepared)
         {
@@ -579,6 +579,9 @@ public class Tpf.PersonaStore : Folks.PersonaStore
                       _("Couldn't connect to the telepathy-logger service."));
                   this._logger = null;
                 }
+
+              /* Ensure the account's prepared first. */
+              yield this.account.prepare_async (null);
 
               this.account.status_changed.connect (
                   this._account_status_changed_cb);
