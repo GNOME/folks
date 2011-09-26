@@ -130,8 +130,8 @@ GLIB_REQUIRED=2.24.0
 TP_GLIB_REQUIRED=0.13.1
 VALA_REQUIRED=0.13.4
 VALADOC_REQUIRED=0.3.1
-TRACKER_SPARQL_REQUIRED=0.10
-TRACKER_SPARQL_NEWER_VER=0.10.6
+TRACKER_SPARQL_REQUIRED=0.12
+TRACKER_SPARQL_NEWER_VER=0.12.0
 GCONF2_REQUIRED=2.31
 EBOOK_REQUIRED=3.1.5
 EDATASERVER_REQUIRED=3.1.5
@@ -153,14 +153,7 @@ if test x$enable_tracker_backend = xyes; then
 	# when calling Tracker.Sparql.Connection.get (). So we need to test
 	# for the installed version and catch or not the exception, accordingly.
         PKG_CHECK_MODULES([TRACKER_SPARQL],
-                          [tracker-sparql-0.10 >= $TRACKER_SPARQL_NEWER_VER],
-			  [AM_CONDITIONAL(HAVE_NEW_TRACKER, [ test 1 == 1 ])],
-			  [PKG_CHECK_MODULES([TRACKER_SPARQL],
-                                             [tracker-sparql-0.10 >= $TRACKER_SPARQL_REQUIRED],
-					     [AM_CONDITIONAL(HAVE_NEW_TRACKER, [ test 0 == 1 ])])]
-			  )
-else
-	AM_CONDITIONAL(HAVE_NEW_TRACKER, [ test 0 == 1 ])
+                          [tracker-sparql-0.12 >= $TRACKER_SPARQL_NEWER_VER])
 fi
 
 if test x$enable_eds_backend = xyes; then

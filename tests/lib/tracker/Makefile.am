@@ -1,7 +1,3 @@
-if HAVE_NEW_TRACKER
-TRACKER_VER_CONSTANTS = -D USE_NEW_SPAWN_EXCEPTION
-endif
-
 VALAFLAGS += \
 	$(ERROR_VALAFLAGS) \
 	--library=tracker-test \
@@ -16,7 +12,6 @@ VALAFLAGS += \
 	--pkg tracker-sparql-0.10 \
 	--pkg folks-tracker \
 	-g \
-	$(TRACKER_VER_CONSTANTS) \
 	$(NULL)
 
 noinst_LTLIBRARIES = libtracker-test.la
