@@ -1947,12 +1947,12 @@ public class Edsf.PersonaStore : Folks.PersonaStore
     {
       bool is_default = false;
 
-      E.SourceList sources;
       try
         {
           /* By peeking at the default source instead of checking the value of
            * the "default" property, we include EDS's fallback logic for the
            * "system" address book */
+          E.SourceList sources;
           E.BookClient.get_sources (out sources);
           var default_source = sources.peek_default_source ();
           if (default_source != null &&
