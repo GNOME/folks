@@ -1,5 +1,7 @@
 Overview of changes from libfolks 0.6.3.1 to libfolks 0.6.4
 ===========================================================
+* Bug 660140 — contacts_contact_find_persona_from_store: assertion `store !=
+  NULL' failed
 
 Overview of changes from libfolks 0.6.3 to libfolks 0.6.3.1
 ===========================================================

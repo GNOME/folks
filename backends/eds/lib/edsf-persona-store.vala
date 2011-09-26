@@ -1946,9 +1946,25 @@ public class Edsf.PersonaStore : Folks.PersonaStore
   private void _notify_if_default ()
     {
       bool is_default = false;
-      if (this._source.get_property ("default") == "true")
+
+      E.SourceList sources;
+      try
         {
-          is_default = true;
+          /* By peeking at the default source instead of checking the value of
+           * the "default" property, we include EDS's fallback logic for the
+           * "system" address book */
+          E.BookClient.get_sources (out sources);
+          var default_source = sources.peek_default_source ();
+          if (default_source != null &&
+              this._source.peek_uid () == default_source.peek_uid ())
+            {
+              is_default = true;
+            }
+        }
+      catch (GLib.Error e)
+        {
+          warning ("Failed to get the set of ESources while looking for a " +
+              "default address book: %s", e);
         }
 
       if (is_default != this.is_user_set_default)
