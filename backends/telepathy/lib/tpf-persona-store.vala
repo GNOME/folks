@@ -583,18 +583,14 @@ public class Tpf.PersonaStore : Folks.PersonaStore
               /* Ensure the account's prepared first. */
               yield this.account.prepare_async (null);
 
-              this.account.status_changed.connect (
-                  this._account_status_changed_cb);
+              this.account.notify["connection"].connect (
+                  this._notify_connection_cb);
 
-              TelepathyGLib.ConnectionStatusReason reason;
-              var status = this.account.get_connection_status (out reason);
               /* immediately handle accounts which are not currently being
                * disconnected */
-              if (status != TelepathyGLib.ConnectionStatus.DISCONNECTED)
+              if (this.account.connection != null)
                 {
-                  this._account_status_changed_cb (
-                      TelepathyGLib.ConnectionStatus.DISCONNECTED, status,
-                      reason, null, null);
+                  this._notify_connection_cb (this.account, null);
                 }
               else
                 {
@@ -759,16 +755,15 @@ public class Tpf.PersonaStore : Folks.PersonaStore
         }
     }
 
-  /* FIXME: the second generic type for details is "weak GLib.Value", but Vala
-   * doesn't accept it as a generic type */
-  private void _account_status_changed_cb (uint old_status, uint new_status,
-      uint reason, string? dbus_error_name,
-      GLib.HashTable<weak string, weak void*>? details)
+  private void _notify_connection_cb (Object s, ParamSpec? p)
     {
-      debug ("Account '%s' changed status from %u to %u.", this.id, old_status,
-          new_status);
+      var account = s as TelepathyGLib.Account;
 
-      if (new_status == TelepathyGLib.ConnectionStatus.DISCONNECTED)
+      debug ("Account '%s' connection changed to %p", this.id,
+          account.connection);
+
+      /* account disconnected */
+      if (account.connection == null)
         {
           /* When disconnecting, we want the PersonaStore to remain alive, but
            * all its Personas to be removed. We do *not* want the PersonaStore
@@ -780,7 +775,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
            *
            * Before we do this, we store the current set of personas to the
            * cache, assuming we were connected before. */
-          if (old_status == TelepathyGLib.ConnectionStatus.CONNECTED)
+          if (this._conn != null)
             {
               this._store_cache.begin ((o, r) =>
                 {
@@ -814,8 +809,6 @@ public class Tpf.PersonaStore : Folks.PersonaStore
 
           return;
         }
-      else if (new_status != TelepathyGLib.ConnectionStatus.CONNECTED)
-        return;
 
       // We're connected, so can stop advertising personas from the cache
       this._unload_cache ();
