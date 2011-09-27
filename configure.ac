@@ -130,8 +130,8 @@ GLIB_REQUIRED=2.24.0
 TP_GLIB_REQUIRED=0.13.1
 VALA_REQUIRED=0.13.4
 VALADOC_REQUIRED=0.3.1
-TRACKER_SPARQL_REQUIRED=0.12
-TRACKER_SPARQL_NEWER_VER=0.12.0
+TRACKER_SPARQL_MAJOR=0.12
+TRACKER_SPARQL_REQUIRED=0.12.0
 GCONF2_REQUIRED=2.31
 EBOOK_REQUIRED=3.1.5
 EDATASERVER_REQUIRED=3.1.5
@@ -149,11 +149,9 @@ PKG_CHECK_MODULES([GEE], [gee-1.0 < 0.7])
 PKG_CHECK_MODULES([TP_GLIB], [telepathy-glib >= $TP_GLIB_REQUIRED])
 
 if test x$enable_tracker_backend = xyes; then
-	# Starting Tracker 0.10.6, the GLib.SpawnError is exception is thrown
-	# when calling Tracker.Sparql.Connection.get (). So we need to test
-	# for the installed version and catch or not the exception, accordingly.
         PKG_CHECK_MODULES([TRACKER_SPARQL],
-                          [tracker-sparql-0.12 >= $TRACKER_SPARQL_NEWER_VER])
+                          [tracker-sparql-$TRACKER_SPARQL_MAJOR >= \
+                           $TRACKER_SPARQL_REQUIRED])
 fi
 
 if test x$enable_eds_backend = xyes; then
@@ -234,7 +232,7 @@ if test "x$enable_vala" = "xyes" ; then
                              gee-1.0])
 
         if test x$enable_tracker_backend = xyes; then
-          VALA_CHECK_PACKAGES([tracker-sparql-0.10])
+          VALA_CHECK_PACKAGES([tracker-sparql-$TRACKER_SPARQL_MAJOR])
         fi
 
         if test x$enable_eds_backend = xyes; then
