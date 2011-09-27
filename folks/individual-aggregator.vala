@@ -368,6 +368,8 @@ public class Folks.IndividualAggregator : Object
       debug.print_key_value_pairs (domain, level,
           "Ref. count", this.ref_count.to_string (),
           "Primary store", "%p".printf (this._primary_store),
+          "Configured store type id", this._configured_primary_store_type_id,
+          "Configured store id", this._configured_primary_store_id,
           "Linking enabled?", this._linking_enabled ? "yes" : "no",
           "Prepared?", this._is_prepared ? "yes" : "no",
           "Quiescent?", this._is_quiescent
