@@ -43,7 +43,7 @@ libfolks_tracker_la_VALAFLAGS = \
 	--pkg gobject-2.0 \
 	--pkg gio-2.0 \
 	--pkg gee-1.0 \
-	--pkg tracker-sparql-0.10 \
+	--pkg tracker-sparql-0.12 \
 	--includedir folks \
 	--vapi folks-tracker.vapi \
 	-H folks/folks-tracker.h \
@@ -54,7 +54,7 @@ folks_backend_tracker_deps = \
 	gee-1.0 \
 	gio-2.0 \
 	gobject-2.0 \
-	tracker-sparql-0.10 \
+	tracker-sparql-0.12 \
 	$(NULL)
 
 libfolks_tracker_la_CFLAGS = \

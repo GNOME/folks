@@ -9,7 +9,7 @@ VALAFLAGS += \
 	--pkg gio-2.0 \
 	--pkg gee-1.0 \
 	--pkg folks \
-	--pkg tracker-sparql-0.10 \
+	--pkg tracker-sparql-0.12 \
 	--pkg folks-tracker \
 	-g \
 	$(NULL)

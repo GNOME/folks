@@ -36,7 +36,7 @@ AM_VALAFLAGS = \
 	--pkg folks \
 	--pkg folks-test \
 	--pkg folks-tracker \
-	--pkg tracker-sparql-0.10 \
+	--pkg tracker-sparql-0.12 \
 	--pkg tracker-test \
 	-g \
 	$(NULL)
