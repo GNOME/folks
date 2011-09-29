@@ -102,6 +102,8 @@ const gchar *tp_test_contact_list_manager_get_alias (
     TpTestContactListManager *self, TpHandle contact);
 void tp_test_contact_list_manager_set_alias (
     TpTestContactListManager *self, TpHandle contact, const gchar *alias);
+GPtrArray * tp_test_contact_list_manager_get_contact_info (
+    TpTestContactListManager *self, TpHandle contact);
 
 G_END_DECLS
 

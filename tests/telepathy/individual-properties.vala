@@ -93,6 +93,10 @@ public class IndividualPropertiesTests : Folks.TestCase
               assert (i.groups.size == 2);
               assert (i.groups.contains ("Montreal") == true);
               assert (i.groups.contains ("Francophones") == true);
+
+              /* Check ContactInfo-provided properties */
+              assert (new PhoneFieldDetails ("+15142345678")
+                  in i.phone_numbers);
             }
 
           assert (removed.size == 1);

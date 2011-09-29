@@ -29,6 +29,7 @@ typedef struct _TpTestContactListConnectionPrivate
 
 struct _TpTestContactListConnectionClass {
     TpBaseConnectionClass parent_class;
+    TpDBusPropertiesMixinClass properties_class;
     TpPresenceMixinClass presence_mixin;
     TpContactsMixinClass contacts_mixin;
 };

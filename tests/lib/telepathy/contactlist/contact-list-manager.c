@@ -62,6 +62,7 @@ typedef struct {
 
     TpHandleSet *tags;
 
+    GPtrArray *contact_info;
 } TpTestContactDetails;
 
 static TpTestContactDetails *
@@ -77,6 +78,9 @@ tp_test_contact_details_destroy (gpointer p)
 
   if (d->tags != NULL)
     tp_handle_set_destroy (d->tags);
+
+  if (d->contact_info != NULL)
+    g_ptr_array_unref (d->contact_info);
 
   g_free (d->id);
   g_free (d->alias);
@@ -95,6 +99,7 @@ enum
 {
   ALIAS_UPDATED,
   PRESENCE_UPDATED,
+  CONTACT_INFO_UPDATED,
   N_SIGNALS
 };
 
@@ -374,6 +379,38 @@ static TpTestContactGroup *ensure_group (TpTestContactListManager *self,
 static TpTestContactList *ensure_list (TpTestContactListManager *self,
     TpTestContactListHandle handle);
 
+/*
+ * _insert_contact_field:
+ * @contact_info: an array of Contact_Info_Field structures
+ * @field_name: a vCard field name in any case combination
+ * @field_params: a list of vCard type-parameters, typically of the form
+ *  type=xxx; must be in lower-case if case-insensitive
+ * @field_values: for unstructured fields, an array containing one element;
+ *  for structured fields, the elements of the field in order
+ */
+static void
+_insert_contact_field (GPtrArray *contact_info,
+                       const gchar *field_name,
+                       const gchar * const *field_params,
+                       const gchar * const *field_values)
+{
+  const gchar * const *empty_strv = { NULL };
+  gchar *field_name_down = g_ascii_strdown (field_name, -1);
+
+  if (field_params == NULL)
+    field_params = empty_strv;
+  if (field_values == NULL)
+    field_values = empty_strv;
+
+   g_ptr_array_add (contact_info, tp_value_array_build (3,
+         G_TYPE_STRING, field_name_down,
+         G_TYPE_STRV, field_params,
+         G_TYPE_STRV, field_values,
+         G_TYPE_INVALID));
+
+   g_free (field_name_down);
+}
+
 static gboolean
 receive_contact_lists (gpointer p)
 {
@@ -432,6 +469,13 @@ receive_contact_lists (gpointer p)
   d->publish = TRUE;
   d->tags = tp_handle_set_new (self->priv->group_repo);
   tp_handle_set_add (d->tags, cambridge);
+  d->contact_info = dbus_g_type_specialized_construct (
+      TP_ARRAY_TYPE_CONTACT_INFO_FIELD_LIST);
+  {
+    const gchar * values[] = { "+14401223357708", NULL };
+    _insert_contact_field (d->contact_info, "tel", NULL,
+        (const gchar * const *) values);
+  }
   tp_handle_unref (self->priv->contact_repo, handle);
 
   id = "guillaume@example.com";
@@ -466,6 +510,18 @@ receive_contact_lists (gpointer p)
   d->tags = tp_handle_set_new (self->priv->group_repo);
   tp_handle_set_add (d->tags, montreal);
   tp_handle_set_add (d->tags, francophones);
+  d->contact_info = dbus_g_type_specialized_construct (
+      TP_ARRAY_TYPE_CONTACT_INFO_FIELD_LIST);
+  {
+    const gchar * values[] = { "+15142345678", NULL };
+    _insert_contact_field (d->contact_info, "tel", NULL,
+        (const gchar * const *) values);
+  }
+  {
+    const gchar * values[] = { "Olivier Crete", NULL };
+    _insert_contact_field (d->contact_info, "fn", NULL,
+        (const gchar * const *) values);
+  }
   tp_handle_unref (self->priv->contact_repo, handle);
 
   id = "travis@example.com";
@@ -496,6 +552,7 @@ receive_contact_lists (gpointer p)
     {
       g_signal_emit (self, signals[ALIAS_UPDATED], 0, handle);
       g_signal_emit (self, signals[PRESENCE_UPDATED], 0, handle);
+      g_signal_emit (self, signals[CONTACT_INFO_UPDATED], 0, handle);
     }
 
   tp_intset_destroy (set);
@@ -548,6 +605,7 @@ receive_contact_lists (gpointer p)
     {
       g_signal_emit (self, signals[ALIAS_UPDATED], 0, handle);
       g_signal_emit (self, signals[PRESENCE_UPDATED], 0, handle);
+      g_signal_emit (self, signals[CONTACT_INFO_UPDATED], 0, handle);
     }
 
   tp_intset_destroy (set);
@@ -576,6 +634,7 @@ receive_contact_lists (gpointer p)
   tp_intset_destroy (set);
   g_signal_emit (self, signals[ALIAS_UPDATED], 0, handle);
   g_signal_emit (self, signals[PRESENCE_UPDATED], 0, handle);
+  g_signal_emit (self, signals[CONTACT_INFO_UPDATED], 0, handle);
 
   id = "christian@example.com";
   handle = tp_handle_ensure (self->priv->contact_repo, id, NULL, NULL);
@@ -598,6 +657,7 @@ receive_contact_lists (gpointer p)
   tp_intset_destroy (set);
   g_signal_emit (self, signals[ALIAS_UPDATED], 0, handle);
   g_signal_emit (self, signals[PRESENCE_UPDATED], 0, handle);
+  g_signal_emit (self, signals[CONTACT_INFO_UPDATED], 0, handle);
 
   tp_group_mixin_change_members ((GObject *) cambridge_group, "",
       cam_set, NULL, NULL, NULL,
@@ -719,6 +779,13 @@ tp_test_contact_list_manager_class_init (TpTestContactListManagerClass *klass)
       g_cclosure_marshal_VOID__UINT, G_TYPE_NONE, 1, G_TYPE_UINT);
 
   signals[PRESENCE_UPDATED] = g_signal_new ("presence-updated",
+      G_TYPE_FROM_CLASS (klass),
+      G_SIGNAL_RUN_LAST,
+      0,
+      NULL, NULL,
+      g_cclosure_marshal_VOID__UINT, G_TYPE_NONE, 1, G_TYPE_UINT);
+
+  signals[CONTACT_INFO_UPDATED] = g_signal_new ("contact-info-updated",
       G_TYPE_FROM_CLASS (klass),
       G_SIGNAL_RUN_LAST,
       0,
@@ -1076,6 +1143,7 @@ send_updated_roster (TpTestContactListManager *self,
        * would make this mistake as well. */
       g_signal_emit (self, signals[ALIAS_UPDATED], 0, handle);
       g_signal_emit (self, signals[PRESENCE_UPDATED], 0, handle);
+      g_signal_emit (self, signals[CONTACT_INFO_UPDATED], 0, handle);
 
       tp_handle_unref (self->priv->contact_repo, handle);
     }
@@ -1682,4 +1750,16 @@ tp_test_contact_list_manager_set_alias (TpTestContactListManager *self,
       set, NULL, NULL, NULL, self->priv->conn->self_handle,
       TP_CHANNEL_GROUP_CHANGE_REASON_NONE);
   tp_intset_destroy (set);
+}
+
+GPtrArray *
+tp_test_contact_list_manager_get_contact_info (TpTestContactListManager *self,
+                                               TpHandle contact)
+{
+  TpTestContactDetails *d = lookup_contact (self, contact);
+
+  if (d != NULL)
+    return d->contact_info;
+
+  return NULL;
 }

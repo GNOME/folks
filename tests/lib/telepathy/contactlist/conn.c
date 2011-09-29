@@ -1,8 +1,8 @@
 /*
  * conn.c - an tp_test connection
  *
- * Copyright © 2007-2009 Collabora Ltd. <http://www.collabora.co.uk/>
- * Copyright © 2007-2009 Nokia Corporation
+ * Copyright © 2007-2011 Collabora Ltd. <http://www.collabora.co.uk/>
+ * Copyright © 2007-2010 Nokia Corporation
  *
  * Copying and distribution of this file, with or without modification,
  * are permitted in any medium without royalty provided the copyright
@@ -22,6 +22,7 @@
 #include "contact-list-manager.h"
 
 static void init_aliasing (gpointer, gpointer);
+static void init_contact_info (gpointer, gpointer);
 
 G_DEFINE_TYPE_WITH_CODE (TpTestContactListConnection,
     tp_test_contact_list_connection,
@@ -33,7 +34,9 @@ G_DEFINE_TYPE_WITH_CODE (TpTestContactListConnection,
     G_IMPLEMENT_INTERFACE (TP_TYPE_SVC_CONNECTION_INTERFACE_PRESENCE,
       tp_presence_mixin_iface_init);
     G_IMPLEMENT_INTERFACE (TP_TYPE_SVC_CONNECTION_INTERFACE_SIMPLE_PRESENCE,
-      tp_presence_mixin_simple_presence_iface_init))
+      tp_presence_mixin_simple_presence_iface_init);
+    G_IMPLEMENT_INTERFACE (TP_TYPE_SVC_CONNECTION_INTERFACE_CONTACT_INFO,
+      init_contact_info))
 
 enum
 {
@@ -245,6 +248,21 @@ alias_updated_cb (TpTestContactListManager *manager,
 }
 
 static void
+contact_info_updated_cb (TpTestContactListManager *manager,
+                         TpHandle contact,
+                         TpTestContactListConnection *self)
+{
+  GPtrArray *contact_info = tp_test_contact_list_manager_get_contact_info (
+      self->priv->list_manager, contact);
+
+  if (contact_info != NULL)
+    {
+      tp_svc_connection_interface_contact_info_emit_contact_info_changed (self,
+          contact, contact_info);
+    }
+}
+
+static void
 presence_updated_cb (TpTestContactListManager *manager,
                      TpHandle contact,
                      TpTestContactListConnection *self)
@@ -280,6 +298,8 @@ create_channel_managers (TpBaseConnection *conn)
 
   g_signal_connect (self->priv->list_manager, "alias-updated",
       G_CALLBACK (alias_updated_cb), self);
+  g_signal_connect (self->priv->list_manager, "contact-info-updated",
+      G_CALLBACK (contact_info_updated_cb), self);
   g_signal_connect (self->priv->list_manager, "presence-updated",
       G_CALLBACK (presence_updated_cb), self);
 
@@ -343,6 +363,69 @@ aliasing_fill_contact_attributes (GObject *object,
 }
 
 static void
+contact_info_fill_contact_attributes (GObject *object,
+                                      const GArray *contacts,
+                                      GHashTable *attributes_hash)
+{
+  TpTestContactListConnection *self = TP_TEST_CONTACT_LIST_CONNECTION (object);
+  guint i;
+
+  for (i = 0; i < contacts->len; i++)
+    {
+      TpHandle contact = g_array_index (contacts, TpHandle, i);
+      GPtrArray *contact_info = tp_test_contact_list_manager_get_contact_info (
+          self->priv->list_manager, contact);
+      if (contact_info != NULL)
+        {
+          GValue *val =  tp_g_value_slice_new_boxed (
+                  TP_ARRAY_TYPE_CONTACT_INFO_FIELD_LIST, contact_info);
+
+          tp_contacts_mixin_set_contact_attribute (attributes_hash,
+                  contact,
+                  TP_IFACE_CONNECTION_INTERFACE_CONTACT_INFO "/info", val);
+        }
+    }
+}
+
+static TpDBusPropertiesMixinPropImpl conn_contact_info_properties[] = {
+      { "ContactInfoFlags", GUINT_TO_POINTER (TP_CONTACT_INFO_FLAG_PUSH |
+          TP_CONTACT_INFO_FLAG_CAN_SET), NULL },
+      { "SupportedFields", NULL, NULL },
+      { NULL }
+};
+
+static void
+conn_contact_info_properties_getter (GObject *object,
+                                     GQuark interface,
+                                     GQuark name,
+                                     GValue *value,
+                                     gpointer getter_data)
+{
+  GQuark q_supported_fields = g_quark_from_static_string ("SupportedFields");
+  static GPtrArray *supported_fields = NULL;
+
+  if (name == q_supported_fields)
+    {
+      if (supported_fields == NULL)
+        {
+          supported_fields = g_ptr_array_new ();
+
+          g_ptr_array_add (supported_fields, tp_value_array_build (4,
+              G_TYPE_STRING, "tel",
+              G_TYPE_STRV, NULL,
+              G_TYPE_UINT, 0,
+              G_TYPE_UINT, G_MAXUINT32,
+              G_TYPE_INVALID));
+        }
+      g_value_set_boxed (value, supported_fields);
+    }
+  else
+    {
+      g_value_set_uint (value, GPOINTER_TO_UINT (getter_data));
+    }
+}
+
+static void
 constructed (GObject *object)
 {
   TpBaseConnection *base = TP_BASE_CONNECTION (object);
@@ -358,6 +441,9 @@ constructed (GObject *object)
   tp_contacts_mixin_add_contact_attributes_iface (object,
       TP_IFACE_CONNECTION_INTERFACE_ALIASING,
       aliasing_fill_contact_attributes);
+  tp_contacts_mixin_add_contact_attributes_iface (object,
+      TP_IFACE_CONNECTION_INTERFACE_CONTACT_INFO,
+      contact_info_fill_contact_attributes);
 
   tp_presence_mixin_init (object,
       G_STRUCT_OFFSET (TpTestContactListConnection, presence_mixin));
@@ -457,11 +543,21 @@ tp_test_contact_list_connection_class_init (
 {
   static const gchar *interfaces_always_present[] = {
       TP_IFACE_CONNECTION_INTERFACE_ALIASING,
+      TP_IFACE_CONNECTION_INTERFACE_CONTACT_INFO,
       TP_IFACE_CONNECTION_INTERFACE_CONTACTS,
       TP_IFACE_CONNECTION_INTERFACE_PRESENCE,
       TP_IFACE_CONNECTION_INTERFACE_REQUESTS,
       TP_IFACE_CONNECTION_INTERFACE_SIMPLE_PRESENCE,
       NULL };
+  static TpDBusPropertiesMixinIfaceImpl prop_interfaces[] = {
+        { TP_IFACE_CONNECTION_INTERFACE_CONTACT_INFO,
+          conn_contact_info_properties_getter,
+          NULL,
+          conn_contact_info_properties,
+        },
+        { NULL }
+  };
+
   TpBaseConnectionClass *base_class = (TpBaseConnectionClass *) klass;
   GObjectClass *object_class = (GObjectClass *) klass;
   GParamSpec *param_spec;
@@ -520,6 +616,10 @@ tp_test_contact_list_connection_class_init (
       status_available, get_contact_statuses, set_own_status,
       tp_test_contact_list_presence_statuses ());
   tp_presence_mixin_simple_presence_init_dbus_properties (object_class);
+
+  klass->properties_class.interfaces = prop_interfaces;
+  tp_dbus_properties_mixin_class_init (object_class,
+      G_STRUCT_OFFSET (TpTestContactListConnectionClass, properties_class));
 }
 
 static void
@@ -666,6 +766,134 @@ init_aliasing (gpointer iface,
   IMPLEMENT(request_aliases);
   IMPLEMENT(get_aliases);
   IMPLEMENT(set_aliases);
+#undef IMPLEMENT
+}
+
+static void
+get_contact_info (
+    TpSvcConnectionInterfaceContactInfo *iface,
+    const GArray *contacts,
+    DBusGMethodInvocation *context)
+{
+  TpTestContactListConnection *self = TP_TEST_CONTACT_LIST_CONNECTION (iface);
+  TpBaseConnection *base = (TpBaseConnection *) self;
+  TpHandleRepoIface *contact_handles = tp_base_connection_get_handles (base,
+      TP_HANDLE_TYPE_CONTACT);
+  GError *error = NULL;
+  guint i;
+  GHashTable *ret;
+
+  TP_BASE_CONNECTION_ERROR_IF_NOT_CONNECTED (TP_BASE_CONNECTION (iface),
+      context);
+
+  if (!tp_handles_are_valid (contact_handles, contacts, FALSE, &error))
+    {
+      dbus_g_method_return_error (context, error);
+      g_error_free (error);
+      return;
+    }
+
+  ret = dbus_g_type_specialized_construct (TP_HASH_TYPE_CONTACT_INFO_MAP);
+
+  for (i = 0; i < contacts->len; i++)
+    {
+      TpHandle contact = g_array_index (contacts, TpHandle, i);
+      GPtrArray *contact_info = tp_test_contact_list_manager_get_contact_info (
+          self->priv->list_manager, contact);
+      if (contact_info != NULL)
+        {
+          g_hash_table_insert (ret, GUINT_TO_POINTER (contact),
+              g_boxed_copy (TP_ARRAY_TYPE_CONTACT_INFO_FIELD_LIST,
+                contact_info));
+        }
+    }
+
+  tp_svc_connection_interface_contact_info_return_from_get_contact_info (
+      context, ret);
+
+  g_boxed_free (TP_HASH_TYPE_CONTACT_INFO_MAP, ret);
+}
+
+static void
+refresh_contact_info (TpSvcConnectionInterfaceContactInfo *iface,
+                      const GArray *contacts,
+                      DBusGMethodInvocation *context)
+{
+  TpTestContactListConnection *self = TP_TEST_CONTACT_LIST_CONNECTION (iface);
+  guint i;
+
+  for (i = 0; i < contacts->len; i++)
+    {
+      TpHandle contact = g_array_index (contacts, TpHandle, i);
+      GPtrArray *contact_info;
+
+      contact_info = tp_test_contact_list_manager_get_contact_info (
+          self->priv->list_manager, contact);
+
+      if (contact_info != NULL)
+        {
+          tp_svc_connection_interface_contact_info_emit_contact_info_changed (
+              iface, contact, contact_info);
+        }
+    }
+}
+
+static void
+_return_from_request_contact_info (TpTestContactListConnection *self,
+                                   guint contact,
+                                   DBusGMethodInvocation *context)
+{
+  GError *error = NULL;
+  GPtrArray *contact_info;
+
+  contact_info = tp_test_contact_list_manager_get_contact_info (
+      self->priv->list_manager, contact);
+
+  if (contact_info == NULL)
+    {
+      dbus_g_method_return_error (context, error);
+      g_error_free (error);
+      return;
+    }
+
+  tp_svc_connection_interface_contact_info_return_from_request_contact_info (
+      context, contact_info);
+}
+
+static void
+request_contact_info (TpSvcConnectionInterfaceContactInfo *iface,
+                      guint contact,
+                      DBusGMethodInvocation *context)
+{
+  TpTestContactListConnection *self = TP_TEST_CONTACT_LIST_CONNECTION (iface);
+  TpBaseConnection *base = (TpBaseConnection *) self;
+  TpHandleRepoIface *contact_handles = tp_base_connection_get_handles (base,
+      TP_HANDLE_TYPE_CONTACT);
+  GError *err = NULL;
+
+  TP_BASE_CONNECTION_ERROR_IF_NOT_CONNECTED (base, context);
+
+  if (!tp_handle_is_valid (contact_handles, contact, &err))
+    {
+      dbus_g_method_return_error (context, err);
+      g_error_free (err);
+      return;
+    }
+
+  _return_from_request_contact_info (self, contact, context);
+}
+
+static void
+init_contact_info (gpointer iface,
+                   gpointer iface_data G_GNUC_UNUSED)
+{
+  TpSvcConnectionInterfaceContactInfoClass *klass = iface;
+
+#define IMPLEMENT(x) tp_svc_connection_interface_contact_info_implement_##x (\
+    klass, x)
+  IMPLEMENT(get_contact_info);
+  IMPLEMENT(refresh_contact_info);
+  IMPLEMENT(request_contact_info);
 #undef IMPLEMENT
 }
 
