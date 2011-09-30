@@ -2125,4 +2125,108 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       FolksTpLowlevel.connection_set_contact_alias (this._conn,
           (Handle) persona.contact.handle, alias);
     }
+
+  internal async void change_user_full_name (Tpf.Persona persona,
+      string full_name) throws PersonaStoreError
+    {
+      /* Deal with badly-behaved callers */
+      if (full_name == null)
+        {
+          full_name = "";
+        }
+
+      var info_set = new HashSet<ContactInfoField> ();
+      string[] values = { full_name };
+      string[] parameters = { null };
+
+      var field = new ContactInfoField ("fn", parameters, values);
+      info_set.add (field);
+
+      yield this._change_user_contact_info (persona, info_set);
+    }
+
+  internal async void _change_user_details (
+      Tpf.Persona persona, Set<AbstractFieldDetails<string>> details,
+      string field_name)
+        throws PersonaStoreError
+    {
+      var info_set = new HashSet<ContactInfoField> ();
+
+      foreach (var afd in details)
+        {
+          string[] values = { afd.value };
+          string[] parameters = {};
+
+          foreach (var param_name in afd.parameters.get_keys ())
+            {
+              var param_values = afd.parameters[param_name];
+              foreach (var param_value in param_values)
+                {
+                  parameters += @"$param_name=$param_value";
+                }
+            }
+
+          if (parameters.length == 0)
+            parameters = { null };
+
+          var field = new ContactInfoField (field_name, parameters, values);
+          info_set.add (field);
+        }
+
+      yield this._change_user_contact_info (persona, info_set);
+    }
+
+  private async void _change_user_contact_info (Tpf.Persona persona,
+      HashSet<ContactInfoField> info_set) throws PersonaStoreError
+    {
+      if (!persona.is_user)
+        {
+          throw new PersonaStoreError.INVALID_ARGUMENT (
+              _("Extended information may only be set on the user's Telepathy contact."));
+        }
+
+      var info_list = this._contact_info_set_to_list (info_set);
+      if (this.account.connection != null)
+        {
+          GLib.Error? error = null;
+          bool success = false;
+          try
+            {
+              success =
+                yield this.account.connection.set_contact_info_async (
+                  info_list);
+            }
+          catch (GLib.Error e)
+            {
+              error = e;
+            }
+
+          if (error != null || !success)
+            {
+              warning ("Failed to set extended information on user's " +
+                  "Telepathy contact: %s",
+                  error != null ? error.message : "(reason unknown)");
+            }
+        }
+      else
+        {
+          throw new PersonaStoreError.STORE_OFFLINE (
+              _("Extended information cannot be written because the store is disconnected."));
+        }
+    }
+
+  private static GLib.List<ContactInfoField> _contact_info_set_to_list (
+      HashSet<ContactInfoField> info_set)
+    {
+      var info_list = new GLib.List<ContactInfoField> ();
+      foreach (var info_field in info_set)
+        {
+          info_list.prepend (new ContactInfoField (
+                info_field.field_name, info_field.parameters,
+                info_field.field_value));
+        }
+      info_list.reverse ();
+
+      return info_list;
+    }
 }

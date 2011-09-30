@@ -411,6 +411,13 @@ conn_contact_info_properties_getter (GObject *object,
           supported_fields = g_ptr_array_new ();
 
           g_ptr_array_add (supported_fields, tp_value_array_build (4,
+              G_TYPE_STRING, "fn",
+              G_TYPE_STRV, NULL,
+              G_TYPE_UINT, 0,
+              G_TYPE_UINT, 1,
+              G_TYPE_INVALID));
+
+          g_ptr_array_add (supported_fields, tp_value_array_build (4,
               G_TYPE_STRING, "tel",
               G_TYPE_STRV, NULL,
               G_TYPE_UINT, 0,
@@ -884,6 +891,28 @@ request_contact_info (TpSvcConnectionInterfaceContactInfo *iface,
 }
 
 static void
+set_contact_info (TpSvcConnectionInterfaceContactInfo *iface,
+                  const GPtrArray *contact_info,
+                  DBusGMethodInvocation *context)
+{
+  TpTestContactListConnection *self = TP_TEST_CONTACT_LIST_CONNECTION (iface);
+  GError *error = NULL;
+
+  if (contact_info == NULL)
+    {
+      dbus_g_method_return_error (context, error);
+      g_error_free (error);
+      return;
+    }
+
+  tp_test_contact_list_manager_set_contact_info (self->priv->list_manager,
+      contact_info);
+
+  tp_svc_connection_interface_contact_info_return_from_set_contact_info (
+      context);
+}
+
+static void
 init_contact_info (gpointer iface,
                    gpointer iface_data G_GNUC_UNUSED)
 {
@@ -894,6 +923,7 @@ init_contact_info (gpointer iface,
   IMPLEMENT(get_contact_info);
   IMPLEMENT(refresh_contact_info);
   IMPLEMENT(request_contact_info);
+  IMPLEMENT(set_contact_info);
 #undef IMPLEMENT
 }
 

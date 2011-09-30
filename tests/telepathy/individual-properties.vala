@@ -29,6 +29,7 @@ public class IndividualPropertiesTests : Folks.TestCase
   private TpTest.Backend tp_backend;
   private void* _account_handle;
   private int _test_timeout = 3;
+  private HashSet<string> _changes_pending;
 
   public IndividualPropertiesTests ()
     {
@@ -42,6 +43,8 @@ public class IndividualPropertiesTests : Folks.TestCase
           this.test_individual_properties_change_alias_through_tp_backend);
       this.add_test ("individual properties:change alias through test cm",
           this.test_individual_properties_change_alias_through_test_cm);
+      this.add_test ("individual properties:change contact info",
+          this.test_individual_properties_change_contact_info);
 
       if (Environment.get_variable ("FOLKS_TEST_VALGRIND") != null)
           this._test_timeout = 10;
@@ -52,6 +55,7 @@ public class IndividualPropertiesTests : Folks.TestCase
       this.tp_backend.set_up ();
       this._account_handle = this.tp_backend.add_account ("protocol",
           "me@example.com", "cm", "account");
+      this._changes_pending = new HashSet<string> ();
     }
 
   public override void tear_down ()
@@ -280,6 +284,140 @@ public class IndividualPropertiesTests : Folks.TestCase
 
       /* necessary to reset the aggregator for the next test */
       aggregator = null;
+    }
+
+  public void test_individual_properties_change_contact_info ()
+    {
+      var main_loop = new GLib.MainLoop (null, false);
+      this._changes_pending.add ("phone-numbers");
+      this._changes_pending.add ("full-name");
+
+      /* Set up the aggregator */
+      var aggregator = new IndividualAggregator ();
+      aggregator.individuals_changed_detailed.connect ((changes) =>
+        {
+          this._change_contact_info_aggregator_individuals_added (changes);
+        });
+
+      aggregator.prepare ();
+
+      /* Kill the main loop after a few seconds. If the alias hasn't been
+       * notified, something along the way failed or been too slow (which we can
+       * consider to be failure). */
+      Timeout.add_seconds (this._test_timeout, () =>
+        {
+          main_loop.quit ();
+          return false;
+        });
+
+      main_loop.run ();
+
+      assert (this._changes_pending.size == 0);
+
+      /* necessary to reset the aggregator for the next test */
+      aggregator = null;
+    }
+
+  private async void _change_contact_info_aggregator_individuals_added (
+      MultiMap<Individual?, Individual?> changes)
+    {
+      var added = changes.get_values ();
+      var removed = changes.get_keys ();
+
+      var new_phone_fd = new PhoneFieldDetails ("+112233445566");
+      new_phone_fd.set_parameter (AbstractFieldDetails.PARAM_TYPE,
+          AbstractFieldDetails.PARAM_TYPE_HOME);
+      var new_full_name = "Cave Johnson";
+
+      foreach (Individual i in added)
+        {
+          assert (i != null);
+
+          /* Check properties */
+          assert (new_full_name != i.full_name);
+          assert (!(new_phone_fd in i.phone_numbers));
+
+          i.notify["full-name"].connect ((s, p) =>
+              {
+                /* we can't re-use i here due to Vala's implementation */
+                var ind = (Individual) s;
+
+                if (ind.full_name == new_full_name)
+                  this._changes_pending.remove ("full-name");
+              });
+
+          i.notify["phone-numbers"].connect ((s, p) =>
+              {
+                /* we can't re-use i here due to Vala's implementation */
+                var ind = (Individual) s;
+
+                if (new_phone_fd in ind.phone_numbers)
+                  {
+                    this._changes_pending.remove ("phone-numbers");
+                  }
+              });
+
+          /* the contact list this aggregator is based upon has exactly 1
+           * Tpf.Persona per Individual */
+          Folks.Persona persona = null;
+          foreach (var p in i.personas)
+            {
+              persona = p;
+              break;
+            }
+          assert (persona is Tpf.Persona);
+
+          var phones = new HashSet<PhoneFieldDetails> (
+              (GLib.HashFunc) PhoneFieldDetails.hash,
+              (GLib.EqualFunc) PhoneFieldDetails.equal);
+          phones.add (new_phone_fd);
+
+          /* set the extended info through Telepathy's ContactInfo interface and
+           * wait for it to hit our notification callback above */
+
+          /* setting the extended info on a non-user is invalid for the
+           * Telepathy backend, so this tracks the number of expected errors for
+           * intentionally-invalid property changes */
+          int uncaught_errors = 0;
+
+          if (!i.is_user)
+            uncaught_errors++;
+          try
+            {
+              yield ((Tpf.Persona) persona).change_full_name (new_full_name);
+            }
+          catch (PropertyError e1)
+            {
+              if (!i.is_user)
+                uncaught_errors--;
+            }
+
+          if (!i.is_user)
+            uncaught_errors++;
+          try
+            {
+              yield ((Tpf.Persona) persona).change_phone_numbers (phones);
+            }
+          catch (PropertyError e2)
+            {
+              /* setting the extended info on a non-user is invalid for the
+               * Telepathy backend */
+              if (!i.is_user)
+                uncaught_errors--;
+            }
+
+          if (!i.is_user)
+            {
+              assert (uncaught_errors == 0);
+            }
+        }
+
+      assert (removed.size == 1);
+
+      foreach (var r in removed)
+        {
+          assert (r == null);
+        }
     }
 }
 

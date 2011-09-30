@@ -33,6 +33,7 @@ public class Tpf.Persona : Folks.Persona,
     FavouriteDetails,
     GroupDetails,
     ImDetails,
+    NameDetails,
     PhoneDetails,
     PresenceDetails
 {
@@ -40,6 +41,7 @@ public class Tpf.Persona : Folks.Persona,
   private Set<string> _groups_ro;
   private bool _is_favourite;
   private string _alias; /* must never be null */
+  private string _full_name; /* must never be null */
   private HashMultiMap<string, ImFieldDetails> _im_addresses;
   private const string[] _linkable_properties = { "im-addresses" };
   private const string[] _writeable_properties =
@@ -81,6 +83,78 @@ public class Tpf.Persona : Folks.Persona,
     {
       get { return this._avatar; }
       set { this.change_avatar.begin (value); } /* not writeable */
+    }
+
+  /**
+   * {@inheritDoc}
+   *
+   * @since UNRELEASED
+   */
+  [CCode (notify = false)]
+  public StructuredName? structured_name
+    {
+      get { return null; }
+      set { this.change_structured_name.begin (value); } /* not writeable */
+    }
+
+  /**
+   * {@inheritDoc}
+   *
+   * @since UNRELEASED
+   */
+  [CCode (notify = false)]
+  public string full_name
+    {
+      get { return this._full_name; }
+      set { this.change_full_name.begin (value); }
+    }
+
+  /**
+   * {@inheritDoc}
+   *
+   * @since UNRELEASED
+   */
+  public async void change_full_name (string full_name) throws PropertyError
+    {
+      var tpf_store = this.store as Tpf.PersonaStore;
+
+      if (full_name == this._full_name)
+        return;
+
+      if (this._is_constructed)
+        {
+          try
+            {
+              yield tpf_store.change_user_full_name (this, full_name);
+            }
+          catch (PersonaStoreError.INVALID_ARGUMENT e1)
+            {
+              throw new PropertyError.NOT_WRITEABLE (e1.message);
+            }
+          catch (PersonaStoreError.STORE_OFFLINE e2)
+            {
+              throw new PropertyError.UNKNOWN_ERROR (e2.message);
+            }
+          catch (PersonaStoreError e3)
+            {
+              throw new PropertyError.UNKNOWN_ERROR (e3.message);
+            }
+        }
+
+      /* the change will be notified when we receive changes to
+       * contact.contact_info */
+    }
+
+  /**
+   * {@inheritDoc}
+   *
+   * @since UNRELEASED
+   */
+  [CCode (notify = false)]
+  public string nickname
+    {
+      get { return ""; }
+      set { this.change_nickname.begin (value); } /* not writeable */
     }
 
   /**
@@ -303,6 +377,56 @@ public class Tpf.Persona : Folks.Persona,
     }
 
   /**
+   * {@inheritDoc}
+   *
+   * @since UNRELEASED
+   */
+  public async void change_phone_numbers (
+      Set<PhoneFieldDetails> phone_numbers) throws PropertyError
+    {
+      yield this._change_details<PhoneFieldDetails> (phone_numbers,
+          this._phone_numbers, "tel");
+    }
+
+  private async void _change_details<T> (
+      Set<AbstractFieldDetails<string>> details,
+      Set<AbstractFieldDetails<string>> member_set,
+      string field_name)
+        throws PropertyError
+    {
+      var tpf_store = this.store as Tpf.PersonaStore;
+
+      if (Folks.PersonaStore.equal_sets<PhoneFieldDetails> (phone_numbers,
+              this._phone_numbers))
+        {
+          return;
+        }
+
+      if (this._is_constructed)
+        {
+          try
+            {
+              yield tpf_store._change_user_details (this, details, field_name);
+            }
+          catch (PersonaStoreError.INVALID_ARGUMENT e1)
+            {
+              throw new PropertyError.NOT_WRITEABLE (e1.message);
+            }
+          catch (PersonaStoreError.STORE_OFFLINE e2)
+            {
+              throw new PropertyError.UNKNOWN_ERROR (e2.message);
+            }
+          catch (PersonaStoreError e3)
+            {
+              throw new PropertyError.UNKNOWN_ERROR (e3.message);
+            }
+        }
+
+      /* the change will be notified when we receive changes to
+       * contact.contact_info */
+    }
+
+  /**
    * Create a new persona.
    *
    * Create a new persona for the {@link PersonaStore} `store`, representing
@@ -329,6 +453,8 @@ public class Tpf.Persona : Folks.Persona,
               uid: uid,
               store: store,
               is_user: contact.handle == connection.self_handle);
+
+      this._full_name = "";
 
       contact.notify["alias"].connect ((s, p) =>
           {
@@ -398,9 +524,9 @@ public class Tpf.Persona : Folks.Persona,
 
       contact.notify["contact-info"].connect ((s, p) =>
         {
-          this._contact_notify_phones ();
+          this._contact_notify_contact_info ();
         });
-      this._contact_notify_phones ();
+      this._contact_notify_contact_info ();
 
       ((Tpf.PersonaStore) this.store).group_members_changed.connect (
           (s, group, added, removed) =>
@@ -428,8 +554,9 @@ public class Tpf.Persona : Folks.Persona,
             });
     }
 
-  private void _contact_notify_phones ()
+  private void _contact_notify_contact_info ()
     {
+      var new_full_name = "";
       var new_phone_numbers = new HashSet<PhoneFieldDetails> (
           (GLib.HashFunc) PhoneFieldDetails.hash,
           (GLib.EqualFunc) PhoneFieldDetails.equal);
@@ -437,15 +564,26 @@ public class Tpf.Persona : Folks.Persona,
       var contact_info = this.contact.get_contact_info ();
       foreach (var info in contact_info)
         {
-          if (info.field_name != "tel")
-            continue;
-
-          foreach (var phone_num in info.field_value)
+          if (info.field_name == "") {}
+          else if (info.field_name == "fn")
             {
-              var parameters = this._afd_params_from_strv (info.parameters);
-              var phone_fd = new PhoneFieldDetails (phone_num, parameters);
-              new_phone_numbers.add (phone_fd);
+              new_full_name = info.field_value[0];
             }
+          else if (info.field_name == "tel")
+            {
+              foreach (var phone_num in info.field_value)
+                {
+                  var parameters = this._afd_params_from_strv (info.parameters);
+                  var phone_fd = new PhoneFieldDetails (phone_num, parameters);
+                  new_phone_numbers.add (phone_fd);
+                }
+            }
+        }
+
+      if (new_full_name != this._full_name)
+        {
+          this._full_name = new_full_name;
+          this.notify_property ("full-name");
         }
 
       if (!Folks.PersonaStore.equal_sets<PhoneFieldDetails> (new_phone_numbers,

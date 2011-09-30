@@ -522,6 +522,11 @@ receive_contact_lists (gpointer p)
     _insert_contact_field (d->contact_info, "fn", NULL,
         (const gchar * const *) values);
   }
+  {
+    const gchar * values[] = { id, NULL };
+    _insert_contact_field (d->contact_info, "email", NULL,
+        (const gchar * const *) values);
+  }
   tp_handle_unref (self->priv->contact_repo, handle);
 
   id = "travis@example.com";
@@ -1762,4 +1767,49 @@ tp_test_contact_list_manager_get_contact_info (TpTestContactListManager *self,
     return d->contact_info;
 
   return NULL;
+}
+
+void
+tp_test_contact_list_manager_set_contact_info (TpTestContactListManager *self,
+                                               const GPtrArray *contact_info)
+{
+  TpTestContactList *stored = self->priv->lists[
+    TP_TEST_CONTACT_LIST_STORED];
+  TpTestContactDetails *d = ensure_contact (self, self->priv->conn->self_handle,
+      NULL);
+  GPtrArray *old = d->contact_info;
+
+  /* FIXME: if stored list hasn't been retrieved yet, queue the change for
+   * later */
+
+  /* if shutting down, do nothing */
+  if (stored == NULL)
+    return;
+
+  d->contact_info = dbus_g_type_specialized_construct (
+      TP_ARRAY_TYPE_CONTACT_INFO_FIELD_LIST);
+  {
+    guint i;
+    for (i = 0; i < contact_info->len; i++)
+      {
+        const gchar *name;
+        const gchar * const * params;
+        const gchar * const * values;
+        GValueArray *va = g_ptr_array_index (contact_info, i);
+
+        tp_value_array_unpack (va, 3,
+          &name,
+          &params,
+          &values);
+
+        _insert_contact_field (d->contact_info, name, params, values);
+      }
+  }
+
+  /* always send the updated roster, since it's not worth checking the
+   * contact_info for changes */
+  send_updated_roster (self, self->priv->conn->self_handle);
+
+  if (old != NULL)
+    g_ptr_array_unref (old);
 }
