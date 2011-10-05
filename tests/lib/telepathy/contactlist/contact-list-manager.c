@@ -1142,6 +1142,46 @@ send_updated_roster (TpTestContactListManager *self,
             }
         }
 
+      if (d->contact_info == NULL)
+        {
+          g_message ("\tno contact info");
+        }
+      else
+        {
+          for (guint i = 0; i < d->contact_info->len; i++)
+            {
+              GValueArray *va = g_ptr_array_index (d->contact_info, i);
+
+              GValue *gv0, *gv1, *gv2;
+              gchar **params, **values;
+              gchar *empty_strv[] = { NULL };
+
+              gv0 = g_value_array_get_nth (va, 0);
+              gv1 = g_value_array_get_nth (va, 1);
+              gv2 = g_value_array_get_nth (va, 2);
+              params = g_value_peek_pointer (gv1);
+              values = g_value_peek_pointer (gv2);
+
+              if (params == NULL)
+                params = empty_strv;
+              if (values == NULL)
+                values = empty_strv;
+
+              g_message ("\tcontact info:");
+              g_message ("\t\tname: %s", g_value_get_string (gv0));
+              g_message ("\t\tparams:");
+              for (guint j = 0; j < g_strv_length (params); j++)
+                {
+                  g_message ("\t\t\t%s", params[j]);
+                }
+              g_message ("\t\tvalues:");
+              for (guint j = 0; j < g_strv_length (values); j++)
+                {
+                  g_message ("\t\t\t%s", values[j]);
+                }
+            }
+        }
+
       handle = tp_handle_ensure (self->priv->contact_repo, d->id, NULL, NULL);
       /* XXX: ideally, we'd only do this if thse specific details really
        * changed, but it's not terribly unrealistic to think some servers or CMs
