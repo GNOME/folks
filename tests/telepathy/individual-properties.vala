@@ -79,47 +79,46 @@ public class IndividualPropertiesTests : Folks.TestCase
             {
               assert (i != null);
 
-              /* We only check one (singleton Individual containing just
-               * olivier@example.com) */
-              if (i.id != "0e46c5e74f61908f49550d241f2a1651892a1695")
+              /* Check the Individual containing just
+               * Tpf.Persona(olivier@example.com) */
+              if (i.id == "0e46c5e74f61908f49550d241f2a1651892a1695")
                 {
-                  continue;
-                }
+                  /* Check properties */
+                  assert (i.alias == "Olivier");
+                  assert (i.presence_message == "");
+                  assert (i.presence_status == "away");
+                  assert (i.presence_type == PresenceType.AWAY);
+                  assert (((PresenceDetails) i).is_online () == true);
 
-              /* Check properties */
-              assert (i.alias == "Olivier");
-              assert (i.presence_message == "");
-              assert (i.presence_status == "away");
-              assert (i.presence_type == PresenceType.AWAY);
-              assert (((PresenceDetails) i).is_online () == true);
+                  /* Check groups */
+                  assert (i.groups.size == 2);
+                  assert (i.groups.contains ("Montreal") == true);
+                  assert (i.groups.contains ("Francophones") == true);
 
-              /* Check groups */
-              assert (i.groups.size == 2);
-              assert (i.groups.contains ("Montreal") == true);
-              assert (i.groups.contains ("Francophones") == true);
-
-              /* Check writeability of fields */
-              Tpf.Persona tpf_persona = null;
-              foreach (var p in i.personas)
-                {
-                  if (p is Tpf.Persona)
+                  /* Check writeability of fields */
+                  Tpf.Persona tpf_persona = null;
+                  foreach (var p in i.personas)
                     {
-                      tpf_persona = p as Tpf.Persona;
-                      break;
+                      if (p is Tpf.Persona)
+                        {
+                          tpf_persona = p as Tpf.Persona;
+                          break;
+                        }
                     }
-                }
-              assert (tpf_persona != null);
-              assert ("alias" in tpf_persona.writeable_properties);
-              assert ("is-favourite" in tpf_persona.writeable_properties);
-              assert ("groups" in tpf_persona.writeable_properties);
-              /* These are only writeable for the user contact */
-              assert (!tpf_persona.is_user);
-              assert (!("full-name" in tpf_persona.writeable_properties));
-              assert (!("phone-numbers" in tpf_persona.writeable_properties));
+                  assert (tpf_persona != null);
+                  assert ("alias" in tpf_persona.writeable_properties);
+                  assert ("is-favourite" in tpf_persona.writeable_properties);
+                  assert ("groups" in tpf_persona.writeable_properties);
+                  /* These are only writeable for the user contact */
+                  assert (!tpf_persona.is_user);
+                  assert (!("full-name" in tpf_persona.writeable_properties));
+                  assert (
+                      !("phone-numbers" in tpf_persona.writeable_properties));
 
-              /* Check ContactInfo-provided properties */
-              assert (new PhoneFieldDetails ("+15142345678")
-                  in i.phone_numbers);
+                  /* Check ContactInfo-provided properties */
+                  assert (new PhoneFieldDetails ("+15142345678")
+                      in i.phone_numbers);
+                }
             }
 
           assert (removed.size == 1);
