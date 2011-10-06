@@ -44,12 +44,13 @@ public class Tpf.Persona : Folks.Persona,
   private string _full_name; /* must never be null */
   private HashMultiMap<string, ImFieldDetails> _im_addresses;
   private const string[] _linkable_properties = { "im-addresses" };
-  private const string[] _writeable_properties =
+  private const string[] _always_writeable_properties =
     {
       "alias",
       "is-favourite",
       "groups"
     };
+  private string[] _writeable_properties = null;
 
   /* Whether we've finished being constructed; this is used to prevent
    * unnecessary trips to the Telepathy service to tell it about properties
@@ -197,7 +198,46 @@ public class Tpf.Persona : Folks.Persona,
    */
   public override string[] writeable_properties
     {
-      get { return this._writeable_properties; }
+      get
+        {
+          if (this.is_user)
+            {
+              var connection =
+                ((Tpf.PersonaStore) this.store).account.connection;
+              if (connection != null)
+                {
+                  var ci_flags = connection.get_contact_info_flags ();
+                  if ((ci_flags & ContactInfoFlags.CAN_SET) != 0)
+                    {
+                      var field_specs =
+                        connection.get_contact_info_supported_fields ();
+                      var supported_fields = new HashSet<string> ();
+                      foreach (var field_spec in field_specs)
+                        {
+                          /* XXX: we ignore the maximum count for each type of
+                           * field since the common-sense count for each
+                           * corresponding field (eg, full-name max = 1) in
+                           * Folks is already reflected in our API and we have
+                           * no other way to express it; but this seems a very
+                           * minor problem */
+                          supported_fields.add (field_spec.name);
+                        }
+
+                      this._writeable_properties =
+                        this._always_writeable_properties;
+
+                      if ("fn" in supported_fields)
+                        this._writeable_properties += "full-name";
+                      if ("tel" in supported_fields)
+                        this._writeable_properties += "phone-numbers";
+
+                      return this._writeable_properties;
+                    }
+                }
+            }
+
+          return this._always_writeable_properties;
+        }
     }
 
   /**
