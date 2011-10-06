@@ -98,6 +98,25 @@ public class IndividualPropertiesTests : Folks.TestCase
               assert (i.groups.contains ("Montreal") == true);
               assert (i.groups.contains ("Francophones") == true);
 
+              /* Check writeability of fields */
+              Tpf.Persona tpf_persona = null;
+              foreach (var p in i.personas)
+                {
+                  if (p is Tpf.Persona)
+                    {
+                      tpf_persona = p as Tpf.Persona;
+                      break;
+                    }
+                }
+              assert (tpf_persona != null);
+              assert ("alias" in tpf_persona.writeable_properties);
+              assert ("is-favourite" in tpf_persona.writeable_properties);
+              assert ("groups" in tpf_persona.writeable_properties);
+              /* These are only writeable for the user contact */
+              assert (!tpf_persona.is_user);
+              assert (!("full-name" in tpf_persona.writeable_properties));
+              assert (!("phone-numbers" in tpf_persona.writeable_properties));
+
               /* Check ContactInfo-provided properties */
               assert (new PhoneFieldDetails ("+15142345678")
                   in i.phone_numbers);
