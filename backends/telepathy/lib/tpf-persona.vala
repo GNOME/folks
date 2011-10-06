@@ -201,40 +201,7 @@ public class Tpf.Persona : Folks.Persona,
       get
         {
           if (this.is_user)
-            {
-              var connection =
-                ((Tpf.PersonaStore) this.store).account.connection;
-              if (connection != null)
-                {
-                  var ci_flags = connection.get_contact_info_flags ();
-                  if ((ci_flags & ContactInfoFlags.CAN_SET) != 0)
-                    {
-                      var field_specs =
-                        connection.get_contact_info_supported_fields ();
-                      var supported_fields = new HashSet<string> ();
-                      foreach (var field_spec in field_specs)
-                        {
-                          /* XXX: we ignore the maximum count for each type of
-                           * field since the common-sense count for each
-                           * corresponding field (eg, full-name max = 1) in
-                           * Folks is already reflected in our API and we have
-                           * no other way to express it; but this seems a very
-                           * minor problem */
-                          supported_fields.add (field_spec.name);
-                        }
-
-                      this._writeable_properties =
-                        this._always_writeable_properties;
-
-                      if ("fn" in supported_fields)
-                        this._writeable_properties += "full-name";
-                      if ("tel" in supported_fields)
-                        this._writeable_properties += "phone-numbers";
-
-                      return this._writeable_properties;
-                    }
-                }
-            }
+            return this._writeable_properties;
 
           return this._always_writeable_properties;
         }
@@ -494,6 +461,7 @@ public class Tpf.Persona : Folks.Persona,
               store: store,
               is_user: contact.handle == connection.self_handle);
 
+
       this._full_name = "";
 
       contact.notify["alias"].connect ((s, p) =>
@@ -592,6 +560,27 @@ public class Tpf.Persona : Folks.Persona,
                   this._change_group (group, false);
                 }
             });
+
+      if (this.is_user)
+        {
+          ((Tpf.PersonaStore) this.store).notify["supported-fields"].connect (
+            (s, p) =>
+              {
+                this._store_notify_supported_fields ();
+              });
+          this._store_notify_supported_fields ();
+        }
+    }
+
+  private void _store_notify_supported_fields ()
+    {
+      var tpf_store = this.store as Tpf.PersonaStore;
+      this._writeable_properties = this._always_writeable_properties;
+
+      if ("fn" in tpf_store.supported_fields)
+        this._writeable_properties += "full-name";
+      if ("tel" in tpf_store.supported_fields)
+        this._writeable_properties += "phone-numbers";
     }
 
   private void _contact_notify_contact_info ()

@@ -107,6 +107,9 @@ public class Tpf.PersonaStore : Folks.PersonaStore
   private Cancellable? _load_cache_cancellable = null;
   private bool _cached = false;
 
+  /* marshalled from ContactInfo.SupportedFields */
+  internal HashSet<string> _supported_fields;
+  internal Set<string> _supported_fields_ro;
   internal signal void group_members_changed (string group,
       GLib.List<Persona>? added, GLib.List<Persona>? removed);
   internal signal void group_removed (string group, GLib.Error? error);
@@ -226,6 +229,11 @@ public class Tpf.PersonaStore : Folks.PersonaStore
   public override Map<string, Persona> personas
     {
       get { return this._personas_ro; }
+    }
+
+  internal Set<string> supported_fields
+    {
+      get { return this._supported_fields_ro; }
     }
 
   /**
@@ -530,6 +538,8 @@ public class Tpf.PersonaStore : Folks.PersonaStore
             }
         }
 
+      this._supported_fields = new HashSet<string> ();
+      this._supported_fields_ro = this._supported_fields.read_only_view;
       this._groups = new HashMap<string, Channel> ();
       this._favourite_handles = new HashSet<uint> ();
       this._self_contact = null;
@@ -773,6 +783,9 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       /* account disconnected */
       if (account.connection == null)
         {
+          this._supported_fields.clear ();
+          this.notify_property ("supported-fields");
+
           /* When disconnecting, we want the PersonaStore to remain alive, but
            * all its Personas to be removed. We do *not* want the PersonaStore
            * to be destroyed, as that makes coming back online hard.
@@ -841,6 +854,9 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       var c = (Connection) s;
       FolksTpLowlevel.connection_connect_to_new_group_channels (c,
           this._new_group_channels_cb);
+
+      this._marshall_supported_fields ();
+      this.notify_property ("supported-fields");
 
       FolksTpLowlevel.connection_get_alias_flags_async.begin (c, (s2, res) =>
           {
@@ -934,6 +950,32 @@ public class Tpf.PersonaStore : Folks.PersonaStore
 
       /* We can only initialise the favourite contacts once _conn is prepared */
       this._initialise_favourite_contacts.begin ();
+    }
+
+  private void _marshall_supported_fields ()
+    {
+      var connection = this.account.connection;
+      if (connection != null)
+        {
+          this._supported_fields.clear ();
+
+          var ci_flags = connection.get_contact_info_flags ();
+          if ((ci_flags & ContactInfoFlags.CAN_SET) != 0)
+            {
+              var field_specs =
+                connection.get_contact_info_supported_fields ();
+              foreach (var field_spec in field_specs)
+                {
+                  /* XXX: we ignore the maximum count for each type of
+                    * field since the common-sense count for each
+                    * corresponding field (eg, full-name max = 1) in
+                    * Folks is already reflected in our API and we have
+                    * no other way to express it; but this seems a very
+                    * minor problem */
+                  this._supported_fields.add (field_spec.name);
+                }
+            }
+        }
     }
 
   /**
