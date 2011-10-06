@@ -62,6 +62,12 @@ public class Tpf.PersonaStore : Folks.PersonaStore
         ContactFeature.CONTACT_INFO
       };
 
+  private static GLib.Quark[] _connection_features =
+      {
+        TelepathyGLib.Connection.get_feature_quark_contact_info (),
+        0
+      };
+
   private const string[] _always_writeable_properties =
     {
       "is-favourite"
@@ -581,11 +587,12 @@ public class Tpf.PersonaStore : Folks.PersonaStore
                   this._logger = null;
                 }
 
-              /* Ensure the account's prepared first. */
-              yield this.account.prepare_async (null);
-
               this.account.notify["connection"].connect (
                   this._notify_connection_cb);
+
+              /* Ensure the connection is prepared as necessary. */
+              yield this.account.connection.prepare_async (
+                  this._connection_features);
 
               /* immediately handle accounts which are not currently being
                * disconnected */
