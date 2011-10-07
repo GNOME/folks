@@ -108,6 +108,8 @@ public class IndividualPropertiesTests : Folks.TestCase
                   assert ("groups" in tpf_persona.writeable_properties);
                   /* These are only writeable for the user contact */
                   assert (tpf_persona.is_user);
+                  assert (
+                      "email-addresses" in tpf_persona.writeable_properties);
                   assert (("full-name" in tpf_persona.writeable_properties));
                   assert (
                       ("phone-numbers" in tpf_persona.writeable_properties));
@@ -149,6 +151,8 @@ public class IndividualPropertiesTests : Folks.TestCase
                   assert ("groups" in tpf_persona.writeable_properties);
                   /* These are only writeable for the user contact */
                   assert (!tpf_persona.is_user);
+                  assert (
+                      !("email-addresses" in tpf_persona.writeable_properties));
                   assert (!("full-name" in tpf_persona.writeable_properties));
                   assert (
                       !("phone-numbers" in tpf_persona.writeable_properties));
@@ -156,6 +160,9 @@ public class IndividualPropertiesTests : Folks.TestCase
                   /* Check ContactInfo-provided properties */
                   assert (new PhoneFieldDetails ("+15142345678")
                       in i.phone_numbers);
+                  assert (i.full_name == "Olivier Crete");
+                  assert (new EmailFieldDetails ("olivier@example.com")
+                      in i.email_addresses);
                 }
             }
 
@@ -345,6 +352,7 @@ public class IndividualPropertiesTests : Folks.TestCase
   public void test_individual_properties_change_contact_info ()
     {
       var main_loop = new GLib.MainLoop (null, false);
+      this._changes_pending.add ("email-addresses");
       this._changes_pending.add ("phone-numbers");
       this._changes_pending.add ("full-name");
 
@@ -380,6 +388,9 @@ public class IndividualPropertiesTests : Folks.TestCase
       var added = changes.get_values ();
       var removed = changes.get_keys ();
 
+      var new_email_fd = new EmailFieldDetails ("cave@aperturescience.com");
+      new_email_fd.set_parameter (AbstractFieldDetails.PARAM_TYPE,
+          AbstractFieldDetails.PARAM_TYPE_WORK);
       var new_phone_fd = new PhoneFieldDetails ("+112233445566");
       new_phone_fd.set_parameter (AbstractFieldDetails.PARAM_TYPE,
           AbstractFieldDetails.PARAM_TYPE_HOME);
@@ -390,8 +401,20 @@ public class IndividualPropertiesTests : Folks.TestCase
           assert (i != null);
 
           /* Check properties */
+          assert (!(new_email_fd in i.email_addresses));
           assert (new_full_name != i.full_name);
           assert (!(new_phone_fd in i.phone_numbers));
+
+          i.notify["email-addresses"].connect ((s, p) =>
+              {
+                /* we can't re-use i here due to Vala's implementation */
+                var ind = (Individual) s;
+
+                if (new_email_fd in ind.email_addresses)
+                  {
+                    this._changes_pending.remove ("email-addresses");
+                  }
+              });
 
           i.notify["full-name"].connect ((s, p) =>
               {
@@ -423,6 +446,10 @@ public class IndividualPropertiesTests : Folks.TestCase
             }
           assert (persona is Tpf.Persona);
 
+          var emails = new HashSet<EmailFieldDetails> (
+              (GLib.HashFunc) EmailFieldDetails.hash,
+              (GLib.EqualFunc) EmailFieldDetails.equal);
+          emails.add (new_email_fd);
           var phones = new HashSet<PhoneFieldDetails> (
               (GLib.HashFunc) PhoneFieldDetails.hash,
               (GLib.EqualFunc) PhoneFieldDetails.equal);
@@ -435,6 +462,20 @@ public class IndividualPropertiesTests : Folks.TestCase
            * Telepathy backend, so this tracks the number of expected errors for
            * intentionally-invalid property changes */
           int uncaught_errors = 0;
+
+          if (!i.is_user)
+            uncaught_errors++;
+          try
+            {
+              yield ((Tpf.Persona) persona).change_email_addresses (emails);
+            }
+          catch (PropertyError e0)
+            {
+              /* setting the extended info on a non-user is invalid for the
+               * Telepathy backend */
+              if (!i.is_user)
+                uncaught_errors--;
+            }
 
           if (!i.is_user)
             uncaught_errors++;
