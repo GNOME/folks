@@ -8,9 +8,42 @@ AM_CPPFLAGS = \
 	-DG_LOG_DOMAIN=\"folks\" \
 	$(NULL)
 
+noinst_LTLIBRARIES = libfolks-internal.la
 lib_LTLIBRARIES = libfolks.la
 
-# Vala files to compile into libfolks.la
+##################################################
+# Internal library
+##################################################
+libfolks_internal_la_SOURCES = \
+	internal.vala \
+	$(NULL)
+
+libfolks_internal_la_VALAFLAGS = \
+	$(ERROR_VALAFLAGS) \
+	--library=folks-internal \
+	--vapidir=. \
+	--pkg gobject-2.0 \
+	--pkg gee-1.0 \
+	--vapi folks-internal.vapi \
+	-H folks-internal.h \
+	$(NULL)
+
+libfolks_internal_la_CFLAGS = \
+	$(GLIB_CFLAGS) \
+	$(GEE_CFLAGS) \
+	$(NULL)
+
+libfolks_internal_la_LIBADD = \
+	$(GLIB_LIBS) \
+	$(GEE_LIBS) \
+	$(NULL)
+
+##################################################
+# Core library
+##################################################
+
+libfolks_la_vala.stamp: libfolks-internal.la
+
 libfolks_la_SOURCES = \
 	abstract-field-details.vala \
 	alias-details.vala \
@@ -54,6 +87,7 @@ libfolks_la_VALAFLAGS = \
 	--library=folks \
 	--vapidir=. \
 	--pkg build-conf \
+	--pkg folks-internal \
 	--pkg gobject-2.0 \
 	--pkg gmodule-2.0 \
 	--pkg gio-2.0 \
@@ -79,6 +113,7 @@ libfolks_la_LIBADD = \
 	$(GMODULE_LIBS) \
 	$(GEE_LIBS) \
 	$(GCONF2_LIBS) \
+	$(top_builddir)/folks/libfolks-internal.la \
 	$(NULL)
 
 # The quoting here is unnecessary but harmless, and has the useful side-effect
@@ -89,6 +124,10 @@ libfolks_la_LDFLAGS = \
 
 folksdir = $(includedir)/folks
 folks_HEADERS = folks.h
+
+dist_noinst_DATA = \
+	folks-internal.vapi \
+	$(NULL)
 
 vapidir = $(datadir)/vala/vapi
 dist_vapi_DATA = \

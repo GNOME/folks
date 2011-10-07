@@ -403,8 +403,7 @@ public class Tpf.Persona : Folks.Persona,
     {
       var tpf_store = this.store as Tpf.PersonaStore;
 
-      if (Folks.PersonaStore.equal_sets<PhoneFieldDetails> (phone_numbers,
-              this._phone_numbers))
+      if (Folks.Internal.equal_sets<T> (details, member_set))
         {
           return;
         }
@@ -615,7 +614,7 @@ public class Tpf.Persona : Folks.Persona,
           this.notify_property ("full-name");
         }
 
-      if (!Folks.PersonaStore.equal_sets<PhoneFieldDetails> (new_phone_numbers,
+      if (!Folks.Internal.equal_sets<PhoneFieldDetails> (new_phone_numbers,
               this._phone_numbers))
         {
           this._phone_numbers = new_phone_numbers;

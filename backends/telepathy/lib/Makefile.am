@@ -110,6 +110,7 @@ libfolks_telepathy_la_VALAFLAGS = \
 	--vapidir=. \
 	--vapidir=$(top_srcdir)/folks \
 	--pkg folks \
+	--pkg folks-internal \
 	--pkg tp-lowlevel \
 	--pkg gobject-2.0 \
 	--pkg gio-2.0 \
@@ -133,6 +134,7 @@ libfolks_telepathy_la_LIBADD = \
 	$(GEE_LIBS) \
 	$(TP_GLIB_LIBS) \
 	$(top_builddir)/folks/libfolks.la \
+	$(top_builddir)/folks/libfolks-internal.la \
 	$(NULL)
 
 # The quoting here is unnecessary but harmless, and has the useful side-effect

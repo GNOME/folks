@@ -45,6 +45,7 @@ libfolks_eds_la_VALAFLAGS = \
 	--vapidir=. \
 	--vapidir=$(top_srcdir)/folks \
 	--pkg folks \
+	--pkg folks-internal \
 	--pkg gee-1.0 \
 	--pkg gio-2.0 \
 	--pkg gobject-2.0 \
@@ -67,6 +68,7 @@ libfolks_eds_la_CFLAGS = \
 
 libfolks_eds_la_LIBADD = \
 	$(top_builddir)/folks/libfolks.la \
+	$(top_builddir)/folks/libfolks-internal.la \
 	$(EBOOK_LIBS) \
 	$(EDATASERVER_LIBS) \
 	$(GIO_LIBS) \
