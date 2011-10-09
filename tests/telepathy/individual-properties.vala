@@ -113,6 +113,7 @@ public class IndividualPropertiesTests : Folks.TestCase
                   assert (("full-name" in tpf_persona.writeable_properties));
                   assert (
                       ("phone-numbers" in tpf_persona.writeable_properties));
+                  assert ("urls" in tpf_persona.writeable_properties);
 
                   /* Check ContactInfo-provided properties */
                   assert (i.full_name == "");
@@ -156,6 +157,7 @@ public class IndividualPropertiesTests : Folks.TestCase
                   assert (!("full-name" in tpf_persona.writeable_properties));
                   assert (
                       !("phone-numbers" in tpf_persona.writeable_properties));
+                  assert (!("urls" in tpf_persona.writeable_properties));
 
                   /* Check ContactInfo-provided properties */
                   assert (new PhoneFieldDetails ("+15142345678")
@@ -163,6 +165,7 @@ public class IndividualPropertiesTests : Folks.TestCase
                   assert (i.full_name == "Olivier Crete");
                   assert (new EmailFieldDetails ("olivier@example.com")
                       in i.email_addresses);
+                  assert (new UrlFieldDetails ("ocrete.example.com") in i.urls);
                 }
             }
 
@@ -355,6 +358,7 @@ public class IndividualPropertiesTests : Folks.TestCase
       this._changes_pending.add ("email-addresses");
       this._changes_pending.add ("phone-numbers");
       this._changes_pending.add ("full-name");
+      this._changes_pending.add ("urls");
 
       /* Set up the aggregator */
       var aggregator = new IndividualAggregator ();
@@ -394,6 +398,9 @@ public class IndividualPropertiesTests : Folks.TestCase
       var new_phone_fd = new PhoneFieldDetails ("+112233445566");
       new_phone_fd.set_parameter (AbstractFieldDetails.PARAM_TYPE,
           AbstractFieldDetails.PARAM_TYPE_HOME);
+      var new_url_fd = new UrlFieldDetails ("aperturescience.com/cave");
+      new_url_fd.set_parameter (AbstractFieldDetails.PARAM_TYPE,
+          AbstractFieldDetails.PARAM_TYPE_WORK);
       var new_full_name = "Cave Johnson";
 
       foreach (Individual i in added)
@@ -404,6 +411,7 @@ public class IndividualPropertiesTests : Folks.TestCase
           assert (!(new_email_fd in i.email_addresses));
           assert (new_full_name != i.full_name);
           assert (!(new_phone_fd in i.phone_numbers));
+          assert (!(new_url_fd in i.urls));
 
           i.notify["email-addresses"].connect ((s, p) =>
               {
@@ -436,6 +444,17 @@ public class IndividualPropertiesTests : Folks.TestCase
                   }
               });
 
+          i.notify["urls"].connect ((s, p) =>
+              {
+                /* we can't re-use i here due to Vala's implementation */
+                var ind = (Individual) s;
+
+                if (new_url_fd in ind.urls)
+                  {
+                    this._changes_pending.remove ("urls");
+                  }
+              });
+
           /* the contact list this aggregator is based upon has exactly 1
            * Tpf.Persona per Individual */
           Folks.Persona persona = null;
@@ -454,6 +473,10 @@ public class IndividualPropertiesTests : Folks.TestCase
               (GLib.HashFunc) PhoneFieldDetails.hash,
               (GLib.EqualFunc) PhoneFieldDetails.equal);
           phones.add (new_phone_fd);
+          var urls = new HashSet<UrlFieldDetails> (
+              (GLib.HashFunc) UrlFieldDetails.hash,
+              (GLib.EqualFunc) UrlFieldDetails.equal);
+          urls.add (new_url_fd);
 
           /* set the extended info through Telepathy's ContactInfo interface and
            * wait for it to hit our notification callback above */
@@ -496,6 +519,20 @@ public class IndividualPropertiesTests : Folks.TestCase
               yield ((Tpf.Persona) persona).change_phone_numbers (phones);
             }
           catch (PropertyError e2)
+            {
+              /* setting the extended info on a non-user is invalid for the
+               * Telepathy backend */
+              if (!i.is_user)
+                uncaught_errors--;
+            }
+
+          if (!i.is_user)
+            uncaught_errors++;
+          try
+            {
+              yield ((Tpf.Persona) persona).change_urls (urls);
+            }
+          catch (PropertyError e3)
             {
               /* setting the extended info on a non-user is invalid for the
                * Telepathy backend */

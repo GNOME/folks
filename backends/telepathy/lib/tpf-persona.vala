@@ -36,7 +36,8 @@ public class Tpf.Persona : Folks.Persona,
     ImDetails,
     NameDetails,
     PhoneDetails,
-    PresenceDetails
+    PresenceDetails,
+    UrlDetails
 {
   private HashSet<string> _groups;
   private Set<string> _groups_ro;
@@ -423,6 +424,32 @@ public class Tpf.Persona : Folks.Persona,
           this._phone_numbers, "tel");
     }
 
+  private HashSet<UrlFieldDetails> _urls;
+  private Set<UrlFieldDetails> _urls_ro;
+
+  /**
+   * {@inheritDoc}
+   *
+   * @since UNRELEASED
+   */
+  [CCode (notify = false)]
+  public Set<UrlFieldDetails> urls
+    {
+      get { return this._urls_ro; }
+      set { this.change_urls.begin (value); }
+    }
+
+  /**
+   * {@inheritDoc}
+   *
+   * @since UNRELEASED
+   */
+  public async void change_urls (Set<UrlFieldDetails> urls) throws PropertyError
+    {
+      yield this._change_details<UrlFieldDetails> (urls,
+          this._urls, "url");
+    }
+
   private async void _change_details<T> (
       Set<AbstractFieldDetails<string>> details,
       Set<AbstractFieldDetails<string>> member_set,
@@ -538,6 +565,10 @@ public class Tpf.Persona : Folks.Persona,
           (GLib.HashFunc) PhoneFieldDetails.hash,
           (GLib.EqualFunc) PhoneFieldDetails.equal);
       this._phone_numbers_ro = this._phone_numbers.read_only_view;
+      this._urls = new HashSet<UrlFieldDetails> (
+          (GLib.HashFunc) UrlFieldDetails.hash,
+          (GLib.EqualFunc) UrlFieldDetails.equal);
+      this._urls_ro = this._urls.read_only_view;
 
       contact.notify["avatar-file"].connect ((s, p) =>
         {
@@ -614,6 +645,8 @@ public class Tpf.Persona : Folks.Persona,
         this._writeable_properties += "full-name";
       if ("tel" in tpf_store.supported_fields)
         this._writeable_properties += "phone-numbers";
+      if ("url" in tpf_store.supported_fields)
+        this._writeable_properties += "urls";
     }
 
   private void _contact_notify_contact_info ()
@@ -625,6 +658,9 @@ public class Tpf.Persona : Folks.Persona,
       var new_phone_numbers = new HashSet<PhoneFieldDetails> (
           (GLib.HashFunc) PhoneFieldDetails.hash,
           (GLib.EqualFunc) PhoneFieldDetails.equal);
+      var new_urls = new HashSet<UrlFieldDetails> (
+          (GLib.HashFunc) UrlFieldDetails.hash,
+          (GLib.EqualFunc) UrlFieldDetails.equal);
 
       var contact_info = this.contact.get_contact_info ();
       foreach (var info in contact_info)
@@ -652,6 +688,15 @@ public class Tpf.Persona : Folks.Persona,
                   new_phone_numbers.add (phone_fd);
                 }
             }
+          else if (info.field_name == "url")
+            {
+              foreach (var url in info.field_value)
+                {
+                  var parameters = this._afd_params_from_strv (info.parameters);
+                  var url_fd = new UrlFieldDetails (url, parameters);
+                  new_urls.add (url_fd);
+                }
+            }
         }
 
       if (!Folks.Internal.equal_sets<EmailFieldDetails> (new_email_addresses,
@@ -674,6 +719,13 @@ public class Tpf.Persona : Folks.Persona,
           this._phone_numbers = new_phone_numbers;
           this._phone_numbers_ro = new_phone_numbers.read_only_view;
           this.notify_property ("phone-numbers");
+        }
+
+      if (!Folks.Internal.equal_sets<UrlFieldDetails> (new_urls, this._urls))
+        {
+          this._urls = new_urls;
+          this._urls_ro = new_urls.read_only_view;
+          this.notify_property ("urls");
         }
     }
 

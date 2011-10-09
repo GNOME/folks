@@ -527,6 +527,11 @@ receive_contact_lists (gpointer p)
     _insert_contact_field (d->contact_info, "email", NULL,
         (const gchar * const *) values);
   }
+  {
+    const gchar * values[] = { "ocrete.example.com", NULL };
+    _insert_contact_field (d->contact_info, "url", NULL,
+        (const gchar * const *) values);
+  }
   tp_handle_unref (self->priv->contact_repo, handle);
 
   id = "travis@example.com";
