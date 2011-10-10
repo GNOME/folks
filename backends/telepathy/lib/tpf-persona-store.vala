@@ -2250,7 +2250,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
     {
       if (!persona.is_user)
         {
-          throw new PersonaStoreError.INVALID_ARGUMENT (
+          throw new PersonaStoreError.UNSUPPORTED_ON_NON_USER (
               _("Extended information may only be set on the user's Telepathy contact."));
         }
 

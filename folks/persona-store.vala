@@ -115,6 +115,14 @@ public errordomain Folks.PersonaStoreError
    * @since 0.6.0
    */
   REMOVE_FAILED,
+
+  /**
+   * Such an operation may only be performed on a {@link Persona} with
+   * {@link Persona.is_user} set to `true`.
+   *
+   * @since UNRELEASED
+   */
+  UNSUPPORTED_ON_NON_USER,
 }
 
 /**
