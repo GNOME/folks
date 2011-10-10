@@ -600,10 +600,6 @@ public class Tpf.PersonaStore : Folks.PersonaStore
               this.account.notify["connection"].connect (
                   this._notify_connection_cb);
 
-              /* Ensure the connection is prepared as necessary. */
-              yield this.account.connection.prepare_async (
-                  this._connection_features);
-
               /* immediately handle accounts which are not currently being
                * disconnected */
               if (this.account.connection != null)
@@ -831,6 +827,14 @@ public class Tpf.PersonaStore : Folks.PersonaStore
           return;
         }
 
+      this._notify_connection_cb_async.begin ();
+    }
+
+  private async void _notify_connection_cb_async () throws GLib.Error
+    {
+      /* Ensure the connection is prepared as necessary. */
+      yield this.account.connection.prepare_async (this._connection_features);
+
       // We're connected, so can stop advertising personas from the cache
       this._unload_cache ();
 
@@ -846,7 +850,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       if (connection_ready == true)
         this._connection_ready_cb (conn, null);
       else
-        conn.prepare_async.begin (null);
+        yield conn.prepare_async (null);
     }
 
   private void _connection_ready_cb (Object s, ParamSpec? p)
