@@ -108,6 +108,7 @@ public class IndividualPropertiesTests : Folks.TestCase
                   assert ("groups" in tpf_persona.writeable_properties);
                   /* These are only writeable for the user contact */
                   assert (tpf_persona.is_user);
+                  assert ("birthday" in tpf_persona.writeable_properties);
                   assert (
                       "email-addresses" in tpf_persona.writeable_properties);
                   assert (("full-name" in tpf_persona.writeable_properties));
@@ -152,6 +153,7 @@ public class IndividualPropertiesTests : Folks.TestCase
                   assert ("groups" in tpf_persona.writeable_properties);
                   /* These are only writeable for the user contact */
                   assert (!tpf_persona.is_user);
+                  assert (!("birthday" in tpf_persona.writeable_properties));
                   assert (
                       !("email-addresses" in tpf_persona.writeable_properties));
                   assert (!("full-name" in tpf_persona.writeable_properties));
@@ -355,6 +357,7 @@ public class IndividualPropertiesTests : Folks.TestCase
   public void test_individual_properties_change_contact_info ()
     {
       var main_loop = new GLib.MainLoop (null, false);
+      this._changes_pending.add ("birthday");
       this._changes_pending.add ("email-addresses");
       this._changes_pending.add ("phone-numbers");
       this._changes_pending.add ("full-name");
@@ -392,6 +395,11 @@ public class IndividualPropertiesTests : Folks.TestCase
       var added = changes.get_values ();
       var removed = changes.get_keys ();
 
+      var timeval = TimeVal ();
+      timeval.from_iso8601 ("1929-01-11T00:00Z");
+      /* work around bgo#661397 by forcing our microseconds to zero */
+      timeval.tv_usec = 0;
+      var new_birthday = new DateTime.from_timeval_utc (timeval);
       var new_email_fd = new EmailFieldDetails ("cave@aperturescience.com");
       new_email_fd.set_parameter (AbstractFieldDetails.PARAM_TYPE,
           AbstractFieldDetails.PARAM_TYPE_WORK);
@@ -408,10 +416,23 @@ public class IndividualPropertiesTests : Folks.TestCase
           assert (i != null);
 
           /* Check properties */
+          assert (i.birthday == null || !new_birthday.equal (i.birthday));
           assert (!(new_email_fd in i.email_addresses));
           assert (new_full_name != i.full_name);
           assert (!(new_phone_fd in i.phone_numbers));
           assert (!(new_url_fd in i.urls));
+
+          i.notify["birthday"].connect ((s, p) =>
+              {
+                /* we can't re-use i here due to Vala's implementation */
+                var ind = (Individual) s;
+
+                if (ind.birthday != null && new_birthday != null &&
+                  ind.birthday.equal (new_birthday))
+                  {
+                    this._changes_pending.remove ("birthday");
+                  }
+              });
 
           i.notify["email-addresses"].connect ((s, p) =>
               {
@@ -485,6 +506,18 @@ public class IndividualPropertiesTests : Folks.TestCase
            * Telepathy backend, so this tracks the number of expected errors for
            * intentionally-invalid property changes */
           int uncaught_errors = 0;
+
+          if (!i.is_user)
+            uncaught_errors++;
+          try
+            {
+              yield ((Tpf.Persona) persona).change_birthday (new_birthday);
+            }
+          catch (PropertyError e_birthday)
+            {
+              if (!i.is_user)
+                uncaught_errors--;
+            }
 
           if (!i.is_user)
             uncaught_errors++;

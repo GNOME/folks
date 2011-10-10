@@ -11,6 +11,7 @@ API changes:
 * Implement NameDetails on Tpf.Persona
 * Implement EmailDetails on Tpf.Persona
 * Implement UrlDetails on Tpf.Persona
+* Implement BirthdayDetails on Tpf.Persona
 
 Overview of changes from libfolks 0.6.3.1 to libfolks 0.6.3.2
 =============================================================

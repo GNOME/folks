@@ -518,6 +518,11 @@ receive_contact_lists (gpointer p)
         (const gchar * const *) values);
   }
   {
+    const gchar * values[] = { "1982-01-02T13:57Z", NULL };
+    _insert_contact_field (d->contact_info, "tel", NULL,
+        (const gchar * const *) values);
+  }
+  {
     const gchar * values[] = { "Olivier Crete", NULL };
     _insert_contact_field (d->contact_info, "fn", NULL,
         (const gchar * const *) values);

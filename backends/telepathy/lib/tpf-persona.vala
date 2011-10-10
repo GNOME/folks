@@ -30,6 +30,7 @@ using Folks;
 public class Tpf.Persona : Folks.Persona,
     AliasDetails,
     AvatarDetails,
+    BirthdayDetails,
     EmailDetails,
     FavouriteDetails,
     GroupDetails,
@@ -158,6 +159,72 @@ public class Tpf.Persona : Folks.Persona,
     {
       get { return ""; }
       set { this.change_nickname.begin (value); } /* not writeable */
+    }
+
+  /**
+   * {@inheritDoc}
+   *
+   * ContactInfo has no equivalent field, so this is unsupported.
+   *
+   * @since UNRELEASED
+   */
+  [CCode (notify = false)]
+  public string? calendar_event_id
+    {
+      get { return null; } /* unsupported */
+      set { this.change_calendar_event_id.begin (value); } /* not writeable */
+    }
+
+  private DateTime? _birthday = null;
+  /**
+   * {@inheritDoc}
+   *
+   * @since UNRELEASED
+   */
+  [CCode (notify = false)]
+  public DateTime? birthday
+    {
+      get { return this._birthday; }
+      set { this.change_birthday.begin (value); }
+    }
+
+  /**
+   * {@inheritDoc}
+   *
+   * @since UNRELEASED
+   */
+  public async void change_birthday (DateTime? birthday) throws PropertyError
+    {
+      var tpf_store = this.store as Tpf.PersonaStore;
+
+      if (birthday != null && this._birthday != null &&
+          birthday.equal (this._birthday))
+        {
+          return;
+        }
+
+      if (this._is_constructed)
+        {
+          try
+            {
+              yield tpf_store.change_user_birthday (this, birthday);
+            }
+          catch (PersonaStoreError.INVALID_ARGUMENT e1)
+            {
+              throw new PropertyError.NOT_WRITEABLE (e1.message);
+            }
+          catch (PersonaStoreError.STORE_OFFLINE e2)
+            {
+              throw new PropertyError.UNKNOWN_ERROR (e2.message);
+            }
+          catch (PersonaStoreError e3)
+            {
+              throw new PropertyError.UNKNOWN_ERROR (e3.message);
+            }
+        }
+
+      /* the change will be notified when we receive changes to
+       * contact.contact_info */
     }
 
   /**
@@ -639,6 +706,8 @@ public class Tpf.Persona : Folks.Persona,
       var tpf_store = this.store as Tpf.PersonaStore;
       this._writeable_properties = this._always_writeable_properties;
 
+      if ("bday" in tpf_store.supported_fields)
+        this._writeable_properties += "birthday";
       if ("email" in tpf_store.supported_fields)
         this._writeable_properties += "email-addresses";
       if ("fn" in tpf_store.supported_fields)
@@ -651,6 +720,7 @@ public class Tpf.Persona : Folks.Persona,
 
   private void _contact_notify_contact_info ()
     {
+      var new_birthday_str = "";
       var new_full_name = "";
       var new_email_addresses = new HashSet<EmailFieldDetails> (
           (GLib.HashFunc) EmailFieldDetails.hash,
@@ -666,6 +736,10 @@ public class Tpf.Persona : Folks.Persona,
       foreach (var info in contact_info)
         {
           if (info.field_name == "") {}
+          else if (info.field_name == "bday")
+            {
+              new_birthday_str = info.field_value[0];
+            }
           else if (info.field_name == "email")
             {
               foreach (var email_addr in info.field_value)
@@ -696,6 +770,29 @@ public class Tpf.Persona : Folks.Persona,
                   var url_fd = new UrlFieldDetails (url, parameters);
                   new_urls.add (url_fd);
                 }
+            }
+        }
+
+      if (new_birthday_str != "")
+        {
+          var timeval = TimeVal ();
+          timeval.from_iso8601 (new_birthday_str);
+          /* work around bgo#661397 by forcing our microseconds to zero */
+          timeval.tv_usec = 0;
+          var d = new DateTime.from_timeval_utc (timeval);
+          if (this._birthday == null ||
+              (this._birthday != null && !this._birthday.equal (d.to_utc ())))
+            {
+              this._birthday = d.to_utc ();
+              this.notify_property ("birthday");
+            }
+        }
+      else
+        {
+          if (this._birthday != null)
+            {
+              this._birthday = null;
+              this.notify_property ("birthday");
             }
         }
 

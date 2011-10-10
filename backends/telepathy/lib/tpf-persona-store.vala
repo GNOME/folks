@@ -2175,6 +2175,26 @@ public class Tpf.PersonaStore : Folks.PersonaStore
           (Handle) persona.contact.handle, alias);
     }
 
+  internal async void change_user_birthday (Tpf.Persona persona,
+      DateTime? birthday) throws PersonaStoreError
+    {
+      string birthday_str;
+
+      if (birthday == null)
+        birthday_str = "";
+      else
+        birthday_str = birthday.to_string ();
+
+      var info_set = new HashSet<ContactInfoField> ();
+      string[] values = { birthday_str };
+      string[] parameters = { null };
+
+      var field = new ContactInfoField ("bday", parameters, values);
+      info_set.add (field);
+
+      yield this._change_user_contact_info (persona, info_set);
+    }
+
   internal async void change_user_full_name (Tpf.Persona persona,
       string full_name) throws PersonaStoreError
     {
