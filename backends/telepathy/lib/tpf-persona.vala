@@ -776,15 +776,21 @@ public class Tpf.Persona : Folks.Persona,
       if (new_birthday_str != "")
         {
           var timeval = TimeVal ();
-          timeval.from_iso8601 (new_birthday_str);
-          /* work around bgo#661397 by forcing our microseconds to zero */
-          timeval.tv_usec = 0;
-          var d = new DateTime.from_timeval_utc (timeval);
-          if (this._birthday == null ||
-              (this._birthday != null && !this._birthday.equal (d.to_utc ())))
+          if (timeval.from_iso8601 (new_birthday_str))
             {
-              this._birthday = d.to_utc ();
-              this.notify_property ("birthday");
+              var d = new DateTime.from_timeval_utc (timeval);
+              if (this._birthday == null ||
+                  (this._birthday != null &&
+                    !this._birthday.equal (d.to_utc ())))
+                {
+                  this._birthday = d.to_utc ();
+                  this.notify_property ("birthday");
+                }
+            }
+          else
+            {
+              warning ("Failed to parse new birthday string '%s'",
+                  new_birthday_str);
             }
         }
       else

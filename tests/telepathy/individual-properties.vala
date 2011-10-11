@@ -396,9 +396,7 @@ public class IndividualPropertiesTests : Folks.TestCase
       var removed = changes.get_keys ();
 
       var timeval = TimeVal ();
-      timeval.from_iso8601 ("1929-01-11T00:00Z");
-      /* work around bgo#661397 by forcing our microseconds to zero */
-      timeval.tv_usec = 0;
+      timeval.from_iso8601 ("1929-01-11T00:00:00Z");
       var new_birthday = new DateTime.from_timeval_utc (timeval);
       var new_email_fd = new EmailFieldDetails ("cave@aperturescience.com");
       new_email_fd.set_parameter (AbstractFieldDetails.PARAM_TYPE,
