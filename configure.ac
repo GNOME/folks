@@ -145,7 +145,18 @@ PKG_CHECK_MODULES([DBUS_GLIB], [dbus-glib-1])
 PKG_CHECK_MODULES([GCONF2], [gconf-2.0 >= $GCONF2_REQUIRED])
 
 # FIXME: We depend on libgee < 0.7 because 0.7 breaks API. bgo#627746
-PKG_CHECK_MODULES([GEE], [gee-1.0 < 0.7])
+PKG_CHECK_MODULES([GEE], [gee-1.0 < 0.7],
+                  have_gee_0_6_x="yes",
+                  have_gee_0_6_x="no")
+
+if test "x$have_gee_0_6_x" != "xyes"; then
+    AC_MSG_ERROR([
+Gee 0.6.x required but not installed.
+
+Note that Gee 0.8.x provides gee-0.8 (but gee-1.0 is, confusingly, provided by
+Gee 0.6.x)])
+fi
+
 PKG_CHECK_MODULES([TP_GLIB], [telepathy-glib >= $TP_GLIB_REQUIRED])
 
 if test x$enable_tracker_backend = xyes; then

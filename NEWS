@@ -5,6 +5,7 @@ Bugs fixed:
   VALA_CHECK_PACKAGES([tracker-sparql-0.12])
 * Bug 657602 — Telepathy backend fails to set Personas' phone numbers from
   ContactInfo
+* Bug 660937 — [regression] build failure: No package 'gee-1.0' found
 
 API changes:
 * Implement PhoneDetails on Tpf.Persona
