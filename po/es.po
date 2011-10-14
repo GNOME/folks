@@ -724,7 +724,7 @@ msgstr "No se pudo cargar el «backend» «%s»"
 #, c-format
 #| msgid "Couldn't load the backends: %s\n"
 msgid "Couldn't prepare the ‘%s’ backend: %s"
-msgstr "No se pudo preparar los «backend»: %s"
+msgstr "No se pudo preparar el «backend» «%s»: %s"
 
 #. Translators: the parameter is a backend identifier.
 #: ../tools/import.vala:145
