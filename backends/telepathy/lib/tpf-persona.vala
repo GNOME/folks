@@ -871,6 +871,16 @@ public class Tpf.Persona : Folks.Persona,
    * @param is_user Whether the persona is the user.
    * @param avatar The icon for the persona's cached avatar, or `null` if they
    * have no avatar.
+   * @param birthday The date/time of birth of the persona, or `null` if it's
+   * unknown.
+   * @param full_name The persona's full name, or the empty string if it's
+   * unknown.
+   * @param email_addresses A set of the persona's e-mail addresses, which may
+   * be empty (but may not be `null`).
+   * @param phone_numbers A set of the persona's phone numbers, which may be
+   * empty (but may not be `null`).
+   * @param urls A set of the persona's URLs, which may be empty (but may not be
+   * `null`).
    * @return A new {@link Tpf.Persona} representing the cached persona.
    *
    * @since 0.6.0
@@ -878,7 +888,9 @@ public class Tpf.Persona : Folks.Persona,
   internal Persona.from_cache (PersonaStore store, string uid, string iid,
       string im_address, string protocol, HashSet<string> groups,
       bool is_favourite, string alias, bool is_in_contact_list, bool is_user,
-      LoadableIcon? avatar)
+      LoadableIcon? avatar, DateTime? birthday, string full_name,
+      HashSet<EmailFieldDetails> email_addresses,
+      HashSet<PhoneFieldDetails> phone_numbers, HashSet<UrlFieldDetails> urls)
     {
       Object (contact: null,
               display_id: im_address,
@@ -901,6 +913,18 @@ public class Tpf.Persona : Folks.Persona,
       this._groups = groups;
       this._groups_ro = this._groups.read_only_view;
 
+      // E-mail addresses
+      this._email_addresses = email_addresses;
+      this._email_addresses_ro = this._email_addresses.read_only_view;
+
+      // Phone numbers
+      this._phone_numbers = phone_numbers;
+      this._phone_numbers_ro = this._phone_numbers.read_only_view;
+
+      // URLs
+      this._urls = urls;
+      this._urls_ro = this._urls.read_only_view;
+
       // Other properties
       if (alias == null)
         {
@@ -908,10 +932,18 @@ public class Tpf.Persona : Folks.Persona,
           alias = "";
         }
 
+      if (full_name == null)
+        {
+          /* Deal with badly-behaved callers */
+          full_name = "";
+        }
+
       this._alias = alias;
       this._is_favourite = is_favourite;
       this.is_in_contact_list = is_in_contact_list;
       this._avatar = avatar;
+      this._birthday = birthday;
+      this._full_name = full_name;
 
       // Make the persona appear offline
       this.presence_type = PresenceType.OFFLINE;

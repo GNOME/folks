@@ -37,6 +37,9 @@ using Folks;
  *  # Alias (`s`)
  *  # In contact list? (`b`)
  *  # Avatar file URI (`s`)
+ *  # Birthday date as a Unix timestamp (`s`)
+ *  # Set of e-mail addresses and parameters (`a(sa(ss))`)
+ *  # Full name (`s`)
  *
  * @since 0.6.0
  */
@@ -48,7 +51,7 @@ internal class Tpf.PersonaStoreCache : Folks.ObjectCache<Tpf.Persona>
    * get_serialised_object_type(). This must be modified whenever that variant
    * type or its semantics are changed, since that would necessitate a cache
    * refresh. */
-  private static const uint8 _FILE_FORMAT_VERSION = 1;
+  private static const uint8 _FILE_FORMAT_VERSION = 2;
 
   internal PersonaStoreCache (PersonaStore store)
     {
@@ -81,6 +84,44 @@ internal class Tpf.PersonaStoreCache : Folks.ObjectCache<Tpf.Persona>
             new VariantType.maybe (VariantType.STRING) // Avatar
           });
         }
+      else if (object_version == 2 || object_version == uint8.MAX)
+        {
+          return new VariantType.tuple ({
+            VariantType.STRING, // UID
+            VariantType.STRING, // IID
+            VariantType.STRING, // ID
+            VariantType.STRING, // Protocol
+            new VariantType.array (VariantType.STRING), // Groups
+            VariantType.BOOLEAN, // Favourite?
+            VariantType.STRING, // Alias
+            VariantType.BOOLEAN, // In contact list?
+            VariantType.BOOLEAN, // Is user?
+            new VariantType.maybe (VariantType.STRING), // Avatar
+            new VariantType.maybe (VariantType.INT64), // Birthday
+            VariantType.STRING, // Full name
+            new VariantType.array (new VariantType.tuple ({
+              VariantType.STRING, // E-mail address
+              new VariantType.array (new VariantType.tuple ({
+                VariantType.STRING, // Key
+                VariantType.STRING // Value
+              })) // Parameters
+            })), // E-mail addresses
+            new VariantType.array (new VariantType.tuple ({
+              VariantType.STRING, // Phone number
+              new VariantType.array (new VariantType.tuple ({
+                VariantType.STRING, // Key
+                VariantType.STRING // Value
+              })) // Parameters
+            })), // Phone numbers
+            new VariantType.array (new VariantType.tuple ({
+              VariantType.STRING, // URL
+              new VariantType.array (new VariantType.tuple ({
+                VariantType.STRING, // Key
+                VariantType.STRING // Value
+              })) // Parameters
+            })) // URLs
+          });
+        }
 
       // Unsupported version
       return null;
@@ -89,6 +130,40 @@ internal class Tpf.PersonaStoreCache : Folks.ObjectCache<Tpf.Persona>
   protected override uint8 get_serialised_object_version ()
     {
       return this._FILE_FORMAT_VERSION;
+    }
+
+  private Variant[] serialise_abstract_field_details (
+      Set<AbstractFieldDetails<string>> field_details_set)
+    {
+      Variant[] output_variants = new Variant[field_details_set.size];
+
+      uint i = 0;
+      foreach (var afd in field_details_set)
+        {
+          Variant[] parameters = new Variant[afd.parameters.size];
+
+          uint f = 0;
+          foreach (var key in afd.parameters.get_keys ())
+            {
+              foreach (var val in afd.parameters.get (key))
+                {
+                  parameters[f] = new Variant.tuple ({
+                    new Variant.string (key), // Key
+                    new Variant.string (val) // Value
+                  });
+                }
+            }
+
+          output_variants[i] = new Variant.tuple ({
+            afd.value, // Variant value (e.g. e-mail address)
+            new Variant.array (new VariantType.tuple ({
+              VariantType.STRING, // Key
+              VariantType.STRING // Value
+            }), parameters)
+          });
+        }
+
+      return output_variants;
     }
 
   protected override Variant serialise_object (Tpf.Persona persona)
@@ -117,6 +192,17 @@ internal class Tpf.PersonaStoreCache : Folks.ObjectCache<Tpf.Persona>
       var avatar_variant = (avatar_file != null) ?
           new Variant.string (avatar_file.get_uri ()) : null;
 
+      // Birthday
+      var birthday_variant = (persona.birthday != null) ?
+          new Variant.int64 (persona.birthday.to_unix ()) : null;
+
+      // Sort out the e-mail addresses, phone numbers and URLs
+      var email_addresses =
+          this.serialise_abstract_field_details (persona.email_addresses);
+      var phone_numbers =
+          this.serialise_abstract_field_details (persona.phone_numbers);
+      var urls = this.serialise_abstract_field_details (persona.urls);
+
       // Serialise the persona
       return new Variant.tuple ({
         new Variant.string (persona.uid),
@@ -128,8 +214,59 @@ internal class Tpf.PersonaStoreCache : Folks.ObjectCache<Tpf.Persona>
         new Variant.string (persona.alias),
         new Variant.boolean (persona.is_in_contact_list),
         new Variant.boolean (persona.is_user),
-        new Variant.maybe (VariantType.STRING, avatar_variant)
+        new Variant.maybe (VariantType.STRING, avatar_variant),
+        new Variant.maybe (VariantType.INT64, birthday_variant),
+        new Variant.string (persona.full_name),
+        new Variant.array (new VariantType.tuple ({
+          VariantType.STRING, // E-mail address
+          new VariantType.array (new VariantType.tuple ({
+            VariantType.STRING, // Key
+            VariantType.STRING // Value
+          })) // Parameters
+        }), email_addresses),
+        new Variant.array (new VariantType.tuple ({
+          VariantType.STRING, // Phone number
+          new VariantType.array (new VariantType.tuple ({
+            VariantType.STRING, // Key
+            VariantType.STRING // Value
+          })) // Parameters
+        }), phone_numbers),
+        new Variant.array (new VariantType.tuple ({
+          VariantType.STRING, // URL
+          new VariantType.array (new VariantType.tuple ({
+            VariantType.STRING, // Key
+            VariantType.STRING // Value
+          })) // Parameters
+        }), urls)
       });
+    }
+
+  private delegate void AfdDeserialisationCallback (string val,
+      HashMultiMap<string, string> parameters);
+
+  private void deserialise_abstract_field_details (Variant input_variants,
+      AfdDeserialisationCallback cb)
+    {
+      for (uint i = 0; i < input_variants.n_children (); i++)
+        {
+          var input_variant = input_variants.get_child_value (i);
+
+          var val = input_variant.get_child_value (0).get_string ();
+
+          var parameters = new HashMultiMap<string, string> ();
+          var params_variants = input_variant.get_child_value (1);
+          for (uint f = 0; f < params_variants.n_children (); f++)
+            {
+              var params_variant = params_variants.get_child_value (f);
+
+              parameters.set (
+                  params_variant.get_child_value (0).get_string (),
+                  params_variant.get_child_value (1).get_string ());
+            }
+
+          // Output
+          cb (val, parameters);
+        }
     }
 
   protected override Tpf.Persona deserialise_object (Variant variant,
@@ -159,9 +296,57 @@ internal class Tpf.PersonaStoreCache : Folks.ObjectCache<Tpf.Persona>
           new FileIcon (File.new_for_uri (avatar_variant.get_string ())) :
           null;
 
+      // Deserialise the birthday
+      DateTime? birthday = null;
+      if (object_version == 2)
+        {
+          var birthday_variant = variant.get_child_value (10).get_maybe ();
+          if (birthday_variant != null)
+            {
+              birthday =
+                  new DateTime.from_unix_utc (birthday_variant.get_int64 ());
+            }
+        }
+
+      var full_name = "";
+      if (object_version == 2)
+        {
+          full_name = variant.get_child_value (11).get_string();
+        }
+
+      var email_address_set = new HashSet<EmailFieldDetails> (
+          (GLib.HashFunc) EmailFieldDetails.hash,
+          (GLib.EqualFunc) EmailFieldDetails.equal);
+      var phone_number_set = new HashSet<PhoneFieldDetails> (
+          (GLib.HashFunc) PhoneFieldDetails.hash,
+          (GLib.EqualFunc) PhoneFieldDetails.equal);
+      var url_set = new HashSet<UrlFieldDetails> (
+          (GLib.HashFunc) UrlFieldDetails.hash,
+          (GLib.EqualFunc) UrlFieldDetails.equal);
+
+      if (object_version == 2)
+        {
+          this.deserialise_abstract_field_details (variant.get_child_value (12),
+              (v, p) =>
+                {
+                  email_address_set.add (new EmailFieldDetails (v, p));
+                });
+          this.deserialise_abstract_field_details (variant.get_child_value (13),
+              (v, p) =>
+                {
+                  phone_number_set.add (new PhoneFieldDetails (v, p));
+                });
+          this.deserialise_abstract_field_details (variant.get_child_value (14),
+              (v, p) =>
+                {
+                  url_set.add (new UrlFieldDetails (v, p));
+                });
+        }
+
       return new Tpf.Persona.from_cache (this._store, uid, iid, display_id,
           im_protocol, group_set, is_favourite, alias, is_in_contact_list,
-          is_user, avatar);
+          is_user, avatar, birthday, full_name, email_address_set,
+          phone_number_set, url_set);
     }
 }
 

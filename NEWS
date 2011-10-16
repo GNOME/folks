@@ -6,6 +6,7 @@ Bugs fixed:
 * Bug 657602 — Telepathy backend fails to set Personas' phone numbers from
   ContactInfo
 * Bug 660937 — [regression] build failure: No package 'gee-1.0' found
+* Bug 661475 — string_strip: assertion `self != NULL' failed
 
 API changes:
 * Implement PhoneDetails on Tpf.Persona
