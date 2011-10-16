@@ -1825,11 +1825,12 @@ tp_test_contact_list_manager_set_contact_info (TpTestContactListManager *self,
 {
   TpTestContactList *stored = self->priv->lists[
     TP_TEST_CONTACT_LIST_STORED];
+  GPtrArray *old;
   TpTestContactDetails *d = ensure_contact (self, self->priv->conn->self_handle,
       NULL);
   d->id = g_strdup (tp_handle_inspect (self->priv->contact_repo,
         self->priv->conn->self_handle));
-  GPtrArray *old = d->contact_info;
+  old = d->contact_info;
 
   /* FIXME: if stored list hasn't been retrieved yet, queue the change for
    * later */
