@@ -62,9 +62,14 @@ public abstract class Folks.ObjectCache<T> : Object
    * If a smooth upgrade path is needed in future due to cache file format
    * changes, this may be modified to take a version parameter.
    *
+   * @param object_version the version of the object format to use, or
+   * `uint8.MAX` for the latest version
+   * @return variant type for that object version, or `null` if the version is
+   * unsupported
    * @since 0.6.0
    */
-  protected abstract VariantType get_serialised_object_type ();
+  protected abstract VariantType? get_serialised_object_type (
+      uint8 object_version);
 
   /**
    * Get the version of the variant type returned by
@@ -94,11 +99,13 @@ public abstract class Folks.ObjectCache<T> : Object
    * {@link ObjectCache.get_serialised_object_type}.
    *
    * @param variant the serialised form to deserialise
+   * @param object_version the version of the object format to deserialise from
    * @return the deserialised object
    *
    * @since 0.6.0
    */
-  protected abstract T deserialise_object (Variant variant);
+  protected abstract T deserialise_object (Variant variant,
+      uint8 object_version);
 
   /**
    * Create a new cache instance using the given type ID and ID. This is
@@ -211,6 +218,18 @@ public abstract class Folks.ObjectCache<T> : Object
       // Deserialise the variant according to the given version numbers
       var variant_type =
           this._get_cache_file_variant_type (wrapper_version, object_version);
+
+      if (variant_type == null)
+        {
+          warning ("Cache file '%s' was version %u of the object file " +
+              "format, which is not supported. The file was deleted.",
+              this._cache_file.get_path (), object_version,
+              this._FILE_FORMAT_VERSION);
+          yield this.clear_cache ();
+
+          return null;
+        }
+
       var variant =
           Variant.new_from_data<uint8[]> (variant_type, variant_data, false,
               data);
@@ -257,7 +276,7 @@ public abstract class Folks.ObjectCache<T> : Object
       for (uint i = 0; i < objects_variant.n_children (); i++)
         {
           var object_variant = objects_variant.get_child_value (i);
-          var object = this.deserialise_object (object_variant);
+          var object = this.deserialise_object (object_variant, object_version);
 
           objects.add (object);
         }
@@ -286,7 +305,8 @@ public abstract class Folks.ObjectCache<T> : Object
       debug ("Storing cache (type ID '%s', ID '%s') to file '%s'.",
           this._type_id, this._id, this._cache_file.get_path ());
 
-      var child_type = this.get_serialised_object_type ();
+      var child_type = this.get_serialised_object_type (uint8.MAX);
+      assert (child_type != null); // uint8.MAX should always be supported
       Variant[] children = new Variant[objects.size];
 
       // Serialise all the objects in the set
@@ -379,13 +399,21 @@ public abstract class Folks.ObjectCache<T> : Object
         }
     }
 
-  private VariantType _get_cache_file_variant_type (uint8 wrapper_version,
+  private VariantType? _get_cache_file_variant_type (uint8 wrapper_version,
       uint8 object_version)
     {
+      var object_type = this.get_serialised_object_type (object_version);
+
+      if (object_type == null)
+        {
+          // Unsupported version
+          return null;
+        }
+
       return new VariantType.tuple ({
         VariantType.STRING, // Type ID
         VariantType.STRING, // ID
-        new VariantType.array (this.get_serialised_object_type ()) // Objects
+        new VariantType.array (object_type) // Objects
       });
     }
 

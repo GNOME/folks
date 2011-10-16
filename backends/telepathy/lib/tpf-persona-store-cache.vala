@@ -57,20 +57,33 @@ internal class Tpf.PersonaStoreCache : Folks.ObjectCache<Tpf.Persona>
       this._store = store;
     }
 
-  protected override VariantType get_serialised_object_type ()
+  protected override VariantType? get_serialised_object_type (
+      uint8 object_version)
     {
-      return new VariantType.tuple ({
-        VariantType.STRING, // UID
-        VariantType.STRING, // IID
-        VariantType.STRING, // ID
-        VariantType.STRING, // Protocol
-        new VariantType.array (VariantType.STRING), // Groups
-        VariantType.BOOLEAN, // Favourite?
-        VariantType.STRING, // Alias
-        VariantType.BOOLEAN, // In contact list?
-        VariantType.BOOLEAN, // Is user?
-        new VariantType.maybe (VariantType.STRING)  // Avatar
-      });
+      // Maximum version?
+      if (object_version == uint8.MAX)
+        {
+          object_version = this._FILE_FORMAT_VERSION;
+        }
+
+      if (object_version == 1)
+        {
+          return new VariantType.tuple ({
+            VariantType.STRING, // UID
+            VariantType.STRING, // IID
+            VariantType.STRING, // ID
+            VariantType.STRING, // Protocol
+            new VariantType.array (VariantType.STRING), // Groups
+            VariantType.BOOLEAN, // Favourite?
+            VariantType.STRING, // Alias
+            VariantType.BOOLEAN, // In contact list?
+            VariantType.BOOLEAN, // Is user?
+            new VariantType.maybe (VariantType.STRING) // Avatar
+          });
+        }
+
+      // Unsupported version
+      return null;
     }
 
   protected override uint8 get_serialised_object_version ()
@@ -119,7 +132,8 @@ internal class Tpf.PersonaStoreCache : Folks.ObjectCache<Tpf.Persona>
       });
     }
 
-  protected override Tpf.Persona deserialise_object (Variant variant)
+  protected override Tpf.Persona deserialise_object (Variant variant,
+      uint8 object_version)
     {
       // Deserialise the persona
       var uid = variant.get_child_value (0).get_string ();
