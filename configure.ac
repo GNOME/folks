@@ -214,6 +214,9 @@ if test \
         ! -e ${sd}backends/telepathy/lib/tp-lowlevel.gir -o \
         ! -e ${sd}backends/telepathy/lib/tp-lowlevel.vapi -o \
         ! -e ${sd}backends/telepathy/lib/libfolks_telepathy_la_vala.stamp -o \
+        ! -e ${sd}folks/folks-internal.h -o \
+        ! -e ${sd}folks/folks-internal.vapi -o \
+        ! -e ${sd}folks/libfolks_internal_la_vala.stamp -o \
         ! -e ${sd}folks/folks.vapi -o \
         ! -e ${sd}folks/libfolks_la_vala.stamp ; then
         enable_vala=yes
