@@ -113,7 +113,7 @@ libfolks_la_LIBADD = \
 	$(GMODULE_LIBS) \
 	$(GEE_LIBS) \
 	$(GCONF2_LIBS) \
-	$(top_builddir)/folks/libfolks-internal.la \
+	libfolks-internal.la \
 	$(NULL)
 
 # The quoting here is unnecessary but harmless, and has the useful side-effect
