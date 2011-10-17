@@ -21,7 +21,8 @@ internal class TestCache : Folks.ObjectCache<TestObject>
       base ("test", id);
     }
 
-  protected override VariantType get_serialised_object_type ()
+  protected override VariantType? get_serialised_object_type (
+      uint8 object_version)
     {
       return new VariantType.tuple ({
         VariantType.STRING,
@@ -42,7 +43,8 @@ internal class TestCache : Folks.ObjectCache<TestObject>
       });
     }
 
-  protected override TestObject deserialise_object (Variant variant)
+  protected override TestObject deserialise_object (Variant variant,
+      uint8 object_version)
     {
       // Deserialise the persona
       var my_string = variant.get_child_value (0).get_string ();
