@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: folks master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=folks&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2011-09-19 14:15+0000\n"
-"PO-Revision-Date: 2011-09-20 08:47+0100\n"
+"POT-Creation-Date: 2011-10-14 13:27+0000\n"
+"PO-Revision-Date: 2011-10-17 10:28+0100\n"
 "Last-Translator: Matej Urbančič <mateju@svn.gnome.org>\n"
 "Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups.com>\n"
 "MIME-Version: 1.0\n"
@@ -23,14 +23,14 @@ msgstr ""
 
 #. Translators: the first parameter is an address book
 #. * URI and the second is a persona UID.
-#: ../backends/eds/lib/edsf-persona-store.vala:475
+#: ../backends/eds/lib/edsf-persona-store.vala:473
 #, c-format
 msgid "Address book ‘%s’ is offline, so contact ‘%s’ cannot be removed."
 msgstr "Imenik ‘%s’ ni povezan, zato stika ‘%s’ ni mogoče odstraniti."
 
 #. Translators: the first parameter is an address book
 #. * URI and the second is an error message.
-#: ../backends/eds/lib/edsf-persona-store.vala:481
+#: ../backends/eds/lib/edsf-persona-store.vala:479
 #, c-format
 msgid "Permission denied to remove contact ‘%s’: %s"
 msgstr "Ni ustreznega dovoljenja za odstranjevanje stika ‘%s’: %s"
@@ -38,152 +38,152 @@ msgstr "Ni ustreznega dovoljenja za odstranjevanje stika ‘%s’: %s"
 # oseba ima več "person", več računov, IM, lalaa
 # oseba ima torej več "stikov"
 #. Translators: the parameter is an error message.
-#: ../backends/eds/lib/edsf-persona-store.vala:486
+#: ../backends/eds/lib/edsf-persona-store.vala:484
 #, c-format
 msgid "Removing contacts isn't supported by this persona store: %s"
 msgstr "Odstranjevanje stikov ni podprto s strani zaloge stikov: %s"
 
-#: ../backends/eds/lib/edsf-persona-store.vala:515
+#: ../backends/eds/lib/edsf-persona-store.vala:513
 #, c-format
 msgid "Can't remove contact ‘%s’: %s"
 msgstr "Ni mogoče odstraniti stika ‘%s’: %s"
 
 #. Translators: the parameter is an address book
 #. * URI.
-#: ../backends/eds/lib/edsf-persona-store.vala:583
-#: ../backends/eds/lib/edsf-persona-store.vala:769
+#: ../backends/eds/lib/edsf-persona-store.vala:581
+#: ../backends/eds/lib/edsf-persona-store.vala:767
 #, c-format
 msgid "Address book ‘%s’ is offline."
 msgstr "Imenik '%s' ni povezan."
 
 #. Translators: the first parameter is an address
 #. * book URI and the second is an error message.
-#: ../backends/eds/lib/edsf-persona-store.vala:588
-#: ../backends/eds/lib/edsf-persona-store.vala:774
+#: ../backends/eds/lib/edsf-persona-store.vala:586
+#: ../backends/eds/lib/edsf-persona-store.vala:772
 #, c-format
 msgid "Permission denied to open address book ‘%s’: %s"
 msgstr "Ni ustreznih dovoljenj za odpiranje imenika ‘%s’: %s"
 
 #. Translators: the first parameter is an address book URI
 #. * and the second is an error message.
-#: ../backends/eds/lib/edsf-persona-store.vala:621
+#: ../backends/eds/lib/edsf-persona-store.vala:619
 #, c-format
 msgid "Couldn't open address book ‘%s’: %s"
 msgstr "Ni mogoče odpreti imenika ‘%s’: %s"
 
 #. Translators: the parameter is an address book URI.
-#: ../backends/eds/lib/edsf-persona-store.vala:631
+#: ../backends/eds/lib/edsf-persona-store.vala:629
 #, c-format
 msgid "Couldn't open address book ‘%s’."
 msgstr "Ni mogoče odpreti imenika ‘%s’."
 
 #. Translators: the parameteter is an error message.
-#: ../backends/eds/lib/edsf-persona-store.vala:690
-#: ../backends/eds/lib/edsf-persona-store.vala:717
+#: ../backends/eds/lib/edsf-persona-store.vala:688
+#: ../backends/eds/lib/edsf-persona-store.vala:715
 #, c-format
 msgid "Couldn't get address book capabilities: %s"
 msgstr "Ni mogoče pridobiti podatkov o zmožnosti imenika: %s"
 
 #. Translators: the parameter is an address book URI.
-#: ../backends/eds/lib/edsf-persona-store.vala:730
+#: ../backends/eds/lib/edsf-persona-store.vala:728
 #, c-format
 msgid "Couldn't get view for address book ‘%s’."
 msgstr "Ni mogoče pridobiti pogleda za imenik ‘%s’."
 
 #. Translators: the first parameter is an address book URI
 #. * and the second is an error message.
-#: ../backends/eds/lib/edsf-persona-store.vala:807
+#: ../backends/eds/lib/edsf-persona-store.vala:805
 #, c-format
 msgid "Couldn't get view for address book ‘%s’: %s"
 msgstr "Ni mogoče pridobiti pogleda za imenik ‘%s’: %s"
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1037
+#: ../backends/eds/lib/edsf-persona-store.vala:1035
 #, c-format
 msgid "Changing the ‘%s’ property failed due to reaching the timeout."
 msgstr "Spreminjanje lastnosti ‘%s’ je spodletelo zaradi časovne omejitve."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1059
+#: ../backends/eds/lib/edsf-persona-store.vala:1057
 #: ../folks/avatar-details.vala:59
 msgid "Avatar is not writeable on this contact."
 msgstr "Podoba tega stika ni zapisljiva."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1080
+#: ../backends/eds/lib/edsf-persona-store.vala:1078
 #: ../folks/web-service-details.vala:118
 msgid "Web service addresses are not writeable on this contact."
 msgstr "Naslovi spletnih storitev za ta stik niso zapisljivi."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1121
+#: ../backends/eds/lib/edsf-persona-store.vala:1119
 #: ../folks/url-details.vala:148
 msgid "URLs are not writeable on this contact."
 msgstr "Naslovi URL za ta stik niso zapisljivi."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1199
+#: ../backends/eds/lib/edsf-persona-store.vala:1197
 #: ../folks/local-id-details.vala:64
 msgid "Local IDs are not writeable on this contact."
 msgstr "Krajevni ID za ta stik ni zapisljiv."
 
 #. Translators: the parameter is an error message.
-#: ../backends/eds/lib/edsf-persona-store.vala:1267
+#: ../backends/eds/lib/edsf-persona-store.vala:1265
 #, c-format
 msgid "Can't update avatar: %s"
 msgstr "Podobe ni mogoče posodobiti: %s"
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1278
+#: ../backends/eds/lib/edsf-persona-store.vala:1276
 #: ../folks/email-details.vala:115
 msgid "E-mail addresses are not writeable on this contact."
 msgstr "Elektronski poštni naslov za ta stik ni zapisljiv."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1292
+#: ../backends/eds/lib/edsf-persona-store.vala:1290
 #: ../folks/phone-details.vala:206
 msgid "Phone numbers are not writeable on this contact."
 msgstr "Telefonske številke za ta stik niso zapisljive."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1306
+#: ../backends/eds/lib/edsf-persona-store.vala:1304
 #: ../folks/postal-address-details.vala:303
 msgid "Postal addresses are not writeable on this contact."
 msgstr "Poštni naslov za ta stik ni zapisljiv."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1373
+#: ../backends/eds/lib/edsf-persona-store.vala:1371
 #: ../folks/name-details.vala:281
 msgid "Full name is not writeable on this contact."
 msgstr "Polno ime za ta stik ni zapisljivo."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1394
+#: ../backends/eds/lib/edsf-persona-store.vala:1392
 #: ../folks/name-details.vala:319
 msgid "Nickname is not writeable on this contact."
 msgstr "Vzdevek za ta stik ni zapisljiv."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1415
+#: ../backends/eds/lib/edsf-persona-store.vala:1413
 #: ../folks/note-details.vala:129
 msgid "Notes are not writeable on this contact."
 msgstr "Opombe za ta stik niso zapisljive."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1444
+#: ../backends/eds/lib/edsf-persona-store.vala:1442
 #: ../folks/birthday-details.vala:60
 msgid "Birthday is not writeable on this contact."
 msgstr "Rojstni datum tega stika ni zapisljiv."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1483
+#: ../backends/eds/lib/edsf-persona-store.vala:1481
 #: ../folks/role-details.vala:220
 msgid "Roles are not writeable on this contact."
 msgstr "Vloge za ta stik niso zapisljive."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1585
+#: ../backends/eds/lib/edsf-persona-store.vala:1582
 #: ../folks/name-details.vala:244
 msgid "Structured name is not writeable on this contact."
 msgstr "Oblikovno ime za ta stik ni zapisljivo."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1619
+#: ../backends/eds/lib/edsf-persona-store.vala:1616
 #: ../folks/im-details.vala:130
 msgid "IM addresses are not writeable on this contact."
 msgstr "Naslov hipnega sporočanja za ta stik ni zapisljiv."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1669
+#: ../backends/eds/lib/edsf-persona-store.vala:1666
 #: ../folks/group-details.vala:168
 msgid "Groups are not writeable on this contact."
 msgstr "Skupine za ta stik niso zapisljive."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1699
+#: ../backends/eds/lib/edsf-persona-store.vala:1696
 #: ../folks/gender-details.vala:77
 msgid "Gender is not writeable on this contact."
 msgstr "Spol za ta stik ni zapisljiv."
@@ -191,7 +191,7 @@ msgstr "Spol za ta stik ni zapisljiv."
 #. Translators: the first parameter is a non-human-readable
 #. * property name and the second parameter is an error
 #. * message.
-#: ../backends/eds/lib/edsf-persona-store.vala:1833
+#: ../backends/eds/lib/edsf-persona-store.vala:1830
 #, c-format
 msgid "Property ‘%s’ is not writeable: %s"
 msgstr "Lastnost '%s' ni zapisljiva: %s"
@@ -199,14 +199,14 @@ msgstr "Lastnost '%s' ni zapisljiva: %s"
 #. Translators: the first parameter is a non-human-readable
 #. * property name and the second parameter is an error
 #. * message.
-#: ../backends/eds/lib/edsf-persona-store.vala:1842
+#: ../backends/eds/lib/edsf-persona-store.vala:1839
 #, c-format
 msgid "Invalid value for property ‘%s’: %s"
 msgstr "Neveljavna vrednost za lastnost ‘%s’: %s"
 
 #. Translators: the first parameter is a non-human-readable
 #. * property name and the second parameter is an error message.
-#: ../backends/eds/lib/edsf-persona-store.vala:1868
+#: ../backends/eds/lib/edsf-persona-store.vala:1865
 #, c-format
 msgid "Unknown error setting property ‘%s’: %s"
 msgstr "Neznana napaka med nastavljanjem lastnosti ‘%s’: %s"
@@ -307,35 +307,35 @@ msgstr "Odstranjevanje stika iz skupine '%s' je spodletelo: %s"
 msgid "Invalid group channel %p to add handle %d to."
 msgstr "Neveljaven skupinski kanal %p za dodelitev ročnika %d."
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:579
+#: ../backends/telepathy/lib/tpf-persona-store.vala:596
 msgid "Couldn't connect to the telepathy-logger service."
 msgstr "Ni se mogoče povezati s storitvijo telepathy-logger."
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:618
+#: ../backends/telepathy/lib/tpf-persona-store.vala:631
 msgid "Lost connection to the telepathy-logger service."
 msgstr "Povezava s storitvijo telepathy-logger je izgubljena."
 
 #. Translators: the parameter is an error message.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:650
-#: ../backends/telepathy/lib/tpf-persona-store.vala:662
+#: ../backends/telepathy/lib/tpf-persona-store.vala:663
+#: ../backends/telepathy/lib/tpf-persona-store.vala:675
 #, c-format
 msgid "Couldn't get list of favorite contacts: %s"
 msgstr "Ni mogoče pridobiti seznama priljubljenih stikov: %s"
 
 #. Translators: the parameter is an identifier.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:699
+#: ../backends/telepathy/lib/tpf-persona-store.vala:712
 #, c-format
 msgid "Unknown Telepathy contact ‘%s’ in favorites list."
 msgstr "Neznan stik Telepathy '%s' na seznamu priljubljenih."
 
 #. Translators: the parameter is an error message.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:730
+#: ../backends/telepathy/lib/tpf-persona-store.vala:743
 #, c-format
 msgid "Couldn't add favorite contacts: %s"
 msgstr "Ni mogoče dodati priljubljenega stika: %s"
 
 #. Translators: the parameter is an error message.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:751
+#: ../backends/telepathy/lib/tpf-persona-store.vala:764
 #, c-format
 msgid "Couldn't remove favorite contacts: %s"
 msgstr "Ni mogoče odstraniti priljubljenega stika: %s"
@@ -343,7 +343,7 @@ msgstr "Ni mogoče odstraniti priljubljenega stika: %s"
 #. Translators: the first parameter is the display name for
 #. * the Telepathy account, and the second is an error
 #. * message.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:860
+#: ../backends/telepathy/lib/tpf-persona-store.vala:884
 #, c-format
 msgid "Failed to determine whether we can set aliases on Telepathy account '%s': %s"
 msgstr "Določevanje ali je mogoče določiti vzdevke računa Telepathy '%s' je spodletelo: %s"
@@ -351,39 +351,39 @@ msgstr "Določevanje ali je mogoče določiti vzdevke računa Telepathy '%s' je 
 #. Translators: the first parameter is the display name for
 #. * the Telepathy account, and the second is an error
 #. * message.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:913
+#: ../backends/telepathy/lib/tpf-persona-store.vala:937
 #, c-format
 msgid "Failed to determine whether we can set groups on Telepathy account '%s': %s"
 msgstr "Določevanje ali je mogoče določiti skupine računa Telepathy '%s' je spodletelo: %s"
 
 #. Translators: the first parameter is a Telepathy handle,
 #. * and the second is an error message.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1064
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1114
 #, c-format
 msgid "Failed to create contact for self handle '%u': %s"
 msgstr "Ustvarjanje stika za ročnik '%u': %s"
 
 #. Translators: do not translate "NewChannels", as it's a D-Bus
 #. * signal name.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1095
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1145
 msgid "Error creating channel for NewChannels signal."
 msgstr "Napaka ustvarjanja kanala za signal NewChannels."
 
 #. Translators: the parameter is a persona identifier and
 #. * the second parameter is a group name.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1134
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1184
 #, c-format
 msgid "Failed to add Telepathy contact ‘%s’ to group ‘%s’."
 msgstr "Dodajanje stika Telepathy ‘%s’ v skupino ‘%s’ je spodletelo."
 
 #. Translators: the parameter is a persona identifier
 #. * and the second parameter is a group name.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1142
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1192
 #, c-format
 msgid "Failed to remove Telepathy contact ‘%s’ from group ‘%s’."
 msgstr "Odstranjevanje stika Telepathy ‘%s’ iz skupine ‘%s’ je spodletelo."
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1496
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1546
 msgid "Telepathy contacts representing the local user may not be removed."
 msgstr "Stikov Telepathy, ki predstavljajo krajevnega uporabnika ni mogoče odstraniti."
 
@@ -393,10 +393,10 @@ msgstr "Stikov Telepathy, ki predstavljajo krajevnega uporabnika ni mogoče odst
 #. Translators: The first parameter is a contact identifier,
 #. * the second is a contact list identifier and the third is an
 #. * error message.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1510
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1525
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1540
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1714
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1560
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1575
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1590
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1764
 #, c-format
 msgid "Failed to remove Telepathy contact ‘%s’ from ‘%s’ list: %s"
 msgstr "Odstranjevanje stika Telepathy ‘%s’ iz seznama ‘%s’ je spodletelo: %s"
@@ -404,21 +404,21 @@ msgstr "Odstranjevanje stika Telepathy ‘%s’ iz seznama ‘%s’ je spodletel
 #. Translators: The first parameter is a contact identifier,
 #. * the second is a contact list identifier and the third is an
 #. * error message.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1704
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1754
 #, c-format
 msgid "Failed to add Telepathy contact ‘%s’ to ‘%s’ list: %s"
 msgstr "Dodajanje stika Telepathy ‘%s’ na seznam stikov ‘%s’ je spodletelo: %s"
 
 #. Translators: the first parameter is a channel identifier and
 #. * the second is an error message..
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1816
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1866
 #, c-format
 msgid "Failed to create incoming Telepathy contacts from channel ‘%s’: %s"
 msgstr "Ustvarjanje prihajajočih stikov Telepathy preko kanala ‘%s’ je spodletelo: %s"
 
 #. Translators: the first two parameters are store identifiers and
 #. * the third is a contact identifier.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1997
+#: ../backends/telepathy/lib/tpf-persona-store.vala:2047
 #, c-format
 msgid ""
 "Persona store (%s, %s) requires the following details:\n"
@@ -427,13 +427,13 @@ msgstr ""
 "Zaloga stika (%s, %s) zahteva naslednje podatke:\n"
 "    stik (ponujen: '%s')\n"
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:2012
+#: ../backends/telepathy/lib/tpf-persona-store.vala:2062
 msgid "Cannot create a new Telepathy contact while offline."
 msgstr "Novega stika Telepathy brez povezave ni mogoče ustvariti."
 
 #. Translators: the parameter is the number of personas
 #. * which were returned.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:2064
+#: ../backends/telepathy/lib/tpf-persona-store.vala:2114
 #, c-format
 msgid "Requested a single persona, but got %u persona back."
 msgid_plural "Requested a single persona, but got %u personas back."
@@ -442,22 +442,30 @@ msgstr[1] "Podana je zahteva za podatke enega stika, vrnjen pa je %u stik."
 msgstr[2] "Podana je zahteva za podatke enega stika, vrnjena pa sta %u stika."
 msgstr[3] "Podana je zahteva za podatke enega stika, vrnjeni pa so %u stiki."
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:2075
+#: ../backends/telepathy/lib/tpf-persona-store.vala:2125
 #, c-format
 msgid "Failed to add a persona from details: %s"
 msgstr "Dodajanje stika iz podatkov je spodletelo: %s"
 
 #. Translators: "telepathy-logger" is the name of an application,
 #. * and should not be translated.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:2095
+#: ../backends/telepathy/lib/tpf-persona-store.vala:2145
 msgid "Failed to change favorite without a connection to the telepathy-logger service."
 msgstr "Spreminjanje priljubljenih ni mogoče brez povezave s storitvijo telepathy-logger."
 
 #. Translators: the parameter is a contact identifier.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:2113
+#: ../backends/telepathy/lib/tpf-persona-store.vala:2163
 #, c-format
 msgid "Failed to change favorite status for Telepathy contact ‘%s’."
 msgstr "Spreminjanje stanja priljubljenih za stik Telepathy ‘%s’ je spodledelo."
+
+#: ../backends/telepathy/lib/tpf-persona-store.vala:2258
+msgid "Extended information may only be set on the user's Telepathy contact."
+msgstr "Razširjene podrobnost je mogoče določiti le na stiku uporabnika programa Telepathy."
+
+#: ../backends/telepathy/lib/tpf-persona-store.vala:2287
+msgid "Extended information cannot be written because the store is disconnected."
+msgstr "Razširjenih podrobnosti ni mogoče zapisati, saj povezava s trgovino ni vzpostavljena."
 
 #. Translators: the first parameter is the unknown key that
 #. * was received with the details params, and the second
@@ -536,34 +544,34 @@ msgstr "Naslova hipnega stika '%s' ni mogoče razumeti."
 
 #. Translators: the first parameter is a persona store identifier
 #. * and the second is an error message.
-#: ../folks/individual-aggregator.vala:679
+#: ../folks/individual-aggregator.vala:681
 #, c-format
 msgid "Error preparing persona store '%s': %s"
 msgstr "Napaka med pripravljanjem zaloge stikov '%s': %s."
 
 #. Translators: the parameter is a property name.
-#: ../folks/individual-aggregator.vala:871
-#: ../folks/individual-aggregator.vala:1053
+#: ../folks/individual-aggregator.vala:873
+#: ../folks/individual-aggregator.vala:1055
 #, c-format
 msgid "Unknown property '%s' in linkable property list."
 msgstr "Neznana lastnost '%s' v seznamu povezljivih lastnosti."
 
 #. Translators: the first parameter is a store identifier
 #. * and the second parameter is an error message.
-#: ../folks/individual-aggregator.vala:1451
+#: ../folks/individual-aggregator.vala:1453
 #, c-format
 msgid "Failed to add contact for persona store ID '%s': %s"
 msgstr "Dodajanje stika za ID zalogo stikov '%s' je spodletelo: %s"
 
-#: ../folks/individual-aggregator.vala:1532
+#: ../folks/individual-aggregator.vala:1534
 msgid "Can't link personas with no primary store."
 msgstr "Ni mogoče povezati stikov brez osnovne zaloge osebe."
 
-#: ../folks/individual-aggregator.vala:1789
+#: ../folks/individual-aggregator.vala:1791
 msgid "Can't add personas with no primary store."
 msgstr "Ni mogoče dodati stikov brez osnovne zaloge osebe."
 
-#: ../folks/individual-aggregator.vala:1794
+#: ../folks/individual-aggregator.vala:1796
 #, c-format
 msgid "Can't write to requested property (“%s”) of the writeable store."
 msgstr "Ni mogoče pisati v zahtevano lastnost (“%s”) zapisljive zaloge."
@@ -719,3 +727,4 @@ msgstr "Napaka med uvažanjem stikov: %s"
 #, c-format
 msgid "Unrecognized source backend name ‘%s’. ‘%s’ is currently the only supported source backend."
 msgstr "Neprepoznano ime ozadnjega programa vira '%s'. Trenutno je podprt le ozadnji program vira ‘%s’."
+
