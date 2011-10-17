@@ -92,7 +92,7 @@ public class Tpf.Persona : Folks.Persona,
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.6.4
    */
   [CCode (notify = false)]
   public StructuredName? structured_name
@@ -104,7 +104,7 @@ public class Tpf.Persona : Folks.Persona,
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.6.4
    */
   [CCode (notify = false)]
   public string full_name
@@ -116,7 +116,7 @@ public class Tpf.Persona : Folks.Persona,
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.6.4
    */
   public async void change_full_name (string full_name) throws PropertyError
     {
@@ -152,7 +152,7 @@ public class Tpf.Persona : Folks.Persona,
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.6.4
    */
   [CCode (notify = false)]
   public string nickname
@@ -166,7 +166,7 @@ public class Tpf.Persona : Folks.Persona,
    *
    * ContactInfo has no equivalent field, so this is unsupported.
    *
-   * @since UNRELEASED
+   * @since 0.6.4
    */
   [CCode (notify = false)]
   public string? calendar_event_id
@@ -179,7 +179,7 @@ public class Tpf.Persona : Folks.Persona,
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.6.4
    */
   [CCode (notify = false)]
   public DateTime? birthday
@@ -191,7 +191,7 @@ public class Tpf.Persona : Folks.Persona,
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.6.4
    */
   public async void change_birthday (DateTime? birthday) throws PropertyError
     {
@@ -349,7 +349,7 @@ public class Tpf.Persona : Folks.Persona,
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.6.4
    */
   [CCode (notify = false)]
   public Set<EmailFieldDetails> email_addresses
@@ -361,7 +361,7 @@ public class Tpf.Persona : Folks.Persona,
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.6.4
    */
   public async void change_email_addresses (
       Set<EmailFieldDetails> email_addresses) throws PropertyError
@@ -470,7 +470,7 @@ public class Tpf.Persona : Folks.Persona,
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.6.4
    */
   [CCode (notify = false)]
   public Set<PhoneFieldDetails> phone_numbers
@@ -482,7 +482,7 @@ public class Tpf.Persona : Folks.Persona,
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.6.4
    */
   public async void change_phone_numbers (
       Set<PhoneFieldDetails> phone_numbers) throws PropertyError
@@ -497,7 +497,7 @@ public class Tpf.Persona : Folks.Persona,
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.6.4
    */
   [CCode (notify = false)]
   public Set<UrlFieldDetails> urls
@@ -509,7 +509,7 @@ public class Tpf.Persona : Folks.Persona,
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.6.4
    */
   public async void change_urls (Set<UrlFieldDetails> urls) throws PropertyError
     {

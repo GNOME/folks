@@ -120,7 +120,7 @@ public errordomain Folks.PersonaStoreError
    * Such an operation may only be performed on a {@link Persona} with
    * {@link Persona.is_user} set to `true`.
    *
-   * @since UNRELEASED
+   * @since 0.6.4
    */
   UNSUPPORTED_ON_NON_USER,
 }

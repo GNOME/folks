@@ -1,10 +1,10 @@
 # If not 1, append datestamp to the version number
-m4_define([folks_released], [0])
+m4_define([folks_released], [1])
 
 m4_define([folks_major_version], [0])
 m4_define([folks_minor_version], [6])
-m4_define([folks_micro_version], [3])
-m4_define([folks_nano_version], [3])
+m4_define([folks_micro_version], [4])
+m4_define([folks_nano_version], [0])
 
 # If library source has changed since last release, increment revision
 # If interfaces have been added, removed or changed since last release,
@@ -12,8 +12,8 @@ m4_define([folks_nano_version], [3])
 # If interfaces have been added since last release, increment age
 # If interfaces have been removed since last release, set age to 0
 m4_define([folks_lt_current], [27])
-m4_define([folks_lt_revision], [2])
-m4_define([folks_lt_age], [2])
+m4_define([folks_lt_revision], [3])
+m4_define([folks_lt_age], [3])
 
 # Display the nano_version only if it's not '0'
 m4_define([folks_base_version],
