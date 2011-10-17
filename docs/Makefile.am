@@ -106,6 +106,7 @@ folks_telepathy_doc_deps = \
 	tp-lowlevel \
 	build-conf \
 	folks \
+	folks-internal \
 	$(NULL)
 valadoc_flags_folks_telepathy = \
 	$(valadoc_flags) \
@@ -167,6 +168,7 @@ folks_eds_doc_deps = \
 	libedataserver-1.2 \
 	build-conf \
 	folks \
+	folks-internal \
 	$(NULL)
 valadoc_flags_folks_eds = \
 	$(valadoc_flags) \
@@ -235,6 +237,7 @@ folks_libsocialweb_doc_deps = \
 	libsocialweb-client \
 	build-conf \
 	folks \
+	folks-internal \
 	$(NULL)
 valadoc_flags_folks_libsocialweb = \
 	$(valadoc_flags) \
