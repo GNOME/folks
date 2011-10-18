@@ -42,7 +42,7 @@ libfolks_internal_la_LIBADD = \
 # Core library
 ##################################################
 
-libfolks_la_vala.stamp: libfolks-internal.la
+libfolks_la_vala.stamp: folks-internal.vapi
 
 libfolks_la_SOURCES = \
 	abstract-field-details.vala \
