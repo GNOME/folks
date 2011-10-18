@@ -7,10 +7,10 @@ m4_define([folks_micro_version], [4])
 m4_define([folks_nano_version], [1])
 
 # If library source has changed since last release, increment revision
-# If interfaces have been added, removed or changed since last release,
+# If public symbols have been added, removed or changed since last release,
 #  increment current and set revision to 0
-# If interfaces have been added since last release, increment age
-# If interfaces have been removed since last release, set age to 0
+# If public symbols have been added since last release, increment age
+# If public symbols have been removed since last release, set age to 0
 m4_define([folks_lt_current], [27])
 m4_define([folks_lt_revision], [3])
 m4_define([folks_lt_age], [3])
