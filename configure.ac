@@ -11,8 +11,8 @@ m4_define([folks_nano_version], [1])
 #  increment current and set revision to 0
 # If public symbols have been added since last release, increment age
 # If public symbols have been removed since last release, set age to 0
-m4_define([folks_lt_current], [27])
-m4_define([folks_lt_revision], [3])
+m4_define([folks_lt_current], [28])
+m4_define([folks_lt_revision], [0])
 m4_define([folks_lt_age], [3])
 
 # Display the nano_version only if it's not '0'
