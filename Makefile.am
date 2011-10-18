@@ -19,6 +19,8 @@ DISTCHECK_CONFIGURE_FLAGS = \
 
 EXTRA_DIST = \
 	autogen.sh \
+	check.mk \
+	valgrind.mk \
 	$(NULL)
 
 MAINTAINERCLEANFILES = \
