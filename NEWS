@@ -1,6 +1,7 @@
-Overview of changes from libfolks 0.6.4 to libfolks 0.6.5
+Overview of changes from libfolks 0.6.4 to libfolks 0.6.4.1
 =============================================================
 Bugs fixed:
+* Bug 662095 — so name of libfolks v 0.6.4 is lower than of libfolks v 0.6.3.x
 
 Overview of changes from libfolks 0.6.3.2 to libfolks 0.6.4
 =============================================================
