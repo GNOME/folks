@@ -236,6 +236,11 @@ public abstract class Folks.AbstractFieldDetails<T> : Object
           return false;
         }
 
+      return this.parameters_equal<T> (that);
+    }
+
+  public virtual bool parameters_equal (AbstractFieldDetails<T> that)
+    {
       /* Check that the parameter names and their values match exactly in both
        * AbstractFieldDetails objects. */
       if (this.parameters.size != that.parameters.size)
