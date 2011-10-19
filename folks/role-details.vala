@@ -164,7 +164,7 @@ public class Folks.RoleFieldDetails : AbstractFieldDetails<Role>
    *
    * @since 0.6.0 
    */
-  public override bool equal (AbstractFieldDetails<string> that)
+  public override bool equal (AbstractFieldDetails<Role> that)
     {
       var that_fd = that as RoleFieldDetails;
 
