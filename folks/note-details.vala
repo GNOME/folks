@@ -67,8 +67,10 @@ public class Folks.NoteFieldDetails : AbstractFieldDetails<string>
    */
   public override bool equal (AbstractFieldDetails<string> that)
     {
-      var that_nfd = that as NoteFieldDetails;
+      if (!base.equal<string> (that))
+        return false;
 
+      var that_nfd = that as NoteFieldDetails;
       if (that_nfd == null)
         return false;
 

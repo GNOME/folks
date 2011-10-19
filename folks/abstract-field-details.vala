@@ -239,6 +239,25 @@ public abstract class Folks.AbstractFieldDetails<T> : Object
       return this.parameters_equal<T> (that);
     }
 
+  /**
+   * An equality function which only considers parameters.
+   *
+   * This function compares:
+   *  * {@link AbstractFieldDetails.parameters}
+   *
+   * And does not compare:
+   *  * {@link AbstractFieldDetails.value}s
+   *  * {@link AbstractFieldDetails.id}s
+   *
+   * @param that another {@link AbstractFieldDetails}
+   *
+   * @return whether the elements' {@link AbstractFieldDetails.value}s are
+   * equal.
+   *
+   * @see AbstractFieldDetails.equal
+   * @see AbstractFieldDetails.values_equal
+   * @since UNRELEASED
+   */
   public virtual bool parameters_equal (AbstractFieldDetails<T> that)
     {
       /* Check that the parameter names and their values match exactly in both

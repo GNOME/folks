@@ -167,8 +167,10 @@ public class Folks.RoleFieldDetails : AbstractFieldDetails<Role>
   public override bool equal (AbstractFieldDetails<Role> that)
     {
       var that_fd = that as RoleFieldDetails;
-
       if (that_fd == null)
+        return false;
+
+      if (!base.parameters_equal<Role> (that))
         return false;
 
       return Role.equal (this.value, that_fd.value);
