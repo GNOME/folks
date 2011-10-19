@@ -30,6 +30,8 @@ public class EmailFieldDetailsTests : Folks.TestCase
       this.add_test ("parameter equality", this.test_params_equality);
       this.add_test ("ImFieldDetails equality",
           this.test_im_field_details_equality);
+      this.add_test ("RoleFieldDetails equality",
+          this.test_role_field_details_equality);
     }
 
   public override void set_up ()
@@ -164,6 +166,20 @@ public class EmailFieldDetailsTests : Folks.TestCase
       /* Comparing different derived classes */
       EmailFieldDetails details_c_1 = new EmailFieldDetails ("foo@example.org");
       assert (!details_a_1.equal (details_c_1));
+    }
+
+  public void test_role_field_details_equality ()
+    {
+      RoleFieldDetails details_a_1 = new RoleFieldDetails (
+          new Role ("Captain", "Obvious Corp.", null));
+      RoleFieldDetails details_a_2 = new RoleFieldDetails (
+          new Role ("Captain", "Obvious Corp.", null));
+      RoleFieldDetails details_b_1 = new RoleFieldDetails (
+          new Role ("Flunkie", "Obvious Corp.", null));
+
+      /* Very-basic comparisons */
+      assert (details_a_1.equal (details_a_2));
+      assert (!details_a_1.equal (details_b_1));
     }
 }
 
