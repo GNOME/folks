@@ -972,16 +972,16 @@ public class Edsf.Persona : Folks.Persona,
 
           default_role = new RoleFieldDetails (new_role);
 
-          if (org_unit != null)
+          if (org_unit != null && org_unit != "")
             default_role.set_parameter ("org_unit", org_unit);
 
-          if (office != null)
+          if (office != null && office != "")
             default_role.set_parameter ("office", office);
 
-          if (manager != null)
+          if (manager != null && manager != "")
             default_role.set_parameter ("manager", manager);
 
-          if (assistant != null)
+          if (assistant != null && manager != "")
             default_role.set_parameter ("assistant", assistant);
         }
 
