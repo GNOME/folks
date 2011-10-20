@@ -101,6 +101,25 @@ public abstract class Folks.AbstractFieldDetails<T> : Object
       set { this._value = value; }
     }
 
+  private string _id;
+  /**
+   * A unique ID (if any) for this specific detail.
+   *
+   * This is primarily intended for {@link PersonaStore}s which need to track
+   * specific instances of details (because their backing store is wacky).
+   *
+   * In most cases, this will be an empty string.
+   *
+   * The content of this is opaque to all but the package which set it.
+   *
+   * @since UNRELEASED
+   */
+  public virtual string id
+    {
+      get { return this._id; }
+      set { this._id = (value != null ? value : ""); }
+    }
+
   private MultiMap<string, string> _parameters =
       new HashMultiMap<string, string> ();
   /**
