@@ -127,11 +127,11 @@ public class SetPostalAddressesTests : Folks.TestCase
                 null, null, null, null);
               pa.po_box = this._postal_address_fd.value.po_box;
               pa.locality = this._postal_address_fd.value.locality;
-              pa.postal_code =this._postal_address_fd.value.postal_code;
+              pa.postal_code = this._postal_address_fd.value.postal_code;
               pa.street = this._postal_address_fd.value.street;
               pa.extension = this._postal_address_fd.value.extension;
               pa.country = this._postal_address_fd.value.country;
-              pa.region  = this._postal_address_fd.value.region;
+              pa.region = this._postal_address_fd.value.region;
               var pafd = new PostalAddressFieldDetails (pa);
 
               addresses.add (pafd);
