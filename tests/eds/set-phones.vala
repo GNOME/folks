@@ -141,7 +141,9 @@ public class SetPhonesTests : Folks.TestCase
       Folks.Individual i = (Folks.Individual) individual_obj;
       foreach (var phone_fd in i.phone_numbers)
         {
-          if (phone_fd.equal (new PhoneFieldDetails ("1234")))
+          var phone_1 = new PhoneFieldDetails ("1234");
+          phone_1.set_parameter (phone_1.PARAM_TYPE, phone_1.PARAM_TYPE_HOME);
+          if (phone_fd.equal (phone_1))
             {
               this._found_after_update = true;
               this._main_loop.quit ();
