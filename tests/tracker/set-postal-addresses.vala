@@ -160,7 +160,7 @@ public class SetPostalAddressesTests : Folks.TestCase
             {
               /* we don't care if UIDs differ for this test */
               this._postal_address_fd.id = pafd.id;
-              if (pafd.value.equal (this._postal_address_fd.value))
+              if (pafd.equal (this._postal_address_fd))
                 {
                   this._postal_address_found = true;
                   this._main_loop.quit ();
