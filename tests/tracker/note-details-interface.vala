@@ -111,10 +111,26 @@ public class NoteDetailsInterfaceTests : Folks.TestCase
           if (i.full_name == this._fullname)
             {
               i.notify["notes"].connect (this._notify_note_cb);
-              foreach (var n in i.notes)
+              foreach (var note_fd in i.notes)
                 {
-                  if (n.equal (new NoteFieldDetails (this._note)))
+                  var note_fd_expected = new NoteFieldDetails (this._note, null,
+                      null);
+
+                  /* We copy the tracker_id - we don't know it.
+                   * We could get it from the 1st personas iid but there is no
+                   * real need. */
+                  note_fd_expected.id = note_fd.id;
+
+                  if (note_fd.equal (note_fd_expected))
                     {
+                      /* Ensure that setting the Note uid directly (which is
+                       * deprecated) is equivalent to setting the id on a
+                       * NoteFieldDetails directly */
+                      var note_fd_2 = new NoteFieldDetails (
+                          note_fd_expected.value, null, note_fd.id);
+                      assert (note_fd.equal (note_fd_2));
+                      assert (note_fd.id == note_fd_2.id);
+
                       this._found_note = true;
                       this._main_loop.quit ();
                     }

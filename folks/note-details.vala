@@ -33,15 +33,24 @@ using GLib;
  */
 public class Folks.NoteFieldDetails : AbstractFieldDetails<string>
 {
-  /* FIXME: deprecate this */
-  private string _uid;
+  private string _id;
+  /**
+   * {@inheritDoc}
+   */
+  public override string id
+    {
+      get { return this._id; }
+      set { this._id = (value != null ? value : ""); }
+    }
+
   /**
    * The UID of the note (if any).
    */
+  [Deprecated (since = "UNRELEASED", replacement = "AbstractFieldDetails.id")]
   public string uid
     {
-      get { return _uid; }
-      set { _uid = (value != null ? value : ""); }
+      get { return this.id; }
+      set { this.id = value; }
     }
 
   /**
@@ -63,7 +72,9 @@ public class Folks.NoteFieldDetails : AbstractFieldDetails<string>
       this.value = value;
       if (parameters != null)
         this.parameters = parameters;
-      this.uid = uid;
+
+      /* These are kept the same value now */
+      this.id = uid;
     }
 
   /**
@@ -80,7 +91,7 @@ public class Folks.NoteFieldDetails : AbstractFieldDetails<string>
       if (that_nfd == null)
         return false;
 
-      return (this.uid == that_nfd.uid && this.value == that_nfd.value);
+      return (this.value == that_nfd.value);
     }
 
   /**
@@ -95,8 +106,8 @@ public class Folks.NoteFieldDetails : AbstractFieldDetails<string>
       if (this.value != null)
         retval += this.value.hash ();
 
-      if (this.uid != null)
-        retval += this.uid.hash ();
+      if (this.id != null)
+        retval += this.id.hash ();
 
       return retval;
     }
