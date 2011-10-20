@@ -115,8 +115,26 @@ public class RoleDetailsInterfaceTests : Folks.TestCase
                   var role_expected = new Role ("boss", "Company");
                   role_expected.role = "Role";
                   var role_fd_expected = new RoleFieldDetails (role_expected);
+
+                  /* We copy the tracker_id - we don't know it.
+                   * We could get it from the 1st personas iid but there is no
+                   * real need. */
+                  role_fd_expected.id = role_fd.id;
+
                   if (role_fd.equal (role_fd_expected))
                     {
+                      /* Ensure that setting the Role uid directly (which is
+                       * deprecated) is equivalent to setting the id on a
+                       * RoleFieldDetails directly */
+                      var role_2 = new Role (
+                          role_expected.title,
+                          role_expected.organisation_name,
+                          role_fd.id);
+                      role_2.role = role_expected.role;
+                      var role_fd_2 = new RoleFieldDetails (role_2);
+                      assert (role_fd.equal (role_fd_2));
+                      assert (role_fd.id == role_fd_2.id);
+
                       this._found_role = true;
                       this._main_loop.quit ();
                     }

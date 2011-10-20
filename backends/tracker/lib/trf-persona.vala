@@ -967,9 +967,10 @@ public class Trf.Persona : Folks.Persona,
           var title = r_info[Trf.RoleFields.TITLE];
           var organisation = r_info[Trf.RoleFields.DEPARTMENT];
 
-          var new_role = new Role (title, organisation, tracker_id);
+          var new_role = new Role (title, organisation, null);
           new_role.role = role;
           var role_fd = new RoleFieldDetails (new_role);
+          role_fd.id = tracker_id;
           role_fds.add (role_fd);
         }
 
@@ -981,9 +982,10 @@ public class Trf.Persona : Folks.Persona,
 
   internal bool _add_role (string tracker_id, string? role, string? title, string? org)
     {
-      var new_role = new Role (title, org, tracker_id);
+      var new_role = new Role (title, org, null);
       new_role.role = role;
       var role_fd = new RoleFieldDetails (new_role);
+      role_fd.id = tracker_id;
       if (this._roles.add (role_fd))
         {
           this.notify_property ("roles");
@@ -996,7 +998,7 @@ public class Trf.Persona : Folks.Persona,
     {
       foreach (var role_fd in this._roles)
         {
-          if (role_fd.value.uid == tracker_id)
+          if (role_fd.id == tracker_id)
             {
               this._roles.remove (role_fd);
               this.notify_property ("roles");

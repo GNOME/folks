@@ -7,6 +7,7 @@ API changes:
 * Add AbstractFieldDetails.id to identify instances of details
 * Deprecate PostalAddress.uid in favor of AbstractFieldDetails.id
 * Deprecate NoteFieldDetails.uid in favor of AbstractFieldDetails.id
+* Deprecate Role.uid in favor of AbstractFieldDetails.id
 
 Behavior changes:
 * PostalAddress.equal() now ignores PostalAddress.uid

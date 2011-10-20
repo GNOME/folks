@@ -68,9 +68,11 @@ public class Folks.Role : Object
       set { this._role = (value != null ? value : ""); }
     }
 
+  private string _uid;
   /**
    * The UID that distinguishes this role.
    */
+  [Deprecated (since = "UNRELEASED", replacement = "AbstractFieldDetails.id")]
   public string uid
     {
       get { return _uid; }
@@ -143,6 +145,23 @@ public class Folks.Role : Object
  */
 public class Folks.RoleFieldDetails : AbstractFieldDetails<Role>
 {
+  private string _id;
+  /**
+   * {@inheritDoc}
+   */
+  public override string id
+    {
+      get { return this._id; }
+      set
+        {
+          this._id = (value != null ? value : "");
+
+          /* Keep the Role.uid sync'd from our id */
+          if (this._id != this.value.uid)
+            this.value.uid = this._id;
+        }
+    }
+
   /**
    * Create a new RoleFieldDetails.
    *
@@ -161,6 +180,16 @@ public class Folks.RoleFieldDetails : AbstractFieldDetails<Role>
       this.value = value;
       if (parameters != null)
         this.parameters = parameters;
+
+      /* We keep these sync'd both directions */
+      this.id = this.value.uid;
+
+      /* Keep the Role.uid sync'd to our id */
+      this.value.notify["uid"].connect ((s, p) =>
+        {
+          if (this.id != this.value.uid)
+            this.id = this.value.uid;
+        });
     }
 
   /**
