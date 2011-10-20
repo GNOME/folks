@@ -75,7 +75,7 @@ public class PostalAddressDetailsTests : Folks.TestCase
            null, "eds_id");
       this._postal_address = new PostalAddressFieldDetails (pa);
       this._postal_address.add_parameter (this._postal_address.PARAM_TYPE,
-          Edsf.Persona.address_fields[0]);
+          this._postal_address.PARAM_TYPE_HOME);
 
       v = Value (typeof (string));
       v.set_string (this._fullname);
@@ -91,9 +91,10 @@ public class PostalAddressDetailsTests : Folks.TestCase
            null, "eds_id");
       var pa_fd_copy = new PostalAddressFieldDetails (pa_copy);
       pa_fd_copy.add_parameter (pa_fd_copy.PARAM_TYPE,
-          Edsf.Persona.address_fields[0]);
+          this._postal_address.PARAM_TYPE_HOME);
       v = Value (typeof (PostalAddressFieldDetails));
       v.set_object (pa_fd_copy);
+      /* corresponds to address of type "home" */
       c1.set (Edsf.Persona.address_fields[0], (owned) v);
 
       this._eds_backend.add_contact (c1);
