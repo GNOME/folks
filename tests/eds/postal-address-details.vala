@@ -153,7 +153,7 @@ public class PostalAddressDetailsTests : Folks.TestCase
                  * Although we could get it from the 1st
                  * personas iid; there is no real need.
                  */
-                this._postal_address.value.uid = pa_fd.value.uid;
+                this._postal_address.id = pa_fd.id;
 
                 if (pa_fd.equal (this._postal_address))
                   {

@@ -151,7 +151,7 @@ public class SetPostalAddressesTests : Folks.TestCase
       Folks.Individual i = (Folks.Individual) individual_obj;
       foreach (var pa_fd in i.postal_addresses)
         {
-          pa_fd.value.uid = this._pa_fd.value.uid;
+          pa_fd.id = this._pa_fd.id;
           if (pa_fd.equal (this._pa_fd))
             {
               this._found_after_update = true;

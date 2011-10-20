@@ -806,8 +806,9 @@ public class Trf.Persona : Folks.Persona,
               a_info[Trf.PostalAddressFields.POSTALCODE],
               a_info[Trf.PostalAddressFields.COUNTRY],
               null,
-              a_info[Trf.PostalAddressFields.TRACKER_ID]);
+              null);
           var pafd = new PostalAddressFieldDetails (pa);
+          pafd.id = a_info[Trf.PostalAddressFields.TRACKER_ID];
 
           postal_addresses.add (pafd);
         }
@@ -851,7 +852,7 @@ public class Trf.Persona : Folks.Persona,
     {
       foreach (var pafd in this._postal_addresses)
         {
-          if (pafd.value.uid == tracker_id)
+          if (pafd.id == tracker_id)
             {
               this._postal_addresses.remove (pafd);
               this.notify_property ("postal-addresses");

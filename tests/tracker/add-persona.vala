@@ -482,8 +482,8 @@ public class AddPersonaTests : Folks.TestCase
 
       foreach (var pafd in i.postal_addresses)
         {
-          this._postal_address_fd.value.uid = pafd.value.uid;
-          if (pafd.value.equal (this._postal_address_fd.value))
+          this._postal_address_fd.id = pafd.id;
+          if (pafd.equal (this._postal_address_fd))
             this._properties_found.replace ("postal-address-1", true);
         }
 

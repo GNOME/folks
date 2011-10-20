@@ -149,10 +149,27 @@ public class PostalAddressDetailsInterfaceTests : Folks.TestCase
                  * Although we could get it from the 1st
                  * personas iid; there is no real need.
                  */
-                this._postal_address_fd.value.uid = pafd.value.uid;
+                this._postal_address_fd.id = pafd.id;
 
                 if (pafd.value.equal (this._postal_address_fd.value))
                   {
+                    /* Ensure that setting the postal address uid directly
+                     * (which is deprecated) is equivalent to setting the id on
+                     * a PostalAddressFieldDetails directly */
+                    var pa_2 = new PostalAddress (
+                        this._postal_address_fd.value.po_box,
+                        this._postal_address_fd.value.extension,
+                        this._postal_address_fd.value.street,
+                        this._postal_address_fd.value.locality,
+                        this._postal_address_fd.value.region,
+                        this._postal_address_fd.value.postal_code,
+                        this._postal_address_fd.value.country,
+                        null,
+                        pafd.id);
+                    var pa_fd_2 = new PostalAddressFieldDetails (pa_2);
+                    assert (pafd.equal (pa_fd_2));
+                    assert (pafd.id == pa_fd_2.id);
+
                     this._found_postal_address = true;
                     this._main_loop.quit ();
                   }

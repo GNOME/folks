@@ -134,6 +134,7 @@ public class Folks.PostalAddress : Object
   /**
    * The UID of the Postal Address (if any).
    */
+  [Deprecated (since = "UNRELEASED", replacement = "AbstractFieldDetails.id")]
   public string uid
     {
       get { return _uid; }
@@ -177,6 +178,8 @@ public class Folks.PostalAddress : Object
    * components are equal (where `null` compares equal only with `null`) and
    * they have the same set of types (or both have no types).
    *
+   * This does not factor in the {@link PostalAddress.uid}.
+   *
    * @param with another postal address to compare with
    * @return `true` if the addresses are equal, `false` otherwise
    */
@@ -189,8 +192,7 @@ public class Folks.PostalAddress : Object
           this.region != with.region ||
           this.postal_code != with.postal_code ||
           this.country != with.country ||
-          this.address_format != with.address_format ||
-          this.uid != with.uid)
+          this.address_format != with.address_format)
         return false;
 
       return true;
@@ -224,6 +226,23 @@ public class Folks.PostalAddress : Object
 public class Folks.PostalAddressFieldDetails :
     AbstractFieldDetails<PostalAddress>
 {
+  private string _id;
+  /**
+   * {@inheritDoc}
+   */
+  public override string id
+    {
+      get { return this._id; }
+      set
+        {
+          this._id = (value != null ? value : "");
+
+          /* Keep the PostalAddress.uid sync'd from our id */
+          if (this._id != this.value.uid)
+            this.value.uid = this._id;
+        }
+    }
+
   /**
    * Create a new PostalAddressFieldDetails.
    *
@@ -243,6 +262,16 @@ public class Folks.PostalAddressFieldDetails :
       this.value = value;
       if (parameters != null)
         this.parameters = parameters;
+
+      /* We keep these sync'd both directions */
+      this.id = this.value.uid;
+
+      /* Keep the PostalAddress.uid sync'd to our id */
+      this.value.notify["uid"].connect ((s, p) =>
+        {
+          if (this.id != this.value.uid)
+            this.id = this.value.uid;
+        });
     }
 
   /**

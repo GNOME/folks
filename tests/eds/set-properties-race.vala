@@ -159,7 +159,7 @@ public class SetPropertiesRaceTests : Folks.TestCase
           assert (pa_fd is PostalAddressFieldDetails);
           assert (pa_fd.value is PostalAddress);
 
-          pa_fd.value.uid = this._pa_fd.value.uid;
+          pa_fd.id = this._pa_fd.id;
           if (pa_fd.equal (this._pa_fd))
             {
               this._found_after_update = true;

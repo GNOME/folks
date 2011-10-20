@@ -5,6 +5,10 @@ Bugs fixed:
 
 API changes:
 * Add AbstractFieldDetails.id to identify instances of details
+* Deprecate PostalAddress.uid in favor of AbstractFieldDetails.id
+
+Behavior changes:
+* PostalAddress.equal() now ignores PostalAddress.uid
 
 Overview of changes from libfolks 0.6.4 to libfolks 0.6.4.1
 =============================================================
