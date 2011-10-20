@@ -1278,7 +1278,7 @@ public class Edsf.Persona : Folks.Persona,
             {
               /* Has this already been added? */
               var exists = false;
-              var current_im_addrs = this.im_addresses.get (proto);
+              var current_im_addrs = new_im_addresses.get (proto);
               if (current_im_addrs != null)
                 {
                   foreach (var cur_im in current_im_addrs)

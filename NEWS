@@ -1,6 +1,7 @@
 Overview of changes from libfolks 0.6.4.1 to libfolks 0.6.5
 =============================================================
 Bugs fixed:
+* Bug 662285 — Error with email -> im_addresses when updating a contact
 
 Overview of changes from libfolks 0.6.4 to libfolks 0.6.4.1
 =============================================================
