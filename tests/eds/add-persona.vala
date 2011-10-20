@@ -35,7 +35,9 @@ public class AddPersonaTests : Folks.TestCase
   private string _im_addr_1;
   private string _im_addr_2;
   private string _phone_1;
+  private string _phone_1_type;
   private string _phone_2;
+  private string _phone_2_type;
   private PostalAddressFieldDetails _address;
   private string _po_box = "12345";
   private string _locality = "locality";
@@ -77,7 +79,9 @@ public class AddPersonaTests : Folks.TestCase
       this._im_addr_1 = "someone-1@jabber.example.org";
       this._im_addr_2 = "someone-2@jabber.example.org";
       this._phone_1 = "12345";
+      this._phone_1_type = AbstractFieldDetails.PARAM_TYPE_HOME;
       this._phone_2 = "54321";
+      this._phone_2_type = AbstractFieldDetails.PARAM_TYPE_OTHER;
       this._family_name = "family";
       this._given_name = "given";
 
@@ -86,7 +90,7 @@ public class AddPersonaTests : Folks.TestCase
           this._postal_code, this._country, null, null);
       this._address = new PostalAddressFieldDetails (pa);
       this._address.add_parameter (this._address.PARAM_TYPE,
-          Edsf.Persona.address_fields[0]);
+          this._address.PARAM_TYPE_HOME);
 
       this._properties_found = new HashTable<string, bool>
           (str_hash, str_equal);
@@ -164,7 +168,7 @@ public class AddPersonaTests : Folks.TestCase
           (GLib.HashFunc) EmailFieldDetails.hash,
           (GLib.EqualFunc) EmailFieldDetails.equal);
       var email_1 = new EmailFieldDetails (this._email_1);
-      email_1.set_parameter (email_1.PARAM_TYPE, Edsf.Persona.email_fields[0]);
+      email_1.set_parameter (email_1.PARAM_TYPE, email_1.PARAM_TYPE_HOME);
       emails.add (email_1);
       v2.set_object (emails);
       details.insert (
@@ -191,10 +195,12 @@ public class AddPersonaTests : Folks.TestCase
           (GLib.EqualFunc) PhoneFieldDetails.equal);
 
       var phone_1 = new PhoneFieldDetails (this._phone_1);
-      phone_1.set_parameter (phone_1.PARAM_TYPE, Edsf.Persona.phone_fields[0]);
+      phone_1.set_parameter (AbstractFieldDetails.PARAM_TYPE,
+          this._phone_1_type);
       phones.add (phone_1);
       var phone_2 = new PhoneFieldDetails (this._phone_2);
-      phone_2.set_parameter (phone_2.PARAM_TYPE, Edsf.Persona.phone_fields[1]);
+      phone_2.set_parameter (AbstractFieldDetails.PARAM_TYPE,
+          this._phone_2_type);
       phones.add (phone_2);
       v5.set_object (phones);
       details.insert (
@@ -210,7 +216,7 @@ public class AddPersonaTests : Folks.TestCase
           this._extension, this._street, this._locality, this._region,
           this._postal_code, this._country, null, null);
       var pa_fd_a = new PostalAddressFieldDetails (pa_a);
-      pa_fd_a.add_parameter ("types", Edsf.Persona.address_fields[0]);
+      pa_fd_a.add_parameter (pa_fd_a.PARAM_TYPE, pa_fd_a.PARAM_TYPE_HOME);
       pa_fds.add (pa_fd_a);
       v6.set_object (pa_fds);
       details.insert (
@@ -386,11 +392,18 @@ public class AddPersonaTests : Folks.TestCase
 
       foreach (var phone_fd in i.phone_numbers)
         {
-          if (phone_fd.equal (new PhoneFieldDetails (this._phone_1)))
+          var phone_1 = new PhoneFieldDetails (this._phone_1);
+          phone_1.set_parameter (AbstractFieldDetails.PARAM_TYPE,
+              this._phone_1_type);
+          var phone_2 = new PhoneFieldDetails (this._phone_2);
+          phone_2.set_parameter (AbstractFieldDetails.PARAM_TYPE,
+              this._phone_2_type);
+
+          if (phone_fd.equal (phone_1))
             {
               this._properties_found.replace ("phone-1", true);
             }
-          else if (phone_fd.equal (new PhoneFieldDetails (this._phone_2)))
+          else if (phone_fd.equal (phone_2))
             {
               this._properties_found.replace ("phone-2", true);
             }
