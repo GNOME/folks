@@ -32,18 +32,29 @@ using GLib;
  */
 public class Folks.Role : Object
 {
+  private string _organisation_name;
   /**
    * The name of the organisation in which the role is held.
    */
-  public string organisation_name { get; set; }
+  public string organisation_name
+    {
+      get { return this._organisation_name; }
+      set { this._organisation_name = (value != null ? value : ""); }
+    }
 
+  private string _title;
   /**
    * The title of the position held.
    *
    * For example: “Director, Ministry of Silly Walks”
    */
-  public string title { get; set; }
+  public string title
+    {
+      get { return this._title; }
+      set { this._title = (value != null ? value : ""); }
+    }
 
+  private string _role;
   /**
    * The role of the position.
    *
@@ -51,12 +62,20 @@ public class Folks.Role : Object
    *
    * @since 0.6.0
    */
-  public string role { get; set; }
+  public string role
+    {
+      get { return this._role; }
+      set { this._role = (value != null ? value : ""); }
+    }
 
   /**
    * The UID that distinguishes this role.
    */
-  public string uid { get; set; }
+  public string uid
+    {
+      get { return _uid; }
+      set { _uid = (value != null ? value : ""); }
+    }
 
   /**
    * Default constructor.
@@ -71,21 +90,6 @@ public class Folks.Role : Object
   public Role (string? title = null,
       string? organisation_name = null, string? uid = null)
     {
-      if (title == null)
-        {
-          title = "";
-        }
-
-      if (organisation_name == null)
-        {
-          organisation_name = "";
-        }
-
-      if (uid == null)
-        {
-          uid = "";
-        }
-
       Object (uid:                  uid,
               title:                title,
               organisation_name:    organisation_name);
