@@ -153,7 +153,7 @@ public class Folks.PotentialMatch : Object
         {
           foreach (var phone_fd_b in set_b)
             {
-              if (phone_fd_a.equal (phone_fd_b))
+              if (phone_fd_a.values_equal (phone_fd_b))
                 {
                   this._result = MatchResult.HIGH;
                   return;

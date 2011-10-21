@@ -229,33 +229,32 @@ public abstract class Folks.AbstractFieldDetails<T> : Object
     }
 
   /**
-   * An equality function for {@link AbstractFieldDetails}.
+   * A fairly-strict equality function for {@link AbstractFieldDetails}.
    *
-   * This defaults to string comparison of the
-   * {@link AbstractFieldDetails.value}s if the generic type is string;
-   * otherwise, direct pointer comparison of the
-   * {@link AbstractFieldDetails.value}s.
+   * This function compares:
+   *  * {@link AbstractFieldDetails.value}s
+   *  * {@link AbstractFieldDetails.parameters}
+   *
+   * And does not compare:
+   *  * {@link AbstractFieldDetails.id}s
+   *
+   * See the description of {@link AbstractFieldDetails.values_equal} for
+   * details on the value comparison.
+   *
+   * To check equality not including the parameters, see
+   * {@link AbstractFieldDetails.values_equal}.
    *
    * @param that another {@link AbstractFieldDetails}
    *
    * @return whether the elements are equal
    *
+   * @see AbstractFieldDetails.parameters_equal
+   * @see AbstractFieldDetails.values_equal
    * @since 0.6.0
    */
   public virtual bool equal (AbstractFieldDetails<T> that)
     {
-      EqualFunc equal_func = direct_equal;
-
-      if (typeof (T) == typeof (string))
-        equal_func = str_equal;
-
-      if ((this.get_type () != that.get_type ()) ||
-          !equal_func (this.value, that.value))
-        {
-          return false;
-        }
-
-      return this.parameters_equal<T> (that);
+      return this.values_equal<T> (that) && this.parameters_equal<T> (that);
     }
 
   /**
@@ -314,6 +313,51 @@ public abstract class Folks.AbstractFieldDetails<T> : Object
               if (!that_param_values.contains (param_val))
                 return false;
             }
+        }
+
+      return true;
+    }
+
+  /**
+   * An equality function which does not consider parameters.
+   *
+   * Specific classes may override this function to provide "smart" value
+   * comparisons (eg, considering the phone number values "+1 555 123 4567" and
+   * "123-4567" equal). If you wish to do strict comparisons, simply compare the
+   * {@link AbstractFieldDetails.value}s directly.
+   *
+   * This function compares:
+   *  * {@link AbstractFieldDetails.value}s
+   *
+   * And does not compare:
+   *  * {@link AbstractFieldDetails.parameters}
+   *  * {@link AbstractFieldDetails.id}s
+   *
+   * This defaults to string comparison of the
+   * {@link AbstractFieldDetails.value}s if the generic type is string;
+   * otherwise, direct pointer comparison of the
+   * {@link AbstractFieldDetails.value}s.
+   *
+   * @param that another {@link AbstractFieldDetails}
+   *
+   * @return whether the elements' {@link AbstractFieldDetails.value}s are
+   * equal.
+   *
+   * @see AbstractFieldDetails.equal
+   * @see AbstractFieldDetails.parameters_equal
+   * @since UNRELEASED
+   */
+  public virtual bool values_equal (AbstractFieldDetails<T> that)
+    {
+      EqualFunc equal_func = direct_equal;
+
+      if (typeof (T) == typeof (string))
+        equal_func = str_equal;
+
+      if ((this.get_type () != that.get_type ()) ||
+          !equal_func (this.value, that.value))
+        {
+          return false;
         }
 
       return true;

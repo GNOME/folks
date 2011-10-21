@@ -85,6 +85,18 @@ public class Folks.PhoneFieldDetails : AbstractFieldDetails<string>
       if (that_fd == null)
         return false;
 
+      return this.values_equal (that_fd);
+    }
+
+  /**
+   * {@inheritDoc}
+   */
+  public override bool values_equal (AbstractFieldDetails<string> that)
+    {
+      var that_fd = that as PhoneFieldDetails;
+      if (that_fd == null)
+        return false;
+
       var n1 = this._drop_extension (this.get_normalised ());
       var n2 = this._drop_extension (that_fd.get_normalised ());
 
