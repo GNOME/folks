@@ -33,10 +33,16 @@ using GLib;
  */
 public class Folks.NoteFieldDetails : AbstractFieldDetails<string>
 {
+  /* FIXME: deprecate this */
+  private string _uid;
   /**
    * The UID of the note (if any).
    */
-  public string uid { get; set; }
+  public string uid
+    {
+      get { return _uid; }
+      set { _uid = (value != null ? value : ""); }
+    }
 
   /**
    * Create a new NoteFieldDetails.
