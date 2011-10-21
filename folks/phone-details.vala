@@ -78,14 +78,7 @@ public class Folks.PhoneFieldDetails : AbstractFieldDetails<string>
    */
   public override bool equal (AbstractFieldDetails<string> that)
     {
-      if (!base.equal<string> (that))
-        return false;
-
-      var that_fd = that as PhoneFieldDetails;
-      if (that_fd == null)
-        return false;
-
-      return this.values_equal (that_fd);
+      return base.equal<string> (that);
     }
 
   /**
