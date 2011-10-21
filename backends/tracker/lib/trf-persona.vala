@@ -1194,8 +1194,7 @@ public class Trf.Persona : Folks.Persona,
               string[] p_info = p.split ("\t");
               var phone_fd =
                 new PhoneFieldDetails (p_info[Trf.PhoneFields.PHONE]);
-              phone_fd.set_parameter ("tracker_id",
-                  p_info[Trf.PhoneFields.TRACKER_ID]);
+              phone_fd.id = p_info[Trf.PhoneFields.TRACKER_ID];
               phones.add (phone_fd);
             }
         }
@@ -1212,7 +1211,7 @@ public class Trf.Persona : Folks.Persona,
 
       foreach (var p in this._phone_numbers)
         {
-          if (p.get_parameter_values ("tracker_id").contains (tracker_id))
+          if (p.id == tracker_id)
             {
               found = true;
               break;
@@ -1222,7 +1221,7 @@ public class Trf.Persona : Folks.Persona,
       if (!found)
         {
           var phone_fd = new PhoneFieldDetails (phone);
-          phone_fd.set_parameter ("tracker_id", tracker_id);
+          phone_fd.id = tracker_id;
           this._phone_numbers.add (phone_fd);
           this.notify_property ("phone-numbers");
         }
@@ -1236,7 +1235,7 @@ public class Trf.Persona : Folks.Persona,
 
       foreach (var p in this._phone_numbers)
         {
-          if (p.get_parameter_values ("tracker_id").contains (tracker_id))
+          if (p.id == tracker_id)
             {
               this._phone_numbers.remove (p);
               found = true;

@@ -41,6 +41,16 @@ public class Folks.PhoneFieldDetails : AbstractFieldDetails<string>
   private const string[] _valid_digits = { "#", "*", "0", "1", "2", "3", "4",
       "5", "6", "7", "8", "9" };
 
+  private string _id;
+  /**
+   * {@inheritDoc}
+   */
+  public override string id
+    {
+      get { return this._id; }
+      set { this._id = (value != null ? value : ""); }
+    }
+
   /**
    * Create a new PhoneFieldDetails.
    *
