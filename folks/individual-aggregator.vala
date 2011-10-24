@@ -297,10 +297,12 @@ public class Folks.IndividualAggregator : Object
 
       if (store_config_ids != null)
         {
+          debug ("Setting primary store IDs from environment variable.");
           this._configure_primary_store (store_config_ids);
         }
       else
         {
+          debug ("Setting primary store IDs to defaults.");
 #if ENABLE_EDS
           this._configured_primary_store_type_id = "eds";
           this._configured_primary_store_id = "system";
@@ -314,13 +316,20 @@ public class Folks.IndividualAggregator : Object
               unowned GConf.Client client = GConf.Client.get_default ();
               GConf.Value? val = client.get (this._FOLKS_CONFIG_KEY);
               if (val != null)
-                this._configure_primary_store (val.get_string ());
+                {
+                  debug ("Setting primary store IDs from GConf.");
+                  this._configure_primary_store (val.get_string ());
+                }
             }
           catch (GLib.Error e)
             {
               /* We ignore errors and go with the default store */
             }
         }
+
+      debug ("Primary store IDs are '%s' and '%s'.",
+          this._configured_primary_store_type_id,
+          this._configured_primary_store_id);
 
       var disable_linking = Environment.get_variable ("FOLKS_DISABLE_LINKING");
       if (disable_linking != null)
@@ -344,6 +353,7 @@ public class Folks.IndividualAggregator : Object
 
   private void _configure_primary_store (string store_config_ids)
     {
+      debug ("_configure_primary_store to '%s'", store_config_ids);
       this._user_configured_primary_store = true;
 
       if (store_config_ids.index_of (":") != -1)
@@ -607,6 +617,8 @@ public class Folks.IndividualAggregator : Object
 
   private void _set_primary_store (PersonaStore store)
     {
+      debug ("_set_primary_store()");
+
       if (this._primary_store == store)
         return;
 
@@ -622,6 +634,9 @@ public class Folks.IndividualAggregator : Object
                   this._configured_primary_store_id == "") ||
               this._configured_primary_store_id == store.id)
             {
+              debug ("Setting primary store to %p (type ID: %s, ID: %s)",
+                  store, store.type_id, store.id);
+
               var previous_store = this._primary_store;
               this._primary_store = store;
 
@@ -709,6 +724,8 @@ public class Folks.IndividualAggregator : Object
 
       if (this._primary_store == store)
         {
+          debug ("Unsetting primary store as store %p (type ID: %s, ID: %s) " +
+              "has been removed", store, store.type_id, store.id);
           this._primary_store = null;
           this.notify_property ("primary-store");
         }
@@ -1343,17 +1360,25 @@ public class Folks.IndividualAggregator : Object
       ParamSpec pspec)
     {
       var store = (PersonaStore) obj;
+
+      debug ("PersonaStore.is-user-set-default changed for store %p " +
+          "(type ID: %s, ID: %s)", store, store.type_id, store.id);
+
       if (this._maybe_configure_as_primary (store))
         this._set_primary_store (store);
     }
 
   private bool _maybe_configure_as_primary (PersonaStore store)
     {
+      debug ("_maybe_configure_as_primary()");
+
       var configured = false;
 
       if (!this._user_configured_primary_store &&
           store.is_user_set_default)
         {
+          debug ("Setting primary store IDs to '%s' and '%s'.", store.type_id,
+              store.id);
           this._configured_primary_store_type_id = store.type_id;
           this._configured_primary_store_id = store.id;
           configured = true;
