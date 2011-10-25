@@ -73,6 +73,7 @@ noinst_PROGRAMS = \
 	set-roles \
 	change-primary-store \
 	link-personas-diff-stores \
+	set-is-favourite \
 	$(NULL)
 
 RUN_WITH_PRIVATE_BUS = $(top_srcdir)/tests/tools/with-session-bus-eds.sh
@@ -211,6 +212,10 @@ link_personas_diff_stores_SOURCES = \
 	link-personas-diff-stores.vala \
 	$(NULL)
 
+set_is_favourite_SOURCES = \
+	set-is-favourite.vala \
+	$(NULL)
+
 CLEANFILES = \
         *.pid \
         *.address \
@@ -249,6 +254,7 @@ MAINTAINERCLEANFILES = \
 	set_roles_vala.stamp \
 	change_primary_store_vala.stamp \
 	link_personas_diff_stores_vala.stamp \
+	set_is_favourite_vala.stamp \
         $(NULL)
 
 EXTRA_DIST = \
