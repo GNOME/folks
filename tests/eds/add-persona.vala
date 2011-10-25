@@ -106,6 +106,7 @@ public class AddPersonaTests : Folks.TestCase
       this._properties_found.insert ("note", false);
       this._properties_found.insert ("birthday", false);
       this._properties_found.insert ("role-1", false);
+      this._properties_found.insert ("is-favourite", false);
 
       this._test_add_persona_async ();
 
@@ -260,6 +261,12 @@ public class AddPersonaTests : Folks.TestCase
       details.insert (Folks.PersonaStore.detail_key (PersonaDetail.ROLES),
           (owned) v10);
 
+      Value? v11 = Value (typeof (bool));
+      v11.set_boolean (true);
+      details.insert (
+          Folks.PersonaStore.detail_key (PersonaDetail.IS_FAVOURITE),
+          (owned) v11);
+
       try
         {
           yield this._aggregator.add_persona_from_details (null,
@@ -317,6 +324,7 @@ public class AddPersonaTests : Folks.TestCase
               i.notify["notes"].disconnect (this._notify_cb);
               i.notify["birthday"].disconnect (this._notify_cb);
               i.notify["roles"].disconnect (this._notify_cb);
+              i.notify["is-favourite"].disconnect (this._notify_cb);
 
               this._properties_found.remove_all ();
             }
@@ -334,6 +342,7 @@ public class AddPersonaTests : Folks.TestCase
           i.notify["notes"].connect (this._notify_cb);
           i.notify["birthday"].connect (this._notify_cb);
           i.notify["roles"].connect (this._notify_cb);
+          i.notify["is-favourite"].connect (this._notify_cb);
 
           this._check_properties (i);
         }
@@ -454,6 +463,11 @@ public class AddPersonaTests : Folks.TestCase
           var role_fd_expected = new RoleFieldDetails (r1);
           if (role_fd.equal (role_fd_expected))
             this._properties_found.replace ("role-1", true);
+        }
+
+      if (i.is_favourite)
+        {
+          this._properties_found.replace ("is-favourite", true);
         }
 
       this._exit_if_all_properties_found ();
