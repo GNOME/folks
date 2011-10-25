@@ -259,6 +259,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
    * - PersonaStore.detail_key (PersonaDetail.FULL_NAME)
    * - PersonaStore.detail_key (PersonaDetail.GENDER)
    * - PersonaStore.detail_key (PersonaDetail.IM_ADDRESSES)
+   * - PersonaStore.detail_key (PersonaDetail.IS_FAVOURITE)
    * - PersonaStore.detail_key (PersonaDetail.PHONE_NUMBERS)
    * - PersonaStore.detail_key (PersonaDetail.POSTAL_ADDRESSES)
    * - PersonaStore.detail_key (PersonaDetail.ROLES)
@@ -381,6 +382,12 @@ public class Edsf.PersonaStore : Folks.PersonaStore
               Set<RoleFieldDetails> roles =
                 (Set<RoleFieldDetails>) v.get_object ();
               yield this._set_contact_roles (contact, roles);
+            }
+          else if (k == Folks.PersonaStore.detail_key (
+                  PersonaDetail.IS_FAVOURITE))
+            {
+              bool is_fav = v.get_boolean ();
+              yield this._set_contact_is_favourite (contact, is_fav);
             }
         }
 
@@ -647,14 +654,17 @@ public class Edsf.PersonaStore : Folks.PersonaStore
                 {
                   string[] fields = supported_fields.split (",");
 
-                  /* We always support local-ids, web-service-addresses and
-                   * gender because we use custom vCard attributes for them. */
+                  /* We always support local-ids, web-service-addresses, gender
+                   * and favourite because we use custom vCard attributes for
+                   * them. */
                   prop_set.add (Folks.PersonaStore.detail_key (
                       PersonaDetail.LOCAL_IDS));
                   prop_set.add (Folks.PersonaStore.detail_key (
                       PersonaDetail.WEB_SERVICE_ADDRESSES));
                   prop_set.add (Folks.PersonaStore.detail_key (
                       PersonaDetail.GENDER));
+                  prop_set.add (Folks.PersonaStore.detail_key (
+                      PersonaDetail.IS_FAVOURITE));
 
                   foreach (unowned string field in fields)
                     {
@@ -1218,6 +1228,36 @@ public class Edsf.PersonaStore : Folks.PersonaStore
         }
 
       contact.add_attribute ((owned) new_attr);
+    }
+
+  internal async void _set_is_favourite (Edsf.Persona persona,
+      bool is_favourite) throws PropertyError
+    {
+      if (!("is-favourite" in this._always_writeable_properties))
+        {
+          throw new PropertyError.NOT_WRITEABLE (
+              _("The contact cannot be marked as favourite."));
+        }
+
+      yield this._set_contact_is_favourite (persona.contact, is_favourite);
+      yield this._commit_modified_property (persona, "is-favourite");
+    }
+
+  private async void _set_contact_is_favourite (E.Contact contact,
+      bool is_favourite)
+    {
+      unowned VCardAttribute attr = contact.get_attribute ("X-FOLKS-FAVOURITE");
+      if (attr != null)
+        {
+          contact.remove_attribute (attr);
+        }
+
+      if (is_favourite)
+        {
+          var new_attr = new VCardAttribute (null, "X-FOLKS-FAVOURITE");
+          new_attr.add_value ("true");
+          contact.add_attribute ((owned) new_attr);
+        }
     }
 
   private async void _set_contact_avatar (E.Contact contact,

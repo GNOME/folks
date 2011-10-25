@@ -33,6 +33,7 @@ public class Edsf.Persona : Folks.Persona,
     AvatarDetails,
     BirthdayDetails,
     EmailDetails,
+    FavouriteDetails,
     GenderDetails,
     GroupDetails,
     ImDetails,
@@ -136,6 +137,8 @@ public class Edsf.Persona : Folks.Persona,
   private Set<string> _local_ids_ro;
 
   private HashMultiMap<string, WebServiceFieldDetails> _web_service_addresses;
+
+  private bool _is_favourite;
 
   /**
    * The e-d-s contact represented by this Persona
@@ -620,6 +623,34 @@ public class Edsf.Persona : Folks.Persona,
     }
 
   /**
+   * Whether this contact is a user-defined favourite.
+   *
+   * @since UNRELEASED
+   */
+  [CCode (notify = false)]
+  public bool is_favourite
+      {
+        get { return this._is_favourite; }
+        set { this.change_is_favourite.begin (value); }
+      }
+
+  /**
+   * {@inheritDoc}
+   *
+   * @since UNRELEASED
+   */
+  public async void change_is_favourite (bool is_favourite) throws PropertyError
+    {
+      if (this._is_favourite == is_favourite)
+        {
+          return;
+        }
+
+      yield ((Edsf.PersonaStore) this.store)._set_is_favourite (this,
+          is_favourite);
+    }
+
+  /**
    * Build a IID.
    *
    * @param store_id the {@link PersonaStore.id}
@@ -798,6 +829,7 @@ public class Edsf.Persona : Folks.Persona,
       this._update_gender ();
       this._update_birthday ();
       this._update_roles ();
+      this._update_favourite ();
 
       this.thaw_notify ();
     }
@@ -1531,6 +1563,27 @@ public class Edsf.Persona : Folks.Persona,
           this._local_ids = new_local_ids;
           this._local_ids_ro = this._local_ids.read_only_view;
           this.notify_property ("local-ids");
+        }
+    }
+
+  private void _update_favourite ()
+    {
+      bool is_fav = false;
+
+      var fav = this.contact.get_attribute ("X-FOLKS-FAVOURITE");
+      if (fav != null)
+        {
+          var val = fav.get_value ();
+          if (val.down () == "true")
+            {
+              is_fav = true;
+            }
+        }
+
+      if (is_fav != this._is_favourite)
+        {
+          this._is_favourite = is_fav;
+          this.notify_property ("is-favourite");
         }
     }
 
