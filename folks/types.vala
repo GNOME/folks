@@ -29,6 +29,8 @@ namespace Folks
 {
   /**
    * A 'boolean' type that has a distinct 'unset' state.
+   *
+   * @since 0.3.1
    */
   public enum MaybeBool
     {
