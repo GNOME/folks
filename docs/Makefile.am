@@ -64,7 +64,18 @@ valadoc_flags = \
 	$(NULL)
 
 # folks documentation
-folks_doc_files = $(top_srcdir)/folks/*.vala
+folks_doc_files_blacklist = \
+	$(top_srcdir)/folks/internal.vala \
+	$(NULL)
+# this expands the list of files, so we can filter out elements
+folks_doc_files_all = \
+	$(wildcard $(top_srcdir)/folks/*.vala) \
+	$(NULL)
+# FIXME: sort the files manually to work around the native doclet portion of
+# bgo#662784
+folks_doc_files = \
+	$(sort \
+	$(filter-out $(folks_doc_files_blacklist),$(folks_doc_files_all)))
 folks_doc_deps = \
 	gconf-2.0 \
 	gmodule-2.0 \
