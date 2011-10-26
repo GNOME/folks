@@ -21,6 +21,11 @@
 
 using Gee;
 
+/**
+ * Utility functions to simplify common patterns in Folks client code.
+ *
+ * @since 0.6.0
+ */
 public class Folks.Utils : Object
 {
   internal static bool _str_equal_safe (string a, string b)
