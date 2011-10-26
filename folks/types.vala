@@ -20,6 +20,11 @@
 
 using GLib;
 
+/**
+ * New general types required by Folks.
+ *
+ * @since 0.3.1
+ */
 namespace Folks
 {
   /**
