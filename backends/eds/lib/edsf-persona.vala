@@ -1167,7 +1167,7 @@ public class Edsf.Persona : Folks.Persona,
 
             return new FileIcon (File.new_for_uri (p.get_uri ()));
           case ContactPhotoType.INLINED:
-            if (p.get_mime_type () == null || p.get_inlined () == null)
+            if (p.get_inlined () == null)
               {
                 return null;
               }

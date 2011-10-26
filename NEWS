@@ -5,6 +5,7 @@ Bugs fixed:
 * Bug 662433 — AbstractFieldDetails.equal() is ambiguous about checking
   parameters.
 * Bug 660908 — Add favourites support to EDS backend
+* Bug 662770 — ContactPhotos are ignored when mime type is null
 
 API changes:
 * Add AbstractFieldDetails.id to identify instances of details

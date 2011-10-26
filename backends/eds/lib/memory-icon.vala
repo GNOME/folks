@@ -30,7 +30,7 @@ using GLib;
 internal class Edsf.MemoryIcon : Object, Icon, LoadableIcon
 {
   private uint8[] _image_data;
-  private string _image_type;
+  private string? _image_type;
 
   /**
    * Construct a new in-memory icon.
@@ -39,7 +39,7 @@ internal class Edsf.MemoryIcon : Object, Icon, LoadableIcon
    * @param image_data the binary data of the image
    * @since 0.6.0
    */
-  public MemoryIcon (string image_type, uint8[] image_data)
+  public MemoryIcon (string? image_type, uint8[] image_data)
     {
       this._image_data = image_data;
       this._image_type = image_type;
@@ -83,7 +83,7 @@ internal class Edsf.MemoryIcon : Object, Icon, LoadableIcon
        *
        * Basically, this is just a nul-safe version of g_str_hash(). Which is
        * calculated over both the image type and image data. */
-      uint hash = this._image_type.hash ();
+      uint hash = this._image_type != null ? this._image_type.hash () : 0;
 
       for (uint i = 0; i < this._image_data.length; i++)
         {
