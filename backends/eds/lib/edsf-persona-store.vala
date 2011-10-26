@@ -1295,6 +1295,15 @@ public class Edsf.PersonaStore : Folks.PersonaStore
                 }
 
               cp.set_inlined (image_data);
+
+              bool uncertain = false;
+              var mime_type = ContentType.guess (null, image_data,
+                  out uncertain);
+              if (mime_type != null && !uncertain)
+                {
+                  cp.set_mime_type (mime_type);
+                }
+
               contact.set (ContactField.PHOTO, cp);
             }
           catch (GLib.Error e1)

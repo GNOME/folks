@@ -6,6 +6,7 @@ Bugs fixed:
   parameters.
 * Bug 660908 — Add favourites support to EDS backend
 * Bug 662770 — ContactPhotos are ignored when mime type is null
+* Bug 662616 — We should set mime type when setting an EContact's photo
 
 API changes:
 * Add AbstractFieldDetails.id to identify instances of details
