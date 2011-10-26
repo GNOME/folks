@@ -232,10 +232,12 @@ public abstract class Folks.AbstractFieldDetails<T> : Object
    * A fairly-strict equality function for {@link AbstractFieldDetails}.
    *
    * This function compares:
+   *
    *  * {@link AbstractFieldDetails.value}s
    *  * {@link AbstractFieldDetails.parameters}
    *
    * And does not compare:
+   *
    *  * {@link AbstractFieldDetails.id}s
    *
    * See the description of {@link AbstractFieldDetails.values_equal} for
@@ -263,9 +265,11 @@ public abstract class Folks.AbstractFieldDetails<T> : Object
    * An equality function which only considers parameters.
    *
    * This function compares:
+   *
    *  * {@link AbstractFieldDetails.parameters}
    *
    * And does not compare:
+   *
    *  * {@link AbstractFieldDetails.value}s
    *  * {@link AbstractFieldDetails.id}s
    *
@@ -329,9 +333,11 @@ public abstract class Folks.AbstractFieldDetails<T> : Object
    * {@link AbstractFieldDetails.value}s directly.
    *
    * This function compares:
+   *
    *  * {@link AbstractFieldDetails.value}s
    *
    * And does not compare:
+   *
    *  * {@link AbstractFieldDetails.parameters}
    *  * {@link AbstractFieldDetails.id}s
    *
