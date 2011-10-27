@@ -1351,6 +1351,20 @@ public class Folks.IndividualAggregator : Object
           this._non_quiescent_persona_store_count == 0 &&
           this._is_quiescent == false)
         {
+          if (this._configured_primary_store_type_id.length > 0 &&
+              this._primary_store == null)
+            {
+              warning ("Failed to find primary PersonaStore with type ID " +
+                  "'%s' and ID '%s'.\n" +
+                  "Individuals will not be linked properly " +
+                  "and creating new links between Personas will not work.\n" +
+                  "The configured primary PersonaStore's backend may not be " +
+                  "installed. If you are unsure, check with your " +
+                  "distribution.",
+                  this._configured_primary_store_type_id,
+                  this._configured_primary_store_id);
+            }
+
           this._is_quiescent = true;
           this.notify_property ("is-quiescent");
         }
