@@ -44,4 +44,13 @@ public class Folks.BuildConf
 
   [CCode (cname = "LOCALE_DIR")]
   public static const string LOCALE_DIR;
+
+  [CCode (cname = "HAVE_EDS")]
+  public static bool HAVE_EDS;
+
+  [CCode (cname = "HAVE_LIBSOCIALWEB")]
+  public static bool HAVE_LIBSOCIALWEB;
+
+  [CCode (cname = "HAVE_TRACKER")]
+  public static bool HAVE_TRACKER;
 }
