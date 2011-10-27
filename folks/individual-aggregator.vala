@@ -303,13 +303,16 @@ public class Folks.IndividualAggregator : Object
       else
         {
           debug ("Setting primary store IDs to defaults.");
-#if ENABLE_EDS
-          this._configured_primary_store_type_id = "eds";
-          this._configured_primary_store_id = "system";
-#else
-          this._configured_primary_store_type_id = "key-file";
-          this._configured_primary_store_id = "";
-#endif
+          if (BuildConf.HAVE_EDS)
+            {
+              this._configured_primary_store_type_id = "eds";
+              this._configured_primary_store_id = "system";
+            }
+          else
+            {
+              this._configured_primary_store_type_id = "key-file";
+              this._configured_primary_store_id = "";
+            }
 
           try
             {
