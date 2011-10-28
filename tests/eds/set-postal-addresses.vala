@@ -35,15 +35,18 @@ public class SetPostalAddressesTests : Folks.TestCase
     {
       base ("SetPostalAddresses");
 
-      this._eds_backend = new EdsTest.Backend ();
-
       this.add_test ("setting postal addresss on e-d-s persona",
           this.test_set_postal_addresses);
     }
 
   public override void set_up ()
     {
+      this._eds_backend = new EdsTest.Backend ();
       this._eds_backend.set_up ();
+
+      /* We configure eds as the primary store */
+      var config_val = "eds:%s".printf (this._eds_backend.address_book_uid);
+      Environment.set_variable ("FOLKS_PRIMARY_STORE", config_val, true);
     }
 
   public override void tear_down ()

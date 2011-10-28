@@ -42,6 +42,9 @@ public class AggregationTests : Folks.TestCase
 
   public override void set_up ()
     {
+      /* Ensure we have a primary store for linking */
+      Environment.set_variable ("FOLKS_PRIMARY_STORE", "key-file", true);
+
       /* Initialize an empty key file for the relationships*/
       var kf_relationships_path = Path.build_filename (
           Environment.get_tmp_dir (),

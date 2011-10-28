@@ -36,8 +36,6 @@ public class AddContactsStressTestTests : Folks.TestCase
     {
       base ("AddContactsStressTestTests");
 
-      this._eds_backend = new EdsTest.Backend ();
-
       var test_desc = "stress testing adding (%d) contacts to e-d-s ".printf (
           this._contacts_cnt);
       this.add_test (test_desc, this.test_add_contacts);
@@ -45,7 +43,12 @@ public class AddContactsStressTestTests : Folks.TestCase
 
   public override void set_up ()
     {
+      this._eds_backend = new EdsTest.Backend ();
       this._eds_backend.set_up ();
+
+      /* We configure eds as the primary store */
+      var config_val = "eds:%s".printf (this._eds_backend.address_book_uid);
+      Environment.set_variable ("FOLKS_PRIMARY_STORE", config_val, true);
     }
 
   public override void tear_down ()
