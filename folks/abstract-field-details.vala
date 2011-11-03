@@ -101,6 +101,20 @@ public abstract class Folks.AbstractFieldDetails<T> : Object
       set { this._value = value; }
     }
 
+  /**
+   * The {@link GLib.Type of the {@link AbstractFieldDetails.value}.
+   *
+   * This is particularly useful for treating collections of different types of
+   * {@link AbstractFieldDetails} in a uniform way without needing to name them
+   * explicitly.
+   *
+   * @since UNRELEASED
+   */
+  public Type value_type
+    {
+      get { return typeof (T); }
+    }
+
   private string _id;
   /**
    * A unique ID (if any) for this specific detail.

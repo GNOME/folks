@@ -32,6 +32,8 @@ public class EmailFieldDetailsTests : Folks.TestCase
           this.test_im_field_details_equality);
       this.add_test ("RoleFieldDetails equality",
           this.test_role_field_details_equality);
+      this.add_test ("Generic AFD handling",
+          this.test_generic_afd_handling);
     }
 
   public override void set_up ()
@@ -180,6 +182,48 @@ public class EmailFieldDetailsTests : Folks.TestCase
       /* Very-basic comparisons */
       assert (details_a_1.equal (details_a_2));
       assert (!details_a_1.equal (details_b_1));
+    }
+
+  public void test_generic_afd_handling ()
+    {
+      AbstractFieldDetails afd;
+
+      afd = new EmailFieldDetails ("foo@example.org");
+      assert (afd.get_type ().is_a (typeof (AbstractFieldDetails)));
+      assert (afd.value_type == typeof (string));
+
+      afd = new ImFieldDetails ("bar@example.org");
+      assert (afd.get_type ().is_a (typeof (AbstractFieldDetails)));
+      assert (afd.value_type == typeof (string));
+
+      afd = new NoteFieldDetails ("Are you writing this down?");
+      assert (afd.get_type ().is_a (typeof (AbstractFieldDetails)));
+      assert (afd.value_type == typeof (string));
+
+      afd = new PhoneFieldDetails ("+19255551234");
+      assert (afd.get_type ().is_a (typeof (AbstractFieldDetails)));
+      assert (afd.value_type == typeof (string));
+
+      afd = new PostalAddressFieldDetails (
+          new PostalAddress (null, null, "123 Streetly Way", "Cityville",
+            "Cascadia", null, "USA", null, null));
+      assert (afd.get_type ().is_a (typeof (AbstractFieldDetails)));
+      assert (afd.value_type == typeof (PostalAddress));
+      assert (afd.value_type != typeof (string));
+
+      afd = new RoleFieldDetails (
+          new Role ("Captain", "Obvious Corp.", null));
+      assert (afd.get_type ().is_a (typeof (AbstractFieldDetails)));
+      assert (afd.value_type == typeof (Role));
+      assert (afd.value_type != typeof (string));
+
+      afd = new UrlFieldDetails ("http://other.side.of.nowhere");
+      assert (afd.get_type ().is_a (typeof (AbstractFieldDetails)));
+      assert (afd.value_type == typeof (string));
+
+      afd = new WebServiceFieldDetails ("bluebomber");
+      assert (afd.get_type ().is_a (typeof (AbstractFieldDetails)));
+      assert (afd.value_type == typeof (string));
     }
 }
 

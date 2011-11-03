@@ -11,6 +11,7 @@ Bugs fixed:
   store.
 * Bug 662314 — Gnome-shell restarts if I change my user status to
   disconnected/unavailable
+* Bug 663798 — Add AbstractFieldDetails.value_type
 
 API changes:
 * Add AbstractFieldDetails.id to identify instances of details
@@ -19,6 +20,7 @@ API changes:
 * Deprecate Role.uid in favor of AbstractFieldDetails.id
 * Add AbstractFieldDetails.values_equal() to compare values (but not parameters)
 * Implement FavouriteDetails on Edsf.Persona
+* Add AbstractFieldDetails.value_type
 
 Behavior changes:
 * PostalAddress.equal() now ignores PostalAddress.uid
