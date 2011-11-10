@@ -625,7 +625,7 @@ public class Edsf.Persona : Folks.Persona,
   /**
    * Whether this contact is a user-defined favourite.
    *
-   * @since UNRELEASED
+   * @since 0.6.5
    */
   [CCode (notify = false)]
   public bool is_favourite
@@ -637,7 +637,7 @@ public class Edsf.Persona : Folks.Persona,
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.6.5
    */
   public async void change_is_favourite (bool is_favourite) throws PropertyError
     {

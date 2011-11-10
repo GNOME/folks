@@ -108,7 +108,7 @@ public abstract class Folks.AbstractFieldDetails<T> : Object
    * {@link AbstractFieldDetails} in a uniform way without needing to name them
    * explicitly.
    *
-   * @since UNRELEASED
+   * @since 0.6.5
    */
   public Type value_type
     {
@@ -126,7 +126,7 @@ public abstract class Folks.AbstractFieldDetails<T> : Object
    *
    * The content of this is opaque to all but the package which set it.
    *
-   * @since UNRELEASED
+   * @since 0.6.5
    */
   public virtual string id
     {
@@ -294,7 +294,7 @@ public abstract class Folks.AbstractFieldDetails<T> : Object
    *
    * @see AbstractFieldDetails.equal
    * @see AbstractFieldDetails.values_equal
-   * @since UNRELEASED
+   * @since 0.6.5
    */
   public virtual bool parameters_equal (AbstractFieldDetails<T> that)
     {
@@ -367,7 +367,7 @@ public abstract class Folks.AbstractFieldDetails<T> : Object
    *
    * @see AbstractFieldDetails.equal
    * @see AbstractFieldDetails.parameters_equal
-   * @since UNRELEASED
+   * @since 0.6.5
    */
   public virtual bool values_equal (AbstractFieldDetails<T> that)
     {

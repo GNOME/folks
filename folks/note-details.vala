@@ -46,7 +46,7 @@ public class Folks.NoteFieldDetails : AbstractFieldDetails<string>
   /**
    * The UID of the note (if any).
    */
-  [Deprecated (since = "UNRELEASED", replacement = "AbstractFieldDetails.id")]
+  [Deprecated (since = "0.6.5", replacement = "AbstractFieldDetails.id")]
   public string uid
     {
       get { return this.id; }
