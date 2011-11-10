@@ -9,6 +9,8 @@ Bugs fixed:
 * Bug 662616 — We should set mime type when setting an EContact's photo
 * Bug 662274 — Failed to link personas: Can't link personas with no primary
   store.
+* Bug 662314 — Gnome-shell restarts if I change my user status to
+  disconnected/unavailable
 
 API changes:
 * Add AbstractFieldDetails.id to identify instances of details

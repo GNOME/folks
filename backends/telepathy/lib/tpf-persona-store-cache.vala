@@ -147,14 +147,14 @@ internal class Tpf.PersonaStoreCache : Folks.ObjectCache<Tpf.Persona>
             {
               foreach (var val in afd.parameters.get (key))
                 {
-                  parameters[f] = new Variant.tuple ({
+                  parameters[f++] = new Variant.tuple ({
                     new Variant.string (key), // Key
                     new Variant.string (val) // Value
                   });
                 }
             }
 
-          output_variants[i] = new Variant.tuple ({
+          output_variants[i++] = new Variant.tuple ({
             afd.value, // Variant value (e.g. e-mail address)
             new Variant.array (new VariantType.tuple ({
               VariantType.STRING, // Key
