@@ -102,7 +102,7 @@ public abstract class Folks.AbstractFieldDetails<T> : Object
     }
 
   /**
-   * The {@link GLib.Type of the {@link AbstractFieldDetails.value}.
+   * The {@link GLib.Type} of the {@link AbstractFieldDetails.value}.
    *
    * This is particularly useful for treating collections of different types of
    * {@link AbstractFieldDetails} in a uniform way without needing to name them
