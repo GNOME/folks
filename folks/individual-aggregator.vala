@@ -245,7 +245,7 @@ public class Folks.IndividualAggregator : Object
    * This will not be emitted until after {@link IndividualAggregator.prepare}
    * has been called.
    *
-   * @param added a mapping of old {@link Individual}s to new
+   * @param changes a mapping of old {@link Individual}s to new
    * {@link Individual}s for the individuals which have changed in the
    * aggregator
    *
