@@ -3,6 +3,8 @@ Overview of changes from libfolks 0.6.5 to libfolks 0.6.6
 Bugs fixed:
 * Bug 664158 — Stale log handler can cause segfault when re-creating Aggregator
   in a single run
+* Bug 663889 — crash due to NameDetails which fail to guarantee
+  non-null full-name/nickname
 
 Overview of changes from libfolks 0.6.4.1 to libfolks 0.6.5
 =============================================================

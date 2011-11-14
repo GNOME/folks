@@ -752,6 +752,8 @@ public class Tpf.Persona : Folks.Persona,
           else if (info.field_name == "fn")
             {
               new_full_name = info.field_value[0];
+              if (new_full_name == null)
+                new_full_name = "";
             }
           else if (info.field_name == "tel")
             {

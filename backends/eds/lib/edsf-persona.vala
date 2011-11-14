@@ -700,6 +700,8 @@ public class Edsf.Persona : Folks.Persona,
       var full_name =
           (string) Edsf.Persona._get_property_from_contact (contact,
               "full_name");
+      if (full_name == null)
+        full_name = "";
 
       debug ("Creating new Edsf.Persona with IID '%s'", iid);
 

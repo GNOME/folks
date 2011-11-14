@@ -1102,6 +1102,8 @@ public class Trf.Persona : Folks.Persona,
           var proto = addr_info[Trf.IMFields.PROTO];
           var account_id = addr_info[Trf.IMFields.ID];
           var nickname = addr_info[Trf.IMFields.IM_NICKNAME];
+          if (nickname == null)
+            nickname = "";
 
           this._update_nickname (nickname);
           this._add_im_address (tracker_id, proto, account_id, false);
