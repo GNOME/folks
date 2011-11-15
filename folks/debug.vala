@@ -57,6 +57,7 @@ public class Folks.Debug : Object
   private string _indentation_string = "";
 
   private bool _colour_enabled = true;
+  private HashSet<string> _domains_handled;
 
   /*
    * Whether colour output is enabled. If true, debug output may include
@@ -169,7 +170,7 @@ public class Folks.Debug : Object
         {
           if (this._all || this._domains.contains (domain.down ()))
             {
-              Log.set_handler (domain, LogLevelFlags.LEVEL_MASK,
+              this._set_handler (domain, LogLevelFlags.LEVEL_MASK,
                   this._log_handler_cb);
               return;
             }
@@ -177,7 +178,7 @@ public class Folks.Debug : Object
 
       /* Install a log handler which will blackhole the log message.
        * Other log messages will be printed out by the default log handler. */
-      Log.set_handler (domain, LogLevelFlags.LEVEL_DEBUG,
+      this._set_handler (domain, LogLevelFlags.LEVEL_DEBUG,
           (domain_arg, flags, message) => {});
     }
 
@@ -255,18 +256,49 @@ public class Folks.Debug : Object
     {
       /* Private constructor for singleton */
 
+      this._domains_handled = new HashSet<string> ();
+
       /* Install a log handler for log messages emitted as a result of
        * Debug.print-status being emitted. */
-      Log.set_handler (Debug.STATUS_LOG_DOMAIN, LogLevelFlags.LEVEL_MASK,
+      this._set_handler (Debug.STATUS_LOG_DOMAIN, LogLevelFlags.LEVEL_MASK,
           this._print_status_log_handler_cb);
     }
 
   ~Debug ()
     {
+      /* Remove handlers so they don't get called after we're destroyed */
+      foreach (var domain in this._domains_handled)
+        this._remove_handler (domain, true);
+      this._domains_handled.clear ();
+
       /* Manually clear the singleton _instance */
       lock (Debug._instance)
         {
           Debug._instance = null;
+        }
+    }
+
+  private void _set_handler (
+      string? domain,
+      LogLevelFlags flags,
+      LogFunc log_func)
+    {
+      this._remove_handler (domain);
+      Log.set_handler (domain, flags, log_func);
+      this._domains_handled.add (domain);
+    }
+
+  private void _remove_handler (string domain, bool keep_in_map = false)
+    {
+      if (this._domains_handled.contains (domain))
+        {
+          Log.set_handler (domain,
+              (LogLevelFlags.LEVEL_MASK | LogLevelFlags.FLAG_RECURSION |
+                  LogLevelFlags.FLAG_FATAL),
+              Log.default_handler);
+
+          if (!keep_in_map)
+            this._domains_handled.remove (domain);
         }
     }
 
