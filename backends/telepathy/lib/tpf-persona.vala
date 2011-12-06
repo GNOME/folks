@@ -464,6 +464,16 @@ public class Tpf.Persona : Folks.Persona,
       this.notify_property ("groups");
     }
 
+  /* This has to be weak since, in general, we can't force any TpContacts to
+   * remain alive if we want to solve bgo#665376. */
+  private weak Contact? _contact = null;
+
+  private void _contact_weak_notify_cb (Object obj)
+    {
+      this._contact = null;
+      this.notify_property ("contact");
+    }
+
   /**
    * The Telepathy contact represented by this persona.
    *
@@ -473,7 +483,28 @@ public class Tpf.Persona : Folks.Persona,
    * are being retrieved from a cache and may not be current (though there's no
    * way to tell this).
    */
-  public Contact? contact { get; construct; }
+  public Contact? contact
+    {
+      get
+        {
+          if (this._contact == null)
+            {
+              return null;
+            }
+
+          return this._contact;
+        }
+
+      construct
+        {
+          if (value != null)
+            {
+              value.weak_ref (this._contact_weak_notify_cb);
+            }
+
+          this._contact = value;
+        }
+    }
 
   private HashSet<PhoneFieldDetails> _phone_numbers =
       new HashSet<PhoneFieldDetails> (
@@ -967,6 +998,11 @@ public class Tpf.Persona : Folks.Persona,
   ~Persona ()
     {
       debug ("Destroying Tpf.Persona '%s': %p", this.uid, this);
+
+      if (this._contact != null)
+        {
+          this._contact.weak_unref (this._contact_weak_notify_cb);
+        }
     }
 
   private static Account? _account_for_connection (Connection conn)
@@ -1045,5 +1081,38 @@ public class Tpf.Persona : Folks.Persona,
           this._avatar = (LoadableIcon) icon;
           this.notify_property ("avatar");
         }
+    }
+
+  /**
+   * Look up a {@link Tpf.Persona} by its {@link TelepathyGLib.Contact}.
+   *
+   * If the {@link TelepathyGLib.Account} for the contact's
+   * {@link TelepathyGLib.Connection} is `null`, or if a
+   * {@link Tpf.PersonaStore} can't be found for that account, `null` will be
+   * returned. Otherwise, if a {@link Tpf.Persona} already exists for the given
+   * contact, that will be returned; if one doesn't exist a new one will be
+   * created and returned. In this case, the {@link Tpf.Persona} will be added
+   * to the {@link PersonaStore} associated with the account, and will be
+   * removed when `contact` is destroyed.
+   *
+   * @param contact the Telepathy contact of the persona
+   * @return the persona associated with the contact, or `null`
+   * @since UNRELEASED
+   */
+  public static Persona? dup_for_contact (Contact contact)
+    {
+      var account = contact.connection.get_account ();
+
+      debug ("Tpf.Persona.dup_for_contact (%p): got account %p", contact,
+          account);
+
+      /* Account could be null; see the docs for tp_connection_get_account(). */
+      if (account == null)
+        {
+          return null;
+        }
+
+      var store = PersonaStore.dup_for_account (account);
+      return store._ensure_persona_from_contact (contact);
     }
 }

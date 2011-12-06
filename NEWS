@@ -9,6 +9,7 @@ Bugs fixed:
 * Bug 665728 — TpfPersonaStore: prepare() isn't mutually exclusive inside a
   single thread
 * Bug 665692 — Use constructors correctly
+* Bug 665376 — Add API to get a TpfPersona from a TpContact
 
 API changes:
 * Add Edsf.PersonaStore.source
@@ -26,6 +27,7 @@ API changes:
   normal setter)
 * Add ObjectCache.type_id
 * Add ObjectCache.id
+* Add Tpf.PersonaStore.dup_for_account() and Tpf.Persona.dup_for_contact()
 
 Overview of changes from libfolks 0.6.4.1 to libfolks 0.6.5
 =============================================================

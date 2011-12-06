@@ -36,8 +36,6 @@ public class Folks.Backends.Tp.Backend : Folks.Backend
   private bool _is_prepared = false;
   private bool _prepare_pending = false; /* used by unprepare() too */
   private bool _is_quiescent = false;
-  private HashMap<string, PersonaStore> _persona_stores;
-  private Map<string, PersonaStore> _persona_stores_ro;
 
   /**
    * {@inheritDoc}
@@ -49,7 +47,7 @@ public class Folks.Backends.Tp.Backend : Folks.Backend
    */
   public override Map<string, PersonaStore> persona_stores
     {
-      get { return this._persona_stores_ro; }
+      get { return Tpf.PersonaStore.list_persona_stores (); }
     }
 
   /**
@@ -58,12 +56,6 @@ public class Folks.Backends.Tp.Backend : Folks.Backend
   public Backend ()
     {
       Object ();
-    }
-
-  construct
-    {
-      this._persona_stores = new HashMap<string, PersonaStore> ();
-      this._persona_stores_ro = this._persona_stores.read_only_view;
     }
 
   /**
@@ -151,14 +143,6 @@ public class Folks.Backends.Tp.Backend : Folks.Backend
                   this._account_validity_changed_cb);
               this._account_manager = null;
 
-              foreach (var persona_store in this._persona_stores.values)
-                {
-                  this.persona_store_removed (persona_store);
-                }
-
-              this._persona_stores.clear ();
-              this.notify_property ("persona-stores");
-
               this._is_quiescent = false;
               this.notify_property ("is-quiescent");
 
@@ -180,25 +164,18 @@ public class Folks.Backends.Tp.Backend : Folks.Backend
 
   private void _account_enabled_cb (Account account)
     {
-      var store = this._persona_stores.get (account.get_object_path ());
-
-      if (store != null)
-        return;
-
-      store = new Tpf.PersonaStore (account);
-
-      this._persona_stores.set (store.id, store);
+      var store = Tpf.PersonaStore.dup_for_account (account);
       store.removed.connect (this._store_removed_cb);
-      this.notify_property ("persona-stores");
 
+      this.notify_property ("persona-stores");
       this.persona_store_added (store);
     }
 
   private void _store_removed_cb (PersonaStore store)
     {
       store.removed.disconnect (this._store_removed_cb);
+
       this.persona_store_removed (store);
-      this._persona_stores.unset (store.id);
       this.notify_property ("persona-stores");
     }
 }

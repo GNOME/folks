@@ -78,6 +78,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
   private HashSet<Persona> _persona_set;
   /* universal, contact owner handles (not channel-specific) */
   private HashMap<uint, Persona> _handle_persona_map;
+  private HashSet<Persona> _weakly_referenced_personas;
   private HashMap<Channel, HashSet<Persona>> _channel_group_personas_map;
   private HashMap<Channel, HashSet<uint>> _channel_group_incoming_adds;
   private HashMap<string, HashSet<Tpf.Persona>> _group_outgoing_adds;
@@ -260,6 +261,9 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       this._debug = Debug.dup ();
       this._debug.print_status.connect (this._debug_print_status);
 
+      // Add to the map of persona stores by account
+      PersonaStore._add_store_to_map (this);
+
       // Set up the cache
       this._cache = new PersonaStoreCache (this);
 
@@ -269,6 +273,9 @@ public class Tpf.PersonaStore : Folks.PersonaStore
   ~PersonaStore ()
     {
       debug ("Destroying Tpf.PersonaStore %p ('%s').", this, this.id);
+
+      // Remove from the map of persona stores by account
+      PersonaStore._remove_store_from_map (this);
 
       this._debug.print_status.disconnect (this._debug_print_status);
       this._debug = null;
@@ -509,6 +516,19 @@ public class Tpf.PersonaStore : Folks.PersonaStore
               this._self_handle_changed_cb);
           this._conn = null;
         }
+
+      if (this._weakly_referenced_personas != null)
+        {
+          foreach (var p in this._weakly_referenced_personas)
+            {
+              if (p.contact != null)
+                {
+                  p.contact.weak_unref (this._contact_weak_notify_cb);
+                }
+            }
+        }
+
+      this._weakly_referenced_personas = new HashSet<Persona> ();
 
       this._handle_persona_map = new HashMap<uint, Persona> ();
       this._channel_group_personas_map =
@@ -1533,6 +1553,13 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       if (persona == null)
         return;
 
+      /* If we hold a weak ref. on the persona's TpContact, release that. */
+      if (this._weakly_referenced_personas.remove (persona) == true &&
+          persona.contact != null)
+        {
+          persona.contact.weak_unref (this._contact_weak_notify_cb);
+        }
+
       /*
        * remove all persona-keyed entries
        */
@@ -1928,6 +1955,56 @@ public class Tpf.PersonaStore : Folks.PersonaStore
         }
 
       return personas;
+    }
+
+  private void _contact_weak_notify_cb (Object obj)
+    {
+      var c = obj as Contact;
+      this._ignore_by_handle (c.get_handle (), null, null,
+          GroupDetails.ChangeReason.NONE);
+    }
+
+  internal Tpf.Persona? _ensure_persona_from_contact (Contact contact)
+    {
+      uint handle = contact.get_handle ();
+
+      debug ("Ensuring contact %p (handle: %u) exists in Tpf.PersonaStore " +
+          "%p ('%s').", contact, handle, this, this.id);
+
+      if (handle == 0)
+        {
+          return null;
+        }
+
+      /* If the persona already exists, return them. */
+      var persona = this._handle_persona_map[handle];
+
+      if (persona != null)
+        {
+          return persona;
+        }
+
+      /* Otherwise, add the persona to the store. See bgo#665376 for details of
+       * why this is necessary. Since the TpContact is coming from a source
+       * other than the TpChannels which are associated with this store, we only
+       * hold a weak reference to it and remove it from the store as soon as
+       * it's destroyed. */
+      persona = this._add_persona_from_contact (contact, false);
+
+      if (persona == null)
+        {
+          return null;
+        }
+
+      /* Weak ref. on the contact. */
+      contact.weak_ref (this._contact_weak_notify_cb);
+      this._weakly_referenced_personas.add (persona);
+
+      /* Signal the addition of the new persona. */
+      var personas = new HashSet<Persona> ();
+      this._emit_personas_changed (personas, null);
+
+      return persona;
     }
 
   private Tpf.Persona? _add_persona_from_contact (Contact contact,
@@ -2331,5 +2408,151 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       info_list.reverse ();
 
       return info_list;
+    }
+
+  /* Must be locked before being accessed. A ref. is held on each PersonaStore,
+   * and they're only removed when they're finalised or their removed signal is
+   * emitted. The map as a whole is lazily constructed and destroyed according
+   * to when PersonaStores are constructed and destroyed. */
+  private static HashMap<string /* Account object path */, PersonaStore>
+      _persona_stores_by_account = null;
+  private static Map<string, PersonaStore> _persona_stores_by_account_ro = null;
+
+  /**
+   * Get a map of all the currently constructed {@link Tpf.PersonaStore}s.
+   *
+   * If a {@link BackendStore} has been prepared, this map will be complete,
+   * containing every store known to the Telepathy account manager. If no
+   * {@link BackendStore} has been prepared, this map will only contain the
+   * stores which have been created by calling
+   * {@link Tpf.PersonaStore.dup_for_account}.
+   *
+   * This map is read-only. Use {@link BackendStore} or
+   * {@link Tpf.PersonaStore.dup_for_account} to add stores.
+   *
+   * @return map from {@link PersonaStore.id} to {@link PersonaStore}
+   * @since UNRELEASED
+   */
+  public static unowned Map<string, PersonaStore> list_persona_stores ()
+    {
+      unowned Map<string, PersonaStore> store;
+
+      lock (PersonaStore._persona_stores_by_account)
+        {
+          if (PersonaStore._persona_stores_by_account == null)
+            {
+              PersonaStore._persona_stores_by_account =
+                  new HashMap<string, PersonaStore> ();
+              PersonaStore._persona_stores_by_account_ro =
+                  PersonaStore._persona_stores_by_account.read_only_view;
+            }
+
+          store = PersonaStore._persona_stores_by_account_ro;
+        }
+
+      return store;
+    }
+
+  private static void _store_removed_cb (Folks.PersonaStore store)
+    {
+      /* Remove the store from the map. */
+      PersonaStore._remove_store_from_map ((Tpf.PersonaStore) store);
+    }
+
+  private static void _add_store_to_map (PersonaStore store)
+    {
+      debug ("Adding PersonaStore %p ('%s') to map.", store, store.id);
+
+      lock (PersonaStore._persona_stores_by_account)
+        {
+          /* Lazy construction. */
+          if (PersonaStore._persona_stores_by_account == null)
+            {
+              PersonaStore._persona_stores_by_account =
+                  new HashMap<string, PersonaStore> ();
+              PersonaStore._persona_stores_by_account_ro =
+                  PersonaStore._persona_stores_by_account.read_only_view;
+            }
+
+          /* Bail if a store already exists for this account. */
+          assert (!PersonaStore._persona_stores_by_account.has_key (store.id));
+
+          /* Add the store. */
+          PersonaStore._persona_stores_by_account.set (store.id, store);
+          store.removed.connect (PersonaStore._store_removed_cb);
+        }
+    }
+
+  private static void _remove_store_from_map (PersonaStore store)
+    {
+      debug ("Removing PersonaStore %p ('%s') from map.", store, store.id);
+
+      lock (PersonaStore._persona_stores_by_account)
+        {
+          /* Bail if no store existed for this account. This can happen if the
+           * store emits its removed() signal (correctly) before being
+           * finalised; we remove the store from the map in both cases. */
+          if (PersonaStore._persona_stores_by_account == null ||
+              !PersonaStore._persona_stores_by_account.unset (store.id))
+            {
+              return;
+            }
+
+          store.removed.disconnect (PersonaStore._store_removed_cb);
+
+          /* Lazy destruction. */
+          if (PersonaStore._persona_stores_by_account.size == 0)
+            {
+              PersonaStore._persona_stores_by_account_ro = null;
+              PersonaStore._persona_stores_by_account = null;
+            }
+        }
+    }
+
+  /**
+   * Look up a {@link Tpf.PersonaStore} by its {@link TelepathyGLib.Account}.
+   *
+   * If found, a new reference to the persona store will be returned. If not
+   * found, a new {@link Tpf.PersonaStore} will be created for the account.
+   *
+   * See the documentation for {@link Tpf.PersonaStore.list_persona_stores} for
+   * information on the lifecycle of these stores when a {@link BackendStore} is
+   * and is not present.
+   *
+   * @param account the Telepathy account of the persona store
+   * @return the persona store associated with the account
+   * @since UNRELEASED
+   */
+  public static PersonaStore dup_for_account (Account account)
+    {
+      PersonaStore? store = null;
+
+      debug ("Tpf.PersonaStore.dup_for_account (%p):", account);
+
+      lock (PersonaStore._persona_stores_by_account)
+        {
+          /* If the store already exists, return it. */
+          if (PersonaStore._persona_stores_by_account != null)
+            {
+              store =
+                  PersonaStore._persona_stores_by_account.get (
+                      account.get_object_path ());
+            }
+
+          /* Otherwise, we have to create it. It's added to the map in its
+           * constructor. */
+          if (store == null)
+            {
+              debug ("    Creating new PersonaStore.");
+              store = new PersonaStore (account);
+            }
+          else
+            {
+              debug ("    Found existing PersonaStore %p ('%s').", store,
+                  store.id);
+            }
+        }
+
+      return store;
     }
 }

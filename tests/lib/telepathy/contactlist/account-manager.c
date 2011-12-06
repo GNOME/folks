@@ -201,6 +201,7 @@ tp_test_account_manager_add_account (TpTestAccountManager *self,
     const gchar *account_path)
 {
   g_ptr_array_add (self->priv->valid_accounts, g_strdup (account_path));
+  tp_svc_account_manager_emit_account_validity_changed (self, account_path, TRUE);
   g_object_notify (G_OBJECT (self), "valid-accounts");
 }
 
@@ -221,4 +222,5 @@ tp_test_account_manager_remove_account (TpTestAccountManager *self,
     }
 
   g_object_notify (G_OBJECT (self), "valid-accounts");
+  tp_svc_account_manager_emit_account_removed (self, account_path);
 }

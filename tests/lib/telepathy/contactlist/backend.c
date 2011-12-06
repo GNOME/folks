@@ -22,6 +22,7 @@
 #include <glib.h>
 #include <telepathy-glib/base-connection.h>
 #include <telepathy-glib/dbus.h>
+#include <telepathy-glib/svc-account.h>
 
 #include "account.h"
 #include "account-manager.h"
@@ -294,6 +295,8 @@ tp_test_backend_remove_account (TpTestBackend *self,
   /* Disconnect it */
   tp_base_connection_change_status (data->conn,
       TP_CONNECTION_STATUS_DISCONNECTED, TP_CONNECTION_STATUS_REASON_REQUESTED);
+
+  tp_svc_account_emit_removed (data->account);
 
   tp_dbus_daemon_unregister_object (priv->daemon, data->account);
   tp_clear_object (&data->account);
