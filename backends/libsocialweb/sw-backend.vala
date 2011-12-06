@@ -93,7 +93,12 @@ public class Folks.Backends.Sw.Backend : Folks.Backend
         {
           if (!this._is_prepared)
             {
-              this._client = new Client();
+              /* Hold a ref. on the Backend while we wait for the callback from
+               * this._client.get_services() to prevent the Backend being
+               * destroyed in the mean time. See: bgo#665039. */
+              this.ref ();
+
+              this._client = new Client ();
               this._client.get_services((client, services) =>
                 {
                   foreach (var service_name in services)
@@ -104,6 +109,8 @@ public class Folks.Backends.Sw.Backend : Folks.Backend
 
                   this._is_quiescent = true;
                   this.notify_property ("is-quiescent");
+
+                  this.unref ();
                 });
             }
         }

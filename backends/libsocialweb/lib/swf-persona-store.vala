@@ -212,25 +212,43 @@ public class Swf.PersonaStore : Folks.PersonaStore
         {
           if (!this._is_prepared)
             {
+              /* Take a reference to the PersonaStore while waiting for the
+               * async call to return. See: bgo#665039. */
+              this.ref ();
+
               this._service.get_static_capabilities (
                   (service, caps, error) =>
                     {
                       if (caps == null)
-                        return;
+                        {
+                          this.unref ();
+                          return;
+                        }
 
                       bool has_contacts = ClientService.has_cap (caps,
                           "has-contacts-query-iface");
                       if (!has_contacts)
-                        return;
+                        {
+                          this.unref ();
+                          return;
+                        }
+
                       var parameters = new HashTable<weak string, weak string>
                           (str_hash, str_equal);
+
+                      /* Take another ref for this async call. */
+                      this.ref ();
+
                       this._service.contacts_query_open_view
                           ("people", parameters, (query, contact_view) =>
                         {
                           /* The D-Bus call could return an error. In this
                            * case, contact_view is null */
                           if (contact_view == null)
-                            return;
+                            {
+                              this.unref ();
+                              return;
+                            }
 
                           contact_view.contacts_added.connect
                               (this.contacts_added_cb);
@@ -261,7 +279,11 @@ public class Swf.PersonaStore : Folks.PersonaStore
                           this.notify_property ("is-quiescent");
 
                           this._contact_view.start ();
+
+                          this.unref ();
                         });
+
+                      this.unref ();
                     });
             }
         }

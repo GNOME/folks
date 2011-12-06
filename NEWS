@@ -5,6 +5,7 @@ Bugs fixed:
   in a single run
 * Bug 663889 — crash due to NameDetails which fail to guarantee
   non-null full-name/nickname
+* Bug 665039 — Crash in folks_backends_sw_backend_add_service
 
 Overview of changes from libfolks 0.6.4.1 to libfolks 0.6.5
 =============================================================
