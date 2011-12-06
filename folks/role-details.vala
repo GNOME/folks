@@ -177,13 +177,14 @@ public class Folks.RoleFieldDetails : AbstractFieldDetails<Role>
   public RoleFieldDetails (Role value,
       MultiMap<string, string>? parameters = null)
     {
-      this.value = value;
-      if (parameters != null)
-        this.parameters = parameters;
+      /* We keep id and value.uid synchronised in both directions. */
+      Object (value: value,
+              parameters: parameters,
+              id: value.uid);
+    }
 
-      /* We keep these sync'd both directions */
-      this.id = this.value.uid;
-
+  construct
+    {
       /* Keep the Role.uid sync'd to our id */
       this.value.notify["uid"].connect ((s, p) =>
         {

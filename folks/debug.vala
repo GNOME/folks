@@ -255,7 +255,11 @@ public class Folks.Debug : Object
   private Debug ()
     {
       /* Private constructor for singleton */
+      Object ();
+    }
 
+  construct
+    {
       this._domains_handled = new HashSet<string> ();
 
       /* Install a log handler for log messages emitted as a result of

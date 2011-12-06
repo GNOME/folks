@@ -537,17 +537,25 @@ public class Trf.Persona : Folks.Persona,
             }
         }
 
-      debug ("Creating new Trf.Persona with iid '%s'", iid);
-
       Object (display_id: fullname,
               uid: uid,
               iid: iid,
               store: store,
-              is_user: is_user);
+              is_user: is_user,
+              tracker_id: tracker_id,
+              /* Ideally we wouldn't have to do this, since passing iterators
+               * around is ugly. However, we can't fix the Tracker backend to
+               * not pass Cursors from PersonaStore to Personas without breaking
+               * API. */
+              cursor: cursor);
+    }
+
+  construct
+    {
+      debug ("Creating new Trf.Persona with iid '%s'", this.iid);
 
       this._gender = Gender.UNSPECIFIED;
-      this._full_name = fullname;
-      this._tracker_id = tracker_id;
+      this._full_name = "";
       this._structured_name = null;
       this._phone_numbers = new HashSet<PhoneFieldDetails> (
           (GLib.HashFunc) PhoneFieldDetails.hash,
@@ -577,10 +585,8 @@ public class Trf.Persona : Folks.Persona,
       this._local_ids_ro = this._local_ids.read_only_view;
 
       /* Set the initial property values if we have a results cursor. */
-      if (cursor != null)
+      if (this._cursor != null)
         {
-          this._cursor = cursor;
-
           this._update_names ();
           this._update_avatar ();
           this._update_im_addresses ();
@@ -597,9 +603,30 @@ public class Trf.Persona : Folks.Persona,
         }
     }
 
-  internal string tracker_id ()
+  /**
+   * ID of the {@link Trf.Persona} in Tracker.
+   *
+   * @since UNRELEASED
+   */
+  public string tracker_id
     {
-      return this._tracker_id;
+      get { return this._tracker_id; }
+      construct { this._tracker_id = value; }
+    }
+
+  /**
+   * A {@link Sparql.Cursor} representing the persona in a set of query results.
+   *
+   * This is an internal (read: horrible) API which shouldn't be used by client
+   * code. It's only exposed publicly due to the design of libfolks’ Tracker
+   * backend.
+   *
+   * @since UNRELEASED
+   */
+  public Sparql.Cursor? cursor
+    {
+      get { return this._cursor; }
+      construct { this._cursor = value; }
     }
 
   /**

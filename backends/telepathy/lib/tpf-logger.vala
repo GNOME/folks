@@ -46,16 +46,23 @@ private interface LoggerIface : Object
 internal class Logger : GLib.Object
 {
   private static LoggerIface _logger;
-  private string _account_path;
   private uint _logger_watch_id;
 
   public signal void invalidated ();
   public signal void favourite_contacts_changed (string[] added,
       string[] removed);
 
+  /**
+   * D-Bus object path of the {@link TelepathyGLib.Account} to watch for
+   * favourite contacts.
+   *
+   * @since UNRELEASED
+   */
+  public string account_path { get; construct; }
+
   public Logger (string account_path)
     {
-      this._account_path = account_path;
+      Object (account_path: account_path);
     }
 
   ~Logger ()

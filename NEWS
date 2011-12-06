@@ -8,6 +8,24 @@ Bugs fixed:
 * Bug 665039 — Crash in folks_backends_sw_backend_add_service
 * Bug 665728 — TpfPersonaStore: prepare() isn't mutually exclusive inside a
   single thread
+* Bug 665692 — Use constructors correctly
+
+API changes:
+* Add Edsf.PersonaStore.source
+* Make Edsf.Persona.contact writeable on construct (previously private setter)
+* Make Edsf.Persona.contact_id writeable on construct (previously private
+  setter)
+* Add Swf.PersonaStore.service
+* Make Swf.Persona.lsw_contact writeable on construct (previously private
+  setter)
+* Add Trf.Persona.tracker_id
+* Add Trf.Persona.cursor
+* Make AbstractFieldDetails.value writeable on construct (previously just a
+  normal setter)
+* Make AbstractFieldDetails.parameters writeable on construct (previously just a
+  normal setter)
+* Add ObjectCache.type_id
+* Add ObjectCache.id
 
 Overview of changes from libfolks 0.6.4.1 to libfolks 0.6.5
 =============================================================

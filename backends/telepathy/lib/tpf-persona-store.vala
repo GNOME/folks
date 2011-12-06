@@ -250,9 +250,12 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       Object (account: account,
               display_name: account.display_name,
               id: account.get_object_path ());
+    }
 
+  construct
+    {
       debug ("Creating new Tpf.PersonaStore %p ('%s') for TpAccount %p.",
-          this, this.id, account);
+          this, this.id, this.account);
 
       this._debug = Debug.dup ();
       this._debug.print_status.connect (this._debug_print_status);

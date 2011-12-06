@@ -273,6 +273,11 @@ public class Folks.IndividualAggregator : Object
    */
   public IndividualAggregator ()
     {
+      Object ();
+    }
+
+  construct
+    {
       this._stores = new HashMap<string, PersonaStore> ();
       this._individuals = new HashMap<string, Individual> ();
       this._individuals_ro = this._individuals.read_only_view;

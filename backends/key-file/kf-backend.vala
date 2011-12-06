@@ -82,6 +82,11 @@ public class Folks.Backends.Kf.Backend : Folks.Backend
    */
   public Backend ()
     {
+      Object ();
+    }
+
+  construct
+    {
       this._persona_stores = new HashMap<string, PersonaStore> ();
       this._persona_stores_ro = this._persona_stores.read_only_view;
     }

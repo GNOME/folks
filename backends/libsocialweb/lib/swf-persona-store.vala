@@ -39,7 +39,6 @@ public class Swf.PersonaStore : Folks.PersonaStore
   private bool _is_prepared = false;
   private bool _prepare_pending = false;
   private bool _is_quiescent = false;
-  private ClientService _service;
   private ClientContactView _contact_view;
 
   /* No writeable properties
@@ -150,6 +149,14 @@ public class Swf.PersonaStore : Folks.PersonaStore
     }
 
   /**
+   * The libsocialweb {@link SocialWebClient.ClientService} associated with the
+   * persona store.
+   *
+   * @since UNRELEASED
+   */
+  public ClientService service { get; construct; }
+
+  /**
    * Create a new PersonaStore.
    *
    * Create a new persona store to store the {@link Persona}s for the contacts
@@ -157,11 +164,14 @@ public class Swf.PersonaStore : Folks.PersonaStore
    */
   public PersonaStore (ClientService service)
     {
-      Object (display_name: service.get_display_name(),
-              id: service.get_name ());
+      Object (display_name: service.get_display_name (),
+              id: service.get_name (),
+              service: service);
+    }
 
+  construct
+    {
       this.trust_level = PersonaStoreTrust.PARTIAL;
-      this._service = service;
       this._personas = new HashMap<string, Persona> ();
       this._personas_ro = this._personas.read_only_view;
     }
@@ -219,7 +229,7 @@ public class Swf.PersonaStore : Folks.PersonaStore
                * async call to return. See: bgo#665039. */
               this.ref ();
 
-              this._service.get_static_capabilities (
+              this.service.get_static_capabilities (
                   (service, caps, error) =>
                     {
                       if (caps == null)
@@ -244,7 +254,7 @@ public class Swf.PersonaStore : Folks.PersonaStore
                       /* Take another ref for this async call. */
                       this.ref ();
 
-                      this._service.contacts_query_open_view
+                      this.service.contacts_query_open_view
                           ("people", parameters, (query, contact_view) =>
                         {
                           /* The D-Bus call could return an error. In this
@@ -325,7 +335,7 @@ public class Swf.PersonaStore : Folks.PersonaStore
     {
       foreach (var contact in contacts)
         {
-          if (this._service.get_name () != contact.service)
+          if (this.service.get_name () != contact.service)
             {
               continue;
             }
@@ -341,7 +351,7 @@ public class Swf.PersonaStore : Folks.PersonaStore
       var removed_personas = new HashSet<Persona> ();
       foreach (var contact in contacts)
         {
-          if (this._service.get_name () != contact.service)
+          if (this.service.get_name () != contact.service)
             {
               continue;
             }

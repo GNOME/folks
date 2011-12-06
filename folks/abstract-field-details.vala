@@ -98,7 +98,7 @@ public abstract class Folks.AbstractFieldDetails<T> : Object
   public virtual T @value
     {
       get { return this._value; }
-      set { this._value = value; }
+      construct set { this._value = value; }
     }
 
   /**
@@ -148,7 +148,7 @@ public abstract class Folks.AbstractFieldDetails<T> : Object
   public virtual MultiMap<string, string> parameters
     {
       get { return this._parameters; }
-      set
+      construct set
         {
           if (value == null)
             this._parameters.clear ();

@@ -66,9 +66,8 @@ public class Folks.PhoneFieldDetails : AbstractFieldDetails<string>
   public PhoneFieldDetails (string value,
       MultiMap<string, string>? parameters = null)
     {
-      this.value = value;
-      if (parameters != null)
-        this.parameters = parameters;
+      Object (value: value,
+              parameters: parameters);
     }
 
   /**

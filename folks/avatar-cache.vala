@@ -40,6 +40,11 @@ public class Folks.AvatarCache : Object
    */
   private AvatarCache ()
     {
+      Object ();
+    }
+
+  construct
+    {
       this._cache_directory =
           File.new_for_path (Environment.get_user_cache_dir ())
               .get_child ("folks")

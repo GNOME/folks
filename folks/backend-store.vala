@@ -130,6 +130,11 @@ public class Folks.BackendStore : Object {
 
   private BackendStore ()
     {
+      Object ();
+    }
+
+  construct
+    {
       /* Treat this as a library init function */
       var debug_no_colour = Environment.get_variable ("FOLKS_DEBUG_NO_COLOUR");
       this._debug =

@@ -40,12 +40,6 @@ public class Tpf.Persona : Folks.Persona,
     PresenceDetails,
     UrlDetails
 {
-  private HashSet<string> _groups;
-  private Set<string> _groups_ro;
-  private bool _is_favourite;
-  private string _alias; /* must never be null */
-  private string _full_name; /* must never be null */
-  private HashMultiMap<string, ImFieldDetails> _im_addresses;
   private const string[] _linkable_properties = { "im-addresses" };
   private const string[] _always_writeable_properties =
     {
@@ -100,6 +94,8 @@ public class Tpf.Persona : Folks.Persona,
       get { return null; }
       set { this.change_structured_name.begin (value); } /* not writeable */
     }
+
+  private string _full_name = ""; /* must never be null */
 
   /**
    * {@inheritDoc}
@@ -276,6 +272,8 @@ public class Tpf.Persona : Folks.Persona,
         }
     }
 
+  private string _alias = ""; /* must never be null */
+
   /**
    * An alias for the Persona.
    *
@@ -308,6 +306,8 @@ public class Tpf.Persona : Folks.Persona,
       this._alias = alias;
       this.notify_property ("alias");
     }
+
+  private bool _is_favourite = false;
 
   /**
    * Whether this Persona is a user-defined favourite.
@@ -343,7 +343,10 @@ public class Tpf.Persona : Folks.Persona,
       this.notify_property ("is-favourite");
     }
 
-  private HashSet<EmailFieldDetails> _email_addresses;
+  private HashSet<EmailFieldDetails> _email_addresses =
+      new HashSet<EmailFieldDetails> (
+          (GLib.HashFunc) EmailFieldDetails.hash,
+          (GLib.EqualFunc) EmailFieldDetails.equal);
   private Set<EmailFieldDetails> _email_addresses_ro;
 
   /**
@@ -370,6 +373,11 @@ public class Tpf.Persona : Folks.Persona,
           this._email_addresses, "email");
     }
 
+  private HashMultiMap<string, ImFieldDetails> _im_addresses =
+      new HashMultiMap<string, ImFieldDetails> (null, null,
+          (GLib.HashFunc) ImFieldDetails.hash,
+          (GLib.EqualFunc) ImFieldDetails.equal);
+
   /**
    * A mapping of IM protocol to an (unordered) set of IM addresses.
    *
@@ -381,6 +389,9 @@ public class Tpf.Persona : Folks.Persona,
       get { return this._im_addresses; }
       set { this.change_im_addresses.begin (value); }
     }
+
+  private HashSet<string> _groups = new HashSet<string> ();
+  private Set<string> _groups_ro;
 
   /**
    * A mapping of group ID to whether the contact is a member.
@@ -464,7 +475,10 @@ public class Tpf.Persona : Folks.Persona,
    */
   public Contact? contact { get; construct; }
 
-  private HashSet<PhoneFieldDetails> _phone_numbers;
+  private HashSet<PhoneFieldDetails> _phone_numbers =
+      new HashSet<PhoneFieldDetails> (
+          (GLib.HashFunc) PhoneFieldDetails.hash,
+          (GLib.EqualFunc) PhoneFieldDetails.equal);
   private Set<PhoneFieldDetails> _phone_numbers_ro;
 
   /**
@@ -491,7 +505,9 @@ public class Tpf.Persona : Folks.Persona,
           this._phone_numbers, "tel");
     }
 
-  private HashSet<UrlFieldDetails> _urls;
+  private HashSet<UrlFieldDetails> _urls = new HashSet<UrlFieldDetails> (
+      (GLib.HashFunc) UrlFieldDetails.hash,
+      (GLib.EqualFunc) UrlFieldDetails.equal);
   private Set<UrlFieldDetails> _urls_ro;
 
   /**
@@ -570,8 +586,7 @@ public class Tpf.Persona : Folks.Persona,
       var account = this._account_for_connection (connection);
       var uid = this.build_uid (store.type_id, store.id, id);
 
-      Object (alias: contact.get_alias (),
-              contact: contact,
+      Object (contact: contact,
               display_id: id,
               /* FIXME: This IID format should be moved out to the ImDetails
                * interface along with the code in
@@ -582,10 +597,28 @@ public class Tpf.Persona : Folks.Persona,
               store: store,
               is_user: contact.handle == connection.self_handle);
 
+      debug ("Created new Tpf.Persona '%s' for service-specific UID '%s': %p",
+          uid, id, this);
+    }
 
-      this._full_name = "";
+  construct
+    {
+      this._groups_ro = this._groups.read_only_view;
+      this._email_addresses_ro = this._email_addresses.read_only_view;
+      this._phone_numbers_ro = this._phone_numbers.read_only_view;
+      this._urls_ro = this._urls.read_only_view;
 
-      contact.notify["alias"].connect ((s, p) =>
+      /* Contact can be null if we've been created from the cache. All the code
+       * below this point is for non-cached personas. */
+      if (this.contact == null)
+        {
+          return;
+        }
+
+      /* Set our alias. */
+      this._alias = this.contact.get_alias ();
+
+      this.contact.notify["alias"].connect ((s, p) =>
           {
             /* Tp guarantees that aliases are always non-null. */
             assert (this.contact.alias != null);
@@ -597,19 +630,13 @@ public class Tpf.Persona : Folks.Persona,
               }
           });
 
-      debug ("Creating new Tpf.Persona '%s' for service-specific UID '%s': %p",
-          uid, id, this);
-      this._is_constructed = true;
-
       /* Set our single IM address */
-      this._im_addresses = new HashMultiMap<string, ImFieldDetails> (
-          null, null,
-          (GLib.HashFunc) ImFieldDetails.hash,
-          (GLib.EqualFunc) ImFieldDetails.equal);
+      var connection = this.contact.connection;
+      var account = this._account_for_connection (connection);
 
       try
         {
-          var im_addr = ImDetails.normalise_im_address (id,
+          var im_addr = ImDetails.normalise_im_address (this.display_id,
               account.get_protocol ());
           var im_fd = new ImFieldDetails (im_addr);
           this._im_addresses.set (account.get_protocol (), im_fd);
@@ -620,38 +647,21 @@ public class Tpf.Persona : Folks.Persona,
           warning (e.message);
         }
 
-      /* Groups */
-      this._groups = new HashSet<string> ();
-      this._groups_ro = this._groups.read_only_view;
-
-      this._email_addresses = new HashSet<EmailFieldDetails> (
-          (GLib.HashFunc) EmailFieldDetails.hash,
-          (GLib.EqualFunc) EmailFieldDetails.equal);
-      this._email_addresses_ro = this._email_addresses.read_only_view;
-      this._phone_numbers = new HashSet<PhoneFieldDetails> (
-          (GLib.HashFunc) PhoneFieldDetails.hash,
-          (GLib.EqualFunc) PhoneFieldDetails.equal);
-      this._phone_numbers_ro = this._phone_numbers.read_only_view;
-      this._urls = new HashSet<UrlFieldDetails> (
-          (GLib.HashFunc) UrlFieldDetails.hash,
-          (GLib.EqualFunc) UrlFieldDetails.equal);
-      this._urls_ro = this._urls.read_only_view;
-
-      contact.notify["avatar-file"].connect ((s, p) =>
+      this.contact.notify["avatar-file"].connect ((s, p) =>
         {
           this._contact_notify_avatar ();
         });
       this._contact_notify_avatar ();
 
-      contact.notify["presence-message"].connect ((s, p) =>
+      this.contact.notify["presence-message"].connect ((s, p) =>
         {
           this._contact_notify_presence_message ();
         });
-      contact.notify["presence-type"].connect ((s, p) =>
+      this.contact.notify["presence-type"].connect ((s, p) =>
         {
           this._contact_notify_presence_type ();
         });
-      contact.notify["presence-status"].connect ((s, p) =>
+      this.contact.notify["presence-status"].connect ((s, p) =>
         {
           this._contact_notify_presence_status ();
         });
@@ -659,7 +669,7 @@ public class Tpf.Persona : Folks.Persona,
       this._contact_notify_presence_type ();
       this._contact_notify_presence_status ();
 
-      contact.notify["contact-info"].connect ((s, p) =>
+      this.contact.notify["contact-info"].connect ((s, p) =>
         {
           this._contact_notify_contact_info ();
         });
@@ -699,6 +709,12 @@ public class Tpf.Persona : Folks.Persona,
               });
           this._store_notify_supported_fields ();
         }
+    }
+
+  /* Called after all construction-time properties have been set. */
+  public override void constructed ()
+    {
+      this._is_constructed = true;
     }
 
   private void _store_notify_supported_fields ()
@@ -901,13 +917,9 @@ public class Tpf.Persona : Folks.Persona,
               store: store,
               is_user: is_user);
 
-      debug ("Creating new Tpf.Persona '%s' from cache: %p", uid, this);
+      debug ("Created new Tpf.Persona '%s' from cache: %p", uid, this);
 
       // IM addresses
-      this._im_addresses = new HashMultiMap<string, ImFieldDetails> (null, null,
-          (GLib.HashFunc) ImFieldDetails.hash,
-          (GLib.EqualFunc) ImFieldDetails.equal);
-
       var im_fd = new ImFieldDetails (im_address);
       this._im_addresses.set (protocol, im_fd);
 

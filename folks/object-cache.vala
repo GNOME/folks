@@ -50,8 +50,6 @@ public abstract class Folks.ObjectCache<T> : Object
    * are used (for version numbers). */
   private static const size_t _HEADER_WIDTH = 8; /* bytes */
 
-  private string _type_id;
-  private string _id;
   private File _cache_directory;
   private File _cache_file;
 
@@ -108,6 +106,31 @@ public abstract class Folks.ObjectCache<T> : Object
       uint8 object_version);
 
   /**
+   * A string identifying the type of object being cached.
+   *
+   * This has to be suitable for use as a directory name; i.e. lower case,
+   * hyphen-separated tokens.
+   *
+   * @since UNRELEASED
+   */
+  public string type_id { get; construct; }
+
+  /**
+   * A string identifying the particular cache instance.
+   *
+   * This will form the file name of the cache file, but will be escaped
+   * beforehand, so can be an arbitrary non-empty string.
+   *
+   * @since UNRELEASED
+   */
+  public string id
+    {
+      get { return this._id; }
+      construct { assert (value != ""); this._id = value; }
+    }
+  private string _id;
+
+  /**
    * Create a new cache instance using the given type ID and ID. This is
    * protected as the `type_id` will typically be set statically by subclasses.
    *
@@ -123,20 +146,22 @@ public abstract class Folks.ObjectCache<T> : Object
    */
   protected ObjectCache (string type_id, string id)
     {
-      assert (id != "");
+      Object (type_id: type_id,
+              id: id);
+    }
 
-      this._type_id = type_id;
-      this._id = id;
-
+  construct
+    {
       debug ("Creating object cache for type ID '%s' with ID '%s'.",
-          type_id, id);
+          this.type_id, this.id);
 
       this._cache_directory =
           File.new_for_path (Environment.get_user_cache_dir ())
               .get_child ("folks")
-              .get_child (type_id);
+              .get_child (this.type_id);
       this._cache_file =
-          this._cache_directory.get_child (Uri.escape_string (id, "", false));
+          this._cache_directory.get_child (Uri.escape_string (this.id,
+              "", false));
     }
 
   /**
@@ -159,7 +184,7 @@ public abstract class Folks.ObjectCache<T> : Object
   public async Set<T>? load_objects (Cancellable? cancellable = null)
     {
       debug ("Loading cache (type ID '%s', ID '%s') from file '%s'.",
-          this._type_id, this._id, this._cache_file.get_path ());
+          this.type_id, this._id, this._cache_file.get_path ());
 
       // Read in the file
       uint8[] data;
@@ -247,11 +272,11 @@ public abstract class Folks.ObjectCache<T> : Object
       // Unpack the stored data
       var type_id = variant.get_child_value (0).get_string ();
 
-      if (type_id != this._type_id)
+      if (type_id != this.type_id)
         {
           warning ("Cache file '%s' had type ID '%s', but '%s' was expected." +
               "The file was deleted.", this._cache_file.get_path (), type_id,
-              this._type_id);
+              this.type_id);
           yield this.clear_cache ();
 
           return null;
@@ -303,7 +328,7 @@ public abstract class Folks.ObjectCache<T> : Object
       Cancellable? cancellable = null)
     {
       debug ("Storing cache (type ID '%s', ID '%s') to file '%s'.",
-          this._type_id, this._id, this._cache_file.get_path ());
+          this.type_id, this._id, this._cache_file.get_path ());
 
       var child_type = this.get_serialised_object_type (uint8.MAX);
       assert (child_type != null); // uint8.MAX should always be supported
@@ -321,7 +346,7 @@ public abstract class Folks.ObjectCache<T> : Object
       var object_version = this.get_serialised_object_version ();
 
       var variant = new Variant.tuple ({
-        new Variant.string (this._type_id), // Type ID
+        new Variant.string (this.type_id), // Type ID
         new Variant.string (this._id), // ID
         new Variant.array (child_type, children) // Array of objects
       });
@@ -387,7 +412,7 @@ public abstract class Folks.ObjectCache<T> : Object
   public async void clear_cache ()
     {
       debug ("Clearing cache (type ID '%s', ID '%s'); deleting file '%s'.",
-          this._type_id, this._id, this._cache_file.get_path ());
+          this.type_id, this._id, this._cache_file.get_path ());
 
       try
         {

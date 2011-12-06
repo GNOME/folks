@@ -99,24 +99,19 @@ public class Folks.Individual : Object,
     UrlDetails,
     WebServiceDetails
 {
-  private bool _is_favourite;
-  private string _alias;
-  private HashSet<string> _groups;
-  private Set<string> _groups_ro;
   /* Stores the Personas contained in this Individual. */
-  private HashSet<Persona> _persona_set;
+  private HashSet<Persona> _persona_set =
+      new HashSet<Persona> (direct_hash, direct_equal);
   /* Read-only view of the above set */
   private Set<Persona> _persona_set_ro;
   /* Mapping from PersonaStore -> number of Personas from that store contained
    * in this Individual. There shouldn't be any entries with a number < 1.
    * This is used for working out when to disconnect from store signals. */
-  private HashMap<PersonaStore, uint> _stores;
+  private HashMap<PersonaStore, uint> _stores =
+      new HashMap<PersonaStore, uint> (null, null);
   /* The number of Personas in this Individual which have
    * Persona.is_user == true. Iff this is > 0, Individual.is_user == true. */
   private uint _persona_user_count = 0;
-  private HashMultiMap<string, ImFieldDetails> _im_addresses;
-  private HashMultiMap<string, WebServiceFieldDetails> _web_service_addresses;
-  private string _nickname = "";
 
   /**
    * The trust level of the Individual.
@@ -282,6 +277,8 @@ public class Folks.Individual : Object,
    */
   public signal void removed (Individual? replacement_individual);
 
+  private string _alias = "";
+
   /**
    * {@inheritDoc}
    */
@@ -370,6 +367,8 @@ public class Folks.Individual : Object,
       set { this.change_full_name.begin (value); } /* not writeable */
     }
 
+  private string _nickname = "";
+
   /**
    * {@inheritDoc}
    */
@@ -451,7 +450,9 @@ public class Folks.Individual : Object,
       set { this.change_gender.begin (value); } /* not writeable */
     }
 
-  private HashSet<UrlFieldDetails> _urls;
+  private HashSet<UrlFieldDetails> _urls = new HashSet<UrlFieldDetails> (
+      (GLib.HashFunc) UrlFieldDetails.hash,
+      (GLib.EqualFunc) UrlFieldDetails.equal);
   private Set<UrlFieldDetails> _urls_ro;
 
   /**
@@ -464,7 +465,10 @@ public class Folks.Individual : Object,
       set { this.change_urls.begin (value); } /* not writeable */
     }
 
-  private HashSet<PhoneFieldDetails> _phone_numbers;
+  private HashSet<PhoneFieldDetails> _phone_numbers =
+      new HashSet<PhoneFieldDetails> (
+          (GLib.HashFunc) PhoneFieldDetails.hash,
+          (GLib.EqualFunc) PhoneFieldDetails.equal);
   private Set<PhoneFieldDetails> _phone_numbers_ro;
 
   /**
@@ -477,7 +481,10 @@ public class Folks.Individual : Object,
       set { this.change_phone_numbers.begin (value); } /* not writeable */
     }
 
-  private HashSet<EmailFieldDetails> _email_addresses;
+  private HashSet<EmailFieldDetails> _email_addresses =
+      new HashSet<EmailFieldDetails> (
+          (GLib.HashFunc) EmailFieldDetails.hash,
+          (GLib.EqualFunc) EmailFieldDetails.equal);
   private Set<EmailFieldDetails> _email_addresses_ro;
 
   /**
@@ -490,7 +497,9 @@ public class Folks.Individual : Object,
       set { this.change_email_addresses.begin (value); } /* not writeable */
     }
 
-  private HashSet<RoleFieldDetails> _roles;
+  private HashSet<RoleFieldDetails> _roles = new HashSet<RoleFieldDetails> (
+      (GLib.HashFunc) RoleFieldDetails.hash,
+      (GLib.EqualFunc) RoleFieldDetails.equal);
   private Set<RoleFieldDetails> _roles_ro;
 
   /**
@@ -503,7 +512,7 @@ public class Folks.Individual : Object,
       set { this.change_roles.begin (value); } /* not writeable */
     }
 
-  private HashSet<string> _local_ids;
+  private HashSet<string> _local_ids = new HashSet<string> ();
   private Set<string> _local_ids_ro;
 
   /**
@@ -540,7 +549,9 @@ public class Folks.Individual : Object,
       set { this.change_calendar_event_id.begin (value); } /* not writeable */
     }
 
-  private HashSet<NoteFieldDetails> _notes;
+  private HashSet<NoteFieldDetails> _notes = new HashSet<NoteFieldDetails> (
+      (GLib.HashFunc) NoteFieldDetails.hash,
+      (GLib.EqualFunc) NoteFieldDetails.equal);
   private Set<NoteFieldDetails> _notes_ro;
 
   /**
@@ -553,7 +564,10 @@ public class Folks.Individual : Object,
       set { this.change_notes.begin (value); } /* not writeable */
     }
 
-  private HashSet<PostalAddressFieldDetails> _postal_addresses;
+  private HashSet<PostalAddressFieldDetails> _postal_addresses =
+      new HashSet<PostalAddressFieldDetails> (
+          (GLib.HashFunc) PostalAddressFieldDetails.hash,
+          (GLib.EqualFunc) PostalAddressFieldDetails.equal);
   private Set<PostalAddressFieldDetails> _postal_addresses_ro;
 
   /**
@@ -565,6 +579,8 @@ public class Folks.Individual : Object,
       get { return this._postal_addresses_ro; }
       set { this.change_postal_addresses.begin (value); } /* not writeable */
     }
+
+  private bool _is_favourite = false;
 
   /**
    * Whether this Individual is a user-defined favourite.
@@ -638,6 +654,9 @@ public class Folks.Individual : Object,
       this.notify_property ("is-favourite");
     }
 
+  private HashSet<string> _groups = new HashSet<string> ();
+  private Set<string> _groups_ro;
+
   /**
    * {@inheritDoc}
    */
@@ -696,6 +715,10 @@ public class Folks.Individual : Object,
       this._update_groups ();
     }
 
+  private HashMultiMap<string, ImFieldDetails> _im_addresses =
+      new HashMultiMap<string, ImFieldDetails> (
+          null, null, ImFieldDetails.hash, (EqualFunc) ImFieldDetails.equal);
+
   /**
    * {@inheritDoc}
    */
@@ -705,6 +728,11 @@ public class Folks.Individual : Object,
       get { return this._im_addresses; }
       set { this.change_im_addresses.begin (value); } /* not writeable */
     }
+
+  private HashMultiMap<string, WebServiceFieldDetails> _web_service_addresses =
+      new HashMultiMap<string, WebServiceFieldDetails> (null, null,
+          (GLib.HashFunc) WebServiceFieldDetails.hash,
+          (GLib.EqualFunc) WebServiceFieldDetails.equal);
 
   /**
    * {@inheritDoc}
@@ -889,49 +917,23 @@ public class Folks.Individual : Object,
    */
   public Individual (Set<Persona>? personas)
     {
+      Object (personas: personas);
+    }
+
+  construct
+    {
       debug ("Creating new Individual with %u Personas: %p",
-          (personas != null ? personas.size : 0), this);
+          (this.personas != null ? this.personas.size : 0), this);
 
-      this._im_addresses = new HashMultiMap<string, ImFieldDetails> (
-          null, null, ImFieldDetails.hash, (EqualFunc) ImFieldDetails.equal);
-      this._web_service_addresses =
-        new HashMultiMap<string, WebServiceFieldDetails> (
-            null, null,
-            (GLib.HashFunc) WebServiceFieldDetails.hash,
-            (GLib.EqualFunc) WebServiceFieldDetails.equal);
-      this._persona_set =
-          new HashSet<Persona> (direct_hash, direct_equal);
       this._persona_set_ro = this._persona_set.read_only_view;
-      this._stores = new HashMap<PersonaStore, uint> (null, null);
-      this._gender = Gender.UNSPECIFIED;
-      this._urls = new HashSet<UrlFieldDetails> (
-          (GLib.HashFunc) UrlFieldDetails.hash,
-          (GLib.EqualFunc) UrlFieldDetails.equal);
       this._urls_ro = this._urls.read_only_view;
-      this._phone_numbers = new HashSet<PhoneFieldDetails> (
-          (GLib.HashFunc) PhoneFieldDetails.hash,
-          (GLib.EqualFunc) PhoneFieldDetails.equal);
       this._phone_numbers_ro = this._phone_numbers.read_only_view;
-      this._email_addresses = new HashSet<EmailFieldDetails> (
-          (GLib.HashFunc) EmailFieldDetails.hash,
-          (GLib.EqualFunc) EmailFieldDetails.equal);
       this._email_addresses_ro = this._email_addresses.read_only_view;
-      this._roles = new HashSet<RoleFieldDetails> (
-          (GLib.HashFunc) RoleFieldDetails.hash,
-          (GLib.EqualFunc) RoleFieldDetails.equal);
       this._roles_ro = this._roles.read_only_view;
-      this._local_ids = new HashSet<string> ();
       this._local_ids_ro = this._local_ids.read_only_view;
-      this._postal_addresses = new HashSet<PostalAddressFieldDetails> (
-          (GLib.HashFunc) PostalAddressFieldDetails.hash,
-          (GLib.EqualFunc) PostalAddressFieldDetails.equal);
       this._postal_addresses_ro = this._postal_addresses.read_only_view;
-      this._notes = new HashSet<NoteFieldDetails> (
-          (GLib.HashFunc) NoteFieldDetails.hash,
-          (GLib.EqualFunc) NoteFieldDetails.equal);
       this._notes_ro = this._notes.read_only_view;
-
-      this.personas = personas;
+      this._groups_ro = this._groups.read_only_view;
     }
 
   ~Individual ()
@@ -1150,13 +1152,6 @@ public class Folks.Individual : Object,
   private void _update_groups ()
     {
       var new_groups = new HashSet<string> ();
-
-      /* this._groups is null during initial construction */
-      if (this._groups == null)
-        {
-          this._groups = new HashSet<string> ();
-          this._groups_ro = this._groups.read_only_view;
-        }
 
       /* FIXME: this should partition the personas by store (maybe we should
        * keep that mapping in general in this class), and execute

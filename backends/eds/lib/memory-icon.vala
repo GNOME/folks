@@ -41,6 +41,10 @@ internal class Edsf.MemoryIcon : Object, Icon, LoadableIcon
    */
   public MemoryIcon (string? image_type, uint8[] image_data)
     {
+      /* Note: To be correct, these should both be properties of the object
+       * and this constructor should just call Object(…). However, this is an
+       * internal class, so we can skip all the pain of making a uint8[] object
+       * for this class only. */
       this._image_data = image_data;
       this._image_type = image_type;
     }

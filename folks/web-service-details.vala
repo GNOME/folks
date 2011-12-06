@@ -47,9 +47,8 @@ public class Folks.WebServiceFieldDetails : AbstractFieldDetails<string>
   public WebServiceFieldDetails (string value,
       MultiMap<string, string>? parameters = null)
     {
-      this.value = value;
-      if (parameters != null)
-        this.parameters = parameters;
+      Object (value: value,
+              parameters: parameters);
     }
 
   /**

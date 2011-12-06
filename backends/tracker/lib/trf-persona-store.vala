@@ -414,7 +414,12 @@ public class Trf.PersonaStore : Folks.PersonaStore
    */
   public PersonaStore ()
     {
-      Object (id: BACKEND_NAME, display_name: BACKEND_NAME);
+      Object (id: BACKEND_NAME,
+              display_name: BACKEND_NAME);
+    }
+
+  construct
+    {
       this._personas = new HashMap<string, Persona> ();
       this._personas_ro = this._personas.read_only_view;
       debug ("Initial query : \n%s\n", this._INITIAL_QUERY);
@@ -1929,8 +1934,8 @@ public class Trf.PersonaStore : Folks.PersonaStore
         "FILTER (tracker:id(?p) = %s) " +
         "} ";
 
-      string query = query_t.printf (persona.tracker_id (), nickname,
-          persona.tracker_id ());
+      string query = query_t.printf (persona.tracker_id, nickname,
+          persona.tracker_id);
 
       yield this._tracker_update (query, "change_nickname");
     }
@@ -1974,8 +1979,8 @@ public class Trf.PersonaStore : Folks.PersonaStore
       " ?p a nco:PersonContact . " +
       "FILTER (tracker:id(?p) = %s) } ";
 
-      string query = query_t.printf (persona.tracker_id (), prop_name,
-          prop_name, prop_value, persona.tracker_id ());
+      string query = query_t.printf (persona.tracker_id, prop_name,
+          prop_name, prop_value, persona.tracker_id);
       yield this._tracker_update (query, callers_name);
     }
 
@@ -2002,11 +2007,11 @@ public class Trf.PersonaStore : Folks.PersonaStore
 
       if (is_favourite)
         {
-          query = ins_q.printf (((Trf.Persona) persona).tracker_id ());
+          query = ins_q.printf (((Trf.Persona) persona).tracker_id);
         }
       else
         {
-          query = del_q.printf (((Trf.Persona) persona).tracker_id ());
+          query = del_q.printf (((Trf.Persona) persona).tracker_id);
         }
 
       yield this._tracker_update (query, "change_is_favourite");
@@ -2030,7 +2035,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
       Set<AbstractFieldDetails<string>> properties, Trf.Attrib attrib)
     {
       string? query_name = null;
-      var p_id = ((Trf.Persona) persona).tracker_id ();
+      var p_id = ((Trf.Persona) persona).tracker_id;
       var builder = new Tracker.Sparql.Builder.update ();
       builder.insert_open (null);
 
@@ -2110,7 +2115,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
         " FILTER(tracker:id(?p) = %s) " +
         "} ";
 
-      var p_id = ((Trf.Persona) persona).tracker_id ();
+      var p_id = ((Trf.Persona) persona).tracker_id;
       string del_q = del_t.printf (p_id);
 
       var builder = new Tracker.Sparql.Builder.update ();
@@ -2159,7 +2164,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
         " FILTER(tracker:id(?p) = %s)" +
         "}";
 
-      var p_id = ((Trf.Persona) persona).tracker_id ();
+      var p_id = ((Trf.Persona) persona).tracker_id;
       string del_q = del_t.printf (p_id);
 
       var builder = new Tracker.Sparql.Builder.update ();
@@ -2203,7 +2208,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
          " FILTER (tracker:id(?p) = %s) " +
          "} ";
 
-      var p_id = ((Trf.Persona) persona).tracker_id ();
+      var p_id = ((Trf.Persona) persona).tracker_id;
       TimeVal tv;
       bday.to_timeval (out tv);
       string query = q_t.printf (p_id, tv.to_iso8601 (), p_id);
@@ -2230,7 +2235,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
         " FILTER (tracker:id(?p) = %s) " +
         "} ";
 
-      var p_id = ((Trf.Persona) persona).tracker_id ();
+      var p_id = ((Trf.Persona) persona).tracker_id;
       string query;
 
       if (gender == Gender.UNSPECIFIED)
@@ -2275,7 +2280,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
         " FILTER(tracker:id(?c) = %s) " +
         "}";
 
-      var p_id = ((Trf.Persona) persona).tracker_id ();
+      var p_id = ((Trf.Persona) persona).tracker_id;
 
       var image_urn = yield this._get_property (int.parse (p_id),
           Trf.OntologyDefs.NCO_PHOTO);
@@ -2345,7 +2350,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
         " FILTER (tracker:id(?p) = %s) " +
         "} ";
 
-      var p_id = ((Trf.Persona) persona).tracker_id ();
+      var p_id = ((Trf.Persona) persona).tracker_id;
 
       string query = query_d.printf (p_id);
       if (sname != null)
@@ -2376,7 +2381,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
         " FILTER (tracker:id(?p) = %s) " +
         "} ";
 
-      var p_id = ((Trf.Persona) persona).tracker_id ();
+      var p_id = ((Trf.Persona) persona).tracker_id;
       string query = query_t.printf (p_id, full_name, p_id);
       yield this._tracker_update (query, "_set_full_name");
     }
@@ -2388,7 +2393,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
   private async void _set_attrib_set (Folks.Persona persona,
       Set<Object> attribs, Trf.Attrib what)
     {
-      var p_id = ((Trf.Persona) persona).tracker_id ();
+      var p_id = ((Trf.Persona) persona).tracker_id;
 
       unowned string? related_attrib = null;
       unowned string? related_prop = null;
@@ -2664,7 +2669,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
 
   private async string _urn_from_persona (Folks.Persona persona)
     {
-      var id = ((Trf.Persona) persona).tracker_id ();
+      var id = ((Trf.Persona) persona).tracker_id;
       return yield this._urn_from_tracker_id (id);
     }
 

@@ -45,7 +45,12 @@ using Folks;
  */
 internal class Tpf.PersonaStoreCache : Folks.ObjectCache<Tpf.Persona>
 {
-  private weak PersonaStore _store;
+  /**
+   * The {@link Tpf.PersonaStore} associated with this cache.
+   *
+   * @since UNRELEASED
+   */
+  public weak PersonaStore store { get; construct; }
 
   /* Version number of the variant type returned by
    * get_serialised_object_type(). This must be modified whenever that variant
@@ -55,9 +60,9 @@ internal class Tpf.PersonaStoreCache : Folks.ObjectCache<Tpf.Persona>
 
   internal PersonaStoreCache (PersonaStore store)
     {
-      base ("tpf-persona-stores", store.id);
-
-      this._store = store;
+      Object (type_id: "tpf-persona-stores",
+              id: store.id,
+              store: store);
     }
 
   protected override VariantType? get_serialised_object_type (

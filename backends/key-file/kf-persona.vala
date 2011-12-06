@@ -33,7 +33,6 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
     ImDetails,
     WebServiceDetails
 {
-  private unowned GLib.KeyFile _key_file;
   private HashMultiMap<string, ImFieldDetails> _im_addresses;
   private HashMultiMap<string, WebServiceFieldDetails> _web_service_addresses;
   private string _alias = ""; /* must not be null */
@@ -99,7 +98,8 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
 
       debug ("Setting alias of Kf.Persona '%s' to '%s'.", this.uid, alias);
 
-      this._key_file.set_string (this.display_id, "__alias", alias);
+      unowned KeyFile key_file = ((Kf.PersonaStore) this.store).get_key_file ();
+      key_file.set_string (this.display_id, "__alias", alias);
       yield ((Kf.PersonaStore) this.store).save_key_file ();
 
       this._alias = alias;
@@ -124,12 +124,14 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
   public async void change_im_addresses (
       MultiMap<string, ImFieldDetails> im_addresses) throws PropertyError
     {
+      unowned KeyFile key_file = ((Kf.PersonaStore) this.store).get_key_file ();
+
       /* Remove the current IM addresses from the key file */
       foreach (var protocol1 in this._im_addresses.get_keys ())
         {
           try
             {
-              this._key_file.remove_key (this.display_id, protocol1);
+              key_file.remove_key (this.display_id, protocol1);
             }
           catch (KeyFileError e1)
             {
@@ -178,7 +180,7 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
           string[] addrs = (string[]) normalised_addresses.to_array ();
           addrs.length = normalised_addresses.size;
 
-          this._key_file.set_string_list (this.display_id, protocol2, addrs);
+          key_file.set_string_list (this.display_id, protocol2, addrs);
         }
 
       /* Get the PersonaStore to save the key file */
@@ -207,12 +209,14 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
       MultiMap<string, WebServiceFieldDetails> web_service_addresses)
           throws PropertyError
     {
+      unowned KeyFile key_file = ((Kf.PersonaStore) this.store).get_key_file ();
+
       /* Remove the current web service addresses from the key file */
       foreach (var web_service1 in this._web_service_addresses.get_keys ())
         {
           try
             {
-              this._key_file.remove_key (this.display_id,
+              key_file.remove_key (this.display_id,
                   "web-service." + web_service1);
             }
           catch (KeyFileError e)
@@ -238,7 +242,7 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
           foreach (var ws_fd1 in ws_fds)
             addrs += ws_fd1.value;
 
-          this._key_file.set_string_list (this.display_id,
+          key_file.set_string_list (this.display_id,
               "web-service." + web_service2, addrs);
 
           foreach (var ws_fd2 in ws_fds)
@@ -258,7 +262,7 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
    * Create a new persona for the {@link PersonaStore} `store`, representing
    * the Persona given by the group `uid` in the key file `key_file`.
    */
-  public Persona (KeyFile key_file, string id, Folks.PersonaStore store)
+  public Persona (string id, Folks.PersonaStore store)
     {
       var iid = store.id + ":" + id;
       var uid = this.build_uid ("key-file", store.id, id);
@@ -268,11 +272,13 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
               uid: uid,
               store: store,
               is_user: false);
+    }
 
-      debug ("Adding key-file Persona '%s' (IID '%s', group '%s')", uid, iid,
-          id);
+  construct
+    {
+      debug ("Adding key-file Persona '%s' (IID '%s', group '%s')", this.uid,
+          this.iid, this.display_id);
 
-      this._key_file = key_file;
       this._im_addresses = new HashMultiMap<string, ImFieldDetails> (
           null, null, ImFieldDetails.hash, (EqualFunc) ImFieldDetails.equal);
       this._web_service_addresses =
@@ -282,16 +288,17 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
             (GLib.EqualFunc) WebServiceFieldDetails.equal);
 
       /* Load the IM addresses from the key file */
+      unowned KeyFile key_file = ((Kf.PersonaStore) this.store).get_key_file ();
+
       try
         {
-          var keys = this._key_file.get_keys (this.display_id);
+          var keys = key_file.get_keys (this.display_id);
           foreach (unowned string key in keys)
             {
               /* Alias */
               if (key == "__alias")
                 {
-                  this._alias = this._key_file.get_string (this.display_id,
-                      key);
+                  this._alias = key_file.get_string (this.display_id, key);
 
                   if (this._alias == null)
                     {
@@ -308,7 +315,7 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
                   decomposed_key[0] == "web-service")
                 {
                   unowned string web_service = decomposed_key[1];
-                  var web_service_addresses = this._key_file.get_string_list (
+                  var web_service_addresses = key_file.get_string_list (
                       this.display_id, web_service);
 
                   foreach (var web_service_address in web_service_addresses)
@@ -322,7 +329,7 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
 
               /* IM addresses */
               unowned string protocol = key;
-              var im_addresses = this._key_file.get_string_list (
+              var im_addresses = key_file.get_string_list (
                   this.display_id, protocol);
 
               foreach (var im_address in im_addresses)

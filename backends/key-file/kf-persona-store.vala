@@ -34,7 +34,6 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
 {
   private HashMap<string, Persona> _personas;
   private Map<string, Persona> _personas_ro;
-  private File _file;
   private GLib.KeyFile _key_file;
   private unowned Cancellable _save_key_file_cancellable = null;
   private bool _is_prepared = false;
@@ -144,6 +143,15 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
     }
 
   /**
+   * File containing the persona store data.
+   *
+   * This must be in GLib key file format.
+   *
+   * @since UNRELEASED
+   */
+  public File file { get; construct; }
+
+  /**
    * Create a new PersonaStore.
    *
    * Create a new persona store to expose the {@link Persona}s provided by the
@@ -154,10 +162,13 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
       var id = key_file.get_basename ();
 
       Object (id: id,
-              display_name: id);
+              display_name: id,
+              file: key_file);
+    }
 
+  construct
+    {
       this.trust_level = PersonaStoreTrust.FULL;
-      this._file = key_file;
       this._personas = new HashMap<string, Persona> ();
       this._personas_ro = this._personas.read_only_view;
     }
@@ -178,7 +189,7 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
             {
               this._prepare_pending = true;
 
-              var filename = this._file.get_path ();
+              var filename = this.file.get_path ();
               this._key_file = new GLib.KeyFile ();
 
               /* Load or create the file */
@@ -191,7 +202,7 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
                     {
                       uint8 *contents = null;
 
-                      yield this._file.load_contents_async (null, out contents,
+                      yield this.file.load_contents_async (null, out contents,
                           null);
                       var contents_s = (string) contents;
 
@@ -218,7 +229,7 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
                     }
 
                   /* Ensure the parent directory tree exists for the new file */
-                  File parent_dir = this._file.get_parent ();
+                  File parent_dir = this.file.get_parent ();
 
                   try
                     {
@@ -245,7 +256,7 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
                   try
                     {
                       /* Create the file */
-                      FileOutputStream stream = yield this._file.create_async (
+                      FileOutputStream stream = yield this.file.create_async (
                           FileCreateFlags.PRIVATE, Priority.DEFAULT);
                       yield stream.close_async (Priority.DEFAULT);
                     }
@@ -271,8 +282,7 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
               var added_personas = new HashSet<Persona> ();
               foreach (var persona_id in groups)
                 {
-                  Persona persona = new Kf.Persona (this._key_file, persona_id,
-                      this);
+                  Persona persona = new Kf.Persona (persona_id, this);
                   this._personas.set (persona.iid, persona);
                   added_personas.add (persona);
                 }
@@ -379,7 +389,7 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
 
       /* Create a new persona and set its addresses property to update the
        * key file */
-      Persona persona = new Kf.Persona (this._key_file, persona_id, this);
+      Persona persona = new Kf.Persona (persona_id, this);
       this._personas.set (persona.iid, persona);
 
       try
@@ -409,12 +419,17 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
       return persona;
     }
 
+  internal unowned KeyFile get_key_file ()
+    {
+      return this._key_file;
+    }
+
   internal async void save_key_file ()
     {
       var key_file_data = this._key_file.to_data ();
       var cancellable = new Cancellable ();
 
-      debug ("Saving key file '%s'.", this._file.get_path ());
+      debug ("Saving key file '%s'.", this.file.get_path ());
 
       /* There's no point in having two competing file write operations.
        * We can ensure that only one is running by just checking if a
@@ -435,7 +450,7 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
            * Vala <= 0.10, it returned the character length). FIXME: We need to
            * take this into account until we depend explicitly on
            * Vala >= 0.11. */
-          yield this._file.replace_contents_async (key_file_data,
+          yield this.file.replace_contents_async (key_file_data,
               key_file_data.length, null, false, FileCreateFlags.PRIVATE,
               cancellable);
         }
@@ -446,7 +461,7 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
               /* Translators: the first parameter is a filename, the second is
                * an error message. */
               warning (_("Could not write updated key file '%s': %s"),
-                  this._file.get_path (), e.message);
+                  this.file.get_path (), e.message);
             }
         }
 

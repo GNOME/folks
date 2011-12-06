@@ -140,13 +140,15 @@ public class Edsf.Persona : Folks.Persona,
 
   private bool _is_favourite;
 
+  private E.Contact _contact; /* should be set on construct */
+
   /**
    * The e-d-s contact represented by this Persona
    */
   public E.Contact contact
     {
-      get;
-      private set;
+      get { return this._contact; }
+      construct { this._contact = value; }
     }
 
   /**
@@ -371,7 +373,7 @@ public class Edsf.Persona : Folks.Persona,
    *
    * @since 0.6.0
    */
-  public string contact_id { get; private set; }
+  public string contact_id { get; construct; }
 
   private string _full_name = "";
   /**
@@ -703,16 +705,20 @@ public class Edsf.Persona : Folks.Persona,
       if (full_name == null)
         full_name = "";
 
-      debug ("Creating new Edsf.Persona with IID '%s'", iid);
-
       Object (display_id: full_name,
               uid: uid,
               iid: iid,
               store: store,
-              is_user: is_user);
+              is_user: is_user,
+              contact_id: contact_id,
+              contact: contact);
+    }
+
+  construct
+    {
+      debug ("Creating new Edsf.Persona with IID '%s'", this.iid);
 
       this._gender = Gender.UNSPECIFIED;
-      this.contact_id = contact_id;
       this._phone_numbers = new HashSet<PhoneFieldDetails> (
           (GLib.HashFunc) PhoneFieldDetails.hash,
           (GLib.EqualFunc) PhoneFieldDetails.equal);
@@ -747,7 +753,7 @@ public class Edsf.Persona : Folks.Persona,
           (GLib.EqualFunc) RoleFieldDetails.equal);
       this._roles_ro = this._roles.read_only_view;
 
-      this._update (contact);
+      this._update (this._contact);
     }
 
   /**
@@ -805,11 +811,14 @@ public class Edsf.Persona : Folks.Persona,
   /**
    * Update attribs of the persona.
    */
-  internal void _update (E.Contact contact)
+  internal void _update (E.Contact updated_contact)
     {
-      this.contact = contact;
-
       this.freeze_notify ();
+
+      /* We get a new E.Contact instance from EDS containing all the updates,
+       * so replace our existing contact with it. */
+      this._contact = updated_contact;
+      this.notify_property ("contact");
 
       this._update_names ();
       this._update_avatar ();

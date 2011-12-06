@@ -185,7 +185,7 @@ public class Swf.Persona : Folks.Persona,
   public Contact lsw_contact
     {
       get { return this._lsw_contact; }
-      private set
+      construct
         {
           if (_lsw_contact != null && _lsw_contact != value)
             {
@@ -253,7 +253,6 @@ public class Swf.Persona : Folks.Persona,
   public Persona (PersonaStore store, Contact contact)
     {
       var id = get_contact_id (contact);
-      var service = contact.service.dup();
       var uid = this.build_uid (BACKEND_NAME, store.id, id);
       var iid = this._build_iid (store.id, id);
 
@@ -261,13 +260,17 @@ public class Swf.Persona : Folks.Persona,
               uid: uid,
               iid: iid,
               store: store,
-              is_user: false);
-      this.lsw_contact = contact;
+              is_user: false,
+              lsw_contact: contact);
+    }
 
+  construct
+    {
       debug ("Creating new Sw.Persona '%s' for %s UID '%s': %p",
-          uid, store.display_name, id, this);
+          this.uid, this.store.display_name, this.display_id, this);
 
-      var facebook_jid = this._build_facebook_jid (store.id, id);
+      var facebook_jid =
+          this._build_facebook_jid (this.store.id, this.display_id);
       if (facebook_jid != null)
         {
           try
@@ -286,10 +289,11 @@ public class Swf.Persona : Folks.Persona,
             }
         }
 
+      var service = this.lsw_contact.service.dup ();
       this._web_service_addresses.set (service,
-          new WebServiceFieldDetails (id));
+          new WebServiceFieldDetails (this.display_id));
 
-      update (contact);
+      this.update (this.lsw_contact);
     }
 
   ~Persona ()

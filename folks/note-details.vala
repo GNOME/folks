@@ -69,12 +69,9 @@ public class Folks.NoteFieldDetails : AbstractFieldDetails<string>
       MultiMap<string, string>? parameters = null,
       string? uid = null)
     {
-      this.value = value;
-      if (parameters != null)
-        this.parameters = parameters;
-
-      /* These are kept the same value now */
-      this.id = uid;
+      Object (value: value,
+              id: uid,
+              parameters: parameters);
     }
 
   /**

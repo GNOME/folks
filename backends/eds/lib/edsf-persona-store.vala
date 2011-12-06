@@ -42,7 +42,6 @@ public class Edsf.PersonaStore : Folks.PersonaStore
   private E.BookClient _addressbook;
   private E.BookClientView _ebookview;
   private E.SourceList? _source_list = null;
-  private E.Source _source;
   private string _query_str;
 
   /* The timeout after which we consider a property change to have failed if we
@@ -192,6 +191,16 @@ public class Edsf.PersonaStore : Folks.PersonaStore
     }
 
   /**
+   * The EDS {@link E.Source} associated with this persona store.
+   *
+   * @since UNRELEASED
+   */
+  public E.Source source
+    {
+      get; construct;
+    }
+
+  /**
    * Create a new PersonaStore.
    *
    * Create a new persona store to store the {@link Persona}s for the contacts
@@ -203,12 +212,17 @@ public class Edsf.PersonaStore : Folks.PersonaStore
   public PersonaStore (E.Source s)
     {
       string eds_uid = s.peek_uid ();
-      Object (id: eds_uid, display_name: eds_uid);
-      this._source = s;
+      Object (id: eds_uid,
+              display_name: eds_uid,
+              source: s);
+    }
+
+  construct
+    {
       this._personas = new HashMap<string, Persona> ();
       this._personas_ro = this._personas.read_only_view;
       this._query_str = "(contains \"x-evolution-any-field\" \"\")";
-      this._source.changed.connect (this._source_changed_cb);
+      this.source.changed.connect (this._source_changed_cb);
       this._notify_if_default ();
     }
 
@@ -550,7 +564,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
               this._source_list.changed.connect (this._source_list_changed_cb);
 
               /* Connect to the address book. */
-              this._addressbook = new E.BookClient (this._source);
+              this._addressbook = new E.BookClient (this.source);
 
               this._addressbook.notify["readonly"].connect (
                   this._address_book_notify_read_only_cb);
@@ -1989,7 +2003,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
    */
   private void _update_trust_level ()
     {
-      unowned SourceGroup? group = (SourceGroup?) this._source.peek_group ();
+      unowned SourceGroup? group = (SourceGroup?) this.source.peek_group ();
       if (group != null)
         {
           var base_uri = group.peek_base_uri ();
@@ -2025,7 +2039,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
           E.BookClient.get_sources (out sources);
           var default_source = sources.peek_default_source ();
           if (default_source != null &&
-              this._source.peek_uid () == default_source.peek_uid ())
+              this.source.peek_uid () == default_source.peek_uid ())
             {
               is_default = true;
             }

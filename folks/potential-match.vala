@@ -83,21 +83,17 @@ public class Folks.PotentialMatch : Object
    *
    * @since 0.5.1
    */
-  public static Set<string> known_email_aliases = null;
+  public static Set<string> known_email_aliases =
+      new Gee.HashSet<string> (str_hash, str_equal);
 
   private static double _DIST_THRESHOLD = 0.70;
   private const string _SEPARATORS = "._-+";
 
-  public PotentialMatch ()
+  static construct
     {
-      if (this.known_email_aliases == null)
-        {
-          this.known_email_aliases = new Gee.HashSet<string> (str_hash,
-              str_equal);
-          this.known_email_aliases.add ("admin");
-          this.known_email_aliases.add ("abuse");
-          this.known_email_aliases.add ("webmaster");
-        }
+      PotentialMatch.known_email_aliases.add ("admin");
+      PotentialMatch.known_email_aliases.add ("abuse");
+      PotentialMatch.known_email_aliases.add ("webmaster");
     }
 
   /**
@@ -265,7 +261,7 @@ public class Folks.PotentialMatch : Object
 
               if (fd_a.value == fd_b.value)
                 {
-                  if (this.known_email_aliases.contains
+                  if (PotentialMatch.known_email_aliases.contains
                       (email_split_a[0]) == true)
                     {
                       if (this._result < MatchResult.HIGH)

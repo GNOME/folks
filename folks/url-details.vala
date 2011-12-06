@@ -86,9 +86,8 @@ public class Folks.UrlFieldDetails : AbstractFieldDetails<string>
   public UrlFieldDetails (string value,
       MultiMap<string, string>? parameters = null)
     {
-      this.value = value;
-      if (parameters != null)
-        this.parameters = parameters;
+      Object (value: value,
+              parameters: parameters);
     }
 
   /**
