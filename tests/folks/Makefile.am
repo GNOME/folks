@@ -50,6 +50,7 @@ noinst_PROGRAMS = \
 	aggregation \
 	avatar-cache \
 	object-cache \
+	init \
 	$(NULL)
 
 SESSION_CONF = $(top_builddir)/tests/lib/telepathy/contactlist/session.conf
@@ -91,6 +92,10 @@ object_cache_SOURCES = \
 	object-cache.vala \
 	$(NULL)
 
+init_SOURCES = \
+	init.vala \
+	$(NULL)
+
 CLEANFILES = \
         *.pid \
         *.address \
@@ -105,6 +110,7 @@ MAINTAINERCLEANFILES = \
         utils_vala.stamp \
         avatar_cache_vala.stamp \
         object_cache_vala.stamp \
+        init_vala.stamp \
         $(NULL)
 
 EXTRA_DIST = \
