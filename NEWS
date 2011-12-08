@@ -6,6 +6,8 @@ Bugs fixed:
 * Bug 663889 — crash due to NameDetails which fail to guarantee
   non-null full-name/nickname
 * Bug 665039 — Crash in folks_backends_sw_backend_add_service
+* Bug 665728 — TpfPersonaStore: prepare() isn't mutually exclusive inside a
+  single thread
 
 Overview of changes from libfolks 0.6.4.1 to libfolks 0.6.5
 =============================================================

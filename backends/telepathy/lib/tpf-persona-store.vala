@@ -99,6 +99,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
   private MaybeBool _can_group_personas = MaybeBool.UNSET;
   private MaybeBool _can_remove_personas = MaybeBool.UNSET;
   private bool _is_prepared = false;
+  private bool _prepare_pending = false;
   private bool _is_quiescent = false;
   private bool _got_stored_channel_members = false;
   private bool _got_self_handle = false;
@@ -561,8 +562,10 @@ public class Tpf.PersonaStore : Folks.PersonaStore
     {
       lock (this._is_prepared)
         {
-          if (!this._is_prepared)
+          if (!this._is_prepared && !this._prepare_pending)
             {
+              this._prepare_pending = true;
+
               this._account_manager = AccountManager.dup ();
 
               this._account_manager.account_removed.connect ((a) =>
@@ -626,6 +629,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
                 }
 
               this._is_prepared = true;
+              this._prepare_pending = false;
               this.notify_property ("is-prepared");
             }
         }
