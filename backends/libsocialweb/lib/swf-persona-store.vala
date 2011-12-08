@@ -37,6 +37,7 @@ public class Swf.PersonaStore : Folks.PersonaStore
   private HashMap<string, Persona> _personas;
   private Map<string, Persona> _personas_ro;
   private bool _is_prepared = false;
+  private bool _prepare_pending = false;
   private bool _is_quiescent = false;
   private ClientService _service;
   private ClientContactView _contact_view;
@@ -210,8 +211,10 @@ public class Swf.PersonaStore : Folks.PersonaStore
     {
       lock (this._is_prepared)
         {
-          if (!this._is_prepared)
+          if (!this._is_prepared && !this._prepare_pending)
             {
+              this._prepare_pending = true;
+
               /* Take a reference to the PersonaStore while waiting for the
                * async call to return. See: bgo#665039. */
               this.ref ();
@@ -222,6 +225,7 @@ public class Swf.PersonaStore : Folks.PersonaStore
                       if (caps == null)
                         {
                           this.unref ();
+                          this._prepare_pending = false;
                           return;
                         }
 
@@ -230,6 +234,7 @@ public class Swf.PersonaStore : Folks.PersonaStore
                       if (!has_contacts)
                         {
                           this.unref ();
+                          this._prepare_pending = false;
                           return;
                         }
 
@@ -247,6 +252,7 @@ public class Swf.PersonaStore : Folks.PersonaStore
                           if (contact_view == null)
                             {
                               this.unref ();
+                              this._prepare_pending = false;
                               return;
                             }
 
@@ -259,6 +265,7 @@ public class Swf.PersonaStore : Folks.PersonaStore
 
                           this._contact_view = contact_view;
                           this._is_prepared = true;
+                          this._prepare_pending = false;
                           this.notify_property ("is-prepared");
 
                           /* FIXME: for lsw Stores with 0 contacts or badly

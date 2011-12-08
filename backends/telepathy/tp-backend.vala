@@ -34,6 +34,7 @@ public class Folks.Backends.Tp.Backend : Folks.Backend
 {
   private AccountManager _account_manager;
   private bool _is_prepared = false;
+  private bool _prepare_pending = false; /* used by unprepare() too */
   private bool _is_quiescent = false;
   private HashMap<string, PersonaStore> _persona_stores;
   private Map<string, PersonaStore> _persona_stores_ro;
@@ -91,7 +92,12 @@ public class Folks.Backends.Tp.Backend : Folks.Backend
     {
       lock (this._is_prepared)
         {
-          if (!this._is_prepared)
+          if (this._is_prepared || this._prepare_pending)
+            {
+              return;
+            }
+
+          try
             {
               this._account_manager = AccountManager.dup ();
               yield this._account_manager.prepare_async (null);
@@ -113,6 +119,10 @@ public class Folks.Backends.Tp.Backend : Folks.Backend
               this._is_quiescent = true;
               this.notify_property ("is-quiescent");
             }
+          finally
+            {
+              this._prepare_pending = false;
+            }
         }
     }
 
@@ -121,28 +131,40 @@ public class Folks.Backends.Tp.Backend : Folks.Backend
    */
   public override async void unprepare () throws GLib.Error
     {
-      if (!this._is_prepared)
-        return;
-
-      this._account_manager.account_enabled.disconnect (
-          this._account_enabled_cb);
-      this._account_manager.account_validity_changed.disconnect (
-          this._account_validity_changed_cb);
-      this._account_manager = null;
-
-      foreach (var persona_store in this._persona_stores.values)
+      lock (this._is_prepared)
         {
-          this.persona_store_removed (persona_store);
+          if (!this._is_prepared || this._prepare_pending)
+            {
+              return;
+            }
+
+          try
+            {
+              this._account_manager.account_enabled.disconnect (
+                  this._account_enabled_cb);
+              this._account_manager.account_validity_changed.disconnect (
+                  this._account_validity_changed_cb);
+              this._account_manager = null;
+
+              foreach (var persona_store in this._persona_stores.values)
+                {
+                  this.persona_store_removed (persona_store);
+                }
+
+              this._persona_stores.clear ();
+              this.notify_property ("persona-stores");
+
+              this._is_quiescent = false;
+              this.notify_property ("is-quiescent");
+
+              this._is_prepared = false;
+              this.notify_property ("is-prepared");
+            }
+          finally
+            {
+              this._prepare_pending = false;
+            }
         }
-
-      this._persona_stores.clear ();
-      this.notify_property ("persona-stores");
-
-      this._is_quiescent = false;
-      this.notify_property ("is-quiescent");
-
-      this._is_prepared = false;
-      this.notify_property ("is-prepared");
     }
 
   private void _account_validity_changed_cb (Account account, bool valid)

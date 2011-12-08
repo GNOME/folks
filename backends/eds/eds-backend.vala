@@ -37,6 +37,7 @@ public class Folks.Backends.Eds.Backend : Folks.Backend
   private static const string _use_address_books =
       "FOLKS_BACKEND_EDS_USE_ADDRESS_BOOKS";
   private bool _is_prepared = false;
+  private bool _prepare_pending = false; /* used for unprepare() too */
   private bool _is_quiescent = false;
   private HashMap<string, PersonaStore> _persona_stores;
   private Map<string, PersonaStore> _persona_stores_ro;
@@ -95,8 +96,15 @@ public class Folks.Backends.Eds.Backend : Folks.Backend
     {
       lock (this._is_prepared)
         {
-          if (!this._is_prepared)
+          if (this._is_prepared || this._prepare_pending)
             {
+              return;
+            }
+
+          try
+            {
+              this._prepare_pending = true;
+
               this._create_avatars_cache_dir ();
 
               E.BookClient.get_sources (out this._ab_sources);
@@ -110,6 +118,10 @@ public class Folks.Backends.Eds.Backend : Folks.Backend
               this._is_quiescent = true;
               this.notify_property ("is-quiescent");
             }
+          finally
+            {
+              this._prepare_pending = false;
+            }
         }
     }
 
@@ -120,8 +132,15 @@ public class Folks.Backends.Eds.Backend : Folks.Backend
     {
       lock (this._is_prepared)
         {
-          if (this._is_prepared)
+          if (!this._is_prepared || this._prepare_pending)
             {
+              return;
+            }
+
+          try
+            {
+              this._prepare_pending = true;
+
               foreach (var persona_store in this._persona_stores.values)
                 {
                   this._remove_address_book (persona_store);
@@ -135,6 +154,10 @@ public class Folks.Backends.Eds.Backend : Folks.Backend
 
               this._is_prepared = false;
               this.notify_property ("is-prepared");
+            }
+          finally
+            {
+              this._prepare_pending = false;
             }
         }
     }

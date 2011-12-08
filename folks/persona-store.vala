@@ -580,6 +580,12 @@ public abstract class Folks.PersonaStore : Object
    *
    * This function is guaranteed to be idempotent (since version 0.3.0).
    *
+   * Concurrent calls to this function from different threads will block until
+   * preparation has completed. However, concurrent calls to this function from
+   * a single thread might not, i.e. the first call will block but subsequent
+   * calls might return before the first one. (Though they will be safe in every
+   * other respect.)
+   *
    * @since 0.1.11
    */
   public abstract async void prepare () throws GLib.Error;

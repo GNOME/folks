@@ -34,6 +34,7 @@ extern const string BACKEND_NAME;
 public class Folks.Backends.Sw.Backend : Folks.Backend
 {
   private bool _is_prepared = false;
+  private bool _prepare_pending = false;
   private bool _is_quiescent = false;
   private Client _client;
   private HashMap<string, PersonaStore> _persona_stores;
@@ -91,8 +92,10 @@ public class Folks.Backends.Sw.Backend : Folks.Backend
     {
       lock (this._is_prepared)
         {
-          if (!this._is_prepared)
+          if (!this._is_prepared && !this._prepare_pending)
             {
+              this._prepare_pending = true;
+
               /* Hold a ref. on the Backend while we wait for the callback from
                * this._client.get_services() to prevent the Backend being
                * destroyed in the mean time. See: bgo#665039. */
@@ -105,6 +108,7 @@ public class Folks.Backends.Sw.Backend : Folks.Backend
                     this.add_service (service_name);
 
                   this._is_prepared = true;
+                  this._prepare_pending = false;
                   this.notify_property ("is-prepared");
 
                   this._is_quiescent = true;
@@ -121,22 +125,33 @@ public class Folks.Backends.Sw.Backend : Folks.Backend
    */
   public override async void unprepare () throws GLib.Error
     {
-      foreach (var store in this._persona_stores.values)
+      lock (this._is_prepared)
         {
-          store.removed.disconnect (this.store_removed_cb);
-          this.persona_store_removed (store);
+          if (!this._is_prepared || this._prepare_pending)
+            {
+              return;
+            }
+
+          this._prepare_pending = true;
+
+          foreach (var store in this._persona_stores.values)
+            {
+              store.removed.disconnect (this.store_removed_cb);
+              this.persona_store_removed (store);
+            }
+
+          this._client = null;
+
+          this._persona_stores.clear ();
+          this.notify_property ("persona-stores");
+
+          this._is_quiescent = false;
+          this.notify_property ("is-quiescent");
+
+          this._is_prepared = false;
+          this._prepare_pending = false;
+          this.notify_property ("is-prepared");
         }
-
-      this._client = null;
-
-      this._persona_stores.clear ();
-      this.notify_property ("persona-stores");
-
-      this._is_quiescent = false;
-      this.notify_property ("is-quiescent");
-
-      this._is_prepared = false;
-      this.notify_property ("is-prepared");
     }
 
   private void add_service (string service_name)

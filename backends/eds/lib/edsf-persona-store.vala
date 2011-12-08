@@ -37,6 +37,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
   private HashMap<string, Persona> _personas;
   private Map<string, Persona> _personas_ro;
   private bool _is_prepared = false;
+  private bool _prepare_pending = false;
   private bool _is_quiescent = false;
   private E.BookClient _addressbook;
   private E.BookClientView _ebookview;
@@ -533,10 +534,12 @@ public class Edsf.PersonaStore : Folks.PersonaStore
       /* FIXME: https://bugzilla.gnome.org/show_bug.cgi?id=652637 */
       lock (this._is_prepared)
         {
-          if (this._is_prepared)
+          if (this._is_prepared == true || this._prepare_pending == true)
             {
               return;
             }
+
+          this._prepare_pending = true;
 
           try
             {
@@ -625,11 +628,16 @@ public class Edsf.PersonaStore : Folks.PersonaStore
                    * and the second is an error message. */
                   _("Couldn't open address book ‘%s’: %s"), this.id, e1.message);
             }
+          finally
+            {
+              this._prepare_pending = false;
+            }
 
           if (this._addressbook.is_opened () == false)
             {
               /* Remove the persona store on error */
               this.removed ();
+              this._prepare_pending = false;
 
               throw new PersonaStoreError.INVALID_ARGUMENT (
                   /* Translators: the parameter is an address book URI. */
@@ -697,6 +705,10 @@ public class Edsf.PersonaStore : Folks.PersonaStore
                   /* Translators: the parameteter is an error message. */
                   _("Couldn't get address book capabilities: %s"), e2.message);
             }
+          finally
+            {
+              this._prepare_pending = false;
+            }
 
           /* Get the set of capabilities supported by the address book.
            * Specifically, we're looking for do-initial-query, which signifies
@@ -723,6 +735,10 @@ public class Edsf.PersonaStore : Folks.PersonaStore
               throw new PersonaStoreError.INVALID_ARGUMENT (
                   /* Translators: the parameteter is an error message. */
                   _("Couldn't get address book capabilities: %s"), e4.message);
+            }
+          finally
+            {
+              this._prepare_pending = false;
             }
 
           bool got_view = false;
@@ -815,8 +831,13 @@ public class Edsf.PersonaStore : Folks.PersonaStore
                   _("Couldn't get view for address book ‘%s’: %s"),
                   this.id, e3.message);
             }
+          finally
+            {
+              this._prepare_pending = false;
+            }
 
           this._is_prepared = true;
+          this._prepare_pending = false;
           this.notify_property ("is-prepared");
 
           /* If the address book isn't going to do an initial query (i.e.

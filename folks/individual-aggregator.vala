@@ -471,6 +471,12 @@ public class Folks.IndividualAggregator : Object
    *
    * This function is guaranteed to be idempotent (since version 0.3.0).
    *
+   * Concurrent calls to this function from different threads will block until
+   * preparation has completed. However, concurrent calls to this function from
+   * a single thread might not, i.e. the first call will block but subsequent
+   * calls might return before the first one. (Though they will be safe in every
+   * other respect.)
+   *
    * @since 0.1.11
    */
   public async void prepare () throws GLib.Error
@@ -481,13 +487,23 @@ public class Folks.IndividualAggregator : Object
 
       lock (this._is_prepared)
         {
-          if (!this._is_prepared && !this._prepare_pending)
+          if (this._is_prepared || this._prepare_pending)
+            {
+              return;
+            }
+
+          try
             {
               this._prepare_pending = true;
+
               yield this._backend_store.load_backends ();
+
               this._is_prepared = true;
-              this._prepare_pending = false;
               this.notify_property ("is-prepared");
+            }
+          finally
+            {
+              this._prepare_pending = false;
             }
         }
     }

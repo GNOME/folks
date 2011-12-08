@@ -562,7 +562,12 @@ public class Tpf.PersonaStore : Folks.PersonaStore
     {
       lock (this._is_prepared)
         {
-          if (!this._is_prepared && !this._prepare_pending)
+          if (this._is_prepared || this._prepare_pending)
+            {
+              return;
+            }
+
+          try
             {
               this._prepare_pending = true;
 
@@ -629,8 +634,11 @@ public class Tpf.PersonaStore : Folks.PersonaStore
                 }
 
               this._is_prepared = true;
-              this._prepare_pending = false;
               this.notify_property ("is-prepared");
+            }
+          finally
+            {
+              this._prepare_pending = false;
             }
         }
     }

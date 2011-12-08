@@ -33,6 +33,7 @@ extern const string BACKEND_NAME;
 public class Folks.Backends.Tr.Backend : Folks.Backend
 {
   private bool _is_prepared = false;
+  private bool _prepare_pending = false; /* used by unprepare() too */
   private bool _is_quiescent = false;
   private HashMap<string, PersonaStore> _persona_stores;
   private Map<string, PersonaStore> _persona_stores_ro;
@@ -89,8 +90,15 @@ public class Folks.Backends.Tr.Backend : Folks.Backend
     {
       lock (this._is_prepared)
         {
-          if (!this._is_prepared)
+          if (this._is_prepared || this._prepare_pending)
             {
+              return;
+            }
+
+          try
+            {
+              this._prepare_pending = true;
+
               this._add_default_persona_store ();
 
               this._is_prepared = true;
@@ -98,6 +106,10 @@ public class Folks.Backends.Tr.Backend : Folks.Backend
 
               this._is_quiescent = true;
               this.notify_property ("is-quiescent");
+            }
+          finally
+            {
+              this._prepare_pending = false;
             }
         }
     }
@@ -107,19 +119,36 @@ public class Folks.Backends.Tr.Backend : Folks.Backend
    */
   public override async void unprepare () throws GLib.Error
     {
-      foreach (var persona_store in this._persona_stores.values)
+      lock (this._is_prepared)
         {
-          this.persona_store_removed (persona_store);
+          if (!this._is_prepared || this._prepare_pending)
+            {
+              return;
+            }
+
+          try
+            {
+              this._prepare_pending = true;
+
+              foreach (var persona_store in this._persona_stores.values)
+                {
+                 this.persona_store_removed (persona_store);
+                }
+
+              this._persona_stores.clear ();
+              this.notify_property ("persona-stores");
+
+              this._is_quiescent = false;
+              this.notify_property ("is-quiescent");
+
+              this._is_prepared = false;
+              this.notify_property ("is-prepared");
+            }
+          finally
+            {
+              this._prepare_pending = false;
+            }
         }
-
-      this._persona_stores.clear ();
-      this.notify_property ("persona-stores");
-
-      this._is_quiescent = false;
-      this.notify_property ("is-quiescent");
-
-      this._is_prepared = false;
-      this.notify_property ("is-prepared");
     }
 
   /**

@@ -166,6 +166,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
   private HashMap<string, Persona> _personas;
   private Map<string, Persona> _personas_ro;
   private bool _is_prepared = false;
+  private bool _prepare_pending = false;
   private bool _is_quiescent = false;
   private static const int _default_timeout = 100;
   private Resources _resources_object;
@@ -1056,8 +1057,15 @@ public class Trf.PersonaStore : Folks.PersonaStore
     {
       lock (this._is_prepared)
         {
-          if (!this._is_prepared)
+          if (this._is_prepared || this._prepare_pending)
             {
+              return;
+            }
+
+          try
+            {
+              this._prepare_pending = true;
+
               try
                 {
                   this._connection =
@@ -1112,6 +1120,10 @@ public class Trf.PersonaStore : Folks.PersonaStore
                   this.removed ();
                   throw new PersonaStoreError.INVALID_ARGUMENT (e3.message);
                 }
+            }
+          finally
+            {
+              this._prepare_pending = false;
             }
         }
     }
