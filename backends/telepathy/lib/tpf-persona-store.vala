@@ -250,6 +250,9 @@ public class Tpf.PersonaStore : Folks.PersonaStore
               display_name: account.display_name,
               id: account.get_object_path ());
 
+      debug ("Creating new Tpf.PersonaStore %p ('%s') for TpAccount %p.",
+          this, this.id, account);
+
       this._debug = Debug.dup ();
       this._debug.print_status.connect (this._debug_print_status);
 
@@ -261,6 +264,8 @@ public class Tpf.PersonaStore : Folks.PersonaStore
 
   ~PersonaStore ()
     {
+      debug ("Destroying Tpf.PersonaStore %p ('%s').", this, this.id);
+
       this._debug.print_status.disconnect (this._debug_print_status);
       this._debug = null;
       if (this._logger != null)
@@ -480,6 +485,8 @@ public class Tpf.PersonaStore : Folks.PersonaStore
 
   private void _reset ()
     {
+      debug ("Resetting Tpf.PersonaStore %p ('%s')", this, this.id);
+
       /* We do not trust local-xmpp or IRC at all, since Persona UIDs can be
        * faked by just changing hostname/username or nickname. */
       if (account.get_protocol () == "local-xmpp" ||
@@ -832,6 +839,9 @@ public class Tpf.PersonaStore : Folks.PersonaStore
 
   private async void _notify_connection_cb_async () throws GLib.Error
     {
+      debug ("_notify_connection_cb_async() for Tpf.PersonaStore %p ('%s').",
+          this, this.id);
+
       /* Ensure the connection is prepared as necessary. */
       yield this.account.connection.prepare_async (this._connection_features);
 
@@ -855,6 +865,9 @@ public class Tpf.PersonaStore : Folks.PersonaStore
 
   private void _connection_ready_cb (Object s, ParamSpec? p)
     {
+      debug ("_connection_ready_cb() for Tpf.PersonaStore %p ('%s').",
+          this, this.id);
+
       var c = (Connection) s;
       FolksTpLowlevel.connection_connect_to_new_group_channels (c,
           this._new_group_channels_cb);
@@ -991,15 +1004,15 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       /* Only load from the cache if the account is enabled and valid. */
       if (this.account.enabled == false || this.account.valid == false)
         {
-          debug ("Skipping loading cache for Tpf.PersonaStore '%s': " +
-              "enabled: %s, valid: %s.", this.id,
+          debug ("Skipping loading cache for Tpf.PersonaStore %p ('%s'): " +
+              "enabled: %s, valid: %s.", this, this.id,
               this.account.enabled ? "yes" : "no",
               this.account.valid ? "yes" : "no");
 
           return;
         }
 
-      debug ("Loading cache for Tpf.PersonaStore '%s'.", this.id);
+      debug ("Loading cache for Tpf.PersonaStore %p ('%s').", this, this.id);
 
       var cancellable = new Cancellable ();
 
@@ -1051,7 +1064,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
    */
   private async void _store_cache ()
     {
-      debug ("Storing cache for Tpf.PersonaStore '%s'.", this.id);
+      debug ("Storing cache for Tpf.PersonaStore %p ('%s').", this, this.id);
 
       yield this._cache.store_objects (this._persona_set);
     }
@@ -1062,7 +1075,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
    */
   private void _unload_cache ()
     {
-      debug ("Unloading cache for Tpf.PersonaStore '%s'.", this.id);
+      debug ("Unloading cache for Tpf.PersonaStore %p ('%s').", this, this.id);
 
       // If we're in the process of loading from the cache, cancel that
       if (this._load_cache_cancellable != null)
@@ -1201,8 +1214,8 @@ public class Tpf.PersonaStore : Folks.PersonaStore
 
   private void _set_up_new_standard_channel (Channel channel)
     {
-      debug ("Setting up new standard channel '%s'.",
-          channel.get_identifier ());
+      debug ("Setting up new standard channel '%s' for Tpf.PersonaStore " +
+          "%p ('%s').", this, this.id, channel.get_identifier ());
 
       /* hold a ref to the channel here until it's ready, so it doesn't
        * disappear */
@@ -1271,7 +1284,8 @@ public class Tpf.PersonaStore : Folks.PersonaStore
   private void _disconnect_from_standard_channel (Channel channel)
     {
       var name = channel.get_identifier ();
-      debug ("Disconnecting from channel '%s'.", name);
+      debug ("Disconnecting from channel '%s' for Tpf.PersonaStore %p ('%s').",
+          name, this, this.id);
 
       channel.invalidated.disconnect (this._channel_invalidated_cb);
 
@@ -1772,7 +1786,8 @@ public class Tpf.PersonaStore : Folks.PersonaStore
     {
       Channel? channel = null;
 
-      debug ("Adding standard channel '%s' to connection %p", name, conn);
+      debug ("Adding standard channel '%s' to connection %p for " +
+          "Tpf.PersonaStore %p ('%s').", name, conn, this, this.id);
 
       /* FIXME: handle the error GLib.Error from this function */
       try
@@ -1783,7 +1798,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
         }
       catch (GLib.Error e)
         {
-          debug ("Failed to add channel '%s': %s\n", name, e.message);
+          debug ("Failed to add channel '%s': %s", name, e.message);
 
           /* If the Connection doesn't support 'stored' channels we
            * pretend we've received the stored channel members.
@@ -1792,8 +1807,8 @@ public class Tpf.PersonaStore : Folks.PersonaStore
            * implement the Channel.Type.ContactList interface.
            *
            * See: https://bugzilla.gnome.org/show_bug.cgi?id=656184 */
-           this._got_stored_channel_members = true;
-           this._notify_if_is_quiescent ();
+          this._got_stored_channel_members = true;
+          this._notify_if_is_quiescent ();
 
           /* XXX: assuming there's no decent way to recover from this */
 
