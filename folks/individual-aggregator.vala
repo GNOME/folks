@@ -79,7 +79,7 @@ public class Folks.IndividualAggregator : Object
   private HashMap<string, PersonaStore> _stores;
   private unowned PersonaStore? _primary_store = null;
   private HashSet<Backend> _backends;
-  private HashTable<string, Individual> _link_map;
+  private HashMultiMap<string, Individual> _link_map;
   private bool _linking_enabled = true;
   private bool _is_prepared = false;
   private bool _prepare_pending = false;
@@ -288,7 +288,7 @@ public class Folks.IndividualAggregator : Object
       this._stores = new HashMap<string, PersonaStore> ();
       this._individuals = new HashMap<string, Individual> ();
       this._individuals_ro = this._individuals.read_only_view;
-      this._link_map = new HashTable<string, Individual> (str_hash, str_equal);
+      this._link_map = new HashMultiMap<string, Individual> ();
 
       this._backends = new HashSet<Backend> ();
       this._debug = Debug.dup ();
@@ -454,16 +454,21 @@ public class Folks.IndividualAggregator : Object
       debug.unindent ();
 
       debug.print_line (domain, level, "%u entries in the link map:",
-          this._link_map.size ());
+          this._link_map.size);
       debug.indent ();
 
-      var iter = HashTableIter<string, Individual> (this._link_map);
-      string link_key;
-      Individual individual;
-      while (iter.next (out link_key, out individual) == true)
+      foreach (var link_key in this._link_map.get_keys ())
         {
-          debug.print_line (domain, level,
-              "%s → %p", link_key, individual);
+          debug.print_line (domain, level, "%s → {", link_key);
+          debug.indent ();
+
+          foreach (var individual in this._link_map.get (link_key))
+            {
+              debug.print_line (domain, level, "%p", individual);
+            }
+
+          debug.unindent ();
+          debug.print_line (domain, level, "}");
         }
 
       debug.unindent ();
@@ -982,14 +987,19 @@ public class Folks.IndividualAggregator : Object
            * Persona to any existing Individual */
           if (trust_level != PersonaStoreTrust.NONE)
             {
-              Individual? candidate_ind = this._link_map.lookup (persona.iid);
-              if (candidate_ind != null &&
-                  ((!) candidate_ind).trust_level != TrustLevel.NONE &&
-                  !candidate_inds.contains ((!) candidate_ind))
+              var candidate_ind_set = this._link_map.get (persona.iid);
+              if (candidate_ind_set != null)
                 {
-                  debug ("    Found candidate individual '%s' by IID '%s'.",
-                      ((!) candidate_ind).id, persona.iid);
-                  candidate_inds.add ((!) candidate_ind);
+                  foreach (var candidate_ind in candidate_ind_set)
+                    {
+                      if (candidate_ind != null &&
+                          ((!) candidate_ind).trust_level != TrustLevel.NONE &&
+                          candidate_inds.add ((!) candidate_ind))
+                        {
+                          debug ("    Found candidate individual '%s' by " +
+                              "IID '%s'.", ((!) candidate_ind).id, persona.iid);
+                        }
+                    }
                 }
             }
 
@@ -1018,18 +1028,24 @@ public class Folks.IndividualAggregator : Object
                   persona.linkable_property_to_links (prop_name, (l) =>
                     {
                       unowned string prop_linking_value = l;
-                      Individual? candidate_ind =
-                          this._link_map.lookup (prop_linking_value);
+                      var candidate_ind_set =
+                          this._link_map.get (prop_linking_value);
 
-                      if (candidate_ind != null &&
-                          ((!) candidate_ind).trust_level != TrustLevel.NONE &&
-                          !candidate_inds.contains ((!) candidate_ind))
+                      if (candidate_ind_set != null)
                         {
-                          debug ("    Found candidate individual '%s' by " +
-                              "linkable property '%s' = '%s'.",
-                              ((!) candidate_ind).id, prop_name,
-                              prop_linking_value);
-                          candidate_inds.add ((!) candidate_ind);
+                          foreach (var candidate_ind in candidate_ind_set)
+                            {
+                              if (candidate_ind != null &&
+                                  ((!) candidate_ind).trust_level !=
+                                      TrustLevel.NONE &&
+                                  candidate_inds.add ((!) candidate_ind))
+                                {
+                                  debug ("    Found candidate individual '%s'" +
+                                      " by linkable property '%s' = '%s'.",
+                                      ((!) candidate_ind).id, prop_name,
+                                      prop_linking_value);
+                                }
+                            }
                         }
                     });
                 }
@@ -1073,6 +1089,9 @@ public class Folks.IndividualAggregator : Object
 
           foreach (var i in candidate_inds)
             {
+              /* Remove the old individuals from the link map. */
+              this._remove_individual_from_link_map (i);
+
               /* Transitively update the individuals_changes. We have to do this
                * in two stages as we can't modify individuals_changes while
                * iterating over it. */
@@ -1173,7 +1192,7 @@ public class Folks.IndividualAggregator : Object
       /* Add the Persona to the link map. Its trust level will be reflected in
        * final_individual.trust_level, so other Personas won't be linked against
        * it in error if the trust level is NONE. */
-      this._link_map.replace (persona.iid, individual);
+      this._link_map.set (persona.iid, individual);
 
       /* Only allow linking on non-IID properties of the Persona if we fully
        * trust the PersonaStore it came from. */
@@ -1203,7 +1222,7 @@ public class Folks.IndividualAggregator : Object
                   unowned string prop_linking_value = l;
 
                   debug ("            %s", prop_linking_value);
-                  this._link_map.replace (prop_linking_value, individual);
+                  this._link_map.set (prop_linking_value, individual);
                 });
             }
         }
@@ -1219,19 +1238,26 @@ public class Folks.IndividualAggregator : Object
     {
       debug ("Removing Individual '%s' from the link map.", individual.id);
 
-      var iter = HashTableIter<string, Individual> (this._link_map);
-      string link_key;
-      Individual link_individual;
+      /* We have to list the keys to remove and then remove them later, since
+       * we can't modify the link map while we're iterating through it, and
+       * there's no iterator object. FIXME: bgo#675067 */
+      var remove_keys = new string[0];
 
-      while (iter.next (out link_key, out link_individual) == true)
+      foreach (var link_key in this._link_map.get_keys ())
         {
-          if (link_individual == individual)
+          if (this._link_map.get (link_key).contains (individual))
             {
               debug ("    %s → %s (%p)",
-                  link_key, link_individual.id, link_individual);
+                  link_key, individual.id, individual);
 
-              iter.remove ();
+              remove_keys += link_key;
             }
+        }
+
+      /* Actually remove the keys. */
+      foreach (var link_key in remove_keys)
+        {
+          this._link_map.remove (link_key, individual);
         }
     }
 
@@ -1262,7 +1288,7 @@ public class Folks.IndividualAggregator : Object
           /* Find the Individual containing the Persona (if any) and mark them
            * for removal (any other Personas they have which aren't being
            * removed will be re-linked into other Individuals). */
-          Individual? ind = this._link_map.lookup (persona.iid);
+          Individual? ind = persona.individual;
           if (ind != null)
             {
               removed_individuals.add ((!) ind);
@@ -1417,22 +1443,21 @@ public class Folks.IndividualAggregator : Object
       /* Validate the link map. */
       if (this._debug.debug_output_enabled == true)
         {
-          var iter2 = HashTableIter<string, Individual> (this._link_map);
-          string link_key;
-          Individual individual;
-
-          while (iter2.next (out link_key, out individual) == true)
+          foreach (var link_key in this._link_map.get_keys ())
             {
-              if (this._individuals.get (individual.id) != individual)
+              foreach (var individual in this._link_map.get (link_key))
                 {
-                  warning ("Link map contains invalid mapping:\n" +
-                      "    %s → %s (%p)",
-                          link_key, individual.id, individual);
-                  warning ("Individual %s (%p) personas:", individual.id,
-                      individual);
-                  foreach (var p in individual.personas)
+                  if (this._individuals.get (individual.id) != individual)
                     {
-                      warning ("    %s (%p)", p.uid, p);
+                      warning ("Link map contains invalid mapping:\n" +
+                          "    %s → %s (%p)",
+                              link_key, individual.id, individual);
+                      warning ("Individual %s (%p) personas:", individual.id,
+                          individual);
+                      foreach (var p in individual.personas)
+                        {
+                          warning ("    %s (%p)", p.uid, p);
+                        }
                     }
                 }
             }
