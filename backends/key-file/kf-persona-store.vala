@@ -147,7 +147,7 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
    *
    * This must be in GLib key file format.
    *
-   * @since UNRELEASED
+   * @since 0.6.6
    */
   public File file { get; construct; }
 

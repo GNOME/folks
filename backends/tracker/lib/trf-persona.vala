@@ -606,7 +606,7 @@ public class Trf.Persona : Folks.Persona,
   /**
    * ID of the {@link Trf.Persona} in Tracker.
    *
-   * @since UNRELEASED
+   * @since 0.6.6
    */
   public string tracker_id
     {
@@ -621,7 +621,7 @@ public class Trf.Persona : Folks.Persona,
    * code. It's only exposed publicly due to the design of libfolks’ Tracker
    * backend.
    *
-   * @since UNRELEASED
+   * @since 0.6.6
    */
   public Sparql.Cursor? cursor
     {

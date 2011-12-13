@@ -111,7 +111,7 @@ public abstract class Folks.ObjectCache<T> : Object
    * This has to be suitable for use as a directory name; i.e. lower case,
    * hyphen-separated tokens.
    *
-   * @since UNRELEASED
+   * @since 0.6.6
    */
   public string type_id { get; construct; }
 
@@ -121,7 +121,7 @@ public abstract class Folks.ObjectCache<T> : Object
    * This will form the file name of the cache file, but will be escaped
    * beforehand, so can be an arbitrary non-empty string.
    *
-   * @since UNRELEASED
+   * @since 0.6.6
    */
   public string id
     {

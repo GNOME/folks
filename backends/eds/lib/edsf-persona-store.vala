@@ -193,7 +193,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
   /**
    * The EDS {@link E.Source} associated with this persona store.
    *
-   * @since UNRELEASED
+   * @since 0.6.6
    */
   public E.Source source
     {

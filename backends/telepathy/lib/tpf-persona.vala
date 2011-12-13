@@ -1097,7 +1097,7 @@ public class Tpf.Persona : Folks.Persona,
    *
    * @param contact the Telepathy contact of the persona
    * @return the persona associated with the contact, or `null`
-   * @since UNRELEASED
+   * @since 0.6.6
    */
   public static Persona? dup_for_contact (Contact contact)
     {

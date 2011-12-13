@@ -48,7 +48,7 @@ internal class Tpf.PersonaStoreCache : Folks.ObjectCache<Tpf.Persona>
   /**
    * The {@link Tpf.PersonaStore} associated with this cache.
    *
-   * @since UNRELEASED
+   * @since 0.6.6
    */
   public weak PersonaStore store { get; construct; }
 

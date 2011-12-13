@@ -56,7 +56,7 @@ internal class Logger : GLib.Object
    * D-Bus object path of the {@link TelepathyGLib.Account} to watch for
    * favourite contacts.
    *
-   * @since UNRELEASED
+   * @since 0.6.6
    */
   public string account_path { get; construct; }
 

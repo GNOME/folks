@@ -152,7 +152,7 @@ public class Swf.PersonaStore : Folks.PersonaStore
    * The libsocialweb {@link SocialWebClient.ClientService} associated with the
    * persona store.
    *
-   * @since UNRELEASED
+   * @since 0.6.6
    */
   public ClientService service { get; construct; }
 

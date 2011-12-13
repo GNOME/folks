@@ -2431,7 +2431,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
    * {@link Tpf.PersonaStore.dup_for_account} to add stores.
    *
    * @return map from {@link PersonaStore.id} to {@link PersonaStore}
-   * @since UNRELEASED
+   * @since 0.6.6
    */
   public static unowned Map<string, PersonaStore> list_persona_stores ()
     {
@@ -2521,7 +2521,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
    *
    * @param account the Telepathy account of the persona store
    * @return the persona store associated with the account
-   * @since UNRELEASED
+   * @since 0.6.6
    */
   public static PersonaStore dup_for_account (Account account)
     {
