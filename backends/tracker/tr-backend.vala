@@ -172,6 +172,6 @@ public class Folks.Backends.Tr.Backend : Folks.Backend
     {
       store.removed.disconnect (this._store_removed_cb);
       this.persona_store_removed (store);
-      this.persona_stores.unset (store.id);
+      this._persona_stores.unset (store.id);
     }
 }
