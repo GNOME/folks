@@ -368,7 +368,7 @@ private class Folks.Inspect.Utils
                 {
                   output_string += ", ";
                 }
-              output_string += note.uid;
+              output_string += note.id;
               first = false;
             }
             output_string += " }";
