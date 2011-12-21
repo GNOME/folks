@@ -941,8 +941,14 @@ public class Edsf.Persona : Folks.Persona,
           if (attr.get_name () != "X-ROLES")
             continue;
 
+          var val = attr.get_value ();
+          if (val == null || val == "")
+             {
+              continue;
+            }
+
           var role = new Role ("", "");
-          role.role = attr.get_value ();
+          role.role = val;
           var role_fd = new RoleFieldDetails (role);
 
           foreach (unowned E.VCardAttributeParam param in
@@ -1046,8 +1052,10 @@ public class Edsf.Persona : Folks.Persona,
               var service_name = service.get_name ().down ();
               foreach (var service_id in service.get_values ())
                 {
-                  if (service_id == null)
-                    continue;
+                  if (service_id == null || service_id == "")
+                    {
+                      continue;
+                    }
 
                   new_services.set (service_name,
                       new WebServiceFieldDetails (service_id));
@@ -1072,7 +1080,13 @@ public class Edsf.Persona : Folks.Persona,
       var attrs = this.contact.get_attributes (E.ContactField.EMAIL);
       foreach (var attr in attrs)
         {
-          var email_fd = new EmailFieldDetails (attr.get_value ());
+          var val = attr.get_value ();
+          if (val == null || val == "")
+            {
+              continue;
+            }
+
+          var email_fd = new EmailFieldDetails (val);
           this._update_params (email_fd, attr);
           new_email_addresses.add (email_fd);
         }
@@ -1261,7 +1275,13 @@ public class Edsf.Persona : Folks.Persona,
         {
           if (attr.get_name () == "X-URIS")
             {
-              var url_fd = new UrlFieldDetails (attr.get_value ());
+              var val = attr.get_value ();
+              if (val == null || val == "")
+                {
+                  continue;
+                }
+
+              var url_fd = new UrlFieldDetails (val);
               this._update_params (url_fd, attr);
               new_urls.add (url_fd);
             }
@@ -1291,6 +1311,11 @@ public class Edsf.Persona : Folks.Persona,
               try
                 {
                   var addr = attr.get_value ();
+                  if (addr == null || addr == "")
+                    {
+                      continue;
+                    }
+
                   string normalised_addr =
                     (owned) ImDetails.normalise_im_address (addr, im_proto);
                   var im_fd = new ImFieldDetails (normalised_addr);
@@ -1450,7 +1475,13 @@ public class Edsf.Persona : Folks.Persona,
       var attrs = this.contact.get_attributes (E.ContactField.TEL);
       foreach (var attr in attrs)
         {
-          var phone_fd = new PhoneFieldDetails (attr.get_value ());
+          var val = attr.get_value ();
+          if (val == null || val == "")
+            {
+              continue;
+            }
+
+          var phone_fd = new PhoneFieldDetails (val);
           this._update_params (phone_fd, attr);
           new_phone_numbers.add (phone_fd);
         }
@@ -1562,7 +1593,10 @@ public class Edsf.Persona : Folks.Persona,
 
           foreach (var local_id in ids_v)
             {
-              new_local_ids.add (local_id);
+              if (local_id != null && local_id != "")
+                {
+                  new_local_ids.add (local_id);
+                }
             }
         }
 
