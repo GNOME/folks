@@ -254,10 +254,30 @@ public class Folks.PotentialMatch : Object
 
       foreach (var fd_a in set_a)
         {
+          string[] email_split_a = fd_a.value.split ("@");
+
+          /* Sanity check for valid e-mail addresses. */
+          if (email_split_a.length < 2)
+            {
+              warning ("Invalid e-mail address when looking for potential " +
+                  "match: %s", fd_a.value);
+              continue;
+            }
+
+          string[] tokens_a =
+            email_split_a[0].split_set (this._SEPARATORS);
+
           foreach (var fd_b in set_b)
             {
-              string[] email_split_a = fd_a.value.split ("@");
               string[] email_split_b = fd_b.value.split ("@");
+
+              /* Sanity check for valid e-mail addresses. */
+              if (email_split_b.length < 2)
+                {
+                  warning ("Invalid e-mail address when looking for " +
+                      "potential match: %s", fd_b.value);
+                  continue;
+                }
 
               if (fd_a.value == fd_b.value)
                 {
@@ -277,8 +297,6 @@ public class Folks.PotentialMatch : Object
                 }
               else
                 {
-                  string[] tokens_a =
-                    email_split_a[0].split_set (this._SEPARATORS);
                   string[] tokens_b =
                     email_split_b[0].split_set (this._SEPARATORS);
 
