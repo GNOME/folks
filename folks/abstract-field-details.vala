@@ -271,8 +271,8 @@ public abstract class Folks.AbstractFieldDetails<T> : Object
   public virtual bool equal (AbstractFieldDetails<T> that)
     {
       return (this.get_type () == that.get_type ()) &&
-        this.values_equal<T> (that) &&
-        this.parameters_equal<T> (that);
+        this.values_equal (that) &&
+        this.parameters_equal (that);
     }
 
   /**

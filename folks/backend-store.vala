@@ -48,7 +48,7 @@ public class Folks.BackendStore : Object {
   private File _config_file;
   private GLib.KeyFile _backends_key_file;
   private HashMap<string,unowned Module> _modules;
-  private static weak BackendStore _instance;
+  private static weak BackendStore? _instance = null;
   private bool _is_prepared = false;
   private Debug _debug;
 
@@ -116,16 +116,16 @@ public class Folks.BackendStore : Object {
    */
   public static BackendStore dup ()
     {
-      if (_instance == null)
+      if (BackendStore._instance == null)
         {
           /* use an intermediate variable to force a strong reference */
           var new_instance = new BackendStore ();
-          _instance = new_instance;
+          BackendStore._instance = new_instance;
 
           return new_instance;
         }
 
-      return _instance;
+      return (!) BackendStore._instance;
     }
 
   private BackendStore ()
@@ -168,10 +168,9 @@ public class Folks.BackendStore : Object {
 
       /* Disconnect from the debug handler */
       this._debug.print_status.disconnect (this._debug_print_status);
-      this._debug = null;
 
       /* manually clear the singleton instance */
-      _instance = null;
+      BackendStore._instance = null;
     }
 
   private void _debug_print_status (Debug debug)
@@ -201,7 +200,7 @@ public class Folks.BackendStore : Object {
 
           foreach (var persona_store in backend.persona_stores.values)
             {
-              string trust_level = null;
+              string? trust_level = null;
 
               switch (persona_store.trust_level)
                 {
@@ -284,8 +283,10 @@ public class Folks.BackendStore : Object {
           yield this._backend_unload_if_needed (backend_existing);
         }
 
-      var path = Environment.get_variable ("FOLKS_BACKEND_PATH");
-      if (path == null)
+      string? _path = Environment.get_variable ("FOLKS_BACKEND_PATH");
+      string path;
+
+      if (_path == null)
         {
           path = BuildConf.BACKEND_DIR;
 
@@ -294,16 +295,17 @@ public class Folks.BackendStore : Object {
         }
       else
         {
+          path = (!) _path;
+
           debug ("Using environment variable FOLKS_BACKEND_PATH = " +
               "'%s' to look for backends", path);
         }
 
-      var modules = new HashMap<string, File?> ();
+      var modules = new HashMap<string, File> ();
       var path_split = path.split (":");
       foreach (unowned string subpath in path_split)
         {
           var file = File.new_for_path (subpath);
-          assert (file != null);
 
           bool is_file;
           bool is_dir;
@@ -315,8 +317,13 @@ public class Folks.BackendStore : Object {
           else if (is_dir)
             {
               var cur_modules = yield this._get_modules_from_dir (file);
-              foreach (var entry in cur_modules.entries)
-                modules.set (entry.key, entry.value);
+              if (cur_modules != null)
+                {
+                  foreach (var entry in ((!) cur_modules).entries)
+                    {
+                      modules.set (entry.key, entry.value);
+                    }
+                }
             }
           else
             {
@@ -369,12 +376,12 @@ public class Folks.BackendStore : Object {
 
       if (!this._backend_is_enabled (backend.name))
         {
-          var backend_existing = this._backend_hash.get (backend.name);
+          Backend? backend_existing = this._backend_hash.get (backend.name);
           if (backend_existing != null)
             {
               try
                 {
-                  yield backend_existing.unprepare ();
+                  yield ((!) backend_existing).unprepare ();
                 }
               catch (GLib.Error e)
                 {
@@ -382,7 +389,7 @@ public class Folks.BackendStore : Object {
                       e.message);
                 }
 
-              this._prepared_backends.unset (backend_existing.name);
+              this._prepared_backends.unset (((!) backend_existing).name);
 
               unloaded = true;
             }
@@ -399,11 +406,11 @@ public class Folks.BackendStore : Object {
   public void add_backend (Backend backend)
     {
       /* Purge any other backend with the same name; re-add if enabled */
-      var backend_existing = this._backend_hash.get (backend.name);
+      Backend? backend_existing = this._backend_hash.get (backend.name);
       if (backend_existing != null && backend_existing != backend)
         {
-          backend_existing.unprepare ();
-          this._prepared_backends.unset (backend_existing.name);
+          ((!) backend_existing).unprepare ();
+          this._prepared_backends.unset (((!) backend_existing).name);
         }
 
       this._debug._register_domain (backend.name);
@@ -566,17 +573,26 @@ public class Folks.BackendStore : Object {
            * aliases */
           var is_symlink = info.get_is_symlink ();
 
-          string mime = ContentType.get_mime_type (content_type);
+          string? mime = ContentType.get_mime_type (content_type);
 
           if (file_type == FileType.DIRECTORY)
             {
               var modules = yield this._get_modules_from_dir (file);
-              foreach (var entry in modules.entries)
-                modules_final.set (entry.key, entry.value);
+              if (modules != null)
+                {
+                  foreach (var entry in ((!) modules).entries)
+                    {
+                      modules_final.set (entry.key, entry.value);
+                    }
+                }
             }
           else if (mime == "application/x-sharedlib" && !is_symlink)
             {
-              modules_final.set (file.get_path (), file);
+              var path = file.get_path ();
+              if (path != null)
+                {
+                  modules_final.set ((!) path, file);
+                }
             }
           else if (mime == null)
             {
@@ -595,13 +611,18 @@ public class Folks.BackendStore : Object {
 
   private void _load_module_from_file (File file)
     {
-      var file_path = file.get_path ();
+      var _file_path = file.get_path ();
+      if (_file_path == null)
+        {
+          return;
+        }
+      var file_path = (!) _file_path;
 
       if (this._modules.has_key (file_path))
         return;
 
-      Module module = Module.open (file_path, ModuleFlags.BIND_LOCAL);
-      if (module == null)
+      var _module = Module.open (file_path, ModuleFlags.BIND_LOCAL);
+      if (_module == null)
         {
           /* Translators: the first parameter is a filename and the second is an
            * error message. */
@@ -610,6 +631,7 @@ public class Folks.BackendStore : Object {
 
           return;
         }
+      unowned Module module = (!) _module;
 
       void* function;
 
@@ -681,7 +703,7 @@ public class Folks.BackendStore : Object {
   private async void _load_disabled_backend_names ()
     {
       File file;
-      unowned string path = Environment.get_variable (
+      unowned string? path = Environment.get_variable (
           "FOLKS_BACKEND_STORE_KEY_FILE_PATH");
       if (path == null)
         {
@@ -695,10 +717,10 @@ public class Folks.BackendStore : Object {
         }
       else
         {
-          file = File.new_for_path (path);
+          file = File.new_for_path ((!) path);
           debug ("Using environment variable " +
               "FOLKS_BACKEND_STORE_KEY_FILE_PATH = '%s' to load the backends " +
-              "key file.", path);
+              "key file.", (!) path);
         }
 
       this._config_file = file;

@@ -48,7 +48,8 @@ public class Folks.Debug : Object
     KEY_FILE_BACKEND = 1 << 2
   }
 
-  private static weak Debug _instance; /* needs to be locked when accessed */
+  /* Needs to be locked when accessed: */
+  private static weak Debug? _instance = null;
   private HashSet<string> _domains; /* needs to be locked when accessed */
   private bool _all = false; /* needs _domains to be locked when accessed */
 
@@ -196,13 +197,18 @@ public class Folks.Debug : Object
     {
       lock (Debug._instance)
         {
-          var retval = Debug._instance;
+          Debug? _retval = Debug._instance;
+          Debug retval;
 
-          if (retval == null)
+          if (_retval == null)
             {
               /* use an intermediate variable to force a strong reference */
               retval = new Debug ();
               Debug._instance = retval;
+            }
+          else
+            {
+              retval = (!) _retval;
             }
 
           return retval;
@@ -234,7 +240,7 @@ public class Folks.Debug : Object
 
           if (debug_flags != null && debug_flags != "")
             {
-              var domains_split = debug_flags.split (",");
+              var domains_split = ((!) debug_flags).split (",");
               foreach (var domain in domains_split)
                 {
                   var domain_lower = domain.down ();
@@ -283,7 +289,7 @@ public class Folks.Debug : Object
     }
 
   private void _set_handler (
-      string? domain,
+      string domain,
       LogLevelFlags flags,
       LogFunc log_func)
     {
@@ -429,7 +435,7 @@ public class Folks.Debug : Object
           return "(null)";
         }
 
-      return input;
+      return (!) input;
     }
 
   struct KeyValuePair
@@ -465,11 +471,12 @@ public class Folks.Debug : Object
        * purposes */
       while (true)
         {
-          string? key = valist.arg ();
-          if (key == null)
+          string? _key = valist.arg ();
+          if (_key == null)
             {
               break;
             }
+          var key = (!) _key;
 
           string? val = valist.arg ();
 

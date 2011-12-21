@@ -64,7 +64,7 @@ public class Folks.WebServiceFieldDetails : AbstractFieldDetails<string>
    */
   public override bool equal (AbstractFieldDetails<string> that)
     {
-      return base.equal<string> (that);
+      return base.equal (that);
     }
 
   /**

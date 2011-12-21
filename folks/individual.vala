@@ -159,7 +159,7 @@ public class Folks.Individual : Object,
    */
   public async void change_avatar (LoadableIcon? avatar) throws PropertyError
     {
-      if ((this._avatar != null && this._avatar.equal (avatar)) ||
+      if ((this._avatar != null && ((!) this._avatar).equal (avatar)) ||
           (this._avatar == null && avatar == null))
         {
           return;
@@ -174,8 +174,14 @@ public class Folks.Individual : Object,
        * "avatar" property as writeable. */
       foreach (var p in this._persona_set)
         {
-          var a = p as AvatarDetails;
-          if (a != null && "avatar" in p.writeable_properties)
+          var _a = p as AvatarDetails;
+          if (_a == null)
+            {
+              continue;
+            }
+          var a = (!) _a;
+
+          if ("avatar" in p.writeable_properties)
             {
               try
                 {
@@ -310,8 +316,14 @@ public class Folks.Individual : Object,
        * as a writeable property. */
       foreach (var p in this._persona_set)
         {
-          var a = p as AliasDetails;
-          if (a != null && "alias" in p.writeable_properties)
+          var _a = p as AliasDetails;
+          if (_a == null)
+            {
+              continue;
+            }
+          var a = (!) _a;
+
+          if ("alias" in p.writeable_properties)
             {
               try
                 {
@@ -406,8 +418,14 @@ public class Folks.Individual : Object,
        * as a writeable property. */
       foreach (var p in this._persona_set)
         {
-          var n = p as NameDetails;
-          if (n != null && "nickname" in p.writeable_properties)
+          var _n = p as NameDetails;
+          if (_n == null)
+            {
+              continue;
+            }
+          var n = (!) _n;
+
+          if ("nickname" in p.writeable_properties)
             {
               try
                 {
@@ -621,8 +639,14 @@ public class Folks.Individual : Object,
        * is one property which is harmless to propagate. */
       foreach (var p in this._persona_set)
         {
-          var a = p as FavouriteDetails;
-          if (a != null && "is-favourite" in p.writeable_properties)
+          var _a = p as FavouriteDetails;
+          if (_a == null)
+            {
+              continue;
+            }
+          var a = (!) _a;
+
+          if ("is-favourite" in p.writeable_properties)
             {
               try
                 {
@@ -683,8 +707,14 @@ public class Folks.Individual : Object,
        * writeable property. */
       foreach (var p in this._persona_set)
         {
-          var g = p as GroupDetails;
-          if (g != null && "groups" in p.writeable_properties)
+          var _g = p as GroupDetails;
+          if (_g == null)
+            {
+              continue;
+            }
+          var g = (!) _g;
+
+          if ("groups" in p.writeable_properties)
             {
               try
                 {
@@ -923,7 +953,7 @@ public class Folks.Individual : Object,
   construct
     {
       debug ("Creating new Individual with %u Personas: %p",
-          (this.personas != null ? this.personas.size : 0), this);
+          this._persona_set.size, this);
 
       this._persona_set_ro = this._persona_set.read_only_view;
       this._urls_ro = this._urls.read_only_view;
@@ -950,8 +980,8 @@ public class Folks.Individual : Object,
       var _added = added;
       var _removed = removed;
 
-      if ((added == null || added.size == 0) &&
-          (removed == null || removed.size == 0))
+      if ((added == null || ((!) added).size == 0) &&
+          (removed == null || ((!) removed).size == 0))
         {
           /* Emitting it with no added or removed personas is pointless */
           return;
@@ -965,7 +995,9 @@ public class Folks.Individual : Object,
           _removed = new HashSet<Persona> ();
         }
 
-      this.personas_changed (_added.read_only_view, _removed.read_only_view);
+      // We've now guaranteed that both _added and _removed are non-null.
+      this.personas_changed (((!) _added).read_only_view,
+          ((!) _removed).read_only_view);
     }
 
   private void _store_removed_cb (PersonaStore store)
@@ -1136,7 +1168,7 @@ public class Folks.Individual : Object,
           if (p.get_type ().is_a (interface_type))
             {
               if (candidate_p == null ||
-                  primary_compare_func (p, candidate_p) > 0)
+                  primary_compare_func (p, (!) candidate_p) > 0)
                 {
                   candidate_p = p;
                 }
@@ -1205,11 +1237,11 @@ public class Folks.Individual : Object,
     {
       this._update_single_valued_property (typeof (PresenceDetails), (p) =>
         {
-          return (p as PresenceDetails).presence_type != PresenceType.UNSET;
+          return ((PresenceDetails) p).presence_type != PresenceType.UNSET;
         }, (a, b) =>
         {
-          var a_presence = (a as PresenceDetails).presence_type;
-          var b_presence = (b as PresenceDetails).presence_type;
+          var a_presence = ((PresenceDetails) a).presence_type;
+          var b_presence = ((PresenceDetails) b).presence_type;
 
           return PresenceDetails.typecmp (a_presence, b_presence);
         }, "presence", (p) =>
@@ -1220,9 +1252,9 @@ public class Folks.Individual : Object,
 
           if (p != null)
             {
-              presence_type = (p as PresenceDetails).presence_type;
-              presence_message = (p as PresenceDetails).presence_message;
-              presence_status = (p as PresenceDetails).presence_status;
+              presence_type = ((PresenceDetails) p).presence_type;
+              presence_message = ((PresenceDetails) p).presence_message;
+              presence_status = ((PresenceDetails) p).presence_status;
             }
 
           /* Only notify if any of the values have changed. */
@@ -1246,8 +1278,8 @@ public class Folks.Individual : Object,
           return true;
         }, (a, b) =>
         {
-          var a_is_favourite = (a as FavouriteDetails).is_favourite;
-          var b_is_favourite = (b as FavouriteDetails).is_favourite;
+          var a_is_favourite = ((FavouriteDetails) a).is_favourite;
+          var b_is_favourite = ((FavouriteDetails) b).is_favourite;
 
           return ((a_is_favourite == true) ? 1 : 0) -
                  ((b_is_favourite == true) ? 1 : 0);
@@ -1257,7 +1289,7 @@ public class Folks.Individual : Object,
 
           if (p != null)
             {
-              favourite = (p as FavouriteDetails).is_favourite;
+              favourite = ((FavouriteDetails) p).is_favourite;
             }
 
           /* Only notify if the value has changed. We have to set the private
@@ -1275,14 +1307,14 @@ public class Folks.Individual : Object,
     {
       this._update_single_valued_property (typeof (AliasDetails), (p) =>
         {
-          var alias = (p as AliasDetails).alias;
+          var alias = ((AliasDetails) p).alias;
           assert (alias != null);
 
           return (alias.strip () != ""); /* empty aliases are unset */
         }, (a, b) =>
         {
-          var a_alias = (a as AliasDetails).alias;
-          var b_alias = (b as AliasDetails).alias;
+          var a_alias = ((AliasDetails) a).alias;
+          var b_alias = ((AliasDetails) b).alias;
 
           assert (a_alias != null);
           assert (b_alias != null);
@@ -1305,7 +1337,7 @@ public class Folks.Individual : Object,
 
           if (p != null)
             {
-              alias = (p as AliasDetails).alias.strip ();
+              alias = ((AliasDetails) p).alias.strip ();
             }
 
           /* Only notify if the value has changed. We have to set the private
@@ -1324,7 +1356,7 @@ public class Folks.Individual : Object,
     {
       this._update_single_valued_property (typeof (AvatarDetails), (p) =>
         {
-          return (p as AvatarDetails).avatar != null;
+          return ((AvatarDetails) p).avatar != null;
         }, (a, b) =>
         {
           /* We can't compare two set avatars efficiently. See: bgo#652721. */
@@ -1335,13 +1367,13 @@ public class Folks.Individual : Object,
 
           if (p != null)
             {
-              avatar = (p as AvatarDetails).avatar;
+              avatar = ((AvatarDetails) p).avatar;
             }
 
           /* only notify if the value has changed */
           if ((this._avatar == null && avatar != null) ||
               (this._avatar != null &&
-               (avatar == null || !this._avatar.equal (avatar))))
+               (avatar == null || !((!) this._avatar).equal (avatar))))
             {
               this._avatar = avatar;
               this.notify_property ("avatar");
@@ -1456,8 +1488,8 @@ public class Folks.Individual : Object,
     {
       this._update_single_valued_property (typeof (NameDetails), (p) =>
         {
-          var name = (p as NameDetails).structured_name;
-          return (name != null && !name.is_empty ());
+          var name = ((NameDetails) p).structured_name;
+          return (name != null && !((!) name).is_empty ());
         }, (a, b) =>
         {
           /* Can't compare two set names. */
@@ -1468,9 +1500,9 @@ public class Folks.Individual : Object,
 
           if (p != null)
             {
-              name = (p as NameDetails).structured_name;
+              name = ((NameDetails) p).structured_name;
 
-              if (name != null && name.is_empty ())
+              if (name != null && ((!) name).is_empty ())
                 {
                   name = null;
                 }
@@ -1478,7 +1510,7 @@ public class Folks.Individual : Object,
 
           if ((this._structured_name == null && name != null) ||
               (this._structured_name != null &&
-               (name == null || !this._structured_name.equal (name))))
+               (name == null || !((!) this._structured_name).equal ((!) name))))
             {
               this._structured_name = name;
               this.notify_property ("structured-name");
@@ -1490,7 +1522,7 @@ public class Folks.Individual : Object,
     {
       this._update_single_valued_property (typeof (NameDetails), (p) =>
         {
-          var name = (p as NameDetails).full_name;
+          var name = ((NameDetails) p).full_name;
           assert (name != null);
 
           return (name.strip () != ""); /* empty names are unset */
@@ -1504,7 +1536,7 @@ public class Folks.Individual : Object,
 
           if (p != null)
             {
-              new_full_name = (p as NameDetails).full_name.strip ();
+              new_full_name = ((NameDetails) p).full_name.strip ();
             }
 
           if (new_full_name != this._full_name)
@@ -1519,7 +1551,7 @@ public class Folks.Individual : Object,
     {
       this._update_single_valued_property (typeof (NameDetails), (p) =>
         {
-          var nickname = (p as NameDetails).nickname;
+          var nickname = ((NameDetails) p).nickname;
           assert (nickname != null);
 
           return (nickname.strip () != ""); /* empty names are unset */
@@ -1533,7 +1565,7 @@ public class Folks.Individual : Object,
 
           if (p != null)
             {
-              new_nickname = (p as NameDetails).nickname.strip ();
+              new_nickname = ((NameDetails) p).nickname.strip ();
             }
 
           if (new_nickname != this._nickname)
@@ -1597,7 +1629,7 @@ public class Folks.Individual : Object,
            * doesn't contain this persona). In this case, we need to set the
            * persona's individual to null. */
           if (replacement_individual != null &&
-              persona in replacement_individual.personas)
+              persona in ((!) replacement_individual).personas)
             {
               persona.individual = replacement_individual;
             }
@@ -1612,7 +1644,7 @@ public class Folks.Individual : Object,
     {
       this._update_single_valued_property (typeof (GenderDetails), (p) =>
         {
-          return (p as GenderDetails).gender != Gender.UNSPECIFIED;
+          return ((GenderDetails) p).gender != Gender.UNSPECIFIED;
         }, (a, b) =>
         {
           /* It would be sexist to rank one gender over another.
@@ -1625,7 +1657,7 @@ public class Folks.Individual : Object,
 
           if (p != null)
             {
-              new_gender = (p as GenderDetails).gender;
+              new_gender = ((GenderDetails) p).gender;
             }
 
           if (new_gender != this.gender)
@@ -1650,11 +1682,8 @@ public class Folks.Individual : Object,
           var url_details = persona as UrlDetails;
           if (url_details != null)
             {
-              foreach (var url_fd in url_details.urls)
+              foreach (var url_fd in ((!) url_details).urls)
                 {
-                  if (url_fd.value == null)
-                    continue;
-
                   var existing = urls_set.get (url_fd.value);
                   if (existing != null)
                     existing.extend_parameters (url_fd.parameters);
@@ -1687,11 +1716,8 @@ public class Folks.Individual : Object,
           var phone_details = persona as PhoneDetails;
           if (phone_details != null)
             {
-              foreach (var phone_fd in phone_details.phone_numbers)
+              foreach (var phone_fd in ((!) phone_details).phone_numbers)
                 {
-                  if (phone_fd.value == null)
-                    continue;
-
                   var existing = phone_numbers_set.get (phone_fd.value);
                   if (existing != null)
                     existing.extend_parameters (phone_fd.parameters);
@@ -1723,11 +1749,8 @@ public class Folks.Individual : Object,
           var email_details = persona as EmailDetails;
           if (email_details != null)
             {
-              foreach (var email_fd in email_details.email_addresses)
+              foreach (var email_fd in ((!) email_details).email_addresses)
                 {
-                  if (email_fd.value == null)
-                    continue;
-
                   var existing = emails_set.get (email_fd.value);
                   if (existing != null)
                     existing.extend_parameters (email_fd.parameters);
@@ -1754,7 +1777,7 @@ public class Folks.Individual : Object,
           var role_details = persona as RoleDetails;
           if (role_details != null)
             {
-              foreach (var role_fd in role_details.roles)
+              foreach (var role_fd in ((!) role_details).roles)
                 {
                   this._roles.add (role_fd);
                 }
@@ -1773,7 +1796,7 @@ public class Folks.Individual : Object,
           var local_ids_details = persona as LocalIdDetails;
           if (local_ids_details != null)
             {
-              foreach (var id in local_ids_details.local_ids)
+              foreach (var id in ((!) local_ids_details).local_ids)
                 {
                   this._local_ids.add (id);
                 }
@@ -1793,7 +1816,7 @@ public class Folks.Individual : Object,
           var address_details = persona as PostalAddressDetails;
           if (address_details != null)
             {
-              foreach (var pafd in address_details.postal_addresses)
+              foreach (var pafd in ((!) address_details).postal_addresses)
                 this._postal_addresses.add (pafd);
             }
         }
@@ -1805,14 +1828,14 @@ public class Folks.Individual : Object,
     {
       this._update_single_valued_property (typeof (BirthdayDetails), (p) =>
         {
-          var details = (p as BirthdayDetails);
+          var details = ((BirthdayDetails) p);
           return details.birthday != null && details.calendar_event_id != null;
         }, (a, b) =>
         {
-          var a_birthday = (a as BirthdayDetails).birthday;
-          var b_birthday = (b as BirthdayDetails).birthday;
-          var a_event_id = (a as BirthdayDetails).calendar_event_id;
-          var b_event_id = (b as BirthdayDetails).calendar_event_id;
+          var a_birthday = ((BirthdayDetails) a).birthday;
+          var b_birthday = ((BirthdayDetails) b).birthday;
+          var a_event_id = ((BirthdayDetails) a).calendar_event_id;
+          var b_event_id = ((BirthdayDetails) b).calendar_event_id;
 
           var a_birthday_is_set = (a_birthday != null) ? 1 : 0;
           var b_birthday_is_set = (b_birthday != null) ? 1 : 0;
@@ -1833,13 +1856,13 @@ public class Folks.Individual : Object,
 
           if (p != null)
             {
-              bday = (p as BirthdayDetails).birthday;
-              calendar_event_id = (p as BirthdayDetails).calendar_event_id;
+              bday = ((BirthdayDetails) p).birthday;
+              calendar_event_id = ((BirthdayDetails) p).calendar_event_id;
             }
 
           if ((this._birthday == null && bday != null) ||
               (this._birthday != null &&
-               (bday == null || !this._birthday.equal (bday))) ||
+               (bday == null || !((!) this._birthday).equal ((!) bday))) ||
               (this._calendar_event_id != calendar_event_id))
             {
               this._birthday = bday;
@@ -1862,7 +1885,7 @@ public class Folks.Individual : Object,
           var note_details = persona as NoteDetails;
           if (note_details != null)
             {
-              foreach (var n in note_details.notes)
+              foreach (var n in ((!) note_details).notes)
                 {
                   this._notes.add (n);
                 }
@@ -1884,7 +1907,7 @@ public class Folks.Individual : Object,
        * assume it's an empty set. */
       if (personas != null)
         {
-          foreach (var p in personas)
+          foreach (var p in (!) personas)
             {
               if (!this._persona_set.contains (p))
                 {
@@ -1922,7 +1945,7 @@ public class Folks.Individual : Object,
         {
           var p = iter.get ();
 
-          if (personas == null || !personas.contains (p))
+          if (personas == null || !((!) personas).contains (p))
             {
               /* Keep track of how many Personas are users */
               if (p.is_user)
@@ -1992,27 +2015,36 @@ public class Folks.Individual : Object,
 
           foreach (var persona in this._persona_set)
             {
-              if (chosen_persona == null ||
-                  (chosen_persona.store.is_primary_store == false &&
+              if (chosen_persona == null)
+                {
+                  chosen_persona = persona;
+                  continue;
+                }
+
+              var _chosen_persona = (!) chosen_persona;
+
+              if ((_chosen_persona.store.is_primary_store == false &&
                       persona.store.is_primary_store == true) ||
-                  (chosen_persona.store.is_primary_store ==
+                  (_chosen_persona.store.is_primary_store ==
                           persona.store.is_primary_store &&
-                      chosen_persona.store.trust_level >
+                      _chosen_persona.store.trust_level >
                           persona.store.trust_level) ||
-                  (chosen_persona.store.is_primary_store ==
+                  (_chosen_persona.store.is_primary_store ==
                           persona.store.is_primary_store &&
-                      chosen_persona.store.trust_level ==
+                      _chosen_persona.store.trust_level ==
                           persona.store.trust_level &&
-                      chosen_persona.store.id > persona.store.id)
+                      _chosen_persona.store.id > persona.store.id)
                  )
                {
                  chosen_persona = persona;
                }
             }
 
-          // Hash the chosen persona's UID
+          /* Hash the chosen persona's UID. We can guarantee chosen_persona is
+           * non-null here because it's at least set to the first element of
+           * this._persona_set, which we've checked is non-empty. */
           this.id = Checksum.compute_for_string (ChecksumType.SHA1,
-              chosen_persona.uid);
+              ((!) chosen_persona).uid);
         }
 
       /* Update our aggregated fields and notify the changes */

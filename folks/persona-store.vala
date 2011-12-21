@@ -366,8 +366,8 @@ public abstract class Folks.PersonaStore : Object
       var _added = added;
       var _removed = removed;
 
-      if ((added == null || added.size == 0) &&
-          (removed == null || removed.size == 0))
+      if ((added == null || ((!) added).size == 0) &&
+          (removed == null || ((!) removed).size == 0))
         {
           /* Don't bother signalling if nothing's changed */
           return;
@@ -381,8 +381,9 @@ public abstract class Folks.PersonaStore : Object
           _removed = new HashSet<Persona> ();
         }
 
-      this.personas_changed (_added.read_only_view, _removed.read_only_view,
-          message, actor, reason);
+      // We've now guaranteed that both _added and _removed are non-null.
+      this.personas_changed (((!) _added).read_only_view,
+          ((!) _removed).read_only_view, message, actor, reason);
     }
 
   /**

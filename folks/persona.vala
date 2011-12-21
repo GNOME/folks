@@ -61,7 +61,7 @@ public errordomain Folks.PropertyError
  */
 public abstract class Folks.Persona : Object
 {
-  private weak Individual _individual;
+  private weak Individual? _individual;
 
   /**
    * The internal ID used to represent the Persona for linking.
@@ -151,14 +151,14 @@ public abstract class Folks.Persona : Object
       get
         {
           assert (this._individual == null ||
-              this._individual.personas.contains (this));
+              ((!) this._individual).personas.contains (this));
 
           return this._individual;
         }
 
       internal set
         {
-          assert (value == null || value.personas.contains (this));
+          assert (value == null || ((!) value).personas.contains (this));
 
           this._individual = value;
         }

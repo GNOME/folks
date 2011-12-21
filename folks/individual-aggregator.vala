@@ -185,7 +185,7 @@ public class Folks.IndividualAggregator : Object
    *
    * @since 0.3.0
    */
-  public Individual user { get; private set; }
+  public Individual? user { get; private set; }
 
   /**
    * Emitted when one or more {@link Individual}s are added to or removed from
@@ -303,7 +303,7 @@ public class Folks.IndividualAggregator : Object
       if (store_config_ids != null)
         {
           debug ("Setting primary store IDs from environment variable.");
-          this._configure_primary_store (store_config_ids);
+          this._configure_primary_store ((!) store_config_ids);
         }
       else
         {
@@ -325,8 +325,13 @@ public class Folks.IndividualAggregator : Object
               GConf.Value? val = client.get (this._FOLKS_CONFIG_KEY);
               if (val != null)
                 {
-                  debug ("Setting primary store IDs from GConf.");
-                  this._configure_primary_store (val.get_string ());
+                  string? val_str = ((!) val).get_string ();
+
+                  if (val_str != null)
+                    {
+                      debug ("Setting primary store IDs from GConf.");
+                      this._configure_primary_store ((!) val_str);
+                    }
                 }
             }
           catch (GLib.Error e)
@@ -341,7 +346,7 @@ public class Folks.IndividualAggregator : Object
 
       var disable_linking = Environment.get_variable ("FOLKS_DISABLE_LINKING");
       if (disable_linking != null)
-        disable_linking = disable_linking.strip ().down ();
+        disable_linking = ((!) disable_linking).strip ().down ();
       this._linking_enabled = (disable_linking == null ||
           disable_linking == "no" || disable_linking == "0");
 
@@ -354,7 +359,6 @@ public class Folks.IndividualAggregator : Object
     {
       this._backend_store.backend_available.disconnect (
           this._backend_available_cb);
-      this._backend_store = null;
 
       this._debug.print_status.disconnect (this._debug_print_status);
     }
@@ -403,7 +407,7 @@ public class Folks.IndividualAggregator : Object
 
       foreach (var individual in this.individuals.values)
         {
-          string trust_level = null;
+          string? trust_level = null;
 
           switch (individual.trust_level)
             {
@@ -569,21 +573,33 @@ public class Folks.IndividualAggregator : Object
       for (var i = 0; i < individuals.length; i++)
         {
           var a = individuals[i];
-          var matches_a = matches.get (a);
-          if (matches_a == null)
+
+          HashMap<Individual, MatchResult>? _matches_a = matches.get (a);
+          HashMap<Individual, MatchResult> matches_a;
+          if (_matches_a == null)
             {
               matches_a = new HashMap<Individual, MatchResult> ();
               matches.set (a, matches_a);
+            }
+          else
+            {
+              matches_a = (!) _matches_a;
             }
 
           for (var f = i + 1; f < individuals.length; f++)
             {
               var b = individuals[f];
-              var matches_b = matches.get (b);
-              if (matches_b == null)
+
+              HashMap<Individual, MatchResult>? _matches_b = matches.get (b);
+              HashMap<Individual, MatchResult> matches_b;
+              if (_matches_b == null)
                 {
                   matches_b = new HashMap<Individual, MatchResult> ();
                   matches.set (b, matches_b);
+                }
+              else
+                {
+                  matches_b = (!) _matches_b;
                 }
 
               var result = matchObj.potential_match (a, b);
@@ -664,16 +680,16 @@ public class Folks.IndividualAggregator : Object
               var previous_store = this._primary_store;
               this._primary_store = store;
 
-              this._primary_store.freeze_notify ();
+              store.freeze_notify ();
               if (previous_store != null)
                 {
-                  previous_store.freeze_notify ();
-                  previous_store.is_primary_store = false;
+                  ((!) previous_store).freeze_notify ();
+                  ((!) previous_store).is_primary_store = false;
                 }
-              this._primary_store.is_primary_store = true;
+              store.is_primary_store = true;
               if (previous_store != null)
-                previous_store.thaw_notify ();
-              this._primary_store.thaw_notify ();
+                ((!) previous_store).thaw_notify ();
+              store.thaw_notify ();
 
               this.notify_property ("primary-store");
             }
@@ -771,26 +787,26 @@ public class Folks.IndividualAggregator : Object
       Persona? actor = null,
       GroupDetails.ChangeReason reason = GroupDetails.ChangeReason.NONE)
     {
-      var _added = added;
-      var _removed = removed;
-      var _changes = changes;
+      Set<Individual> _added;
+      Set<Individual> _removed;
+      MultiMap<Individual?, Individual?> _changes;
 
-      if ((added == null || added.size == 0) &&
-          (removed == null || removed.size == 0) &&
-          (changes == null || changes.size == 0))
+      if ((added == null || ((!) added).size == 0) &&
+          (removed == null || ((!) removed).size == 0) &&
+          (changes == null || ((!) changes).size == 0))
         {
           /* Don't bother emitting it if nothing's changed */
           return;
         }
-      else if (added == null)
+
+      _added = (added != null) ? (!) added : new HashSet<Individual> ();
+      _removed = (removed != null) ? (!) removed : new HashSet<Individual> ();
+
+      if (changes != null)
         {
-          _added = new HashSet<Individual> ();
+          _changes = (!) changes;
         }
-      else if (removed == null)
-        {
-          _removed = new HashSet<Individual> ();
-        }
-      else if (changes == null)
+      else
         {
           _changes = new HashMultiMap<Individual?, Individual?> ();
         }
@@ -806,14 +822,15 @@ public class Folks.IndividualAggregator : Object
               foreach (var added_ind in _changes.get (removed_ind))
                 {
                   debug ("    %s (%p) → %s (%p)",
-                      (removed_ind != null) ? removed_ind.id : "", removed_ind,
-                      (added_ind != null) ? added_ind.id : "", added_ind);
+                      (removed_ind != null) ? ((!) removed_ind).id : "",
+                      removed_ind,
+                      (added_ind != null) ? ((!) added_ind).id : "", added_ind);
 
                   if (removed_ind != null)
                     {
                       debug ("      Removed individual's personas:");
 
-                      foreach (var p in removed_ind.personas)
+                      foreach (var p in ((!) removed_ind).personas)
                         {
                           debug ("        %s (%p)", p.uid, p);
                         }
@@ -823,7 +840,7 @@ public class Folks.IndividualAggregator : Object
                     {
                       debug ("      Added individual's personas:");
 
-                      foreach (var p in added_ind.personas)
+                      foreach (var p in ((!) added_ind).personas)
                         {
                           debug ("        %s (%p)", p.uid, p);
                         }
@@ -849,7 +866,7 @@ public class Folks.IndividualAggregator : Object
       individual.removed.disconnect (this._individual_removed_cb);
     }
 
-  private void _add_personas (Set<Persona> added, ref Individual user,
+  private void _add_personas (Set<Persona> added, ref Individual? user,
       ref HashMultiMap<Individual?, Individual?> individuals_changes)
     {
       foreach (var persona in added)
@@ -867,7 +884,6 @@ public class Folks.IndividualAggregator : Object
           HashSet<Individual> candidate_inds = new HashSet<Individual> ();
 
           var final_personas = new HashSet<Persona> ();
-          Individual final_individual = null;
 
           debug ("Aggregating persona '%s' on '%s'.", persona.uid, persona.iid);
 
@@ -875,22 +891,23 @@ public class Folks.IndividualAggregator : Object
            * existing this.user. */
           if (persona.is_user == true && user != null)
             {
-              debug ("    Found candidate individual '%s' as user.", user.id);
-              candidate_inds.add (user);
+              debug ("    Found candidate individual '%s' as user.",
+                  ((!) user).id);
+              candidate_inds.add ((!) user);
             }
 
           /* If we don't trust the PersonaStore at all, we can't link the
            * Persona to any existing Individual */
           if (trust_level != PersonaStoreTrust.NONE)
             {
-              var candidate_ind = this._link_map.lookup (persona.iid);
+              Individual? candidate_ind = this._link_map.lookup (persona.iid);
               if (candidate_ind != null &&
-                  candidate_ind.trust_level != TrustLevel.NONE &&
-                  !candidate_inds.contains (candidate_ind))
+                  ((!) candidate_ind).trust_level != TrustLevel.NONE &&
+                  !candidate_inds.contains ((!) candidate_ind))
                 {
                   debug ("    Found candidate individual '%s' by IID '%s'.",
-                      candidate_ind.id, persona.iid);
-                  candidate_inds.add (candidate_ind);
+                      ((!) candidate_ind).id, persona.iid);
+                  candidate_inds.add ((!) candidate_ind);
                 }
             }
 
@@ -919,17 +936,18 @@ public class Folks.IndividualAggregator : Object
                   persona.linkable_property_to_links (prop_name, (l) =>
                     {
                       unowned string prop_linking_value = l;
-                      var candidate_ind =
+                      Individual? candidate_ind =
                           this._link_map.lookup (prop_linking_value);
 
                       if (candidate_ind != null &&
-                          candidate_ind.trust_level != TrustLevel.NONE &&
-                          !candidate_inds.contains (candidate_ind))
+                          ((!) candidate_ind).trust_level != TrustLevel.NONE &&
+                          !candidate_inds.contains ((!) candidate_ind))
                         {
                           debug ("    Found candidate individual '%s' by " +
                               "linkable property '%s' = '%s'.",
-                              candidate_ind.id, prop_name, prop_linking_value);
-                          candidate_inds.add (candidate_ind);
+                              ((!) candidate_ind).id, prop_name,
+                              prop_linking_value);
+                          candidate_inds.add ((!) candidate_ind);
                         }
                     });
                 }
@@ -960,7 +978,7 @@ public class Folks.IndividualAggregator : Object
             }
 
           /* Create the final linked Individual */
-          final_individual = new Individual (final_personas);
+          var final_individual = new Individual (final_personas);
           debug ("    Created new individual '%s' (%p) with personas:",
               final_individual.id, final_individual);
           foreach (var p in final_personas)
@@ -976,7 +994,7 @@ public class Folks.IndividualAggregator : Object
               /* Transitively update the individuals_changes. We have to do this
                * in two stages as we can't modify individuals_changes while
                * iterating over it. */
-              var transitive_updates = new HashSet<Individual> ();
+              var transitive_updates = new HashSet<Individual?> ();
 
               foreach (var k in individuals_changes.get_keys ())
                 {
@@ -1033,7 +1051,7 @@ public class Folks.IndividualAggregator : Object
        * changed, so that persona might require re-linking. We do this in a
        * simplistic and hacky way (which should work) by simply treating the
        * persona as if it's been removed and re-added. */
-      var persona = obj as Persona;
+      var persona = (!) (obj as Persona);
 
       debug ("Linkable property '%s' changed for persona '%s' " +
           "(is user: %s, IID: %s).", pspec.name, persona.uid,
@@ -1162,10 +1180,10 @@ public class Folks.IndividualAggregator : Object
           /* Find the Individual containing the Persona (if any) and mark them
            * for removal (any other Personas they have which aren't being
            * removed will be re-linked into other Individuals). */
-          var ind = this._link_map.lookup (persona.iid);
+          Individual? ind = this._link_map.lookup (persona.iid);
           if (ind != null)
             {
-              removed_individuals.add (ind);
+              removed_individuals.add ((!) ind);
             }
 
           /* Stop listening to notifications about the persona's linkable
@@ -1279,18 +1297,18 @@ public class Folks.IndividualAggregator : Object
 
                   if (old_ind != null)
                     {
-                      removed_individuals.add (old_ind);
+                      removed_individuals.add ((!) old_ind);
                     }
 
                   if (new_ind != null)
                     {
-                      added_individuals.add (new_ind);
-                      this._connect_to_individual (new_ind);
+                      added_individuals.add ((!) new_ind);
+                      this._connect_to_individual ((!) new_ind);
                     }
 
                   if (old_ind != null && new_ind != null)
                     {
-                      replaced_individuals.set (old_ind, new_ind);
+                      replaced_individuals.set ((!) old_ind, (!) new_ind);
                     }
                 }
             }
@@ -1309,7 +1327,7 @@ public class Folks.IndividualAggregator : Object
           var new_ind = iter.get_value ();
 
           debug ("    %s (%p) → %s (%p)", old_ind.id, old_ind,
-              (new_ind != null) ? new_ind.id : "", new_ind);
+              new_ind.id, new_ind);
 
           old_ind.replace (new_ind);
         }
@@ -1438,7 +1456,7 @@ public class Folks.IndividualAggregator : Object
       if (replacement != null)
         {
           debug ("Individual '%s' removed (replaced by '%s')", i.id,
-              replacement.id);
+              ((!) replacement).id);
         }
       else
         {
@@ -1493,7 +1511,7 @@ public class Folks.IndividualAggregator : Object
       PersonaStore persona_store,
       HashTable<string, Value?> details) throws IndividualAggregatorError
     {
-      Persona persona = null;
+      Persona? persona = null;
       try
         {
           var details_copy = this._asv_copy (details);
@@ -1520,7 +1538,7 @@ public class Folks.IndividualAggregator : Object
 
       if (parent != null && persona != null)
         {
-          parent.personas.add (persona);
+          ((!) parent).personas.add ((!) persona);
         }
 
       return persona;
@@ -1614,7 +1632,7 @@ public class Folks.IndividualAggregator : Object
 
       /* Create a new persona in the primary store which links together the
        * given personas */
-      assert (this._primary_store.type_id ==
+      assert (((!) this._primary_store).type_id ==
           this._configured_primary_store_type_id);
 
       /* `protocols_addrs_set` will be passed to the new Kf.Persona */
@@ -1680,7 +1698,8 @@ public class Folks.IndividualAggregator : Object
         {
           var im_addresses_value = Value (typeof (MultiMap));
           im_addresses_value.set_object (protocols_addrs_set);
-          details.insert (PersonaStore.detail_key (PersonaDetail.IM_ADDRESSES),
+          details.insert (
+              (!) PersonaStore.detail_key (PersonaDetail.IM_ADDRESSES),
               im_addresses_value);
         }
 
@@ -1688,8 +1707,8 @@ public class Folks.IndividualAggregator : Object
         {
           var web_service_addresses_value = Value (typeof (MultiMap));
           web_service_addresses_value.set_object (web_service_addrs_set);
-          details.insert (PersonaStore.detail_key
-              (PersonaDetail.WEB_SERVICE_ADDRESSES),
+          details.insert (
+              (!) PersonaStore.detail_key (PersonaDetail.WEB_SERVICE_ADDRESSES),
               web_service_addresses_value);
         }
 
@@ -1698,12 +1717,12 @@ public class Folks.IndividualAggregator : Object
           var local_ids_value = Value (typeof (Set<string>));
           local_ids_value.set_object (local_ids);
           details.insert (
-              Folks.PersonaStore.detail_key (PersonaDetail.LOCAL_IDS),
+              (!) Folks.PersonaStore.detail_key (PersonaDetail.LOCAL_IDS),
               local_ids_value);
         }
 
       yield this.add_persona_from_details (null,
-          this._primary_store, details);
+          (!) this._primary_store, details);
     }
 
   /**
@@ -1750,11 +1769,13 @@ public class Folks.IndividualAggregator : Object
 
       foreach (var persona in personas)
         {
+          /* Since persona.store != null, we know that
+           * this._primary_store != null. */
           if (persona.store == this._primary_store)
             {
               debug ("    %s (is user: %s, IID: %s)", persona.uid,
                   persona.is_user ? "yes" : "no", persona.iid);
-              yield this._primary_store.remove_persona (persona);
+              yield ((!) this._primary_store).remove_persona (persona);
             }
         }
     }
@@ -1810,13 +1831,14 @@ public class Folks.IndividualAggregator : Object
       Persona? new_persona = null;
 
       if (this._primary_store != null &&
-          property_name in this._primary_store.always_writeable_properties)
+          property_name in
+              ((!) this._primary_store).always_writeable_properties)
         {
           try
             {
               debug ("    Using writeable store");
               new_persona = yield this.add_persona_from_details (null,
-                  this._primary_store, details);
+                  (!) this._primary_store, details);
             }
           catch (IndividualAggregatorError e1)
             {
@@ -1868,9 +1890,10 @@ public class Folks.IndividualAggregator : Object
               property_name);
         }
 
-      /* Link the persona to the existing individual */
+      /* Link the persona to the existing individual. We can guarantee
+       * new_persona != null because we'd have bailed out above otherwise. */
       var linking_personas = new HashSet<Persona> ();
-      linking_personas.add (new_persona);
+      linking_personas.add ((!) new_persona);
 
       foreach (var p2 in individual.personas)
         {
@@ -1881,6 +1904,6 @@ public class Folks.IndividualAggregator : Object
           property_name);
       yield this.link_personas (linking_personas);
 
-      return new_persona;
+      return (!) new_persona;
     }
 }

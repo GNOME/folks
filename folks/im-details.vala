@@ -66,7 +66,7 @@ public class Folks.ImFieldDetails : AbstractFieldDetails<string>
 
       this.value = value;
       if (parameters != null)
-        this.parameters = parameters;
+        this.parameters = (!) parameters;
     }
 
   /**
@@ -76,7 +76,7 @@ public class Folks.ImFieldDetails : AbstractFieldDetails<string>
    */
   public override bool equal (AbstractFieldDetails<string> that)
     {
-      return base.equal<string> (that);
+      return base.equal (that);
     }
 
   /**
@@ -179,7 +179,7 @@ public interface Folks.ImDetails : Object
                   im_address);
             }
 
-          string resource = null;
+          string? resource = null;
           if (parts.length == 2)
             resource = parts[1];
 
@@ -193,20 +193,20 @@ public interface Folks.ImDetails : Object
                   im_address);
             }
 
-          string node, domain;
+          string? node, _domain;
           if (parts.length == 2)
             {
               node = parts[0];
-              domain = parts[1];
+              _domain = parts[1];
             }
           else
             {
               node = null;
-              domain = parts[0];
+              _domain = parts[0];
             }
 
           if ((node != null && node == "") ||
-              (domain == null || domain == "") ||
+              (_domain == null || _domain == "") ||
               (resource != null && resource == ""))
             {
               throw new ImDetailsError.INVALID_IM_ADDRESS (
@@ -215,24 +215,24 @@ public interface Folks.ImDetails : Object
                   im_address);
             }
 
-          domain = domain.down ();
+          string domain = ((!) _domain).down ();
           if (node != null)
-            node = node.down ();
+            node = ((!) node).down ();
 
           /* Build a new JID */
-          string normalised = null;
+          string? normalised = null;
 
           if (node != null && resource != null)
             {
-              normalised = "%s@%s/%s".printf (node, domain, resource);
+              normalised = "%s@%s/%s".printf ((!) node, domain, (!) resource);
             }
           else if (node != null)
             {
-              normalised = "%s@%s".printf (node, domain);
+              normalised = "%s@%s".printf ((!) node, domain);
             }
           else if (resource != null)
             {
-              normalised = "%s/%s".printf (domain, resource);
+              normalised = "%s/%s".printf (domain, (!) resource);
             }
           else
             {
@@ -242,7 +242,7 @@ public interface Folks.ImDetails : Object
                   im_address);
             }
 
-          return normalised.normalize (-1, NormalizeMode.NFKC);
+          return ((!) normalised).normalize (-1, NormalizeMode.NFKC);
         }
       else
         {

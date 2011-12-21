@@ -83,7 +83,7 @@ public class Folks.PhoneFieldDetails : AbstractFieldDetails<string>
    */
   public override bool equal (AbstractFieldDetails<string> that)
     {
-      return base.equal<string> (that);
+      return base.equal (that);
     }
 
   /**
@@ -91,9 +91,10 @@ public class Folks.PhoneFieldDetails : AbstractFieldDetails<string>
    */
   public override bool values_equal (AbstractFieldDetails<string> that)
     {
-      var that_fd = that as PhoneFieldDetails;
-      if (that_fd == null)
+      var _that_fd = that as PhoneFieldDetails;
+      if (_that_fd == null)
         return false;
+      PhoneFieldDetails that_fd = (!) _that_fd;
 
       var n1 = this._drop_extension (this.get_normalised ());
       var n2 = this._drop_extension (that_fd.get_normalised ());

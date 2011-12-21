@@ -52,6 +52,7 @@ public abstract class Folks.ObjectCache<T> : Object
 
   private File _cache_directory;
   private File _cache_file;
+  private string _cache_file_path; /* save calls to _cache_file.get_path() */
 
   /**
    * Get the {@link GLib.VariantType} of the serialised form of an object stored
@@ -162,6 +163,8 @@ public abstract class Folks.ObjectCache<T> : Object
       this._cache_file =
           this._cache_directory.get_child (Uri.escape_string (this.id,
               "", false));
+      var path = this._cache_file.get_path ();
+      this._cache_file_path = (path != null) ? (!) path : "(null)";
     }
 
   /**
@@ -184,7 +187,7 @@ public abstract class Folks.ObjectCache<T> : Object
   public async Set<T>? load_objects (Cancellable? cancellable = null)
     {
       debug ("Loading cache (type ID '%s', ID '%s') from file '%s'.",
-          this.type_id, this._id, this._cache_file.get_path ());
+          this.type_id, this._id, this._cache_file_path);
 
       // Read in the file
       uint8[] data;
@@ -202,12 +205,12 @@ public abstract class Folks.ObjectCache<T> : Object
           else if (e is IOError.NOT_FOUND)
             {
               debug ("Couldn't load cache file '%s': %s",
-                  this._cache_file.get_path (), e.message);
+                  this._cache_file_path, e.message);
             }
           else
             {
               warning ("Couldn't load cache file '%s': %s",
-                  this._cache_file.get_path (), e.message);
+                  this._cache_file_path, e.message);
             }
 
           return null;
@@ -217,7 +220,7 @@ public abstract class Folks.ObjectCache<T> : Object
       if (data.length < this._HEADER_WIDTH)
         {
           warning ("Cache file '%s' was too small. The file was deleted.",
-              this._cache_file.get_path ());
+              this._cache_file_path);
           yield this.clear_cache ();
 
           return null;
@@ -231,7 +234,7 @@ public abstract class Folks.ObjectCache<T> : Object
         {
           warning ("Cache file '%s' was version %u of the file format, " +
               "but only version %u is supported. The file was deleted.",
-              this._cache_file.get_path (), wrapper_version,
+              this._cache_file_path, wrapper_version,
               this._FILE_FORMAT_VERSION);
           yield this.clear_cache ();
 
@@ -241,19 +244,20 @@ public abstract class Folks.ObjectCache<T> : Object
       unowned uint8[] variant_data = data[this._HEADER_WIDTH:data.length];
 
       // Deserialise the variant according to the given version numbers
-      var variant_type =
+      var _variant_type =
           this._get_cache_file_variant_type (wrapper_version, object_version);
 
-      if (variant_type == null)
+      if (_variant_type == null)
         {
           warning ("Cache file '%s' was version %u of the object file " +
               "format, which is not supported. The file was deleted.",
-              this._cache_file.get_path (), object_version,
+              this._cache_file_path, object_version,
               this._FILE_FORMAT_VERSION);
           yield this.clear_cache ();
 
           return null;
         }
+      var variant_type = (!) _variant_type;
 
       var variant =
           Variant.new_from_data<uint8[]> (variant_type, variant_data, false,
@@ -263,7 +267,7 @@ public abstract class Folks.ObjectCache<T> : Object
       if (variant.is_normal_form () == false)
         {
           warning ("Cache file '%s' was corrupt and was deleted.",
-              this._cache_file.get_path ());
+              this._cache_file_path);
           yield this.clear_cache ();
 
           return null;
@@ -275,7 +279,7 @@ public abstract class Folks.ObjectCache<T> : Object
       if (type_id != this.type_id)
         {
           warning ("Cache file '%s' had type ID '%s', but '%s' was expected." +
-              "The file was deleted.", this._cache_file.get_path (), type_id,
+              "The file was deleted.", this._cache_file_path, type_id,
               this.type_id);
           yield this.clear_cache ();
 
@@ -287,7 +291,7 @@ public abstract class Folks.ObjectCache<T> : Object
       if (id != this._id)
         {
           warning ("Cache file '%s' had ID '%s', but '%s' was expected." +
-              "The file was deleted.", this._cache_file.get_path (), id,
+              "The file was deleted.", this._cache_file_path, id,
               this._id);
           yield this.clear_cache ();
 
@@ -328,7 +332,7 @@ public abstract class Folks.ObjectCache<T> : Object
       Cancellable? cancellable = null)
     {
       debug ("Storing cache (type ID '%s', ID '%s') to file '%s'.",
-          this.type_id, this._id, this._cache_file.get_path ());
+          this.type_id, this._id, this._cache_file_path);
 
       var child_type = this.get_serialised_object_type (uint8.MAX);
       assert (child_type != null); // uint8.MAX should always be supported
@@ -351,8 +355,10 @@ public abstract class Folks.ObjectCache<T> : Object
         new Variant.array (child_type, children) // Array of objects
       });
 
-      assert (variant.get_type ().equal (
-          this._get_cache_file_variant_type (wrapper_version, object_version)));
+      var desired_variant_type =
+          this._get_cache_file_variant_type (wrapper_version, object_version);
+      assert (desired_variant_type != null &&
+          variant.get_type ().equal ((!) desired_variant_type));
 
       // Prepend the version numbers to the data
       uint8[] data = new uint8[this._HEADER_WIDTH + variant.get_size ()];
@@ -396,7 +402,7 @@ public abstract class Folks.ObjectCache<T> : Object
               /* Print a warning and delete the cache file so we don't leave
                * stale cached objects lying around. */
               warning ("Couldn't write to cache file '%s', so deleting it: %s",
-                  this._cache_file.get_path (), e.message);
+                  this._cache_file_path, e.message);
               yield this.clear_cache ();
 
               return;
@@ -412,7 +418,7 @@ public abstract class Folks.ObjectCache<T> : Object
   public async void clear_cache ()
     {
       debug ("Clearing cache (type ID '%s', ID '%s'); deleting file '%s'.",
-          this.type_id, this._id, this._cache_file.get_path ());
+          this.type_id, this._id, this._cache_file_path);
 
       try
         {
@@ -427,13 +433,14 @@ public abstract class Folks.ObjectCache<T> : Object
   private VariantType? _get_cache_file_variant_type (uint8 wrapper_version,
       uint8 object_version)
     {
-      var object_type = this.get_serialised_object_type (object_version);
+      var _object_type = this.get_serialised_object_type (object_version);
 
-      if (object_type == null)
+      if (_object_type == null)
         {
           // Unsupported version
           return null;
         }
+      var object_type = (!) _object_type;
 
       return new VariantType.tuple ({
         VariantType.STRING, // Type ID

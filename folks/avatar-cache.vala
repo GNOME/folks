@@ -29,7 +29,7 @@ using GLib;
  */
 public class Folks.AvatarCache : Object
 {
-  private static weak AvatarCache _instance = null; /* needs to be locked */
+  private static weak AvatarCache? _instance = null; /* needs to be locked */
   private File _cache_directory;
 
   /**
@@ -64,13 +64,18 @@ public class Folks.AvatarCache : Object
     {
       lock (AvatarCache._instance)
         {
-          var retval = AvatarCache._instance;
+          var _retval = AvatarCache._instance;
+          AvatarCache retval;
 
-          if (retval == null)
+          if (_retval == null)
             {
               /* use an intermediate variable to force a strong reference */
               retval = new AvatarCache ();
               AvatarCache._instance = retval;
+            }
+          else
+            {
+              retval = (!) _retval;
             }
 
           return retval;
@@ -143,9 +148,9 @@ public class Folks.AvatarCache : Object
               dest_avatar_stream =
                   yield dest_avatar_file.replace_async (null, false,
                       FileCreateFlags.PRIVATE);
-              yield dest_avatar_stream.splice_async (src_avatar_stream,
+              yield ((!) dest_avatar_stream).splice_async (src_avatar_stream,
                   OutputStreamSpliceFlags.NONE);
-              yield dest_avatar_stream.close_async ();
+              yield ((!) dest_avatar_stream).close_async ();
 
               break;
             }
@@ -161,7 +166,7 @@ public class Folks.AvatarCache : Object
 
               if (dest_avatar_stream != null)
                 {
-                  yield dest_avatar_stream.close_async ();
+                  yield ((!) dest_avatar_stream).close_async ();
                 }
 
               throw e;

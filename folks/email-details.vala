@@ -57,7 +57,7 @@ public class Folks.EmailFieldDetails : AbstractFieldDetails<string>
 
       this.value = value;
       if (parameters != null)
-        this.parameters = parameters;
+        this.parameters = (!) parameters;
     }
 
   /**
@@ -67,7 +67,7 @@ public class Folks.EmailFieldDetails : AbstractFieldDetails<string>
    */
   public override bool equal (AbstractFieldDetails<string> that)
     {
-      return base.equal<string> (that);
+      return base.equal (that);
     }
 
   /**

@@ -166,8 +166,6 @@ public class Folks.PotentialMatch : Object
    */
   private void _name_similarity ()
     {
-      Folks.StructuredName a = this._individual_a.structured_name;
-      Folks.StructuredName b = this._individual_b.structured_name;
       double similarity = 0.0;
 
       if (this._look_alike (this._individual_a.nickname,
@@ -182,8 +180,14 @@ public class Folks.PotentialMatch : Object
           similarity += 0.70;
         }
 
-      if (a != null && b != null)
+      var _a = this._individual_a.structured_name;
+      var _b = this._individual_b.structured_name;
+
+      if (_a != null && _b != null)
         {
+          var a = (!) _a;
+          var b = (!) _b;
+
           if (a.is_empty () == false && a.equal (b))
             {
               this._result = MatchResult.HIGH;
@@ -395,8 +399,8 @@ public class Folks.PotentialMatch : Object
           return false;
         }
 
-      bool alike = this.jaro_dist (a, b) >= this._DIST_THRESHOLD ? true : false;
-      return alike;
+      // a and b look alike if their Jaro distance is over the threshold.
+      return (this.jaro_dist ((!) a, (!) b) >= this._DIST_THRESHOLD);
     }
 
   /* Based on:

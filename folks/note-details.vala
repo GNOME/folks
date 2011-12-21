@@ -87,7 +87,7 @@ public class Folks.NoteFieldDetails : AbstractFieldDetails<string>
    */
   public override bool equal (AbstractFieldDetails<string> that)
     {
-      return base.equal<string> (that);
+      return base.equal (that);
     }
 
   /**
@@ -97,15 +97,7 @@ public class Folks.NoteFieldDetails : AbstractFieldDetails<string>
    */
   public override uint hash ()
     {
-      uint retval = 0;
-
-      if (this.value != null)
-        retval += this.value.hash ();
-
-      if (this.id != null)
-        retval += this.id.hash ();
-
-      return retval;
+      return (this.value.hash () + this.id.hash ());
     }
 }
 

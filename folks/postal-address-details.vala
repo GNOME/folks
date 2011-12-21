@@ -307,7 +307,7 @@ public class Folks.PostalAddressFieldDetails :
    */
   public override bool equal (AbstractFieldDetails<PostalAddress> that)
     {
-      if (!base.parameters_equal<PostalAddress> (that))
+      if (!base.parameters_equal (that))
         return false;
 
       /* This is fairly-dumb but smart matching is an i10n nightmare. */
