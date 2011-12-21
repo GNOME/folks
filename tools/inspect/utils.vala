@@ -237,7 +237,8 @@ private class Folks.Inspect.Utils
           return "Set of %u personas".printf (personas.size);
         }
       else if (prop_name == "groups" ||
-               prop_name == "local-ids")
+               prop_name == "local-ids" ||
+               prop_name == "supported-fields")
         {
           Set<string> groups = (Set<string>) prop_value.get_object ();
           output_string = "{ ";
@@ -268,6 +269,18 @@ private class Folks.Inspect.Utils
           else if (avatar != null)
             {
               ret = "%p".printf (avatar);
+            }
+
+          return ret;
+        }
+      else if (prop_name == "file")
+        {
+          string ret = null;
+          File? file = (File) prop_value.get_object ();
+
+          if (file != null)
+            {
+              ret = "%p (file: %s)".printf (file, file.get_uri ());
             }
 
           return ret;
