@@ -174,6 +174,26 @@ public class Folks.PostalAddress : Object
     }
 
   /**
+   * Whether none of the components is set.
+   *
+   * @return `true` if all the components are the empty string, `false`
+   * otherwise.
+   *
+   * @since UNRELEASED
+   */
+  public bool is_empty ()
+    {
+      return this.po_box == "" &&
+             this.extension == "" &&
+             this.street == "" &&
+             this.locality == "" &&
+             this.region == "" &&
+             this.postal_code == "" &&
+             this.country == "" &&
+             this.address_format == "";
+    }
+
+  /**
    * Compare if two postal addresses are equal. Addresses are equal if all their
    * components are equal (where `null` compares equal only with `null`) and
    * they have the same set of types (or both have no types).
@@ -246,7 +266,7 @@ public class Folks.PostalAddressFieldDetails :
   /**
    * Create a new PostalAddressFieldDetails.
    *
-   * @param value the value of the field
+   * @param value the value of the field, a non-empty {@link PostalAddress}
    * @param parameters initial parameters. See
    * {@link AbstractFieldDetails.parameters}. A `null` value is equivalent to an
    * empty map of parameters.
@@ -259,6 +279,11 @@ public class Folks.PostalAddressFieldDetails :
   public PostalAddressFieldDetails (PostalAddress value,
       MultiMap<string, string>? parameters = null)
     {
+      if (value.is_empty ())
+        {
+          warning ("Empty postal address passed to PostalAddressFieldDetails.");
+        }
+
       /* We keep id and value.uid synchronised in both directions. */
       Object (value: value,
               parameters: parameters,

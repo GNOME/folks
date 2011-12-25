@@ -98,6 +98,21 @@ public class Folks.Role : Object
     }
 
   /**
+   * Whether none of the components is set.
+   *
+   * @return `true` if all the components are the empty string, `false`
+   * otherwise.
+   *
+   * @since UNRELEASED
+   */
+  public bool is_empty ()
+    {
+      return this.organisation_name == "" &&
+             this.title == "" &&
+             this.role == "";
+    }
+
+  /**
    * Compare if two roles are equal. Roles are equal if their titles and
    * organisation names are equal.
    *
@@ -165,7 +180,7 @@ public class Folks.RoleFieldDetails : AbstractFieldDetails<Role>
   /**
    * Create a new RoleFieldDetails.
    *
-   * @param value the {@link Role} of the field
+   * @param value the non-empty {@link Role} of the field
    * @param parameters initial parameters. See
    * {@link AbstractFieldDetails.parameters}. A `null` value is equivalent to an
    * empty map of parameters.
@@ -177,6 +192,11 @@ public class Folks.RoleFieldDetails : AbstractFieldDetails<Role>
   public RoleFieldDetails (Role value,
       MultiMap<string, string>? parameters = null)
     {
+      if (value.is_empty ())
+        {
+          warning ("Empty role passed to RoleFieldDetails.");
+        }
+
       /* We keep id and value.uid synchronised in both directions. */
       Object (value: value,
               parameters: parameters,

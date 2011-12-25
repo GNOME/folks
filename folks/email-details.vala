@@ -37,11 +37,11 @@ public class Folks.EmailFieldDetails : AbstractFieldDetails<string>
   /**
    * Create a new EmailFieldDetails.
    *
-   * @param value the value of the field
+   * @param value the value of the field, which should be a valid, non-empty
+   * e-mail address
    * @param parameters initial parameters. See
    * {@link AbstractFieldDetails.parameters}. A `null` value is equivalent to an
    * empty map of parameters.
-   *
    *
    * @return a new EmailFieldDetails
    *
@@ -50,6 +50,11 @@ public class Folks.EmailFieldDetails : AbstractFieldDetails<string>
   public EmailFieldDetails (string value,
       MultiMap<string, string>? parameters = null)
     {
+      if (value == "")
+        {
+          warning ("Empty e-mail address passed to EmailFieldDetails.");
+        }
+
       this.value = value;
       if (parameters != null)
         this.parameters = parameters;

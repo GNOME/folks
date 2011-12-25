@@ -35,7 +35,7 @@ public class Folks.WebServiceFieldDetails : AbstractFieldDetails<string>
   /**
    * Create a new WebServiceFieldDetails.
    *
-   * @param value the value of the field
+   * @param value the value of the field, a non-empty web service address
    * @param parameters initial parameters. See
    * {@link AbstractFieldDetails.parameters}. A `null` value is equivalent to an
    * empty map of parameters.
@@ -47,6 +47,12 @@ public class Folks.WebServiceFieldDetails : AbstractFieldDetails<string>
   public WebServiceFieldDetails (string value,
       MultiMap<string, string>? parameters = null)
     {
+      if (value == "")
+        {
+          warning ("Empty web service address passed to " +
+              "WebServiceFieldDetails.");
+        }
+
       Object (value: value,
               parameters: parameters);
     }

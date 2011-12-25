@@ -46,7 +46,8 @@ public class Folks.ImFieldDetails : AbstractFieldDetails<string>
   /**
    * Create a new ImFieldDetails.
    *
-   * @param value the value of the field
+   * @param value the value of the field, which should be a valid, non-empty
+   * IM address
    * @param parameters initial parameters. See
    * {@link AbstractFieldDetails.parameters}. A `null` value is equivalent to an
    * empty map of parameters.
@@ -58,6 +59,11 @@ public class Folks.ImFieldDetails : AbstractFieldDetails<string>
   public ImFieldDetails (string value,
       MultiMap<string, string>? parameters = null)
     {
+      if (value == "")
+        {
+          warning ("Empty IM address passed to ImFieldDetails.");
+        }
+
       this.value = value;
       if (parameters != null)
         this.parameters = parameters;

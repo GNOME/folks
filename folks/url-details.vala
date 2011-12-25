@@ -74,7 +74,7 @@ public class Folks.UrlFieldDetails : AbstractFieldDetails<string>
   /**
    * Create a new UrlFieldDetails.
    *
-   * @param value the value of the field
+   * @param value the value of the field, a non-empty URI
    * @param parameters initial parameters. See
    * {@link AbstractFieldDetails.parameters}. A `null` value is equivalent to a
    * empty map of parameters.
@@ -86,6 +86,11 @@ public class Folks.UrlFieldDetails : AbstractFieldDetails<string>
   public UrlFieldDetails (string value,
       MultiMap<string, string>? parameters = null)
     {
+      if (value == "")
+        {
+          warning ("Empty URI passed to UrlFieldDetails.");
+        }
+
       Object (value: value,
               parameters: parameters);
     }

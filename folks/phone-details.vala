@@ -54,7 +54,8 @@ public class Folks.PhoneFieldDetails : AbstractFieldDetails<string>
   /**
    * Create a new PhoneFieldDetails.
    *
-   * @param value the value of the field
+   * @param value the value of the field, which should be a non-empty phone
+   * number (no particular format is mandated)
    * @param parameters initial parameters. See
    * {@link AbstractFieldDetails.parameters}. A `null` value is equivalent to a
    * empty map of parameters.
@@ -66,6 +67,11 @@ public class Folks.PhoneFieldDetails : AbstractFieldDetails<string>
   public PhoneFieldDetails (string value,
       MultiMap<string, string>? parameters = null)
     {
+      if (value == "")
+        {
+          warning ("Empty phone number passed to PhoneFieldDetails.");
+        }
+
       Object (value: value,
               parameters: parameters);
     }

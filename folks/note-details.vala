@@ -56,7 +56,8 @@ public class Folks.NoteFieldDetails : AbstractFieldDetails<string>
   /**
    * Create a new NoteFieldDetails.
    *
-   * @param value the value of the field
+   * @param value the value of the field, which should be a non-empty free-form
+   * UTF-8 string as entered by the user
    * @param parameters initial parameters. See
    * {@link AbstractFieldDetails.parameters}. A `null` value is equivalent to a
    * empty map of parameters.
@@ -69,6 +70,11 @@ public class Folks.NoteFieldDetails : AbstractFieldDetails<string>
       MultiMap<string, string>? parameters = null,
       string? uid = null)
     {
+      if (value == "")
+        {
+          warning ("Empty note passed to NoteFieldDetails.");
+        }
+
       Object (value: value,
               id: uid,
               parameters: parameters);
