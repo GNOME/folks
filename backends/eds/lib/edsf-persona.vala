@@ -1016,22 +1016,26 @@ public class Edsf.Persona : Folks.Persona,
           assistant != null)
         {
           var new_role = new Role (title, org);
-          if (role != null)
+          if (role != null && role != "")
             new_role.role = role;
 
-          default_role = new RoleFieldDetails (new_role);
+          /* Check if it's non-empty. */
+          if (!new_role.is_empty ())
+            {
+              default_role = new RoleFieldDetails (new_role);
 
-          if (org_unit != null && org_unit != "")
-            default_role.set_parameter ("org_unit", org_unit);
+              if (org_unit != null && org_unit != "")
+                default_role.set_parameter ("org_unit", org_unit);
 
-          if (office != null && office != "")
-            default_role.set_parameter ("office", office);
+              if (office != null && office != "")
+                default_role.set_parameter ("office", office);
 
-          if (manager != null && manager != "")
-            default_role.set_parameter ("manager", manager);
+              if (manager != null && manager != "")
+                default_role.set_parameter ("manager", manager);
 
-          if (assistant != null && manager != "")
-            default_role.set_parameter ("assistant", assistant);
+              if (assistant != null && manager != "")
+                default_role.set_parameter ("assistant", assistant);
+            }
         }
 
       return default_role;
