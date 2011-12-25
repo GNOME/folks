@@ -5,6 +5,9 @@ Bugs fixed:
 * Bug 666528 — Can't convert from type 'GFile' to 'gchararray'
 * Bug 666540 — Segfault on empty e-mail addresses with potential match
 
+API changes:
+* Add PostalAddress.is_empty() and Role.is_empty()
+
 Overview of changes from libfolks 0.6.5 to libfolks 0.6.6
 =============================================================
 Bugs fixed:
