@@ -1594,7 +1594,11 @@ public class Folks.IndividualAggregator : Object
       if (this._primary_store == null)
         {
           throw new IndividualAggregatorError.NO_PRIMARY_STORE (
-              _("Can't link personas with no primary store."));
+              _("Can’t link personas with no primary store.") + "\n" +
+              _("Persona store ‘%s:%s’ is configured as primary, but could not be found or failed to load.") + "\n" +
+              _("Check the service providing the persona store is running, or change the default store in that service or using the “%s” GConf key."),
+              this._configured_primary_store_type_id,
+              this._configured_primary_store_id, this._FOLKS_CONFIG_KEY);
         }
 
       /* Don't bother linking if it's just one Persona */
@@ -1851,7 +1855,11 @@ public class Folks.IndividualAggregator : Object
       if (new_persona == null && this._primary_store == null)
         {
           throw new IndividualAggregatorError.NO_PRIMARY_STORE (
-              _("Can't add personas with no primary store."));
+              _("Can’t add personas with no primary store.") + "\n" +
+              _("Persona store ‘%s:%s’ is configured as primary, but could not be found or failed to load.") + "\n" +
+              _("Check the service providing the persona store is running, or change the default store in that service or using the “%s” GConf key."),
+              this._configured_primary_store_type_id,
+              this._configured_primary_store_id, this._FOLKS_CONFIG_KEY);
         }
       else if (new_persona == null)
         {
