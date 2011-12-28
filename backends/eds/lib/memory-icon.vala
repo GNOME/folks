@@ -57,11 +57,15 @@ internal class Edsf.MemoryIcon : Object, Icon, LoadableIcon
    * @return `true` if the instances are equal, `false` otherwise
    * @since 0.6.0
    */
+#if VALA_0_16
+  public bool equal (Icon? icon2)
+#else
   public bool equal (Icon icon2)
+#endif
     {
-      // This type check be taken care of by the interface wrapper.
-      var icon = icon2 as MemoryIcon;
-      assert (icon != null);
+      /* These type and nullability checks are taken care of by the interface
+       * wrapper. */
+      var icon = (MemoryIcon) (!) icon2;
 
       return (this._image_data.length == icon._image_data.length &&
               Memory.cmp (this._image_data, icon._image_data,
@@ -87,7 +91,7 @@ internal class Edsf.MemoryIcon : Object, Icon, LoadableIcon
        *
        * Basically, this is just a nul-safe version of g_str_hash(). Which is
        * calculated over both the image type and image data. */
-      uint hash = this._image_type != null ? this._image_type.hash () : 0;
+      uint hash = this._image_type != null ? ((!) this._image_type).hash () : 0;
 
       for (uint i = 0; i < this._image_data.length; i++)
         {

@@ -39,9 +39,9 @@ public class Edsf.PersonaStore : Folks.PersonaStore
   private bool _is_prepared = false;
   private bool _prepare_pending = false;
   private bool _is_quiescent = false;
-  private E.BookClient _addressbook;
-  private E.BookClientView _ebookview;
-  private E.SourceList? _source_list = null;
+  private E.BookClient? _addressbook = null; /* null before prepare() */
+  private E.BookClientView? _ebookview = null; /* null before prepare() */
+  private E.SourceList? _source_list = null; /* null before prepare() */
   private string _query_str;
 
   /* The timeout after which we consider a property change to have failed if we
@@ -81,7 +81,8 @@ public class Edsf.PersonaStore : Folks.PersonaStore
               return MaybeBool.FALSE;
             }
 
-          return this._addressbook.readonly ? MaybeBool.FALSE : MaybeBool.TRUE;
+          return ((!) this._addressbook).readonly
+              ? MaybeBool.FALSE : MaybeBool.TRUE;
         }
     }
 
@@ -129,7 +130,8 @@ public class Edsf.PersonaStore : Folks.PersonaStore
               return MaybeBool.FALSE;
             }
 
-          return this._addressbook.readonly ? MaybeBool.FALSE : MaybeBool.TRUE;
+          return ((!) this._addressbook).readonly
+              ? MaybeBool.FALSE : MaybeBool.TRUE;
         }
     }
 
@@ -157,7 +159,8 @@ public class Edsf.PersonaStore : Folks.PersonaStore
     {
       get
         {
-          if (this._addressbook.readonly == true)
+          if (this._addressbook == null ||
+              ((!) this._addressbook).readonly == true)
             {
               return this._always_writeable_properties_empty;
             }
@@ -232,20 +235,20 @@ public class Edsf.PersonaStore : Folks.PersonaStore
         {
           if (this._ebookview != null)
             {
-              this._ebookview.objects_added.disconnect (
+              ((!) this._ebookview).objects_added.disconnect (
                   this._contacts_added_cb);
-              this._ebookview.objects_removed.disconnect (
+              ((!) this._ebookview).objects_removed.disconnect (
                   this._contacts_removed_cb);
-              this._ebookview.objects_modified.disconnect (
+              ((!) this._ebookview).objects_modified.disconnect (
                   this._contacts_changed_cb);
-              this._ebookview.stop ();
+              ((!) this._ebookview).stop ();
 
               this._ebookview = null;
             }
 
           if (this._addressbook != null)
             {
-              this._addressbook.notify["readonly"].disconnect (
+              ((!) this._addressbook).notify["readonly"].disconnect (
                   this._address_book_notify_read_only_cb);
 
               this._addressbook = null;
@@ -253,7 +256,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
 
           if (this._source_list != null)
             {
-              this._source_list.changed.disconnect (
+              ((!) this._source_list).changed.disconnect (
                   this._source_list_changed_cb);
               this._source_list = null;
             }
@@ -291,16 +294,32 @@ public class Edsf.PersonaStore : Folks.PersonaStore
   public override async Folks.Persona? add_persona_from_details (
       HashTable<string, Value?> details) throws Folks.PersonaStoreError
     {
+      // We have to have called prepare() beforehand.
+      if (!this._is_prepared)
+        {
+          throw new PersonaStoreError.STORE_OFFLINE (
+              "Persona store has not yet been prepared.");
+        }
+
       E.Contact contact = new E.Contact ();
 
-      foreach (var k in details.get_keys ())
+      var iter = HashTableIter<string, Value?> (details);
+      unowned string k;
+      unowned Value? _v;
+
+      while (iter.next (out k, out _v) == true)
         {
-          Value? v = details.lookup (k);
+          if (_v == null)
+            {
+              continue;
+            }
+          unowned Value v = (!) _v;
+
           if (k == Folks.PersonaStore.detail_key (
                 PersonaDetail.FULL_NAME))
             {
-              var full_name = v.get_string ();
-              if (full_name == "")
+              string? full_name = v.get_string ();
+              if (full_name != null && (!) full_name == "")
                 {
                   full_name = null;
                 }
@@ -406,12 +425,14 @@ public class Edsf.PersonaStore : Folks.PersonaStore
             }
         }
 
-      Edsf.Persona? persona = null;
+      Edsf.Persona? _persona = null;
 
       try
         {
+          /* _addressbook is guaranteed to be non-null before we ensure that
+           * prepare() has already been called. */
           string added_uid;
-          var result = yield this._addressbook.add_contact (contact,
+          var result = yield ((!) this._addressbook).add_contact (contact,
               null,
               out added_uid);
 
@@ -421,15 +442,19 @@ public class Edsf.PersonaStore : Folks.PersonaStore
               lock (this._personas)
                 {
                   var iid = Edsf.Persona.build_iid (this.id, added_uid);
-                  persona = this._personas.get (iid);
-                  if (persona == null)
+                  _persona = this._personas.get (iid);
+                  if (_persona == null)
                     {
+                      Edsf.Persona persona;
+
                       contact.set (E.Contact.field_id ("id"), added_uid);
                       persona = new Persona (this, contact);
                       this._personas.set (persona.iid, persona);
                       var added_personas = new HashSet<Persona> ();
                       added_personas.add (persona);
                       this._emit_personas_changed (added_personas, null);
+
+                      _persona = persona;
                     }
                 }
             }
@@ -445,7 +470,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
               e.message);
         }
 
-      return persona;
+      return _persona;
     }
 
   /**
@@ -460,9 +485,18 @@ public class Edsf.PersonaStore : Folks.PersonaStore
   public override async void remove_persona (Folks.Persona persona)
       throws Folks.PersonaStoreError
     {
+      // We have to have called prepare() beforehand.
+      if (!this._is_prepared)
+        {
+          throw new PersonaStoreError.STORE_OFFLINE (
+              "Persona store has not yet been prepared.");
+        }
+
       try
         {
-          yield this._addressbook.remove_contact (
+          /* _addressbook is guaranteed to be non-null before we ensure that
+           * prepare() has already been called. */
+          yield ((!) this._addressbook).remove_contact (
               ((Edsf.Persona) persona).contact, null);
         }
       catch (GLib.Error e)
@@ -561,15 +595,19 @@ public class Edsf.PersonaStore : Folks.PersonaStore
                * need to check if we still exist in the list, as
                * addressbook.open() will fail if we don't. */
               E.BookClient.get_sources (out this._source_list);
-              this._source_list.changed.connect (this._source_list_changed_cb);
+
+              /* We know _source_list != null because otherwise
+               * E.BookClient.get_sources() would've thrown an error. */
+              ((!) this._source_list).changed.connect (
+                  this._source_list_changed_cb);
 
               /* Connect to the address book. */
               this._addressbook = new E.BookClient (this.source);
 
-              this._addressbook.notify["readonly"].connect (
+              ((!) this._addressbook).notify["readonly"].connect (
                   this._address_book_notify_read_only_cb);
 
-              yield this._addressbook.open (false, null);
+              yield ((!) this._addressbook).open (false, null);
 
               this._update_trust_level ();
             }
@@ -647,7 +685,8 @@ public class Edsf.PersonaStore : Folks.PersonaStore
               this._prepare_pending = false;
             }
 
-          if (this._addressbook.is_opened () == false)
+          // this._addressbook is guaranteed to be non-null by now.
+          if (((!) this._addressbook).is_opened () == false)
             {
               /* Remove the persona store on error */
               this.removed ();
@@ -663,29 +702,29 @@ public class Edsf.PersonaStore : Folks.PersonaStore
            *
            * Note: We assume this is constant over the lifetime of the address
            * book. This seems reasonable. */
-          string supported_fields;
           try
             {
-              yield this._addressbook.get_backend_property ("supported-fields",
-                  null, out supported_fields);
+              string? supported_fields = null;
+              yield ((!) this._addressbook).get_backend_property (
+                  "supported-fields", null, out supported_fields);
 
               var prop_set = new HashSet<string> ();
 
               /* We get a comma-separated list of fields back. */
               if (supported_fields != null)
                 {
-                  string[] fields = supported_fields.split (",");
+                  string[] fields = ((!) supported_fields).split (",");
 
                   /* We always support local-ids, web-service-addresses, gender
                    * and favourite because we use custom vCard attributes for
                    * them. */
-                  prop_set.add (Folks.PersonaStore.detail_key (
+                  prop_set.add ((!) Folks.PersonaStore.detail_key (
                       PersonaDetail.LOCAL_IDS));
-                  prop_set.add (Folks.PersonaStore.detail_key (
+                  prop_set.add ((!) Folks.PersonaStore.detail_key (
                       PersonaDetail.WEB_SERVICE_ADDRESSES));
-                  prop_set.add (Folks.PersonaStore.detail_key (
+                  prop_set.add ((!) Folks.PersonaStore.detail_key (
                       PersonaDetail.GENDER));
-                  prop_set.add (Folks.PersonaStore.detail_key (
+                  prop_set.add ((!) Folks.PersonaStore.detail_key (
                       PersonaDetail.IS_FAVOURITE));
 
                   foreach (unowned string field in fields)
@@ -695,20 +734,19 @@ public class Edsf.PersonaStore : Folks.PersonaStore
 
                       if (prop != null)
                         {
-                          prop_set.add ((owned) prop);
+                          prop_set.add ((!) (owned) prop);
                         }
                     }
                 }
 
               /* Convert the property set to an array. We can't use .to_array()
                * here because it fails to null-terminate the array. Sigh. */
-              this._always_writeable_properties = new string[prop_set.size + 1];
+              this._always_writeable_properties = new string[prop_set.size];
               uint i = 0;
               foreach (var final_prop in prop_set)
                 {
                   this._always_writeable_properties[i++] = final_prop;
                 }
-              this._always_writeable_properties[i] = null;
             }
           catch (GLib.Error e2)
             {
@@ -730,13 +768,13 @@ public class Edsf.PersonaStore : Folks.PersonaStore
           var do_initial_query = false;
           try
             {
-              string capabilities;
-              yield this._addressbook.get_backend_property ("capabilities",
-                  null, out capabilities);
+              string? capabilities = null;
+              yield ((!) this._addressbook).get_backend_property (
+                  "capabilities", null, out capabilities);
 
               if (capabilities != null)
                 {
-                  string[] caps = capabilities.split (",");
+                  string[] caps = ((!) capabilities).split (",");
 
                   do_initial_query = ("do-initial-query" in caps);
                 }
@@ -758,8 +796,8 @@ public class Edsf.PersonaStore : Folks.PersonaStore
           bool got_view = false;
           try
             {
-              got_view = yield this._addressbook.get_view (this._query_str,
-                  null, out this._ebookview);
+              got_view = yield ((!) this._addressbook).get_view (
+                  this._query_str, null, out this._ebookview);
 
               if (got_view == false)
                 {
@@ -769,11 +807,14 @@ public class Edsf.PersonaStore : Folks.PersonaStore
                           this.id);
                 }
 
-              this._ebookview.objects_added.connect (this._contacts_added_cb);
-              this._ebookview.objects_removed.connect (this._contacts_removed_cb);
-              this._ebookview.objects_modified.connect (this._contacts_changed_cb);
+              ((!) this._ebookview).objects_added.connect (
+                  this._contacts_added_cb);
+              ((!) this._ebookview).objects_removed.connect (
+                  this._contacts_removed_cb);
+              ((!) this._ebookview).objects_modified.connect (
+                  this._contacts_changed_cb);
 
-              this._ebookview.start ();
+              ((!) this._ebookview).start ();
             }
           catch (GLib.Error e3)
             {
@@ -1024,6 +1065,12 @@ public class Edsf.PersonaStore : Folks.PersonaStore
   private async void _commit_modified_property (Edsf.Persona persona,
       string property_name) throws PropertyError
     {
+      /* We require _addressbook to be non-null. This should be the case
+       * because we're only called from property setters, and they check whether
+       * the properties are writeable first. Properties shouldn't be writeable
+       * if _addressbook is null. */
+      assert (this._addressbook != null);
+
       var contact = persona.contact;
 
       ulong signal_id = 0;
@@ -1045,8 +1092,9 @@ public class Edsf.PersonaStore : Folks.PersonaStore
                 }
             });
 
-          /* Commit the modification. */
-          yield this._addressbook.modify_contact (contact, null);
+          /* Commit the modification. _addressbook is asserted as being non-null
+           * above. */
+          yield ((!) this._addressbook).modify_contact (contact, null);
 
           timeout_id = Timeout.add_seconds (this._property_change_timeout, () =>
             {
@@ -1093,6 +1141,15 @@ public class Edsf.PersonaStore : Folks.PersonaStore
         }
     }
 
+  private void _remove_attribute (E.Contact contact, string attr_name)
+    {
+      unowned VCardAttribute? attr = contact.get_attribute (attr_name);
+      if (attr != null)
+        {
+          contact.remove_attribute ((!) attr);
+        }
+    }
+
   internal async void _set_avatar (Edsf.Persona persona, LoadableIcon? avatar)
       throws PropertyError
     {
@@ -1104,7 +1161,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
 
       /* Return early if there will be no change */
       if ((persona.avatar == null && avatar == null) ||
-          (persona.avatar != null && persona.avatar.equal (avatar)))
+          (persona.avatar != null && ((!) persona.avatar).equal (avatar)))
         {
           return;
         }
@@ -1135,12 +1192,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
   private async void _set_contact_web_service_addresses (E.Contact contact,
       MultiMap<string, WebServiceFieldDetails> web_service_addresses)
     {
-      unowned VCardAttribute attr =
-          contact.get_attribute ("X-FOLKS-WEB-SERVICES-IDS");
-      if (attr != null)
-        {
-          contact.remove_attribute (attr);
-        }
+      this._remove_attribute (contact, "X-FOLKS-WEB-SERVICES-IDS");
 
       var attr_n = new VCardAttribute (null, "X-FOLKS-WEB-SERVICES-IDS");
       foreach (var service in web_service_addresses.get_keys ())
@@ -1249,12 +1301,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
   private async void _set_contact_local_ids (E.Contact contact,
       Set<string> local_ids)
     {
-      unowned VCardAttribute attr =
-          contact.get_attribute ("X-FOLKS-CONTACTS-IDS");
-      if (attr != null)
-        {
-          contact.remove_attribute (attr);
-        }
+      this._remove_attribute (contact, "X-FOLKS-CONTACTS-IDS");
 
       var new_attr = new VCardAttribute (null, "X-FOLKS-CONTACTS-IDS");
       foreach (var local_id in local_ids)
@@ -1281,11 +1328,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
   private async void _set_contact_is_favourite (E.Contact contact,
       bool is_favourite)
     {
-      unowned VCardAttribute attr = contact.get_attribute ("X-FOLKS-FAVOURITE");
-      if (attr != null)
-        {
-          contact.remove_attribute (attr);
-        }
+      this._remove_attribute (contact, "X-FOLKS-FAVOURITE");
 
       if (is_favourite)
         {
@@ -1300,11 +1343,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
     {
       if (avatar == null)
         {
-          unowned VCardAttribute attr = contact.get_attribute ("PHOTO");
-          if (attr != null)
-            {
-              contact.remove_attribute (attr);
-            }
+          this._remove_attribute (contact, "PHOTO");
         }
       else
         {
@@ -1313,7 +1352,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
               /* Set the avatar on the contact */
               var cp = new ContactPhoto ();
               cp.type = ContactPhotoType.INLINED;
-              var input_s = yield avatar.load_async (-1, null, null);
+              var input_s = yield ((!) avatar).load_async (-1, null, null);
 
               uint8[] image_data = new uint8[0];
               uint8[] buffer = new uint8[4096];
@@ -1334,7 +1373,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
               bool uncertain = false;
               var mime_type = ContentType.guess (null, image_data,
                   out uncertain);
-              if (mime_type != null && !uncertain)
+              if (!uncertain)
                 {
                   cp.set_mime_type (mime_type);
                 }
@@ -1455,15 +1494,16 @@ public class Edsf.PersonaStore : Folks.PersonaStore
               _("Full name is not writeable on this contact."));
         }
 
+      string? _full_name = full_name;
       if (full_name == "")
         {
-          full_name = null;
+          _full_name = null;
         }
 
-      if (persona.full_name == full_name)
+      if (persona.full_name == _full_name)
         return;
 
-      persona.contact.set (E.Contact.field_id ("full_name"), full_name);
+      persona.contact.set (E.Contact.field_id ("full_name"), _full_name);
       yield this._commit_modified_property (persona, "full-name");
     }
 
@@ -1476,15 +1516,16 @@ public class Edsf.PersonaStore : Folks.PersonaStore
               _("Nickname is not writeable on this contact."));
         }
 
+      string? _nickname = nickname;
       if (nickname == "")
         {
-          nickname = null;
+          _nickname = null;
         }
 
-      if (persona.nickname == nickname)
+      if (persona.nickname == _nickname)
         return;
 
-      persona.contact.set (E.Contact.field_id ("nickname"), nickname);
+      persona.contact.set (E.Contact.field_id ("nickname"), _nickname);
       yield this._commit_modified_property (persona, "nickname");
     }
 
@@ -1528,7 +1569,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
 
       if (persona.birthday != null &&
           bday != null &&
-          persona.birthday.equal (bday))
+          ((!) persona.birthday).equal ((!) bday))
         return;
 
       /* Maybe the current and new b-day are unset */
@@ -1541,19 +1582,24 @@ public class Edsf.PersonaStore : Folks.PersonaStore
     }
 
   private async void _set_contact_birthday (E.Contact contact,
-      DateTime? bday)
+      DateTime? _bday)
     {
-      E.ContactDate? contact_bday = null;
+      E.ContactDate? _contact_bday = null;
 
-      if (bday != null)
+      if (_bday != null)
         {
+          var bday = (!) _bday;
+          E.ContactDate contact_bday;
+
           contact_bday = new E.ContactDate ();
           contact_bday.year = (uint) bday.get_year ();
           contact_bday.month = (uint) bday.get_month ();
           contact_bday.day = (uint) bday.get_day_of_month ();
+
+          _contact_bday = contact_bday;
         }
 
-      contact.set (E.Contact.field_id ("birth_date"), contact_bday);
+      contact.set (E.Contact.field_id ("birth_date"), _contact_bday);
     }
 
   internal async void _set_roles (Edsf.Persona persona,
@@ -1601,23 +1647,23 @@ public class Edsf.PersonaStore : Folks.PersonaStore
               /* FIXME: we are swallowing the extra parameter values */
               var org_unit_values = role_fd.get_parameter_values ("org_unit");
               if (org_unit_values != null &&
-                  org_unit_values.size > 0)
-                org_unit = org_unit_values.to_array ()[0];
+                  ((!) org_unit_values).size > 0)
+                org_unit = ((!) org_unit_values).to_array ()[0];
 
               var office_values = role_fd.get_parameter_values ("office");
               if (office_values != null &&
-                  office_values.size > 0)
-                office = office_values.to_array ()[0];
+                  ((!) office_values).size > 0)
+                office = ((!) office_values).to_array ()[0];
 
               var manager_values = role_fd.get_parameter_values ("manager");
               if (manager_values != null &&
-                  manager_values.size > 0)
-                manager = manager_values.to_array ()[0];
+                  ((!) manager_values).size > 0)
+                manager = ((!) manager_values).to_array ()[0];
 
               var assistant_values = role_fd.get_parameter_values ("assistant");
               if (assistant_values != null &&
-                  assistant_values.size > 0)
-                assistant = assistant_values.to_array ()[0];
+                  ((!) assistant_values).size > 0)
+                assistant = ((!) assistant_values).to_array ()[0];
             }
           else
             {
@@ -1666,8 +1712,12 @@ public class Edsf.PersonaStore : Folks.PersonaStore
               _("Structured name is not writeable on this contact."));
         }
 
-      if (persona.structured_name != null &&
-          persona.structured_name.equal (sname))
+      if (persona.structured_name != null && sname != null &&
+          ((!) persona.structured_name).equal ((!) sname))
+        return;
+
+      /* Maybe the current and new name are unset */
+      if (persona.structured_name == null && sname == null)
         return;
 
       yield this._set_contact_name (persona.contact, sname);
@@ -1675,12 +1725,14 @@ public class Edsf.PersonaStore : Folks.PersonaStore
     }
 
   private async void _set_contact_name (E.Contact contact,
-      StructuredName? sname)
+      StructuredName? _sname)
     {
       E.ContactName contact_name = new E.ContactName ();
 
-      if (sname != null)
+      if (_sname != null)
         {
+          var sname = (!) _sname;
+
           contact_name.family = sname.family_name;
           contact_name.given = sname.given_name;
           contact_name.additional = sname.additional_names;
@@ -1787,12 +1839,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
   private async void _set_contact_gender (E.Contact contact,
       Gender gender)
     {
-      unowned VCardAttribute attr =
-          contact.get_attribute (Edsf.Persona.gender_attribute_name);
-      if (attr != null)
-        {
-          contact.remove_attribute (attr);
-        }
+      this._remove_attribute (contact, Edsf.Persona.gender_attribute_name);
 
       var new_attr =
           new VCardAttribute (null, Edsf.Persona.gender_attribute_name);
@@ -1820,10 +1867,9 @@ public class Edsf.PersonaStore : Folks.PersonaStore
           foreach (E.Contact c in contacts)
             {
               var iid = Edsf.Persona.build_iid_from_contact (this.id, c);
-              var persona = this._personas.get (iid);
-              if (persona == null)
+              if (this._personas.has_key (iid) == false)
                 {
-                  persona = new Persona (this, c);
+                  var persona = new Persona (this, c);
                   this._personas.set (persona.iid, persona);
                   added_personas.add (persona);
                 }
@@ -1849,10 +1895,10 @@ public class Edsf.PersonaStore : Folks.PersonaStore
       foreach (E.Contact c in contacts)
         {
           var iid = Edsf.Persona.build_iid_from_contact (this.id, c);
-          var persona = this._personas.get (iid);
+          Persona? persona = this._personas.get (iid);
           if (persona != null)
             {
-              persona._update (c);
+              ((!) persona)._update (c);
             }
         }
     }
@@ -1864,11 +1910,11 @@ public class Edsf.PersonaStore : Folks.PersonaStore
       foreach (string contact_id in contacts_ids)
         {
           var iid = Edsf.Persona.build_iid (this.id, contact_id);
-          var persona = _personas.get (iid);
+          Persona? persona = _personas.get (iid);
           if (persona != null)
             {
-              removed_personas.add (persona);
-              this._personas.unset (persona.iid);
+              removed_personas.add ((!) persona);
+              this._personas.unset (((!) persona).iid);
             }
         }
 
@@ -1952,8 +1998,12 @@ public class Edsf.PersonaStore : Folks.PersonaStore
 
   private bool _is_in_source_list ()
     {
+      /* Should only ever be called from a callback from the source list itself,
+       * so we can assert that the source list is non-null. */
+      assert (this._source_list != null);
+
       unowned GLib.SList<weak E.SourceGroup> groups =
-          this._source_list.peek_groups ();
+          ((!) this._source_list).peek_groups ();
 
       foreach (var g in groups)
         {
@@ -2003,19 +2053,23 @@ public class Edsf.PersonaStore : Folks.PersonaStore
    */
   private void _update_trust_level ()
     {
+      /* We may be called before prepare() has finished (and it may then fail),
+       * but _addressbook should always be non-null when we're called. */
+      assert (this._addressbook != null);
+
       unowned SourceGroup? group = (SourceGroup?) this.source.peek_group ();
       if (group != null)
         {
-          var base_uri = group.peek_base_uri ();
+          var base_uri = ((!) group).peek_base_uri ();
           /* base_uri should be ldap:// for LDAP based address books */
-          if (base_uri != null && base_uri.has_prefix("ldap"))
+          if (base_uri.has_prefix ("ldap"))
             {
               this.trust_level = PersonaStoreTrust.PARTIAL;
               return;
             }
         }
 
-      if (this._addressbook.readonly)
+      if (((!) this._addressbook).readonly)
         this.trust_level = PersonaStoreTrust.PARTIAL;
       else
         this.trust_level = PersonaStoreTrust.FULL;
@@ -2039,7 +2093,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
           E.BookClient.get_sources (out sources);
           var default_source = sources.peek_default_source ();
           if (default_source != null &&
-              this.source.peek_uid () == default_source.peek_uid ())
+              this.source.peek_uid () == ((!) default_source).peek_uid ())
             {
               is_default = true;
             }

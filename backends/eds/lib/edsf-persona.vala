@@ -128,7 +128,7 @@ public class Edsf.Persona : Folks.Persona,
   private Set<EmailFieldDetails> _email_addresses_ro;
   private HashSet<NoteFieldDetails> _notes;
   private Set<NoteFieldDetails> _notes_ro;
-  private static HashTable<string, E.ContactField> _im_eds_map = null;
+  private static HashTable<string, E.ContactField>? _im_eds_map = null;
 
   private HashSet<PostalAddressFieldDetails> _postal_addresses;
   private Set<PostalAddressFieldDetails> _postal_addresses_ro;
@@ -665,8 +665,8 @@ public class Edsf.Persona : Folks.Persona,
       E.Contact contact)
     {
       var contact_id =
-          (string) Edsf.Persona._get_property_from_contact (contact, "id");
-      return Edsf.Persona.build_iid (store_id, contact_id);
+          (string?) Edsf.Persona._get_property_from_contact (contact, "id");
+      return Edsf.Persona.build_iid (store_id, (!) (contact_id ?? ""));
     }
 
   /**
@@ -694,16 +694,17 @@ public class Edsf.Persona : Folks.Persona,
    */
   public Persona (PersonaStore store, E.Contact contact)
     {
-      var contact_id =
-        (string) Edsf.Persona._get_property_from_contact (contact, "id");
+      var _contact_id =
+        (string?) Edsf.Persona._get_property_from_contact (contact, "id");
+      var contact_id = (!) (_contact_id ?? "");
+
       var uid = this.build_uid (BACKEND_NAME, store.id, contact_id);
       var iid = Edsf.Persona.build_iid (store.id, contact_id);
       var is_user = BookClient.is_self (contact);
-      var full_name =
-          (string) Edsf.Persona._get_property_from_contact (contact,
+      var _full_name =
+          (string?) Edsf.Persona._get_property_from_contact (contact,
               "full_name");
-      if (full_name == null)
-        full_name = "";
+      var full_name = (!) (_full_name ?? "");
 
       Object (display_id: full_name,
               uid: uid,
@@ -873,15 +874,21 @@ public class Edsf.Persona : Folks.Persona,
 
       if (gender_attr != null)
         {
-          var gender_str = gender_attr.get_value ().up ();
-
-          if (gender_str == Edsf.Persona.gender_male)
+          var val = ((!) gender_attr).get_value ();
+          if (val != null)
             {
-              gender = Gender.MALE;
-            }
-          else if (gender_str == Edsf.Persona.gender_female)
-            {
-              gender = Gender.FEMALE;
+              switch (((!) val).up ())
+                {
+                  case Edsf.Persona.gender_male:
+                    gender = Gender.MALE;
+                    break;
+                  case Edsf.Persona.gender_female:
+                    gender = Gender.FEMALE;
+                    break;
+                  default:
+                    /* Unspecified, as above */
+                    break;
+                }
             }
         }
 
@@ -894,10 +901,12 @@ public class Edsf.Persona : Folks.Persona,
 
   private void _update_birthday ()
     {
-      E.ContactDate? bday = (E.ContactDate?) this._get_property ("birth_date");
+      var _bday = (E.ContactDate?) this._get_property ("birth_date");
 
-      if (bday != null)
+      if (_bday != null)
         {
+          var bday = (!) _bday;
+
           /* Since e-d-s stores birthdays as a plain date, we take the
            * given date in local time and convert it to UTC as mandated
            * by the BirthdayDetails interface.
@@ -907,7 +916,7 @@ public class Edsf.Persona : Folks.Persona,
               (int) bday.year, (int) bday.month, (int) bday.day, 0, 0, 0.0);
           if (this._birthday == null ||
               (this._birthday != null &&
-                  !this._birthday.equal (d.to_utc ())))
+                  !((!) this._birthday).equal (d.to_utc ())))
             {
               this._birthday = d.to_utc ();
               this.notify_property ("birthday");
@@ -932,7 +941,7 @@ public class Edsf.Persona : Folks.Persona,
       var default_role_fd = this._get_default_role ();
       if (default_role_fd != null)
         {
-          new_roles.add (default_role_fd);
+          new_roles.add ((!) default_role_fd);
         }
 
       var vcard = (E.VCard) this.contact;
@@ -942,13 +951,13 @@ public class Edsf.Persona : Folks.Persona,
             continue;
 
           var val = attr.get_value ();
-          if (val == null || val == "")
+          if (val == null || (!) val == "")
              {
               continue;
             }
 
           var role = new Role ("", "");
-          role.role = val;
+          role.role = (!) val;
           var role_fd = new RoleFieldDetails (role);
 
           foreach (unowned E.VCardAttributeParam param in
@@ -997,7 +1006,7 @@ public class Edsf.Persona : Folks.Persona,
 
   private RoleFieldDetails? _get_default_role ()
     {
-      RoleFieldDetails? default_role = null;
+      RoleFieldDetails? _default_role = null;
 
       var org = (string?) this._get_property ("org");
       var org_unit = (string?) this._get_property ("org_unit");
@@ -1016,29 +1025,31 @@ public class Edsf.Persona : Folks.Persona,
           assistant != null)
         {
           var new_role = new Role (title, org);
-          if (role != null && role != "")
-            new_role.role = role;
+          if (role != null && (!) role != "")
+            new_role.role = (!) role;
 
           /* Check if it's non-empty. */
           if (!new_role.is_empty ())
             {
-              default_role = new RoleFieldDetails (new_role);
+              var default_role = new RoleFieldDetails (new_role);
 
               if (org_unit != null && org_unit != "")
-                default_role.set_parameter ("org_unit", org_unit);
+                default_role.set_parameter ("org_unit", (!) org_unit);
 
               if (office != null && office != "")
-                default_role.set_parameter ("office", office);
+                default_role.set_parameter ("office", (!) office);
 
               if (manager != null && manager != "")
-                default_role.set_parameter ("manager", manager);
+                default_role.set_parameter ("manager", (!) manager);
 
               if (assistant != null && manager != "")
-                default_role.set_parameter ("assistant", assistant);
+                default_role.set_parameter ("assistant", (!) assistant);
+
+              _default_role = default_role;
             }
         }
 
-      return default_role;
+      return _default_role;
     }
 
   private void _update_web_services_addresses ()
@@ -1051,12 +1062,12 @@ public class Edsf.Persona : Folks.Persona,
       var services = this.contact.get_attribute ("X-FOLKS-WEB-SERVICES-IDS");
       if (services != null)
         {
-          foreach (var service in services.get_params ())
+          foreach (var service in ((!) services).get_params ())
             {
               var service_name = service.get_name ().down ();
               foreach (var service_id in service.get_values ())
                 {
-                  if (service_id == null || service_id == "")
+                  if (service_id == "")
                     {
                       continue;
                     }
@@ -1085,12 +1096,12 @@ public class Edsf.Persona : Folks.Persona,
       foreach (var attr in attrs)
         {
           var val = attr.get_value ();
-          if (val == null || val == "")
+          if (val == null || (!) val == "")
             {
               continue;
             }
 
-          var email_fd = new EmailFieldDetails (val);
+          var email_fd = new EmailFieldDetails ((!) val);
           this._update_params (email_fd, attr);
           new_email_addresses.add (email_fd);
         }
@@ -1110,10 +1121,10 @@ public class Edsf.Persona : Folks.Persona,
           (GLib.HashFunc) NoteFieldDetails.hash,
           (GLib.EqualFunc) NoteFieldDetails.equal);
 
-      string n = (string) this._get_property ("note");
+      var n = (string?) this._get_property ("note");
       if (n != null && n != "")
         {
-          var note = new NoteFieldDetails (n);
+          var note = new NoteFieldDetails ((!) n);
           new_notes.add (note);
         }
 
@@ -1127,12 +1138,14 @@ public class Edsf.Persona : Folks.Persona,
 
   private void _update_names ()
     {
-      string full_name = (string) this._get_property ("full_name");
+      var _full_name = (string?) this._get_property ("full_name");
 
-      if (full_name == null)
+      if (_full_name == null)
         {
-          full_name = "";
+          _full_name = "";
         }
+
+      var full_name = (!) _full_name;
 
       if (this._full_name != full_name)
         {
@@ -1140,12 +1153,14 @@ public class Edsf.Persona : Folks.Persona,
           this.notify_property ("full-name");
         }
 
-      string nickname = (string) this._get_property ("nickname");
+      var _nickname = (string?) this._get_property ("nickname");
 
-      if (nickname == null)
+      if (_nickname == null)
         {
-          nickname = "";
+          _nickname = "";
         }
+
+      var nickname = (!) _nickname;
 
       if (this._nickname != nickname)
         {
@@ -1154,9 +1169,11 @@ public class Edsf.Persona : Folks.Persona,
         }
 
       StructuredName? structured_name = null;
-      E.ContactName? cn = (E.ContactName) this._get_property ("name");
-      if (cn != null)
+      var _cn = (E.ContactName?) this._get_property ("name");
+      if (_cn != null)
         {
+          var cn = (!) _cn;
+
           string family_name = cn.family;
           string given_name  = cn.given;
           string additional_names = cn.additional;
@@ -1167,9 +1184,9 @@ public class Edsf.Persona : Folks.Persona,
                                                 suffixes);
         }
 
-      if (structured_name != null && !structured_name.is_empty ())
+      if (structured_name != null && !((!) structured_name).is_empty ())
         {
-          this._structured_name = structured_name;
+          this._structured_name = (!) structured_name;
           this.notify_property ("structured-name");
         }
       else if (this._structured_name != null)
@@ -1179,29 +1196,34 @@ public class Edsf.Persona : Folks.Persona,
         }
     }
 
-  private LoadableIcon? _contact_photo_to_loadable_icon (ContactPhoto? p)
+  private LoadableIcon? _contact_photo_to_loadable_icon (ContactPhoto? _p)
     {
-      if (p == null)
+      if (_p == null)
         {
           return null;
         }
 
+      var p = (!) _p;
+
       switch (p.type)
         {
           case ContactPhotoType.URI:
-            if (p.get_uri () == null)
+            var uri = p.get_uri ();
+            if (uri == null)
               {
                 return null;
               }
 
-            return new FileIcon (File.new_for_uri (p.get_uri ()));
+            return new FileIcon (File.new_for_uri ((!) uri));
           case ContactPhotoType.INLINED:
-            if (p.get_inlined () == null)
+            var data = p.get_inlined ();
+            var mime_type = p.get_mime_type ();
+            if (data == null || mime_type == null)
               {
                 return null;
               }
 
-            return new Edsf.MemoryIcon (p.get_mime_type (), p.get_inlined ());
+            return new Edsf.MemoryIcon ((!) mime_type, (!) data);
           default:
             return null;
         }
@@ -1209,7 +1231,7 @@ public class Edsf.Persona : Folks.Persona,
 
   private void _update_avatar ()
     {
-      E.ContactPhoto? p = (E.ContactPhoto) this._get_property ("photo");
+      var p = (E.ContactPhoto?) this._get_property ("photo");
 
       var cache = AvatarCache.dup ();
 
@@ -1231,12 +1253,13 @@ public class Edsf.Persona : Folks.Persona,
               this.notify_property ("avatar");
             });
         }
-      else if ((this.avatar == null && new_avatar != null) ||
-          (this.avatar != null && new_avatar != null &&
-           this._avatar.equal (new_avatar) == false))
+      else if ((this._avatar == null && new_avatar != null) ||
+          (this._avatar != null && new_avatar != null &&
+           ((!) this._avatar).equal (new_avatar) == false))
         {
-          // Store the new avatar in the cache.
-          cache.store_avatar.begin (this.uid, new_avatar, (obj, res) =>
+          /* Store the new avatar in the cache. new_avatar is guaranteed to be
+           * non-null. */
+          cache.store_avatar.begin (this.uid, (!) new_avatar, (obj, res) =>
             {
               try
                 {
@@ -1264,10 +1287,10 @@ public class Edsf.Persona : Folks.Persona,
           var url_property = mapping.vcard_field_name;
           var folks_type = mapping.folks_type;
 
-          string u = (string) this._get_property (url_property);
+          var u = (string?) this._get_property (url_property);
           if (u != null && u != "")
             {
-              var fd_u = new UrlFieldDetails (u);
+              var fd_u = new UrlFieldDetails ((!) u);
               fd_u.set_parameter (fd_u.PARAM_TYPE, folks_type);
               new_urls.add (fd_u);
             }
@@ -1280,12 +1303,12 @@ public class Edsf.Persona : Folks.Persona,
           if (attr.get_name () == "X-URIS")
             {
               var val = attr.get_value ();
-              if (val == null || val == "")
+              if (val == null || (!) val == "")
                 {
                   continue;
                 }
 
-              var url_fd = new UrlFieldDetails (val);
+              var url_fd = new UrlFieldDetails ((!) val);
               this._update_params (url_fd, attr);
               new_urls.add (url_fd);
             }
@@ -1315,13 +1338,13 @@ public class Edsf.Persona : Folks.Persona,
               try
                 {
                   var addr = attr.get_value ();
-                  if (addr == null || addr == "")
+                  if (addr == null || (!) addr == "")
                     {
                       continue;
                     }
 
                   string normalised_addr =
-                    (owned) ImDetails.normalise_im_address (addr, im_proto);
+                    (owned) ImDetails.normalise_im_address ((!) addr, im_proto);
                   var im_fd = new ImFieldDetails (normalised_addr);
                   new_im_addresses.set (im_proto, im_fd);
                 }
@@ -1345,15 +1368,18 @@ public class Edsf.Persona : Folks.Persona,
        */
       foreach (var email in this.email_addresses)
         {
-          var proto = this._im_proto_from_addr (email.value);
-          if (proto != null)
+          var _proto = this._im_proto_from_addr (email.value);
+          if (_proto != null)
             {
+              var proto = (!) _proto;
+
               /* Has this already been added? */
               var exists = false;
-              var current_im_addrs = new_im_addresses.get (proto);
+              Collection<ImFieldDetails>? current_im_addrs =
+                  new_im_addresses.get (proto);
               if (current_im_addrs != null)
                 {
-                  foreach (var cur_im in current_im_addrs)
+                  foreach (var cur_im in (!) current_im_addrs)
                     {
                       if (cur_im.value == email.value)
                         {
@@ -1444,30 +1470,31 @@ public class Edsf.Persona : Folks.Persona,
    */
   internal static HashTable<string, E.ContactField> _get_im_eds_map ()
     {
+      HashTable<string, E.ContactField> retval;
+
       lock (Edsf.Persona._im_eds_map)
         {
           if (Edsf.Persona._im_eds_map == null)
             {
-              Edsf.Persona._im_eds_map =
-                new HashTable<string, E.ContactField> (str_hash, str_equal);
-              Edsf.Persona._im_eds_map.insert ("aim", ContactField.IM_AIM);
-              Edsf.Persona._im_eds_map.insert ("yahoo", ContactField.IM_YAHOO);
-              Edsf.Persona._im_eds_map.insert ("groupwise",
-                  ContactField.IM_GROUPWISE);
-              Edsf.Persona._im_eds_map.insert ("jabber",
-                  ContactField.IM_JABBER);
-              Edsf.Persona._im_eds_map.insert ("msn",
-                  ContactField.IM_MSN);
-              Edsf.Persona._im_eds_map.insert ("icq",
-                  ContactField.IM_ICQ);
-              Edsf.Persona._im_eds_map.insert ("gadugadu",
-                  ContactField.IM_GADUGADU);
-              Edsf.Persona._im_eds_map.insert ("skype",
-                  ContactField.IM_SKYPE);
+              var table =
+                  new HashTable<string, E.ContactField> (str_hash, str_equal);
+
+              table.insert ("aim", ContactField.IM_AIM);
+              table.insert ("yahoo", ContactField.IM_YAHOO);
+              table.insert ("groupwise", ContactField.IM_GROUPWISE);
+              table.insert ("jabber", ContactField.IM_JABBER);
+              table.insert ("msn", ContactField.IM_MSN);
+              table.insert ("icq", ContactField.IM_ICQ);
+              table.insert ("gadugadu", ContactField.IM_GADUGADU);
+              table.insert ("skype", ContactField.IM_SKYPE);
+
+              Edsf.Persona._im_eds_map = table;
             }
+
+          retval = (!) Edsf.Persona._im_eds_map;
         }
 
-      return Edsf.Persona._im_eds_map;
+      return retval;
     }
 
   private void _update_phones ()
@@ -1480,12 +1507,12 @@ public class Edsf.Persona : Folks.Persona,
       foreach (var attr in attrs)
         {
           var val = attr.get_value ();
-          if (val == null || val == "")
+          if (val == null || (!) val == "")
             {
               continue;
             }
 
-          var phone_fd = new PhoneFieldDetails (val);
+          var phone_fd = new PhoneFieldDetails ((!) val);
           this._update_params (phone_fd, attr);
           new_phone_numbers.add (phone_fd);
         }
@@ -1501,8 +1528,8 @@ public class Edsf.Persona : Folks.Persona,
 
   private PostalAddress _postal_address_from_attribute (E.VCardAttribute attr)
     {
-      unowned GLib.List<string?> values = attr.get_values();
-      unowned GLib.List<string?> l = values;
+      unowned GLib.List<string>? values = attr.get_values();
+      unowned GLib.List<string>? l = values;
 
       var address_format = "";
       var po_box = "";
@@ -1515,38 +1542,38 @@ public class Edsf.Persona : Folks.Persona,
 
       if (l != null)
         {
-          po_box = l.data;
-          l = l.next;
+          po_box = ((!) l).data;
+          l = ((!) l).next;
         }
       if (l != null)
         {
-          extension = l.data;
-          l = l.next;
+          extension = ((!) l).data;
+          l = ((!) l).next;
         }
       if (l != null)
         {
-          street = l.data;
-          l = l.next;
+          street = ((!) l).data;
+          l = ((!) l).next;
         }
       if (l != null)
         {
-          locality = l.data;
-          l = l.next;
+          locality = ((!) l).data;
+          l = ((!) l).next;
         }
       if (l != null)
         {
-          region = l.data;
-          l = l.next;
+          region = ((!) l).data;
+          l = ((!) l).next;
         }
       if (l != null)
         {
-          postal_code = l.data;
-          l = l.next;
+          postal_code = ((!) l).data;
+          l = ((!) l).next;
         }
       if (l != null)
         {
-          country = l.data;
-          l = l.next;
+          country = ((!) l).data;
+          l = ((!) l).next;
         }
 
       return new PostalAddress (po_box, extension, street,
@@ -1593,11 +1620,11 @@ public class Edsf.Persona : Folks.Persona,
       var ids = this.contact.get_attribute ("X-FOLKS-CONTACTS-IDS");
       if (ids != null)
         {
-          unowned GLib.List<string> ids_v = ids.get_values ();
+          unowned GLib.List<string> ids_v = ((!) ids).get_values ();
 
           foreach (var local_id in ids_v)
             {
-              if (local_id != null && local_id != "")
+              if (local_id != "")
                 {
                   new_local_ids.add (local_id);
                 }
@@ -1622,8 +1649,8 @@ public class Edsf.Persona : Folks.Persona,
       var fav = this.contact.get_attribute ("X-FOLKS-FAVOURITE");
       if (fav != null)
         {
-          var val = fav.get_value ();
-          if (val.down () == "true")
+          var val = ((!) fav).get_value ();
+          if (val != null && ((!) val).down () == "true")
             {
               is_fav = true;
             }
@@ -1636,6 +1663,7 @@ public class Edsf.Persona : Folks.Persona,
         }
     }
 
+  // NOTE: This may return null, but Vala doesn't allow us to express that in the type system for void* types.
   internal static void * _get_property_from_contact (E.Contact contact,
       string prop_name)
     {
@@ -1644,6 +1672,7 @@ public class Edsf.Persona : Folks.Persona,
       return prop_value;
     }
 
+  // NOTE: This may return null, but Vala doesn't allow us to express that in the type system for void* types.
   private void * _get_property (string prop_name)
     {
       return Edsf.Persona._get_property_from_contact (this.contact,
