@@ -10,8 +10,8 @@ msgstr ""
 "Project-Id-Version: folks master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=folks&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2011-12-28 19:56+0000\n"
-"PO-Revision-Date: 2011-12-29 15:44+0100\n"
+"POT-Creation-Date: 2011-12-29 14:48+0000\n"
+"PO-Revision-Date: 2011-12-31 18:45+0100\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -25,8 +25,8 @@ msgstr ""
 #, c-format
 msgid "Address book ‘%s’ is offline, so contact ‘%s’ cannot be removed."
 msgstr ""
-"La libreta de direcciones «%s» está fuera de línea, por lo que el contacto «%"
-"s» no se puede quitar."
+"La libreta de direcciones «%s» está fuera de línea, por lo que el contacto "
+"«%s» no se puede quitar."
 
 #. Translators: the first parameter is an address book
 #. * URI and the second is an error message.
@@ -263,13 +263,13 @@ msgstr "No se pudieron cargar los datos de la clave de relación: %s"
 #: ../backends/telepathy/lib/tp-lowlevel.c:508
 #, c-format
 msgid "Error requesting a group channel: %s"
-msgstr "Error al pedir un canal de grupo: %s"
+msgstr "Error al solicitar un canal de grupo: %s"
 
 #. Translators: the parameter is an error message.
 #: ../backends/telepathy/lib/tp-lowlevel.c:526
 #, c-format
 msgid "Error requesting group handles: %s"
-msgstr ""
+msgstr "Error al solicitar los punteros inteligentes del grupo: %s"
 
 #. Translators: the parameter is an error message.
 #: ../backends/telepathy/lib/tp-lowlevel.c:564
@@ -310,7 +310,7 @@ msgstr "Fallo al quitar el contacto del grupo «%s»: %s"
 #: ../backends/telepathy/lib/tp-lowlevel.c:736
 #, c-format
 msgid "Invalid group channel %p to add handle %d to."
-msgstr ""
+msgstr "Canal de grupo no válido %p para añadirle el puntero inteligente %d."
 
 #: ../backends/telepathy/lib/tpf-persona-store.vala:634
 msgid "Couldn't connect to the telepathy-logger service."
@@ -372,7 +372,7 @@ msgstr ""
 #: ../backends/telepathy/lib/tpf-persona-store.vala:1162
 #, c-format
 msgid "Failed to create contact for self handle '%u': %s"
-msgstr ""
+msgstr "Falló al crear contacto para el puntero inteligente propio «%u»: %s"
 
 #. Translators: do not translate "NewChannels", as it's a D-Bus
 #. * signal name.
@@ -425,10 +425,9 @@ msgstr "Falló al añadir el contacto «%s» de Telepathy a lista «%s»: %s"
 #. Translators: the first parameter is a channel identifier and
 #. * the second is an error message..
 #: ../backends/telepathy/lib/tpf-persona-store.vala:1923
-#, fuzzy, c-format
-#| msgid "Failed to remove contact from group '%s': %s"
+#, c-format
 msgid "Failed to create incoming Telepathy contacts from channel ‘%s’: %s"
-msgstr "Fallo al quitar el contacto del grupo «%s»: %s"
+msgstr "Falló al crear contactos entrantes de Telepathy del canal «%s»: %s"
 
 #. Translators: the first two parameters are store identifiers and
 #. * the third is a contact identifier.
@@ -494,7 +493,7 @@ msgstr ""
 #: ../backends/tracker/lib/trf-persona-store.vala:739
 #, c-format
 msgid "Unrecognized parameter '%s' passed to persona store '%s'."
-msgstr ""
+msgstr "Parámetro «%s» desconocido pasado al almacén de contactos «%s»."
 
 #: ../folks/alias-details.vala:57
 msgid "Alias is not writeable on this contact."
@@ -552,7 +551,7 @@ msgstr "Falló al obtener el tipo de contenido para «%s»."
 
 #: ../folks/birthday-details.vala:89
 msgid "Birthday event ID is not writeable on this contact."
-msgstr ""
+msgstr "No se puede escribir el ID de evento de cumpleaños en este contacto."
 
 #: ../folks/favourite-details.vala:52
 msgid "Favorite status is not writeable on this contact."
@@ -585,9 +584,9 @@ msgstr "Propiedad «%s» desconocida en la lista enlazable de propiedades."
 #, c-format
 msgid "Failed to add contact for persona store ID '%s': %s"
 msgstr ""
+"Falló al añadir el contacto para el ID de almacén de contactos «%s»: %s"
 
 #: ../folks/individual-aggregator.vala:1597
-#| msgid "Can't link personas with no primary store."
 msgid "Can’t link personas with no primary store."
 msgstr "No se pueden enlazar contactos sin almacén primario."
 
@@ -598,6 +597,8 @@ msgid ""
 "Persona store ‘%s:%s’ is configured as primary, but could not be found or "
 "failed to load."
 msgstr ""
+"El almacén de contactos «%s:%s» está configurado como primario, pero no se "
+"encontró o falló al cargar."
 
 #: ../folks/individual-aggregator.vala:1599
 #: ../folks/individual-aggregator.vala:1860
@@ -606,9 +607,11 @@ msgid ""
 "Check the service providing the persona store is running, or change the "
 "default store in that service or using the “%s” GConf key."
 msgstr ""
+"Verifique que el servicio que proporciona el almacén de contactos se esté "
+"ejecutando, o modifique el almacén predeterminado en ese servicio usando la "
+"clave de GConf «%s»."
 
 #: ../folks/individual-aggregator.vala:1858
-#| msgid "Can't add personas with no primary store."
 msgid "Can’t add personas with no primary store."
 msgstr "No se pueden añadir contactos sin almacén primario."
 
@@ -616,6 +619,7 @@ msgstr "No se pueden añadir contactos sin almacén primario."
 #, c-format
 msgid "Can't write to requested property (“%s”) of the writeable store."
 msgstr ""
+"No se puede escribir a la propiedad solicitada («%s») del almacén escribible."
 
 #: ../folks/postal-address-details.vala:231
 #, c-format
@@ -650,7 +654,7 @@ msgstr "No se puede leer el archivo «%s»."
 #: ../tools/import-pidgin.vala:81
 #, c-format
 msgid "The Pidgin buddy list file '%s' could not be loaded."
-msgstr ""
+msgstr "No se pudo cargar la lista de amigos de Pidgin «%s»."
 
 #. Translators: the parameter is a filename.
 #: ../tools/import-pidgin.vala:96
@@ -659,6 +663,8 @@ msgid ""
 "The Pidgin buddy list file ‘%s’ could not be loaded: the root element could "
 "not be found or was not recognized."
 msgstr ""
+"No se pudo cargar la lista de amigos de Pidgin «%s»: no se encontró el "
+"elemento raíz o no se reconoció."
 
 #. Translators: the first parameter is the number of buddies which
 #. * were successfully imported, and the second is a filename.
@@ -666,8 +672,8 @@ msgstr ""
 #, c-format
 msgid "Imported %u buddy from '%s'."
 msgid_plural "Imported %u buddies from '%s'."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Importado %u amigo de «%s»."
+msgstr[1] "Importados %u amigos de «%s»."
 
 #. Translators: the first parameter is a persona identifier,
 #. * and the second is an error message.
@@ -683,6 +689,8 @@ msgid ""
 "Ignoring buddy with no alias and only one IM address:\n"
 "%s"
 msgstr ""
+"Ignorando amigo sin alias y sólo una dirección IM:\n"
+"%s"
 
 #: ../tools/import-pidgin.vala:243
 #, c-format
@@ -691,6 +699,10 @@ msgid ""
 "%s\n"
 "Error: %s\n"
 msgstr ""
+"Falló al crear contacto nuevo para el amigo con alias «%s» y direcciones "
+"IM:\n"
+"%s\n"
+"Error: %s\n"
 
 #. Translators: the first parameter is a persona identifier, the
 #. * second is an alias for the persona, and the third is a set of IM
@@ -711,10 +723,12 @@ msgstr "Nombre del «backend» origen (predeterminado: «pidgin»)"
 #: ../tools/import.vala:47
 msgid "Source filename (default: specific to source backend)"
 msgstr ""
+"Nombre de archivo fuente (predeterminado: específico a la fuente del "
+"«backend»)"
 
 #: ../tools/import.vala:57
 msgid "— import meta-contact information to libfolks"
-msgstr ""
+msgstr "— importar información de meta-contacto a libfolks"
 
 #. Translators: the parameter is an error message.
 #: ../tools/import.vala:67
@@ -748,10 +762,10 @@ msgid "Couldn't load the ‘%s’ backend's persona store."
 msgstr "No se pudo cargar el almacén de contactos del «backend %s»."
 
 #: ../tools/import.vala:166
-#, fuzzy, c-format
-#| msgid "Couldn't load the backends: %s\n"
+#, c-format
 msgid "Couldn't prepare the ‘%s’ backend's persona store: %s"
-msgstr "No se pudieron cargar los «backend»: %s\n"
+msgstr ""
+"No se pudieron preparar los almacenes de contactos del «backend %s»: %s"
 
 #. Translators: the parameter is an error message.
 #: ../tools/import.vala:184
@@ -766,6 +780,8 @@ msgid ""
 "Unrecognized source backend name ‘%s’. ‘%s’ is currently the only supported "
 "source backend."
 msgstr ""
+"Nombre «%s» de la fuente del «backend» desconocido. «%s» es actualmente el "
+"único soportado."
 
 #~ msgid "Failed to remove persona '%s' (%s) from 'stored' list: %s"
 #~ msgstr "Falló al quitar el contacto «%s» (%s) de la lista «stored»: %s"
