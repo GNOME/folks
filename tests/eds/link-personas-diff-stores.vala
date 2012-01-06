@@ -106,16 +106,24 @@ public class LinkPersonasDiffStoresTests : Folks.TestCase
       try
         {
           yield this._aggregator.prepare ();
+          assert (this._aggregator.is_prepared);
 
-          var pstore = this._get_store (store,
-              this._eds_backend.address_book_uid);
-          assert (pstore != null);
+          /* We require both stores to guarantee to be prepared for this test,
+           * since we call add_persona_from_details() on them. */
+          this._aggregator.notify["is-quiescent"].connect ((obj, pspec) =>
+            {
+              var pstore = this._get_store (store,
+                  this._eds_backend.address_book_uid);
+              assert (pstore != null);
+              assert (pstore.is_prepared == true);
 
-          var pstore2 = this._get_store (store,
-              this._eds_backend_other.address_book_uid);
-          assert (pstore2 != null);
+              var pstore2 = this._get_store (store,
+                  this._eds_backend_other.address_book_uid);
+              assert (pstore2 != null);
+              assert (pstore2.is_prepared == true);
 
-          yield this._add_personas (pstore, pstore2);
+              this._add_personas (pstore, pstore2);
+            });
         }
       catch (GLib.Error e)
         {
