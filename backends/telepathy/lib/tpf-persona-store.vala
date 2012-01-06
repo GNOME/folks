@@ -1080,6 +1080,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
         {
           foreach (var p in cached_personas)
             {
+              this._personas.set (p.iid, p);
               this._persona_set.add (p);
             }
         }
