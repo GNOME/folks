@@ -351,12 +351,14 @@ public class Folks.IndividualAggregator : Object
           disable_linking == "no" || disable_linking == "0");
 
       this._backend_store = BackendStore.dup ();
-      this._backend_store.backend_available.connect (
-          this._backend_available_cb);
+
+      debug ("Constructing IndividualAggregator %p", this);
     }
 
   ~IndividualAggregator ()
     {
+      debug ("Destroying IndividualAggregator %p", this);
+
       this._backend_store.backend_available.disconnect (
           this._backend_available_cb);
 
@@ -505,10 +507,33 @@ public class Folks.IndividualAggregator : Object
             {
               this._prepare_pending = true;
 
+              this._backend_store.backend_available.connect (
+                  this._backend_available_cb);
+
+              /* Load any backends which already exist. This could happen if the
+               * BackendStore has stayed alive after being used by a previous
+               * IndividualAggregator instance. */
+              var backends = this._backend_store.enabled_backends.values;
+              foreach (var backend in backends)
+                {
+                  this._backend_available_cb (this._backend_store, backend);
+                }
+
+              /* Load any backends which haven't been loaded already. (Typically
+               * all of them.) */
               yield this._backend_store.load_backends ();
 
               this._is_prepared = true;
               this.notify_property ("is-prepared");
+
+              /* Mark the aggregator as having reached a quiescent state if
+               * appropriate. This will typically only happen here in cases
+               * where the stores were all prepared and quiescent before the
+               * aggregator was created. */
+              if (this._is_quiescent == false)
+                {
+                  this._notify_if_is_quiescent ();
+                }
             }
           finally
             {
@@ -699,6 +724,9 @@ public class Folks.IndividualAggregator : Object
   private void _backend_persona_store_added_cb (Backend backend,
       PersonaStore store)
     {
+      debug ("_backend_persona_store_added_cb(): backend: %s, store: %s (%p)",
+          backend.name, store.id, store);
+
       var store_id = this._get_store_full_id (store.type_id, store.id);
 
       this._maybe_configure_as_primary (store);
@@ -723,6 +751,24 @@ public class Folks.IndividualAggregator : Object
           this._non_quiescent_persona_store_count++;
         }
 
+      /* Handle any pre-existing personas in the store. This can happen if the
+       * store existed (and was prepared) before this IndividualAggregator was
+       * constructed. */
+      if (store.personas.size > 0)
+        {
+          var persona_set = new HashSet<Persona> ();
+          foreach (var p in store.personas.values)
+            {
+              persona_set.add (p);
+            }
+
+          this._personas_changed_cb (store, persona_set,
+              new HashSet<Persona> (), null, null,
+              GroupDetails.ChangeReason.NONE);
+        }
+
+      /* Prepare the store and receive a load of other personas-changed
+       * signals. */
       store.prepare.begin ((obj, result) =>
         {
           try

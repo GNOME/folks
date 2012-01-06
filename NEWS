@@ -6,6 +6,8 @@ Bugs fixed:
 * Bug 666540 — Segfault on empty e-mail addresses with potential match
 * Bug 659610 — Support code coverage report generation
 * Bug 657063 — Allow to pass a command to folks-inspect
+* Bug 667410 — A second instance of the aggregator only fetch a small subset of
+  my contacts
 
 API changes:
 * Add PostalAddress.is_empty() and Role.is_empty()

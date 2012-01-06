@@ -35,6 +35,16 @@ using Gee;
  */
 public abstract class Folks.Backend : Object
 {
+  construct
+    {
+      debug ("Constructing Backend ‘%s’ (%p)", this.name, this);
+    }
+
+  ~Backend ()
+    {
+      debug ("Destroying Backend ‘%s’ (%p)", this.name, this);
+    }
+
   /**
    * Whether {@link Backend.prepare} has successfully completed for this
    * backend.

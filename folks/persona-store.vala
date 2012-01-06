@@ -280,6 +280,16 @@ public enum Folks.PersonaDetail
  */
 public abstract class Folks.PersonaStore : Object
 {
+  construct
+    {
+      debug ("Constructing PersonaStore ‘%s’ (%p)", this.id, this);
+    }
+
+  ~PersonaStore ()
+    {
+      debug ("Destroying PersonaStore ‘%s’ (%p)", this.id, this);
+    }
+
   /**
    * The following list of properties are the basic keys
    * that each PersonaStore with write capabilities should

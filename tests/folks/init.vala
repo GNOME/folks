@@ -15,6 +15,7 @@
  * along with this library.  If not, see <http://www.gnu.org/licenses/>.
  *
  * Authors: Guillaume Desmottes <guillaume.desmottes@collabora.co.uk>
+ *          Philip Withnall <philip@tecnocode.co.uk>
  */
 
 using Gee;
@@ -35,6 +36,7 @@ public class InitTests : Folks.TestCase
 
       /* Set up the tests */
       this.add_test ("looped", this.test_looped);
+      this.add_test ("individual-count", this.test_individual_count);
     }
 
   public override void set_up ()
@@ -83,6 +85,95 @@ public class InitTests : Folks.TestCase
       this._tp_backend.remove_account (account2_handle);
       this._tp_backend.remove_account (account1_handle);
       this._kf_backend.tear_down ();
+    }
+
+  /* Prepare an aggregator and wait for quiescence, then count how many
+   * individuals it contains. Loop and do the same thing again, then compare
+   * the numbers of individuals and their IDs. Do this several times.
+   *
+   * This tests that the preparation code in IndividualAggregator can handle
+   * Backends and PersonaStores which have been prepared before the aggregator
+   * was created. To a lesser extent, it also tests that the aggregation code
+   * is deterministic. See: bgo#667410. */
+  public void test_individual_count ()
+    {
+      var main_loop = new GLib.MainLoop (null, false);
+
+      this._kf_backend.set_up (
+          "[0]\n" +
+          "msn=foo@hotmail.com\n" +
+          "[1]\n" +
+          "__alias=Bar McBadgerson\n" +
+          "jabber=bar@jabber.org\n");
+
+      void* account1_handle = this._tp_backend.add_account ("protocol",
+          "me@example.com", "cm", "account");
+      void* account2_handle = this._tp_backend.add_account ("protocol",
+          "me2@example.com", "cm", "account2");
+
+      /* Run the test loop. */
+      Idle.add (() =>
+        {
+          this._test_individual_count_loop.begin ((obj, res) =>
+            {
+              this._test_individual_count_loop.end (res);
+              main_loop.quit ();
+            });
+
+          return false;
+        });
+
+      main_loop.run ();
+
+      /* Clean up for the next test */
+      this._tp_backend.remove_account (account2_handle);
+      this._tp_backend.remove_account (account1_handle);
+
+      this._kf_backend.tear_down ();
+    }
+
+  private async void _test_individual_count_loop ()
+    {
+      string[]? previous_individual_ids = null;
+
+      for (uint i = 0; i < 10; i++)
+        {
+          var aggregator = new IndividualAggregator ();
+
+          try
+            {
+              yield TestUtils.aggregator_prepare_and_wait_for_quiescence (
+                  aggregator);
+            }
+          catch (GLib.Error e1)
+            {
+              GLib.critical ("Error preparing aggregator: %s", e1.message);
+            }
+
+          if (previous_individual_ids == null)
+            {
+              /* First iteration; store the set of IDs. */
+              previous_individual_ids = aggregator.individuals.keys.to_array ();
+            }
+          else
+            {
+              /* Compare this set to the previous aggregator's set. */
+              debug ("%u vs %u individuals:", previous_individual_ids.length,
+                  aggregator.individuals.size);
+              assert (previous_individual_ids.length ==
+                  aggregator.individuals.size);
+              assert (aggregator.individuals.size > 0);
+
+              foreach (var id in previous_individual_ids)
+                {
+                  debug ("  %s", id);
+                  assert (aggregator.individuals.has_key (id) == true);
+                }
+            }
+
+          /* Destroy the aggregator and loop. */
+          aggregator = null;
+        }
     }
 }
 
