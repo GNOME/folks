@@ -609,7 +609,9 @@ public class Edsf.PersonaStore : Folks.PersonaStore
               ((!) this._addressbook).notify["readonly"].connect (
                   this._address_book_notify_read_only_cb);
 
-              yield ((!) this._addressbook).open (false, null);
+              yield this._open_address_book ();
+              debug ("Successfully finished opening address book %p for " +
+                  "persona store ‘%s’ (%p).", this._addressbook, this.id, this);
 
               this._update_trust_level ();
             }
@@ -907,6 +909,88 @@ public class Edsf.PersonaStore : Folks.PersonaStore
               this._is_quiescent = true;
               this.notify_property ("is-quiescent");
             }
+        }
+    }
+
+  /* Temporaries for _open_address_book(). See the complaint below. */
+  Error? _open_address_book_error = null;
+  SourceFunc? _open_address_book_callback = null; /* non-null iff yielded */
+
+  private async void _open_address_book () throws GLib.Error
+    {
+      Error? err_out = null;
+
+      debug ("Opening address book %p for persona store ‘%s’ (%p)",
+          this._addressbook, this.id, this);
+
+      /* We have to connect to this weirdly because ‘opened’ is also a property
+       * name. This means we can’t use a lambda function, which in turn means
+       * that we need to build our own closure (or store some temporaries in
+       * the persona store’s private data struct). Yuck. Yuck. Yuck. */
+      var signal_id = Signal.connect_swapped ((!) this._addressbook, "opened",
+        (Callback) this._address_book_opened_cb, this);
+
+      try
+        {
+          yield ((!) this._addressbook).open (false, null);
+        }
+      catch (GLib.Error e1)
+        {
+          if (e1.domain == Client.error_quark () &&
+              (ClientError) e1.code == ClientError.BUSY)
+            {
+              /* If we've received a BUSY error, it means that the address book
+               * is already in the process of being opened by a different client
+               * (most likely in a completely unrelated process). Since EDS is
+               * kind enough not to block the open() call in this case, we have
+               * to handle it ourselves by waiting for the ::opened signal,
+               * which will be emitted once the address book is opened (or once
+               * opening it fails).
+               *
+               * We yield until the ::opened callback is called, at which point
+               * we return. The callback is a no-op if it’s called during the
+               * open() call above. */
+              this._open_address_book_callback =
+                  this._open_address_book.callback;
+
+              debug ("Yielding on opening address book %p for persona store " +
+                  "‘%s’ (%p)", this._addressbook, this.id, this);
+              yield;
+
+              /* Propagate error/success. */
+              err_out = this._open_address_book_error;
+            }
+          else
+            {
+              /* Error. */
+              err_out = e1;
+            }
+
+          if (err_out != null)
+            {
+              throw err_out;
+            }
+        }
+      finally
+        {
+          /* Disconnect the ::opened signal. */
+          ((!) this._addressbook).disconnect (signal_id);
+
+          /* Sanity check. */
+          assert (((!) this._addressbook).is_opened () == true ||
+              err_out != null);
+        }
+    }
+
+  private void _address_book_opened_cb (Error? err, BookClient address_book)
+    {
+      debug ("_address_book_opened_cb for store ‘%s’ (%p), address book %p " +
+          "and error %p", this.id, this, address_book, (void*) err);
+
+      if (this._open_address_book_callback != null)
+        {
+          this._open_address_book_error = err;
+          this._open_address_book_callback ();
         }
     }
 
