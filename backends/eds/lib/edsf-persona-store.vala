@@ -689,18 +689,6 @@ public class Edsf.PersonaStore : Folks.PersonaStore
               this._prepare_pending = false;
             }
 
-          // this._addressbook is guaranteed to be non-null by now.
-          if (((!) this._addressbook).is_opened () == false)
-            {
-              /* Remove the persona store on error */
-              this.removed ();
-              this._prepare_pending = false;
-
-              throw new PersonaStoreError.INVALID_ARGUMENT (
-                  /* Translators: the parameter is an address book URI. */
-                  _("Couldn't open address book ‘%s’."), this.id);
-            }
-
           /* Determine which fields the address book supports. This is necessary
            * to work out which writeable properties we can support.
            *
@@ -916,6 +904,8 @@ public class Edsf.PersonaStore : Folks.PersonaStore
   Error? _open_address_book_error = null;
   SourceFunc? _open_address_book_callback = null; /* non-null iff yielded */
 
+  /* Guarantees that either the address book will be open once the method
+   * returns, or an error will be thrown. */
   private async void _open_address_book () throws GLib.Error
     {
       Error? err_out = null;
@@ -976,9 +966,17 @@ public class Edsf.PersonaStore : Folks.PersonaStore
           /* Disconnect the ::opened signal. */
           ((!) this._addressbook).disconnect (signal_id);
 
-          /* Sanity check. */
-          assert (((!) this._addressbook).is_opened () == true ||
-              err_out != null);
+          /* We should really be able to expect that either the address book is
+           * now open, or we have an error set. Unfortunately, this sometimes
+           * isn't the case, probably due to misbehaving EDS backends (though
+           * I haven't investigated). Just throw an error to be on the safe
+           * side. */
+          if (((!) this._addressbook).is_opened () == false && err_out == null)
+            {
+              err_out = new Error (Client.error_quark (),
+                  ClientError.OTHER_ERROR, "Misbehaving EDS backend: %s.",
+                  this.id);
+            }
         }
     }
 
