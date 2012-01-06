@@ -241,6 +241,8 @@ public class Edsf.PersonaStore : Folks.PersonaStore
                   this._contacts_removed_cb);
               ((!) this._ebookview).objects_modified.disconnect (
                   this._contacts_changed_cb);
+              ((!) this._ebookview).complete.disconnect (
+                  this._contacts_complete_cb);
               ((!) this._ebookview).stop ();
 
               this._ebookview = null;
@@ -813,6 +815,8 @@ public class Edsf.PersonaStore : Folks.PersonaStore
                   this._contacts_removed_cb);
               ((!) this._ebookview).objects_modified.connect (
                   this._contacts_changed_cb);
+              ((!) this._ebookview).complete.connect (
+                  this._contacts_complete_cb);
 
               ((!) this._ebookview).start ();
             }
@@ -1880,14 +1884,6 @@ public class Edsf.PersonaStore : Folks.PersonaStore
         {
           this._emit_personas_changed (added_personas, null);
         }
-
-      /* If this is the first contacts-added notification, assume we've reached
-       * a quiescent state. */
-      if (this._is_quiescent == false)
-        {
-          this._is_quiescent = true;
-          this.notify_property ("is-quiescent");
-        }
     }
 
   private void _contacts_changed_cb (GLib.List<E.Contact> contacts)
@@ -1922,6 +1918,35 @@ public class Edsf.PersonaStore : Folks.PersonaStore
          {
            this._emit_personas_changed (null, removed_personas);
          }
+    }
+
+  private void _contacts_complete_cb (Error err)
+    {
+      /* Handle errors. We treat an error in the first _contacts_complete_cb()
+       * callback as unrecoverable, since it's being reported from the address
+       * book's view creation code. Subsequent errors may be recoverable, since
+       * they might be transient errors in refreshing the contact list. */
+      if (err != null)
+        {
+          warning ("Error in address book view query: %s", err.message);
+        }
+
+      /* The initial query is complete, so signal that we've reached
+       * quiescence (even if there was an error). */
+      if (this._is_quiescent == false)
+        {
+          /* Handle initial errors. */
+          if (err != null)
+            {
+              warning ("Error is considered unrecoverable. " +
+                  "Removing persona store.");
+              this.removed ();
+              return;
+            }
+
+          this._is_quiescent = true;
+          this.notify_property ("is-quiescent");
+        }
     }
 
   /* Convert an EClientError or EBookClientError to a Folks.PropertyError for
