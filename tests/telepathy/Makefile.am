@@ -44,12 +44,12 @@ AM_VALAFLAGS = \
 	-g \
 	$(NULL)
 
-# in order from least to most complex
 noinst_PROGRAMS = \
 	fake-tp-backend \
 	persona-store-capabilities \
 	individual-retrieval \
 	individual-properties \
+	init \
 	$(NULL)
 
 SESSION_CONF = $(top_builddir)/tests/lib/telepathy/contactlist/session.conf
@@ -76,6 +76,10 @@ individual_properties_SOURCES = \
 	individual-properties.vala \
 	$(NULL)
 
+init_SOURCES = \
+	init.vala \
+	$(NULL)
+
 persona_store_capabilities_SOURCES = \
 	persona-store-capabilities.vala \
 	$(NULL)
@@ -84,6 +88,7 @@ BUILT_SOURCES = \
 	fake_tp_backend_vala.stamp \
 	individual_properties_vala.stamp \
 	individual_retrieval_vala.stamp \
+	init_vala.stamp \
 	persona_store_capabilities_vala.stamp \
 	$(NULL)
 

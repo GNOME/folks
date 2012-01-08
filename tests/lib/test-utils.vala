@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2011 Collabora Ltd.
+ * Copyright (C) 2012 Philip Withnall
  *
  * This library is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -15,9 +16,11 @@
  * along with this library.  If not, see <http://www.gnu.org/licenses/>.
  *
  * Authors: Travis Reitter <travis.reitter@collabora.com>
+ *          Philip Withnall <philip@tecnocode.co.uk>
  *
  */
 
+using Folks;
 using GLib;
 
 public class Folks.TestUtils
@@ -90,5 +93,46 @@ public class Folks.TestUtils
         }
 
       return retval;
+    }
+
+  /**
+   * Prepare an aggregator and wait for it to reach quiescence.
+   *
+   * This will prepare the given {@link IndividualAggregator} then yield until
+   * it reaches quiescence. No timeout is used, so if the aggregator never
+   * reaches quiescence, this function will never return; callers must add their
+   * own timeout to avoid this if necessary.
+   *
+   * When this returns, the aggregator is guaranteed to be quiescent.
+   *
+   * @param aggregator the aggregator to prepare
+   */
+  public static async void aggregator_prepare_and_wait_for_quiescence (
+      IndividualAggregator aggregator) throws GLib.Error
+    {
+      var has_yielded = false;
+      var signal_id = aggregator.notify["is-quiescent"].connect ((obj, pspec) =>
+        {
+          if (has_yielded == true)
+            {
+              TestUtils.aggregator_prepare_and_wait_for_quiescence.callback ();
+            }
+        });
+
+      try
+        {
+          yield aggregator.prepare ();
+
+          if (aggregator.is_quiescent == false)
+            {
+              has_yielded = true;
+              yield;
+            }
+        }
+      finally
+        {
+          aggregator.disconnect (signal_id);
+          assert (aggregator.is_quiescent == true);
+        }
     }
 }
