@@ -42,45 +42,49 @@ public class Folks.Inspect.Client : Object
       Intl.bindtextdomain (BuildConf.GETTEXT_PACKAGE, BuildConf.LOCALE_DIR);
       Intl.textdomain (BuildConf.GETTEXT_PACKAGE);
 
+      /* Parse command line options. */
+      OptionContext context = new OptionContext ("[COMMAND]");
+      context.set_summary ("Inspect meta-contact information in libfolks.");
+
+      try
+        {
+          context.parse (ref args);
+        }
+      catch (OptionError e1)
+        {
+          stderr.printf ("Couldn’t parse command line options: %s\n",
+              e1.message);
+          return 1;
+        }
+
+      /* Create the client and run the command. */
       main_client = new Client ();
-      main_client.run_interactive ();
+
+      if (args.length == 1)
+        {
+          main_client.run_interactive ();
+        }
+      else
+        {
+          assert (args.length > 1);
+
+          /* Drop the first argument and parse the rest as a command line. If
+           * the first argument is ‘--’ then the command was passed after some
+           * flags. */
+          string command_line;
+          if (args[1] == "--")
+            {
+              command_line = string.joinv (" ", args[2:0]);
+            }
+          else
+            {
+              command_line = string.joinv (" ", args[1:0]);
+            }
+
+          main_client.run_non_interactive (command_line);
+        }
 
       return 0;
-    }
-
-  private void *folks_thread_main ()
-    {
-      this.main_loop = new MainLoop ();
-
-      this.signal_manager = new SignalManager ();
-
-      this.aggregator = new IndividualAggregator ();
-      this.aggregator.prepare ();
-
-      this.backend_store = BackendStore.dup ();
-      this.backend_store.backend_available.connect ((bs, b) => 
-        {
-          Backend backend = (Backend) b;
-
-          backend.prepare.begin ((obj, result) =>
-            {
-              try
-                {
-                  backend.prepare.end (result);
-                }
-              catch (GLib.Error e)
-                {
-                  warning ("Error preparing Backend '%s': %s", backend.name,
-                      e.message);
-                }
-            });
-        });
-
-      this.backend_store.load_backends ();
-
-      this.main_loop.run ();
-
-      return null;
     }
 
   public Client ()
@@ -101,6 +105,99 @@ public class Folks.Inspect.Client : Object
       this.commands.set ("signals", new Commands.Signals (this));
       this.commands.set ("debug", new Commands.Debug (this));
 
+      /* Create various bits of folks machinery. */
+      this.main_loop = new MainLoop ();
+      this.signal_manager = new SignalManager ();
+      this.backend_store = BackendStore.dup ();
+      this.aggregator = new IndividualAggregator ();
+    }
+
+  private async void _wait_for_quiescence () throws GLib.Error
+    {
+      var has_yielded = false;
+      var signal_id = this.aggregator.notify["is-quiescent"].connect (
+          (obj, pspec) =>
+        {
+          if (has_yielded == true)
+            {
+              this._wait_for_quiescence.callback ();
+            }
+        });
+
+      try
+        {
+          yield this.aggregator.prepare ();
+
+          if (this.aggregator.is_quiescent == false)
+            {
+              has_yielded = true;
+              yield;
+            }
+        }
+      finally
+        {
+          this.aggregator.disconnect (signal_id);
+          assert (this.aggregator.is_quiescent == true);
+        }
+    }
+
+  public void run_non_interactive (string command_line)
+    {
+      /* Non-interactive mode: run a single command and output the results.
+       * We do this all from the main thread, in a main loop, waiting for
+       * quiescence before running the command. */
+
+      /* Check we can parse the command first. */
+      string subcommand;
+      string command_name;
+      var command = this.parse_command_line (command_line, out command_name,
+          out subcommand);
+
+      if (command == null)
+        {
+          stdout.printf ("Unrecognised command ‘%s’.\n", command_name);
+          return;
+        }
+
+      /* Wait until we reach quiescence, or the results will probably be
+       * useless. */
+      this._wait_for_quiescence.begin ((obj, res) =>
+        {
+          try
+            {
+              this._wait_for_quiescence.end (res);
+            }
+          catch (GLib.Error e1)
+            {
+              stderr.printf ("Error preparing aggregator: %s\n", e1.message);
+              Process.exit (1);
+            }
+
+          /* Run the command */
+          command.run (subcommand);
+
+          this.main_loop.quit ();
+        });
+
+      this.main_loop.run ();
+    }
+
+  private void *folks_thread_main ()
+    {
+      this.aggregator.prepare ();
+      this.main_loop.run ();
+
+      return null;
+    }
+
+  public void run_interactive ()
+    {
+      /* Interactive mode: have a little shell which allows the data from
+       * libfolks to be browsed and edited in real time. We do this by spawning
+       * a second thread which takes care of the main loop and aggregator. The
+       * main thread then sits in a readline loop. */
+
+      /* Spawn the folks worker thread. */
       try
         {
           this.folks_thread = Thread<void*>.create<void*> (
@@ -111,12 +208,6 @@ public class Folks.Inspect.Client : Object
           stdout.printf ("Couldn't create aggregator thread: %s", e.message);
           Process.exit (1);
         }
-    }
-
-  public void run_interactive ()
-    {
-      /* Interactive mode: have a little shell which allows the data from
-       * libfolks to be browsed and edited in real time. */
 
       /* Allow things to be set for folks-inspect in ~/.inputrc, and install our
        * own completion function. */
