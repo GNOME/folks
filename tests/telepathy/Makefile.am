@@ -46,6 +46,7 @@ AM_VALAFLAGS = \
 
 # in order from least to most complex
 noinst_PROGRAMS = \
+	fake-tp-backend \
 	persona-store-capabilities \
 	individual-retrieval \
 	individual-properties \
@@ -61,7 +62,11 @@ TESTS_ENVIRONMENT = \
 	$(RUN_WITH_PRIVATE_BUS) \
 	--config-file=$(SESSION_CONF) \
 	--
-TESTS = $(noinst_PROGRAMS)
+TESTS = $(filter-out fake-tp-backend,$(noinst_PROGRAMS))
+
+fake_tp_backend_SOURCES = \
+	fake-tp-backend.vala \
+	$(NULL)
 
 individual_retrieval_SOURCES = \
 	individual-retrieval.vala \
@@ -76,6 +81,7 @@ persona_store_capabilities_SOURCES = \
 	$(NULL)
 
 BUILT_SOURCES = \
+	fake_tp_backend_vala.stamp \
 	individual_properties_vala.stamp \
 	individual_retrieval_vala.stamp \
 	persona_store_capabilities_vala.stamp \
