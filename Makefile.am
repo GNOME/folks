@@ -20,11 +20,13 @@ DISTCHECK_CONFIGURE_FLAGS = \
 EXTRA_DIST = \
 	autogen.sh \
 	check.mk \
+	lcov.mk \
 	valgrind.mk \
 	$(NULL)
 
 MAINTAINERCLEANFILES = \
 	ABOUT-NLS \
+	$(top_builddir)/lcov.info \
 	$(srcdir)/INSTALL \
 	$(srcdir)/aclocal.m4 \
 	$(srcdir)/compile \
@@ -49,6 +51,16 @@ MAINTAINERCLEANFILES = \
 	po/missing \
 	po/quot.sed \
 	po/remove-potcdate.sin \
+	$(NULL)
+
+maintainer-clean-local: maintainer-clean-local-lcov
+maintainer-clean-local-lcov:
+	rm -rf $(top_builddir)/lcov.html
+
+.PHONY: maintainer-clean-local-lcov
+
+GITIGNOREFILES = \
+	$(top_builddir)/lcov.html/* \
 	$(NULL)
 
 distclean-local:
@@ -78,5 +90,8 @@ ChangeLog:
 	fi
 
 .PHONY: ChangeLog
+
+# Code coverage support
+include lcov.mk
 
 -include $(top_srcdir)/git.mk
