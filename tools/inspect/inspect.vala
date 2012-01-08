@@ -39,6 +39,9 @@ public class Folks.Inspect.Client : Object
 
   public static int main (string[] args)
     {
+      Intl.bindtextdomain (BuildConf.GETTEXT_PACKAGE, BuildConf.LOCALE_DIR);
+      Intl.textdomain (BuildConf.GETTEXT_PACKAGE);
+
       main_client = new Client ();
       main_client.run_interactive ();
 

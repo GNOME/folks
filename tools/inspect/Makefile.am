@@ -6,6 +6,7 @@ VALAFLAGS = \
 	--pkg=gio-2.0 \
 	--pkg=gee-1.0 \
 	--pkg=folks \
+	--pkg=build-conf \
 	$(NULL)
 
 bin_PROGRAMS = folks-inspect
@@ -34,6 +35,8 @@ folks_inspect_LDADD = \
 	$(NULL)
 folks_inspect_CPPFLAGS = \
 	$(AM_CPPFLAGS) \
+	-include $(CONFIG_HEADER) \
+	-DLOCALE_DIR=\"$(pkgdatadir)/locale\" \
 	-I$(top_srcdir)/folks \
 	$(NULL)
 folks_inspect_CFLAGS = \
