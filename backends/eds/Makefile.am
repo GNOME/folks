@@ -2,17 +2,8 @@ SUBDIRS = lib
 
 BACKEND_NAME = "eds"
 
-AM_CPPFLAGS = \
-	-I$(top_srcdir)/folks \
-	-I$(top_srcdir)/backends/eds/lib \
-	-I$(top_srcdir)/backends/eds/lib/folks \
-	-include $(CONFIG_HEADER) \
-	-DPACKAGE_DATADIR=\"$(pkgdatadir)\" \
-	-DBACKEND_NAME=\"$(BACKEND_NAME)\" \
-	-DG_LOG_DOMAIN=\"$(BACKEND_NAME)\" \
-	$(NULL)
-
 VALAFLAGS += \
+	$(AM_VALAFLAGS) \
 	$(ERROR_VALAFLAGS) \
 	--vapidir=. \
 	--vapidir=$(top_builddir)/backends/eds/lib \
@@ -39,7 +30,18 @@ eds_deps = \
 	libxml-2.0 \
 	$(NULL)
 
+eds_la_CPPFLAGS = \
+	-I$(top_srcdir)/folks \
+	-I$(top_srcdir)/backends/eds/lib \
+	-I$(top_srcdir)/backends/eds/lib/folks \
+	-include $(CONFIG_HEADER) \
+	-DPACKAGE_DATADIR=\"$(pkgdatadir)\" \
+	-DBACKEND_NAME=\"$(BACKEND_NAME)\" \
+	-DG_LOG_DOMAIN=\"$(BACKEND_NAME)\" \
+	$(NULL)
+
 eds_la_CFLAGS = \
+	$(AM_CFLAGS) \
 	$(GIO_CFLAGS) \
 	$(GLIB_CFLAGS) \
 	$(GEE_CFLAGS) \
@@ -49,7 +51,8 @@ eds_la_CFLAGS = \
 	$(NULL)
 
 eds_la_LIBADD = \
-	lib/libfolks-eds.la \
+	$(AM_LIBADD) \
+	$(top_builddir)/backends/eds/lib/libfolks-eds.la \
 	$(top_builddir)/folks/libfolks.la \
 	$(GIO_LIBS) \
 	$(GLIB_LIBS) \
@@ -59,7 +62,13 @@ eds_la_LIBADD = \
 	$(LIBXML_LIBS) \
 	$(NULL)
 
-eds_la_LDFLAGS = -shared -fPIC -module -avoid-version
+eds_la_LDFLAGS = \
+	$(AM_LDFLAGS) \
+	-shared \
+	-fPIC \
+	-module \
+	-avoid-version \
+	$(NULL)
 
 GITIGNOREFILES = \
 	folks-backend-eds.vapi \

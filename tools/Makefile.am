@@ -10,12 +10,8 @@ if ENABLE_IMPORT_TOOL
 bin_PROGRAMS = folks-import
 endif
 
-AM_CPPFLAGS = \
-	-include $(CONFIG_HEADER) \
-	-DLOCALE_DIR=\"$(pkgdatadir)/locale\" \
-	$(NULL)
-
 VALAFLAGS = \
+	$(AM_VALAFLAGS) \
 	--vapidir=$(top_builddir)/folks \
 	--pkg=gee-1.0 \
 	--pkg=libxml-2.0 \
@@ -27,14 +23,21 @@ folks_import_SOURCES = \
 	import.vala \
 	import-pidgin.vala \
 	$(NULL)
+folks_import_CPPFLAGS = \
+	$(AM_CPPFLAGS) \
+	-include $(CONFIG_HEADER) \
+	-DLOCALE_DIR=\"$(pkgdatadir)/locale\" \
+	-I$(top_srcdir)/folks \
+	$(NULL)
 folks_import_CFLAGS = \
+	$(AM_CFLAGS) \
 	$(GIO_CFLAGS) \
 	$(GLIB_CFLAGS) \
 	$(GEE_CFLAGS) \
 	$(LIBXML_CFLAGS) \
-	-I$(top_srcdir)/folks \
 	$(NULL)
 folks_import_LDADD = \
+	$(AM_LDADD) \
 	$(GIO_LIBS) \
 	$(GLIB_LIBS) \
 	$(GEE_LIBS) \

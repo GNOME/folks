@@ -1,23 +1,7 @@
 BACKEND_NAME = "tracker"
 
-AM_CPPFLAGS = \
-	-I$(top_srcdir)/folks \
-	-include $(CONFIG_HEADER) \
-	-DPACKAGE_DATADIR=\"$(pkgdatadir)\" \
-	-DBACKEND_NAME=\"$(BACKEND_NAME)\" \
-	-DG_LOG_DOMAIN=\"$(BACKEND_NAME)\" \
-	$(NULL)
-
-VAPIGENFLAGS += \
-	--vapidir=. \
-	--vapidir=$(top_srcdir)/folks
-
 folks_trackerdir = $(libdir)
 folks_tracker_LTLIBRARIES = libfolks-tracker.la
-
-##################################################################
-# Support library
-##################################################################
 
 pkgconfig_in = folks-tracker.pc.in
 pkgconfigdir = $(libdir)/pkgconfig
@@ -36,6 +20,7 @@ libfolks_tracker_la_SOURCES = \
 	$(NULL)
 
 libfolks_tracker_la_VALAFLAGS = \
+	$(AM_VALAFLAGS) \
 	$(ERROR_VALAFLAGS) \
 	--vapidir=. \
 	--vapidir=$(top_srcdir)/folks \
@@ -57,7 +42,16 @@ folks_backend_tracker_deps = \
 	tracker-sparql-0.12 \
 	$(NULL)
 
+libfolks_tracker_la_CPPFLAGS = \
+	-I$(top_srcdir)/folks \
+	-include $(CONFIG_HEADER) \
+	-DPACKAGE_DATADIR=\"$(pkgdatadir)\" \
+	-DBACKEND_NAME=\"$(BACKEND_NAME)\" \
+	-DG_LOG_DOMAIN=\"$(BACKEND_NAME)\" \
+	$(NULL)
+
 libfolks_tracker_la_CFLAGS = \
+	$(AM_CFLAGS) \
 	$(GIO_CFLAGS) \
 	$(GLIB_CFLAGS) \
 	$(GEE_CFLAGS) \
@@ -65,6 +59,7 @@ libfolks_tracker_la_CFLAGS = \
 	$(NULL)
 
 libfolks_tracker_la_LIBADD = \
+	$(AM_LIBADD) \
 	$(GIO_LIBS) \
 	$(GLIB_LIBS) \
 	$(GEE_LIBS) \
@@ -76,6 +71,7 @@ libfolks_tracker_la_LIBADD = \
 # that vim quickfix mode (:make) doesn't interpret the libtool --mode=link
 # command as an error message in a bizarrely named file
 libfolks_tracker_la_LDFLAGS = \
+	$(AM_LDFLAGS) \
 	-version-info "$(LT_CURRENT)":"$(LT_REVISION)":"$(LT_AGE)" \
 	-export-symbols-regex "^(TRF|trf)_.*|" \
 	$(NULL)

@@ -2,17 +2,8 @@ SUBDIRS = lib
 
 BACKEND_NAME = "libsocialweb"
 
-AM_CPPFLAGS = \
-	-I$(top_srcdir)/folks \
-	-I$(top_srcdir)/backends/libsocialweb/lib \
-	-I$(top_srcdir)/backends/libsocialweb/lib/folks \
-	-include $(CONFIG_HEADER) \
-	-DPACKAGE_DATADIR=\"$(pkgdatadir)\" \
-	-DBACKEND_NAME=\"$(BACKEND_NAME)\" \
-	-DG_LOG_DOMAIN=\"$(BACKEND_NAME)\" \
-	$(NULL)
-
 VALAFLAGS += \
+	$(AM_VALAFLAGS) \
 	$(ERROR_VALAFLAGS) \
 	--vapidir=. \
 	--vapidir=$(top_builddir)/backends/libsocialweb/lib \
@@ -30,14 +21,25 @@ libsocialweb_la_SOURCES = \
 
 libsocialweb_deps = \
 	folks \
-        folks-libsocialweb \
+	folks-libsocialweb \
 	gee-1.0 \
 	gio-2.0 \
 	gobject-2.0 \
 	libsocialweb-client \
 	$(NULL)
 
+libsocialweb_la_CPPFLAGS = \
+	-I$(top_srcdir)/folks \
+	-I$(top_srcdir)/backends/libsocialweb/lib \
+	-I$(top_srcdir)/backends/libsocialweb/lib/folks \
+	-include $(CONFIG_HEADER) \
+	-DPACKAGE_DATADIR=\"$(pkgdatadir)\" \
+	-DBACKEND_NAME=\"$(BACKEND_NAME)\" \
+	-DG_LOG_DOMAIN=\"$(BACKEND_NAME)\" \
+	$(NULL)
+
 libsocialweb_la_CFLAGS = \
+	$(AM_CFLAGS) \
 	$(GIO_CFLAGS) \
 	$(GLIB_CFLAGS) \
 	$(GEE_CFLAGS) \
@@ -45,6 +47,7 @@ libsocialweb_la_CFLAGS = \
 	$(NULL)
 
 libsocialweb_la_LIBADD = \
+	$(AM_LIBADD) \
 	$(GIO_LIBS) \
 	$(GLIB_LIBS) \
 	$(GEE_LIBS) \
@@ -53,7 +56,13 @@ libsocialweb_la_LIBADD = \
 	lib/libfolks-libsocialweb.la \
 	$(NULL)
 
-libsocialweb_la_LDFLAGS = -shared -fPIC -module -avoid-version
+libsocialweb_la_LDFLAGS = \
+	$(AM_LDFLAGS) \
+	-shared \
+	-fPIC \
+	-module \
+	-avoid-version \
+	$(NULL)
 
 GITIGNOREFILES = \
 	folks-backend-libsocialweb.vapi \

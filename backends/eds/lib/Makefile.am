@@ -41,6 +41,7 @@ libfolks_eds_la_SOURCES = \
 # to factor out repetition, but automake's Vala support doesn't like it
 # because it assumes it can simply match every flag in any _VALAFLAGS string.
 libfolks_eds_la_VALAFLAGS = \
+	$(AM_VALAFLAGS) \
 	$(ERROR_VALAFLAGS) \
 	--vapidir=. \
 	--vapidir=$(top_srcdir)/folks \
@@ -58,6 +59,7 @@ libfolks_eds_la_VALAFLAGS = \
 	$(NULL)
 
 libfolks_eds_la_CFLAGS = \
+	$(AM_CFLAGS) \
 	$(GIO_CFLAGS) \
 	$(GLIB_CFLAGS) \
 	$(GEE_CFLAGS) \
@@ -67,6 +69,7 @@ libfolks_eds_la_CFLAGS = \
 	$(NULL)
 
 libfolks_eds_la_LIBADD = \
+	$(AM_LIBADD) \
 	$(top_builddir)/folks/libfolks.la \
 	$(top_builddir)/folks/libfolks-internal.la \
 	$(EBOOK_LIBS) \
@@ -81,6 +84,7 @@ libfolks_eds_la_LIBADD = \
 # that vim quickfix mode (:make) doesn't interpret the libtool --mode=link
 # command as an error message in a bizarrely named file
 libfolks_eds_la_LDFLAGS = \
+	$(AM_LDFLAGS) \
 	-version-info "$(LT_CURRENT)":"$(LT_REVISION)":"$(LT_AGE)" \
 	-export-symbols-regex "^(EDSF|edsf)_.*|" \
 	$(NULL)

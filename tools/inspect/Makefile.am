@@ -1,4 +1,5 @@
 VALAFLAGS = \
+	$(AM_VALAFLAGS) \
 	--vapidir=$(top_srcdir)/folks \
 	--pkg=readline \
 	--pkg=gobject-2.0 \
@@ -24,14 +25,19 @@ folks_inspect_SOURCES = \
 	inspect.vala \
 	$(NULL)
 folks_inspect_LDADD = \
+	$(AM_LDADD) \
 	$(LIBREADLINE) \
 	$(GIO_LIBS) \
 	$(GLIB_LIBS) \
 	$(GEE_LIBS) \
 	$(top_builddir)/folks/libfolks.la \
 	$(NULL)
-folks_inspect_CFLAGS = \
+folks_inspect_CPPFLAGS = \
+	$(AM_CPPFLAGS) \
 	-I$(top_srcdir)/folks \
+	$(NULL)
+folks_inspect_CFLAGS = \
+	$(AM_CFLAGS) \
 	$(GIO_CFLAGS) \
 	$(GLIB_CFLAGS) \
 	$(GEE_CFLAGS) \

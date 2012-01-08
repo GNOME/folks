@@ -2,17 +2,8 @@ SUBDIRS = lib
 
 BACKEND_NAME = "telepathy"
 
-AM_CPPFLAGS = \
-	-I$(top_srcdir)/folks \
-	-I$(top_srcdir)/backends/telepathy/lib \
-	-I$(top_srcdir)/backends/telepathy/lib/folks \
-	-include $(CONFIG_HEADER) \
-	-DPACKAGE_DATADIR=\"$(pkgdatadir)\" \
-	-DBACKEND_NAME=\"$(BACKEND_NAME)\" \
-	-DG_LOG_DOMAIN=\"$(BACKEND_NAME)\" \
-	$(NULL)
-
 VALAFLAGS += \
+	$(AM_VALAFLAGS) \
 	$(ERROR_VALAFLAGS) \
 	--vapidir=. \
 	--vapidir=$(top_builddir)/backends/telepathy/lib \
@@ -37,7 +28,18 @@ telepathy_deps = \
 	telepathy-glib \
 	$(NULL)
 
+telepathy_la_CPPFLAGS = \
+	-I$(top_srcdir)/folks \
+	-I$(top_srcdir)/backends/telepathy/lib \
+	-I$(top_srcdir)/backends/telepathy/lib/folks \
+	-include $(CONFIG_HEADER) \
+	-DPACKAGE_DATADIR=\"$(pkgdatadir)\" \
+	-DBACKEND_NAME=\"$(BACKEND_NAME)\" \
+	-DG_LOG_DOMAIN=\"$(BACKEND_NAME)\" \
+	$(NULL)
+
 telepathy_la_CFLAGS = \
+	$(AM_CFLAGS) \
 	$(GIO_CFLAGS) \
 	$(GLIB_CFLAGS) \
 	$(GEE_CFLAGS) \
@@ -45,6 +47,7 @@ telepathy_la_CFLAGS = \
 	$(NULL)
 
 telepathy_la_LIBADD = \
+	$(AM_LIBADD) \
 	$(GIO_LIBS) \
 	$(GLIB_LIBS) \
 	$(GEE_LIBS) \
@@ -53,7 +56,13 @@ telepathy_la_LIBADD = \
 	lib/libfolks-telepathy.la \
 	$(NULL)
 
-telepathy_la_LDFLAGS = -shared -fPIC -module -avoid-version
+telepathy_la_LDFLAGS = \
+	$(AM_LDFLAGS) \
+	-shared \
+	-fPIC \
+	-module \
+	-avoid-version \
+	$(NULL)
 
 GITIGNOREFILES = \
 	folks-backend-telepathy.vapi \

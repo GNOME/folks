@@ -19,6 +19,7 @@ libfolks_internal_la_SOURCES = \
 	$(NULL)
 
 libfolks_internal_la_VALAFLAGS = \
+	$(AM_VALAFLAGS) \
 	$(ERROR_VALAFLAGS) \
 	--library=folks-internal \
 	--vapidir=. \
@@ -29,11 +30,17 @@ libfolks_internal_la_VALAFLAGS = \
 	$(NULL)
 
 libfolks_internal_la_CFLAGS = \
+	$(AM_CFLAGS) \
 	$(GLIB_CFLAGS) \
 	$(GEE_CFLAGS) \
 	$(NULL)
 
+libfolks_internal_la_LDFLAGS = \
+	$(AM_LDFLAGS) \
+	$(NULL)
+
 libfolks_internal_la_LIBADD = \
+	$(AM_LIBADD) \
 	$(GLIB_LIBS) \
 	$(GEE_LIBS) \
 	$(NULL)
@@ -82,6 +89,7 @@ EDS_FLAGS = -D ENABLE_EDS
 endif
 
 libfolks_la_VALAFLAGS = \
+	$(AM_VALAFLAGS) \
 	$(ERROR_VALAFLAGS) \
 	--gir=Folks-$(API_VERSION).gir \
 	--library=folks \
@@ -100,6 +108,7 @@ libfolks_la_VALAFLAGS = \
 	$(NULL)
 
 libfolks_la_CFLAGS = \
+	$(AM_CFLAGS) \
 	$(GIO_CFLAGS) \
 	$(GLIB_CFLAGS) \
 	$(GMODULE_CFLAGS) \
@@ -108,6 +117,7 @@ libfolks_la_CFLAGS = \
 	$(NULL)
 
 libfolks_la_LIBADD = \
+	$(AM_LIBADD) \
 	$(GIO_LIBS) \
 	$(GLIB_LIBS) \
 	$(GMODULE_LIBS) \
@@ -120,6 +130,7 @@ libfolks_la_LIBADD = \
 # that vim quickfix mode (:make) doesn't interpret the libtool --mode=link
 # command as an error message in a bizarrely named file
 libfolks_la_LDFLAGS = \
+	$(AM_LDFLAGS) \
 	-version-info "$(LT_CURRENT)":"$(LT_REVISION)":"$(LT_AGE)"
 
 folksdir = $(includedir)/folks

@@ -27,6 +27,7 @@ libtp_lowlevel_la_SOURCES = \
 tp_lowlevel_headers = tp-lowlevel.h
 
 libtp_lowlevel_la_CFLAGS = \
+	$(AM_CFLAGS) \
 	$(ERROR_CFLAGS) \
 	$(GIO_CFLAGS) \
 	$(GLIB_CFLAGS) \
@@ -38,7 +39,9 @@ libtp_lowlevel_la_CFLAGS = \
 # despite not being installed (it needs to be a shared library for
 # vala-gen-introspect)
 libtp_lowlevel_la_LDFLAGS = \
-	-shared -rpath $(libdir) \
+	$(AM_LDFLAGS) \
+	-shared \
+	-rpath $(libdir) \
 	-avoid-version \
 	$(GIO_LIBS) \
 	$(GLIB_LIBS) \
@@ -106,6 +109,7 @@ libfolks_telepathy_la_SOURCES = \
 	$(NULL)
 
 libfolks_telepathy_la_VALAFLAGS = \
+	$(AM_VALAFLAGS) \
 	$(ERROR_VALAFLAGS) \
 	--vapidir=. \
 	--vapidir=$(top_srcdir)/folks \
@@ -122,6 +126,7 @@ libfolks_telepathy_la_VALAFLAGS = \
 	$(NULL)
 
 libfolks_telepathy_la_CFLAGS = \
+	$(AM_CFLAGS) \
 	$(GIO_CFLAGS) \
 	$(GLIB_CFLAGS) \
 	$(GEE_CFLAGS) \
@@ -129,6 +134,7 @@ libfolks_telepathy_la_CFLAGS = \
 	$(NULL)
 
 libfolks_telepathy_la_LIBADD = \
+	$(AM_LIBADD) \
 	$(GIO_LIBS) \
 	$(GLIB_LIBS) \
 	$(GEE_LIBS) \
@@ -141,6 +147,7 @@ libfolks_telepathy_la_LIBADD = \
 # that vim quickfix mode (:make) doesn't interpret the libtool --mode=link
 # command as an error message in a bizarrely named file
 libfolks_telepathy_la_LDFLAGS = \
+	$(AM_LDFLAGS) \
 	-version-info "$(LT_CURRENT)":"$(LT_REVISION)":"$(LT_AGE)" \
 	-export-symbols-regex "^tpf_.*" \
 	$(NULL)

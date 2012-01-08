@@ -2,17 +2,8 @@ SUBDIRS = lib
 
 BACKEND_NAME = "tracker"
 
-AM_CPPFLAGS = \
-	-I$(top_srcdir)/folks \
-	-I$(top_srcdir)/backends/tracker/lib \
-	-I$(top_srcdir)/backends/tracker/lib/folks \
-	-include $(CONFIG_HEADER) \
-	-DPACKAGE_DATADIR=\"$(pkgdatadir)\" \
-	-DBACKEND_NAME=\"$(BACKEND_NAME)\" \
-	-DG_LOG_DOMAIN=\"$(BACKEND_NAME)\" \
-	$(NULL)
-
 VALAFLAGS += \
+	$(AM_VALAFLAGS) \
 	$(ERROR_VALAFLAGS) \
 	--vapidir=. \
 	--vapidir=vapi \
@@ -38,7 +29,18 @@ tracker_deps = \
 	tracker-sparql-0.12 \
 	$(NULL)
 
+tracker_la_CPPFLAGS = \
+	-I$(top_srcdir)/folks \
+	-I$(top_srcdir)/backends/tracker/lib \
+	-I$(top_srcdir)/backends/tracker/lib/folks \
+	-include $(CONFIG_HEADER) \
+	-DPACKAGE_DATADIR=\"$(pkgdatadir)\" \
+	-DBACKEND_NAME=\"$(BACKEND_NAME)\" \
+	-DG_LOG_DOMAIN=\"$(BACKEND_NAME)\" \
+	$(NULL)
+
 tracker_la_CFLAGS = \
+	$(AM_CFLAGS) \
 	$(GIO_CFLAGS) \
 	$(GLIB_CFLAGS) \
 	$(GEE_CFLAGS) \
@@ -46,15 +48,22 @@ tracker_la_CFLAGS = \
 	$(NULL)
 
 tracker_la_LIBADD = \
+	$(AM_LIBADD) \
 	$(GIO_LIBS) \
 	$(GLIB_LIBS) \
 	$(GEE_LIBS) \
 	$(top_builddir)/folks/libfolks.la \
 	$(TRACKER_SPARQL_LIBS) \
-	lib/libfolks-tracker.la \
+	$(top_builddir)/backends/tracker/lib/libfolks-tracker.la \
 	$(NULL)
 
-tracker_la_LDFLAGS = -shared -fPIC -module -avoid-version
+tracker_la_LDFLAGS = \
+	$(AM_LDFLAGS) \
+	-shared \
+	-fPIC \
+	-module \
+	-avoid-version \
+	$(NULL)
 
 GITIGNOREFILES = \
 	folks-backend-tracker.vapi \
