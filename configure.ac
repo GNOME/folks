@@ -450,15 +450,44 @@ AS_COMPILER_FLAG([-Wstrict-prototypes], [ERROR_CFLAGS="$ERROR_CFLAGS \
 
 AC_SUBST([ERROR_CFLAGS])
 
+# -----------------------------------------------------------
+# Code coverage flags
+# -----------------------------------------------------------
+
+AC_ARG_ENABLE([code-coverage],
+              AS_HELP_STRING([--enable-code-coverage],
+                             [compile with code coverage code]),
+              [enable_code_coverage=$enableval], [enable_code_coverage=no])
+
+# Only enable code coverage if this isn't a release.
+m4_if(folks_released, [1], [],
+    [
+        if test "x$GCC" = "xyes"; then
+            if test "x$enable_code_coverage" = "xyes"; then
+                CODE_COVERAGE_CFLAGS="-fprofile-arcs -ftest-coverage -O0 -ggdb"
+                CODE_COVERAGE_LDFLAGS="-lgcov"
+            fi
+        fi
+    ])
+
+AC_SUBST([CODE_COVERAGE_CFLAGS])
+AC_SUBST([CODE_COVERAGE_LDFLAGS])
+
 # Vala-related flags
 AS_IF([test "x$enable_vala" = "xyes"],
       [ERROR_INTROSPECTION_SCANNER_ARGS="\
                         $ERROR_INTROSPECTION_SCANNER_ARGS --warn-error"
        ERROR_VALAFLAGS="$ERROR_VALAFLAGS --fatal-warnings"])
 
+# Disable -g if we're building with code coverage enabled, since Vala's
+# insertion of #line directives into .c files confuses lcov. For the moment,
+# we'll have to do with looking at code coverage of the generated C files only.
+# We set the debug flags in CODE_COVERAGE_CFLAGS instead in that case.
 m4_if(folks_released, [1], [],
     [
-        ERROR_VALAFLAGS="$ERROR_VALAFLAGS -g"
+        if test "x$enable_code_coverage" != "xyes" -o "x$GCC" != "xyes"; then
+            ERROR_VALAFLAGS="$ERROR_VALAFLAGS -g"
+        fi
     ])
 
 AC_SUBST([ERROR_INTROSPECTION_SCANNER_ARGS])
@@ -524,7 +553,8 @@ Configure summary:
 
         Vala........................:  ${enable_vala}
         Vala Compiler...............:  ${VALAC}
-        C Compiler Flags............:  ${CFLAGS} ${ERROR_CFLAGS}
+        C Compiler Flags............:  ${CFLAGS} ${ERROR_CFLAGS} ${CODE_COVERAGE_CFLAGS}
+        Linker Flags................:  ${LDFLAGS} ${CODE_COVERAGE_LDFLAGS}
         Prefix......................:  ${prefix}
         Bugreporting URL............:  ${PACKAGE_BUGREPORT}
         Documentation...............:  ${have_valadoc}

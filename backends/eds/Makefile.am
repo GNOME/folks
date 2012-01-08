@@ -42,6 +42,7 @@ eds_la_CPPFLAGS = \
 
 eds_la_CFLAGS = \
 	$(AM_CFLAGS) \
+	$(CODE_COVERAGE_CFLAGS) \
 	$(GIO_CFLAGS) \
 	$(GLIB_CFLAGS) \
 	$(GEE_CFLAGS) \
@@ -64,6 +65,7 @@ eds_la_LIBADD = \
 
 eds_la_LDFLAGS = \
 	$(AM_LDFLAGS) \
+	$(CODE_COVERAGE_LDFLAGS) \
 	-shared \
 	-fPIC \
 	-module \

@@ -60,6 +60,7 @@ libfolks_eds_la_VALAFLAGS = \
 
 libfolks_eds_la_CFLAGS = \
 	$(AM_CFLAGS) \
+	$(CODE_COVERAGE_CFLAGS) \
 	$(GIO_CFLAGS) \
 	$(GLIB_CFLAGS) \
 	$(GEE_CFLAGS) \
@@ -85,6 +86,7 @@ libfolks_eds_la_LIBADD = \
 # command as an error message in a bizarrely named file
 libfolks_eds_la_LDFLAGS = \
 	$(AM_LDFLAGS) \
+	$(CODE_COVERAGE_LDFLAGS) \
 	-version-info "$(LT_CURRENT)":"$(LT_REVISION)":"$(LT_AGE)" \
 	-export-symbols-regex "^(EDSF|edsf)_.*|" \
 	$(NULL)

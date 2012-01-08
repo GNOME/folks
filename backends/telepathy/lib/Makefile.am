@@ -28,6 +28,7 @@ tp_lowlevel_headers = tp-lowlevel.h
 
 libtp_lowlevel_la_CFLAGS = \
 	$(AM_CFLAGS) \
+	$(CODE_COVERAGE_CFLAGS) \
 	$(ERROR_CFLAGS) \
 	$(GIO_CFLAGS) \
 	$(GLIB_CFLAGS) \
@@ -40,6 +41,7 @@ libtp_lowlevel_la_CFLAGS = \
 # vala-gen-introspect)
 libtp_lowlevel_la_LDFLAGS = \
 	$(AM_LDFLAGS) \
+	$(CODE_COVERAGE_LDFLAGS) \
 	-shared \
 	-rpath $(libdir) \
 	-avoid-version \
@@ -127,6 +129,7 @@ libfolks_telepathy_la_VALAFLAGS = \
 
 libfolks_telepathy_la_CFLAGS = \
 	$(AM_CFLAGS) \
+	$(CODE_COVERAGE_CFLAGS) \
 	$(GIO_CFLAGS) \
 	$(GLIB_CFLAGS) \
 	$(GEE_CFLAGS) \
@@ -148,6 +151,7 @@ libfolks_telepathy_la_LIBADD = \
 # command as an error message in a bizarrely named file
 libfolks_telepathy_la_LDFLAGS = \
 	$(AM_LDFLAGS) \
+	$(CODE_COVERAGE_LDFLAGS) \
 	-version-info "$(LT_CURRENT)":"$(LT_REVISION)":"$(LT_AGE)" \
 	-export-symbols-regex "^tpf_.*" \
 	$(NULL)

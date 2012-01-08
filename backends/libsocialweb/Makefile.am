@@ -40,6 +40,7 @@ libsocialweb_la_CPPFLAGS = \
 
 libsocialweb_la_CFLAGS = \
 	$(AM_CFLAGS) \
+	$(CODE_COVERAGE_CFLAGS) \
 	$(GIO_CFLAGS) \
 	$(GLIB_CFLAGS) \
 	$(GEE_CFLAGS) \
@@ -58,6 +59,7 @@ libsocialweb_la_LIBADD = \
 
 libsocialweb_la_LDFLAGS = \
 	$(AM_LDFLAGS) \
+	$(CODE_COVERAGE_LDFLAGS) \
 	-shared \
 	-fPIC \
 	-module \

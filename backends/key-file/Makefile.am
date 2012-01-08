@@ -31,6 +31,7 @@ key_file_la_CPPFLAGS = \
 
 key_file_la_CFLAGS = \
 	$(AM_CFLAGS) \
+	$(CODE_COVERAGE_CFLAGS) \
 	$(GIO_CFLAGS) \
 	$(GLIB_CFLAGS) \
 	$(GEE_CFLAGS) \
@@ -46,6 +47,7 @@ key_file_la_LIBADD = \
 
 key_file_la_LDFLAGS = \
 	$(AM_LDFLAGS) \
+	$(CODE_COVERAGE_LDFLAGS) \
 	-shared \
 	-fPIC \
 	-module \

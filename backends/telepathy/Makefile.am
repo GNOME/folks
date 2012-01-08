@@ -40,6 +40,7 @@ telepathy_la_CPPFLAGS = \
 
 telepathy_la_CFLAGS = \
 	$(AM_CFLAGS) \
+	$(CODE_COVERAGE_CFLAGS) \
 	$(GIO_CFLAGS) \
 	$(GLIB_CFLAGS) \
 	$(GEE_CFLAGS) \
@@ -58,6 +59,7 @@ telepathy_la_LIBADD = \
 
 telepathy_la_LDFLAGS = \
 	$(AM_LDFLAGS) \
+	$(CODE_COVERAGE_LDFLAGS) \
 	-shared \
 	-fPIC \
 	-module \

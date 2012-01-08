@@ -31,12 +31,14 @@ libfolks_internal_la_VALAFLAGS = \
 
 libfolks_internal_la_CFLAGS = \
 	$(AM_CFLAGS) \
+	$(CODE_COVERAGE_CFLAGS) \
 	$(GLIB_CFLAGS) \
 	$(GEE_CFLAGS) \
 	$(NULL)
 
 libfolks_internal_la_LDFLAGS = \
 	$(AM_LDFLAGS) \
+	$(CODE_COVERAGE_LDFLAGS) \
 	$(NULL)
 
 libfolks_internal_la_LIBADD = \
@@ -109,6 +111,7 @@ libfolks_la_VALAFLAGS = \
 
 libfolks_la_CFLAGS = \
 	$(AM_CFLAGS) \
+	$(CODE_COVERAGE_CFLAGS) \
 	$(GIO_CFLAGS) \
 	$(GLIB_CFLAGS) \
 	$(GMODULE_CFLAGS) \
@@ -131,6 +134,7 @@ libfolks_la_LIBADD = \
 # command as an error message in a bizarrely named file
 libfolks_la_LDFLAGS = \
 	$(AM_LDFLAGS) \
+	$(CODE_COVERAGE_LDFLAGS) \
 	-version-info "$(LT_CURRENT)":"$(LT_REVISION)":"$(LT_AGE)"
 
 folksdir = $(includedir)/folks

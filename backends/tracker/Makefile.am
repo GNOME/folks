@@ -41,6 +41,7 @@ tracker_la_CPPFLAGS = \
 
 tracker_la_CFLAGS = \
 	$(AM_CFLAGS) \
+	$(CODE_COVERAGE_CFLAGS) \
 	$(GIO_CFLAGS) \
 	$(GLIB_CFLAGS) \
 	$(GEE_CFLAGS) \
@@ -59,6 +60,7 @@ tracker_la_LIBADD = \
 
 tracker_la_LDFLAGS = \
 	$(AM_LDFLAGS) \
+	$(CODE_COVERAGE_LDFLAGS) \
 	-shared \
 	-fPIC \
 	-module \

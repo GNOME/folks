@@ -59,6 +59,7 @@ folks_backend_libsocialweb_deps = \
 
 libfolks_libsocialweb_la_CFLAGS = \
 	$(GIO_CFLAGS) \
+	$(CODE_COVERAGE_CFLAGS) \
 	$(GLIB_CFLAGS) \
 	$(GEE_CFLAGS) \
 	$(SW_CLIENT_CFLAGS) \
@@ -74,6 +75,7 @@ libfolks_libsocialweb_la_LIBADD = \
 
 
 libfolks_libsocialweb_la_LDFLAGS = \
+	$(CODE_COVERAGE_LDFLAGS) \
 	-version-info "$(LT_CURRENT)":"$(LT_REVISION)":"$(LT_AGE)" \
         -export-symbols-regex "^swf_.*" \
 	$(NULL)
