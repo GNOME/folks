@@ -1003,6 +1003,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
             return PersonaDetail.FULL_NAME;
           case ContactField.GIVEN_NAME:
           case ContactField.FAMILY_NAME:
+          case ContactField.NAME:
             return PersonaDetail.STRUCTURED_NAME;
           case ContactField.NICKNAME:
             return PersonaDetail.NICKNAME;
@@ -1116,23 +1117,31 @@ public class Edsf.PersonaStore : Folks.PersonaStore
           case ContactField.IM_SKYPE_WORK_2:
           case ContactField.IM_SKYPE_WORK_3:
           case ContactField.IM_SKYPE:
+          case ContactField.IM_GOOGLE_TALK_HOME_1:
+          case ContactField.IM_GOOGLE_TALK_HOME_2:
+          case ContactField.IM_GOOGLE_TALK_HOME_3:
+          case ContactField.IM_GOOGLE_TALK_WORK_1:
+          case ContactField.IM_GOOGLE_TALK_WORK_2:
+          case ContactField.IM_GOOGLE_TALK_WORK_3:
+          case ContactField.IM_GOOGLE_TALK:
             return PersonaDetail.IM_ADDRESSES;
           case ContactField.PHOTO:
             return PersonaDetail.AVATAR;
           case ContactField.BIRTH_DATE:
             return PersonaDetail.BIRTHDAY;
+          /* Irrelevant */
+          case ContactField.UID: /* identifier */
+          case ContactField.REV: /* revision date */
+          case ContactField.BOOK_URI: /* parent identifier */
+          case ContactField.NAME_OR_ORG: /* FULL_NAME or ORG; both handled */
+            return PersonaDetail.INVALID;
           /* Unsupported */
-          case ContactField.UID:
           case ContactField.FILE_AS:
-          case ContactField.BOOK_URI:
           case ContactField.MAILER:
           case ContactField.CALENDAR_URI:
           case ContactField.ICS_CALENDAR:
           case ContactField.SPOUSE:
-          case ContactField.REV:
-          case ContactField.NAME_OR_ORG:
           case ContactField.LOGO:
-          case ContactField.NAME:
           case ContactField.WANTS_HTML:
           case ContactField.IS_LIST:
           case ContactField.LIST_SHOW_ADDRESSES:
