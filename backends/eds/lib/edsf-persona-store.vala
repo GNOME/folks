@@ -250,6 +250,8 @@ public class Edsf.PersonaStore : Folks.PersonaStore
 
           if (this._addressbook != null)
             {
+              ((!) this._addressbook).authenticate.disconnect (
+                  this._address_book_authenticate_cb);
               ((!) this._addressbook).notify["readonly"].disconnect (
                   this._address_book_notify_read_only_cb);
 
@@ -608,6 +610,8 @@ public class Edsf.PersonaStore : Folks.PersonaStore
 
               ((!) this._addressbook).notify["readonly"].connect (
                   this._address_book_notify_read_only_cb);
+              ((!) this._addressbook).authenticate.connect (
+                  this._address_book_authenticate_cb);
 
               yield this._open_address_book ();
               debug ("Successfully finished opening address book %p for " +
@@ -900,6 +904,17 @@ public class Edsf.PersonaStore : Folks.PersonaStore
         }
     }
 
+  private bool _address_book_authenticate_cb (Client address_book,
+      void *credentials)
+    {
+      /* FIXME: Add authentication support. That's:
+       * https://bugzilla.gnome.org/show_bug.cgi?id=653339
+       *
+       * For the moment, we just reject the authentication request, rather than
+       * leave it hanging. */
+      return false;
+    }
+
   /* Temporaries for _open_address_book(). See the complaint below. */
   Error? _open_address_book_error = null;
   SourceFunc? _open_address_book_callback = null; /* non-null iff yielded */
@@ -922,7 +937,14 @@ public class Edsf.PersonaStore : Folks.PersonaStore
 
       try
         {
+          this._open_address_book_error = null;
+
           yield ((!) this._addressbook).open (false, null);
+
+          if (this._open_address_book_error != null)
+            {
+              throw this._open_address_book_error;
+            }
         }
       catch (GLib.Error e1)
         {
@@ -942,6 +964,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
                * open() call above. */
               this._open_address_book_callback =
                   this._open_address_book.callback;
+              this._open_address_book_error = null;
 
               debug ("Yielding on opening address book %p for persona store " +
                   "‘%s’ (%p)", this._addressbook, this.id, this);
@@ -985,9 +1008,10 @@ public class Edsf.PersonaStore : Folks.PersonaStore
       debug ("_address_book_opened_cb for store ‘%s’ (%p), address book %p " +
           "and error %p", this.id, this, address_book, (void*) err);
 
+      this._open_address_book_error = err;
+
       if (this._open_address_book_callback != null)
         {
-          this._open_address_book_error = err;
           this._open_address_book_callback ();
         }
     }
