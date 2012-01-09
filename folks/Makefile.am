@@ -160,6 +160,8 @@ EXTRA_DIST = \
 	$(NULL)
 
 BUILT_SOURCES = \
+	folks-internal.h \
+	folks-internal.vapi \
 	folks.h \
 	folks.vapi \
 	$(NULL)
@@ -167,6 +169,8 @@ BUILT_SOURCES = \
 GITIGNOREFILES = \
 	$(libfolks_la_SOURCES:.vala=.c) \
 	libfolks_la_vala.stamp \
+	$(libfolks_internal_la_SOURCES:.vala=.c) \
+	libfolks_internal_la_vala.stamp \
 	$(NULL)
 
 CLEANFILES =
