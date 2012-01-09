@@ -48,6 +48,12 @@ public class Edsf.PersonaStore : Folks.PersonaStore
    * haven't received a property change notification for it. */
   private const uint _property_change_timeout = 30; /* seconds */
 
+  /* Translators: This should be translated to the name of the “Starred in
+   * Android” group in Google Contacts for your language. If Google have not
+   * localised the group for your language, or Google Contacts isn't available
+   * in your language, please *do not* translate this string. */
+  internal const string android_favourite_group_name = N_("Starred in Android");
+
   /**
    * The type of persona store this is.
    *
@@ -1442,6 +1448,23 @@ public class Edsf.PersonaStore : Folks.PersonaStore
 
       yield this._set_contact_is_favourite (persona.contact, is_favourite);
       yield this._commit_modified_property (persona, "is-favourite");
+
+      /* If this is a Google Contacts address book, change the user's membership
+       * of the “Starred in Android” group accordingly. See: bgo#661490. */
+      if (this._is_google_contacts_address_book ())
+        {
+          try
+            {
+              yield persona.change_group (this.android_favourite_group_name,
+                  is_favourite);
+            }
+          catch (GLib.Error e1)
+            {
+              /* We know this will always be a PropertyError. */
+              assert (e1 is PropertyError);
+              throw (PropertyError) e1;
+            }
+        }
     }
 
   private async void _set_contact_is_favourite (E.Contact contact,
@@ -1923,6 +1946,15 @@ public class Edsf.PersonaStore : Folks.PersonaStore
 
       yield this._set_contact_groups (persona.contact, groups);
       yield this._commit_modified_property (persona, "groups");
+
+      /* If this is a Google Contacts address book and the user's changing
+       * membership of the “Starred in Android” group, change our favourite
+       * status accordingly. See: bgo#661490. */
+      if (this._is_google_contacts_address_book ())
+        {
+          yield persona.change_is_favourite (
+              this.android_favourite_group_name in groups);
+        }
     }
 
   private async void _set_contact_groups (E.Contact contact, Set<string> groups)
@@ -2134,6 +2166,24 @@ public class Edsf.PersonaStore : Folks.PersonaStore
            * property name and the second parameter is an error message. */
           _("Unknown error setting property ‘%s’: %s"), property_name,
           error_in.message);
+    }
+
+  /* Try and work out whether this address book is Google Contacts. If so, we
+   * can enable things like setting favourite status based on Android groups. */
+  internal bool _is_google_contacts_address_book ()
+    {
+      unowned SourceGroup? group = (SourceGroup?) this.source.peek_group ();
+      if (group != null)
+        {
+          var base_uri = ((!) group).peek_base_uri ();
+          /* base_uri should be google:// for Google Contacts address books */
+          if (base_uri.has_prefix ("google:"))
+            {
+              return true;
+            }
+        }
+
+      return false;
     }
 
   private bool _is_in_source_list ()

@@ -1445,24 +1445,49 @@ public class Edsf.Persona : Folks.Persona,
             }
         }
 
+      var old_is_favourite = this._is_favourite;
+      var store = (Edsf.PersonaStore) this.store;
+
       /* Make the changes to this._groups and emit signals. */
       foreach (var category_name in removed_categories)
         {
+          /* We link the “Starred in Android” group to Google Contacts address
+           * books. See: bgo#661490. */
+          if (store._is_google_contacts_address_book () &&
+              category_name == Edsf.PersonaStore.android_favourite_group_name)
+            {
+              this._is_favourite = false;
+            }
+
           this.group_changed (category_name, false);
           this._groups.remove (category_name);
         }
 
       foreach (var category_name in added_categories)
         {
+          if (store._is_google_contacts_address_book () &&
+              category_name == Edsf.PersonaStore.android_favourite_group_name)
+            {
+              this._is_favourite = true;
+            }
+
           this._groups.add (category_name);
           this.group_changed (category_name, true);
         }
 
       /* Notify if anything's changed. */
+      this.freeze_notify ();
+
       if (added_categories.size != 0 || removed_categories.size != 0)
         {
           this.notify_property ("groups");
         }
+      if (this._is_favourite != old_is_favourite)
+        {
+          this.notify_property ("is-favourite");
+        }
+
+      this.thaw_notify ();
    }
 
   /**
@@ -1656,10 +1681,39 @@ public class Edsf.Persona : Folks.Persona,
             }
         }
 
+      var store = (Edsf.PersonaStore) this.store;
+
+      if (store._is_google_contacts_address_book ())
+        {
+          is_fav = is_fav ||
+              (Edsf.PersonaStore.android_favourite_group_name in this._groups);
+        }
+
       if (is_fav != this._is_favourite)
         {
           this._is_favourite = is_fav;
+
+          var groups_changed = false;
+
+          if (store._is_google_contacts_address_book () &&
+              !(Edsf.PersonaStore.android_favourite_group_name in this._groups))
+            {
+              this._groups.add (Edsf.PersonaStore.android_favourite_group_name);
+              this.group_changed (
+                  Edsf.PersonaStore.android_favourite_group_name, true);
+              groups_changed = true;
+            }
+
+          this.freeze_notify ();
+
+          if (groups_changed == true)
+            {
+              this.notify_property ("groups");
+            }
+
           this.notify_property ("is-favourite");
+
+          this.thaw_notify ();
         }
     }
 
