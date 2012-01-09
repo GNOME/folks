@@ -8,6 +8,8 @@ Bugs fixed:
 * Bug 657063 — Allow to pass a command to folks-inspect
 * Bug 667410 — A second instance of the aggregator only fetch a small subset of
   my contacts
+* Bug 667535 — persona created by tpf_persona_dup_for_contact() outlives its
+  TpContact
 
 API changes:
 * Add PostalAddress.is_empty() and Role.is_empty()

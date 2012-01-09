@@ -78,7 +78,10 @@ public class Tpf.PersonaStore : Folks.PersonaStore
   private HashSet<Persona> _persona_set;
   /* universal, contact owner handles (not channel-specific) */
   private HashMap<uint, Persona> _handle_persona_map;
-  private HashSet<Persona> _weakly_referenced_personas;
+  /* Map from weakly-referenced TpContacts to their original TpHandles;
+   * necessary because the handles get set to 0 before our weak_notify callback
+   * is called, and we need the handle to remove the contact. */
+  private HashMap<unowned Contact, uint> _weakly_referenced_contacts;
   private HashMap<Channel, HashSet<Persona>> _channel_group_personas_map;
   private HashMap<Channel, HashSet<uint>> _channel_group_incoming_adds;
   private HashMap<string, HashSet<Tpf.Persona>> _group_outgoing_adds;
@@ -517,18 +520,18 @@ public class Tpf.PersonaStore : Folks.PersonaStore
           this._conn = null;
         }
 
-      if (this._weakly_referenced_personas != null)
+      if (this._weakly_referenced_contacts != null)
         {
-          foreach (var p in this._weakly_referenced_personas)
+          var iter = this._weakly_referenced_contacts.map_iterator ();
+          while (iter.next () == true)
             {
-              if (p.contact != null)
-                {
-                  p.contact.weak_unref (this._contact_weak_notify_cb);
-                }
+              var contact = iter.get_key ();
+              contact.weak_unref (this._contact_weak_notify_cb);
             }
         }
 
-      this._weakly_referenced_personas = new HashSet<Persona> ();
+      this._weakly_referenced_contacts =
+          new HashMap<unowned Contact, uint> ();
 
       this._handle_persona_map = new HashMap<uint, Persona> ();
       this._channel_group_personas_map =
@@ -1555,8 +1558,8 @@ public class Tpf.PersonaStore : Folks.PersonaStore
         return;
 
       /* If we hold a weak ref. on the persona's TpContact, release that. */
-      if (this._weakly_referenced_personas.remove (persona) == true &&
-          persona.contact != null)
+      if (persona.contact != null &&
+          this._weakly_referenced_contacts.unset (persona.contact) == true)
         {
           persona.contact.weak_unref (this._contact_weak_notify_cb);
         }
@@ -1961,8 +1964,15 @@ public class Tpf.PersonaStore : Folks.PersonaStore
   private void _contact_weak_notify_cb (Object obj)
     {
       var c = obj as Contact;
-      this._ignore_by_handle (c.get_handle (), null, null,
-          GroupDetails.ChangeReason.NONE);
+      if (this._weakly_referenced_contacts != null)
+        {
+          Handle handle = this._weakly_referenced_contacts.get (c);
+          if (handle != 0)
+            {
+              this._ignore_by_handle ((!) handle, null, null,
+                  GroupDetails.ChangeReason.NONE);
+            }
+        }
     }
 
   internal Tpf.Persona? _ensure_persona_from_contact (Contact contact)
@@ -1999,7 +2009,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
 
       /* Weak ref. on the contact. */
       contact.weak_ref (this._contact_weak_notify_cb);
-      this._weakly_referenced_personas.add (persona);
+      this._weakly_referenced_contacts.set (contact, handle);
 
       /* Signal the addition of the new persona. */
       var personas = new HashSet<Persona> ();
