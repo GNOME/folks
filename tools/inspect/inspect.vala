@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2010 Collabora Ltd.
+ * Copyright (C) 2012 Philip Withnall
  *
  * This library is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -32,7 +33,6 @@ public class Folks.Inspect.Client : Object
 {
   public HashMap<string, Command> commands;
   private MainLoop main_loop;
-  private unowned Thread folks_thread;
   public IndividualAggregator aggregator { get; private set; }
   public BackendStore backend_store { get; private set; }
   public SignalManager signal_manager { get; private set; }
@@ -112,6 +112,12 @@ public class Folks.Inspect.Client : Object
       this.aggregator = new IndividualAggregator ();
     }
 
+  public void quit ()
+    {
+      /* Kill the main loop. */
+      this.main_loop.quit ();
+    }
+
   private async void _wait_for_quiescence () throws GLib.Error
     {
       var has_yielded = false;
@@ -182,64 +188,87 @@ public class Folks.Inspect.Client : Object
       this.main_loop.run ();
     }
 
-  private void *folks_thread_main ()
-    {
-      this.aggregator.prepare ();
-      this.main_loop.run ();
-
-      return null;
-    }
-
   public void run_interactive ()
     {
       /* Interactive mode: have a little shell which allows the data from
-       * libfolks to be browsed and edited in real time. We do this by spawning
-       * a second thread which takes care of the main loop and aggregator. The
-       * main thread then sits in a readline loop. */
+       * libfolks to be browsed and edited in real time. We do this by watching
+       * stdin in our main loop, and passing character notifications to
+       * readline. The main loop also processes all the folks events, thus
+       * preventing us having to run a second thread. */
+      var stdin_channel = new IOChannel.unix_new (stdin.fileno ());
+      stdin_channel.add_watch (IOCondition.IN, (source, cond) =>
+        {
+          /* At least a single character is available on stdin, so let readline
+           * consume it. */
+          if ((cond & IOCondition.IN) != 0)
+            {
+              Readline.callback_read_char ();
+              return true;
+            }
 
-      /* Spawn the folks worker thread. */
-      try
-        {
-          this.folks_thread = Thread<void*>.create<void*> (
-              this.folks_thread_main, true);
-        }
-      catch (ThreadError e)
-        {
-          stdout.printf ("Couldn't create aggregator thread: %s", e.message);
-          Process.exit (1);
-        }
+          assert_not_reached ();
+        });
 
       /* Allow things to be set for folks-inspect in ~/.inputrc, and install our
        * own completion function. */
       Readline.readline_name = "folks-inspect";
       Readline.attempted_completion_function = Client.completion_cb;
+      Readline.catch_signals = 0; /* go away, readline */
 
-      /* Main prompt loop */
-      while (true)
+      /* Callback for each character appearing on stdin. */
+      Readline.callback_handler_install ("> ", (_command_line) =>
         {
-          string command_line = Readline.readline ("> ");
+          if (_command_line == null)
+            {
+              /* EOF. If we've entered some text, don't do anything. Otherwise,
+               * quit. */
+              if (Readline.line_buffer != "")
+                {
+                  Readline.ding ();
+                  return;
+                }
 
-          if (command_line == null)
-            continue;
+              /* Quit. */
+              Readline.crlf ();
+              Readline.callback_handler_remove ();
+              main_client.quit ();
+
+              return;
+            }
+
+          var command_line = (!) _command_line;
 
           command_line = command_line.strip ();
           if (command_line == "")
-            continue;
+            {
+              /* If the user's entered a blank line, just display a new prompt
+               * without doing anything else. */
+              return;
+            }
 
           string subcommand;
           string command_name;
-          Command command = this.parse_command_line (command_line,
+          Command command = main_client.parse_command_line (command_line,
               out command_name, out subcommand);
 
           /* Run the command */
           if (command != null)
-            command.run (subcommand);
+            {
+              command.run (subcommand);
+            }
           else
-            stdout.printf ("Unrecognised command '%s'.\n", command_name);
+            {
+              stdout.printf ("Unrecognised command ‘%s’.\n", command_name);
+            }
 
           /* Store the command in the history, even if it failed */
           Readline.History.add (command_line);
-        }
+        });
+
+      /* Run the aggregator and the main loop. */
+      this.aggregator.prepare ();
+
+      this.main_loop.run ();
     }
 
   private static Command? parse_command_line (string command_line,
