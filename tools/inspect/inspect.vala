@@ -57,9 +57,19 @@ public class Folks.Inspect.Client : Object
           return 1;
         }
 
-      /* Create the client and run the command. */
+      /* Create the client. */
       main_client = new Client ();
 
+      /* Set up signal handling. */
+      Unix.signal_add (Posix.SIGTERM, () =>
+        {
+          /* Quit the client and let that exit the process. */
+          main_client.quit ();
+
+          return false;
+        });
+
+      /* Run the command. */
       if (args.length == 1)
         {
           main_client.run_interactive ();
@@ -207,6 +217,24 @@ public class Folks.Inspect.Client : Object
             }
 
           assert_not_reached ();
+        });
+
+      /* Handle SIGINT. */
+      Unix.signal_add (Posix.SIGINT, () =>
+        {
+          /* Tidy up. */
+          Readline.free_line_state ();
+          Readline.cleanup_after_signal ();
+          Readline.reset_after_signal ();
+
+          /* Display a fresh prompt. */
+          stdout.printf ("^C");
+          Readline.crlf ();
+          Readline.reset_line_state ();
+          Readline.replace_line ("", 0);
+          Readline.redisplay ();
+
+          return true;
         });
 
       /* Allow things to be set for folks-inspect in ~/.inputrc, and install our

@@ -1,6 +1,7 @@
 VALAFLAGS = \
 	$(AM_VALAFLAGS) \
 	--vapidir=$(top_srcdir)/folks \
+	--pkg=posix \
 	--pkg=readline \
 	--pkg=gobject-2.0 \
 	--pkg=gio-2.0 \

@@ -15,6 +15,7 @@ Bugs fixed:
 * Bug 671900 — Folks should not suggest linking contacts from telepathy-salut
 * Bug 670872 — Should be less sensitive to accentuated chars
 * Bug 669984 — Does not notify when contacts are added to groups
+* Bug 660235 — Consistent signal handlers to a terminal would be cool
 
 Overview of changes from libfolks 0.6.6 to libfolks 0.6.7
 =============================================================
