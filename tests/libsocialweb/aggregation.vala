@@ -55,9 +55,8 @@ public class AggregationTests : Folks.TestCase
       File kf_relationships_f = File.new_for_path (kf_relationships_path);
       try
         {
-          kf_relationships_f.replace_contents (kf_relationships_data,
-              kf_relationships_data.length, null, false,
-              FileCreateFlags.PRIVATE, null);
+          kf_relationships_f.replace_contents (kf_relationships_data.data, null,
+              false, FileCreateFlags.PRIVATE, null);
         }
       catch (Error e)
         {
@@ -80,9 +79,8 @@ public class AggregationTests : Folks.TestCase
         {
           File backend_f = File.new_for_path (kf_path);
           string data = kf.to_data ();
-          backend_f.replace_contents (data,
-              data.length, null, false, FileCreateFlags.PRIVATE,
-              null);
+          backend_f.replace_contents (data.data, null, false,
+              FileCreateFlags.PRIVATE, null);
         }
       catch (Error e)
         {

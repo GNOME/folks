@@ -299,7 +299,7 @@ public class Folks.Inspect.Client : Object
     }
 }
 
-private abstract class Folks.Inspect.Command
+public abstract class Folks.Inspect.Command
 {
   protected Client client;
 

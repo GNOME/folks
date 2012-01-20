@@ -11,6 +11,7 @@ Bugs fixed:
 * Bug 667535 — persona created by tpf_persona_dup_for_contact() outlives its
   TpContact
 * Bug 670196 — Disable GLib deprecation warnings
+* Bug 668415 — Port to Vala 0.15.x
 
 API changes:
 * Add PostalAddress.is_empty() and Role.is_empty()

@@ -443,16 +443,9 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
 
       try
         {
-          /* Note: We have to use key_file_data.size () here to get its length
-           * in _bytes_ rather than _characters_. bgo#628930.
-           * In Vala >= 0.11, string.size() has been deprecated in favour of
-           * string.length (which now returns the byte length, whereas in
-           * Vala <= 0.10, it returned the character length). FIXME: We need to
-           * take this into account until we depend explicitly on
-           * Vala >= 0.11. */
-          yield this.file.replace_contents_async (key_file_data,
-              key_file_data.length, null, false, FileCreateFlags.PRIVATE,
-              cancellable);
+          yield this.file.replace_contents_async (key_file_data.data,
+              null, false, FileCreateFlags.PRIVATE,
+              cancellable, null);
         }
       catch (Error e)
         {

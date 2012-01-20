@@ -194,7 +194,7 @@ public abstract class Folks.ObjectCache<T> : Object
 
       try
         {
-          yield this._cache_file.load_contents_async (cancellable, out data);
+          yield this._cache_file.load_contents_async (cancellable, out data, null);
         }
       catch (Error e)
         {
@@ -372,8 +372,8 @@ public abstract class Folks.ObjectCache<T> : Object
           try
             {
               yield this._cache_file.replace_contents_async (
-                  (string) data, data.length, null, false,
-                  FileCreateFlags.PRIVATE, cancellable);
+                  data, null, false,
+                  FileCreateFlags.PRIVATE, cancellable, null);
               break;
             }
           catch (Error e)

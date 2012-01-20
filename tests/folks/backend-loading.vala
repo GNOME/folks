@@ -59,9 +59,9 @@ public class BackendLoadingTests : Folks.TestCase
         {
           File backend_f = File.new_for_path (kf_path);
           string data = kf.to_data ();
-          backend_f.replace_contents (data,
-              data.length, null, false, FileCreateFlags.PRIVATE,
-              null);
+          backend_f.replace_contents (data.data,
+              null, false, FileCreateFlags.PRIVATE,
+              null, null);
         }
       catch (Error e)
         {

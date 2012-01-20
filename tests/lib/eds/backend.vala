@@ -225,7 +225,7 @@ public class EdsTest.Backend
 
               try
                 {
-                  file.load_contents (null, out photo_content);
+                  file.load_contents (null, out photo_content, null);
 
                   var cp = new ContactPhoto ();
                   cp.type = ContactPhotoType.INLINED;

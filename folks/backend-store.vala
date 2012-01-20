@@ -537,10 +537,10 @@ public class Folks.BackendStore : Object {
       debug ("Searching for modules in folder '%s' ..", dir.get_path ());
 
       var attributes =
-          FILE_ATTRIBUTE_STANDARD_NAME + "," +
-          FILE_ATTRIBUTE_STANDARD_TYPE + "," +
-          FILE_ATTRIBUTE_STANDARD_IS_SYMLINK + "," +
-          FILE_ATTRIBUTE_STANDARD_CONTENT_TYPE;
+          FileAttribute.STANDARD_NAME + "," +
+          FileAttribute.STANDARD_TYPE + "," +
+          FileAttribute.STANDARD_IS_SYMLINK + "," +
+          FileAttribute.STANDARD_CONTENT_TYPE;
 
       GLib.List<FileInfo> infos;
       try
@@ -675,7 +675,7 @@ public class Folks.BackendStore : Object {
         {
           /* Query for the MIME type; if the file doesn't exist, we'll get an
            * appropriate error back, so this also checks for existence. */
-          file_info = yield file.query_info_async (FILE_ATTRIBUTE_STANDARD_TYPE,
+          file_info = yield file.query_info_async (FileAttribute.STANDARD_TYPE,
               FileQueryInfoFlags.NONE, Priority.DEFAULT, null);
         }
       catch (Error error)
@@ -766,9 +766,9 @@ public class Folks.BackendStore : Object {
            * Vala <= 0.10, it returned the character length). FIXME: We need to
            * take this into account until we depend explicitly on
            * Vala >= 0.11. */
-          yield this._config_file.replace_contents_async (key_file_data,
-              key_file_data.length, null, false, FileCreateFlags.PRIVATE,
-              null);
+          yield this._config_file.replace_contents_async (key_file_data.data,
+              null, false, FileCreateFlags.PRIVATE,
+              null, null);
         }
       catch (Error e)
         {
