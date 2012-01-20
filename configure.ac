@@ -480,7 +480,11 @@ AC_SUBST([CODE_COVERAGE_CFLAGS])
 AC_SUBST([CODE_COVERAGE_LDFLAGS])
 
 # Vala-related flags
-AS_IF([test "x$enable_vala" = "xyes"],
+AC_ARG_ENABLE([fatal-warnings],
+              AS_HELP_STRING([--disable-fatal-warnings],
+                             [Make warnings from valac and g-ir-scanner non-fatal]),
+              [enable_fatal_warnings=$enableval], [enable_fatal_warnings=yes])
+AS_IF([test "x$enable_vala" = "xyes" && test "x$enable_fatal_warnings" = "xyes"],
       [ERROR_INTROSPECTION_SCANNER_ARGS="\
                         $ERROR_INTROSPECTION_SCANNER_ARGS --warn-error"
        ERROR_VALAFLAGS="$ERROR_VALAFLAGS --fatal-warnings"])
