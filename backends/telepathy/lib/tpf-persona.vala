@@ -228,7 +228,7 @@ public class Tpf.Persona : Folks.Persona,
    *
    * See {@link Folks.PresenceDetails.presence_type}.
    */
-  public Folks.PresenceType presence_type { get; private set; }
+  public Folks.PresenceType presence_type { get; set; }
 
   /**
    * The Persona's presence status.
@@ -237,14 +237,14 @@ public class Tpf.Persona : Folks.Persona,
    *
    * @since 0.6.0
    */
-  public string presence_status { get; private set; }
+  public string presence_status { get; set; }
 
   /**
    * The Persona's presence message.
    *
    * See {@link Folks.PresenceDetails.presence_message}.
    */
-  public string presence_message { get; private set; }
+  public string presence_message { get; set; }
 
   /**
    * The names of the Persona's linkable properties.
