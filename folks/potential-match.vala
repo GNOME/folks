@@ -167,6 +167,7 @@ public class Folks.PotentialMatch : Object
   private void _name_similarity ()
     {
       double similarity = 0.0;
+      bool exact_match = false;
 
       if (this._look_alike (this._individual_a.nickname,
               this._individual_b.nickname))
@@ -174,8 +175,18 @@ public class Folks.PotentialMatch : Object
           similarity += 0.20;
         }
 
-      if (this._look_alike (this._individual_a.full_name,
-              this._individual_b.full_name))
+      if (this._look_alike_or_identical (this._individual_a.full_name,
+              this._individual_b.full_name,
+              out exact_match) ||
+          this._look_alike_or_identical (this._individual_a.alias,
+	      this._individual_b.full_name,
+	      out exact_match) ||
+          this._look_alike_or_identical (this._individual_a.full_name,
+              this._individual_b.alias,
+              out exact_match) ||
+          this._look_alike_or_identical (this._individual_a.alias,
+              this._individual_b.alias,
+              out exact_match))
         {
           similarity += 0.70;
         }
@@ -217,7 +228,16 @@ public class Folks.PotentialMatch : Object
       debug ("[name_similarity] Got %f\n", similarity);
 
       if (similarity >= this._DIST_THRESHOLD)
-        this._result = this._inc_match_level (this._result, 2);
+        {
+          int inc = 2;
+	  /* We need exact matches to go to at least HIGH, or otherwise its
+	     not possible to get a HIGH match for e.g. a facebook telepathy
+	     persona, where alias is the only piece of information
+	     available */
+          if (exact_match)
+            inc += 1;
+          this._result = this._inc_match_level (this._result, inc);
+        }
     }
 
   /**
@@ -392,9 +412,27 @@ public class Folks.PotentialMatch : Object
       return ret;
     }
 
+  private bool _look_alike_or_identical (string? a, string? b, out bool exact)
+    {
+      exact = false;
+      if (a == null || a == "" || b == null || b == "")
+        {
+          return false;
+        }
+
+      if (a == b)
+        {
+          exact = true;
+          return true;
+        }
+
+      // a and b look alike if their Jaro distance is over the threshold.
+      return (this.jaro_dist ((!) a, (!) b) >= this._DIST_THRESHOLD);
+    }
+
   private bool _look_alike (string? a, string? b)
     {
-      if (a == null || b == null)
+      if (a == null || a == "" || b == null || b == "")
         {
           return false;
         }
