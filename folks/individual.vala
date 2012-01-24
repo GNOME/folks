@@ -212,19 +212,19 @@ public class Folks.Individual : Object,
   /**
    * {@inheritDoc}
    */
-  public Folks.PresenceType presence_type { get; private set; }
+  public Folks.PresenceType presence_type { get; set; }
 
   /**
    * {@inheritDoc}
    *
    * @since 0.6.0
    */
-  public string presence_status { get; private set; }
+  public string presence_status { get; set; }
 
   /**
    * {@inheritDoc}
    */
-  public string presence_message { get; private set; }
+  public string presence_message { get; set; }
 
   /**
    * Whether the Individual is the user.
