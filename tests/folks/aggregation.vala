@@ -544,8 +544,8 @@ public class AggregationTests : Folks.TestCase
 
   private void _test_linkable_properties_individuals_changed (bool detailed,
       uint num_personas, Collection<Individual?> added,
-      Set<Individual?> removed, ref weak Individual individual1,
-      ref weak Individual individual2)
+      Set<Individual?> removed, ref weak Individual? individual1,
+      ref weak Individual? individual2)
     {
       foreach (Individual i in removed)
         {
@@ -700,7 +700,7 @@ public class AggregationTests : Folks.TestCase
 
   private void _test_user_individuals_changed (bool detailed,
       Collection<Individual?> added, Set<Individual?> removed,
-      ref Individual user_individual)
+      ref Individual? user_individual)
     {
       /* Keep track of the user individual */
       foreach (Individual i in removed)
