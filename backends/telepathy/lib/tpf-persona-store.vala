@@ -1234,7 +1234,10 @@ public class Tpf.PersonaStore : Folks.PersonaStore
                       /* Translators: the parameter is a persona identifier and
                        * the second parameter is a group name. */
                       warning (_("Failed to add Telepathy contact ‘%s’ to group ‘%s’."),
-                          persona.contact.identifier, group);
+                          persona.contact != null ?
+                              persona.contact.identifier :
+                              "(nil)",
+                          group);
                     }
                   else
                     {
@@ -1242,7 +1245,11 @@ public class Tpf.PersonaStore : Folks.PersonaStore
                           /* Translators: the parameter is a persona identifier
                            * and the second parameter is a group name. */
                           _("Failed to remove Telepathy contact ‘%s’ from group ‘%s’."),
-                          persona.contact.identifier, group);
+
+                          persona.contact != null ?
+                              persona.contact.identifier :
+                              "(nil)",
+                          group);
                     }
                 }
             }
@@ -1606,6 +1613,13 @@ public class Tpf.PersonaStore : Folks.PersonaStore
               _("Telepathy contacts representing the local user may not be removed."));
         }
 
+      if (tp_persona.contact == null)
+        {
+          warning ("Skipping server-side removal of Tpf.Persona %p because " +
+              "it has no attached TpContact", tp_persona);
+          return;
+        }
+
       try
         {
           FolksTpLowlevel.channel_group_change_membership (this._stored,
@@ -1797,6 +1811,13 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       string? message)
     {
       var tp_persona = (Tpf.Persona) persona;
+
+      if (tp_persona.contact == null)
+        {
+          warning ("Skipping Tpf.Persona %p contact list change because it " +
+              "has no attached TpContact", tp_persona);
+          return;
+        }
 
       try
         {
@@ -2263,6 +2284,12 @@ public class Tpf.PersonaStore : Folks.PersonaStore
               _("Failed to change favorite without a connection to the telepathy-logger service."));
         }
 
+      if (((Tpf.Persona) persona).contact == null)
+        {
+          throw new PropertyError.INVALID_VALUE (
+              _("Failed to change favorite status of Telepathy Persona because it has no attached TpContact."));
+        }
+
       try
         {
           /* Add or remove the persona to the list of favourites as
@@ -2289,6 +2316,13 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       if (alias == null)
         {
           alias = "";
+        }
+
+      if (persona.contact == null)
+        {
+          warning ("Skipping Tpf.Persona %p alias change to '%s' because it " +
+              "has no attached TpContact", persona, alias);
+          return;
         }
 
       debug ("Changing alias of persona %u to '%s'.", persona.contact.handle,
