@@ -1795,8 +1795,11 @@ public class Trf.PersonaStore : Folks.PersonaStore
               var postal_address = new Folks.PostalAddress (
                   po_box, extension, street, locality, region, postal_code,
                   country, null, affl_info.affl_tracker_id);
-              affl_info.postal_address_fd =
-                  new Folks.PostalAddressFieldDetails (postal_address);
+              if (!postal_address.is_empty ())
+                {
+                  affl_info.postal_address_fd =
+                      new Folks.PostalAddressFieldDetails (postal_address);
+                }
 
               affl_info.email = cursor.get_string
                   (Trf.AfflInfoFields.AFFL_EMAIL).dup ();

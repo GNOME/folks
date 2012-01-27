@@ -834,10 +834,13 @@ public class Trf.Persona : Folks.Persona,
               a_info[Trf.PostalAddressFields.COUNTRY],
               null,
               null);
-          var pafd = new PostalAddressFieldDetails (pa);
-          pafd.id = a_info[Trf.PostalAddressFields.TRACKER_ID];
+          if (!pa.is_empty ())
+            {
+              var pafd = new PostalAddressFieldDetails (pa);
+              pafd.id = a_info[Trf.PostalAddressFields.TRACKER_ID];
 
-          postal_addresses.add (pafd);
+              postal_addresses.add (pafd);
+            }
         }
 
       this._postal_addresses = postal_addresses;
@@ -996,9 +999,12 @@ public class Trf.Persona : Folks.Persona,
 
           var new_role = new Role (title, organisation, null);
           new_role.role = role;
-          var role_fd = new RoleFieldDetails (new_role);
-          role_fd.id = tracker_id;
-          role_fds.add (role_fd);
+          if (!new_role.is_empty ())
+            {
+              var role_fd = new RoleFieldDetails (new_role);
+              role_fd.id = tracker_id;
+              role_fds.add (role_fd);
+            }
         }
 
       this._roles = role_fds;
@@ -1011,12 +1017,15 @@ public class Trf.Persona : Folks.Persona,
     {
       var new_role = new Role (title, org, null);
       new_role.role = role;
-      var role_fd = new RoleFieldDetails (new_role);
-      role_fd.id = tracker_id;
-      if (this._roles.add (role_fd))
+      if (!new_role.is_empty ())
         {
-          this.notify_property ("roles");
-          return true;
+          var role_fd = new RoleFieldDetails (new_role);
+          role_fd.id = tracker_id;
+          if (this._roles.add (role_fd))
+            {
+              this.notify_property ("roles");
+              return true;
+            }
         }
       return false;
     }
