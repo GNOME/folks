@@ -179,7 +179,7 @@ public class MatchPhoneNumberTests : Folks.TestCase
       details1.insert (Folks.PersonaStore.detail_key (PersonaDetail.FULL_NAME),
           (owned) val);
 
-      val = Value (typeof (Set<PhoneFieldDetails>));
+      val = Value (typeof (Set));
       var phone_numbers1 = new HashSet<PhoneFieldDetails> (
           (GLib.HashFunc) PhoneFieldDetails.hash,
           (GLib.EqualFunc) PhoneFieldDetails.equal);
@@ -195,7 +195,7 @@ public class MatchPhoneNumberTests : Folks.TestCase
       details2.insert (Folks.PersonaStore.detail_key (PersonaDetail.FULL_NAME),
           (owned) val);
 
-      val = Value (typeof (Set<PhoneFieldDetails>));
+      val = Value (typeof (Set));
       var phone_numbers2 = new HashSet<PhoneFieldDetails> (
           (GLib.HashFunc) PhoneFieldDetails.hash,
           (GLib.EqualFunc) PhoneFieldDetails.equal);

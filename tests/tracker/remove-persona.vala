@@ -131,7 +131,7 @@ public class RemovePersonaTests : Folks.TestCase
       details.insert (Folks.PersonaStore.detail_key (PersonaDetail.FULL_NAME),
           (owned) v1);
 
-      Value? v2 = Value (typeof (Set<EmailFieldDetails>));
+      Value? v2 = Value (typeof (Set));
       var emails = new HashSet<EmailFieldDetails> (
           (GLib.HashFunc) EmailFieldDetails.hash,
           (GLib.EqualFunc) EmailFieldDetails.equal);

@@ -140,7 +140,7 @@ public class LinkPersonasTests : Folks.TestCase
     {
       HashTable<string, Value?> details1 = new HashTable<string, Value?>
           (str_hash, str_equal);
-      Value? v1 = Value (typeof (MultiMap<string, ImFieldDetails>));
+      Value? v1 = Value (typeof (MultiMap));
       var im_addrs1 = new HashMultiMap<string, ImFieldDetails> (null, null,
           (GLib.HashFunc) ImFieldDetails.hash,
           (GLib.EqualFunc) ImFieldDetails.equal);
@@ -154,7 +154,7 @@ public class LinkPersonasTests : Folks.TestCase
 
       HashTable<string, Value?> details2 = new HashTable<string, Value?>
           (str_hash, str_equal);
-      Value? v3 = Value (typeof (MultiMap<string, ImFieldDetails>));
+      Value? v3 = Value (typeof (MultiMap));
       var im_addrs2 = new HashMultiMap<string, ImFieldDetails> (null, null,
           (GLib.HashFunc) ImFieldDetails.hash,
           (GLib.EqualFunc) ImFieldDetails.equal);

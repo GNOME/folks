@@ -167,7 +167,7 @@ public class AddPersonaTests : Folks.TestCase
       details.insert (Folks.PersonaStore.detail_key (PersonaDetail.FULL_NAME),
           (owned) v1);
 
-      Value? v2 = Value (typeof (Set<EmailFieldDetails>));
+      Value? v2 = Value (typeof (Set));
       var emails = new HashSet<EmailFieldDetails> (
           (GLib.HashFunc) EmailFieldDetails.hash,
           (GLib.EqualFunc) EmailFieldDetails.equal);
@@ -185,7 +185,7 @@ public class AddPersonaTests : Folks.TestCase
       details.insert (Folks.PersonaStore.detail_key (PersonaDetail.AVATAR),
           (owned) v3);
 
-      Value? v4 = Value (typeof (MultiMap<string, ImFieldDetails>));
+      Value? v4 = Value (typeof (MultiMap));
       var im_fds = new HashMultiMap<string, ImFieldDetails> ();
       im_fds.set ("jabber", new ImFieldDetails (this._im_addr_1));
       im_fds.set ("yahoo", new ImFieldDetails (this._im_addr_2));
@@ -193,7 +193,7 @@ public class AddPersonaTests : Folks.TestCase
       details.insert (
          Folks.PersonaStore.detail_key (PersonaDetail.IM_ADDRESSES), v4);
 
-      Value? v5 = Value (typeof (Set<PhoneFieldDetails>));
+      Value? v5 = Value (typeof (Set));
       var phones = new HashSet<PhoneFieldDetails> (
           (GLib.HashFunc) PhoneFieldDetails.hash,
           (GLib.EqualFunc) PhoneFieldDetails.equal);
@@ -211,7 +211,7 @@ public class AddPersonaTests : Folks.TestCase
           Folks.PersonaStore.detail_key (PersonaDetail.PHONE_NUMBERS),
           (owned) v5);
 
-      Value? v6 = Value (typeof (Set<PostalAddress>));
+      Value? v6 = Value (typeof (Set));
       var pa_fds = new HashSet<PostalAddressFieldDetails> (
           (GLib.HashFunc) PostalAddressFieldDetails.hash,
           (GLib.EqualFunc) PostalAddressFieldDetails.equal);
@@ -235,7 +235,7 @@ public class AddPersonaTests : Folks.TestCase
           Folks.PersonaStore.detail_key (PersonaDetail.STRUCTURED_NAME),
           (owned) v7);
 
-      Value? v8 = Value (typeof (Set<NoteFieldDetails>));
+      Value? v8 = Value (typeof (Set));
       var notes = new HashSet<NoteFieldDetails> (
           (GLib.HashFunc) NoteFieldDetails.hash,
           (GLib.EqualFunc) NoteFieldDetails.equal);
@@ -252,7 +252,7 @@ public class AddPersonaTests : Folks.TestCase
       details.insert (Folks.PersonaStore.detail_key (PersonaDetail.BIRTHDAY),
           (owned) v9);
 
-      Value? v10 = Value (typeof (Set<Role>));
+      Value? v10 = Value (typeof (Set));
       var role_fds = new HashSet<RoleFieldDetails> (
           (GLib.HashFunc) RoleFieldDetails.hash,
           (GLib.EqualFunc) RoleFieldDetails.equal);

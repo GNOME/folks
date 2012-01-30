@@ -185,7 +185,7 @@ public class MatchKnownEmailsTests : Folks.TestCase
       details1.insert (Folks.PersonaStore.detail_key (PersonaDetail.FULL_NAME),
           (owned) val);
 
-      val = Value (typeof (Set<EmailFieldDetails>));
+      val = Value (typeof (Set));
       var emails1 = new HashSet<EmailFieldDetails> (
           (GLib.HashFunc) EmailFieldDetails.hash,
           (GLib.EqualFunc) EmailFieldDetails.equal);
@@ -201,7 +201,7 @@ public class MatchKnownEmailsTests : Folks.TestCase
       details2.insert (Folks.PersonaStore.detail_key (PersonaDetail.FULL_NAME),
           (owned) val);
 
-      val = Value (typeof (Set<EmailFieldDetails>));
+      val = Value (typeof (Set));
       var emails2 = new HashSet<EmailFieldDetails> (
           (GLib.HashFunc) EmailFieldDetails.hash,
           (GLib.EqualFunc) EmailFieldDetails.equal);

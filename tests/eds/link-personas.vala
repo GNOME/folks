@@ -211,7 +211,7 @@ public class LinkPersonasTests : Folks.TestCase
       if (this._linking_method == LinkingMethod.IM_ADDRESSES ||
           this._linking_method == LinkingMethod.EMAIL_AS_IM_ADDRESS)
         {
-          v1 = Value (typeof (MultiMap<string,  ImFieldDetails>));
+          v1 = Value (typeof (MultiMap));
           var im_addrs1 = new HashMultiMap<string, ImFieldDetails> (
               null, null,
               (GLib.HashFunc) ImFieldDetails.hash,
@@ -226,7 +226,7 @@ public class LinkPersonasTests : Folks.TestCase
         }
       else if (this._linking_method == LinkingMethod.WEB_SERVICE_ADDRESSES)
         {
-          v1 = Value (typeof (MultiMap<string, WebServiceFieldDetails>));
+          v1 = Value (typeof (MultiMap));
           var wsa1 = new HashMultiMap<string, WebServiceFieldDetails> (
               null, null,
               (GLib.HashFunc) WebServiceFieldDetails.hash,
@@ -246,7 +246,7 @@ public class LinkPersonasTests : Folks.TestCase
       Value? v3;
       if (this._linking_method == LinkingMethod.IM_ADDRESSES)
         {
-          v3 = Value (typeof (MultiMap<string, string>));
+          v3 = Value (typeof (MultiMap));
           var im_addrs2 = new HashMultiMap<string, ImFieldDetails> (
               null, null,
               (GLib.HashFunc) ImFieldDetails.hash,
@@ -257,7 +257,7 @@ public class LinkPersonasTests : Folks.TestCase
         }
       else if (this._linking_method == LinkingMethod.WEB_SERVICE_ADDRESSES)
         {
-          v3 = Value (typeof (MultiMap<string, WebServiceFieldDetails>));
+          v3 = Value (typeof (MultiMap));
           var wsa2 = new HashMultiMap<string, WebServiceFieldDetails> (
               null, null,
               (GLib.HashFunc) WebServiceFieldDetails.hash,
@@ -268,7 +268,7 @@ public class LinkPersonasTests : Folks.TestCase
         }
       else if (this._linking_method == LinkingMethod.EMAIL_AS_IM_ADDRESS)
         {
-          v3 = Value (typeof (Set<EmailFieldDetails>));
+          v3 = Value (typeof (Set));
           var emails = new HashSet<EmailFieldDetails> (
               (GLib.HashFunc) EmailFieldDetails.hash,
               (GLib.EqualFunc) EmailFieldDetails.equal);

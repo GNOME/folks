@@ -178,7 +178,7 @@ public class MatchIMAddressesTests : Folks.TestCase
       details1.insert (Folks.PersonaStore.detail_key (PersonaDetail.FULL_NAME),
           (owned) val);
 
-      val = Value (typeof (MultiMap<string, ImFieldDetails>));
+      val = Value (typeof (MultiMap));
       im_addrs = new HashMultiMap<string, ImFieldDetails> (null, null,
           (GLib.HashFunc) ImFieldDetails.hash,
           (GLib.EqualFunc) ImFieldDetails.equal);
@@ -194,7 +194,7 @@ public class MatchIMAddressesTests : Folks.TestCase
       details2.insert (Folks.PersonaStore.detail_key (PersonaDetail.FULL_NAME),
           (owned) val);
 
-      val = Value (typeof (MultiMap<string, ImFieldDetails>));
+      val = Value (typeof (MultiMap));
       im_addrs = new HashMultiMap<string, ImFieldDetails> (null, null,
           (GLib.HashFunc) ImFieldDetails.hash,
           (GLib.EqualFunc) ImFieldDetails.equal);
