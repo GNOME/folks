@@ -9,6 +9,9 @@
  * notice and this notice are preserved.
  */
 
+
+#include "config.h"
+
 #include "conn.h"
 
 #include <string.h>

@@ -9,6 +9,8 @@
  * notice and this notice are preserved.
  */
 
+#include "config.h"
+
 #include "contact-list-manager.h"
 
 #include <string.h>
