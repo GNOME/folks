@@ -405,6 +405,10 @@ IT_PROG_INTLTOOL([0.35.0])
 # Error flags
 # -----------------------------------------------------------
 
+# Disable GLib deprecation warnings for now (#670196); GValueArray is deprecated
+# but we need it for dbus-glib. Porting to GDBus will solve this (#653198)
+AC_DEFINE(GLIB_DISABLE_DEPRECATION_WARNINGS, 1, [Build with GLib deprecated])
+
 AS_COMPILER_FLAG([-Wall], [ERROR_CFLAGS="-Wall"], [ERROR_CFLAGS=""])
 AS_COMPILER_FLAG([-Werror], [werror=yes], [werror=no])
 
