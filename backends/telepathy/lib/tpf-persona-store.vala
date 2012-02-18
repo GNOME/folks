@@ -119,12 +119,22 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       GLib.List<Persona>? added, GLib.List<Persona>? removed);
   internal signal void group_removed (string group, GLib.Error? error);
 
+  private Account _account;
+
   /**
    * The Telepathy account this store is based upon.
    */
   [Property(nick = "basis account",
       blurb = "Telepathy account this store is based upon")]
-  public Account account { get; construct; }
+  public Account account
+    {
+      get { return this._account; }
+      construct
+        {
+          this._account = value;
+          this._account.invalidated.connect (this._account_invalidated_cb);
+        }
+    }
 
   /**
    * The type of persona store this is.
@@ -277,6 +287,8 @@ public class Tpf.PersonaStore : Folks.PersonaStore
     {
       debug ("Destroying Tpf.PersonaStore %p ('%s').", this, this.id);
 
+      this._reset ();
+
       // Remove from the map of persona stores by account
       PersonaStore._remove_store_from_map (this);
 
@@ -284,6 +296,10 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       this._debug = null;
       if (this._logger != null)
         this._logger.invalidated.disconnect (this._logger_invalidated_cb);
+
+      this._account.invalidated.disconnect (this._account_invalidated_cb);
+      this._account_manager.invalidated.disconnect (
+          this._account_manager_invalidated_cb);
     }
 
   private string _format_maybe_bool (MaybeBool input)
@@ -579,6 +595,13 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       this._self_contact = null;
     }
 
+  private void _remove_store ()
+    {
+      this._emit_personas_changed (null, this._persona_set);
+      this._cache.clear_cache ();
+      this.removed ();
+    }
+
   /**
    * Prepare the PersonaStore for use.
    *
@@ -599,23 +622,25 @@ public class Tpf.PersonaStore : Folks.PersonaStore
 
               this._account_manager = AccountManager.dup ();
 
+              this._account_manager.invalidated.connect (
+                  this._account_manager_invalidated_cb);
+
               this._account_manager.account_removed.connect ((a) =>
                 {
                   if (this.account == a)
                     {
-                      this._emit_personas_changed (null, this._persona_set);
-                      this._cache.clear_cache ();
-                      this.removed ();
+                      this._remove_store ();
                     }
                 });
               this._account_manager.account_validity_changed.connect (
                   (a, valid) =>
                     {
+                      debug ("Account validity changed for %p (‘%s’) to %s.",
+                          a, a.display_name, valid ? "true" : "false");
+
                       if (!valid && this.account == a)
                         {
-                          this._emit_personas_changed (null, this._persona_set);
-                          this._cache.clear_cache ();
-                          this.removed ();
+                          this._remove_store ();
                         }
                     });
 
@@ -667,6 +692,21 @@ public class Tpf.PersonaStore : Folks.PersonaStore
               this._prepare_pending = false;
             }
         }
+    }
+
+  private void _account_manager_invalidated_cb (uint domain, int code,
+      string message)
+    {
+      debug ("TpAccountManager invalidated (%u, %i, “%s”) for " +
+          "Tpf.PersonaStore %p (‘%s’).", domain, code, message, this, this.id);
+      this._remove_store ();
+    }
+
+  private void _account_invalidated_cb (uint domain, int code, string message)
+    {
+      debug ("TpAccount invalidated (%u, %i, “%s”) for " +
+          "Tpf.PersonaStore %p (‘%s’).", domain, code, message, this, this.id);
+      this._remove_store ();
     }
 
   private void _logger_invalidated_cb ()
@@ -814,6 +854,8 @@ public class Tpf.PersonaStore : Folks.PersonaStore
         }
     }
 
+  /* This is called when we go online, when the user chooses to go offline, or
+   * when a CM crashes. */
   private void _notify_connection_cb (Object s, ParamSpec? p)
     {
       var account = s as TelepathyGLib.Account;
@@ -839,6 +881,8 @@ public class Tpf.PersonaStore : Folks.PersonaStore
            * cache, assuming we were connected before. */
           if (this._conn != null)
             {
+              this._conn = null;
+
               this._store_cache.begin ((o, r) =>
                 {
                   this._store_cache.end (r);
@@ -859,8 +903,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
            * with). */
           if (this.account.enabled == false)
             {
-              this._emit_personas_changed (null, this._persona_set);
-              this.removed ();
+              this._remove_store ();
             }
 
           /* If the persona store starts offline, we've reached a quiescent

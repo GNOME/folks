@@ -11,6 +11,7 @@ Bugs fixed:
   Favorites
 * Bug 671714 — Fail to add contact to the contact list
 * Bug 672373 — folks-import segfaults (Archlinux x86_64)
+* Bug 670348 — Handle Telepathy CMs crashing/being invalidated
 
 Overview of changes from libfolks 0.6.6 to libfolks 0.6.7
 =============================================================
