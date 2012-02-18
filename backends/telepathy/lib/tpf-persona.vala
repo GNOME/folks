@@ -785,7 +785,7 @@ public class Tpf.Persona : Folks.Persona,
           if (info.field_name == "") {}
           else if (info.field_name == "bday")
             {
-              new_birthday_str = info.field_value[0];
+              new_birthday_str = info.field_value[0] ?? "";
             }
           else if (info.field_name == "email")
             {
