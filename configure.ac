@@ -1,19 +1,19 @@
 # If not 1, append datestamp to the version number
-m4_define([folks_released], [0])
+m4_define([folks_released], [1])
 
 m4_define([folks_major_version], [0])
 m4_define([folks_minor_version], [6])
-m4_define([folks_micro_version], [6])
-m4_define([folks_nano_version], [1])
+m4_define([folks_micro_version], [7])
+m4_define([folks_nano_version], [0])
 
 # If library source has changed since last release, increment revision
 # If public symbols have been added, removed or changed since last release,
 #  increment current and set revision to 0
 # If public symbols have been added since last release, increment age
 # If public symbols have been removed since last release, set age to 0
-m4_define([folks_lt_current], [30])
+m4_define([folks_lt_current], [31])
 m4_define([folks_lt_revision], [0])
-m4_define([folks_lt_age], [5])
+m4_define([folks_lt_age], [6])
 
 # Display the nano_version only if it's not '0'
 m4_define([folks_base_version],

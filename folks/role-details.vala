@@ -103,7 +103,7 @@ public class Folks.Role : Object
    * @return `true` if all the components are the empty string, `false`
    * otherwise.
    *
-   * @since UNRELEASED
+   * @since 0.6.7
    */
   public bool is_empty ()
     {
