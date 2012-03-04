@@ -100,6 +100,13 @@ public class Folks.IndividualAggregator : Object
   /* Same for backends. */
   private uint _non_quiescent_backend_count = 0;
   private bool _is_quiescent = false;
+  /* As a precaution against backends/persona stores which never reach
+   * quiescence (due to bugs), we implement a timeout after which we forcibly
+   * reach quiescence. */
+  private uint _quiescent_timeout_id = 0;
+
+  private static const uint _QUIESCENT_TIMEOUT = 5; /* seconds */
+
   /* We use this to know if the primary PersonaStore has been explicitly
    * set by the user (either via GConf or an env variable). If that is the
    * case, we don't want to override it with other PersonaStores that
@@ -358,6 +365,12 @@ public class Folks.IndividualAggregator : Object
   ~IndividualAggregator ()
     {
       debug ("Destroying IndividualAggregator %p", this);
+
+      if (this._quiescent_timeout_id != 0)
+        {
+          Source.remove (this._quiescent_timeout_id);
+          this._quiescent_timeout_id = 0;
+        }
 
       this._backend_store.backend_available.disconnect (
           this._backend_available_cb);
@@ -675,6 +688,15 @@ public class Folks.IndividualAggregator : Object
       if (backend.is_quiescent == false)
         {
           this._non_quiescent_backend_count++;
+
+          /* Start the timeout to force quiescence if the backend (or its
+           * persona stores) misbehave and don't reach quiescence. */
+          if (this._quiescent_timeout_id == 0)
+            {
+              this._quiescent_timeout_id =
+                  Timeout.add_seconds (this._QUIESCENT_TIMEOUT,
+                      this._quiescent_timeout_cb);
+            }
         }
 
       this._add_backend.begin (backend);
@@ -1455,7 +1477,36 @@ public class Folks.IndividualAggregator : Object
 
           this._is_quiescent = true;
           this.notify_property ("is-quiescent");
+
+          /* Remove the quiescence timeout, if it exists. */
+          if (this._quiescent_timeout_id != 0)
+            {
+              Source.remove (this._quiescent_timeout_id);
+              this._quiescent_timeout_id = 0;
+            }
         }
+    }
+
+  private bool _quiescent_timeout_cb ()
+    {
+      /* If we're not quiescent by the time the timeout is triggered, force
+       * quiescence anyway, just so that we don't leave clients hanging if our
+       * backends have bugs. */
+      if (this._is_quiescent == false)
+        {
+          warning ("Failed to reach quiescence normally (%u backends and %u " +
+              "persona stores still haven't reached quiescence). Forcing " +
+              "IndividualAggregator quiescence due to reaching the timeout.",
+              this._non_quiescent_backend_count,
+              this._non_quiescent_persona_store_count);
+
+          this._is_quiescent = true;
+          this.notify_property ("is-quiescent");
+        }
+
+      /* One-shot timeout */
+      this._quiescent_timeout_id = 0;
+      return false;
     }
 
   private void _persona_store_is_user_set_default_changed_cb (Object obj,
