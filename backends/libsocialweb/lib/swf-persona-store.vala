@@ -212,12 +212,96 @@ public class Swf.PersonaStore : Folks.PersonaStore
           "Personas cannot be removed from this store.");
     }
 
+  private async string[]? _get_static_capabilities () throws GLib.Error
+    {
+      /* Take a reference to the PersonaStore while waiting for the async call
+       * to return. See: bgo#665039. */
+      this.ref ();
+
+      var received_callback = false;
+      var has_yielded = false;
+
+      string[]? caps = null;
+      Error? error = null;
+
+      this.service.get_static_capabilities ((service, _caps, _error) =>
+        {
+          received_callback = true;
+
+          caps = _caps;
+          error = _error;
+
+          if (has_yielded == true)
+            {
+              this._get_static_capabilities.callback ();
+            }
+        });
+
+      /* Yield for the get_static_capabilities() callback to be invoked, if it
+       * hasn't already been invoked (which could happen if
+       * get_static_capabilities() called it immediately). */
+      if (received_callback == false)
+        {
+          has_yielded = true;
+          yield;
+        }
+
+      this.unref ();
+
+      /* Handle the error, if it was set. */
+      if (error != null)
+        {
+          throw error;
+        }
+
+      return caps;
+    }
+
+  private async ClientContactView? _contacts_query_open_view (string query,
+      HashTable<weak string, weak string> parameters)
+    {
+      /* Take a reference to the PersonaStore while waiting for the async call
+       * to return. See: bgo#665039. */
+      this.ref ();
+
+      var received_callback = false;
+      var has_yielded = false;
+
+      ClientContactView? contact_view = null;
+
+      this.service.contacts_query_open_view (query, parameters,
+          (service, _contact_view) =>
+        {
+          received_callback = true;
+
+          contact_view = _contact_view;
+
+          if (has_yielded == true)
+            {
+              this._contacts_query_open_view.callback ();
+            }
+        });
+
+      /* Yield for the contacts_query_open_view() callback to be invoked, if it
+       * hasn't already been invoked (which could happen if
+       * contacts_query_open_view() called it immediately). */
+      if (received_callback == false)
+        {
+          has_yielded = true;
+          yield;
+        }
+
+      this.unref ();
+
+      return contact_view;
+    }
+
   /**
    * Prepare the PersonaStore for use.
    *
    * See {@link Folks.PersonaStore.prepare}.
    */
-  public override async void prepare ()
+  public override async void prepare () throws GLib.Error
     {
       lock (this._is_prepared)
         {
@@ -225,83 +309,88 @@ public class Swf.PersonaStore : Folks.PersonaStore
             {
               this._prepare_pending = true;
 
-              /* Take a reference to the PersonaStore while waiting for the
-               * async call to return. See: bgo#665039. */
-              this.ref ();
+              /* Get the service's capabilities. */
+              string[]? caps = null;
 
-              this.service.get_static_capabilities (
-                  (service, caps, error) =>
+              try
+                {
+                  caps = yield this._get_static_capabilities ();
+
+                  if (caps == null)
                     {
-                      if (caps == null)
-                        {
-                          this.unref ();
-                          this._prepare_pending = false;
-                          return;
-                        }
+                      throw new PersonaStoreError.INVALID_ARGUMENT (
+                          /* Translators: the parameter is an error message. */
+                          _("Couldn’t prepare libsocialweb service: %s"),
+                          _("No capabilities were found."));
+                    }
+                }
+              catch (GLib.Error e1)
+                {
+                  /* Remove the persona store on error */
+                  this.removed ();
+                  this._prepare_pending = false;
 
-                      bool has_contacts = ClientService.has_cap (caps,
-                          "has-contacts-query-iface");
-                      if (!has_contacts)
-                        {
-                          this.unref ();
-                          this._prepare_pending = false;
-                          return;
-                        }
+                  throw e1;
+                }
 
-                      var parameters = new HashTable<weak string, weak string>
-                          (str_hash, str_equal);
+              /* Check for the contacts query interface. */
+              bool has_contacts = ClientService.has_cap (caps,
+                  "has-contacts-query-iface");
+              if (!has_contacts)
+                {
+                  /* Remove the persona store on error */
+                  this.removed ();
+                  this._prepare_pending = false;
 
-                      /* Take another ref for this async call. */
-                      this.ref ();
+                  throw new PersonaStoreError.INVALID_ARGUMENT (
+                      /* Translators: the parameter is an error message. */
+                      _("Couldn’t prepare libsocialweb service: %s"),
+                      _("No contacts capability was found."));
+                }
 
-                      this.service.contacts_query_open_view
-                          ("people", parameters, (query, contact_view) =>
-                        {
-                          /* The D-Bus call could return an error. In this
-                           * case, contact_view is null */
-                          if (contact_view == null)
-                            {
-                              this.unref ();
-                              this._prepare_pending = false;
-                              return;
-                            }
+              /* Open a contacts query view. */
+              var contact_view = yield this._contacts_query_open_view ("people",
+                  new HashTable<weak string, weak string> (str_hash,
+                      str_equal));
 
-                          contact_view.contacts_added.connect
-                              (this.contacts_added_cb);
-                          contact_view.contacts_changed.connect
-                              (this.contacts_changed_cb);
-                          contact_view.contacts_removed.connect
-                              (this.contacts_removed_cb);
+              /* Propagate errors from the contacts_query_open_view()
+               * callback. */
+              if (contact_view == null)
+                {
+                  /* Remove the persona store on error */
+                  this.removed ();
+                  this._prepare_pending = false;
 
-                          this._contact_view = contact_view;
-                          this._is_prepared = true;
-                          this._prepare_pending = false;
-                          this.notify_property ("is-prepared");
+                  throw new PersonaStoreError.INVALID_ARGUMENT (
+                      /* Translators: the parameter is an error message. */
+                      _("Couldn’t prepare libsocialweb service: %s"),
+                      _("Error opening contacts view."));
+                }
 
-                          /* FIXME: for lsw Stores with 0 contacts or badly
-                           * configured (or not authenticated, etc) we are
-                           * condemned to never reach quiescence if we wait for
-                           * contacts to be added. A possible way around this
-                           * would be, if libsocialweb provided such properties,
-                           * to query the social client to see if it's available
-                           * (authenticated and ready) and the number of
-                           * contacts that we would (eventually) get. That is
-                           * the only way we could ever reach quiescence without
-                           * waiting for eternity.
-                           *
-                           * See:
-                           * https://bugzilla.gnome.org/show_bug.cgi?id=658445
-                           */
-                          this._is_quiescent = true;
-                          this.notify_property ("is-quiescent");
+              contact_view.contacts_added.connect (this.contacts_added_cb);
+              contact_view.contacts_changed.connect (this.contacts_changed_cb);
+              contact_view.contacts_removed.connect (this.contacts_removed_cb);
 
-                          this._contact_view.start ();
+              this._contact_view = contact_view;
+              this._is_prepared = true;
+              this._prepare_pending = false;
+              this.notify_property ("is-prepared");
 
-                          this.unref ();
-                        });
+              /* FIXME: for lsw Stores with 0 contacts or badly configured (or
+               * not authenticated, etc) we are condemned to never reach
+               * quiescence if we wait for contacts to be added. A possible way
+               * around this would be, if libsocialweb provided such properties,
+               * to query the social client to see if it's available
+               * (authenticated and ready) and the number of contacts that we
+               * would (eventually) get. That is the only way we could ever
+               * reach quiescence without waiting for eternity.
+               *
+               * See: https://bugzilla.gnome.org/show_bug.cgi?id=658445
+               */
+              this._is_quiescent = true;
+              this.notify_property ("is-quiescent");
 
-                      this.unref ();
-                    });
+              this._contact_view.start ();
             }
         }
     }
