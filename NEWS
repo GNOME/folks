@@ -14,6 +14,7 @@ Bugs fixed:
 * Bug 670348 — Handle Telepathy CMs crashing/being invalidated
 * Bug 671900 — Folks should not suggest linking contacts from telepathy-salut
 * Bug 670872 — Should be less sensitive to accentuated chars
+* Bug 669984 — Does not notify when contacts are added to groups
 
 Overview of changes from libfolks 0.6.6 to libfolks 0.6.7
 =============================================================

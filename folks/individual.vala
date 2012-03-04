@@ -1205,14 +1205,8 @@ public class Folks.Individual : Object,
 
       foreach (var group in new_groups)
         {
-          if (!this._groups.contains (group))
+          if (this._groups.add (group))
             {
-              this._groups.add (group);
-              foreach (var g in this._groups)
-                {
-                  debug ("   %s", g);
-                }
-
               this.group_changed (group, true);
             }
         }

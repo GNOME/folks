@@ -1733,23 +1733,59 @@ public class Tpf.PersonaStore : Folks.PersonaStore
               var channel_handle = (Handle) adds.index (i);
               var contact_handle = channel.group_get_handle_owner (
                 channel_handle);
-              var persona = this._handle_persona_map[contact_handle];
-              if (persona == null)
+
+              HashSet<uint>? contact_handles =
+                  this._channel_group_incoming_adds[channel];
+              if (contact_handles == null)
                 {
-                  HashSet<uint>? contact_handles =
-                      this._channel_group_incoming_adds[channel];
-                  if (contact_handles == null)
-                    {
-                      contact_handles = new HashSet<uint> ();
-                      this._channel_group_incoming_adds[channel] =
-                          contact_handles;
-                    }
-                  contact_handles.add (contact_handle);
+                  contact_handles = new HashSet<uint> ();
+                  this._channel_group_incoming_adds[channel] =
+                      contact_handles;
                 }
+              contact_handles.add (contact_handle);
             }
         }
 
       this._channel_groups_add_new_personas ();
+    }
+
+  private void _channel_group_handle_incoming_removes (Channel channel,
+      Array<uint> removes)
+    {
+      var removes_length = removes != null ? removes.length : 0;
+      if (removes_length >= 1)
+        {
+          var members_removed = new GLib.List<Persona> ();
+
+          HashSet<Persona> members = this._channel_group_personas_map[channel];
+          if (members == null)
+            members = new HashSet<Persona> ();
+
+          for (var i = 0; i < removes.length; i++)
+            {
+              var channel_handle = (Handle) removes.index (i);
+              var contact_handle = channel.group_get_handle_owner (
+                channel_handle);
+              var persona = this._handle_persona_map[contact_handle];
+
+
+              if (persona != null)
+                {
+                  members.remove (persona);
+                  members_removed.prepend (persona);
+                }
+            }
+
+          this._channel_group_personas_map[channel] = members;
+
+          var name = channel.get_identifier ();
+          if (this._group_is_display_group (name) &&
+              members_removed.length () > 0)
+            {
+              members_removed.reverse ();
+              this.group_members_changed (name, null, members_removed);
+            }
+        }
     }
 
   private void _set_up_new_group_channel (Channel channel)
@@ -1816,6 +1852,11 @@ public class Tpf.PersonaStore : Folks.PersonaStore
     {
       if (added != null)
         this._channel_group_pend_incoming_adds.begin (channel, added, false);
+
+      if (removed != null)
+        {
+          this._channel_group_handle_incoming_removes (channel, removed);
+        }
 
       /* FIXME: continue for the other arrays */
     }

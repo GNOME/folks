@@ -425,14 +425,12 @@ public class Tpf.Persona : Folks.Persona,
 
       if (is_member)
         {
-          if (!this._groups.contains (group))
-            {
-              this._groups.add (group);
-              changed = true;
-            }
+          changed = this._groups.add (group);
         }
       else
-        changed = this._groups.remove (group);
+        {
+          changed = this._groups.remove (group);
+        }
 
       if (changed == true)
         this.group_changed (group, is_member);
