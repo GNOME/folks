@@ -154,6 +154,8 @@ GCONF2_REQUIRED=2.31
 EBOOK_REQUIRED=3.1.5
 EDATASERVER_REQUIRED=3.1.5
 
+AC_SUBST([TRACKER_SPARQL_MAJOR])
+
 PKG_CHECK_MODULES([GLIB],
                   [glib-2.0 >= $GLIB_REQUIRED
                    gobject-2.0 >= $GLIB_REQUIRED])
@@ -504,6 +506,7 @@ AC_SUBST([ERROR_VALAFLAGS])
 AC_CONFIG_FILES([
     backends/telepathy/lib/folks-telepathy.pc
     backends/telepathy/lib/folks-telepathy-uninstalled.pc
+    backends/tracker/lib/folks-tracker.deps
     backends/tracker/lib/folks-tracker.pc
     backends/tracker/lib/folks-tracker-uninstalled.pc
     backends/eds/lib/folks-eds.pc

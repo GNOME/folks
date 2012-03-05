@@ -26,7 +26,7 @@ tracker_deps = \
 	gee-1.0 \
 	gio-2.0 \
 	gobject-2.0 \
-	tracker-sparql-0.12 \
+	tracker-sparql-$(TRACKER_SPARQL_MAJOR) \
 	$(NULL)
 
 tracker_la_CPPFLAGS = \
