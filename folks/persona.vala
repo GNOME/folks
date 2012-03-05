@@ -61,8 +61,6 @@ public errordomain Folks.PropertyError
  */
 public abstract class Folks.Persona : Object
 {
-  private weak Individual? _individual;
-
   /**
    * The internal ID used to represent the Persona for linking.
    *
@@ -136,6 +134,8 @@ public abstract class Folks.Persona : Object
    * The {@link PersonaStore} which contains this Persona.
    */
   public weak PersonaStore store { get; construct; }
+
+  private weak Individual? _individual = null;
 
   private void _individual_weak_notify_cb (Object obj)
     {

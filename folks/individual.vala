@@ -1940,11 +1940,8 @@ public class Folks.Individual : Object,
         }
 
       /* Determine which Personas have been removed */
-      var iter = this._persona_set.iterator ();
-      while (iter.next ())
+      foreach (var p in this._persona_set)
         {
-          var p = iter.get ();
-
           if (personas == null || !((!) personas).contains (p))
             {
               /* Keep track of how many Personas are users */
@@ -1970,8 +1967,12 @@ public class Folks.Individual : Object,
                 }
 
               this._disconnect_from_persona (p, replacement_individual);
-              iter.remove ();
             }
+        }
+
+      foreach (var p in removed)
+        {
+          this._persona_set.remove (p);
         }
 
       this._emit_personas_changed (added, removed);
