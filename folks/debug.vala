@@ -255,11 +255,6 @@ public class Folks.Debug : Object
 
       retval.colour_enabled = colour_enabled;
 
-      /* Unconditionally enable all G_MESSAGES_DEBUG domains, or GLib's default
-       * log handler will drop all our output. We don't spawn any subprocesses,
-       * so this shouldn't leak and cause problems elsewhere. */
-      Environment.set_variable ("G_MESSAGES_DEBUG", "all", true);
-
       return retval;
     }
 
