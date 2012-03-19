@@ -137,6 +137,14 @@ public abstract class Folks.Persona : Object
    */
   public weak PersonaStore store { get; construct; }
 
+  private void _individual_weak_notify_cb (Object obj)
+    {
+      debug ("Individual %p has been destroyed; resetting the Individual of %s",
+          obj, this.iid);
+      this._individual = null;
+      this.notify_property ("individual");
+    }
+
   /**
    * The {@link Individual} which contains this Persona.
    *
@@ -159,6 +167,16 @@ public abstract class Folks.Persona : Object
       internal set
         {
           assert (value == null || ((!) value).personas.contains (this));
+
+          if (this._individual != null)
+            {
+              this._individual.weak_unref (this._individual_weak_notify_cb);
+            }
+
+          if (value != null)
+            {
+              value.weak_ref (this._individual_weak_notify_cb);
+            }
 
           this._individual = value;
         }
@@ -322,5 +340,10 @@ public abstract class Folks.Persona : Object
       persona_id = Persona._unescape_uid_component (
           ((string) ((char*) uid + backend_name_length +
               persona_store_id_length + 2)));
+    }
+
+  ~Persona ()
+    {
+      this.individual = null;
     }
 }
