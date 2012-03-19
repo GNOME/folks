@@ -4,6 +4,8 @@ Bugs fixed:
 * Bug 670191 — IndividualAggregator::is-quiescent is never set to TRUE
 * Bug 670523 — persona.vala:153:folks_persona_get_individual:
   assertion failed: (_tmp6_)
+* Bug 672381 — invalid uninstantiatable type `<invalid>' in cast to
+  `FolksIndividual'
 
 Overview of changes from libfolks 0.6.6 to libfolks 0.6.7
 =============================================================
