@@ -771,6 +771,15 @@ public class Folks.IndividualAggregator : Object
       if (store.is_quiescent == false)
         {
           this._non_quiescent_persona_store_count++;
+
+          /* Start the timeout to force quiescence if the backend (or its
+           * persona stores) misbehave and don't reach quiescence. */
+          if (this._quiescent_timeout_id == 0)
+            {
+              this._quiescent_timeout_id =
+                  Timeout.add_seconds (this._QUIESCENT_TIMEOUT,
+                      this._quiescent_timeout_cb);
+            }
         }
 
       /* Handle any pre-existing personas in the store. This can happen if the
