@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: folks master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=folks&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2012-01-31 12:15+0000\n"
-"PO-Revision-Date: 2012-01-31 20:00+0100\n"
+"POT-Creation-Date: 2012-03-19 19:05+0000\n"
+"PO-Revision-Date: 2012-03-20 14:41+0100\n"
 "Last-Translator: Matej Urbančič <mateju@svn.gnome.org>\n"
 "Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups.com>\n"
 "Language: Slovenian\n"
@@ -21,16 +21,27 @@ msgstr ""
 "X-Poedit-Language: Slovenian\n"
 "X-Poedit-SourceCharset: utf-8\n"
 
+#. The timeout after which we consider a property change to have failed if we
+#. * haven't received a property change notification for it.
+#. seconds
+#. Translators: This should be translated to the name of the “Starred in
+#. * Android” group in Google Contacts for your language. If Google have not
+#. * localised the group for your language, or Google Contacts isn't available
+#. * in your language, please *do not* translate this string.
+#: ../backends/eds/lib/edsf-persona-store.vala:55
+msgid "Starred in Android"
+msgstr "Starred in Android"
+
 #. Translators: the first parameter is an address book
 #. * URI and the second is a persona UID.
-#: ../backends/eds/lib/edsf-persona-store.vala:533
+#: ../backends/eds/lib/edsf-persona-store.vala:539
 #, c-format
 msgid "Address book ‘%s’ is offline, so contact ‘%s’ cannot be removed."
 msgstr "Imenik ‘%s’ ni povezan, zato stika ‘%s’ ni mogoče odstraniti."
 
 #. Translators: the first parameter is an address book
 #. * URI and the second is an error message.
-#: ../backends/eds/lib/edsf-persona-store.vala:539
+#: ../backends/eds/lib/edsf-persona-store.vala:545
 #, c-format
 msgid "Permission denied to remove contact ‘%s’: %s"
 msgstr "Ni ustreznega dovoljenja za odstranjevanje stika ‘%s’: %s"
@@ -38,150 +49,150 @@ msgstr "Ni ustreznega dovoljenja za odstranjevanje stika ‘%s’: %s"
 # oseba ima več "person", več računov, IM, lalaa
 # oseba ima torej več "stikov"
 #. Translators: the parameter is an error message.
-#: ../backends/eds/lib/edsf-persona-store.vala:544
+#: ../backends/eds/lib/edsf-persona-store.vala:550
 #, c-format
 msgid "Removing contacts isn't supported by this persona store: %s"
 msgstr "Odstranjevanje stikov ni podprto s strani zaloge stikov: %s"
 
-#: ../backends/eds/lib/edsf-persona-store.vala:573
+#: ../backends/eds/lib/edsf-persona-store.vala:579
 #, c-format
 msgid "Can't remove contact ‘%s’: %s"
 msgstr "Ni mogoče odstraniti stika ‘%s’: %s"
 
 #. Translators: the parameter is an address book
 #. * URI.
-#: ../backends/eds/lib/edsf-persona-store.vala:651
-#: ../backends/eds/lib/edsf-persona-store.vala:846
+#: ../backends/eds/lib/edsf-persona-store.vala:657
+#: ../backends/eds/lib/edsf-persona-store.vala:852
 #, c-format
 msgid "Address book ‘%s’ is offline."
 msgstr "Imenik '%s' ni povezan."
 
 #. Translators: the first parameter is an address
 #. * book URI and the second is an error message.
-#: ../backends/eds/lib/edsf-persona-store.vala:656
-#: ../backends/eds/lib/edsf-persona-store.vala:851
+#: ../backends/eds/lib/edsf-persona-store.vala:662
+#: ../backends/eds/lib/edsf-persona-store.vala:857
 #, c-format
 msgid "Permission denied to open address book ‘%s’: %s"
 msgstr "Ni ustreznih dovoljenj za odpiranje imenika ‘%s’: %s"
 
 #. Translators: the first parameter is an address book URI
 #. * and the second is an error message.
-#: ../backends/eds/lib/edsf-persona-store.vala:689
+#: ../backends/eds/lib/edsf-persona-store.vala:695
 #, c-format
 msgid "Couldn't open address book ‘%s’: %s"
 msgstr "Ni mogoče odpreti imenika ‘%s’: %s"
 
 #. Translators: the parameteter is an error message.
-#: ../backends/eds/lib/edsf-persona-store.vala:754
-#: ../backends/eds/lib/edsf-persona-store.vala:785
+#: ../backends/eds/lib/edsf-persona-store.vala:760
+#: ../backends/eds/lib/edsf-persona-store.vala:791
 #, c-format
 msgid "Couldn't get address book capabilities: %s"
 msgstr "Ni mogoče pridobiti podatkov o zmožnosti imenika: %s"
 
 #. Translators: the parameter is an address book URI.
-#: ../backends/eds/lib/edsf-persona-store.vala:802
+#: ../backends/eds/lib/edsf-persona-store.vala:808
 #, c-format
 msgid "Couldn't get view for address book ‘%s’."
 msgstr "Ni mogoče pridobiti pogleda za imenik ‘%s’."
 
 #. Translators: the first parameter is an address book URI
 #. * and the second is an error message.
-#: ../backends/eds/lib/edsf-persona-store.vala:884
+#: ../backends/eds/lib/edsf-persona-store.vala:890
 #, c-format
 msgid "Couldn't get view for address book ‘%s’: %s"
 msgstr "Ni mogoče pridobiti pogleda za imenik ‘%s’: %s"
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1247
+#: ../backends/eds/lib/edsf-persona-store.vala:1253
 #, c-format
 msgid "Changing the ‘%s’ property failed due to reaching the timeout."
 msgstr "Spreminjanje lastnosti ‘%s’ je spodletelo zaradi časovne omejitve."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1278
+#: ../backends/eds/lib/edsf-persona-store.vala:1284
 #: ../folks/avatar-details.vala:59
 msgid "Avatar is not writeable on this contact."
 msgstr "Podoba tega stika ni zapisljiva."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1299
+#: ../backends/eds/lib/edsf-persona-store.vala:1305
 #: ../folks/web-service-details.vala:123
 msgid "Web service addresses are not writeable on this contact."
 msgstr "Naslovi spletnih storitev za ta stik niso zapisljivi."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1335
+#: ../backends/eds/lib/edsf-persona-store.vala:1341
 #: ../folks/url-details.vala:152
 msgid "URLs are not writeable on this contact."
 msgstr "Naslovi URL za ta stik niso zapisljivi."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1413
+#: ../backends/eds/lib/edsf-persona-store.vala:1419
 #: ../folks/local-id-details.vala:64
 msgid "Local IDs are not writeable on this contact."
 msgstr "Krajevni ID za ta stik ni zapisljiv."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1440
+#: ../backends/eds/lib/edsf-persona-store.vala:1446
 msgid "The contact cannot be marked as favourite."
 msgstr "Stika ni mogoče označiti kot priljubljenega."
 
 #. Translators: the parameter is an error message.
-#: ../backends/eds/lib/edsf-persona-store.vala:1507
+#: ../backends/eds/lib/edsf-persona-store.vala:1530
 #, c-format
 msgid "Can't update avatar: %s"
 msgstr "Podobe ni mogoče posodobiti: %s"
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1518
+#: ../backends/eds/lib/edsf-persona-store.vala:1541
 #: ../folks/email-details.vala:120
 msgid "E-mail addresses are not writeable on this contact."
 msgstr "Elektronski poštni naslov za ta stik ni zapisljiv."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1532
+#: ../backends/eds/lib/edsf-persona-store.vala:1555
 #: ../folks/phone-details.vala:229
 msgid "Phone numbers are not writeable on this contact."
 msgstr "Telefonske številke za ta stik niso zapisljive."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1546
+#: ../backends/eds/lib/edsf-persona-store.vala:1569
 #: ../folks/postal-address-details.vala:361
 msgid "Postal addresses are not writeable on this contact."
 msgstr "Poštni naslov za ta stik ni zapisljiv."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1613
+#: ../backends/eds/lib/edsf-persona-store.vala:1636
 #: ../folks/name-details.vala:281
 msgid "Full name is not writeable on this contact."
 msgstr "Polno ime za ta stik ni zapisljivo."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1635
+#: ../backends/eds/lib/edsf-persona-store.vala:1658
 #: ../folks/name-details.vala:319
 msgid "Nickname is not writeable on this contact."
 msgstr "Vzdevek za ta stik ni zapisljiv."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1657
+#: ../backends/eds/lib/edsf-persona-store.vala:1680
 #: ../folks/note-details.vala:136
 msgid "Notes are not writeable on this contact."
 msgstr "Opombe za ta stik niso zapisljive."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1686
+#: ../backends/eds/lib/edsf-persona-store.vala:1709
 #: ../folks/birthday-details.vala:60
 msgid "Birthday is not writeable on this contact."
 msgstr "Rojstni datum tega stika ni zapisljiv."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1730
+#: ../backends/eds/lib/edsf-persona-store.vala:1753
 #: ../folks/role-details.vala:277
 msgid "Roles are not writeable on this contact."
 msgstr "Vloge za ta stik niso zapisljive."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1831
+#: ../backends/eds/lib/edsf-persona-store.vala:1854
 #: ../folks/name-details.vala:244
 msgid "Structured name is not writeable on this contact."
 msgstr "Oblikovno ime za ta stik ni zapisljivo."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1871
+#: ../backends/eds/lib/edsf-persona-store.vala:1894
 #: ../folks/im-details.vala:136
 msgid "IM addresses are not writeable on this contact."
 msgstr "Naslov hipnega sporočanja za ta stik ni zapisljiv."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1921
+#: ../backends/eds/lib/edsf-persona-store.vala:1944
 #: ../folks/group-details.vala:168
 msgid "Groups are not writeable on this contact."
 msgstr "Skupine za ta stik niso zapisljive."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1951
+#: ../backends/eds/lib/edsf-persona-store.vala:1983
 #: ../folks/gender-details.vala:77
 msgid "Gender is not writeable on this contact."
 msgstr "Spol za ta stik ni zapisljiv."
@@ -189,7 +200,7 @@ msgstr "Spol za ta stik ni zapisljiv."
 #. Translators: the first parameter is a non-human-readable
 #. * property name and the second parameter is an error
 #. * message.
-#: ../backends/eds/lib/edsf-persona-store.vala:2100
+#: ../backends/eds/lib/edsf-persona-store.vala:2132
 #, c-format
 msgid "Property ‘%s’ is not writeable: %s"
 msgstr "Lastnost '%s' ni zapisljiva: %s"
@@ -197,14 +208,14 @@ msgstr "Lastnost '%s' ni zapisljiva: %s"
 #. Translators: the first parameter is a non-human-readable
 #. * property name and the second parameter is an error
 #. * message.
-#: ../backends/eds/lib/edsf-persona-store.vala:2109
+#: ../backends/eds/lib/edsf-persona-store.vala:2141
 #, c-format
 msgid "Invalid value for property ‘%s’: %s"
 msgstr "Neveljavna vrednost za lastnost ‘%s’: %s"
 
 #. Translators: the first parameter is a non-human-readable
 #. * property name and the second parameter is an error message.
-#: ../backends/eds/lib/edsf-persona-store.vala:2135
+#: ../backends/eds/lib/edsf-persona-store.vala:2167
 #, c-format
 msgid "Unknown error setting property ‘%s’: %s"
 msgstr "Neznana napaka med nastavljanjem lastnosti ‘%s’: %s"
@@ -233,7 +244,7 @@ msgstr "Datoteke ključa sorodnosti stikov '%s' ni mogoče ustvariti: %s "
 
 #. Translators: the first parameter is a filename, the second is
 #. * an error message.
-#: ../backends/key-file/kf-persona-store.vala:463
+#: ../backends/key-file/kf-persona-store.vala:456
 #, c-format
 msgid "Could not write updated key file '%s': %s"
 msgstr "Ni mogoče zapisati posodobljene datoteke ključa '%s': %s"
@@ -546,46 +557,46 @@ msgstr "Naslova hipnega stika '%s' ni mogoče razumeti."
 
 #. Translators: the first parameter is a persona store identifier
 #. * and the second is an error message.
-#: ../folks/individual-aggregator.vala:782
+#: ../folks/individual-aggregator.vala:813
 #, c-format
 msgid "Error preparing persona store '%s': %s"
 msgstr "Napaka med pripravljanjem zaloge stikov '%s': %s."
 
 #. Translators: the parameter is a property name.
-#: ../folks/individual-aggregator.vala:977
-#: ../folks/individual-aggregator.vala:1160
+#: ../folks/individual-aggregator.vala:1008
+#: ../folks/individual-aggregator.vala:1191
 #, c-format
 msgid "Unknown property '%s' in linkable property list."
 msgstr "Neznana lastnost '%s' v seznamu povezljivih lastnosti."
 
 #. Translators: the first parameter is a store identifier
 #. * and the second parameter is an error message.
-#: ../folks/individual-aggregator.vala:1580
+#: ../folks/individual-aggregator.vala:1640
 #, c-format
 msgid "Failed to add contact for persona store ID '%s': %s"
 msgstr "Dodajanje stika za ID zalogo stikov '%s' je spodletelo: %s"
 
-#: ../folks/individual-aggregator.vala:1661
+#: ../folks/individual-aggregator.vala:1721
 msgid "Can’t link personas with no primary store."
 msgstr "Ni mogoče povezati stikov brez osnovne zaloge osebe."
 
-#: ../folks/individual-aggregator.vala:1662
-#: ../folks/individual-aggregator.vala:1927
+#: ../folks/individual-aggregator.vala:1722
+#: ../folks/individual-aggregator.vala:1987
 #, c-format
 msgid "Persona store ‘%s:%s’ is configured as primary, but could not be found or failed to load."
 msgstr "Zaloga osebe ‘%s:%s’ je nastavljena kot osnovna, vendar pa je ni mogoče najti oziroma naložiti."
 
-#: ../folks/individual-aggregator.vala:1663
-#: ../folks/individual-aggregator.vala:1928
+#: ../folks/individual-aggregator.vala:1723
+#: ../folks/individual-aggregator.vala:1988
 #, c-format
 msgid "Check the service providing the persona store is running, or change the default store in that service or using the “%s” GConf key."
 msgstr "Preverite ali je storitev, ki omogoča zaloge oseb, zagnana ali pa spremenite privzeto zalogo v storitvi oziroma s ključem GConf “%s”."
 
-#: ../folks/individual-aggregator.vala:1926
+#: ../folks/individual-aggregator.vala:1986
 msgid "Can’t add personas with no primary store."
 msgstr "Ni mogoče dodati stikov brez osnovne zaloge osebe."
 
-#: ../folks/individual-aggregator.vala:1935
+#: ../folks/individual-aggregator.vala:1995
 #, c-format
 msgid "Can't write to requested property (“%s”) of the writeable store."
 msgstr "Ni mogoče pisati v zahtevano lastnost (“%s”) zapisljive zaloge."
