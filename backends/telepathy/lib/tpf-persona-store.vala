@@ -1172,10 +1172,11 @@ public class Tpf.PersonaStore : Folks.PersonaStore
 
               /* Add the local user */
               Contact contact = contacts[0];
-              Persona persona = this._add_persona_from_contact (contact, false);
+              bool added;
+              Persona persona = this._add_persona_from_contact (contact, false, out added);
 
               var personas = new HashSet<Persona> ();
-              if (persona != null)
+              if (added)
                 personas.add (persona);
 
               this._self_contact = contact;
@@ -1969,8 +1970,9 @@ public class Tpf.PersonaStore : Folks.PersonaStore
 
           debug ("Creating persona from contact '%s'", contact.identifier);
 
-          var persona = this._add_persona_from_contact (contact, true);
-          if (persona != null)
+          bool added;
+          var persona = this._add_persona_from_contact (contact, true, out added);
+          if (added)
             personas.add (persona);
         }
 
@@ -2021,9 +2023,10 @@ public class Tpf.PersonaStore : Folks.PersonaStore
        * other than the TpChannels which are associated with this store, we only
        * hold a weak reference to it and remove it from the store as soon as
        * it's destroyed. */
-      persona = this._add_persona_from_contact (contact, false);
+      bool added;
+      persona = this._add_persona_from_contact (contact, false, out added);
 
-      if (persona == null)
+      if (!added)
         {
           return null;
         }
@@ -2040,7 +2043,8 @@ public class Tpf.PersonaStore : Folks.PersonaStore
     }
 
   private Tpf.Persona? _add_persona_from_contact (Contact contact,
-      bool from_contact_list)
+      bool from_contact_list,
+      out bool added)
     {
       var h = contact.get_handle ();
       Persona? persona = null;
@@ -2071,7 +2075,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
 
           persona.is_in_contact_list = from_contact_list;
 
-          return persona;
+          added = true;
         }
       else
         {
@@ -2089,8 +2093,9 @@ public class Tpf.PersonaStore : Folks.PersonaStore
               persona.is_in_contact_list = true;
             }
 
-          return null;
+          added = false;
         }
+      return persona;
     }
 
   private void _add_new_personas_from_contacts (Contact[] contacts)
@@ -2099,8 +2104,9 @@ public class Tpf.PersonaStore : Folks.PersonaStore
 
       foreach (Contact contact in contacts)
         {
-          var persona = this._add_persona_from_contact (contact, true);
-          if (persona != null)
+          bool added;
+          var persona = this._add_persona_from_contact (contact, true, out added);
+          if (added)
             personas.add (persona);
         }
 
