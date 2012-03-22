@@ -1951,10 +1951,11 @@ public class Tpf.PersonaStore : Folks.PersonaStore
         }
     }
 
-  private async HashSet<Persona> _create_personas_from_contact_ids (
+  private async HashSet<Persona> _ensure_personas_from_contact_ids (
       string[] contact_ids) throws GLib.Error
     {
       var personas = new HashSet<Persona> ();
+      var personas_added = new HashSet<Persona> ();
 
       if (contact_ids.length == 0)
         return personas;
@@ -1973,12 +1974,14 @@ public class Tpf.PersonaStore : Folks.PersonaStore
           bool added;
           var persona = this._add_persona_from_contact (contact, true, out added);
           if (added)
-            personas.add (persona);
+            personas_added.add (persona);
+
+          personas.add (persona);
         }
 
-      if (personas.size > 0)
+      if (personas_added.size > 0)
         {
-          this._emit_personas_changed (personas, null);
+          this._emit_personas_changed (personas_added, null);
         }
 
       return personas;
@@ -2212,7 +2215,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
 
       try
         {
-          var personas = yield this._create_personas_from_contact_ids (
+          var personas = yield this._ensure_personas_from_contact_ids (
               contact_ids);
 
           if (personas.size == 0)

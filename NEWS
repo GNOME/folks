@@ -9,6 +9,7 @@ Bugs fixed:
 * Bug 670347 — Check for null birthday strings
 * Bug 661490 — Should mark contacts from the "Starred in Android" group as
   Favorites
+* Bug 671714 — Fail to add contact to the contact list
 
 Overview of changes from libfolks 0.6.6 to libfolks 0.6.7
 =============================================================
