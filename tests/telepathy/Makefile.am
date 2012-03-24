@@ -49,6 +49,7 @@ noinst_PROGRAMS = \
 	persona-store-capabilities \
 	individual-retrieval \
 	individual-properties \
+	individual-zeitgeist \
 	init \
 	$(NULL)
 
@@ -76,6 +77,10 @@ individual_properties_SOURCES = \
 	individual-properties.vala \
 	$(NULL)
 
+individual_zeitgeist_SOURCES = \
+	individual-zeitgeist.vala \
+	$(NULL)
+
 init_SOURCES = \
 	init.vala \
 	$(NULL)
@@ -88,6 +93,7 @@ BUILT_SOURCES = \
 	fake_tp_backend_vala.stamp \
 	individual_properties_vala.stamp \
 	individual_retrieval_vala.stamp \
+	individual_zeitgeist_vala.stamp \
 	init_vala.stamp \
 	persona_store_capabilities_vala.stamp \
 	$(NULL)
