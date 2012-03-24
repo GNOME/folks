@@ -30,34 +30,45 @@ using Gee;
 public enum Folks.MatchResult
 {
   /**
+   * Zero likelihood of a match.
+   *
+   * This is used in situations where two individuals should never be linked,
+   * such as when one of them has a {@link Individual.trust_level} of
+   * {@link TrustLevel.NONE}.
+   *
+   * @since UNRELEASED
+   */
+  NONE = -1,
+
+  /**
    * Very low likelihood of a match.
    */
-  VERY_LOW,
+  VERY_LOW = 0,
 
   /**
    * Low likelihood of a match.
    */
-  LOW,
+  LOW = 1,
 
   /**
    * Medium likelihood of a match.
    */
-  MEDIUM,
+  MEDIUM = 2,
 
   /**
    * High likelihood of a match.
    */
-  HIGH,
+  HIGH = 3,
 
   /**
    * Very high likelihood of a match.
    */
-  VERY_HIGH,
+  VERY_HIGH = 4,
 
   /**
    * Minimum likelihood of a match.
    */
-  MIN = VERY_LOW,
+  MIN = NONE,
 
   /**
    * Maximum likelihood of a match.
@@ -110,6 +121,16 @@ public class Folks.PotentialMatch : Object
       this._individual_b = b;
       this._result = MatchResult.MIN;
 
+      /* Immediately discount a match if either of the individuals can't be
+       * trusted (e.g. due to containing link-local XMPP personas, which can be
+       * spoofed). */
+      if (a.trust_level == TrustLevel.NONE || b.trust_level == TrustLevel.NONE)
+        {
+          this._result = MatchResult.NONE;
+          return this._result;
+        }
+
+      /* If individuals share gender. */
       if (this._individual_a.gender != Gender.UNSPECIFIED &&
           this._individual_b.gender != Gender.UNSPECIFIED &&
           this._individual_a.gender != this._individual_b.gender)
