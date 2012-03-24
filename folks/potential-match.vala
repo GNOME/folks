@@ -495,6 +495,69 @@ public class Folks.PotentialMatch : Object
       return distance;
     }
 
+  /**
+   * stripped_char:
+   *
+   * Returns a stripped version of @ch, removing any case, accentuation
+   * mark, or any special mark on it.
+   *
+   * Copied from Empathy's libempathy-gtk/empathy-live-search.c.
+   *
+   * Copyright (C) 2010 Collabora Ltd.
+   * Copyright (C) 2007-2010 Nokia Corporation.
+   *
+   * Authors: Felix Kaser <felix.kaser@collabora.co.uk>
+   *          Xavier Claessens <xavier.claessens@collabora.co.uk>
+   *          Claudio Saavedra <csaavedra@igalia.com>
+   */
+  private unichar _stripped_char (unichar ch)
+    {
+      unichar retval[1] = { 0 };
+      var utype = ch.type ();
+
+      switch (utype)
+        {
+          case UnicodeType.CONTROL:
+          case UnicodeType.FORMAT:
+          case UnicodeType.UNASSIGNED:
+          case UnicodeType.NON_SPACING_MARK:
+          case UnicodeType.COMBINING_MARK:
+          case UnicodeType.ENCLOSING_MARK:
+            /* Ignore those */
+            break;
+          case UnicodeType.PRIVATE_USE:
+          case UnicodeType.SURROGATE:
+          case UnicodeType.LOWERCASE_LETTER:
+          case UnicodeType.MODIFIER_LETTER:
+          case UnicodeType.OTHER_LETTER:
+          case UnicodeType.TITLECASE_LETTER:
+          case UnicodeType.UPPERCASE_LETTER:
+          case UnicodeType.DECIMAL_NUMBER:
+          case UnicodeType.LETTER_NUMBER:
+          case UnicodeType.OTHER_NUMBER:
+          case UnicodeType.CONNECT_PUNCTUATION:
+          case UnicodeType.DASH_PUNCTUATION:
+          case UnicodeType.CLOSE_PUNCTUATION:
+          case UnicodeType.FINAL_PUNCTUATION:
+          case UnicodeType.INITIAL_PUNCTUATION:
+          case UnicodeType.OTHER_PUNCTUATION:
+          case UnicodeType.OPEN_PUNCTUATION:
+          case UnicodeType.CURRENCY_SYMBOL:
+          case UnicodeType.MODIFIER_SYMBOL:
+          case UnicodeType.MATH_SYMBOL:
+          case UnicodeType.OTHER_SYMBOL:
+          case UnicodeType.LINE_SEPARATOR:
+          case UnicodeType.PARAGRAPH_SEPARATOR:
+          case UnicodeType.SPACE_SEPARATOR:
+          default:
+            ch = ch.tolower ();
+            ch.fully_decompose (false, retval);
+            break;
+        }
+
+      return retval[0];
+    }
+
   /* Calculate matches and transpositions as defined by the Jaro distance.
    */
   private int _matches (string s1, string s2, int max_dist, out double t)
@@ -502,10 +565,22 @@ public class Folks.PotentialMatch : Object
       int matches = 0;
       t = 0.0;
 
-      for (int i=0; i < s1.length; i++)
+      assert (s1.validate ());
+      assert (s2.validate ());
+
+      int idx = 0;
+      unichar look_for = 0;
+
+      while (s1.get_next_char (ref idx, out look_for))
         {
-          var look_for = s1.slice (i, i + 1);
-          int contains = this._contains (s2, look_for, i, max_dist);
+          /* Skip uninteresting characters. */
+          look_for = this._stripped_char (look_for);
+          if (look_for == 0)
+            {
+              continue;
+            }
+
+          int contains = this._contains (s2, look_for, idx, max_dist);
           if (contains >= 0)
             {
               matches++;
@@ -523,20 +598,33 @@ public class Folks.PotentialMatch : Object
 
   /* If haystack contains c in pos return 0, if it contains
    * it withing the bounds of max_dist return abs(pos-pos_found).
-   * If its not found, return -1. */
-  private int _contains (string haystack, string c, int pos, int max_dist)
+   * If its not found, return -1.
+   *
+   * pos and max_dist are both in bytes.
+   *
+   * Note: haystack must have been validated using haystack.validate() before
+   * being passed to this method. */
+  private int _contains (string haystack, unichar c, int pos, int max_dist)
     {
-      if (pos < haystack.length && haystack.slice (pos, pos + 1) == c)
+      var haystack_len = haystack.length; /* in bytes */
+
+      if (pos < haystack_len && haystack.get_char (pos) == c)
         return 0;
 
-      for (int i=pos-max_dist; i <= pos + max_dist; i++)
-        {
-          if (i < 0 || i >= haystack.length)
-            continue;
+      int idx = (pos - max_dist).clamp (0, haystack_len);
+      unichar ch = 0;
 
-          var str = haystack.slice (i, i + 1);
-          if (str == c)
-            return (pos - i).abs ();
+      while (idx < pos + max_dist && haystack.get_next_char (ref idx, out ch))
+        {
+          /* Skip uninteresting characters. */
+          ch = this._stripped_char (ch);
+          if (ch == 0)
+            {
+              continue;
+            }
+
+          if (ch == c)
+            return (pos - idx).abs ();
         }
 
       return -1;

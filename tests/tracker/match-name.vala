@@ -48,6 +48,8 @@ public class MatchNameTests : Folks.TestCase
           this.test_match_name_2);
       this.add_test ("test potential match by name #3 ",
           this.test_match_name_3);
+      this.add_test ("test potential match by name #4 ",
+          this.test_match_name_4);
     }
 
   public override void set_up ()
@@ -96,6 +98,15 @@ public class MatchNameTests : Folks.TestCase
   public void test_match_name_3 ()
     {
       this._test_match_name ("Travis Reitter", "Travis R.");
+      assert (this._match >= Folks.MatchResult.MEDIUM);
+    }
+
+  public void test_match_name_4 ()
+    {
+      /* Chosen to test the accent- and case-invariance of the matching
+       * algorithm. The string's repeated so the string lengths get us up to
+       * a MEDIUM result. */
+      this._test_match_name ("PâtéPâtéPâté", "patepatepate");
       assert (this._match >= Folks.MatchResult.MEDIUM);
     }
 
