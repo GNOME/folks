@@ -247,7 +247,7 @@ public class Folks.PotentialMatch : Object
    *
    * @since 0.5.0
    */
-  public void _inspect_im_addresses ()
+  private void _inspect_im_addresses ()
     {
       var addrs = new HashSet<string> ();
 
