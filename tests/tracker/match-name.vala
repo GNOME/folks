@@ -59,14 +59,14 @@ public class MatchNameTests : Folks.TestCase
       this._tracker_backend.tear_down ();
     }
 
-  public void test_match_name_1 ()
+  private void _test_match_name (string full_name1, string full_name2)
     {
       this._main_loop = new GLib.MainLoop (null, false);
 
       this._match = Folks.MatchResult.MIN;
       this._added_personas = false;
-      this._persona_fullname_1 = "Bernie Innocenti";
-      this._persona_fullname_2 = "Bernardo H. Innocenti";
+      this._persona_fullname_1 = full_name1;
+      this._persona_fullname_2 = full_name2;
       this._individual_id_1 = "";
       this._individual_id_2 = "";
 
@@ -79,55 +79,23 @@ public class MatchNameTests : Folks.TestCase
         });
 
       this._main_loop.run ();
+    }
 
+  public void test_match_name_1 ()
+    {
+      this._test_match_name ("Bernie Innocenti", "Bernardo H. Innocenti");
       assert (this._match >= Folks.MatchResult.MEDIUM);
     }
 
   public void test_match_name_2 ()
     {
-      this._main_loop = new GLib.MainLoop (null, false);
-
-      this._match = Folks.MatchResult.MIN;
-      this._added_personas = false;
-      this._persona_fullname_1 = "AAAA BBBBB";
-      this._persona_fullname_2 = "CCCCC DDDDD";
-      this._individual_id_1 = "";
-      this._individual_id_2 = "";
-
-      this._test_match_name_async ();
-
-      Timeout.add_seconds (5, () =>
-        {
-          this._main_loop.quit ();
-          assert_not_reached ();
-        });
-
-      this._main_loop.run ();
-
+      this._test_match_name ("AAAA BBBBB", "CCCCC DDDDD");
       assert (this._match <= Folks.MatchResult.LOW);
     }
 
   public void test_match_name_3 ()
     {
-      this._main_loop = new GLib.MainLoop (null, false);
-
-      this._match = Folks.MatchResult.MIN;
-      this._added_personas = false;
-      this._persona_fullname_1 = "Travis Reitter";
-      this._persona_fullname_2 = "Travis R.";
-      this._individual_id_1 = "";
-      this._individual_id_2 = "";
-
-      this._test_match_name_async ();
-
-      Timeout.add_seconds (5, () =>
-        {
-          this._main_loop.quit ();
-          assert_not_reached ();
-        });
-
-      this._main_loop.run ();
-
+      this._test_match_name ("Travis Reitter", "Travis R.");
       assert (this._match >= Folks.MatchResult.MEDIUM);
     }
 
