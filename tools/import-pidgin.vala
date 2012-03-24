@@ -169,7 +169,7 @@ public class Folks.Importers.Pidgin : Folks.Importer
   private async Persona? parse_contact (Xml.Node *contact_node)
     {
       string alias = null;
-      var im_addresses = new HashMultiMap<string, string> ();
+      var im_addresses = new HashMultiMap<string, ImFieldDetails> ();
       string im_address_string = "";
 
       /* Parse the <buddy> elements beneath <contact> */
@@ -203,7 +203,8 @@ public class Folks.Importers.Pidgin : Folks.Importer
                    * we need to insert into the Persona's im-addresses property
                    * for the linking to work. */
                   string im_address = subiter->get_content ();
-                  im_addresses.set (tp_protocol, im_address);
+                  im_addresses.set (tp_protocol,
+                      new ImFieldDetails (im_address));
                   im_address_string += "    %s\n".printf (im_address);
                 }
             }
