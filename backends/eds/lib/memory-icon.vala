@@ -57,11 +57,7 @@ internal class Edsf.MemoryIcon : Object, Icon, LoadableIcon
    * @return `true` if the instances are equal, `false` otherwise
    * @since 0.6.0
    */
-#if VALA_0_16
   public bool equal (Icon? icon2)
-#else
-  public bool equal (Icon icon2)
-#endif
     {
       /* These type and nullability checks are taken care of by the interface
        * wrapper. */
