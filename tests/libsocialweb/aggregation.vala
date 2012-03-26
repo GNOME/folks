@@ -129,7 +129,7 @@ public class AggregationTests : Folks.TestCase
                     {
                       var conn = Bus.get_sync (BusType.SESSION);
                       conn.emit_signal (null, path,
-                          "com.meego.libsocialweb.ContactView",
+                          "org.gnome.libsocialweb.ContactView",
                           "ContactsAdded", v);
                     }
                   catch (GLib.IOError e)
@@ -159,7 +159,7 @@ public class AggregationTests : Folks.TestCase
                     {
                       var conn = Bus.get_sync (BusType.SESSION);
                       conn.emit_signal (null, path,
-                          "com.meego.libsocialweb.ContactView",
+                          "org.gnome.libsocialweb.ContactView",
                           "ContactsAdded", v);
                     }
                   catch (GLib.IOError e)

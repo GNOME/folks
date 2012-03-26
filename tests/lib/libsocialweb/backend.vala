@@ -21,7 +21,7 @@
 using Gee;
 using GLib;
 
-[DBus (name = "com.meego.libsocialweb.ContactView")]
+[DBus (name = "org.gnome.libsocialweb.ContactView")]
 public interface LibsocialwebTest.ContactView : DBusProxy
 {
   public struct ContactsAddedElement
@@ -52,7 +52,7 @@ public interface LibsocialwebTest.ContactView : DBusProxy
   public signal void ContactsRemoved (ContactsRemovedElement[] contacts);
 }
 
-[DBus (name = "com.meego.libsocialweb.ContactView")]
+[DBus (name = "org.gnome.libsocialweb.ContactView")]
 public class LibsocialwebTest.LibsocialwebContactViewTest : Object
 {
   public struct ContactsAddedElement
@@ -182,14 +182,14 @@ public class LibsocialwebTest.LibsocialwebContactViewTest : Object
     }
 }
 
-[DBus (name = "com.meego.libsocialweb.Service")]
+[DBus (name = "org.gnome.libsocialweb.Service")]
 public interface LibsocialwebTest.LibsocialwebServiceCapabilitiesTest : Object
 {
   [DBus (name = "GetStaticCapabilities")]
   public abstract string[] GetStaticCapabilities () throws GLib.IOError;
 }
 
-[DBus (name = "com.meego.libsocialweb.ContactsQuery")]
+[DBus (name = "org.gnome.libsocialweb.ContactsQuery")]
 public interface LibsocialwebTest.LibsocialwebServiceQueryTest : Object
 {
   [DBus (name = "OpenView")]
@@ -197,7 +197,7 @@ public interface LibsocialwebTest.LibsocialwebServiceQueryTest : Object
       HashTable<string, string> p) throws GLib.IOError;
 }
 
-[DBus (name = "com.meego.libsocialweb.ContactsQuery")]
+[DBus (name = "org.gnome.libsocialweb.ContactsQuery")]
 public class LibsocialwebTest.LibsocialwebServiceTest : Object,
     LibsocialwebTest.LibsocialwebServiceCapabilitiesTest,
     LibsocialwebTest.LibsocialwebServiceQueryTest
@@ -248,7 +248,7 @@ public class LibsocialwebTest.LibsocialwebServiceTest : Object,
     }
 }
 
-[DBus (name = "com.meego.libsocialweb")]
+[DBus (name = "org.gnome.libsocialweb")]
 public class LibsocialwebTest.LibsocialwebServerTest : Object
 {
   private string[] services;
@@ -298,9 +298,9 @@ public class LibsocialwebTest.LibsocialwebServerTest : Object
 
 public class LibsocialwebTest.Backend
 {
-  public static const string LIBSOCIALWEB_IFACE = "com.meego.libsocialweb";
-  public static const string LIBSOCIALWEB_PATH = "/com/meego/libsocialweb";
-  public static const string LIBSOCIALWEB_BUS_NAME = "com.meego.libsocialweb";
+  public static const string LIBSOCIALWEB_IFACE = "org.gnome.libsocialweb";
+  public static const string LIBSOCIALWEB_PATH = "/org/gnome/libsocialweb";
+  public static const string LIBSOCIALWEB_BUS_NAME = "org.gnome.libsocialweb";
 
   public bool debug { get; set; }
   private LibsocialwebServerTest lsw_server;

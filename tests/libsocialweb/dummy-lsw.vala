@@ -70,7 +70,7 @@ public class DummyLswTests : Folks.TestCase
           var conn = Bus.get_sync (BusType.SESSION);
           conn.get_proxy<LibsocialwebTest.ContactView>
               .begin<LibsocialwebTest.ContactView> (
-              "com.meego.libsocialweb", view_path, 0, null, (v) =>
+              "org.gnome.libsocialweb", view_path, 0, null, (v) =>
             {
               LibsocialwebTest.ContactView view
                   = (LibsocialwebTest.ContactView)v;
@@ -119,7 +119,7 @@ public class DummyLswTests : Folks.TestCase
                     {
                       var conn = Bus.get_sync (BusType.SESSION);
                       conn.emit_signal (null, path,
-                          "com.meego.libsocialweb.ContactView",
+                          "org.gnome.libsocialweb.ContactView",
                           "ContactsAdded", v);
                     }
                   catch (GLib.IOError e)
@@ -210,7 +210,7 @@ public class DummyLswTests : Folks.TestCase
             {
               var conn = Bus.get_sync (BusType.SESSION);
               conn.emit_signal (null, view_path,
-                  "com.meego.libsocialweb.ContactView",
+                  "org.gnome.libsocialweb.ContactView",
                   "ContactsChanged", v);
             }
           catch (GLib.IOError e)
@@ -253,7 +253,7 @@ public class DummyLswTests : Folks.TestCase
             {
               var conn = Bus.get_sync (BusType.SESSION);
               conn.emit_signal (null, view_path,
-                  "com.meego.libsocialweb.ContactView",
+                  "org.gnome.libsocialweb.ContactView",
                   "ContactsRemoved", v);
             }
           catch (GLib.IOError e)
