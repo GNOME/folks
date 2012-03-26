@@ -1,5 +1,15 @@
 Overview of changes from libfolks 0.6.7 to libfolks 0.6.8
 =============================================================
+
+Major changes:
+* FOLKS_DEBUG has been removed in favour of G_MESSAGES_DEBUG (and the bug where
+  folks would set G_MESSAGES_DEBUG for any process linked to it has been fixed)
+* A --disable-fatal-warnings configure flag has been added for non-developers
+* Update favourite status of EDS contacts with membership of the ‘Starred in
+  Android’ Google Contacts group
+* Improvements to linking suggestions (potential matches)
+* Improvements to folks-inspect to make it a good command line citizen
+
 Bugs fixed:
 * Bug 670191 — IndividualAggregator::is-quiescent is never set to TRUE
 * Bug 670523 — persona.vala:153:folks_persona_get_individual:
@@ -16,6 +26,10 @@ Bugs fixed:
 * Bug 670872 — Should be less sensitive to accentuated chars
 * Bug 669984 — Does not notify when contacts are added to groups
 * Bug 660235 — Consistent signal handlers to a terminal would be cool
+* Bug 671499 — Don't set G_MESSAGES_DEBUG unconditionally
+
+API changes:
+* Add MatchResult.NONE enum member
 
 Overview of changes from libfolks 0.6.6 to libfolks 0.6.7
 =============================================================

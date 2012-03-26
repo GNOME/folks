@@ -36,7 +36,7 @@ public enum Folks.MatchResult
    * such as when one of them has a {@link Individual.trust_level} of
    * {@link TrustLevel.NONE}.
    *
-   * @since UNRELEASED
+   * @since 0.6.8
    */
   NONE = -1,
 
