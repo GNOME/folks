@@ -1055,30 +1055,6 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       this._emit_personas_changed (personas_added, personas_removed);
     }
 
-  internal async void _change_group_membership (Folks.Persona persona,
-      string group, bool is_member) throws Folks.PropertyError
-    {
-      var tp_persona = (Tpf.Persona) persona;
-
-      try
-        {
-          if (is_member)
-            {
-              yield tp_persona.contact.add_to_group_async (group);
-            }
-          else
-            {
-              yield tp_persona.contact.remove_from_group_async (group);
-            }
-        }
-      catch (GLib.Error e)
-        {
-          /* Translators: the parameter is an error message. */
-          throw new PropertyError.UNKNOWN_ERROR (
-              _("Failed to change group membership: %s"), e.message);
-        }
-    }
-
   /**
    * Remove a {@link Persona} from the PersonaStore.
    *

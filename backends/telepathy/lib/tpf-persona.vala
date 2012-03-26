@@ -416,15 +416,39 @@ public class Tpf.Persona : Folks.Persona,
    * See {@link Folks.GroupDetails.change_group}.
    */
   public async void change_group (string group, bool is_member)
-      throws Folks.PropertyError
+      throws GLib.Error
     {
-      if (this._change_group (group, is_member))
+      if (this._groups.contains (group) != is_member)
         {
-          Tpf.PersonaStore store = (Tpf.PersonaStore) this.store;
-          yield store._change_group_membership (this, group, is_member);
+          yield this._change_group_membership (group, is_member);
+        }
+
+      /* The change will be notified when we receive changes from the store. */
+    }
+
+  private async void _change_group_membership (string group,
+      bool is_member) throws Folks.PropertyError
+    {
+      try
+        {
+          if (is_member)
+            {
+              yield this.contact.add_to_group_async (group);
+            }
+          else
+            {
+              yield this.contact.remove_from_group_async (group);
+            }
+        }
+      catch (GLib.Error e)
+        {
+          /* Translators: the parameter is an error message. */
+          throw new PropertyError.UNKNOWN_ERROR (
+              _("Failed to change group membership: %s"), e.message);
         }
     }
 
+  /* Note: Only ever called as a result of signals from Telepathy. */
   private bool _change_group (string group, bool is_member)
     {
       var changed = false;
@@ -439,7 +463,10 @@ public class Tpf.Persona : Folks.Persona,
         }
 
       if (changed == true)
-        this.group_changed (group, is_member);
+        {
+          this.group_changed (group, is_member);
+          this.notify_property ("groups");
+        }
 
       return changed;
     }
@@ -464,21 +491,19 @@ public class Tpf.Persona : Folks.Persona,
    */
   public async void change_groups (Set<string> groups) throws PropertyError
     {
-      Tpf.PersonaStore store = (Tpf.PersonaStore) this.store;
-
       foreach (var group1 in groups)
         {
           if (this._groups.contains (group1) == false)
-            yield store._change_group_membership (this, group1, true);
+            yield this._change_group_membership (group1, true);
         }
 
       foreach (var group2 in this._groups)
         {
           if (groups.contains (group2) == false)
-            yield store._change_group_membership (this, group2, false);
+            yield this._change_group_membership (group2, false);
         }
 
-      this.notify_property ("groups");
+      /* The change will be notified when we receive changes from the store. */
     }
 
   /* This has to be weak since, in general, we can't force any TpContacts to
