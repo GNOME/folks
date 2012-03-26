@@ -47,19 +47,39 @@ public class Edsf.Persona : Folks.Persona,
     WebServiceDetails
 {
   /* The following 4 definitions are used by the tests */
+  /**
+   * vCard field names for telephone numbers.
+   *
+   * @since 0.6.0
+   */
   public static const string[] phone_fields = {
     "assistant_phone", "business_phone", "business_phone_2", "callback_phone",
     "car_phone", "company_phone", "home_phone", "home_phone_2", "isdn_phone",
     "mobile_phone", "other_phone", "primary_phone"
   };
+  /**
+   * vCard field names for postal addresses.
+   *
+   * @since 0.6.0
+   */
   public static const string[] address_fields = {
     "address_home", "address_other", "address_work"
   };
+  /**
+   * vCard field names for e-mail addresses.
+   *
+   * @since 0.6.0
+   */
   public static const string[] email_fields = {
     "email_1", "email_2", "email_3", "email_4"
   };
 
   [Deprecated]
+  /**
+   * vCard field names for miscellaneous URIs.
+   *
+   * @since 0.6.0
+   */
   public static const string[] url_properties = {
     "blog_url", "fburl", "homepage_url", "video_url"
   };
@@ -689,6 +709,9 @@ public class Edsf.Persona : Folks.Persona,
    *
    * Create a new persona for the {@link PersonaStore} `store`, representing
    * the EDS contact given by `contact`.
+   *
+   * @param store the store which will contain the persona
+   * @param contact the EDS contact being represented by the persona
    *
    * @since 0.6.0
    */

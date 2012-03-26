@@ -161,6 +161,9 @@ public class Swf.PersonaStore : Folks.PersonaStore
    *
    * Create a new persona store to store the {@link Persona}s for the contacts
    * provided by the `service`.
+   *
+   * @param service the libsocialweb service being represented by the new
+   * persona store
    */
   public PersonaStore (ClientService service)
     {

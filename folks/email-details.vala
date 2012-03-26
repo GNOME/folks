@@ -94,7 +94,7 @@ public interface Folks.EmailDetails : Object
    *
    * Each of the values in this property contains just an e-mail address (e.g.
    * “foo@bar.com”), rather than any other way of formatting an e-mail address
-   * (such as “John Smith <foo@bar.com>”).
+   * (such as “John Smith &lt;foo@bar.com&gt;”).
    *
    * @since 0.6.0
    */

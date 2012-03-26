@@ -629,7 +629,7 @@ public abstract class Folks.PersonaStore : Object
    * return value is purely for convenience, since it can be complicated to
    * correlate the provided details with the final Persona.
    *
-   * If the store is offline (or {@link PersonaStore.prepare()} hasn't yet been
+   * If the store is offline (or {@link PersonaStore.prepare} hasn't yet been
    * called successfully), this function will throw
    * {@link PersonaStoreError.STORE_OFFLINE}. It's the responsibility of the
    * caller to cache details and re-try this function if it wishes to make
@@ -662,7 +662,7 @@ public abstract class Folks.PersonaStore : Object
    * will be signalled through emission of
    * {@link PersonaStore.personas_changed}.
    *
-   * If the store is offline (or {@link PersonaStore.prepare()} hasn't yet been
+   * If the store is offline (or {@link PersonaStore.prepare} hasn't yet been
    * called successfully), this function will throw
    * {@link PersonaStoreError.STORE_OFFLINE}. It's the responsibility of the
    * caller to cache details and re-try this function if it wishes to make

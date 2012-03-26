@@ -154,7 +154,6 @@ public class Folks.PostalAddress : Object
    * @param postal_code the postal code
    * @param country the country name
    * @param address_format the address format
-   * @param types set of types for the address (such as "personal" or "work")
    * @param uid external UID for the address instance
    * @since 0.5.1
    */

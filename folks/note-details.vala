@@ -61,6 +61,8 @@ public class Folks.NoteFieldDetails : AbstractFieldDetails<string>
    * @param parameters initial parameters. See
    * {@link AbstractFieldDetails.parameters}. A `null` value is equivalent to a
    * empty map of parameters.
+   * @param uid UID for the note object itself, if known. A `null` value means
+   * the note has no unique ID.
    *
    * @return a new NoteFieldDetails
    *

@@ -2559,16 +2559,16 @@ public class Tpf.PersonaStore : Folks.PersonaStore
   /**
    * Get a map of all the currently constructed {@link Tpf.PersonaStore}s.
    *
-   * If a {@link BackendStore} has been prepared, this map will be complete,
-   * containing every store known to the Telepathy account manager. If no
-   * {@link BackendStore} has been prepared, this map will only contain the
-   * stores which have been created by calling
+   * If a {@link Folks.BackendStore} has been prepared, this map will be
+   * complete, containing every store known to the Telepathy account manager. If
+   * no {@link Folks.BackendStore} has been prepared, this map will only contain
+   * the stores which have been created by calling
    * {@link Tpf.PersonaStore.dup_for_account}.
    *
-   * This map is read-only. Use {@link BackendStore} or
+   * This map is read-only. Use {@link Folks.BackendStore} or
    * {@link Tpf.PersonaStore.dup_for_account} to add stores.
    *
-   * @return map from {@link PersonaStore.id} to {@link PersonaStore}
+   * @return map from {@link Folks.PersonaStore.id} to {@link Tpf.PersonaStore}
    * @since 0.6.6
    */
   public static unowned Map<string, PersonaStore> list_persona_stores ()
@@ -2654,8 +2654,8 @@ public class Tpf.PersonaStore : Folks.PersonaStore
    * found, a new {@link Tpf.PersonaStore} will be created for the account.
    *
    * See the documentation for {@link Tpf.PersonaStore.list_persona_stores} for
-   * information on the lifecycle of these stores when a {@link BackendStore} is
-   * and is not present.
+   * information on the lifecycle of these stores when a
+   * {@link Folks.BackendStore} is and is not present.
    *
    * @param account the Telepathy account of the persona store
    * @return the persona store associated with the account

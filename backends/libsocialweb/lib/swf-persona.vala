@@ -249,6 +249,10 @@ public class Swf.Persona : Folks.Persona,
    *
    * Create a new persona for the {@link PersonaStore} `store`, representing
    * the libsocialweb contact given by `contact`.
+   *
+   * @param store the store which will contain the persona
+   * @param contact the libsocialweb contact being represented by the new
+   * persona
    */
   public Persona (PersonaStore store, Contact contact)
     {
@@ -303,11 +307,29 @@ public class Swf.Persona : Folks.Persona,
       this._lsw_contact = null;
     }
 
+  /**
+   * Get the ID of the libsocialweb contact.
+   *
+   * @param contact contact to return the ID from
+   * @return ID of `contact`
+   *
+   * @since 0.5.0
+   */
   public static string? get_contact_id (Contact contact)
     {
       return contact.get_value ("id");
     }
 
+  /**
+   * Update the persona from the given contact.
+   *
+   * This will update the values of all the persona's properties from the
+   * properties of the given contact.
+   *
+   * @param contact contact to update the persona from
+   *
+   * @since 0.5.0
+   */
   public void update (Contact contact)
     {
       var nickname = contact.get_value ("name");
