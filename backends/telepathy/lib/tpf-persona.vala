@@ -338,12 +338,17 @@ public class Tpf.Persona : Folks.Persona,
               is_favourite);
         }
 
-      this._is_favourite = is_favourite;
-      this.notify_property ("is-favourite");
+      /* The change will be notified when we receive changes from the store. */
     }
 
+  /* Note: Only ever called by Tpf.PersonaStore. */
   internal void _set_is_favourite (bool is_favourite)
     {
+      if (this._is_favourite == is_favourite)
+        {
+          return;
+        }
+
       this._is_favourite = is_favourite;
       this.notify_property ("is-favourite");
     }
