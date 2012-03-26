@@ -105,7 +105,7 @@ public class Folks.IndividualAggregator : Object
    * reach quiescence. */
   private uint _quiescent_timeout_id = 0;
 
-  private static const uint _QUIESCENT_TIMEOUT = 5; /* seconds */
+  private static const uint _QUIESCENT_TIMEOUT = 30; /* seconds */
 
   /* We use this to know if the primary PersonaStore has been explicitly
    * set by the user (either via GConf or an env variable). If that is the
