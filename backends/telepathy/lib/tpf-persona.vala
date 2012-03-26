@@ -303,8 +303,7 @@ public class Tpf.Persona : Folks.Persona,
           yield ((Tpf.PersonaStore) this.store).change_alias (this, alias);
         }
 
-      this._alias = alias;
-      this.notify_property ("alias");
+      /* The change will be notified when we receive changes from the store. */
     }
 
   private bool _is_favourite = false;

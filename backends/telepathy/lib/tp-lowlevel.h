@@ -29,10 +29,17 @@
 G_BEGIN_DECLS
 
 void
-folks_tp_lowlevel_connection_set_contact_alias (
+folks_tp_lowlevel_connection_set_contact_alias_async (
     TpConnection *conn,
     guint handle,
-    const gchar *alias);
+    const gchar *alias,
+    GAsyncReadyCallback callback,
+    gpointer user_data);
+
+void
+folks_tp_lowlevel_connection_set_contact_alias_finish (
+    GAsyncResult *result,
+    GError **error);
 
 void
 folks_tp_lowlevel_connection_get_alias_flags_async (

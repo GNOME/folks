@@ -1225,6 +1225,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
     }
 
   internal async void change_alias (Tpf.Persona persona, string alias)
+      throws PropertyError
     {
       /* Deal with badly-behaved callers */
       if (alias == null)
@@ -1239,11 +1240,19 @@ public class Tpf.PersonaStore : Folks.PersonaStore
           return;
         }
 
-      debug ("Changing alias of persona %s to '%s'.",
-          persona.contact.get_identifier (), alias);
-
-      FolksTpLowlevel.connection_set_contact_alias (this._conn,
-          (Handle) persona.contact.handle, alias);
+      try
+        {
+          debug ("Changing alias of persona %s to '%s'.",
+              persona.contact.get_identifier (), alias);
+          yield FolksTpLowlevel.connection_set_contact_alias_async (this._conn,
+              (Handle) persona.contact.handle, alias);
+        }
+      catch (GLib.Error e1)
+        {
+          throw new PropertyError.UNKNOWN_ERROR (
+              /* Translators: the parameter is an error message. */
+              _("Failed to change contact's alias: %s"), e1.message);
+        }
     }
 
   internal async void change_user_birthday (Tpf.Persona persona,
