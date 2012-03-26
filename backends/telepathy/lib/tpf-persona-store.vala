@@ -84,9 +84,6 @@ public class Tpf.PersonaStore : Folks.PersonaStore
   /* marshalled from ContactInfo.SupportedFields */
   internal HashSet<string> _supported_fields;
   internal Set<string> _supported_fields_ro;
-  internal signal void group_members_changed (string group,
-      GLib.List<Persona>? added, GLib.List<Persona>? removed);
-  internal signal void group_removed (string group, GLib.Error? error);
 
   private Account _account;
 
