@@ -2077,6 +2077,8 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       if (this._weakly_referenced_contacts != null)
         {
           Handle handle = this._weakly_referenced_contacts.get (c);
+          this._weakly_referenced_contacts.unset (c);
+
           if (handle != 0)
             {
               this._ignore_by_handle ((!) handle, null, null,
