@@ -41,12 +41,6 @@ public class Tpf.Persona : Folks.Persona,
     UrlDetails
 {
   private const string[] _linkable_properties = { "im-addresses" };
-  private const string[] _always_writeable_properties =
-    {
-      "alias",
-      "is-favourite",
-      "groups"
-    };
   private string[] _writeable_properties = null;
 
   /* Whether we've finished being constructed; this is used to prevent
@@ -263,13 +257,7 @@ public class Tpf.Persona : Folks.Persona,
    */
   public override string[] writeable_properties
     {
-      get
-        {
-          if (this.is_user)
-            return this._writeable_properties;
-
-          return this._always_writeable_properties;
-        }
+      get { return this._writeable_properties; }
     }
 
   private string _alias = ""; /* must never be null */
@@ -761,15 +749,22 @@ public class Tpf.Persona : Folks.Persona,
         });
       this._contact_groups_changed (this.contact.get_contact_groups (), {});
 
+      var tpf_store = this.store as Tpf.PersonaStore;
+
       if (this.is_user)
         {
-          ((Tpf.PersonaStore) this.store).notify["supported-fields"].connect (
-            (s, p) =>
-              {
-                this._store_notify_supported_fields ();
-              });
-          this._store_notify_supported_fields ();
+          tpf_store.notify["supported-fields"].connect ((s, p) =>
+            {
+              this._update_writeable_properties ();
+            });
         }
+
+      tpf_store.notify["always-writeable-properties"].connect ((s, p) =>
+        {
+          this._update_writeable_properties ();
+        });
+
+      this._update_writeable_properties ();
     }
 
   /* Called after all construction-time properties have been set. */
@@ -778,21 +773,24 @@ public class Tpf.Persona : Folks.Persona,
       this._is_constructed = true;
     }
 
-  private void _store_notify_supported_fields ()
+  private void _update_writeable_properties ()
     {
       var tpf_store = this.store as Tpf.PersonaStore;
-      this._writeable_properties = this._always_writeable_properties;
+      this._writeable_properties = this.store.always_writeable_properties;
 
-      if ("bday" in tpf_store.supported_fields)
-        this._writeable_properties += "birthday";
-      if ("email" in tpf_store.supported_fields)
-        this._writeable_properties += "email-addresses";
-      if ("fn" in tpf_store.supported_fields)
-        this._writeable_properties += "full-name";
-      if ("tel" in tpf_store.supported_fields)
-        this._writeable_properties += "phone-numbers";
-      if ("url" in tpf_store.supported_fields)
-        this._writeable_properties += "urls";
+      if (this.is_user)
+        {
+          if ("bday" in tpf_store.supported_fields)
+            this._writeable_properties += "birthday";
+          if ("email" in tpf_store.supported_fields)
+            this._writeable_properties += "email-addresses";
+          if ("fn" in tpf_store.supported_fields)
+            this._writeable_properties += "full-name";
+          if ("tel" in tpf_store.supported_fields)
+            this._writeable_properties += "phone-numbers";
+          if ("url" in tpf_store.supported_fields)
+            this._writeable_properties += "urls";
+        }
     }
 
   private void _contact_notify_contact_info ()

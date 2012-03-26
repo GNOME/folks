@@ -3,6 +3,7 @@ Overview of changes from libfolks 0.6.9 to libfolks 0.7.0
 
 Bugs fixed:
 • Bug 658576 — Need API to get a FolksIndividual from his ID
+• Bug 671662 — Renamed alias of Facebook contact is not saved
 
 API changes:
 • Add IndividualAggregator.look_up_individual()
