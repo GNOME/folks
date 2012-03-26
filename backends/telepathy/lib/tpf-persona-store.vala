@@ -95,7 +95,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
   private Channel _stored;
   private Channel _subscribe;
   private Connection _conn;
-  private AccountManager _account_manager;
+  private AccountManager? _account_manager; /* only null before prepare() */
   private Logger _logger;
   private Contact? _self_contact;
   private MaybeBool _can_add_personas = MaybeBool.UNSET;
@@ -298,8 +298,13 @@ public class Tpf.PersonaStore : Folks.PersonaStore
         this._logger.invalidated.disconnect (this._logger_invalidated_cb);
 
       this._account.invalidated.disconnect (this._account_invalidated_cb);
-      this._account_manager.invalidated.disconnect (
-          this._account_manager_invalidated_cb);
+
+      if (this._account_manager != null)
+        {
+          this._account_manager.invalidated.disconnect (
+              this._account_manager_invalidated_cb);
+          this._account_manager = null;
+        }
     }
 
   private string _format_maybe_bool (MaybeBool input)
