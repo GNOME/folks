@@ -126,9 +126,10 @@ public class Folks.PotentialMatch : Object
        * spoofed). */
       if (a.trust_level == TrustLevel.NONE || b.trust_level == TrustLevel.NONE)
         {
-          this._result = MatchResult.NONE;
           return this._result;
         }
+
+      this._result = MatchResult.VERY_LOW;
 
       /* If individuals share gender. */
       if (this._individual_a.gender != Gender.UNSPECIFIED &&
