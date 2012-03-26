@@ -602,6 +602,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
 
   private void _remove_store ()
     {
+      debug ("Removing store %s (%p)", this.id, this);
       this._emit_personas_changed (null, this._persona_set);
       this._cache.clear_cache ();
       this.removed ();

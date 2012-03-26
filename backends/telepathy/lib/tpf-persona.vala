@@ -468,6 +468,8 @@ public class Tpf.Persona : Folks.Persona,
 
   private void _contact_weak_notify_cb (Object obj)
     {
+      debug ("TpContact %p destroyed; setting ._contact = null in Persona %p",
+          obj, this);
       this._contact = null;
       this.notify_property ("contact");
     }
