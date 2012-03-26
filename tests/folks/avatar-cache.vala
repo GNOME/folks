@@ -34,9 +34,11 @@ public class AvatarCacheTests : Folks.TestCase
       base ("AvatarCache");
 
       /* Use a temporary cache directory */
-      this._cache_dir =
-          File.new_for_path (Environment.get_tmp_dir ()).
-              get_child ("folks-avatar-cache-tests");
+      /* FIXME: Use g_dir_make_tmp() but it is not bound: #672846 */
+      var tmp_path = Environment.get_tmp_dir () + "/folks-avatar-cache-tests";
+      Environment.set_variable ("XDG_CACHE_HOME", tmp_path, true);
+      assert (Environment.get_user_cache_dir () == tmp_path);
+      this._cache_dir = File.new_for_path (tmp_path);
 
       this.add_test ("store-and-load-avatar", this.test_store_and_load_avatar);
       this.add_test ("store-avatar-overwrite",
@@ -52,8 +54,6 @@ public class AvatarCacheTests : Folks.TestCase
   public override void set_up ()
     {
       this._delete_cache_directory ();
-      Environment.set_variable ("XDG_CACHE_HOME", this._cache_dir.get_path (),
-          true);
 
       this._cache = AvatarCache.dup ();
       this._avatar =
