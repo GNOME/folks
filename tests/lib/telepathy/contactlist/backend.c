@@ -28,11 +28,13 @@
 #include "account-manager.h"
 #include "conn.h"
 #include "contact-list.h"
+#include "util.h"
 
 #include "backend.h"
 
 struct _TpTestBackendPrivate
 {
+  TpAccountManager *am_proxy;
   TpDBusDaemon *daemon;
   TpTestAccountManager *account_manager;
   GList *accounts;
@@ -201,6 +203,8 @@ tp_test_backend_set_up (TpTestBackend *self)
   priv->account_manager = tp_test_account_manager_new ();
   tp_dbus_daemon_register_object (priv->daemon, TP_ACCOUNT_MANAGER_OBJECT_PATH,
       priv->account_manager);
+
+  priv->am_proxy = tp_account_manager_dup ();
 }
 
 /**
@@ -312,6 +316,10 @@ tp_test_backend_tear_down (TpTestBackend *self)
 {
   TpTestBackendPrivate *priv = self->priv;
   GError *error = NULL;
+
+  /* Make sure all dbus trafic is done */
+  tp_tests_proxy_run_until_dbus_queue_processed (priv->am_proxy);
+  g_clear_object (&priv->am_proxy);
 
   tp_dbus_daemon_unregister_object (priv->daemon, priv->account_manager);
   tp_clear_object (&priv->account_manager);

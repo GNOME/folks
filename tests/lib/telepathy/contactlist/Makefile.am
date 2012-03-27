@@ -30,6 +30,8 @@ libtp_test_contactlist_la_SOURCES = \
         contact-list.h \
         contact-list-manager.c \
         contact-list-manager.h \
+        util.c \
+        util.h \
 	$(NULL)
 
 libtp_test_contactlist_la_CFLAGS = \
