@@ -323,9 +323,9 @@ public class IndividualPropertiesTests : Folks.TestCase
 
               /* set the alias through Telepathy and wait for it to hit our
                * alias notification callback above */
-
               var handle = (Handle) ((Tpf.Persona) persona).contact.handle;
-              this.tp_backend.connection.manager.set_alias (handle, new_alias);
+              var conn = this.tp_backend.get_connection_for_handle (this._account_handle);
+              conn.change_aliases ({handle}, {new_alias});
             }
 
           assert (removed.size == 1);

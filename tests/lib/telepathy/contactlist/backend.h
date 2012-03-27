@@ -24,7 +24,7 @@
 #include <glib.h>
 #include <glib-object.h>
 
-#include "conn.h"
+#include "contacts-conn.h"
 
 G_BEGIN_DECLS
 
@@ -61,14 +61,16 @@ TpTestsBackend *tp_tests_backend_new (void);
 
 void tp_tests_backend_set_up (TpTestsBackend *self);
 void tp_tests_backend_tear_down (TpTestsBackend *self);
-TpTestsContactListConnection *tp_tests_backend_get_connection (
-    TpTestsBackend *self);
+
+TpTestsContactsConnection *tp_tests_backend_get_connection_for_handle (
+    TpTestsBackend *self,
+    gpointer handle);
 
 gpointer tp_tests_backend_add_account (TpTestsBackend *self,
-    const gchar *protocol_name,
+    const gchar *protocol,
     const gchar *user_id,
-    const gchar *connection_manager_name,
-    const gchar *account_name);
+    const gchar *cm_name,
+    const gchar *account);
 void tp_tests_backend_remove_account (TpTestsBackend *self,
     gpointer handle);
 

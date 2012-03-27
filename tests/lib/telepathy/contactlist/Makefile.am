@@ -18,18 +18,21 @@ noinst_LTLIBRARIES = libtp-test-contactlist.la
 
 libtp_test_contactlist_la_SOURCES = \
         _gen/param-spec-struct.h \
-        account.c \
-        account.h \
-        account-manager.c \
-        account-manager.h \
         backend.c \
         backend.h \
-        conn.c \
-        conn.h \
-        contact-list.c \
-        contact-list.h \
         contact-list-manager.c \
         contact-list-manager.h \
+        contacts-conn.c \
+        contacts-conn.h \
+        debug.h \
+        simple-account.c \
+        simple-account.h \
+        simple-account-manager.c \
+        simple-account-manager.h \
+        simple-conn.c \
+        simple-conn.h \
+        textchan-null.c \
+        textchan-null.h \
         util.c \
         util.h \
 	$(NULL)
