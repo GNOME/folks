@@ -27,8 +27,8 @@
 static void init_aliasing (gpointer, gpointer);
 static void init_contact_info (gpointer, gpointer);
 
-G_DEFINE_TYPE_WITH_CODE (TpTestContactListConnection,
-    tp_test_contact_list_connection,
+G_DEFINE_TYPE_WITH_CODE (TpTestsContactListConnection,
+    tp_tests_contact_list_connection,
     TP_TYPE_BASE_CONNECTION,
     G_IMPLEMENT_INTERFACE (TP_TYPE_SVC_CONNECTION_INTERFACE_ALIASING,
       init_aliasing);
@@ -51,11 +51,11 @@ enum
   N_PROPS
 };
 
-struct _TpTestContactListConnectionPrivate
+struct _TpTestsContactListConnectionPrivate
 {
   gchar *account;
   guint simulation_delay;
-  TpTestContactListManager *list_manager;
+  TpTestsContactListManager *list_manager;
   gboolean away;
   TpChannelGroupFlags publish_flags;
   TpChannelGroupFlags subscribe_flags;
@@ -67,11 +67,11 @@ static TpChannelGroupFlags default_group_flags =
     TP_CHANNEL_GROUP_FLAG_MEMBERS_CHANGED_DETAILED;
 
 static void
-tp_test_contact_list_connection_init (TpTestContactListConnection *self)
+tp_tests_contact_list_connection_init (TpTestsContactListConnection *self)
 {
   self->priv = G_TYPE_INSTANCE_GET_PRIVATE (self,
-      TP_TEST_TYPE_CONTACT_LIST_CONNECTION,
-      TpTestContactListConnectionPrivate);
+      TP_TESTS_TYPE_CONTACT_LIST_CONNECTION,
+      TpTestsContactListConnectionPrivate);
 }
 
 static void
@@ -80,8 +80,8 @@ get_property (GObject *object,
               GValue *value,
               GParamSpec *spec)
 {
-  TpTestContactListConnection *self =
-    TP_TEST_CONTACT_LIST_CONNECTION (object);
+  TpTestsContactListConnection *self =
+    TP_TESTS_CONTACT_LIST_CONNECTION (object);
 
   switch (property_id)
     {
@@ -116,8 +116,8 @@ set_property (GObject *object,
               const GValue *value,
               GParamSpec *spec)
 {
-  TpTestContactListConnection *self =
-    TP_TEST_CONTACT_LIST_CONNECTION (object);
+  TpTestsContactListConnection *self =
+    TP_TESTS_CONTACT_LIST_CONNECTION (object);
 
   switch (property_id)
     {
@@ -146,26 +146,26 @@ set_property (GObject *object,
 static void
 finalize (GObject *object)
 {
-  TpTestContactListConnection *self =
-    TP_TEST_CONTACT_LIST_CONNECTION (object);
+  TpTestsContactListConnection *self =
+    TP_TESTS_CONTACT_LIST_CONNECTION (object);
 
   tp_contacts_mixin_finalize (object);
   g_free (self->priv->account);
 
-  G_OBJECT_CLASS (tp_test_contact_list_connection_parent_class)->finalize (
+  G_OBJECT_CLASS (tp_tests_contact_list_connection_parent_class)->finalize (
       object);
 }
 
 /**
- * tp_test_contact_list_connection_get_manager:
+ * tp_tests_contact_list_connection_get_manager:
  * @self: the connection
  *
  * Returns: (transfer none): the contact list manager or %NULL.
  */
-TpTestContactListManager *
-tp_test_contact_list_connection_get_manager (TpTestContactListConnection *self)
+TpTestsContactListManager *
+tp_tests_contact_list_connection_get_manager (TpTestsContactListConnection *self)
 {
-  g_return_val_if_fail (TP_TEST_IS_CONTACT_LIST_CONNECTION (self), NULL);
+  g_return_val_if_fail (TP_TESTS_IS_CONTACT_LIST_CONNECTION (self), NULL);
 
   return self->priv->list_manager;
 }
@@ -173,13 +173,13 @@ tp_test_contact_list_connection_get_manager (TpTestContactListConnection *self)
 static gchar *
 get_unique_connection_name (TpBaseConnection *conn)
 {
-  TpTestContactListConnection *self = TP_TEST_CONTACT_LIST_CONNECTION (conn);
+  TpTestsContactListConnection *self = TP_TESTS_CONTACT_LIST_CONNECTION (conn);
 
   return g_strdup_printf ("%s@%p", self->priv->account, self);
 }
 
 gchar *
-tp_test_contact_list_normalize_contact (TpHandleRepoIface *repo,
+tp_tests_contact_list_normalize_contact (TpHandleRepoIface *repo,
                                         const gchar *id,
                                         gpointer context,
                                         GError **error)
@@ -195,7 +195,7 @@ tp_test_contact_list_normalize_contact (TpHandleRepoIface *repo,
 }
 
 static gchar *
-tp_test_contact_list_normalize_group (TpHandleRepoIface *repo,
+tp_tests_contact_list_normalize_group (TpHandleRepoIface *repo,
                                       const gchar *id,
                                       gpointer context,
                                       GError **error)
@@ -215,19 +215,19 @@ create_handle_repos (TpBaseConnection *conn,
                      TpHandleRepoIface *repos[NUM_TP_HANDLE_TYPES])
 {
   repos[TP_HANDLE_TYPE_CONTACT] = tp_dynamic_handle_repo_new
-      (TP_HANDLE_TYPE_CONTACT, tp_test_contact_list_normalize_contact, NULL);
+      (TP_HANDLE_TYPE_CONTACT, tp_tests_contact_list_normalize_contact, NULL);
 
   repos[TP_HANDLE_TYPE_LIST] = tp_static_handle_repo_new
-      (TP_HANDLE_TYPE_LIST, tp_test_contact_lists ());
+      (TP_HANDLE_TYPE_LIST, tp_tests_contact_lists ());
 
   repos[TP_HANDLE_TYPE_GROUP] = tp_dynamic_handle_repo_new
-      (TP_HANDLE_TYPE_GROUP, tp_test_contact_list_normalize_group, NULL);
+      (TP_HANDLE_TYPE_GROUP, tp_tests_contact_list_normalize_group, NULL);
 }
 
 static void
-alias_updated_cb (TpTestContactListManager *manager,
+alias_updated_cb (TpTestsContactListManager *manager,
                   TpHandle contact,
-                  TpTestContactListConnection *self)
+                  TpTestsContactListConnection *self)
 {
   GPtrArray *aliases;
   GValueArray *pair;
@@ -239,7 +239,7 @@ alias_updated_cb (TpTestContactListManager *manager,
   g_value_init (pair->values + 1, G_TYPE_STRING);
   g_value_set_uint (pair->values + 0, contact);
   g_value_set_string (pair->values + 1,
-      tp_test_contact_list_manager_get_alias (manager, contact));
+      tp_tests_contact_list_manager_get_alias (manager, contact));
 
   aliases = g_ptr_array_sized_new (1);
   g_ptr_array_add (aliases, pair);
@@ -251,11 +251,11 @@ alias_updated_cb (TpTestContactListManager *manager,
 }
 
 static void
-contact_info_updated_cb (TpTestContactListManager *manager,
+contact_info_updated_cb (TpTestsContactListManager *manager,
                          TpHandle contact,
-                         TpTestContactListConnection *self)
+                         TpTestsContactListConnection *self)
 {
-  GPtrArray *contact_info = tp_test_contact_list_manager_get_contact_info (
+  GPtrArray *contact_info = tp_tests_contact_list_manager_get_contact_info (
       self->priv->list_manager, contact);
 
   if (contact_info != NULL)
@@ -266,9 +266,9 @@ contact_info_updated_cb (TpTestContactListManager *manager,
 }
 
 static void
-presence_updated_cb (TpTestContactListManager *manager,
+presence_updated_cb (TpTestsContactListManager *manager,
                      TpHandle contact,
-                     TpTestContactListConnection *self)
+                     TpTestsContactListConnection *self)
 {
   TpBaseConnection *base = (TpBaseConnection *) self;
   TpPresenceStatus *status;
@@ -278,7 +278,7 @@ presence_updated_cb (TpTestContactListManager *manager,
     return;
 
   status = tp_presence_status_new (
-      tp_test_contact_list_manager_get_presence (manager, contact),
+      tp_tests_contact_list_manager_get_presence (manager, contact),
       NULL);
   tp_presence_mixin_emit_one_presence_update ((GObject *) self,
       contact, status);
@@ -288,13 +288,13 @@ presence_updated_cb (TpTestContactListManager *manager,
 static GPtrArray *
 create_channel_managers (TpBaseConnection *conn)
 {
-  TpTestContactListConnection *self =
-    TP_TEST_CONTACT_LIST_CONNECTION (conn);
+  TpTestsContactListConnection *self =
+    TP_TESTS_CONTACT_LIST_CONNECTION (conn);
   GPtrArray *ret = g_ptr_array_sized_new (1);
 
   self->priv->list_manager =
-    TP_TEST_CONTACT_LIST_MANAGER (g_object_new (
-          TP_TEST_TYPE_CONTACT_LIST_MANAGER,
+    TP_TESTS_CONTACT_LIST_MANAGER (g_object_new (
+          TP_TESTS_TYPE_CONTACT_LIST_MANAGER,
           "connection", conn,
           "simulation-delay", self->priv->simulation_delay,
           NULL));
@@ -315,7 +315,7 @@ static gboolean
 start_connecting (TpBaseConnection *conn,
                   GError **error)
 {
-  TpTestContactListConnection *self = TP_TEST_CONTACT_LIST_CONNECTION (conn);
+  TpTestsContactListConnection *self = TP_TESTS_CONTACT_LIST_CONNECTION (conn);
   TpHandleRepoIface *contact_repo = tp_base_connection_get_handles (conn,
       TP_HANDLE_TYPE_CONTACT);
 
@@ -349,8 +349,8 @@ aliasing_fill_contact_attributes (GObject *object,
                                   const GArray *contacts,
                                   GHashTable *attributes)
 {
-  TpTestContactListConnection *self =
-    TP_TEST_CONTACT_LIST_CONNECTION (object);
+  TpTestsContactListConnection *self =
+    TP_TESTS_CONTACT_LIST_CONNECTION (object);
   guint i;
 
   for (i = 0; i < contacts->len; i++)
@@ -360,7 +360,7 @@ aliasing_fill_contact_attributes (GObject *object,
       tp_contacts_mixin_set_contact_attribute (attributes, contact,
           TP_TOKEN_CONNECTION_INTERFACE_ALIASING_ALIAS,
           tp_g_value_slice_new_string (
-            tp_test_contact_list_manager_get_alias (self->priv->list_manager,
+            tp_tests_contact_list_manager_get_alias (self->priv->list_manager,
               contact)));
     }
 }
@@ -370,13 +370,13 @@ contact_info_fill_contact_attributes (GObject *object,
                                       const GArray *contacts,
                                       GHashTable *attributes_hash)
 {
-  TpTestContactListConnection *self = TP_TEST_CONTACT_LIST_CONNECTION (object);
+  TpTestsContactListConnection *self = TP_TESTS_CONTACT_LIST_CONNECTION (object);
   guint i;
 
   for (i = 0; i < contacts->len; i++)
     {
       TpHandle contact = g_array_index (contacts, TpHandle, i);
-      GPtrArray *contact_info = tp_test_contact_list_manager_get_contact_info (
+      GPtrArray *contact_info = tp_tests_contact_list_manager_get_contact_info (
           self->priv->list_manager, contact);
       if (contact_info != NULL)
         {
@@ -461,13 +461,13 @@ constructed (GObject *object)
 {
   TpBaseConnection *base = TP_BASE_CONNECTION (object);
   void (*chain_up) (GObject *) =
-    G_OBJECT_CLASS (tp_test_contact_list_connection_parent_class)->constructed;
+    G_OBJECT_CLASS (tp_tests_contact_list_connection_parent_class)->constructed;
 
   if (chain_up != NULL)
     chain_up (object);
 
   tp_contacts_mixin_init (object,
-      G_STRUCT_OFFSET (TpTestContactListConnection, contacts_mixin));
+      G_STRUCT_OFFSET (TpTestsContactListConnection, contacts_mixin));
   tp_base_connection_register_with_contacts_mixin (base);
   tp_contacts_mixin_add_contact_attributes_iface (object,
       TP_IFACE_CONNECTION_INTERFACE_ALIASING,
@@ -477,7 +477,7 @@ constructed (GObject *object)
       contact_info_fill_contact_attributes);
 
   tp_presence_mixin_init (object,
-      G_STRUCT_OFFSET (TpTestContactListConnection, presence_mixin));
+      G_STRUCT_OFFSET (TpTestsContactListConnection, presence_mixin));
   tp_presence_mixin_simple_presence_register_with_contacts_mixin (object);
 }
 
@@ -498,8 +498,8 @@ get_contact_statuses (GObject *object,
                       const GArray *contacts,
                       GError **error)
 {
-  TpTestContactListConnection *self =
-    TP_TEST_CONTACT_LIST_CONNECTION (object);
+  TpTestsContactListConnection *self =
+    TP_TESTS_CONTACT_LIST_CONNECTION (object);
   TpBaseConnection *base = TP_BASE_CONNECTION (object);
   guint i;
   GHashTable *result = g_hash_table_new_full (g_direct_hash, g_direct_equal,
@@ -508,19 +508,19 @@ get_contact_statuses (GObject *object,
   for (i = 0; i < contacts->len; i++)
     {
       TpHandle contact = g_array_index (contacts, guint, i);
-      TpTestContactListPresence presence;
+      TpTestsContactListPresence presence;
       GHashTable *parameters;
 
       /* we get our own status from the connection, and everyone else's status
        * from the contact lists */
       if (contact == base->self_handle)
         {
-          presence = (self->priv->away ? TP_TEST_CONTACT_LIST_PRESENCE_AWAY
-              : TP_TEST_CONTACT_LIST_PRESENCE_AVAILABLE);
+          presence = (self->priv->away ? TP_TESTS_CONTACT_LIST_PRESENCE_AWAY
+              : TP_TESTS_CONTACT_LIST_PRESENCE_AVAILABLE);
         }
       else
         {
-          presence = tp_test_contact_list_manager_get_presence (
+          presence = tp_tests_contact_list_manager_get_presence (
               self->priv->list_manager, contact);
         }
 
@@ -539,12 +539,12 @@ set_own_status (GObject *object,
                 const TpPresenceStatus *status,
                 GError **error)
 {
-  TpTestContactListConnection *self =
-    TP_TEST_CONTACT_LIST_CONNECTION (object);
+  TpTestsContactListConnection *self =
+    TP_TESTS_CONTACT_LIST_CONNECTION (object);
   TpBaseConnection *base = TP_BASE_CONNECTION (object);
   GHashTable *presences;
 
-  if (status->index == TP_TEST_CONTACT_LIST_PRESENCE_AWAY)
+  if (status->index == TP_TESTS_CONTACT_LIST_PRESENCE_AWAY)
     {
       if (self->priv->away)
         return TRUE;
@@ -569,8 +569,8 @@ set_own_status (GObject *object,
 }
 
 static void
-tp_test_contact_list_connection_class_init (
-    TpTestContactListConnectionClass *klass)
+tp_tests_contact_list_connection_class_init (
+    TpTestsContactListConnectionClass *klass)
 {
   static const gchar *interfaces_always_present[] = {
       TP_IFACE_CONNECTION_INTERFACE_ALIASING,
@@ -598,7 +598,7 @@ tp_test_contact_list_connection_class_init (
   object_class->constructed = constructed;
   object_class->finalize = finalize;
   g_type_class_add_private (klass,
-      sizeof (TpTestContactListConnectionPrivate));
+      sizeof (TpTestsContactListConnectionPrivate));
 
   base_class->create_handle_repos = create_handle_repos;
   base_class->get_unique_connection_name = get_unique_connection_name;
@@ -613,9 +613,9 @@ tp_test_contact_list_connection_class_init (
       G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK | G_PARAM_STATIC_BLURB);
   g_object_class_install_property (object_class, PROP_ACCOUNT, param_spec);
 
-  param_spec = g_param_spec_object ("manager", "TpTestContactListManager",
-      "TpTestContactListManager object that owns this channel",
-      TP_TEST_TYPE_CONTACT_LIST_MANAGER,
+  param_spec = g_param_spec_object ("manager", "TpTestsContactListManager",
+      "TpTestsContactListManager object that owns this channel",
+      TP_TESTS_TYPE_CONTACT_LIST_MANAGER,
       G_PARAM_READABLE | G_PARAM_STATIC_STRINGS);
   g_object_class_install_property (object_class, PROP_MANAGER, param_spec);
 
@@ -641,16 +641,16 @@ tp_test_contact_list_connection_class_init (
       param_spec);
 
   tp_contacts_mixin_class_init (object_class,
-      G_STRUCT_OFFSET (TpTestContactListConnectionClass, contacts_mixin));
+      G_STRUCT_OFFSET (TpTestsContactListConnectionClass, contacts_mixin));
   tp_presence_mixin_class_init (object_class,
-      G_STRUCT_OFFSET (TpTestContactListConnectionClass, presence_mixin),
+      G_STRUCT_OFFSET (TpTestsContactListConnectionClass, presence_mixin),
       status_available, get_contact_statuses, set_own_status,
-      tp_test_contact_list_presence_statuses ());
+      tp_tests_contact_list_presence_statuses ());
   tp_presence_mixin_simple_presence_init_dbus_properties (object_class);
 
   klass->properties_class.interfaces = prop_interfaces;
   tp_dbus_properties_mixin_class_init (object_class,
-      G_STRUCT_OFFSET (TpTestContactListConnectionClass, properties_class));
+      G_STRUCT_OFFSET (TpTestsContactListConnectionClass, properties_class));
 }
 
 static void
@@ -669,8 +669,8 @@ get_aliases (TpSvcConnectionInterfaceAliasing *aliasing,
              const GArray *contacts,
              DBusGMethodInvocation *context)
 {
-  TpTestContactListConnection *self =
-    TP_TEST_CONTACT_LIST_CONNECTION (aliasing);
+  TpTestsContactListConnection *self =
+    TP_TESTS_CONTACT_LIST_CONNECTION (aliasing);
   TpBaseConnection *base = TP_BASE_CONNECTION (aliasing);
   TpHandleRepoIface *contact_repo = tp_base_connection_get_handles (base,
       TP_HANDLE_TYPE_CONTACT);
@@ -692,7 +692,7 @@ get_aliases (TpSvcConnectionInterfaceAliasing *aliasing,
   for (i = 0; i < contacts->len; i++)
     {
       TpHandle contact = g_array_index (contacts, TpHandle, i);
-      const gchar *alias = tp_test_contact_list_manager_get_alias (
+      const gchar *alias = tp_tests_contact_list_manager_get_alias (
           self->priv->list_manager, contact);
 
       g_hash_table_insert (result, GUINT_TO_POINTER (contact),
@@ -709,8 +709,8 @@ request_aliases (TpSvcConnectionInterfaceAliasing *aliasing,
                  const GArray *contacts,
                  DBusGMethodInvocation *context)
 {
-  TpTestContactListConnection *self =
-    TP_TEST_CONTACT_LIST_CONNECTION (aliasing);
+  TpTestsContactListConnection *self =
+    TP_TESTS_CONTACT_LIST_CONNECTION (aliasing);
   TpBaseConnection *base = TP_BASE_CONNECTION (aliasing);
   TpHandleRepoIface *contact_repo = tp_base_connection_get_handles (base,
       TP_HANDLE_TYPE_CONTACT);
@@ -733,7 +733,7 @@ request_aliases (TpSvcConnectionInterfaceAliasing *aliasing,
   for (i = 0; i < contacts->len; i++)
     {
       TpHandle contact = g_array_index (contacts, TpHandle, i);
-      const gchar *alias = tp_test_contact_list_manager_get_alias (
+      const gchar *alias = tp_tests_contact_list_manager_get_alias (
           self->priv->list_manager, contact);
 
       g_ptr_array_add (result, (gchar *) alias);
@@ -751,8 +751,8 @@ set_aliases (TpSvcConnectionInterfaceAliasing *aliasing,
              GHashTable *aliases,
              DBusGMethodInvocation *context)
 {
-  TpTestContactListConnection *self =
-    TP_TEST_CONTACT_LIST_CONNECTION (aliasing);
+  TpTestsContactListConnection *self =
+    TP_TESTS_CONTACT_LIST_CONNECTION (aliasing);
   TpBaseConnection *base = TP_BASE_CONNECTION (aliasing);
   TpHandleRepoIface *contact_repo = tp_base_connection_get_handles (base,
       TP_HANDLE_TYPE_CONTACT);
@@ -778,7 +778,7 @@ set_aliases (TpSvcConnectionInterfaceAliasing *aliasing,
 
   while (g_hash_table_iter_next (&iter, &key, &value))
     {
-      tp_test_contact_list_manager_set_alias (self->priv->list_manager,
+      tp_tests_contact_list_manager_set_alias (self->priv->list_manager,
           GPOINTER_TO_UINT (key), value);
     }
 
@@ -806,7 +806,7 @@ get_contact_info (
     const GArray *contacts,
     DBusGMethodInvocation *context)
 {
-  TpTestContactListConnection *self = TP_TEST_CONTACT_LIST_CONNECTION (iface);
+  TpTestsContactListConnection *self = TP_TESTS_CONTACT_LIST_CONNECTION (iface);
   TpBaseConnection *base = (TpBaseConnection *) self;
   TpHandleRepoIface *contact_handles = tp_base_connection_get_handles (base,
       TP_HANDLE_TYPE_CONTACT);
@@ -829,7 +829,7 @@ get_contact_info (
   for (i = 0; i < contacts->len; i++)
     {
       TpHandle contact = g_array_index (contacts, TpHandle, i);
-      GPtrArray *contact_info = tp_test_contact_list_manager_get_contact_info (
+      GPtrArray *contact_info = tp_tests_contact_list_manager_get_contact_info (
           self->priv->list_manager, contact);
       if (contact_info != NULL)
         {
@@ -850,7 +850,7 @@ refresh_contact_info (TpSvcConnectionInterfaceContactInfo *iface,
                       const GArray *contacts,
                       DBusGMethodInvocation *context)
 {
-  TpTestContactListConnection *self = TP_TEST_CONTACT_LIST_CONNECTION (iface);
+  TpTestsContactListConnection *self = TP_TESTS_CONTACT_LIST_CONNECTION (iface);
   guint i;
 
   for (i = 0; i < contacts->len; i++)
@@ -858,7 +858,7 @@ refresh_contact_info (TpSvcConnectionInterfaceContactInfo *iface,
       TpHandle contact = g_array_index (contacts, TpHandle, i);
       GPtrArray *contact_info;
 
-      contact_info = tp_test_contact_list_manager_get_contact_info (
+      contact_info = tp_tests_contact_list_manager_get_contact_info (
           self->priv->list_manager, contact);
 
       if (contact_info != NULL)
@@ -870,14 +870,14 @@ refresh_contact_info (TpSvcConnectionInterfaceContactInfo *iface,
 }
 
 static void
-_return_from_request_contact_info (TpTestContactListConnection *self,
+_return_from_request_contact_info (TpTestsContactListConnection *self,
                                    guint contact,
                                    DBusGMethodInvocation *context)
 {
   GError *error = NULL;
   GPtrArray *contact_info;
 
-  contact_info = tp_test_contact_list_manager_get_contact_info (
+  contact_info = tp_tests_contact_list_manager_get_contact_info (
       self->priv->list_manager, contact);
 
   if (contact_info == NULL)
@@ -896,7 +896,7 @@ request_contact_info (TpSvcConnectionInterfaceContactInfo *iface,
                       guint contact,
                       DBusGMethodInvocation *context)
 {
-  TpTestContactListConnection *self = TP_TEST_CONTACT_LIST_CONNECTION (iface);
+  TpTestsContactListConnection *self = TP_TESTS_CONTACT_LIST_CONNECTION (iface);
   TpBaseConnection *base = (TpBaseConnection *) self;
   TpHandleRepoIface *contact_handles = tp_base_connection_get_handles (base,
       TP_HANDLE_TYPE_CONTACT);
@@ -919,7 +919,7 @@ set_contact_info (TpSvcConnectionInterfaceContactInfo *iface,
                   const GPtrArray *contact_info,
                   DBusGMethodInvocation *context)
 {
-  TpTestContactListConnection *self = TP_TEST_CONTACT_LIST_CONNECTION (iface);
+  TpTestsContactListConnection *self = TP_TESTS_CONTACT_LIST_CONNECTION (iface);
   GError *error = NULL;
 
   if (contact_info == NULL)
@@ -929,7 +929,7 @@ set_contact_info (TpSvcConnectionInterfaceContactInfo *iface,
       return;
     }
 
-  tp_test_contact_list_manager_set_contact_info (self->priv->list_manager,
+  tp_tests_contact_list_manager_set_contact_info (self->priv->list_manager,
       contact_info);
 
   tp_svc_connection_interface_contact_info_return_from_set_contact_info (
@@ -951,8 +951,8 @@ init_contact_info (gpointer iface,
 #undef IMPLEMENT
 }
 
-TpTestContactListConnection *
-tp_test_contact_list_connection_new (const gchar *account,
+TpTestsContactListConnection *
+tp_tests_contact_list_connection_new (const gchar *account,
     const gchar *protocol,
     TpChannelGroupFlags publish_flags,
     TpChannelGroupFlags subscribe_flags)
@@ -963,7 +963,7 @@ tp_test_contact_list_connection_new (const gchar *account,
   if (subscribe_flags == 0)
     subscribe_flags = default_group_flags;
 
-  return g_object_new (TP_TEST_TYPE_CONTACT_LIST_CONNECTION,
+  return g_object_new (TP_TESTS_TYPE_CONTACT_LIST_CONNECTION,
       "account", account,
       "protocol", protocol,
       "publish-flags", publish_flags,

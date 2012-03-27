@@ -22,8 +22,8 @@
 #include "contact-list.h"
 
 /* elements 0, 1... of this array must be kept in sync with elements 1, 2...
- * of the enum TpTestContactList in contact-list-manager.h */
-static const gchar *_contact_lists[NUM_TP_TEST_CONTACT_LISTS + 1] = {
+ * of the enum TpTestsContactList in contact-list-manager.h */
+static const gchar *_contact_lists[NUM_TP_TESTS_CONTACT_LISTS + 1] = {
     "subscribe",
     "publish",
     "stored",
@@ -31,13 +31,13 @@ static const gchar *_contact_lists[NUM_TP_TEST_CONTACT_LISTS + 1] = {
 };
 
 const gchar **
-tp_test_contact_lists (void)
+tp_tests_contact_lists (void)
 {
   return _contact_lists;
 }
 
 /* this array must be kept in sync with the enum
- * TpTestContactListPresence in contact-list-manager.h */
+ * TpTestsContactListPresence in contact-list-manager.h */
 static const TpPresenceStatusSpec _statuses[] = {
       { "offline", TP_CONNECTION_PRESENCE_TYPE_OFFLINE, FALSE, NULL },
       { "unknown", TP_CONNECTION_PRESENCE_TYPE_UNKNOWN, FALSE, NULL },
@@ -48,7 +48,7 @@ static const TpPresenceStatusSpec _statuses[] = {
 };
 
 const TpPresenceStatusSpec *
-tp_test_contact_list_presence_statuses (void)
+tp_tests_contact_list_presence_statuses (void)
 {
   return _statuses;
 }
@@ -65,18 +65,18 @@ typedef struct {
     TpHandleSet *tags;
 
     GPtrArray *contact_info;
-} TpTestContactDetails;
+} TpTestsContactDetails;
 
-static TpTestContactDetails *
-tp_test_contact_details_new (void)
+static TpTestsContactDetails *
+tp_tests_contact_details_new (void)
 {
-  return g_slice_new0 (TpTestContactDetails);
+  return g_slice_new0 (TpTestsContactDetails);
 }
 
 static void
-tp_test_contact_details_destroy (gpointer p)
+tp_tests_contact_details_destroy (gpointer p)
 {
-  TpTestContactDetails *d = p;
+  TpTestsContactDetails *d = p;
 
   if (d->tags != NULL)
     tp_handle_set_destroy (d->tags);
@@ -86,13 +86,13 @@ tp_test_contact_details_destroy (gpointer p)
 
   g_free (d->id);
   g_free (d->alias);
-  g_slice_free (TpTestContactDetails, d);
+  g_slice_free (TpTestsContactDetails, d);
 }
 
 static void channel_manager_iface_init (gpointer, gpointer);
 
-G_DEFINE_TYPE_WITH_CODE (TpTestContactListManager,
-    tp_test_contact_list_manager,
+G_DEFINE_TYPE_WITH_CODE (TpTestsContactListManager,
+    tp_tests_contact_list_manager,
     G_TYPE_OBJECT,
     G_IMPLEMENT_INTERFACE (TP_TYPE_CHANNEL_MANAGER,
       channel_manager_iface_init))
@@ -114,7 +114,7 @@ enum
   N_PROPS
 };
 
-struct _TpTestContactListManagerPrivate
+struct _TpTestsContactListManagerPrivate
 {
   TpBaseConnection *conn;
   guint simulation_delay;
@@ -123,12 +123,12 @@ struct _TpTestContactListManagerPrivate
 
   TpHandleSet *contacts;
   /* GUINT_TO_POINTER (handle borrowed from contacts)
-   *    => TpTestContactDetails */
+   *    => TpTestsContactDetails */
   GHashTable *contact_details;
 
-  TpTestContactList *lists[NUM_TP_TEST_CONTACT_LISTS];
+  TpTestsContactList *lists[NUM_TP_TESTS_CONTACT_LISTS];
 
-  /* GUINT_TO_POINTER (handle borrowed from channel) => TpTestContactGroup */
+  /* GUINT_TO_POINTER (handle borrowed from channel) => TpTestsContactGroup */
   GHashTable *groups;
 
   /* borrowed TpExportableChannel => GSList of gpointer (request tokens) that
@@ -140,13 +140,13 @@ struct _TpTestContactListManagerPrivate
 };
 
 static void
-tp_test_contact_list_manager_init (TpTestContactListManager *self)
+tp_tests_contact_list_manager_init (TpTestsContactListManager *self)
 {
   self->priv = G_TYPE_INSTANCE_GET_PRIVATE (self,
-      TP_TEST_TYPE_CONTACT_LIST_MANAGER, TpTestContactListManagerPrivate);
+      TP_TESTS_TYPE_CONTACT_LIST_MANAGER, TpTestsContactListManagerPrivate);
 
   self->priv->contact_details = g_hash_table_new_full (g_direct_hash,
-      g_direct_equal, NULL, tp_test_contact_details_destroy);
+      g_direct_equal, NULL, tp_tests_contact_details_destroy);
   self->priv->groups = g_hash_table_new_full (g_direct_hash, g_direct_equal,
       NULL, g_object_unref);
   self->priv->queued_requests = g_hash_table_new_full (g_direct_hash,
@@ -159,7 +159,7 @@ tp_test_contact_list_manager_init (TpTestContactListManager *self)
 }
 
 static void
-tp_test_contact_list_manager_close_all (TpTestContactListManager *self)
+tp_tests_contact_list_manager_close_all (TpTestsContactListManager *self)
 {
   guint i;
 
@@ -215,11 +215,11 @@ tp_test_contact_list_manager_close_all (TpTestContactListManager *self)
       g_hash_table_destroy (tmp);
     }
 
-  for (i = 0; i < NUM_TP_TEST_CONTACT_LISTS; i++)
+  for (i = 0; i < NUM_TP_TESTS_CONTACT_LISTS; i++)
     {
       if (self->priv->lists[i] != NULL)
         {
-          TpTestContactList *list = self->priv->lists[i];
+          TpTestsContactList *list = self->priv->lists[i];
 
           /* set self->priv->lists[i] to NULL here so list_closed_cb does
            * not try to delete the list again */
@@ -239,14 +239,14 @@ tp_test_contact_list_manager_close_all (TpTestContactListManager *self)
 static void
 dispose (GObject *object)
 {
-  TpTestContactListManager *self = TP_TEST_CONTACT_LIST_MANAGER (object);
+  TpTestsContactListManager *self = TP_TESTS_CONTACT_LIST_MANAGER (object);
 
-  tp_test_contact_list_manager_close_all (self);
+  tp_tests_contact_list_manager_close_all (self);
   g_assert (self->priv->groups == NULL);
   g_assert (self->priv->lists[0] == NULL);
   g_assert (self->priv->queued_requests == NULL);
 
-  ((GObjectClass *) tp_test_contact_list_manager_parent_class)->dispose (
+  ((GObjectClass *) tp_tests_contact_list_manager_parent_class)->dispose (
     object);
 }
 
@@ -256,7 +256,7 @@ get_property (GObject *object,
               GValue *value,
               GParamSpec *pspec)
 {
-  TpTestContactListManager *self = TP_TEST_CONTACT_LIST_MANAGER (object);
+  TpTestsContactListManager *self = TP_TESTS_CONTACT_LIST_MANAGER (object);
 
   switch (property_id)
     {
@@ -279,7 +279,7 @@ set_property (GObject *object,
               const GValue *value,
               GParamSpec *pspec)
 {
-  TpTestContactListManager *self = TP_TEST_CONTACT_LIST_MANAGER (object);
+  TpTestsContactListManager *self = TP_TESTS_CONTACT_LIST_MANAGER (object);
 
   switch (property_id)
     {
@@ -303,7 +303,7 @@ static void
 satisfy_queued_requests (TpExportableChannel *channel,
                          gpointer user_data)
 {
-  TpTestContactListManager *self = TP_TEST_CONTACT_LIST_MANAGER (user_data);
+  TpTestsContactListManager *self = TP_TESTS_CONTACT_LIST_MANAGER (user_data);
   GSList *requests = g_hash_table_lookup (self->priv->queued_requests,
       channel);
 
@@ -314,26 +314,26 @@ satisfy_queued_requests (TpExportableChannel *channel,
   g_slist_free (requests);
 }
 
-static TpTestContactDetails *
-lookup_contact (TpTestContactListManager *self,
+static TpTestsContactDetails *
+lookup_contact (TpTestsContactListManager *self,
                 TpHandle contact)
 {
   return g_hash_table_lookup (self->priv->contact_details,
       GUINT_TO_POINTER (contact));
 }
 
-static TpTestContactDetails *
-ensure_contact (TpTestContactListManager *self,
+static TpTestsContactDetails *
+ensure_contact (TpTestsContactListManager *self,
                 TpHandle contact,
                 gboolean *created)
 {
-  TpTestContactDetails *ret = lookup_contact (self, contact);
+  TpTestsContactDetails *ret = lookup_contact (self, contact);
 
   if (ret == NULL)
     {
       tp_handle_set_add (self->priv->contacts, contact);
 
-      ret = tp_test_contact_details_new ();
+      ret = tp_tests_contact_details_new ();
       ret->alias = g_strdup (tp_handle_inspect (self->priv->contact_repo,
             contact));
 
@@ -352,16 +352,16 @@ ensure_contact (TpTestContactListManager *self,
 }
 
 static void
-tp_test_contact_list_manager_foreach_channel (TpChannelManager *manager,
+tp_tests_contact_list_manager_foreach_channel (TpChannelManager *manager,
                                               TpExportableChannelFunc callback,
                                               gpointer user_data)
 {
-  TpTestContactListManager *self = TP_TEST_CONTACT_LIST_MANAGER (manager);
+  TpTestsContactListManager *self = TP_TESTS_CONTACT_LIST_MANAGER (manager);
   GHashTableIter iter;
   gpointer handle, channel;
   guint i;
 
-  for (i = 0; i < NUM_TP_TEST_CONTACT_LISTS; i++)
+  for (i = 0; i < NUM_TP_TESTS_CONTACT_LISTS; i++)
     {
       if (self->priv->lists[i] != NULL)
         callback (TP_EXPORTABLE_CHANNEL (self->priv->lists[i]), user_data);
@@ -375,11 +375,11 @@ tp_test_contact_list_manager_foreach_channel (TpChannelManager *manager,
     }
 }
 
-static TpTestContactGroup *ensure_group (TpTestContactListManager *self,
+static TpTestsContactGroup *ensure_group (TpTestsContactListManager *self,
     TpHandle handle);
 
-static TpTestContactList *ensure_list (TpTestContactListManager *self,
-    TpTestContactListHandle handle);
+static TpTestsContactList *ensure_list (TpTestsContactListManager *self,
+    TpTestsContactListHandle handle);
 
 /*
  * _insert_contact_field:
@@ -416,14 +416,14 @@ _insert_contact_field (GPtrArray *contact_info,
 static gboolean
 receive_contact_lists (gpointer p)
 {
-  TpTestContactListManager *self = p;
+  TpTestsContactListManager *self = p;
   TpHandle handle, cambridge, montreal, francophones;
   const gchar *id;
-  TpTestContactDetails *d;
+  TpTestsContactDetails *d;
   TpIntSet *set, *cam_set, *mtl_set, *fr_set;
   TpIntSetFastIter iter;
-  TpTestContactList *subscribe, *publish, *stored;
-  TpTestContactGroup *cambridge_group, *montreal_group,
+  TpTestsContactList *subscribe, *publish, *stored;
+  TpTestsContactGroup *cambridge_group, *montreal_group,
       *francophones_group;
 
   if (self->priv->groups == NULL)
@@ -436,9 +436,9 @@ receive_contact_lists (gpointer p)
   /* In a real CM we'd have received a contact list from the server at this
    * point. But this isn't a real CM, so we have to make one up... */
 
-  subscribe = ensure_list (self, TP_TEST_CONTACT_LIST_SUBSCRIBE);
-  publish = ensure_list (self, TP_TEST_CONTACT_LIST_PUBLISH);
-  stored = ensure_list (self, TP_TEST_CONTACT_LIST_STORED);
+  subscribe = ensure_list (self, TP_TESTS_CONTACT_LIST_SUBSCRIBE);
+  publish = ensure_list (self, TP_TESTS_CONTACT_LIST_PUBLISH);
+  stored = ensure_list (self, TP_TESTS_CONTACT_LIST_STORED);
 
   cambridge = tp_handle_ensure (self->priv->group_repo, "Cambridge", NULL,
       NULL);
@@ -696,7 +696,7 @@ receive_contact_lists (gpointer p)
 
   /* Now we've received the roster, we can satisfy all the queued requests */
 
-  tp_test_contact_list_manager_foreach_channel ((TpChannelManager *) self,
+  tp_tests_contact_list_manager_foreach_channel ((TpChannelManager *) self,
       satisfy_queued_requests, self);
 
   g_assert (g_hash_table_size (self->priv->queued_requests) == 0);
@@ -710,7 +710,7 @@ static void
 status_changed_cb (TpBaseConnection *conn,
                    guint status,
                    guint reason,
-                   TpTestContactListManager *self)
+                   TpTestsContactListManager *self)
 {
   switch (status)
     {
@@ -731,7 +731,7 @@ status_changed_cb (TpBaseConnection *conn,
 
     case TP_CONNECTION_STATUS_DISCONNECTED:
         {
-          tp_test_contact_list_manager_close_all (self);
+          tp_tests_contact_list_manager_close_all (self);
         }
       break;
     default:
@@ -742,9 +742,9 @@ status_changed_cb (TpBaseConnection *conn,
 static void
 constructed (GObject *object)
 {
-  TpTestContactListManager *self = TP_TEST_CONTACT_LIST_MANAGER (object);
+  TpTestsContactListManager *self = TP_TESTS_CONTACT_LIST_MANAGER (object);
   void (*chain_up) (GObject *) =
-      ((GObjectClass *) tp_test_contact_list_manager_parent_class)->constructed;
+      ((GObjectClass *) tp_tests_contact_list_manager_parent_class)->constructed;
 
   if (chain_up != NULL)
     {
@@ -762,7 +762,7 @@ constructed (GObject *object)
 }
 
 static void
-tp_test_contact_list_manager_class_init (TpTestContactListManagerClass *klass)
+tp_tests_contact_list_manager_class_init (TpTestsContactListManagerClass *klass)
 {
   GParamSpec *param_spec;
   GObjectClass *object_class = (GObjectClass *) klass;
@@ -786,7 +786,7 @@ tp_test_contact_list_manager_class_init (TpTestContactListManagerClass *klass)
   g_object_class_install_property (object_class, PROP_SIMULATION_DELAY,
       param_spec);
 
-  g_type_class_add_private (klass, sizeof (TpTestContactListManagerPrivate));
+  g_type_class_add_private (klass, sizeof (TpTestsContactListManagerPrivate));
 
   signals[ALIAS_UPDATED] = g_signal_new ("alias-updated",
       G_TYPE_FROM_CLASS (klass),
@@ -811,8 +811,8 @@ tp_test_contact_list_manager_class_init (TpTestContactListManagerClass *klass)
 }
 
 static void
-list_closed_cb (TpTestContactList *chan,
-                TpTestContactListManager *self)
+list_closed_cb (TpTestsContactList *chan,
+                TpTestsContactListManager *self)
 {
   TpHandle handle;
 
@@ -832,8 +832,8 @@ list_closed_cb (TpTestContactList *chan,
 }
 
 static void
-group_closed_cb (TpTestContactGroup *chan,
-                 TpTestContactListManager *self)
+group_closed_cb (TpTestsContactGroup *chan,
+                 TpTestsContactListManager *self)
 {
   tp_channel_manager_emit_channel_closed_for_object (self,
       TP_EXPORTABLE_CHANNEL (chan));
@@ -850,13 +850,13 @@ group_closed_cb (TpTestContactGroup *chan,
     }
 }
 
-static TpTestContactListBase *
-new_channel (TpTestContactListManager *self,
+static TpTestsContactListBase *
+new_channel (TpTestsContactListManager *self,
              TpHandleType handle_type,
              TpHandle handle,
              gpointer request_token)
 {
-  TpTestContactListBase *chan;
+  TpTestsContactListBase *chan;
   gchar *object_path;
   GType type;
   GSList *requests = NULL;
@@ -869,7 +869,7 @@ new_channel (TpTestContactListManager *self,
        * those clients. Please read the spec when implementing it :-) */
       object_path = g_strdup_printf ("%s/%sContactList",
           self->priv->conn->object_path, _contact_lists[handle - 1]);
-      type = TP_TEST_TYPE_CONTACT_LIST;
+      type = TP_TESTS_TYPE_CONTACT_LIST;
     }
   else
     {
@@ -882,7 +882,7 @@ new_channel (TpTestContactListManager *self,
       g_assert (handle_type == TP_HANDLE_TYPE_GROUP);
       object_path = g_strdup_printf ("%s/Group/%s",
           self->priv->conn->object_path, id);
-      type = TP_TEST_TYPE_CONTACT_GROUP;
+      type = TP_TESTS_TYPE_CONTACT_GROUP;
 
       g_free (id);
     }
@@ -901,7 +901,7 @@ new_channel (TpTestContactListManager *self,
     {
       g_signal_connect (chan, "closed", (GCallback) list_closed_cb, self);
       g_assert (self->priv->lists[handle] == NULL);
-      self->priv->lists[handle] = TP_TEST_CONTACT_LIST (chan);
+      self->priv->lists[handle] = TP_TESTS_CONTACT_LIST (chan);
     }
   else
     {
@@ -910,7 +910,7 @@ new_channel (TpTestContactListManager *self,
       g_assert (g_hash_table_lookup (self->priv->groups,
             GUINT_TO_POINTER (handle)) == NULL);
       g_hash_table_insert (self->priv->groups, GUINT_TO_POINTER (handle),
-          TP_TEST_CONTACT_GROUP (chan));
+          TP_TESTS_CONTACT_GROUP (chan));
     }
 
   if (self->priv->queued_requests == NULL)
@@ -934,9 +934,9 @@ new_channel (TpTestContactListManager *self,
   return chan;
 }
 
-static TpTestContactList *
-ensure_list (TpTestContactListManager *self,
-             TpTestContactListHandle handle)
+static TpTestsContactList *
+ensure_list (TpTestsContactListManager *self,
+             TpTestsContactListHandle handle)
 {
   if (self->priv->lists[handle] == NULL)
     {
@@ -947,16 +947,16 @@ ensure_list (TpTestContactListManager *self,
   return self->priv->lists[handle];
 }
 
-static TpTestContactGroup *
-ensure_group (TpTestContactListManager *self,
+static TpTestsContactGroup *
+ensure_group (TpTestsContactListManager *self,
               TpHandle handle)
 {
-  TpTestContactGroup *group = g_hash_table_lookup (self->priv->groups,
+  TpTestsContactGroup *group = g_hash_table_lookup (self->priv->groups,
       GUINT_TO_POINTER (handle));
 
   if (group == NULL)
     {
-      group = TP_TEST_CONTACT_GROUP (new_channel (self, TP_HANDLE_TYPE_GROUP,
+      group = TP_TESTS_CONTACT_GROUP (new_channel (self, TP_HANDLE_TYPE_GROUP,
             handle, NULL));
     }
 
@@ -976,7 +976,7 @@ static const gchar * const allowed_properties[] = {
 };
 
 static void
-tp_test_contact_list_manager_foreach_channel_class (TpChannelManager *manager,
+tp_tests_contact_list_manager_foreach_channel_class (TpChannelManager *manager,
     TpChannelManagerChannelClassFunc func,
     gpointer user_data)
 {
@@ -996,14 +996,14 @@ tp_test_contact_list_manager_foreach_channel_class (TpChannelManager *manager,
 }
 
 static gboolean
-tp_test_contact_list_manager_request (TpTestContactListManager *self,
+tp_tests_contact_list_manager_request (TpTestsContactListManager *self,
                                       gpointer request_token,
                                       GHashTable *request_properties,
                                       gboolean require_new)
 {
   TpHandleType handle_type;
   TpHandle handle;
-  TpTestContactListBase *chan;
+  TpTestsContactListBase *chan;
   GError *error = NULL;
 
   if (tp_strdiff (tp_asv_get_string (request_properties,
@@ -1035,9 +1035,9 @@ tp_test_contact_list_manager_request (TpTestContactListManager *self,
   if (handle_type == TP_HANDLE_TYPE_LIST)
     {
       /* telepathy-glib has already checked that the handle is valid */
-      g_assert (handle < NUM_TP_TEST_CONTACT_LISTS);
+      g_assert (handle < NUM_TP_TESTS_CONTACT_LISTS);
 
-      chan = TP_TEST_CONTACT_LIST_BASE (self->priv->lists[handle]);
+      chan = TP_TESTS_CONTACT_LIST_BASE (self->priv->lists[handle]);
     }
   else
     {
@@ -1072,22 +1072,22 @@ error:
 }
 
 static gboolean
-tp_test_contact_list_manager_create_channel (TpChannelManager *manager,
+tp_tests_contact_list_manager_create_channel (TpChannelManager *manager,
                                              gpointer request_token,
                                              GHashTable *request_properties)
 {
-    return tp_test_contact_list_manager_request (
-        TP_TEST_CONTACT_LIST_MANAGER (manager), request_token,
+    return tp_tests_contact_list_manager_request (
+        TP_TESTS_CONTACT_LIST_MANAGER (manager), request_token,
         request_properties, TRUE);
 }
 
 static gboolean
-tp_test_contact_list_manager_ensure_channel (TpChannelManager *manager,
+tp_tests_contact_list_manager_ensure_channel (TpChannelManager *manager,
                                              gpointer request_token,
                                              GHashTable *request_properties)
 {
-    return tp_test_contact_list_manager_request (
-        TP_TEST_CONTACT_LIST_MANAGER (manager), request_token,
+    return tp_tests_contact_list_manager_request (
+        TP_TESTS_CONTACT_LIST_MANAGER (manager), request_token,
         request_properties, FALSE);
 }
 
@@ -1097,20 +1097,20 @@ channel_manager_iface_init (gpointer g_iface,
 {
   TpChannelManagerIface *iface = g_iface;
 
-  iface->foreach_channel = tp_test_contact_list_manager_foreach_channel;
+  iface->foreach_channel = tp_tests_contact_list_manager_foreach_channel;
   iface->foreach_channel_class =
-      tp_test_contact_list_manager_foreach_channel_class;
-  iface->create_channel = tp_test_contact_list_manager_create_channel;
-  iface->ensure_channel = tp_test_contact_list_manager_ensure_channel;
+      tp_tests_contact_list_manager_foreach_channel_class;
+  iface->create_channel = tp_tests_contact_list_manager_create_channel;
+  iface->ensure_channel = tp_tests_contact_list_manager_ensure_channel;
   /* In this channel manager, Request has the same semantics as Ensure */
-  iface->request_channel = tp_test_contact_list_manager_ensure_channel;
+  iface->request_channel = tp_tests_contact_list_manager_ensure_channel;
 }
 
 static void
-send_updated_roster (TpTestContactListManager *self,
+send_updated_roster (TpTestsContactListManager *self,
                      TpHandle contact)
 {
-  TpTestContactDetails *d = g_hash_table_lookup (self->priv->contact_details,
+  TpTestsContactDetails *d = g_hash_table_lookup (self->priv->contact_details,
       GUINT_TO_POINTER (contact));
   const gchar *identifier = tp_handle_inspect (self->priv->contact_repo,
       contact);
@@ -1207,7 +1207,7 @@ send_updated_roster (TpTestContactListManager *self,
 }
 
 gboolean
-tp_test_contact_list_manager_add_to_group (TpTestContactListManager *self,
+tp_tests_contact_list_manager_add_to_group (TpTestsContactListManager *self,
                                            GObject *channel,
                                            TpHandle group,
                                            TpHandle member,
@@ -1215,9 +1215,9 @@ tp_test_contact_list_manager_add_to_group (TpTestContactListManager *self,
                                            GError **error)
 {
   gboolean updated;
-  TpTestContactDetails *d = ensure_contact (self, member, &updated);
-  TpTestContactList *stored = self->priv->lists[
-    TP_TEST_CONTACT_LIST_STORED];
+  TpTestsContactDetails *d = ensure_contact (self, member, &updated);
+  TpTestsContactList *stored = self->priv->lists[
+    TP_TESTS_CONTACT_LIST_STORED];
 
   if (d->tags == NULL)
     d->tags = tp_handle_set_new (self->priv->group_repo);
@@ -1245,15 +1245,15 @@ tp_test_contact_list_manager_add_to_group (TpTestContactListManager *self,
 }
 
 gboolean
-tp_test_contact_list_manager_remove_from_group (
-    TpTestContactListManager *self,
+tp_tests_contact_list_manager_remove_from_group (
+    TpTestsContactListManager *self,
     GObject *channel,
     TpHandle group,
     TpHandle member,
     const gchar *message,
     GError **error)
 {
-  TpTestContactDetails *d = lookup_contact (self, member);
+  TpTestsContactDetails *d = lookup_contact (self, member);
 
   /* If not on the roster or not in any groups, we have nothing to do */
   if (d == NULL || d->tags == NULL)
@@ -1273,12 +1273,12 @@ tp_test_contact_list_manager_remove_from_group (
 }
 
 typedef struct {
-    TpTestContactListManager *self;
+    TpTestsContactListManager *self;
     TpHandle contact;
 } SelfAndContact;
 
 static SelfAndContact *
-self_and_contact_new (TpTestContactListManager *self,
+self_and_contact_new (TpTestsContactListManager *self,
                       TpHandle contact)
 {
   SelfAndContact *ret = g_slice_new0 (SelfAndContact);
@@ -1300,15 +1300,15 @@ self_and_contact_destroy (gpointer p)
 }
 
 static void
-receive_auth_request (TpTestContactListManager *self,
+receive_auth_request (TpTestsContactListManager *self,
                       TpHandle contact)
 {
-  TpTestContactDetails *d;
+  TpTestsContactDetails *d;
   TpIntSet *set;
-  TpTestContactList *publish = self->priv->lists[
-    TP_TEST_CONTACT_LIST_PUBLISH];
-  TpTestContactList *stored = self->priv->lists[
-    TP_TEST_CONTACT_LIST_STORED];
+  TpTestsContactList *publish = self->priv->lists[
+    TP_TESTS_CONTACT_LIST_PUBLISH];
+  TpTestsContactList *stored = self->priv->lists[
+    TP_TESTS_CONTACT_LIST_STORED];
 
   /* if shutting down, do nothing */
   if (publish == NULL)
@@ -1344,12 +1344,12 @@ static gboolean
 receive_authorized (gpointer p)
 {
   SelfAndContact *s = p;
-  TpTestContactDetails *d;
+  TpTestsContactDetails *d;
   TpIntSet *set;
-  TpTestContactList *subscribe = s->self->priv->lists[
-    TP_TEST_CONTACT_LIST_SUBSCRIBE];
-  TpTestContactList *stored = s->self->priv->lists[
-    TP_TEST_CONTACT_LIST_STORED];
+  TpTestsContactList *subscribe = s->self->priv->lists[
+    TP_TESTS_CONTACT_LIST_SUBSCRIBE];
+  TpTestsContactList *stored = s->self->priv->lists[
+    TP_TESTS_CONTACT_LIST_STORED];
 
   /* A remote contact has accepted our request to see their presence.
    *
@@ -1394,10 +1394,10 @@ static gboolean
 receive_unauthorized (gpointer p)
 {
   SelfAndContact *s = p;
-  TpTestContactDetails *d;
+  TpTestsContactDetails *d;
   TpIntSet *set;
-  TpTestContactList *subscribe = s->self->priv->lists[
-    TP_TEST_CONTACT_LIST_SUBSCRIBE];
+  TpTestsContactList *subscribe = s->self->priv->lists[
+    TP_TESTS_CONTACT_LIST_SUBSCRIBE];
 
   /* if shutting down, do nothing */
   if (subscribe == NULL)
@@ -1432,23 +1432,23 @@ receive_unauthorized (gpointer p)
 }
 
 gboolean
-tp_test_contact_list_manager_add_to_list (TpTestContactListManager *self,
+tp_tests_contact_list_manager_add_to_list (TpTestsContactListManager *self,
                                           GObject *channel,
-                                          TpTestContactListHandle list,
+                                          TpTestsContactListHandle list,
                                           TpHandle member,
                                           const gchar *message,
                                           GError **error)
 {
   TpIntSet *set;
-  TpTestContactList *stored = self->priv->lists[TP_TEST_CONTACT_LIST_STORED];
+  TpTestsContactList *stored = self->priv->lists[TP_TESTS_CONTACT_LIST_STORED];
 
   switch (list)
     {
-    case TP_TEST_CONTACT_LIST_SUBSCRIBE:
+    case TP_TESTS_CONTACT_LIST_SUBSCRIBE:
       /* we would like to see member's presence */
         {
           gboolean created;
-          TpTestContactDetails *d = ensure_contact (self, member, &created);
+          TpTestsContactDetails *d = ensure_contact (self, member, &created);
           gchar *message_lc;
 
           /* if they already authorized us, it's a no-op */
@@ -1504,11 +1504,11 @@ tp_test_contact_list_manager_add_to_list (TpTestContactListManager *self,
         }
       return TRUE;
 
-    case TP_TEST_CONTACT_LIST_PUBLISH:
+    case TP_TESTS_CONTACT_LIST_PUBLISH:
       /* We would like member to see our presence. This is meaningless,
        * unless they have asked for it. */
         {
-          TpTestContactDetails *d = lookup_contact (self, member);
+          TpTestsContactDetails *d = lookup_contact (self, member);
 
           if (d == NULL || !d->publish_requested)
             {
@@ -1540,7 +1540,7 @@ tp_test_contact_list_manager_add_to_list (TpTestContactListManager *self,
         }
       return TRUE;
 
-    case TP_TEST_CONTACT_LIST_STORED:
+    case TP_TESTS_CONTACT_LIST_STORED:
       /* we would like member to be on the roster */
         {
           gboolean created;
@@ -1558,7 +1558,7 @@ tp_test_contact_list_manager_add_to_list (TpTestContactListManager *self,
         }
       return TRUE;
 
-    case INVALID_TP_TEST_CONTACT_LIST:
+    case INVALID_TP_TESTS_CONTACT_LIST:
     default:
       g_return_val_if_reached (FALSE);
     }
@@ -1575,9 +1575,9 @@ auth_request_cb (gpointer p)
 }
 
 gboolean
-tp_test_contact_list_manager_remove_from_list (TpTestContactListManager *self,
+tp_tests_contact_list_manager_remove_from_list (TpTestsContactListManager *self,
                                                GObject *channel,
-                                               TpTestContactListHandle list,
+                                               TpTestsContactListHandle list,
                                                TpHandle member,
                                                const gchar *message,
                                                GError **error)
@@ -1586,11 +1586,11 @@ tp_test_contact_list_manager_remove_from_list (TpTestContactListManager *self,
 
   switch (list)
     {
-    case TP_TEST_CONTACT_LIST_PUBLISH:
+    case TP_TESTS_CONTACT_LIST_PUBLISH:
       /* we would like member not to see our presence any more, or we
        * would like to reject a request from them to see our presence */
         {
-          TpTestContactDetails *d = lookup_contact (self, member);
+          TpTestsContactDetails *d = lookup_contact (self, member);
 
           if (d != NULL)
             {
@@ -1638,12 +1638,12 @@ tp_test_contact_list_manager_remove_from_list (TpTestContactListManager *self,
         }
       return TRUE;
 
-    case TP_TEST_CONTACT_LIST_SUBSCRIBE:
+    case TP_TESTS_CONTACT_LIST_SUBSCRIBE:
       /* we would like to avoid receiving member's presence any more,
        * or we would like to cancel an outstanding request for their
        * presence */
         {
-          TpTestContactDetails *d = lookup_contact (self, member);
+          TpTestsContactDetails *d = lookup_contact (self, member);
 
           if (d != NULL)
             {
@@ -1689,10 +1689,10 @@ tp_test_contact_list_manager_remove_from_list (TpTestContactListManager *self,
         }
       return TRUE;
 
-    case TP_TEST_CONTACT_LIST_STORED:
+    case TP_TESTS_CONTACT_LIST_STORED:
       /* we would like to remove member from the roster altogether */
         {
-          TpTestContactDetails *d = lookup_contact (self, member);
+          TpTestsContactDetails *d = lookup_contact (self, member);
 
           if (d != NULL)
             {
@@ -1706,12 +1706,12 @@ tp_test_contact_list_manager_remove_from_list (TpTestContactListManager *self,
                   self->priv->conn->self_handle,
                   TP_CHANNEL_GROUP_CHANGE_REASON_NONE);
               tp_group_mixin_change_members (
-                  (GObject *) self->priv->lists[TP_TEST_CONTACT_LIST_SUBSCRIBE],
+                  (GObject *) self->priv->lists[TP_TESTS_CONTACT_LIST_SUBSCRIBE],
                   "", NULL, set, NULL, NULL,
                   self->priv->conn->self_handle,
                   TP_CHANNEL_GROUP_CHANGE_REASON_NONE);
               tp_group_mixin_change_members (
-                  (GObject *) self->priv->lists[TP_TEST_CONTACT_LIST_PUBLISH],
+                  (GObject *) self->priv->lists[TP_TESTS_CONTACT_LIST_PUBLISH],
                   "", NULL, set, NULL, NULL,
                   self->priv->conn->self_handle,
                   TP_CHANNEL_GROUP_CHANGE_REASON_NONE);
@@ -1728,24 +1728,24 @@ tp_test_contact_list_manager_remove_from_list (TpTestContactListManager *self,
         }
       return TRUE;
 
-    case INVALID_TP_TEST_CONTACT_LIST:
+    case INVALID_TP_TESTS_CONTACT_LIST:
     default:
       g_return_val_if_reached (FALSE);
     }
 }
 
-TpTestContactListPresence
-tp_test_contact_list_manager_get_presence (TpTestContactListManager *self,
+TpTestsContactListPresence
+tp_tests_contact_list_manager_get_presence (TpTestsContactListManager *self,
                                            TpHandle contact)
 {
-  TpTestContactDetails *d = lookup_contact (self, contact);
+  TpTestsContactDetails *d = lookup_contact (self, contact);
   const gchar *id;
 
   if (d == NULL || !d->subscribe)
     {
       /* we don't know the presence of people not on the subscribe list,
        * by definition */
-      return TP_TEST_CONTACT_LIST_PRESENCE_UNKNOWN;
+      return TP_TESTS_CONTACT_LIST_PRESENCE_UNKNOWN;
     }
 
   id = tp_handle_inspect (self->priv->contact_repo, contact);
@@ -1755,17 +1755,17 @@ tp_test_contact_list_manager_get_presence (TpTestContactListManager *self,
    * (including non-alphabetic and non-ASCII initial letters) are away. */
   if ((id[0] >= 'A' && id[0] <= 'M') || (id[0] >= 'a' && id[0] <= 'm'))
     {
-      return TP_TEST_CONTACT_LIST_PRESENCE_AVAILABLE;
+      return TP_TESTS_CONTACT_LIST_PRESENCE_AVAILABLE;
     }
 
-  return TP_TEST_CONTACT_LIST_PRESENCE_AWAY;
+  return TP_TESTS_CONTACT_LIST_PRESENCE_AWAY;
 }
 
 const gchar *
-tp_test_contact_list_manager_get_alias (TpTestContactListManager *self,
+tp_tests_contact_list_manager_get_alias (TpTestsContactListManager *self,
                                         TpHandle contact)
 {
-  TpTestContactDetails *d = lookup_contact (self, contact);
+  TpTestsContactDetails *d = lookup_contact (self, contact);
 
   if (d == NULL)
     {
@@ -1777,14 +1777,14 @@ tp_test_contact_list_manager_get_alias (TpTestContactListManager *self,
 }
 
 void
-tp_test_contact_list_manager_set_alias (TpTestContactListManager *self,
+tp_tests_contact_list_manager_set_alias (TpTestsContactListManager *self,
                                         TpHandle contact,
                                         const gchar *alias)
 {
   gboolean created;
-  TpTestContactDetails *d = ensure_contact (self, contact, &created);
-  TpTestContactList *stored = self->priv->lists[
-    TP_TEST_CONTACT_LIST_STORED];
+  TpTestsContactDetails *d = ensure_contact (self, contact, &created);
+  TpTestsContactList *stored = self->priv->lists[
+    TP_TESTS_CONTACT_LIST_STORED];
   gchar *old = d->alias;
   TpIntSet *set;
 
@@ -1810,10 +1810,10 @@ tp_test_contact_list_manager_set_alias (TpTestContactListManager *self,
 }
 
 GPtrArray *
-tp_test_contact_list_manager_get_contact_info (TpTestContactListManager *self,
+tp_tests_contact_list_manager_get_contact_info (TpTestsContactListManager *self,
                                                TpHandle contact)
 {
-  TpTestContactDetails *d = lookup_contact (self, contact);
+  TpTestsContactDetails *d = lookup_contact (self, contact);
 
   if (d != NULL)
     return d->contact_info;
@@ -1822,13 +1822,13 @@ tp_test_contact_list_manager_get_contact_info (TpTestContactListManager *self,
 }
 
 void
-tp_test_contact_list_manager_set_contact_info (TpTestContactListManager *self,
+tp_tests_contact_list_manager_set_contact_info (TpTestsContactListManager *self,
                                                const GPtrArray *contact_info)
 {
-  TpTestContactList *stored = self->priv->lists[
-    TP_TEST_CONTACT_LIST_STORED];
+  TpTestsContactList *stored = self->priv->lists[
+    TP_TESTS_CONTACT_LIST_STORED];
   GPtrArray *old;
-  TpTestContactDetails *d = ensure_contact (self, self->priv->conn->self_handle,
+  TpTestsContactDetails *d = ensure_contact (self, self->priv->conn->self_handle,
       NULL);
   d->id = g_strdup (tp_handle_inspect (self->priv->contact_repo,
         self->priv->conn->self_handle));

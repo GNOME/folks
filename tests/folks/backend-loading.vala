@@ -22,7 +22,7 @@ using Folks;
 
 public class BackendLoadingTests : Folks.TestCase
 {
-  private TpTest.Backend _tp_backend;
+  private TpTests.Backend _tp_backend;
   private void* _account_handle;
   private MainLoop main_loop;
   private static const string STORE_FILE_PATH = "folks-test-backend-store.ini";
@@ -31,7 +31,7 @@ public class BackendLoadingTests : Folks.TestCase
     {
       base ("BackendLoading");
 
-      this._tp_backend = new TpTest.Backend ();
+      this._tp_backend = new TpTests.Backend ();
 
       this.add_test ("load and prep", this.test_load_and_prep);
       this.add_test ("disabling", this.test_disabling);

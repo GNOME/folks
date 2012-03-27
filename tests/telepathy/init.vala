@@ -22,14 +22,14 @@ using Folks;
 
 public class InitTests : Folks.TestCase
 {
-  private TpTest.Backend _tp_backend;
+  private TpTests.Backend _tp_backend;
   private int _test_timeout = 5;
 
   public InitTests ()
     {
       base ("Init");
 
-      this._tp_backend = new TpTest.Backend ();
+      this._tp_backend = new TpTests.Backend ();
 
       /* Set up the tests */
       this.add_test ("quiescence", this.test_quiescence);

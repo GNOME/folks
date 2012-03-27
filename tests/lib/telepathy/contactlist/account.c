@@ -23,8 +23,8 @@
 
 static void account_iface_init (gpointer, gpointer);
 
-G_DEFINE_TYPE_WITH_CODE (TpTestAccount,
-    tp_test_account,
+G_DEFINE_TYPE_WITH_CODE (TpTestsAccount,
+    tp_tests_account,
     G_TYPE_OBJECT,
     G_IMPLEMENT_INTERFACE (TP_TYPE_SVC_ACCOUNT,
         account_iface_init);
@@ -56,7 +56,7 @@ enum
   PROP_HAS_BEEN_ONLINE,
 };
 
-struct _TpTestAccountPrivate
+struct _TpTestsAccountPrivate
 {
   gchar *connection_path;
 };
@@ -66,27 +66,27 @@ account_iface_init (gpointer klass,
     gpointer unused G_GNUC_UNUSED)
 {
 #define IMPLEMENT(x) tp_svc_account_implement_##x (\
-  klass, tp_test_account_##x)
+  klass, tp_tests_account_##x)
   /* TODO */
 #undef IMPLEMENT
 }
 
 
 static void
-tp_test_account_init (TpTestAccount *self)
+tp_tests_account_init (TpTestsAccount *self)
 {
-  self->priv = G_TYPE_INSTANCE_GET_PRIVATE (self, TP_TEST_TYPE_ACCOUNT,
-      TpTestAccountPrivate);
+  self->priv = G_TYPE_INSTANCE_GET_PRIVATE (self, TP_TESTS_TYPE_ACCOUNT,
+      TpTestsAccountPrivate);
 }
 
 static void
-tp_test_account_get_property (GObject *object,
+tp_tests_account_get_property (GObject *object,
               guint property_id,
               GValue *value,
               GParamSpec *spec)
 {
   GValueArray *presence;
-  TpTestAccountPrivate *priv = TP_TEST_ACCOUNT (object)->priv;
+  TpTestsAccountPrivate *priv = TP_TESTS_ACCOUNT (object)->priv;
 
   presence = tp_value_array_build (3,
       G_TYPE_UINT, TP_CONNECTION_PRESENCE_TYPE_AVAILABLE,
@@ -152,12 +152,12 @@ tp_test_account_get_property (GObject *object,
 }
 
 static void
-tp_test_account_set_property (GObject *object,
+tp_tests_account_set_property (GObject *object,
               guint property_id,
               const GValue *value,
               GParamSpec *spec)
 {
-  TpTestAccountPrivate *priv = TP_TEST_ACCOUNT (object)->priv;
+  TpTestsAccountPrivate *priv = TP_TESTS_ACCOUNT (object)->priv;
 
   switch (property_id) {
     case PROP_CONNECTION:
@@ -170,13 +170,13 @@ tp_test_account_set_property (GObject *object,
 }
 
 static void
-tp_test_account_finalize (GObject *object)
+tp_tests_account_finalize (GObject *object)
 {
-  TpTestAccountPrivate *priv = TP_TEST_ACCOUNT (object)->priv;
+  TpTestsAccountPrivate *priv = TP_TESTS_ACCOUNT (object)->priv;
 
   g_free (priv->connection_path);
 
-  G_OBJECT_CLASS (tp_test_account_parent_class)->finalize (object);
+  G_OBJECT_CLASS (tp_tests_account_parent_class)->finalize (object);
 }
 
 /**
@@ -185,7 +185,7 @@ tp_test_account_finalize (GObject *object)
   * Properties.GetAll().
   */
 static void
-tp_test_account_class_init (TpTestAccountClass *klass)
+tp_tests_account_class_init (TpTestsAccountClass *klass)
 {
   GObjectClass *object_class = (GObjectClass *) klass;
   GParamSpec *param_spec;
@@ -219,10 +219,10 @@ tp_test_account_class_init (TpTestAccountClass *klass)
         { NULL },
   };
 
-  g_type_class_add_private (klass, sizeof (TpTestAccountPrivate));
-  object_class->get_property = tp_test_account_get_property;
-  object_class->set_property = tp_test_account_set_property;
-  object_class->finalize = tp_test_account_finalize;
+  g_type_class_add_private (klass, sizeof (TpTestsAccountPrivate));
+  object_class->get_property = tp_tests_account_get_property;
+  object_class->set_property = tp_tests_account_set_property;
+  object_class->finalize = tp_tests_account_finalize;
 
   param_spec = g_param_spec_boxed ("interfaces", "Extra D-Bus interfaces",
       "In this case we only implement Account, so none.",
@@ -330,12 +330,12 @@ tp_test_account_class_init (TpTestAccountClass *klass)
 
   klass->dbus_props_class.interfaces = prop_interfaces;
   tp_dbus_properties_mixin_class_init (object_class,
-      G_STRUCT_OFFSET (TpTestAccountClass, dbus_props_class));
+      G_STRUCT_OFFSET (TpTestsAccountClass, dbus_props_class));
 }
 
-TpTestAccount *
-tp_test_account_new (const gchar *connection_path)
+TpTestsAccount *
+tp_tests_account_new (const gchar *connection_path)
 {
-  return g_object_new (TP_TEST_TYPE_ACCOUNT,
+  return g_object_new (TP_TESTS_TYPE_ACCOUNT,
       "connection", connection_path, NULL);
 }

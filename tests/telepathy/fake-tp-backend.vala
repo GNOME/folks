@@ -17,7 +17,7 @@
  * Authors: Philip Withnall <philip@tecnocode.co.uk>
  */
 
-using TpTest;
+using TpTests;
 using Folks;
 
 /* A simple test program to expose the test Telepathy account used by folks’
@@ -26,7 +26,7 @@ using Folks;
 
 public int main (string[] args)
 {
-  var tp_backend = new TpTest.Backend ();
+  var tp_backend = new TpTests.Backend ();
 
   tp_backend.set_up ();
   void *account_handle = tp_backend.add_account ("protocol", "me@example.com",

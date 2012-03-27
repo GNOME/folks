@@ -10,8 +10,8 @@
  * Copied from telepathy-glib/tests/lib/simple-account.h.
  */
 
-#ifndef __TP_TEST_ACCOUNT_H__
-#define __TP_TEST_ACCOUNT_H__
+#ifndef __TP_TESTS_ACCOUNT_H__
+#define __TP_TESTS_ACCOUNT_H__
 
 #include <glib-object.h>
 #include <telepathy-glib/dbus-properties-mixin.h>
@@ -19,42 +19,42 @@
 
 G_BEGIN_DECLS
 
-typedef struct _TpTestAccount TpTestAccount;
-typedef struct _TpTestAccountClass TpTestAccountClass;
-typedef struct _TpTestAccountPrivate TpTestAccountPrivate;
+typedef struct _TpTestsAccount TpTestsAccount;
+typedef struct _TpTestsAccountClass TpTestsAccountClass;
+typedef struct _TpTestsAccountPrivate TpTestsAccountPrivate;
 
-struct _TpTestAccountClass {
+struct _TpTestsAccountClass {
     GObjectClass parent_class;
     TpDBusPropertiesMixinClass dbus_props_class;
 };
 
-struct _TpTestAccount {
+struct _TpTestsAccount {
     GObject parent;
 
-    TpTestAccountPrivate *priv;
+    TpTestsAccountPrivate *priv;
 };
 
-GType tp_test_account_get_type (void);
+GType tp_tests_account_get_type (void);
 
 /* TYPE MACROS */
-#define TP_TEST_TYPE_ACCOUNT \
-  (tp_test_account_get_type ())
-#define TP_TEST_ACCOUNT(obj) \
-  (G_TYPE_CHECK_INSTANCE_CAST((obj), TP_TEST_TYPE_ACCOUNT, \
-                              TpTestAccount))
-#define TP_TEST_ACCOUNT_CLASS(klass) \
-  (G_TYPE_CHECK_CLASS_CAST((klass), TP_TEST_TYPE_ACCOUNT, \
-                           TpTestAccountClass))
-#define TP_TEST_IS_ACCOUNT(obj) \
-  (G_TYPE_CHECK_INSTANCE_TYPE((obj), TP_TEST_TYPE_ACCOUNT))
-#define TP_TEST_IS_ACCOUNT_CLASS(klass) \
-  (G_TYPE_CHECK_CLASS_TYPE((klass), TP_TEST_TYPE_ACCOUNT))
-#define TP_TEST_ACCOUNT_GET_CLASS(obj) \
-  (G_TYPE_INSTANCE_GET_CLASS ((obj), TP_TEST_TYPE_ACCOUNT, \
-                              TpTestAccountClass))
+#define TP_TESTS_TYPE_ACCOUNT \
+  (tp_tests_account_get_type ())
+#define TP_TESTS_ACCOUNT(obj) \
+  (G_TYPE_CHECK_INSTANCE_CAST((obj), TP_TESTS_TYPE_ACCOUNT, \
+                              TpTestsAccount))
+#define TP_TESTS_ACCOUNT_CLASS(klass) \
+  (G_TYPE_CHECK_CLASS_CAST((klass), TP_TESTS_TYPE_ACCOUNT, \
+                           TpTestsAccountClass))
+#define TP_TESTS_IS_ACCOUNT(obj) \
+  (G_TYPE_CHECK_INSTANCE_TYPE((obj), TP_TESTS_TYPE_ACCOUNT))
+#define TP_TESTS_IS_ACCOUNT_CLASS(klass) \
+  (G_TYPE_CHECK_CLASS_TYPE((klass), TP_TESTS_TYPE_ACCOUNT))
+#define TP_TESTS_ACCOUNT_GET_CLASS(obj) \
+  (G_TYPE_INSTANCE_GET_CLASS ((obj), TP_TESTS_TYPE_ACCOUNT, \
+                              TpTestsAccountClass))
 
-TpTestAccount *tp_test_account_new (const gchar *connection_path);
+TpTestsAccount *tp_tests_account_new (const gchar *connection_path);
 
 G_END_DECLS
 
-#endif /* #ifndef __TP_TEST_ACCOUNT_H__ */
+#endif /* #ifndef __TP_TESTS_ACCOUNT_H__ */

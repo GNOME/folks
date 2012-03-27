@@ -63,7 +63,7 @@ tp_test_contactlist_gir_INCLUDES = GObject-2.0 TelepathyGLib-0.12
 tp_test_contactlist_gir_CFLAGS = $(TP_GLIB_CFLAGS)
 tp_test_contactlist_gir_LIBS = libtp-test-contactlist.la
 tp_test_contactlist_gir_FILES = $(libtp_test_contactlist_la_SOURCES)
-tp_test_contactlist_gir_NAMESPACE = TpTest
+tp_test_contactlist_gir_NAMESPACE = TpTests
 INTROSPECTION_GIRS += tp-test-contactlist.gir
 
 if HAVE_VALA

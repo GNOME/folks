@@ -32,23 +32,23 @@
 
 #include "backend.h"
 
-struct _TpTestBackendPrivate
+struct _TpTestsBackendPrivate
 {
   TpAccountManager *am_proxy;
   TpDBusDaemon *daemon;
-  TpTestAccountManager *account_manager;
+  TpTestsAccountManager *account_manager;
   GList *accounts;
 };
 
 typedef struct
 {
-  TpTestAccount *account;
+  TpTestsAccount *account;
   TpBaseConnection *conn;
   gchar *bus_name;
   gchar *object_path;
 } AccountData;
 
-G_DEFINE_TYPE (TpTestBackend, tp_test_backend, G_TYPE_OBJECT)
+G_DEFINE_TYPE (TpTestsBackend, tp_tests_backend, G_TYPE_OBJECT)
 
 enum
 {
@@ -57,39 +57,39 @@ enum
 };
 
 static void
-tp_test_backend_init (TpTestBackend *self)
+tp_tests_backend_init (TpTestsBackend *self)
 {
-  self->priv = G_TYPE_INSTANCE_GET_PRIVATE (self, TP_TEST_TYPE_BACKEND,
-      TpTestBackendPrivate);
+  self->priv = G_TYPE_INSTANCE_GET_PRIVATE (self, TP_TESTS_TYPE_BACKEND,
+      TpTestsBackendPrivate);
 }
 
 static void
-tp_test_backend_finalize (GObject *object)
+tp_tests_backend_finalize (GObject *object)
 {
-  TpTestBackendPrivate *priv = TP_TEST_BACKEND (object)->priv;
+  TpTestsBackendPrivate *priv = TP_TESTS_BACKEND (object)->priv;
   GList *l;
 
   for (l = priv->accounts; l != NULL; l = l->next)
     {
-      tp_test_backend_remove_account (TP_TEST_BACKEND (object), l->data);
+      tp_tests_backend_remove_account (TP_TESTS_BACKEND (object), l->data);
     }
 
-  tp_test_backend_tear_down (TP_TEST_BACKEND (object));
-  G_OBJECT_CLASS (tp_test_backend_parent_class)->finalize (object);
+  tp_tests_backend_tear_down (TP_TESTS_BACKEND (object));
+  G_OBJECT_CLASS (tp_tests_backend_parent_class)->finalize (object);
 }
 
 static void
-tp_test_backend_get_property (GObject *object,
+tp_tests_backend_get_property (GObject *object,
     guint property_id,
     GValue *value,
     GParamSpec *spec)
 {
-  TpTestBackend *self = TP_TEST_BACKEND (object);
+  TpTestsBackend *self = TP_TESTS_BACKEND (object);
 
   switch (property_id)
     {
     case PROP_CONNECTION:
-      g_value_set_object (value, tp_test_backend_get_connection (self));
+      g_value_set_object (value, tp_tests_backend_get_connection (self));
       break;
 
     default:
@@ -98,7 +98,7 @@ tp_test_backend_get_property (GObject *object,
 }
 
 static void
-tp_test_backend_set_property (GObject *object,
+tp_tests_backend_set_property (GObject *object,
     guint property_id,
     const GValue *value,
     GParamSpec *spec)
@@ -111,27 +111,27 @@ tp_test_backend_set_property (GObject *object,
 }
 
 static void
-tp_test_backend_class_init (TpTestBackendClass *klass)
+tp_tests_backend_class_init (TpTestsBackendClass *klass)
 {
   GObjectClass *object_class = G_OBJECT_CLASS (klass);
   GParamSpec *param_spec;
 
-  g_type_class_add_private (klass, sizeof (TpTestBackendPrivate));
-  object_class->finalize = tp_test_backend_finalize;
-  object_class->get_property = tp_test_backend_get_property;
-  object_class->set_property = tp_test_backend_set_property;
+  g_type_class_add_private (klass, sizeof (TpTestsBackendPrivate));
+  object_class->finalize = tp_tests_backend_finalize;
+  object_class->get_property = tp_tests_backend_get_property;
+  object_class->set_property = tp_tests_backend_set_property;
 
   param_spec = g_param_spec_object ("connection", "Connection",
       "The base ContactListConnection",
-      TP_TEST_TYPE_CONTACT_LIST_CONNECTION,
+      TP_TESTS_TYPE_CONTACT_LIST_CONNECTION,
       G_PARAM_READABLE | G_PARAM_STATIC_STRINGS);
   g_object_class_install_property (object_class, PROP_CONNECTION, param_spec);
 }
 
-TpTestBackend *
-tp_test_backend_new (void)
+TpTestsBackend *
+tp_tests_backend_new (void)
 {
-  return g_object_new (TP_TEST_TYPE_BACKEND, NULL);
+  return g_object_new (TP_TESTS_TYPE_BACKEND, NULL);
 }
 
 static gboolean
@@ -178,9 +178,9 @@ _log_fatal_handler (const char *domain,
 }
 
 void
-tp_test_backend_set_up (TpTestBackend *self)
+tp_tests_backend_set_up (TpTestsBackend *self)
 {
-  TpTestBackendPrivate *priv = self->priv;
+  TpTestsBackendPrivate *priv = self->priv;
   GError *error = NULL;
 
   /* Override the handler set in the general Folks.TestCase class */
@@ -200,7 +200,7 @@ tp_test_backend_set_up (TpTestBackend *self)
           TP_ACCOUNT_MANAGER_BUS_NAME, error->message);
     }
 
-  priv->account_manager = tp_test_account_manager_new ();
+  priv->account_manager = tp_tests_account_manager_new ();
   tp_dbus_daemon_register_object (priv->daemon, TP_ACCOUNT_MANAGER_OBJECT_PATH,
       priv->account_manager);
 
@@ -208,7 +208,7 @@ tp_test_backend_set_up (TpTestBackend *self)
 }
 
 /**
- * tp_test_backend_add_account:
+ * tp_tests_backend_add_account:
  * @self:
  * @protocol_name:
  * @user_id:
@@ -218,13 +218,13 @@ tp_test_backend_set_up (TpTestBackend *self)
  * Return value: (transfer none):
  */
 gpointer
-tp_test_backend_add_account (TpTestBackend *self,
+tp_tests_backend_add_account (TpTestsBackend *self,
     const gchar *protocol_name,
     const gchar *user_id,
     const gchar *connection_manager_name,
     const gchar *account_name)
 {
-  TpTestBackendPrivate *priv = self->priv;
+  TpTestsBackendPrivate *priv = self->priv;
   TpHandleRepoIface *handle_repo;
   TpHandle self_handle;
   gchar *object_path;
@@ -235,7 +235,7 @@ tp_test_backend_add_account (TpTestBackend *self,
 
   /* Set up a contact list connection */
   data->conn =
-      TP_BASE_CONNECTION (tp_test_contact_list_connection_new (user_id,
+      TP_BASE_CONNECTION (tp_tests_contact_list_connection_new (user_id,
           protocol_name, 0, 0));
 
   tp_base_connection_register (data->conn, connection_manager_name,
@@ -259,14 +259,14 @@ tp_test_backend_add_account (TpTestBackend *self,
       TP_CONNECTION_STATUS_CONNECTED, TP_CONNECTION_STATUS_REASON_REQUESTED);
 
   /* Create an account */
-  data->account = tp_test_account_new (data->object_path);
+  data->account = tp_tests_account_new (data->object_path);
   object_path =
       g_strdup_printf ("%s%s/%s/%s", TP_ACCOUNT_OBJECT_PATH_BASE,
           connection_manager_name, protocol_name, account_name);
   tp_dbus_daemon_register_object (priv->daemon, object_path, data->account);
 
   /* Add the account to the account manager */
-  tp_test_account_manager_add_account (priv->account_manager, object_path);
+  tp_tests_account_manager_add_account (priv->account_manager, object_path);
 
   g_free (object_path);
 
@@ -277,10 +277,10 @@ tp_test_backend_add_account (TpTestBackend *self,
 }
 
 void
-tp_test_backend_remove_account (TpTestBackend *self,
+tp_tests_backend_remove_account (TpTestsBackend *self,
     gpointer handle)
 {
-  TpTestBackendPrivate *priv = self->priv;
+  TpTestsBackendPrivate *priv = self->priv;
   AccountData *data;
 
   if (g_list_find (priv->accounts, handle) == NULL)
@@ -293,7 +293,7 @@ tp_test_backend_remove_account (TpTestBackend *self,
   data = (AccountData *) handle;
 
   /* Remove the account from the account manager */
-  tp_test_account_manager_remove_account (priv->account_manager,
+  tp_tests_account_manager_remove_account (priv->account_manager,
       data->object_path);
 
   /* Disconnect it */
@@ -312,9 +312,9 @@ tp_test_backend_remove_account (TpTestBackend *self,
 }
 
 void
-tp_test_backend_tear_down (TpTestBackend *self)
+tp_tests_backend_tear_down (TpTestsBackend *self)
 {
-  TpTestBackendPrivate *priv = self->priv;
+  TpTestsBackendPrivate *priv = self->priv;
   GError *error = NULL;
 
   /* Make sure all dbus trafic is done */
@@ -336,17 +336,17 @@ tp_test_backend_tear_down (TpTestBackend *self)
 }
 
 /**
- * tp_test_backend_get_connection:
+ * tp_tests_backend_get_connection:
  * @self: the backend
  *
  * Returns: (transfer none): the contact list connection or %NULL.
  */
-TpTestContactListConnection *
-tp_test_backend_get_connection (TpTestBackend *self)
+TpTestsContactListConnection *
+tp_tests_backend_get_connection (TpTestsBackend *self)
 {
   AccountData *data;
 
-  g_return_val_if_fail (TP_TEST_IS_BACKEND (self), NULL);
+  g_return_val_if_fail (TP_TESTS_IS_BACKEND (self), NULL);
 
   if (self->priv->accounts == NULL)
     {
@@ -354,5 +354,5 @@ tp_test_backend_get_connection (TpTestBackend *self)
     }
 
   data = (AccountData *) self->priv->accounts->data;
-  return TP_TEST_CONTACT_LIST_CONNECTION (data->conn);
+  return TP_TESTS_CONTACT_LIST_CONNECTION (data->conn);
 }

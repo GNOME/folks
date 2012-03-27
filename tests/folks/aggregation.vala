@@ -19,12 +19,12 @@
 
 using Gee;
 using Folks;
-using TpTest;
+using TpTests;
 
 public class AggregationTests : Folks.TestCase
 {
   private KfTest.Backend _kf_backend;
-  private TpTest.Backend _tp_backend;
+  private TpTests.Backend _tp_backend;
   private HashSet<string> _default_personas;
   private int _test_timeout = 3;
 
@@ -33,7 +33,7 @@ public class AggregationTests : Folks.TestCase
       base ("Aggregation");
 
       this._kf_backend = new KfTest.Backend ();
-      this._tp_backend = new TpTest.Backend ();
+      this._tp_backend = new TpTests.Backend ();
 
       /* Create a set of the individuals we expect to see */
       this._default_personas = new HashSet<string> (str_hash, str_equal);

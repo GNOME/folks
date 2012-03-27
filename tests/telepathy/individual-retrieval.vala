@@ -19,14 +19,14 @@
 
 using DBus;
 using TelepathyGLib;
-using TpTest;
+using TpTests;
 using Tpf;
 using Folks;
 using Gee;
 
 public class IndividualRetrievalTests : Folks.TestCase
 {
-  private TpTest.Backend tp_backend;
+  private TpTests.Backend tp_backend;
   private void* _account_handle;
   private HashSet<string> default_individuals;
   private int _test_timeout = 3;
@@ -35,7 +35,7 @@ public class IndividualRetrievalTests : Folks.TestCase
     {
       base ("IndividualRetrieval");
 
-      this.tp_backend = new TpTest.Backend ();
+      this.tp_backend = new TpTests.Backend ();
 
       /* IDs of the individuals we expect to see.
        * These are externally opaque, but internally are SHA-1 hashes of the

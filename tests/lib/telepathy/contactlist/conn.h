@@ -9,8 +9,8 @@
  * notice and this notice are preserved.
  */
 
-#ifndef __TP_TEST_CONTACT_LIST_CONN_H__
-#define __TP_TEST_CONTACT_LIST_CONN_H__
+#ifndef __TP_TESTS_CONTACT_LIST_CONN_H__
+#define __TP_TESTS_CONTACT_LIST_CONN_H__
 
 #include <glib-object.h>
 #include <telepathy-glib/base-connection.h>
@@ -21,52 +21,52 @@
 
 G_BEGIN_DECLS
 
-typedef struct _TpTestContactListConnection TpTestContactListConnection;
-typedef struct _TpTestContactListConnectionClass
-    TpTestContactListConnectionClass;
-typedef struct _TpTestContactListConnectionPrivate
-    TpTestContactListConnectionPrivate;
+typedef struct _TpTestsContactListConnection TpTestsContactListConnection;
+typedef struct _TpTestsContactListConnectionClass
+    TpTestsContactListConnectionClass;
+typedef struct _TpTestsContactListConnectionPrivate
+    TpTestsContactListConnectionPrivate;
 
-struct _TpTestContactListConnectionClass {
+struct _TpTestsContactListConnectionClass {
     TpBaseConnectionClass parent_class;
     TpDBusPropertiesMixinClass properties_class;
     TpPresenceMixinClass presence_mixin;
     TpContactsMixinClass contacts_mixin;
 };
 
-struct _TpTestContactListConnection {
+struct _TpTestsContactListConnection {
     TpBaseConnection parent;
     TpPresenceMixin presence_mixin;
     TpContactsMixin contacts_mixin;
 
-    TpTestContactListConnectionPrivate *priv;
+    TpTestsContactListConnectionPrivate *priv;
 };
 
-GType tp_test_contact_list_connection_get_type (void);
+GType tp_tests_contact_list_connection_get_type (void);
 
-#define TP_TEST_TYPE_CONTACT_LIST_CONNECTION \
-  (tp_test_contact_list_connection_get_type ())
-#define TP_TEST_CONTACT_LIST_CONNECTION(obj) \
-  (G_TYPE_CHECK_INSTANCE_CAST((obj), TP_TEST_TYPE_CONTACT_LIST_CONNECTION, \
-                              TpTestContactListConnection))
-#define TP_TEST_CONTACT_LIST_CONNECTION_CLASS(klass) \
-  (G_TYPE_CHECK_CLASS_CAST((klass), TP_TEST_TYPE_CONTACT_LIST_CONNECTION, \
-                           TpTestContactListConnectionClass))
-#define TP_TEST_IS_CONTACT_LIST_CONNECTION(obj) \
-  (G_TYPE_CHECK_INSTANCE_TYPE((obj), TP_TEST_TYPE_CONTACT_LIST_CONNECTION))
-#define TP_TEST_IS_CONTACT_LIST_CONNECTION_CLASS(klass) \
-  (G_TYPE_CHECK_CLASS_TYPE((klass), TP_TEST_TYPE_CONTACT_LIST_CONNECTION))
-#define TP_TEST_CONTACT_LIST_CONNECTION_GET_CLASS(obj) \
-  (G_TYPE_INSTANCE_GET_CLASS ((obj), TP_TEST_TYPE_CONTACT_LIST_CONNECTION, \
-                              TpTestContactListConnectionClass))
+#define TP_TESTS_TYPE_CONTACT_LIST_CONNECTION \
+  (tp_tests_contact_list_connection_get_type ())
+#define TP_TESTS_CONTACT_LIST_CONNECTION(obj) \
+  (G_TYPE_CHECK_INSTANCE_CAST((obj), TP_TESTS_TYPE_CONTACT_LIST_CONNECTION, \
+                              TpTestsContactListConnection))
+#define TP_TESTS_CONTACT_LIST_CONNECTION_CLASS(klass) \
+  (G_TYPE_CHECK_CLASS_CAST((klass), TP_TESTS_TYPE_CONTACT_LIST_CONNECTION, \
+                           TpTestsContactListConnectionClass))
+#define TP_TESTS_IS_CONTACT_LIST_CONNECTION(obj) \
+  (G_TYPE_CHECK_INSTANCE_TYPE((obj), TP_TESTS_TYPE_CONTACT_LIST_CONNECTION))
+#define TP_TESTS_IS_CONTACT_LIST_CONNECTION_CLASS(klass) \
+  (G_TYPE_CHECK_CLASS_TYPE((klass), TP_TESTS_TYPE_CONTACT_LIST_CONNECTION))
+#define TP_TESTS_CONTACT_LIST_CONNECTION_GET_CLASS(obj) \
+  (G_TYPE_INSTANCE_GET_CLASS ((obj), TP_TESTS_TYPE_CONTACT_LIST_CONNECTION, \
+                              TpTestsContactListConnectionClass))
 
-TpTestContactListManager *tp_test_contact_list_connection_get_manager (
-    TpTestContactListConnection *self);
+TpTestsContactListManager *tp_tests_contact_list_connection_get_manager (
+    TpTestsContactListConnection *self);
 
-gchar *tp_test_contact_list_normalize_contact (TpHandleRepoIface *repo,
+gchar *tp_tests_contact_list_normalize_contact (TpHandleRepoIface *repo,
     const gchar *id, gpointer context, GError **error);
 
-TpTestContactListConnection *tp_test_contact_list_connection_new (
+TpTestsContactListConnection *tp_tests_contact_list_connection_new (
     const gchar *account, const gchar *protocol,
     TpChannelGroupFlags publish_flags, TpChannelGroupFlags subscribe_flags);
 

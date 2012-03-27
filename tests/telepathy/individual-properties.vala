@@ -19,14 +19,14 @@
 
 using DBus;
 using TelepathyGLib;
-using TpTest;
+using TpTests;
 using Tpf;
 using Folks;
 using Gee;
 
 public class IndividualPropertiesTests : Folks.TestCase
 {
-  private TpTest.Backend tp_backend;
+  private TpTests.Backend tp_backend;
   private void* _account_handle;
   private int _test_timeout = 3;
   private HashSet<string> _changes_pending;
@@ -35,7 +35,7 @@ public class IndividualPropertiesTests : Folks.TestCase
     {
       base ("IndividualProperties");
 
-      this.tp_backend = new TpTest.Backend ();
+      this.tp_backend = new TpTests.Backend ();
 
       this.add_test ("individual properties",
           this.test_individual_properties);

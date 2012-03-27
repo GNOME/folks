@@ -11,8 +11,8 @@
  * Copied from telepathy-glib/tests/lib/simple-account-manager.h.
  */
 
-#ifndef __TP_TEST_ACCOUNT_MANAGER_H__
-#define __TP_TEST_ACCOUNT_MANAGER_H__
+#ifndef __TP_TESTS_ACCOUNT_MANAGER_H__
+#define __TP_TESTS_ACCOUNT_MANAGER_H__
 
 #include <glib-object.h>
 #include <telepathy-glib/dbus-properties-mixin.h>
@@ -20,47 +20,47 @@
 
 G_BEGIN_DECLS
 
-typedef struct _TpTestAccountManager TpTestAccountManager;
-typedef struct _TpTestAccountManagerClass TpTestAccountManagerClass;
-typedef struct _TpTestAccountManagerPrivate TpTestAccountManagerPrivate;
+typedef struct _TpTestsAccountManager TpTestsAccountManager;
+typedef struct _TpTestsAccountManagerClass TpTestsAccountManagerClass;
+typedef struct _TpTestsAccountManagerPrivate TpTestsAccountManagerPrivate;
 
-struct _TpTestAccountManagerClass {
+struct _TpTestsAccountManagerClass {
     GObjectClass parent_class;
     TpDBusPropertiesMixinClass dbus_props_class;
 };
 
-struct _TpTestAccountManager {
+struct _TpTestsAccountManager {
     GObject parent;
 
-    TpTestAccountManagerPrivate *priv;
+    TpTestsAccountManagerPrivate *priv;
 };
 
-GType tp_test_account_manager_get_type (void);
+GType tp_tests_account_manager_get_type (void);
 
 /* TYPE MACROS */
-#define TP_TEST_TYPE_ACCOUNT_MANAGER \
-  (tp_test_account_manager_get_type ())
-#define TP_TEST_ACCOUNT_MANAGER(obj) \
-  (G_TYPE_CHECK_INSTANCE_CAST((obj), TP_TEST_TYPE_ACCOUNT_MANAGER, \
-                              TpTestAccountManager))
-#define TP_TEST_ACCOUNT_MANAGER_CLASS(klass) \
-  (G_TYPE_CHECK_CLASS_CAST((klass), TP_TEST_TYPE_ACCOUNT_MANAGER, \
-                           TpTestAccountManagerClass))
-#define IS_TP_TEST_ACCOUNT_MANAGER(obj) \
-  (G_TYPE_CHECK_INSTANCE_TYPE((obj), TP_TEST_TYPE_ACCOUNT_MANAGER))
-#define TP_TEST_IS_ACCOUNT_MANAGER_CLASS(klass) \
-  (G_TYPE_CHECK_CLASS_TYPE((klass), TP_TEST_TYPE_ACCOUNT_MANAGER))
-#define TP_TEST_ACCOUNT_MANAGER_GET_CLASS(obj) \
-  (G_TYPE_INSTANCE_GET_CLASS ((obj), TP_TEST_TYPE_ACCOUNT_MANAGER, \
-                              TpTestAccountManagerClass))
+#define TP_TESTS_TYPE_ACCOUNT_MANAGER \
+  (tp_tests_account_manager_get_type ())
+#define TP_TESTS_ACCOUNT_MANAGER(obj) \
+  (G_TYPE_CHECK_INSTANCE_CAST((obj), TP_TESTS_TYPE_ACCOUNT_MANAGER, \
+                              TpTestsAccountManager))
+#define TP_TESTS_ACCOUNT_MANAGER_CLASS(klass) \
+  (G_TYPE_CHECK_CLASS_CAST((klass), TP_TESTS_TYPE_ACCOUNT_MANAGER, \
+                           TpTestsAccountManagerClass))
+#define IS_TP_TESTS_ACCOUNT_MANAGER(obj) \
+  (G_TYPE_CHECK_INSTANCE_TYPE((obj), TP_TESTS_TYPE_ACCOUNT_MANAGER))
+#define TP_TESTS_IS_ACCOUNT_MANAGER_CLASS(klass) \
+  (G_TYPE_CHECK_CLASS_TYPE((klass), TP_TESTS_TYPE_ACCOUNT_MANAGER))
+#define TP_TESTS_ACCOUNT_MANAGER_GET_CLASS(obj) \
+  (G_TYPE_INSTANCE_GET_CLASS ((obj), TP_TESTS_TYPE_ACCOUNT_MANAGER, \
+                              TpTestsAccountManagerClass))
 
-TpTestAccountManager *tp_test_account_manager_new (void);
+TpTestsAccountManager *tp_tests_account_manager_new (void);
 
-void tp_test_account_manager_add_account (TpTestAccountManager *self,
+void tp_tests_account_manager_add_account (TpTestsAccountManager *self,
     const gchar *account_path);
-void tp_test_account_manager_remove_account (TpTestAccountManager *self,
+void tp_tests_account_manager_remove_account (TpTestsAccountManager *self,
     const gchar *account_path);
 
 G_END_DECLS
 
-#endif /* #ifndef __TP_TEST_ACCOUNT_MANAGER_H__ */
+#endif /* #ifndef __TP_TESTS_ACCOUNT_MANAGER_H__ */

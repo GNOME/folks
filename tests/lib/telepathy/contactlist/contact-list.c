@@ -23,7 +23,7 @@ static void list_channel_iface_init (gpointer iface, gpointer data);
 static void group_channel_iface_init (gpointer iface, gpointer data);
 
 /* Abstract base class */
-G_DEFINE_TYPE_WITH_CODE (TpTestContactListBase, tp_test_contact_list_base,
+G_DEFINE_TYPE_WITH_CODE (TpTestsContactListBase, tp_tests_contact_list_base,
     G_TYPE_OBJECT,
     G_IMPLEMENT_INTERFACE (TP_TYPE_SVC_CHANNEL, channel_iface_init);
     G_IMPLEMENT_INTERFACE (TP_TYPE_SVC_CHANNEL_TYPE_CONTACT_LIST, NULL);
@@ -35,13 +35,13 @@ G_DEFINE_TYPE_WITH_CODE (TpTestContactListBase, tp_test_contact_list_base,
     G_IMPLEMENT_INTERFACE (TP_TYPE_CHANNEL_IFACE, NULL))
 
 /* Subclass for handle type LIST */
-G_DEFINE_TYPE_WITH_CODE (TpTestContactList, tp_test_contact_list,
-    TP_TEST_TYPE_CONTACT_LIST_BASE,
+G_DEFINE_TYPE_WITH_CODE (TpTestsContactList, tp_tests_contact_list,
+    TP_TESTS_TYPE_CONTACT_LIST_BASE,
     G_IMPLEMENT_INTERFACE (TP_TYPE_SVC_CHANNEL, list_channel_iface_init))
 
 /* Subclass for handle type GROUP */
-G_DEFINE_TYPE_WITH_CODE (TpTestContactGroup, tp_test_contact_group,
-    TP_TEST_TYPE_CONTACT_LIST_BASE,
+G_DEFINE_TYPE_WITH_CODE (TpTestsContactGroup, tp_tests_contact_group,
+    TP_TESTS_TYPE_CONTACT_LIST_BASE,
     G_IMPLEMENT_INTERFACE (TP_TYPE_SVC_CHANNEL, group_channel_iface_init))
 
 static const gchar *contact_list_interfaces[] = {
@@ -67,10 +67,10 @@ enum
   N_PROPS
 };
 
-struct _TpTestContactListBasePrivate
+struct _TpTestsContactListBasePrivate
 {
   TpBaseConnection *conn;
-  TpTestContactListManager *manager;
+  TpTestsContactListManager *manager;
   gchar *object_path;
   TpHandleType handle_type;
   TpHandle handle;
@@ -80,43 +80,43 @@ struct _TpTestContactListBasePrivate
   unsigned disposed:1;
 };
 
-struct _TpTestContactListPrivate
+struct _TpTestsContactListPrivate
 {
   int dummy:1;
 };
 
-struct _TpTestContactGroupPrivate
+struct _TpTestsContactGroupPrivate
 {
   int dummy:1;
 };
 
 static void
-tp_test_contact_list_base_init (TpTestContactListBase *self)
+tp_tests_contact_list_base_init (TpTestsContactListBase *self)
 {
   self->priv = G_TYPE_INSTANCE_GET_PRIVATE (self,
-      TP_TEST_TYPE_CONTACT_LIST_BASE, TpTestContactListBasePrivate);
+      TP_TESTS_TYPE_CONTACT_LIST_BASE, TpTestsContactListBasePrivate);
 }
 
 static void
-tp_test_contact_list_init (TpTestContactList *self)
+tp_tests_contact_list_init (TpTestsContactList *self)
 {
-  self->priv = G_TYPE_INSTANCE_GET_PRIVATE (self, TP_TEST_TYPE_CONTACT_LIST,
-      TpTestContactListPrivate);
+  self->priv = G_TYPE_INSTANCE_GET_PRIVATE (self, TP_TESTS_TYPE_CONTACT_LIST,
+      TpTestsContactListPrivate);
 }
 
 static void
-tp_test_contact_group_init (TpTestContactGroup *self)
+tp_tests_contact_group_init (TpTestsContactGroup *self)
 {
-  self->priv = G_TYPE_INSTANCE_GET_PRIVATE (self, TP_TEST_TYPE_CONTACT_GROUP,
-      TpTestContactGroupPrivate);
+  self->priv = G_TYPE_INSTANCE_GET_PRIVATE (self, TP_TESTS_TYPE_CONTACT_GROUP,
+      TpTestsContactGroupPrivate);
 }
 
 static void
 constructed (GObject *object)
 {
-  TpTestContactListBase *self = TP_TEST_CONTACT_LIST_BASE (object);
+  TpTestsContactListBase *self = TP_TESTS_CONTACT_LIST_BASE (object);
   void (*chain_up) (GObject *) =
-    ((GObjectClass *) tp_test_contact_list_base_parent_class)->constructed;
+    ((GObjectClass *) tp_tests_contact_list_base_parent_class)->constructed;
   TpHandleRepoIface *contact_repo = tp_base_connection_get_handles
       (self->priv->conn, TP_HANDLE_TYPE_CONTACT);
   TpHandle self_handle = self->priv->conn->self_handle;
@@ -127,14 +127,14 @@ constructed (GObject *object)
     chain_up (object);
 
   g_assert (TP_IS_BASE_CONNECTION (self->priv->conn));
-  g_assert (TP_TEST_IS_CONTACT_LIST_MANAGER (self->priv->manager));
+  g_assert (TP_TESTS_IS_CONTACT_LIST_MANAGER (self->priv->manager));
 
   tp_dbus_daemon_register_object (
       tp_base_connection_get_dbus_daemon (self->priv->conn),
       self->priv->object_path, self);
 
   tp_handle_ref (handle_repo, self->priv->handle);
-  tp_group_mixin_init (object, G_STRUCT_OFFSET (TpTestContactListBase, group),
+  tp_group_mixin_init (object, G_STRUCT_OFFSET (TpTestsContactListBase, group),
       contact_repo, self_handle);
   /* Both the subclasses have full support for telepathy-spec 0.17.6. */
   tp_group_mixin_change_flags (object,
@@ -144,9 +144,9 @@ constructed (GObject *object)
 static void
 list_constructed (GObject *object)
 {
-  TpTestContactList *self = TP_TEST_CONTACT_LIST (object);
+  TpTestsContactList *self = TP_TESTS_CONTACT_LIST (object);
   void (*chain_up) (GObject *) =
-    ((GObjectClass *) tp_test_contact_list_parent_class)->constructed;
+    ((GObjectClass *) tp_tests_contact_list_parent_class)->constructed;
 
   if (chain_up != NULL)
     chain_up (object);
@@ -155,7 +155,7 @@ list_constructed (GObject *object)
 
   switch (self->parent.priv->handle)
     {
-    case TP_TEST_CONTACT_LIST_PUBLISH:
+    case TP_TESTS_CONTACT_LIST_PUBLISH:
       /* We can stop publishing presence to people, but we can't
        * start sending people our presence unless they ask for it.
        *
@@ -165,7 +165,7 @@ list_constructed (GObject *object)
       tp_group_mixin_change_flags (object,
           TP_CHANNEL_GROUP_FLAG_CAN_REMOVE, 0);
       break;
-    case TP_TEST_CONTACT_LIST_STORED:
+    case TP_TESTS_CONTACT_LIST_STORED:
       /* We can add people to our roster (not that that's very useful without
        * also adding them to subscribe), and we can remove them altogether
        * (which implicitly removes them from subscribe, publish, and all
@@ -174,7 +174,7 @@ list_constructed (GObject *object)
       tp_group_mixin_change_flags (object,
           TP_CHANNEL_GROUP_FLAG_CAN_ADD | TP_CHANNEL_GROUP_FLAG_CAN_REMOVE, 0);
       break;
-    case TP_TEST_CONTACT_LIST_SUBSCRIBE:
+    case TP_TESTS_CONTACT_LIST_SUBSCRIBE:
       /* We can ask people to show us their presence, attaching a message.
        * We can also cancel (rescind) requests that they haven't replied to,
        * and stop receiving their presence after they allow it.
@@ -193,9 +193,9 @@ list_constructed (GObject *object)
 static void
 group_constructed (GObject *object)
 {
-  TpTestContactGroup *self = TP_TEST_CONTACT_GROUP (object);
+  TpTestsContactGroup *self = TP_TESTS_CONTACT_GROUP (object);
   void (*chain_up) (GObject *) =
-    ((GObjectClass *) tp_test_contact_group_parent_class)->constructed;
+    ((GObjectClass *) tp_tests_contact_group_parent_class)->constructed;
 
   if (chain_up != NULL)
     chain_up (object);
@@ -214,7 +214,7 @@ get_property (GObject *object,
               GValue *value,
               GParamSpec *pspec)
 {
-  TpTestContactListBase *self = TP_TEST_CONTACT_LIST_BASE (object);
+  TpTestsContactListBase *self = TP_TESTS_CONTACT_LIST_BASE (object);
 
   switch (property_id)
     {
@@ -285,7 +285,7 @@ set_property (GObject *object,
               const GValue *value,
               GParamSpec *pspec)
 {
-  TpTestContactListBase *self = TP_TEST_CONTACT_LIST_BASE (object);
+  TpTestsContactListBase *self = TP_TESTS_CONTACT_LIST_BASE (object);
 
   switch (property_id)
     {
@@ -321,7 +321,7 @@ set_property (GObject *object,
 static void
 dispose (GObject *object)
 {
-  TpTestContactListBase *self = TP_TEST_CONTACT_LIST_BASE (object);
+  TpTestsContactListBase *self = TP_TESTS_CONTACT_LIST_BASE (object);
 
   if (self->priv->disposed)
     return;
@@ -334,13 +334,13 @@ dispose (GObject *object)
       tp_svc_channel_emit_closed (self);
     }
 
-  ((GObjectClass *) tp_test_contact_list_base_parent_class)->dispose (object);
+  ((GObjectClass *) tp_tests_contact_list_base_parent_class)->dispose (object);
 }
 
 static void
 finalize (GObject *object)
 {
-  TpTestContactListBase *self = TP_TEST_CONTACT_LIST_BASE (object);
+  TpTestsContactListBase *self = TP_TESTS_CONTACT_LIST_BASE (object);
   TpHandleRepoIface *handle_repo = tp_base_connection_get_handles
       (self->priv->conn, self->priv->handle_type);
 
@@ -348,7 +348,7 @@ finalize (GObject *object)
   g_free (self->priv->object_path);
   tp_group_mixin_finalize (object);
 
-  ((GObjectClass *) tp_test_contact_list_base_parent_class)->finalize (object);
+  ((GObjectClass *) tp_tests_contact_list_base_parent_class)->finalize (object);
 }
 
 static gboolean
@@ -357,9 +357,9 @@ group_add_member (GObject *object,
                   const gchar *message,
                   GError **error)
 {
-  TpTestContactListBase *self = TP_TEST_CONTACT_LIST_BASE (object);
+  TpTestsContactListBase *self = TP_TESTS_CONTACT_LIST_BASE (object);
 
-  return tp_test_contact_list_manager_add_to_group (self->priv->manager,
+  return tp_tests_contact_list_manager_add_to_group (self->priv->manager,
       object, self->priv->handle, handle, message, error);
 }
 
@@ -369,9 +369,9 @@ group_remove_member (GObject *object,
                      const gchar *message,
                      GError **error)
 {
-  TpTestContactListBase *self = TP_TEST_CONTACT_LIST_BASE (object);
+  TpTestsContactListBase *self = TP_TESTS_CONTACT_LIST_BASE (object);
 
-  return tp_test_contact_list_manager_remove_from_group (self->priv->manager,
+  return tp_tests_contact_list_manager_remove_from_group (self->priv->manager,
       object, self->priv->handle, handle, message, error);
 }
 
@@ -381,9 +381,9 @@ list_add_member (GObject *object,
                  const gchar *message,
                  GError **error)
 {
-  TpTestContactListBase *self = TP_TEST_CONTACT_LIST_BASE (object);
+  TpTestsContactListBase *self = TP_TESTS_CONTACT_LIST_BASE (object);
 
-  return tp_test_contact_list_manager_add_to_list (self->priv->manager,
+  return tp_tests_contact_list_manager_add_to_list (self->priv->manager,
       object, self->priv->handle, handle, message, error);
 }
 
@@ -393,14 +393,14 @@ list_remove_member (GObject *object,
                     const gchar *message,
                     GError **error)
 {
-  TpTestContactListBase *self = TP_TEST_CONTACT_LIST_BASE (object);
+  TpTestsContactListBase *self = TP_TESTS_CONTACT_LIST_BASE (object);
 
-  return tp_test_contact_list_manager_remove_from_list (self->priv->manager,
+  return tp_tests_contact_list_manager_remove_from_list (self->priv->manager,
       object, self->priv->handle, handle, message, error);
 }
 
 static void
-tp_test_contact_list_base_class_init (TpTestContactListBaseClass *klass)
+tp_tests_contact_list_base_class_init (TpTestsContactListBaseClass *klass)
 {
   static TpDBusPropertiesMixinPropImpl channel_props[] = {
       { "TargetHandleType", (gpointer) "handle-type", NULL },
@@ -424,7 +424,7 @@ tp_test_contact_list_base_class_init (TpTestContactListBaseClass *klass)
   GObjectClass *object_class = (GObjectClass *) klass;
   GParamSpec *param_spec;
 
-  g_type_class_add_private (klass, sizeof (TpTestContactListBasePrivate));
+  g_type_class_add_private (klass, sizeof (TpTestsContactListBasePrivate));
 
   object_class->constructed = constructed;
   object_class->set_property = set_property;
@@ -451,9 +451,9 @@ tp_test_contact_list_base_class_init (TpTestContactListBaseClass *klass)
       G_PARAM_CONSTRUCT_ONLY | G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS);
   g_object_class_install_property (object_class, PROP_CONNECTION, param_spec);
 
-  param_spec = g_param_spec_object ("manager", "TpTestContactListManager",
-      "TpTestContactListManager object that owns this channel",
-      TP_TEST_TYPE_CONTACT_LIST_MANAGER,
+  param_spec = g_param_spec_object ("manager", "TpTestsContactListManager",
+      "TpTestsContactListManager object that owns this channel",
+      TP_TESTS_TYPE_CONTACT_LIST_MANAGER,
       G_PARAM_CONSTRUCT_ONLY | G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS);
   g_object_class_install_property (object_class, PROP_MANAGER, param_spec);
 
@@ -491,39 +491,39 @@ tp_test_contact_list_base_class_init (TpTestContactListBaseClass *klass)
 
   klass->dbus_properties_class.interfaces = prop_interfaces;
   tp_dbus_properties_mixin_class_init (object_class,
-      G_STRUCT_OFFSET (TpTestContactListBaseClass, dbus_properties_class));
+      G_STRUCT_OFFSET (TpTestsContactListBaseClass, dbus_properties_class));
 
   /* Group mixin is initialized separately for each subclass - they have
    *  different callbacks */
 }
 
 static void
-tp_test_contact_list_class_init (TpTestContactListClass *klass)
+tp_tests_contact_list_class_init (TpTestsContactListClass *klass)
 {
   GObjectClass *object_class = (GObjectClass *) klass;
 
-  g_type_class_add_private (klass, sizeof (TpTestContactListPrivate));
+  g_type_class_add_private (klass, sizeof (TpTestsContactListPrivate));
 
   object_class->constructed = list_constructed;
 
   tp_group_mixin_class_init (object_class,
-      G_STRUCT_OFFSET (TpTestContactListBaseClass, group_class),
+      G_STRUCT_OFFSET (TpTestsContactListBaseClass, group_class),
       list_add_member,
       list_remove_member);
   tp_group_mixin_init_dbus_properties (object_class);
 }
 
 static void
-tp_test_contact_group_class_init (TpTestContactGroupClass *klass)
+tp_tests_contact_group_class_init (TpTestsContactGroupClass *klass)
 {
   GObjectClass *object_class = (GObjectClass *) klass;
 
-  g_type_class_add_private (klass, sizeof (TpTestContactGroupPrivate));
+  g_type_class_add_private (klass, sizeof (TpTestsContactGroupPrivate));
 
   object_class->constructed = group_constructed;
 
   tp_group_mixin_class_init (object_class,
-      G_STRUCT_OFFSET (TpTestContactListBaseClass, group_class),
+      G_STRUCT_OFFSET (TpTestsContactListBaseClass, group_class),
       group_add_member,
       group_remove_member);
   tp_group_mixin_init_dbus_properties (object_class);
@@ -543,8 +543,8 @@ static void
 group_channel_close (TpSvcChannel *iface,
                      DBusGMethodInvocation *context)
 {
-  TpTestContactGroup *self = TP_TEST_CONTACT_GROUP (iface);
-  TpTestContactListBase *base = TP_TEST_CONTACT_LIST_BASE (iface);
+  TpTestsContactGroup *self = TP_TESTS_CONTACT_GROUP (iface);
+  TpTestsContactListBase *base = TP_TESTS_CONTACT_LIST_BASE (iface);
 
   if (tp_handle_set_size (base->group.members) > 0)
     {
@@ -581,7 +581,7 @@ static void
 channel_get_handle (TpSvcChannel *iface,
                     DBusGMethodInvocation *context)
 {
-  TpTestContactListBase *self = TP_TEST_CONTACT_LIST_BASE (iface);
+  TpTestsContactListBase *self = TP_TESTS_CONTACT_LIST_BASE (iface);
 
   tp_svc_channel_return_from_get_handle (context, self->priv->handle_type,
       self->priv->handle);

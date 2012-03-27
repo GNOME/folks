@@ -20,8 +20,8 @@
 
 static void account_manager_iface_init (gpointer, gpointer);
 
-G_DEFINE_TYPE_WITH_CODE (TpTestAccountManager,
-    tp_test_account_manager,
+G_DEFINE_TYPE_WITH_CODE (TpTestsAccountManager,
+    tp_tests_account_manager,
     G_TYPE_OBJECT,
     G_IMPLEMENT_INTERFACE (TP_TYPE_SVC_ACCOUNT_MANAGER,
         account_manager_iface_init);
@@ -45,13 +45,13 @@ enum
   PROP_INVALID_ACCOUNTS,
 };
 
-struct _TpTestAccountManagerPrivate
+struct _TpTestsAccountManagerPrivate
 {
   GPtrArray *valid_accounts;
 };
 
 static void
-tp_test_account_manager_create_account (TpSvcAccountManager *self,
+tp_tests_account_manager_create_account (TpSvcAccountManager *self,
     const gchar *in_Connection_Manager,
     const gchar *in_Protocol,
     const gchar *in_Display_Name,
@@ -69,37 +69,37 @@ account_manager_iface_init (gpointer klass,
     gpointer unused G_GNUC_UNUSED)
 {
 #define IMPLEMENT(x) tp_svc_account_manager_implement_##x (\
-  klass, tp_test_account_manager_##x)
+  klass, tp_tests_account_manager_##x)
   IMPLEMENT (create_account);
 #undef IMPLEMENT
 }
 
 
 static void
-tp_test_account_manager_init (TpTestAccountManager *self)
+tp_tests_account_manager_init (TpTestsAccountManager *self)
 {
   self->priv = G_TYPE_INSTANCE_GET_PRIVATE (self,
-      TP_TEST_TYPE_ACCOUNT_MANAGER, TpTestAccountManagerPrivate);
+      TP_TESTS_TYPE_ACCOUNT_MANAGER, TpTestsAccountManagerPrivate);
 
   self->priv->valid_accounts =
       g_ptr_array_new_with_free_func ((GDestroyNotify) g_free);
 }
 
 static void
-tp_test_account_manager_finalize (GObject *obj)
+tp_tests_account_manager_finalize (GObject *obj)
 {
-  g_ptr_array_free (TP_TEST_ACCOUNT_MANAGER (obj)->priv->valid_accounts, TRUE);
+  g_ptr_array_free (TP_TESTS_ACCOUNT_MANAGER (obj)->priv->valid_accounts, TRUE);
 
-  G_OBJECT_CLASS (tp_test_account_manager_parent_class)->finalize (obj);
+  G_OBJECT_CLASS (tp_tests_account_manager_parent_class)->finalize (obj);
 }
 
 static void
-tp_test_account_manager_get_property (GObject *object,
+tp_tests_account_manager_get_property (GObject *object,
               guint property_id,
               GValue *value,
               GParamSpec *spec)
 {
-  TpTestAccountManagerPrivate *priv = TP_TEST_ACCOUNT_MANAGER (object)->priv;
+  TpTestsAccountManagerPrivate *priv = TP_TESTS_ACCOUNT_MANAGER (object)->priv;
   GPtrArray *accounts;
   guint i = 0;
 
@@ -140,8 +140,8 @@ tp_test_account_manager_get_property (GObject *object,
   * too.
   */
 static void
-tp_test_account_manager_class_init (
-    TpTestAccountManagerClass *klass)
+tp_tests_account_manager_class_init (
+    TpTestsAccountManagerClass *klass)
 {
   GObjectClass *object_class = (GObjectClass *) klass;
   GParamSpec *param_spec;
@@ -165,9 +165,9 @@ tp_test_account_manager_class_init (
         { NULL },
   };
 
-  g_type_class_add_private (klass, sizeof (TpTestAccountManagerPrivate));
-  object_class->get_property = tp_test_account_manager_get_property;
-  object_class->finalize = tp_test_account_manager_finalize;
+  g_type_class_add_private (klass, sizeof (TpTestsAccountManagerPrivate));
+  object_class->get_property = tp_tests_account_manager_get_property;
+  object_class->finalize = tp_tests_account_manager_finalize;
 
   param_spec = g_param_spec_boxed ("interfaces", "Extra D-Bus interfaces",
       "In this case we only implement AccountManager, so none.",
@@ -187,17 +187,17 @@ tp_test_account_manager_class_init (
 
   klass->dbus_props_class.interfaces = prop_interfaces;
   tp_dbus_properties_mixin_class_init (object_class,
-      G_STRUCT_OFFSET (TpTestAccountManagerClass, dbus_props_class));
+      G_STRUCT_OFFSET (TpTestsAccountManagerClass, dbus_props_class));
 }
 
-TpTestAccountManager *
-tp_test_account_manager_new (void)
+TpTestsAccountManager *
+tp_tests_account_manager_new (void)
 {
-  return g_object_new (TP_TEST_TYPE_ACCOUNT_MANAGER, NULL);
+  return g_object_new (TP_TESTS_TYPE_ACCOUNT_MANAGER, NULL);
 }
 
 void
-tp_test_account_manager_add_account (TpTestAccountManager *self,
+tp_tests_account_manager_add_account (TpTestsAccountManager *self,
     const gchar *account_path)
 {
   g_ptr_array_add (self->priv->valid_accounts, g_strdup (account_path));
@@ -206,10 +206,10 @@ tp_test_account_manager_add_account (TpTestAccountManager *self,
 }
 
 void
-tp_test_account_manager_remove_account (TpTestAccountManager *self,
+tp_tests_account_manager_remove_account (TpTestsAccountManager *self,
     const gchar *account_path)
 {
-  TpTestAccountManagerPrivate *priv = self->priv;
+  TpTestsAccountManagerPrivate *priv = self->priv;
   guint i;
 
   for (i = 0; i < priv->valid_accounts->len; i++)

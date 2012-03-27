@@ -9,8 +9,8 @@
  * notice and this notice are preserved.
  */
 
-#ifndef __TP_TEST_CONTACT_LIST_MANAGER_H__
-#define __TP_TEST_CONTACT_LIST_MANAGER_H__
+#ifndef __TP_TESTS_CONTACT_LIST_MANAGER_H__
+#define __TP_TESTS_CONTACT_LIST_MANAGER_H__
 
 #include <glib-object.h>
 
@@ -20,92 +20,92 @@
 
 G_BEGIN_DECLS
 
-typedef struct _TpTestContactListManager TpTestContactListManager;
-typedef struct _TpTestContactListManagerClass TpTestContactListManagerClass;
-typedef struct _TpTestContactListManagerPrivate TpTestContactListManagerPrivate;
+typedef struct _TpTestsContactListManager TpTestsContactListManager;
+typedef struct _TpTestsContactListManagerClass TpTestsContactListManagerClass;
+typedef struct _TpTestsContactListManagerPrivate TpTestsContactListManagerPrivate;
 
-struct _TpTestContactListManagerClass {
+struct _TpTestsContactListManagerClass {
     GObjectClass parent_class;
 };
 
-struct _TpTestContactListManager {
+struct _TpTestsContactListManager {
     GObject parent;
 
-    TpTestContactListManagerPrivate *priv;
+    TpTestsContactListManagerPrivate *priv;
 };
 
-GType tp_test_contact_list_manager_get_type (void);
+GType tp_tests_contact_list_manager_get_type (void);
 
-#define TP_TEST_TYPE_CONTACT_LIST_MANAGER \
-  (tp_test_contact_list_manager_get_type ())
-#define TP_TEST_CONTACT_LIST_MANAGER(obj) \
-  (G_TYPE_CHECK_INSTANCE_CAST((obj), TP_TEST_TYPE_CONTACT_LIST_MANAGER, \
-                              TpTestContactListManager))
-#define TP_TEST_CONTACT_LIST_MANAGER_CLASS(klass) \
-  (G_TYPE_CHECK_CLASS_CAST((klass), TP_TEST_TYPE_CONTACT_LIST_MANAGER, \
-                           TpTestContactListManagerClass))
-#define TP_TEST_IS_CONTACT_LIST_MANAGER(obj) \
-  (G_TYPE_CHECK_INSTANCE_TYPE((obj), TP_TEST_TYPE_CONTACT_LIST_MANAGER))
-#define TP_TEST_IS_CONTACT_LIST_MANAGER_CLASS(klass) \
-  (G_TYPE_CHECK_CLASS_TYPE((klass), TP_TEST_TYPE_CONTACT_LIST_MANAGER))
-#define TP_TEST_CONTACT_LIST_MANAGER_GET_CLASS(obj) \
-  (G_TYPE_INSTANCE_GET_CLASS ((obj), TP_TEST_TYPE_CONTACT_LIST_MANAGER, \
-                              TpTestContactListManagerClass))
+#define TP_TESTS_TYPE_CONTACT_LIST_MANAGER \
+  (tp_tests_contact_list_manager_get_type ())
+#define TP_TESTS_CONTACT_LIST_MANAGER(obj) \
+  (G_TYPE_CHECK_INSTANCE_CAST((obj), TP_TESTS_TYPE_CONTACT_LIST_MANAGER, \
+                              TpTestsContactListManager))
+#define TP_TESTS_CONTACT_LIST_MANAGER_CLASS(klass) \
+  (G_TYPE_CHECK_CLASS_CAST((klass), TP_TESTS_TYPE_CONTACT_LIST_MANAGER, \
+                           TpTestsContactListManagerClass))
+#define TP_TESTS_IS_CONTACT_LIST_MANAGER(obj) \
+  (G_TYPE_CHECK_INSTANCE_TYPE((obj), TP_TESTS_TYPE_CONTACT_LIST_MANAGER))
+#define TP_TESTS_IS_CONTACT_LIST_MANAGER_CLASS(klass) \
+  (G_TYPE_CHECK_CLASS_TYPE((klass), TP_TESTS_TYPE_CONTACT_LIST_MANAGER))
+#define TP_TESTS_CONTACT_LIST_MANAGER_GET_CLASS(obj) \
+  (G_TYPE_INSTANCE_GET_CLASS ((obj), TP_TESTS_TYPE_CONTACT_LIST_MANAGER, \
+                              TpTestsContactListManagerClass))
 
-gboolean tp_test_contact_list_manager_add_to_group (
-    TpTestContactListManager *self, GObject *channel,
+gboolean tp_tests_contact_list_manager_add_to_group (
+    TpTestsContactListManager *self, GObject *channel,
     TpHandle group, TpHandle member, const gchar *message, GError **error);
 
-gboolean tp_test_contact_list_manager_remove_from_group (
-    TpTestContactListManager *self, GObject *channel,
+gboolean tp_tests_contact_list_manager_remove_from_group (
+    TpTestsContactListManager *self, GObject *channel,
     TpHandle group, TpHandle member, const gchar *message, GError **error);
 
 /* elements 1, 2... of this enum must be kept in sync with elements 0, 1...
  * of the array _contact_lists in contact-list-manager.h */
 typedef enum {
-    INVALID_TP_TEST_CONTACT_LIST,
-    TP_TEST_CONTACT_LIST_SUBSCRIBE = 1,
-    TP_TEST_CONTACT_LIST_PUBLISH,
-    TP_TEST_CONTACT_LIST_STORED
-} TpTestContactListHandle;
+    INVALID_TP_TESTS_CONTACT_LIST,
+    TP_TESTS_CONTACT_LIST_SUBSCRIBE = 1,
+    TP_TESTS_CONTACT_LIST_PUBLISH,
+    TP_TESTS_CONTACT_LIST_STORED
+} TpTestsContactListHandle;
 
-#define NUM_TP_TEST_CONTACT_LISTS TP_TEST_CONTACT_LIST_STORED + 1
+#define NUM_TP_TESTS_CONTACT_LISTS TP_TESTS_CONTACT_LIST_STORED + 1
 
 /* this enum must be kept in sync with the array _statuses in
  * contact-list-manager.c */
 typedef enum {
-    TP_TEST_CONTACT_LIST_PRESENCE_OFFLINE = 0,
-    TP_TEST_CONTACT_LIST_PRESENCE_UNKNOWN,
-    TP_TEST_CONTACT_LIST_PRESENCE_ERROR,
-    TP_TEST_CONTACT_LIST_PRESENCE_AWAY,
-    TP_TEST_CONTACT_LIST_PRESENCE_AVAILABLE
-} TpTestContactListPresence;
+    TP_TESTS_CONTACT_LIST_PRESENCE_OFFLINE = 0,
+    TP_TESTS_CONTACT_LIST_PRESENCE_UNKNOWN,
+    TP_TESTS_CONTACT_LIST_PRESENCE_ERROR,
+    TP_TESTS_CONTACT_LIST_PRESENCE_AWAY,
+    TP_TESTS_CONTACT_LIST_PRESENCE_AVAILABLE
+} TpTestsContactListPresence;
 
-const TpPresenceStatusSpec *tp_test_contact_list_presence_statuses (
+const TpPresenceStatusSpec *tp_tests_contact_list_presence_statuses (
     void);
 
-gboolean tp_test_contact_list_manager_add_to_list (
-    TpTestContactListManager *self, GObject *channel,
-    TpTestContactListHandle list, TpHandle member, const gchar *message,
+gboolean tp_tests_contact_list_manager_add_to_list (
+    TpTestsContactListManager *self, GObject *channel,
+    TpTestsContactListHandle list, TpHandle member, const gchar *message,
     GError **error);
 
-gboolean tp_test_contact_list_manager_remove_from_list (
-    TpTestContactListManager *self, GObject *channel,
-    TpTestContactListHandle list, TpHandle member, const gchar *message,
+gboolean tp_tests_contact_list_manager_remove_from_list (
+    TpTestsContactListManager *self, GObject *channel,
+    TpTestsContactListHandle list, TpHandle member, const gchar *message,
     GError **error);
 
-const gchar **tp_test_contact_lists (void);
+const gchar **tp_tests_contact_lists (void);
 
-TpTestContactListPresence tp_test_contact_list_manager_get_presence (
-    TpTestContactListManager *self, TpHandle contact);
-const gchar *tp_test_contact_list_manager_get_alias (
-    TpTestContactListManager *self, TpHandle contact);
-void tp_test_contact_list_manager_set_alias (
-    TpTestContactListManager *self, TpHandle contact, const gchar *alias);
-GPtrArray * tp_test_contact_list_manager_get_contact_info (
-    TpTestContactListManager *self, TpHandle contact);
-void tp_test_contact_list_manager_set_contact_info (
-    TpTestContactListManager *self, const GPtrArray *contact_info);
+TpTestsContactListPresence tp_tests_contact_list_manager_get_presence (
+    TpTestsContactListManager *self, TpHandle contact);
+const gchar *tp_tests_contact_list_manager_get_alias (
+    TpTestsContactListManager *self, TpHandle contact);
+void tp_tests_contact_list_manager_set_alias (
+    TpTestsContactListManager *self, TpHandle contact, const gchar *alias);
+GPtrArray * tp_tests_contact_list_manager_get_contact_info (
+    TpTestsContactListManager *self, TpHandle contact);
+void tp_tests_contact_list_manager_set_contact_info (
+    TpTestsContactListManager *self, const GPtrArray *contact_info);
 
 G_END_DECLS
 
