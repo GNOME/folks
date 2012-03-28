@@ -2012,4 +2012,33 @@ public class Folks.IndividualAggregator : Object
 
       return (!) new_persona;
     }
+
+  /**
+   * Look up an individual in the aggregator.
+   *
+   * This returns the {@link Individual} with the given `id` if it exists in
+   * the aggregator, and `null` otherwise.
+   *
+   * In future, when lazy-loading of individuals' properties is added to folks,
+   * this method guarantees to load all properties of the individual, even if
+   * the aggregator hasn't lazy-loaded anything else.
+   *
+   * This method is safe to call before {@link IndividualAggregator.prepare} has
+   * been called, and will call {@link IndividualAggregator.prepare} itself in
+   * that case.
+   *
+   * @param id ID of the individual to look up
+   * @return individual with `id`, or `null` if no such individual was found
+   * @throws GLib.Error from {@link IndividualAggregator.prepare}
+   *
+   * @since UNRELEASED
+   */
+  public async Individual? look_up_individual (string id) throws GLib.Error
+    {
+      /* Ensure the aggregator's prepared. */
+      yield this.prepare ();
+
+      /* FIXME: When bgo#648805 is fixed, this needs to support lazy-loading. */
+      return this._individuals.get (id);
+    }
 }
