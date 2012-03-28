@@ -317,6 +317,9 @@ tp_tests_backend_remove_account (TpTestsBackend *self,
   priv->accounts = g_list_remove (priv->accounts, handle);
   data = (AccountData *) handle;
 
+  /* Make sure all dbus trafic with account's connection is done */
+  tp_tests_proxy_run_until_dbus_queue_processed (data->client_conn);
+
   /* Remove the account from the account manager */
   tp_tests_simple_account_manager_remove_account (priv->account_manager,
       data->object_path);
@@ -340,7 +343,7 @@ tp_tests_backend_tear_down (TpTestsBackend *self)
   TpTestsBackendPrivate *priv = self->priv;
   GError *error = NULL;
 
-  /* Make sure all dbus trafic is done */
+  /* Make sure all dbus trafic with AM is done */
   tp_tests_proxy_run_until_dbus_queue_processed (priv->client_am);
   g_clear_object (&priv->client_am);
 
