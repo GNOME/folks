@@ -1,7 +1,11 @@
 Overview of changes from libfolks 0.6.8 to libfolks 0.6.9
 =============================================================
 
+Dependencies:
+• telepathy-glib ≥ 0.15.5
+
 Bugs fixed:
+• Bug 672980 — tp_account_get_protocol: assertion `TP_IS_ACCOUNT (account)' failed
 
 Overview of changes from libfolks 0.6.7 to libfolks 0.6.8
 =============================================================

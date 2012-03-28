@@ -614,7 +614,7 @@ public class Tpf.Persona : Folks.Persona,
     {
       unowned string id = contact.get_identifier ();
       var connection = contact.connection;
-      var account = this._account_for_connection (connection);
+      var account = connection.get_account ();
       var uid = this.build_uid (store.type_id, store.id, id);
 
       Object (contact: contact,
@@ -663,7 +663,7 @@ public class Tpf.Persona : Folks.Persona,
 
       /* Set our single IM address */
       var connection = this.contact.connection;
-      var account = this._account_for_connection (connection);
+      var account = connection.get_account ();
 
       try
         {
@@ -1003,25 +1003,6 @@ public class Tpf.Persona : Folks.Persona,
         {
           this._contact.weak_unref (this._contact_weak_notify_cb);
         }
-    }
-
-  private static Account? _account_for_connection (Connection conn)
-    {
-      var manager = AccountManager.dup ();
-      var accounts = manager.get_valid_accounts ();
-
-      Account account_found = null;
-      accounts.foreach ((l) =>
-        {
-          unowned Account account = (Account) l;
-          if (account.connection == conn)
-            {
-              account_found = account;
-              return;
-            }
-        });
-
-      return account_found;
     }
 
   private void _contact_notify_presence_message ()
