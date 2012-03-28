@@ -137,9 +137,9 @@ tp_tests_simple_account_manager_class_init (
   GParamSpec *param_spec;
 
   static TpDBusPropertiesMixinPropImpl am_props[] = {
-        { "Interfaces", "interfaces", NULL },
-        { "ValidAccounts", "valid-accounts", NULL },
-        { "InvalidAccounts", "invalid-accounts", NULL },
+        { "Interfaces", (gpointer) "interfaces", NULL },
+        { "ValidAccounts", (gpointer) "valid-accounts", NULL },
+        { "InvalidAccounts", (gpointer) "invalid-accounts", NULL },
         /*
         { "SupportedAccountProperties", "supported-account-properties", NULL },
         */

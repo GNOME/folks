@@ -531,6 +531,12 @@ status_changed_cb (TpBaseConnection *conn,
           close_all (self);
         }
       break;
+
+    default:
+        {
+          g_assert_not_reached ();
+        }
+      break;
     }
 }
 

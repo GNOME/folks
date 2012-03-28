@@ -343,14 +343,14 @@ tp_tests_props_text_channel_class_init (TpTestsPropsTextChannelClass *klass)
 {
   GObjectClass *object_class = (GObjectClass *) klass;
   static TpDBusPropertiesMixinPropImpl channel_props[] = {
-      { "TargetHandleType", "handle-type", NULL },
-      { "TargetHandle", "handle", NULL },
-      { "ChannelType", "channel-type", NULL },
-      { "Interfaces", "interfaces", NULL },
-      { "TargetID", "target-id", NULL },
-      { "Requested", "requested", NULL },
-      { "InitiatorHandle", "initiator-handle", NULL },
-      { "InitiatorID", "initiator-id", NULL },
+      { "TargetHandleType", (gpointer) "handle-type", NULL },
+      { "TargetHandle", (gpointer) "handle", NULL },
+      { "ChannelType", (gpointer) "channel-type", NULL },
+      { "Interfaces", (gpointer) "interfaces", NULL },
+      { "TargetID", (gpointer) "target-id", NULL },
+      { "Requested", (gpointer) "requested", NULL },
+      { "InitiatorHandle", (gpointer) "initiator-handle", NULL },
+      { "InitiatorID", (gpointer) "initiator-id", NULL },
       { NULL }
   };
   static TpDBusPropertiesMixinIfaceImpl prop_interfaces[] = {

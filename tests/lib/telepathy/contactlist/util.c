@@ -375,6 +375,7 @@ _tp_create_local_socket (TpSocketAddressType address_type,
       case TP_SOCKET_ACCESS_CONTROL_PORT:
         break;
 
+      case TP_SOCKET_ACCESS_CONTROL_NETMASK:
       default:
         g_assert_not_reached ();
     }
@@ -403,6 +404,10 @@ _tp_create_local_socket (TpSocketAddressType address_type,
           break;
         }
 
+#ifndef HAVE_GIO_UNIX
+      case TP_SOCKET_ADDRESS_TYPE_UNIX:
+#endif
+      case TP_SOCKET_ADDRESS_TYPE_ABSTRACT_UNIX:
       default:
         g_assert_not_reached ();
     }
@@ -447,6 +452,10 @@ _tp_create_local_socket (TpSocketAddressType address_type,
             G_MAXUINT);
         break;
 
+#ifndef HAVE_GIO_UNIX
+      case TP_SOCKET_ADDRESS_TYPE_UNIX:
+#endif
+      case TP_SOCKET_ADDRESS_TYPE_ABSTRACT_UNIX:
       default:
         g_assert_not_reached ();
     }

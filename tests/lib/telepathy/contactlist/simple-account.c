@@ -287,44 +287,49 @@ tp_tests_simple_account_class_init (TpTestsSimpleAccountClass *klass)
   GObjectClass *object_class = (GObjectClass *) klass;
   GParamSpec *param_spec;
 
+#define MIXIN_PROP(N, g) \
+        { N, (gpointer) g, NULL }
+
   static TpDBusPropertiesMixinPropImpl a_props[] = {
-        { "Interfaces", "interfaces", NULL },
-        { "DisplayName", "display-name", NULL },
-        { "Icon", "icon", NULL },
-        { "Valid", "valid", NULL },
-        { "Enabled", "enabled", NULL },
-        { "Nickname", "nickname", NULL },
-        { "Parameters", "parameters", NULL },
-        { "AutomaticPresence", "automatic-presence", NULL },
-        { "ConnectAutomatically", "connect-automatically", NULL },
-        { "Connection", "connection", NULL },
-        { "ConnectionStatus", "connection-status", NULL },
-        { "ConnectionStatusReason", "connection-status-reason", NULL },
-        { "CurrentPresence", "current-presence", NULL },
-        { "RequestedPresence", "requested-presence", NULL },
-        { "NormalizedName", "normalized-name", NULL },
-        { "HasBeenOnline", "has-been-online", NULL },
-        { "Supersedes", "supersedes", NULL },
+        MIXIN_PROP ("Interfaces", "interfaces"),
+        MIXIN_PROP ("DisplayName", "display-name"),
+        MIXIN_PROP ("Icon", "icon"),
+        MIXIN_PROP ("Valid", "valid"),
+        MIXIN_PROP ("Enabled", "enabled"),
+        MIXIN_PROP ("Nickname", "nickname"),
+        MIXIN_PROP ("Parameters", "parameters"),
+        MIXIN_PROP ("AutomaticPresence", "automatic-presence"),
+        MIXIN_PROP ("ConnectAutomatically", "connect-automatically"),
+        MIXIN_PROP ("Connection", "connection"),
+        MIXIN_PROP ("ConnectionStatus", "connection-status"),
+        MIXIN_PROP ("ConnectionStatusReason", "connection-status-reason"),
+        MIXIN_PROP ("CurrentPresence", "current-presence"),
+        MIXIN_PROP ("RequestedPresence", "requested-presence"),
+        MIXIN_PROP ("NormalizedName", "normalized-name"),
+        MIXIN_PROP ("HasBeenOnline", "has-been-online"),
+        MIXIN_PROP ("Supersedes", "supersedes"),
         { NULL }
   };
 
   static TpDBusPropertiesMixinPropImpl ais_props[] = {
-        { "StorageProvider", "storage-provider", NULL },
-        { "StorageIdentifier", "storage-identifier", NULL },
-        { "StorageSpecificInformation", "storage-specific-information", NULL },
-        { "StorageRestrictions", "storage-restrictions", NULL },
+        MIXIN_PROP ("StorageProvider", "storage-provider"),
+        MIXIN_PROP ("StorageIdentifier", "storage-identifier"),
+        MIXIN_PROP ("StorageSpecificInformation", "storage-specific-information"),
+        MIXIN_PROP ("StorageRestrictions", "storage-restrictions"),
         { NULL },
   };
 
   static TpDBusPropertiesMixinPropImpl aia_props[] = {
-        { "URISchemes", "uri-schemes", NULL },
+        MIXIN_PROP ("URISchemes", "uri-schemes"),
         { NULL },
   };
 
   static TpDBusPropertiesMixinPropImpl avatar_props[] = {
-        { "Avatar", "avatar", NULL },
+        MIXIN_PROP ("Avatar", "avatar"),
         { NULL },
   };
+
+#undef MIXIN_PROP
 
   static TpDBusPropertiesMixinIfaceImpl prop_interfaces[] = {
         { TP_IFACE_ACCOUNT,
