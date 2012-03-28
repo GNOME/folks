@@ -341,6 +341,7 @@ public class AggregationTests : Folks.TestCase
       individual2_expected.add ("geraldine@example.com");
 
       HashSet<string> set_in_use = null;
+      bool detailed_swapped = false;
       foreach (var p in individual1.personas)
         {
           /* Work out which of the two individuals this is */
@@ -364,6 +365,25 @@ public class AggregationTests : Folks.TestCase
                   found_detailed = true;
                 }
             }
+
+          if (!found_detailed && !detailed_swapped)
+            {
+              /* Swap individual1_detailed and individual2_detailed in the case they
+               * did not appear in the same order in normal and detailed signals */
+              weak Individual tmp = individual1_detailed;
+              individual1_detailed = individual2_detailed;
+              individual2_detailed = tmp;
+              detailed_swapped = true;
+
+              foreach (var pd in individual1_detailed.personas)
+                {
+                  if (pd.uid == p.uid)
+                    {
+                      found_detailed = true;
+                    }
+                }
+            }
+
           assert (found_detailed == true);
         }
 
