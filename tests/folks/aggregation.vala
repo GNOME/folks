@@ -640,7 +640,8 @@ public class AggregationTests : Folks.TestCase
 
       /* Set up the aggregator */
       var aggregator = new IndividualAggregator ();
-      aggregator.individuals_changed_detailed.connect ((changes) =>
+      var individuals_changed_detailed_id =
+          aggregator.individuals_changed_detailed.connect ((changes) =>
         {
           var removed = changes.get_keys ();
           var added = changes.get_values ();
@@ -648,7 +649,8 @@ public class AggregationTests : Folks.TestCase
           this._test_user_individuals_changed (true, added, removed,
               ref user_individual_detailed);
         });
-      aggregator.individuals_changed.connect ((added, removed, m, a, r) =>
+      var individuals_changed_id =
+          aggregator.individuals_changed.connect ((added, removed, m, a, r) =>
         {
           this._test_user_individuals_changed (false, added, removed,
               ref user_individual);
@@ -711,6 +713,9 @@ public class AggregationTests : Folks.TestCase
       assert (display_ids_detailed.contains ("me@example.com") &&
           display_ids_detailed.contains ("me2@example.com"));
 
+      aggregator.disconnect (individuals_changed_id);
+      aggregator.disconnect (individuals_changed_detailed_id);
+
       /* Clean up for the next test */
       this._tp_backend.remove_account (account2_handle);
       this._tp_backend.remove_account (account1_handle);
@@ -770,14 +775,16 @@ public class AggregationTests : Folks.TestCase
 
       /* Set up the aggregator */
       var aggregator = new IndividualAggregator ();
-      aggregator.individuals_changed_detailed.connect ((changes) =>
+      var individuals_changed_detailed_id =
+          aggregator.individuals_changed_detailed.connect ((changes) =>
         {
           var removed = changes.get_keys ();
           var added = changes.get_values ();
 
           this._test_untrusted_store_individuals_changed (true, added, removed);
         });
-      aggregator.individuals_changed.connect ((added, removed, m, a, r) =>
+      var individuals_changed_id =
+          aggregator.individuals_changed.connect ((added, removed, m, a, r) =>
         {
           this._test_untrusted_store_individuals_changed (false, added,
               removed);
@@ -812,6 +819,9 @@ public class AggregationTests : Folks.TestCase
         });
 
       main_loop.run ();
+
+      aggregator.disconnect (individuals_changed_id);
+      aggregator.disconnect (individuals_changed_detailed_id);
 
       /* Clean up for the next test */
       this._tp_backend.remove_account (account2_handle);
