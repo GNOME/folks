@@ -438,6 +438,15 @@ public class Tpf.Persona : Folks.Persona,
       return changed;
     }
 
+  private void _contact_groups_changed (string[] added, string[] removed)
+    {
+      foreach (var group in added)
+        this._change_group (group, true);
+
+      foreach (var group in removed)
+        this._change_group (group, false);
+    }
+
   /**
    * {@inheritDoc}
    *
@@ -706,30 +715,11 @@ public class Tpf.Persona : Folks.Persona,
         });
       this._contact_notify_contact_info ();
 
-      ((Tpf.PersonaStore) this.store).group_members_changed.connect (
-          (s, group, added, removed) =>
-            {
-              if (added.find (this) != null)
-                this._change_group (group, true);
-
-              if (removed.find (this) != null)
-                this._change_group (group, false);
-            });
-
-      ((Tpf.PersonaStore) this.store).group_removed.connect (
-          (s, group, error) =>
-            {
-              /* FIXME: Can't use
-               * !(error is TelepathyGLib.DBusError.OBJECT_REMOVED) because the
-               * GIR bindings don't annotate errors */
-              if (error != null &&
-                  (error.domain != TelepathyGLib.dbus_errors_quark () ||
-                   error.code != TelepathyGLib.DBusError.OBJECT_REMOVED))
-                {
-                  debug ("Group invalidated: %s", error.message);
-                  this._change_group (group, false);
-                }
-            });
+      this.contact.contact_groups_changed.connect ((added, removed) =>
+        {
+          this._contact_groups_changed (added, removed);
+        });
+      this._contact_groups_changed (this.contact.get_contact_groups (), {});
 
       if (this.is_user)
         {
@@ -1094,6 +1084,6 @@ public class Tpf.Persona : Folks.Persona,
         }
 
       var store = PersonaStore.dup_for_account (account);
-      return store._ensure_persona_from_contact (contact);
+      return store._ensure_persona_for_contact (contact);
     }
 }

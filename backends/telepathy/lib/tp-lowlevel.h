@@ -24,75 +24,15 @@
 #include <glib.h>
 #include <glib-object.h>
 #include <gio/gio.h>
-#include <telepathy-glib/channel.h>
-#include <telepathy-glib/connection.h>
-#include <telepathy-glib/contact.h>
+#include <telepathy-glib/telepathy-glib.h>
 
 G_BEGIN_DECLS
-
-GQuark folks_tp_lowlevel_error_quark (void);
-#define FOLKS_TP_LOWLEVEL_ERROR (folks_tp_lowlevel_error_quark ())
-
-typedef enum {
-  FOLKS_TP_LOWLEVEL_ERROR_INVALID_ARGUMENT,
-} FolksTpLowlevelError;
-
-/**
- * folks_tp_lowlevel_channel_group_change_membership:
- * @channel:
- * @handle:
- * @is_member:
- * @message: (allow-none):
- * @error:
- */
-void
-folks_tp_lowlevel_channel_group_change_membership (TpChannel *channel,
-    guint handle,
-    gboolean is_member,
-    const gchar *message,
-    GError **error);
-
-/**
- * FolksTpLowlevelNewGroupChannelsCallback:
- * @channel: (allow-none) (transfer none): the new group #TpChannel
- * @result: the #GAsyncResult to finish the async call with
- * @user_data: extra data to pass to the callback
- *
- * The callback type for
- * folks_tp_lowlevel_connection_connect_to_new_group_channels().
- */
-typedef void (*FolksTpLowlevelNewGroupChannelsCallback) (TpChannel *channel,
-    GAsyncResult *result,
-    gpointer user_data);
-
-void
-folks_tp_lowlevel_connection_connect_to_new_group_channels (
-    TpConnection *conn,
-    FolksTpLowlevelNewGroupChannelsCallback callback,
-    gpointer user_data);
-
-void
-folks_tp_lowlevel_connection_create_group_async (
-    TpConnection *conn,
-    const char *name);
 
 void
 folks_tp_lowlevel_connection_set_contact_alias (
     TpConnection *conn,
     guint handle,
     const gchar *alias);
-
-void
-folks_tp_lowlevel_connection_open_contact_list_channel_async (
-    TpConnection *conn,
-    const char *name,
-    GAsyncReadyCallback callback,
-    gpointer user_data);
-
-TpChannel *
-folks_tp_lowlevel_connection_open_contact_list_channel_finish (
-    GAsyncResult *result,
-    GError **error);
 
 void
 folks_tp_lowlevel_connection_get_alias_flags_async (
@@ -102,21 +42,6 @@ folks_tp_lowlevel_connection_get_alias_flags_async (
 
 TpConnectionAliasFlags
 folks_tp_lowlevel_connection_get_alias_flags_finish (
-    GAsyncResult *result,
-    GError **error);
-
-void
-folks_tp_lowlevel_connection_get_contacts_by_handle_async (
-    TpConnection *conn,
-    const guint *contact_handles,
-    guint contact_handles_length,
-    const guint *features,
-    guint features_length,
-    GAsyncReadyCallback callback,
-    gpointer user_data);
-
-GList *
-folks_tp_lowlevel_connection_get_contacts_by_handle_finish (
     GAsyncResult *result,
     GError **error);
 
@@ -132,17 +57,6 @@ folks_tp_lowlevel_connection_get_contacts_by_id_async (
 
 GList *
 folks_tp_lowlevel_connection_get_contacts_by_id_finish (
-    GAsyncResult *result,
-    GError **error);
-
-void
-folks_tp_lowlevel_connection_get_requestable_channel_classes_async (
-    TpConnection *conn,
-    GAsyncReadyCallback callback,
-    gpointer user_data);
-
-GPtrArray *
-folks_tp_lowlevel_connection_get_requestable_channel_classes_finish (
     GAsyncResult *result,
     GError **error);
 

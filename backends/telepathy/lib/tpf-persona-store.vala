@@ -17,6 +17,7 @@
  * Authors:
  *       Travis Reitter <travis.reitter@collabora.co.uk>
  *       Philip Withnall <philip.withnall@collabora.co.uk>
+ *       Xavier Claessens <xavier.claessens@collabora.co.uk>
  */
 
 using GLib;
@@ -29,75 +30,32 @@ extern const string BACKEND_NAME;
 
 /**
  * A persona store which is associated with a single Telepathy account. It will
- * create {@link Persona}s for each of the contacts in the published, stored or
- * subscribed
- * [[http://people.collabora.co.uk/~danni/telepathy-book/chapter.channel.html|channels]]
- * of the account.
+ * create {@link Persona}s for each of the contacts in the account's
+ * contact list.
  */
 public class Tpf.PersonaStore : Folks.PersonaStore
 {
-  /* FIXME: expose the interface strings in the introspected tp-glib bindings
-   */
-  private static string _tp_channel_iface = "org.freedesktop.Telepathy.Channel";
-  private static string _tp_channel_contact_list_type = _tp_channel_iface +
-      ".Type.ContactList";
-  private static string _tp_channel_channel_type = _tp_channel_iface +
-      ".ChannelType";
-  private static string _tp_channel_handle_type = _tp_channel_iface +
-      ".TargetHandleType";
-  private static string[] _undisplayed_groups =
-      {
-        "publish",
-        "stored",
-        "subscribe"
-      };
-  private static ContactFeature[] _contact_features =
-      {
-        ContactFeature.ALIAS,
-        ContactFeature.AVATAR_DATA,
-        ContactFeature.AVATAR_TOKEN,
-        ContactFeature.CAPABILITIES,
-        ContactFeature.CLIENT_TYPES,
-        ContactFeature.PRESENCE,
-        ContactFeature.CONTACT_INFO
-      };
-
-  private static GLib.Quark[] _connection_features =
-      {
-        TelepathyGLib.Connection.get_feature_quark_contact_info (),
-        0
-      };
-
   private const string[] _always_writeable_properties =
     {
       "is-favourite"
     };
 
+  /* Sets of Personas exposed by this store.
+   * This is the roster + self_contact */
   private HashMap<string, Persona> _personas;
   private Map<string, Persona> _personas_ro;
   private HashSet<Persona> _persona_set;
-  /* universal, contact owner handles (not channel-specific) */
-  private HashMap<uint, Persona> _handle_persona_map;
-  /* Map from weakly-referenced TpContacts to their original TpHandles;
-   * necessary because the handles get set to 0 before our weak_notify callback
-   * is called, and we need the handle to remove the contact. */
-  private HashMap<unowned Contact, uint> _weakly_referenced_contacts;
-  private HashMap<Channel, HashSet<Persona>> _channel_group_personas_map;
-  private HashMap<Channel, HashSet<uint>> _channel_group_incoming_adds;
-  private HashMap<string, HashSet<Tpf.Persona>> _group_outgoing_adds;
-  private HashMap<string, HashSet<Tpf.Persona>> _group_outgoing_removes;
-  private HashMap<string, Channel> _standard_channels_unready;
-  private HashMap<string, Channel> _group_channels_unready;
-  private HashMap<string, Channel> _groups;
-  /* FIXME: Should be HashSet<Handle> */
-  private HashSet<uint> _favourite_handles;
-  private Channel _publish;
-  private Channel _stored;
-  private Channel _subscribe;
+
+  /* Map from weakly-referenced TpContacts to their Persona.
+   * This map contains all the TpContact we know about, could be more than the
+   * the roster. Persona is kept in the map until its TpContact is disposed. */
+  private HashMap<unowned Contact, Persona> _contact_persona_map;
+
+  private HashSet<string> _favourite_ids;
   private Connection _conn;
   private AccountManager? _account_manager; /* only null before prepare() */
   private Logger _logger;
-  private Contact? _self_contact;
+  private Persona? _self_persona;
   private MaybeBool _can_add_personas = MaybeBool.UNSET;
   private MaybeBool _can_alias_personas = MaybeBool.UNSET;
   private MaybeBool _can_group_personas = MaybeBool.UNSET;
@@ -105,8 +63,8 @@ public class Tpf.PersonaStore : Folks.PersonaStore
   private bool _is_prepared = false;
   private bool _prepare_pending = false;
   private bool _is_quiescent = false;
-  private bool _got_stored_channel_members = false;
-  private bool _got_self_handle = false;
+  private bool _got_initial_members = false;
+  private bool _got_self_contact = false;
   private Debug _debug;
   private PersonaStoreCache _cache;
   private Cancellable? _load_cache_cancellable = null;
@@ -227,13 +185,20 @@ public class Tpf.PersonaStore : Folks.PersonaStore
 
   private void _notify_if_is_quiescent ()
     {
-      if (this._got_stored_channel_members == true &&
-          this._got_self_handle == true &&
+      if (this._got_initial_members == true &&
+          this._got_self_contact == true &&
           this._is_quiescent == false)
         {
           this._is_quiescent = true;
           this.notify_property ("is-quiescent");
         }
+    }
+
+  private void _force_quiescent ()
+    {
+        this._got_self_contact = true;
+        this._got_initial_members = true;
+        this._notify_if_is_quiescent ();
     }
 
   /**
@@ -331,14 +296,11 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       debug.print_key_value_pairs (domain, level,
           "ID", this.id,
           "Prepared?", this._is_prepared ? "yes" : "no",
-          "Has stored contact members?", this._got_stored_channel_members ? "yes" : "no",
-          "Has self handle?", this._got_self_handle ? "yes" : "no",
-          "Publish TpChannel", "%p".printf (this._publish),
-          "Stored TpChannel", "%p".printf (this._stored),
-          "Subscribe TpChannel", "%p".printf (this._subscribe),
+          "Has initial members?", this._got_initial_members ? "yes" : "no",
+          "Has self contact?", this._got_self_contact ? "yes" : "no",
           "TpConnection", "%p".printf (this._conn),
           "TpAccountManager", "%p".printf (this._account_manager),
-          "Self-TpContact", "%p".printf (this._self_contact),
+          "Self-Persona", "%p".printf (this._self_persona),
           "Can add personas?", this._format_maybe_bool (this._can_add_personas),
           "Can alias personas?",
               this._format_maybe_bool (this._can_alias_personas),
@@ -366,151 +328,26 @@ public class Tpf.PersonaStore : Folks.PersonaStore
 
       debug.unindent ();
 
-      debug.print_line (domain, level, "%u handle–Persona mappings:",
-          this._handle_persona_map.size);
+      debug.print_line (domain, level, "%u contact–Persona mappings:",
+          this._contact_persona_map.size);
       debug.indent ();
 
-      var iter1 = this._handle_persona_map.map_iterator ();
+      var iter1 = this._contact_persona_map.map_iterator ();
       while (iter1.next () == true)
         {
           debug.print_line (domain, level,
-              "%u → %p", iter1.get_key (), iter1.get_value ());
+              "%s → %p", iter1.get_key ().get_identifier (), iter1.get_value ());
         }
 
       debug.unindent ();
 
-      debug.print_line (domain, level, "%u channel group Persona sets:",
-          this._channel_group_personas_map.size);
+      debug.print_line (domain, level, "%u favourite ids:",
+          this._favourite_ids.size);
       debug.indent ();
 
-      var iter2 = this._channel_group_personas_map.map_iterator ();
-      while (iter2.next () == true)
+      foreach (var id in this._favourite_ids)
         {
-          debug.print_heading (domain, level,
-              "Channel (%p):", iter2.get_key ());
-
-          debug.indent ();
-
-          foreach (var persona in iter2.get_value ())
-            {
-              debug.print_line (domain, level, "%p", persona);
-            }
-
-          debug.unindent ();
-        }
-
-      debug.unindent ();
-
-      debug.print_line (domain, level, "%u channel group incoming handle sets:",
-          this._channel_group_incoming_adds.size);
-      debug.indent ();
-
-      var iter3 = this._channel_group_incoming_adds.map_iterator ();
-      while (iter3.next () == true)
-        {
-          debug.print_heading (domain, level,
-              "Channel (%p):", iter3.get_key ());
-
-          debug.indent ();
-
-          foreach (var handle in iter3.get_value ())
-            {
-              debug.print_line (domain, level, "%u", handle);
-            }
-
-          debug.unindent ();
-        }
-
-      debug.unindent ();
-
-      debug.print_line (domain, level, "%u group outgoing add sets:",
-          this._group_outgoing_adds.size);
-      debug.indent ();
-
-      var iter4 = this._group_outgoing_adds.map_iterator ();
-      while (iter4.next () == true)
-        {
-          debug.print_heading (domain, level, "Group (%s):", iter4.get_key ());
-
-          debug.indent ();
-
-          foreach (var persona in iter4.get_value ())
-            {
-              debug.print_line (domain, level, "%p", persona);
-            }
-
-          debug.unindent ();
-        }
-
-      debug.unindent ();
-
-      debug.print_line (domain, level, "%u group outgoing remove sets:",
-          this._group_outgoing_removes.size);
-      debug.indent ();
-
-      var iter5 = this._group_outgoing_removes.map_iterator ();
-      while (iter5.next () == true)
-        {
-          debug.print_heading (domain, level, "Group (%s):", iter5.get_key ());
-
-          debug.indent ();
-
-          foreach (var persona in iter5.get_value ())
-            {
-              debug.print_line (domain, level, "%p", persona);
-            }
-
-          debug.unindent ();
-        }
-
-      debug.unindent ();
-
-      debug.print_line (domain, level, "%u unready standard channels:",
-          this._standard_channels_unready.size);
-      debug.indent ();
-
-      var iter6 = this._standard_channels_unready.map_iterator ();
-      while (iter6.next () == true)
-        {
-          debug.print_line (domain, level,
-              "%s → %p", iter6.get_key (), iter6.get_value ());
-        }
-
-      debug.unindent ();
-
-      debug.print_line (domain, level, "%u unready group channels:",
-          this._group_channels_unready.size);
-      debug.indent ();
-
-      var iter7 = this._group_channels_unready.map_iterator ();
-      while (iter7.next () == true)
-        {
-          debug.print_line (domain, level,
-              "%s → %p", iter7.get_key (), iter7.get_value ());
-        }
-
-      debug.unindent ();
-
-      debug.print_line (domain, level, "%u ready group channels:",
-          this._groups.size);
-      debug.indent ();
-
-      var iter8 = this._groups.map_iterator ();
-      while (iter8.next () == true)
-        {
-          debug.print_line (domain, level,
-              "%s → %p", iter8.get_key (), iter8.get_value ());
-        }
-
-      debug.unindent ();
-
-      debug.print_line (domain, level, "%u favourite handles:",
-          this._favourite_handles.size);
-      debug.indent ();
-
-      foreach (var handle in this._favourite_handles)
-        {
-          debug.print_line (domain, level, "%u", handle);
+          debug.print_line (domain, level, "%s", id);
         }
 
       debug.unindent ();
@@ -536,14 +373,14 @@ public class Tpf.PersonaStore : Folks.PersonaStore
 
       if (this._conn != null)
         {
-          this._conn.notify["self-handle"].disconnect (
-              this._self_handle_changed_cb);
+          this._conn.notify["self-contact"].disconnect (
+              this._self_contact_changed_cb);
           this._conn = null;
         }
 
-      if (this._weakly_referenced_contacts != null)
+      if (this._contact_persona_map != null)
         {
-          var iter = this._weakly_referenced_contacts.map_iterator ();
+          var iter = this._contact_persona_map.map_iterator ();
           while (iter.next () == true)
             {
               var contact = iter.get_key ();
@@ -551,53 +388,12 @@ public class Tpf.PersonaStore : Folks.PersonaStore
             }
         }
 
-      this._weakly_referenced_contacts =
-          new HashMap<unowned Contact, uint> ();
-
-      this._handle_persona_map = new HashMap<uint, Persona> ();
-      this._channel_group_personas_map =
-          new HashMap<Channel, HashSet<Persona>> ();
-      this._channel_group_incoming_adds =
-          new HashMap<Channel, HashSet<uint>> ();
-      this._group_outgoing_adds = new HashMap<string, HashSet<Tpf.Persona>> ();
-      this._group_outgoing_removes = new HashMap<string, HashSet<Tpf.Persona>> (
-          );
-
-      if (this._publish != null)
-        {
-          this._disconnect_from_standard_channel (this._publish);
-          this._publish = null;
-        }
-
-      if (this._stored != null)
-        {
-          this._disconnect_from_standard_channel (this._stored);
-          this._stored = null;
-        }
-
-      if (this._subscribe != null)
-        {
-          this._disconnect_from_standard_channel (this._subscribe);
-          this._subscribe = null;
-        }
-
-      this._standard_channels_unready = new HashMap<string, Channel> ();
-      this._group_channels_unready = new HashMap<string, Channel> ();
-
-      if (this._groups != null)
-        {
-          foreach (var channel in this._groups.values)
-            {
-              if (channel != null)
-                this._disconnect_from_group_channel (channel);
-            }
-        }
+      this._contact_persona_map = new HashMap<unowned Contact, Persona> ();
 
       this._supported_fields = new HashSet<string> ();
       this._supported_fields_ro = this._supported_fields.read_only_view;
-      this._groups = new HashMap<string, Channel> ();
-      this._favourite_handles = new HashSet<uint> ();
-      this._self_contact = null;
+      this._favourite_ids = new HashSet<string> ();
+      this._self_persona = null;
     }
 
   private void _remove_store ()
@@ -661,6 +457,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
                       this._logger_invalidated_cb);
                   this._logger.favourite_contacts_changed.connect (
                       this._favourite_contacts_changed_cb);
+                  this._initialise_favourite_contacts.begin ();
                 }
               catch (GLib.Error e)
                 {
@@ -683,11 +480,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
                   /* If we're disconnected, advertise personas from the cache
                    * instead. */
                   yield this._load_cache ();
-
-                  /* We've reached a quiescent state. */
-                  this._got_self_handle = true;
-                  this._got_stored_channel_members = true;
-                  this._notify_if_is_quiescent ();
+                  this._force_quiescent ();
                 }
 
               this._is_prepared = true;
@@ -732,33 +525,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       try
         {
           var contacts = yield this._logger.get_favourite_contacts ();
-
-          if (contacts.length == 0)
-            return;
-
-          /* Note that we don't need to release these handles, as they're
-           * also held by the relevant contact objects, and will be released
-           * as appropriate by those objects (we're circumventing tp-glib's
-           * handle reference counting). */
-          this._conn.request_handles (-1, HandleType.CONTACT, contacts,
-            (c, ht, h, i, e, w) =>
-              {
-                try
-                  {
-                    this._change_favourites_by_request_handles ((Handle[]) h, i,
-                        e, true);
-                  }
-                catch (GLib.Error e)
-                  {
-                    /* Translators: the parameter is an error message. */
-                    warning (_("Couldn't get list of favorite contacts: %s"),
-                        e.message);
-                  }
-              },
-            this);
-          /* FIXME: Have to pass this as weak_object parameter since Vala
-           * seems to swap the order of user_data and weak_object in the
-           * callback. */
+          this._favourite_contacts_changed_cb (contacts, {});
         }
       catch (GLib.Error e)
         {
@@ -767,96 +534,34 @@ public class Tpf.PersonaStore : Folks.PersonaStore
         }
     }
 
-  private void _change_favourites_by_request_handles (Handle[] handles,
-      string[] ids, GLib.Error? error, bool add) throws GLib.Error
+  private Persona? _lookup_persona_by_id (string id)
     {
-      if (error != null)
-        throw error;
-
-      for (var i = 0; i < handles.length; i++)
+      /* This is not efficient, but probably better than doing DBus roundtrip
+       * to get a TpContact. Maybe we should add a id->persona map? */
+      var iter = this._contact_persona_map.map_iterator ();
+      while (iter.next ())
         {
-          var h = handles[i];
-          var p = this._handle_persona_map[h];
-
-          /* Add/Remove the handle to the set of favourite handles, since we
-           * might not have the corresponding contact yet */
-          if (add)
-            this._favourite_handles.add (h);
-          else
-            this._favourite_handles.remove (h);
-
-          /* If the persona isn't in the _handle_persona_map yet, it's most
-           * likely because the account hasn't connected yet (and we haven't
-           * received the roster). If there are already entries in
-           * _handle_persona_map, the account *is* connected and we should
-           * warn about the unknown persona.
-           * We have to take into account that this._self_contact may be
-           * retrieved before or after the rest of the account's contact list,
-           * affecting the size of this._handle_persona_map. */
-          if (p == null &&
-              ((this._self_contact == null &&
-                this._handle_persona_map.size > 0) ||
-               (this._self_contact != null &&
-                    this._handle_persona_map.size > 1)))
-            {
-              /* Translators: the parameter is an identifier. */
-              warning (_("Unknown Telepathy contact ‘%s’ in favorites list."),
-                  ids[i]);
-              continue;
-            }
-
-          /* Mark or unmark the persona as a favourite */
-          if (p != null)
-            p.is_favourite = add;
+          if (iter.get_key().get_identifier() == id)
+            return iter.get_value();
         }
+      return null;
     }
 
   private void _favourite_contacts_changed_cb (string[] added, string[] removed)
     {
-      /* Don't listen to favourites updates if the account is disconnected. */
-      if (this._conn == null)
-        return;
-
-      /* Add favourites */
-      if (added.length > 0)
+      foreach (var id in added)
         {
-          this._conn.request_handles (-1, HandleType.CONTACT, added,
-              (c, ht, h, i, e, w) =>
-                {
-                  try
-                    {
-                      this._change_favourites_by_request_handles ((Handle[]) h,
-                          i, e, true);
-                    }
-                  catch (GLib.Error e)
-                    {
-                      /* Translators: the parameter is an error message. */
-                      warning (_("Couldn't add favorite contacts: %s"),
-                          e.message);
-                    }
-                },
-              this);
+          this._favourite_ids.add (id);
+          Persona ?p = this._lookup_persona_by_id (id);
+          if (p != null)
+            p.is_favourite = true;
         }
-
-      /* Remove favourites */
-      if (removed.length > 0)
+      foreach (var id in removed)
         {
-          this._conn.request_handles (-1, HandleType.CONTACT, removed,
-              (c, ht, h, i, e, w) =>
-                {
-                  try
-                    {
-                      this._change_favourites_by_request_handles ((Handle[]) h,
-                          i, e, false);
-                    }
-                  catch (GLib.Error e)
-                    {
-                      /* Translators: the parameter is an error message. */
-                      warning (_("Couldn't remove favorite contacts: %s"),
-                          e.message);
-                    }
-                },
-              this);
+          this._favourite_ids.remove (id);
+          Persona ?p = this._lookup_persona_by_id (id);
+          if (p != null)
+            p.is_favourite = false;
         }
     }
 
@@ -914,9 +619,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
 
           /* If the persona store starts offline, we've reached a quiescent
            * state. */
-          this._got_self_handle = true;
-          this._got_stored_channel_members = true;
-          this._notify_if_is_quiescent ();
+          this._force_quiescent ();
 
           return;
         }
@@ -930,130 +633,85 @@ public class Tpf.PersonaStore : Folks.PersonaStore
           this, this.id);
 
       /* Ensure the connection is prepared as necessary. */
-      yield this.account.connection.prepare_async (this._connection_features);
+      yield this.account.connection.prepare_async ({
+          TelepathyGLib.Connection.get_feature_quark_contact_list (),
+          TelepathyGLib.Connection.get_feature_quark_contact_groups (),
+          TelepathyGLib.Connection.get_feature_quark_contact_info (),
+          TelepathyGLib.Connection.get_feature_quark_connected ()
+      });
+
+      if (!this.account.connection.has_interface_by_id (
+          iface_quark_connection_interface_contact_list ()))
+        {
+          warning ("Connection does not implement ContactList iface,
+              legacy CM are not supported anymore. Stay offline");
+
+          this._force_quiescent ();
+
+          return;
+        }
 
       // We're connected, so can stop advertising personas from the cache
       this._unload_cache ();
 
-      var conn = this.account.connection;
-      conn.notify["connection-ready"].connect (this._connection_ready_cb);
-
-      /* Deal with the case where the connection is already ready
-       * FIXME: We have to access the property manually until bgo#571348 is
-       * fixed. */
-      var connection_ready = false;
-      conn.get ("connection-ready", out connection_ready);
-
-      if (connection_ready == true)
-        this._connection_ready_cb (conn, null);
-      else
-        yield conn.prepare_async (null);
-    }
-
-  private void _connection_ready_cb (Object s, ParamSpec? p)
-    {
-      debug ("_connection_ready_cb() for Tpf.PersonaStore %p ('%s').",
-          this, this.id);
-
-      var c = (Connection) s;
-      FolksTpLowlevel.connection_connect_to_new_group_channels (c,
-          this._new_group_channels_cb);
+      this._conn = this.account.connection;
 
       this._marshall_supported_fields ();
       this.notify_property ("supported-fields");
 
-      FolksTpLowlevel.connection_get_alias_flags_async.begin (c, (s2, res) =>
-          {
-            var new_can_alias = MaybeBool.FALSE;
-            try
-              {
-                var flags =
-                    FolksTpLowlevel.connection_get_alias_flags_async.end (res);
-                if ((flags &
-                    ConnectionAliasFlags.CONNECTION_ALIAS_FLAG_USER_SET) > 0)
-                  {
-                    new_can_alias = MaybeBool.TRUE;
-                  }
-              }
-            catch (GLib.Error e)
-              {
-                GLib.warning (
-                    /* Translators: the first parameter is the display name for
-                     * the Telepathy account, and the second is an error
-                     * message. */
-                    _("Failed to determine whether we can set aliases on Telepathy account '%s': %s"),
-                    this.display_name, e.message);
-              }
+      if (this._conn.get_group_storage () != ContactMetadataStorageType.NONE)
+        this._can_group_personas = MaybeBool.TRUE;
+      else
+        this._can_group_personas = MaybeBool.FALSE;
+      this.notify_property ("can-group-personas");
 
-            this._can_alias_personas = new_can_alias;
-            this.notify_property ("can-alias-personas");
-          });
-
-      FolksTpLowlevel.connection_get_requestable_channel_classes_async.begin (c,
-          (s3, res3) =>
-          {
-            var new_can_group = MaybeBool.FALSE;
-            try
-              {
-                GenericArray<weak void*> v;
-                int i;
-
-                v = FolksTpLowlevel.
-                    connection_get_requestable_channel_classes_async.end (res3);
-
-                for (i = 0; i < v.length; i++)
-                  {
-                    unowned ValueArray @class = (ValueArray) v.get (i);
-                    var val = @class.get_nth (0);
-                    if (val != null)
-                      {
-                        var props = (HashTable<weak string, weak Value?>)
-                            val.get_boxed ();
-
-                        var channel_type = TelepathyGLib.asv_get_string (props,
-                            this._tp_channel_channel_type);
-                        bool handle_type_valid;
-                        var handle_type = TelepathyGLib.asv_get_uint32 (props,
-                            this._tp_channel_handle_type,
-                            out handle_type_valid);
-
-                        if ((channel_type ==
-                              this._tp_channel_contact_list_type) &&
-                            handle_type_valid &&
-                            (handle_type == HandleType.GROUP))
-                          {
-                            new_can_group = MaybeBool.TRUE;
-                            break;
-                          }
-                      }
-                  }
-              }
-            catch (GLib.Error e3)
-              {
-                GLib.warning (
-                    /* Translators: the first parameter is the display name for
-                     * the Telepathy account, and the second is an error
-                     * message. */
-                    _("Failed to determine whether we can set groups on Telepathy account '%s': %s"),
-                    this.display_name, e3.message);
-              }
-
-            this._can_group_personas = new_can_group;
-            this.notify_property ("can-group-personas");
-          });
-
-      this._add_standard_channel (c, "publish");
-      this._add_standard_channel (c, "stored");
-      this._add_standard_channel (c, "subscribe");
-      this._conn = c;
+      if (this._conn.get_can_change_contact_list ())
+        {
+          this._can_add_personas = MaybeBool.TRUE;
+          this._can_remove_personas = MaybeBool.TRUE;
+        }
+      else
+        {
+          this._can_add_personas = MaybeBool.FALSE;
+          this._can_remove_personas = MaybeBool.FALSE;
+        }
+      this.notify_property ("can-add-personas");
+      this.notify_property ("can-remove-personas");
 
       /* Add the local user */
-      _conn.notify["self-handle"].connect (this._self_handle_changed_cb);
-      if (this._conn.self_handle != 0)
-        this._self_handle_changed_cb (this._conn, null);
+      this._conn.notify["self-contact"].connect (this._self_contact_changed_cb);
+      this._self_contact_changed_cb (this._conn, null);
 
-      /* We can only initialise the favourite contacts once _conn is prepared */
-      this._initialise_favourite_contacts.begin ();
+      /* TpConnection still does not have high-level API for this */
+      FolksTpLowlevel.connection_get_alias_flags_async.begin (this._conn, (s2, res) =>
+        {
+          var new_can_alias = MaybeBool.FALSE;
+          try
+            {
+              var flags =
+                  FolksTpLowlevel.connection_get_alias_flags_async.end (res);
+              if ((flags &
+                  ConnectionAliasFlags.CONNECTION_ALIAS_FLAG_USER_SET) > 0)
+                {
+                  new_can_alias = MaybeBool.TRUE;
+                }
+            }
+          catch (GLib.Error e)
+            {
+              GLib.warning (
+                  /* Translators: the first parameter is the display name for
+                   * the Telepathy account, and the second is an error
+                   * message. */
+                  _("Failed to determine whether we can set aliases on Telepathy account '%s': %s"),
+                  this.display_name, e.message);
+            }
+
+          this._can_alias_personas = new_can_alias;
+          this.notify_property ("can-alias-personas");
+        });
+
+      this._conn.notify["contact-list-state"].connect (this._contact_list_state_changed_cb);
+      this._contact_list_state_changed_cb (this._conn, null);
     }
 
   private void _marshall_supported_fields ()
@@ -1180,470 +838,164 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       this._cached = false;
     }
 
-  private void _self_handle_changed_cb (Object s, ParamSpec? p)
+  private bool _add_persona (Persona p)
     {
-      var c = (Connection) s;
-
-      /* Remove the old self persona */
-      if (this._self_contact != null)
-        this._ignore_by_handle (this._self_contact.handle, null, null, 0);
-
-      if (c.self_handle == 0)
+      if (!this._persona_set.contains (p))
         {
-          /* We can only claim to have reached a quiescent state once we've
-           * got the stored contact list and the self handle. */
-          this._got_self_handle = true;
-          this._notify_if_is_quiescent ();
-
-          return;
+          this._personas.set (p.iid, p);
+          this._persona_set.add (p);
+          return true;
         }
 
-      uint[] contact_handles = { c.self_handle };
-
-      /* We have to do it this way instead of using
-       * TpLowleve.get_contacts_by_handle_async() as we're in a notification
-       * callback */
-      c.get_contacts_by_handle (contact_handles,
-          (uint[]) this._contact_features,
-          (conn, contacts, failed, error, weak_object) =>
-            {
-              if (error != null)
-                {
-                  warning (
-                      /* Translators: the first parameter is a Telepathy handle,
-                       * and the second is an error message. */
-                      _("Failed to create contact for self handle '%u': %s"),
-                      conn.self_handle, error.message);
-                  return;
-                }
-
-              debug ("Creating persona from self-handle");
-
-              /* Add the local user */
-              Contact contact = contacts[0];
-              bool added;
-              Persona persona = this._add_persona_from_contact (contact, false, out added);
-
-              var personas = new HashSet<Persona> ();
-              if (added)
-                personas.add (persona);
-
-              this._self_contact = contact;
-              this._emit_personas_changed (personas, null);
-
-              this._got_self_handle = true;
-              this._notify_if_is_quiescent ();
-            },
-          this);
+      return false;
     }
 
-  private void _new_group_channels_cb (TelepathyGLib.Channel? channel,
-      GLib.AsyncResult? result)
+  private bool _remove_persona (Persona p)
     {
-      if (channel == null)
+      if (this._persona_set.contains (p))
         {
-          /* Translators: do not translate "NewChannels", as it's a D-Bus
-           * signal name. */
-          warning (_("Error creating channel for NewChannels signal."));
-          return;
+          this._personas.unset (p.iid);
+          this._persona_set.remove (p);
+          return true;
         }
 
-      this._set_up_new_group_channel (channel);
-      this._channel_group_changes_resolve (channel);
+      return false;
     }
 
-  private void _channel_group_changes_resolve (Channel channel)
+  private void _contact_weak_notify_cb (Object obj)
     {
-      unowned string group = channel.get_identifier ();
-
-      var change_maps = new HashMap<HashSet<Tpf.Persona>, bool> ();
-      if (this._group_outgoing_adds[group] != null)
-        change_maps.set (this._group_outgoing_adds[group], true);
-
-      if (this._group_outgoing_removes[group] != null)
-        change_maps.set (this._group_outgoing_removes[group], false);
-
-      if (change_maps.size < 1)
+      if (this._contact_persona_map == null)
         return;
 
-      foreach (var entry in change_maps.entries)
-        {
-          var changes = entry.key;
-
-          foreach (var persona in changes)
-            {
-              try
-                {
-                  FolksTpLowlevel.channel_group_change_membership (channel,
-                      (Handle) persona.contact.handle, entry.value, null);
-                }
-              catch (GLib.Error e)
-                {
-                  if (entry.value == true)
-                    {
-                      /* Translators: the parameter is a persona identifier and
-                       * the second parameter is a group name. */
-                      warning (_("Failed to add Telepathy contact ‘%s’ to group ‘%s’."),
-                          persona.contact != null ?
-                              persona.contact.identifier :
-                              "(nil)",
-                          group);
-                    }
-                  else
-                    {
-                      warning (
-                          /* Translators: the parameter is a persona identifier
-                           * and the second parameter is a group name. */
-                          _("Failed to remove Telepathy contact ‘%s’ from group ‘%s’."),
-
-                          persona.contact != null ?
-                              persona.contact.identifier :
-                              "(nil)",
-                          group);
-                    }
-                }
-            }
-
-          changes.clear ();
-        }
-    }
-
-  private void _set_up_new_standard_channel (Channel channel)
-    {
-      debug ("Setting up new standard channel '%s' for Tpf.PersonaStore " +
-          "%p ('%s').", this, this.id, channel.get_identifier ());
-
-      /* hold a ref to the channel here until it's ready, so it doesn't
-       * disappear */
-      this._standard_channels_unready[channel.get_identifier ()] = channel;
-
-      channel.notify["channel-ready"].connect ((s, p) =>
-        {
-          var c = (Channel) s;
-          unowned string name = c.get_identifier ();
-
-          debug ("Channel '%s' is ready.", name);
-
-          if (name == "publish")
-            {
-              this._publish = c;
-
-              c.group_members_changed_detailed.connect (
-                  this._publish_channel_group_members_changed_detailed_cb);
-            }
-          else if (name == "stored")
-            {
-              this._stored = c;
-
-              c.group_members_changed_detailed.connect (
-                  this._stored_channel_group_members_changed_detailed_cb);
-            }
-          else if (name == "subscribe")
-            {
-              this._subscribe = c;
-
-              c.group_members_changed_detailed.connect (
-                  this._subscribe_channel_group_members_changed_detailed_cb);
-
-              c.group_flags_changed.connect (
-                  this._subscribe_channel_group_flags_changed_cb);
-
-              this._subscribe_channel_group_flags_changed_cb (c,
-                  c.group_get_flags (), 0);
-            }
-
-          this._standard_channels_unready.unset (name);
-
-          c.invalidated.connect (this._channel_invalidated_cb);
-
-          unowned Intset? members = c.group_get_members ();
-          if (members != null && name == "stored")
-            {
-              this._channel_group_pend_incoming_adds.begin (c,
-                  members.to_array (), true, (obj, res) =>
-                    {
-                      this._channel_group_pend_incoming_adds.end (res);
-
-                      /* We've got some members for the stored channel group. */
-                      this._got_stored_channel_members = true;
-                      this._notify_if_is_quiescent ();
-                    });
-            }
-          else if (members != null)
-            {
-              this._channel_group_pend_incoming_adds.begin (c,
-                  members.to_array (), true);
-            }
-        });
-    }
-
-  private void _disconnect_from_standard_channel (Channel channel)
-    {
-      var name = channel.get_identifier ();
-      debug ("Disconnecting from channel '%s' for Tpf.PersonaStore %p ('%s').",
-          name, this, this.id);
-
-      channel.invalidated.disconnect (this._channel_invalidated_cb);
-
-      if (name == "publish")
-        {
-          channel.group_members_changed_detailed.disconnect (
-              this._publish_channel_group_members_changed_detailed_cb);
-        }
-      else if (name == "stored")
-        {
-          channel.group_members_changed_detailed.disconnect (
-              this._stored_channel_group_members_changed_detailed_cb);
-        }
-      else if (name == "subscribe")
-        {
-          channel.group_members_changed_detailed.disconnect (
-              this._subscribe_channel_group_members_changed_detailed_cb);
-          channel.group_flags_changed.disconnect (
-              this._subscribe_channel_group_flags_changed_cb);
-        }
-    }
-
-  private void _publish_channel_group_members_changed_detailed_cb (
-      Channel channel,
-      /* FIXME: Array<uint> => Array<Handle>; parser bug */
-      Array<uint> added,
-      Array<uint> removed,
-      Array<uint> local_pending,
-      Array<uint> remote_pending,
-      HashTable details)
-    {
-      if (added.length > 0)
-        this._channel_group_pend_incoming_adds.begin (channel, added, true);
-
-      /* we refuse to send these contacts our presence, so remove them */
-      for (var i = 0; i < removed.length; i++)
-        {
-          var handle = removed.index (i);
-          this._ignore_by_handle_if_needed (handle, details);
-        }
-
-      /* FIXME: continue for the other arrays */
-    }
-
-  private void _stored_channel_group_members_changed_detailed_cb (
-      Channel channel,
-      /* FIXME: Array<uint> => Array<Handle>; parser bug */
-      Array<uint> added,
-      Array<uint> removed,
-      Array<uint> local_pending,
-      Array<uint> remote_pending,
-      HashTable details)
-    {
-      if (added.length > 0)
-        {
-          this._channel_group_pend_incoming_adds.begin (channel, added, true,
-              (obj, res) =>
-            {
-              this._channel_group_pend_incoming_adds.end (res);
-
-              /* We can only claim to have reached a quiescent state once we've
-               * got the stored contact list and the self handle. */
-              this._got_stored_channel_members = true;
-              this._notify_if_is_quiescent ();
-            });
-        }
-
-      for (var i = 0; i < removed.length; i++)
-        {
-          var handle = removed.index (i);
-          this._ignore_by_handle_if_needed (handle, details);
-        }
-    }
-
-  private void _subscribe_channel_group_flags_changed_cb (
-      Channel? channel,
-      uint added,
-      uint removed)
-    {
-      this._update_capability ((ChannelGroupFlags) added,
-          (ChannelGroupFlags) removed, ChannelGroupFlags.CAN_ADD,
-          ref this._can_add_personas, "can-add-personas");
-
-      this._update_capability ((ChannelGroupFlags) added,
-          (ChannelGroupFlags) removed, ChannelGroupFlags.CAN_REMOVE,
-          ref this._can_remove_personas, "can-remove-personas");
-    }
-
-  private void _update_capability (
-      ChannelGroupFlags added,
-      ChannelGroupFlags removed,
-      ChannelGroupFlags tp_flag,
-      ref MaybeBool private_member,
-      string prop_name)
-    {
-      var new_value = private_member;
-
-      if ((added & tp_flag) != 0)
-        new_value = MaybeBool.TRUE;
-
-      if ((removed & tp_flag) != 0)
-        new_value = MaybeBool.FALSE;
-
-      if (new_value != private_member)
-        {
-          private_member = new_value;
-          this.notify_property (prop_name);
-        }
-    }
-
-  private void _subscribe_channel_group_members_changed_detailed_cb (
-      Channel channel,
-      /* FIXME: Array<uint> => Array<Handle>; parser bug */
-      Array<uint> added,
-      Array<uint> removed,
-      Array<uint> local_pending,
-      Array<uint> remote_pending,
-      HashTable details)
-    {
-      if (added.length > 0)
-        {
-          this._channel_group_pend_incoming_adds.begin (channel, added, true);
-
-          /* expose ourselves to anyone we can see */
-          if (this._publish != null)
-            {
-              this._channel_group_pend_incoming_adds.begin (this._publish,
-                  added, true);
-            }
-        }
-
-      /* these contacts refused to send us their presence, so remove them */
-      for (var i = 0; i < removed.length; i++)
-        {
-          var handle = removed.index (i);
-          this._ignore_by_handle_if_needed (handle, details);
-        }
-
-      /* FIXME: continue for the other arrays */
-    }
-
-  private void _channel_invalidated_cb (TelepathyGLib.Proxy proxy, uint domain,
-      int code, string message)
-    {
-      var channel = (Channel) proxy;
-
-      this._channel_group_personas_map.unset (channel);
-      this._channel_group_incoming_adds.unset (channel);
-
-      if (proxy == this._publish)
-        this._publish = null;
-      else if (proxy == this._stored)
-        this._stored = null;
-      else if (proxy == this._subscribe)
-        this._subscribe = null;
-      else
-        {
-          var error = new GLib.Error ((Quark) domain, code, "%s", message);
-          var name = channel.get_identifier ();
-          this.group_removed (name, error);
-          this._groups.unset (name);
-        }
-    }
-
-  private void _ignore_by_handle_if_needed (uint handle,
-      HashTable<string, HashTable<string, Value?>> details)
-    {
-      unowned TelepathyGLib.Intset members;
-
-      if (this._subscribe != null)
-        {
-          members = this._subscribe.group_get_members ();
-          if (members.is_member (handle))
-            return;
-
-          members = this._subscribe.group_get_remote_pending ();
-          if (members.is_member (handle))
-            return;
-        }
-
-      if (this._publish != null)
-        {
-          members = this._publish.group_get_members ();
-          if (members.is_member (handle))
-            return;
-        }
-
-      unowned string message = TelepathyGLib.asv_get_string (details,
-          "message");
-      bool valid;
-      Persona? actor = null;
-      var actor_handle = TelepathyGLib.asv_get_uint32 (details, "actor",
-          out valid);
-      if (actor_handle > 0 && valid)
-        actor = this._handle_persona_map[actor_handle];
-
-      GroupDetails.ChangeReason reason = GroupDetails.ChangeReason.NONE;
-      var tp_reason = TelepathyGLib.asv_get_uint32 (details, "change-reason",
-          out valid);
-      if (valid)
-        reason = Tpf.PersonaStore._change_reason_from_tp_reason (tp_reason);
-
-      this._ignore_by_handle (handle, message, actor, reason);
-    }
-
-  private static GroupDetails.ChangeReason _change_reason_from_tp_reason (
-      uint reason)
-    {
-      return (GroupDetails.ChangeReason) reason;
-    }
-
-  private void _ignore_by_handle (uint handle, string? message, Persona? actor,
-      GroupDetails.ChangeReason reason)
-    {
-      var persona = this._handle_persona_map[handle];
-
-      debug ("Ignoring handle %u (persona: %p)", handle, persona);
-
-      if (this._self_contact != null && this._self_contact.handle == handle)
-        this._self_contact = null;
-
-      /*
-       * remove all handle-keyed entries
-       */
-      this._handle_persona_map.unset (handle);
-
-      /* skip _channel_group_incoming_adds because they occurred after removal
-       */
-
+      var contact = obj as Contact;
+      var persona = this._contact_persona_map[contact];
       if (persona == null)
         return;
 
-      /* If we hold a weak ref. on the persona's TpContact, release that. */
-      if (persona.contact != null &&
-          this._weakly_referenced_contacts.unset (persona.contact) == true)
+      if (this._remove_persona (persona))
         {
-          persona.contact.weak_unref (this._contact_weak_notify_cb);
+          /* This should never happen because TpConnection keeps a ref on
+           * self and roster TpContacts, so they should have been removed
+           * already. But deal with it just in case... */
+          warning ("A TpContact part of the ContactList is disposed");
+          var personas = new HashSet<Persona> ();
+          personas.add (persona);
+          this._emit_personas_changed (null, personas);
         }
 
-      /*
-       * remove all persona-keyed entries
-       */
-      foreach (var channel in this._channel_group_personas_map.keys)
+      this._contact_persona_map.unset (contact);
+    }
+
+  internal Tpf.Persona _ensure_persona_for_contact (Contact contact)
+    {
+      Persona? persona = this._contact_persona_map[contact];
+      if (persona != null)
+        return (!) persona;
+
+      persona = new Tpf.Persona (contact, this);
+      this._contact_persona_map[contact] = persona;
+      contact.weak_ref (this._contact_weak_notify_cb);
+
+      persona.is_favourite = this._favourite_ids.contains (contact.get_identifier ());
+
+      return persona;
+    }
+
+  private void _self_contact_changed_cb (Object s, ParamSpec? p)
+    {
+      var contact = this._conn.self_contact;
+
+      var personas_added = new HashSet<Persona> ();
+      var personas_removed = new HashSet<Persona> ();
+
+      /* Remove old self persona if not also part of roster */
+      if (this._self_persona != null &&
+          !this._self_persona.is_in_contact_list &&
+          this._remove_persona (this._self_persona))
         {
-          var members = this._channel_group_personas_map[channel];
-          if (members != null)
-            members.remove (persona);
+          personas_removed.add (this._self_persona);
+        }
+      this._self_persona = null;
+
+      if (contact != null)
+        {
+          debug ("Creating persona from self-contact");
+
+          /* Add the local user to roster */
+          this._self_persona = this._ensure_persona_for_contact (contact);
+          if (this._add_persona (this._self_persona))
+            personas_added.add (this._self_persona);
         }
 
-      foreach (var name in this._group_outgoing_adds.keys)
+      this._emit_personas_changed (personas_added, personas_removed);
+
+      this._got_self_contact = true;
+      this._notify_if_is_quiescent ();
+    }
+
+  private void _contact_list_state_changed_cb (Object s, ParamSpec? p)
+    {
+      if (this._conn.contact_list_state != ContactListState.SUCCESS)
+        return;
+
+      this._conn.contact_list_changed.connect (this._contact_list_changed_cb);
+      this._contact_list_changed_cb (this._conn.dup_contact_list (),
+          new GLib.GenericArray<TelepathyGLib.Contact> ());
+
+      this._got_initial_members = true;
+      this._notify_if_is_quiescent ();
+    }
+
+  private void _contact_list_changed_cb (GLib.GenericArray<TelepathyGLib.Contact> added,
+      GLib.GenericArray<TelepathyGLib.Contact> removed)
+    {
+      var personas_added = new HashSet<Persona> ();
+      var personas_removed = new HashSet<Persona> ();
+
+      foreach (Contact contact in added.data)
         {
-          var members = this._group_outgoing_adds[name];
-          if (members != null)
-            members.remove (persona);
+          var persona = this._ensure_persona_for_contact (contact);
+
+          if (!persona.is_in_contact_list)
+            persona.is_in_contact_list = true;
+
+          if (this._add_persona (persona))
+            personas_added.add (persona);
         }
 
-      var personas = new HashSet<Persona> ();
-      personas.add (persona);
+      foreach (Contact contact in removed.data)
+        {
+          var persona = this._contact_persona_map[contact];
 
-      this._emit_personas_changed (null, personas, message, actor, reason);
-      this._personas.unset (persona.iid);
-      this._persona_set.remove (persona);
+          if (persona == null)
+            {
+              warning ("Unknown TpContact removed from ContactList: %s",
+                  contact.get_identifier ());
+              continue;
+            }
+
+          if (persona == this._self_persona)
+            {
+              persona.is_in_contact_list = false;
+              continue;
+            }
+
+          if (this._remove_persona (persona))
+            personas_removed.add (persona);
+        }
+
+      this._emit_personas_changed (personas_added, personas_removed);
+    }
+
+  internal async void _change_group_membership (Folks.Persona persona,
+      string group, bool is_member)
+    {
+      var tp_persona = (Tpf.Persona) persona;
+
+      if (is_member)
+        tp_persona.contact.add_to_group_async (group);
+      else
+        tp_persona.contact.remove_from_group_async (group);
     }
 
   /**
@@ -1656,7 +1008,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
     {
       var tp_persona = (Tpf.Persona) persona;
 
-      if (tp_persona.contact == this._self_contact &&
+      if (persona == this._self_persona &&
           tp_persona.is_in_contact_list == false)
         {
           throw new PersonaStoreError.UNSUPPORTED_ON_USER (
@@ -1670,604 +1022,20 @@ public class Tpf.PersonaStore : Folks.PersonaStore
           return;
         }
 
-      try
-        {
-          FolksTpLowlevel.channel_group_change_membership (this._stored,
-              (Handle) tp_persona.contact.handle, false, null);
-        }
-      catch (GLib.Error e1)
-        {
-          warning (
-              /* Translators: The first parameter is a contact identifier, the
-               * second is a contact list identifier and the third is an error
-               * message. */
-              _("Failed to remove Telepathy contact ‘%s’ from ‘%s’ list: %s"),
-              tp_persona.contact.identifier, "stored", e1.message);
-        }
-
-      try
-        {
-          FolksTpLowlevel.channel_group_change_membership (this._subscribe,
-              (Handle) tp_persona.contact.handle, false, null);
-        }
-      catch (GLib.Error e2)
-        {
-          warning (
-              /* Translators: The first parameter is a contact identifier, the
-               * second is a contact list identifier and the third is an error
-               * message. */
-              _("Failed to remove Telepathy contact ‘%s’ from ‘%s’ list: %s"),
-              tp_persona.contact.identifier, "subscribe", e2.message);
-        }
-
-      try
-        {
-          FolksTpLowlevel.channel_group_change_membership (this._publish,
-              (Handle) tp_persona.contact.handle, false, null);
-        }
-      catch (GLib.Error e3)
-        {
-          warning (
-              /* Translators: The first parameter is a contact identifier, the
-               * second is a contact list identifier and the third is an error
-               * message. */
-              _("Failed to remove Telepathy contact ‘%s’ from ‘%s’ list: %s"),
-              tp_persona.contact.identifier, "publish", e3.message);
-        }
-
-      /* the contact will be actually removed (and signaled) when we hear back
-       * from the server */
+      tp_persona.contact.remove_async ();
     }
 
-  /* Only non-group contact list channels should use create_personas == true,
-   * since the exposed set of Personas are meant to be filtered by them */
-  private async void _channel_group_pend_incoming_adds (Channel channel,
-      Array<uint> adds,
-      bool create_personas)
+  private async Persona _ensure_persona_for_id (string contact_id)
+      throws GLib.Error
     {
-      var adds_length = adds != null ? adds.length : 0;
-      if (adds_length >= 1)
-        {
-          if (create_personas)
-            {
-              yield this._create_personas_from_channel_handles_async (channel,
-                  adds);
-            }
-
-          for (var i = 0; i < adds.length; i++)
-            {
-              var channel_handle = (Handle) adds.index (i);
-              var contact_handle = channel.group_get_handle_owner (
-                channel_handle);
-
-              HashSet<uint>? contact_handles =
-                  this._channel_group_incoming_adds[channel];
-              if (contact_handles == null)
-                {
-                  contact_handles = new HashSet<uint> ();
-                  this._channel_group_incoming_adds[channel] =
-                      contact_handles;
-                }
-              contact_handles.add (contact_handle);
-            }
-        }
-
-      this._channel_groups_add_new_personas ();
-    }
-
-  private void _channel_group_handle_incoming_removes (Channel channel,
-      Array<uint> removes)
-    {
-      var removes_length = removes != null ? removes.length : 0;
-      if (removes_length >= 1)
-        {
-          var members_removed = new GLib.List<Persona> ();
-
-          HashSet<Persona> members = this._channel_group_personas_map[channel];
-          if (members == null)
-            members = new HashSet<Persona> ();
-
-          for (var i = 0; i < removes.length; i++)
-            {
-              var channel_handle = (Handle) removes.index (i);
-              var contact_handle = channel.group_get_handle_owner (
-                channel_handle);
-              var persona = this._handle_persona_map[contact_handle];
-
-
-              if (persona != null)
-                {
-                  members.remove (persona);
-                  members_removed.prepend (persona);
-                }
-            }
-
-          this._channel_group_personas_map[channel] = members;
-
-          var name = channel.get_identifier ();
-          if (this._group_is_display_group (name) &&
-              members_removed.length () > 0)
-            {
-              members_removed.reverse ();
-              this.group_members_changed (name, null, members_removed);
-            }
-        }
-    }
-
-  private void _set_up_new_group_channel (Channel channel)
-    {
-      /* hold a ref to the channel here until it's ready, so it doesn't
-       * disappear */
-      this._group_channels_unready[channel.get_identifier ()] = channel;
-
-      channel.notify["channel-ready"].connect ((s, p) =>
-        {
-          var c = (Channel) s;
-          var name = c.get_identifier ();
-
-          var existing_channel = this._groups[name];
-          if (existing_channel != null)
-            {
-              /* Somehow, this group channel has already been set up. We have to
-               * hold a reference to the existing group while unsetting it in
-               * the group map so that unsetting it doesn't cause it to be
-               * destroyed. If that were to happen, channel_invalidated_cb()
-               * would remove it from the group map a second time, causing a
-               * double unref. */
-              existing_channel.ref ();
-              this._groups.unset (name);
-              existing_channel.unref ();
-            }
-
-          /* Drop all references before we set the new channel */
-          existing_channel = null;
-
-          this._groups[name] = c;
-          this._group_channels_unready.unset (name);
-
-          c.invalidated.connect (this._channel_invalidated_cb);
-          c.group_members_changed_detailed.connect (
-            this._channel_group_members_changed_detailed_cb);
-
-          unowned Intset members = c.group_get_members ();
-          if (members != null)
-            {
-              this._channel_group_pend_incoming_adds.begin (c,
-                members.to_array (), false);
-            }
-        });
-    }
-
-  private void _disconnect_from_group_channel (Channel channel)
-    {
-      var name = channel.get_identifier ();
-      debug ("Disconnecting from group channel '%s'.", name);
-
-      channel.group_members_changed_detailed.disconnect (
-          this._channel_group_members_changed_detailed_cb);
-      channel.invalidated.disconnect (this._channel_invalidated_cb);
-    }
-
-  private void _channel_group_members_changed_detailed_cb (Channel channel,
-      /* FIXME: Array<uint> => Array<Handle>; parser bug */
-      Array<uint> added,
-      Array<uint> removed,
-      Array<uint> local_pending,
-      Array<uint> remote_pending,
-      HashTable details)
-    {
-      if (added != null)
-        this._channel_group_pend_incoming_adds.begin (channel, added, false);
-
-      if (removed != null)
-        {
-          this._channel_group_handle_incoming_removes (channel, removed);
-        }
-
-      /* FIXME: continue for the other arrays */
-    }
-
-  internal async void _change_group_membership (Folks.Persona persona,
-      string group, bool is_member)
-    {
-      var tp_persona = (Tpf.Persona) persona;
-      var channel = this._groups[group];
-      var change_map = is_member ? this._group_outgoing_adds :
-        this._group_outgoing_removes;
-      var change_set = change_map[group];
-
-      if (change_set == null)
-        {
-          change_set = new HashSet<Tpf.Persona> ();
-          change_map[group] = change_set;
-        }
-      change_set.add (tp_persona);
-
-      if (channel == null)
-        {
-          /* the changes queued above will be resolve in the NewChannels handler
-           */
-          FolksTpLowlevel.connection_create_group_async (this.account.connection,
-              group);
-        }
-      else
-        {
-          /* the channel is already ready, so resolve immediately */
-          this._channel_group_changes_resolve (channel);
-        }
-    }
-
-  private void _change_standard_contact_list_membership (
-      TelepathyGLib.Channel channel, Folks.Persona persona, bool is_member,
-      string? message)
-    {
-      var tp_persona = (Tpf.Persona) persona;
-
-      if (tp_persona.contact == null)
-        {
-          warning ("Skipping Tpf.Persona %p contact list change because it " +
-              "has no attached TpContact", tp_persona);
-          return;
-        }
-
-      try
-        {
-          FolksTpLowlevel.channel_group_change_membership (channel,
-              (Handle) tp_persona.contact.handle, is_member, message);
-        }
-      catch (GLib.Error e)
-        {
-          if (is_member == true)
-            {
-              warning (
-                  /* Translators: The first parameter is a contact identifier,
-                   * the second is a contact list identifier and the third is an
-                   * error message. */
-                  _("Failed to add Telepathy contact ‘%s’ to ‘%s’ list: %s"),
-                  tp_persona.contact.identifier, channel.get_identifier (),
-                  e.message);
-            }
-          else
-            {
-              warning (
-                  /* Translators: The first parameter is a contact identifier,
-                   * the second is a contact list identifier and the third is an
-                   * error message. */
-                  _("Failed to remove Telepathy contact ‘%s’ from ‘%s’ list: %s"),
-                  tp_persona.contact.identifier, channel.get_identifier (),
-                  e.message);
-            }
-        }
-    }
-
-  private async Channel? _add_standard_channel (Connection conn, string name)
-    {
-      Channel? channel = null;
-
-      debug ("Adding standard channel '%s' to connection %p for " +
-          "Tpf.PersonaStore %p ('%s').", name, conn, this, this.id);
-
-      /* FIXME: handle the error GLib.Error from this function */
-      try
-        {
-          channel =
-              yield FolksTpLowlevel.connection_open_contact_list_channel_async (
-                  conn, name);
-        }
-      catch (GLib.Error e)
-        {
-          debug ("Failed to add channel '%s': %s", name, e.message);
-
-          /* If the Connection doesn't support 'stored' channels we
-           * pretend we've received the stored channel members.
-           *
-           * When this happens it probably means the ConnectionManager doesn't
-           * implement the Channel.Type.ContactList interface.
-           *
-           * See: https://bugzilla.gnome.org/show_bug.cgi?id=656184 */
-          this._got_stored_channel_members = true;
-          this._notify_if_is_quiescent ();
-
-          /* XXX: assuming there's no decent way to recover from this */
-
-          return null;
-        }
-
-      this._set_up_new_standard_channel (channel);
-
-      return channel;
-    }
-
-  /* FIXME: Array<uint> => Array<Handle>; parser bug */
-  private async void _create_personas_from_channel_handles_async (
-      Channel channel,
-      Array<uint> channel_handles)
-    {
-      uint[] contact_handles = {};
-      for (var i = 0; i < channel_handles.length; i++)
-        {
-          var channel_handle = (Handle) channel_handles.index (i);
-          var contact_handle = channel.group_get_handle_owner (channel_handle);
-          Persona? persona = this._handle_persona_map[contact_handle];
-
-          if (persona == null)
-            {
-              contact_handles += contact_handle;
-            }
-          else
-            {
-              /* Mark the persona as having been seen in the contact list.
-               * The persona might have originally been discovered by querying
-               * the Telepathy connection's self-handle; in this case, its
-               * is-in-contact-list property will originally be false, as a
-               * contact could be exposed as the self-handle, but not actually
-               * be in the user's contact list. */
-              debug ("Setting is-in-contact-list for '%s' to true",
-                  persona.uid);
-              persona.is_in_contact_list = true;
-            }
-        }
-
-      try
-        {
-          if (contact_handles.length < 1)
-            return;
-
-          GLib.List<TelepathyGLib.Contact> contacts =
-              yield FolksTpLowlevel.connection_get_contacts_by_handle_async (
-                  this._conn, contact_handles, (uint[]) _contact_features);
-
-          if (contacts == null || contacts.length () < 1)
-            return;
-
-          var contacts_array = new TelepathyGLib.Contact[contacts.length ()];
-          var j = 0;
-          unowned GLib.List<TelepathyGLib.Contact> l = contacts;
-          for (; l != null; l = l.next)
-            {
-              contacts_array[j] = l.data;
-              j++;
-            }
-
-          this._add_new_personas_from_contacts (contacts_array);
-        }
-      catch (GLib.Error e)
-        {
-          warning (
-              /* Translators: the first parameter is a channel identifier and
-               * the second is an error message.. */
-              _("Failed to create incoming Telepathy contacts from channel ‘%s’: %s"),
-              channel.get_identifier (), e.message);
-        }
-    }
-
-  private async HashSet<Persona> _ensure_personas_from_contact_ids (
-      string[] contact_ids) throws GLib.Error
-    {
-      var personas = new HashSet<Persona> ();
-      var personas_added = new HashSet<Persona> ();
-
-      if (contact_ids.length == 0)
-        return personas;
+      var contact_ids = new string[1];
+      contact_ids[0] = contact_id;
 
       GLib.List<TelepathyGLib.Contact> contacts =
           yield FolksTpLowlevel.connection_get_contacts_by_id_async (
-              this._conn, contact_ids, (uint[]) _contact_features);
+              this._conn, contact_ids, {});
 
-      unowned GLib.List<TelepathyGLib.Contact> l;
-      for (l = contacts; l != null; l = l.next)
-        {
-          var contact = l.data;
-
-          debug ("Creating persona from contact '%s'", contact.identifier);
-
-          bool added;
-          var persona = this._add_persona_from_contact (contact, true, out added);
-          if (added)
-            personas_added.add (persona);
-
-          personas.add (persona);
-        }
-
-      if (personas_added.size > 0)
-        {
-          this._emit_personas_changed (personas_added, null);
-        }
-
-      return personas;
-    }
-
-  private void _contact_weak_notify_cb (Object obj)
-    {
-      var c = obj as Contact;
-      if (this._weakly_referenced_contacts != null)
-        {
-          Handle handle = this._weakly_referenced_contacts.get (c);
-          this._weakly_referenced_contacts.unset (c);
-
-          if (handle != 0)
-            {
-              this._ignore_by_handle ((!) handle, null, null,
-                  GroupDetails.ChangeReason.NONE);
-            }
-        }
-    }
-
-  internal Tpf.Persona? _ensure_persona_from_contact (Contact contact)
-    {
-      uint handle = contact.get_handle ();
-
-      debug ("Ensuring contact %p (handle: %u) exists in Tpf.PersonaStore " +
-          "%p ('%s').", contact, handle, this, this.id);
-
-      if (handle == 0)
-        {
-          return null;
-        }
-
-      /* If the persona already exists, return them. */
-      var persona = this._handle_persona_map[handle];
-
-      if (persona != null)
-        {
-          return persona;
-        }
-
-      /* Otherwise, add the persona to the store. See bgo#665376 for details of
-       * why this is necessary. Since the TpContact is coming from a source
-       * other than the TpChannels which are associated with this store, we only
-       * hold a weak reference to it and remove it from the store as soon as
-       * it's destroyed. */
-      bool added;
-      persona = this._add_persona_from_contact (contact, false, out added);
-
-      if (!added)
-        {
-          return null;
-        }
-
-      /* Weak ref. on the contact. */
-      contact.weak_ref (this._contact_weak_notify_cb);
-      this._weakly_referenced_contacts.set (contact, handle);
-
-      /* Signal the addition of the new persona. */
-      var personas = new HashSet<Persona> ();
-      this._emit_personas_changed (personas, null);
-
-      return persona;
-    }
-
-  private Tpf.Persona? _add_persona_from_contact (Contact contact,
-      bool from_contact_list,
-      out bool added)
-    {
-      var h = contact.get_handle ();
-      Persona? persona = null;
-
-      debug ("Adding persona from contact '%s'", contact.identifier);
-
-      persona = this._handle_persona_map[h];
-      if (persona == null)
-        {
-          persona = new Tpf.Persona (contact, this);
-
-          this._personas.set (persona.iid, persona);
-          this._persona_set.add (persona);
-          this._handle_persona_map[h] = persona;
-
-          /* If the handle is a favourite, ensure the persona's marked
-           * as such. This deals with the case where we receive a
-           * contact _after_ we've discovered that they're a
-           * favourite. */
-          persona.is_favourite = this._favourite_handles.contains (h);
-
-          /* Only emit this debug message in the false case to reduce debug
-           * spam (see https://bugzilla.gnome.org/show_bug.cgi?id=640901#c2). */
-          if (from_contact_list == false)
-            {
-              debug ("    Setting is-in-contact-list to false");
-            }
-
-          persona.is_in_contact_list = from_contact_list;
-
-          added = true;
-        }
-      else
-        {
-           debug ("    ...already exists.");
-
-          /* Mark the persona as having been seen in the contact list.
-           * The persona might have originally been discovered by querying
-           * the Telepathy connection's self-handle; in this case, its
-           * is-in-contact-list property will originally be false, as a
-           * contact could be exposed as the self-handle, but not actually
-           * be in the user's contact list. */
-          if (persona.is_in_contact_list == false && from_contact_list == true)
-            {
-              debug ("    Setting is-in-contact-list to true");
-              persona.is_in_contact_list = true;
-            }
-
-          added = false;
-        }
-      return persona;
-    }
-
-  private void _add_new_personas_from_contacts (Contact[] contacts)
-    {
-      var personas = new HashSet<Persona> ();
-
-      foreach (Contact contact in contacts)
-        {
-          bool added;
-          var persona = this._add_persona_from_contact (contact, true, out added);
-          if (added)
-            personas.add (persona);
-        }
-
-      this._channel_groups_add_new_personas ();
-
-      if (personas.size > 0)
-        {
-          this._emit_personas_changed (personas, null);
-        }
-    }
-
-  private void _channel_groups_add_new_personas ()
-    {
-      foreach (var entry in this._channel_group_incoming_adds.entries)
-        {
-          var channel = (Channel) entry.key;
-          var members_added = new GLib.List<Persona> ();
-
-          HashSet<Persona> members = this._channel_group_personas_map[channel];
-          if (members == null)
-            members = new HashSet<Persona> ();
-
-          debug ("Adding members to channel '%s':", channel.get_identifier ());
-
-          var contact_handles = entry.value;
-          if (contact_handles != null && contact_handles.size > 0)
-            {
-              var contact_handles_added = new HashSet<uint> ();
-              foreach (var contact_handle in contact_handles)
-                {
-                  var persona = this._handle_persona_map[contact_handle];
-                  if (persona != null)
-                    {
-                      debug ("    %s", persona.uid);
-                      members.add (persona);
-                      members_added.prepend (persona);
-                      contact_handles_added.add (contact_handle);
-                    }
-                }
-
-              foreach (var handle in contact_handles_added)
-                contact_handles.remove (handle);
-            }
-
-          if (members.size > 0)
-            this._channel_group_personas_map[channel] = members;
-
-          var name = channel.get_identifier ();
-          if (this._group_is_display_group (name) &&
-              members_added.length () > 0)
-            {
-              members_added.reverse ();
-              this.group_members_changed (name, members_added, null);
-            }
-        }
-    }
-
-  private bool _group_is_display_group (string group)
-    {
-      for (var i = 0; i < this._undisplayed_groups.length; i++)
-        {
-          if (this._undisplayed_groups[i] == group)
-            return false;
-        }
-
-      return true;
+      return this._ensure_persona_for_contact (contacts.data);
     }
 
   /**
@@ -2302,61 +1070,13 @@ public class Tpf.PersonaStore : Folks.PersonaStore
               _("Cannot create a new Telepathy contact while offline."));
         }
 
-      var contact_ids = new string[1];
-      contact_ids[0] = contact_id;
-
       try
         {
-          var personas = yield this._ensure_personas_from_contact_ids (
-              contact_ids);
+          var persona = yield this._ensure_persona_for_id (contact_id);
+          var tp_persona = (Tpf.Persona) persona;
+          tp_persona.contact.request_subscription_async (add_message);
 
-          if (personas.size == 0)
-            {
-              /* the persona already existed */
-              return null;
-            }
-          else if (personas.size == 1)
-            {
-              /* Get the first (and only) Persona */
-              Persona persona = null;
-              foreach (var p in personas)
-                {
-                  persona = p;
-                  break;
-                }
-
-              if (this._subscribe != null)
-                this._change_standard_contact_list_membership (this._subscribe,
-                    persona, true, add_message);
-
-              if (this._publish != null)
-                {
-                  var flags = this._publish.group_get_flags ();
-                  if ((flags & ChannelGroupFlags.CAN_ADD) ==
-                      ChannelGroupFlags.CAN_ADD)
-                    {
-                      this._change_standard_contact_list_membership (
-                          this._publish, persona, true, add_message);
-                    }
-                }
-
-              return persona;
-            }
-          else
-            {
-              /* We ignore the case of an empty list, as it just means the
-               * contact was already in our roster */
-              var num_personas = personas.size;
-              var message =
-                  ngettext (
-                      /* Translators: the parameter is the number of personas
-                       * which were returned. */
-                      "Requested a single persona, but got %u persona back.",
-                      "Requested a single persona, but got %u personas back.",
-                          num_personas);
-
-              throw new PersonaStoreError.CREATE_FAILED (message, num_personas);
-            }
+          return persona;
         }
       catch (GLib.Error e)
         {
@@ -2519,7 +1239,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
           try
             {
               success =
-                yield this.account.connection.set_contact_info_async (
+                yield this._conn.set_contact_info_async (
                   info_list);
             }
           catch (GLib.Error e)

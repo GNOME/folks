@@ -133,6 +133,7 @@ void
 tp_tests_backend_set_up (TpTestsBackend *self)
 {
   TpTestsBackendPrivate *priv = self->priv;
+  TpSimpleClientFactory *factory;
   GError *error = NULL;
 
   /* Override the handler set in the general Folks.TestCase class */
@@ -158,6 +159,17 @@ tp_tests_backend_set_up (TpTestsBackend *self)
       priv->account_manager);
 
   priv->client_am = tp_account_manager_dup ();
+  factory = tp_proxy_get_factory (priv->client_am);
+  tp_simple_client_factory_add_contact_features_varargs (factory,
+      TP_CONTACT_FEATURE_ALIAS,
+      TP_CONTACT_FEATURE_AVATAR_DATA,
+      TP_CONTACT_FEATURE_AVATAR_TOKEN,
+      TP_CONTACT_FEATURE_CAPABILITIES,
+      TP_CONTACT_FEATURE_CLIENT_TYPES,
+      TP_CONTACT_FEATURE_PRESENCE,
+      TP_CONTACT_FEATURE_CONTACT_INFO,
+      TP_CONTACT_FEATURE_CONTACT_GROUPS,
+      TP_CONTACT_FEATURE_INVALID);
 }
 
 static void
