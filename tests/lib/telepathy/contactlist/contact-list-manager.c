@@ -533,9 +533,6 @@ status_changed_cb (TpBaseConnection *conn,
       break;
 
     default:
-        {
-          g_assert_not_reached ();
-        }
       break;
     }
 }
