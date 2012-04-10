@@ -417,6 +417,7 @@ public class Tpf.Persona : Folks.Persona,
    * See {@link Folks.GroupDetails.change_group}.
    */
   public async void change_group (string group, bool is_member)
+      throws Folks.PropertyError
     {
       if (this._change_group (group, is_member))
         {
