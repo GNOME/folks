@@ -440,6 +440,24 @@ public class Tpf.PersonaStore : Folks.PersonaStore
 
               this._account_manager = AccountManager.dup ();
 
+              /* FIXME: Add all contact features on AM's factory. We should not
+               * force preparing all features but let app define what it needs,
+               * but this is for backward compatibility.
+               * Note that if application already prepared TpContacts before
+               * preparing this store, this will have no effect on existing
+               * contacts. */
+              var factory = this._account_manager.get_factory ();
+              factory.add_contact_features ({
+                  ContactFeature.ALIAS,
+                  ContactFeature.AVATAR_DATA,
+                  ContactFeature.AVATAR_TOKEN,
+                  ContactFeature.CAPABILITIES,
+                  ContactFeature.CLIENT_TYPES,
+                  ContactFeature.PRESENCE,
+                  ContactFeature.CONTACT_INFO,
+                  ContactFeature.CONTACT_GROUPS
+              });
+
               this._account_manager.invalidated.connect (
                   this._account_manager_invalidated_cb);
 
