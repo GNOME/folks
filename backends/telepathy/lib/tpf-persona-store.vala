@@ -32,6 +32,11 @@ extern const string BACKEND_NAME;
  * A persona store which is associated with a single Telepathy account. It will
  * create {@link Persona}s for each of the contacts in the account's
  * contact list.
+ *
+ * User must define contact features it wants on the #TpSimpleClientFactory of
+ * the default #TpAccountManager returned by tp_account_manager_dup() *before*
+ * preparing telepathy stores. Note that this is a behaviour change since
+ * 0.UNRELEASED, folks won't force preparing any feature anymore.
  */
 public class Tpf.PersonaStore : Folks.PersonaStore
 {
@@ -51,20 +56,26 @@ public class Tpf.PersonaStore : Folks.PersonaStore
    * the roster. Persona is kept in the map until its TpContact is disposed. */
   private HashMap<unowned Contact, Persona> _contact_persona_map;
 
+  /* TpContact IDs */
   private HashSet<string> _favourite_ids;
+
   private Connection _conn;
   private AccountManager? _account_manager; /* only null before prepare() */
   private Logger _logger;
   private Persona? _self_persona;
+
+  /* Connection's capabilities */
   private MaybeBool _can_add_personas = MaybeBool.UNSET;
   private MaybeBool _can_alias_personas = MaybeBool.UNSET;
   private MaybeBool _can_group_personas = MaybeBool.UNSET;
   private MaybeBool _can_remove_personas = MaybeBool.UNSET;
+
   private bool _is_prepared = false;
   private bool _prepare_pending = false;
   private bool _is_quiescent = false;
   private bool _got_initial_members = false;
-  private bool _got_self_contact = false;
+  private bool _got_initial_self_contact = false;
+
   private Debug _debug;
   private PersonaStoreCache _cache;
   private Cancellable? _load_cache_cancellable = null;
@@ -186,7 +197,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
   private void _notify_if_is_quiescent ()
     {
       if (this._got_initial_members == true &&
-          this._got_self_contact == true &&
+          this._got_initial_self_contact == true &&
           this._is_quiescent == false)
         {
           this._is_quiescent = true;
@@ -196,7 +207,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
 
   private void _force_quiescent ()
     {
-        this._got_self_contact = true;
+        this._got_initial_self_contact = true;
         this._got_initial_members = true;
         this._notify_if_is_quiescent ();
     }
@@ -297,7 +308,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
           "ID", this.id,
           "Prepared?", this._is_prepared ? "yes" : "no",
           "Has initial members?", this._got_initial_members ? "yes" : "no",
-          "Has self contact?", this._got_self_contact ? "yes" : "no",
+          "Has self contact?", this._got_initial_self_contact ? "yes" : "no",
           "TpConnection", "%p".printf (this._conn),
           "TpAccountManager", "%p".printf (this._account_manager),
           "Self-Persona", "%p".printf (this._self_persona),
@@ -328,7 +339,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
 
       debug.unindent ();
 
-      debug.print_line (domain, level, "%u contact–Persona mappings:",
+      debug.print_line (domain, level, "%u TpContact–Persona mappings:",
           this._contact_persona_map.size);
       debug.indent ();
 
@@ -341,7 +352,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
 
       debug.unindent ();
 
-      debug.print_line (domain, level, "%u favourite ids:",
+      debug.print_line (domain, level, "%u favourite TpContact IDs:",
           this._favourite_ids.size);
       debug.indent ();
 
@@ -536,13 +547,15 @@ public class Tpf.PersonaStore : Folks.PersonaStore
 
   private Persona? _lookup_persona_by_id (string id)
     {
-      /* This is not efficient, but probably better than doing DBus roundtrip
-       * to get a TpContact. Maybe we should add a id->persona map? */
+      /* This is not efficient, but better than doing DBus roundtrip to get a
+       * TpContact. */
       var iter = this._contact_persona_map.map_iterator ();
       while (iter.next ())
         {
-          if (iter.get_key().get_identifier() == id)
-            return iter.get_value();
+          if (iter.get_key ().get_identifier () == id)
+            {
+              return iter.get_value ();
+            }
         }
       return null;
     }
@@ -552,16 +565,20 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       foreach (var id in added)
         {
           this._favourite_ids.add (id);
-          Persona ?p = this._lookup_persona_by_id (id);
+          var p = this._lookup_persona_by_id (id);
           if (p != null)
-            p._set_is_favourite (true);
+            {
+              p._set_is_favourite (true);
+            }
         }
       foreach (var id in removed)
         {
           this._favourite_ids.remove (id);
-          Persona ?p = this._lookup_persona_by_id (id);
+          var p = this._lookup_persona_by_id (id);
           if (p != null)
-            p._set_is_favourite (false);
+            {
+              p._set_is_favourite (false);
+            }
         }
     }
 
@@ -660,9 +677,13 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       this.notify_property ("supported-fields");
 
       if (this._conn.get_group_storage () != ContactMetadataStorageType.NONE)
-        this._can_group_personas = MaybeBool.TRUE;
+        {
+          this._can_group_personas = MaybeBool.TRUE;
+        }
       else
-        this._can_group_personas = MaybeBool.FALSE;
+        {
+          this._can_group_personas = MaybeBool.FALSE;
+        }
       this.notify_property ("can-group-personas");
 
       if (this._conn.get_can_change_contact_list ())
@@ -682,7 +703,8 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       this._conn.notify["self-contact"].connect (this._self_contact_changed_cb);
       this._self_contact_changed_cb (this._conn, null);
 
-      /* TpConnection still does not have high-level API for this */
+      /* FIXME: TpConnection still does not have high-level API for this.
+       * See fd.o#14540 */
       FolksTpLowlevel.connection_get_alias_flags_async.begin (this._conn, (s2, res) =>
         {
           var new_can_alias = MaybeBool.FALSE;
@@ -840,10 +862,10 @@ public class Tpf.PersonaStore : Folks.PersonaStore
 
   private bool _add_persona (Persona p)
     {
-      if (!this._persona_set.contains (p))
+      if (this._persona_set.add (p))
         {
+          debug ("Add persona %p with uid %s", p, p.uid);
           this._personas.set (p.iid, p);
-          this._persona_set.add (p);
           return true;
         }
 
@@ -852,10 +874,15 @@ public class Tpf.PersonaStore : Folks.PersonaStore
 
   private bool _remove_persona (Persona p)
     {
-      if (this._persona_set.contains (p))
+      if (this._persona_set.remove (p))
         {
+          debug ("Remove persona %p with uid %s", p, p.uid);
           this._personas.unset (p.iid);
-          this._persona_set.remove (p);
+          if (this._self_persona == p)
+            {
+              this._self_persona = null;
+            }
+
           return true;
         }
 
@@ -865,12 +892,19 @@ public class Tpf.PersonaStore : Folks.PersonaStore
   private void _contact_weak_notify_cb (Object obj)
     {
       if (this._contact_persona_map == null)
-        return;
+        {
+          return;
+        }
 
-      var contact = obj as Contact;
-      var persona = this._contact_persona_map[contact];
+      Contact contact = obj as Contact;
+      debug ("Weak notify for TpContact %s", contact.get_identifier ());
+
+      Persona? persona = null;
+      this._contact_persona_map.unset (contact, out persona);
       if (persona == null)
-        return;
+        {
+          return;
+        }
 
       if (this._remove_persona (persona))
         {
@@ -882,10 +916,11 @@ public class Tpf.PersonaStore : Folks.PersonaStore
           personas.add (persona);
           this._emit_personas_changed (null, personas);
         }
-
-      this._contact_persona_map.unset (contact);
     }
 
+  /* Ensure that we have a Persona wrapping this TpContact. This will keep the
+   * Persona internally only (won't emit personas_changed) and until the
+   * TpContact is destroyed (we keep only weak ref). */
   internal Tpf.Persona _ensure_persona_for_contact (Contact contact)
     {
       Persona? persona = this._contact_persona_map[contact];
@@ -898,6 +933,10 @@ public class Tpf.PersonaStore : Folks.PersonaStore
 
       var is_favourite = this._favourite_ids.contains (contact.get_identifier ());
       persona._set_is_favourite (is_favourite);
+
+      debug ("Persona %p with uid %s created for TpContact %s, favourite: %s",
+          persona, persona.uid, contact.get_identifier (),
+          is_favourite ? "yes" : "no");
 
       return persona;
     }
@@ -920,8 +959,6 @@ public class Tpf.PersonaStore : Folks.PersonaStore
 
       if (contact != null)
         {
-          debug ("Creating persona from self-contact");
-
           /* Add the local user to roster */
           this._self_persona = this._ensure_persona_for_contact (contact);
           if (this._add_persona (this._self_persona))
@@ -930,12 +967,14 @@ public class Tpf.PersonaStore : Folks.PersonaStore
 
       this._emit_personas_changed (personas_added, personas_removed);
 
-      this._got_self_contact = true;
+      this._got_initial_self_contact = true;
       this._notify_if_is_quiescent ();
     }
 
   private void _contact_list_state_changed_cb (Object s, ParamSpec? p)
     {
+      /* Once the contact list is downloaded from server, state moves to
+       * SUCCESS and won't change anymore */
       if (this._conn.contact_list_state != ContactListState.SUCCESS)
         return;
 
@@ -953,15 +992,22 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       var personas_added = new HashSet<Persona> ();
       var personas_removed = new HashSet<Persona> ();
 
+      debug ("contact list changed: %d added, %d removed",
+          added.length, removed.length);
+
       foreach (Contact contact in added.data)
         {
           var persona = this._ensure_persona_for_contact (contact);
 
           if (!persona.is_in_contact_list)
-            persona.is_in_contact_list = true;
+            {
+              persona.is_in_contact_list = true;
+            }
 
           if (this._add_persona (persona))
-            personas_added.add (persona);
+            {
+              personas_added.add (persona);
+            }
         }
 
       foreach (Contact contact in removed.data)
@@ -975,6 +1021,11 @@ public class Tpf.PersonaStore : Folks.PersonaStore
               continue;
             }
 
+          /* If self contact was also part of the roster but got removed,
+           * we keep it in our persona store, but with is_in_contact_list=false.
+           * This matches behaviour of _self_contact_changed_cb() where we add
+           * the self persona into the user-visible set even if it is not part
+           * of the roster. */
           if (persona == this._self_persona)
             {
               persona.is_in_contact_list = false;
@@ -982,7 +1033,9 @@ public class Tpf.PersonaStore : Folks.PersonaStore
             }
 
           if (this._remove_persona (persona))
-            personas_removed.add (persona);
+            {
+              personas_removed.add (persona);
+            }
         }
 
       this._emit_personas_changed (personas_added, personas_removed);
@@ -1029,12 +1082,9 @@ public class Tpf.PersonaStore : Folks.PersonaStore
   private async Persona _ensure_persona_for_id (string contact_id)
       throws GLib.Error
     {
-      var contact_ids = new string[1];
-      contact_ids[0] = contact_id;
-
       GLib.List<TelepathyGLib.Contact> contacts =
           yield FolksTpLowlevel.connection_get_contacts_by_id_async (
-              this._conn, contact_ids, {});
+              this._conn, {contact_id}, {});
 
       return this._ensure_persona_for_contact (contacts.data);
     }
@@ -1147,8 +1197,9 @@ public class Tpf.PersonaStore : Folks.PersonaStore
           return;
         }
 
-      debug ("Changing alias of persona %u to '%s'.", persona.contact.handle,
-          alias);
+      debug ("Changing alias of persona %s to '%s'.",
+          persona.contact.get_identifier (), alias);
+
       FolksTpLowlevel.connection_set_contact_alias (this._conn,
           (Handle) persona.contact.handle, alias);
     }

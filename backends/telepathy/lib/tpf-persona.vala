@@ -447,10 +447,14 @@ public class Tpf.Persona : Folks.Persona,
   private void _contact_groups_changed (string[] added, string[] removed)
     {
       foreach (var group in added)
-        this._change_group (group, true);
+        {
+          this._change_group (group, true);
+        }
 
       foreach (var group in removed)
-        this._change_group (group, false);
+        {
+          this._change_group (group, false);
+        }
     }
 
   /**
