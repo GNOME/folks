@@ -657,9 +657,9 @@ public class Tpf.PersonaStore : Folks.PersonaStore
           iface_quark_connection_interface_contact_list ()))
         {
           warning ("Connection does not implement ContactList iface,
-              legacy CM are not supported anymore. Stay offline");
+              legacy CM are not supported anymore.");
 
-          this._force_quiescent ();
+          this._remove_store ();
 
           return;
         }
