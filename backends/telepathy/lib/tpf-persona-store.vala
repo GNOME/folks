@@ -1073,13 +1073,6 @@ public class Tpf.PersonaStore : Folks.PersonaStore
     {
       var tp_persona = (Tpf.Persona) persona;
 
-      if (persona == this._self_persona &&
-          tp_persona.is_in_contact_list == false)
-        {
-          throw new PersonaStoreError.UNSUPPORTED_ON_USER (
-              _("Telepathy contacts representing the local user may not be removed."));
-        }
-
       if (tp_persona.contact == null)
         {
           warning ("Skipping server-side removal of Tpf.Persona %p because " +
@@ -1087,7 +1080,23 @@ public class Tpf.PersonaStore : Folks.PersonaStore
           return;
         }
 
-      tp_persona.contact.remove_async ();
+      if (persona == this._self_persona &&
+          tp_persona.is_in_contact_list == false)
+        {
+          throw new PersonaStoreError.UNSUPPORTED_ON_USER (
+              _("Telepathy contacts representing the local user may not be removed."));
+        }
+
+      try
+        {
+          yield tp_persona.contact.remove_async ();
+        }
+      catch (GLib.Error e)
+        {
+          /* Translators: the parameter is an error message. */
+          throw new PersonaStoreError.REMOVE_FAILED (
+              _("Failed to remove a persona from store: %s"), e.message);
+        }
     }
 
   private async Persona _ensure_persona_for_id (string contact_id)
