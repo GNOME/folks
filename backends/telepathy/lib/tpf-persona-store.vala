@@ -669,6 +669,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
 
       this._conn = this.account.connection;
 
+      this.freeze_notify ();
       this._marshall_supported_fields ();
       this.notify_property ("supported-fields");
 
@@ -694,6 +695,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
         }
       this.notify_property ("can-add-personas");
       this.notify_property ("can-remove-personas");
+      this.thaw_notify ();
 
       /* Add the local user */
       this._conn.notify["self-contact"].connect (this._self_contact_changed_cb);
