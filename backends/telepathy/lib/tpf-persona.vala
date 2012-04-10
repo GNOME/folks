@@ -343,6 +343,12 @@ public class Tpf.Persona : Folks.Persona,
       this.notify_property ("is-favourite");
     }
 
+  internal void _set_is_favourite (bool is_favourite)
+    {
+      this._is_favourite = is_favourite;
+      this.notify_property ("is-favourite");
+    }
+
   private HashSet<EmailFieldDetails> _email_addresses =
       new HashSet<EmailFieldDetails> (
           (GLib.HashFunc) EmailFieldDetails.hash,

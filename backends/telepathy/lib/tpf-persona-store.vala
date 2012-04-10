@@ -554,14 +554,14 @@ public class Tpf.PersonaStore : Folks.PersonaStore
           this._favourite_ids.add (id);
           Persona ?p = this._lookup_persona_by_id (id);
           if (p != null)
-            p.is_favourite = true;
+            p._set_is_favourite (true);
         }
       foreach (var id in removed)
         {
           this._favourite_ids.remove (id);
           Persona ?p = this._lookup_persona_by_id (id);
           if (p != null)
-            p.is_favourite = false;
+            p._set_is_favourite (false);
         }
     }
 
@@ -896,7 +896,8 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       this._contact_persona_map[contact] = persona;
       contact.weak_ref (this._contact_weak_notify_cb);
 
-      persona.is_favourite = this._favourite_ids.contains (contact.get_identifier ());
+      var is_favourite = this._favourite_ids.contains (contact.get_identifier ());
+      persona._set_is_favourite (is_favourite);
 
       return persona;
     }
