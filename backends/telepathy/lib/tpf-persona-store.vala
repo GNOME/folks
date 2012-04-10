@@ -386,6 +386,11 @@ public class Tpf.PersonaStore : Folks.PersonaStore
         {
           this._conn.notify["self-contact"].disconnect (
               this._self_contact_changed_cb);
+          this._conn.notify["contact-list-state"].disconnect (
+              this._contact_list_state_changed_cb);
+          this._conn.contact_list_changed.disconnect (
+              this._contact_list_changed_cb);
+
           this._conn = null;
         }
 
