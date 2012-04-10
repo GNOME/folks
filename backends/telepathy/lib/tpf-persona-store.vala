@@ -462,25 +462,23 @@ public class Tpf.PersonaStore : Folks.PersonaStore
                         }
                     });
 
-              /* We have to connect to the logger before dealing with the
-               * account status, because if the account's already connected we
-               * want to be able to query favourite information immediately. */
-              try
-                {
-                  this._logger = new Logger (this.id);
-                  yield this._logger.prepare ();
-                  this._logger.invalidated.connect (
-                      this._logger_invalidated_cb);
-                  this._logger.favourite_contacts_changed.connect (
-                      this._favourite_contacts_changed_cb);
-                  this._initialise_favourite_contacts.begin ();
-                }
-              catch (GLib.Error e)
-                {
-                  warning (
-                      _("Couldn't connect to the telepathy-logger service."));
-                  this._logger = null;
-                }
+              this._logger = new Logger (this.id);
+              this._logger.invalidated.connect (
+                  this._logger_invalidated_cb);
+              this._logger.favourite_contacts_changed.connect (
+                  this._favourite_contacts_changed_cb);
+              this._initialise_favourite_contacts.begin ((o, r) =>
+                  {
+                    try
+                      {
+                        this._initialise_favourite_contacts.end (r);
+                      }
+                    catch (GLib.Error e)
+                      {
+                        warning ("Failed to initialise favourite contacts: %s",
+                            e.message);
+                      }
+                  });
 
               this.account.notify["connection"].connect (
                   this._notify_connection_cb);
@@ -532,22 +530,15 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       this._logger = null;
     }
 
-  private async void _initialise_favourite_contacts ()
+  private async void _initialise_favourite_contacts () throws GLib.Error
     {
       if (this._logger == null)
         return;
 
-      /* Get an initial set of favourite contacts */
-      try
-        {
-          var contacts = yield this._logger.get_favourite_contacts ();
-          this._favourite_contacts_changed_cb (contacts, {});
-        }
-      catch (GLib.Error e)
-        {
-          /* Translators: the parameter is an error message. */
-          warning (_("Couldn't get list of favorite contacts: %s"), e.message);
-        }
+      yield this._logger.prepare ();
+
+      var contacts = yield this._logger.get_favourite_contacts ();
+      this._favourite_contacts_changed_cb (contacts, {});
     }
 
   private Persona? _lookup_persona_by_id (string id)
