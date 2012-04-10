@@ -1144,10 +1144,13 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       try
         {
           var persona = yield this._ensure_persona_for_id (contact_id);
+          var already_exists = persona.is_in_contact_list;
           var tp_persona = (Tpf.Persona) persona;
-          tp_persona.contact.request_subscription_async (add_message);
+          yield tp_persona.contact.request_subscription_async (add_message);
 
-          return persona;
+          /* This function is supposed to return null if the persona was already
+           * in the contact list. */
+          return already_exists ? null : persona;
         }
       catch (GLib.Error e)
         {
