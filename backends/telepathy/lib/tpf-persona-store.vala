@@ -408,7 +408,6 @@ public class Tpf.PersonaStore : Folks.PersonaStore
 
       this._supported_fields = new HashSet<string> ();
       this._supported_fields_ro = this._supported_fields.read_only_view;
-      this._favourite_ids = new HashSet<string> ();
       this._self_persona = null;
     }
 
@@ -480,6 +479,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
                         }
                     });
 
+              this._favourite_ids = new HashSet<string> ();
               this._logger = new Logger (this.id);
               this._logger.invalidated.connect (
                   this._logger_invalidated_cb);
