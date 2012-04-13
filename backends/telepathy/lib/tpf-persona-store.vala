@@ -486,17 +486,18 @@ public class Tpf.PersonaStore : Folks.PersonaStore
               this._logger.favourite_contacts_changed.connect (
                   this._favourite_contacts_changed_cb);
               this._initialise_favourite_contacts.begin ((o, r) =>
-                  {
-                    try
-                      {
-                        this._initialise_favourite_contacts.end (r);
-                      }
-                    catch (GLib.Error e)
-                      {
-                        warning ("Failed to initialise favourite contacts: %s",
-                            e.message);
-                      }
-                  });
+                {
+                  debug ("FAVOURITE INIT DONE");
+                  try
+                    {
+                      this._initialise_favourite_contacts.end (r);
+                    }
+                  catch (GLib.Error e)
+                    {
+                      warning ("Failed to initialise favourite contacts: %s",
+                          e.message);
+                    }
+                });
 
               this.account.notify["connection"].connect (
                   this._notify_connection_cb);
