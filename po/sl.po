@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: folks master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=folks&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2012-03-26 18:41+0000\n"
-"PO-Revision-Date: 2012-03-26 21:01+0100\n"
+"POT-Creation-Date: 2012-04-13 15:33+0000\n"
+"PO-Revision-Date: 2012-04-14 09:52+0100\n"
 "Last-Translator: Matej Urbančič <mateju@svn.gnome.org>\n"
 "Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups.com>\n"
 "Language: Slovenian\n"
@@ -286,168 +286,40 @@ msgid "Error opening contacts view."
 msgstr "Napaka med odpiranjem pogleda stikov."
 
 #. Translators: the parameter is an error message.
-#: ../backends/telepathy/lib/tp-lowlevel.c:508
-#, c-format
-msgid "Error requesting a group channel: %s"
-msgstr "Napaka med podajanjem zahteve za skupinski kanala: %s"
-
-#. Translators: the parameter is an error message.
-#: ../backends/telepathy/lib/tp-lowlevel.c:526
-#, c-format
-msgid "Error requesting group handles: %s"
-msgstr "Napaka med podajanjem zahteve za skupinske ročnike: %s"
-
-#. Translators: the parameter is an error message.
-#: ../backends/telepathy/lib/tp-lowlevel.c:564
+#: ../backends/telepathy/lib/tp-lowlevel.c:218
 #, c-format
 msgid "Failed to change contact's alias: %s"
 msgstr "Spreminjanje vzdevka stika je spodletelo: %s"
 
-#. Translators: the parameter is an error message.
-#: ../backends/telepathy/lib/tp-lowlevel.c:623
-#, c-format
-msgid "Failed to create group channel: %s"
-msgstr "Ustvarjanje skupine kanalov je spodletelo: %s"
-
-#. Translators: the parameter is an error message.
-#: ../backends/telepathy/lib/tp-lowlevel.c:655
-#, c-format
-msgid "Get Channels property failed: %s"
-msgstr "Pridobivanje lastnosti kanalov je spodletelo: %s"
-
-#. Translators: the first parameter is a group channel identifier and the
-#. * second is an error message.
-#: ../backends/telepathy/lib/tp-lowlevel.c:697
-#, c-format
-msgid "Failed to add contact to group '%s': %s"
-msgstr "Dodajanje stika v skupino '%s' je spodletelo: %s"
-
-#. Translators: the first parameter is a group channel identifier and the
-#. * second is an error message.
-#: ../backends/telepathy/lib/tp-lowlevel.c:713
-#, c-format
-msgid "Failed to remove contact from group '%s': %s"
-msgstr "Odstranjevanje stika iz skupine '%s' je spodletelo: %s"
-
-#. Translators: the first parameter is a pointer address and the
-#. * second is a contact handle (numeric identifier).
-#: ../backends/telepathy/lib/tp-lowlevel.c:736
-#, c-format
-msgid "Invalid group channel %p to add handle %d to."
-msgstr "Neveljaven skupinski kanal %p za dodelitev ročnika %d."
-
-#: ../backends/telepathy/lib/tpf-persona-store.vala:662
-msgid "Couldn't connect to the telepathy-logger service."
-msgstr "Ni se mogoče povezati s storitvijo telepathy-logger."
-
-#: ../backends/telepathy/lib/tpf-persona-store.vala:716
+#: ../backends/telepathy/lib/tpf-persona-store.vala:548
 msgid "Lost connection to the telepathy-logger service."
 msgstr "Povezava s storitvijo telepathy-logger je izgubljena."
-
-#. Translators: the parameter is an error message.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:748
-#: ../backends/telepathy/lib/tpf-persona-store.vala:760
-#, c-format
-msgid "Couldn't get list of favorite contacts: %s"
-msgstr "Ni mogoče pridobiti seznama priljubljenih stikov: %s"
-
-#. Translators: the parameter is an identifier.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:797
-#, c-format
-msgid "Unknown Telepathy contact ‘%s’ in favorites list."
-msgstr "Neznan stik Telepathy '%s' na seznamu priljubljenih."
-
-#. Translators: the parameter is an error message.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:828
-#, c-format
-msgid "Couldn't add favorite contacts: %s"
-msgstr "Ni mogoče dodati priljubljenega stika: %s"
-
-#. Translators: the parameter is an error message.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:849
-#, c-format
-msgid "Couldn't remove favorite contacts: %s"
-msgstr "Ni mogoče odstraniti priljubljenega stika: %s"
 
 #. Translators: the first parameter is the display name for
 #. * the Telepathy account, and the second is an error
 #. * message.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:978
+#: ../backends/telepathy/lib/tpf-persona-store.vala:744
 #, c-format
 msgid "Failed to determine whether we can set aliases on Telepathy account '%s': %s"
 msgstr "Določevanje ali je mogoče določiti vzdevke računa Telepathy '%s' je spodletelo: %s"
 
-#. Translators: the first parameter is the display name for
-#. * the Telepathy account, and the second is an error
-#. * message.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1031
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1081
 #, c-format
-msgid "Failed to determine whether we can set groups on Telepathy account '%s': %s"
-msgstr "Določevanje ali je mogoče določiti skupine računa Telepathy '%s' je spodletelo: %s"
+msgid "Failed to change group membership: %s"
+msgstr "Spreminjanje članstva skupine je spodletelo: %s"
 
-#. Translators: the first parameter is a Telepathy handle,
-#. * and the second is an error message.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1209
-#, c-format
-msgid "Failed to create contact for self handle '%u': %s"
-msgstr "Ustvarjanje stika za ročnik '%u': %s"
-
-#. Translators: do not translate "NewChannels", as it's a D-Bus
-#. * signal name.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1241
-msgid "Error creating channel for NewChannels signal."
-msgstr "Napaka ustvarjanja kanala za signal NewChannels."
-
-#. Translators: the parameter is a persona identifier and
-#. * the second parameter is a group name.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1280
-#, c-format
-msgid "Failed to add Telepathy contact ‘%s’ to group ‘%s’."
-msgstr "Dodajanje stika Telepathy ‘%s’ v skupino ‘%s’ je spodletelo."
-
-#. Translators: the parameter is a persona identifier
-#. * and the second parameter is a group name.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1291
-#, c-format
-msgid "Failed to remove Telepathy contact ‘%s’ from group ‘%s’."
-msgstr "Odstranjevanje stika Telepathy ‘%s’ iz skupine ‘%s’ je spodletelo."
-
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1657
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1106
 msgid "Telepathy contacts representing the local user may not be removed."
 msgstr "Stikov Telepathy, ki predstavljajo krajevnega uporabnika ni mogoče odstraniti."
 
-#. Translators: The first parameter is a contact identifier, the
-#. * second is a contact list identifier and the third is an error
-#. * message.
-#. Translators: The first parameter is a contact identifier,
-#. * the second is a contact list identifier and the third is an
-#. * error message.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1678
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1693
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1708
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1930
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1117
 #, c-format
-msgid "Failed to remove Telepathy contact ‘%s’ from ‘%s’ list: %s"
-msgstr "Odstranjevanje stika Telepathy ‘%s’ iz seznama ‘%s’ je spodletelo: %s"
-
-#. Translators: The first parameter is a contact identifier,
-#. * the second is a contact list identifier and the third is an
-#. * error message.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1920
-#, c-format
-msgid "Failed to add Telepathy contact ‘%s’ to ‘%s’ list: %s"
-msgstr "Dodajanje stika Telepathy ‘%s’ na seznam stikov ‘%s’ je spodletelo: %s"
-
-#. Translators: the first parameter is a channel identifier and
-#. * the second is an error message..
-#: ../backends/telepathy/lib/tpf-persona-store.vala:2033
-#, c-format
-msgid "Failed to create incoming Telepathy contacts from channel ‘%s’: %s"
-msgstr "Ustvarjanje prihajajočih stikov Telepathy preko kanala ‘%s’ je spodletelo: %s"
+msgid "Failed to remove a persona from store: %s"
+msgstr "Odstranjevanje stika iz zaloge je spodletelo: %s"
 
 #. Translators: the first two parameters are store identifiers and
 #. * the third is a contact identifier.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:2281
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1145
 #, c-format
 msgid ""
 "Persona store (%s, %s) requires the following details:\n"
@@ -456,47 +328,36 @@ msgstr ""
 "Zaloga stika (%s, %s) zahteva naslednje podatke:\n"
 "    stik (ponujen: '%s')\n"
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:2296
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1160
 msgid "Cannot create a new Telepathy contact while offline."
 msgstr "Novega stika Telepathy brez povezave ni mogoče ustvariti."
 
-#. Translators: the parameter is the number of personas
-#. * which were returned.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:2348
-#, c-format
-msgid "Requested a single persona, but got %u persona back."
-msgid_plural "Requested a single persona, but got %u personas back."
-msgstr[0] "Podana je zahteva za podatke enega stika, vrnjenih pa je %u stikov."
-msgstr[1] "Podana je zahteva za podatke enega stika, vrnjen pa je %u stik."
-msgstr[2] "Podana je zahteva za podatke enega stika, vrnjena pa sta %u stika."
-msgstr[3] "Podana je zahteva za podatke enega stika, vrnjeni pa so %u stiki."
-
-#: ../backends/telepathy/lib/tpf-persona-store.vala:2359
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1178
 #, c-format
 msgid "Failed to add a persona from details: %s"
 msgstr "Dodajanje stika iz podatkov je spodletelo: %s"
 
 #. Translators: "telepathy-logger" is the name of an application,
 #. * and should not be translated.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:2379
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1198
 msgid "Failed to change favorite without a connection to the telepathy-logger service."
 msgstr "Spreminjanje priljubljenih ni mogoče brez povezave s storitvijo telepathy-logger."
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:2385
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1204
 msgid "Failed to change favorite status of Telepathy Persona because it has no attached TpContact."
 msgstr "Spreminjanje stanja priljubljenih za stik Telepathy je spodletelo, ker ni ustreznega predmeta TpContact."
 
 #. Translators: the parameter is a contact identifier.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:2403
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1222
 #, c-format
 msgid "Failed to change favorite status for Telepathy contact ‘%s’."
 msgstr "Spreminjanje stanja priljubljenih za stik Telepathy ‘%s’ je spodledelo."
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:2505
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1325
 msgid "Extended information may only be set on the user's Telepathy contact."
 msgstr "Razširjene podrobnost je mogoče določiti le na stiku uporabnika programa Telepathy."
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:2534
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1354
 msgid "Extended information cannot be written because the store is disconnected."
 msgstr "Razširjenih podrobnosti ni mogoče zapisati, saj povezava s trgovino ni vzpostavljena."
 
@@ -772,6 +633,82 @@ msgstr "Napaka med uvažanjem stikov: %s"
 #, c-format
 msgid "Unrecognized source backend name ‘%s’. ‘%s’ is currently the only supported source backend."
 msgstr "Neprepoznano ime ozadnjega programa vira '%s'. Trenutno je podprt le ozadnji program vira ‘%s’."
+
+#~ msgid "Error requesting a group channel: %s"
+#~ msgstr "Napaka med podajanjem zahteve za skupinski kanala: %s"
+
+#~ msgid "Error requesting group handles: %s"
+#~ msgstr "Napaka med podajanjem zahteve za skupinske ročnike: %s"
+
+#~ msgid "Get Channels property failed: %s"
+#~ msgstr "Pridobivanje lastnosti kanalov je spodletelo: %s"
+
+#~ msgid "Failed to add contact to group '%s': %s"
+#~ msgstr "Dodajanje stika v skupino '%s' je spodletelo: %s"
+
+#~ msgid "Failed to remove contact from group '%s': %s"
+#~ msgstr "Odstranjevanje stika iz skupine '%s' je spodletelo: %s"
+
+#~ msgid "Invalid group channel %p to add handle %d to."
+#~ msgstr "Neveljaven skupinski kanal %p za dodelitev ročnika %d."
+
+#~ msgid "Couldn't connect to the telepathy-logger service."
+#~ msgstr "Ni se mogoče povezati s storitvijo telepathy-logger."
+
+#~ msgid "Couldn't get list of favorite contacts: %s"
+#~ msgstr "Ni mogoče pridobiti seznama priljubljenih stikov: %s"
+
+#~ msgid "Unknown Telepathy contact ‘%s’ in favorites list."
+#~ msgstr "Neznan stik Telepathy '%s' na seznamu priljubljenih."
+
+#~ msgid "Couldn't add favorite contacts: %s"
+#~ msgstr "Ni mogoče dodati priljubljenega stika: %s"
+
+#~ msgid "Couldn't remove favorite contacts: %s"
+#~ msgstr "Ni mogoče odstraniti priljubljenega stika: %s"
+
+#~ msgid ""
+#~ "Failed to determine whether we can set groups on Telepathy account '%s': "
+#~ "%s"
+#~ msgstr ""
+#~ "Določevanje ali je mogoče določiti skupine računa Telepathy '%s' je "
+#~ "spodletelo: %s"
+
+#~ msgid "Failed to create contact for self handle '%u': %s"
+#~ msgstr "Ustvarjanje stika za ročnik '%u': %s"
+
+#~ msgid "Error creating channel for NewChannels signal."
+#~ msgstr "Napaka ustvarjanja kanala za signal NewChannels."
+
+#~ msgid "Failed to add Telepathy contact ‘%s’ to group ‘%s’."
+#~ msgstr "Dodajanje stika Telepathy ‘%s’ v skupino ‘%s’ je spodletelo."
+
+#~ msgid "Failed to remove Telepathy contact ‘%s’ from group ‘%s’."
+#~ msgstr "Odstranjevanje stika Telepathy ‘%s’ iz skupine ‘%s’ je spodletelo."
+
+#~ msgid "Failed to remove Telepathy contact ‘%s’ from ‘%s’ list: %s"
+#~ msgstr ""
+#~ "Odstranjevanje stika Telepathy ‘%s’ iz seznama ‘%s’ je spodletelo: %s"
+
+#~ msgid "Failed to add Telepathy contact ‘%s’ to ‘%s’ list: %s"
+#~ msgstr ""
+#~ "Dodajanje stika Telepathy ‘%s’ na seznam stikov ‘%s’ je spodletelo: %s"
+
+#~ msgid "Failed to create incoming Telepathy contacts from channel ‘%s’: %s"
+#~ msgstr ""
+#~ "Ustvarjanje prihajajočih stikov Telepathy preko kanala ‘%s’ je "
+#~ "spodletelo: %s"
+
+#~ msgid "Requested a single persona, but got %u persona back."
+
+#~ msgid_plural "Requested a single persona, but got %u personas back."
+#~ msgstr[0] ""
+#~ "Podana je zahteva za podatke enega stika, vrnjenih pa je %u stikov."
+#~ msgstr[1] "Podana je zahteva za podatke enega stika, vrnjen pa je %u stik."
+#~ msgstr[2] ""
+#~ "Podana je zahteva za podatke enega stika, vrnjena pa sta %u stika."
+#~ msgstr[3] ""
+#~ "Podana je zahteva za podatke enega stika, vrnjeni pa so %u stiki."
 
 #~ msgid "Couldn't open address book ‘%s’."
 #~ msgstr "Ni mogoče odpreti imenika ‘%s’."
