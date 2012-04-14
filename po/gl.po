@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: folks master\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-03-27 12:38+0200\n"
-"PO-Revision-Date: 2012-03-27 12:39+0200\n"
+"POT-Creation-Date: 2012-04-14 14:06+0200\n"
+"PO-Revision-Date: 2012-04-14 14:07+0200\n"
 "Last-Translator: Fran Dieguez <frandieguez@gnome.org>\n"
 "Language-Team: Galician <gnome-l10n-gl@gnome.org>\n"
 "Language: gl\n"
@@ -285,93 +285,19 @@ msgid "Error opening contacts view."
 msgstr "Produciuse un erro ao abrir a vista de contactos"
 
 #. Translators: the parameter is an error message.
-#: ../backends/telepathy/lib/tp-lowlevel.c:508
-#, c-format
-msgid "Error requesting a group channel: %s"
-msgstr "Produciuse un erro ao solicitar a canle de grupos: %s"
-
-#. Translators: the parameter is an error message.
-#: ../backends/telepathy/lib/tp-lowlevel.c:526
-#, c-format
-msgid "Error requesting group handles: %s"
-msgstr "Produciuse un erro ao solicitar o xestor de grupo: %s"
-
-#. Translators: the parameter is an error message.
-#: ../backends/telepathy/lib/tp-lowlevel.c:564
+#: ../backends/telepathy/lib/tp-lowlevel.c:218
 #, c-format
 msgid "Failed to change contact's alias: %s"
 msgstr "Produciuse un erro ao cambiar o alias do contacto: %s"
 
-#. Translators: the parameter is an error message.
-#: ../backends/telepathy/lib/tp-lowlevel.c:623
-#, c-format
-msgid "Failed to create group channel: %s"
-msgstr "Produciuse un fallo ao crear a canle de grupo: %s"
-
-#. Translators: the parameter is an error message.
-#: ../backends/telepathy/lib/tp-lowlevel.c:655
-#, c-format
-msgid "Get Channels property failed: %s"
-msgstr "Produciuse un fallo ao obter a propiedade Canles: %s"
-
-#. Translators: the first parameter is a group channel identifier and the
-#. * second is an error message.
-#: ../backends/telepathy/lib/tp-lowlevel.c:697
-#, c-format
-msgid "Failed to add contact to group '%s': %s"
-msgstr "Produciuse un fallo ao engadiro o contacto ao grupo «%s»: %s"
-
-#. Translators: the first parameter is a group channel identifier and the
-#. * second is an error message.
-#: ../backends/telepathy/lib/tp-lowlevel.c:713
-#, c-format
-msgid "Failed to remove contact from group '%s': %s"
-msgstr "Produciuse un fallo ao quitar o contacto do grupo «%s»: %s"
-
-#. Translators: the first parameter is a pointer address and the
-#. * second is a contact handle (numeric identifier).
-#: ../backends/telepathy/lib/tp-lowlevel.c:736
-#, c-format
-msgid "Invalid group channel %p to add handle %d to."
-msgstr "Canle de grupo %p non válida onde engadir un xestor %d "
-
-#: ../backends/telepathy/lib/tpf-persona-store.vala:668
-msgid "Couldn't connect to the telepathy-logger service."
-msgstr "Non foi posíbel conectarse ao servizo «telepathy-logger»."
-
-#: ../backends/telepathy/lib/tpf-persona-store.vala:722
+#: ../backends/telepathy/lib/tpf-persona-store.vala:548
 msgid "Lost connection to the telepathy-logger service."
 msgstr "Conexión co servizo «telepathy-logger» perdida."
-
-#. Translators: the parameter is an error message.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:754
-#: ../backends/telepathy/lib/tpf-persona-store.vala:766
-#, c-format
-msgid "Couldn't get list of favorite contacts: %s"
-msgstr "Non foi posíbel obter a lista de contactos favoritos: %s"
-
-#. Translators: the parameter is an identifier.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:803
-#, c-format
-msgid "Unknown Telepathy contact ‘%s’ in favorites list."
-msgstr "Contacto «%s» de Telepathy descoñecido na lista de favoritos."
-
-#. Translators: the parameter is an error message.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:834
-#, c-format
-msgid "Couldn't add favorite contacts: %s"
-msgstr "Non foi posíbel engadir aos contactos favoritos: %s"
-
-#. Translators: the parameter is an error message.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:855
-#, c-format
-msgid "Couldn't remove favorite contacts: %s"
-msgstr "Non foi posíbel elimianr os contactos favoritos: %s"
 
 #. Translators: the first parameter is the display name for
 #. * the Telepathy account, and the second is an error
 #. * message.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:984
+#: ../backends/telepathy/lib/tpf-persona-store.vala:744
 #, c-format
 msgid ""
 "Failed to determine whether we can set aliases on Telepathy account '%s': %s"
@@ -379,88 +305,25 @@ msgstr ""
 "Produciuse un fallo ao determinar se se poden estabelcer alias na conta «%s» "
 "de Telepathy: %s"
 
-#. Translators: the first parameter is the display name for
-#. * the Telepathy account, and the second is an error
-#. * message.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1037
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1081
 #, c-format
-msgid ""
-"Failed to determine whether we can set groups on Telepathy account '%s': %s"
-msgstr ""
-"Produciuse un fallo ao determinar se se pode estabelecer grupos na conta «%s "
-"»de Telepathy: %s"
+msgid "Failed to change group membership: %s"
+msgstr "Produciuse un fallo ao cambiar a membresía do grupo: %s"
 
-#. Translators: the first parameter is a Telepathy handle,
-#. * and the second is an error message.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1215
-#, c-format
-msgid "Failed to create contact for self handle '%u': %s"
-msgstr "Produciuse un fallo ao crear o contacto para o xestor propio «%u»: %s"
-
-#. Translators: do not translate "NewChannels", as it's a D-Bus
-#. * signal name.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1247
-msgid "Error creating channel for NewChannels signal."
-msgstr "Produciuse un erro ao crear a canle do sinal NewChannels"
-
-#. Translators: the parameter is a persona identifier and
-#. * the second parameter is a group name.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1286
-#, c-format
-msgid "Failed to add Telepathy contact ‘%s’ to group ‘%s’."
-msgstr ""
-"Produciuse un fallo ao engadir o contacto «%s» de Telepathy ao grupo «%s»."
-
-#. Translators: the parameter is a persona identifier
-#. * and the second parameter is a group name.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1297
-#, c-format
-msgid "Failed to remove Telepathy contact ‘%s’ from group ‘%s’."
-msgstr ""
-"Produciuse un fallo ao quitar o contacto «%s» de Telepathy do grupo «%s»."
-
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1663
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1106
 msgid "Telepathy contacts representing the local user may not be removed."
 msgstr ""
 "Os contactos de Telepathy que representan ao usuario local non se deben "
 "quitar."
 
-#. Translators: The first parameter is a contact identifier, the
-#. * second is a contact list identifier and the third is an error
-#. * message.
-#. Translators: The first parameter is a contact identifier,
-#. * the second is a contact list identifier and the third is an
-#. * error message.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1684
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1699
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1714
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1936
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1117
 #, c-format
-msgid "Failed to remove Telepathy contact ‘%s’ from ‘%s’ list: %s"
-msgstr ""
-"Produciuse un fallo ao quitar o contacto «%s» de Telepathy do grupo «%s»: %s"
-
-#. Translators: The first parameter is a contact identifier,
-#. * the second is a contact list identifier and the third is an
-#. * error message.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1926
-#, c-format
-msgid "Failed to add Telepathy contact ‘%s’ to ‘%s’ list: %s"
-msgstr ""
-"Produciuse un fallo ao engadir o contacto «%s» de Telepathy á lista de "
-"contactos «%s»: %s"
-
-#. Translators: the first parameter is a channel identifier and
-#. * the second is an error message..
-#: ../backends/telepathy/lib/tpf-persona-store.vala:2039
-#, c-format
-msgid "Failed to create incoming Telepathy contacts from channel ‘%s’: %s"
-msgstr ""
-"Produciuse un fallo ao crear os contactos de entrada desde a canle «%s»: %s"
+msgid "Failed to remove a persona from store: %s"
+msgstr "Produciuse un fallo ao quitar un contacto do almacén: %s"
 
 #. Translators: the first two parameters are store identifiers and
 #. * the third is a contact identifier.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:2287
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1145
 #, c-format
 msgid ""
 "Persona store (%s, %s) requires the following details:\n"
@@ -469,27 +332,18 @@ msgstr ""
 "O almacén de contactos (%s, %s) require os seguintes detalles:\n"
 "    contacto (fornecido: «%s»)\n"
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:2302
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1160
 msgid "Cannot create a new Telepathy contact while offline."
 msgstr "Non é posíbel crear un contacto de Telepathy novo estando desconectado"
 
-#. Translators: the parameter is the number of personas
-#. * which were returned.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:2354
-#, c-format
-msgid "Requested a single persona, but got %u persona back."
-msgid_plural "Requested a single persona, but got %u personas back."
-msgstr[0] "Solicitouse un único contacto, pero obtívose %u contacto."
-msgstr[1] "Soliciouse un único contacto, pero obtivéronse %u contactos."
-
-#: ../backends/telepathy/lib/tpf-persona-store.vala:2365
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1178
 #, c-format
 msgid "Failed to add a persona from details: %s"
 msgstr "Produciuse un fallo ao engadir un contacto desde os detalles: %s"
 
 #. Translators: "telepathy-logger" is the name of an application,
 #. * and should not be translated.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:2385
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1198
 msgid ""
 "Failed to change favorite without a connection to the telepathy-logger "
 "service."
@@ -497,7 +351,7 @@ msgstr ""
 "Produciuse un fallo ao cambiar o estado de favorito sen unha conexión ao "
 "servizo de telepathy-logger"
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:2391
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1204
 msgid ""
 "Failed to change favorite status of Telepathy Persona because it has no "
 "attached TpContact."
@@ -506,20 +360,20 @@ msgstr ""
 "Telepathy xa que non ten TpContact anexo."
 
 #. Translators: the parameter is a contact identifier.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:2409
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1222
 #, c-format
 msgid "Failed to change favorite status for Telepathy contact ‘%s’."
 msgstr ""
 "Produciuse un fallo ao cambiar o estado de favorito para o contacto de "
 "Telepathy «%s»."
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:2511
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1325
 msgid "Extended information may only be set on the user's Telepathy contact."
 msgstr ""
 "A información extendida só pode estabelecerse no contacto de Telepathy do "
 "usuario."
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:2540
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1354
 msgid ""
 "Extended information cannot be written because the store is disconnected."
 msgstr ""
@@ -824,12 +678,83 @@ msgstr ""
 "Non se recoñeceu o nome «%s» do motor de orixe. Actualmente %s é o único de "
 "motor orixe admitido."
 
+#~ msgid "Error requesting a group channel: %s"
+#~ msgstr "Produciuse un erro ao solicitar a canle de grupos: %s"
+
+#~ msgid "Error requesting group handles: %s"
+#~ msgstr "Produciuse un erro ao solicitar o xestor de grupo: %s"
+
+#~ msgid "Get Channels property failed: %s"
+#~ msgstr "Produciuse un fallo ao obter a propiedade Canles: %s"
+
+#~ msgid "Failed to add contact to group '%s': %s"
+#~ msgstr "Produciuse un fallo ao engadiro o contacto ao grupo «%s»: %s"
+
+#~ msgid "Failed to remove contact from group '%s': %s"
+#~ msgstr "Produciuse un fallo ao quitar o contacto do grupo «%s»: %s"
+
+#~ msgid "Invalid group channel %p to add handle %d to."
+#~ msgstr "Canle de grupo %p non válida onde engadir un xestor %d "
+
+#~ msgid "Couldn't connect to the telepathy-logger service."
+#~ msgstr "Non foi posíbel conectarse ao servizo «telepathy-logger»."
+
+#~ msgid "Couldn't get list of favorite contacts: %s"
+#~ msgstr "Non foi posíbel obter a lista de contactos favoritos: %s"
+
+#~ msgid "Unknown Telepathy contact ‘%s’ in favorites list."
+#~ msgstr "Contacto «%s» de Telepathy descoñecido na lista de favoritos."
+
+#~ msgid "Couldn't add favorite contacts: %s"
+#~ msgstr "Non foi posíbel engadir aos contactos favoritos: %s"
+
+#~ msgid "Couldn't remove favorite contacts: %s"
+#~ msgstr "Non foi posíbel elimianr os contactos favoritos: %s"
+
+#~ msgid ""
+#~ "Failed to determine whether we can set groups on Telepathy account '%s': "
+#~ "%s"
+#~ msgstr ""
+#~ "Produciuse un fallo ao determinar se se pode estabelecer grupos na conta "
+#~ "«%s »de Telepathy: %s"
+
+#~ msgid "Failed to create contact for self handle '%u': %s"
+#~ msgstr ""
+#~ "Produciuse un fallo ao crear o contacto para o xestor propio «%u»: %s"
+
+#~ msgid "Error creating channel for NewChannels signal."
+#~ msgstr "Produciuse un erro ao crear a canle do sinal NewChannels"
+
+#~ msgid "Failed to add Telepathy contact ‘%s’ to group ‘%s’."
+#~ msgstr ""
+#~ "Produciuse un fallo ao engadir o contacto «%s» de Telepathy ao grupo «%s»."
+
+#~ msgid "Failed to remove Telepathy contact ‘%s’ from group ‘%s’."
+#~ msgstr ""
+#~ "Produciuse un fallo ao quitar o contacto «%s» de Telepathy do grupo «%s»."
+
+#~ msgid "Failed to remove Telepathy contact ‘%s’ from ‘%s’ list: %s"
+#~ msgstr ""
+#~ "Produciuse un fallo ao quitar o contacto «%s» de Telepathy do grupo «%s»: "
+#~ "%s"
+
+#~ msgid "Failed to add Telepathy contact ‘%s’ to ‘%s’ list: %s"
+#~ msgstr ""
+#~ "Produciuse un fallo ao engadir o contacto «%s» de Telepathy á lista de "
+#~ "contactos «%s»: %s"
+
+#~ msgid "Failed to create incoming Telepathy contacts from channel ‘%s’: %s"
+#~ msgstr ""
+#~ "Produciuse un fallo ao crear os contactos de entrada desde a canle «%s»: "
+#~ "%s"
+
+#~ msgid "Requested a single persona, but got %u persona back."
+#~ msgid_plural "Requested a single persona, but got %u personas back."
+#~ msgstr[0] "Solicitouse un único contacto, pero obtívose %u contacto."
+#~ msgstr[1] "Soliciouse un único contacto, pero obtivéronse %u contactos."
+
 #~ msgid "Couldn't open address book ‘%s’."
 #~ msgstr "Non foi posíbel abrir a axenda de enderezos: «%s»."
-
-#~ msgid "Failed to remove persona '%s' (%s) from 'stored' list: %s"
-#~ msgstr ""
-#~ "Produciuse un fallo ao quitar o contacto «%s» (%s) da lista «stored»: %s"
 
 #~ msgid "Failed to remove persona '%s' (%s) from 'subscribe' list: %s"
 #~ msgstr ""
