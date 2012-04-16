@@ -488,7 +488,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
                     }
                   catch (GLib.Error e)
                     {
-                      warning ("Failed to initialise favourite contacts: %s",
+                      debug ("Failed to initialise favourite contacts: %s",
                           e.message);
                       this._logger = null;
                     }
