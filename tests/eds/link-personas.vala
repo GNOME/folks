@@ -135,7 +135,12 @@ public class LinkPersonasTests : Folks.TestCase
 
       var timer_id = Timeout.add_seconds (8, () =>
         {
-          this._main_loop.quit ();
+          // Let the main loop run out of events before we quit (yes, this is a HACK)
+          Timeout.add_seconds (5, () =>
+            {
+              this._main_loop.quit ();
+              return false;
+            });
           assert_not_reached ();
         });
 
@@ -432,7 +437,11 @@ public class LinkPersonasTests : Folks.TestCase
 
           if (this._linking_props.size == 0)
             {
-              this._main_loop.quit ();
+              Timeout.add_seconds (5, () =>
+                {
+                  this._main_loop.quit ();
+                  return false;
+                });
             }
         }
 
