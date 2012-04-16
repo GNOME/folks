@@ -40,7 +40,7 @@ extern const string BACKEND_NAME;
  */
 public class Tpf.PersonaStore : Folks.PersonaStore
 {
-  private string[] _always_writeable_properties = { "is-favourite" };
+  private string[] _always_writeable_properties = {};
 
   /* Sets of Personas exposed by this store.
    * This is the roster + self_contact */
@@ -490,6 +490,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
                     {
                       warning ("Failed to initialise favourite contacts: %s",
                           e.message);
+                      this._logger = null;
                     }
                 });
 
@@ -552,6 +553,9 @@ public class Tpf.PersonaStore : Folks.PersonaStore
 
       var contacts = yield this._logger.get_favourite_contacts ();
       this._favourite_contacts_changed_cb (contacts, {});
+
+      this._always_writeable_properties += "is-favourite";
+      this.notify_property ("always-writeable-properties");
     }
 
   private Persona? _lookup_persona_by_id (string id)
@@ -844,7 +848,15 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       this._can_group_personas = MaybeBool.FALSE;
       this._can_remove_personas = MaybeBool.FALSE;
 
-      this._always_writeable_properties = { "is-favourite" };
+      if (this._logger != null)
+        {
+          this._always_writeable_properties = { "is-favourite" };
+        }
+      else
+        {
+          this._always_writeable_properties = {};
+        }
+
       this.notify_property ("always-writeable-properties");
     }
 

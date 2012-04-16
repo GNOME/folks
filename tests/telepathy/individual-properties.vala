@@ -104,7 +104,9 @@ public class IndividualPropertiesTests : Folks.TestCase
                     }
                   assert (tpf_persona != null);
                   assert ("alias" in tpf_persona.writeable_properties);
-                  assert ("is-favourite" in tpf_persona.writeable_properties);
+                  /* The logger isn't run in the test suite. */
+                  assert (!("is-favourite"
+                       in tpf_persona.writeable_properties));
                   assert ("groups" in tpf_persona.writeable_properties);
                   /* These are only writeable for the user contact */
                   assert (tpf_persona.is_user);
@@ -149,7 +151,9 @@ public class IndividualPropertiesTests : Folks.TestCase
                     }
                   assert (tpf_persona != null);
                   assert ("alias" in tpf_persona.writeable_properties);
-                  assert ("is-favourite" in tpf_persona.writeable_properties);
+                  /* The logger isn't run in the test suite. */
+                  assert (!("is-favourite"
+                      in tpf_persona.writeable_properties));
                   assert ("groups" in tpf_persona.writeable_properties);
                   /* These are only writeable for the user contact */
                   assert (!tpf_persona.is_user);
