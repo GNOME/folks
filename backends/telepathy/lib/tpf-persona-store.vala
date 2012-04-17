@@ -36,7 +36,7 @@ extern const string BACKEND_NAME;
  * User must define contact features it wants on the #TpSimpleClientFactory of
  * the default #TpAccountManager returned by tp_account_manager_dup() *before*
  * preparing telepathy stores. Note that this is a behaviour change since
- * 0.UNRELEASED, folks won't force preparing any feature anymore.
+ * 0.7.0, folks won't force preparing any feature anymore.
  */
 public class Tpf.PersonaStore : Folks.PersonaStore
 {

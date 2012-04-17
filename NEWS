@@ -1,9 +1,15 @@
 Overview of changes from libfolks 0.6.9 to libfolks 0.7.0
 =========================================================
 
+Major changes:
+* Folks now uses the Connection.ContactList Telepathy spec. instead of the
+  deprecated Channel.ContactList. This means legacy Connection Managers
+  (notably telepathy-butterfly) are not supported any more .
+
 Bugs fixed:
 • Bug 658576 — Need API to get a FolksIndividual from his ID
 • Bug 671662 — Renamed alias of Facebook contact is not saved
+• Bug 630822 — Support Connection.Interface.ContactList API
 
 API changes:
 • Add IndividualAggregator.look_up_individual()

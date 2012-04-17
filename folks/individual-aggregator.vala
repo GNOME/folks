@@ -2031,7 +2031,7 @@ public class Folks.IndividualAggregator : Object
    * @return individual with `id`, or `null` if no such individual was found
    * @throws GLib.Error from {@link IndividualAggregator.prepare}
    *
-   * @since UNRELEASED
+   * @since 0.7.0
    */
   public async Individual? look_up_individual (string id) throws GLib.Error
     {
