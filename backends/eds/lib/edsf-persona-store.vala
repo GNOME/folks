@@ -1261,8 +1261,15 @@ public class Edsf.PersonaStore : Folks.PersonaStore
       finally
         {
           /* Remove the callbacks. */
-          persona.disconnect (signal_id);
-          GLib.Source.remove (timeout_id);
+          if (signal_id != 0)
+            {
+              persona.disconnect (signal_id);
+            }
+
+          if (timeout_id != 0)
+            {
+              GLib.Source.remove (timeout_id);
+            }
         }
     }
 
