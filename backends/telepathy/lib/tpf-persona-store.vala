@@ -540,7 +540,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
     {
       this._logger.invalidated.disconnect (this._logger_invalidated_cb);
 
-      warning (_("Lost connection to the telepathy-logger service."));
+      debug ("Lost connection to the telepathy-logger service.");
       this._logger = null;
     }
 
