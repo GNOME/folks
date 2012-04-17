@@ -615,7 +615,7 @@ tp_tests_contacts_connection_get_contact_list_manager (
  * @self: a #TpTestsContactsConnection
  * @n: the number of handles
  * @handles: (array length=n): the handles
- * @aliases: (array zero-terminated=1): aliases
+ * @aliases: (array length=n): aliases
  *
  */
 void
@@ -801,7 +801,7 @@ my_get_alias_flags (TpSvcConnectionInterfaceAliasing *aliasing,
 
   TP_BASE_CONNECTION_ERROR_IF_NOT_CONNECTED (base, context);
   tp_svc_connection_interface_aliasing_return_from_get_alias_flags (context,
-      0);
+      TP_CONNECTION_ALIAS_FLAG_USER_SET);
 }
 
 static void
@@ -893,6 +893,57 @@ my_request_aliases (TpSvcConnectionInterfaceAliasing *aliasing,
 }
 
 static void
+my_set_aliases (TpSvcConnectionInterfaceAliasing *aliasing,
+    GHashTable *table,
+    DBusGMethodInvocation *context)
+{
+  TpTestsContactsConnection *self = TP_TESTS_CONTACTS_CONNECTION (aliasing);
+  TpBaseConnection *base = TP_BASE_CONNECTION (aliasing);
+  TpHandleRepoIface *contact_repo = tp_base_connection_get_handles (base,
+      TP_HANDLE_TYPE_CONTACT);
+  guint n;
+  GArray *handles;
+  GPtrArray *aliases;
+  GHashTableIter iter;
+  gpointer key, value;
+  GError *error = NULL;
+
+  /* Convert the hash table to arrays of handles and aliases */
+  n = g_hash_table_size (table);
+  handles = g_array_sized_new (FALSE, FALSE, sizeof (TpHandle), n);
+  aliases = g_ptr_array_sized_new (n);
+  g_hash_table_iter_init (&iter, table);
+  while (g_hash_table_iter_next (&iter, &key, &value))
+    {
+      TpHandle handle = GPOINTER_TO_UINT (key);
+
+      g_array_append_val (handles, handle);
+      g_ptr_array_add (aliases, value);
+    }
+  g_assert_cmpuint (handles->len, ==, n);
+  g_assert_cmpuint (aliases->len, ==, n);
+
+  /* Verify all handles are valid */
+  if (!tp_handles_are_valid (contact_repo, handles, FALSE, &error))
+    {
+      dbus_g_method_return_error (context, error);
+      g_clear_error (&error);
+      goto out;
+    }
+
+  /* Change aliases */
+  tp_tests_contacts_connection_change_aliases (self, n,
+      (const TpHandle *) handles->data,
+      (const gchar * const *) aliases->pdata);
+
+  tp_svc_connection_interface_aliasing_return_from_set_aliases (context);
+
+out:
+  g_array_unref (handles);
+  g_ptr_array_unref (aliases);
+}
+
+static void
 init_aliasing (gpointer g_iface,
                gpointer iface_data)
 {
@@ -903,7 +954,7 @@ init_aliasing (gpointer g_iface,
   IMPLEMENT(get_alias_flags);
   IMPLEMENT(request_aliases);
   IMPLEMENT(get_aliases);
-  /* IMPLEMENT(set_aliases); */
+  IMPLEMENT(set_aliases);
 #undef IMPLEMENT
 }
 
