@@ -266,7 +266,35 @@ public enum Folks.PersonaDetail
    *
    * @since 0.6.2
    */
-  GROUPS
+  GROUPS,
+
+  /**
+   * Field for {@link InteractionDetails.im_interaction_count}.
+   *
+   * @since UNRELEASED
+   */
+  IM_INTERACTION_COUNT,
+
+  /**
+   * Field for {@link InteractionDetails.last_im_interaction_datetime}.
+   *
+   * @since UNRELEASED
+   */
+  LAST_IM_INTERACTION_DATETIME,
+
+  /**
+   * Field for {@link InteractionDetails.call_interaction_count}.
+   *
+   * @since UNRELEASED
+   */
+  CALL_INTERACTION_COUNT,
+
+  /**
+   * Field for {@link InteractionDetails.last_call_interaction_datetime}.
+   *
+   * @since UNRELEASED
+   */
+  LAST_CALL_INTERACTION_DATETIME
 }
 
 /**
@@ -321,7 +349,11 @@ public abstract class Folks.PersonaStore : Object
     "structured-name",
     "urls",
     "web-service-addresses",
-    "groups"
+    "groups",
+    "im-interaction-count",
+    "last-im-interaction-datetime",
+    "call-interaction-count",
+    "last-call-interaction-datetime"
   };
 
   /**

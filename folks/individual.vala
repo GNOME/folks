@@ -89,6 +89,7 @@ public class Folks.Individual : Object,
     GenderDetails,
     GroupDetails,
     ImDetails,
+    InteractionDetails,
     LocalIdDetails,
     NameDetails,
     NoteDetails,
@@ -776,6 +777,110 @@ public class Folks.Individual : Object,
     }
 
   /**
+   * {@inheritDoc}
+   */
+  public uint im_interaction_count
+    {
+      get
+        {
+          uint counter = 0;
+          /* Iterate over all personas and sum up their IM interaction counts*/
+          foreach (var persona in this._persona_set)
+            {
+              var my_interaction_details = persona as InteractionDetails;
+              if (my_interaction_details != null)
+                {
+                  counter = counter + my_interaction_details.im_interaction_count;
+                }
+            }
+          return counter;
+        }
+    }
+
+  /**
+   * {@inheritDoc}
+   */
+  private DateTime? _last_im_interaction_datetime = null;
+
+  public DateTime? last_im_interaction_datetime
+    {
+      get 
+        {
+          if (this._last_im_interaction_datetime == null)
+            {
+              /* Iterate over all personas and get the latest IM interaction datetime */
+              foreach (var persona in this._persona_set)
+                {
+                  var my_interaction_details = persona as InteractionDetails;
+                  if (my_interaction_details != null &&
+                      my_interaction_details.last_im_interaction_datetime != null)
+                    {
+                      DateTime interaction_datetime = my_interaction_details.last_im_interaction_datetime;
+                      if (this._last_im_interaction_datetime == null ||
+                          interaction_datetime.compare (this._last_im_interaction_datetime) == 1)
+                        {
+                          this._last_im_interaction_datetime = my_interaction_details.last_im_interaction_datetime;
+                        }
+                    }
+                }
+            }
+          return this._last_im_interaction_datetime;
+        }
+    }
+
+  /**
+   * {@inheritDoc}
+   */
+  public uint call_interaction_count
+    {
+      get 
+        {
+          uint counter = 0;
+          /* Iterate over all personas and sum up their call interaction counts*/
+          foreach (var persona in this._persona_set)
+            {
+              var my_interaction_details = persona as InteractionDetails;
+              if (my_interaction_details != null)
+                {
+                  counter = counter + my_interaction_details.call_interaction_count;
+                }
+            }
+          return counter;
+        }
+    }
+
+  /**
+   * {@inheritDoc}
+   */
+  private DateTime? _last_call_interaction_datetime = null;
+
+  public DateTime? last_call_interaction_datetime
+    {
+      get
+        {
+          if (this._last_call_interaction_datetime == null)
+            {
+              /* Iterate over all personas and get the latest IM interaction datetime */
+              foreach (var persona in this._persona_set)
+                {
+                  var my_interaction_details = persona as InteractionDetails;
+                  if (my_interaction_details != null &&
+                      my_interaction_details.last_call_interaction_datetime != null)
+                    {
+                      var interaction_datetime = my_interaction_details.last_call_interaction_datetime;
+                      if (this._last_call_interaction_datetime == null ||
+                          interaction_datetime.compare (this._last_call_interaction_datetime) > 1)
+                        {
+                          this._last_call_interaction_datetime = my_interaction_details.last_call_interaction_datetime;
+                        }
+                    }
+                }
+            }
+          return this._last_call_interaction_datetime;
+        }
+    }
+
+  /**
    * The set of {@link Persona}s encapsulated by this Individual.
    *
    * No order is specified over the set of personas, as such an order may be
@@ -930,6 +1035,44 @@ public class Folks.Individual : Object,
   private void _notify_is_favourite_cb (Object obj, ParamSpec ps)
     {
       this._update_is_favourite ();
+    }
+
+  private void _notify_im_interaction_count_cb (Object obj, ParamSpec ps)
+    {
+      /**
+       * The property is pull rather than push. This function is called in
+       * response to personas emitting a similar notification.
+       */
+      this.notify_property ("im-interaction-count");
+    }
+
+  private void _notify_call_interaction_count_cb (Object obj, ParamSpec ps)
+    {
+      /**
+       * The property is pull rather than push. This function is called in
+       * response to personas emitting a similar notification.
+       */
+      this.notify_property ("call-interaction-count");
+    }
+
+  private void _notify_last_im_interaction_datetime_cb (Object obj, ParamSpec ps)
+    {
+      /**
+       * The property is pull rather than push. This function is called in
+       * response to personas emitting a similar notification.
+       */
+      this._last_im_interaction_datetime = null;
+      this.notify_property ("last-im-interaction-datetime");
+    }
+
+  private void _notify_last_call_interaction_datetime_cb (Object obj, ParamSpec ps)
+    {
+      /**
+       * The property is pull rather than push. This function is called in
+       * response to personas emitting a similar notification.
+       */
+      this._last_call_interaction_datetime = null;
+      this.notify_property ("last-call-interaction-datetime");
     }
 
   /**
@@ -1476,6 +1619,15 @@ public class Folks.Individual : Object,
           ((GroupDetails) persona).group_changed.connect (
               this._persona_group_changed_cb);
         }
+      /* Subscribe to the interactions signal for the persona */
+      var p_interaction_details = persona as InteractionDetails;
+      if (p_interaction_details != null) 
+        {
+          persona.notify["im-interaction-count"].connect (this._notify_im_interaction_count_cb);
+          persona.notify["call-interaction-count"].connect (this._notify_call_interaction_count_cb);
+          persona.notify["last-im-interaction-datetime"].connect (this._notify_last_im_interaction_datetime_cb);
+          persona.notify["last-call-interaction-datetime"].connect (this._notify_last_call_interaction_datetime_cb);
+        }
     }
 
   private void _update_structured_name ()
@@ -1606,6 +1758,16 @@ public class Folks.Individual : Object,
         {
           ((GroupDetails) persona).group_changed.disconnect (
               this._persona_group_changed_cb);
+        }
+
+      /* Unsubscribe from the interactions signal for the persona */
+      var p_interaction_details = persona as InteractionDetails;
+      if (p_interaction_details != null) 
+        {
+          persona.notify["im-interaction-count"].disconnect (this._notify_im_interaction_count_cb);
+          persona.notify["call-interaction-count"].disconnect (this._notify_call_interaction_count_cb);
+          persona.notify["last-im-interaction-datetime"].disconnect (this._notify_last_im_interaction_datetime_cb);
+          persona.notify["last-call-interaction-datetime"].disconnect (this._notify_last_call_interaction_datetime_cb);
         }
 
       /* Don't update the individual if the persona's been added to the new one
