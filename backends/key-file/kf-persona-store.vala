@@ -200,11 +200,11 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
                    * below and try to create it instead. */
                   try
                     {
-                      uint8 *contents = null;
+                      uint8[] contents;
 
                       yield this.file.load_contents_async (null, out contents,
                           null);
-                      var contents_s = (string) contents;
+                      unowned string contents_s = (string) contents;
 
                       if (contents_s.length > 0)
                         {
