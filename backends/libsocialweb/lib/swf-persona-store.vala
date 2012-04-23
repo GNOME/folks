@@ -195,6 +195,9 @@ public class Swf.PersonaStore : Folks.PersonaStore
    * Add a new {@link Persona} to the PersonaStore.
    *
    * See {@link Folks.PersonaStore.add_persona_from_details}.
+   *
+   * @throws Folks.PersonaStoreError.READ_ONLY every time — libsocialweb is
+   * read-only
    */
   public override async Folks.Persona? add_persona_from_details (
       HashTable<string, Value?> details) throws Folks.PersonaStoreError
@@ -207,6 +210,9 @@ public class Swf.PersonaStore : Folks.PersonaStore
    * Remove a {@link Persona} from the PersonaStore.
    *
    * See {@link Folks.PersonaStore.remove_persona}.
+   *
+   * @throws Folks.PersonaStoreError.READ_ONLY every time — libsocialweb is
+   * read-only
    */
   public override async void remove_persona (Folks.Persona persona)
       throws Folks.PersonaStoreError
@@ -303,6 +309,10 @@ public class Swf.PersonaStore : Folks.PersonaStore
    * Prepare the PersonaStore for use.
    *
    * See {@link Folks.PersonaStore.prepare}.
+   *
+   * @throws Folks.PersonaStoreError.INVALID_ARGUMENT if the libsocialweb
+   * service capabilities couldn’t be retrieved, or if the ‘contacts’ capability
+   * wasn’t found, or if a view couldn’t be opened
    */
   public override async void prepare () throws GLib.Error
     {

@@ -299,6 +299,11 @@ public class Edsf.PersonaStore : Folks.PersonaStore
    *
    * See {@link Folks.PersonaStore.add_persona_from_details}.
    *
+   * @throws Folks.PersonaStoreError.STORE_OFFLINE if the store hasn’t been
+   * prepared
+   * @throws Folks.PersonaStoreError.CREATE_FAILED if creating the persona in
+   * the EDS store failed
+   *
    * @since 0.6.0
    */
   public override async Folks.Persona? add_persona_from_details (
@@ -489,6 +494,13 @@ public class Edsf.PersonaStore : Folks.PersonaStore
    * See {@link Folks.PersonaStore.remove_persona}.
    *
    * @param persona the persona that should be removed
+   * @throws Folks.PersonaStoreError.STORE_OFFLINE if the store hasn’t been
+   * prepared or has gone offline
+   * @throws Folks.PersonaStoreError.PERMISSION_DENIED if the store denied
+   * permission to delete the contact
+   * @throws Folks.PersonaStoreError.READ_ONLY if the store is read only
+   * @throws Folks.PersonaStoreError.REMOVE_FAILED if any other errors happened
+   * in the store
    *
    * @since 0.6.0
    */
@@ -584,6 +596,12 @@ public class Edsf.PersonaStore : Folks.PersonaStore
    * Prepare the PersonaStore for use.
    *
    * See {@link Folks.PersonaStore.prepare}.
+   *
+   * @throws Folks.PersonaStoreError.STORE_OFFLINE if the EDS store is offline
+   * @throws Folks.PersonaStoreError.PERMISSION_DENIED if permission was denied
+   * to open the EDS store
+   * @throws Folks.PersonaStoreError.INVALID_ARGUMENT if any other error
+   * occurred in the EDS store
    *
    * @since 0.6.0
    */

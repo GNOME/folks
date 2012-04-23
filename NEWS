@@ -10,6 +10,7 @@ Dependencies:
 Bugs fixed:
 • Bug 674256 — telepathy-glib minimal version is insufficient
 • Bug 647909 — Port Folks to GSettings
+• Bug 663890 — @throws annotations missing for some functions
 
 Overview of changes from libfolks 0.6.9 to libfolks 0.7.0
 =========================================================

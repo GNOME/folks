@@ -407,6 +407,9 @@ public class Tpf.Persona : Folks.Persona,
    * Add or remove the Persona from the specified group.
    *
    * See {@link Folks.GroupDetails.change_group}.
+   *
+   * @throws Folks.PropertyError.UNKNOWN_ERROR if changing group membership
+   * failed
    */
   public async void change_group (string group, bool is_member)
       throws GLib.Error

@@ -417,6 +417,8 @@ public class Tpf.PersonaStore : Folks.PersonaStore
    * Prepare the PersonaStore for use.
    *
    * See {@link Folks.PersonaStore.prepare}.
+   *
+   * @throws GLib.Error currently unused
    */
   public override async void prepare () throws GLib.Error
     {
@@ -1079,6 +1081,11 @@ public class Tpf.PersonaStore : Folks.PersonaStore
    * Remove a {@link Persona} from the PersonaStore.
    *
    * See {@link Folks.PersonaStore.remove_persona}.
+   *
+   * @throws Folks.PersonaStoreError.UNSUPPORTED_ON_USER if `persona` is the
+   * local user — removing the local user isn’t supported
+   * @throws Folks.PersonaStoreError.REMOVE_FAILED if removing the contact
+   * failed
    */
   public override async void remove_persona (Folks.Persona persona)
       throws Folks.PersonaStoreError
@@ -1125,6 +1132,11 @@ public class Tpf.PersonaStore : Folks.PersonaStore
    * Add a new {@link Persona} to the PersonaStore.
    *
    * See {@link Folks.PersonaStore.add_persona_from_details}.
+   *
+   * @throws Folks.PersonaStoreError.INVALID_ARGUMENT if the `contact` key was
+   * not provided in `details`
+   * @throws Folks.PersonaStoreError.STORE_OFFLINE if the CM is offline
+   * @throws Folks.PersonaStoreError.CREATE_FAILED if adding the contact failed
    */
   public override async Folks.Persona? add_persona_from_details (
       HashTable<string, Value?> details) throws Folks.PersonaStoreError

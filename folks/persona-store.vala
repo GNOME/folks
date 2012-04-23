@@ -597,6 +597,9 @@ public abstract class Folks.PersonaStore : Object
    * calls might return before the first one. (Though they will be safe in every
    * other respect.)
    *
+   * @throws GLib.Error if preparing the backend-specific services failed — this
+   * will be a backend-specific error
+   *
    * @since 0.1.11
    */
   public abstract async void prepare () throws GLib.Error;
@@ -650,6 +653,7 @@ public abstract class Folks.PersonaStore : Object
    * already existed. If non-`null`, the new {@link Persona} will also be
    * amongst the {@link Persona}(s) in a future emission of
    * {@link PersonaStore.personas_changed}.
+   * @throws PersonaStoreError if adding the persona failed
    */
   public abstract async Persona? add_persona_from_details (
       HashTable<string, Value?> details) throws Folks.PersonaStoreError;
@@ -669,6 +673,8 @@ public abstract class Folks.PersonaStore : Object
    * offline removals work.
    *
    * @param persona the {@link Persona} to remove
+   * @throws PersonaStoreError if removing the persona failed
+   *
    * @since 0.1.11
    */
   public abstract async void remove_persona (Persona persona)

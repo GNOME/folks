@@ -133,6 +133,8 @@ public abstract class Folks.Backend : Object
    * other respect.)
    *
    * @since 0.1.11
+   * @throws GLib.Error if preparing the backend-specific services failed — this
+   * will be a backend-specific error
    */
   public abstract async void prepare () throws GLib.Error;
 
@@ -155,6 +157,8 @@ public abstract class Folks.Backend : Object
    * other respect.)
    *
    * @since 0.3.2
+   * @throws GLib.Error if unpreparing the backend-specific services failed —
+   * this will be a backend-specific error
    */
   public abstract async void unprepare () throws GLib.Error;
 }

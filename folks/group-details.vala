@@ -131,6 +131,8 @@ public interface Folks.GroupDetails : Object
    *
    * @param group a freeform group identifier
    * @param is_member whether the contact should be a member of the group
+   * @throws GLib.Error if changing the group failed in the backing store
+   *
    * @since 0.1.11
    */
   public async abstract void change_group (string group, bool is_member)

@@ -356,6 +356,9 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
    * - PersonaStore.detail_key (PersonaDetail.WEB_SERVICE_ADDRESSES)
    *
    * See {@link Folks.PersonaStore.add_persona_from_details}.
+   *
+   * @throws Folks.PersonaStoreError.CREATE_FAILED if setting the persona’s
+   * properties failed
    */
   public override async Folks.Persona? add_persona_from_details (
       HashTable<string, Value?> details) throws Folks.PersonaStoreError

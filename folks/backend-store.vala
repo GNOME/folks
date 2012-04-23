@@ -270,6 +270,8 @@ public class Folks.BackendStore : Object {
    * Backends will be searched for in the path given by the `FOLKS_BACKEND_PATH`
    * environment variable, if it's set. If it's not set, backends will be
    * searched for in a path set at compilation time.
+   *
+   * @throws GLib.Error currently unused
    */
   public async void load_backends () throws GLib.Error
     {

@@ -448,6 +448,9 @@ public class Trf.PersonaStore : Folks.PersonaStore
    * - PersonaStore.detail_key (PersonaDetail.WEB_SERVICE_ADDRESSES)
    *
    * See {@link Folks.PersonaStore.add_persona_from_details}.
+   *
+   * @throws Folks.PersonaStoreError.INVALID_ARGUMENT if an unrecognised detail
+   * key was passed in `details`
    */
   public override async Folks.Persona? add_persona_from_details (
       HashTable<string, Value?> details) throws Folks.PersonaStoreError
@@ -889,6 +892,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
    *
    * See {@link Folks.PersonaStore.remove_persona}.
    *
+   * @throws Folks.PersonaStoreError currently unused
    */
   public override async void remove_persona (Folks.Persona persona)
       throws Folks.PersonaStoreError
@@ -1057,6 +1061,9 @@ public class Trf.PersonaStore : Folks.PersonaStore
    *       when we were trying to setup the PersonaStore.
    *
    * See {@link Folks.PersonaStore.prepare}.
+   *
+   * @throws Folks.PersonaStoreError.INVALID_ARGUMENT if connecting to D-Bus
+   * failed
    */
   public override async void prepare () throws GLib.Error
     {

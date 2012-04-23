@@ -489,6 +489,9 @@ public class Folks.IndividualAggregator : Object
    * calls might return before the first one. (Though they will be safe in every
    * other respect.)
    *
+   * @throws GLib.Error if preparing any of the backends failed — this error
+   * will be passed through from {@link BackendStore.load_backends}
+   *
    * @since 0.1.11
    */
   public async void prepare () throws GLib.Error
@@ -1598,6 +1601,10 @@ public class Folks.IndividualAggregator : Object
    * @return the new {@link Persona} or `null` if the corresponding
    * {@link Persona} already existed. If non-`null`, the new {@link Persona}
    * will also be added to a new or existing {@link Individual} as necessary.
+   * @throws IndividualAggregatorError.STORE_OFFLINE if the persona store was
+   * offline
+   * @throws IndividualAggregatorError.ADD_FAILED if any other error occurred
+   * while adding the persona
    *
    * @since 0.3.5
    */
@@ -1655,6 +1662,9 @@ public class Folks.IndividualAggregator : Object
    * backing stores.
    *
    * @param individual the {@link Individual} to remove
+   * @throws GLib.Error if removing the persona failed — this will be passed
+   * through from {@link PersonaStore.remove_persona}
+   *
    * @since 0.1.11
    */
   public async void remove_individual (Individual individual) throws GLib.Error
@@ -1679,6 +1689,9 @@ public class Folks.IndividualAggregator : Object
    * This will leave other personas in the same individual alone.
    *
    * @param persona the {@link Persona} to remove
+   * @throws GLib.Error if removing the persona failed — this will be passed
+   * through from {@link PersonaStore.remove_persona}
+   *
    * @since 0.1.11
    */
   public async void remove_persona (Persona persona) throws GLib.Error
@@ -1698,6 +1711,12 @@ public class Folks.IndividualAggregator : Object
    * {@link Individual.removed}.
    *
    * @param personas the {@link Persona}s to be linked
+   * @throws IndividualAggregatorError.NO_PRIMARY_STORE if no primary store has
+   * been configured for the individual aggregator
+   * @throws IndividualAggregatorError if adding the linking persona failed —
+   * this will be passed through from
+   * {@link IndividualAggregator.add_persona_from_details}
+   *
    * @since 0.5.1
    */
   public async void link_personas (Set<Persona> personas)
@@ -1838,6 +1857,9 @@ public class Folks.IndividualAggregator : Object
    * {@link IndividualAggregator.individuals_changed}.
    *
    * @param individual the {@link Individual} to unlink
+   * @throws GLib.Error if removing the linking persona failed — this will be
+   * passed through from {@link PersonaStore.remove_persona}
+   *
    * @since 0.1.13
    */
   public async void unlink_individual (Individual individual) throws GLib.Error
@@ -1900,6 +1922,13 @@ public class Folks.IndividualAggregator : Object
    * (this should be in lower case using hyphens, e.g. “web-service-addresses”)
    * @return a persona (new or existing) which has the given property as
    * writeable
+   * @throws IndividualAggregatorError.NO_PRIMARY_STORE if no primary store was
+   * configured for this individual aggregator
+   * @throws IndividualAggregatorError.PROPERTY_NOT_WRITEABLE if the given
+   * `property_name` referred to a non-writeable property
+   * @throws IndividualAggregatorError if adding a new persona (using
+   * {@link IndividualAggregator.add_persona_from_details}) failed, or if
+   * linking personas (using {@link IndividualAggregator.link_personas}) failed
    *
    * @since 0.6.2
    */
