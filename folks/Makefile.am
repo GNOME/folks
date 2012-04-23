@@ -209,7 +209,6 @@ MAINTAINERCLEANFILES += \
 gsettings_SCHEMAS = org.freedesktop.folks.gschema.xml
 
 @GSETTINGS_RULES@
-@INTLTOOL_XML_NOMERGE_RULE@
 
 # Data migration tool
 convertdir = $(datadir)/GConf/gsettings

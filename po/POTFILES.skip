@@ -20,7 +20,6 @@ folks/individual-aggregator.c
 folks/local-id-details.c
 folks/name-details.c
 folks/note-details.c
-folks/org.freedesktop.folks.gschema.xml.in
 folks/phone-details.c
 folks/postal-address-details.c
 folks/role-details.c

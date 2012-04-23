@@ -5,6 +5,7 @@ Dependencies:
 • telepathy-glib ≥ 0.17.5
 • GLib ≥ 2.26.0
 • GConf dependency dropped
+• intltool ≥ 0.50.0
 
 Bugs fixed:
 • Bug 674256 — telepathy-glib minimal version is insufficient
