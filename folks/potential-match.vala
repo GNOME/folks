@@ -201,8 +201,8 @@ public class Folks.PotentialMatch : Object
               this._individual_b.full_name,
               out exact_match) ||
           this._look_alike_or_identical (this._individual_a.alias,
-	      this._individual_b.full_name,
-	      out exact_match) ||
+              this._individual_b.full_name,
+              out exact_match) ||
           this._look_alike_or_identical (this._individual_a.full_name,
               this._individual_b.alias,
               out exact_match) ||
@@ -252,10 +252,10 @@ public class Folks.PotentialMatch : Object
       if (similarity >= this._DIST_THRESHOLD)
         {
           int inc = 2;
-	  /* We need exact matches to go to at least HIGH, or otherwise its
-	     not possible to get a HIGH match for e.g. a facebook telepathy
-	     persona, where alias is the only piece of information
-	     available */
+          /* We need exact matches to go to at least HIGH, or otherwise its
+             not possible to get a HIGH match for e.g. a facebook telepathy
+             persona, where alias is the only piece of information
+             available */
           if (exact_match)
             inc += 1;
           this._result = this._inc_match_level (this._result, inc);
