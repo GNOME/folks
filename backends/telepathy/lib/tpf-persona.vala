@@ -838,7 +838,7 @@ public class Tpf.Persona : Folks.Persona,
             }
           else
             {
-              warning ("Failed to parse new birthday string '%s'",
+              debug ("Failed to parse new birthday string '%s'",
                   new_birthday_str);
             }
         }
