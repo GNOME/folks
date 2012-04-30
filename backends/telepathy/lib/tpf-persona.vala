@@ -822,9 +822,12 @@ public class Tpf.Persona : Folks.Persona,
             {
               foreach (var email_addr in info.field_value)
                 {
-                  var parameters = this._afd_params_from_strv (info.parameters);
-                  var email_fd = new EmailFieldDetails (email_addr, parameters);
-                  new_email_addresses.add (email_fd);
+                  if (email_addr != "")
+                    {
+                      var parameters = this._afd_params_from_strv (info.parameters);
+                      var email_fd = new EmailFieldDetails (email_addr, parameters);
+                      new_email_addresses.add (email_fd);
+                    }
                 }
             }
           else if (info.field_name == "fn")
@@ -837,18 +840,24 @@ public class Tpf.Persona : Folks.Persona,
             {
               foreach (var phone_num in info.field_value)
                 {
-                  var parameters = this._afd_params_from_strv (info.parameters);
-                  var phone_fd = new PhoneFieldDetails (phone_num, parameters);
-                  new_phone_numbers.add (phone_fd);
+                  if (phone_num != "")
+                    {
+                      var parameters = this._afd_params_from_strv (info.parameters);
+                      var phone_fd = new PhoneFieldDetails (phone_num, parameters);
+                      new_phone_numbers.add (phone_fd);
+                    }
                 }
             }
           else if (info.field_name == "url")
             {
               foreach (var url in info.field_value)
                 {
-                  var parameters = this._afd_params_from_strv (info.parameters);
-                  var url_fd = new UrlFieldDetails (url, parameters);
-                  new_urls.add (url_fd);
+                  if (url != "")
+                    {
+                      var parameters = this._afd_params_from_strv (info.parameters);
+                      var url_fd = new UrlFieldDetails (url, parameters);
+                      new_urls.add (url_fd);
+                    }
                 }
             }
         }
@@ -869,7 +878,7 @@ public class Tpf.Persona : Folks.Persona,
             }
           else
             {
-              warning ("Failed to parse new birthday string '%s'",
+              debug ("Failed to parse new birthday string '%s'",
                   new_birthday_str);
             }
         }
