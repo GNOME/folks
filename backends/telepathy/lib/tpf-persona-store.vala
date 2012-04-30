@@ -625,13 +625,14 @@ public class Tpf.PersonaStore : Folks.PersonaStore
            * cache, assuming we were connected before. */
           if (this._conn != null)
             {
-              this._conn = null;
+              var old_personas = this._persona_set;
+              this._reset ();
 
-              this._store_cache.begin ((o, r) =>
+              this._store_cache.begin (old_personas, (o, r) =>
                 {
                   this._store_cache.end (r);
 
-                  this._load_cache.begin ((o2, r2) =>
+                  this._load_cache.begin (old_personas, (o2, r2) =>
                     {
                       this._load_cache.end (r2);
                     });
@@ -792,7 +793,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
    * If our account is disconnected, we want to continue to export a static
    * view of personas from the cache.
    */
-  private async void _load_cache ()
+  private async void _load_cache (HashSet<Persona>? old_personas = null)
     {
       /* Only load from the cache if the account is enabled and valid. */
       if (this.account.enabled == false || this.account.valid == false)
@@ -820,7 +821,10 @@ public class Tpf.PersonaStore : Folks.PersonaStore
 
       // Load the persona set from the cache and notify of the change
       var cached_personas = yield this._cache.load_objects (cancellable);
-      var old_personas = this._persona_set;
+      if (old_personas == null)
+        {
+          old_personas = this._persona_set;
+        }
 
       /* If the load operation was cancelled, don't change the state
        * of the persona store at all. */
@@ -866,11 +870,11 @@ public class Tpf.PersonaStore : Folks.PersonaStore
    * When we're about to disconnect, store the current set of personas to the
    * cache file so that we can access them once offline.
    */
-  private async void _store_cache ()
+  private async void _store_cache (HashSet<Persona> old_personas)
     {
       debug ("Storing cache for Tpf.PersonaStore %p ('%s').", this, this.id);
 
-      yield this._cache.store_objects (this._persona_set);
+      yield this._cache.store_objects (old_personas);
     }
 
   /**
