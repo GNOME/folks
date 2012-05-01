@@ -331,20 +331,31 @@ internal class Tpf.PersonaStoreCache : Folks.ObjectCache<Tpf.Persona>
 
       if (object_version == 2)
         {
+          /* Make sure that the extracted value is not empty as caches created
+           * before bgo#675144 was fixed may have stored empty values. */
           this.deserialise_abstract_field_details (variant.get_child_value (12),
               (v, p) =>
                 {
-                  email_address_set.add (new EmailFieldDetails (v, p));
+                  if (v != "")
+                    {
+                      email_address_set.add (new EmailFieldDetails (v, p));
+                    }
                 });
           this.deserialise_abstract_field_details (variant.get_child_value (13),
               (v, p) =>
                 {
-                  phone_number_set.add (new PhoneFieldDetails (v, p));
+                  if (v != "")
+                    {
+                      phone_number_set.add (new PhoneFieldDetails (v, p));
+                    }
                 });
           this.deserialise_abstract_field_details (variant.get_child_value (14),
               (v, p) =>
                 {
-                  url_set.add (new UrlFieldDetails (v, p));
+                  if (v != "")
+                    {
+                      url_set.add (new UrlFieldDetails (v, p));
+                    }
                 });
         }
 
