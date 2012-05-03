@@ -53,8 +53,9 @@ public class Tpf.PersonaStore : Folks.PersonaStore
    * the roster. Persona is kept in the map until its TpContact is disposed. */
   private HashMap<unowned Contact, Persona> _contact_persona_map;
 
-  /* TpContact IDs */
-  private HashSet<string> _favourite_ids;
+  /* TpContact IDs. Note that this should *not* be cleared in _reset().
+   * See bgo#630822. */
+  private HashSet<string> _favourite_ids = new HashSet<string> ();
 
   private Connection _conn;
   private AccountManager? _account_manager; /* only null before prepare() */
@@ -475,7 +476,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
                         }
                     });
 
-              this._favourite_ids = new HashSet<string> ();
+              this._favourite_ids.clear ();
               this._logger = new Logger (this.id);
               this._logger.invalidated.connect (
                   this._logger_invalidated_cb);
