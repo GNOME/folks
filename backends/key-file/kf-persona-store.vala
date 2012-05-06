@@ -44,8 +44,11 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
     {
       "alias",
       "im-addresses",
-      "web-service-addresses"
+      "web-service-addresses",
+      "anti-links"
     };
+
+  internal static const string anti_links_key_name = "__anti-links";
 
   /**
    * {@inheritDoc}

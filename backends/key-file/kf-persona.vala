@@ -30,6 +30,7 @@ using Folks.Backends.Kf;
  */
 public class Folks.Backends.Kf.Persona : Folks.Persona,
     AliasDetails,
+    AntiLinkable,
     ImDetails,
     WebServiceDetails
 {
@@ -45,7 +46,8 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
     {
       "alias",
       "im-addresses",
-      "web-service-addresses"
+      "web-service-addresses",
+      "anti-links"
     };
 
   /**
@@ -256,6 +258,51 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
       this.notify_property ("web-service-addresses");
     }
 
+  private HashSet<string> _anti_links;
+  private Set<string> _anti_links_ro;
+
+  /**
+   * {@inheritDoc}
+   *
+   * @since UNRELEASED
+   */
+  [CCode (notify = false)]
+  public Set<string> anti_links
+    {
+      get { return this._anti_links_ro; }
+      set { this.change_anti_links.begin (value); }
+    }
+
+  /**
+   * {@inheritDoc}
+   *
+   * @since UNRELEASED
+   */
+  public async void change_anti_links (Set<string> anti_links)
+      throws PropertyError
+    {
+      if (Folks.Internal.equal_sets<string> (anti_links, this.anti_links))
+        {
+          return;
+        }
+
+      unowned KeyFile key_file = ((Kf.PersonaStore) this.store).get_key_file ();
+
+      /* Skip the persona's UID; don't allow reflexive anti-links. */
+      anti_links.remove (this.uid);
+
+      key_file.set_string_list (this.display_id,
+          Kf.PersonaStore.anti_links_key_name, anti_links.to_array ());
+
+      /* Get the PersonaStore to save the key file */
+      yield ((Kf.PersonaStore) this.store).save_key_file ();
+
+      /* Update the stored anti-links. */
+      this._anti_links.clear ();
+      this._anti_links.add_all (anti_links);
+      this.notify_property ("anti-links");
+    }
+
   /**
    * Create a new persona.
    *
@@ -287,6 +334,8 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
             null, null,
              AbstractFieldDetails<string>.hash_static,
              AbstractFieldDetails<string>.equal_static);
+      this._anti_links = new HashSet<string> ();
+      this._anti_links_ro = this._anti_links.read_only_view;
 
       /* Load the IM addresses from the key file */
       unowned KeyFile key_file = ((Kf.PersonaStore) this.store).get_key_file ();
@@ -308,6 +357,25 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
 
                   debug ("    Loaded alias '%s'.", this._alias);
                   continue;
+                }
+
+              /* Anti-links. */
+              if (key == Kf.PersonaStore.anti_links_key_name)
+                {
+                  var anti_link_array =
+                      key_file.get_string_list (this.display_id, key);
+
+                  if (anti_link_array != null)
+                    {
+                      foreach (var anti_link in anti_link_array)
+                        {
+                          this._anti_links.add (anti_link);
+                        }
+
+                      debug ("    Loaded %u anti-links.",
+                          anti_link_array.length);
+                      continue;
+                    }
                 }
 
               /* Web service addresses */
