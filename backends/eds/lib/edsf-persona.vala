@@ -30,6 +30,7 @@ using Xml;
  * A persona subclass which represents a single EDS contact.
  */
 public class Edsf.Persona : Folks.Persona,
+    AntiLinkable,
     AvatarDetails,
     BirthdayDetails,
     EmailDetails,
@@ -672,6 +673,32 @@ public class Edsf.Persona : Folks.Persona,
           is_favourite);
     }
 
+  private HashSet<string> _anti_links;
+  private Set<string> _anti_links_ro;
+
+  /**
+   * {@inheritDoc}
+   *
+   * @since UNRELEASED
+   */
+  [CCode (notify = false)]
+  public Set<string> anti_links
+    {
+      get { return this._anti_links_ro; }
+      set { this.change_anti_links.begin (value); }
+    }
+
+  /**
+   * {@inheritDoc}
+   *
+   * @since UNRELEASED
+   */
+  public async void change_anti_links (Set<string> anti_links)
+      throws PropertyError
+    {
+      yield ((Edsf.PersonaStore) this.store)._set_anti_links (this, anti_links);
+    }
+
   /**
    * Build a IID.
    *
@@ -776,6 +803,8 @@ public class Edsf.Persona : Folks.Persona,
            AbstractFieldDetails<Role>.hash_static,
            AbstractFieldDetails<Role>.equal_static);
       this._roles_ro = this._roles.read_only_view;
+      this._anti_links = new HashSet<string> ();
+      this._anti_links_ro = this._anti_links.read_only_view;
 
       this._update (this._contact);
     }
@@ -865,6 +894,7 @@ public class Edsf.Persona : Folks.Persona,
       this._update_birthday ();
       this._update_roles ();
       this._update_favourite ();
+      this._update_anti_links ();
 
       this.thaw_notify ();
     }
@@ -1748,6 +1778,35 @@ public class Edsf.Persona : Folks.Persona,
           this.notify_property ("is-favourite");
 
           this.thaw_notify ();
+        }
+    }
+
+  private void _update_anti_links ()
+    {
+      var new_anti_links = new HashSet<string> ();
+
+      var vcard = (E.VCard) this.contact;
+      foreach (unowned E.VCardAttribute attr in vcard.get_attributes ())
+        {
+          if (attr.get_name () != Edsf.PersonaStore.anti_links_attribute_name)
+            {
+              continue;
+            }
+
+          var val = attr.get_value ();
+          if (val == null || (!) val == "")
+             {
+              continue;
+            }
+
+          new_anti_links.add ((!) val);
+        }
+
+      if (!Folks.Internal.equal_sets<string> (new_anti_links, this._anti_links))
+        {
+          this._anti_links = new_anti_links;
+          this._anti_links_ro = new_anti_links.read_only_view;
+          this.notify_property ("anti-links");
         }
     }
 

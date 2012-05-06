@@ -59,6 +59,8 @@ public class Edsf.PersonaStore : Folks.PersonaStore
    * in your language, please *do not* translate this string. */
   internal const string android_favourite_group_name = N_("Starred in Android");
 
+  internal static const string anti_links_attribute_name = "X-FOLKS-ANTI-LINKS";
+
   /**
    * The type of persona store this is.
    *
@@ -781,9 +783,9 @@ public class Edsf.PersonaStore : Folks.PersonaStore
                 {
                   string[] fields = ((!) supported_fields).split (",");
 
-                  /* We always support local-ids, web-service-addresses, gender
-                   * and favourite because we use custom vCard attributes for
-                   * them. */
+                  /* We always support local-ids, web-service-addresses, gender,
+                   * anti-links and favourite because we use custom vCard
+                   * attributes for them. */
                   prop_set.add ((!) Folks.PersonaStore.detail_key (
                       PersonaDetail.LOCAL_IDS));
                   prop_set.add ((!) Folks.PersonaStore.detail_key (
@@ -792,6 +794,8 @@ public class Edsf.PersonaStore : Folks.PersonaStore
                       PersonaDetail.GENDER));
                   prop_set.add ((!) Folks.PersonaStore.detail_key (
                       PersonaDetail.IS_FAVOURITE));
+                  prop_set.add ((!) Folks.PersonaStore.detail_key (
+                      PersonaDetail.ANTI_LINKS));
 
                   foreach (unowned string field in fields)
                     {
@@ -2075,6 +2079,49 @@ public class Edsf.PersonaStore : Folks.PersonaStore
             new_attr.add_value (Edsf.Persona.gender_female);
             contact.add_attribute ((owned) new_attr);
             break;
+        }
+    }
+
+  internal async void _set_anti_links (Edsf.Persona persona,
+      Set<string> anti_links) throws PropertyError
+    {
+      if (!("anti-links" in this._always_writeable_properties))
+        {
+          throw new PropertyError.NOT_WRITEABLE (
+              _("Anti-links are not writeable on this contact."));
+        }
+
+      if (Folks.Internal.equal_sets<string> (anti_links, persona.anti_links))
+        {
+          return;
+        }
+
+      yield this._set_contact_anti_links (persona.contact, anti_links);
+      yield this._commit_modified_property (persona, "anti-links");
+    }
+
+  private async void _set_contact_anti_links (E.Contact contact,
+      Set<string> anti_links)
+    {
+      var vcard = (E.VCard) contact;
+      vcard.remove_attributes (null, this.anti_links_attribute_name);
+
+      var persona_uid =
+          Folks.Persona.build_uid (BACKEND_NAME, this.id, contact.id);
+
+      foreach (var anti_link_uid in anti_links)
+        {
+          /* Skip the persona's UID; don't allow reflexive anti-links. */
+          if (anti_link_uid == persona_uid)
+            {
+              continue;
+            }
+
+          var attr = new E.VCardAttribute (null,
+              this.anti_links_attribute_name);
+          attr.add_value (anti_link_uid);
+
+          contact.add_attribute ((owned) attr);
         }
     }
 
