@@ -1792,6 +1792,15 @@ public class Folks.IndividualAggregator : Object
       assert (((!) this._primary_store).type_id ==
           this._configured_primary_store_type_id);
 
+      var details = this._build_linking_details (personas);
+
+      yield this.add_persona_from_details (null,
+          (!) this._primary_store, details);
+    }
+
+  private HashTable<string, Value?> _build_linking_details (
+      Set<Persona> personas)
+    {
       /* `protocols_addrs_set` will be passed to the new Kf.Persona */
       var protocols_addrs_set = new HashMultiMap<string, ImFieldDetails> (
             null, null,
@@ -1878,8 +1887,7 @@ public class Folks.IndividualAggregator : Object
               local_ids_value);
         }
 
-      yield this.add_persona_from_details (null,
-          (!) this._primary_store, details);
+      return details;
     }
 
   /**
