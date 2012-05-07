@@ -1989,8 +1989,17 @@ public class Folks.IndividualAggregator : Object
       debug ("ensure_individual_property_writeable: %s, %s",
           individual.id, property_name);
 
-      /* See if the individual already contains the property we want. */
-      foreach (var p1 in individual.personas)
+      var p = yield this._ensure_personas_property_writeable (
+          individual.personas, property_name);
+      return p;
+    }
+
+  private async Persona _ensure_personas_property_writeable (
+      Set<Persona> personas, string property_name)
+      throws IndividualAggregatorError
+    {
+      /* See if the persona set already contains the property we want. */
+      foreach (var p1 in personas)
         {
           if (property_name in p1.writeable_properties)
             {
@@ -2002,7 +2011,7 @@ public class Folks.IndividualAggregator : Object
       /* Otherwise, create a new persona in the writeable store. If the
        * writeable store doesn't exist or doesn't support writing to the given
        * property, we try the other persona stores. */
-      var details = new HashTable<string, Value?> (str_hash, str_equal);
+      var details = this._build_linking_details (personas);
       Persona? new_persona = null;
 
       if (this._primary_store != null &&
@@ -2067,20 +2076,8 @@ public class Folks.IndividualAggregator : Object
               property_name);
         }
 
-      /* Link the persona to the existing individual. We can guarantee
-       * new_persona != null because we'd have bailed out above otherwise. */
-      var linking_personas = new HashSet<Persona> ();
-      linking_personas.add ((!) new_persona);
-
-      foreach (var p2 in individual.personas)
-        {
-          linking_personas.add (p2);
-        }
-
-      debug ("    Linking personas to ensure %s property is writeable.",
-          property_name);
-      yield this.link_personas (linking_personas);
-
+      /* We can guarantee new_persona != null because we'd have bailed out above
+       * otherwise. */
       return (!) new_persona;
     }
 
