@@ -510,7 +510,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
                 {
                   /* If we're disconnected, advertise personas from the cache
                    * instead. */
-                  yield this._load_cache ();
+                  yield this._load_cache (null);
                   this._force_quiescent ();
                 }
 
@@ -625,6 +625,8 @@ public class Tpf.PersonaStore : Folks.PersonaStore
            * cache, assuming we were connected before. */
           if (this._conn != null)
             {
+              /* Call reset immediately, otherwise TpConnection's invalidation
+               * will cause all contacts to weak notify. See bug #675141 */
               var old_personas = this._persona_set;
               this._reset ();
 
@@ -791,9 +793,9 @@ public class Tpf.PersonaStore : Folks.PersonaStore
 
   /**
    * If our account is disconnected, we want to continue to export a static
-   * view of personas from the cache.
+   * view of personas from the cache. old_personas will be notified as removed.
    */
-  private async void _load_cache (HashSet<Persona>? old_personas = null)
+  private async void _load_cache (HashSet<Persona>? old_personas)
     {
       /* Only load from the cache if the account is enabled and valid. */
       if (this.account.enabled == false || this.account.valid == false)
@@ -821,10 +823,6 @@ public class Tpf.PersonaStore : Folks.PersonaStore
 
       // Load the persona set from the cache and notify of the change
       var cached_personas = yield this._cache.load_objects (cancellable);
-      if (old_personas == null)
-        {
-          old_personas = this._persona_set;
-        }
 
       /* If the load operation was cancelled, don't change the state
        * of the persona store at all. */
