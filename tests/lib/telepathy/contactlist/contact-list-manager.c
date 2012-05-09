@@ -199,7 +199,7 @@ contact_list_dup_groups (TpBaseContactList *base)
 
   if (self->priv->groups != NULL)
     {
-      TpIntSetFastIter iter;
+      TpIntsetFastIter iter;
       TpHandle group;
 
       ret = g_ptr_array_sized_new (tp_handle_set_size (self->priv->groups) + 1);
@@ -231,7 +231,7 @@ contact_list_dup_contact_groups (TpBaseContactList *base,
 
   if (d != NULL && d->groups != NULL)
     {
-      TpIntSetFastIter iter;
+      TpIntsetFastIter iter;
       TpHandle group;
 
       ret = g_ptr_array_sized_new (tp_handle_set_size (d->groups) + 1);
@@ -297,7 +297,7 @@ contact_list_set_contact_groups_async (TpBaseContactList *base,
   TpIntset *set, *added_set, *removed_set;
   GPtrArray *added_names, *removed_names;
   GPtrArray *new_groups;
-  TpIntSetFastIter iter;
+  TpIntsetFastIter iter;
   TpHandle group_handle;
   guint i;
 
@@ -530,9 +530,6 @@ status_changed_cb (TpBaseConnection *conn,
         {
           close_all (self);
         }
-      break;
-
-    default:
       break;
     }
 }

@@ -287,49 +287,44 @@ tp_tests_simple_account_class_init (TpTestsSimpleAccountClass *klass)
   GObjectClass *object_class = (GObjectClass *) klass;
   GParamSpec *param_spec;
 
-#define MIXIN_PROP(N, g) \
-        { N, (gpointer) g, NULL }
-
   static TpDBusPropertiesMixinPropImpl a_props[] = {
-        MIXIN_PROP ("Interfaces", "interfaces"),
-        MIXIN_PROP ("DisplayName", "display-name"),
-        MIXIN_PROP ("Icon", "icon"),
-        MIXIN_PROP ("Valid", "valid"),
-        MIXIN_PROP ("Enabled", "enabled"),
-        MIXIN_PROP ("Nickname", "nickname"),
-        MIXIN_PROP ("Parameters", "parameters"),
-        MIXIN_PROP ("AutomaticPresence", "automatic-presence"),
-        MIXIN_PROP ("ConnectAutomatically", "connect-automatically"),
-        MIXIN_PROP ("Connection", "connection"),
-        MIXIN_PROP ("ConnectionStatus", "connection-status"),
-        MIXIN_PROP ("ConnectionStatusReason", "connection-status-reason"),
-        MIXIN_PROP ("CurrentPresence", "current-presence"),
-        MIXIN_PROP ("RequestedPresence", "requested-presence"),
-        MIXIN_PROP ("NormalizedName", "normalized-name"),
-        MIXIN_PROP ("HasBeenOnline", "has-been-online"),
-        MIXIN_PROP ("Supersedes", "supersedes"),
+        { "Interfaces", "interfaces", NULL },
+        { "DisplayName", "display-name", NULL },
+        { "Icon", "icon", NULL },
+        { "Valid", "valid", NULL },
+        { "Enabled", "enabled", NULL },
+        { "Nickname", "nickname", NULL },
+        { "Parameters", "parameters", NULL },
+        { "AutomaticPresence", "automatic-presence", NULL },
+        { "ConnectAutomatically", "connect-automatically", NULL },
+        { "Connection", "connection", NULL },
+        { "ConnectionStatus", "connection-status", NULL },
+        { "ConnectionStatusReason", "connection-status-reason", NULL },
+        { "CurrentPresence", "current-presence", NULL },
+        { "RequestedPresence", "requested-presence", NULL },
+        { "NormalizedName", "normalized-name", NULL },
+        { "HasBeenOnline", "has-been-online", NULL },
+        { "Supersedes", "supersedes", NULL },
         { NULL }
   };
 
   static TpDBusPropertiesMixinPropImpl ais_props[] = {
-        MIXIN_PROP ("StorageProvider", "storage-provider"),
-        MIXIN_PROP ("StorageIdentifier", "storage-identifier"),
-        MIXIN_PROP ("StorageSpecificInformation", "storage-specific-information"),
-        MIXIN_PROP ("StorageRestrictions", "storage-restrictions"),
+        { "StorageProvider", "storage-provider", NULL },
+        { "StorageIdentifier", "storage-identifier", NULL },
+        { "StorageSpecificInformation", "storage-specific-information", NULL },
+        { "StorageRestrictions", "storage-restrictions", NULL },
         { NULL },
   };
 
   static TpDBusPropertiesMixinPropImpl aia_props[] = {
-        MIXIN_PROP ("URISchemes", "uri-schemes"),
+        { "URISchemes", "uri-schemes", NULL },
         { NULL },
   };
 
   static TpDBusPropertiesMixinPropImpl avatar_props[] = {
-        MIXIN_PROP ("Avatar", "avatar"),
+        { "Avatar", "avatar", NULL },
         { NULL },
   };
-
-#undef MIXIN_PROP
 
   static TpDBusPropertiesMixinIfaceImpl prop_interfaces[] = {
         { TP_IFACE_ACCOUNT,
@@ -424,14 +419,14 @@ tp_tests_simple_account_class_init (TpTestsSimpleAccountClass *klass)
 
   param_spec = g_param_spec_uint ("connection-status", "connection status",
       "ConnectionStatus property",
-      0, NUM_TP_CONNECTION_STATUSES, TP_CONNECTION_STATUS_DISCONNECTED,
+      0, TP_NUM_CONNECTION_STATUSES, TP_CONNECTION_STATUS_DISCONNECTED,
       G_PARAM_READABLE | G_PARAM_STATIC_STRINGS);
   g_object_class_install_property (object_class, PROP_CONNECTION_STATUS,
       param_spec);
 
   param_spec = g_param_spec_uint ("connection-status-reason",
       "connection status reason", "ConnectionStatusReason property",
-      0, NUM_TP_CONNECTION_STATUS_REASONS,
+      0, TP_NUM_CONNECTION_STATUS_REASONS,
       TP_CONNECTION_STATUS_REASON_NONE_SPECIFIED,
       G_PARAM_READABLE | G_PARAM_STATIC_STRINGS);
   g_object_class_install_property (object_class, PROP_CONNECTION_STATUS_REASON,

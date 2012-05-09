@@ -25,6 +25,8 @@ libtp_test_contactlist_la_SOURCES = \
         contacts-conn.c \
         contacts-conn.h \
         debug.h \
+        room-list-chan.c \
+        room-list-chan.h \
         simple-account.c \
         simple-account.h \
         simple-account-manager.c \

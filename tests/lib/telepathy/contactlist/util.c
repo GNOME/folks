@@ -10,7 +10,7 @@
 
 #include "config.h"
 
-#include "util.h"
+#include "tests/lib/util.h"
 
 #include <telepathy-glib/connection.h>
 
@@ -375,7 +375,6 @@ _tp_create_local_socket (TpSocketAddressType address_type,
       case TP_SOCKET_ACCESS_CONTROL_PORT:
         break;
 
-      case TP_SOCKET_ACCESS_CONTROL_NETMASK:
       default:
         g_assert_not_reached ();
     }
@@ -404,10 +403,6 @@ _tp_create_local_socket (TpSocketAddressType address_type,
           break;
         }
 
-#ifndef HAVE_GIO_UNIX
-      case TP_SOCKET_ADDRESS_TYPE_UNIX:
-#endif
-      case TP_SOCKET_ADDRESS_TYPE_ABSTRACT_UNIX:
       default:
         g_assert_not_reached ();
     }
@@ -452,10 +447,6 @@ _tp_create_local_socket (TpSocketAddressType address_type,
             G_MAXUINT);
         break;
 
-#ifndef HAVE_GIO_UNIX
-      case TP_SOCKET_ADDRESS_TYPE_UNIX:
-#endif
-      case TP_SOCKET_ADDRESS_TYPE_ABSTRACT_UNIX:
       default:
         g_assert_not_reached ();
     }
@@ -479,4 +470,42 @@ tp_tests_connection_assert_disconnect_succeeds (TpConnection *connection)
   g_assert_no_error (error);
   g_assert (ok);
   g_object_unref (result);
+}
+
+static void
+one_contact_cb (TpConnection *connection,
+    guint n_contacts,
+    TpContact * const *contacts,
+    const gchar * const *good_ids,
+    GHashTable *bad_ids,
+    const GError *error,
+    gpointer user_data,
+    GObject *weak_object)
+{
+  TpContact **contact_loc = user_data;
+
+  g_assert_no_error (error);
+  g_assert_cmpuint (g_hash_table_size (bad_ids), ==, 0);
+  g_assert_cmpuint (n_contacts, ==, 1);
+  g_assert_cmpstr (good_ids[0], !=, NULL);
+  g_assert (contacts[0] != NULL);
+
+  *contact_loc = g_object_ref (contacts[0]);
+}
+
+TpContact *
+tp_tests_connection_run_until_contact_by_id (TpConnection *connection,
+    const gchar *id,
+    guint n_features,
+    const TpContactFeature *features)
+{
+  TpContact *contact = NULL;
+
+  tp_connection_get_contacts_by_id (connection, 1, &id, n_features, features,
+      one_contact_cb, &contact, NULL, NULL);
+
+  while (contact == NULL)
+    g_main_context_iteration (NULL, TRUE);
+
+  return contact;
 }
