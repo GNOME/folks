@@ -12,6 +12,7 @@ Bugs fixed:
 • Bug 647909 — Port Folks to GSettings
 • Bug 663890 — @throws annotations missing for some functions
 • Bug 675292 — Assertion when joining IRC channel
+• Bug 676023 — Invalid read when preparing the aggregator
 
 Overview of changes from libfolks 0.6.9 to libfolks 0.7.0
 =========================================================

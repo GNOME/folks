@@ -673,7 +673,8 @@ public class Tpf.PersonaStore : Folks.PersonaStore
           TelepathyGLib.Connection.get_feature_quark_contact_list (),
           TelepathyGLib.Connection.get_feature_quark_contact_groups (),
           TelepathyGLib.Connection.get_feature_quark_contact_info (),
-          TelepathyGLib.Connection.get_feature_quark_connected ()
+          TelepathyGLib.Connection.get_feature_quark_connected (),
+          0
       });
 
       if (!this.account.connection.has_interface_by_id (
