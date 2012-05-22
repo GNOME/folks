@@ -13,6 +13,7 @@
 
 #include "simple-account-manager.h"
 
+#include <telepathy-glib/account.h>
 #include <telepathy-glib/gtypes.h>
 #include <telepathy-glib/interfaces.h>
 #include <telepathy-glib/svc-generic.h>
@@ -49,7 +50,7 @@ struct _TpTestsSimpleAccountManagerPrivate
 };
 
 static void
-tp_tests_simple_account_manager_create_account (TpSvcAccountManager *self,
+tp_tests_simple_account_manager_create_account (TpSvcAccountManager *svc,
     const gchar *in_Connection_Manager,
     const gchar *in_Protocol,
     const gchar *in_Display_Name,
@@ -57,9 +58,24 @@ tp_tests_simple_account_manager_create_account (TpSvcAccountManager *self,
     GHashTable *in_Properties,
     DBusGMethodInvocation *context)
 {
-  const gchar *out_Account = "/some/fake/account/i/think";
+  TpTestsSimpleAccountManager *self = (TpTestsSimpleAccountManager *) svc;
+  const gchar *out = TP_ACCOUNT_OBJECT_PATH_BASE "gabble/jabber/lospolloshermanos";
 
-  tp_svc_account_manager_return_from_create_account (context, out_Account);
+  /* if we have fail=yes as a parameter, make the call fail */
+  if (!tp_strdiff (tp_asv_get_string (in_Parameters, "fail"), "yes"))
+    {
+      GError e = { TP_ERROR, TP_ERROR_INVALID_ARGUMENT, "loldongs" };
+      dbus_g_method_return_error (context, &e);
+      return;
+    }
+
+  self->create_cm = g_strdup (in_Connection_Manager);
+  self->create_protocol = g_strdup (in_Protocol);
+  self->create_display_name = g_strdup (in_Display_Name);
+  self->create_parameters = g_hash_table_ref (in_Parameters);
+  self->create_properties = g_hash_table_ref (in_Properties);
+
+  tp_svc_account_manager_return_from_create_account (context, out);
 }
 
 static void
@@ -117,6 +133,12 @@ tp_tests_simple_account_manager_finalize (GObject *object)
 
   g_ptr_array_unref (self->priv->valid_accounts);
   g_ptr_array_unref (self->priv->invalid_accounts);
+
+  tp_clear_pointer (&self->create_cm, g_free);
+  tp_clear_pointer (&self->create_protocol, g_free);
+  tp_clear_pointer (&self->create_display_name, g_free);
+  tp_clear_pointer (&self->create_parameters, g_hash_table_unref);
+  tp_clear_pointer (&self->create_properties, g_hash_table_unref);
 
   G_OBJECT_CLASS (tp_tests_simple_account_manager_parent_class)->finalize (
       object);

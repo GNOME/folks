@@ -272,6 +272,7 @@ tp_tests_simple_account_finalize (GObject *object)
 
   g_free (self->priv->presence_status);
   g_free (self->priv->presence_msg);
+  g_free (self->priv->connection_path);
 
   G_OBJECT_CLASS (tp_tests_simple_account_parent_class)->finalize (object);
 }

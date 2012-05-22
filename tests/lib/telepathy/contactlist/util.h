@@ -18,10 +18,6 @@ TpDBusDaemon *tp_tests_dbus_daemon_dup_or_die (void);
 
 void tp_tests_proxy_run_until_dbus_queue_processed (gpointer proxy);
 
-TpHandle tp_tests_connection_run_request_contact_handle (
-    TpConnection *connection,
-    const gchar *id);
-
 void tp_tests_proxy_run_until_prepared (gpointer proxy,
     const GQuark *features);
 gboolean tp_tests_proxy_run_until_prepared_or_failed (gpointer proxy,

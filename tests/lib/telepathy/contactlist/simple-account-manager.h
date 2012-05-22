@@ -30,6 +30,12 @@ struct _TpTestsSimpleAccountManagerClass {
 struct _TpTestsSimpleAccountManager {
     GObject parent;
 
+    gchar *create_cm;
+    gchar *create_protocol;
+    gchar *create_display_name;
+    GHashTable *create_parameters;
+    GHashTable *create_properties;
+
     TpTestsSimpleAccountManagerPrivate *priv;
 };
 

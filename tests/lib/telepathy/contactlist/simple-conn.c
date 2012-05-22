@@ -350,7 +350,6 @@ tp_tests_simple_connection_set_identifier (TpTestsSimpleConnection *self,
   g_return_if_fail (handle != 0);
 
   tp_base_connection_set_self_handle (conn, handle);
-  tp_handle_unref (contact_repo, handle);
 }
 
 TpTestsSimpleConnection *
@@ -406,8 +405,6 @@ tp_tests_simple_connection_ensure_text_chan (TpTestsSimpleConnection *self,
       g_hash_table_insert (self->priv->text_channels, GUINT_TO_POINTER (handle),
           chan);
     }
-
-  tp_handle_unref (contact_repo, handle);
 
   if (props != NULL)
     *props = tp_tests_text_channel_get_props (chan);

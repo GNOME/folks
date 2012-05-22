@@ -114,50 +114,6 @@ tp_tests_proxy_run_until_dbus_queue_processed (gpointer proxy)
   g_main_loop_unref (loop);
 }
 
-typedef struct {
-    GMainLoop *loop;
-    TpHandle handle;
-} HandleRequestResult;
-
-static void
-handles_requested_cb (TpConnection *connection G_GNUC_UNUSED,
-    TpHandleType handle_type G_GNUC_UNUSED,
-    guint n_handles,
-    const TpHandle *handles,
-    const gchar * const *ids G_GNUC_UNUSED,
-    const GError *error,
-    gpointer user_data,
-    GObject *weak_object G_GNUC_UNUSED)
-{
-  HandleRequestResult *result = user_data;
-
-  g_assert_no_error ((GError *) error);
-  g_assert_cmpuint (n_handles, ==, 1);
-  result->handle = handles[0];
-}
-
-static void
-handle_request_result_finish (gpointer r)
-{
-  HandleRequestResult *result = r;
-
-  g_main_loop_quit (result->loop);
-}
-
-TpHandle
-tp_tests_connection_run_request_contact_handle (TpConnection *connection,
-    const gchar *id)
-{
-  HandleRequestResult result = { g_main_loop_new (NULL, FALSE), 0 };
-  const gchar * const ids[] = { id, NULL };
-
-  tp_connection_request_handles (connection, -1, TP_HANDLE_TYPE_CONTACT, ids,
-      handles_requested_cb, &result, handle_request_result_finish, NULL);
-  g_main_loop_run (result.loop);
-  g_main_loop_unref (result.loop);
-  return result.handle;
-}
-
 void
 _test_assert_empty_strv (const char *file,
     int line,
@@ -473,24 +429,19 @@ tp_tests_connection_assert_disconnect_succeeds (TpConnection *connection)
 }
 
 static void
-one_contact_cb (TpConnection *connection,
-    guint n_contacts,
-    TpContact * const *contacts,
-    const gchar * const *good_ids,
-    GHashTable *bad_ids,
-    const GError *error,
-    gpointer user_data,
-    GObject *weak_object)
+one_contact_cb (GObject *object,
+    GAsyncResult *result,
+    gpointer user_data)
 {
+  TpConnection *connection = (TpConnection *) object;
   TpContact **contact_loc = user_data;
+  GError *error = NULL;
+
+  *contact_loc = tp_connection_dup_contact_by_id_finish (connection, result,
+      &error);
 
   g_assert_no_error (error);
-  g_assert_cmpuint (g_hash_table_size (bad_ids), ==, 0);
-  g_assert_cmpuint (n_contacts, ==, 1);
-  g_assert_cmpstr (good_ids[0], !=, NULL);
-  g_assert (contacts[0] != NULL);
-
-  *contact_loc = g_object_ref (contacts[0]);
+  g_assert (TP_IS_CONTACT (*contact_loc));
 }
 
 TpContact *
@@ -501,8 +452,8 @@ tp_tests_connection_run_until_contact_by_id (TpConnection *connection,
 {
   TpContact *contact = NULL;
 
-  tp_connection_get_contacts_by_id (connection, 1, &id, n_features, features,
-      one_contact_cb, &contact, NULL, NULL);
+  tp_connection_dup_contact_by_id_async (connection, id, n_features, features,
+      one_contact_cb, &contact);
 
   while (contact == NULL)
     g_main_context_iteration (NULL, TRUE);
