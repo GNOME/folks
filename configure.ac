@@ -175,11 +175,11 @@ Note that Gee 0.8.x provides gee-0.8 (but gee-1.0 is, confusingly, provided by
 Gee 0.6.x)])
 fi
 
-TP_GLIB_REQUIRED=0.17.5
+TP_GLIB_REQUIRED=0.19.0
 PKG_CHECK_MODULES([TP_GLIB], [telepathy-glib >= $TP_GLIB_REQUIRED])
 
-# Ignore post 0.18 deprecations
-TP_GLIB_CFLAGS="$TP_GLIB_CFLAGS -DTP_VERSION_MIN_REQUIRED=TP_VERSION_0_18"
+# Ignore post 0.20 deprecations
+TP_GLIB_CFLAGS="$TP_GLIB_CFLAGS -DTP_VERSION_MIN_REQUIRED=TP_VERSION_0_20"
 # Prevent post 0.20 APIs
 TP_GLIB_CFLAGS="$TP_GLIB_CFLAGS -DTP_VERSION_MAX_ALLOWED=TP_VERSION_0_20"
 
