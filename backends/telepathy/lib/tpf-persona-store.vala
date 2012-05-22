@@ -1124,11 +1124,8 @@ public class Tpf.PersonaStore : Folks.PersonaStore
   private async Persona _ensure_persona_for_id (string contact_id)
       throws GLib.Error
     {
-      GLib.List<TelepathyGLib.Contact> contacts =
-          yield FolksTpLowlevel.connection_get_contacts_by_id_async (
-              this._conn, {contact_id}, {});
-
-      return this._ensure_persona_for_contact (contacts.data);
+      var contact = yield this._conn.dup_contact_by_id_async (contact_id, {});
+      return this._ensure_persona_for_contact (contact);
     }
 
   /**
