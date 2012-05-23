@@ -22,6 +22,9 @@ using Gee;
 using GLib;
 using TelepathyGLib;
 using Folks;
+#if HAVE_ZEITGEIST
+using Zeitgeist;
+#endif
 
 /**
  * A persona subclass which represents a single instant messaging contact from
@@ -34,6 +37,7 @@ public class Tpf.Persona : Folks.Persona,
     EmailDetails,
     FavouriteDetails,
     GroupDetails,
+    InteractionDetails,
     ImDetails,
     NameDetails,
     PhoneDetails,
@@ -386,6 +390,64 @@ public class Tpf.Persona : Folks.Persona,
     {
       get { return this._im_addresses; }
       set { this.change_im_addresses.begin (value); }
+    }
+
+  private uint _im_interaction_count = 0;
+
+  /**
+   * A counter for IM interactions (send/receive message) with the persona.
+   *
+   * See {@link Folks.InteractionDetails.im_interaction_count}
+   *
+   * @since UNRELEASED
+   */
+  public uint im_interaction_count
+    {
+      get { return this._im_interaction_count; }
+    }
+
+  internal DateTime? _last_im_interaction_datetime = null;
+
+  /**
+   * The latest datetime for IM interactions (send/receive message) with the
+   * persona.
+   *
+   * See {@link Folks.InteractionDetails.last_im_interaction_datetime}
+   *
+   * @since UNRELEASED
+   */
+  public DateTime? last_im_interaction_datetime
+    {
+      get { return this._last_im_interaction_datetime; }
+    }
+
+  private uint _call_interaction_count = 0;
+
+  /**
+   * A counter for call interactions (only successful calls) with the persona.
+   *
+   * See {@link Folks.InteractionDetails.call_interaction_count}
+   *
+   * @since UNRELEASED
+   */
+  public uint call_interaction_count
+    {
+      get { return this._call_interaction_count; }
+    }
+
+  internal DateTime? _last_call_interaction_datetime = null;
+
+  /**
+   * The latest datetime for call interactions (only successful calls) with the
+   * persona.
+   *
+   * See {@link Folks.InteractionDetails.last_call_interaction_datetime}
+   *
+   * @since UNRELEASED
+   */
+  public DateTime? last_call_interaction_datetime
+    {
+      get { return this._last_call_interaction_datetime; }
     }
 
   private HashSet<string> _groups = new HashSet<string> ();
@@ -1136,4 +1198,45 @@ public class Tpf.Persona : Folks.Persona,
       var store = PersonaStore.dup_for_account (account);
       return store._ensure_persona_for_contact (contact);
     }
+
+#if HAVE_ZEITGEIST
+  internal void _increase_counter (string id, string interaction_type, Event event)
+    {
+      var timestamp = (uint) (event.get_timestamp () / 1000);
+      var converted_datetime = new DateTime.from_unix_utc (timestamp);
+      var interpretation = event.get_interpretation ();
+
+      /* Only count send/receive for IM interactions */
+      if (interaction_type == Zeitgeist.NMO_IMMESSAGE &&
+          (interpretation == Zeitgeist.ZG_SEND_EVENT ||
+           interpretation == Zeitgeist.ZG_RECEIVE_EVENT))
+        {
+          this._im_interaction_count++;
+          this.notify_property ("im-interaction-count");
+          if (this._last_im_interaction_datetime == null ||
+              this._last_im_interaction_datetime.compare (converted_datetime) == -1)
+            {
+              this._last_im_interaction_datetime = converted_datetime;
+              this.notify_property ("last-im-interaction-datetime");
+            }
+          debug ("Persona %s IM interaction details changed:\n - count: %u \n - timestamp: %lld\n",
+              id, this._im_interaction_count, this._last_im_interaction_datetime.format ("%H %M %S - %d %m %y"));
+        }
+      /* Only count successful call for call interactions */
+      else if (interaction_type == Zeitgeist.NFO_AUDIO &&
+                interpretation == Zeitgeist.ZG_LEAVE_EVENT)
+        {
+          this._call_interaction_count++;
+          this.notify_property ("call-interaction-count");
+          if (this._last_call_interaction_datetime == null ||
+              this._last_call_interaction_datetime.compare (converted_datetime) == -1)
+            { 
+              this._last_call_interaction_datetime = converted_datetime;
+              this.notify_property ("last-call-interaction-datetime");
+            }
+          debug ("Persona %s Call interaction details changed:\n - count: %u \n - timestamp: %lld\n",
+             id, this._call_interaction_count, this._last_call_interaction_datetime.format ("%H %M %S - %d %m %y"));
+        }
+    }
+#endif
 }

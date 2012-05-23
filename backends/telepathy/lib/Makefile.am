@@ -146,6 +146,13 @@ libfolks_telepathy_la_LIBADD = \
 	$(top_builddir)/folks/libfolks-internal.la \
 	$(NULL)
 
+if ENABLE_ZEITGEIST
+libfolks_telepathy_la_VALAFLAGS += --pkg zeitgeist-1.0
+libfolks_telepathy_la_VALAFLAGS += --define=HAVE_ZEITGEIST
+libfolks_telepathy_la_CFLAGS += $(ZEITGEIST_CFLAGS)
+libfolks_telepathy_la_LIBADD += $(ZEITGEIST_LIBS)
+endif
+
 # The quoting here is unnecessary but harmless, and has the useful side-effect
 # that vim quickfix mode (:make) doesn't interpret the libtool --mode=link
 # command as an error message in a bizarrely named file
