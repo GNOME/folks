@@ -142,6 +142,37 @@ public interface Folks.PresenceDetails : Object
     }
 
   /**
+   * The default message for a presence type.
+   *
+   * @since UNRELEASED
+   */
+  public static string get_default_message_from_type (PresenceType type)
+    {
+      switch (type)
+        {
+          default:
+          case PresenceType.UNKNOWN:
+            return _("Unknown status");
+          case PresenceType.OFFLINE:
+            return _("Offline");
+          case PresenceType.UNSET:
+            return "";
+          case PresenceType.ERROR:
+            return _("Error");
+          case PresenceType.AVAILABLE:
+            return _("Available");
+          case PresenceType.AWAY:
+            return _("Away");
+          case PresenceType.EXTENDED_AWAY:
+            return _("Extended away");
+          case PresenceType.BUSY:
+            return _("Busy");
+          case PresenceType.HIDDEN:
+            return _("Hidden");
+        }
+    }
+
+  /**
    * Compare two {@link PresenceType}s.
    *
    * `0` will be returned if the types are equal, a positive number will be

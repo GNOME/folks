@@ -14,6 +14,9 @@ Bugs fixed:
 • Bug 675292 — Assertion when joining IRC channel
 • Bug 676023 — Invalid read when preparing the aggregator
 
+API changes:
+ Add PresenceDetails.get_default_message_from_type()
+
 Overview of changes from libfolks 0.6.9 to libfolks 0.7.0
 =========================================================
 
