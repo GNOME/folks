@@ -22,6 +22,7 @@ folks/name-details.c
 folks/note-details.c
 folks/phone-details.c
 folks/postal-address-details.c
+folks/presence-details.c
 folks/role-details.c
 folks/url-details.c
 folks/web-service-details.c

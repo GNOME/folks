@@ -144,9 +144,13 @@ public interface Folks.PresenceDetails : Object
   /**
    * The default message for a presence type.
    *
+   * @param type a {@link PresenceType} for which to retrieve a translated
+   * display string
+   * @return a default translated display string for the given
+   * {@link PresenceType}
    * @since UNRELEASED
    */
-  public static string get_default_message_from_type (PresenceType type)
+  public static unowned string get_default_message_from_type (PresenceType type)
     {
       switch (type)
         {

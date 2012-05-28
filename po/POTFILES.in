@@ -24,6 +24,7 @@ folks/note-details.vala
 [type: gettext/gsettings]folks/org.freedesktop.folks.gschema.xml.in
 folks/phone-details.vala
 folks/postal-address-details.vala
+folks/presence-details.vala
 folks/role-details.vala
 folks/url-details.vala
 folks/web-service-details.vala
