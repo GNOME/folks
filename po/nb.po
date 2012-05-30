@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: folks 0.6.x\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-05-19 11:35+0200\n"
-"PO-Revision-Date: 2012-05-19 11:37+0200\n"
+"POT-Creation-Date: 2012-05-30 13:22+0200\n"
+"PO-Revision-Date: 2012-05-30 13:28+0200\n"
 "Last-Translator: Kjartan Maraas <kmaraas@gnome.org>\n"
 "Language-Team: Norwegian bokmål <i18n-nb@lister.ping.uio.no>\n"
 "Language: \n"
@@ -40,7 +40,7 @@ msgstr "Adressebok «%s» er frakoblet så kontakt «%s» kan ikke fjernes."
 #: ../backends/eds/lib/edsf-persona-store.vala:557
 #, c-format
 msgid "Permission denied to remove contact ‘%s’: %s"
-msgstr ""
+msgstr "Tilgang til å fjerne kontakt «%s» nektet: %s"
 
 #. Translators: the parameter is an error message.
 #: ../backends/eds/lib/edsf-persona-store.vala:562
@@ -67,7 +67,7 @@ msgstr "Adressebok «%s» er frakoblet."
 #: ../backends/eds/lib/edsf-persona-store.vala:875
 #, c-format
 msgid "Permission denied to open address book ‘%s’: %s"
-msgstr ""
+msgstr "Tilgang til å åpne adressebok «%s» nektet: %s"
 
 #. Translators: the first parameter is an address book URI
 #. * and the second is an error message.
@@ -87,14 +87,14 @@ msgstr ""
 #: ../backends/eds/lib/edsf-persona-store.vala:826
 #, c-format
 msgid "Couldn't get view for address book ‘%s’."
-msgstr ""
+msgstr "Fant ikke visning for adressebok «%s»."
 
 #. Translators: the first parameter is an address book URI
 #. * and the second is an error message.
 #: ../backends/eds/lib/edsf-persona-store.vala:908
 #, c-format
 msgid "Couldn't get view for address book ‘%s’: %s"
-msgstr ""
+msgstr "Fant ikke visning for adressebokk «%s»: %s"
 
 #: ../backends/eds/lib/edsf-persona-store.vala:1271
 #, c-format
@@ -179,7 +179,7 @@ msgstr "Strukturert navn er ikke skrivbart på denne kontakten."
 #: ../backends/eds/lib/edsf-persona-store.vala:1919
 #: ../folks/im-details.vala:136
 msgid "IM addresses are not writeable on this contact."
-msgstr ""
+msgstr "Lynmeldingsadresser er ikke skrivbare på denne kontakten."
 
 #: ../backends/eds/lib/edsf-persona-store.vala:1969
 #: ../folks/group-details.vala:170
@@ -240,7 +240,7 @@ msgstr ""
 #: ../backends/key-file/kf-persona-store.vala:459
 #, c-format
 msgid "Could not write updated key file '%s': %s"
-msgstr ""
+msgstr "Kunne ikke skrive oppdatert nøkkelfil «%s»: %s"
 
 #. Translators: this is an error message for if the user
 #. * provides an invalid IM address. The first parameter is
@@ -276,29 +276,29 @@ msgstr ""
 
 #: ../backends/libsocialweb/lib/swf-persona-store.vala:380
 msgid "Error opening contacts view."
-msgstr ""
+msgstr "Feil ved åpning av kontaktvisning."
 
 #. Translators: the first parameter is the display name for
 #. * the Telepathy account, and the second is an error
 #. * message.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:752
+#: ../backends/telepathy/lib/tpf-persona-store.vala:759
 #, c-format
 msgid ""
 "Failed to determine whether we can set aliases on Telepathy account '%s': %s"
 msgstr ""
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1109
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1122
 msgid "Telepathy contacts representing the local user may not be removed."
 msgstr ""
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1120
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1133
 #, c-format
 msgid "Failed to remove a persona from store: %s"
 msgstr "Klarte ikke å fjerne en persona fra lageret: %s"
 
 #. Translators: the first two parameters are store identifiers and
 #. * the third is a contact identifier.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1153
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1163
 #, c-format
 msgid ""
 "Persona store (%s, %s) requires the following details:\n"
@@ -307,51 +307,51 @@ msgstr ""
 "Personalager (%s, %s) krever følgende detaljer:\n"
 "    kontakt (oppgitt: «%s»)\n"
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1168
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1178
 msgid "Cannot create a new Telepathy contact while offline."
 msgstr ""
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1186
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1196
 #, c-format
 msgid "Failed to add a persona from details: %s"
 msgstr "Klarte ikke å legge til persona fra detaljer: %s"
 
 #. Translators: "telepathy-logger" is the name of an application,
 #. * and should not be translated.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1206
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1216
 msgid ""
 "Failed to change favorite without a connection to the telepathy-logger "
 "service."
 msgstr ""
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1212
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1222
 msgid ""
 "Failed to change favorite status of Telepathy Persona because it has no "
 "attached TpContact."
 msgstr ""
 
 #. Translators: the parameter is a contact identifier.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1230
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1240
 #, c-format
 msgid "Failed to change favorite status for Telepathy contact ‘%s’."
 msgstr ""
 
 #. Translators: the parameter is an error message.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1262
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1272
 #, c-format
 msgid "Failed to change contact's alias: %s"
 msgstr ""
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1342
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1352
 msgid "Extended information may only be set on the user's Telepathy contact."
 msgstr ""
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1371
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1381
 msgid ""
 "Extended information cannot be written because the store is disconnected."
 msgstr ""
 
-#: ../backends/telepathy/lib/tpf-persona.vala:443
+#: ../backends/telepathy/lib/tpf-persona.vala:505
 #, c-format
 msgid "Failed to change group membership: %s"
 msgstr ""
