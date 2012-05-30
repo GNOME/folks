@@ -13,6 +13,7 @@ Bugs fixed:
 • Bug 663890 — @throws annotations missing for some functions
 • Bug 675292 — Assertion when joining IRC channel
 • Bug 676023 — Invalid read when preparing the aggregator
+• Bug 627403 — Move default presence messages from Empathy to libfolks
 
 API changes:
  Add PresenceDetails.get_default_message_from_type()
