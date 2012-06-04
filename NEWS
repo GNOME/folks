@@ -18,13 +18,14 @@ Bugs fixed:
 • Bug 672709 — Add new Individual InteractionDetails properties
 
 API changes:
- Add PresenceDetails.get_default_message_from_type()
- Add new Individual properties:
+• Add PresenceDetails.get_default_message_from_type()
+• Add new Individual properties:
     - im_interaction_count
     - call_interaction_count
     - last_im_interaction_timestamp
     - last_call_interaction_timestamp
 
+• Add PresenceDetails.get_default_message_from_type()
 
 Overview of changes from libfolks 0.6.9 to libfolks 0.7.0
 =========================================================
