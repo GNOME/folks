@@ -148,7 +148,7 @@ public interface Folks.PresenceDetails : Object
    * display string
    * @return a default translated display string for the given
    * {@link PresenceType}
-   * @since UNRELEASED
+   * @since 0.7.1
    */
   public static unowned string get_default_message_from_type (PresenceType type)
     {

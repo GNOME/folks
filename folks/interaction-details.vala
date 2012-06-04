@@ -26,14 +26,14 @@ using GLib;
  * a {@link Persona} or an {@link Individual} as well as the the datetime of
  * the last call and IM interaction.
  *
- * @since UNRELEASED
+ * @since 0.7.1
  */
 public interface Folks.InteractionDetails : Object
 {
   /**
    * The IM interaction associated with a Persona
    *
-   * @since UNRELEASED
+   * @since 0.7.1
    */
   public abstract uint im_interaction_count
     {
@@ -43,7 +43,7 @@ public interface Folks.InteractionDetails : Object
   /**
    * The latest IM interaction timestamp associated with a Persona
    *
-   * @since UNRELEASED
+   * @since 0.7.1
    */
   public abstract DateTime? last_im_interaction_datetime
     {
@@ -53,7 +53,7 @@ public interface Folks.InteractionDetails : Object
   /**
    * The call interaction associated with a Persona
    *
-   * @since UNRELEASED
+   * @since 0.7.1
    */
   public abstract uint call_interaction_count
     {
@@ -63,7 +63,7 @@ public interface Folks.InteractionDetails : Object
   /**
    * The latest call interaction timestamp associated with a Persona
    *
-   * @since UNRELEASED
+   * @since 0.7.1
    */
   public abstract DateTime? last_call_interaction_datetime
     {

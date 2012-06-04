@@ -271,28 +271,28 @@ public enum Folks.PersonaDetail
   /**
    * Field for {@link InteractionDetails.im_interaction_count}.
    *
-   * @since UNRELEASED
+   * @since 0.7.1
    */
   IM_INTERACTION_COUNT,
 
   /**
    * Field for {@link InteractionDetails.last_im_interaction_datetime}.
    *
-   * @since UNRELEASED
+   * @since 0.7.1
    */
   LAST_IM_INTERACTION_DATETIME,
 
   /**
    * Field for {@link InteractionDetails.call_interaction_count}.
    *
-   * @since UNRELEASED
+   * @since 0.7.1
    */
   CALL_INTERACTION_COUNT,
 
   /**
    * Field for {@link InteractionDetails.last_call_interaction_datetime}.
    *
-   * @since UNRELEASED
+   * @since 0.7.1
    */
   LAST_CALL_INTERACTION_DATETIME
 }

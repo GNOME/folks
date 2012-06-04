@@ -399,7 +399,7 @@ public class Tpf.Persona : Folks.Persona,
    *
    * See {@link Folks.InteractionDetails.im_interaction_count}
    *
-   * @since UNRELEASED
+   * @since 0.7.1
    */
   public uint im_interaction_count
     {
@@ -414,7 +414,7 @@ public class Tpf.Persona : Folks.Persona,
    *
    * See {@link Folks.InteractionDetails.last_im_interaction_datetime}
    *
-   * @since UNRELEASED
+   * @since 0.7.1
    */
   public DateTime? last_im_interaction_datetime
     {
@@ -428,7 +428,7 @@ public class Tpf.Persona : Folks.Persona,
    *
    * See {@link Folks.InteractionDetails.call_interaction_count}
    *
-   * @since UNRELEASED
+   * @since 0.7.1
    */
   public uint call_interaction_count
     {
@@ -443,7 +443,7 @@ public class Tpf.Persona : Folks.Persona,
    *
    * See {@link Folks.InteractionDetails.last_call_interaction_datetime}
    *
-   * @since UNRELEASED
+   * @since 0.7.1
    */
   public DateTime? last_call_interaction_datetime
     {
