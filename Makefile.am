@@ -14,6 +14,10 @@ endif
 
 DISTCHECK_CONFIGURE_FLAGS = \
 	--enable-docs \
+	--enable-eds-backend \
+	--enable-libsocialweb-backend \
+	--enable-tracker-backend \
+	--enable-zeitgeist \
 	--disable-vala \
 	$(NULL)
 
