@@ -1638,7 +1638,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
         }
       catch
         {
-          warning ("Failed to fetch events from Zeitgeist");
+          debug ("Failed to fetch events from Zeitgeist");
         }
 
       /* Prepare a monitor and install for this account to populate persona 
