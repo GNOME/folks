@@ -15,7 +15,8 @@ Bugs fixed:
 • Bug 676023 — Invalid read when preparing the aggregator
 • Bug 627403 — Move default presence messages from Empathy to libfolks
 • Bug 675121 — port Folks to eds api changes
-• Bug 672709 — Add new Individual InteractionDetails properties
+• Bug 675121 — Add new Individual InteractionDetails properties
+• Bug 672709 — Add new interaction details properties to individuals
 
 API changes:
 • Add PresenceDetails.get_default_message_from_type()
@@ -24,8 +25,9 @@ API changes:
     - call_interaction_count
     - last_im_interaction_timestamp
     - last_call_interaction_timestamp
-
 • Add PresenceDetails.get_default_message_from_type()
+• Add InteractionDetails interface to report interactions with Personas and
+  Individuals
 
 Overview of changes from libfolks 0.6.9 to libfolks 0.7.0
 =========================================================
