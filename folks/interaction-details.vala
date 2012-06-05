@@ -22,9 +22,9 @@ using GLib;
 
 /**
  * Object representing interaction details for an Individual or Persona.
- * Interaction details are the number of call or IM interactions with the a
+ * Interaction details are the number of calls or IM interactions with
  * a {@link Persona} or an {@link Individual} as well as the the datetime of
- * the last call and im interaction.
+ * the last call and IM interaction.
  *
  * @since UNRELEASED
  */
