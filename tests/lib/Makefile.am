@@ -12,7 +12,7 @@ SUBDIRS += tracker
 endif
 
 if ENABLE_EDS
-SUBDIRS += eds
+#SUBDIRS += eds
 endif
 
 DIST_SUBDIRS = \

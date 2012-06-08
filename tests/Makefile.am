@@ -11,7 +11,7 @@ SUBDIRS += libsocialweb
 endif
 
 if ENABLE_EDS
-SUBDIRS += eds
+#SUBDIRS += eds
 endif
 
 SUBDIRS += key-file
