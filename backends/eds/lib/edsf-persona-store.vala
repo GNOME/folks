@@ -2195,7 +2195,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
 
           var backend_name = ((!) extension).get_backend_name ();
           /* base_uri should be google:// for Google Contacts address books */
-          if (backend_name.has_prefix ("google:"))
+          if (backend_name.has_prefix ("google"))
             {
               return true;
             }
