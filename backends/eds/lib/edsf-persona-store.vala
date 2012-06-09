@@ -2210,16 +2210,11 @@ public class Edsf.PersonaStore : Folks.PersonaStore
        * so we can assert that the source list is non-null. */
       assert (this._source_registry != null);
 
-      GLib.List<E.Source> books =
-          ((!) this._source_registry).list_sources (SOURCE_EXTENSION_ADDRESS_BOOK);
-
-      foreach (var s in books)
+      E.Source? needle = ((!) this._source_registry).ref_source(this.id);
+      if (needle != null && needle.has_extension (SOURCE_EXTENSION_ADDRESS_BOOK))
         {
-          if (s.get_uid () == this.id)
-            {
-              /* We've found ourself. */
-              return true;
-            }
+          /* We've found ourself. */
+          return true;
         }
 
       return false;
