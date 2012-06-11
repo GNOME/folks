@@ -2191,10 +2191,12 @@ public class Edsf.PersonaStore : Folks.PersonaStore
     {
       if (this.source.has_extension (SOURCE_EXTENSION_ADDRESS_BOOK))
         {
-          var extension = (E.SourceAddressBook) this._source_registry.find_extension (this.source, SOURCE_EXTENSION_ADDRESS_BOOK);
+          var extension = (E.SourceAddressBook)
+                          this._source_registry.find_extension (
+                            this.source, SOURCE_EXTENSION_ADDRESS_BOOK);
 
           var backend_name = ((!) extension).get_backend_name ();
-          /* base_uri should be google:// for Google Contacts address books */
+          /* backend name should be google for Google Contacts address books */
           if (backend_name.has_prefix ("google"))
             {
               return true;
@@ -2210,7 +2212,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
        * so we can assert that the source list is non-null. */
       assert (this._source_registry != null);
 
-      E.Source? needle = ((!) this._source_registry).ref_source(this.id);
+      E.Source? needle = ((!) this._source_registry).ref_source (this.id);
       if (needle != null && needle.has_extension (SOURCE_EXTENSION_ADDRESS_BOOK))
         {
           /* We've found ourself. */
@@ -2259,7 +2261,9 @@ public class Edsf.PersonaStore : Folks.PersonaStore
 
       if (this.source.has_extension (SOURCE_EXTENSION_ADDRESS_BOOK))
         {
-          var extension = (E.SourceAddressBook) this._source_registry.find_extension (this.source, SOURCE_EXTENSION_ADDRESS_BOOK);
+          var extension = (E.SourceAddressBook)
+                          this._source_registry.find_extension (
+                            this.source, SOURCE_EXTENSION_ADDRESS_BOOK);
 
           var backend_name = ((!) extension).get_backend_name ();
           /* base_uri should be ldap:// for LDAP based address books */

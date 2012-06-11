@@ -119,7 +119,7 @@ public class Folks.Backends.Eds.Backend : Folks.Backend
                   this._ab_source_list_changed_cb);
               this._ab_sources.source_enabled.connect (
                   this._ab_source_list_changed_cb);
-              this._ab_source_list_changed_cb ( );
+              this._ab_source_list_changed_cb ();
 
               this._is_prepared = true;
               this.notify_property ("is-prepared");
