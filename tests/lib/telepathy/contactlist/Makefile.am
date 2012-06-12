@@ -51,7 +51,7 @@ libtp_test_contactlist_la_LIBADD = \
 
 _gen/tp_test_contact_list.manager _gen/param-spec-struct.h: \
 			manager-file.py $(top_srcdir)/tests/tools/manager-file.py
-		$(AM_V_at)$(mkdir_p) _gen
+		$(AM_V_at)$(MKDIR_P) _gen
 		$(AM_V_GEN)$(PYTHON) $(top_srcdir)/tests/tools/manager-file.py \
 			$(srcdir)/manager-file.py _gen
 
