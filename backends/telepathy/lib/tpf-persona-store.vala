@@ -1030,10 +1030,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
 
       this._got_initial_members = true;
 #if HAVE_ZEITGEIST
-          if (this._monitor == null)
-            {
-              this._populate_counters ();
-            }
+      this._populate_counters ();
 #endif
       this._notify_if_is_quiescent ();
     }
@@ -1606,16 +1603,9 @@ public class Tpf.PersonaStore : Folks.PersonaStore
 
   private async void _populate_counters ()
     {
-      this._log = new Zeitgeist.Log ();
-
-      /* Prepare a monitor for this account to populate the counters upon
-       * interaction changes */
-      if (this._monitor == null)
+      if (this._log == null)
         {
-          PtrArray monitor_events = this._get_zeitgeist_event_templates ();
-          this._monitor = new Zeitgeist.Monitor (new Zeitgeist.TimeRange.from_now (),
-              (owned) monitor_events);
-          this._monitor.events_inserted.connect (this._handle_new_interaction);
+          this._log = new Zeitgeist.Log ();
         }
 
       /* Get all events for this account from Zeitgeist and increase the
@@ -1627,9 +1617,10 @@ public class Tpf.PersonaStore : Folks.PersonaStore
               (owned) events, StorageState.ANY, 0, ResultType.MOST_RECENT_EVENTS,
               null);
 
-          foreach (var persona in this.personas.values)
+          foreach (var persona in this._personas.values)
             {
               persona.freeze_notify ();
+              persona._reset_interaction ();
             }
           foreach (var e in results)
             {
@@ -1650,9 +1641,16 @@ public class Tpf.PersonaStore : Folks.PersonaStore
           warning ("Failed to fetch events from Zeitgeist");
         }
 
-      /* Install the monitor for this account to be notified when a persona has 
-       * been interacted with */
-      this._log.install_monitor (this._monitor);
+      /* Prepare a monitor and install for this account to populate persona 
+       * counters upon interaction changes.*/
+      if (this._monitor == null)
+        {
+          PtrArray monitor_events = this._get_zeitgeist_event_templates ();
+          this._monitor = new Zeitgeist.Monitor (new Zeitgeist.TimeRange.from_now (),
+              (owned) monitor_events);
+          this._monitor.events_inserted.connect (this._handle_new_interaction);
+          this._log.install_monitor (this._monitor);
+        }
 
       this._notify_if_is_quiescent ();
     }

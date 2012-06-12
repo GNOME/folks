@@ -1238,5 +1238,13 @@ public class Tpf.Persona : Folks.Persona,
              id, this._call_interaction_count, this._last_call_interaction_datetime.format ("%H %M %S - %d %m %y"));
         }
     }
+
+  internal void _reset_interaction () 
+    {
+      this._call_interaction_count = 0;
+      this._im_interaction_count = 0;
+      this._last_call_interaction_datetime = null;
+      this._last_im_interaction_datetime = null;
+    }
 #endif
 }
