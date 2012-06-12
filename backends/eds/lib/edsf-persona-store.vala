@@ -28,6 +28,8 @@ using GLib;
 
 extern const string BACKEND_NAME;
 
+/* The following function is needed in order to use the async SourceRegistry
+ * constructor. */
 [CCode (cname = "e_source_registry_new", cheader_filename = "libedataserver/libedataserver.h", finish_function = "e_source_registry_new_finish")]
 public extern static async E.SourceRegistry create_source_registry (GLib.Cancellable? cancellable = null) throws GLib.Error;
 
