@@ -41,7 +41,7 @@ public class Folks.Backends.Eds.Backend : Folks.Backend
   private bool _is_quiescent = false;
   private HashMap<string, PersonaStore> _persona_stores;
   private Map<string, PersonaStore> _persona_stores_ro;
-  private E.SourceList _ab_sources;
+  private E.SourceRegistry _ab_sources;
 
   /**
    * {@inheritDoc}
@@ -112,10 +112,14 @@ public class Folks.Backends.Eds.Backend : Folks.Backend
 
               this._create_avatars_cache_dir ();
 
-              E.BookClient.get_sources (out this._ab_sources);
-              this._ab_sources.changed.connect (
+              this._ab_sources = yield create_source_registry ();
+              /* Our callback only looks for added sources, so we only
+               need to connect to source-added and source-enabled signals */
+              this._ab_sources.source_added.connect (
                   this._ab_source_list_changed_cb);
-              this._ab_source_list_changed_cb (this._ab_sources);
+              this._ab_sources.source_enabled.connect (
+                  this._ab_source_list_changed_cb);
+              this._ab_source_list_changed_cb ();
 
               this._is_prepared = true;
               this.notify_property ("is-prepared");
@@ -151,7 +155,8 @@ public class Folks.Backends.Eds.Backend : Folks.Backend
                   this._remove_address_book (persona_store);
                 }
 
-              this._ab_sources.changed.disconnect (this._ab_source_list_changed_cb);
+              this._ab_sources.source_added.disconnect (this._ab_source_list_changed_cb);
+              this._ab_sources.source_enabled.disconnect (this._ab_source_list_changed_cb);
               this._ab_sources = null;
 
               this._is_quiescent = false;
@@ -178,11 +183,11 @@ public class Folks.Backends.Eds.Backend : Folks.Backend
    * cases where it's called but we don't have to do anything. For example, if
    * an address book is renamed, we don't have to add or remove any persona
    * stores since we don't use the address book names. */
-  private void _ab_source_list_changed_cb (E.SourceList list)
+  private void _ab_source_list_changed_cb ()
     {
       string[] use_addressbooks = this._get_addressbooks_from_env ();
-      unowned GLib.SList<weak E.SourceGroup> groups =
-          this._ab_sources.peek_groups ();
+      GLib.List<E.Source> books =
+          this._ab_sources.list_sources (SOURCE_EXTENSION_ADDRESS_BOOK);
 
       debug ("Address book source list changed.");
 
@@ -191,31 +196,28 @@ public class Folks.Backends.Eds.Backend : Folks.Backend
        * Edsf.PersonaStore for that. */
       var added_sources = new LinkedList<E.Source> ();
 
-      foreach (var g in groups)
+      foreach (E.Source s in books)
         {
-          foreach (E.Source s in g.peek_sources ())
+          /* If we've been told to use just a specific set of address
+           * books, we must ignore all others. */
+          var uid = s.get_uid ();
+          if (use_addressbooks.length > 0 &&
+              !(uid in use_addressbooks))
             {
-              /* If we've been told to use just a specific set of address
-               * books, we must ignore all others. */
-              if (use_addressbooks.length > 0 &&
-                  !(s.peek_name () in use_addressbooks))
-                {
-                  continue;
-                }
+              continue;
+            }
 
-              var uid = s.peek_uid ();
-              if (!this._persona_stores.has_key (uid))
-                {
-                  added_sources.add (s);
-                }
+          if (!this._persona_stores.has_key (uid))
+            {
+              added_sources.add (s);
             }
         }
 
       /* Actually apply the changes to our state. We can't do this any earlier
        * or we'll mess up the calculation of what's been added. */
-      foreach (var source in added_sources)
+      foreach (var s in added_sources)
         {
-          this._add_address_book (source);
+          this._add_address_book (s);
         }
     }
 
@@ -224,7 +226,7 @@ public class Folks.Backends.Eds.Backend : Folks.Backend
    */
   private void _add_address_book (E.Source s)
     {
-      string uid = s.peek_uid ();
+      string uid = s.get_uid ();
       if (this._persona_stores.has_key (uid))
         return;
 

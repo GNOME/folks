@@ -12,7 +12,9 @@ SUBDIRS += tracker
 endif
 
 if ENABLE_EDS
-SUBDIRS += eds
+# comment out eds tests until they are ported to eds api changes.
+# https://bugzilla.gnome.org/show_bug.cgi?id=675121
+#SUBDIRS += eds
 endif
 
 DIST_SUBDIRS = \

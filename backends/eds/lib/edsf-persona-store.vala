@@ -28,6 +28,11 @@ using GLib;
 
 extern const string BACKEND_NAME;
 
+/* The following function is needed in order to use the async SourceRegistry
+ * constructor. */
+[CCode (cname = "e_source_registry_new", cheader_filename = "libedataserver/libedataserver.h", finish_function = "e_source_registry_new_finish")]
+public extern static async E.SourceRegistry create_source_registry (GLib.Cancellable? cancellable = null) throws GLib.Error;
+
 /**
  * A persona store.
  * It will create {@link Persona}s for each contacts on the main addressbook.
@@ -41,7 +46,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
   private bool _is_quiescent = false;
   private E.BookClient? _addressbook = null; /* null before prepare() */
   private E.BookClientView? _ebookview = null; /* null before prepare() */
-  private E.SourceList? _source_list = null; /* null before prepare() */
+  private E.SourceRegistry? _source_registry = null; /* null before prepare() */
   private string _query_str;
 
   /* The timeout after which we consider a property change to have failed if we
@@ -220,7 +225,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
    */
   public PersonaStore (E.Source s)
     {
-      string eds_uid = s.peek_uid ();
+      string eds_uid = s.get_uid ();
       Object (id: eds_uid,
               display_name: eds_uid,
               source: s);
@@ -256,19 +261,19 @@ public class Edsf.PersonaStore : Folks.PersonaStore
 
           if (this._addressbook != null)
             {
-              ((!) this._addressbook).authenticate.disconnect (
-                  this._address_book_authenticate_cb);
               ((!) this._addressbook).notify["readonly"].disconnect (
                   this._address_book_notify_read_only_cb);
 
               this._addressbook = null;
             }
 
-          if (this._source_list != null)
+          if (this._source_registry != null)
             {
-              ((!) this._source_list).changed.disconnect (
-                  this._source_list_changed_cb);
-              this._source_list = null;
+              ((!) this._source_registry).source_removed.disconnect (
+                  this._source_registry_changed_cb);
+              ((!) this._source_registry).source_disabled.disconnect (
+                  this._source_registry_changed_cb);
+              this._source_registry = null;
             }
         }
       catch (GLib.Error e)
@@ -622,20 +627,20 @@ public class Edsf.PersonaStore : Folks.PersonaStore
               /* Listen for removal signals for the address book. There's no
                * need to check if we still exist in the list, as
                * addressbook.open() will fail if we don't. */
-              E.BookClient.get_sources (out this._source_list);
+              this._source_registry = yield create_source_registry ();
 
-              /* We know _source_list != null because otherwise
+              /* We know _source_registry != null because otherwise
                * E.BookClient.get_sources() would've thrown an error. */
-              ((!) this._source_list).changed.connect (
-                  this._source_list_changed_cb);
+              ((!) this._source_registry).source_removed.connect (
+                  this._source_registry_changed_cb);
+              ((!) this._source_registry).source_disabled.connect (
+                  this._source_registry_changed_cb);
 
               /* Connect to the address book. */
               this._addressbook = new E.BookClient (this.source);
 
               ((!) this._addressbook).notify["readonly"].connect (
                   this._address_book_notify_read_only_cb);
-              ((!) this._addressbook).authenticate.connect (
-                  this._address_book_authenticate_cb);
 
               yield this._open_address_book ();
               debug ("Successfully finished opening address book %p for " +
@@ -926,17 +931,6 @@ public class Edsf.PersonaStore : Folks.PersonaStore
               this.notify_property ("is-quiescent");
             }
         }
-    }
-
-  private bool _address_book_authenticate_cb (Client address_book,
-      void *credentials)
-    {
-      /* FIXME: Add authentication support. That's:
-       * https://bugzilla.gnome.org/show_bug.cgi?id=653339
-       *
-       * For the moment, we just reject the authentication request, rather than
-       * leave it hanging. */
-      return false;
     }
 
   /* Temporaries for _open_address_book(). See the complaint below. */
@@ -2197,12 +2191,15 @@ public class Edsf.PersonaStore : Folks.PersonaStore
    * can enable things like setting favourite status based on Android groups. */
   internal bool _is_google_contacts_address_book ()
     {
-      unowned SourceGroup? group = (SourceGroup?) this.source.peek_group ();
-      if (group != null)
+      if (this.source.has_extension (SOURCE_EXTENSION_ADDRESS_BOOK))
         {
-          var base_uri = ((!) group).peek_base_uri ();
-          /* base_uri should be google:// for Google Contacts address books */
-          if (base_uri.has_prefix ("google:"))
+          var extension = (E.SourceAddressBook)
+                          this._source_registry.find_extension (
+                            this.source, SOURCE_EXTENSION_ADDRESS_BOOK);
+
+          var backend_name = ((!) extension).get_backend_name ();
+          /* backend name should be google for Google Contacts address books */
+          if (backend_name.has_prefix ("google"))
             {
               return true;
             }
@@ -2211,25 +2208,17 @@ public class Edsf.PersonaStore : Folks.PersonaStore
       return false;
     }
 
-  private bool _is_in_source_list ()
+  private bool _is_in_source_registry ()
     {
       /* Should only ever be called from a callback from the source list itself,
        * so we can assert that the source list is non-null. */
-      assert (this._source_list != null);
+      assert (this._source_registry != null);
 
-      unowned GLib.SList<weak E.SourceGroup> groups =
-          ((!) this._source_list).peek_groups ();
-
-      foreach (var g in groups)
+      E.Source? needle = ((!) this._source_registry).ref_source (this.id);
+      if (needle != null && needle.has_extension (SOURCE_EXTENSION_ADDRESS_BOOK))
         {
-          foreach (var s in g.peek_sources ())
-            {
-              if (s.peek_uid () == this.id)
-                {
-                  /* We've found ourself. */
-                  return true;
-                }
-            }
+          /* We've found ourself. */
+          return true;
         }
 
       return false;
@@ -2238,11 +2227,11 @@ public class Edsf.PersonaStore : Folks.PersonaStore
   /* Detect removal of the address book. We can't do this in Eds.Backend because
    * it has no way to tell the PersonaStore that it's been removed without
    * uglifying the store's public API. */
-  private void _source_list_changed_cb (E.SourceList list)
+  private void _source_registry_changed_cb (E.Source list)
     {
       /* If we can't find our source, this persona store's address book has
        * been removed. */
-      if (this._is_in_source_list () == false)
+      if (this._is_in_source_registry () == false)
         {
           /* Marshal the personas from a Collection to a Set. */
           var removed_personas = new HashSet<Persona> ();
@@ -2272,12 +2261,15 @@ public class Edsf.PersonaStore : Folks.PersonaStore
        * but _addressbook should always be non-null when we're called. */
       assert (this._addressbook != null);
 
-      unowned SourceGroup? group = (SourceGroup?) this.source.peek_group ();
-      if (group != null)
+      if (this.source.has_extension (SOURCE_EXTENSION_ADDRESS_BOOK))
         {
-          var base_uri = ((!) group).peek_base_uri ();
+          var extension = (E.SourceAddressBook)
+                          this._source_registry.find_extension (
+                            this.source, SOURCE_EXTENSION_ADDRESS_BOOK);
+
+          var backend_name = ((!) extension).get_backend_name ();
           /* base_uri should be ldap:// for LDAP based address books */
-          if (base_uri.has_prefix ("ldap"))
+          if (backend_name.has_prefix ("ldap"))
             {
               this.trust_level = PersonaStoreTrust.PARTIAL;
               return;
@@ -2299,24 +2291,14 @@ public class Edsf.PersonaStore : Folks.PersonaStore
     {
       bool is_default = false;
 
-      try
+      /* By peeking at the default source instead of checking the value of
+       * the "default" property, we include EDS's fallback logic for the
+       * "system" address book */
+      var default_source = this._source_registry.ref_default_address_book ();
+      if (default_source != null &&
+          this.source.get_uid () == ((!) default_source).get_uid ())
         {
-          /* By peeking at the default source instead of checking the value of
-           * the "default" property, we include EDS's fallback logic for the
-           * "system" address book */
-          E.SourceList sources;
-          E.BookClient.get_sources (out sources);
-          var default_source = sources.peek_default_source ();
-          if (default_source != null &&
-              this.source.peek_uid () == ((!) default_source).peek_uid ())
-            {
-              is_default = true;
-            }
-        }
-      catch (GLib.Error e)
-        {
-          warning ("Failed to get the set of ESources while looking for a " +
-              "default address book: %s", e);
+          is_default = true;
         }
 
       if (is_default != this.is_user_set_default)
