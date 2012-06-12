@@ -11,6 +11,8 @@ SUBDIRS += libsocialweb
 endif
 
 if ENABLE_EDS
+# Comment out eds tests until they are ported to eds api changes.
+# https://bugzilla.gnome.org/show_bug.cgi?id=675121
 #SUBDIRS += eds
 endif
 
