@@ -101,24 +101,6 @@ fi
 
 AM_CONDITIONAL([ENABLE_EDS], [test "x$enable_eds_backend" = "xyes"])
 
-
-AC_ARG_ENABLE(zeitgeist,
-        AC_HELP_STRING([--enable-zeitgeist],
-                       [ build the Zeitgeist]),
-        enable_zeitgeist=$enableval,
-        enable_zeitgeist=no )
-
-AM_CONDITIONAL([ENABLE_ZEITGEIST], [test "x$enable_zeitgeist" = "xyes"])
-
-if test "x$enable_zeitgeist" = "xyes"; then
-        AC_DEFINE(HAVE_ZEITGEIST, [1],
-                  [Define as 1 if you have the Zeitgeist support])
-else
-        AC_DEFINE(HAVE_ZEITGEIST, [0],
-                  [Define as 1 if you have the Zeitgeist support])
-fi
-
-
 # Automatically check the dependencies for the libsocialweb backend
 SW_CLIENT_REQUIRED=0.25.20
 AC_ARG_ENABLE(libsocialweb-backend,
@@ -213,9 +195,7 @@ if test x$enable_eds_backend = xyes; then
         PKG_CHECK_MODULES([EDATASERVER], [libedataserver-1.2 >= $EDATASERVER_REQUIRED])
 fi
 
-if test x$enable_zeitgeist = xyes; then
-        PKG_CHECK_MODULES([ZEITGEIST], [zeitgeist-1.0 >= $ZEITGEIST_REQUIRED])
-fi
+PKG_CHECK_MODULES([ZEITGEIST], [zeitgeist-1.0 >= $ZEITGEIST_REQUIRED])
 
 #
 # Vala building options -- allows tarball builds without installing Vala
@@ -290,7 +270,8 @@ if test "x$enable_vala" = "xyes" ; then
 
         VALA_CHECK_PACKAGES([telepathy-glib
                              gio-2.0
-                             gee-1.0])
+                             gee-1.0
+                             zeitgeist-1.0])
 
         if test x$enable_tracker_backend = xyes; then
           VALA_CHECK_PACKAGES([tracker-sparql-$TRACKER_SPARQL_MAJOR])
@@ -299,11 +280,6 @@ if test "x$enable_vala" = "xyes" ; then
         if test x$enable_eds_backend = xyes; then
           VALA_CHECK_PACKAGES([libebook-1.2 libedataserver-1.2 libxml-2.0])
         fi
-
-        if test x$enable_zeitgeist = xyes; then
-          VALA_CHECK_PACKAGES([zeitgeist-1.0])
-        fi
-
 fi
 
 # this will set HAVE_INTROSPECTION
@@ -612,6 +588,5 @@ Configure summary:
         Tracker backend.............:  ${enable_tracker_backend}
         Libsocialweb backend........:  ${have_libsocialweb_backend}
         E-D-S backend...............:  ${enable_eds_backend}
-        Zeitgeist support...........:  ${enable_zeitgeist}
 
 "
