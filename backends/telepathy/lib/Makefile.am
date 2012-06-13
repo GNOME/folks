@@ -122,6 +122,7 @@ libfolks_telepathy_la_VALAFLAGS = \
 	--pkg gio-2.0 \
 	--pkg gee-1.0 \
 	--pkg telepathy-glib \
+	--pkg zeitgeist-1.0 \
 	--includedir folks \
 	--vapi folks-telepathy.vapi \
 	-H folks/folks-telepathy.h \
@@ -134,6 +135,7 @@ libfolks_telepathy_la_CFLAGS = \
 	$(GLIB_CFLAGS) \
 	$(GEE_CFLAGS) \
 	$(TP_GLIB_CFLAGS) \
+	$(ZEITGEIST_CFLAGS) \
 	$(NULL)
 
 libfolks_telepathy_la_LIBADD = \
@@ -142,14 +144,10 @@ libfolks_telepathy_la_LIBADD = \
 	$(GLIB_LIBS) \
 	$(GEE_LIBS) \
 	$(TP_GLIB_LIBS) \
+	$(ZEITGEIST_LIBS) \
 	$(top_builddir)/folks/libfolks.la \
 	$(top_builddir)/folks/libfolks-internal.la \
 	$(NULL)
-
-libfolks_telepathy_la_VALAFLAGS += --pkg zeitgeist-1.0
-libfolks_telepathy_la_VALAFLAGS += --define=HAVE_ZEITGEIST
-libfolks_telepathy_la_CFLAGS += $(ZEITGEIST_CFLAGS)
-libfolks_telepathy_la_LIBADD += $(ZEITGEIST_LIBS)
 
 # The quoting here is unnecessary but harmless, and has the useful side-effect
 # that vim quickfix mode (:make) doesn't interpret the libtool --mode=link

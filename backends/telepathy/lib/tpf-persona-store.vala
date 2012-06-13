@@ -24,9 +24,7 @@ using GLib;
 using Gee;
 using TelepathyGLib;
 using Folks;
-#if HAVE_ZEITGEIST
 using Zeitgeist;
-#endif
 extern const string G_LOG_DOMAIN;
 extern const string BACKEND_NAME;
 
@@ -87,10 +85,8 @@ public class Tpf.PersonaStore : Folks.PersonaStore
 
   private Account _account;
 
-#if HAVE_ZEITGEIST
   private Zeitgeist.Log? _log= null;
   private Zeitgeist.Monitor? _monitor = null;
-#endif
 
   /**
    * The Telepathy account this store is based upon.
@@ -1029,9 +1025,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
           new GLib.GenericArray<TelepathyGLib.Contact> ());
 
       this._got_initial_members = true;
-#if HAVE_ZEITGEIST
       this._populate_counters ();
-#endif
       this._notify_if_is_quiescent ();
     }
 
@@ -1540,11 +1534,10 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       return store;
     }
 
-#if HAVE_ZEITGEIST
-  private string? _get_iid_from_event_metadata (string? uri) 
+  private string? _get_iid_from_event_metadata (string? uri)
     {
       /* Format a proper id represting a persona in the store.
-       * Zeitgeist uses x-telepathy-identifier as a prefix for telepathy, which 
+       * Zeitgeist uses x-telepathy-identifier as a prefix for telepathy, which
        * is stored as the uri of a subject of an event. */
       if (uri == null)
         {
@@ -1553,7 +1546,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       var new_uri = uri.replace ("x-telepathy-identifier:", "");
       return this.account.protocol + ":" + new_uri;
     }
-  
+
   private void _increase_persona_counter (string? id, string? interaction_type, Event event)
     {
       /* Check if the persona id and interaction is valid. If so increase the
@@ -1610,7 +1603,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
 
       /* Get all events for this account from Zeitgeist and increase the
        * the counters of the personas */
-      try 
+      try
         {
           PtrArray events = this._get_zeitgeist_event_templates ();
           var results = yield this._log.find_events (new TimeRange.anytime (),
@@ -1641,7 +1634,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
           debug ("Failed to fetch events from Zeitgeist");
         }
 
-      /* Prepare a monitor and install for this account to populate persona 
+      /* Prepare a monitor and install for this account to populate persona
        * counters upon interaction changes.*/
       if (this._monitor == null)
         {
@@ -1654,5 +1647,4 @@ public class Tpf.PersonaStore : Folks.PersonaStore
 
       this._notify_if_is_quiescent ();
     }
-#endif
 }
