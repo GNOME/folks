@@ -22,7 +22,6 @@ DIST_SUBDIRS = \
 	telepathy \
 	libsocialweb \
 	tracker \
-	eds \
 	$(NULL)
 
 noinst_LTLIBRARIES = libfolks-test.la

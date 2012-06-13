@@ -33,7 +33,6 @@ DIST_SUBDIRS = \
     telepathy \
     libsocialweb \
     tracker \
-    eds \
     $(NULL)
 
 TESTS_ENVIRONMENT = \
