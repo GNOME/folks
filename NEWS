@@ -3,6 +3,7 @@ Overview of changes from libfolks 0.7.0 to libfolks 0.7.1
 
 Dependencies:
 • telepathy-glib ≥ 0.17.5
+• libzeitgeist ≥ 0.3.14
 • GLib ≥ 2.26.0
 • GConf dependency dropped
 • intltool ≥ 0.50.0
@@ -24,7 +25,6 @@ API changes:
     - call_interaction_count
     - last_im_interaction_timestamp
     - last_call_interaction_timestamp
-• Add PresenceDetails.get_default_message_from_type()
 • Add InteractionDetails interface to report interactions with Personas and
   Individuals
 
