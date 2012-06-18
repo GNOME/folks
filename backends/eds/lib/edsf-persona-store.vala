@@ -237,7 +237,6 @@ public class Edsf.PersonaStore : Folks.PersonaStore
       this._personas_ro = this._personas.read_only_view;
       this._query_str = "(contains \"x-evolution-any-field\" \"\")";
       this.source.changed.connect (this._source_changed_cb);
-      this._notify_if_default ();
     }
 
   ~PersonaStore ()
@@ -634,7 +633,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
               this._source_registry = yield create_source_registry ();
 
               /* We know _source_registry != null because otherwise
-               * E.BookClient.get_sources() would've thrown an error. */
+               * create_source_registry() would've thrown an error. */
               ((!) this._source_registry).source_removed.connect (
                   this._source_registry_changed_cb);
               ((!) this._source_registry).source_disabled.connect (
@@ -650,6 +649,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
               debug ("Successfully finished opening address book %p for " +
                   "persona store ‘%s’ (%p).", this._addressbook, this.id, this);
 
+              this._notify_if_default ();
               this._update_trust_level ();
             }
           catch (GLib.Error e1)
