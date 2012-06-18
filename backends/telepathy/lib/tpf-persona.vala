@@ -1093,6 +1093,9 @@ public class Tpf.Persona : Folks.Persona,
       // Make the persona appear offline
       this.presence_type = PresenceType.OFFLINE;
       this.presence_message = "";
+      this.presence_status = "offline";
+
+      this._writeable_properties = {};
     }
 
   ~Persona ()
