@@ -164,6 +164,11 @@ public class Folks.Backends.Tp.Backend : Folks.Backend
 
   private void _account_enabled_cb (Account account)
     {
+      if (!account.enabled)
+        {
+          return;
+        }
+
       var store = Tpf.PersonaStore.dup_for_account (account);
       store.removed.connect (this._store_removed_cb);
 
