@@ -318,7 +318,7 @@ public class Folks.IndividualAggregator : Object
           if (BuildConf.HAVE_EDS)
             {
               this._configured_primary_store_type_id = "eds";
-              this._configured_primary_store_id = "system";
+              this._configured_primary_store_id = "system-address-book";
             }
           else
             {

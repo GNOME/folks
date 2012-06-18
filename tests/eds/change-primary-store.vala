@@ -36,7 +36,7 @@ public class ChangePrimaryStoreTests : Folks.TestCase
       base ("ChangePrimaryStoreTests");
 
       this._eds_backend = new EdsTest.Backend ();
-      this._eds_backend.address_book_uri = "system";
+      this._eds_backend.address_book_uri = "system-address-book";
       this._eds_backend_other = new EdsTest.Backend ();
       this._eds_backend_other.address_book_uri = "other";
 
