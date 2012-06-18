@@ -39,6 +39,8 @@ private class Folks.Inspect.Utils
           typeof (string), Utils.transform_persona_store_to_string);
       Value.register_transform_func (typeof (string[]), typeof (string),
           Utils.transform_string_array_to_string);
+      Value.register_transform_func (typeof (DateTime), typeof (string),
+          Utils.transform_date_time_to_string);
     }
 
   private static void transform_object_to_string (Value src,
@@ -71,6 +73,18 @@ private class Folks.Inspect.Utils
           first = false;
         }
       output += " }";
+      dest = (owned) output;
+    }
+
+  private static void transform_date_time_to_string (Value src, out Value dest)
+    {
+      unowned DateTime? date_time = (DateTime?) src;
+      string output = "(null)";
+      if (date_time != null)
+        {
+          output = ((!) date_time).format ("%FT%T%z");
+        }
+
       dest = (owned) output;
     }
 
