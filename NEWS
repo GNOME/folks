@@ -3,7 +3,8 @@ Overview of changes from libfolks 0.7.1 to libfolks 0.7.2
 
 Dependencies:
 
-Bugs Fixed:
+Bugs fixed:
+• Bug 677166 — Salut personas survive disconnection
 
 API changes:
 

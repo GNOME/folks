@@ -460,24 +460,35 @@ public class Tpf.PersonaStore : Folks.PersonaStore
               this._account_manager.invalidated.connect (
                   this._account_manager_invalidated_cb);
 
+              /* Note: For the three signal handlers below, we do *not* need to
+               * store personas to the cache before removing the store, as
+               * _remove_store() deletes the cache file. */
               this._account_manager.account_removed.connect ((a) =>
                 {
                   if (this.account == a)
                     {
+                      debug ("Account %p (‘%s’) removed.", a, a.display_name);
                       this._remove_store ();
                     }
                 });
               this._account_manager.account_validity_changed.connect (
                   (a, valid) =>
                     {
-                      debug ("Account validity changed for %p (‘%s’) to %s.",
-                          a, a.display_name, valid ? "true" : "false");
-
                       if (!valid && this.account == a)
                         {
+                          debug ("Account %p (‘%s’) invalid.", a,
+                              a.display_name);
                           this._remove_store ();
                         }
                     });
+              this._account_manager.account_disabled.connect ((a) =>
+                {
+                  if (this.account == a)
+                    {
+                      debug ("Account %p (‘%s’) disabled.", a, a.display_name);
+                      this._remove_store ();
+                    }
+                });
 
               this._favourite_ids.clear ();
               this._logger = new Logger (this.id);
@@ -633,27 +644,24 @@ public class Tpf.PersonaStore : Folks.PersonaStore
               var old_personas = this._persona_set;
               this._reset ();
 
-              this._store_cache.begin (old_personas, (o, r) =>
+              /* Only store/load the cache if the account is enabled and valid;
+               * otherwise, the PersonaStore will get removed and the cache
+               * deleted later anyway. */
+              if (this.account.enabled && this.account.valid)
                 {
-                  this._store_cache.end (r);
-
-                  this._load_cache.begin (old_personas, (o2, r2) =>
+                  this._store_cache.begin (old_personas, (o, r) =>
                     {
-                      this._load_cache.end (r2);
-                    });
-                });
-            }
+                      this._store_cache.end (r);
 
-          /* If the account was disabled, remove it. We do this here rather than
-           * in a handler for the AccountManager::account-disabled signal so
-           * that we can wait until the personas have been stored to the cache,
-           * which only happens once the account is disconnected (above). We can
-           * do this because it's guaranteed that the account will be
-           * disconnected after being disabled (if it was connected to begin
-           * with). */
-          if (this.account.enabled == false)
-            {
-              this._remove_store ();
+                      if (this.account.enabled && this.account.valid)
+                        {
+                          this._load_cache.begin (old_personas, (o2, r2) =>
+                            {
+                              this._load_cache.end (r2);
+                            });
+                        }
+                    });
+                }
             }
 
           /* If the persona store starts offline, we've reached a quiescent
