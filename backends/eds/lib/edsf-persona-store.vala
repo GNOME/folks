@@ -2191,24 +2191,28 @@ public class Edsf.PersonaStore : Folks.PersonaStore
           error_in.message);
     }
 
+  private bool _backend_name_matches (string backend_name)
+    {
+      if (this.source.has_extension (SOURCE_EXTENSION_ADDRESS_BOOK))
+        {
+          unowned E.SourceAddressBook extension = (E.SourceAddressBook)
+            this.source.get_extension (SOURCE_EXTENSION_ADDRESS_BOOK);
+
+          return (extension.get_backend_name () == backend_name);
+        }
+
+      return false;
+    }
+
   /* Try and work out whether this address book is Google Contacts. If so, we
    * can enable things like setting favourite status based on Android groups. */
   internal bool _is_google_contacts_address_book ()
     {
-      if (this.source.has_extension (SOURCE_EXTENSION_ADDRESS_BOOK))
-        {
-          var extension = (E.SourceAddressBook)
-            this.source.get_extension (SOURCE_EXTENSION_ADDRESS_BOOK);
+      /* Should only ever be called from property getters/setters. */
+      assert (this._source_registry != null);
 
-          var backend_name = ((!) extension).get_backend_name ();
-          /* backend name should be google for Google Contacts address books */
-          if (backend_name.has_prefix ("google"))
-            {
-              return true;
-            }
-        }
-
-      return false;
+      /* backend name should be ‘google’ for Google Contacts address books */
+      return this._backend_name_matches ("google");
     }
 
   private bool _is_in_source_registry ()
@@ -2262,21 +2266,14 @@ public class Edsf.PersonaStore : Folks.PersonaStore
     {
       /* We may be called before prepare() has finished (and it may then fail),
        * but _addressbook should always be non-null when we're called. */
+      assert (this._source_registry != null);
       assert (this._addressbook != null);
 
-      if (this._source_registry != null &&
-          this.source.has_extension (SOURCE_EXTENSION_ADDRESS_BOOK))
+      /* backend_name should be ‘ldap’ for LDAP based address books */
+      if (this._backend_name_matches ("ldap"))
         {
-          var extension = (E.SourceAddressBook)
-            this.source.get_extension (SOURCE_EXTENSION_ADDRESS_BOOK);
-
-          var backend_name = ((!) extension).get_backend_name ();
-          /* base_uri should be ldap:// for LDAP based address books */
-          if (backend_name.has_prefix ("ldap"))
-            {
-              this.trust_level = PersonaStoreTrust.PARTIAL;
-              return;
-            }
+          this.trust_level = PersonaStoreTrust.PARTIAL;
+          return;
         }
 
       if (((!) this._addressbook).readonly)
