@@ -36,7 +36,7 @@ public class EdsTest.Backend
   private E.BookClient _addressbook;
   private GLib.List<string> _e_contacts;
   private GLib.List<Gee.HashMap<string, Value?>> _contacts;
-  E.SourceGroup _source_group;
+  E.SourceRegistry _source_registry;
   E.Source _source;
 
   public string address_book_uri
@@ -46,7 +46,7 @@ public class EdsTest.Backend
 
   public string address_book_uid
     {
-      get { return this._addressbook.get_source ().peek_uid (); }
+      get { return this._addressbook.get_source ().get_uid (); }
     }
 
   public Backend ()
@@ -107,7 +107,7 @@ public class EdsTest.Backend
           this._addressbook = new BookClient (this._source);
           this._addressbook.open_sync (false, null);
           this._addressbook_name =
-            this._addressbook.get_source ().peek_name ();
+            this._source.get_display_name ();
           Environment.set_variable ("FOLKS_BACKEND_EDS_USE_ADDRESS_BOOKS",
                                     this._addressbook_name, true);
         }
@@ -119,41 +119,24 @@ public class EdsTest.Backend
 
   public void set_as_default ()
     {
-      try
-        {
-          this._addressbook.set_default ();
-        }
-      catch (GLib.Error e)
-        {
-          GLib.warning ("Unable to set address book as default: %s",
-              e.message);
-        }
+      this._source_registry.set_default_address_book(this._source);
     }
 
   private void _prepare_source (bool is_default)
     {
-      var base_uri = "local:";
-      this._source_group = new E.SourceGroup ("Test", base_uri);
+      try
+        {
+          this._source_registry = new SourceRegistry.sync (null);
+        }
+      catch (GLib.Error e)
+        {
+          GLib.critical (e.message);
+        }
 
-      this._source = new E.Source ("Test", this.address_book_uri);
+      this._source = this._source_registry.ref_source("test");
 
       if (is_default)
-        this._source.set_property ("default", "true");
-
-      if (this._source_group.add_source (this._source, -1))
-        {
-          try
-            {
-              SourceList sl;
-              BookClient.get_sources (out sl);
-              sl.add_group (this._source_group, 0);
-              sl.sync ();
-            }
-          catch (GLib.Error e)
-            {
-              // XXX
-            }
-        }
+        set_as_default();
     }
 
   public async void commit_contacts_to_addressbook ()

@@ -11,10 +11,15 @@
 
 eds_tmpdir=$(mktemp -d)
 
+cur_dir=`dirname $0`
+
 eds_init_settings () {
     export XDG_DATA_HOME=$eds_tmpdir/.local
     export XDG_CACHE_HOME=$eds_tmpdir/.cache
     export XDG_CONFIG_HOME=$eds_tmpdir/.config
+    mkdir -p $XDG_CONFIG_HOME/evolution/sources
+    echo "copying test.source from $cur_dir to temp folder"
+    cp $cur_dir/test.source $XDG_CONFIG_HOME/evolution/sources/
 }
 
 # This should be called on INT TERM and EXIT
