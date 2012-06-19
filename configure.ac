@@ -550,6 +550,7 @@ AC_CONFIG_FILES([
     tests/Makefile
     tests/data/Makefile
     tests/data/gconf.path
+    tests/eds/Makefile
     tests/folks/Makefile
     tests/key-file/Makefile
     tests/libsocialweb/Makefile
@@ -557,6 +558,7 @@ AC_CONFIG_FILES([
     tests/tracker/Makefile
     tests/lib/Makefile
     tests/lib/folks-test-uninstalled.pc
+    tests/lib/eds/Makefile
     tests/lib/key-file/Makefile
     tests/lib/libsocialweb/Makefile
     tests/lib/libsocialweb/session.conf
