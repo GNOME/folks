@@ -379,15 +379,17 @@ public class Edsf.PersonaStore : Folks.PersonaStore
             {
               Set<PhoneFieldDetails> phone_numbers =
                 (Set<PhoneFieldDetails>) v.get_object ();
-              yield this._set_contact_attributes_string (contact,
-                  phone_numbers, "TEL",
-                  E.ContactField.TEL);
+              if (!phone_numbers.is_empty)
+                yield this._set_contact_attributes_string (contact,
+                    phone_numbers, "TEL",
+                    E.ContactField.TEL);
             }
           else if (k == Folks.PersonaStore.detail_key (
                 PersonaDetail.POSTAL_ADDRESSES))
             {
               Set<PostalAddressFieldDetails> postal_fds =
                 (Set<PostalAddressFieldDetails>) v.get_object ();
+              if (!postal_fds.is_empty)
                 yield this._set_contact_postal_addresses (contact,
                     postal_fds);
             }
@@ -424,7 +426,8 @@ public class Edsf.PersonaStore : Folks.PersonaStore
           else if (k == Folks.PersonaStore.detail_key (PersonaDetail.URLS))
             {
               Set<UrlFieldDetails> urls = (Set<UrlFieldDetails>) v.get_object ();
-              yield this._set_contact_urls (contact, urls);
+              if (!urls.is_empty)
+                yield this._set_contact_urls (contact, urls);
             }
           else if (k == Folks.PersonaStore.detail_key (PersonaDetail.BIRTHDAY))
             {
@@ -435,7 +438,8 @@ public class Edsf.PersonaStore : Folks.PersonaStore
             {
               Set<RoleFieldDetails> roles =
                 (Set<RoleFieldDetails>) v.get_object ();
-              yield this._set_contact_roles (contact, roles);
+              if (!roles.is_empty)
+                yield this._set_contact_roles (contact, roles);
             }
           else if (k == Folks.PersonaStore.detail_key (
                   PersonaDetail.IS_FAVOURITE))
@@ -2194,8 +2198,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
       if (this.source.has_extension (SOURCE_EXTENSION_ADDRESS_BOOK))
         {
           var extension = (E.SourceAddressBook)
-                          this._source_registry.find_extension (
-                            this.source, SOURCE_EXTENSION_ADDRESS_BOOK);
+            this.source.get_extension (SOURCE_EXTENSION_ADDRESS_BOOK);
 
           var backend_name = ((!) extension).get_backend_name ();
           /* backend name should be google for Google Contacts address books */
@@ -2261,11 +2264,11 @@ public class Edsf.PersonaStore : Folks.PersonaStore
        * but _addressbook should always be non-null when we're called. */
       assert (this._addressbook != null);
 
-      if (this.source.has_extension (SOURCE_EXTENSION_ADDRESS_BOOK))
+      if (this._source_registry != null &&
+          this.source.has_extension (SOURCE_EXTENSION_ADDRESS_BOOK))
         {
           var extension = (E.SourceAddressBook)
-                          this._source_registry.find_extension (
-                            this.source, SOURCE_EXTENSION_ADDRESS_BOOK);
+            this.source.get_extension (SOURCE_EXTENSION_ADDRESS_BOOK);
 
           var backend_name = ((!) extension).get_backend_name ();
           /* base_uri should be ldap:// for LDAP based address books */
@@ -2294,16 +2297,19 @@ public class Edsf.PersonaStore : Folks.PersonaStore
       /* By peeking at the default source instead of checking the value of
        * the "default" property, we include EDS's fallback logic for the
        * "system" address book */
-      var default_source = this._source_registry.ref_default_address_book ();
-      if (default_source != null &&
-          this.source.get_uid () == ((!) default_source).get_uid ())
+      if (this._source_registry != null)
         {
-          is_default = true;
-        }
+          var default_source = this._source_registry.ref_default_address_book ();
+          if (default_source != null &&
+              this.source.get_uid () == ((!) default_source).get_uid ())
+            {
+              is_default = true;
+            }
 
-      if (is_default != this.is_user_set_default)
-        {
-          this.is_user_set_default = is_default;
+          if (is_default != this.is_user_set_default)
+            {
+              this.is_user_set_default = is_default;
+            }
         }
     }
 }
