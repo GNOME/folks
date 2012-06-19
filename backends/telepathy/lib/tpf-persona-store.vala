@@ -77,7 +77,6 @@ public class Tpf.PersonaStore : Folks.PersonaStore
   private Debug _debug;
   private PersonaStoreCache _cache;
   private Cancellable? _load_cache_cancellable = null;
-  private bool _cached = false;
 
   /* marshalled from ContactInfo.SupportedFields */
   internal HashSet<string> _supported_fields;
@@ -845,7 +844,6 @@ public class Tpf.PersonaStore : Folks.PersonaStore
         }
 
       this._reset ();
-      this._cached = true;
 
       this._persona_set = new HashSet<Persona> ();
       if (cached_personas != null)
@@ -907,7 +905,6 @@ public class Tpf.PersonaStore : Folks.PersonaStore
           GroupDetails.ChangeReason.NONE);
 
       this._reset ();
-      this._cached = false;
     }
 
   private bool _add_persona (Persona p)
