@@ -32,17 +32,13 @@ errordomain EdsTest.BackendSetupError
 
 public class EdsTest.Backend
 {
+  private string _source_name;
   private string _addressbook_name;
   private E.BookClient _addressbook;
   private GLib.List<string> _e_contacts;
   private GLib.List<Gee.HashMap<string, Value?>> _contacts;
   E.SourceRegistry _source_registry;
   E.Source _source;
-
-  public string address_book_uri
-    {
-      get; set; default = "local://test";
-    }
 
   public string address_book_uid
     {
@@ -99,15 +95,16 @@ public class EdsTest.Backend
     }
 
   /* Create a temporary addressbook */
-  public void set_up (bool source_is_default = false)
+  public void set_up (bool source_is_default = false, string name = "test")
     {
       try
         {
+          this._source_name = name;
           this._prepare_source (source_is_default);
           this._addressbook = new BookClient (this._source);
           this._addressbook.open_sync (false, null);
           this._addressbook_name =
-            this._source.get_display_name ();
+            this._addressbook.get_source().get_uid ();
           Environment.set_variable ("FOLKS_BACKEND_EDS_USE_ADDRESS_BOOKS",
                                     this._addressbook_name, true);
         }
@@ -133,7 +130,7 @@ public class EdsTest.Backend
           GLib.critical (e.message);
         }
 
-      this._source = this._source_registry.ref_source("test");
+      this._source = this._source_registry.ref_source(this._source_name);
 
       if (is_default)
         set_as_default();

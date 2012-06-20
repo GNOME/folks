@@ -47,10 +47,9 @@ public class LinkPersonasDiffStoresTests : Folks.TestCase
     {
       this._eds_backend = new EdsTest.Backend ();
       this._eds_backend_other = new EdsTest.Backend ();
-      this._eds_backend_other.address_book_uri = "local://other";
 
       this._eds_backend.set_up ();
-      this._eds_backend_other.set_up ();
+      this._eds_backend_other.set_up (false, "other");
 
       /* We configure eds as the primary store */
       var config_val = "eds:%s".printf (this._eds_backend.address_book_uid);
