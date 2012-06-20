@@ -1,0 +1,6 @@
+[Data Source]
+DisplayName=Other Test Address Book
+Parent=local-stub
+
+[Address Book]
+BackendName=local
