@@ -262,22 +262,24 @@ public class EdsTest.Backend
       Environment.set_variable ("FOLKS_BACKEND_EDS_USE_ADDRESS_BOOKS",
           "", true);
 
-      try
+        this._addressbook.remove.begin (null, (o, r) =>
         {
-          var ret = this._addressbook.remove_sync (null);
-          if (ret == false)
+          try
+          {
+            var ret = this._addressbook.remove.end (r);
+            if (ret == false)
             {
               GLib.warning ("remove() addressbook returned false on %s\n",
-                                  this._addressbook_name);
+              this._addressbook_name);
             }
-
-          this._addressbook = null;
-        }
-      catch (GLib.Error e)
-        {
-          GLib.warning ("Unable to remove addressbook %s because: %s\n",
-                              this._addressbook_name, e.message);
-        }
+            this._addressbook = null;
+          }
+          catch (GLib.Error e)
+          {
+            GLib.warning ("Unable to remove addressbook %s because: %s\n",
+            this._addressbook_name, e.message);
+          }
+          });
     }
 
   private Gee.HashMap<string, string> _parse_addrs (string addr_s)
