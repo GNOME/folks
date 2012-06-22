@@ -341,6 +341,9 @@ public class Tpf.Persona : Folks.Persona,
 
       this._is_favourite = is_favourite;
       this.notify_property ("is-favourite");
+
+      /* Mark the cache as needing to be updated. */
+      ((Tpf.PersonaStore) this.store)._set_cache_needs_update ();
     }
 
   private HashSet<EmailFieldDetails> _email_addresses =
@@ -522,6 +525,9 @@ public class Tpf.Persona : Folks.Persona,
       if (changed == true)
         {
           this.notify_property ("groups");
+
+          /* Mark the cache as needing to be updated. */
+          ((Tpf.PersonaStore) this.store)._set_cache_needs_update ();
         }
     }
 
@@ -742,6 +748,9 @@ public class Tpf.Persona : Folks.Persona,
               {
                 this._alias = this.contact.alias;
                 this.notify_property ("alias");
+
+                /* Mark the cache as needing to be updated. */
+                ((Tpf.PersonaStore) this.store)._set_cache_needs_update ();
               }
           });
 
@@ -842,6 +851,7 @@ public class Tpf.Persona : Folks.Persona,
 
   private void _contact_notify_contact_info ()
     {
+      var changed = false;
       var new_birthday_str = "";
       var new_full_name = "";
       var new_email_addresses = new HashSet<EmailFieldDetails> (
@@ -918,6 +928,7 @@ public class Tpf.Persona : Folks.Persona,
                 {
                   this._birthday = d.to_utc ();
                   this.notify_property ("birthday");
+                  changed = true;
                 }
             }
           else
@@ -932,6 +943,7 @@ public class Tpf.Persona : Folks.Persona,
             {
               this._birthday = null;
               this.notify_property ("birthday");
+              changed = true;
             }
         }
 
@@ -941,12 +953,14 @@ public class Tpf.Persona : Folks.Persona,
           this._email_addresses = new_email_addresses;
           this._email_addresses_ro = new_email_addresses.read_only_view;
           this.notify_property ("email-addresses");
+          changed = true;
         }
 
       if (new_full_name != this._full_name)
         {
           this._full_name = new_full_name;
           this.notify_property ("full-name");
+          changed = true;
         }
 
       if (!Folks.Internal.equal_sets<PhoneFieldDetails> (new_phone_numbers,
@@ -955,6 +969,7 @@ public class Tpf.Persona : Folks.Persona,
           this._phone_numbers = new_phone_numbers;
           this._phone_numbers_ro = new_phone_numbers.read_only_view;
           this.notify_property ("phone-numbers");
+          changed = true;
         }
 
       if (!Folks.Internal.equal_sets<UrlFieldDetails> (new_urls, this._urls))
@@ -962,6 +977,13 @@ public class Tpf.Persona : Folks.Persona,
           this._urls = new_urls;
           this._urls_ro = new_urls.read_only_view;
           this.notify_property ("urls");
+          changed = true;
+        }
+
+      if (changed == true)
+        {
+          /* Mark the cache as needing to be updated. */
+          ((Tpf.PersonaStore) this.store)._set_cache_needs_update ();
         }
     }
 
@@ -1148,6 +1170,8 @@ public class Tpf.Persona : Folks.Persona,
         {
           this._avatar = (LoadableIcon) icon;
           this.notify_property ("avatar");
+          /* Mark the persona cache as needing to be updated. */
+          ((Tpf.PersonaStore) this.store)._set_cache_needs_update ();
         }
     }
 

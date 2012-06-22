@@ -565,6 +565,49 @@ public class Folks.IndividualAggregator : Object
     }
 
   /**
+   * Clean up and release resources used by the aggregator.
+   *
+   * This will disconnect the aggregator cleanly from any resources it or its
+   * persona stores are using. It is recommended to call this method before
+   * finalising the individual aggregator, but calling it is not required. If
+   * this method is not called then, for example, unsaved changes in backends
+   * may not be flushed.
+   *
+   * Concurrent calls to this function from different threads will block until
+   * preparation has completed. However, concurrent calls to this function from
+   * a single thread might not, i.e. the first call will block but subsequent
+   * calls might return before the first one. (Though they will be safe in every
+   * other respect.)
+   *
+   * @since UNRELEASED
+   * @throws GLib.Error if unpreparing the backend-specific services failed —
+   * this will be a backend-specific error
+   */
+  public async void unprepare () throws GLib.Error
+    {
+      lock (this._is_prepared)
+        {
+          if (!this._is_prepared || this._prepare_pending)
+            {
+              return;
+            }
+
+          try
+            {
+              /* Flush any PersonaStores which need it. */
+              foreach (var p in this._stores.values)
+                {
+                  yield p.flush ();
+                }
+            }
+          finally
+            {
+              this._prepare_pending = false;
+            }
+        }
+    }
+
+  /**
    * Get all matches for a given {@link Individual}.
    *
    * @param matchee the individual to find matches for

@@ -77,6 +77,10 @@ public class Tpf.PersonaStore : Folks.PersonaStore
   private Debug _debug;
   private PersonaStoreCache _cache;
   private Cancellable? _load_cache_cancellable = null;
+  /* Whether data in memory is dirty and needs flushing to the cache at some
+   * point. For example, this will be true if a contact has updated their avatar
+   * while we've been online. */
+  private bool _cache_needs_update = false;
 
   /* marshalled from ContactInfo.SupportedFields */
   internal HashSet<string> _supported_fields;
@@ -378,6 +382,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       this._personas = new HashMap<string, Persona> ();
       this._personas_ro = this._personas.read_only_view;
       this._persona_set = new HashSet<Persona> ();
+      this._cache_needs_update = false;
 
       if (this._conn != null)
         {
@@ -657,26 +662,26 @@ public class Tpf.PersonaStore : Folks.PersonaStore
               /* Call reset immediately, otherwise TpConnection's invalidation
                * will cause all contacts to weak notify. See bug #675141 */
               var old_personas = this._persona_set;
+              var old_cache_needs_update = this._cache_needs_update;
               this._reset ();
 
-              /* Only store/load the cache if the account is enabled and valid;
-               * otherwise, the PersonaStore will get removed and the cache
-               * deleted later anyway. */
-              if (this.account.enabled && this.account.valid)
+              if (old_cache_needs_update)
                 {
-                  this._store_cache.begin (old_personas, (o, r) =>
-                    {
-                      this._store_cache.end (r);
-
-                      if (this.account.enabled && this.account.valid)
-                        {
-                          this._load_cache.begin (old_personas, (o2, r2) =>
-                            {
-                              this._load_cache.end (r2);
-                            });
-                        }
-                    });
+                  this._set_cache_needs_update ();
                 }
+
+              this._store_cache.begin (old_personas, (o, r) =>
+                {
+                  this._store_cache.end (r);
+
+                  if (this.account.enabled && this.account.valid)
+                    {
+                      this._load_cache.begin (old_personas, (o2, r2) =>
+                        {
+                          this._load_cache.end (r2);
+                        });
+                    }
+                });
             }
 
           /* If the persona store starts offline, we've reached a quiescent
@@ -896,15 +901,52 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       this.notify_property ("always-writeable-properties");
     }
 
+  public override async void flush ()
+    {
+      debug ("Flushing Tpf.PersonaStore %p (‘%s’).", this, this.id);
+
+      /* Store the cache if it needs an update. */
+      yield this._store_cache (this._persona_set);
+    }
+
+  /**
+   * Called when a contact property is set which is not accessible when either
+   * the contact is offline or we're offline. For example, a contact's avatar.
+   * This will cause the cache to be stored when the PersonaStore is destroyed.
+   */
+  internal void _set_cache_needs_update ()
+    {
+      debug ("Setting cache as needing an update for Tpf.PersonaStore " +
+          "%p (‘%s’).", this, this.id);
+      this._cache_needs_update = true;
+    }
+
   /**
    * When we're about to disconnect, store the current set of personas to the
    * cache file so that we can access them once offline.
    */
   private async void _store_cache (HashSet<Persona> old_personas)
     {
+      /* Only store/load the cache if the account is enabled and valid;
+       * otherwise, the PersonaStore will get removed and the cache
+       * deleted later anyway. */
+      if (!this.account.enabled || !this.account.valid)
+        {
+          debug ("Skipping storing cache for Tpf.PersonaStore %p (‘%s’) as " +
+              "its TpAccount is disabled or invalid.", this, this.id);
+          return;
+        }
+      else if (this._cache_needs_update == false)
+        {
+          debug ("Skipping storing cache for Tpf.PersonaStore %p (‘%s’) as " +
+              "it doesn’t need an update.", this, this.id);
+          return;
+        }
+
       debug ("Storing cache for Tpf.PersonaStore %p ('%s').", this, this.id);
 
       yield this._cache.store_objects (old_personas);
+      this._cache_needs_update = false;
     }
 
   /**
