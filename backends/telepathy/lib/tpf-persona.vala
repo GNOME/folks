@@ -1092,9 +1092,14 @@ public class Tpf.Persona : Folks.Persona,
       this._alias = alias;
       this._is_favourite = is_favourite;
       this.is_in_contact_list = is_in_contact_list;
-      this._avatar = avatar;
       this._birthday = birthday;
       this._full_name = full_name;
+
+      // Avatars
+      this._avatar = avatar;
+      var avatar_file =
+          (avatar != null) ? ((FileIcon) avatar).get_file () : null;
+      ((Tpf.PersonaStore) store)._update_avatar_cache (iid, avatar_file);
 
       // Make the persona appear offline
       this.presence_type = PresenceType.OFFLINE;
@@ -1161,17 +1166,48 @@ public class Tpf.Persona : Folks.Persona,
   private void _contact_notify_avatar ()
     {
       var file = this.contact.avatar_file;
+      var token = this.contact.avatar_token;
       Icon? icon = null;
+      var from_cache = false;
+
+      /* Handle all the different cases of avatars. */
+      if (token == "")
+        {
+          /* Definitely know there's no avatar. */
+          file = null;
+          from_cache = false;
+        }
+      else if (token != null && file != null)
+        {
+          /* Definitely know there's some avatar, so leave the file alone. */
+          from_cache = false;
+        }
+      else
+        {
+          /* Not sure about the avatar; fall back to any cached avatar. */
+          file = ((Tpf.PersonaStore) this.store)._query_avatar_cache (this.iid);
+          from_cache = true;
+        }
 
       if (file != null)
-        icon = new FileIcon (file);
+        {
+          icon = new FileIcon (file);
+        }
 
-      if (this._avatar == null || icon == null || !this._avatar.equal (icon))
+      if ((this._avatar == null) != (icon == null) || !this._avatar.equal (icon))
         {
           this._avatar = (LoadableIcon) icon;
           this.notify_property ("avatar");
-          /* Mark the persona cache as needing to be updated. */
-          ((Tpf.PersonaStore) this.store)._set_cache_needs_update ();
+
+          if (from_cache == false)
+            {
+              /* Mark the persona cache as needing to be updated. */
+              ((Tpf.PersonaStore) this.store)._set_cache_needs_update ();
+
+              /* Update the avatar cache. */
+              ((Tpf.PersonaStore) this.store)._update_avatar_cache (this.iid,
+                  file);
+            }
         }
     }
 

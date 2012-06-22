@@ -57,6 +57,11 @@ public class Tpf.PersonaStore : Folks.PersonaStore
    * See bgo#630822. */
   private HashSet<string> _favourite_ids = new HashSet<string> ();
 
+  /* Mapping from Persona IIDs to their avatars. This allows avatars to persist
+   * between the cached (offline) personas and the online personas. Note that
+   * this should *not* be cleared in _reset(). */
+  private HashMap<string, File> _avatars = new HashMap<string, File> ();
+
   private Connection _conn;
   private AccountManager? _account_manager; /* only null before prepare() */
   private Logger _logger;
@@ -364,6 +369,17 @@ public class Tpf.PersonaStore : Folks.PersonaStore
 
       debug.unindent ();
 
+      debug.print_line (domain, level, "Cached avatars for %u personas:",
+          this._avatars.size);
+      debug.indent ();
+
+      foreach (var id in this._avatars.keys)
+        {
+          debug.print_line (domain, level, "%s", id);
+        }
+
+      debug.unindent ();
+
       debug.print_line (domain, level, "");
     }
 
@@ -498,6 +514,8 @@ public class Tpf.PersonaStore : Folks.PersonaStore
 
               Internal.profiling_point ("created account manager in " +
                   "Tpf.PersonaStore (ID: %s)", this.id);
+
+              this._avatars.clear ();
 
               this._favourite_ids.clear ();
               this._logger = new Logger (this.id);
@@ -969,6 +987,23 @@ public class Tpf.PersonaStore : Folks.PersonaStore
           GroupDetails.ChangeReason.NONE);
 
       this._reset ();
+    }
+
+  internal void _update_avatar_cache (string persona_iid, File? avatar_file)
+    {
+      if (avatar_file == null)
+        {
+          this._avatars.unset (persona_iid);
+        }
+      else
+        {
+          this._avatars.set (persona_iid, (!) avatar_file);
+        }
+    }
+
+  internal File? _query_avatar_cache (string persona_iid)
+    {
+      return this._avatars.get (persona_iid);
     }
 
   private bool _add_persona (Persona p)
