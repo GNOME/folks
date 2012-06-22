@@ -108,8 +108,8 @@ public class Folks.Individual : Object,
   /* Mapping from PersonaStore -> number of Personas from that store contained
    * in this Individual. There shouldn't be any entries with a number < 1.
    * This is used for working out when to disconnect from store signals. */
-  private HashMap<PersonaStore, uint> _stores =
-      new HashMap<PersonaStore, uint> (null, null);
+  private HashMap<unowned PersonaStore, uint> _stores =
+      new HashMap<unowned PersonaStore, uint> (null, null);
   /* The number of Personas in this Individual which have
    * Persona.is_user == true. Iff this is > 0, Individual.is_user == true. */
   private uint _persona_user_count = 0;
