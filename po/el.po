@@ -1,0 +1,723 @@
+# Greek translation for folks.
+# Copyright (C) 2012 folks's COPYRIGHT HOLDER
+# This file is distributed under the same license as the folks package.
+# Dimitris Spingos <dmtrs32@gmail.com>, 2012.
+# Dimitris Spingos (Δημήτρης Σπίγγος) <dmtrs32@gmail.com>, 2012.
+msgid ""
+msgstr ""
+"Project-Id-Version: folks master\n"
+"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=folks&"
+"keywords=I18N+L10N&component=general\n"
+"POT-Creation-Date: 2012-06-19 15:19+0000\n"
+"PO-Revision-Date: 2012-06-22 16:08+0300\n"
+"Last-Translator: Dimitris Spingos (Δημήτρης Σπίγγος) <dmtrs32@gmail.com>\n"
+"Language-Team: team@gnome.gr\n"
+"Language: el\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Virtaal 0.7.0\n"
+"X-Project-Style: gnome\n"
+
+#. The timeout after which we consider a property change to have failed if we
+#. * haven't received a property change notification for it.
+#. seconds
+#. Translators: This should be translated to the name of the “Starred in
+#. * Android” group in Google Contacts for your language. If Google have not
+#. * localised the group for your language, or Google Contacts isn't available
+#. * in your language, please *do not* translate this string.
+#: ../backends/eds/lib/edsf-persona-store.vala:60
+msgid "Starred in Android"
+msgstr "Πρωταγωνιστής στο Android"
+
+#. Translators: the first parameter is an address book
+#. * URI and the second is a persona UID.
+#: ../backends/eds/lib/edsf-persona-store.vala:560
+#, c-format
+msgid "Address book ‘%s’ is offline, so contact ‘%s’ cannot be removed."
+msgstr ""
+"Το βιβλίο διευθύνσεων ‘%s’ είναι χωρίς σύνδεση, έτσι η επαφή ‘%s’ δεν μπορεί "
+"να αφαιρεθεί."
+
+#. Translators: the first parameter is an address book
+#. * URI and the second is an error message.
+#: ../backends/eds/lib/edsf-persona-store.vala:566
+#, c-format
+msgid "Permission denied to remove contact ‘%s’: %s"
+msgstr "Άρνηση πρόσβασης για αφαίρεση επαφής ‘%s’: %s"
+
+#. Translators: the parameter is an error message.
+#: ../backends/eds/lib/edsf-persona-store.vala:571
+#, c-format
+msgid "Removing contacts isn't supported by this persona store: %s"
+msgstr ""
+"Η αφαίρεση επαφών δεν υποστηρίζεται από αυτή την παρακαταθήκη "
+"προσωπικότητας: %s"
+
+#: ../backends/eds/lib/edsf-persona-store.vala:600
+#, c-format
+msgid "Can't remove contact ‘%s’: %s"
+msgstr "Αδύνατη η αφαίρεση επαφής ‘%s’: %s"
+
+#. Translators: the parameter is an address book
+#. * URI.
+#: ../backends/eds/lib/edsf-persona-store.vala:684
+#: ../backends/eds/lib/edsf-persona-store.vala:879
+#, c-format
+msgid "Address book ‘%s’ is offline."
+msgstr "Το βιβλίο διευθύνσεων ‘%s’ είναι χωρίς σύνδεση."
+
+#. Translators: the first parameter is an address
+#. * book URI and the second is an error message.
+#: ../backends/eds/lib/edsf-persona-store.vala:689
+#: ../backends/eds/lib/edsf-persona-store.vala:884
+#, c-format
+msgid "Permission denied to open address book ‘%s’: %s"
+msgstr "Άρνηση πρόσβασης για άνοιγμα βιβλίου διευθύνσεων ‘%s’: %s"
+
+#. Translators: the first parameter is an address book URI
+#. * and the second is an error message.
+#: ../backends/eds/lib/edsf-persona-store.vala:722
+#, c-format
+msgid "Couldn't open address book ‘%s’: %s"
+msgstr "Αδυναμία ανοίγματος βιβλίου διευθύνσεων ‘%s’: %s"
+
+#. Translators: the parameteter is an error message.
+#: ../backends/eds/lib/edsf-persona-store.vala:787
+#: ../backends/eds/lib/edsf-persona-store.vala:818
+#, c-format
+msgid "Couldn't get address book capabilities: %s"
+msgstr "Αδυναμία λήψης δυνατοτήτων βιβλίου διευθύνσεων: %s"
+
+#. Translators: the parameter is an address book URI.
+#: ../backends/eds/lib/edsf-persona-store.vala:835
+#, c-format
+msgid "Couldn't get view for address book ‘%s’."
+msgstr "Αδυναμία λήψης προβολής για βιβλίο διευθύνσεων ‘%s’."
+
+#. Translators: the first parameter is an address book URI
+#. * and the second is an error message.
+#: ../backends/eds/lib/edsf-persona-store.vala:917
+#, c-format
+msgid "Couldn't get view for address book ‘%s’: %s"
+msgstr "Αδυναμία λήψης προβολής για βιβλίο διευθύνσεων ‘%s’: %s"
+
+#: ../backends/eds/lib/edsf-persona-store.vala:1269
+#, c-format
+msgid "Changing the ‘%s’ property failed due to reaching the timeout."
+msgstr "Αποτυχία αλλαγής της ιδιότητας ‘%s’ λόγω λήξης χρόνου."
+
+#: ../backends/eds/lib/edsf-persona-store.vala:1307
+#: ../folks/avatar-details.vala:59
+msgid "Avatar is not writeable on this contact."
+msgstr "Η ενσάρκωση δεν είναι εγγράψιμη σε αυτήν την επαφή."
+
+#: ../backends/eds/lib/edsf-persona-store.vala:1328
+#: ../folks/web-service-details.vala:123
+msgid "Web service addresses are not writeable on this contact."
+msgstr "Οι διευθύνσεις υπηρεσιών ιστού δεν είναι εγγράψιμες σε αυτήν την επαφή."
+
+#: ../backends/eds/lib/edsf-persona-store.vala:1364
+#: ../folks/url-details.vala:152
+msgid "URLs are not writeable on this contact."
+msgstr "Τα URLs δεν είναι εγγράψιμα σε αυτήν την επαφή."
+
+#: ../backends/eds/lib/edsf-persona-store.vala:1442
+#: ../folks/local-id-details.vala:64
+msgid "Local IDs are not writeable on this contact."
+msgstr "Οι τοπικές ταυτότητες δεν είναι εγγράψιμες σε αυτήν την επαφή."
+
+#: ../backends/eds/lib/edsf-persona-store.vala:1469
+msgid "The contact cannot be marked as favourite."
+msgstr "Η επαφή δεν μπορεί να σημειωθεί ως αγαπημένη."
+
+#. Translators: the parameter is an error message.
+#: ../backends/eds/lib/edsf-persona-store.vala:1553
+#, c-format
+msgid "Can't update avatar: %s"
+msgstr "Αδυναμία ενημέρωσης ενσάρκωσης: %s"
+
+#: ../backends/eds/lib/edsf-persona-store.vala:1564
+#: ../folks/email-details.vala:120
+msgid "E-mail addresses are not writeable on this contact."
+msgstr ""
+"Οι διευθύνσεις ηλ. αλληλογραφίας δεν είναι εγγράψιμες σε αυτήν την επαφή."
+
+#: ../backends/eds/lib/edsf-persona-store.vala:1578
+#: ../folks/phone-details.vala:229
+msgid "Phone numbers are not writeable on this contact."
+msgstr "Οι αριθμοί τηλεφώνου δεν είναι εγγράψιμοι σε αυτήν την επαφή."
+
+#: ../backends/eds/lib/edsf-persona-store.vala:1592
+#: ../folks/postal-address-details.vala:360
+msgid "Postal addresses are not writeable on this contact."
+msgstr "Οι ταχυδρομικές διευθύνσεις δεν είναι εγγράψιμες σε αυτήν την επαφή."
+
+#: ../backends/eds/lib/edsf-persona-store.vala:1659
+#: ../folks/name-details.vala:281
+msgid "Full name is not writeable on this contact."
+msgstr "Το πλήρες όνομα δεν είναι εγγράψιμο σε αυτήν την επαφή."
+
+#: ../backends/eds/lib/edsf-persona-store.vala:1681
+#: ../folks/name-details.vala:319
+msgid "Nickname is not writeable on this contact."
+msgstr "Το παρωνύμιο δεν είναι εγγράψιμο σε αυτήν την επαφή."
+
+#: ../backends/eds/lib/edsf-persona-store.vala:1703
+#: ../folks/note-details.vala:138
+msgid "Notes are not writeable on this contact."
+msgstr "Οι σημειώσεις δεν είναι εγγράψιμες σε αυτήν την επαφή."
+
+#: ../backends/eds/lib/edsf-persona-store.vala:1732
+#: ../folks/birthday-details.vala:60
+msgid "Birthday is not writeable on this contact."
+msgstr "Τα γενέθλια δεν είναι εγγράψιμα σε αυτήν την επαφή."
+
+#: ../backends/eds/lib/edsf-persona-store.vala:1776
+#: ../folks/role-details.vala:277
+msgid "Roles are not writeable on this contact."
+msgstr "Οι ρόλοι δεν είναι εγγράψιμοι σε αυτήν την επαφή."
+
+#: ../backends/eds/lib/edsf-persona-store.vala:1877
+#: ../folks/name-details.vala:244
+msgid "Structured name is not writeable on this contact."
+msgstr "Το δομημένο όνομα δεν είναι εγγράψιμο σε αυτήν την επαφή."
+
+#: ../backends/eds/lib/edsf-persona-store.vala:1917
+#: ../folks/im-details.vala:136
+msgid "IM addresses are not writeable on this contact."
+msgstr "Οι διευθύνσεις IM δεν είναι εγγράψιμες σε αυτήν την επαφή."
+
+#: ../backends/eds/lib/edsf-persona-store.vala:1967
+#: ../folks/group-details.vala:170
+msgid "Groups are not writeable on this contact."
+msgstr "Οι ομάδες δεν είναι εγγράψιμες σε αυτήν την επαφή."
+
+#: ../backends/eds/lib/edsf-persona-store.vala:2006
+#: ../folks/gender-details.vala:77
+msgid "Gender is not writeable on this contact."
+msgstr "Το φύλο δεν είναι εγγράψιμο σε αυτήν την επαφή."
+
+#. Translators: the first parameter is a non-human-readable
+#. * property name and the second parameter is an error
+#. * message.
+#: ../backends/eds/lib/edsf-persona-store.vala:2155
+#, c-format
+msgid "Property ‘%s’ is not writeable: %s"
+msgstr "Η ιδιότητα ‘%s’ δεν είναι εγγράψιμη: %s"
+
+#. Translators: the first parameter is a non-human-readable
+#. * property name and the second parameter is an error
+#. * message.
+#: ../backends/eds/lib/edsf-persona-store.vala:2164
+#, c-format
+msgid "Invalid value for property ‘%s’: %s"
+msgstr "Άκυρη τιμή για την ιδιότητα ‘%s’: %s"
+
+#. Translators: the first parameter is a non-human-readable
+#. * property name and the second parameter is an error message.
+#: ../backends/eds/lib/edsf-persona-store.vala:2190
+#, c-format
+msgid "Unknown error setting property ‘%s’: %s"
+msgstr "Άγνωστο σφάλμα ρύθμισης ιδιότητας ‘%s’: %s"
+
+#. Translators: the first parameter is a filename,
+#. * and the second is an error message.
+#: ../backends/key-file/kf-persona-store.vala:224
+#, c-format
+msgid "The relationship key file '%s' could not be loaded: %s"
+msgstr "Το αρχείο του κλειδιού της σχέσης '%s' δεν μπορεί να φορτωθεί: %s"
+
+#. Translators: the first parameter is a path, and
+#. * the second is an error message.
+#: ../backends/key-file/kf-persona-store.vala:246
+#, c-format
+msgid "The relationship key file directory '%s' could not be created: %s"
+msgstr ""
+"Ο κατάλογος του αρχείου του κλειδιού της σχέσης '%s' δεν μπορεί να "
+"δημιουργηθεί: %s"
+
+#. Translators: the first parameter is a filename,
+#. * and the second is an error message.
+#: ../backends/key-file/kf-persona-store.vala:270
+#, c-format
+msgid "The relationship key file '%s' could not be created: %s"
+msgstr "Το αρχείο του κλειδιού της σχέσης '%s' δεν μπορεί να δημιουργηθεί: %s"
+
+#. Translators: the first parameter is a filename, the second is
+#. * an error message.
+#: ../backends/key-file/kf-persona-store.vala:459
+#, c-format
+msgid "Could not write updated key file '%s': %s"
+msgstr "Αδυναμία εγγραφής ενημέρωσης του αρχείου του κλειδιού '%s': %s"
+
+#. Translators: this is an error message for if the user
+#. * provides an invalid IM address. The first parameter is
+#. * an IM address (e.g. “foo@jabber.org”), the second is
+#. * the name of a protocol (e.g. “jabber”) and the third is
+#. * an error message.
+#: ../backends/key-file/kf-persona.vala:171
+#, c-format
+msgid "Invalid IM address ‘%s’ for protocol ‘%s’: %s"
+msgstr "Άκυρη διεύθυνση IM ‘%s’ για πρωτόκολλο ‘%s’: %s"
+
+#. Translators: the parameter is an error message.
+#: ../backends/key-file/kf-persona.vala:364
+#, c-format
+msgid "Couldn't load data from key file: %s"
+msgstr "Αδυναμία φόρτωσης δεδομένων από το αρχείο κλειδιού: %s"
+
+#. Translators: the parameter is an error message.
+#: ../backends/libsocialweb/lib/swf-persona-store.vala:336
+#: ../backends/libsocialweb/lib/swf-persona-store.vala:360
+#: ../backends/libsocialweb/lib/swf-persona-store.vala:379
+#, c-format
+msgid "Couldn’t prepare libsocialweb service: %s"
+msgstr "Αδυναμία προετοιμασίας υπηρεσίας libsocialweb: %s"
+
+#: ../backends/libsocialweb/lib/swf-persona-store.vala:337
+msgid "No capabilities were found."
+msgstr "Δεν βρέθηκαν δυνατότητες."
+
+#: ../backends/libsocialweb/lib/swf-persona-store.vala:361
+msgid "No contacts capability was found."
+msgstr "Δεν βρέθηκε δυνατότητα επαφών."
+
+#: ../backends/libsocialweb/lib/swf-persona-store.vala:380
+msgid "Error opening contacts view."
+msgstr "Σφάλμα ανοίγματος προβολής επαφών."
+
+#. Translators: the first parameter is the display name for
+#. * the Telepathy account, and the second is an error
+#. * message.
+#: ../backends/telepathy/lib/tpf-persona-store.vala:763
+#, c-format
+msgid ""
+"Failed to determine whether we can set aliases on Telepathy account '%s': %s"
+msgstr ""
+"Αποτυχία προσδιορισμού δυνατότητας ρύθμισης ψευδωνύμων στον λογαριασμό "
+"Telepathy '%s': %s"
+
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1121
+msgid "Telepathy contacts representing the local user may not be removed."
+msgstr ""
+"Οι επαφές Telepathy που αντιπροσωπεύουν τον τοπικό χρήστη δεν μπορούν να "
+"αφαιρεθούν."
+
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1132
+#, c-format
+msgid "Failed to remove a persona from store: %s"
+msgstr "Αποτυχία αφαίρεσης μιας προσωπικότητας από την παρακαταθήκη: %s"
+
+#. Translators: the first two parameters are store identifiers and
+#. * the third is a contact identifier.
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1162
+#, c-format
+msgid ""
+"Persona store (%s, %s) requires the following details:\n"
+"    contact (provided: '%s')\n"
+msgstr ""
+"Η παρακαταθήκη προσωπικότητας (%s, %s) απαιτεί τις παρακάτω λεπτομέρειες:\n"
+"    επαφή (παρεχόμενη: '%s')\n"
+
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1177
+msgid "Cannot create a new Telepathy contact while offline."
+msgstr "Αδυναμία δημιουργίας νέας επαφής Telepathy χωρίς σύνδεση."
+
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1195
+#, c-format
+msgid "Failed to add a persona from details: %s"
+msgstr "Αποτυχία προσθήκης προσωπικότητας από τις λεπτομέρειες: %s"
+
+#. Translators: "telepathy-logger" is the name of an application,
+#. * and should not be translated.
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1215
+msgid ""
+"Failed to change favorite without a connection to the telepathy-logger "
+"service."
+msgstr ""
+"Αποτυχία αλλαγής αγαπημένου χωρίς σύνδεση με την υπηρεσία telepathy-logger."
+
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1221
+msgid ""
+"Failed to change favorite status of Telepathy Persona because it has no "
+"attached TpContact."
+msgstr ""
+"Αποτυχία αλλαγής κατάστασης αγαπημένου προσωπικότητας του Telepathy λόγω μη "
+"προσάρτησης του TpContact."
+
+#. Translators: the parameter is a contact identifier.
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1239
+#, c-format
+msgid "Failed to change favorite status for Telepathy contact ‘%s’."
+msgstr "Αποτυχία αλλαγής κατάστασης αγαπημένου για επαφή του Telepathy ‘%s’."
+
+#. Translators: the parameter is an error message.
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1271
+#, c-format
+msgid "Failed to change contact's alias: %s"
+msgstr "Αποτυχία αλλαγής ψευδωνύμου επαφής: %s"
+
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1351
+msgid "Extended information may only be set on the user's Telepathy contact."
+msgstr ""
+"Εκτεταμένες πληροφορίες μπορούν να οριστούν μόνο στην επαφή Telepathy του "
+"χρήστη."
+
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1380
+msgid ""
+"Extended information cannot be written because the store is disconnected."
+msgstr ""
+"Εκτεταμένες πληροφορίες δεν μπορούν να γραφτούν λόγω αποσύνδεσης "
+"παρακαταθήκης."
+
+#: ../backends/telepathy/lib/tpf-persona.vala:503
+#, c-format
+msgid "Failed to change group membership: %s"
+msgstr "Αποτυχία αλλαγής μέλους ομάδας: %s"
+
+#. Translators: the first parameter is the unknown key that
+#. * was received with the details params, and the second
+#. * identifies the persona store.
+#: ../backends/tracker/lib/trf-persona-store.vala:742
+#, c-format
+msgid "Unrecognized parameter '%s' passed to persona store '%s'."
+msgstr "Άγνωστη παράμετρος '%s' πέρασε στην παρακαταθήκη προσωπικότητας '%s'."
+
+#: ../folks/alias-details.vala:57
+msgid "Alias is not writeable on this contact."
+msgstr "Το ψευδώνυμο δεν είναι εγγράψιμο σε αυτήν την επαφή."
+
+#. Translators: the first parameter is a backend name, and the
+#. * second is an error message.
+#: ../folks/backend-store.vala:368
+#, c-format
+msgid "Error preparing Backend '%s': %s"
+msgstr "Σφάλμα προετοιμασίας οπισθοφυλακής '%s': %s"
+
+#. Translators: the first parameter is a folder path and the second
+#. * is an error message.
+#: ../folks/backend-store.vala:561
+#, c-format
+msgid "Error listing contents of folder '%s': %s"
+msgstr "Σφάλμα καταγραφής των περιεχομένων του φακέλου '%s': %s"
+
+#. Translators: the parameter is a filename.
+#: ../folks/backend-store.vala:603
+#, c-format
+msgid ""
+"The content type of '%s' could not be determined. Have you installed shared-"
+"mime-info?"
+msgstr ""
+"Ο τύπος περιεχομένου του '%s' δεν μπόρεσε να προσδιοριστεί. Έχετε "
+"εγκαταστήσει το shared-mime-info;"
+
+#. Translators: the first parameter is a filename and the second is an
+#. * error message.
+#: ../folks/backend-store.vala:631
+#, c-format
+msgid "Failed to load module from path '%s': %s"
+msgstr "Αποτυχία φόρτωσης του αρθρώματος από τη διαδρομή '%s' : %s"
+
+#. Translators: the first parameter is a function name, the second is
+#. * a filename and the third is an error message.
+#: ../folks/backend-store.vala:647
+#, c-format
+msgid "Failed to find entry point function '%s' in '%s': %s"
+msgstr "Αποτυχία εύρεσης του σημείου εισόδου της συνάρτησης '%s' στο '%s': %s"
+
+#. Translators: the parameter is a filename.
+#: ../folks/backend-store.vala:688
+#, c-format
+msgid "File or directory '%s' does not exist."
+msgstr "Δεν υπάρχει αρχείο ή κατάλογος '%s'."
+
+#. Translators: the parameter is a filename.
+#: ../folks/backend-store.vala:694
+#, c-format
+msgid "Failed to get content type for '%s'."
+msgstr "Αποτυχία λήψης τύπου περιεχομένου για '%s'."
+
+#: ../folks/birthday-details.vala:89
+msgid "Birthday event ID is not writeable on this contact."
+msgstr ""
+"Η ID του συμβάντος των γενεθλίων δεν είναι εγγράψιμη σε αυτήν την επαφή."
+
+#: ../folks/favourite-details.vala:52
+msgid "Favorite status is not writeable on this contact."
+msgstr "Η αγαπημένη κατάσταση δεν είναι εγγράψιμη σε αυτήν την επαφή."
+
+#. Translators: the parameter is an IM address.
+#: ../folks/im-details.vala:178 ../folks/im-details.vala:192
+#: ../folks/im-details.vala:214 ../folks/im-details.vala:241
+#, c-format
+msgid "The IM address '%s' could not be understood."
+msgstr "Η διεύθυνση IM '%s' δεν είναι κατανοητή."
+
+#. Translators: the first parameter is a persona store identifier
+#. * and the second is an error message.
+#: ../folks/individual-aggregator.vala:804
+#, c-format
+msgid "Error preparing persona store '%s': %s"
+msgstr "Σφάλμα προετοιμασίας της παρακαταθήκης προσωπικοτήτων '%s': %s"
+
+#. Translators: the parameter is a property name.
+#: ../folks/individual-aggregator.vala:999
+#: ../folks/individual-aggregator.vala:1182
+#, c-format
+msgid "Unknown property '%s' in linkable property list."
+msgstr "Άγνωστη ιδιότητα '%s' σε λίστα συνδέσιμων ιδιοτήτων."
+
+#. Translators: the first parameter is a store identifier
+#. * and the second parameter is an error message.
+#: ../folks/individual-aggregator.vala:1635
+#, c-format
+msgid "Failed to add contact for persona store ID '%s': %s"
+msgstr ""
+"Αποτυχία προσθήκης επαφής για το ID της παρακαταθήκης προσωπικοτήτων '%s': %"
+"s"
+
+#: ../folks/individual-aggregator.vala:1728
+msgid "Can’t link personas with no primary store."
+msgstr "Αδυναμία σύνδεσης προσωπικοτήτων χωρίς κύρια παρακαταθήκη."
+
+#: ../folks/individual-aggregator.vala:1729
+#: ../folks/individual-aggregator.vala:2006
+#, c-format
+msgid ""
+"Persona store ‘%s:%s’ is configured as primary, but could not be found or "
+"failed to load."
+msgstr ""
+"Η παρακαταθήκη προσωπικοτήτων ‘%s:%s’ τροποποιήθηκε ως κύρια, αλλά δεν "
+"βρέθηκε ή απέτυχε να φορτωθεί."
+
+#: ../folks/individual-aggregator.vala:1730
+#: ../folks/individual-aggregator.vala:2007
+#, c-format
+msgid ""
+"Check the relevant service is running, or change the default store in that "
+"service or using the “%s” GSettings key."
+msgstr ""
+"Ελέγξτε ότι η σχετική υπηρεσία εκτελείται, ή αλλάξτε την προεπιλεγμένη "
+"παρακαταθήκη σε αυτή την υπηρεσία ή χρησιμοποιήστε το κλειδί GSettings “%s”."
+
+#: ../folks/individual-aggregator.vala:2005
+msgid "Can’t add personas with no primary store."
+msgstr "Αδυναμία προσθήκης προσωπικοτήτων χωρίς κύρια παρακαταθήκη."
+
+#: ../folks/individual-aggregator.vala:2016
+#, c-format
+msgid "Can't write to requested property (“%s”) of the writeable store."
+msgstr ""
+"Αδυναμία εγγραφής στη ζητούμενη ιδιότητα (“%s”) της εγγράψιμης "
+"παρακαταθήκης."
+
+#: ../folks/org.freedesktop.folks.gschema.xml.in.h:1
+msgid "Primary store ID"
+msgstr "Ταυτότητα της πρωτεύουσας παρακαταθήκης"
+
+#: ../folks/org.freedesktop.folks.gschema.xml.in.h:2
+msgid ""
+"The ID of the persona store which folks should use as primary (i.e. to store "
+"linking data in). The type ID of the store may optionally be prepended, "
+"separated by a colon. For example: “eds:system” or “key-file”."
+msgstr ""
+"Η ταυτότητα της παρακαταθήκης προσωπικοτήτων που το folks πρέπει να "
+"χρησιμοποιήσει ως πρωτεύουσα (δηλαδή για αποθήκευση δεδομένων συνδέσεων). Ο "
+"τύπος της παρακαταθήκης μπορεί προαιρετικά να προταθεί, διαχωριζόμενος με "
+"άνω κάτω τελεία. Για παράδειγμα: “eds:system” ή “key-file”."
+
+#: ../folks/postal-address-details.vala:230
+#, c-format
+msgid "%s, %s, %s, %s, %s, %s, %s"
+msgstr "%s, %s, %s, %s, %s, %s, %s"
+
+#: ../folks/presence-details.vala:159
+msgid "Unknown status"
+msgstr "Άγνωστη κατάσταση"
+
+#: ../folks/presence-details.vala:161
+msgid "Offline"
+msgstr "Χωρίς σύνδεση"
+
+#: ../folks/presence-details.vala:165
+msgid "Error"
+msgstr "Σφάλμα"
+
+#: ../folks/presence-details.vala:167
+msgid "Available"
+msgstr "Διαθέσιμη"
+
+#: ../folks/presence-details.vala:169
+msgid "Away"
+msgstr "Απούσα"
+
+#: ../folks/presence-details.vala:171
+msgid "Extended away"
+msgstr "Παρατεταμένη απουσία"
+
+#: ../folks/presence-details.vala:173
+msgid "Busy"
+msgstr "Απασχολημένη"
+
+#: ../folks/presence-details.vala:175
+msgid "Hidden"
+msgstr "Κρυφή"
+
+#: ../folks/role-details.vala:148
+#, c-format
+msgid "Title: %s, Organisation: %s, Role: %s"
+msgstr "Τίτλος: %s, οργάνωση: %s, ρόλος: %s"
+
+#. Translators: the parameter is a filename.
+#: ../tools/import-pidgin.vala:48
+#, c-format
+msgid "File %s does not exist."
+msgstr "Το αρχείο %s δεν υπάρχει."
+
+#. Translators: the first parameter is a filename, and the second
+#. * is an error message.
+#: ../tools/import-pidgin.vala:64
+#, c-format
+msgid "Failed to get information about file %s: %s"
+msgstr "Αδυναμία λήψης πληροφοριών για το αρχείο %s: %s"
+
+#. Translators: the parameter is a filename.
+#: ../tools/import-pidgin.vala:71
+#, c-format
+msgid "File %s is not readable."
+msgstr "Το αρχείο %s δεν είναι αναγνώσιμο."
+
+#. Translators: the parameter is a filename.
+#: ../tools/import-pidgin.vala:81
+#, c-format
+msgid "The Pidgin buddy list file '%s' could not be loaded."
+msgstr "Το αρχείο λίστας επαφών Pidgin '%s' δεν μπόρεσε να φορτωθεί."
+
+#. Translators: the parameter is a filename.
+#: ../tools/import-pidgin.vala:96
+#, c-format
+msgid ""
+"The Pidgin buddy list file ‘%s’ could not be loaded: the root element could "
+"not be found or was not recognized."
+msgstr ""
+"Το αρχείο λίστας επαφών Pidgin ‘%s’ δεν μπόρεσε να φορτωθεί: το στοιχείο "
+"ρίζας δεν μπόρεσε να βρεθεί ή δεν αναγνωρίστηκε."
+
+#. Translators: the first parameter is the number of buddies which
+#. * were successfully imported, and the second is a filename.
+#: ../tools/import-pidgin.vala:116
+#, c-format
+msgid "Imported %u buddy from '%s'."
+msgid_plural "Imported %u buddies from '%s'."
+msgstr[0] "Εισαγωγή %u επαφής από '%s'."
+msgstr[1] "Εισαγωγή %u επαφών από '%s'."
+
+#. Translators: the first parameter is a persona identifier,
+#. * and the second is an error message.
+#: ../tools/import-pidgin.vala:163
+#, c-format
+msgid "Error changing group of contact ‘%s’: %s"
+msgstr "Σφάλμα αλλαγής ομάδας επαφής ‘%s’: %s"
+
+#. Translators: the parameter is the buddy's IM address.
+#: ../tools/import-pidgin.vala:220
+#, c-format
+msgid ""
+"Ignoring buddy with no alias and only one IM address:\n"
+"%s"
+msgstr ""
+"Παράβλεψη επαφής χωρίς ψευδώνυμο και μόνο μια διεύθυνση IM:\n"
+"%s"
+
+#: ../tools/import-pidgin.vala:244
+#, c-format
+msgid ""
+"Failed to create new contact for buddy with alias ‘%s’ and IM addresses:\n"
+"%s\n"
+"Error: %s\n"
+msgstr ""
+"Αποτυχία δημιουργίας νέας επαφής για άτομο με ψευδώνυμο ‘%s’ και διευθύνσεις "
+"IM:\n"
+"%s\n"
+"Σφάλμα: %s\n"
+
+#. Translators: the first parameter is a persona identifier, the
+#. * second is an alias for the persona, and the third is a set of IM
+#. * addresses each on a new line.
+#: ../tools/import-pidgin.vala:258
+#, c-format
+msgid ""
+"Created contact ‘%s’ for buddy with alias ‘%s’ and IM addresses:\n"
+"%s"
+msgstr ""
+"Δημιουργήθηκε επαφή ‘%s’ για άτομο με ψευδώνυμο ‘%s’ και διευθύνσεις IM:\n"
+"%s"
+
+#: ../tools/import.vala:44
+msgid "Source backend name (default: 'pidgin')"
+msgstr "Όνομα πηγής οπισθοφυλακής (προεπιλογή: 'pidgin')"
+
+#: ../tools/import.vala:47
+msgid "Source filename (default: specific to source backend)"
+msgstr "Όνομα αρχείου πηγής (προεπιλογή: συγκεκριμένο στην πηγή οπισθοφυλακής)"
+
+#: ../tools/import.vala:57
+msgid "— import meta-contact information to libfolks"
+msgstr "— εισαγωγή πληροφοριών μετα- επαφής στο libfolks"
+
+#. Translators: the parameter is an error message.
+#: ../tools/import.vala:67
+#, c-format
+msgid "Couldn't parse command line options: %s"
+msgstr "Αδυναμία ανάλυσης επιλογών γραμμής εντολών: %s"
+
+#. Translators: the parameter is an error message.
+#: ../tools/import.vala:108
+#, c-format
+msgid "Couldn't load the backends: %s"
+msgstr "Αδυναμία φόρτωσης των οπισθοφυλακών: %s"
+
+#. Translators: the parameter is a backend identifier.
+#: ../tools/import.vala:119
+#, c-format
+msgid "Couldn't load the ‘%s’ backend."
+msgstr "Αδυναμία φόρτωσης της οπισθοφυλακής ‘%s’."
+
+#. Translators: the first parameter is a backend identifier and the
+#. * second parameter is an error message.
+#: ../tools/import.vala:132
+#, c-format
+msgid "Couldn't prepare the ‘%s’ backend: %s"
+msgstr "Αδυναμία προετοιμασίας της οπισθοφυλακής ‘%s’: %s"
+
+#. Translators: the parameter is a backend identifier.
+#: ../tools/import.vala:145
+#, c-format
+msgid "Couldn't load the ‘%s’ backend's persona store."
+msgstr ""
+"Αδυναμία φόρτωσης της παρακαταθήκης προσωπικοτήτων της οπισθοφυλακής ‘%s’."
+
+#: ../tools/import.vala:166
+#, c-format
+msgid "Couldn't prepare the ‘%s’ backend's persona store: %s"
+msgstr ""
+"Αδυναμία προετοιμασίας της παρακαταθήκης προσωπικοτήτων της οπισθοφυλακής ‘%"
+"s’: %s"
+
+#. Translators: the parameter is an error message.
+#: ../tools/import.vala:184
+#, c-format
+msgid "Error importing contacts: %s"
+msgstr "Σφάλμα εισαγωγής επαφών: %s"
+
+#. Translators: both parameters are identifiers for backends.
+#: ../tools/import.vala:198
+#, c-format
+msgid ""
+"Unrecognized source backend name ‘%s’. ‘%s’ is currently the only supported "
+"source backend."
+msgstr ""
+"Μη αναγνωρίσιμο όνομα πηγής οπισθοφυλακής ‘%s’. Το ‘%s’ είναι προς το παρόν "
+"η μοναδική υποστηριζόμενη πηγή οπισθοφυλακής."
