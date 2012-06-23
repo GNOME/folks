@@ -84,7 +84,6 @@ public enum Folks.MatchResult
  */
 public class Folks.PotentialMatch : Object
 {
-  MatchResult _result;
   private Folks.Individual _individual_a;
   private Folks.Individual _individual_b;
 
@@ -119,50 +118,50 @@ public class Folks.PotentialMatch : Object
     {
       this._individual_a = a;
       this._individual_b = b;
-      this._result = MatchResult.MIN;
+      MatchResult result = MatchResult.MIN;
 
       /* Immediately discount a match if either of the individuals can't be
        * trusted (e.g. due to containing link-local XMPP personas, which can be
        * spoofed). */
       if (a.trust_level == TrustLevel.NONE || b.trust_level == TrustLevel.NONE)
         {
-          return this._result;
+          return result;
         }
 
-      this._result = MatchResult.VERY_LOW;
+      result = MatchResult.VERY_LOW;
 
       /* If individuals share gender. */
       if (this._individual_a.gender != Gender.UNSPECIFIED &&
           this._individual_b.gender != Gender.UNSPECIFIED &&
           this._individual_a.gender != this._individual_b.gender)
         {
-          return this._result;
+          return result;
         }
 
       /* If individuals share common im-addresses */
-      this._inspect_im_addresses ();
-      if (this._result == MatchResult.MAX)
-        return this._result;
+      result = this._inspect_im_addresses (result);
+      if (result == MatchResult.MAX)
+        return result;
 
       /* If individuals share common e-mails */
-      this._inspect_emails ();
-      if (this._result == MatchResult.MAX)
-        return this._result;
+      result = this._inspect_emails (result);
+      if (result == MatchResult.MAX)
+        return result;
 
       /* If individuals share common phone numbers */
-      this._inspect_phone_numbers ();
-      if (this._result == MatchResult.MAX)
-        return this._result;
+      result = this._inspect_phone_numbers (result);
+      if (result == MatchResult.MAX)
+        return result;
 
       /* they have the same (normalised) name? */
-      this._name_similarity ();
-      if (this._result == MatchResult.MAX)
-        return this._result;
+      result = this._name_similarity (result);
+      if (result == MatchResult.MAX)
+        return result;
 
-      return this._result;
+      return result;
     }
 
-  private void _inspect_phone_numbers ()
+  private MatchResult _inspect_phone_numbers (MatchResult old_result)
     {
       var set_a = this._individual_a.phone_numbers;
       var set_b = this._individual_b.phone_numbers;
@@ -173,11 +172,12 @@ public class Folks.PotentialMatch : Object
             {
               if (phone_fd_a.values_equal (phone_fd_b))
                 {
-                  this._result = MatchResult.HIGH;
-                  return;
+                  return MatchResult.HIGH;
                 }
             }
         }
+
+      return old_result;
     }
 
   /* Approach:
@@ -186,7 +186,7 @@ public class Folks.PotentialMatch : Object
    *
    * @since 0.5.0
    */
-  private void _name_similarity ()
+  private MatchResult _name_similarity (MatchResult old_result)
     {
       double similarity = 0.0;
       bool exact_match = false;
@@ -223,8 +223,7 @@ public class Folks.PotentialMatch : Object
 
           if (a.is_empty () == false && a.equal (b))
             {
-              this._result = MatchResult.HIGH;
-              return;
+              return MatchResult.HIGH;
             }
 
           if (Folks.Utils._str_equal_safe (a.given_name, b.given_name))
@@ -258,8 +257,10 @@ public class Folks.PotentialMatch : Object
              available */
           if (exact_match)
             inc += 1;
-          this._result = this._inc_match_level (this._result, inc);
+          return this._inc_match_level (old_result, inc);
         }
+
+      return old_result;
     }
 
   /**
@@ -269,7 +270,7 @@ public class Folks.PotentialMatch : Object
    *
    * @since 0.5.0
    */
-  private void _inspect_im_addresses ()
+  private MatchResult _inspect_im_addresses (MatchResult old_result)
     {
       var addrs = new HashSet<string> ();
 
@@ -282,10 +283,11 @@ public class Folks.PotentialMatch : Object
         {
           if (addrs.contains (im_b.value) == true)
             {
-              this._result = MatchResult.HIGH;
-              return;
+              return MatchResult.HIGH;
             }
         }
+
+      return old_result;
     }
 
   /**
@@ -293,10 +295,11 @@ public class Folks.PotentialMatch : Object
    *
    * @since 0.5.0
    */
-  private void _inspect_emails ()
+  private MatchResult _inspect_emails (MatchResult old_result)
     {
       var set_a = this._individual_a.email_addresses;
       var set_b = this._individual_b.email_addresses;
+      MatchResult result = old_result;
 
       foreach (var fd_a in set_a)
         {
@@ -330,15 +333,14 @@ public class Folks.PotentialMatch : Object
                   if (PotentialMatch.known_email_aliases.contains
                       (email_split_a[0]) == true)
                     {
-                      if (this._result < MatchResult.HIGH)
+                      if (result < MatchResult.HIGH)
                         {
-                          this._result = MatchResult.LOW;
+                          result = MatchResult.LOW;
                         }
                     }
                   else
                     {
-                      this._result = MatchResult.HIGH;
-                      return;
+                      return MatchResult.HIGH;
                     }
                 }
               else
@@ -349,7 +351,7 @@ public class Folks.PotentialMatch : Object
                   /* Do we have: first.middle.last@ ~= fml@ ? */
                   if (this._check_initials_expansion (tokens_a, tokens_b))
                     {
-                      this._result = MatchResult.MEDIUM;
+                      result = MatchResult.MEDIUM;
                     }
                   /* So we have splitted the user part of the e-mail
                    * address into tokens. Lets see if there is some
@@ -357,11 +359,13 @@ public class Folks.PotentialMatch : Object
                    * As in: first.middle.last@ ~= [first,middle,..]@  */
                   else if (this._match_tokens (tokens_a, tokens_b))
                     {
-                      this._result = MatchResult.MEDIUM;
+                      result = MatchResult.MEDIUM;
                     }
                }
             }
         }
+
+      return result;
     }
 
   /* We are after:
