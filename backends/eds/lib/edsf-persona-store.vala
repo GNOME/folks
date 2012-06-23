@@ -378,19 +378,17 @@ public class Edsf.PersonaStore : Folks.PersonaStore
             {
               Set<PhoneFieldDetails> phone_numbers =
                 (Set<PhoneFieldDetails>) v.get_object ();
-              if (!phone_numbers.is_empty)
-                yield this._set_contact_attributes_string (contact,
-                    phone_numbers, "TEL",
-                    E.ContactField.TEL);
+              yield this._set_contact_attributes_string (contact,
+                  phone_numbers, "TEL",
+                  E.ContactField.TEL);
             }
           else if (k == Folks.PersonaStore.detail_key (
                 PersonaDetail.POSTAL_ADDRESSES))
             {
               Set<PostalAddressFieldDetails> postal_fds =
                 (Set<PostalAddressFieldDetails>) v.get_object ();
-              if (!postal_fds.is_empty)
-                yield this._set_contact_postal_addresses (contact,
-                    postal_fds);
+              yield this._set_contact_postal_addresses (contact,
+                  postal_fds);
             }
           else if (k == Folks.PersonaStore.detail_key (
                 PersonaDetail.STRUCTURED_NAME))
@@ -425,8 +423,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
           else if (k == Folks.PersonaStore.detail_key (PersonaDetail.URLS))
             {
               Set<UrlFieldDetails> urls = (Set<UrlFieldDetails>) v.get_object ();
-              if (!urls.is_empty)
-                yield this._set_contact_urls (contact, urls);
+              yield this._set_contact_urls (contact, urls);
             }
           else if (k == Folks.PersonaStore.detail_key (PersonaDetail.BIRTHDAY))
             {
@@ -437,8 +434,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
             {
               Set<RoleFieldDetails> roles =
                 (Set<RoleFieldDetails>) v.get_object ();
-              if (!roles.is_empty)
-                yield this._set_contact_roles (contact, roles);
+              yield this._set_contact_roles (contact, roles);
             }
           else if (k == Folks.PersonaStore.detail_key (
                   PersonaDetail.IS_FAVOURITE))
