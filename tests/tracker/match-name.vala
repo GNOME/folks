@@ -50,6 +50,8 @@ public class MatchNameTests : Folks.TestCase
           this.test_match_name_3);
       this.add_test ("test potential match by name #4 ",
           this.test_match_name_4);
+      this.add_test ("test potential match by name #5 ",
+          this.test_match_name_5);
     }
 
   public override void set_up ()
@@ -108,6 +110,13 @@ public class MatchNameTests : Folks.TestCase
        * a MEDIUM result. */
       this._test_match_name ("PâtéPâtéPâté", "patepatepate");
       assert (this._match >= Folks.MatchResult.MEDIUM);
+    }
+
+  public void test_match_name_5 ()
+    {
+      /* bgo#678474 */
+      this._test_match_name ("Frédéric Peters", "Frederic Peters");
+      assert (this._match >= Folks.MatchResult.HIGH);
     }
 
   private async void _test_match_name_async ()

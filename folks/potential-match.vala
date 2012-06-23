@@ -446,14 +446,23 @@ public class Folks.PotentialMatch : Object
           return false;
         }
 
-      if (a == b)
+      assert (a.validate ());
+      assert (b.validate ());
+
+      var a_stripped = this._strip_string ((!) a);
+      var b_stripped = this._strip_string ((!) b);
+
+      var jaro_dist = this._jaro_dist (a_stripped, b_stripped);
+
+      // a and b match exactly iff their Jaro distance is 1.
+      if (jaro_dist == 1.0)
         {
           exact = true;
           return true;
         }
 
       // a and b look alike if their Jaro distance is over the threshold.
-      return (this.jaro_dist ((!) a, (!) b) >= this._DIST_THRESHOLD);
+      return (jaro_dist >= this._DIST_THRESHOLD);
     }
 
   private bool _look_alike (string? a, string? b)
@@ -463,8 +472,14 @@ public class Folks.PotentialMatch : Object
           return false;
         }
 
+      assert (a.validate ());
+      assert (b.validate ());
+
+      var a_stripped = this._strip_string ((!) a);
+      var b_stripped = this._strip_string ((!) b);
+
       // a and b look alike if their Jaro distance is over the threshold.
-      return (this.jaro_dist ((!) a, (!) b) >= this._DIST_THRESHOLD);
+      return (this._jaro_dist (a_stripped, b_stripped) >= this._DIST_THRESHOLD);
     }
 
   /* Based on:
@@ -477,7 +492,7 @@ public class Folks.PotentialMatch : Object
    * m = matching characters
    * t = number of transpositions
    */
-  private double jaro_dist (string s1, string s2)
+  private double _jaro_dist (unichar[] s1, unichar[] s2)
     {
       double distance;
       int max = s1.length > s2.length ? s1.length : s2.length;
@@ -495,7 +510,7 @@ public class Folks.PotentialMatch : Object
 
       distance = (1.0/3.0) * (a + b + c);
 
-      debug ("[jaro_dist] Distance for %s and %s: %f\n", s1, s2, distance);
+      debug ("Jaro distance: %f (a = %f, b = %f, c = %f)", distance, a, b, c);
 
       return distance;
     }
@@ -563,28 +578,37 @@ public class Folks.PotentialMatch : Object
       return retval[0];
     }
 
+  private unichar[] _strip_string (string s)
+    {
+      int next_idx = 0;
+      uint write_idx = 0;
+      unichar ch = 0;
+      unichar[] output = new unichar[s.length]; // this is a safe overestimate
+
+      while (s.get_next_char (ref next_idx, out ch))
+        {
+          ch = this._stripped_char (ch);
+          if (ch != 0)
+            {
+              output[write_idx++] = ch;
+            }
+        }
+
+      output.length = (int) write_idx;
+      return output;
+    }
+
   /* Calculate matches and transpositions as defined by the Jaro distance.
    */
-  private int _matches (string s1, string s2, int max_dist, out double t)
+  private int _matches (unichar[] s1, unichar[] s2, int max_dist, out double t)
     {
       int matches = 0;
       t = 0.0;
 
-      assert (s1.validate ());
-      assert (s2.validate ());
-
-      int idx = 0;
       unichar look_for = 0;
 
-      while (s1.get_next_char (ref idx, out look_for))
+      for (uint idx = 0; (look_for = s1[idx]) != 0; idx++)
         {
-          /* Skip uninteresting characters. */
-          look_for = this._stripped_char (look_for);
-          if (look_for == 0)
-            {
-              continue;
-            }
-
           int contains = this._contains (s2, look_for, idx, max_dist);
           if (contains >= 0)
             {
@@ -594,8 +618,7 @@ public class Folks.PotentialMatch : Object
             }
         }
 
-      debug ("%s and %s have %d matches and %f / 2 transpositions\n",
-          s1, s2, matches, t);
+      debug ("%d matches and %f / 2 transpositions", matches, t);
 
       t = t / 2.0;
       return matches;
@@ -605,31 +628,27 @@ public class Folks.PotentialMatch : Object
    * it withing the bounds of max_dist return abs(pos-pos_found).
    * If its not found, return -1.
    *
-   * pos and max_dist are both in bytes.
+   * pos and max_dist are both in unichars.
    *
    * Note: haystack must have been validated using haystack.validate() before
    * being passed to this method. */
-  private int _contains (string haystack, unichar c, int pos, int max_dist)
+  private int _contains (unichar[] haystack, unichar c, uint pos, uint max_dist)
     {
-      var haystack_len = haystack.length; /* in bytes */
+      var haystack_len = haystack.length; /* in unichars */
 
-      if (pos < haystack_len && haystack.get_char (pos) == c)
+      unichar ch = haystack[pos];
+      if (pos < haystack_len && ch == c)
         return 0;
 
-      int idx = (pos - max_dist).clamp (0, haystack_len);
-      unichar ch = 0;
+      uint idx = ((int) pos - (int) max_dist).clamp (0, haystack_len);
+      ch = 0;
 
-      while (idx < pos + max_dist && haystack.get_next_char (ref idx, out ch))
+      while (idx < pos + max_dist && (ch = haystack[idx]) != 0)
         {
-          /* Skip uninteresting characters. */
-          ch = this._stripped_char (ch);
-          if (ch == 0)
-            {
-              continue;
-            }
-
           if (ch == c)
-            return (pos - idx).abs ();
+            return ((int) pos - (int) idx).abs ();
+
+          idx++;
         }
 
       return -1;
