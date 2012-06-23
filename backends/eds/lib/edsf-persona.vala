@@ -1368,6 +1368,12 @@ public class Edsf.Persona : Folks.Persona,
 
                   string normalised_addr =
                     (owned) ImDetails.normalise_im_address ((!) addr, im_proto);
+
+                  if (normalised_addr == "")
+                    {
+                      continue;
+                    }
+
                   var im_fd = new ImFieldDetails (normalised_addr);
                   new_im_addresses.set (im_proto, im_fd);
                 }
@@ -1643,8 +1649,13 @@ public class Edsf.Persona : Folks.Persona,
       var attrs = this.contact.get_attributes (E.ContactField.ADDRESS);
       foreach (unowned E.VCardAttribute attr in attrs)
         {
-          var pa_fd = new PostalAddressFieldDetails (
-              this._postal_address_from_attribute (attr));
+          var address = this._postal_address_from_attribute (attr);
+          if (address.is_empty ())
+            {
+              continue;
+            }
+
+          var pa_fd = new PostalAddressFieldDetails (address);
           this._update_params (pa_fd, attr);
           new_postal_addresses.add (pa_fd);
         }
