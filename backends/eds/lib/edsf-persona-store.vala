@@ -222,14 +222,42 @@ public class Edsf.PersonaStore : Folks.PersonaStore
    * @param s the e-d-s source being represented by the persona store
    *
    * @since 0.6.0
+   * @deprecated UNRELEASED Use {@link Edsf.PersonaStore.with_source_registry}
    */
-  public PersonaStore (E.Source s)
+  [Deprecated (since = "UNRELEASED",
+      replacement = "Edsf.PersonaStore.with_source_registry()")]
+  public PersonaStore (E.SourceRegistry r, E.Source s)
     {
       string eds_uid = s.get_uid ();
       string eds_name = s.get_display_name ();
       Object (id: eds_uid,
               display_name: eds_name,
               source: s);
+
+      this._source_registry = null; /* created in prepare() */
+    }
+
+  /**
+   * Create a new PersonaStore.
+   *
+   * Create a new persona store to store the {@link Persona}s for the contacts
+   * in `s`. Passing a re-used source registry to the constructor (compared to
+   * the old {@link Edsf.PersonaStore} constructor) saves a lot of time and
+   * D-Bus round trips.
+   *
+   * @param r the EDS source registry giving access to all EDS sources
+   * @param s the EDS source being represented by the persona store
+   *
+   * @since UNRELEASED
+   */
+  public PersonaStore.with_source_registry (E.SourceRegistry r, E.Source s)
+    {
+      string eds_uid = s.get_uid ();
+      Object (id: eds_uid,
+              display_name: eds_uid,
+              source: s);
+
+      this._source_registry = r;
     }
 
   construct
@@ -630,10 +658,10 @@ public class Edsf.PersonaStore : Folks.PersonaStore
               /* Listen for removal signals for the address book. There's no
                * need to check if we still exist in the list, as
                * addressbook.open() will fail if we don't. */
-              this._source_registry = yield create_source_registry ();
-
-              Internal.profiling_point ("created SourceRegistry in " +
-                  "Edsf.PersonaStore (ID: %s)", this.id);
+              if (this._source_registry == null)
+                {
+                  this._source_registry = yield create_source_registry ();
+                }
 
               /* We know _source_registry != null because otherwise
                * create_source_registry() would've thrown an error. */

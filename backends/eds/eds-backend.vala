@@ -236,7 +236,8 @@ public class Folks.Backends.Eds.Backend : Folks.Backend
 
       debug ("Adding address book '%s'.", uid);
 
-      var store = new Edsf.PersonaStore (s);
+      var store =
+          new Edsf.PersonaStore.with_source_registry (this._ab_sources, s);
 
       store.removed.connect (this._store_removed_cb);
 
