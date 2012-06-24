@@ -513,6 +513,11 @@ public class Folks.IndividualAggregator : Object
             {
               this._prepare_pending = true;
 
+              /* Temporarily increase the non-quiescent backend count so that
+               * we don't prematurely reach quiescence due to odd timing of the
+               * backend-available signals. */
+              this._non_quiescent_backend_count++;
+
               this._backend_store.backend_available.connect (
                   this._backend_available_cb);
 
@@ -528,6 +533,8 @@ public class Folks.IndividualAggregator : Object
               /* Load any backends which haven't been loaded already. (Typically
                * all of them.) */
               yield this._backend_store.load_backends ();
+
+              this._non_quiescent_backend_count--;
 
               this._is_prepared = true;
               this.notify_property ("is-prepared");
