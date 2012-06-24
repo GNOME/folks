@@ -1182,7 +1182,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
           return;
         }
 
-      yield this._build_urn_prefix_table ();
+      this._build_urn_prefix_table ();
 
       this._prefix_tracker_id = new Gee.TreeMap<string, int> ();
 
@@ -1219,7 +1219,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
         }
     }
 
-  private async void _build_urn_prefix_table ()
+  private void _build_urn_prefix_table ()
     {
       if (this._urn_prefix != null)
         {
