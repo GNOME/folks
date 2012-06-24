@@ -18,7 +18,9 @@
  *       Raul Gutierrez Segales <raul.gutierrez.segales@collabora.co.uk>
  */
 
+using GLib;
 using Gee;
+using Posix;
 
 namespace Folks.Internal
 {
@@ -34,5 +36,75 @@ namespace Folks.Internal
         }
 
       return true;
+    }
+
+#if ENABLE_PROFILING
+  /* See: http://people.gnome.org/~federico/news-2006-03.html#timeline-tools */
+  private static void profiling_markv (string format, va_list args)
+    {
+      var formatted = format.vprintf (args);
+      var str = "MARK: %s-%p: %s".printf (Environment.get_prgname (), Thread.self<void> (), formatted);
+      access (str, F_OK);
+    }
+#endif
+
+  /**
+   * Emit a profiling point.
+   *
+   * This emits a profiling point with the given message (printf-style), which
+   * can be picked up by profiling tools and timing information extracted.
+   *
+   * @param format printf-style message format
+   * @param ... message arguments
+   * @since UNRELEASED
+   */
+  public static void profiling_point (string format, ...)
+    {
+#if ENABLE_PROFILING
+      var args = va_list ();
+      Internal.profiling_markv (format, args);
+#endif
+    }
+
+  /**
+   * Start a profiling block.
+   *
+   * This emits a profiling start point with the given message (printf-style),
+   * which can be picked up by profiling tools and timing information extracted.
+   *
+   * This is typically used in a pair with {@link Internal.profiling_end} to
+   * delimit blocks of processing which need timing.
+   *
+   * @param format printf-style message format
+   * @param ... message arguments
+   * @since UNRELEASED
+   */
+  public static void profiling_start (string format, ...)
+    {
+#if ENABLE_PROFILING
+      var args = va_list ();
+      Internal.profiling_markv ("START: " + format, args);
+#endif
+    }
+
+  /**
+   * End a profiling block.
+   *
+   * This emits a profiling end point with the given message (printf-style),
+   * which can be picked up by profiling tools and timing information extracted.
+   *
+   * This is typically used in a pair with {@link Internal.profiling_start} to
+   * delimit blocks of processing which need timing.
+   *
+   * @param format printf-style message format
+   * @param ... message arguments
+   * @since UNRELEASED
+   */
+  public static void profiling_end (string format, ...)
+    {
+#if ENABLE_PROFILING
+      var args = va_list ();
+      Internal.profiling_markv ("END: " + format, args);
+#endif
     }
 }

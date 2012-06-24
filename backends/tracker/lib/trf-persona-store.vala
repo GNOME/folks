@@ -1067,6 +1067,8 @@ public class Trf.PersonaStore : Folks.PersonaStore
    */
   public override async void prepare () throws GLib.Error
     {
+      Internal.profiling_start ("preparing Trf.PersonaStore (ID: %s)", this.id);
+
       lock (this._is_prepared)
         {
           if (this._is_prepared || this._prepare_pending)
@@ -1083,8 +1085,18 @@ public class Trf.PersonaStore : Folks.PersonaStore
                   this._connection =
                     yield Tracker.Sparql.Connection.get_async ();
 
+                  Internal.profiling_point ("got connection in " +
+                      "Trf.PersonaStore (ID: %s)", this.id);
+
                   yield this._build_predicates_table ();
+
+                  Internal.profiling_point ("build predicates table in " +
+                      "Trf.PersonaStore (ID: %s)", this.id);
+
                   yield this._do_add_contacts (this._INITIAL_QUERY.printf (""));
+
+                  Internal.profiling_point ("added contacts in " +
+                      "Trf.PersonaStore (ID: %s)", this.id);
 
                   /* Don't add a match rule for all signals from Tracker but
                    * only for GraphUpdated with the specific class we need. We
@@ -1102,6 +1114,9 @@ public class Trf.PersonaStore : Folks.PersonaStore
                       "GraphUpdated", this._OBJECT_PATH,
                       Trf.OntologyDefs.PERSON_CLASS, GLib.DBusSignalFlags.NONE,
                       this._graph_updated_cb);
+
+                  Internal.profiling_point ("got resources proxy in " +
+                      "Trf.PersonaStore (ID: %s)", this.id);
 
                   this._is_prepared = true;
                   this.notify_property ("is-prepared");
@@ -1138,6 +1153,8 @@ public class Trf.PersonaStore : Folks.PersonaStore
               this._prepare_pending = false;
             }
         }
+
+      Internal.profiling_end ("preparing Trf.PersonaStore (ID: %s)", this.id);
     }
 
   public int get_favorite_id ()

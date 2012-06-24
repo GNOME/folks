@@ -254,14 +254,18 @@ public class Folks.BackendStore : Object {
    */
   public async void prepare ()
     {
+      Internal.profiling_start ("preparing BackendStore");
+
       /* (re-)load the list of disabled backends */
       yield this._load_disabled_backend_names ();
 
-      if (this._is_prepared == true)
-        return;
-      this._is_prepared = true;
+      if (this._is_prepared == false)
+        {
+          this._is_prepared = true;
+          this.notify_property ("is-prepared");
+        }
 
-      this.notify_property ("is-prepared");
+      Internal.profiling_end ("preparing BackendStore");
     }
 
   /**
@@ -277,6 +281,8 @@ public class Folks.BackendStore : Object {
     {
       assert (Module.supported());
 
+      Internal.profiling_start ("loading backends in BackendStore");
+
       yield this.prepare ();
 
       /* unload backends that have been disabled since they were loaded */
@@ -284,6 +290,8 @@ public class Folks.BackendStore : Object {
         {
           yield this._backend_unload_if_needed (backend_existing);
         }
+
+      Internal.profiling_point ("unloaded backends in BackendStore");
 
       string? _path = Environment.get_variable ("FOLKS_BACKEND_PATH");
       string path;
@@ -336,15 +344,39 @@ public class Folks.BackendStore : Object {
             }
         }
 
+      Internal.profiling_point ("found modules in BackendStore");
+
       /* this will load any new modules found in the backends dir and will
        * prepare and unprepare backends such that they match the state in the
        * backend store key file */
       foreach (var module in modules.values)
         this._load_module_from_file (module);
 
+      Internal.profiling_point ("loaded modules in BackendStore");
+
       /* this is populated indirectly from _load_module_from_file(), above */
+      var backends_remaining = 1;
       foreach (var backend in this._backend_hash.values)
-        yield this._backend_load_if_needed (backend);
+        {
+          backends_remaining++;
+          this._backend_load_if_needed.begin (backend, (o, r) =>
+            {
+              this._backend_load_if_needed.end (r);
+              backends_remaining--;
+
+              if (backends_remaining == 0)
+                {
+                  this.load_backends.callback ();
+                }
+            });
+        }
+      backends_remaining--;
+      if (backends_remaining > 0)
+        {
+          yield;
+        }
+
+      Internal.profiling_end ("loading backends in BackendStore");
     }
 
   private async void _backend_load_if_needed (Backend backend)

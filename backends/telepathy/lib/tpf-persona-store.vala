@@ -425,6 +425,8 @@ public class Tpf.PersonaStore : Folks.PersonaStore
    */
   public override async void prepare () throws GLib.Error
     {
+      Internal.profiling_start ("preparing Tpf.PersonaStore (ID: %s)", this.id);
+
       lock (this._is_prepared)
         {
           if (this._is_prepared || this._prepare_pending)
@@ -489,18 +491,24 @@ public class Tpf.PersonaStore : Folks.PersonaStore
                     }
                 });
 
+              Internal.profiling_point ("created account manager in " +
+                  "Tpf.PersonaStore (ID: %s)", this.id);
+
               this._favourite_ids.clear ();
               this._logger = new Logger (this.id);
               this._logger.invalidated.connect (
                   this._logger_invalidated_cb);
               this._logger.favourite_contacts_changed.connect (
                   this._favourite_contacts_changed_cb);
+              Internal.profiling_start ("initialising favourite contacts in " +
+                  "Tpf.PersonaStore (ID: %s)", this.id);
               this._initialise_favourite_contacts.begin ((o, r) =>
                 {
-                  debug ("FAVOURITE INIT DONE");
                   try
                     {
                       this._initialise_favourite_contacts.end (r);
+                      Internal.profiling_end ("initialising favourite " +
+                          "contacts in Tpf.PersonaStore (ID: %s)", this.id);
                     }
                   catch (GLib.Error e)
                     {
@@ -509,6 +517,9 @@ public class Tpf.PersonaStore : Folks.PersonaStore
                       this._logger = null;
                     }
                 });
+
+              Internal.profiling_point ("created logger in Tpf.PersonaStore " +
+                  "(ID: %s)", this.id);
 
               this.account.notify["connection"].connect (
                   this._notify_connection_cb);
@@ -527,6 +538,9 @@ public class Tpf.PersonaStore : Folks.PersonaStore
                   this._force_quiescent ();
                 }
 
+              Internal.profiling_point ("loaded cache in Tpf.PersonaStore " +
+                  "(ID: %s)", this.id);
+
               this._is_prepared = true;
               this.notify_property ("is-prepared");
             }
@@ -535,6 +549,8 @@ public class Tpf.PersonaStore : Folks.PersonaStore
               this._prepare_pending = false;
             }
         }
+
+      Internal.profiling_end ("preparing Tpf.PersonaStore (ID: %s)", this.id);
     }
 
   private void _account_manager_invalidated_cb (uint domain, int code,
@@ -678,6 +694,9 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       debug ("_notify_connection_cb_async() for Tpf.PersonaStore %p ('%s').",
           this, this.id);
 
+      Internal.profiling_start ("notify connection for Tpf.PersonaStore " +
+          "(ID: %s)", this.id);
+
       /* Ensure the connection is prepared as necessary. */
       yield this.account.connection.prepare_async ({
           TelepathyGLib.Connection.get_feature_quark_contact_list (),
@@ -774,6 +793,9 @@ public class Tpf.PersonaStore : Folks.PersonaStore
 
       this._conn.notify["contact-list-state"].connect (this._contact_list_state_changed_cb);
       this._contact_list_state_changed_cb (this._conn, null);
+
+      Internal.profiling_end ("notify connection for Tpf.PersonaStore " +
+          "(ID: %s)", this.id);
     }
 
   private void _marshall_supported_fields ()

@@ -127,3 +127,18 @@ hooks for each test. Simply run:
         make -C tests/<dir> <test name>.gdb
 
 Then use gdb as normal.
+
+Profiling folks
+===============
+
+Folks has various profiling points throughout its startup code, in order to be
+able to profile the startup process. In order to use this:
+ 1. Compile folks with --enable-profiling.
+ 2. strace -ttt -f -o /tmp/logfile folks-inspect # or some other folks program
+ 3. python plot-timeline.py -o output.png /tmp/logfile
+ 4. Examine output.png for obvious problems
+
+This is based on Federico Mena Quintero’s plot-timeline.py, described on:
+http://people.gnome.org/~federico/news-2006-03.html#timeline-tools. The Python
+script itself can be downloaded from
+http://gitorious.org/projects/performance-scripts.

@@ -496,6 +496,8 @@ public class Folks.IndividualAggregator : Object
    */
   public async void prepare () throws GLib.Error
     {
+      Internal.profiling_start ("preparing IndividualAggregator");
+
       /* Once this async function returns, all the {@link Backend}s will have
        * been prepared (though no {@link PersonaStore}s are guaranteed to be
        * available yet). This last guarantee is new as of version 0.2.0. */
@@ -544,6 +546,8 @@ public class Folks.IndividualAggregator : Object
               this._prepare_pending = false;
             }
         }
+
+      Internal.profiling_end ("preparing IndividualAggregator");
     }
 
   /**
@@ -866,6 +870,9 @@ public class Folks.IndividualAggregator : Object
           /* Don't bother emitting it if nothing's changed */
           return;
         }
+
+      Internal.profiling_point ("emitting " +
+          "IndividualAggregator::individuals-changed");
 
       _added = (added != null) ? (!) added : new HashSet<Individual> ();
       _removed = (removed != null) ? (!) removed : new HashSet<Individual> ();
@@ -1474,6 +1481,9 @@ public class Folks.IndividualAggregator : Object
                   this._configured_primary_store_type_id,
                   this._configured_primary_store_id);
             }
+
+          Internal.profiling_point ("reached quiescence in " +
+              "IndividualAggregator");
 
           this._is_quiescent = true;
           this.notify_property ("is-quiescent");

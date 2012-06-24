@@ -21,6 +21,7 @@ libsocialweb_la_SOURCES = \
 
 libsocialweb_deps = \
 	folks \
+	folks-internal \
 	folks-libsocialweb \
 	gee-1.0 \
 	gio-2.0 \
@@ -53,6 +54,7 @@ libsocialweb_la_LIBADD = \
 	$(GLIB_LIBS) \
 	$(GEE_LIBS) \
 	$(top_builddir)/folks/libfolks.la \
+	$(top_builddir)/folks/libfolks-internal.la \
 	$(SW_CLIENT_LIBS) \
 	lib/libfolks-libsocialweb.la \
 	$(NULL)

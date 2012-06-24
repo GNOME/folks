@@ -21,6 +21,7 @@ eds_la_SOURCES = \
 
 eds_deps = \
 	folks \
+	folks-internal \
 	folks-eds \
 	gee-1.0 \
 	gio-2.0 \
@@ -55,6 +56,7 @@ eds_la_LIBADD = \
 	$(AM_LIBADD) \
 	$(top_builddir)/backends/eds/lib/libfolks-eds.la \
 	$(top_builddir)/folks/libfolks.la \
+	$(top_builddir)/folks/libfolks-internal.la \
 	$(GIO_LIBS) \
 	$(GLIB_LIBS) \
 	$(GEE_LIBS) \

@@ -9,6 +9,7 @@ Bugs fixed:
 • Bug 678474 — potential-match should be smarter with accents
 • Bug 678781 — memory leak in e-d-s backend
 • Bug 678811 — Fix eds backend unit tests
+• Bug 678734 — Add profiling API
 
 API changes:
 

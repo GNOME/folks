@@ -423,6 +423,9 @@ public abstract class Folks.PersonaStore : Object
           _removed = new HashSet<Persona> ();
         }
 
+      Internal.profiling_point ("emitting PersonaStore::personas-changed " +
+          "(ID: %s)", this.id);
+
       // We've now guaranteed that both _added and _removed are non-null.
       this.personas_changed (((!) _added).read_only_view,
           ((!) _removed).read_only_view, message, actor, reason);

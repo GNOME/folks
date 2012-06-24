@@ -178,6 +178,8 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
    */
   public override async void prepare ()
     {
+      Internal.profiling_start ("preparing Kf.PersonaStore (ID: %s)", this.id);
+
       lock (this._is_prepared)
         {
           if (this._is_prepared || this._prepare_pending)
@@ -206,11 +208,17 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
                           null);
                       unowned string contents_s = (string) contents;
 
+                      Internal.profiling_point ("loaded file in " +
+                          "Kf.PersonaStore (ID: %s)", this.id);
+
                       if (contents_s.length > 0)
                         {
                           this._key_file.load_from_data (contents_s,
                               contents_s.length,
                               KeyFileFlags.KEEP_COMMENTS);
+
+                          Internal.profiling_point ("parsed data in " +
+                              "Kf.PersonaStore (ID: %s)", this.id);
                         }
                       break;
                     }
@@ -306,6 +314,8 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
               this._prepare_pending = false;
             }
         }
+
+      Internal.profiling_end ("preparing Kf.PersonaStore (ID: %s)", this.id);
     }
 
   /**

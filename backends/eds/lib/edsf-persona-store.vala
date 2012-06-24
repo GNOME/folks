@@ -612,6 +612,9 @@ public class Edsf.PersonaStore : Folks.PersonaStore
    */
   public override async void prepare () throws PersonaStoreError
     {
+      Internal.profiling_start ("preparing Edsf.PersonaStore (ID: %s)",
+          this.id);
+
       /* FIXME: https://bugzilla.gnome.org/show_bug.cgi?id=652637 */
       lock (this._is_prepared)
         {
@@ -629,6 +632,9 @@ public class Edsf.PersonaStore : Folks.PersonaStore
                * addressbook.open() will fail if we don't. */
               this._source_registry = yield create_source_registry ();
 
+              Internal.profiling_point ("created SourceRegistry in " +
+                  "Edsf.PersonaStore (ID: %s)", this.id);
+
               /* We know _source_registry != null because otherwise
                * create_source_registry() would've thrown an error. */
               ((!) this._source_registry).source_removed.connect (
@@ -645,6 +651,9 @@ public class Edsf.PersonaStore : Folks.PersonaStore
               yield this._open_address_book ();
               debug ("Successfully finished opening address book %p for " +
                   "persona store ‘%s’ (%p).", this._addressbook, this.id, this);
+
+              Internal.profiling_point ("opened address book in " +
+                  "Edsf.PersonaStore (ID: %s)", this.id);
 
               this._notify_if_default ();
               this._update_trust_level ();
@@ -734,6 +743,9 @@ public class Edsf.PersonaStore : Folks.PersonaStore
               yield ((!) this._addressbook).get_backend_property (
                   "supported-fields", null, out supported_fields);
 
+              Internal.profiling_point ("got supported fields in " +
+                  "Edsf.PersonaStore (ID: %s)", this.id);
+
               var prop_set = new HashSet<string> ();
 
               /* We get a comma-separated list of fields back. */
@@ -798,6 +810,9 @@ public class Edsf.PersonaStore : Folks.PersonaStore
               yield ((!) this._addressbook).get_backend_property (
                   "capabilities", null, out capabilities);
 
+              Internal.profiling_point ("got capabilities in " +
+                  "Edsf.PersonaStore (ID: %s)", this.id);
+
               if (capabilities != null)
                 {
                   string[] caps = ((!) capabilities).split (",");
@@ -824,6 +839,9 @@ public class Edsf.PersonaStore : Folks.PersonaStore
             {
               got_view = yield ((!) this._addressbook).get_view (
                   this._query_str, null, out this._ebookview);
+
+              Internal.profiling_point ("opened book view in " +
+                  "Edsf.PersonaStore (ID: %s)", this.id);
 
               if (got_view == false)
                 {
@@ -932,6 +950,8 @@ public class Edsf.PersonaStore : Folks.PersonaStore
               this.notify_property ("is-quiescent");
             }
         }
+
+      Internal.profiling_end ("preparing Edsf.PersonaStore");
     }
 
   /* Temporaries for _open_address_book(). See the complaint below. */
@@ -2097,6 +2117,9 @@ public class Edsf.PersonaStore : Folks.PersonaStore
         {
           warning ("Error in address book view query: %s", err.message);
         }
+
+      Internal.profiling_point ("initial query complete in " +
+          "Edsf.PersonaStore (ID: %s)", this.id);
 
       /* The initial query is complete, so signal that we've reached
        * quiescence (even if there was an error). */

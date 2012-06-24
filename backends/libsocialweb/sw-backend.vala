@@ -95,6 +95,8 @@ public class Folks.Backends.Sw.Backend : Folks.Backend
    */
   public override async void prepare () throws GLib.Error
     {
+      Internal.profiling_start ("preparing Sw.Backend");
+
       lock (this._is_prepared)
         {
           if (!this._is_prepared && !this._prepare_pending)
@@ -123,6 +125,8 @@ public class Folks.Backends.Sw.Backend : Folks.Backend
                 });
             }
         }
+
+      Internal.profiling_end ("preparing Sw.Backend");
     }
 
   /**

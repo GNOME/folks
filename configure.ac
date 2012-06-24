@@ -512,6 +512,17 @@ AC_SUBST([ERROR_INTROSPECTION_SCANNER_ARGS])
 AC_SUBST([ERROR_VALAFLAGS])
 
 # -----------------------------------------------------------
+# Profiling
+# -----------------------------------------------------------
+
+AC_ARG_ENABLE([profiling],
+              AS_HELP_STRING([--enable-profiling],
+                             [Enable building profiling points]),
+              [enable_profiling=$enableval],
+              [enable_profiling=no])
+AM_CONDITIONAL([ENABLE_PROFILING], [test "$enable_profiling" = "yes"])
+
+# -----------------------------------------------------------
 # Final output
 # -----------------------------------------------------------
 

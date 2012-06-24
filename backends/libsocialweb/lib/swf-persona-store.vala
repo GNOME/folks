@@ -316,6 +316,8 @@ public class Swf.PersonaStore : Folks.PersonaStore
    */
   public override async void prepare () throws GLib.Error
     {
+      Internal.profiling_start ("preparing Swf.PersonaStore (ID: %s)", this.id);
+
       lock (this._is_prepared)
         {
           if (!this._is_prepared && !this._prepare_pending)
@@ -328,6 +330,9 @@ public class Swf.PersonaStore : Folks.PersonaStore
               try
                 {
                   caps = yield this._get_static_capabilities ();
+
+                  Internal.profiling_point ("got capabilities in " +
+                      "Swf.PersonaStore (ID: %s)", this.id);
 
                   if (caps == null)
                     {
@@ -365,6 +370,9 @@ public class Swf.PersonaStore : Folks.PersonaStore
               var contact_view = yield this._contacts_query_open_view ("people",
                   new HashTable<weak string, weak string> (str_hash,
                       str_equal));
+
+              Internal.profiling_point ("opened view in Swf.PersonaStore " +
+                  "(ID: %s)", this.id);
 
               /* Propagate errors from the contacts_query_open_view()
                * callback. */
@@ -406,6 +414,8 @@ public class Swf.PersonaStore : Folks.PersonaStore
               this._contact_view.start ();
             }
         }
+
+      Internal.profiling_end ("preparing Swf.PersonaStore (ID: %s)", this.id);
     }
 
   private void contacts_added_cb (GLib.List<unowned Contact> contacts)
