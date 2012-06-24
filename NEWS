@@ -8,9 +8,11 @@ Bugs fixed:
 • Bug 673918 — Port to newer libgee
 • Bug 629537 — Support anti-linking
 • Bug 679618 — Crash when unsetting all groups
+• Bug 678696 — Add API for EDS Google system groups
 
 API changes:
 • Add AntiLinkable interface and implement it on Kf.Persona and Edsf.Persona
+• Add Edsf.Persona.in_google_personal_group
 
 Overview of changes from libfolks 0.7.1 to libfolks 0.7.2
 =========================================================
@@ -28,7 +30,6 @@ Bugs fixed:
 
 API changes:
 • Add profiling api
-
 
 Overview of changes from libfolks 0.7.0 to libfolks 0.7.1
 =========================================================

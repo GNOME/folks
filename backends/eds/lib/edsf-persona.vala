@@ -699,6 +699,20 @@ public class Edsf.Persona : Folks.Persona,
       yield ((Edsf.PersonaStore) this.store)._set_anti_links (this, anti_links);
     }
 
+  private bool _in_google_personal_group;
+
+  /**
+   * Whether this contact is in the “My Contacts” section of the user’s address
+   * book, rather than the “Other” section.
+   *
+   * @since UNRELEASED
+   */
+  [CCode (notify = false)]
+  public bool in_google_personal_group
+    {
+      get { return this._in_google_personal_group; }
+    }
+
   /**
    * Build a IID.
    *
@@ -1504,8 +1518,34 @@ public class Edsf.Persona : Folks.Persona,
             }
         }
 
-      var old_is_favourite = this._is_favourite;
+      /* Check our new set of system groups if this is a Google address book. */
       var store = (Edsf.PersonaStore) this.store;
+      var in_google_personal_group = false;
+
+      if (store._is_google_contacts_address_book ())
+        {
+          var vcard = (E.VCard) this.contact;
+          unowned E.VCardAttribute? attr =
+             vcard.get_attribute ("X-GOOGLE-SYSTEM-GROUP-IDS");
+          if (attr != null)
+            {
+              unowned GLib.List<string> vals = attr.get_values ();
+
+              /* If we're in the GDATA_CONTACTS_GROUP_CONTACTS group, then
+               * we're in the user's "My Contacts" address book, as opposed
+               * to their "Other" address book. */
+              foreach (var system_group_id in vals)
+                {
+                  if (system_group_id == "Contacts")
+                    {
+                      in_google_personal_group = true;
+                      break;
+                    }
+                }
+            }
+        }
+
+      var old_is_favourite = this._is_favourite;
 
       /* Make the changes to this._groups and emit signals. */
       foreach (var category_name in removed_categories)
@@ -1544,6 +1584,11 @@ public class Edsf.Persona : Folks.Persona,
       if (this._is_favourite != old_is_favourite)
         {
           this.notify_property ("is-favourite");
+        }
+      if (in_google_personal_group != this._in_google_personal_group)
+        {
+          this._in_google_personal_group = in_google_personal_group;
+          this.notify_property ("in-google-personal-group");
         }
 
       this.thaw_notify ();
