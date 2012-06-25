@@ -22,16 +22,9 @@ done
 shift
 if test "z$1" = "z"; then dbus_usage; fi
 
-gconf_stop ()
-{
-  local pid=$(dbus-send --print-reply --dest=org.freedesktop.DBus /org/freedesktop/DBus org.freedesktop.DBus.GetConnectionUnixProcessID string:org.gnome.GConf | tail -n 1 | awk ' { print $2; } ')
-  kill -KILL $pid
-}
-
 cleanup ()
 {
     eds_stop
-    gconf_stop
     dbus_stop
     test -d ../data/gconf.d && rm -rf ../data/gconf.d
 }
