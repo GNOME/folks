@@ -52,6 +52,8 @@ public class MatchNameTests : Folks.TestCase
           this.test_match_name_4);
       this.add_test ("test potential match by name #5 ",
           this.test_match_name_5);
+      this.add_test ("test potential match by name #6 ",
+          this.test_match_name_6);
     }
 
   public override void set_up ()
@@ -116,6 +118,13 @@ public class MatchNameTests : Folks.TestCase
     {
       /* bgo#678474 */
       this._test_match_name ("Frédéric Peters", "Frederic Peters");
+      assert (this._match >= Folks.MatchResult.HIGH);
+    }
+
+  public void test_match_name_6 ()
+    {
+      /* Another one from bgo#678474, testing random punctuation in names */
+      this._test_match_name ("Alice Badger", "alice.badger");
       assert (this._match >= Folks.MatchResult.HIGH);
     }
 

@@ -545,13 +545,6 @@ public class Folks.PotentialMatch : Object
           case UnicodeType.ENCLOSING_MARK:
             /* Ignore those */
             break;
-          case UnicodeType.PRIVATE_USE:
-          case UnicodeType.SURROGATE:
-          case UnicodeType.LOWERCASE_LETTER:
-          case UnicodeType.MODIFIER_LETTER:
-          case UnicodeType.OTHER_LETTER:
-          case UnicodeType.TITLECASE_LETTER:
-          case UnicodeType.UPPERCASE_LETTER:
           case UnicodeType.DECIMAL_NUMBER:
           case UnicodeType.LETTER_NUMBER:
           case UnicodeType.OTHER_NUMBER:
@@ -569,6 +562,16 @@ public class Folks.PotentialMatch : Object
           case UnicodeType.LINE_SEPARATOR:
           case UnicodeType.PARAGRAPH_SEPARATOR:
           case UnicodeType.SPACE_SEPARATOR:
+            /* Replace punctuation with spaces. */
+            retval[0] = ' ';
+            break;
+          case UnicodeType.PRIVATE_USE:
+          case UnicodeType.SURROGATE:
+          case UnicodeType.LOWERCASE_LETTER:
+          case UnicodeType.MODIFIER_LETTER:
+          case UnicodeType.OTHER_LETTER:
+          case UnicodeType.TITLECASE_LETTER:
+          case UnicodeType.UPPERCASE_LETTER:
           default:
             ch = ch.tolower ();
             ch.fully_decompose (false, retval);
