@@ -1174,7 +1174,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
           /* Irrelevant */
           case ContactField.UID: /* identifier */
           case ContactField.REV: /* revision date */
-          case ContactField.BOOK_URI: /* parent identifier */
+          case ContactField.BOOK_UID: /* parent identifier */
           case ContactField.NAME_OR_ORG: /* FULL_NAME or ORG; both handled */
             return PersonaDetail.INVALID;
           /* Unsupported */
