@@ -54,6 +54,8 @@ public class LinkPersonasDiffStoresTests : Folks.TestCase
       /* We configure eds as the primary store */
       var config_val = "eds:%s".printf (this._eds_backend.address_book_uid);
       Environment.set_variable ("FOLKS_PRIMARY_STORE", config_val, true);
+      Environment.set_variable ("FOLKS_BACKEND_EDS_USE_ADDRESS_BOOKS",
+                                "test:other", true);
     }
 
   public override void tear_down ()
