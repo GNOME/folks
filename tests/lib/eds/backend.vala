@@ -32,7 +32,6 @@ errordomain EdsTest.BackendSetupError
 
 public class EdsTest.Backend
 {
-  private string _source_name;
   private string _addressbook_name;
   private E.BookClient _addressbook;
   private GLib.List<string> _e_contacts;
@@ -99,12 +98,12 @@ public class EdsTest.Backend
     {
       try
         {
-          this._source_name = name;
+          /* _addressbook_name needs to be set before calling _prepare_source */
+          this._addressbook_name = name;
+
           this._prepare_source (source_is_default);
           this._addressbook = new BookClient (this._source);
           this._addressbook.open_sync (false, null);
-          this._addressbook_name =
-            this._addressbook.get_source().get_uid ();
           Environment.set_variable ("FOLKS_BACKEND_EDS_USE_ADDRESS_BOOKS",
                                     this._addressbook_name, true);
         }
@@ -116,7 +115,7 @@ public class EdsTest.Backend
 
   public void set_as_default ()
     {
-      this._source_registry.set_default_address_book(this._source);
+      this._source_registry.set_default_address_book (this._source);
     }
 
   private void _prepare_source (bool is_default)
@@ -130,10 +129,10 @@ public class EdsTest.Backend
           GLib.critical (e.message);
         }
 
-      this._source = this._source_registry.ref_source(this._source_name);
+      this._source = this._source_registry.ref_source (this._addressbook_name);
 
       if (is_default)
-        set_as_default();
+        this.set_as_default();
     }
 
   public async void commit_contacts_to_addressbook ()
@@ -264,6 +263,7 @@ public class EdsTest.Backend
       Environment.set_variable ("FOLKS_BACKEND_EDS_USE_ADDRESS_BOOKS",
                                 "", true);
 
+      /* Use the async remove method because the sync method currently hangs. */
       this._addressbook.remove.begin (null, (o, r) =>
         {
           try
@@ -272,14 +272,14 @@ public class EdsTest.Backend
               if (ret == false)
                 {
                   GLib.warning ("remove() addressbook returned false on %s\n",
-                  this._addressbook_name);
+                      this._addressbook_name);
                 }
               this._addressbook = null;
             }
           catch (GLib.Error e)
             {
               GLib.warning ("Unable to remove addressbook %s because: %s\n",
-              this._addressbook_name, e.message);
+                  this._addressbook_name, e.message);
             }
             mainloop.quit();
         });
