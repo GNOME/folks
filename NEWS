@@ -2,10 +2,12 @@ Overview of changes from libfolks 0.7.1 to libfolks 0.7.2
 =========================================================
 
 Dependencies:
+• evolution-data-server ≥ 3.5.4
 
 Bugs fixed:
 • Bug 677166 — Salut personas survive disconnection
 • Bug 678474 — potential-match should be smarter with accents
+• Bug 678781 — memory leak in e-d-s backend
 
 API changes:
 

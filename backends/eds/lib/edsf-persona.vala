@@ -685,7 +685,7 @@ public class Edsf.Persona : Folks.Persona,
       E.Contact contact)
     {
       var contact_id =
-          (string?) Edsf.Persona._get_property_from_contact (contact, "id");
+          Edsf.Persona._get_property_from_contact<string> (contact, "id");
       return Edsf.Persona.build_iid (store_id, (!) (contact_id ?? ""));
     }
 
@@ -718,14 +718,14 @@ public class Edsf.Persona : Folks.Persona,
   public Persona (PersonaStore store, E.Contact contact)
     {
       var _contact_id =
-        (string?) Edsf.Persona._get_property_from_contact (contact, "id");
+          Edsf.Persona._get_property_from_contact<string> (contact, "id");
       var contact_id = (!) (_contact_id ?? "");
 
       var uid = this.build_uid (BACKEND_NAME, store.id, contact_id);
       var iid = Edsf.Persona.build_iid (store.id, contact_id);
       var is_user = BookClient.is_self (contact);
       var _full_name =
-          (string?) Edsf.Persona._get_property_from_contact (contact,
+          Edsf.Persona._get_property_from_contact<string> (contact,
               "full_name");
       var full_name = (!) (_full_name ?? "");
 
@@ -924,7 +924,7 @@ public class Edsf.Persona : Folks.Persona,
 
   private void _update_birthday ()
     {
-      var _bday = (E.ContactDate?) this._get_property ("birth_date");
+      var _bday = this._get_property<E.ContactDate> ("birth_date");
 
       if (_bday != null)
         {
@@ -1031,13 +1031,13 @@ public class Edsf.Persona : Folks.Persona,
     {
       RoleFieldDetails? _default_role = null;
 
-      var org = (string?) this._get_property ("org");
-      var org_unit = (string?) this._get_property ("org_unit");
-      var office = (string?) this._get_property ("office");
-      var title = (string?) this._get_property ("title");
-      var role = (string?) this._get_property ("role");
-      var manager = (string?) this._get_property ("manager");
-      var assistant = (string?) this._get_property ("assistant");
+      var org = this._get_property<string> ("org");
+      var org_unit = this._get_property<string> ("org_unit");
+      var office = this._get_property<string> ("office");
+      var title = this._get_property<string> ("title");
+      var role = this._get_property<string> ("role");
+      var manager = this._get_property<string> ("manager");
+      var assistant = this._get_property<string> ("assistant");
 
       if (org != null ||
           org_unit != null ||
@@ -1144,7 +1144,7 @@ public class Edsf.Persona : Folks.Persona,
           (GLib.HashFunc) NoteFieldDetails.hash,
           (GLib.EqualFunc) NoteFieldDetails.equal);
 
-      var n = (string?) this._get_property ("note");
+      var n = this._get_property<string> ("note");
       if (n != null && n != "")
         {
           var note = new NoteFieldDetails ((!) n);
@@ -1161,7 +1161,7 @@ public class Edsf.Persona : Folks.Persona,
 
   private void _update_names ()
     {
-      var _full_name = (string?) this._get_property ("full_name");
+      var _full_name = this._get_property<string> ("full_name");
 
       if (_full_name == null)
         {
@@ -1176,7 +1176,7 @@ public class Edsf.Persona : Folks.Persona,
           this.notify_property ("full-name");
         }
 
-      var _nickname = (string?) this._get_property ("nickname");
+      var _nickname = this._get_property<string> ("nickname");
 
       if (_nickname == null)
         {
@@ -1192,7 +1192,7 @@ public class Edsf.Persona : Folks.Persona,
         }
 
       StructuredName? structured_name = null;
-      var _cn = (E.ContactName?) this._get_property ("name");
+      var _cn = this._get_property<E.ContactName> ("name");
       if (_cn != null)
         {
           var cn = (!) _cn;
@@ -1254,7 +1254,7 @@ public class Edsf.Persona : Folks.Persona,
 
   private void _update_avatar ()
     {
-      var p = (E.ContactPhoto?) this._get_property ("photo");
+      var p = this._get_property<E.ContactPhoto> ("photo");
 
       var cache = AvatarCache.dup ();
 
@@ -1310,7 +1310,7 @@ public class Edsf.Persona : Folks.Persona,
           var url_property = mapping.vcard_field_name;
           var folks_type = mapping.folks_type;
 
-          var u = (string?) this._get_property (url_property);
+          var u = this._get_property<string> (url_property);
           if (u != null && u != "")
             {
               var fd_u = new UrlFieldDetails ((!) u);
@@ -1447,8 +1447,8 @@ public class Edsf.Persona : Folks.Persona,
 
   private void _update_groups ()
     {
-      unowned GLib.List<string> category_names =
-          (GLib.List<string>) this._contact.get (E.ContactField.CATEGORY_LIST);
+      var category_names =
+          this._contact.get<GLib.List<string>> (E.ContactField.CATEGORY_LIST);
       var new_categories = new HashSet<string> ();
       var added_categories = new LinkedList<string> ();
 
@@ -1751,19 +1751,17 @@ public class Edsf.Persona : Folks.Persona,
         }
     }
 
-  // NOTE: This may return null, but Vala doesn't allow us to express that in the type system for void* types.
-  internal static void * _get_property_from_contact (E.Contact contact,
+  internal static T? _get_property_from_contact<T> (E.Contact contact,
       string prop_name)
     {
-      void *prop_value = null;
-      prop_value = contact.get (E.Contact.field_id (prop_name));
+      T? prop_value = null;
+      prop_value = contact.get<T> (E.Contact.field_id (prop_name));
       return prop_value;
     }
 
-  // NOTE: This may return null, but Vala doesn't allow us to express that in the type system for void* types.
-  private void * _get_property (string prop_name)
+  private T? _get_property<T> (string prop_name)
     {
-      return Edsf.Persona._get_property_from_contact (this.contact,
+      return Edsf.Persona._get_property_from_contact<T> (this.contact,
           prop_name);
     }
 
