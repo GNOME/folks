@@ -63,7 +63,7 @@ TESTS_ENVIRONMENT = \
 	$(RUN_WITH_PRIVATE_BUS) \
 	--config-file=$(SESSION_CONF) \
 	--
-TESTS = $(filter-out fake-tp-backend,$(noinst_PROGRAMS))
+TESTS = $(filter-out fake-tp-backend individual-zeitgeist,$(noinst_PROGRAMS))
 
 fake_tp_backend_SOURCES = \
 	fake-tp-backend.vala \
