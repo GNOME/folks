@@ -120,14 +120,22 @@ public class EdsTest.Backend
 
   private void _prepare_source (bool is_default)
     {
-      try
+      var mainloop = new GLib.MainLoop (null, false);
+
+      create_source_registry.begin (null, (obj, async_res) =>
         {
-          this._source_registry = new SourceRegistry.sync (null);
-        }
-      catch (GLib.Error e)
-        {
-          GLib.critical (e.message);
-        }
+          try
+            {
+              this._source_registry = create_source_registry.end (async_res);
+            }
+          catch (GLib.Error e)
+            {
+              GLib.critical (e.message);
+            }
+          mainloop.quit();
+        });
+
+      mainloop.run();
 
       this._source = this._source_registry.ref_source (this._addressbook_name);
 
@@ -258,8 +266,6 @@ public class EdsTest.Backend
 
   public void tear_down ()
     {
-      var mainloop = new GLib.MainLoop (null, false);
-
       Environment.set_variable ("FOLKS_BACKEND_EDS_USE_ADDRESS_BOOKS",
                                 "", true);
 
@@ -281,10 +287,7 @@ public class EdsTest.Backend
               GLib.warning ("Unable to remove addressbook %s because: %s\n",
                   this._addressbook_name, e.message);
             }
-            mainloop.quit();
         });
-
-      mainloop.run();
     }
 
   private Gee.HashMap<string, string> _parse_addrs (string addr_s)
