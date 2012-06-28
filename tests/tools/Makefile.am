@@ -6,6 +6,8 @@ EXTRA_DIST = \
 	with-session-bus-eds.sh \
 	with-session-bus-tracker.sh \
 	tracker.sh \
+	test.source \
+	other.source \
 	$(NULL)
 
 -include $(top_srcdir)/git.mk
