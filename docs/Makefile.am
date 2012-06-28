@@ -80,6 +80,7 @@ folks_doc_deps = \
 	gmodule-2.0 \
 	gio-2.0 \
 	gee-1.0 \
+	folks-internal \
 	build-conf \
 	$(NULL)
 valadoc_flags_folks = \
