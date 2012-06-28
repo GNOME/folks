@@ -1,13 +1,3 @@
-Overview of changes from libfolks 0.7.2 to libfolks 0.7.3
-=========================================================
-
-Dependencies:
-
-Bugs fixed:
-
-API changes:
-
-
 Overview of changes from libfolks 0.7.1 to libfolks 0.7.2
 =========================================================
 
@@ -23,6 +13,7 @@ Bugs fixed:
 • Bug 679020 — Fail to build master using vala master
 
 API changes:
+• Add profiling api
 
 
 Overview of changes from libfolks 0.7.0 to libfolks 0.7.1
