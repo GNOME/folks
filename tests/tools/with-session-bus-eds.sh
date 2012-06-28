@@ -38,6 +38,7 @@ eds_init_settings
 dbus_init 0
 
 dbus_start
+eds_start
 
 e=0
 "$@" || e=$?

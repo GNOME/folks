@@ -10,6 +10,7 @@
 # notice and this notice are preserved.
 
 eds_tmpdir=$(mktemp -d)
+libexec=$(pkg-config --variable=libexecdir evolution-data-server-1.2)
 
 cur_dir=`dirname $0`
 
@@ -20,6 +21,11 @@ eds_init_settings () {
     mkdir -p $XDG_CONFIG_HOME/evolution/sources
     cp $cur_dir/test.source $XDG_CONFIG_HOME/evolution/sources/
     cp $cur_dir/other.source $XDG_CONFIG_HOME/evolution/sources/
+}
+
+eds_start () {
+    $libexec/evolution-source-registry > /dev/null &
+    $libexec/evolution-addressbook-factory --wait-for-client > /dev/null &
 }
 
 # This should be called on INT TERM and EXIT
