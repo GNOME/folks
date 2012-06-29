@@ -635,6 +635,13 @@ public class Folks.BackendStore : Object {
                   _("The content type of '%s' could not be determined. Have you installed shared-mime-info?"),
                   file.get_path ());
             }
+          /* We should have only .la .so and sub-directories */
+          else if (mime != "application/x-sharedlib" &&
+                   mime != "application/x-shared-library-la" &&
+                   mime != "inode/directory")
+            {
+              warning ("The content type of '%s' appears to be '%s' which looks suspicious. Have you installed shared-mime-info?", file.get_path (), mime);
+            }
         }
 
       debug ("Finished searching for modules in folder '%s'",
