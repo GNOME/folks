@@ -1,5 +1,5 @@
 # If not 1, append datestamp to the version number
-m4_define([folks_released], [0])
+m4_define([folks_released], [1])
 
 m4_define([folks_major_version], [0])
 m4_define([folks_minor_version], [7])
@@ -151,7 +151,7 @@ VALADOC_REQUIRED=0.3.1
 TRACKER_SPARQL_MAJOR=0.14
 TRACKER_SPARQL_REQUIRED=0.13.1
 EBOOK_REQUIRED=3.5.3
-EDATASERVER_REQUIRED=3.5.4
+EDATASERVER_REQUIRED=3.5.3.1
 ZEITGEIST_REQUIRED=0.3.14
 
 AC_SUBST([TRACKER_SPARQL_MAJOR])
