@@ -56,7 +56,7 @@ namespace Folks.Internal
    *
    * @param format printf-style message format
    * @param ... message arguments
-   * @since UNRELEASED
+   * @since 0.7.2
    */
   public static void profiling_point (string format, ...)
     {
@@ -77,7 +77,7 @@ namespace Folks.Internal
    *
    * @param format printf-style message format
    * @param ... message arguments
-   * @since UNRELEASED
+   * @since 0.7.2
    */
   public static void profiling_start (string format, ...)
     {
@@ -98,7 +98,7 @@ namespace Folks.Internal
    *
    * @param format printf-style message format
    * @param ... message arguments
-   * @since UNRELEASED
+   * @since 0.7.2
    */
   public static void profiling_end (string format, ...)
     {

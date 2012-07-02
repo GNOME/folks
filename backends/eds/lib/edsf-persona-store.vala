@@ -222,9 +222,9 @@ public class Edsf.PersonaStore : Folks.PersonaStore
    * @param s the e-d-s source being represented by the persona store
    *
    * @since 0.6.0
-   * @deprecated UNRELEASED Use {@link Edsf.PersonaStore.with_source_registry}
+   * @deprecated 0.7.2 Use {@link Edsf.PersonaStore.with_source_registry}
    */
-  [Deprecated (since = "UNRELEASED",
+  [Deprecated (since = "0.7.2",
       replacement = "Edsf.PersonaStore.with_source_registry()")]
   public PersonaStore (E.SourceRegistry r, E.Source s)
     {
@@ -248,7 +248,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
    * @param r the EDS source registry giving access to all EDS sources
    * @param s the EDS source being represented by the persona store
    *
-   * @since UNRELEASED
+   * @since 0.7.2
    */
   public PersonaStore.with_source_registry (E.SourceRegistry r, E.Source s)
     {
