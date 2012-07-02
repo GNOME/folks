@@ -395,9 +395,7 @@ public class Folks.BackendStore : Object {
                 }
               catch (GLib.Error e)
                 {
-                  /* Translators: the first parameter is a backend name, and the
-                   * second is an error message. */
-                  warning (_("Error preparing Backend '%s': %s"),
+                  warning ("Error preparing Backend '%s': %s",
                       backend.name, e.message);
                 }
             }
@@ -631,8 +629,7 @@ public class Folks.BackendStore : Object {
           else if (mime == null)
             {
               warning (
-                  /* Translators: the parameter is a filename. */
-                  _("The content type of '%s' could not be determined. Have you installed shared-mime-info?"),
+                  "The content type of '%s' could not be determined. Have you installed shared-mime-info?",
                   file.get_path ());
             }
           /* We should have only .la .so and sub-directories */
@@ -665,9 +662,7 @@ public class Folks.BackendStore : Object {
       var _module = Module.open (file_path, ModuleFlags.BIND_LOCAL);
       if (_module == null)
         {
-          /* Translators: the first parameter is a filename and the second is an
-           * error message. */
-          warning (_("Failed to load module from path '%s': %s"),
+          warning ("Failed to load module from path '%s': %s",
                     file_path, Module.error ());
 
           return;
@@ -681,9 +676,7 @@ public class Folks.BackendStore : Object {
        * removed if they've since been disabled */
       if (!module.symbol("module_init", out function))
         {
-          /* Translators: the first parameter is a function name, the second is
-           * a filename and the third is an error message. */
-          warning (_("Failed to find entry point function '%s' in '%s': %s"),
+          warning ("Failed to find entry point function '%s' in '%s': %s",
                     "module_init",
                     file_path,
                     Module.error ());
