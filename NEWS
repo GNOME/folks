@@ -12,7 +12,7 @@ Overview of changes from libfolks 0.7.1 to libfolks 0.7.2
 =========================================================
 
 Dependencies:
-• evolution-data-server ≥ 3.5.4
+• evolution-data-server ≥ 3.5.3.1
 
 Bugs fixed:
 • Bug 677166 — Salut personas survive disconnection

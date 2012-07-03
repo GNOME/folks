@@ -1,5 +1,5 @@
 # If not 1, append datestamp to the version number
-m4_define([folks_released], [1])
+m4_define([folks_released], [0])
 
 m4_define([folks_major_version], [0])
 m4_define([folks_minor_version], [7])
