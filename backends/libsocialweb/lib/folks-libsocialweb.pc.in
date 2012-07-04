@@ -10,6 +10,6 @@ vapidir=@datadir@/vala/vapi
 Name: Folks libsocialweb support library
 Description: Libsocialweb support library for the Folks meta-contacts library
 Version: @VERSION@
-Requires: folks glib-2.0 gobject-2.0 gee-1.0 libsocialweb-client
+Requires: folks glib-2.0 gobject-2.0 gee-0.8 libsocialweb-client
 Libs: -L${libdir} -lfolks-libsocialweb
 Cflags: -I${includedir}

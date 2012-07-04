@@ -79,7 +79,7 @@ folks_doc_files = \
 folks_doc_deps = \
 	gmodule-2.0 \
 	gio-2.0 \
-	gee-1.0 \
+	gee-0.8 \
 	folks-internal \
 	build-conf \
 	$(NULL)
@@ -111,7 +111,7 @@ folks_telepathy_doc_files = $(top_srcdir)/backends/telepathy/lib/*.vala
 folks_telepathy_doc_deps = \
 	gmodule-2.0 \
 	gio-2.0 \
-	gee-1.0 \
+	gee-0.8 \
 	telepathy-glib \
 	zeitgeist-1.0 \
 	tp-lowlevel \
@@ -173,7 +173,7 @@ folks_eds_doc_files = $(top_srcdir)/backends/eds/lib/*.vala
 folks_eds_doc_deps = \
 	gmodule-2.0 \
 	gio-2.0 \
-	gee-1.0 \
+	gee-0.8 \
 	libebook-1.2 \
 	libedataserver-1.2 \
 	build-conf \
@@ -242,7 +242,7 @@ folks_libsocialweb_doc_files = $(top_srcdir)/backends/libsocialweb/lib/*.vala
 folks_libsocialweb_doc_deps = \
 	gmodule-2.0 \
 	gio-2.0 \
-	gee-1.0 \
+	gee-0.8 \
 	libsocialweb-client \
 	build-conf \
 	folks \

@@ -8,7 +8,7 @@ VALAFLAGS += \
 	--vapidir=. \
 	--pkg gobject-2.0 \
 	--pkg gio-2.0 \
-	--pkg gee-1.0 \
+	--pkg gee-0.8 \
 	--pkg folks \
 	--pkg libebook-1.2 \
 	--pkg libedataserver-1.2 \
