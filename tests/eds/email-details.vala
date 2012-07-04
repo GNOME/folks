@@ -58,8 +58,7 @@ public class EmailDetailsTests : Folks.TestCase
   public void test_email_details ()
     {
       this._email_count = 0;
-      this._email_types = new HashSet<string> (str_hash,
-          str_equal);
+      this._email_types = new HashSet<string> ();
       this._c1 = new Gee.HashMap<string, Value?> ();
       this._c2 = new Gee.HashMap<string, Value?> ();
       this._c3 = new Gee.HashMap<string, Value?> ();

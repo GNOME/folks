@@ -121,8 +121,8 @@ public class SetPostalAddressesTests : Folks.TestCase
               i.notify["postal-addresses"].connect (this._notify_postal_cb);
 
               var addresses = new HashSet<PostalAddressFieldDetails> (
-                  (GLib.HashFunc) PostalAddressFieldDetails.hash,
-                  (GLib.EqualFunc) PostalAddressFieldDetails.equal);
+                   AbstractFieldDetails<PostalAddress>.hash_static,
+                   AbstractFieldDetails<PostalAddress>.equal_static);
               var pa = new PostalAddress (null, null, null, null, null,
                 null, null, null, null);
               pa.po_box = this._postal_address_fd.value.po_box;

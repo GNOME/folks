@@ -101,7 +101,7 @@ public class Folks.Inspect.Client : Object
     {
       Utils.init ();
 
-      this.commands = new HashMap<string, Command> (str_hash, str_equal);
+      this.commands = new HashMap<string, Command> ();
 
       /* Register the commands we support */
       /* FIXME: This should be automatic */

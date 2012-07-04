@@ -127,8 +127,8 @@ public class SetIMAddressesTests : Folks.TestCase
                 {
                   var im_addrs = new HashMultiMap<string, ImFieldDetails> (
                       null, null,
-                      (GLib.HashFunc) ImFieldDetails.hash,
-                      (GLib.EqualFunc) ImFieldDetails.equal);
+                       AbstractFieldDetails<string>.hash_static,
+                       AbstractFieldDetails<string>.equal_static);
                   im_addrs.set ("jabber",
                       new ImFieldDetails ("bernie@example.org"));
                   ((ImDetails) p).im_addresses = im_addrs;

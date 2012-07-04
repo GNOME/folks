@@ -115,8 +115,8 @@ public class SetPhonesTests : Folks.TestCase
               i.notify["phone-numbers"].connect (this._notify_phones_cb);
 
               var phones = new HashSet<PhoneFieldDetails> (
-                  (GLib.HashFunc) PhoneFieldDetails.hash,
-                  (GLib.EqualFunc) PhoneFieldDetails.equal);
+                   AbstractFieldDetails<string>.hash_static,
+                   AbstractFieldDetails<string>.equal_static);
 
               var p1 = new PhoneFieldDetails (this._phone_1);
               phones.add (p1);

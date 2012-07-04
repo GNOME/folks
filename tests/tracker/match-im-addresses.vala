@@ -180,8 +180,8 @@ public class MatchIMAddressesTests : Folks.TestCase
 
       val = Value (typeof (MultiMap));
       im_addrs = new HashMultiMap<string, ImFieldDetails> (null, null,
-          (GLib.HashFunc) ImFieldDetails.hash,
-          (GLib.EqualFunc) ImFieldDetails.equal);
+           AbstractFieldDetails<string>.hash_static,
+           AbstractFieldDetails<string>.equal_static);
       im_addrs.set ("jabber", new ImFieldDetails (this._im_addr_1));
       im_addrs.set ("yahoo", new ImFieldDetails (this._im_addr_2));
       val.set_object (im_addrs);
@@ -196,8 +196,8 @@ public class MatchIMAddressesTests : Folks.TestCase
 
       val = Value (typeof (MultiMap));
       im_addrs = new HashMultiMap<string, ImFieldDetails> (null, null,
-          (GLib.HashFunc) ImFieldDetails.hash,
-          (GLib.EqualFunc) ImFieldDetails.equal);
+           AbstractFieldDetails<string>.hash_static,
+           AbstractFieldDetails<string>.equal_static);
       im_addrs.set ("jabber", new ImFieldDetails (this._im_addr_2));
       val.set_object (im_addrs);
       details2.insert (
