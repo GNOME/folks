@@ -10,7 +10,7 @@
 # notice and this notice are preserved.
 
 eds_tmpdir=$(mktemp -d)
-libexec=$(pkg-config --variable=libexecdir evolution-data-server-1.2)
+libexec=$(pkg-config --variable=libexecdir libedata-book-1.2)
 
 cur_dir=`dirname $0`
 
