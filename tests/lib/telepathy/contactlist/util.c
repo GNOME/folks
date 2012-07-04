@@ -183,6 +183,7 @@ tp_tests_create_conn (GType conn_type,
     TpConnection **client_conn)
 {
   TpDBusDaemon *dbus;
+  TpSimpleClientFactory *factory;
   gchar *name;
   gchar *conn_path;
   GError *error = NULL;
@@ -191,6 +192,7 @@ tp_tests_create_conn (GType conn_type,
   g_assert (client_conn != NULL);
 
   dbus = tp_tests_dbus_daemon_dup_or_die ();
+  factory = (TpSimpleClientFactory *) tp_automatic_client_factory_new (dbus);
 
   *service_conn = tp_tests_object_new_static_class (
         conn_type,
@@ -203,8 +205,8 @@ tp_tests_create_conn (GType conn_type,
         &name, &conn_path, &error));
   g_assert_no_error (error);
 
-  *client_conn = tp_connection_new (dbus, name, conn_path,
-      &error);
+  *client_conn = tp_simple_client_factory_ensure_connection (factory,
+      conn_path, NULL, &error);
   g_assert (*client_conn != NULL);
   g_assert_no_error (error);
 
@@ -220,6 +222,7 @@ tp_tests_create_conn (GType conn_type,
   g_free (conn_path);
 
   g_object_unref (dbus);
+  g_object_unref (factory);
 }
 
 void

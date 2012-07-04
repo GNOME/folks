@@ -268,6 +268,7 @@ tp_tests_backend_add_account (TpTestsBackend *self,
     const gchar *account)
 {
   TpTestsBackendPrivate *priv = self->priv;
+  TpSimpleClientFactory *factory;
   AccountData *data;
   gchar *conn_path;
   GError *error = NULL;
@@ -284,8 +285,9 @@ tp_tests_backend_add_account (TpTestsBackend *self,
         NULL, &conn_path, &error);
   g_assert_no_error (error);
 
-  data->client_conn = tp_connection_new (priv->daemon, NULL, conn_path,
-      &error);
+  factory = tp_proxy_get_factory (priv->client_am);
+  data->client_conn = tp_simple_client_factory_ensure_connection (factory,
+      conn_path, NULL, &error);
   g_assert_no_error (error);
 
   /* Create an account */

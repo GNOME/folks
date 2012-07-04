@@ -99,12 +99,8 @@ get_property (GObject *object,
         }
       else
         {
-          guint32 status = TP_BASE_CONNECTION (self)->status;
-
-          if (status == TP_INTERNAL_CONNECTION_STATUS_NEW)
-            g_value_set_uint (value, TP_CONNECTION_STATUS_DISCONNECTED);
-          else
-            g_value_set_uint (value, status);
+          g_value_set_uint (value,
+              tp_base_connection_get_status (TP_BASE_CONNECTION (self)));
         }
       break;
     default:
@@ -227,11 +223,13 @@ pretend_connected (gpointer data)
   TpBaseConnection *conn = (TpBaseConnection *) self;
   TpHandleRepoIface *contact_repo = tp_base_connection_get_handles (conn,
       TP_HANDLE_TYPE_CONTACT);
+  TpHandle self_handle;
 
-  conn->self_handle = tp_handle_ensure (contact_repo, self->priv->account,
+  self_handle = tp_handle_ensure (contact_repo, self->priv->account,
       NULL, NULL);
+  tp_base_connection_set_self_handle (conn, self_handle);
 
-  if (conn->status == TP_CONNECTION_STATUS_CONNECTING)
+  if (tp_base_connection_get_status (conn) == TP_CONNECTION_STATUS_CONNECTING)
     {
       tp_base_connection_change_status (conn, TP_CONNECTION_STATUS_CONNECTED,
           TP_CONNECTION_STATUS_REASON_REQUESTED);
@@ -391,8 +389,8 @@ tp_tests_simple_connection_ensure_text_chan (TpTestsSimpleConnection *self,
     }
   else
     {
-      chan_path = g_strdup_printf ("%s/Channel%u", base_conn->object_path,
-          count++);
+      chan_path = g_strdup_printf ("%s/Channel%u",
+          tp_base_connection_get_object_path (base_conn), count++);
 
        chan = TP_TESTS_TEXT_CHANNEL_NULL (
           tp_tests_object_new_static_class (
@@ -436,7 +434,7 @@ tp_tests_simple_connection_ensure_room_list_chan (TpTestsSimpleConnection *self,
   else
     {
       chan_path = g_strdup_printf ("%s/RoomListChannel",
-          base_conn->object_path);
+          tp_base_connection_get_object_path (base_conn));
 
       self->priv->room_list_chan = TP_TESTS_ROOM_LIST_CHAN (
           tp_tests_object_new_static_class (
@@ -485,7 +483,8 @@ get_self_handle (TpSvcConnection *iface,
       return;
     }
 
-  tp_svc_connection_return_from_get_self_handle (context, base->self_handle);
+  tp_svc_connection_return_from_get_self_handle (context,
+      tp_base_connection_get_self_handle (base));
   g_signal_emit (self, signals[SIGNAL_GOT_SELF_HANDLE], 0);
 }
 

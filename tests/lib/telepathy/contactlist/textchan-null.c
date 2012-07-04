@@ -154,7 +154,8 @@ get_property (GObject *object,
       g_value_set_boolean (value, TRUE);
       break;
     case PROP_INITIATOR_HANDLE:
-      g_value_set_uint (value, self->priv->conn->self_handle);
+      g_value_set_uint (value, tp_base_connection_get_self_handle (
+            self->priv->conn));
       break;
     case PROP_INITIATOR_ID:
         {
@@ -162,7 +163,8 @@ get_property (GObject *object,
               self->priv->conn, TP_HANDLE_TYPE_CONTACT);
 
           g_value_set_string (value,
-              tp_handle_inspect (contact_repo, self->priv->conn->self_handle));
+              tp_handle_inspect (contact_repo,
+                tp_base_connection_get_self_handle (self->priv->conn)));
         }
       break;
     case PROP_INTERFACES:

@@ -454,10 +454,7 @@ my_status_available (GObject *object,
 {
   TpBaseConnection *base = TP_BASE_CONNECTION (object);
 
-  if (base->status != TP_CONNECTION_STATUS_CONNECTED)
-    return FALSE;
-
-  return TRUE;
+  return tp_base_connection_check_connected (base, NULL);
 }
 
 static GHashTable *
@@ -506,6 +503,7 @@ my_set_own_status (GObject *object,
   TpBaseConnection *base_conn = TP_BASE_CONNECTION (object);
   TpTestsContactsConnectionPresenceStatusIndex index = status->index;
   const gchar *message = "";
+  TpHandle self_handle;
 
   if (status->optional_arguments != NULL)
     {
@@ -515,8 +513,9 @@ my_set_own_status (GObject *object,
         message = "";
     }
 
+  self_handle = tp_base_connection_get_self_handle (base_conn);
   tp_tests_contacts_connection_change_presences (TP_TESTS_CONTACTS_CONNECTION (object),
-      1, &(base_conn->self_handle), &index, &message);
+      1, &self_handle, &index, &message);
 
   return TRUE;
 }

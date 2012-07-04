@@ -881,8 +881,9 @@ tp_tests_contact_list_manager_add_initial_contacts (TpTestsContactListManager *s
   TpHandleSet *handles;
   guint i;
 
-  g_assert_cmpint (self->priv->conn->status, ==,
-      TP_INTERNAL_CONNECTION_STATUS_NEW);
+  g_assert_cmpint (tp_base_connection_get_status (self->priv->conn), ==,
+      TP_CONNECTION_STATUS_DISCONNECTED);
+  g_assert (!tp_base_connection_is_destroyed (self->priv->conn));
 
   handles = tp_handle_set_new (self->priv->contact_repo);
   for (i = 0; i < n_members; i++)
