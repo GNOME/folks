@@ -2,8 +2,10 @@ Overview of changes from libfolks 0.7.2 to libfolks 0.7.3
 =========================================================
 
 Dependencies:
+• libgee ≥ 0.8
 
 Bugs fixed:
+• Bug 673918 — Port to newer libgee
 
 API changes:
 
