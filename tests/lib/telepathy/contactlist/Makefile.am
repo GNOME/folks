@@ -102,6 +102,10 @@ DISTCLEANFILES = \
 	session.conf \
 	$(NULL)
 
+if NOT_RELEASE
+DISTCLEANFILES += $(dist_noinst_DATA)
+endif
+
 EXTRA_DIST = \
 	manager-file.py \
 	session.conf.in \

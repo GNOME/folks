@@ -98,6 +98,10 @@ dist_noinst_DATA = \
 	tp-lowlevel.vapi \
 	$(NULL)
 
+if NOT_RELEASE
+DISTCLEANFILES = $(dist_noinst_DATA)
+endif
+
 folks_telepathy_valasources = \
 	tpf-persona.vala \
 	tpf-persona-store.vala \

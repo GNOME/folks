@@ -291,6 +291,8 @@ AM_CONDITIONAL([HAVE_VALA], [test "x$enable_vala" = "xyes"])
 AC_CHECK_FUNCS([memset])
 AC_CHECK_FUNCS([strstr])
 
+AM_CONDITIONAL([NOT_RELEASE], [test "x$folks_released" = "x0"])
+
 # -----------------------------------------------------------
 # Backends
 # -----------------------------------------------------------
