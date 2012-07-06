@@ -24,7 +24,7 @@ tracker_deps = \
 	folks \
 	folks-internal \
 	folks-tracker \
-	gee-1.0 \
+	gee-0.8 \
 	gio-2.0 \
 	gobject-2.0 \
 	tracker-sparql-$(TRACKER_SPARQL_MAJOR) \

@@ -23,7 +23,7 @@ AM_VALAFLAGS = \
 	--vapidir=$(top_srcdir)/tests/lib/key-file \
 	--pkg gobject-2.0 \
 	--pkg gio-2.0 \
-	--pkg gee-1.0 \
+	--pkg gee-0.8 \
 	--pkg folks \
 	--pkg folks-test \
 	--pkg kf-test \

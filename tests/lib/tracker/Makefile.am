@@ -7,7 +7,7 @@ VALAFLAGS += \
 	--vapidir=. \
 	--pkg gobject-2.0 \
 	--pkg gio-2.0 \
-	--pkg gee-1.0 \
+	--pkg gee-0.8 \
 	--pkg folks \
 	--pkg tracker-sparql-$(TRACKER_SPARQL_MAJOR) \
 	--pkg folks-tracker \
