@@ -279,7 +279,7 @@ public abstract class Folks.AbstractFieldDetails<T> : Object
    * Same as {@link AbstractFieldDetails.equal}, but static,
    * so we can use libgee 0.8 without an api break.
    *
-   * See https://bugzilla.gnome.org/show_bug.cgi?id=673918
+   * See [[https://bugzilla.gnome.org/show_bug.cgi?id=673918|673918]]"
    * This can and should be removed next time we break the api.
    * Note: This uses Gee.EqualDataFunc signature, to avoid having to cast.
    *
@@ -436,7 +436,7 @@ public abstract class Folks.AbstractFieldDetails<T> : Object
    * Same as {@link AbstractFieldDetails.hash}, but static,
    * so we can use libgee 0.8 without an api break.
    *
-   * See https://bugzilla.gnome.org/show_bug.cgi?id=673918
+   * See [[https://bugzilla.gnome.org/show_bug.cgi?id=673918|673918]]
    * This can and should be removed next time we break the api.
    * Note: This uses Gee.HashDataFunc signature, to avoit having to cast.
    *
