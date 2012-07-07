@@ -9,6 +9,7 @@ backends/telepathy/lib/tpf-persona-store.vala
 backends/telepathy/lib/tpf-persona.vala
 backends/tracker/lib/trf-persona-store.vala
 folks/alias-details.vala
+folks/anti-linkable.vala
 folks/avatar-details.vala
 folks/backend-store.vala
 folks/birthday-details.vala

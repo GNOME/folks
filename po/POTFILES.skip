@@ -8,6 +8,7 @@ backends/telepathy/lib/tpf-persona.c
 backends/tracker/lib/trf-persona-store.c
 docs/gtk-doc/folks-telepathy/ccomments/tp-lowlevel.c
 folks/alias-details.c
+folks/anti-linkable.c
 folks/avatar-details.c
 folks/backend-store.c
 folks/birthday-details.c
