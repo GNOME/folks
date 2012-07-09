@@ -474,24 +474,13 @@ public class Tpf.Persona : Folks.Persona,
   public async void change_group (string group, bool is_member)
       throws GLib.Error
     {
-      if (this._groups.contains (group) != is_member)
-        {
-          yield this._change_group_membership (group, is_member);
-        }
-
-      /* The change will be notified when we receive changes from the store. */
-    }
-
-  private async void _change_group_membership (string group,
-      bool is_member) throws Folks.PropertyError
-    {
       try
         {
-          if (is_member)
+          if (is_member && !this._groups.contains (group))
             {
               yield this.contact.add_to_group_async (group);
             }
-          else
+          else if (!is_member && this._groups.contains (group))
             {
               yield this.contact.remove_from_group_async (group);
             }
@@ -502,6 +491,8 @@ public class Tpf.Persona : Folks.Persona,
           throw new PropertyError.UNKNOWN_ERROR (
               _("Failed to change group membership: %s"), e.message);
         }
+
+      /* The change will be notified when we receive changes from the store. */
     }
 
   /* Note: Only ever called as a result of signals from Telepathy. */
@@ -547,16 +538,15 @@ public class Tpf.Persona : Folks.Persona,
    */
   public async void change_groups (Set<string> groups) throws PropertyError
     {
-      foreach (var group1 in groups)
+      try
         {
-          if (this._groups.contains (group1) == false)
-            yield this._change_group_membership (group1, true);
+          yield this.contact.set_contact_groups_async (groups.to_array ());
         }
-
-      foreach (var group2 in this._groups)
+      catch (GLib.Error e)
         {
-          if (groups.contains (group2) == false)
-            yield this._change_group_membership (group2, false);
+          /* Translators: the parameter is an error message. */
+          throw new PropertyError.UNKNOWN_ERROR (
+              _("Failed to change group membership: %s"), e.message);
         }
 
       /* The change will be notified when we receive changes from the store. */
