@@ -109,7 +109,6 @@ libfolks_la_VALAFLAGS = \
 	--pkg gmodule-2.0 \
 	--pkg gio-2.0 \
 	--pkg gee-0.8 \
-	--pkg gconf-2.0 \
 	--includedir folks \
 	--vapi folks.vapi \
 	-H folks.h \

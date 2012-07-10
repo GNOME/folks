@@ -515,11 +515,6 @@ AM_CONDITIONAL([ENABLE_PROFILING], [test "$enable_profiling" = "yes"])
 # Final output
 # -----------------------------------------------------------
 
-# FIXME: We can't remove gconf.path until bgo#635379 is fixed, since we need to
-# safely contain EDS' use of GConf for the EDS backend tests.
-# Note that our use of gconf.path doesn't actually need GConf to be installed,
-# though, so it's not a hard dependency of folks.
-
 AC_CONFIG_FILES([
     backends/telepathy/lib/folks-telepathy.pc
     backends/telepathy/lib/folks-telepathy-uninstalled.pc
@@ -549,7 +544,6 @@ AC_CONFIG_FILES([
     po/Makefile.in
     tests/Makefile
     tests/data/Makefile
-    tests/data/gconf.path
     tests/eds/Makefile
     tests/folks/Makefile
     tests/key-file/Makefile

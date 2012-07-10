@@ -84,7 +84,6 @@ RUN_WITH_PRIVATE_BUS = $(top_srcdir)/tests/tools/with-session-bus-eds.sh
 backend_store_key_file=$(srcdir)/data/backend-eds-only.ini
 avatar_file=@abs_top_srcdir@/tests/data/avatar-01.jpg
 TESTS_ENVIRONMENT = \
-	GCONF_DEFAULT_SOURCE_PATH=@abs_top_srcdir@/tests/data/gconf.path \
 	FOLKS_BACKEND_PATH=$(BACKEND_UNINST_PATH) \
         FOLKS_BACKEND_STORE_KEY_FILE_PATH=$(backend_store_key_file) \
 	AVATAR_FILE_PATH=$(avatar_file) \

@@ -57,7 +57,6 @@ SESSION_CONF = $(top_builddir)/tests/lib/telepathy/contactlist/session.conf
 backend_store_key_file=$(top_srcdir)/tests/data/backend-store-all.ini
 avatar_file=@abs_top_srcdir@/tests/data/avatar-01.jpg
 TESTS_ENVIRONMENT = \
-	GCONF_DEFAULT_SOURCE_PATH=@abs_top_srcdir@/tests/data/gconf.path \
 	FOLKS_BACKEND_PATH=$(BACKEND_UNINST_PATH) \
 	FOLKS_BACKEND_STORE_KEY_FILE_PATH=$(backend_store_key_file) \
 	FOLKS_PRIMARY_STORE=key-file \
