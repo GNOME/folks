@@ -32,9 +32,22 @@ dbus_init 0
 dbus_start
 
 e=0
-"$@" || e=$?
+
+if test -t 1 && test "z$CHECK_VERBOSE" != z; then
+  "$@" || e=$?
+else
+  "$@" > capture-$$.log 2>&1 || e=$?
+fi
 
 trap - INT HUP TERM
 cleanup
 
-exit $e
+# if exit code is 0, check for skipped tests
+if test z$e = z0; then
+  grep -i skipped capture-$$.log || true
+  rm -f capture-$$.log
+# exit code is not 0, so output log and exit
+else
+  cat capture-$$.log
+  exit $e
+fi
