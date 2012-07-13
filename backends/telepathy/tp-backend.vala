@@ -98,6 +98,7 @@ public class Folks.Backends.Tp.Backend : Folks.Backend
 
           try
             {
+              this._prepare_pending = true;
               this._account_manager = AccountManager.dup ();
               yield this._account_manager.prepare_async (null);
               this._account_manager.account_enabled.connect (
