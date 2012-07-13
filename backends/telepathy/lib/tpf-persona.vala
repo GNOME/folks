@@ -496,38 +496,32 @@ public class Tpf.Persona : Folks.Persona,
     }
 
   /* Note: Only ever called as a result of signals from Telepathy. */
-  private bool _change_group (string group, bool is_member)
+  private void _contact_groups_changed (string[] added, string[] removed)
     {
       var changed = false;
 
-      if (is_member)
-        {
-          changed = this._groups.add (group);
-        }
-      else
-        {
-          changed = this._groups.remove (group);
-        }
-
-      if (changed == true)
-        {
-          this.group_changed (group, is_member);
-          this.notify_property ("groups");
-        }
-
-      return changed;
-    }
-
-  private void _contact_groups_changed (string[] added, string[] removed)
-    {
       foreach (var group in added)
         {
-          this._change_group (group, true);
+          if (this._groups.add (group) == true)
+            {
+              changed = true;
+              this.group_changed (group, true);
+            }
         }
 
       foreach (var group in removed)
         {
-          this._change_group (group, false);
+          if (this._groups.remove (group) == true)
+            {
+              changed = true;
+              this.group_changed (group, false);
+            }
+        }
+
+      /* Notify if anything changed. */
+      if (changed == true)
+        {
+          this.notify_property ("groups");
         }
     }
 
