@@ -2371,6 +2371,9 @@ public class Edsf.PersonaStore : Folks.PersonaStore
           return;
         }
 
+      if (this._is_google_contacts_address_book ())
+        this.trust_level = PersonaStoreTrust.FULL;
+
       if (((!) this._addressbook).readonly)
         this.trust_level = PersonaStoreTrust.PARTIAL;
       else
