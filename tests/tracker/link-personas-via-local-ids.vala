@@ -118,13 +118,19 @@ public class LinkPersonasViaLocalIDsTests : Folks.TestCase
                 break;
             }
           assert (pstore != null);
-
-          yield _add_personas (pstore);
+          pstore.notify["is-prepared"].connect (this._persona_store_prepared_cb);
         }
       catch (GLib.Error e)
         {
           GLib.warning ("Error when calling prepare: %s\n", e.message);
         }
+    }
+
+  private void _persona_store_prepared_cb (Object obj, ParamSpec params)
+    {
+      PersonaStore pstore = (!)(obj as PersonaStore);
+      
+      _add_personas (pstore);
     }
 
   /* Here is how this test is expected to work:
