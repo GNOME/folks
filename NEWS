@@ -9,6 +9,7 @@ Bugs fixed:
 • Bug 629537 — Support anti-linking
 • Bug 679618 — Crash when unsetting all groups
 • Bug 678696 — Add API for EDS Google system groups
+• Bug 669158 — Readonly/Offline issues
 
 API changes:
 • Add AntiLinkable interface and implement it on Kf.Persona and Edsf.Persona
