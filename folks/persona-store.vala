@@ -585,6 +585,8 @@ public abstract class Folks.PersonaStore : Object
       replacement = "PersonaStore.is_primary_store")]
   public bool is_writeable { get; set; default = false; }
 
+  private PersonaStoreTrust _trust_level = PersonaStoreTrust.NONE;
+
   /**
    * The trust level of the PersonaStore for linking.
    *
@@ -597,7 +599,23 @@ public abstract class Folks.PersonaStore : Object
    */
   public PersonaStoreTrust trust_level
     {
-      get; set; default = PersonaStoreTrust.NONE;
+      get
+        { 
+          return this._trust_level; 
+        }
+      
+      set 
+        {
+          if (value > trust_level)
+            {
+              this._trust_level = value;
+              this.notify_property ("trust-level");
+            }
+          else
+            {
+              debug ("Unable to lower Persona Store trust_level");
+            }
+        }
     }
 
   /**
