@@ -1853,13 +1853,20 @@ public class Trf.PersonaStore : Folks.PersonaStore
     }
 
   private async string? _insert_persona (string query, string persona_var)
+    throws PersonaStoreError
     {
       GLib.Variant variant;
       string contact_urn = null;
 
+      if (!this.is_prepared)
+        {
+          throw new PersonaStoreError.CREATE_FAILED("Cannot insert persona before store is prepared");
+        }
+      
       try
         {
           debug ("_insert_persona: %s", query);
+          debug ("_connection is %p", this._connection);
           variant = yield this._connection.update_blank_async (query);
 
           VariantIter iter1, iter2, iter3;
