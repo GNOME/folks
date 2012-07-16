@@ -37,7 +37,8 @@ dbus_start
 eds_start
 
 e=0
-"$@" || e=$?
+
+$cur_dir"/execute-test.sh" "$@" || e=$?
 
 trap - INT HUP TERM
 cleanup

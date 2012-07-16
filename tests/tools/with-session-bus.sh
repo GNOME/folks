@@ -31,23 +31,9 @@ trap cleanup INT HUP TERM
 dbus_init 0
 dbus_start
 
-e=0
-
-if test -t 1 && test "z$CHECK_VERBOSE" != z; then
-  "$@" || e=$?
-else
-  "$@" > capture-$$.log 2>&1 || e=$?
-fi
+$cur_dir"/execute-test.sh" "$@" || e=$?
 
 trap - INT HUP TERM
 cleanup
 
-# if exit code is 0, check for skipped tests
-if test z$e = z0; then
-  grep -i skipped capture-$$.log || true
-  rm -f capture-$$.log
-# exit code is not 0, so output log and exit
-else
-  cat capture-$$.log
-  exit $e
-fi
+exit $e

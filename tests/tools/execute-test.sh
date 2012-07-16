@@ -9,37 +9,20 @@
 # are permitted in any medium without royalty provided the copyright
 # notice and this notice are preserved.
 
-
-cur_dir=`dirname $0`
-
-. $cur_dir"/dbus-session.sh"
-. $cur_dir"/tracker.sh"
-
-dbus_parse_args $@
-while test "z$1" != "z--"; do
-    shift
-done
-shift
-if test "z$1" = "z"; then dbus_usage; fi
-
-cleanup ()
-{
-    tracker_stop
-    dbus_stop
-}
-
-trap cleanup INT HUP TERM
-
-tracker_init_settings
-dbus_init 0
-
-dbus_start
-tracker_start
-
 e=0
-$cur_dir"/execute-test.sh" "$@" || e=$?
 
-trap - INT HUP TERM
-cleanup
+if test -t 1 && test "z$CHECK_VERBOSE" != z; then
+  "$@" || e=$?
+else
+  "$@" > capture-$$.log 2>&1 || e=$?
+fi
 
-exit $e
+# if exit code is 0, check for skipped tests
+if test z$e = z0; then
+  grep -i skipped capture-$$.log || true
+  rm -f capture-$$.log
+# exit code is not 0, so output log and exit
+else
+  cat capture-$$.log
+  exit $e
+fi
