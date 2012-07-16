@@ -24,9 +24,9 @@ eds_init_settings () {
 }
 
 eds_start () {
-    $libexec/evolution-source-registry > /dev/null &
-    $libexec/evolution-addressbook-factory --wait-for-client > /dev/null &
-    sleep 1
+    $libexec/evolution-source-registry > /dev/null 2>&1 &
+    $libexec/evolution-addressbook-factory --wait-for-client > /dev/null 2>&1 &
+    sleep 2
 }
 
 # This should be called on INT TERM and EXIT
