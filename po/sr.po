@@ -578,7 +578,7 @@ msgid_plural "Imported %u buddies from '%s'."
 msgstr[0] "Увезао сам %u другара из „%s“."
 msgstr[1] "Увезао сам %u другара из „%s“."
 msgstr[2] "Увезао сам %u другара из „%s“."
-msgstr[3] "Увезао сам једног другара из „%s“."
+msgstr[3] "Увезао сам %u другара из „%s“."
 
 #. Translators: the first parameter is a persona identifier,
 #. * and the second is an error message.
