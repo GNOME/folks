@@ -709,7 +709,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       if (!this.account.connection.has_interface_by_id (
           iface_quark_connection_interface_contact_list ()))
         {
-          warning ("Connection does not implement ContactList iface; " +
+          debug ("Connection does not implement ContactList iface; " +
               "legacy CMs are not supported any more.");
 
           this._remove_store ();

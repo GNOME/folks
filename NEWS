@@ -10,6 +10,7 @@ Bugs fixed:
 • Bug 679618 — Crash when unsetting all groups
 • Bug 678696 — Add API for EDS Google system groups
 • Bug 669158 — Readonly/Offline issues
+• Bug 675223 — Shouldn't warn if CM does not implement any contact list
 
 API changes:
 • Add AntiLinkable interface and implement it on Kf.Persona and Edsf.Persona
