@@ -114,10 +114,10 @@ public interface Folks.GroupDetails : Object
     }
 
   /**
-   * A mapping of group ID to whether the contact is a member.
+   * A set of group IDs for groups containing the member.
    *
-   * Freeform group IDs are mapped to a boolean which is `true` if the
-   * contact is a member of the group, and `false` otherwise.
+   * The complete set of freeform identifiers for all the groups the contact is
+   * a member of.
    *
    * @since 0.5.1
    */

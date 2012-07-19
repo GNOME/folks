@@ -455,7 +455,7 @@ public class Tpf.Persona : Folks.Persona,
   private Set<string> _groups_ro;
 
   /**
-   * A mapping of group ID to whether the contact is a member.
+   * A set group IDs for the groups the contact is a member of.
    *
    * See {@link Folks.GroupDetails.groups}.
    */
