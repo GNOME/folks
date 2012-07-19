@@ -1,0 +1,672 @@
+# Belarusian translation for folks.
+# Copyright (C) 2012 folks's COPYRIGHT HOLDER
+# This file is distributed under the same license as the folks package.
+# Ihar Hrachyshka <ihar.hrachyshka@gmail.com>, 2012.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: folks master\n"
+"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
+"product=folks&keywords=I18N+L10N&component=general\n"
+"POT-Creation-Date: 2012-07-19 04:07+0000\n"
+"PO-Revision-Date: 2012-07-20 00:08+0300\n"
+"Last-Translator: Ihar Hrachyshka <ihar.hrachyshka@gmail.com>\n"
+"Language-Team: Belarusian <i18n-bel-gnome@googlegroups.com>\n"
+"Language: be\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+
+#. The timeout after which we consider a property change to have failed if we
+#. * haven't received a property change notification for it.
+#. seconds
+#. Translators: This should be translated to the name of the “Starred in
+#. * Android” group in Google Contacts for your language. If Google have not
+#. * localised the group for your language, or Google Contacts isn't available
+#. * in your language, please *do not* translate this string.
+#: ../backends/eds/lib/edsf-persona-store.vala:60
+msgid "Starred in Android"
+msgstr ""
+
+#. Translators: the first parameter is an address book
+#. * URI and the second is a persona UID.
+#: ../backends/eds/lib/edsf-persona-store.vala:586
+#, c-format
+msgid "Address book ‘%s’ is offline, so contact ‘%s’ cannot be removed."
+msgstr "Адрасная кніга \"%s\" па-за сеткай, таму кантакт \"%s\" не можа быць выдалены."
+
+#. Translators: the first parameter is an address book
+#. * URI and the second is an error message.
+#: ../backends/eds/lib/edsf-persona-store.vala:592
+#, c-format
+msgid "Permission denied to remove contact ‘%s’: %s"
+msgstr "Адмоўлена ў праве на выдаленне кантакту \"%s\": %s"
+
+#. Translators: the parameter is an error message.
+#: ../backends/eds/lib/edsf-persona-store.vala:597
+#, c-format
+msgid "Removing contacts isn't supported by this persona store: %s"
+msgstr "Гэтае сховішча асоб не падтрымлівае аперацыі выдалення кантактаў: %s"
+
+#: ../backends/eds/lib/edsf-persona-store.vala:626
+#, c-format
+msgid "Can't remove contact ‘%s’: %s"
+msgstr "Не ўдалося выдаліць кантакт \"%s\": %s"
+
+#. Translators: the parameter is an address book
+#. * URI.
+#: ../backends/eds/lib/edsf-persona-store.vala:720
+#: ../backends/eds/lib/edsf-persona-store.vala:926
+#, c-format
+msgid "Address book ‘%s’ is offline."
+msgstr "Адрасная кніга \"%s\" па-за сеткай."
+
+#. Translators: the first parameter is an address
+#. * book URI and the second is an error message.
+#: ../backends/eds/lib/edsf-persona-store.vala:725
+#: ../backends/eds/lib/edsf-persona-store.vala:931
+#, c-format
+msgid "Permission denied to open address book ‘%s’: %s"
+msgstr "Адмоўлена ў праве адкрыць адрасную кнігу \"%s\": %s"
+
+#. Translators: the first parameter is an address book URI
+#. * and the second is an error message.
+#: ../backends/eds/lib/edsf-persona-store.vala:758
+#, c-format
+msgid "Couldn't open address book ‘%s’: %s"
+msgstr "Не ўдалося адкрыць адрасную кнігу \"%s\": %s"
+
+#. Translators: the parameteter is an error message.
+#: ../backends/eds/lib/edsf-persona-store.vala:828
+#: ../backends/eds/lib/edsf-persona-store.vala:862
+#, c-format
+msgid "Couldn't get address book capabilities: %s"
+msgstr "Не ўдалося атрымаць спіс магчымасцяў адраснай кнігі: %s"
+
+#. Translators: the parameter is an address book URI.
+#: ../backends/eds/lib/edsf-persona-store.vala:882
+#, c-format
+msgid "Couldn't get view for address book ‘%s’."
+msgstr "Не ўдалося атрымаць аб'ект прагляду для адраснай кнігі \"%s\"."
+
+#. Translators: the first parameter is an address book URI
+#. * and the second is an error message.
+#: ../backends/eds/lib/edsf-persona-store.vala:964
+#, c-format
+msgid "Couldn't get view for address book ‘%s’: %s"
+msgstr "Не ўдалося атрымаць аб'ект прагляду для адраснай кнігі \"%s\": %s"
+
+#: ../backends/eds/lib/edsf-persona-store.vala:1318
+#, c-format
+msgid "Changing the ‘%s’ property failed due to reaching the timeout."
+msgstr "Не ўдалося змяніць уласцівасць \"%s\", бо быў вычарпаны тэрмін чакання."
+
+#: ../backends/eds/lib/edsf-persona-store.vala:1356
+#: ../folks/avatar-details.vala:59
+msgid "Avatar is not writeable on this contact."
+msgstr "Аватара гэтага кантакту не падтрымлівае аперацыі запісу."
+
+#: ../backends/eds/lib/edsf-persona-store.vala:1377
+#: ../folks/web-service-details.vala:123
+msgid "Web service addresses are not writeable on this contact."
+msgstr "Адрасы сеціўных паслуг гэтага кантакту не падтрымліваюць аперацыі запісу."
+
+#: ../backends/eds/lib/edsf-persona-store.vala:1413
+#: ../folks/url-details.vala:152
+msgid "URLs are not writeable on this contact."
+msgstr "URL-адрасы гэтага кантакту не падтрымліваюць аперацыі запісу."
+
+#: ../backends/eds/lib/edsf-persona-store.vala:1491
+#: ../folks/local-id-details.vala:64
+msgid "Local IDs are not writeable on this contact."
+msgstr "Мясцовыя ідэнтыфікатары гэтага кантакту не падтрымліваюць аперацыі запісу."
+
+#: ../backends/eds/lib/edsf-persona-store.vala:1518
+msgid "The contact cannot be marked as favourite."
+msgstr "Немагчыма зрабіць гэты кантакт упадабаным."
+
+#. Translators: the parameter is an error message.
+#: ../backends/eds/lib/edsf-persona-store.vala:1602
+#, c-format
+msgid "Can't update avatar: %s"
+msgstr "Не ўдалося абнавіць аватару: %s"
+
+#: ../backends/eds/lib/edsf-persona-store.vala:1613
+#: ../folks/email-details.vala:120
+msgid "E-mail addresses are not writeable on this contact."
+msgstr "Адрасы электроннай пошты гэтага кантакту не падтрымліваюць аперацыі запісу."
+
+#: ../backends/eds/lib/edsf-persona-store.vala:1627
+#: ../folks/phone-details.vala:229
+msgid "Phone numbers are not writeable on this contact."
+msgstr "Тэлефонныя нумары гэтага кантакту не падтрымліваюць аперацыі запісу."
+
+#: ../backends/eds/lib/edsf-persona-store.vala:1641
+#: ../folks/postal-address-details.vala:360
+msgid "Postal addresses are not writeable on this contact."
+msgstr "Паштовыя адрасы гэтага кантакту не падтрымліваюць аперацыі запісу."
+
+#: ../backends/eds/lib/edsf-persona-store.vala:1708
+#: ../folks/name-details.vala:281
+msgid "Full name is not writeable on this contact."
+msgstr "Поўнае імя гэтага кантакту не падтрымлівае аперацыі запісу."
+
+#: ../backends/eds/lib/edsf-persona-store.vala:1730
+#: ../folks/name-details.vala:319
+msgid "Nickname is not writeable on this contact."
+msgstr "Псеўданім гэтага кантакту не падтрымлівае аперацыі запісу."
+
+#: ../backends/eds/lib/edsf-persona-store.vala:1752
+#: ../folks/note-details.vala:138
+msgid "Notes are not writeable on this contact."
+msgstr "Нататкі гэтага кантакту не падтрымліваюць аперацыі запісу."
+
+#: ../backends/eds/lib/edsf-persona-store.vala:1781
+#: ../folks/birthday-details.vala:60
+msgid "Birthday is not writeable on this contact."
+msgstr "Дзень нараджэння гэтага кантакту не падтрымлівае аперацыі запісу."
+
+#: ../backends/eds/lib/edsf-persona-store.vala:1825
+#: ../folks/role-details.vala:277
+msgid "Roles are not writeable on this contact."
+msgstr "Ролі гэтага кантакту не падтрымліваюць аперацыі запісу."
+
+#: ../backends/eds/lib/edsf-persona-store.vala:1926
+#: ../folks/name-details.vala:244
+msgid "Structured name is not writeable on this contact."
+msgstr "Структураванае імя гэтага кантакту не падтрымлівае аперацыі запісу."
+
+#: ../backends/eds/lib/edsf-persona-store.vala:1966
+#: ../folks/im-details.vala:136
+msgid "IM addresses are not writeable on this contact."
+msgstr "IM-адрасы гэтага кантакту не падтрымліваюць аперацыі запісу."
+
+#: ../backends/eds/lib/edsf-persona-store.vala:2016
+#: ../folks/group-details.vala:170
+msgid "Groups are not writeable on this contact."
+msgstr "Групы гэтага кантакту не падтрымліваюць аперацыі запісу."
+
+#: ../backends/eds/lib/edsf-persona-store.vala:2055
+#: ../folks/gender-details.vala:77
+msgid "Gender is not writeable on this contact."
+msgstr "Пол гэтага кантакту не падтрымлівае аперацыі запісу."
+
+#: ../backends/eds/lib/edsf-persona-store.vala:2091
+#: ../folks/anti-linkable.vala:81
+msgid "Anti-links are not writeable on this contact."
+msgstr "Антыспасылкі гэтага кантакту не падтрымліваюць аперацыі запісу."
+
+#. Translators: the first parameter is a non-human-readable
+#. * property name and the second parameter is an error
+#. * message.
+#: ../backends/eds/lib/edsf-persona-store.vala:2250
+#, c-format
+msgid "Property ‘%s’ is not writeable: %s"
+msgstr "Уласцівасць \"%s\" не падтрымлівае аперацыі запісу: %s"
+
+#. Translators: the first parameter is a non-human-readable
+#. * property name and the second parameter is an error
+#. * message.
+#: ../backends/eds/lib/edsf-persona-store.vala:2259
+#, c-format
+msgid "Invalid value for property ‘%s’: %s"
+msgstr "Хібнае значэнне ўласцівасці \"%s\": %s"
+
+#. Translators: the first parameter is a non-human-readable
+#. * property name and the second parameter is an error message.
+#: ../backends/eds/lib/edsf-persona-store.vala:2285
+#, c-format
+msgid "Unknown error setting property ‘%s’: %s"
+msgstr "Невядомая памылка настаўлення ўласцівасці \"%s\": %s"
+
+#. Translators: the first parameter is a filename,
+#. * and the second is an error message.
+#: ../backends/key-file/kf-persona-store.vala:235
+#, c-format
+msgid "The relationship key file '%s' could not be loaded: %s"
+msgstr "Не ўдалося загрузіць ключавы файл адносін \"%s\": %s"
+
+#. Translators: the first parameter is a path, and
+#. * the second is an error message.
+#: ../backends/key-file/kf-persona-store.vala:257
+#, c-format
+msgid "The relationship key file directory '%s' could not be created: %s"
+msgstr "Не ўдалося стварыць каталог для ключавых файлаў адносін \"%s\": %s"
+
+#. Translators: the first parameter is a filename,
+#. * and the second is an error message.
+#: ../backends/key-file/kf-persona-store.vala:281
+#, c-format
+msgid "The relationship key file '%s' could not be created: %s"
+msgstr "Не ўдалося стварыць ключавы файл адносін \"%s\": %s"
+
+#. Translators: the first parameter is a filename, the second is
+#. * an error message.
+#: ../backends/key-file/kf-persona-store.vala:472
+#, c-format
+msgid "Could not write updated key file '%s': %s"
+msgstr "Не ўдалося запісаць абноўлены ключавы файл \"%s\": %s"
+
+#. Translators: this is an error message for if the user
+#. * provides an invalid IM address. The first parameter is
+#. * an IM address (e.g. “foo@jabber.org”), the second is
+#. * the name of a protocol (e.g. “jabber”) and the third is
+#. * an error message.
+#: ../backends/key-file/kf-persona.vala:173
+#, c-format
+msgid "Invalid IM address ‘%s’ for protocol ‘%s’: %s"
+msgstr "Хібны IM-адрас \"%s\" для пратакола \"%s\": %s"
+
+#. Translators: the parameter is an error message.
+#: ../backends/key-file/kf-persona.vala:433
+#, c-format
+msgid "Couldn't load data from key file: %s"
+msgstr "Не ўдалося загрузіць даныя з ключавога файла: %s"
+
+#. Translators: the parameter is an error message.
+#: ../backends/libsocialweb/lib/swf-persona-store.vala:341
+#: ../backends/libsocialweb/lib/swf-persona-store.vala:365
+#: ../backends/libsocialweb/lib/swf-persona-store.vala:387
+#, c-format
+msgid "Couldn’t prepare libsocialweb service: %s"
+msgstr "Не ўдалося падрыхтаваць службу libsocialweb: %s"
+
+#: ../backends/libsocialweb/lib/swf-persona-store.vala:342
+msgid "No capabilities were found."
+msgstr "Магчымасці не знойдзеныя."
+
+#: ../backends/libsocialweb/lib/swf-persona-store.vala:366
+msgid "No contacts capability was found."
+msgstr "Магчымасці кантактаў не былі знойдзеныя."
+
+#: ../backends/libsocialweb/lib/swf-persona-store.vala:388
+msgid "Error opening contacts view."
+msgstr "Памылка адкрыцця аб'екта прагляду кантактаў."
+
+#. Translators: the first parameter is the display name for
+#. * the Telepathy account, and the second is an error
+#. * message.
+#: ../backends/telepathy/lib/tpf-persona-store.vala:804
+#, c-format
+msgid ""
+"Failed to determine whether we can set aliases on Telepathy account '%s': %s"
+msgstr ""
+"Не ўдалося вызначыць, ці магчыма прызначаць псеўданімы для Telepathy-конта \"%s\": %s"
+
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1217
+msgid "Telepathy contacts representing the local user may not be removed."
+msgstr "Немагчыма выдаліць Telepathy-кантакты, якія прадстаўляюць мясцовых карыстальнікаў."
+
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1228
+#, c-format
+msgid "Failed to remove a persona from store: %s"
+msgstr "Не ўдалося выдаліць асобу са сховішча: %s"
+
+#. Translators: the first two parameters are store identifiers and
+#. * the third is a contact identifier.
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1258
+#, c-format
+msgid ""
+"Persona store (%s, %s) requires the following details:\n"
+"    contact (provided: '%s')\n"
+msgstr ""
+"Сховішча асоб (%s, %s) патрабуе наступных звестак:\n"
+"    кантакт (пададзена: \"%s\")\n"
+
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1273
+msgid "Cannot create a new Telepathy contact while offline."
+msgstr "Немагчыма стварыць новы Telepathy-кантакт у пазасеткавым рэжыме."
+
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1291
+#, c-format
+msgid "Failed to add a persona from details: %s"
+msgstr "Не ўдалося дадаць асобу з прапанаваных звестак: %s"
+
+#. Translators: "telepathy-logger" is the name of an application,
+#. * and should not be translated.
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1311
+msgid ""
+"Failed to change favorite without a connection to the telepathy-logger "
+"service."
+msgstr ""
+"Не ўдалося змяніць упадабанае без злучэння са службай telepathy-logger."
+
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1317
+msgid ""
+"Failed to change favorite status of Telepathy Persona because it has no "
+"attached TpContact."
+msgstr ""
+"Не ўдалося змяніць стан упадабанасці Telepathy-асобы, бо яна не мае прычэпленых даных TpContact."
+
+#. Translators: the parameter is a contact identifier.
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1335
+#, c-format
+msgid "Failed to change favorite status for Telepathy contact ‘%s’."
+msgstr "Не ўдалося змяніць стан упадабанасці для Telepathy-кантакту \"%s\"."
+
+#. Translators: the parameter is an error message.
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1367
+#, c-format
+msgid "Failed to change contact's alias: %s"
+msgstr "Не ўдалося змяніць псеўданім кантакту: %s"
+
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1447
+msgid "Extended information may only be set on the user's Telepathy contact."
+msgstr "Пашыраную інфармацыю можна прызначыць толькі для Telepathy-кантактаў карыстальніка."
+
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1476
+msgid ""
+"Extended information cannot be written because the store is disconnected."
+msgstr ""
+"Немагчыма запісаць пашыраную інфармацыю, бо сховішча адлучана."
+
+#: ../backends/telepathy/lib/tpf-persona.vala:495
+#: ../backends/telepathy/lib/tpf-persona.vala:549
+#, c-format
+msgid "Failed to change group membership: %s"
+msgstr "Не ўдалося змяніць групавую прыналежнасць: %s"
+
+#. Translators: the first parameter is the unknown key that
+#. * was received with the details params, and the second
+#. * identifies the persona store.
+#: ../backends/tracker/lib/trf-persona-store.vala:742
+#, c-format
+msgid "Unrecognized parameter '%s' passed to persona store '%s'."
+msgstr "У сховішча асоб \"%2$s перададзены невядомы параметр \"%1$s\"."
+
+#: ../folks/alias-details.vala:57
+msgid "Alias is not writeable on this contact."
+msgstr "Псеўданім гэтага кантакту не падтрымлівае аперацыі запісу."
+
+#. Translators: the first parameter is a folder path and the second
+#. * is an error message.
+#: ../folks/backend-store.vala:590
+#, c-format
+msgid "Error listing contents of folder '%s': %s"
+msgstr "Памылка пераліку змесціва папкі \"%s\": %s"
+
+#. Translators: the parameter is a filename.
+#: ../folks/backend-store.vala:719
+#, c-format
+msgid "File or directory '%s' does not exist."
+msgstr "Файл ці каталог \"%s\" не існуе."
+
+#. Translators: the parameter is a filename.
+#: ../folks/backend-store.vala:725
+#, c-format
+msgid "Failed to get content type for '%s'."
+msgstr "Не ўдалося апазнаць тып змесціва для \"%s\"."
+
+#: ../folks/birthday-details.vala:89
+msgid "Birthday event ID is not writeable on this contact."
+msgstr "Ідэнтыфікатар дня нараджэння гэтага кантакту не падтрымлівае аперацыі запісу."
+
+#: ../folks/favourite-details.vala:52
+msgid "Favorite status is not writeable on this contact."
+msgstr "Стан упадабанасці гэтага кантакту не падтрымлівае аперацыі запісу."
+
+#. Translators: the parameter is an IM address.
+#: ../folks/im-details.vala:178 ../folks/im-details.vala:192
+#: ../folks/im-details.vala:214 ../folks/im-details.vala:241
+#, c-format
+msgid "The IM address '%s' could not be understood."
+msgstr "Не ўдалося разабраць IM-адрас \"%s\"."
+
+#. Translators: the first parameter is a persona store identifier
+#. * and the second is an error message.
+#: ../folks/individual-aggregator.vala:865
+#, c-format
+msgid "Error preparing persona store '%s': %s"
+msgstr "Памылка падрыхтоўкі сховішча асоб \"%s\": %s"
+
+#. Translators: the parameter is a property name.
+#: ../folks/individual-aggregator.vala:1071
+#: ../folks/individual-aggregator.vala:1297
+#, c-format
+msgid "Unknown property '%s' in linkable property list."
+msgstr "Невядомая ўласцівасць \"%s\" у спісе ўласцівасцяў."
+
+#. Translators: the first parameter is a store identifier
+#. * and the second parameter is an error message.
+#: ../folks/individual-aggregator.vala:1759
+#, c-format
+msgid "Failed to add contact for persona store ID '%s': %s"
+msgstr "Не ўдалося дадаць кантакт для ідэнтыфікатара сховішча асоб \"%s\": %s"
+
+#: ../folks/individual-aggregator.vala:1852
+msgid "Can’t link personas with no primary store."
+msgstr "Немагчыма спасылацца на асоб без асноўнага сховішча."
+
+#: ../folks/individual-aggregator.vala:1853
+#: ../folks/individual-aggregator.vala:2187
+#, c-format
+msgid ""
+"Persona store ‘%s:%s’ is configured as primary, but could not be found or "
+"failed to load."
+msgstr ""
+"Сховішча асоб \"%s:%s\" з'яўляецца асноўным, але яго не ўдалося адшукаць або загрузіць."
+
+#: ../folks/individual-aggregator.vala:1854
+#: ../folks/individual-aggregator.vala:2188
+#, c-format
+msgid ""
+"Check the relevant service is running, or change the default store in that "
+"service or using the “%s” GSettings key."
+msgstr ""
+"Праверце, каб працавала адпаведная служба, або змяніце прадвызначанае сховішча ў службе ці з дапамогай GSettings-ключа \"%s\"."
+
+#: ../folks/individual-aggregator.vala:1886
+msgid "Anti-links can't be removed between personas being linked."
+msgstr "Немагчыма выдаліць антыспасылкі паміж звязанымі асобамі."
+
+#: ../folks/individual-aggregator.vala:2186
+msgid "Can’t add personas with no primary store."
+msgstr "Немагчыма дадаць асоб без асноўнага сховішча."
+
+#: ../folks/individual-aggregator.vala:2197
+#, c-format
+msgid "Can't write to requested property (“%s”) of the writeable store."
+msgstr "Немагчыма запісаць патрэбную ўласцівасць (\"%s\") сховішча, даступнага для запісу."
+
+#: ../folks/org.freedesktop.folks.gschema.xml.in.h:1
+msgid "Primary store ID"
+msgstr "Ідэнтыфікатар асноўнага сховішча"
+
+#: ../folks/org.freedesktop.folks.gschema.xml.in.h:2
+msgid ""
+"The ID of the persona store which folks should use as primary (i.e. to store "
+"linking data in). The type ID of the store may optionally be prepended, "
+"separated by a colon. For example: “eds:system-address-book” or “key-file”."
+msgstr ""
+"Ідэнтыфікатар асноўнага сховішча асоб для folks (г. зн. сховішча, у якім трэба "
+"захоўваць звязаныя даныя). Дадаткова, можна вызначыць тып сховішча, дадаўшы ў пачатку адпаведны ідэнтыфікатар і двукроп'е. Напрыклад, \"eds:system-address-book\" ці \"key-file\"."
+
+#: ../folks/postal-address-details.vala:230
+#, c-format
+msgid "%s, %s, %s, %s, %s, %s, %s"
+msgstr "%s, %s, %s, %s, %s, %s, %s"
+
+#: ../folks/presence-details.vala:159
+msgid "Unknown status"
+msgstr "Невядомы стан"
+
+#: ../folks/presence-details.vala:161
+msgid "Offline"
+msgstr "Па-за сеткай"
+
+#: ../folks/presence-details.vala:165
+msgid "Error"
+msgstr "Памылка"
+
+#: ../folks/presence-details.vala:167
+msgid "Available"
+msgstr "Даступны"
+
+#: ../folks/presence-details.vala:169
+msgid "Away"
+msgstr "Адсутны"
+
+#: ../folks/presence-details.vala:171
+msgid "Extended away"
+msgstr "Адсутны (пашырана)"
+
+#: ../folks/presence-details.vala:173
+msgid "Busy"
+msgstr "Заняты"
+
+#: ../folks/presence-details.vala:175
+msgid "Hidden"
+msgstr "Схаваны"
+
+#: ../folks/role-details.vala:148
+#, c-format
+msgid "Title: %s, Organisation: %s, Role: %s"
+msgstr "Пасада: %s, Установа: %s, Роля: %s"
+
+#. Translators: the parameter is a filename.
+#: ../tools/import-pidgin.vala:48
+#, c-format
+msgid "File %s does not exist."
+msgstr "Файл %s не існуе."
+
+#. Translators: the first parameter is a filename, and the second
+#. * is an error message.
+#: ../tools/import-pidgin.vala:64
+#, c-format
+msgid "Failed to get information about file %s: %s"
+msgstr "Не ўдалося атрымаць інфармацыю аб файле %s: %s"
+
+#. Translators: the parameter is a filename.
+#: ../tools/import-pidgin.vala:71
+#, c-format
+msgid "File %s is not readable."
+msgstr "Файл %s недаступны для чытання."
+
+#. Translators: the parameter is a filename.
+#: ../tools/import-pidgin.vala:81
+#, c-format
+msgid "The Pidgin buddy list file '%s' could not be loaded."
+msgstr "Не ўдалося загрузіць файл \"%s\" са спісам Pidgin-сяброў."
+
+#. Translators: the parameter is a filename.
+#: ../tools/import-pidgin.vala:96
+#, c-format
+msgid ""
+"The Pidgin buddy list file ‘%s’ could not be loaded: the root element could "
+"not be found or was not recognized."
+msgstr ""
+"Не ўдалося загрузіць файл \"%s\" са спісам Pidgin-сяброў: не ўдалося адшукаць ці апазнаць каранёвы элемент."
+
+#. Translators: the first parameter is the number of buddies which
+#. * were successfully imported, and the second is a filename.
+#: ../tools/import-pidgin.vala:116
+#, c-format
+msgid "Imported %u buddy from '%s'."
+msgid_plural "Imported %u buddies from '%s'."
+msgstr[0] "%u сябар імпартаваны з \"%s\"."
+msgstr[1] "%u сябры імпартаваныя з \"%s\"."
+msgstr[2] "%u сяброў імпартаваныя з \"%s\"."
+
+#. Translators: the first parameter is a persona identifier,
+#. * and the second is an error message.
+#: ../tools/import-pidgin.vala:163
+#, c-format
+msgid "Error changing group of contact ‘%s’: %s"
+msgstr "Памылка змянення групы кантакту \"%s\": %s"
+
+#. Translators: the parameter is the buddy's IM address.
+#: ../tools/import-pidgin.vala:220
+#, c-format
+msgid ""
+"Ignoring buddy with no alias and only one IM address:\n"
+"%s"
+msgstr ""
+"Ігнаруецца сябар без псеўданіма і з адзіным IM-адрасам:\n"
+"%s"
+
+#: ../tools/import-pidgin.vala:244
+#, c-format
+msgid ""
+"Failed to create new contact for buddy with alias ‘%s’ and IM addresses:\n"
+"%s\n"
+"Error: %s\n"
+msgstr ""
+"Не ўдалося стварыць новы кантакт для сябра з псеўданімам \"%s\" і IM-адрасамі:\n"
+"%s\n"
+"Памылка: %s\n"
+
+#. Translators: the first parameter is a persona identifier, the
+#. * second is an alias for the persona, and the third is a set of IM
+#. * addresses each on a new line.
+#: ../tools/import-pidgin.vala:258
+#, c-format
+msgid ""
+"Created contact ‘%s’ for buddy with alias ‘%s’ and IM addresses:\n"
+"%s"
+msgstr ""
+"Створаны кантакт \"%s\" для сябра з псеўданімам \"%s\" і IM-адрасамі:\n"
+"%s"
+
+#: ../tools/import.vala:44
+msgid "Source backend name (default: 'pidgin')"
+msgstr "Назва віду крыніцы (прадвызначана: \"pidgin\")"
+
+#: ../tools/import.vala:47
+msgid "Source filename (default: specific to source backend)"
+msgstr "Назва файла-крыніцы (прадвызначана: залежыць ад віду крыніцы)"
+
+#: ../tools/import.vala:57
+msgid "— import meta-contact information to libfolks"
+msgstr "— імпартаванне метакантактаў у libfolks"
+
+#. Translators: the parameter is an error message.
+#: ../tools/import.vala:67
+#, c-format
+msgid "Couldn't parse command line options: %s"
+msgstr "Не ўдалося разабраць опцыі загаднага радка: %s"
+
+#. Translators: the parameter is an error message.
+#: ../tools/import.vala:108
+#, c-format
+msgid "Couldn't load the backends: %s"
+msgstr "Не ўдалося загрузіць праграмныя драйверы крыніц: %s"
+
+#. Translators: the parameter is a backend identifier.
+#: ../tools/import.vala:119
+#, c-format
+msgid "Couldn't load the ‘%s’ backend."
+msgstr "Не ўдалося загрузіць праграмны драйвер крыніц \"%s\"."
+
+#. Translators: the first parameter is a backend identifier and the
+#. * second parameter is an error message.
+#: ../tools/import.vala:132
+#, c-format
+msgid "Couldn't prepare the ‘%s’ backend: %s"
+msgstr "Не ўдалося падрыхтаваць праграмны драйвер крыніц \"%s\": %s"
+
+#. Translators: the parameter is a backend identifier.
+#: ../tools/import.vala:145
+#, c-format
+msgid "Couldn't load the ‘%s’ backend's persona store."
+msgstr "Не ўдалося загрузіць сховішча асоб праграмнага драйвера крыніц \"%s\"."
+
+#: ../tools/import.vala:166
+#, c-format
+msgid "Couldn't prepare the ‘%s’ backend's persona store: %s"
+msgstr "Не ўдалося падрыхтаваць сховішча асоб праграмнага драйвера крыніц \"%s\": %s"
+
+#. Translators: the parameter is an error message.
+#: ../tools/import.vala:184
+#, c-format
+msgid "Error importing contacts: %s"
+msgstr "Памылка імпартавання кантактаў: %s"
+
+#. Translators: both parameters are identifiers for backends.
+#: ../tools/import.vala:198
+#, c-format
+msgid ""
+"Unrecognized source backend name ‘%s’. ‘%s’ is currently the only supported "
+"source backend."
+msgstr ""
+"Невядомая назва праграмнага драйвера крыніц \"%s\". Пакуль што адзіным магчымым драйверам з'яўляецца \"%s\"."
