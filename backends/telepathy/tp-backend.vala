@@ -137,6 +137,8 @@ public class Folks.Backends.Tp.Backend : Folks.Backend
 
       try
         {
+          this._prepare_pending = true;
+
           this._account_manager.account_enabled.disconnect (
               this._account_enabled_cb);
           this._account_manager.account_validity_changed.disconnect (

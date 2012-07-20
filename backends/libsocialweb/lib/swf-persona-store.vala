@@ -318,13 +318,18 @@ public class Swf.PersonaStore : Folks.PersonaStore
     {
       Internal.profiling_start ("preparing Swf.PersonaStore (ID: %s)", this.id);
 
-      if (!this._is_prepared && !this._prepare_pending)
+      if (this._is_prepared || this._prepare_pending)
+        {
+          return;
+        }
+      
+      try
         {
           this._prepare_pending = true;
-
+          
           /* Get the service's capabilities. */
           string[]? caps = null;
-
+          
           try
             {
               caps = yield this._get_static_capabilities ();
@@ -392,7 +397,6 @@ public class Swf.PersonaStore : Folks.PersonaStore
 
           this._contact_view = contact_view;
           this._is_prepared = true;
-          this._prepare_pending = false;
           this.notify_property ("is-prepared");
 
           /* FIXME: for lsw Stores with 0 contacts or badly configured (or
@@ -410,6 +414,10 @@ public class Swf.PersonaStore : Folks.PersonaStore
           this.notify_property ("is-quiescent");
 
           this._contact_view.start ();
+        }
+      finally
+        {
+          this._prepare_pending = false;
         }
 
       Internal.profiling_end ("preparing Swf.PersonaStore (ID: %s)", this.id);

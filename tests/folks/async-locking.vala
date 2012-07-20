@@ -9,6 +9,9 @@ public class AsyncLockingTests : Folks.TestCase
   int _total_calls;
   MainLoop _loop;
 
+  // This test was added to ensure removing lock (this._is_prepared) in prepare
+  // Methods is not going to cause a problem.  
+  // See bug: https://bugzilla.gnome.org/show_bug.cgi?id=652637
   public AsyncLockingTests ()
     {
       base ("AsyncLocking");

@@ -1142,10 +1142,6 @@ public class Trf.PersonaStore : Folks.PersonaStore
               this.removed ();
               throw new PersonaStoreError.INVALID_ARGUMENT (e3.message);
             }
-          finally
-            {
-              this._prepare_pending = false;
-            }
         }
       finally
         {
@@ -1326,14 +1322,11 @@ public class Trf.PersonaStore : Folks.PersonaStore
           if (e.pred_id == rdf_type_id &&
               e.object_id == nco_person_id)
             {
-              lock (this._personas)
+              var removed_p = this._personas.get (p_id);
+              if (removed_p != null)
                 {
-                  var removed_p = this._personas.get (p_id);
-                  if (removed_p != null)
-                    {
-                      removed_personas.add (removed_p);
-                      _personas.unset (removed_p.iid);
-                    }
+                  removed_personas.add (removed_p);
+                  _personas.unset (removed_p.iid);
                 }
             }
           else
@@ -1363,15 +1356,12 @@ public class Trf.PersonaStore : Folks.PersonaStore
           var subject_tracker_id = e.subject_id.to_string ();
           var p_id = Trf.Persona.build_iid (this.id, subject_tracker_id);
           Trf.Persona persona;
-          lock (this._personas)
+          persona = this._personas.get (p_id);
+          if (persona == null)
             {
-              persona = this._personas.get (p_id);
-              if (persona == null)
-                {
-                  persona = new Trf.Persona (this, subject_tracker_id);
-                  this._personas.set (persona.iid, persona);
-                  added_personas.add (persona);
-                }
+              persona = new Trf.Persona (this, subject_tracker_id);
+              this._personas.set (persona.iid, persona);
+              added_personas.add (persona);
             }
           yield this._do_update (persona, e);
         }
@@ -1389,21 +1379,18 @@ public class Trf.PersonaStore : Folks.PersonaStore
       try {
         Sparql.Cursor cursor = yield this._connection.query_async (query);
 
-        lock (this._personas)
+        while (cursor.next ())
           {
-            while (cursor.next ())
+            int tracker_id =
+                (int) cursor.get_integer (Trf.Fields.TRACKER_ID);
+            var p_id =
+                Trf.Persona.build_iid (this.id, tracker_id.to_string ());
+            if (this._personas.get (p_id) == null)
               {
-                int tracker_id =
-                    (int) cursor.get_integer (Trf.Fields.TRACKER_ID);
-                var p_id =
-                    Trf.Persona.build_iid (this.id, tracker_id.to_string ());
-                if (this._personas.get (p_id) == null)
-                  {
-                    var persona = new Trf.Persona (this,
-                        tracker_id.to_string (), cursor);
-                    this._personas.set (persona.iid, persona);
-                    added_personas.add (persona);
-                  }
+                var persona = new Trf.Persona (this,
+                    tracker_id.to_string (), cursor);
+                this._personas.set (persona.iid, persona);
+                added_personas.add (persona);
               }
           }
 
