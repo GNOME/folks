@@ -89,40 +89,37 @@ public class Folks.Backends.Tp.Backend : Folks.Backend
     {
       Internal.profiling_start ("preparing Tp.Backend");
 
-      lock (this._is_prepared)
+      if (this._is_prepared || this._prepare_pending)
         {
-          if (this._is_prepared || this._prepare_pending)
+          return;
+        }
+
+      try
+        {
+          this._prepare_pending = true;
+          this._account_manager = AccountManager.dup ();
+          yield this._account_manager.prepare_async (null);
+          this._account_manager.account_enabled.connect (
+              this._account_enabled_cb);
+          this._account_manager.account_validity_changed.connect (
+              this._account_validity_changed_cb);
+
+          GLib.List<unowned Account> accounts =
+              this._account_manager.get_valid_accounts ();
+          foreach (Account account in accounts)
             {
-              return;
+              this._account_enabled_cb (account);
             }
 
-          try
-            {
-              this._prepare_pending = true;
-              this._account_manager = AccountManager.dup ();
-              yield this._account_manager.prepare_async (null);
-              this._account_manager.account_enabled.connect (
-                  this._account_enabled_cb);
-              this._account_manager.account_validity_changed.connect (
-                  this._account_validity_changed_cb);
+          this._is_prepared = true;
+          this.notify_property ("is-prepared");
 
-              GLib.List<unowned Account> accounts =
-                  this._account_manager.get_valid_accounts ();
-              foreach (Account account in accounts)
-                {
-                  this._account_enabled_cb (account);
-                }
-
-              this._is_prepared = true;
-              this.notify_property ("is-prepared");
-
-              this._is_quiescent = true;
-              this.notify_property ("is-quiescent");
-            }
-          finally
-            {
-              this._prepare_pending = false;
-            }
+          this._is_quiescent = true;
+          this.notify_property ("is-quiescent");
+        }
+      finally
+        {
+          this._prepare_pending = false;
         }
 
       Internal.profiling_end ("preparing Tp.Backend");
@@ -133,31 +130,28 @@ public class Folks.Backends.Tp.Backend : Folks.Backend
    */
   public override async void unprepare () throws GLib.Error
     {
-      lock (this._is_prepared)
+      if (!this._is_prepared || this._prepare_pending)
         {
-          if (!this._is_prepared || this._prepare_pending)
-            {
-              return;
-            }
+          return;
+        }
 
-          try
-            {
-              this._account_manager.account_enabled.disconnect (
-                  this._account_enabled_cb);
-              this._account_manager.account_validity_changed.disconnect (
-                  this._account_validity_changed_cb);
-              this._account_manager = null;
+      try
+        {
+          this._account_manager.account_enabled.disconnect (
+              this._account_enabled_cb);
+          this._account_manager.account_validity_changed.disconnect (
+              this._account_validity_changed_cb);
+          this._account_manager = null;
 
-              this._is_quiescent = false;
-              this.notify_property ("is-quiescent");
+          this._is_quiescent = false;
+          this.notify_property ("is-quiescent");
 
-              this._is_prepared = false;
-              this.notify_property ("is-prepared");
-            }
-          finally
-            {
-              this._prepare_pending = false;
-            }
+          this._is_prepared = false;
+          this.notify_property ("is-prepared");
+        }
+      finally
+        {
+          this._prepare_pending = false;
         }
     }
 

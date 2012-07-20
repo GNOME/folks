@@ -97,33 +97,38 @@ public class Folks.Backends.Sw.Backend : Folks.Backend
     {
       Internal.profiling_start ("preparing Sw.Backend");
 
-      lock (this._is_prepared)
+      if (this._is_prepared || this._prepare_pending)
         {
-          if (!this._is_prepared && !this._prepare_pending)
+          return;
+        }
+        
+      try
+        {
+          this._prepare_pending = true;
+
+          /* Hold a ref. on the Backend while we wait for the callback from
+           * this._client.get_services() to prevent the Backend being
+           * destroyed in the mean time. See: bgo#665039. */
+          this.ref ();
+
+          this._client = new Client ();
+          this._client.get_services((client, services) =>
             {
-              this._prepare_pending = true;
+              foreach (var service_name in services)
+                this.add_service (service_name);
 
-              /* Hold a ref. on the Backend while we wait for the callback from
-               * this._client.get_services() to prevent the Backend being
-               * destroyed in the mean time. See: bgo#665039. */
-              this.ref ();
+              this._is_prepared = true;
+              this.notify_property ("is-prepared");
 
-              this._client = new Client ();
-              this._client.get_services((client, services) =>
-                {
-                  foreach (var service_name in services)
-                    this.add_service (service_name);
+              this._is_quiescent = true;
+              this.notify_property ("is-quiescent");
 
-                  this._is_prepared = true;
-                  this._prepare_pending = false;
-                  this.notify_property ("is-prepared");
-
-                  this._is_quiescent = true;
-                  this.notify_property ("is-quiescent");
-
-                  this.unref ();
-                });
-            }
+              this.unref ();
+            });
+        }
+      finally
+        {
+          this._prepare_pending = false;
         }
 
       Internal.profiling_end ("preparing Sw.Backend");
@@ -134,33 +139,30 @@ public class Folks.Backends.Sw.Backend : Folks.Backend
    */
   public override async void unprepare () throws GLib.Error
     {
-      lock (this._is_prepared)
+      if (!this._is_prepared || this._prepare_pending)
         {
-          if (!this._is_prepared || this._prepare_pending)
-            {
-              return;
-            }
-
-          this._prepare_pending = true;
-
-          foreach (var store in this._persona_stores.values)
-            {
-              store.removed.disconnect (this.store_removed_cb);
-              this.persona_store_removed (store);
-            }
-
-          this._client = null;
-
-          this._persona_stores.clear ();
-          this.notify_property ("persona-stores");
-
-          this._is_quiescent = false;
-          this.notify_property ("is-quiescent");
-
-          this._is_prepared = false;
-          this._prepare_pending = false;
-          this.notify_property ("is-prepared");
+          return;
         }
+
+      this._prepare_pending = true;
+
+      foreach (var store in this._persona_stores.values)
+        {
+          store.removed.disconnect (this.store_removed_cb);
+          this.persona_store_removed (store);
+        }
+
+      this._client = null;
+
+      this._persona_stores.clear ();
+      this.notify_property ("persona-stores");
+
+      this._is_quiescent = false;
+      this.notify_property ("is-quiescent");
+
+      this._is_prepared = false;
+      this._prepare_pending = false;
+      this.notify_property ("is-prepared");
     }
 
   private void add_service (string service_name)

@@ -101,38 +101,35 @@ public class Folks.Backends.Eds.Backend : Folks.Backend
     {
       Internal.profiling_start ("preparing Eds.Backend");
 
-      lock (this._is_prepared)
+      if (this._is_prepared || this._prepare_pending)
         {
-          if (this._is_prepared || this._prepare_pending)
-            {
-              return;
-            }
+          return;
+        }
 
-          try
-            {
-              this._prepare_pending = true;
+      try
+        {
+          this._prepare_pending = true;
 
-              this._create_avatars_cache_dir ();
+          this._create_avatars_cache_dir ();
 
-              this._ab_sources = yield create_source_registry ();
-              /* Our callback only looks for added sources, so we only
-               need to connect to source-added and source-enabled signals */
-              this._ab_sources.source_added.connect (
-                  this._ab_source_list_changed_cb);
-              this._ab_sources.source_enabled.connect (
-                  this._ab_source_list_changed_cb);
-              this._ab_source_list_changed_cb ();
+          this._ab_sources = yield create_source_registry ();
+          /* Our callback only looks for added sources, so we only
+           need to connect to source-added and source-enabled signals */
+          this._ab_sources.source_added.connect (
+              this._ab_source_list_changed_cb);
+          this._ab_sources.source_enabled.connect (
+              this._ab_source_list_changed_cb);
+          this._ab_source_list_changed_cb ();
 
-              this._is_prepared = true;
-              this.notify_property ("is-prepared");
+          this._is_prepared = true;
+          this.notify_property ("is-prepared");
 
-              this._is_quiescent = true;
-              this.notify_property ("is-quiescent");
-            }
-          finally
-            {
-              this._prepare_pending = false;
-            }
+          this._is_quiescent = true;
+          this.notify_property ("is-quiescent");
+        }
+      finally
+        {
+          this._prepare_pending = false;
         }
 
       Internal.profiling_end ("preparing Eds.Backend");
@@ -143,36 +140,33 @@ public class Folks.Backends.Eds.Backend : Folks.Backend
    */
   public override async void unprepare () throws GLib.Error
     {
-      lock (this._is_prepared)
+      if (!this._is_prepared || this._prepare_pending)
         {
-          if (!this._is_prepared || this._prepare_pending)
+          return;
+        }
+
+      try
+        {
+          this._prepare_pending = true;
+
+          foreach (var persona_store in this._persona_stores.values)
             {
-              return;
+              this._remove_address_book (persona_store);
             }
 
-          try
-            {
-              this._prepare_pending = true;
+          this._ab_sources.source_added.disconnect (this._ab_source_list_changed_cb);
+          this._ab_sources.source_enabled.disconnect (this._ab_source_list_changed_cb);
+          this._ab_sources = null;
 
-              foreach (var persona_store in this._persona_stores.values)
-                {
-                  this._remove_address_book (persona_store);
-                }
+          this._is_quiescent = false;
+          this.notify_property ("is-quiescent");
 
-              this._ab_sources.source_added.disconnect (this._ab_source_list_changed_cb);
-              this._ab_sources.source_enabled.disconnect (this._ab_source_list_changed_cb);
-              this._ab_sources = null;
-
-              this._is_quiescent = false;
-              this.notify_property ("is-quiescent");
-
-              this._is_prepared = false;
-              this.notify_property ("is-prepared");
-            }
-          finally
-            {
-              this._prepare_pending = false;
-            }
+          this._is_prepared = false;
+          this.notify_property ("is-prepared");
+        }
+      finally
+        {
+          this._prepare_pending = false;
         }
     }
 

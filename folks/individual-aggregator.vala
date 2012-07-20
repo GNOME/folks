@@ -509,57 +509,54 @@ public class Folks.IndividualAggregator : Object
        * been prepared (though no {@link PersonaStore}s are guaranteed to be
        * available yet). This last guarantee is new as of version 0.2.0. */
 
-      lock (this._is_prepared)
+      if (this._is_prepared || this._prepare_pending)
         {
-          if (this._is_prepared || this._prepare_pending)
+          return;
+        }
+
+      try
+        {
+          this._prepare_pending = true;
+
+          /* Temporarily increase the non-quiescent backend count so that
+           * we don't prematurely reach quiescence due to odd timing of the
+           * backend-available signals. */
+          this._non_quiescent_backend_count++;
+
+          this._backend_store.backend_available.connect (
+              this._backend_available_cb);
+
+          /* Load any backends which already exist. This could happen if the
+           * BackendStore has stayed alive after being used by a previous
+           * IndividualAggregator instance. */
+          var backends = this._backend_store.enabled_backends.values;
+          foreach (var backend in backends)
             {
-              return;
+              this._backend_available_cb (this._backend_store, backend);
             }
 
-          try
+          /* Load any backends which haven't been loaded already. (Typically
+           * all of them.) */
+          yield this._backend_store.load_backends ();
+
+          this._non_quiescent_backend_count--;
+
+          this._is_prepared = true;
+          this._prepare_pending = false;
+          this.notify_property ("is-prepared");
+
+          /* Mark the aggregator as having reached a quiescent state if
+           * appropriate. This will typically only happen here in cases
+           * where the stores were all prepared and quiescent before the
+           * aggregator was created. */
+          if (this._is_quiescent == false)
             {
-              this._prepare_pending = true;
-
-              /* Temporarily increase the non-quiescent backend count so that
-               * we don't prematurely reach quiescence due to odd timing of the
-               * backend-available signals. */
-              this._non_quiescent_backend_count++;
-
-              this._backend_store.backend_available.connect (
-                  this._backend_available_cb);
-
-              /* Load any backends which already exist. This could happen if the
-               * BackendStore has stayed alive after being used by a previous
-               * IndividualAggregator instance. */
-              var backends = this._backend_store.enabled_backends.values;
-              foreach (var backend in backends)
-                {
-                  this._backend_available_cb (this._backend_store, backend);
-                }
-
-              /* Load any backends which haven't been loaded already. (Typically
-               * all of them.) */
-              yield this._backend_store.load_backends ();
-
-              this._non_quiescent_backend_count--;
-
-              this._is_prepared = true;
-              this._prepare_pending = false;
-              this.notify_property ("is-prepared");
-
-              /* Mark the aggregator as having reached a quiescent state if
-               * appropriate. This will typically only happen here in cases
-               * where the stores were all prepared and quiescent before the
-               * aggregator was created. */
-              if (this._is_quiescent == false)
-                {
-                  this._notify_if_is_quiescent ();
-                }
+              this._notify_if_is_quiescent ();
             }
-          finally
-            {
-              this._prepare_pending = false;
-            }
+        }
+      finally
+        {
+          this._prepare_pending = false;
         }
 
       Internal.profiling_end ("preparing IndividualAggregator");

@@ -306,7 +306,6 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
             }
 
           this._is_prepared = true;
-          this._prepare_pending = false;
           this.notify_property ("is-prepared");
 
           /* We've finished loading all the personas we know about */

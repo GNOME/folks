@@ -98,57 +98,54 @@ public class Folks.Backends.Kf.Backend : Folks.Backend
     {
       Internal.profiling_start ("preparing Kf.Backend");
 
-      lock (this._is_prepared)
+      if (this._is_prepared || this._prepare_pending)
         {
-          if (this._is_prepared || this._prepare_pending)
+          return;
+        }
+
+      try
+        {
+          this._prepare_pending = true;
+
+          File file;
+          unowned string path = Environment.get_variable (
+              "FOLKS_BACKEND_KEY_FILE_PATH");
+          if (path == null)
             {
-              return;
+              file = File.new_for_path (Environment.get_user_data_dir ());
+              file = file.get_child ("folks");
+              file = file.get_child ("relationships.ini");
+
+              debug ("Using built-in key file '%s' (override with " +
+                  "environment variable FOLKS_BACKEND_KEY_FILE_PATH)",
+                  file.get_path ());
+            }
+          else
+            {
+              file = File.new_for_path (path);
+              debug ("Using environment variable " +
+                  "FOLKS_BACKEND_KEY_FILE_PATH = '%s' to load the key " +
+                  "file.", path);
             }
 
-          try
-            {
-              this._prepare_pending = true;
+          /* Create the PersonaStore for the key file */
+          PersonaStore store = new Kf.PersonaStore (file);
 
-              File file;
-              unowned string path = Environment.get_variable (
-                  "FOLKS_BACKEND_KEY_FILE_PATH");
-              if (path == null)
-                {
-                  file = File.new_for_path (Environment.get_user_data_dir ());
-                  file = file.get_child ("folks");
-                  file = file.get_child ("relationships.ini");
+          this._persona_stores.set (store.id, store);
+          store.removed.connect (this._store_removed_cb);
+          this.notify_property ("persona-stores");
 
-                  debug ("Using built-in key file '%s' (override with " +
-                      "environment variable FOLKS_BACKEND_KEY_FILE_PATH)",
-                      file.get_path ());
-                }
-              else
-                {
-                  file = File.new_for_path (path);
-                  debug ("Using environment variable " +
-                      "FOLKS_BACKEND_KEY_FILE_PATH = '%s' to load the key " +
-                      "file.", path);
-                }
+          this.persona_store_added (store);
 
-              /* Create the PersonaStore for the key file */
-              PersonaStore store = new Kf.PersonaStore (file);
+          this._is_prepared = true;
+          this.notify_property ("is-prepared");
 
-              this._persona_stores.set (store.id, store);
-              store.removed.connect (this._store_removed_cb);
-              this.notify_property ("persona-stores");
-
-              this.persona_store_added (store);
-
-              this._is_prepared = true;
-              this.notify_property ("is-prepared");
-
-              this._is_quiescent = true;
-              this.notify_property ("is-quiescent");
-            }
-          finally
-            {
-              this._prepare_pending = false;
-            }
+          this._is_quiescent = true;
+          this.notify_property ("is-quiescent");
+        }
+      finally
+        {
+          this._prepare_pending = false;
         }
 
       Internal.profiling_end ("preparing Kf.Backend");
@@ -159,35 +156,32 @@ public class Folks.Backends.Kf.Backend : Folks.Backend
    */
   public override async void unprepare () throws GLib.Error
     {
-      lock (this._is_prepared)
+      if (!this._is_prepared || this._prepare_pending == true)
         {
-          if (!this._is_prepared || this._prepare_pending == true)
+          return;
+        }
+
+      try
+        {
+          this._prepare_pending = true;
+
+          foreach (var persona_store in this._persona_stores.values)
             {
-              return;
+              this.persona_store_removed (persona_store);
             }
 
-          try
-            {
-              this._prepare_pending = true;
+          this._persona_stores.clear ();
+          this.notify_property ("persona-stores");
 
-              foreach (var persona_store in this._persona_stores.values)
-                {
-                  this.persona_store_removed (persona_store);
-                }
+          this._is_quiescent = false;
+          this.notify_property ("is-quiescent");
 
-              this._persona_stores.clear ();
-              this.notify_property ("persona-stores");
-
-              this._is_quiescent = false;
-              this.notify_property ("is-quiescent");
-
-              this._is_prepared = false;
-              this.notify_property ("is-prepared");
-            }
-          finally
-            {
-              this._prepare_pending = false;
-            }
+          this._is_prepared = false;
+          this.notify_property ("is-prepared");
+        }
+      finally
+        {
+          this._prepare_pending = false;
         }
     }
 
