@@ -24,6 +24,7 @@ using Folks;
 using Readline;
 using Gee;
 using GLib;
+using Posix;
 
 /* We have to have a static global instance so that the readline callbacks can
  * access its data, since they don't pass closures around. */
@@ -32,10 +33,21 @@ static Inspect.Client main_client = null;
 public class Folks.Inspect.Client : Object
 {
   public HashMap<string, Command> commands;
+  private static bool _is_readline_installed;
   private MainLoop main_loop;
   public IndividualAggregator aggregator { get; private set; }
   public BackendStore backend_store { get; private set; }
   public SignalManager signal_manager { get; private set; }
+
+  /* To page or not to page? */
+  private termios _original_termios_p;
+  private bool _original_termios_p_valid = false;
+  private bool _quit_after_pager_dies = false;
+  private static Pid _pager_pid = 0;
+  private IOChannel? _stdin_channel = null;
+  private static uint _stdin_watch_id = 0;
+  private FileStream? _pager_channel = null;
+  private uint _pager_child_watch_id = 0;
 
   public static int main (string[] args)
     {
@@ -52,7 +64,7 @@ public class Folks.Inspect.Client : Object
         }
       catch (OptionError e1)
         {
-          stderr.printf ("Couldn’t parse command line options: %s\n",
+          GLib.stderr.printf ("Couldn’t parse command line options: %s\n",
               e1.message);
           return 1;
         }
@@ -63,8 +75,17 @@ public class Folks.Inspect.Client : Object
       /* Set up signal handling. */
       Unix.signal_add (Posix.SIGTERM, () =>
         {
-          /* Quit the client and let that exit the process. */
-          main_client.quit ();
+          /* Propagate the signal to our pager process, if it's running. */
+          if (main_client._pager_pid != 0)
+            {
+              main_client._quit_after_pager_dies = true;
+              kill (main_client._pager_pid, Posix.SIGTERM);
+            }
+          else
+            {
+              /* Quit the client and let that exit the process. */
+              main_client.quit ();
+            }
 
           return false;
         });
@@ -76,7 +97,7 @@ public class Folks.Inspect.Client : Object
         }
       else
         {
-          assert (args.length > 1);
+          GLib.assert (args.length > 1);
 
           /* Drop the first argument and parse the rest as a command line. If
            * the first argument is ‘--’ then the command was passed after some
@@ -124,6 +145,23 @@ public class Folks.Inspect.Client : Object
 
   public void quit ()
     {
+      /* Stop paging. */
+      this._stop_paged_output ();
+
+      /* Uninstall readline, if it's installed. */
+      if (this._is_readline_installed)
+        {
+          this._uninstall_readline_and_stdin ();
+        }
+
+      /* Restore the user's original terminal settings, since the pager might've
+       * fiddled with them. */
+      if (this._original_termios_p_valid)
+        {
+          tcsetattr (Posix.STDIN_FILENO, Posix.TCSADRAIN,
+              this._original_termios_p);
+        }
+
       /* Kill the main loop. */
       this.main_loop.quit ();
     }
@@ -153,7 +191,7 @@ public class Folks.Inspect.Client : Object
       finally
         {
           this.aggregator.disconnect (signal_id);
-          assert (this.aggregator.is_quiescent == true);
+          GLib.assert (this.aggregator.is_quiescent == true);
         }
     }
 
@@ -171,7 +209,7 @@ public class Folks.Inspect.Client : Object
 
       if (command == null)
         {
-          stdout.printf ("Unrecognised command ‘%s’.\n", command_name);
+          GLib.stdout.printf ("Unrecognised command ‘%s’.\n", command_name);
           return;
         }
 
@@ -185,14 +223,14 @@ public class Folks.Inspect.Client : Object
             }
           catch (GLib.Error e1)
             {
-              stderr.printf ("Error preparing aggregator: %s\n", e1.message);
+              GLib.stderr.printf ("Error preparing aggregator: %s\n", e1.message);
               Process.exit (1);
             }
 
           /* Run the command */
           command.run (subcommand);
 
-          this.main_loop.quit ();
+          this.quit ();
         });
 
       this.main_loop.run ();
@@ -205,30 +243,28 @@ public class Folks.Inspect.Client : Object
        * stdin in our main loop, and passing character notifications to
        * readline. The main loop also processes all the folks events, thus
        * preventing us having to run a second thread. */
-      var stdin_channel = new IOChannel.unix_new (stdin.fileno ());
-      stdin_channel.add_watch (IOCondition.IN, (source, cond) =>
-        {
-          /* At least a single character is available on stdin, so let readline
-           * consume it. */
-          if ((cond & IOCondition.IN) != 0)
-            {
-              Readline.callback_read_char ();
-              return true;
-            }
 
-          assert_not_reached ();
-        });
+      /* Copy the user's original terminal settings. */
+      if (tcgetattr (Posix.STDIN_FILENO, out this._original_termios_p) == 0)
+        {
+          this._original_termios_p_valid = true;
+        }
 
       /* Handle SIGINT. */
       Unix.signal_add (Posix.SIGINT, () =>
         {
+          if (Client._is_readline_installed == false)
+            {
+              return true;
+            }
+
           /* Tidy up. */
           Readline.free_line_state ();
           Readline.cleanup_after_signal ();
           Readline.reset_after_signal ();
 
           /* Display a fresh prompt. */
-          stdout.printf ("^C");
+          GLib.stdout.printf ("^C");
           Readline.crlf ();
           Readline.reset_line_state ();
           Readline.replace_line ("", 0);
@@ -243,60 +279,226 @@ public class Folks.Inspect.Client : Object
       Readline.attempted_completion_function = Client.completion_cb;
       Readline.catch_signals = 0; /* go away, readline */
 
-      /* Callback for each character appearing on stdin. */
-      Readline.callback_handler_install ("> ", (_command_line) =>
-        {
-          if (_command_line == null)
-            {
-              /* EOF. If we've entered some text, don't do anything. Otherwise,
-               * quit. */
-              if (Readline.line_buffer != "")
-                {
-                  Readline.ding ();
-                  return;
-                }
-
-              /* Quit. */
-              Readline.crlf ();
-              Readline.callback_handler_remove ();
-              main_client.quit ();
-
-              return;
-            }
-
-          var command_line = (!) _command_line;
-
-          command_line = command_line.strip ();
-          if (command_line == "")
-            {
-              /* If the user's entered a blank line, just display a new prompt
-               * without doing anything else. */
-              return;
-            }
-
-          string subcommand;
-          string command_name;
-          Command command = main_client.parse_command_line (command_line,
-              out command_name, out subcommand);
-
-          /* Run the command */
-          if (command != null)
-            {
-              command.run (subcommand);
-            }
-          else
-            {
-              stdout.printf ("Unrecognised command ‘%s’.\n", command_name);
-            }
-
-          /* Store the command in the history, even if it failed */
-          Readline.History.add (command_line);
-        });
+      /* Install readline and the stdin handler. */
+      this._stdin_channel = new IOChannel.unix_new (GLib.stdin.fileno ());
+      this._install_readline_and_stdin ();
 
       /* Run the aggregator and the main loop. */
       this.aggregator.prepare ();
 
       this.main_loop.run ();
+    }
+
+  private void _install_readline_and_stdin ()
+    {
+      /* stdin handler. */
+      this._stdin_watch_id = this._stdin_channel.add_watch (IOCondition.IN,
+          this._stdin_handler_cb);
+
+      /* Callback for each character appearing on stdin. */
+      Readline.callback_handler_install ("> ", Client._readline_handler_cb);
+      Client._is_readline_installed = true;
+    }
+
+  private void _uninstall_readline_and_stdin ()
+    {
+      Readline.callback_handler_remove ();
+      Client._is_readline_installed = false;
+
+      Source.remove (this._stdin_watch_id);
+      this._stdin_watch_id = 0;
+    }
+
+  /* This should only ever be called while readline is installed. */
+  private bool _stdin_handler_cb (IOChannel source, IOCondition cond)
+    {
+      /* At least a single character is available on stdin, so let readline
+       * consume it. */
+      if ((cond & IOCondition.IN) != 0)
+        {
+          Readline.callback_read_char ();
+          return true;
+        }
+
+      assert_not_reached ();
+    }
+
+  private static void _readline_handler_cb (string? _command_line)
+    {
+      if (_command_line == null)
+        {
+          /* EOF. If we've entered some text, don't do anything. Otherwise,
+           * quit. */
+          if (Readline.line_buffer != "")
+            {
+              Readline.ding ();
+              return;
+            }
+
+          /* Quit. */
+          main_client.quit ();
+
+          return;
+        }
+
+      var command_line = (!) _command_line;
+
+      command_line = command_line.strip ();
+      if (command_line == "")
+        {
+          /* If the user's entered a blank line, just display a new prompt
+           * without doing anything else. */
+          return;
+        }
+
+      string subcommand;
+      string command_name;
+      Command command = main_client.parse_command_line (command_line,
+          out command_name, out subcommand);
+
+      /* Run the command */
+      if (command != null)
+        {
+          if (command_name != "quit")
+            {
+              /* Start paging output. This is stopped when the pager dies. */
+              main_client._start_paged_output ();
+            }
+
+          command.run (subcommand);
+
+          /* Close the stream to the pager so it knows it's reached EOF. */
+          main_client._pager_channel = null;
+          Utils.output_filestream = GLib.stdout;
+        }
+      else
+        {
+          GLib.stdout.printf ("Unrecognised command ‘%s’.\n", command_name);
+        }
+
+      /* Store the command in the history, even if it failed */
+      Readline.History.add (command_line);
+    }
+
+  private void _start_paged_output ()
+    {
+      /* If the output is not a TTY (because it's a pipe or a file or a
+       * toaster) we don't page. */
+      if (!isatty (1))
+        {
+          return;
+        }
+
+      var pager = Environment.get_variable ("PAGER");
+      if (pager != null && pager == "")
+        {
+          return;
+        }
+
+      if (pager == null)
+        {
+          pager = "less -FRSX";
+        }
+
+      /* Convert command to null terminated array */
+      string[] args;
+      try
+        {
+          GLib.Shell.parse_argv (pager, out args);
+        }
+      catch (GLib.ShellError e)
+        {
+          warning ("Error parsing pager arguments: %s", e.message);
+          return;
+        }
+
+      /* Remove the readline and stdin handlers while the pager is running. */
+      this._uninstall_readline_and_stdin ();
+
+      /* Store the readline terminal state so that we can restore them
+       * after the pager has exited. */
+      Readline.prep_terminal (1);
+
+      /* Spawn the pager. */
+      int pager_fd = 0;
+
+      try
+        {
+          GLib.Process.spawn_async_with_pipes (null,
+              args,
+              null,
+              GLib.SpawnFlags.LEAVE_DESCRIPTORS_OPEN |
+                  GLib.SpawnFlags.SEARCH_PATH |
+                  GLib.SpawnFlags.DO_NOT_REAP_CHILD /* we use a ChildWatch */,
+              null,
+              out this._pager_pid,
+              out pager_fd, // Std input
+              null, // Std out
+              null); // Std error
+        }
+      catch (SpawnError e2)
+        {
+          warning ("Error spawning pager: %s", e2.message);
+          return;
+        }
+
+      /* Redirect our output to the pager. */
+      this._pager_channel = FileStream.fdopen (pager_fd, "w");
+      Utils.output_filestream = this._pager_channel;
+
+      /* Watch for when the pager exits. */
+      this._pager_child_watch_id = ChildWatch.add (this._pager_pid,
+          (pid, status) =>
+            {
+              /* $PAGER died or was killed. */
+              this._stop_paged_output ();
+
+              /* Reset the readline state ready to display a new prompt. If the
+               * pager exited as the result of a signal, it probably didn't
+               * tidy up after itself (e.g. `less` leaves a colon prompt behind
+               * on the current line), so move to a new line. Doing this
+               * normally just looks a bit weird. */
+              if (Process.if_signaled (status))
+                {
+                  Readline.crlf ();
+                }
+
+              Readline.reset_line_state ();
+              Readline.replace_line ("", 0);
+
+              /* Are we supposed to quit (e.g. due to receiving a SIGTERM)? */
+              if (this._quit_after_pager_dies)
+                {
+                  main_client.quit ();
+                  return;
+                }
+
+              /* Reinstall the readline handler and stdin handler. */
+              this._install_readline_and_stdin ();
+            });
+    }
+
+  private void _stop_paged_output ()
+    {
+      if (this._pager_pid == 0)
+        {
+          return;
+        }
+
+      Process.close_pid (this._pager_pid);
+      Source.remove (this._pager_child_watch_id);
+
+      this._pager_channel = null;
+      Utils.output_filestream = GLib.stdout;
+      this._pager_pid = 0;
+      this._pager_child_watch_id = 0;
+
+      /* Reset the terminal state (e.g. ECHO, which can get left turned
+       * off if the pager was killed uncleanly). */
+      Readline.deprep_terminal ();
+      Readline.free_line_state ();
+      Readline.cleanup_after_signal ();
+      Readline.reset_after_signal ();
     }
 
   private static Command? parse_command_line (string command_line,

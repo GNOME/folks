@@ -13,6 +13,7 @@ Bugs fixed:
 • Bug 675223 — Shouldn't warn if CM does not implement any contact list
 • Bug 660128 — Most contacts don't have an avatar
 • Bug 652637 — Don't hold locks across async calls
+• Bug 660236 — Paging for long text in folks-inspect
 
 API changes:
 • Add AntiLinkable interface and implement it on Kf.Persona and Edsf.Persona

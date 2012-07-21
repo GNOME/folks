@@ -28,6 +28,9 @@ private class Folks.Inspect.Utils
   private static uint indentation = 0;
   private static string indentation_string = "";
 
+  /* The FILE we're printing output to. */
+  public static unowned FileStream output_filestream = GLib.stdout;
+
   public static void init ()
     {
       Utils.indentation_string = "";
@@ -107,7 +110,8 @@ private class Folks.Inspect.Utils
       /* FIXME: store the va_list temporarily to work around bgo#638308 */
       var valist = va_list ();
       string output = format.vprintf (valist);
-      stdout.printf ("%s%s\n", Utils.indentation_string, output);
+      var str = "%s%s\n".printf (Utils.indentation_string, output);
+      Utils.output_filestream.printf (str);
     }
 
   public static void print_individual (Individual individual,
