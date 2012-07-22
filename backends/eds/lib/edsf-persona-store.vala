@@ -471,7 +471,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
                   PersonaDetail.IS_FAVOURITE))
             {
               bool is_fav = v.get_boolean ();
-              yield this._set_contact_is_favourite (contact, is_fav);
+              this._set_contact_is_favourite (contact, is_fav);
             }
         }
 
@@ -1518,29 +1518,14 @@ public class Edsf.PersonaStore : Folks.PersonaStore
               _("The contact cannot be marked as favourite."));
         }
 
-      yield this._set_contact_is_favourite (persona.contact, is_favourite);
-      yield this._commit_modified_property (persona, "is-favourite");
-
+      this._set_contact_is_favourite (persona.contact, is_favourite);
       /* If this is a Google Contacts address book, change the user's membership
        * of the “Starred in Android” group accordingly. See: bgo#661490. */
-      if (this._is_google_contacts_address_book ())
-        {
-          try
-            {
-              yield persona.change_group (this.android_favourite_group_name,
-                  is_favourite);
-            }
-          catch (GLib.Error e1)
-            {
-              /* We know this will always be a PropertyError. */
-              assert (e1 is PropertyError);
-              throw (PropertyError) e1;
-            }
-        }
+      this._set_contact_groups (persona.contact, persona.groups, is_favourite);
+      yield this._commit_modified_property (persona, "is-favourite");
     }
 
-  private async void _set_contact_is_favourite (E.Contact contact,
-      bool is_favourite)
+  private void _set_contact_is_favourite (E.Contact contact, bool is_favourite)
     {
       this._remove_attribute (contact, "X-FOLKS-FAVOURITE");
 
@@ -2016,20 +2001,12 @@ public class Edsf.PersonaStore : Folks.PersonaStore
               _("Groups are not writeable on this contact."));
         }
 
-      yield this._set_contact_groups (persona.contact, groups);
+      this._set_contact_groups (persona.contact, groups, persona.is_favourite);
       yield this._commit_modified_property (persona, "groups");
-
-      /* If this is a Google Contacts address book and the user's changing
-       * membership of the “Starred in Android” group, change our favourite
-       * status accordingly. See: bgo#661490. */
-      if (this._is_google_contacts_address_book ())
-        {
-          yield persona.change_is_favourite (
-              this.android_favourite_group_name in groups);
-        }
     }
 
-  private async void _set_contact_groups (E.Contact contact, Set<string> groups)
+  private void _set_contact_groups (E.Contact contact, Set<string> groups,
+      bool is_favourite)
     {
       var categories = new GLib.List<string> ();
 
@@ -2039,8 +2016,21 @@ public class Edsf.PersonaStore : Folks.PersonaStore
             {
               continue;
             }
+          else if (this._is_google_contacts_address_book () &&
+              group == Edsf.PersonaStore.android_favourite_group_name)
+            {
+              continue;
+            }
 
           categories.prepend (group);
+        }
+
+      /* If this is a Google address book, we must transparently add/remove the
+       * “Starred in Android” group to/from the group list, depending on our
+       * favourite status. */
+      if (is_favourite && this._is_google_contacts_address_book ())
+        {
+          categories.prepend (Edsf.PersonaStore.android_favourite_group_name);
         }
 
       contact.set (ContactField.CATEGORY_LIST, categories);
