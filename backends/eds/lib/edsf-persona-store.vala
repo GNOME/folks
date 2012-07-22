@@ -381,7 +381,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
             {
               Set<EmailFieldDetails> email_addresses =
                 (Set<EmailFieldDetails>) v.get_object ();
-              yield this._set_contact_attributes_string (contact,
+              this._set_contact_attributes_string (contact,
                   email_addresses,
                   "EMAIL", E.ContactField.EMAIL);
             }
@@ -402,14 +402,14 @@ public class Edsf.PersonaStore : Folks.PersonaStore
                 PersonaDetail.IM_ADDRESSES))
             {
               var im_fds = (MultiMap<string, ImFieldDetails>) v.get_object ();
-              yield this._set_contact_im_fds (contact, im_fds);
+              this._set_contact_im_fds (contact, im_fds);
             }
           else if (k == Folks.PersonaStore.detail_key (
                 PersonaDetail.PHONE_NUMBERS))
             {
               Set<PhoneFieldDetails> phone_numbers =
                 (Set<PhoneFieldDetails>) v.get_object ();
-              yield this._set_contact_attributes_string (contact,
+              this._set_contact_attributes_string (contact,
                   phone_numbers, "TEL",
                   E.ContactField.TEL);
             }
@@ -418,19 +418,18 @@ public class Edsf.PersonaStore : Folks.PersonaStore
             {
               Set<PostalAddressFieldDetails> postal_fds =
                 (Set<PostalAddressFieldDetails>) v.get_object ();
-              yield this._set_contact_postal_addresses (contact,
-                  postal_fds);
+              this._set_contact_postal_addresses (contact, postal_fds);
             }
           else if (k == Folks.PersonaStore.detail_key (
                 PersonaDetail.STRUCTURED_NAME))
             {
               StructuredName sname = (StructuredName) v.get_object ();
-              yield this._set_contact_name (contact, sname);
+              this._set_contact_name (contact, sname);
             }
           else if (k == Folks.PersonaStore.detail_key (PersonaDetail.LOCAL_IDS))
             {
               Set<string> local_ids = (Set<string>) v.get_object ();
-              yield this._set_contact_local_ids (contact, local_ids);
+              this._set_contact_local_ids (contact, local_ids);
             }
           else if (k == Folks.PersonaStore.detail_key
               (PersonaDetail.WEB_SERVICE_ADDRESSES))
@@ -438,34 +437,34 @@ public class Edsf.PersonaStore : Folks.PersonaStore
               HashMultiMap<string, WebServiceFieldDetails>
                 web_service_addresses =
                 (HashMultiMap<string, WebServiceFieldDetails>) v.get_object ();
-              yield this._set_contact_web_service_addresses (contact,
+              this._set_contact_web_service_addresses (contact,
                   web_service_addresses);
             }
           else if (k == Folks.PersonaStore.detail_key (PersonaDetail.NOTES))
             {
               var notes = (Gee.HashSet<NoteFieldDetails>) v.get_object ();
-              yield this._set_contact_notes (contact, notes);
+              this._set_contact_notes (contact, notes);
             }
           else if (k == Folks.PersonaStore.detail_key (PersonaDetail.GENDER))
             {
               var gender = (Gender) v.get_enum ();
-              yield this._set_contact_gender (contact, gender);
+              this._set_contact_gender (contact, gender);
             }
           else if (k == Folks.PersonaStore.detail_key (PersonaDetail.URLS))
             {
               Set<UrlFieldDetails> urls = (Set<UrlFieldDetails>) v.get_object ();
-              yield this._set_contact_urls (contact, urls);
+              this._set_contact_urls (contact, urls);
             }
           else if (k == Folks.PersonaStore.detail_key (PersonaDetail.BIRTHDAY))
             {
               var birthday = (DateTime?) v.get_boxed ();
-              yield this._set_contact_birthday (contact, birthday);
+              this._set_contact_birthday (contact, birthday);
             }
           else if (k == Folks.PersonaStore.detail_key (PersonaDetail.ROLES))
             {
               Set<RoleFieldDetails> roles =
                 (Set<RoleFieldDetails>) v.get_object ();
-              yield this._set_contact_roles (contact, roles);
+              this._set_contact_roles (contact, roles);
             }
           else if (k == Folks.PersonaStore.detail_key (
                   PersonaDetail.IS_FAVOURITE))
@@ -1381,12 +1380,12 @@ public class Edsf.PersonaStore : Folks.PersonaStore
             web_service_addresses))
         return;
 
-      yield this._set_contact_web_service_addresses (persona.contact,
+      this._set_contact_web_service_addresses (persona.contact,
           web_service_addresses);
       yield this._commit_modified_property (persona, "web-service-addresses");
     }
 
-  private async void _set_contact_web_service_addresses (E.Contact contact,
+  private void _set_contact_web_service_addresses (E.Contact contact,
       MultiMap<string, WebServiceFieldDetails> web_service_addresses)
     {
       this._remove_attribute (contact, "X-FOLKS-WEB-SERVICES-IDS");
@@ -1416,12 +1415,11 @@ public class Edsf.PersonaStore : Folks.PersonaStore
       if (Utils.set_afd_equal (persona.urls, urls))
         return;
 
-      yield this._set_contact_urls (persona.contact, urls);
+      this._set_contact_urls (persona.contact, urls);
       yield this._commit_modified_property (persona, "urls");
     }
 
-  private async void _set_contact_urls (E.Contact contact,
-      Set<UrlFieldDetails> urls)
+  private void _set_contact_urls (E.Contact contact, Set<UrlFieldDetails> urls)
     {
       var vcard = (E.VCard) contact;
       vcard.remove_attributes (null, "X-URIS");
@@ -1491,12 +1489,11 @@ public class Edsf.PersonaStore : Folks.PersonaStore
               _("Local IDs are not writeable on this contact."));
         }
 
-      yield this._set_contact_local_ids (persona.contact, local_ids);
+      this._set_contact_local_ids (persona.contact, local_ids);
       yield this._commit_modified_property (persona, "local-ids");
     }
 
-  private async void _set_contact_local_ids (E.Contact contact,
-      Set<string> local_ids)
+  private void _set_contact_local_ids (E.Contact contact, Set<string> local_ids)
     {
       this._remove_attribute (contact, "X-FOLKS-CONTACTS-IDS");
 
@@ -1598,7 +1595,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
               _("E-mail addresses are not writeable on this contact."));
         }
 
-      yield this._set_contact_attributes_string (persona.contact, emails,
+      this._set_contact_attributes_string (persona.contact, emails,
           "EMAIL", E.ContactField.EMAIL);
       yield this._commit_modified_property (persona, "email-addresses");
     }
@@ -1612,7 +1609,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
               _("Phone numbers are not writeable on this contact."));
         }
 
-      yield this._set_contact_attributes_string (persona.contact, phones, "TEL",
+      this._set_contact_attributes_string (persona.contact, phones, "TEL",
           E.ContactField.TEL);
       yield this._commit_modified_property (persona, "phone-numbers");
     }
@@ -1626,14 +1623,14 @@ public class Edsf.PersonaStore : Folks.PersonaStore
               _("Postal addresses are not writeable on this contact."));
         }
 
-      yield this._set_contact_postal_addresses (persona.contact, postal_fds);
+      this._set_contact_postal_addresses (persona.contact, postal_fds);
       yield this._commit_modified_property (persona, "postal-addresses");
     }
 
-  private async void _set_contact_postal_addresses (E.Contact contact,
+  private void _set_contact_postal_addresses (E.Contact contact,
       Set<PostalAddressFieldDetails> postal_fds)
     {
-      yield this._set_contact_attributes<PostalAddress> (contact,
+      this._set_contact_attributes<PostalAddress> (contact,
           postal_fds,
           (attr, address) => {
             attr.add_value (address.po_box);
@@ -1649,7 +1646,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
 
   delegate void FieldToAttribute<T> (E.VCardAttribute attr, T value);
 
-  private async void _set_contact_attributes<T> (E.Contact contact,
+  private void _set_contact_attributes<T> (E.Contact contact,
       Set<AbstractFieldDetails<T>> new_attributes,
       FieldToAttribute<T> fill_attribute,
       string attrib_name, E.ContactField field_id)
@@ -1675,11 +1672,11 @@ public class Edsf.PersonaStore : Folks.PersonaStore
       contact.set_attributes (field_id, attributes);
     }
 
-  private async void _set_contact_attributes_string (E.Contact contact,
+  private void _set_contact_attributes_string (E.Contact contact,
       Set<AbstractFieldDetails<string>> new_attributes,
       string attrib_name, E.ContactField field_id)
     {
-      _set_contact_attributes<string> (contact, new_attributes,
+      this._set_contact_attributes<string> (contact, new_attributes,
           (attr, value) => { attr.add_value (value); },
           attrib_name, field_id);
     }
@@ -1737,11 +1734,11 @@ public class Edsf.PersonaStore : Folks.PersonaStore
               _("Notes are not writeable on this contact."));
         }
 
-      yield this._set_contact_notes (persona.contact, notes);
+      this._set_contact_notes (persona.contact, notes);
       yield this._commit_modified_property (persona, "notes");
     }
 
-  private async void _set_contact_notes (E.Contact contact,
+  private void _set_contact_notes (E.Contact contact,
       Set<NoteFieldDetails> notes)
     {
       string note_str = "";
@@ -1776,12 +1773,11 @@ public class Edsf.PersonaStore : Folks.PersonaStore
           bday == null)
         return;
 
-      yield this._set_contact_birthday (persona.contact, bday);
+      this._set_contact_birthday (persona.contact, bday);
       yield this._commit_modified_property (persona, "birthday");
     }
 
-  private async void _set_contact_birthday (E.Contact contact,
-      DateTime? _bday)
+  private void _set_contact_birthday (E.Contact contact, DateTime? _bday)
     {
       E.ContactDate? _contact_bday = null;
 
@@ -1813,11 +1809,11 @@ public class Edsf.PersonaStore : Folks.PersonaStore
       if (Folks.Internal.equal_sets<RoleFieldDetails> (roles, persona.roles))
         return;
 
-      yield this._set_contact_roles (persona.contact, roles);
+      this._set_contact_roles (persona.contact, roles);
       yield this._commit_modified_property (persona, "roles");
     }
 
-  private async void _set_contact_roles (E.Contact contact,
+  private void _set_contact_roles (E.Contact contact,
       Set<RoleFieldDetails> roles)
     {
       var vcard = (E.VCard) contact;
@@ -1919,12 +1915,11 @@ public class Edsf.PersonaStore : Folks.PersonaStore
       if (persona.structured_name == null && sname == null)
         return;
 
-      yield this._set_contact_name (persona.contact, sname);
+      this._set_contact_name (persona.contact, sname);
       yield this._commit_modified_property (persona, "structured-name");
     }
 
-  private async void _set_contact_name (E.Contact contact,
-      StructuredName? _sname)
+  private void _set_contact_name (E.Contact contact, StructuredName? _sname)
     {
       E.ContactName contact_name = new E.ContactName ();
 
@@ -1954,12 +1949,12 @@ public class Edsf.PersonaStore : Folks.PersonaStore
       if (Utils.multi_map_str_afd_equal (persona.im_addresses, im_fds))
         return;
 
-      yield this._set_contact_im_fds (persona.contact, im_fds);
+      this._set_contact_im_fds (persona.contact, im_fds);
       yield this._commit_modified_property (persona, "im-addresses");
     }
 
   /* TODO: this could be smarter & more efficient. */
-  private async void _set_contact_im_fds (E.Contact contact,
+  private void _set_contact_im_fds (E.Contact contact,
       MultiMap<string, ImFieldDetails> im_fds)
     {
       var im_eds_map = Edsf.Persona._get_im_eds_map ();
@@ -2045,12 +2040,11 @@ public class Edsf.PersonaStore : Folks.PersonaStore
               _("Gender is not writeable on this contact."));
         }
 
-      yield this._set_contact_gender (persona.contact, gender);
+      this._set_contact_gender (persona.contact, gender);
       yield this._commit_modified_property (persona, "gender");
     }
 
-  private async void _set_contact_gender (E.Contact contact,
-      Gender gender)
+  private void _set_contact_gender (E.Contact contact, Gender gender)
     {
       this._remove_attribute (contact, Edsf.Persona.gender_attribute_name);
 
@@ -2086,11 +2080,11 @@ public class Edsf.PersonaStore : Folks.PersonaStore
           return;
         }
 
-      yield this._set_contact_anti_links (persona.contact, anti_links);
+      this._set_contact_anti_links (persona.contact, anti_links);
       yield this._commit_modified_property (persona, "anti-links");
     }
 
-  private async void _set_contact_anti_links (E.Contact contact,
+  private void _set_contact_anti_links (E.Contact contact,
       Set<string> anti_links)
     {
       var vcard = (E.VCard) contact;
