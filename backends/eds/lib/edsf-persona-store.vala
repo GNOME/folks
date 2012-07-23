@@ -952,7 +952,6 @@ public class Edsf.PersonaStore : Folks.PersonaStore
             }
 
           this._is_prepared = true;
-          this._prepare_pending = false;
           this.notify_property ("is-prepared");
 
           /* If the address book isn't going to do an initial query (i.e.

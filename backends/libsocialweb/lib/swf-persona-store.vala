@@ -349,7 +349,6 @@ public class Swf.PersonaStore : Folks.PersonaStore
             {
               /* Remove the persona store on error */
               this.removed ();
-              this._prepare_pending = false;
 
               throw e1;
             }
@@ -361,7 +360,6 @@ public class Swf.PersonaStore : Folks.PersonaStore
             {
               /* Remove the persona store on error */
               this.removed ();
-              this._prepare_pending = false;
 
               throw new PersonaStoreError.INVALID_ARGUMENT (
                   /* Translators: the parameter is an error message. */
@@ -383,7 +381,6 @@ public class Swf.PersonaStore : Folks.PersonaStore
             {
               /* Remove the persona store on error */
               this.removed ();
-              this._prepare_pending = false;
 
               throw new PersonaStoreError.INVALID_ARGUMENT (
                   /* Translators: the parameter is an error message. */

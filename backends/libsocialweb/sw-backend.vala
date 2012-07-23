@@ -107,13 +107,13 @@ public class Folks.Backends.Sw.Backend : Folks.Backend
        * destroyed in the mean time. See: bgo#665039. */
       this.ref ();
 
+      this._prepare_pending = true;
+      
       this._client = new Client ();
       this._client.get_services((client, services) =>
         {
           try
             {
-              this._prepare_pending = true;
-        
               foreach (var service_name in services)
                 this.add_service (service_name);
 
