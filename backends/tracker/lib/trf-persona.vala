@@ -378,8 +378,8 @@ public class Trf.Persona : Folks.Persona,
 
   private HashMultiMap<string, ImFieldDetails> _im_addresses =
       new HashMultiMap<string, ImFieldDetails> (null, null,
-           AbstractFieldDetails<string>.hash_static,
-           AbstractFieldDetails<string>.equal_static);
+          (GLib.HashFunc) ImFieldDetails.hash,
+          (GLib.EqualFunc) ImFieldDetails.equal);
 
   /**
    * {@inheritDoc}
@@ -468,8 +468,8 @@ public class Trf.Persona : Folks.Persona,
   private HashMultiMap<string, WebServiceFieldDetails> _web_service_addresses =
       new HashMultiMap<string, WebServiceFieldDetails> (
           null, null,
-           AbstractFieldDetails<string>.hash_static,
-           AbstractFieldDetails<string>.equal_static);
+          (GLib.HashFunc) WebServiceFieldDetails.hash,
+          (GLib.EqualFunc) WebServiceFieldDetails.equal);
 
   /**
    * {@inheritDoc}
@@ -558,28 +558,28 @@ public class Trf.Persona : Folks.Persona,
       this._full_name = "";
       this._structured_name = null;
       this._phone_numbers = new HashSet<PhoneFieldDetails> (
-           AbstractFieldDetails<string>.hash_static,
-           AbstractFieldDetails<string>.equal_static);
+          (GLib.HashFunc) PhoneFieldDetails.hash,
+          (GLib.EqualFunc) PhoneFieldDetails.equal);
       this._phone_numbers_ro = this._phone_numbers.read_only_view;
       this._email_addresses = new HashSet<EmailFieldDetails> (
-           AbstractFieldDetails<string>.hash_static,
-           AbstractFieldDetails<string>.equal_static);
+          (GLib.HashFunc) EmailFieldDetails.hash,
+          (GLib.EqualFunc) EmailFieldDetails.equal);
       this._email_addresses_ro = this._email_addresses.read_only_view;
       this._roles = new HashSet<RoleFieldDetails> (
-           AbstractFieldDetails<Role>.hash_static,
-           AbstractFieldDetails<Role>.equal_static);
+          (GLib.HashFunc) RoleFieldDetails.hash,
+          (GLib.EqualFunc) RoleFieldDetails.equal);
       this._roles_ro = this._roles.read_only_view;
       this._notes = new HashSet<NoteFieldDetails> (
-           AbstractFieldDetails<string>.hash_static,
-           AbstractFieldDetails<string>.equal_static);
+          (GLib.HashFunc) NoteFieldDetails.hash,
+          (GLib.EqualFunc) NoteFieldDetails.equal);
       this._notes_ro = this._notes.read_only_view;
       this._urls = new HashSet<UrlFieldDetails> (
-           AbstractFieldDetails<string>.hash_static,
-           AbstractFieldDetails<string>.equal_static);
+          (GLib.HashFunc) UrlFieldDetails.hash,
+          (GLib.EqualFunc) UrlFieldDetails.equal);
       this._urls_ro = this._urls.read_only_view;
       this._postal_addresses = new HashSet<PostalAddressFieldDetails> (
-           AbstractFieldDetails<PostalAddress>.hash_static,
-           AbstractFieldDetails<PostalAddress>.equal_static);
+          (GLib.HashFunc) PostalAddressFieldDetails.hash,
+          (GLib.EqualFunc) PostalAddressFieldDetails.equal);
       this._postal_addresses_ro = this._postal_addresses.read_only_view;
       this._local_ids = new HashSet<string> ();
       this._local_ids_ro = this._local_ids.read_only_view;
@@ -804,8 +804,8 @@ public class Trf.Persona : Folks.Persona,
         }
 
       var postal_addresses = new HashSet<PostalAddressFieldDetails> (
-           AbstractFieldDetails<PostalAddress>.hash_static,
-           AbstractFieldDetails<PostalAddress>.equal_static);
+          (GLib.HashFunc) PostalAddressFieldDetails.hash,
+          (GLib.EqualFunc) PostalAddressFieldDetails.equal);
 
       string[] addresses_a = postal_field.split ("\n");
 
@@ -984,8 +984,8 @@ public class Trf.Persona : Folks.Persona,
         }
 
       HashSet<RoleFieldDetails> role_fds = new HashSet<RoleFieldDetails> (
-           AbstractFieldDetails<Role>.hash_static,
-           AbstractFieldDetails<Role>.equal_static);
+          (GLib.HashFunc) RoleFieldDetails.hash,
+          (GLib.EqualFunc) RoleFieldDetails.equal);
 
       string[] roles_a = roles_field.split ("\n");
 
@@ -1221,8 +1221,8 @@ public class Trf.Persona : Folks.Persona,
         }
 
       var phones = new HashSet<PhoneFieldDetails> (
-           AbstractFieldDetails<string>.hash_static,
-           AbstractFieldDetails<string>.equal_static);
+          (GLib.HashFunc) PhoneFieldDetails.hash,
+          (GLib.EqualFunc) PhoneFieldDetails.equal);
       string[] phones_a = phones_field.split ("\n");
 
       foreach (var p in phones_a)
@@ -1347,8 +1347,8 @@ public class Trf.Persona : Folks.Persona,
         }
 
       var email_addresses = new HashSet<EmailFieldDetails> (
-           AbstractFieldDetails<string>.hash_static,
-           AbstractFieldDetails<string>.equal_static);
+          (GLib.HashFunc) EmailFieldDetails.hash,
+          (GLib.EqualFunc) EmailFieldDetails.equal);
       string[] emails_a = emails_field.split (",");
 
       foreach (var e in emails_a)
@@ -1372,8 +1372,8 @@ public class Trf.Persona : Folks.Persona,
   private void _update_urls ()
     {
       var url_fds = new HashSet<UrlFieldDetails> (
-           AbstractFieldDetails<string>.hash_static,
-           AbstractFieldDetails<string>.equal_static);
+          (GLib.HashFunc) UrlFieldDetails.hash,
+          (GLib.EqualFunc) UrlFieldDetails.equal);
       var _urls_field = this._cursor.get_string (Trf.Fields.URLS).dup ();
 
       if (_urls_field == null)

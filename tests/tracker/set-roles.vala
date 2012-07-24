@@ -115,8 +115,8 @@ public class SetRolesTests : Folks.TestCase
 
               Gee.HashSet<RoleFieldDetails> role_fds =
                 new HashSet<RoleFieldDetails>
-                  ( AbstractFieldDetails<Role>.hash_static,
-                    AbstractFieldDetails<Role>.equal_static);
+                  ((GLib.HashFunc) RoleFieldDetails.hash,
+                   (GLib.EqualFunc) RoleFieldDetails.equal);
               var role = new Role ("some title", "some organisation");
               role.role = "some role";
               var role_fd = new RoleFieldDetails (role);

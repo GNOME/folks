@@ -85,7 +85,7 @@ public class BackendLoadingTests : Folks.TestCase
   public void test_load_and_prep ()
     {
       var main_loop = new GLib.MainLoop (null, false);
-      var backends_expected = new HashSet<string> ();
+      var backends_expected = new HashSet<string> (str_hash, str_equal);
 
       backends_expected.add ("key-file");
       backends_expected.add ("telepathy");
@@ -135,7 +135,7 @@ public class BackendLoadingTests : Folks.TestCase
 
   private async void test_disabling_async (BackendStore store)
     {
-      var backends_expected = new HashSet<string> ();
+      var backends_expected = new HashSet<string> (str_hash, str_equal);
       backends_expected.add ("key-file");
 
       /* Disable some backends */
@@ -181,7 +181,7 @@ public class BackendLoadingTests : Folks.TestCase
       /*
        * First loading
        */
-      backends_expected = new HashSet<string> ();
+      backends_expected = new HashSet<string> (str_hash, str_equal);
       backends_expected.add ("key-file");
       backends_expected.add ("telepathy");
 
@@ -205,7 +205,7 @@ public class BackendLoadingTests : Folks.TestCase
       /*
        * Second loading: late disabling
        */
-      backends_expected = new HashSet<string> ();
+      backends_expected = new HashSet<string> (str_hash, str_equal);
       backends_expected.add ("telepathy");
 
       /* Disable some backends */
@@ -232,7 +232,7 @@ public class BackendLoadingTests : Folks.TestCase
       /*
        * Third loading: late enabling
        */
-      backends_expected = new HashSet<string> ();
+      backends_expected = new HashSet<string> (str_hash, str_equal);
       backends_expected.add ("key-file");
       backends_expected.add ("telepathy");
 
@@ -261,7 +261,7 @@ public class BackendLoadingTests : Folks.TestCase
        * Fourth loading: idempotency
        */
 
-      backends_expected = new HashSet<string> ();
+      backends_expected = new HashSet<string> (str_hash, str_equal);
       backends_expected.add ("key-file");
       backends_expected.add ("telepathy");
 

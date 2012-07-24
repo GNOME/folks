@@ -146,9 +146,10 @@ public class Folks.BackendStore : Object {
 
       this._debug.print_status.connect (this._debug_print_status);
 
-      this._modules = new HashMap<string,unowned Module> ();
-      this._backend_hash = new HashMap<string,Backend> ();
-      this._prepared_backends = new HashMap<string,Backend> ();
+      this._modules = new HashMap<string,unowned Module> (str_hash, str_equal);
+      this._backend_hash = new HashMap<string,Backend> (str_hash, str_equal);
+      this._prepared_backends = new HashMap<string,Backend> (str_hash,
+          str_equal);
       this._prepared_backends_ro = this._prepared_backends.read_only_view;
     }
 
@@ -593,7 +594,7 @@ public class Folks.BackendStore : Object {
           return null;
         }
 
-      var modules_final = new HashMap<string, File> ();
+      var modules_final = new HashMap<string, File> (str_hash, str_equal);
 
       foreach (var info in infos)
         {

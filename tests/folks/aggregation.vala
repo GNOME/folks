@@ -36,7 +36,7 @@ public class AggregationTests : Folks.TestCase
       this._tp_backend = new TpTests.Backend ();
 
       /* Create a set of the individuals we expect to see */
-      this._default_personas = new HashSet<string> ();
+      this._default_personas = new HashSet<string> (str_hash, str_equal);
 
       this._default_personas.add ("travis@example.com");
       this._default_personas.add ("olivier@example.com");

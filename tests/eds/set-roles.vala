@@ -119,8 +119,8 @@ public class SetRolesTests : Folks.TestCase
               foreach (var p in i.personas)
                 {
                   var role_fds = new HashSet<RoleFieldDetails> (
-                       AbstractFieldDetails<Role>.hash_static,
-                       AbstractFieldDetails<Role>.equal_static);
+                      (GLib.HashFunc) RoleFieldDetails.hash,
+                      (GLib.EqualFunc) RoleFieldDetails.equal);
                   var r1 = new Role ("Dr.", "The Nut House Ltd");
                   r1.role = "The Manager";
                   var role_fd1 = new RoleFieldDetails (r1);

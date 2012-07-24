@@ -113,8 +113,8 @@ public class SetURLsTests : Folks.TestCase
               i.notify["urls"].connect (this._notify_urls_cb);
 
               var url_fds = new HashSet<UrlFieldDetails> (
-                   AbstractFieldDetails<string>.hash_static,
-                   AbstractFieldDetails<string>.equal_static);
+                  (GLib.HashFunc) UrlFieldDetails.hash,
+                  (GLib.EqualFunc) UrlFieldDetails.equal);
               var p1 = new UrlFieldDetails (
                   this._urls.get (UrlFieldDetails.PARAM_TYPE_BLOG));
               p1.set_parameter (p1.PARAM_TYPE, p1.PARAM_TYPE_BLOG);

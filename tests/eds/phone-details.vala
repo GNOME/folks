@@ -57,7 +57,8 @@ public class PhoneDetailsTests : Folks.TestCase
   public void test_phone_numbers ()
     {
       this._phones_count = 0;
-      this._phone_types = new HashSet<string> ();
+      this._phone_types = new HashSet<string> (str_hash,
+          str_equal);
       this._c1 = new Gee.HashMap<string, Value?> ();
       this._c2 = new Gee.HashMap<string, Value?> ();
       this._main_loop = new GLib.MainLoop (null, false);

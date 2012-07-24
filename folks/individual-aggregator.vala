@@ -1903,13 +1903,13 @@ public class Folks.IndividualAggregator : Object
       /* `protocols_addrs_set` will be passed to the new Kf.Persona */
       var protocols_addrs_set = new HashMultiMap<string, ImFieldDetails> (
             null, null,
-             AbstractFieldDetails<string>.hash_static,
-             AbstractFieldDetails<string>.equal_static);
+            (GLib.HashFunc) ImFieldDetails.hash,
+            (GLib.EqualFunc) ImFieldDetails.equal);
       var web_service_addrs_set =
         new HashMultiMap<string, WebServiceFieldDetails> (
             null, null,
-             AbstractFieldDetails<string>.hash_static,
-             AbstractFieldDetails<string>.equal_static);
+            (GLib.HashFunc) WebServiceFieldDetails.hash,
+            (GLib.EqualFunc) WebServiceFieldDetails.equal);
 
       /* List of local_ids */
       var local_ids = new Gee.HashSet<string> ();

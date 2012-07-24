@@ -55,7 +55,8 @@ public class IndividualRetrievalTests : Folks.TestCase
     {
       Gee.HashMap<string, Value?> c1 = new Gee.HashMap<string, Value?> ();
       Gee.HashMap<string, Value?> c2 = new Gee.HashMap<string, Value?> ();
-      this._found_individuals = new HashSet<string> ();
+      this._found_individuals = new HashSet<string> (str_hash,
+          str_equal);
       this._main_loop = new GLib.MainLoop (null, false);
       Value? v;
 

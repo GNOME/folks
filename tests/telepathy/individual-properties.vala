@@ -489,16 +489,16 @@ public class IndividualPropertiesTests : Folks.TestCase
           assert (persona is Tpf.Persona);
 
           var emails = new HashSet<EmailFieldDetails> (
-               AbstractFieldDetails<string>.hash_static,
-               AbstractFieldDetails<string>.equal_static);
+              (GLib.HashFunc) EmailFieldDetails.hash,
+              (GLib.EqualFunc) EmailFieldDetails.equal);
           emails.add (new_email_fd);
           var phones = new HashSet<PhoneFieldDetails> (
-               AbstractFieldDetails<string>.hash_static,
-               AbstractFieldDetails<string>.equal_static);
+              (GLib.HashFunc) PhoneFieldDetails.hash,
+              (GLib.EqualFunc) PhoneFieldDetails.equal);
           phones.add (new_phone_fd);
           var urls = new HashSet<UrlFieldDetails> (
-               AbstractFieldDetails<string>.hash_static,
-               AbstractFieldDetails<string>.equal_static);
+              (GLib.HashFunc) UrlFieldDetails.hash,
+              (GLib.EqualFunc) UrlFieldDetails.equal);
           urls.add (new_url_fd);
 
           /* set the extended info through Telepathy's ContactInfo interface and

@@ -225,8 +225,8 @@ public class AddPersonaTests : Folks.TestCase
 
       Value? v8 = Value (typeof (Set));
       var emails = new HashSet<EmailFieldDetails> (
-           AbstractFieldDetails<string>.hash_static,
-           AbstractFieldDetails<string>.equal_static);
+          (GLib.HashFunc) EmailFieldDetails.hash,
+          (GLib.EqualFunc) EmailFieldDetails.equal);
       var email_1 = new EmailFieldDetails (this._email_1);
       emails.add (email_1);
       var email_2 = new EmailFieldDetails (this._email_2);
@@ -238,8 +238,8 @@ public class AddPersonaTests : Folks.TestCase
 
       Value? v9 = Value (typeof (MultiMap));
       var im_addrs = new HashMultiMap<string, ImFieldDetails> (null, null,
-           AbstractFieldDetails<string>.hash_static,
-           AbstractFieldDetails<string>.equal_static);
+          (GLib.HashFunc) ImFieldDetails.hash,
+          (GLib.EqualFunc) ImFieldDetails.equal);
       im_addrs.set ("jabber", new ImFieldDetails (this._im_addr_1));
       im_addrs.set ("yahoo", new ImFieldDetails (this._im_addr_2));
       v9.set_object (im_addrs);
@@ -248,8 +248,8 @@ public class AddPersonaTests : Folks.TestCase
 
       Value? v10 = Value (typeof (Set));
       var notes = new HashSet<NoteFieldDetails> (
-           AbstractFieldDetails<string>.hash_static,
-           AbstractFieldDetails<string>.equal_static);
+          (GLib.HashFunc) NoteFieldDetails.hash,
+          (GLib.EqualFunc) NoteFieldDetails.equal);
       NoteFieldDetails note_fd_1 = new NoteFieldDetails (this._note_1);
       notes.add (note_fd_1);
       v10.set_object (notes);
@@ -258,8 +258,8 @@ public class AddPersonaTests : Folks.TestCase
 
       Value? v11 = Value (typeof (Set));
       var phones = new HashSet<PhoneFieldDetails> (
-           AbstractFieldDetails<string>.hash_static,
-           AbstractFieldDetails<string>.equal_static);
+          (GLib.HashFunc) PhoneFieldDetails.hash,
+          (GLib.EqualFunc) PhoneFieldDetails.equal);
 
       var phone_1 = new PhoneFieldDetails (this._phone_1);
       phones.add (phone_1);
@@ -272,8 +272,8 @@ public class AddPersonaTests : Folks.TestCase
 
       Value? v12 = Value (typeof (Set));
       var role_fds = new HashSet<RoleFieldDetails> (
-           AbstractFieldDetails<Role>.hash_static,
-           AbstractFieldDetails<Role>.equal_static);
+          (GLib.HashFunc) RoleFieldDetails.hash,
+          (GLib.EqualFunc) RoleFieldDetails.equal);
       var r1 = new Role (this._title_1, this._organisation_1);
       r1.role = this._role_1;
       var role_fd1 = new RoleFieldDetails (r1);
@@ -284,8 +284,8 @@ public class AddPersonaTests : Folks.TestCase
 
       Value? v13 = Value (typeof (Set));
       var postal_addresses = new HashSet<PostalAddressFieldDetails> (
-           AbstractFieldDetails<PostalAddress>.hash_static,
-           AbstractFieldDetails<PostalAddress>.equal_static);
+          (GLib.HashFunc) PostalAddressFieldDetails.hash,
+          (GLib.EqualFunc) PostalAddressFieldDetails.equal);
 
 
       var postal_a = new PostalAddress (this._po_box,
@@ -300,8 +300,8 @@ public class AddPersonaTests : Folks.TestCase
 
       Value? v14 = Value (typeof (Set));
       var urls = new HashSet<UrlFieldDetails> (
-           AbstractFieldDetails<string>.hash_static,
-           AbstractFieldDetails<string>.equal_static);
+          (GLib.HashFunc) UrlFieldDetails.hash,
+          (GLib.EqualFunc) UrlFieldDetails.equal);
       var url_1 = new UrlFieldDetails (this._url_1);
       urls.add (url_1);
       var url_2 = new UrlFieldDetails (this._url_2);

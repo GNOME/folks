@@ -120,8 +120,8 @@ public class SetIMAddressesTests : Folks.TestCase
 
               var im_addresses = new HashMultiMap<string, ImFieldDetails> (
                   null, null,
-                   AbstractFieldDetails<string>.hash_static,
-                   AbstractFieldDetails<string>.equal_static);
+                  (GLib.HashFunc)ImFieldDetails.hash,
+                  (GLib.EqualFunc) ImFieldDetails.equal);
 
               im_addresses.set ("aim", new ImFieldDetails ("one@example.org"));
               im_addresses.set ("aim", new ImFieldDetails ("two@example.org"));

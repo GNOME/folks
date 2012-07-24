@@ -823,8 +823,8 @@ public class Trf.PersonaStore : Folks.PersonaStore
     {
       var ret = new HashMultiMap<string, WebServiceFieldDetails> (
           null, null,
-           AbstractFieldDetails<string>.hash_static,
-           AbstractFieldDetails<string>.equal_static);
+          (GLib.HashFunc) WebServiceFieldDetails.hash,
+          (GLib.EqualFunc) WebServiceFieldDetails.equal);
 
       var services = ws_addrs.split (";");
       foreach (var service_line in services)

@@ -44,7 +44,7 @@ public class IndividualRetrievalTests : Folks.TestCase
        * e.g.
        *  telepathy:/org/freedesktop/Telepathy/Account/cm/protocol/account:me@example.com
        * only in each Individual. */
-      this.default_individuals = new HashSet<string> ();
+      this.default_individuals = new HashSet<string> (str_hash, str_equal);
 
       /* me@example.com */
       default_individuals.add ("48fa372a81026063187255e3f5c184665d2ed7ce");
@@ -276,7 +276,7 @@ public class IndividualRetrievalTests : Folks.TestCase
            * add_persona_from_details can temporarily fail with
            * PersonaStoreError.STORE_OFFLINE (in which case, we just need to try
            * again later) */
-          var ids_remaining = new HashSet<string> ();
+          var ids_remaining = new HashSet<string> (str_hash, str_equal);
           foreach (var contact_id in ids_add)
             ids_remaining.add (contact_id);
 
@@ -286,7 +286,8 @@ public class IndividualRetrievalTests : Folks.TestCase
 
               foreach (var id in ids_remaining)
                 {
-                  var details = new HashTable<string, GLib.Value?> (str_hash, str_equal);
+                  var details = new HashTable<string, GLib.Value?> (str_hash,
+                      str_equal);
                   details.insert ("contact", id);
 
                   /* we can end up adding the same ID twice, since this async
