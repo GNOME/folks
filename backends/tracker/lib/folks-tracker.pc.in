@@ -10,6 +10,6 @@ vapidir=@datadir@/vala/vapi
 Name: Folks tracker support library
 Description: Tracker support library for the Folks meta-contacts library
 Version: @VERSION@
-Requires: folks glib-2.0 gobject-2.0 gee-0.8 tracker-sparql-@TRACKER_SPARQL_MAJOR@
+Requires: folks glib-2.0 gobject-2.0 gee-1.0 tracker-sparql-@TRACKER_SPARQL_MAJOR@
 Libs: -L${libdir} -lfolks-tracker
 Cflags: -I${includedir}

@@ -23,7 +23,7 @@ eds_deps = \
 	folks \
 	folks-internal \
 	folks-eds \
-	gee-0.8 \
+	gee-1.0 \
 	gio-2.0 \
 	gobject-2.0 \
 	libebook-1.2 \

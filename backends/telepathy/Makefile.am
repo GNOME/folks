@@ -23,7 +23,7 @@ telepathy_deps = \
 	folks \
 	folks-internal \
 	folks-telepathy \
-	gee-0.8 \
+	gee-1.0 \
 	gio-2.0 \
 	gobject-2.0 \
 	telepathy-glib \

@@ -7,7 +7,7 @@ VALAFLAGS += \
 	--vapidir=. \
 	--pkg gobject-2.0 \
 	--pkg gio-2.0 \
-	--pkg gee-0.8 \
+	--pkg gee-1.0 \
 	--pkg folks \
 	--pkg libsocialweb-client \
 	--pkg folks-libsocialweb \

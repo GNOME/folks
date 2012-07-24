@@ -43,7 +43,7 @@ libfolks_libsocialweb_la_VALAFLAGS = \
         --pkg folks-internal \
         --pkg gobject-2.0 \
         --pkg gio-2.0 \
-        --pkg gee-0.8 \
+        --pkg gee-1.0 \
         --pkg libsocialweb-client \
         --includedir folks \
         --vapi folks-libsocialweb.vapi \
@@ -52,7 +52,7 @@ libfolks_libsocialweb_la_VALAFLAGS = \
 
 folks_backend_libsocialweb_deps = \
 	folks \
-	gee-0.8 \
+	gee-1.0 \
 	gio-2.0 \
 	gobject-2.0 \
 	libsocialweb-client \
