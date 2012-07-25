@@ -1,6 +1,6 @@
 /*
- * Copyright (C) 2011 Collabora Ltd.
- * Copyright (C) 2011 Philip Withnall
+ * Copyright (C) 2011, 2013 Collabora Ltd.
+ * Copyright (C) 2011, 2013 Philip Withnall
  *
  * This library is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -186,22 +186,193 @@ public class Folks.StructuredName : Object
              this._suffixes         == other.suffixes;
     }
 
+  private string _extract_initials (string names)
+    {
+      /* Extract the first letter of each word (where a word is a group of
+       * characters following whitespace or a hyphen.
+       * I've made this up since the documentation on
+       * http://lh.2xlibre.net/values/name_fmt/ doesn't specify how to extract
+       * the initials from a set of names. It should work for Western names,
+       * but I'm not so sure about other names. */
+      var output = new StringBuilder ();
+      var at_start_of_word = true;
+      int index = 0;
+      unichar c;
+
+      while (names.get_next_char (ref index, out c) == true)
+        {
+          /* Grab a new initial from any word preceded by a space or a hyphen,
+           * so (e.g.) ‘Mary-Jane’ becomes ‘MJ’. */
+          if (c.isspace () || c == '-')
+            {
+              at_start_of_word = true;
+            }
+          else if (at_start_of_word)
+            {
+              output.append_unichar (c);
+              at_start_of_word = false;
+            }
+        }
+
+      return output.str;
+    }
+
   /**
    * Formatted version of the structured name.
    *
+   * @return name formatted according to the current locale
    * @since 0.4.0
    */
   public string to_string ()
     {
-      /* Translators: format for the formatted structured name.
-       * Parameters (in order) are: prefixes (for the name), given name,
-       * family name, additional names and (name) suffixes */
-      var str = "%s, %s, %s, %s, %s";
-      return str.printf (this.prefixes,
-          this.given_name,
-          this.family_name,
-          this.additional_names,
-          this.suffixes);
+      /* FIXME: Ideally we’d use a format string translated to the locale of the
+       * persona whose name is being formatted, but no backend provides
+       * information about personas’ locales, so we have to settle for the
+       * current user’s locale.
+       *
+       * We thought about using nl_langinfo(_NL_NAME_NAME_FMT) here, but
+       * decided against it because:
+       *  1. It’s not the best documented API in the world, and its stability
+       *     is in question.
+       *  2. An attempt to improve the interface in glibc met with a wall of
+       *     complaints: https://sourceware.org/bugzilla/show_bug.cgi?id=14641.
+       *
+       * However, we do re-use the string format placeholders from
+       * _NL_NAME_NAME_FMT (as documented here:
+       * http://lh.2xlibre.net/values/name_fmt/) because there’s a chance glibc
+       * might eventually grow a useful interface for this.
+       *
+       * It does mean we have to implement our own parser for the name_fmt
+       * format though, since glibc doesn’t provide a formatting function. */
+
+      /* Translators: This is a format string used to convert structured names
+       * to a single string. It should be translated to the predominant
+       * semi-formal name format for your locale, using the placeholders
+       * documented here: http://lh.2xlibre.net/values/name_fmt/. You may be
+       * able to re-use the existing glibc format string for your locale on that
+       * page if it’s suitable.
+       *
+       * More explicitly: the supported placeholders are %f, %F, %g, %G, %m, %M,
+       * %t. The romanisation modifier (e.g. %Rf) is recognized but ignored.
+       * %s, %S and %d are all replaced by the same thing (the ‘Honorific
+       * Prefixes’ from vCard) so please avoid using more than one.
+       *
+       * For example, the format string ‘%g%t%m%t%f’ expands to ‘John Andrew
+       * Lees’ when used for a persona with first name ‘John’, additional names
+       * ‘Andrew’ and family names ‘Lees’.
+       *
+       * If you need additional placeholders with other information or
+       * punctuation, please file a bug against libfolks:
+       *   https://bugzilla.gnome.org/enter_bug.cgi?product=folks
+       */
+      var name_fmt = _("%g%t%m%t%f");
+
+      return this.to_string_with_format (name_fmt);
+    }
+
+  /**
+   * Formatted version of the structured name.
+   *
+   * This allows a custom format string to be specified, using the placeholders
+   * described on [[http://lh.2xlibre.net/values/name_fmt/]]. This ``name_fmt``
+   * must almost always be translated to the current locale. (Ideally it would
+   * be translated to the locale of the persona whose name is being formatted,
+   * but such locale information isn’t available.)
+   *
+   * @param name_fmt format string for the name
+   * @return name formatted according to the given format
+   * @since UNRELEASED
+   */
+  public string to_string_with_format (string name_fmt)
+    {
+      var output = new StringBuilder ();
+      var in_field_descriptor = false;
+      var field_descriptor_romanised = false;
+      var field_descriptor_empty = true;
+      int index = 0;
+      unichar c;
+
+      while (name_fmt.get_next_char (ref index, out c) == true)
+        {
+          /* Start of a field descriptor. */
+          if (c == '%')
+            {
+              in_field_descriptor = !in_field_descriptor;
+
+              /* If entering a field descriptor, reset the state
+               * and continue to the next character. */
+              if (in_field_descriptor)
+                {
+                  field_descriptor_romanised = false;
+                  continue;
+                }
+            }
+
+          if (in_field_descriptor)
+            {
+              /* Romanisation, e.g. using a field descriptor ‘%Rg’. */
+              if (c == 'R')
+                {
+                  /* FIXME: Romanisation isn't supported yet. */
+                  field_descriptor_romanised = true;
+                  continue;
+                }
+
+              var val = "";
+
+              /* Handle the different types of field descriptor. */
+              if (c == 'f')
+                {
+                  val = this._family_name;
+                }
+              else if (c == 'F')
+                {
+                  val = this._family_name.up ();
+                }
+              else if (c == 'g')
+                {
+                  val = this._given_name;
+                }
+              else if (c == 'G')
+                {
+                  val = this._extract_initials (this._given_name);
+                }
+              else if (c == 'm')
+                {
+                  val = this._additional_names;
+                }
+              else if (c == 'M')
+                {
+                  val = this._extract_initials (this._additional_names);
+                }
+              else if (c == 's' || c == 'S' || c == 'd')
+                {
+                  /* FIXME: Not ideal, but prefixes will have to do. */
+                  val = this._prefixes;
+                }
+              else if (c == 't')
+                {
+                  val = (field_descriptor_empty == false) ? " " : "";
+                }
+              else if (c == 'l' || c == 'o' || c == 'p')
+                {
+                  /* FIXME: Not supported. */
+                  val = "";
+                }
+
+              /* Append the value of the field descriptor. */
+              output.append (val);
+              in_field_descriptor = false;
+              field_descriptor_empty = (val == "");
+            }
+          else
+            {
+              /* Handle non-field descriptor characters. */
+              output.append_unichar (c);
+            }
+        }
+
+      return output.str;
     }
 }
 

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2010 Collabora Ltd.
- * Copyright (C) 2011 Philip Withnall
+ * Copyright (C) 2011, 2013 Philip Withnall
  *
  * This library is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -302,6 +302,29 @@ public class Folks.Individual : Object,
    * @since 0.1.13
    */
   public signal void removed (Individual? replacement_individual);
+
+  private string _display_name = "";
+
+  /**
+   * The name of this Individual to display in the UI.
+   *
+   * This value is set according to the following list of possibilities, each
+   * one being tried first on the primary persona, then on all other personas in
+   * the Individual, before falling back to the next item on the list:
+   * # Alias
+   * # Full name, structured name or nickname
+   * # E-mail address
+   * # Display ID (e.g. foo@example.org)
+   * # Postal address
+   * # _("Unnamed Person")
+   *
+   * @since UNRELEASED
+   */
+  [CCode (notify = false)]
+  public string display_name
+    {
+      get { return this._display_name; }
+    }
 
   private string _alias = "";
 
@@ -1340,6 +1363,9 @@ public class Folks.Individual : Object,
       this._update_postal_addresses (false);
       this._update_local_ids (false);
       this._update_location ();
+
+      /* Entirely derived fields. */
+      this._update_display_name ();
     }
 
   /* Delegate to update the value of a property on this individual from the
@@ -1707,6 +1733,202 @@ public class Folks.Individual : Object,
         });
     }
 
+  private string _look_up_alias_for_display_name (Persona? p)
+    {
+      var a = p as AliasDetails;
+      if (a != null && a.alias != null)
+        {
+          return a.alias;
+        }
+
+      return "";
+    }
+
+  private string _look_up_name_details_for_display_name (Persona? p)
+    {
+      var n = p as NameDetails;
+      if (n != null)
+        {
+          if (n.full_name != "")
+            {
+              return n.full_name;
+            }
+          else if (n.structured_name != null)
+            {
+              return n.structured_name.to_string ();
+            }
+          else if (n.nickname != "")
+            {
+              return n.nickname;
+            }
+        }
+
+      return "";
+    }
+
+  private string _look_up_email_address_for_display_name (Persona? p)
+    {
+      var e = p as EmailDetails;
+      if (e != null)
+        {
+          foreach (var email_fd in ((!) e).email_addresses)
+            {
+              if (email_fd.value != null)
+                {
+                  return email_fd.value;
+                }
+            }
+        }
+
+      return "";
+    }
+
+  private string _look_up_display_id_for_display_name (Persona? p)
+    {
+      if (p != null && p.display_id != null)
+        {
+          return p.display_id;
+        }
+
+      return "";
+    }
+
+  private string _look_up_postal_address_for_display_name (Persona? p)
+    {
+      var address_details = p as PostalAddressDetails;
+      if (address_details != null)
+        {
+          foreach (var pa_fd in ((!) address_details).postal_addresses)
+            {
+              var pa = pa_fd.value;
+              if (pa != null)
+                {
+                  return pa.to_string ();
+                }
+            }
+        }
+
+      return "";
+    }
+
+  private void _update_display_name ()
+    {
+      Persona? primary_persona = null;
+      var new_display_name = "";
+
+      /* Find the primary persona first. The primary persona's values will be
+       * preferred in every case where they're set. */
+      foreach (var p in this._persona_set)
+        {
+          if (p.store.is_primary_store)
+            {
+              primary_persona = p;
+              break;
+            }
+        }
+
+      /* See if any persona has an alias set. */
+      new_display_name = this._look_up_alias_for_display_name (primary_persona);
+
+      foreach (var p in this._persona_set)
+        {
+          if (new_display_name != "")
+            {
+              break;
+            }
+
+          new_display_name = this._look_up_alias_for_display_name (p);
+        }
+
+      /* Try NameDetails next. */
+      if (new_display_name == "")
+        {
+          new_display_name =
+              this._look_up_name_details_for_display_name (primary_persona);
+
+          foreach (var p in this._persona_set)
+            {
+              if (new_display_name != "")
+                {
+                  break;
+                }
+
+              new_display_name =
+                  this._look_up_name_details_for_display_name (p);
+            }
+        }
+
+      /* Now the e-mail addresses. */
+      if (new_display_name == "")
+        {
+          new_display_name =
+              this._look_up_email_address_for_display_name (primary_persona);
+
+          foreach (var p in this._persona_set)
+            {
+              if (new_display_name != "")
+                {
+                  break;
+                }
+
+              new_display_name =
+                  this._look_up_email_address_for_display_name (p);
+            }
+        }
+
+      /* Now the display-id. */
+      if (new_display_name == "")
+        {
+          new_display_name =
+              this._look_up_display_id_for_display_name (primary_persona);
+
+          foreach (var p in this._persona_set)
+            {
+              if (new_display_name != "")
+                {
+                  break;
+                }
+
+              new_display_name =
+                  this._look_up_display_id_for_display_name (p);
+            }
+        }
+
+      /* Finally fall back to the postal address. */
+      if (new_display_name == "")
+        {
+          new_display_name =
+              this._look_up_postal_address_for_display_name (primary_persona);
+
+          foreach (var p in this._persona_set)
+            {
+              if (new_display_name != "")
+                {
+                  break;
+                }
+
+              new_display_name =
+                  this._look_up_postal_address_for_display_name (p);
+            }
+        }
+
+      /* Ultimate fall back: a static string. */
+      if (new_display_name == "")
+        {
+          /* Translators: This is the default name for an Individual
+           * when displayed in the UI if no personal details are available
+           * for them. */
+          new_display_name = _("Unnamed Person");
+        }
+
+      if (new_display_name != this._display_name)
+        {
+          this._display_name = new_display_name;
+          debug ("Setting display name ‘%s’", new_display_name);
+          this.notify_property ("display-name");
+        }
+    }
+
   private void _update_alias ()
     {
       this._update_single_valued_property (typeof (AliasDetails), (p) =>
@@ -1751,7 +1973,10 @@ public class Folks.Individual : Object,
           if (this._alias != alias)
             {
               this._alias = alias;
+              debug ("Setting alias ‘%s’", alias);
               this.notify_property ("alias");
+
+              this._update_display_name ();
             }
         });
     }
@@ -1932,6 +2157,8 @@ public class Folks.Individual : Object,
             {
               this._structured_name = name;
               this.notify_property ("structured-name");
+
+              this._update_display_name ();
             }
         });
     }
@@ -1961,6 +2188,8 @@ public class Folks.Individual : Object,
             {
               this._full_name = new_full_name;
               this.notify_property ("full-name");
+
+              this._update_display_name ();
             }
         });
     }
@@ -1990,6 +2219,8 @@ public class Folks.Individual : Object,
             {
               this._nickname = new_nickname;
               this.notify_property ("nickname");
+
+              this._update_display_name ();
             }
         });
     }
