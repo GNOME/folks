@@ -224,7 +224,6 @@ public class Edsf.PersonaStore : Folks.PersonaStore
    * @param s the e-d-s source being represented by the persona store
    *
    * @since 0.6.0
-   * @deprecated 0.7.2 Use {@link Edsf.PersonaStore.with_source_registry}
    */
   [Deprecated (since = "0.7.2",
       replacement = "Edsf.PersonaStore.with_source_registry()")]
