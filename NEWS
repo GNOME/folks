@@ -1,11 +1,7 @@
 Overview of changes from libfolks 0.7.2 to libfolks 0.7.3
 =========================================================
 
-Dependencies:
-• libgee ≥ 0.8
-
 Bugs fixed:
-• Bug 673918 — Port to newer libgee
 • Bug 629537 — Support anti-linking
 • Bug 679618 — Crash when unsetting all groups
 • Bug 678696 — Add API for EDS Google system groups
@@ -14,6 +10,10 @@ Bugs fixed:
 • Bug 660128 — Most contacts don't have an avatar
 • Bug 652637 — Don't hold locks across async calls
 • Bug 660236 — Paging for long text in folks-inspect
+• Bug 679116 — Output debug message if modules are not loaded because of mime
+  type detection
+• Bug 657456 — Folks test output not terribly useful
+• Bug 674611 — Remove gconf.path once EDS drops GConf
 
 API changes:
 • Add AntiLinkable interface and implement it on Kf.Persona and Edsf.Persona

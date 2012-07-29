@@ -679,7 +679,7 @@ public class Edsf.Persona : Folks.Persona,
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.7.3
    */
   [CCode (notify = false)]
   public Set<string> anti_links
@@ -691,7 +691,7 @@ public class Edsf.Persona : Folks.Persona,
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.7.3
    */
   public async void change_anti_links (Set<string> anti_links)
       throws PropertyError
@@ -705,7 +705,7 @@ public class Edsf.Persona : Folks.Persona,
    * Whether this contact is in the “My Contacts” section of the user’s address
    * book, rather than the “Other” section.
    *
-   * @since UNRELEASED
+   * @since 0.7.3
    */
   [CCode (notify = false)]
   public bool in_google_personal_group

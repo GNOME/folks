@@ -264,7 +264,7 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.7.3
    */
   [CCode (notify = false)]
   public Set<string> anti_links
@@ -276,7 +276,7 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.7.3
    */
   public async void change_anti_links (Set<string> anti_links)
       throws PropertyError

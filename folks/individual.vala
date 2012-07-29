@@ -2225,7 +2225,7 @@ public class Folks.Individual : Object,
    * @param p persona to check for anti-links with
    * @return `true` if this individual is anti-linked with persona `p`; `false`
    * otherwise
-   * @since UNRELEASED
+   * @since 0.7.3
    */
   public bool has_anti_link_with_persona (Persona p)
     {
@@ -2258,7 +2258,7 @@ public class Folks.Individual : Object,
    * @param i individual to check for anti-links with
    * @return `true` if this individual is anti-linked with individual `i`;
    * `false` otherwise
-   * @since UNRELEASED
+   * @since 0.7.3
    */
   public bool has_anti_link_with_individual (Individual i)
     {

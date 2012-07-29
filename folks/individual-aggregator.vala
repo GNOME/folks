@@ -577,7 +577,7 @@ public class Folks.IndividualAggregator : Object
    * calls might return before the first one. (Though they will be safe in every
    * other respect.)
    *
-   * @since UNRELEASED
+   * @since 0.7.3
    * @throws GLib.Error if unpreparing the backend-specific services failed —
    * this will be a backend-specific error
    */

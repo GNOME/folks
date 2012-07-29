@@ -29,7 +29,7 @@ using GLib;
  * {@link Persona} (A), specifying that A must not be linked into an
  * {@link Individual} with any of the personas in its anti-links set.
  *
- * @since UNRELEASED
+ * @since 0.7.3
  */
 public interface Folks.AntiLinkable : Folks.Persona
 {
@@ -50,7 +50,7 @@ public interface Folks.AntiLinkable : Folks.Persona
    * {@link AntiLinkable.anti_links} set, persona B will typically also list
    * persona A in its anti-links set.
    *
-   * @since UNRELEASED
+   * @since 0.7.3
    */
   public abstract Set<string> anti_links { get; set; }
 
@@ -71,7 +71,7 @@ public interface Folks.AntiLinkable : Folks.Persona
    *
    * @param anti_links the new set of anti-links from this persona
    * @throws PropertyError if setting the anti-links failed
-   * @since UNRELEASED
+   * @since 0.7.3
    */
   public virtual async void change_anti_links (Set<string> anti_links)
       throws PropertyError
@@ -89,7 +89,7 @@ public interface Folks.AntiLinkable : Folks.Persona
    *
    * @param other_persona the persona to check is anti-linked
    * @return `true` if an anti-link exists, `false` otherwise
-   * @since UNRELEASED
+   * @since 0.7.3
    */
   public bool has_anti_link_with_persona (Persona other_persona)
     {
@@ -107,7 +107,7 @@ public interface Folks.AntiLinkable : Folks.Persona
    *
    * @param other_personas the personas to anti-link to this one
    * @throws PropertyError if setting the anti-links failed
-   * @since UNRELEASED
+   * @since 0.7.3
    */
   public async void add_anti_links (Set<Persona> other_personas)
       throws PropertyError
@@ -137,7 +137,7 @@ public interface Folks.AntiLinkable : Folks.Persona
    *
    * @param other_personas the personas to remove anti-links from this one
    * @throws PropertyError if setting the anti-links failed
-   * @since UNRELEASED
+   * @since 0.7.3
    */
   public async void remove_anti_links (Set<Persona> other_personas)
       throws PropertyError

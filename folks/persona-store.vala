@@ -299,7 +299,7 @@ public enum Folks.PersonaDetail
   /**
    * Field for {@link AntiLinkable.anti_links}.
    *
-   * @since UNRELEASED
+   * @since 0.7.3
    */
   ANTI_LINKS,
 }
