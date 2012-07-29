@@ -18,6 +18,14 @@ upload_docs = \
 	upload-docs-vala-folks-telepathy \
 	$(NULL)
 
+folks_wiki_pages = \
+	concepts \
+	glossary \
+	debugging \
+	$(NULL)
+
+EXTRA_DIST = $(folks_wiki_files)
+
 folksdocdir=$(datadir)/devhelp/references/folks
 folksimgdir=$(datadir)/devhelp/references/folks/img
 folkstelepathydocdir=$(datadir)/devhelp/references/folks-telepathy
@@ -71,6 +79,9 @@ folks_doc_files_blacklist = \
 folks_doc_files_all = \
 	$(wildcard $(top_srcdir)/folks/*.vala) \
 	$(NULL)
+folks_wiki_files = \
+	$(addprefix wiki/,$(addsuffix .valadoc,$(folks_wiki_pages))) \
+	$(NULL)
 # FIXME: sort the files manually to work around the native doclet portion of
 # bgo#662784
 folks_doc_files = \
@@ -88,17 +99,18 @@ valadoc_flags_folks = \
 	-X $(top_srcdir)/folks/folks.h \
 	$(addprefix --pkg=,$(folks_doc_deps)) \
 	--vapidir=$(top_srcdir)/folks \
+	--wiki=$(top_srcdir)/docs/wiki \
 	$(folks_doc_files) \
 	$(NULL)
 
-folks-doc: $(folks_doc_files)
+folks-doc: $(folks_doc_files) $(folks_wiki_files)
 	$(AM_V_GEN)$(VALADOC) \
 		-o folks/ \
 		--doclet=devhelp \
 		$(valadoc_flags_folks) \
 		$(NULL)
 
-folks-gtk-doc: $(folks_doc_files)
+folks-gtk-doc: $(folks_doc_files) $(folks_wiki_files)
 	$(AM_V_GEN)$(VALADOC) \
 		-X -l -X $(top_builddir)/folks/.libs/libfolks.so \
 		-o gtk-doc/folks \

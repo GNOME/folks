@@ -1,0 +1,28 @@
+The core of folks is Folks.Individual. An Individual is meant to represent a person, and contains metadata from one or more contact sources (e.g. the Gabble Jabber connection manager, a local address book). Individuals contain one or more Personas, which are a subset of a person's metadata (as exposed by a contact source). These Personas form an ''unordered'' set. The Individual object will expose the sum of all n-ary attributes (e.g. e-mail addresses) from all contained Personas and will expose a single value for the attribute from amongst the Personas (according some some attribute-specific heuristic) for unary attributes (e.g. alias, avatar).
+
+For example, an Individual's alias is chosen from its Personas by preferring aliases which are set (Personas don't necessarily have to implement Folks.Alias, or have a non-null alias set) and are not equal to the Persona's display ID (e.g. set to their IM address as a default). The aliases from writeable PersonaStores are preferred to those from other PersonaStores.
+
+Currently, all backends except the key-file and EDS backends are read-only. The key-file and EDS backends are writeable, which allows for linking of Personas from other backends by creating a Kf.Persona or an Edsf.Persona containing linkable properties which can be matched against the Personas being linked together. There is only ever ''one'' writeable PersonaStore; libfolks does not do synchronisation, since that can only ever go wrong.
+
+Because Individuals are basically just a set of Personas, it is possible to both link and unlink contacts.
+
+Personas are linked using common fields; the single primary writeable PersonaStore returns Personas with fields containing the UIDs of all the other Personas which are linked to that Persona. The IndividualAggregator then assembles Individuals from the Personas whose UIDs are are linked from the primary PersonaStore.
+
+For example, there are two PersonaStores: Telepathy and a primary key file PersonaStore. The key file contains the following, which is exposed as a Persona:
+
+{{{
+[IndividualID]
+    jabber=foo@jabber.org
+    msn=bla@hotmail.com
+}}}
+
+The Telepathy backend exposes these two Personas:
+
+{{{
+Persona with uid = jabber:foo@jabber.org
+Persona with uid = msn:bla@hotmail.com
+}}}
+
+Since their UIDs are referenced by a Persona in primary key file PersonaStore, the IndividualAggregator links the two Personas to form an Individual.
+
+This linking can work on other fields from other PersonaStores. For example, if a verified e-mail address was provided by a Persona from a Facebook backend, that could be used to link Personas (by setting the "im-addresses" property from the Folks.IMable interface as a ''linkable property''). This is only possible for Personas which come from "trusted" PersonaStores since, for example, a malicious user could otherwise set their Jabber address on Facebook to someoneelse@jabber.org and hijack people's contact lists; or someone could impersonate someone else's link-local XMPP account by changing their hostname and username (or just using hacked IM software). PersonaStores can either be completely untrusted (e.g. a link-local XMPP PersonaStore); can have their UIDs trusted, but no other properties (e.g. a Jabber PersonaStore); or can have all their properties trusted (e.g. the key-file backend's PersonaStore).

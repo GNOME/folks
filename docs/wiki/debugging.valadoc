@@ -1,0 +1,34 @@
+The main way to debug libfolks (or applications using it) is using the ''G_MESSAGES_DEBUG'' environment variable. For example, to collect a log file of all libfolks debug data from Empathy, use the command:
+{{{
+FOLKS_DEBUG_NO_COLOUR=1 G_MESSAGES_DEBUG=all empathy &> folks.log
+}}}
+
+Available values for folks for the ''G_MESSAGES_DEBUG'' environment variable are:
+
+ * ''all'' (equivalent to listing all possible values)
+ * ''folks'' (for the core of libfolks)
+ * ''eds'' (for the evolution-data-server backend)
+ * ''key-file'' (for the key file backend)
+ * ''libsocialweb'' (for the libsocialweb backend)
+ * ''telepathy'' (for the Telepathy backend)
+ * ''tracker'' (for the Tracker backend)
+
+Multiple values can be specified using commas, e.g.: ''G_MESSAGES_DEBUG=folks,eds,key-file''.
+
+Another way to debug libfolks itself is to run the //folks-inspect// utility which is bundled with libfolks (possibly in a utils or tools package, depending on your distribution). Its use is beyond the scope of this page, but it has a ''help'' command which should serve as an introduction.
+
+Finally, libfolks has a status printing mechanism. Some libfolks clients may expose this as part of their own debug functionality (for example, folks-inspect uses this for its ''debug'' command), but it can be invoked more generally using gdb:
+
+ * Run the libfolks client you wish to debug under gdb.
+ * Break execution at a suitable (for example, once you've got the client into an erroneous state you wish to examine).
+ * At gdb's command prompt, enter the following commands:
+
+{{{
+set $folks_debug = folks_debug_dup()
+call folks_debug_emit_print_status($folks_debug)
+}}}
+
+This will print out a listing of the state of all the objects relevant to libfolks' linking decisions.
+
+Finally, libfolks outputs debug and status information using terminal colours and formatting by default. If this isn't desired, set the ''FOLKS_DEBUG_NO_COLOUR'' environment variable.
+

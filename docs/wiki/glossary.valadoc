@@ -1,0 +1,11 @@
+ * ''aggregation'': the process performed by libfolks which takes all the ''implicit'' and ''explicit link''s between ''persona''s and uses them to form ''individual''s which (should) uniquely represent physical people known by the ''user''.
+ * ''client'': an application (or library) which uses libfolks.
+ * ''explicit link'': a ''link'' between ''persona''s which was explicitly created by the ''user''.
+ * ''implicit link'': a ''link'' between ''persona''s which wasn't explicitly created by the ''user''; it was inferred by libfolks from trusted data which is shared by the ''persona''s in question.
+ * ''individual'': a collection of one or more ''persona''s which relate to the same physical person.
+ * ''link'' (''verb''): to “connect” two ''personas'' (which should relate to the same physical person) in a non-destructive manner to form an ''individual''.
+ * ''linked individual'': an ''individual'' which contains more than one ''persona''.
+ * ''persona'': a single “facet” of a physical person as seen by the ''user'', such as a contact for them on a particular IM service, their profile on a social networking site or the ''user''’s address book entry for the person.
+ * ''singleton individual'': an ''individual'' which contains only one ''persona'' (i.e. that ''persona'' has no ''implicit'' or ''explicit link''s).
+ * ''unlink'': to break the ''link''s between the ''persona''s forming an ''individual'' so that they are no longer ''aggregated'' into that ''individual''.
+ * ''user'': the physical person who owns the currently logged in user account on the computer.
