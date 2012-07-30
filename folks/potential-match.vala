@@ -473,8 +473,8 @@ public class Folks.PotentialMatch : Object
           return false;
         }
 
-      assert (a.validate ());
-      assert (b.validate ());
+      return_val_if_fail (a.validate (), false);
+      return_val_if_fail (b.validate (), false);
 
       var a_stripped = this._strip_string ((!) a);
       var b_stripped = this._strip_string ((!) b);
@@ -499,8 +499,8 @@ public class Folks.PotentialMatch : Object
           return false;
         }
 
-      assert (a.validate ());
-      assert (b.validate ());
+      return_val_if_fail (a.validate (), false);
+      return_val_if_fail (b.validate (), false);
 
       var a_stripped = this._strip_string ((!) a);
       var b_stripped = this._strip_string ((!) b);

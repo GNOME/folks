@@ -1554,7 +1554,8 @@ public class Tpf.PersonaStore : Folks.PersonaStore
             }
 
           /* Bail if a store already exists for this account. */
-          assert (!PersonaStore._persona_stores_by_account.has_key (store.id));
+          return_if_fail (
+              !PersonaStore._persona_stores_by_account.has_key (store.id));
 
           /* Add the store. */
           PersonaStore._persona_stores_by_account.set (store.id, store);

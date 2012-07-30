@@ -5,6 +5,8 @@ Bugs fixed:
 • Bug 681346 — Individual id can be inconsistent
 • Bug 681420 — warning (vala 0.17.x): access to static class members through an
   instance variable
+• Bug 664072 — Folks should only use assert*() for critical, program-terminating
+  errors
 
 Overview of changes from libfolks 0.7.2 to libfolks 0.7.3
 =========================================================

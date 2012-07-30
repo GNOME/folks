@@ -1258,8 +1258,8 @@ public class Folks.Individual : Object,
     {
       CompareDataFunc<Persona> primary_compare_func = (a, b) =>
         {
-          assert (a != null);
-          assert (b != null);
+          return_val_if_fail (a != null, 0);
+          return_val_if_fail (b != null, 0);
 
           /* Always prefer values which are set over those which aren't. */
           var a_is_set = filter_func (a);
@@ -1446,7 +1446,7 @@ public class Folks.Individual : Object,
       this._update_single_valued_property (typeof (AliasDetails), (p) =>
         {
           var alias = ((AliasDetails) p).alias;
-          assert (alias != null);
+          return_val_if_fail (alias != null, false);
 
           return (alias.strip () != ""); /* empty aliases are unset */
         }, (a, b) =>
@@ -1454,8 +1454,8 @@ public class Folks.Individual : Object,
           var a_alias = ((AliasDetails) a).alias;
           var b_alias = ((AliasDetails) b).alias;
 
-          assert (a_alias != null);
-          assert (b_alias != null);
+          return_val_if_fail (a_alias != null, 0);
+          return_val_if_fail (b_alias != null, 0);
 
           var a_is_empty = (a_alias.strip () == "") ? 1 : 0;
           var b_is_empty = (b_alias.strip () == "") ? 1 : 0;
@@ -1670,7 +1670,7 @@ public class Folks.Individual : Object,
       this._update_single_valued_property (typeof (NameDetails), (p) =>
         {
           var name = ((NameDetails) p).full_name;
-          assert (name != null);
+          return_val_if_fail (name != null, false);
 
           return (name.strip () != ""); /* empty names are unset */
         }, (a, b) =>
@@ -1699,7 +1699,7 @@ public class Folks.Individual : Object,
       this._update_single_valued_property (typeof (NameDetails), (p) =>
         {
           var nickname = ((NameDetails) p).nickname;
-          assert (nickname != null);
+          return_val_if_fail (nickname != null, false);
 
           return (nickname.strip () != ""); /* empty names are unset */
         }, (a, b) =>
