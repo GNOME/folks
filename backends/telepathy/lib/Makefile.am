@@ -177,6 +177,7 @@ dist_vapi_DATA = \
 MAINTAINERCLEANFILES = \
 	$(folks_telepathy_valasources:.vala=.c) \
 	libfolks_telepathy_la_vala.stamp \
+	libtp_lowlevel_la_vala.stamp \
 	folks/folks-telepathy.h \
 	folks-telepathy.vapi \
 	$(dist_noinst_DATA) \
