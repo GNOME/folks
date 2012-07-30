@@ -426,29 +426,54 @@ AC_ARG_ENABLE([debug],
               AS_HELP_STRING([--disable-debug],[compile without debug code]),
               [enable_debug=$enableval], [enable_debug=yes])
 
-AC_ARG_ENABLE([Werror],
-              AS_HELP_STRING([--disable-Werror],
-                             [compile without -Werror (normally enabled in
-                              development builds)]),
-              [werror=$enableval], [werror=yes])
-
 AS_COMPILER_FLAG([-Wextra], [wextra=yes], [wextra=no])
 AS_COMPILER_FLAG([-Wno-missing-field-initializers],
                  [wno_missing_field_initializers=yes],
                  [wno_missing_field_initializers=no])
 AS_COMPILER_FLAG([-Wno-unused-parameter],
                  [wno_unused_parameter=yes], [wno_unused_parameter=no])
+AS_COMPILER_FLAG([-Wstrict-prototypes], [wstrict_prototypes=yes],
+                 [wstrict_prototypes=no])
+AS_COMPILER_FLAG([-Wmissing-prototypes], [wmissing_prototypes=yes],
+                 [wmissing_prototypes=no])
+AS_COMPILER_FLAG([-Wimplicit-function-declaration],
+                 [wimplicit_function_declaration=yes],
+                 [wimplicit_function_declaration=no])
+AS_COMPILER_FLAG([-Wpointer-arith], [wpointer_arith=yes], [wpointer_arith=no])
+AS_COMPILER_FLAG([-Winit-self], [winit_self=yes], [winit_self=no])
+AS_COMPILER_FLAG([-Wformat=2], [wformat=yes], [wformat=no])
+AS_COMPILER_FLAG([-Wmissing-include-dirs], [wmissing_include_dirs=yes],
+                 [wmissing_include_dirs=no])
+AS_COMPILER_FLAG([-Waggregate-return], [waggregate_return=yes],
+                 [waggregate_return=no])
+AS_COMPILER_FLAG([-Wdeclaration-after-statement],
+                 [wdeclaration_after_statement=yes],
+                 [wdeclaration_after_statement=no])
 
 m4_if(folks_released, [1], [],
     [
+        # Iff we support -Werror, then use it with all our compiler warnings.
         if test x$werror = xyes; then
-            ERROR_CFLAGS="$ERROR_CFLAGS -Werror"
+            flag="-Werror="
+        else
+            flag="-W"
         fi
+
         if test x$wextra = xyes -a \
             x$wno_missing_field_initializers = xyes -a \
-            x$wno_unused_parameter = xyes; then
-            ERROR_CFLAGS="$ERROR_CFLAGS -Wextra \
-                -Wno-missing-field-initializers -Wno-unused-parameter"
+            x$wno_unused_parameter = xyes -a x$wstrict_prototypes = xyes -a \
+            x$wmissing_prototypes = xyes -a \
+            x$wimplicit_function_declaration = xyes -a x$wpointer_arith = xyes \
+            -a x$winit_self = xyes -a x$wformat = xyes -a \
+            x$wmissing_include_dirs = xyes -a x$waggregate_return = xyes -a \
+            x$wdeclaration_after_statement = xyes; then
+            ERROR_CFLAGS="$ERROR_CFLAGS ${flag}extra \
+                ${flag}no-missing-field-initializers \
+                ${flag}no-unused-parameter ${flag}strict-prototypes \
+                ${flag}missing-prototypes ${flag}implicit-function-declaration \
+                ${flag}pointer-arith ${flag}init-self ${flag}format=2 \
+                ${flag}missing-include-dirs ${flag}aggregate-return \
+                ${flag}declaration-after-statement"
         fi
     ])
 
