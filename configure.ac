@@ -467,9 +467,9 @@ m4_if(folks_released, [1], [],
             -a x$winit_self = xyes -a x$wformat = xyes -a \
             x$wmissing_include_dirs = xyes -a x$waggregate_return = xyes -a \
             x$wdeclaration_after_statement = xyes; then
-            ERROR_CFLAGS="$ERROR_CFLAGS ${flag}extra \
-                ${flag}no-missing-field-initializers \
-                ${flag}no-unused-parameter ${flag}strict-prototypes \
+            ERROR_CFLAGS="$ERROR_CFLAGS -Wextra \
+                -Wno-missing-field-initializers \
+                -Wno-unused-parameter ${flag}strict-prototypes \
                 ${flag}missing-prototypes ${flag}implicit-function-declaration \
                 ${flag}pointer-arith ${flag}init-self ${flag}format=2 \
                 ${flag}missing-include-dirs ${flag}aggregate-return \
