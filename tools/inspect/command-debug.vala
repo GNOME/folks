@@ -46,7 +46,7 @@ private class Folks.Inspect.Commands.Debug : Folks.Inspect.Command
       base (client);
     }
 
-  public override void run (string? command_string)
+  public override async void run (string? command_string)
     {
       var debug = Folks.Debug.dup ();
       debug.emit_print_status ();
