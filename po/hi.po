@@ -1,0 +1,686 @@
+# Hindi translation for folks.
+# Copyright (C) 2012 folks's COPYRIGHT HOLDER
+# This file is distributed under the same license as the folks package.
+#
+# chandan kumar <chandankumar.093047@gmail.com>, 2012.
+msgid ""
+msgstr ""
+"Project-Id-Version: folks master\n"
+"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
+"product=folks&keywords=I18N+L10N&component=general\n"
+"POT-Creation-Date: 2012-08-04 15:57+0000\n"
+"PO-Revision-Date: 2012-08-07 11:18+0530\n"
+"Last-Translator: chandankumar <chandankumar.093047@gmail.com>\n"
+"Language-Team: Hindi <kde-i18n-doc@kde.org>\n"
+"Language: hi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Lokalize 1.4\n"
+
+#. The timeout after which we consider a property change to have failed if we
+#. * haven't received a property change notification for it.
+#. seconds
+#. Translators: This should be translated to the name of the “Starred in
+#. * Android” group in Google Contacts for your language. If Google have not
+#. * localised the group for your language, or Google Contacts isn't available
+#. * in your language, please *do not* translate this string.
+#: ../backends/eds/lib/edsf-persona-store.vala:60
+msgid "Starred in Android"
+msgstr "एंड्रायड में तारांकित किया"
+
+#. Translators: the first parameter is an address book
+#. * URI and the second is a persona UID.
+#: ../backends/eds/lib/edsf-persona-store.vala:584
+#, c-format
+msgid "Address book ‘%s’ is offline, so contact ‘%s’ cannot be removed."
+msgstr "पता पुस्तिका '%s' ऑफ़लाइन है, तो संपर्क '%s' हटाया नहीं जा सकता है."
+
+#. Translators: the first parameter is an address book
+#. * URI and the second is an error message.
+#: ../backends/eds/lib/edsf-persona-store.vala:590
+#, c-format
+msgid "Permission denied to remove contact ‘%s’: %s"
+msgstr "संपर्क '%s' को हटाने की अनुमति को इनकार किया गया:%s"
+
+#. Translators: the parameter is an error message.
+#: ../backends/eds/lib/edsf-persona-store.vala:595
+#, c-format
+msgid "Removing contacts isn't supported by this persona store: %s"
+msgstr "संपर्क हटाना इस व्यक्तित्व दुकान के द्वारा समर्थित नहीं है: %s"
+
+#: ../backends/eds/lib/edsf-persona-store.vala:624
+#, c-format
+msgid "Can't remove contact ‘%s’: %s"
+msgstr "संपर्क को नही हटा सकते हैं '%s': %s"
+
+#. Translators: the parameter is an address book
+#. * URI.
+#: ../backends/eds/lib/edsf-persona-store.vala:717
+#: ../backends/eds/lib/edsf-persona-store.vala:911
+#, c-format
+msgid "Address book ‘%s’ is offline."
+msgstr "पता पुस्तिका ‘%s’ ऑफ़लाइन है."
+
+#. Translators: the first parameter is an address
+#. * book URI and the second is an error message.
+#: ../backends/eds/lib/edsf-persona-store.vala:722
+#: ../backends/eds/lib/edsf-persona-store.vala:916
+#, c-format
+msgid "Permission denied to open address book ‘%s’: %s"
+msgstr "पता पुस्तक ‘%s’ को खोलने की अनुमति से वंचित: %s"
+
+#. Translators: the first parameter is an address book URI
+#. * and the second is an error message.
+#: ../backends/eds/lib/edsf-persona-store.vala:755
+#, c-format
+msgid "Couldn't open address book ‘%s’: %s"
+msgstr "पता पुस्तिका ‘%s’ खोल नहीं सका: %s"
+
+#. Translators: the parameteter is an error message.
+#: ../backends/eds/lib/edsf-persona-store.vala:821
+#: ../backends/eds/lib/edsf-persona-store.vala:851
+#, c-format
+msgid "Couldn't get address book capabilities: %s"
+msgstr "पता पुस्तिका क्षमताओं को प्राप्त नहीं कर सका: %s"
+
+#. Translators: the parameter is an address book URI.
+#: ../backends/eds/lib/edsf-persona-store.vala:867
+#, c-format
+msgid "Couldn't get view for address book ‘%s’."
+msgstr "पता पुस्तिका ‘%s’ के लिए दृश्य नहीं मिल सका."
+
+#. Translators: the first parameter is an address book URI
+#. * and the second is an error message.
+#: ../backends/eds/lib/edsf-persona-store.vala:949
+#, c-format
+msgid "Couldn't get view for address book ‘%s’: %s"
+msgstr "पता पुस्तिका ‘%s’ के लिए दृश्य नहीं मिल सका: %s"
+
+#: ../backends/eds/lib/edsf-persona-store.vala:1302
+#, c-format
+msgid "Changing the ‘%s’ property failed due to reaching the timeout."
+msgstr "मध्यांतर तक पहुँचने के कारण ‘%s’ गुण को बदलना विफल रहा."
+
+#: ../backends/eds/lib/edsf-persona-store.vala:1340
+#: ../folks/avatar-details.vala:59
+msgid "Avatar is not writeable on this contact."
+msgstr "अवतार इस संपर्क पर लिखने योग्य नहीं है."
+
+#: ../backends/eds/lib/edsf-persona-store.vala:1361
+#: ../folks/web-service-details.vala:123
+msgid "Web service addresses are not writeable on this contact."
+msgstr "वेब सेवा के पते इस संपर्क पर लेखनीय नहीं हैं."
+
+#: ../backends/eds/lib/edsf-persona-store.vala:1397
+#: ../folks/url-details.vala:152
+msgid "URLs are not writeable on this contact."
+msgstr "यूआरएल इस संपर्क पर लिखने योग्य नहीं हैं."
+
+#: ../backends/eds/lib/edsf-persona-store.vala:1474
+#: ../folks/local-id-details.vala:64
+msgid "Local IDs are not writeable on this contact."
+msgstr "इस संपर्क पर स्थानीय आईडी लेखनीय नहीं हैं."
+
+#: ../backends/eds/lib/edsf-persona-store.vala:1500
+msgid "The contact cannot be marked as favourite."
+msgstr "संपर्क पसंदीदा के रूप में चिह्नित नहीं किया जा सकता है."
+
+#. Translators: the parameter is an error message.
+#: ../backends/eds/lib/edsf-persona-store.vala:1569
+#, c-format
+msgid "Can't update avatar: %s"
+msgstr "अवतार अद्यतन नहीं कर सकते %s"
+
+#: ../backends/eds/lib/edsf-persona-store.vala:1580
+#: ../folks/email-details.vala:120
+msgid "E-mail addresses are not writeable on this contact."
+msgstr "ई - मेल पते इस संपर्क पर लेखनीय नहीं हैं."
+
+#: ../backends/eds/lib/edsf-persona-store.vala:1594
+#: ../folks/phone-details.vala:229
+msgid "Phone numbers are not writeable on this contact."
+msgstr "इस संपर्क पर फ़ोन नंबर लिखने योग्य नही हैं."
+
+#: ../backends/eds/lib/edsf-persona-store.vala:1608
+#: ../folks/postal-address-details.vala:360
+msgid "Postal addresses are not writeable on this contact."
+msgstr "इस संपर्क पर डाक के पते लिखने योग्य नही हैं."
+
+#: ../backends/eds/lib/edsf-persona-store.vala:1675
+#: ../folks/name-details.vala:281
+msgid "Full name is not writeable on this contact."
+msgstr "इस संपर्क पर पूरा नाम लिखने योग्य नहीं है."
+
+#: ../backends/eds/lib/edsf-persona-store.vala:1697
+#: ../folks/name-details.vala:319
+msgid "Nickname is not writeable on this contact."
+msgstr "उपनाम इस संपर्क पर लेखनीय नहीं है."
+
+#: ../backends/eds/lib/edsf-persona-store.vala:1719
+#: ../folks/note-details.vala:138
+msgid "Notes are not writeable on this contact."
+msgstr "नोट्स इस संपर्क पर लिखने योग्य नहीं हैं."
+
+#: ../backends/eds/lib/edsf-persona-store.vala:1748
+#: ../folks/birthday-details.vala:60
+msgid "Birthday is not writeable on this contact."
+msgstr "जन्मदिन इस संपर्क पर लेखनीय नहीं है."
+
+#: ../backends/eds/lib/edsf-persona-store.vala:1791
+#: ../folks/role-details.vala:277
+msgid "Roles are not writeable on this contact."
+msgstr "भूमिका इस संपर्क पर लेखनीय नहीं हैं."
+
+#: ../backends/eds/lib/edsf-persona-store.vala:1892
+#: ../folks/name-details.vala:244
+msgid "Structured name is not writeable on this contact."
+msgstr "संरचित नाम इस संपर्क पर लेखनीय नहीं है."
+
+#: ../backends/eds/lib/edsf-persona-store.vala:1931
+#: ../folks/im-details.vala:136
+msgid "IM addresses are not writeable on this contact."
+msgstr "आईएम पते इस संपर्क पर लेखनीय नहीं हैं."
+
+#: ../backends/eds/lib/edsf-persona-store.vala:1981
+#: ../folks/group-details.vala:170
+msgid "Groups are not writeable on this contact."
+msgstr "समूह इस संपर्क पर लिखने योग्य नहीं हैं."
+
+#: ../backends/eds/lib/edsf-persona-store.vala:2025
+#: ../folks/gender-details.vala:77
+msgid "Gender is not writeable on this contact."
+msgstr "लिंग इस संपर्क पर लेखनीय नहीं है."
+
+#: ../backends/eds/lib/edsf-persona-store.vala:2060
+#: ../folks/anti-linkable.vala:81
+msgid "Anti-links are not writeable on this contact."
+msgstr "विरोधी लिंक इस संपर्क पर लेखनीय नहीं हैं."
+
+#. Translators: the first parameter is a non-human-readable
+#. * property name and the second parameter is an error
+#. * message.
+#: ../backends/eds/lib/edsf-persona-store.vala:2219
+#, c-format
+msgid "Property ‘%s’ is not writeable: %s"
+msgstr "गुण ‘%s’ लेखनीय नहीं है: %s"
+
+#. Translators: the first parameter is a non-human-readable
+#. * property name and the second parameter is an error
+#. * message.
+#: ../backends/eds/lib/edsf-persona-store.vala:2228
+#, c-format
+msgid "Invalid value for property ‘%s’: %s"
+msgstr "गुण ‘%s’ के लिए अमान्य मान: %s"
+
+#. Translators: the first parameter is a non-human-readable
+#. * property name and the second parameter is an error message.
+#: ../backends/eds/lib/edsf-persona-store.vala:2254
+#, c-format
+msgid "Unknown error setting property ‘%s’: %s"
+msgstr "अज्ञात त्रुटि सेटिंग गुण `%s': %s"
+
+#. Translators: the first parameter is a filename, and
+#. * the second is an error message.
+#: ../backends/key-file/kf-persona-store.vala:233
+#, c-format
+msgid "The relationship key file '%s' could not be loaded: %s"
+msgstr "संबंध कुंजी फ़ाइल '%s' को लोड नहीं किया जा सकता है: %s"
+
+#. Translators: the first parameter is a path, and the
+#. * second is an error message.
+#: ../backends/key-file/kf-persona-store.vala:255
+#, c-format
+msgid "The relationship key file directory '%s' could not be created: %s"
+msgstr "संबंध कुंजी फ़ाइल निर्देशिका '%s' को नहीं बनाया जा सका: %s"
+
+#. Translators: the first parameter is a filename, and
+#. * the second is an error message.
+#: ../backends/key-file/kf-persona-store.vala:279
+#, c-format
+msgid "The relationship key file '%s' could not be created: %s"
+msgstr "संबंध कुंजी फ़ाइल '%s' को नहीं बनाया जा सका: %s"
+
+#. Translators: the first parameter is a filename, the second is
+#. * an error message.
+#: ../backends/key-file/kf-persona-store.vala:468
+#, c-format
+msgid "Could not write updated key file '%s': %s"
+msgstr "अद्यतन कुंजी फाइल '%s' को लिखा नहीं जा सका : %s"
+
+#. Translators: this is an error message for if the user
+#. * provides an invalid IM address. The first parameter is
+#. * an IM address (e.g. “foo@jabber.org”), the second is
+#. * the name of a protocol (e.g. “jabber”) and the third is
+#. * an error message.
+#: ../backends/key-file/kf-persona.vala:173
+#, c-format
+msgid "Invalid IM address ‘%s’ for protocol ‘%s’: %s"
+msgstr "अवैध IM पता ‘%s’ प्रोटोकॉल ‘%s’ के लिए: %s"
+
+#. Translators: the parameter is an error message.
+#: ../backends/key-file/kf-persona.vala:432
+#, c-format
+msgid "Couldn't load data from key file: %s"
+msgstr "कुंजी फ़ाइल से डेटा लोड नहीं कर सका: %s"
+
+#. Translators: the parameter is an error message.
+#: ../backends/libsocialweb/lib/swf-persona-store.vala:344
+#: ../backends/libsocialweb/lib/swf-persona-store.vala:366
+#: ../backends/libsocialweb/lib/swf-persona-store.vala:387
+#, c-format
+msgid "Couldn’t prepare libsocialweb service: %s"
+msgstr "libsocialweb सेवा को तैयार नहीं कर सका: %s"
+
+#: ../backends/libsocialweb/lib/swf-persona-store.vala:345
+msgid "No capabilities were found."
+msgstr "कोई क्षमताओं को पाया नहीं गया."
+
+#: ../backends/libsocialweb/lib/swf-persona-store.vala:367
+msgid "No contacts capability was found."
+msgstr "कोई संपर्क क्षमता प्राप्त नहीं हुआ."
+
+#: ../backends/libsocialweb/lib/swf-persona-store.vala:388
+msgid "Error opening contacts view."
+msgstr "संपर्क दृश्य को खोलने में त्रुटि."
+
+#. Translators: the first parameter is the display name for
+#. * the Telepathy account, and the second is an error
+#. * message.
+#: ../backends/telepathy/lib/tpf-persona-store.vala:801
+#, c-format
+msgid ""
+"Failed to determine whether we can set aliases on Telepathy account '%s': %s"
+msgstr ""
+"हम टेलिपाथी खाता '%s' पर फर्जी नाम निर्धारित कर सकते हैं को तय करने में विफल: "
+"%s"
+
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1214
+msgid "Telepathy contacts representing the local user may not be removed."
+msgstr ""
+"टेलिपाथी स्थानीय उपयोगकर्ता प्रतिनिधित्व संपर्कों को हटाया नहीं जा सकता है."
+
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1225
+#, c-format
+msgid "Failed to remove a persona from store: %s"
+msgstr "भंडार से एक व्यक्तित्व को हटाने में विफल: %s"
+
+#. Translators: the first two parameters are store identifiers and
+#. * the third is a contact identifier.
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1255
+#, c-format
+msgid ""
+"Persona store (%s, %s) requires the following details:\n"
+"    contact (provided: '%s')\n"
+msgstr ""
+"व्यक्तित्व भंडार (%s, %s) को निम्नलिखित जानकारी की आवश्यकता है:\n"
+"    संपर्क (उपलब्ध: '%s')\n"
+
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1270
+msgid "Cannot create a new Telepathy contact while offline."
+msgstr "ऑफ़लाइन रहते हुए एक नया टेलिपाथी संपर्क नहीं बना सकते."
+
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1288
+#, c-format
+msgid "Failed to add a persona from details: %s"
+msgstr "व्यक्तित्व विवरण से जोड़ने में विफल: %s"
+
+#. Translators: "telepathy-logger" is the name of an application,
+#. * and should not be translated.
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1308
+msgid ""
+"Failed to change favorite without a connection to the telepathy-logger "
+"service."
+msgstr ""
+"कनेक्शन के बिना टेलिपाथी-लॉगर सेवा करने के लिए पसंदीदा परिवर्तित "
+"करने में असफ़ल."
+
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1314
+msgid ""
+"Failed to change favorite status of Telepathy Persona because it has no "
+"attached TpContact."
+msgstr ""
+"टेलिपाथी व्यक्तित्व की पसंदीदा स्थिति को बदलने में असफल क्योंकि यह "
+"कोई TpContact संलग्न नहीं है"
+
+#. Translators: the parameter is a contact identifier.
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1332
+#, c-format
+msgid "Failed to change favorite status for Telepathy contact ‘%s’."
+msgstr "टेलिपाथी संपर्क ‘%s’.के लिए पसंदीदा स्थिति को बदलने में विफल."
+
+#. Translators: the parameter is an error message.
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1364
+#, c-format
+msgid "Failed to change contact's alias: %s"
+msgstr "संपर्क उपनाम बदलने में विफल: %s"
+
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1444
+msgid "Extended information may only be set on the user's Telepathy contact."
+msgstr ""
+"विस्तारित जानकारी केवल उपयोगकर्ता टेलिपाथी संपर्क पर सेट किया जा सकता है."
+
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1473
+msgid ""
+"Extended information cannot be written because the store is disconnected."
+msgstr ""
+"विस्तारित जानकारी  नहीं लिखा जा सकता है.क्योंकि स्टोर डिस्कनेक्ट कर दिया है"
+
+#: ../backends/telepathy/lib/tpf-persona.vala:495
+#: ../backends/telepathy/lib/tpf-persona.vala:549
+#, c-format
+msgid "Failed to change group membership: %s"
+msgstr "समूह सदस्यता बदलने में विफल: %s"
+
+#. Translators: the first parameter is the unknown key that
+#. * was received with the details params, and the second
+#. * identifies the persona store.
+#: ../backends/tracker/lib/trf-persona-store.vala:742
+#, c-format
+msgid "Unrecognized parameter '%s' passed to persona store '%s'."
+msgstr "अपरिचित मापदंड '%s' स्टोर को व्यक्तित्व '%s' करने के लिए पारित."
+
+#: ../folks/alias-details.vala:57
+msgid "Alias is not writeable on this contact."
+msgstr "इस संपर्क पर उपनाम लेखनीय नहीं है."
+
+#. Translators: the first parameter is a folder path and the second
+#. * is an error message.
+#: ../folks/backend-store.vala:591
+#, c-format
+msgid "Error listing contents of folder '%s': %s"
+msgstr "फ़ोल्डर '%s' के सामग्री के सूचीकरण में त्रुटि: %s"
+
+#. Translators: the parameter is a filename.
+#: ../folks/backend-store.vala:720
+#, c-format
+msgid "File or directory '%s' does not exist."
+msgstr "फ़ाइल या निर्देशिका '%s' मौजूद नहीं है."
+
+#. Translators: the parameter is a filename.
+#: ../folks/backend-store.vala:726
+#, c-format
+msgid "Failed to get content type for '%s'."
+msgstr "'%s' के लिए सामग्री प्रकार पाने में विफल"
+
+#: ../folks/birthday-details.vala:89
+msgid "Birthday event ID is not writeable on this contact."
+msgstr "जन्मदिन इवेंट आईडी इस संपर्क पर लेखनीय नहीं है."
+
+#: ../folks/favourite-details.vala:52
+msgid "Favorite status is not writeable on this contact."
+msgstr "पसंदीदा स्थिति इस संपर्क पर लेखनीय नहीं है."
+
+#. Translators: the parameter is an IM address.
+#: ../folks/im-details.vala:178 ../folks/im-details.vala:192
+#: ../folks/im-details.vala:214 ../folks/im-details.vala:241
+#, c-format
+msgid "The IM address '%s' could not be understood."
+msgstr "IM पता '%s' नहीं समझा जा सकता है."
+
+#. Translators: the first parameter is a persona store identifier
+#. * and the second is an error message.
+#: ../folks/individual-aggregator.vala:863
+#, c-format
+msgid "Error preparing persona store '%s': %s"
+msgstr "व्यक्तिगत स्टोर '%s' की तैयारी में त्रुटि : %s"
+
+#. Translators: the parameter is a property name.
+#: ../folks/individual-aggregator.vala:1069
+#: ../folks/individual-aggregator.vala:1295
+#, c-format
+msgid "Unknown property '%s' in linkable property list."
+msgstr "अज्ञात गुण '%s' लिंक करने योग्य गुण सूची में "
+
+#. Translators: the first parameter is a store identifier
+#. * and the second parameter is an error message.
+#: ../folks/individual-aggregator.vala:1757
+#, c-format
+msgid "Failed to add contact for persona store ID '%s': %s"
+msgstr " व्यक्तित्व स्टोर आईडी '%s' के लिए संपर्क जोड़ने में विफल: %s"
+
+#: ../folks/individual-aggregator.vala:1850
+msgid "Can’t link personas with no primary store."
+msgstr "कोई प्राथमिक स्टोर के साथ व्यक्तित्व लिंक नहीं कर सकते."
+
+#: ../folks/individual-aggregator.vala:1851
+#: ../folks/individual-aggregator.vala:2185
+#, c-format
+msgid ""
+"Persona store ‘%s:%s’ is configured as primary, but could not be found or "
+"failed to load."
+msgstr ""
+"व्यक्तित्व स्टोर‘%s:%s’ प्राथमिक रूप से विन्यस्त है, लेकिन नहीं मिल सका "
+"या लोड करने में विफल."
+
+#: ../folks/individual-aggregator.vala:1852
+#: ../folks/individual-aggregator.vala:2186
+#, c-format
+msgid ""
+"Check the relevant service is running, or change the default store in that "
+"service or using the “%s” GSettings key."
+msgstr ""
+"प्रासंगिक सेवा चल रहा है की जाँच करें, या कि सेवा में डिफ़ॉल्ट स्टोर में "
+"परिवर्तन "
+"या \"%s\" GSettings कुंजी का उपयोग के लिए."
+
+#: ../folks/individual-aggregator.vala:1884
+msgid "Anti-links can't be removed between personas being linked."
+msgstr "लिंक किया जा रहा व्यक्तित्व के बीच से विरोधी लिंक हटाया नहीं जा सकता."
+
+#: ../folks/individual-aggregator.vala:2184
+msgid "Can’t add personas with no primary store."
+msgstr "कोई प्राथमिक स्टोर के साथ व्यक्तित्व नहीं जोड़ सकते हैं."
+
+#: ../folks/individual-aggregator.vala:2195
+#, c-format
+msgid "Can't write to requested property (“%s”) of the writeable store."
+msgstr "लेखनीय स्टोर का अनुरोध गुण (“%s”) के लिए नहीं लिख सकते हैं."
+
+#: ../folks/org.freedesktop.folks.gschema.xml.in.h:1
+msgid "Primary store ID"
+msgstr "प्राथमिक स्टोर आईडी"
+
+#: ../folks/org.freedesktop.folks.gschema.xml.in.h:2
+msgid ""
+"The ID of the persona store which folks should use as primary (i.e. to store "
+"linking data in). The type ID of the store may optionally be prepended, "
+"separated by a colon. For example: “eds:system-address-book” or “key-file”."
+msgstr ""
+"व्यक्तित्व स्टोर की आईडी है जो लोगों के लिए प्राथमिक (यानी जोड़े हुए डेटा को "
+"जमा करने में ) रूप में उपयोग होता "
+"हैं. स्टोर के प्रकार आईडी वैकल्पिक रूप से एक बृहदान्त्र द्वारा अलग कर सम्पन्न "
+"किया जा सकता,"
+"है. उदाहरण के लिए: “eds:system-address-book” या \"कुंजी फ़ाइल\"."
+
+#: ../folks/postal-address-details.vala:230
+#, c-format
+msgid "%s, %s, %s, %s, %s, %s, %s"
+msgstr "%s, %s, %s, %s, %s, %s, %s"
+
+#: ../folks/presence-details.vala:159
+msgid "Unknown status"
+msgstr "अज्ञात स्थिति"
+
+#: ../folks/presence-details.vala:161
+msgid "Offline"
+msgstr "ऑफ़लाइन"
+
+#: ../folks/presence-details.vala:165
+msgid "Error"
+msgstr "त्रुटि"
+
+#: ../folks/presence-details.vala:167
+msgid "Available"
+msgstr "उपलब्ध"
+
+#: ../folks/presence-details.vala:169
+msgid "Away"
+msgstr "दूर"
+
+#: ../folks/presence-details.vala:171
+msgid "Extended away"
+msgstr "विस्तारित दूर"
+
+#: ../folks/presence-details.vala:173
+msgid "Busy"
+msgstr "व्यस्त"
+
+#: ../folks/presence-details.vala:175
+msgid "Hidden"
+msgstr "छिपा हुआ"
+
+#: ../folks/role-details.vala:148
+#, c-format
+msgid "Title: %s, Organisation: %s, Role: %s"
+msgstr "शीर्षकशीर्षक: %s, संगठन: %s, भूमिका: %s"
+
+#. Translators: the parameter is a filename.
+#: ../tools/import-pidgin.vala:48
+#, c-format
+msgid "File %s does not exist."
+msgstr "फ़ाइल %s मौजूद नहीं है."
+
+#. Translators: the first parameter is a filename, and the second
+#. * is an error message.
+#: ../tools/import-pidgin.vala:64
+#, c-format
+msgid "Failed to get information about file %s: %s"
+msgstr "%s फाइल के बारे में जानकारी प्राप्त करने में विफल: %s"
+
+#. Translators: the parameter is a filename.
+#: ../tools/import-pidgin.vala:71
+#, c-format
+msgid "File %s is not readable."
+msgstr "फ़ाइल %s पढ़ने लायक नहीं है."
+
+#. Translators: the parameter is a filename.
+#: ../tools/import-pidgin.vala:81
+#, c-format
+msgid "The Pidgin buddy list file '%s' could not be loaded."
+msgstr "पिजिन दोस्त सूची फ़ाइल '%s' लोड नहीं किया जा सकता है."
+
+#. Translators: the parameter is a filename.
+#: ../tools/import-pidgin.vala:96
+#, c-format
+msgid ""
+"The Pidgin buddy list file ‘%s’ could not be loaded: the root element could "
+"not be found or was not recognized."
+msgstr ""
+"पिजिन दोस्त सूची फ़ाइल ‘%s’ लोड नहीं किया जा सकता है. मूल तत्व नहीं "
+"पाया जा सकता है या पहचाना नहीं गया था."
+
+#. Translators: the first parameter is the number of buddies which
+#. * were successfully imported, and the second is a filename.
+#: ../tools/import-pidgin.vala:116
+#, c-format
+msgid "Imported %u buddy from '%s'."
+msgid_plural "Imported %u buddies from '%s'."
+msgstr[0] "आयातित %u दोस्त '%s' से."
+msgstr[1] "आयातित %u दोस्त '%s' से."
+
+#. Translators: the first parameter is a persona identifier,
+#. * and the second is an error message.
+#: ../tools/import-pidgin.vala:163
+#, c-format
+msgid "Error changing group of contact ‘%s’: %s"
+msgstr " संपर्क ‘%s’ के समूह को बदलने में त्रुटि: %s"
+
+#. Translators: the parameter is the buddy's IM address.
+#: ../tools/import-pidgin.vala:220
+#, c-format
+msgid ""
+"Ignoring buddy with no alias and only one IM address:\n"
+"%s"
+msgstr ""
+"कोई एलियास के साथ दोस्त की अनदेखी और केवल एक IM पता:\n"
+"%s"
+
+#: ../tools/import-pidgin.vala:244
+#, c-format
+msgid ""
+"Failed to create new contact for buddy with alias ‘%s’ and IM addresses:\n"
+"%s\n"
+"Error: %s\n"
+msgstr ""
+"एलियास '%s' और IM पते के साथ दोस्त के लिए नए संपर्क बनाने में विफल:\n"
+"%s\n"
+"त्रुटि: %s\n"
+
+#. Translators: the first parameter is a persona identifier, the
+#. * second is an alias for the persona, and the third is a set of IM
+#. * addresses each on a new line.
+#: ../tools/import-pidgin.vala:258
+#, c-format
+msgid ""
+"Created contact ‘%s’ for buddy with alias ‘%s’ and IM addresses:\n"
+"%s"
+msgstr ""
+"एलियास '%s' के और आईएम पते के साथ दोस्त के लिए '%s' संपर्क बनाया गया:\n"
+"%s"
+
+#: ../tools/import.vala:44
+msgid "Source backend name (default: 'pidgin')"
+msgstr "स्रोत बैकेंड नाम (डिफ़ॉल्ट: 'Pidgin')"
+
+#: ../tools/import.vala:47
+msgid "Source filename (default: specific to source backend)"
+msgstr "स्रोत फ़ाइल नाम (डिफ़ॉल्ट: स्रोत बैकेंड के लिए विशेष)"
+
+#: ../tools/import.vala:57
+msgid "— import meta-contact information to libfolks"
+msgstr "— libfolks के लिए मेटा संपर्क जानकारी आयात करें"
+
+#. Translators: the parameter is an error message.
+#: ../tools/import.vala:67
+#, c-format
+msgid "Couldn't parse command line options: %s"
+msgstr "कमांड लाइन विकल्प को पार्स नहीं कर सका: %s"
+
+#. Translators: the parameter is an error message.
+#: ../tools/import.vala:108
+#, c-format
+msgid "Couldn't load the backends: %s"
+msgstr "बैकेंड लोड नहीं कर सका: %s"
+
+#. Translators: the parameter is a backend identifier.
+#: ../tools/import.vala:119
+#, c-format
+msgid "Couldn't load the ‘%s’ backend."
+msgstr " ‘%s’ बैकेंड लोड नहीं कर सका."
+
+#. Translators: the first parameter is a backend identifier and the
+#. * second parameter is an error message.
+#: ../tools/import.vala:132
+#, c-format
+msgid "Couldn't prepare the ‘%s’ backend: %s"
+msgstr "‘%s’ बैकेंड तैयार नहीं कर सका: %s"
+
+#. Translators: the parameter is a backend identifier.
+#: ../tools/import.vala:145
+#, c-format
+msgid "Couldn't load the ‘%s’ backend's persona store."
+msgstr "'%s' बैकेंड के व्यक्तित्व स्टोर लोड नहीं कर सका."
+
+#: ../tools/import.vala:166
+#, c-format
+msgid "Couldn't prepare the ‘%s’ backend's persona store: %s"
+msgstr "'%s' बैकेंड के व्यक्तित्व स्टोर तैयार नहीं कर सका: %s"
+
+#. Translators: the parameter is an error message.
+#: ../tools/import.vala:184
+#, c-format
+msgid "Error importing contacts: %s"
+msgstr "संपर्क आयात करने में त्रुटि: %s"
+
+#. Translators: both parameters are identifiers for backends.
+#: ../tools/import.vala:198
+#, c-format
+msgid ""
+"Unrecognized source backend name ‘%s’. ‘%s’ is currently the only supported "
+"source backend."
+msgstr ""
+"अपरिचित स्रोत बैकेंड नाम ‘%s’. वर्तमान में केवल स्रोत बैकेंड ‘%s’ समर्थित है."
+
+
