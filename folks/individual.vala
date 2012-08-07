@@ -2162,6 +2162,7 @@ public class Folks.Individual : Object,
        *  1. store.is-primary-store
        *  2. store.trust-level
        *  3. store.id (alphabetically)
+       *  4. persona.uid (alphabetically)
        *
        * Note that this heuristic shouldn't be changed without careful thought,
        * since stored references to IDs may be broken by the change.
@@ -2190,7 +2191,13 @@ public class Folks.Individual : Object,
                           persona.store.is_primary_store &&
                       _chosen_persona.store.trust_level ==
                           persona.store.trust_level &&
-                      _chosen_persona.store.id > persona.store.id)
+                      _chosen_persona.store.id > persona.store.id) ||
+                  (_chosen_persona.store.is_primary_store ==
+                          persona.store.is_primary_store &&
+                      _chosen_persona.store.trust_level ==
+                          persona.store.trust_level &&
+                      _chosen_persona.store.id == persona.store.id &&
+                      _chosen_persona.uid > persona.uid)
                  )
                {
                  chosen_persona = persona;
