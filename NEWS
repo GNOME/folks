@@ -17,6 +17,7 @@ Bugs fixed:
   _tpf_persona_contact_weak_notify_cb()
 • Bug 681726 — empathy crashed with SIGABRT in g_assertion_message()
 • Bug 683452 — gnome-contacts starts up with an empty address book
+• Bug 681476 — folks-inspect could use some methods to set values
 
 API changes:
 • Add PropertyError.UNAVAILABLE
