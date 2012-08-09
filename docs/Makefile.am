@@ -69,6 +69,7 @@ $(folkstelepathygtkdoc_DATA): folks-telepathy-gtk-doc
 valadoc_flags = \
 	--force \
 	--package-version $(PACKAGE_VERSION) \
+	--no-protected \
 	$(NULL)
 
 # folks documentation
