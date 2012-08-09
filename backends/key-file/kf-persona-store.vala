@@ -134,7 +134,7 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
    */
   public override string[] always_writeable_properties
     {
-      get { return this._always_writeable_properties; }
+      get { return Kf.PersonaStore._always_writeable_properties; }
     }
 
   /**
@@ -379,7 +379,7 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
           ? (MultiMap<string, ImFieldDetails>) val.get_object ()
           : null;
       unowned Value? val2 = details.lookup
-          (this.detail_key (PersonaDetail.WEB_SERVICE_ADDRESSES));
+          (Folks.PersonaStore.detail_key (PersonaDetail.WEB_SERVICE_ADDRESSES));
       MultiMap<string, WebServiceFieldDetails> web_service_addresses
           = val2 != null
           ? (MultiMap<string, WebServiceFieldDetails>) val2.get_object ()

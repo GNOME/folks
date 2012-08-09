@@ -55,7 +55,7 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
    */
   public override string[] linkable_properties
     {
-      get { return this._linkable_properties; }
+      get { return Kf.Persona._linkable_properties; }
     }
 
   /**
@@ -65,7 +65,7 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
    */
   public override string[] writeable_properties
     {
-      get { return this._writeable_properties; }
+      get { return Kf.Persona._writeable_properties; }
     }
 
   /**
@@ -312,7 +312,7 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
   public Persona (string id, Folks.PersonaStore store)
     {
       var iid = store.id + ":" + id;
-      var uid = this.build_uid ("key-file", store.id, id);
+      var uid = Folks.Persona.build_uid ("key-file", store.id, id);
 
       Object (display_id: id,
               iid: iid,
