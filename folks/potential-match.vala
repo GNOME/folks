@@ -256,7 +256,7 @@ public class Folks.PotentialMatch : Object
 
       debug ("[name_similarity] Got %f\n", similarity);
 
-      if (similarity >= this._DIST_THRESHOLD)
+      if (similarity >= PotentialMatch._DIST_THRESHOLD)
         {
           int inc = 2;
           /* We need exact matches to go to at least HIGH, or otherwise its
@@ -322,7 +322,7 @@ public class Folks.PotentialMatch : Object
             }
 
           string[] tokens_a =
-            email_split_a[0].split_set (this._SEPARATORS);
+            email_split_a[0].split_set (PotentialMatch._SEPARATORS);
 
           foreach (var fd_b in set_b)
             {
@@ -354,7 +354,7 @@ public class Folks.PotentialMatch : Object
               else
                 {
                   string[] tokens_b =
-                    email_split_b[0].split_set (this._SEPARATORS);
+                    email_split_b[0].split_set (PotentialMatch._SEPARATORS);
 
                   /* Do we have: first.middle.last@ ~= fml@ ? */
                   if (this._check_initials_expansion (tokens_a, tokens_b))
@@ -470,7 +470,7 @@ public class Folks.PotentialMatch : Object
         }
 
       // a and b look alike if their Jaro distance is over the threshold.
-      return (jaro_dist >= this._DIST_THRESHOLD);
+      return (jaro_dist >= PotentialMatch._DIST_THRESHOLD);
     }
 
   private bool _look_alike (string? a, string? b)
@@ -487,7 +487,7 @@ public class Folks.PotentialMatch : Object
       var b_stripped = this._strip_string ((!) b);
 
       // a and b look alike if their Jaro distance is over the threshold.
-      return (this._jaro_dist (a_stripped, b_stripped) >= this._DIST_THRESHOLD);
+      return (this._jaro_dist (a_stripped, b_stripped) >= PotentialMatch._DIST_THRESHOLD);
     }
 
   /* Based on:

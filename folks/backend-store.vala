@@ -319,7 +319,7 @@ public class Folks.BackendStore : Object {
 
           bool is_file;
           bool is_dir;
-          yield this._get_file_info (file, out is_file, out is_dir);
+          yield BackendStore._get_file_info (file, out is_file, out is_dir);
           if (is_file)
             {
               modules.set (subpath, file);
@@ -441,7 +441,7 @@ public class Folks.BackendStore : Object {
       Backend? backend_existing = this._backend_hash.get (backend.name);
       if (backend_existing != null && backend_existing != backend)
         {
-          ((!) backend_existing).unprepare ();
+          ((!) backend_existing).unprepare.begin ();
           this._prepared_backends.unset (((!) backend_existing).name);
         }
 
@@ -456,7 +456,7 @@ public class Folks.BackendStore : Object {
       try
         {
           all_others_enabled = this._backends_key_file.get_boolean (
-              this.KEY_FILE_GROUP_ALL_OTHERS, "enabled");
+              BackendStore.KEY_FILE_GROUP_ALL_OTHERS, "enabled");
         }
       catch (KeyFileError e)
         {
@@ -492,7 +492,7 @@ public class Folks.BackendStore : Object {
                   "keyfile. %s according to '%s' setting.",
                   name,
                   all_others_enabled ? "Enabling" : "Disabling",
-                  this.KEY_FILE_GROUP_ALL_OTHERS);
+                  BackendStore.KEY_FILE_GROUP_ALL_OTHERS);
               enabled = all_others_enabled;
             }
           else if (!(e is KeyFileError.GROUP_NOT_FOUND) &&

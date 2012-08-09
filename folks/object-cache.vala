@@ -217,7 +217,7 @@ public abstract class Folks.ObjectCache<T> : Object
         }
 
       // Check the length
-      if (data.length < this._HEADER_WIDTH)
+      if (data.length < ObjectCache._HEADER_WIDTH)
         {
           warning ("Cache file '%s' was too small. The file was deleted.",
               this._cache_file_path);
@@ -230,18 +230,18 @@ public abstract class Folks.ObjectCache<T> : Object
       var wrapper_version = data[0];
       var object_version = data[1];
 
-      if (wrapper_version != this._FILE_FORMAT_VERSION)
+      if (wrapper_version != ObjectCache._FILE_FORMAT_VERSION)
         {
           warning ("Cache file '%s' was version %u of the file format, " +
               "but only version %u is supported. The file was deleted.",
               this._cache_file_path, wrapper_version,
-              this._FILE_FORMAT_VERSION);
+              ObjectCache._FILE_FORMAT_VERSION);
           yield this.clear_cache ();
 
           return null;
         }
 
-      unowned uint8[] variant_data = data[this._HEADER_WIDTH:data.length];
+      unowned uint8[] variant_data = data[ObjectCache._HEADER_WIDTH:data.length];
 
       // Deserialise the variant according to the given version numbers
       var _variant_type =
@@ -252,7 +252,7 @@ public abstract class Folks.ObjectCache<T> : Object
           warning ("Cache file '%s' was version %u of the object file " +
               "format, which is not supported. The file was deleted.",
               this._cache_file_path, object_version,
-              this._FILE_FORMAT_VERSION);
+              ObjectCache._FILE_FORMAT_VERSION);
           yield this.clear_cache ();
 
           return null;
@@ -346,7 +346,7 @@ public abstract class Folks.ObjectCache<T> : Object
         }
 
       // File format
-      var wrapper_version = this._FILE_FORMAT_VERSION;
+      var wrapper_version = ObjectCache._FILE_FORMAT_VERSION;
       var object_version = this.get_serialised_object_version ();
 
       var variant = new Variant.tuple ({
@@ -361,10 +361,10 @@ public abstract class Folks.ObjectCache<T> : Object
           variant.get_type ().equal ((!) desired_variant_type));
 
       // Prepend the version numbers to the data
-      uint8[] data = new uint8[this._HEADER_WIDTH + variant.get_size ()];
+      uint8[] data = new uint8[ObjectCache._HEADER_WIDTH + variant.get_size ()];
       data[0] = wrapper_version;
       data[1] = object_version;
-      variant.store (data[this._HEADER_WIDTH:data.length]);
+      variant.store (data[ObjectCache._HEADER_WIDTH:data.length]);
 
       // Write the data out to the file
       while (true)

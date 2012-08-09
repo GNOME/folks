@@ -96,8 +96,8 @@ public class Folks.PhoneFieldDetails : AbstractFieldDetails<string>
         return false;
       PhoneFieldDetails that_fd = (!) _that_fd;
 
-      var n1 = this._drop_extension (this.get_normalised ());
-      var n2 = this._drop_extension (that_fd.get_normalised ());
+      var n1 = PhoneFieldDetails._drop_extension (this.get_normalised ());
+      var n2 = PhoneFieldDetails._drop_extension (that_fd.get_normalised ());
 
       /* Based on http://blog.barisione.org/2010-06/handling-phone-numbers/ */
       if (n1.length >= 7 && n2.length >= 7)
@@ -150,13 +150,13 @@ public class Folks.PhoneFieldDetails : AbstractFieldDetails<string>
               /* we drop the initial + */
               continue;
             }
-          else if (digit in this._extension_chars ||
-              digit in this._valid_digits)
+          else if (digit in PhoneFieldDetails._extension_chars ||
+              digit in PhoneFieldDetails._valid_digits)
             {
               /* lets keep valid digits */
               normalised_number += digit;
             }
-          else if (digit in this._common_delimiters)
+          else if (digit in PhoneFieldDetails._common_delimiters)
             {
               continue;
             }

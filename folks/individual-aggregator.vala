@@ -328,8 +328,8 @@ public class Folks.IndividualAggregator : Object
               this._configured_primary_store_id = "";
             }
 
-          var settings = new Settings (this._FOLKS_GSETTINGS_SCHEMA);
-          var val = settings.get_string (this._PRIMARY_STORE_CONFIG_KEY);
+          var settings = new Settings (IndividualAggregator._FOLKS_GSETTINGS_SCHEMA);
+          var val = settings.get_string (IndividualAggregator._PRIMARY_STORE_CONFIG_KEY);
           if (val != null && val != "")
             {
               debug ("Setting primary store IDs from GSettings.");
@@ -744,7 +744,7 @@ public class Folks.IndividualAggregator : Object
           if (this._quiescent_timeout_id == 0)
             {
               this._quiescent_timeout_id =
-                  Timeout.add_seconds (this._QUIESCENT_TIMEOUT,
+                  Timeout.add_seconds (IndividualAggregator._QUIESCENT_TIMEOUT,
                       this._quiescent_timeout_cb);
             }
         }
@@ -827,7 +827,7 @@ public class Folks.IndividualAggregator : Object
           if (this._quiescent_timeout_id == 0)
             {
               this._quiescent_timeout_id =
-                  Timeout.add_seconds (this._QUIESCENT_TIMEOUT,
+                  Timeout.add_seconds (IndividualAggregator._QUIESCENT_TIMEOUT,
                       this._quiescent_timeout_cb);
             }
         }
@@ -1852,8 +1852,8 @@ public class Folks.IndividualAggregator : Object
               _("Check the relevant service is running, or change the default store in that service or using the “%s” GSettings key."),
               this._configured_primary_store_type_id,
               this._configured_primary_store_id,
-              "%s %s".printf (this._FOLKS_GSETTINGS_SCHEMA,
-                  this._PRIMARY_STORE_CONFIG_KEY));
+              "%s %s".printf (IndividualAggregator._FOLKS_GSETTINGS_SCHEMA,
+                  IndividualAggregator._PRIMARY_STORE_CONFIG_KEY));
         }
 
       /* Don't bother linking if it's just one Persona */
@@ -2186,8 +2186,8 @@ public class Folks.IndividualAggregator : Object
               _("Check the relevant service is running, or change the default store in that service or using the “%s” GSettings key."),
               this._configured_primary_store_type_id,
               this._configured_primary_store_id,
-              "%s %s".printf (this._FOLKS_GSETTINGS_SCHEMA,
-                  this._PRIMARY_STORE_CONFIG_KEY));
+              "%s %s".printf (IndividualAggregator._FOLKS_GSETTINGS_SCHEMA,
+                  IndividualAggregator._PRIMARY_STORE_CONFIG_KEY));
         }
       else if (new_persona == null)
         {
