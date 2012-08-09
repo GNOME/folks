@@ -31,7 +31,7 @@ extern const string BACKEND_NAME;
 /* The following function is needed in order to use the async SourceRegistry
  * constructor. FIXME: https://bugzilla.gnome.org/show_bug.cgi?id=659886 */
 [CCode (cname = "e_source_registry_new", cheader_filename = "libedataserver/libedataserver.h", finish_function = "e_source_registry_new_finish")]
-public extern static async E.SourceRegistry create_source_registry (GLib.Cancellable? cancellable = null) throws GLib.Error;
+internal extern static async E.SourceRegistry create_source_registry (GLib.Cancellable? cancellable = null) throws GLib.Error;
 
 /**
  * A persona store.
@@ -227,7 +227,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
    */
   [Deprecated (since = "0.7.2",
       replacement = "Edsf.PersonaStore.with_source_registry()")]
-  public PersonaStore (E.SourceRegistry r, E.Source s)
+  public PersonaStore (E.Source s)
     {
       string eds_uid = s.get_uid ();
       string eds_name = s.get_display_name ();
