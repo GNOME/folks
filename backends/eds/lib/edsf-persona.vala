@@ -326,7 +326,7 @@ public class Edsf.Persona : Folks.Persona,
    */
   public override string[] linkable_properties
     {
-      get { return this._linkable_properties; }
+      get { return Persona._linkable_properties; }
     }
 
   /**
@@ -762,7 +762,7 @@ public class Edsf.Persona : Folks.Persona,
           Edsf.Persona._get_property_from_contact<string> (contact, "id");
       var contact_id = (!) (_contact_id ?? "");
 
-      var uid = this.build_uid (BACKEND_NAME, store.id, contact_id);
+      var uid = Folks.Persona.build_uid (BACKEND_NAME, store.id, contact_id);
       var iid = Edsf.Persona.build_iid (store.id, contact_id);
       var is_user = BookClient.is_self (contact);
       var _full_name =
@@ -979,7 +979,7 @@ public class Edsf.Persona : Folks.Persona,
            * by the BirthdayDetails interface.
            * We cache the timezone since creating it requires mmapping
            * /etc/localtime, which means lots of syscalls. */
-          var d = new DateTime (this._local_time_zone,
+          var d = new DateTime (Persona._local_time_zone,
               (int) bday.year, (int) bday.month, (int) bday.day, 0, 0, 0.0);
           if (this._birthday == null ||
               (this._birthday != null &&
@@ -1349,7 +1349,7 @@ public class Edsf.Persona : Folks.Persona,
       var new_urls = new HashSet<UrlFieldDetails> ();
 
       /* First we get the standard Evo urls.. */
-      foreach (var mapping in this._url_properties)
+      foreach (var mapping in Persona._url_properties)
         {
           var url_property = mapping.vcard_field_name;
           var folks_type = mapping.folks_type;
@@ -1358,7 +1358,7 @@ public class Edsf.Persona : Folks.Persona,
           if (u != null && u != "")
             {
               var fd_u = new UrlFieldDetails ((!) u);
-              fd_u.set_parameter (fd_u.PARAM_TYPE, folks_type);
+              fd_u.set_parameter (AbstractFieldDetails.PARAM_TYPE, folks_type);
               new_urls.add (fd_u);
             }
         }
@@ -1391,7 +1391,7 @@ public class Edsf.Persona : Folks.Persona,
 
   private void _update_im_addresses ()
     {
-      var im_eds_map = this._get_im_eds_map ();
+      var im_eds_map = Persona._get_im_eds_map ();
       var new_im_addresses = new HashMultiMap<string, ImFieldDetails> (null,
           null, (GLib.HashFunc) ImFieldDetails.hash,
           (GLib.EqualFunc) ImFieldDetails.equal);

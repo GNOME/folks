@@ -175,7 +175,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
           if (this._addressbook == null ||
               ((!) this._addressbook).readonly == true)
             {
-              return this._always_writeable_properties_empty;
+              return PersonaStore._always_writeable_properties_empty;
             }
 
           return this._always_writeable_properties;
@@ -1270,7 +1270,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
            * above. */
           yield ((!) this._addressbook).modify_contact (contact, null);
 
-          timeout_id = Timeout.add_seconds (this._property_change_timeout, () =>
+          timeout_id = Timeout.add_seconds (PersonaStore._property_change_timeout, () =>
             {
               /* Failure! Return to _commit_modified_property() without setting
                * received_notification. */
@@ -2073,7 +2073,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
       Set<string> anti_links)
     {
       var vcard = (E.VCard) contact;
-      vcard.remove_attributes (null, this.anti_links_attribute_name);
+      vcard.remove_attributes (null, PersonaStore.anti_links_attribute_name);
 
       var persona_uid =
           Folks.Persona.build_uid (BACKEND_NAME, this.id, contact.id);
@@ -2087,7 +2087,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
             }
 
           var attr = new E.VCardAttribute (null,
-              this.anti_links_attribute_name);
+              PersonaStore.anti_links_attribute_name);
           attr.add_value (anti_link_uid);
 
           contact.add_attribute ((owned) attr);

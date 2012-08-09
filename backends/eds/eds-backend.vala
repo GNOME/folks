@@ -261,7 +261,7 @@ public class Folks.Backends.Eds.Backend : Folks.Backend
   private string[] _get_addressbooks_from_env ()
     {
       string[] addressbooks = {};
-      string ab_list = Environment.get_variable (this._use_address_books);
+      string ab_list = Environment.get_variable (Backend._use_address_books);
 
       if (ab_list != null && ab_list != "")
         {
