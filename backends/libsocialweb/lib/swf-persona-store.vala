@@ -29,6 +29,7 @@ extern const string BACKEND_NAME;
 
 /**
  * A persona store which is associated with a single libsocialweb service.
+ *
  * It will create {@link Persona}s for each of the contacts known to that
  * service.
  */

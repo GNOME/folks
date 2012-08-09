@@ -23,8 +23,10 @@
 using GLib;
 
 /**
- * This interface contains the birth date of a {@link Persona} and
- * {@link Individual}
+ * Birthday details for a contact.
+ *
+ * This allows representation of the birth date and associated calendar event ID
+ * of a contact.
  *
  * @since 0.4.0
  */
@@ -63,7 +65,8 @@ public interface Folks.BirthdayDetails : Object
   /**
    * The event ID of the birthday event from the source calendar.
    *
-   * If this is `null`, the birthday event is unknown.
+   * If this is `null`, the birthday event is unknown. The semantics of the
+   * event ID are left unspecified by folks.
    *
    * @since 0.4.0
    */

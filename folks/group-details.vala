@@ -22,8 +22,12 @@ using GLib;
 using Gee;
 
 /**
- * Interface for {@link Persona}s or {@link Individual}s which can be grouped
- * into sets of similar objects.
+ * Groups for a contact.
+ *
+ * This allows contacts to be collected into user-defined groups (or categories)
+ * for organisational purposes. Groups are non-exclusive and non-hierarchical,
+ * so a single contact can be put into many groups, but groups may not
+ * themselves be put into groups.
  */
 public interface Folks.GroupDetails : Object
 {

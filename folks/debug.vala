@@ -32,9 +32,10 @@ private extern void g_log (string? log_domain,
     ...);
 
 /**
- * Manage debug output and status reporting for all folks objects. All GLib
- * debug logging calls are passed through a log handler in this class, which
- * allows debug domains to be outputted according to whether they've been
+ * Manages debug output and status reporting for all folks objects.
+ *
+ * All GLib debug logging calls are passed through a log handler in this class,
+ * which allows debug domains to be outputted according to whether they've been
  * enabled by being passed to {@link Debug.dup}.
  *
  * @since 0.5.1
@@ -184,13 +185,13 @@ public class Folks.Debug : Object
     }
 
   /**
-   * Create or return the singleton {@link Debug} class instance.
+   * Create or return the singleton {@link Folks.Debug} class instance.
    * If the instance doesn't exist already, it will be created with no debug
    * domains enabled.
    *
    * This function is thread-safe.
    *
-   * @return  Singleton {@link Debug} instance
+   * @return  Singleton {@link Folks.Debug} instance
    * @since 0.5.1
    */
   public static Debug dup ()
@@ -216,7 +217,7 @@ public class Folks.Debug : Object
     }
 
   /**
-   * Create or return the singleton {@link Debug} class instance.
+   * Create or return the singleton {@link Folks.Debug} class instance.
    * If the instance doesn't exist already, it will be created with the given
    * set of debug domains enabled. Otherwise, the existing instance will have
    * its set of enabled domains changed to the provided set.
@@ -225,7 +226,7 @@ public class Folks.Debug : Object
    * null to disable debug output
    * @param colour_enabled Whether debug output should be coloured using
    * terminal escape sequences
-   * @return Singleton {@link Debug} instance
+   * @return Singleton {@link Folks.Debug} instance
    * @since 0.5.1
    */
   public static Debug dup_with_flags (string? debug_flags,
@@ -315,7 +316,7 @@ public class Folks.Debug : Object
   /**
    * Causes all significant objects in the library to print their current
    * status to standard output, obeying the options set on this
-   * {@link Debug} instance for colouring and other formatting.
+   * {@link Folks.Debug} instance for colouring and other formatting.
    *
    * @since 0.5.1
    */

@@ -27,6 +27,12 @@ using Zeitgeist;
 /**
  * A persona subclass which represents a single instant messaging contact from
  * Telepathy.
+ *
+ * There is a one-to-one correspondence between {@link Tpf.Persona}s and
+ * {@link TelepathyGLib.Contact}s, although at any time the
+ * {@link Tpf.Persona.contact} property of a persona may be `null` if the
+ * contact's Telepathy connection isn't available (e.g. due to being offline).
+ * In this case, the persona's properties persist from a local cache.
  */
 public class Tpf.Persona : Folks.Persona,
     AliasDetails,

@@ -26,7 +26,8 @@ using Gee;
 
 /**
  * Object representing a postal mail address.
- * The components of the address are never null, an empty string
+ *
+ * The components of the address are never `null`: an empty string
  * indicates that a property is not set.
  */
 public class Folks.PostalAddress : Object

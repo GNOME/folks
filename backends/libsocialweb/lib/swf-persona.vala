@@ -26,6 +26,9 @@ using SocialWebClient;
 
 /**
  * A persona subclass which represents a single libsocialweb contact.
+ *
+ * There is a one-to-one correspondence between {@link Swf.Persona}s and
+ * {@link SocialWebClient.Contact}s.
  */
 public class Swf.Persona : Folks.Persona,
     AvatarDetails,

@@ -45,7 +45,9 @@ public enum Folks.Gender
 }
 
 /**
- * Interface for specifying the gender of a contact.
+ * Gender of a contact.
+ *
+ * This allows representation of the gender of a contact.
  *
  * @since 0.3.5
  */

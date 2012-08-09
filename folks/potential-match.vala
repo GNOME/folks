@@ -78,8 +78,15 @@ public enum Folks.MatchResult
 }
 
 /**
- * This class provides functionality to explore a potential match between
- * two individuals.
+ * Match calculator for pairs of individuals.
+ *
+ * This provides functionality to explore the degree of a potential match
+ * between two individuals. It compares the similarity of the individuals'
+ * properties to determine how likely it is that the individuals represent the
+ * same physical person.
+ *
+ * This can be used by folks clients to, for example, present suggestions of
+ * pairs of individuals which should be linked by the user.
  *
  * @since 0.5.0
  */
@@ -105,6 +112,18 @@ public class Folks.PotentialMatch : Object
       PotentialMatch.known_email_aliases.add ("admin");
       PotentialMatch.known_email_aliases.add ("abuse");
       PotentialMatch.known_email_aliases.add ("webmaster");
+    }
+
+  /**
+   * Create a new PotentialMatch.
+   *
+   * @return a new PotentialMatch
+   *
+   * @since 0.5.0
+   */
+  public PotentialMatch ()
+    {
+      base ();
     }
 
   /**

@@ -23,8 +23,12 @@
 using GLib;
 
 /**
- * Interface for classes which represent aliasable contacts, such as
- * {@link Persona} and {@link Individual}.
+ * Alias for a contact.
+ *
+ * This allows representation of aliases for contacts, where the user has chosen
+ * their own name for the contact to better represent that contact to them. A
+ * typical example of this is the use of user-chosen aliases for contacts in
+ * instant messaging programs.
  */
 public interface Folks.AliasDetails : Object
 {

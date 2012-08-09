@@ -28,6 +28,11 @@ using Xml;
 
 /**
  * A persona subclass which represents a single EDS contact.
+ *
+ * Each {@link Edsf.Persona} instance represents a single EDS {@link E.Contact}.
+ * When the contact is modified (either by this folks client, or a different
+ * client), the {@link Edsf.Persona} remains the same, but is assigned a new
+ * {@link E.Contact}. It then updates its properties from this new contact.
  */
 public class Edsf.Persona : Folks.Persona,
     AntiLinkable,
@@ -75,12 +80,12 @@ public class Edsf.Persona : Folks.Persona,
     "email_1", "email_2", "email_3", "email_4"
   };
 
-  [Deprecated]
   /**
    * vCard field names for miscellaneous URIs.
    *
    * @since 0.6.0
    */
+  [Deprecated]
   public static const string[] url_properties = {
     "blog_url", "fburl", "homepage_url", "video_url"
   };

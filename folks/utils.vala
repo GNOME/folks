@@ -21,8 +21,16 @@
 
 using Gee;
 
+/* TODO: This should be converted to a nested namespace, rather than a class,
+ * when folks next breaks API. Having it as a class means that a GType is always
+ * registered for it, and a C constructor function created, even though
+ * instantiating it is pointless as all the methods are static (and should
+ * remain so). */
 /**
  * Utility functions to simplify common patterns in Folks client code.
+ *
+ * These may be used by folks clients as well, and are part of folks' supported
+ * stable API.
  *
  * @since 0.6.0
  */
@@ -31,6 +39,21 @@ public class Folks.Utils : Object
   internal static bool _str_equal_safe (string a, string b)
     {
       return (a != "" && b != "" && a.down () == b.down ());
+    }
+
+  /**
+   * Create a new utilities object.
+   *
+   * This method is useless and should never be used. It will be removed in a
+   * future version in favour of making the Utils class into a nested namespace.
+   *
+   * @return a new utilities object
+   * @since 0.6.0
+   */
+  [Deprecated (since = "UNRELEASED")]
+  public Utils ()
+    {
+      base ();
     }
 
   /**

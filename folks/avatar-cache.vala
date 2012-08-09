@@ -21,9 +21,19 @@
 using GLib;
 
 /**
- * A singleton persistent cache object for avatars used across backends in
- * folks. Avatars may be added to the cache, and referred to by a persistent
- * URI from that point onwards.
+ * A singleton persistent cache for avatars in folks.
+ *
+ * Avatars may be added to the cache, and referred to by a persistent
+ * URI from that point onwards. The avatars will be stored on disk in the user's
+ * XDG cache directory.
+ *
+ * The avatar cache is typically used by backends where retrieving avatars is an
+ * expensive operation (for example, they have to be downloaded from the network
+ * every time they're used).
+ *
+ * All avatars from all users of the {@link Folks.AvatarCache} are stored in the
+ * same namespace, so callers must ensure that the IDs they use for avatars are
+ * globally unique (e.g. by using the corresponding {@link Folks.Persona.uid}).
  *
  * @since 0.6.0
  */
@@ -52,12 +62,12 @@ public class Folks.AvatarCache : Object
     }
 
   /**
-   * Create or return the singleton {@link AvatarCache} class instance.
+   * Create or return the singleton {@link Folks.AvatarCache} class instance.
    * If the instance doesn't exist already, it will be created.
    *
    * This function is thread-safe.
    *
-   * @return Singleton {@link AvatarCache} instance
+   * @return Singleton {@link Folks.AvatarCache} instance
    * @since 0.6.0
    */
   public static AvatarCache dup ()

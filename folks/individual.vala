@@ -73,12 +73,12 @@ public enum Folks.TrustLevel
  * persona store (see {@link IndividualAggregator.primary_store}), its property
  * values will be chosen above all others. This means that any changes to
  * property values made through folks (which are normally written to the primary
- * store) will always be used by {@link Individual}s.
+ * store) will always be used by {@link Folks.Individual}s.
  *
  * No further guarantees are made about the order of preference used for
- * choosing which property values to use for the {@link Individual}, other than
- * that the order may vary between properties, but is guaranteed to be stable
- * for a given property.
+ * choosing which property values to use for the {@link Folks.Individual}, other
+ * than that the order may vary between properties, but is guaranteed to be
+ * stable for a given property.
  */
 public class Folks.Individual : Object,
     AliasDetails,
@@ -1083,7 +1083,7 @@ public class Folks.Individual : Object,
    * {@link Folks.Individual.personas} property after construction.
    *
    * @param personas a list of {@link Persona}s to initialise the
-   * {@link Individual} with, or `null`
+   * {@link Folks.Individual} with, or `null`
    * @return a new Individual
    *
    * @since 0.5.1
@@ -2249,8 +2249,8 @@ public class Folks.Individual : Object,
    * Anti-linked with an individual?
    *
    * Check whether this individual is anti-linked to any of the {@link Persona}s
-   * in {@link Individual} `i`. If so, `true` will be returned — `false` will be
-   * returned otherwise.
+   * in {@link Folks.Individual} `i`. If so, `true` will be returned — `false`
+   * will be returned otherwise.
    *
    * Note that this will check for anti-links in either direction, since
    * anti-links are not necessarily symmetric.

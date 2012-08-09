@@ -25,8 +25,10 @@ using Gee;
 using GLib;
 
 /**
- * This interface represents the role a {@link Persona} and {@link Individual}
- * have in a given Organisation.
+ * Role a contact has in an organisation.
+ *
+ * This represents the role a {@link Persona} or {@link Individual} has in a
+ * single given organisation, such as a company.
  *
  * @since 0.4.0
  */

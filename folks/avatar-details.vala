@@ -23,17 +23,21 @@
 using GLib;
 
 /**
- * Interface for classes which represent contacts which have an avatar
- * (pictorial representation), such as {@link Persona} and {@link Individual}.
+ * Avatar for a contact.
+ *
+ * This allows avatars to be associated with contacts. An avatar is a small
+ * image file which represents the contact, such as a photo of them.
+ *
+ * @since 0.6.0
  */
 public interface Folks.AvatarDetails : Object
 {
   /**
    * An avatar for the contact.
    *
-   * An avatar is a small image file which represents the contact. It may be
-   * `null` if unset. Otherwise, the image data may be asynchronously loaded
-   * using the methods of the {@link GLib.LoadableIcon} implementation.
+   * The avatar may be `null` if unset. Otherwise, the image data may be
+   * asynchronously loaded using the methods of the {@link GLib.LoadableIcon}
+   * implementation.
    *
    * @since 0.6.0
    */

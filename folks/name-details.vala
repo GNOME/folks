@@ -24,9 +24,11 @@
 using GLib;
 
 /**
- * Object for a full name split in its constituent parts (given name,
+ * Structured name representation for human names.
+ *
+ * Represents a full name split in its constituent parts (given name,
  * family name, etc.). This structure corresponds to the "N" field in
- * VCards.  The parts of the name are never null, an empty string
+ * vCards. The parts of the name are never `null`: an empty string
  * indicates that a property is not set.
  *
  * @since 0.3.5

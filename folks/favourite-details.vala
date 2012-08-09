@@ -22,8 +22,13 @@
 using GLib;
 
 /**
- * Interface exposing a {@link Persona}'s or {@link Individual}'s user-defined
- * status as a favourite.
+ * Favourite status for a contact.
+ *
+ * This allows user-defined favourite contacts to be specified. A contact is a
+ * favourite if the user has selected them as such; the semantics of 'favourite'
+ * are left unspecified by folks. Typically, a user might select the contacts
+ * that they talk to most frequently as their favourite contacts in an instant
+ * messaging program, for example.
  */
 public interface Folks.FavouriteDetails : Object
 {

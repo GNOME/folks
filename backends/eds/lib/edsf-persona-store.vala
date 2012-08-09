@@ -34,8 +34,10 @@ extern const string BACKEND_NAME;
 internal extern static async E.SourceRegistry create_source_registry (GLib.Cancellable? cancellable = null) throws GLib.Error;
 
 /**
- * A persona store.
- * It will create {@link Persona}s for each contacts on the main addressbook.
+ * A persona store representing a single EDS address book.
+ *
+ * The persona store will contain {@link Edsf.Persona}s for each contact in the
+ * address book it represents.
  */
 public class Edsf.PersonaStore : Folks.PersonaStore
 {
