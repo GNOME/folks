@@ -249,7 +249,7 @@ public class Tpf.Persona : Folks.Persona,
    */
   public override string[] linkable_properties
     {
-      get { return this._linkable_properties; }
+      get { return Tpf.Persona._linkable_properties; }
     }
 
   /**
@@ -705,7 +705,7 @@ public class Tpf.Persona : Folks.Persona,
       unowned string id = contact.get_identifier ();
       var connection = contact.connection;
       var account = connection.get_account ();
-      var uid = this.build_uid (store.type_id, store.id, id);
+      var uid = Folks.Persona.build_uid (store.type_id, store.id, id);
 
       Object (contact: contact,
               display_id: id,

@@ -71,7 +71,7 @@ internal class Tpf.PersonaStoreCache : Folks.ObjectCache<Tpf.Persona>
       // Maximum version?
       if (object_version == uint8.MAX)
         {
-          object_version = this._FILE_FORMAT_VERSION;
+          object_version = PersonaStoreCache._FILE_FORMAT_VERSION;
         }
 
       if (object_version == 1)
@@ -134,7 +134,7 @@ internal class Tpf.PersonaStoreCache : Folks.ObjectCache<Tpf.Persona>
 
   protected override uint8 get_serialised_object_version ()
     {
-      return this._FILE_FORMAT_VERSION;
+      return PersonaStoreCache._FILE_FORMAT_VERSION;
     }
 
   private Variant[] serialise_abstract_field_details (

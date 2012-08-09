@@ -433,7 +433,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
     {
       debug ("Removing store %s (%p)", this.id, this);
       this._emit_personas_changed (null, this._persona_set);
-      this._cache.clear_cache ();
+      this._cache.clear_cache.begin ();
       this.removed ();
     }
 
@@ -1126,7 +1126,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
           new GLib.GenericArray<TelepathyGLib.Contact> ());
 
       this._got_initial_members = true;
-      this._populate_counters ();
+      this._populate_counters.begin ();
       this._notify_if_is_quiescent ();
     }
 
@@ -1444,7 +1444,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
               _("Extended information may only be set on the user's Telepathy contact."));
         }
 
-      var info_list = this._contact_info_set_to_list (info_set);
+      var info_list = PersonaStore._contact_info_set_to_list (info_set);
       if (this.account.connection != null)
         {
           GLib.Error? error = null;
