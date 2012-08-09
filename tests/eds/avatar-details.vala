@@ -71,7 +71,7 @@ public class AvatarDetailsTests : Folks.TestCase
       this._c1.set ("avatar",(owned) v);
       this._eds_backend.add_contact (this._c1);
 
-      this._test_avatar_async ();
+      this._test_avatar_async.begin ();
 
       Timeout.add_seconds (5, () =>
         {
@@ -126,7 +126,7 @@ public class AvatarDetailsTests : Folks.TestCase
           if (i.full_name == "bernie h. innocenti")
             {
               i.notify["avatar"].connect (this._notify_cb);
-              this._check_avatar (i.avatar);
+              this._check_avatar.begin (i.avatar);
             }
         }
    }
@@ -134,7 +134,7 @@ public class AvatarDetailsTests : Folks.TestCase
   private void _notify_cb (Object individual_obj, ParamSpec ps)
     {
       Folks.Individual i = (Folks.Individual) individual_obj;
-      this._check_avatar (i.avatar);
+      this._check_avatar.begin (i.avatar);
     }
 
   private async void _check_avatar (LoadableIcon? avatar)

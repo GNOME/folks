@@ -68,7 +68,7 @@ public class RemovingContactsTests : Folks.TestCase
       c1.set ("full_name", (owned) v);
       this._eds_backend.add_contact (c1);
 
-      this._test_removal_async ();
+      this._test_removal_async.begin ();
 
       Timeout.add_seconds (5, () => {
             this._main_loop.quit ();
@@ -116,7 +116,7 @@ public class RemovingContactsTests : Folks.TestCase
           var name = (Folks.NameDetails) i;
           this._added = true;
           assert (name.full_name == "bernie h. innocenti");
-          this._eds_backend.remove_contact (0);
+          this._eds_backend.remove_contact.begin (0);
         }
 
       foreach (Individual i in removed)

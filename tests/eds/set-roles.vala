@@ -70,7 +70,7 @@ public class SetRolesTests : Folks.TestCase
       c1.set ("full_name", (owned) v);
       this._eds_backend.add_contact (c1);
 
-      this._test_set_roles_async ();
+      this._test_set_roles_async.begin ();
 
       Timeout.add_seconds (5, () => {
             this._main_loop.quit ();

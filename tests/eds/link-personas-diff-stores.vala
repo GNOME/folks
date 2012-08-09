@@ -80,7 +80,7 @@ public class LinkPersonasDiffStoresTests : Folks.TestCase
       this._persona_iid_2 = "";
       this._linked_individual_found = false;
 
-      this._test_linking_personas_async ();
+      this._test_linking_personas_async.begin ();
 
       var timer_id = Timeout.add_seconds (8, () =>
         {
@@ -123,7 +123,7 @@ public class LinkPersonasDiffStoresTests : Folks.TestCase
               assert (pstore2 != null);
               assert (pstore2.is_prepared == true);
 
-              this._add_personas (pstore, pstore2);
+              this._add_personas.begin (pstore, pstore2);
             });
         }
       catch (GLib.Error e)

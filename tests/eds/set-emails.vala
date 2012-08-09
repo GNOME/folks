@@ -68,7 +68,7 @@ public class SetEmailsTests : Folks.TestCase
       c1.set ("full_name", (owned) v);
       this._eds_backend.add_contact (c1);
 
-      this._test_set_emails_async ();
+      this._test_set_emails_async.begin ();
 
       Timeout.add_seconds (5, () => {
             this._main_loop.quit ();
@@ -123,8 +123,8 @@ public class SetEmailsTests : Folks.TestCase
                       (GLib.HashFunc) EmailFieldDetails.hash,
                       (GLib.EqualFunc) EmailFieldDetails.equal);
                   var email_1 = new EmailFieldDetails ("bernie@example.org");
-                  email_1.set_parameter (email_1.PARAM_TYPE,
-                      email_1.PARAM_TYPE_OTHER);
+                  email_1.set_parameter (AbstractFieldDetails.PARAM_TYPE,
+                      AbstractFieldDetails.PARAM_TYPE_OTHER);
                   emails.add (email_1);
                   ((EmailDetails) p).email_addresses = emails;
                 }

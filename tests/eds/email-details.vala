@@ -101,7 +101,7 @@ public class EmailDetailsTests : Folks.TestCase
       this._c3.set (Edsf.Persona.email_fields[1], (owned) v);
       this._eds_backend.add_contact (this._c3);
 
-      this._test_email_details_async ();
+      this._test_email_details_async.begin ();
 
       Timeout.add_seconds (5, () =>
           {
@@ -190,7 +190,7 @@ public class EmailDetailsTests : Folks.TestCase
                   }
               }
               assert (found);
-              foreach (var v in e.get_parameter_values (e.PARAM_TYPE))
+              foreach (var v in e.get_parameter_values (AbstractFieldDetails.PARAM_TYPE))
                 {
                   this._email_types.add (v);
                 }

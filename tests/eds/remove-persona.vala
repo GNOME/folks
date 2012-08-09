@@ -66,7 +66,7 @@ public class RemovePersonaTests : Folks.TestCase
       this._persona_removed = false;
       this._individual_removed = false;
 
-      this._test_remove_persona_async ();
+      this._test_remove_persona_async.begin ();
 
       Timeout.add_seconds (5, () =>
         {
@@ -122,7 +122,7 @@ public class RemovePersonaTests : Folks.TestCase
           this._added_persona == false)
         {
           this._added_persona = true;
-          this._add_persona ();
+          this._add_persona.begin ();
         }
     }
 
@@ -175,7 +175,7 @@ public class RemovePersonaTests : Folks.TestCase
               if (this._pstore.personas.has_key (this._persona_id) == true)
                 {
                   this._pstore.personas_changed.connect (this._personas_cb);
-                  this._aggregator.remove_individual (this._individual);
+                  this._aggregator.remove_individual.begin (this._individual);
                 }
             }
         }

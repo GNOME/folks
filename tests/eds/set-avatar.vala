@@ -73,7 +73,7 @@ public class SetAvatarTests : Folks.TestCase
       c1.set ("full_name", (owned) v);
       this._eds_backend.add_contact (c1);
 
-      this._test_set_avatar_async ();
+      this._test_set_avatar_async.begin ();
 
       var timeout_id = Timeout.add_seconds (5, () => {
             this._main_loop.quit ();
@@ -182,7 +182,7 @@ public class SetAvatarTests : Folks.TestCase
       c1.set ("full_name", (owned) v);
       this._eds_backend.add_contact (c1);
 
-      this._test_set_individual_avatar_async ();
+      this._test_set_individual_avatar_async.begin ();
 
       var timeout_id = Timeout.add_seconds (5, () =>
         {

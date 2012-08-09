@@ -69,7 +69,7 @@ public class AddContactsStressTestTests : Folks.TestCase
 
       this._start_time = new DateTime.now_utc ();
 
-      this._test_add_persona_async ();
+      this._test_add_persona_async.begin ();
 
       this._main_loop.run ();
 
@@ -77,7 +77,7 @@ public class AddContactsStressTestTests : Folks.TestCase
       var difference = now.difference (this._start_time);
 
       var diff = difference / TimeSpan.SECOND;
-      GLib.stdout.printf ("(Elapsed time: %" + diff.FORMAT + " secs) ", diff);
+      GLib.stdout.printf ("(Elapsed time: %" + int64.FORMAT + " secs) ", diff);
 
       int found = 0;
       foreach (var k in this._contacts_found.get_values ())
@@ -183,7 +183,7 @@ public class AddContactsStressTestTests : Folks.TestCase
               this._added_contacts == false)
             {
               this._added_contacts = true;
-              this._add_contacts ();
+              this._add_contacts.begin ();
             }
         }
     }

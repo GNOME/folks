@@ -131,7 +131,7 @@ public class LinkPersonasTests : Folks.TestCase
           this._linking_props.set ("prop2", this._auto_linkable_email);
         }
 
-      this._test_linking_personas_async ();
+      this._test_linking_personas_async.begin ();
 
       var timer_id = Timeout.add_seconds (8, () =>
         {
@@ -179,7 +179,7 @@ public class LinkPersonasTests : Folks.TestCase
   private void _notify_pstore_cb (Object _pstore, ParamSpec ps)
     {
       var pstore = (PersonaStore) _pstore;
-      this._add_personas (pstore, pstore);
+      this._add_personas.begin (pstore, pstore);
     }
 
   private PersonaStore? _get_store (BackendStore store, string store_id)
@@ -323,9 +323,9 @@ public class LinkPersonasTests : Folks.TestCase
             }
 
           if (this._linking_method == LinkingMethod.EMAIL_AS_IM_ADDRESS)
-            this._check_auto_linked_personas (i);
+            this._check_auto_linked_personas.begin (i);
           else
-            this._check_personas (i);
+            this._check_personas.begin (i);
         }
     }
 

@@ -69,7 +69,7 @@ public class SetGenderTests : Folks.TestCase
       c1.set ("full_name", (owned) v);
       this._eds_backend.add_contact (c1);
 
-      this._test_set_gender_async ();
+      this._test_set_gender_async.begin ();
 
       Timeout.add_seconds (5, () =>
         {

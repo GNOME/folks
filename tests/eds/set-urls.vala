@@ -80,7 +80,7 @@ public class SetUrlsTests : Folks.TestCase
       c1.set ("full_name", (owned) v);
       this._eds_backend.add_contact (c1);
 
-      this._test_set_urls_async ();
+      this._test_set_urls_async.begin ();
 
       Timeout.add_seconds (5, () => {
             this._main_loop.quit ();
@@ -141,10 +141,12 @@ public class SetUrlsTests : Folks.TestCase
                   var p2 = new UrlFieldDetails (this._url_extra_2);
                   urls.add (p2);
                   var p3 = new UrlFieldDetails (this._url_home);
-                  p3.set_parameter(p3.PARAM_TYPE, p3.PARAM_TYPE_HOME_PAGE);
+                  p3.set_parameter(AbstractFieldDetails.PARAM_TYPE,
+                      UrlFieldDetails.PARAM_TYPE_HOME_PAGE);
                   urls.add (p3);
                   var p4 = new UrlFieldDetails (this._url_blog);
-                  p4.set_parameter(p3.PARAM_TYPE, p3.PARAM_TYPE_BLOG);
+                  p4.set_parameter(AbstractFieldDetails.PARAM_TYPE,
+                      UrlFieldDetails.PARAM_TYPE_BLOG);
                   urls.add (p4);
 
                   ((UrlDetails) p).urls = urls;

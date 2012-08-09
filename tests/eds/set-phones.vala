@@ -68,7 +68,7 @@ public class SetPhonesTests : Folks.TestCase
       c1.set ("full_name", (owned) v);
       this._eds_backend.add_contact (c1);
 
-      this._test_set_phones_async ();
+      this._test_set_phones_async.begin ();
 
       Timeout.add_seconds (5, () => {
             this._main_loop.quit ();
@@ -123,8 +123,8 @@ public class SetPhonesTests : Folks.TestCase
                       (GLib.HashFunc) PhoneFieldDetails.hash,
                       (GLib.EqualFunc) PhoneFieldDetails.equal);
                   var phone_1 = new PhoneFieldDetails ("1234");
-                  phone_1.set_parameter (phone_1.PARAM_TYPE,
-                      phone_1.PARAM_TYPE_HOME);
+                  phone_1.set_parameter (AbstractFieldDetails.PARAM_TYPE,
+                      AbstractFieldDetails.PARAM_TYPE_HOME);
                   phones.add (phone_1);
                   ((PhoneDetails) p).phone_numbers = phones;
                 }
@@ -145,7 +145,8 @@ public class SetPhonesTests : Folks.TestCase
       foreach (var phone_fd in i.phone_numbers)
         {
           var phone_1 = new PhoneFieldDetails ("1234");
-          phone_1.set_parameter (phone_1.PARAM_TYPE, phone_1.PARAM_TYPE_HOME);
+          phone_1.set_parameter (AbstractFieldDetails.PARAM_TYPE,
+              AbstractFieldDetails.PARAM_TYPE_HOME);
           if (phone_fd.equal (phone_1))
             {
               this._found_after_update = true;

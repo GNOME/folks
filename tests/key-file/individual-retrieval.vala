@@ -92,7 +92,7 @@ public class IndividualRetrievalTests : Folks.TestCase
               assert (i == null);
             }
         });
-      aggregator.prepare ();
+      aggregator.prepare.begin ();
 
       /* Kill the main loop after a few seconds. If there are still individuals
        * in the set of expected individuals, the aggregator has either failed
@@ -143,7 +143,7 @@ public class IndividualRetrievalTests : Folks.TestCase
               assert (i == null);
             }
         });
-      aggregator.prepare ();
+      aggregator.prepare.begin ();
 
       /* Kill the main loop after a few seconds. If there are still individuals
        * in the set of expected individuals, the aggregator has either failed

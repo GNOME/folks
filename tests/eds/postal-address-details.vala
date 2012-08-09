@@ -77,8 +77,8 @@ public class PostalAddressDetailsTests : Folks.TestCase
            this._country,
            null, "eds_id");
       this._postal_address = new PostalAddressFieldDetails (pa);
-      this._postal_address.add_parameter (this._postal_address.PARAM_TYPE,
-          this._postal_address.PARAM_TYPE_HOME);
+      this._postal_address.add_parameter (AbstractFieldDetails.PARAM_TYPE,
+          AbstractFieldDetails.PARAM_TYPE_HOME);
 
       v = Value (typeof (string));
       v.set_string (this._fullname);
@@ -93,8 +93,8 @@ public class PostalAddressDetailsTests : Folks.TestCase
            this._country,
            null, "eds_id");
       var pa_fd_copy = new PostalAddressFieldDetails (pa_copy);
-      pa_fd_copy.add_parameter (pa_fd_copy.PARAM_TYPE,
-          this._postal_address.PARAM_TYPE_HOME);
+      pa_fd_copy.add_parameter (AbstractFieldDetails.PARAM_TYPE,
+          AbstractFieldDetails.PARAM_TYPE_HOME);
       v = Value (typeof (PostalAddressFieldDetails));
       v.set_object (pa_fd_copy);
       /* corresponds to address of type "home" */
@@ -104,7 +104,7 @@ public class PostalAddressDetailsTests : Folks.TestCase
 
       this._found_postal_address = false;
 
-      this._test_postal_address_details_interface_async ();
+      this._test_postal_address_details_interface_async.begin ();
 
       Timeout.add_seconds (5, () =>
         {

@@ -82,7 +82,7 @@ public class PersonaStoreCapabilitiesTests : Folks.TestCase
 
           });
 
-      backend_store.load_backends ();
+      backend_store.load_backends.begin ();
 
       Timeout.add_seconds (this._test_timeout, () =>
         {

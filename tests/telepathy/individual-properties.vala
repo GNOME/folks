@@ -182,7 +182,7 @@ public class IndividualPropertiesTests : Folks.TestCase
               assert (i == null);
             }
         });
-      aggregator.prepare ();
+      aggregator.prepare.begin ();
 
       /* Kill the main loop after a few seconds. If there are still individuals
        * in the set of expected individuals, the aggregator has either failed
@@ -259,7 +259,7 @@ public class IndividualPropertiesTests : Folks.TestCase
               assert (i == null);
             }
         });
-      aggregator.prepare ();
+      aggregator.prepare.begin ();
 
       /* Kill the main loop after a few seconds. If the alias hasn't been
        * notified, something along the way failed or been too slow (which we can
@@ -339,7 +339,7 @@ public class IndividualPropertiesTests : Folks.TestCase
               assert (i == null);
             }
         });
-      aggregator.prepare ();
+      aggregator.prepare.begin ();
 
       /* Kill the main loop after a few seconds. If the alias hasn't been
        * notified, something along the way failed or been too slow (which we can
@@ -371,10 +371,10 @@ public class IndividualPropertiesTests : Folks.TestCase
       var aggregator = new IndividualAggregator ();
       aggregator.individuals_changed_detailed.connect ((changes) =>
         {
-          this._change_contact_info_aggregator_individuals_added (changes);
+          this._change_contact_info_aggregator_individuals_added.begin (changes);
         });
 
-      aggregator.prepare ();
+      aggregator.prepare.begin ();
 
       /* Kill the main loop after a few seconds. If the alias hasn't been
        * notified, something along the way failed or been too slow (which we can

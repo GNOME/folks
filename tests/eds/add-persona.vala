@@ -92,8 +92,8 @@ public class AddPersonaTests : Folks.TestCase
           this._extension, this._street, this._locality, this._region,
           this._postal_code, this._country, null, null);
       this._address = new PostalAddressFieldDetails (pa);
-      this._address.add_parameter (this._address.PARAM_TYPE,
-          this._address.PARAM_TYPE_HOME);
+      this._address.add_parameter (AbstractFieldDetails.PARAM_TYPE,
+          AbstractFieldDetails.PARAM_TYPE_HOME);
 
       this._properties_found = new HashTable<string, bool>
           (str_hash, str_equal);
@@ -111,7 +111,7 @@ public class AddPersonaTests : Folks.TestCase
       this._properties_found.insert ("role-1", false);
       this._properties_found.insert ("is-favourite", false);
 
-      this._test_add_persona_async ();
+      this._test_add_persona_async.begin ();
 
       Timeout.add_seconds (5, () =>
         {
@@ -172,7 +172,8 @@ public class AddPersonaTests : Folks.TestCase
           (GLib.HashFunc) EmailFieldDetails.hash,
           (GLib.EqualFunc) EmailFieldDetails.equal);
       var email_1 = new EmailFieldDetails (this._email_1);
-      email_1.set_parameter (email_1.PARAM_TYPE, email_1.PARAM_TYPE_HOME);
+      email_1.set_parameter (AbstractFieldDetails.PARAM_TYPE,
+          AbstractFieldDetails.PARAM_TYPE_HOME);
       emails.add (email_1);
       v2.set_object (emails);
       details.insert (
@@ -220,7 +221,8 @@ public class AddPersonaTests : Folks.TestCase
           this._extension, this._street, this._locality, this._region,
           this._postal_code, this._country, null, null);
       var pa_fd_a = new PostalAddressFieldDetails (pa_a);
-      pa_fd_a.add_parameter (pa_fd_a.PARAM_TYPE, pa_fd_a.PARAM_TYPE_HOME);
+      pa_fd_a.add_parameter (AbstractFieldDetails.PARAM_TYPE,
+          AbstractFieldDetails.PARAM_TYPE_HOME);
       pa_fds.add (pa_fd_a);
       v6.set_object (pa_fds);
       details.insert (
@@ -347,7 +349,7 @@ public class AddPersonaTests : Folks.TestCase
           i.notify["roles"].connect (this._notify_cb);
           i.notify["is-favourite"].connect (this._notify_cb);
 
-          this._check_properties (i);
+          this._check_properties.begin (i);
         }
 
       return retval;
@@ -356,7 +358,7 @@ public class AddPersonaTests : Folks.TestCase
   private void _notify_cb (Object individual_obj, ParamSpec ps)
     {
       Folks.Individual i = (Folks.Individual) individual_obj;
-      this._check_properties (i);
+      this._check_properties.begin (i);
     }
 
   private void _notify_pstore_cb (Object _pstore, ParamSpec ps)
@@ -372,7 +374,7 @@ public class AddPersonaTests : Folks.TestCase
               this._added_persona == false)
             {
               this._added_persona = true;
-              this._add_persona ();
+              this._add_persona.begin ();
             }
         }
     }

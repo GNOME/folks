@@ -94,7 +94,7 @@ public class PhoneDetailsTests : Folks.TestCase
       this._c2.set ("home_phone", (owned) v);
       this._eds_backend.add_contact (this._c2);
 
-      this._test_phone_numbers_async ();
+      this._test_phone_numbers_async.begin ();
 
       Timeout.add_seconds (5, () =>
         {
@@ -168,7 +168,7 @@ public class PhoneDetailsTests : Folks.TestCase
             {
               this._phones_count++;
               foreach (var t in phone_fd.get_parameter_values (
-                  phone_fd.PARAM_TYPE))
+                  AbstractFieldDetails.PARAM_TYPE))
                 {
                   string? v = null;
 
@@ -176,7 +176,7 @@ public class PhoneDetailsTests : Folks.TestCase
                     {
                       v = "car_phone";
                     }
-                  else if (t == phone_fd.PARAM_TYPE_HOME)
+                  else if (t == AbstractFieldDetails.PARAM_TYPE_HOME)
                     {
                       v = "home_phone";
                     }

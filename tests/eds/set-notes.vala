@@ -70,7 +70,7 @@ public class SetNotesTests : Folks.TestCase
       c1.set ("full_name", (owned) v);
       this._eds_backend.add_contact (c1);
 
-      this._test_set_full_name_async ();
+      this._test_set_full_name_async.begin ();
 
       Timeout.add_seconds (5, () => {
             this._main_loop.quit ();

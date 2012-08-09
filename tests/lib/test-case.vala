@@ -71,7 +71,7 @@ public abstract class Folks.TestCase : Object
 
       public void set_up (void* fixture)
         {
-          GLib.set_printerr_handler (this._printerr_func_stack_trace);
+          GLib.set_printerr_handler (Adaptor._printerr_func_stack_trace);
           Log.set_default_handler (this._log_func_stack_trace);
 
           this._test_case.set_up ();

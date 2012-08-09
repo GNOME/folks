@@ -98,7 +98,7 @@ public class NameDetailsTests : Folks.TestCase
       this._c2.set ("contact_name_given", (owned) v);
       this._eds_backend.add_contact (this._c2);
 
-      this._test_names_async ();
+      this._test_names_async.begin ();
 
       Timeout.add_seconds (5, () =>
           {

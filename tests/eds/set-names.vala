@@ -76,7 +76,7 @@ public class SetNamesTests : Folks.TestCase
       c1.set ("nickname", (owned) v);
       this._eds_backend.add_contact (c1);
 
-      this._test_set_names_async ();
+      this._test_set_names_async.begin ();
 
       Timeout.add_seconds (5, () => {
             this._main_loop.quit ();

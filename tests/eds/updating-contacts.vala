@@ -68,7 +68,7 @@ public class UpdatingContactsTests : Folks.TestCase
       c1.set ("full_name", (owned) v);
       this._eds_backend.add_contact (c1);
 
-      this._test_updates_async ();
+      this._test_updates_async.begin ();
 
       Timeout.add_seconds (5, () => {
             this._main_loop.quit ();
@@ -116,7 +116,7 @@ public class UpdatingContactsTests : Folks.TestCase
             {
               i.notify["full-name"].connect (this._notify_full_name_cb);
               this._found_before_update = true;
-              this._update_contact ();
+              this._update_contact.begin ();
             }
         }
 

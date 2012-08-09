@@ -78,7 +78,7 @@ public class IndividualRetrievalTests : Folks.TestCase
       c2.set(Edsf.Persona.email_fields[0], (owned) v);
       this._eds_backend.add_contact (c2);
 
-      this._test_singleton_individuals_async ();
+      this._test_singleton_individuals_async.begin ();
 
       Timeout.add_seconds (5, () =>
         {
