@@ -9,7 +9,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug."
 "cgi?product=folks&keywords=I18N+L10N&component=general\n"
 "POT-Creation-Date: 2012-07-24 19:22+0000\n"
-"PO-Revision-Date: 2012-08-10 15:04+0530\n"
+"PO-Revision-Date: 2012-08-10 16:55+0530\n"
 "Last-Translator: \n"
 "Language-Team: gu_IN <kde-i18n-doc@kde.org>\n"
 "Language: gu\n"
@@ -101,7 +101,7 @@ msgstr "સરનામુ પુસ્તિકા ‘%s’ માટે જો
 #: ../backends/eds/lib/edsf-persona-store.vala:1303
 #, c-format
 msgid "Changing the ‘%s’ property failed due to reaching the timeout."
-msgstr ""
+msgstr "સમયસમાપ્તિને કારણે ‘%s’ ગુણધર્મને બદલવાનું નિષ્ફળ ગયુ."
 
 #: ../backends/eds/lib/edsf-persona-store.vala:1341
 #: ../folks/avatar-details.vala:59
@@ -196,7 +196,7 @@ msgstr "જાતિ આ સંપર્ક માટે લખી શકાય 
 #: ../backends/eds/lib/edsf-persona-store.vala:2061
 #: ../folks/anti-linkable.vala:81
 msgid "Anti-links are not writeable on this contact."
-msgstr ""
+msgstr "વિરોધી-કડી આ સંપર્ક પર લખી શકાય તેમ નથી."
 
 #. Translators: the first parameter is a non-human-readable
 #. * property name and the second parameter is an error
@@ -293,10 +293,14 @@ msgstr "સંપર્કો જોતી વખતે ભૂલ."
 msgid ""
 "Failed to determine whether we can set aliases on Telepathy account '%s': %s"
 msgstr ""
+"નક્કી કરવામાં નિષ્ફળતા કે શું આપણે ટૅલિપથી ખાતા '%s' પર ઉપનામોને સુયોજિત કરી "
+"શકીએ: %s"
 
 #: ../backends/telepathy/lib/tpf-persona-store.vala:1214
 msgid "Telepathy contacts representing the local user may not be removed."
 msgstr ""
+"ટૅલિપથી સંપર્કો સ્થાનિક વપરાશકર્તાને રજૂ કરી રહ્યા હોય તેને દૂર કરી શકાતુ "
+"નથી."
 
 #: ../backends/telepathy/lib/tpf-persona-store.vala:1225
 #, c-format
@@ -311,6 +315,8 @@ msgid ""
 "Persona store (%s, %s) requires the following details:\n"
 "    contact (provided: '%s')\n"
 msgstr ""
+"પર્સોના સ્ટોર (%s, %s) ને નીચેની વિગતોની જરૂર છે:\n"
+"    સંપર્ક (પૂરુ પાડેલ: '%s')\n"
 
 #: ../backends/telepathy/lib/tpf-persona-store.vala:1270
 msgid "Cannot create a new Telepathy contact while offline."
@@ -327,7 +333,7 @@ msgstr "વિગતો માટે પર્સોના ઉમેરવામ
 msgid ""
 "Failed to change favorite without a connection to the telepathy-logger "
 "service."
-msgstr ""
+msgstr "telepathy-logger સંવાનાં જોડાણ વગર પસંદીદાને બદલવામાં નિષ્ફળતા."
 
 #: ../backends/telepathy/lib/tpf-persona-store.vala:1314
 msgid ""
@@ -442,6 +448,8 @@ msgid ""
 "Persona store ‘%s:%s’ is configured as primary, but could not be found or "
 "failed to load."
 msgstr ""
+"પર્સોના સ્ટોર ‘%s:%s’ એ પ્રાથમિક રીતે રૂપરેખાંકિત થયેલ છે, પરંતુ શોધી શક્યા "
+"નહિં અથવા લાવવામાં નિષ્ફળતા."
 
 #: ../folks/individual-aggregator.vala:1852
 #: ../folks/individual-aggregator.vala:2186
@@ -450,19 +458,21 @@ msgid ""
 "Check the relevant service is running, or change the default store in that "
 "service or using the “%s” GSettings key."
 msgstr ""
+"અનૂકુળ સેવા ચાલી રહી છે તેને ચકાસો, અથવા તે સેવામાં મૂળભૂત સ્ટોરને બદલો અથવા "
+"“%s” GSettings કીને વાપરી રહ્યા છે."
 
 #: ../folks/individual-aggregator.vala:1884
 msgid "Anti-links can't be removed between personas being linked."
-msgstr ""
+msgstr "વિરોધ-કડી એ કડી થયેલ પર્સોના વચ્ચે દૂર કરી શકાતી નથી."
 
 #: ../folks/individual-aggregator.vala:2184
 msgid "Can’t add personas with no primary store."
-msgstr ""
+msgstr "પ્રાથમિક સ્ટોર સાથે પર્સોનાને ઉમેરી શકાતુ નથી."
 
 #: ../folks/individual-aggregator.vala:2195
 #, c-format
 msgid "Can't write to requested property (“%s”) of the writeable store."
-msgstr ""
+msgstr "લખી શકાય તેવા સ્ટોરનાં સૂચિત ગુણધર્મ (“%s”) ને લખી શકાતુ નથી."
 
 #: ../folks/org.freedesktop.folks.gschema.xml.in.h:1
 msgid "Primary store ID"
@@ -474,6 +484,10 @@ msgid ""
 "linking data in). The type ID of the store may optionally be prepended, "
 "separated by a colon. For example: “eds:system-address-book” or “key-file”."
 msgstr ""
+"પર્સોના સ્ટોરનું ID કે જે folks ને પ્રાથમિક તરીકે વાપરવુ જોઇએ (એટલે કે. "
+"તેમાં કડીવાળી માહિતીને સંગ્રહવા માટે). સ્ટોરનું પ્રકાર ID વૈકલ્પિક રીતે "
+"ઉમેરાઇ શકે છે, વિરામચિહ્ન દ્દારા અલગ થયેલ છે. ઉદાહરણ તરીકે: "
+"“eds:system-address-book” અથવા “key-file”."
 
 #: ../folks/postal-address-details.vala:230
 #, c-format
@@ -502,7 +516,7 @@ msgstr "દૂર"
 
 #: ../folks/presence-details.vala:171
 msgid "Extended away"
-msgstr ""
+msgstr "વિસ્તૃત દૂર"
 
 #: ../folks/presence-details.vala:173
 msgid "Busy"
@@ -549,6 +563,8 @@ msgid ""
 "The Pidgin buddy list file ‘%s’ could not be loaded: the root element could "
 "not be found or was not recognized."
 msgstr ""
+"Pidgin મિત્ર યાદી ફાઇલ ‘%s’ ને લાવી શક્યા નહિં: રુટ ઘટકને શોધી શક્યા નહિં "
+"અથવા ઓળખાયુ ન હતુ."
 
 #. Translators: the first parameter is the number of buddies which
 #. * were successfully imported, and the second is a filename.
@@ -573,6 +589,8 @@ msgid ""
 "Ignoring buddy with no alias and only one IM address:\n"
 "%s"
 msgstr ""
+"ઉપનામ સાથે મિત્રને અવગણી રહ્યા છે અને ફક્ત એક IM સરનામું છે:\n"
+"%s"
 
 #: ../tools/import-pidgin.vala:244
 #, c-format
@@ -581,6 +599,9 @@ msgid ""
 "%s\n"
 "Error: %s\n"
 msgstr ""
+"ઉપનામ ‘%s’ અને IM સરનામાં સાથે મિત્ર માટે નવા સંપર્કને બનાવામાં નિષ્ફળતા:\n"
+"%s\n"
+"ભૂલ: %s\n"
 
 #. Translators: the first parameter is a persona identifier, the
 #. * second is an alias for the persona, and the third is a set of IM
@@ -590,7 +611,7 @@ msgstr ""
 msgid ""
 "Created contact ‘%s’ for buddy with alias ‘%s’ and IM addresses:\n"
 "%s"
-msgstr ""
+msgstr "ઉપનામ ‘%s’ અને IM સરનામાં સાથે મિત્ર માટે સંપર્ક ‘%s’ ને બનાવ્યુ:%s"
 
 #: ../tools/import.vala:44
 msgid "Source backend name (default: 'pidgin')"
@@ -598,11 +619,11 @@ msgstr "સ્ત્રોત બૅકએન્ડ નામ (મૂળભૂ�
 
 #: ../tools/import.vala:47
 msgid "Source filename (default: specific to source backend)"
-msgstr ""
+msgstr "સ્ત્રોત ફાઇલનામ (મૂળભૂત: સ્ત્રોત બેકઍન્ડને લગતુ)"
 
 #: ../tools/import.vala:57
 msgid "— import meta-contact information to libfolks"
-msgstr ""
+msgstr "— libfolks માં meta-contact જાણકારીને આયાત કરો"
 
 #. Translators: the parameter is an error message.
 #: ../tools/import.vala:67
@@ -627,18 +648,18 @@ msgstr "‘%s’ બેકઍન્ડને લાવી શક્યા નહ
 #: ../tools/import.vala:132
 #, c-format
 msgid "Couldn't prepare the ‘%s’ backend: %s"
-msgstr ""
+msgstr "‘%s’ બેકઍન્ડને તૈયાર કરી શક્યા નહિં: %s"
 
 #. Translators: the parameter is a backend identifier.
 #: ../tools/import.vala:145
 #, c-format
 msgid "Couldn't load the ‘%s’ backend's persona store."
-msgstr ""
+msgstr "‘%s’ બેકઍન્ડનાં પર્સોની સ્ટોરને લાવી શક્યા નહિં."
 
 #: ../tools/import.vala:166
 #, c-format
 msgid "Couldn't prepare the ‘%s’ backend's persona store: %s"
-msgstr ""
+msgstr "‘%s’ બેકઍન્ડનાં પર્સોના સ્ટોરને તૈયાર કરી શક્યા નહિં: %s"
 
 #. Translators: the parameter is an error message.
 #: ../tools/import.vala:184
@@ -653,5 +674,6 @@ msgid ""
 "Unrecognized source backend name ‘%s’. ‘%s’ is currently the only supported "
 "source backend."
 msgstr ""
+"બિનઓળખાયેલ સ્ત્રોત બેકઍન્ડ નામ ‘%s’. ‘%s’ એ હાલમાં ફક્ત આધારભૂત સ્ત્રોત છે."
 
 
