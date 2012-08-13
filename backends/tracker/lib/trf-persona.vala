@@ -142,7 +142,7 @@ public class Trf.Persona : Folks.Persona,
    */
   public override string[] linkable_properties
     {
-      get { return this._linkable_properties; }
+      get { return Trf.Persona._linkable_properties; }
     }
 
   /**
@@ -152,7 +152,7 @@ public class Trf.Persona : Folks.Persona,
    */
   public override string[] writeable_properties
     {
-      get { return this._writeable_properties; }
+      get { return Trf.Persona._writeable_properties; }
     }
 
   private LoadableIcon? _avatar = null;
@@ -517,8 +517,8 @@ public class Trf.Persona : Folks.Persona,
   public Persona (PersonaStore store, string tracker_id,
                   Sparql.Cursor? cursor = null)
     {
-      string uid = this.build_uid (BACKEND_NAME, store.id, tracker_id);
-      string iid = this.build_iid (store.id, tracker_id);
+      string uid = Folks.Persona.build_uid (BACKEND_NAME, store.id, tracker_id);
+      string iid = Trf.Persona.build_iid (store.id, tracker_id);
       bool is_user = false;
       string fullname = "";
 
@@ -1410,7 +1410,7 @@ public class Trf.Persona : Folks.Persona,
 
               if (type != null)
                 {
-                  url_fd.set_parameter (url_fd.PARAM_TYPE, type);
+                  url_fd.set_parameter (AbstractFieldDetails.PARAM_TYPE, type);
                 }
 
               url_fds.add (url_fd);
@@ -1443,7 +1443,7 @@ public class Trf.Persona : Folks.Persona,
 
           if (type != null)
             {
-              url_fd.set_parameter (url_fd.PARAM_TYPE, type);
+              url_fd.set_parameter (AbstractFieldDetails.PARAM_TYPE, type);
             }
 
           this._urls.add (url_fd);

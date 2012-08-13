@@ -382,7 +382,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
    */
   public override string[] always_writeable_properties
     {
-      get { return this._always_writeable_properties; }
+      get { return Trf.PersonaStore._always_writeable_properties; }
     }
 
   /*
@@ -422,7 +422,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
     {
       this._personas = new HashMap<string, Persona> ();
       this._personas_ro = this._personas.read_only_view;
-      debug ("Initial query : \n%s\n", this._INITIAL_QUERY);
+      debug ("Initial query : \n%s\n", PersonaStore._INITIAL_QUERY);
       this.trust_level = PersonaStoreTrust.FULL;
     }
 
@@ -704,7 +704,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
               builder.predicate ("a");
               builder.object (Trf.OntologyDefs.NAO_PROPERTY);
               builder.predicate (Trf.OntologyDefs.NAO_PROPERTY_NAME);
-              builder.object_string (this._LOCAL_ID_PROPERTY_NAME);
+              builder.object_string (Trf.PersonaStore._LOCAL_ID_PROPERTY_NAME);
               builder.predicate (Trf.OntologyDefs.NAO_PROPERTY_VALUE);
               builder.object_string (ids);
 
@@ -725,7 +725,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
               builder.predicate ("a");
               builder.object (Trf.OntologyDefs.NAO_PROPERTY);
               builder.predicate (Trf.OntologyDefs.NAO_PROPERTY_NAME);
-              builder.object_string (this._WSD_PROPERTY_NAME);
+              builder.object_string (Trf.PersonaStore._WSD_PROPERTY_NAME);
               builder.predicate (Trf.OntologyDefs.NAO_PROPERTY_VALUE);
               builder.object_string (ws_addrs);
 
@@ -751,7 +751,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
       if (contact_urn != null)
         {
           string filter = " FILTER(?_contact = <%s>) ".printf (contact_urn);
-          string query = this._INITIAL_QUERY.printf (filter);
+          string query = PersonaStore._INITIAL_QUERY.printf (filter);
           var ret_personas = yield this._do_add_contacts (query);
 
           /* Return the first persona we find in the set */
@@ -1088,7 +1088,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
               Internal.profiling_point ("build predicates table in " +
                   "Trf.PersonaStore (ID: %s)", this.id);
 
-              yield this._do_add_contacts (this._INITIAL_QUERY.printf (""));
+              yield this._do_add_contacts (PersonaStore._INITIAL_QUERY.printf (""));
 
               Internal.profiling_point ("added contacts in " +
                   "Trf.PersonaStore (ID: %s)", this.id);
@@ -1100,13 +1100,13 @@ public class Trf.PersonaStore : Folks.PersonaStore
                */
               this._resources_object = yield GLib.Bus.get_proxy<Resources> (
                   BusType.SESSION,
-                  this._OBJECT_NAME,
-                  this._OBJECT_PATH,
+                  PersonaStore._OBJECT_NAME,
+                  PersonaStore._OBJECT_PATH,
                   DBusProxyFlags.DO_NOT_CONNECT_SIGNALS |
                     DBusProxyFlags.DO_NOT_LOAD_PROPERTIES);
               this._resources_object.g_connection.signal_subscribe
-                  (this._OBJECT_NAME, this._OBJECT_IFACE,
-                  "GraphUpdated", this._OBJECT_PATH,
+                  (PersonaStore._OBJECT_NAME, PersonaStore._OBJECT_IFACE,
+                  "GraphUpdated", PersonaStore._OBJECT_PATH,
                   Trf.OntologyDefs.PERSON_CLASS, GLib.DBusSignalFlags.NONE,
                   this._graph_updated_cb);
 
@@ -1153,35 +1153,35 @@ public class Trf.PersonaStore : Folks.PersonaStore
 
   public int get_favorite_id ()
     {
-      return this._prefix_tracker_id.get
+      return PersonaStore._prefix_tracker_id.get
           (Trf.OntologyDefs.NAO_FAVORITE);
     }
 
   public int get_gender_male_id ()
     {
-      return this._prefix_tracker_id.get
+      return PersonaStore._prefix_tracker_id.get
           (Trf.OntologyDefs.NCO_MALE);
     }
 
   public int get_gender_female_id ()
     {
-      return this._prefix_tracker_id.get
+      return PersonaStore._prefix_tracker_id.get
           (Trf.OntologyDefs.NCO_FEMALE);
     }
 
   private async void _build_predicates_table ()
     {
-      if (this._prefix_tracker_id != null)
+      if (PersonaStore._prefix_tracker_id != null)
         {
           return;
         }
 
       this._build_urn_prefix_table ();
 
-      this._prefix_tracker_id = new Gee.TreeMap<string, int> ();
+      PersonaStore._prefix_tracker_id = new Gee.TreeMap<string, int> ();
 
       string query = "SELECT  ";
-      foreach (var urn_t in this._urn_prefix.keys)
+      foreach (var urn_t in PersonaStore._urn_prefix.keys)
         {
           query += " tracker:id(" + urn_t + ")";
         }
@@ -1194,11 +1194,11 @@ public class Trf.PersonaStore : Folks.PersonaStore
           while (cursor.next ())
             {
               int i=0;
-              foreach (var urn in this._urn_prefix.keys)
+              foreach (var urn in PersonaStore._urn_prefix.keys)
                 {
                   var tracker_id = (int) cursor.get_integer (i);
-                  var prefix = this._urn_prefix.get (urn).dup ();
-                  this._prefix_tracker_id.set (prefix, tracker_id);
+                  var prefix = PersonaStore._urn_prefix.get (urn).dup ();
+                  PersonaStore._prefix_tracker_id.set (prefix, tracker_id);
                   i++;
                 }
             }
@@ -1215,69 +1215,69 @@ public class Trf.PersonaStore : Folks.PersonaStore
 
   private void _build_urn_prefix_table ()
     {
-      if (this._urn_prefix != null)
+      if (PersonaStore._urn_prefix != null)
         {
           return;
         }
-      this._urn_prefix = new Gee.TreeMap<string, string> ();
-      this._urn_prefix.set (Trf.OntologyDefs.NCO_URL_PREFIX + "nco#fullname>",
+      PersonaStore._urn_prefix = new Gee.TreeMap<string, string> ();
+      PersonaStore._urn_prefix.set (Trf.OntologyDefs.NCO_URL_PREFIX + "nco#fullname>",
           Trf.OntologyDefs.NCO_FULLNAME);
-      this._urn_prefix.set (Trf.OntologyDefs.NCO_URL_PREFIX + "nco#nameFamily>",
+      PersonaStore._urn_prefix.set (Trf.OntologyDefs.NCO_URL_PREFIX + "nco#nameFamily>",
           Trf.OntologyDefs.NCO_FAMILY);
-      this._urn_prefix.set (Trf.OntologyDefs.NCO_URL_PREFIX + "nco#nameGiven>",
+      PersonaStore._urn_prefix.set (Trf.OntologyDefs.NCO_URL_PREFIX + "nco#nameGiven>",
           Trf.OntologyDefs.NCO_GIVEN);
-      this._urn_prefix.set (
+      PersonaStore._urn_prefix.set (
           Trf.OntologyDefs.NCO_URL_PREFIX + "nco#nameAdditional>",
           Trf.OntologyDefs.NCO_ADDITIONAL);
-      this._urn_prefix.set (
+      PersonaStore._urn_prefix.set (
           Trf.OntologyDefs.NCO_URL_PREFIX + "nco#nameHonorificSuffix>",
           Trf.OntologyDefs.NCO_SUFFIX);
-      this._urn_prefix.set (
+      PersonaStore._urn_prefix.set (
          Trf.OntologyDefs.NCO_URL_PREFIX + "nco#nameHonorificPrefix>",
          Trf.OntologyDefs.NCO_PREFIX);
-      this._urn_prefix.set (Trf.OntologyDefs.NCO_URL_PREFIX + "nco#nickname>",
+      PersonaStore._urn_prefix.set (Trf.OntologyDefs.NCO_URL_PREFIX + "nco#nickname>",
          Trf.OntologyDefs.NCO_NICKNAME);
-      this._urn_prefix.set (
+      PersonaStore._urn_prefix.set (
          Trf.OntologyDefs.RDF_URL_PREFIX + "22-rdf-syntax-ns#type>",
          Trf.OntologyDefs.RDF_TYPE);
-      this._urn_prefix.set (
+      PersonaStore._urn_prefix.set (
          Trf.OntologyDefs.NCO_URL_PREFIX + "nco#PersonContact>",
          Trf.OntologyDefs.NCO_PERSON);
-      this._urn_prefix.set (Trf.OntologyDefs.NCO_URL_PREFIX + "nco#websiteUrl>",
+      PersonaStore._urn_prefix.set (Trf.OntologyDefs.NCO_URL_PREFIX + "nco#websiteUrl>",
          Trf.OntologyDefs.NCO_WEBSITE);
-      this._urn_prefix.set (Trf.OntologyDefs.NCO_URL_PREFIX + "nco#blogUrl>",
+      PersonaStore._urn_prefix.set (Trf.OntologyDefs.NCO_URL_PREFIX + "nco#blogUrl>",
          Trf.OntologyDefs.NCO_BLOG);
-      this._urn_prefix.set (Trf.OntologyDefs.NCO_URL_PREFIX + "nco#url>",
+      PersonaStore._urn_prefix.set (Trf.OntologyDefs.NCO_URL_PREFIX + "nco#url>",
          Trf.OntologyDefs.NCO_URL);
-      this._urn_prefix.set (
+      PersonaStore._urn_prefix.set (
          Trf.OntologyDefs.NAO_URL_PREFIX + "nao#predefined-tag-favorite>",
          Trf.OntologyDefs.NAO_FAVORITE);
-      this._urn_prefix.set (Trf.OntologyDefs.NAO_URL_PREFIX + "nao#hasTag>",
+      PersonaStore._urn_prefix.set (Trf.OntologyDefs.NAO_URL_PREFIX + "nao#hasTag>",
          Trf.OntologyDefs.NAO_TAG);
-      this._urn_prefix.set (
+      PersonaStore._urn_prefix.set (
          Trf.OntologyDefs.NCO_URL_PREFIX + "nco#hasEmailAddress>",
          Trf.OntologyDefs.NCO_HAS_EMAIL);
-      this._urn_prefix.set (
+      PersonaStore._urn_prefix.set (
          Trf.OntologyDefs.NCO_URL_PREFIX + "nco#hasPhoneNumber>",
          Trf.OntologyDefs.NCO_HAS_PHONE);
-      this._urn_prefix.set (
+      PersonaStore._urn_prefix.set (
          Trf.OntologyDefs.NCO_URL_PREFIX + "nco#hasAffiliation>",
          Trf.OntologyDefs.NCO_HAS_AFFILIATION);
-      this._urn_prefix.set (Trf.OntologyDefs.NCO_URL_PREFIX + "nco#birthDate>",
+      PersonaStore._urn_prefix.set (Trf.OntologyDefs.NCO_URL_PREFIX + "nco#birthDate>",
          Trf.OntologyDefs.NCO_BIRTHDAY);
-      this._urn_prefix.set (Trf.OntologyDefs.NCO_URL_PREFIX + "nco#note>",
+      PersonaStore._urn_prefix.set (Trf.OntologyDefs.NCO_URL_PREFIX + "nco#note>",
          Trf.OntologyDefs.NCO_NOTE);
-      this._urn_prefix.set (Trf.OntologyDefs.NCO_URL_PREFIX + "nco#gender>",
+      PersonaStore._urn_prefix.set (Trf.OntologyDefs.NCO_URL_PREFIX + "nco#gender>",
          Trf.OntologyDefs.NCO_GENDER);
-      this._urn_prefix.set (
+      PersonaStore._urn_prefix.set (
          Trf.OntologyDefs.NCO_URL_PREFIX + "nco#gender-male>",
          Trf.OntologyDefs.NCO_MALE);
-      this._urn_prefix.set (
+      PersonaStore._urn_prefix.set (
          Trf.OntologyDefs.NCO_URL_PREFIX + "nco#gender-female>",
          Trf.OntologyDefs.NCO_FEMALE);
-      this._urn_prefix.set (Trf.OntologyDefs.NCO_URL_PREFIX + "nco#photo>",
+      PersonaStore._urn_prefix.set (Trf.OntologyDefs.NCO_URL_PREFIX + "nco#photo>",
          Trf.OntologyDefs.NCO_PHOTO);
-      this._urn_prefix.set (
+      PersonaStore._urn_prefix.set (
          Trf.OntologyDefs.NAO_URL_PREFIX + "nao#hasProperty>",
          Trf.OntologyDefs.NAO_PROPERTY);
     }
@@ -1297,7 +1297,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
           return;
         }
 
-      this._handle_events ((owned) iter_del, (owned) iter_ins);
+      this._handle_events.begin ((owned) iter_del, (owned) iter_ins);
     }
 
   private async void _handle_events
@@ -1311,8 +1311,8 @@ public class Trf.PersonaStore : Folks.PersonaStore
     {
       var removed_personas = new HashSet<Persona> ();
       var nco_person_id =
-          this._prefix_tracker_id.get (Trf.OntologyDefs.NCO_PERSON);
-      var rdf_type_id = this._prefix_tracker_id.get (Trf.OntologyDefs.RDF_TYPE);
+          PersonaStore._prefix_tracker_id.get (Trf.OntologyDefs.NCO_PERSON);
+      var rdf_type_id = PersonaStore._prefix_tracker_id.get (Trf.OntologyDefs.RDF_TYPE);
       Event e = Event ();
 
       while (iter_del.next
@@ -1408,7 +1408,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
   private async void _do_update (Persona p, Event e, bool adding = true)
     {
       if (e.pred_id ==
-          this._prefix_tracker_id.get (Trf.OntologyDefs.NCO_FULLNAME))
+          PersonaStore._prefix_tracker_id.get (Trf.OntologyDefs.NCO_FULLNAME))
         {
           string fullname = "";
           if (adding)
@@ -1420,7 +1420,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
           p._update_full_name (fullname);
         }
       else if (e.pred_id ==
-               this._prefix_tracker_id.get (Trf.OntologyDefs.NCO_NICKNAME))
+               PersonaStore._prefix_tracker_id.get (Trf.OntologyDefs.NCO_NICKNAME))
         {
           string nickname = "";
           if (adding)
@@ -1432,7 +1432,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
           p._update_nickname (nickname);
         }
       else if (e.pred_id ==
-               this._prefix_tracker_id.get (Trf.OntologyDefs.NCO_FAMILY))
+               PersonaStore._prefix_tracker_id.get (Trf.OntologyDefs.NCO_FAMILY))
         {
           string family_name = "";
           if (adding)
@@ -1443,7 +1443,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
           p._update_family_name (family_name);
         }
       else if (e.pred_id ==
-               this._prefix_tracker_id.get (Trf.OntologyDefs.NCO_GIVEN))
+               PersonaStore._prefix_tracker_id.get (Trf.OntologyDefs.NCO_GIVEN))
         {
           string given_name = "";
           if (adding)
@@ -1454,7 +1454,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
           p._update_given_name (given_name);
         }
       else if (e.pred_id ==
-               this._prefix_tracker_id.get (Trf.OntologyDefs.NCO_ADDITIONAL))
+               PersonaStore._prefix_tracker_id.get (Trf.OntologyDefs.NCO_ADDITIONAL))
         {
           string additional_name = "";
           if (adding)
@@ -1464,7 +1464,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
             }
           p._update_additional_names (additional_name);
         }
-      else if (e.pred_id == this._prefix_tracker_id.get
+      else if (e.pred_id == PersonaStore._prefix_tracker_id.get
           (Trf.OntologyDefs.NCO_SUFFIX))
         {
           string suffix_name = "";
@@ -1475,7 +1475,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
             }
           p._update_suffixes (suffix_name);
         }
-      else if (e.pred_id == this._prefix_tracker_id.get
+      else if (e.pred_id == PersonaStore._prefix_tracker_id.get
           (Trf.OntologyDefs.NCO_PREFIX))
         {
           string prefix_name = "";
@@ -1486,7 +1486,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
             }
           p._update_prefixes (prefix_name);
         }
-      else if (e.pred_id == this._prefix_tracker_id.get
+      else if (e.pred_id == PersonaStore._prefix_tracker_id.get
           (Trf.OntologyDefs.NAO_TAG))
         {
           if (e.object_id == this.get_favorite_id ())
@@ -1501,7 +1501,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
                 }
             }
         }
-      else if (e.pred_id == this._prefix_tracker_id.get
+      else if (e.pred_id == PersonaStore._prefix_tracker_id.get
           (Trf.OntologyDefs.NCO_HAS_EMAIL))
         {
           if (adding)
@@ -1517,7 +1517,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
               p._remove_email (e.object_id.to_string ());
             }
         }
-      else if (e.pred_id == this._prefix_tracker_id.get
+      else if (e.pred_id == PersonaStore._prefix_tracker_id.get
           (Trf.OntologyDefs.NCO_HAS_PHONE))
         {
           if (adding)
@@ -1532,7 +1532,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
               p._remove_phone (e.object_id.to_string ());
             }
         }
-      else if (e.pred_id == this._prefix_tracker_id.get
+      else if (e.pred_id == PersonaStore._prefix_tracker_id.get
           (Trf.OntologyDefs.NCO_HAS_AFFILIATION))
         {
           if (adding)
@@ -1593,7 +1593,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
               p._remove_url (e.object_id.to_string ());
             }
         }
-      else if (e.pred_id == this._prefix_tracker_id.get
+      else if (e.pred_id == PersonaStore._prefix_tracker_id.get
           (Trf.OntologyDefs.NCO_BIRTHDAY))
         {
           string bday = "";
@@ -1604,7 +1604,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
             }
           p._set_birthday (bday);
         }
-      else if (e.pred_id == this._prefix_tracker_id.get
+      else if (e.pred_id == PersonaStore._prefix_tracker_id.get
           (Trf.OntologyDefs.NCO_NOTE))
         {
           string note = "";
@@ -1615,7 +1615,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
             }
           p._set_note (note);
         }
-      else if (e.pred_id == this._prefix_tracker_id.get
+      else if (e.pred_id == PersonaStore._prefix_tracker_id.get
           (Trf.OntologyDefs.NCO_GENDER))
         {
           if (adding)
@@ -1627,7 +1627,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
               p._set_gender (0);
             }
         }
-      else if (e.pred_id == this._prefix_tracker_id.get
+      else if (e.pred_id == PersonaStore._prefix_tracker_id.get
           (Trf.OntologyDefs.NCO_PHOTO))
         {
           string avatar_url = "";
@@ -1638,7 +1638,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
             }
           p._set_avatar_from_uri (avatar_url);
         }
-      else if (e.pred_id == this._prefix_tracker_id.get
+      else if (e.pred_id == PersonaStore._prefix_tracker_id.get
           (Trf.OntologyDefs.NAO_PROPERTY))
         {
           /* WARNING:
@@ -1649,11 +1649,11 @@ public class Trf.PersonaStore : Folks.PersonaStore
             {
               string[] prop_info =  yield this._get_nao_property_by_prop_id (
                   e.object_id);
-              if (prop_info[0] == this._LOCAL_ID_PROPERTY_NAME)
+              if (prop_info[0] == Trf.PersonaStore._LOCAL_ID_PROPERTY_NAME)
                 {
                   p._set_local_ids (prop_info[1]);
                 }
-              else if (prop_info[0] == this._WSD_PROPERTY_NAME)
+              else if (prop_info[0] == Trf.PersonaStore._WSD_PROPERTY_NAME)
                 {
                   p._set_web_service_addrs (prop_info[1]);
                 }
@@ -1662,10 +1662,10 @@ public class Trf.PersonaStore : Folks.PersonaStore
             {
               string local_ids = yield this._get_nao_property_by_person_id (
                   e.subject_id,
-                  this._LOCAL_ID_PROPERTY_NAME);
+                  Trf.PersonaStore._LOCAL_ID_PROPERTY_NAME);
               string ws_addrs = yield this._get_nao_property_by_person_id (
                   e.subject_id,
-                  this._WSD_PROPERTY_NAME);
+                  Trf.PersonaStore._WSD_PROPERTY_NAME);
 
               p._set_local_ids (local_ids);
               p._set_web_service_addrs (ws_addrs);
@@ -1969,7 +1969,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
     {
       string ids = Trf.PersonaStore.serialize_local_ids (local_ids);
       yield this._set_tracker_property (persona,
-          this._LOCAL_ID_PROPERTY_NAME, ids,
+          Trf.PersonaStore._LOCAL_ID_PROPERTY_NAME, ids,
           "_set_local_ids");
     }
 
@@ -1978,7 +1978,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
     {
       var ws_addrs = Trf.PersonaStore.serialize_web_services (ws_obj);
       yield this._set_tracker_property (persona,
-          this._WSD_PROPERTY_NAME, ws_addrs,
+          Trf.PersonaStore._WSD_PROPERTY_NAME, ws_addrs,
           "_set_web_service_addrs");
     }
 
@@ -2309,7 +2309,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
       var image_urn = yield this._get_property (int.parse (p_id),
           Trf.OntologyDefs.NCO_PHOTO);
       if (image_urn != "")
-        this._delete_resource ("<%s>".printf (image_urn));
+        this._delete_resource.begin ("<%s>".printf (image_urn));
 
       string query = query_d.printf (p_id);
 
@@ -2484,7 +2484,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
                 break;
               case Trf.Attrib.URLS:
                 fd = (UrlFieldDetails) p;
-                var type_p = fd.get_parameter_values (fd.PARAM_TYPE);
+                var type_p = fd.get_parameter_values (AbstractFieldDetails.PARAM_TYPE);
 
                 if (type_p != null &&
                     type_p.contains (UrlFieldDetails.PARAM_TYPE_BLOG))
