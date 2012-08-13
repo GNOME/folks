@@ -59,7 +59,7 @@ public class Swf.Persona : Folks.Persona,
    */
   public override string[] linkable_properties
     {
-      get { return this._linkable_properties; }
+      get { return Swf.Persona._linkable_properties; }
     }
 
   /**
@@ -69,7 +69,7 @@ public class Swf.Persona : Folks.Persona,
    */
   public override string[] writeable_properties
     {
-      get { return this._writeable_properties; }
+      get { return Swf.Persona._writeable_properties; }
     }
 
   private LoadableIcon? _avatar = null;
@@ -260,8 +260,8 @@ public class Swf.Persona : Folks.Persona,
   public Persona (PersonaStore store, Contact contact)
     {
       var id = get_contact_id (contact);
-      var uid = this.build_uid (BACKEND_NAME, store.id, id);
-      var iid = this._build_iid (store.id, id);
+      var uid = Folks.Persona.build_uid (BACKEND_NAME, store.id, id);
+      var iid = Swf.Persona._build_iid (store.id, id);
 
       Object (display_id: id,
               uid: uid,
@@ -277,7 +277,7 @@ public class Swf.Persona : Folks.Persona,
           this.uid, this.store.display_name, this.display_id, this);
 
       var facebook_jid =
-          this._build_facebook_jid (this.store.id, this.display_id);
+          Swf.Persona._build_facebook_jid (this.store.id, this.display_id);
       if (facebook_jid != null)
         {
           try

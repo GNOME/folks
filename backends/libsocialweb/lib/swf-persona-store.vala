@@ -124,7 +124,7 @@ public class Swf.PersonaStore : Folks.PersonaStore
    */
   public override string[] always_writeable_properties
     {
-      get { return this._always_writeable_properties; }
+      get { return Swf.PersonaStore._always_writeable_properties; }
     }
 
   /*
