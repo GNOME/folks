@@ -58,7 +58,7 @@ public class SetDuplicateEmailTests : Folks.TestCase
       this._main_loop = new GLib.MainLoop (null, false);
 
       this._email_found = false;
-      this._test_set_duplicate_email_async ();
+      this._test_set_duplicate_email_async.begin ();
 
       Timeout.add_seconds (5, () =>
         {
@@ -93,7 +93,7 @@ public class SetDuplicateEmailTests : Folks.TestCase
             }
           assert (this._pstore != null);
           this._pstore.notify["is-prepared"].connect (this._notify_pstore_cb);
-          this._try_to_add ();
+          this._try_to_add.begin ();
         }
       catch (GLib.Error e)
         {
@@ -170,7 +170,7 @@ public class SetDuplicateEmailTests : Folks.TestCase
 
   private void _notify_pstore_cb (Object _pstore, ParamSpec ps)
     {
-      this._try_to_add ();
+      this._try_to_add.begin ();
     }
 
   private async void _try_to_add ()

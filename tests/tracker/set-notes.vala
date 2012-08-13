@@ -65,7 +65,7 @@ public class SetNotesTests : Folks.TestCase
 
       this._note_found = false;
 
-      this._test_set_notes_async ();
+      this._test_set_notes_async.begin ();
 
       Timeout.add_seconds (5, () =>
         {

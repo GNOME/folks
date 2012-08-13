@@ -66,7 +66,7 @@ public class SetFullNameTests : Folks.TestCase
 
       this._found_changed_full_name = false;
 
-      this._test_set_full_name_async ();
+      this._test_set_full_name_async.begin ();
 
       Timeout.add_seconds (5, () =>
         {

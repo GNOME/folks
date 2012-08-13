@@ -66,7 +66,7 @@ public class RoleDetailsInterfaceTests : Folks.TestCase
 
       this._found_role = false;
 
-      this._test_role_details_interface_async ();
+      this._test_role_details_interface_async.begin ();
 
       Timeout.add_seconds (5, () =>
         {

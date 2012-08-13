@@ -74,7 +74,7 @@ public class EmailsUpdatesTests : Folks.TestCase
       this._initial_email_found = false;
       this._updated_email_found = false;
 
-      this._test_emails_updates_async ();
+      this._test_emails_updates_async.begin ();
 
       Timeout.add_seconds (5, () =>
         {

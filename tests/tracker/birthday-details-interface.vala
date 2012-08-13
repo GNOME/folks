@@ -68,7 +68,7 @@ public class BirthdayDetailsInterfaceTests : Folks.TestCase
 
       this._found_birthday = false;
 
-      this._test_birthay_details_interface ();
+      this._test_birthay_details_interface.begin ();
 
       Timeout.add_seconds (5, () =>
         {

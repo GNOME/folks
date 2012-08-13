@@ -74,7 +74,7 @@ public class PrefixNameUpdatesTests : Folks.TestCase
       this._updated_prefix_name_found = false;
       this._individual_id = "";
 
-      this._test_prefix_name_updates_async ();
+      this._test_prefix_name_updates_async.begin ();
 
       Timeout.add_seconds (5, () =>
         {

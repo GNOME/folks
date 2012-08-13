@@ -61,7 +61,7 @@ public class SetNullAvatarTests : Folks.TestCase
 
       this._null_avatar_set = false;
 
-      this._test_set_null_avatar_async ();
+      this._test_set_null_avatar_async.begin ();
 
       Timeout.add_seconds (5, () =>
         {
@@ -108,7 +108,7 @@ public class SetNullAvatarTests : Folks.TestCase
               foreach (var p in i.personas)
                 {
                   ((AvatarDetails) p).avatar = null;
-                  this._set_null_avatar_async ();
+                  this._set_null_avatar_async.begin ();
                 }
             }
         }

@@ -98,7 +98,7 @@ public class PostalAddressDetailsInterfaceTests : Folks.TestCase
 
       this._found_postal_address = false;
 
-      this._test_postal_address_details_interface_async ();
+      this._test_postal_address_details_interface_async.begin ();
 
       Timeout.add_seconds (5, () =>
         {

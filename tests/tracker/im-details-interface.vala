@@ -68,7 +68,7 @@ public class ImDetailsInterfaceTests : Folks.TestCase
       this._found_addr_1 = false;
       this._found_addr_2 = false;
 
-      this._test_im_details_interface_async ();
+      this._test_im_details_interface_async.begin ();
 
       Timeout.add_seconds (5, () =>
         {

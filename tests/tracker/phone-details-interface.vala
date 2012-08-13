@@ -65,7 +65,7 @@ public class PhoneDetailsInterfaceTests : Folks.TestCase
       this._found_phone_1 = false;
       this._found_phone_2 = false;
 
-      this._test_phone_details_interface_async ();
+      this._test_phone_details_interface_async.begin ();
 
       Timeout.add_seconds (5, () =>
         {

@@ -73,7 +73,7 @@ public class FullnameUpdatesTests : Folks.TestCase
       this._deleted_name_found = false;
       this._individual_id = "";
 
-      this._test_fullname_updates_async ();
+      this._test_fullname_updates_async.begin ();
 
       Timeout.add_seconds (5, () =>
         {

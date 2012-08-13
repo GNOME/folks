@@ -82,7 +82,7 @@ public class LinkPersonasTests : Folks.TestCase
       this._linking_props.set ("prop1", this._im_address_1);
       this._linking_props.set ("prop2", this._im_address_2);
 
-      this._test_linking_personas_async ();
+      this._test_linking_personas_async.begin ();
 
       /* Kill the main loop after 5 seconds: if the linked individual hasn't
        * show up at this point then we've either seen an error or we've been
@@ -131,7 +131,7 @@ public class LinkPersonasTests : Folks.TestCase
     {
       PersonaStore pstore = (!)(obj as PersonaStore);
       
-      _add_personas (pstore);
+      _add_personas.begin (pstore);
     }
   
   /* Here is how this test is expected to work:
@@ -283,7 +283,7 @@ public class LinkPersonasTests : Folks.TestCase
            * delayed events. */
           Timeout.add_seconds (2, () =>
             {
-              this._aggregator.link_personas (this._personas);
+              this._aggregator.link_personas.begin (this._personas);
               return false;
             });
         }

@@ -76,7 +76,7 @@ public class PhonesUpdatesTests : Folks.TestCase
       this._initial_phone_found_again = false;
       this._updated_phone_found = false;
 
-      this._test_phones_updates_async ();
+      this._test_phones_updates_async.begin ();
 
       Timeout.add_seconds (5, () =>
         {

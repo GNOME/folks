@@ -62,7 +62,7 @@ public class SetGenderTests : Folks.TestCase
 
       this._gender_found = false;
 
-      this._test_set_gender_async ();
+      this._test_set_gender_async.begin ();
 
       Timeout.add_seconds (5, () =>
         {

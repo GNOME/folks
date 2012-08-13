@@ -76,7 +76,7 @@ public class SetStructuredNameTests : Folks.TestCase
 
       this._sname_found = false;
 
-      this._test_set_structured_name_async ();
+      this._test_set_structured_name_async.begin ();
 
       Timeout.add_seconds (5, () =>
         {

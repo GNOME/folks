@@ -66,7 +66,7 @@ public class NoteDetailsInterfaceTests : Folks.TestCase
 
       this._found_note = false;
 
-      this._test_note_details_interface_async ();
+      this._test_note_details_interface_async.begin ();
 
       Timeout.add_seconds (5, () =>
         {

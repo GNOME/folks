@@ -60,7 +60,7 @@ public class IndividualRetrievalTests : Folks.TestCase
       this._tracker_backend.add_contact (this._c2);
       this._tracker_backend.set_up ();
 
-      this._test_singleton_individuals_async ();
+      this._test_singleton_individuals_async.begin ();
 
       Timeout.add_seconds (5, () =>
         {

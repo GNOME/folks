@@ -68,7 +68,7 @@ public class SetNicknameTests : Folks.TestCase
       this._initial_nickname_found = false;
       this._modified_nickname_found = false;
 
-      this._test_set_nickname_async ();
+      this._test_set_nickname_async.begin ();
 
       Timeout.add_seconds (5, () =>
         {

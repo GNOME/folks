@@ -69,7 +69,7 @@ public class NicknameUpdatesTests : Folks.TestCase
       this._updated_nickname_found = false;
       this._individual_id = "";
 
-      this._test_nickname_updates_async ();
+      this._test_nickname_updates_async.begin ();
 
       Timeout.add_seconds (5, () =>
         {

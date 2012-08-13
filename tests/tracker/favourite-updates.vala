@@ -81,7 +81,7 @@ public class FavouriteUpdatesTests : Folks.TestCase
       this._is_favourite_2 = true;
       this._individual_id_2 = "";
 
-      this._test_favourite_update_async ();
+      this._test_favourite_update_async.begin ();
 
       // this timer is slightly higher than usual because sleep
       // to ensure a (usually delayed) INSERT event has happened

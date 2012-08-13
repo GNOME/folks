@@ -66,7 +66,7 @@ public class SetURLsTests : Folks.TestCase
 
       this._tracker_backend.set_up ();
 
-      this._test_set_urls_async ();
+      this._test_set_urls_async.begin ();
 
       Timeout.add_seconds (5, () =>
         {
@@ -117,11 +117,11 @@ public class SetURLsTests : Folks.TestCase
                   (GLib.EqualFunc) UrlFieldDetails.equal);
               var p1 = new UrlFieldDetails (
                   this._urls.get (UrlFieldDetails.PARAM_TYPE_BLOG));
-              p1.set_parameter (p1.PARAM_TYPE, p1.PARAM_TYPE_BLOG);
+              p1.set_parameter (AbstractFieldDetails.PARAM_TYPE, UrlFieldDetails.PARAM_TYPE_BLOG);
               url_fds.add (p1);
               var p2 = new UrlFieldDetails (
                   this._urls.get (UrlFieldDetails.PARAM_TYPE_HOME_PAGE));
-              p2.set_parameter (p1.PARAM_TYPE, p1.PARAM_TYPE_HOME_PAGE);
+              p2.set_parameter (AbstractFieldDetails.PARAM_TYPE, UrlFieldDetails.PARAM_TYPE_HOME_PAGE);
               url_fds.add (p2);
               var p3 = new UrlFieldDetails (
                   this._urls.get (AbstractFieldDetails.PARAM_TYPE_OTHER));
@@ -149,24 +149,24 @@ public class SetURLsTests : Folks.TestCase
         {
           foreach (var p in i.urls)
             {
-              var type_p = p.get_parameter_values (p.PARAM_TYPE);
+              var type_p = p.get_parameter_values (AbstractFieldDetails.PARAM_TYPE);
 
               if (type_p != null &&
-                  type_p.contains (p.PARAM_TYPE_BLOG) &&
-                  p.value == this._urls.get (p.PARAM_TYPE_BLOG))
+                  type_p.contains (UrlFieldDetails.PARAM_TYPE_BLOG) &&
+                  p.value == this._urls.get (UrlFieldDetails.PARAM_TYPE_BLOG))
                 {
-                  this._urls.unset (p.PARAM_TYPE_BLOG);
+                  this._urls.unset (UrlFieldDetails.PARAM_TYPE_BLOG);
                 }
               else if (type_p != null &&
-                  type_p.contains (p.PARAM_TYPE_HOME_PAGE) &&
-                  p.value == this._urls.get (p.PARAM_TYPE_HOME_PAGE))
+                  type_p.contains (UrlFieldDetails.PARAM_TYPE_HOME_PAGE) &&
+                  p.value == this._urls.get (UrlFieldDetails.PARAM_TYPE_HOME_PAGE))
                 {
-                  this._urls.unset (p.PARAM_TYPE_HOME_PAGE);
+                  this._urls.unset (UrlFieldDetails.PARAM_TYPE_HOME_PAGE);
                 }
               else if (type_p == null &&
-                  p.value == this._urls.get (p.PARAM_TYPE_OTHER))
+                  p.value == this._urls.get (AbstractFieldDetails.PARAM_TYPE_OTHER))
                 {
-                  this._urls.unset (p.PARAM_TYPE_OTHER);
+                  this._urls.unset (AbstractFieldDetails.PARAM_TYPE_OTHER);
                 }
             }
         }

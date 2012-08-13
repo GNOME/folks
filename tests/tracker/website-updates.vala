@@ -76,7 +76,7 @@ public class WebsiteUpdatesTests : Folks.TestCase
       this._deleted_website_found = false;
       this._individual_id = "";
 
-      this._test_website_updates_async ();
+      this._test_website_updates_async.begin ();
 
       Timeout.add_seconds (5, () =>
         {

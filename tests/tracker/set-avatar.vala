@@ -64,7 +64,7 @@ public class SetAvatarTests : Folks.TestCase
 
       this._avatar_found = false;
 
-      this._test_set_avatar_async ();
+      this._test_set_avatar_async.begin ();
 
       Timeout.add_seconds (5, () =>
         {

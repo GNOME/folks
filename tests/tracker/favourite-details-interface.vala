@@ -80,7 +80,7 @@ public class FavouriteDetailsInterfaceTests : Folks.TestCase
       this._found_p2 = false;
       this._found_p3 = false;
 
-      this._test_favourite_details_interface_async ();
+      this._test_favourite_details_interface_async.begin ();
 
       Timeout.add_seconds (5, () =>
         {

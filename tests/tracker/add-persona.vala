@@ -129,7 +129,7 @@ public class AddPersonaTests : Folks.TestCase
       this._properties_found.insert ("url-1", false);
       this._properties_found.insert ("url-2", false);
 
-      this._test_add_persona_async ();
+      this._test_add_persona_async.begin ();
 
       Timeout.add_seconds (5, () =>
         {
@@ -396,7 +396,7 @@ public class AddPersonaTests : Folks.TestCase
       if (this._pstore.is_prepared && this._added_persona == false)
         {
           this._added_persona = true;
-          this._add_persona ();
+          this._add_persona.begin ();
         }
     }
 

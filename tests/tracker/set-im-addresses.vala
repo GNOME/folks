@@ -68,7 +68,7 @@ public class SetIMAddressesTests : Folks.TestCase
 
       this._tracker_backend.set_up ();
 
-      this._test_set_im_addresses_async ();
+      this._test_set_im_addresses_async.begin ();
 
       Timeout.add_seconds (5, () =>
         {

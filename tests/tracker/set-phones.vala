@@ -67,7 +67,7 @@ public class SetPhonesTests : Folks.TestCase
       this._phone_1_found = false;
       this._phone_2_found = false;
 
-      this._test_set_phones_async ();
+      this._test_set_phones_async.begin ();
 
       Timeout.add_seconds (5, () =>
         {

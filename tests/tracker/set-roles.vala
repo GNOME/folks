@@ -67,7 +67,7 @@ public class SetRolesTests : Folks.TestCase
 
       this._role_found = false;
 
-      this._test_set_roles_async ();
+      this._test_set_roles_async.begin ();
 
       Timeout.add_seconds (5, () =>
         {

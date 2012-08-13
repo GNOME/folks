@@ -65,7 +65,7 @@ public class GenderDetailsInterfaceTests : Folks.TestCase
 
       this._found_gender = false;
 
-      this._test_gender_details_interface_async ();
+      this._test_gender_details_interface_async.begin ();
 
       Timeout.add_seconds (5, () =>
         {

@@ -77,7 +77,7 @@ public class IMAddressesUpdatesTests : Folks.TestCase
       this._initial_imaddress_found = false;
       this._updated_imaddr_found = false;
 
-      this._test_imaddresses_updates_async ();
+      this._test_imaddresses_updates_async.begin ();
 
       Timeout.add_seconds (5, () =>
         {

@@ -64,7 +64,7 @@ public class AvatarDetailsInterfaceTests : Folks.TestCase
       this._tracker_backend.add_contact (c1);
       this._tracker_backend.set_up ();
 
-      test_avatar_details_interface_async ();
+      test_avatar_details_interface_async.begin ();
 
       Timeout.add_seconds (5, () =>
         {

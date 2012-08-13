@@ -79,7 +79,7 @@ public class AvatarUpdatesTests : Folks.TestCase
       this._updated_avatar_found = false;
       this._individual_id = "";
 
-      test_avatar_updates_async ();
+      test_avatar_updates_async.begin ();
 
       Timeout.add_seconds (5, () =>
         {

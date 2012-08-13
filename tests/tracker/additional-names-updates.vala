@@ -77,7 +77,7 @@ public class AdditionalNamesUpdatesTests : Folks.TestCase
       this._individual_id = "";
 
       var store = BackendStore.dup ();
-      _test_additional_names_updates_async (store);
+      _test_additional_names_updates_async.begin (store);
 
       Timeout.add_seconds (5, () =>
         {

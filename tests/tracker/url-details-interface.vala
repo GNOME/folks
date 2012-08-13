@@ -70,7 +70,7 @@ public class UrlDetailsInterfaceTests : Folks.TestCase
       this._found_blog = false;
       this._found_website = false;
 
-      this._test_url_details_interface_async ();
+      this._test_url_details_interface_async.begin ();
 
       Timeout.add_seconds (5, () =>
         {

@@ -84,7 +84,7 @@ public class BirthdayUpdatesTests : Folks.TestCase
       this._updated_birthday_found = false;
       this._individual_id = "";
 
-      test_birthday_updates_async ();
+      test_birthday_updates_async.begin ();
 
 
       Timeout.add_seconds (5, () =>

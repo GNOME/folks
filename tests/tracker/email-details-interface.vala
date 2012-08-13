@@ -66,7 +66,7 @@ public class EmailDetailsInterfaceTests : Folks.TestCase
       this._found_email_1 = false;
       this._found_email_2 = false;
 
-      this._test_email_details_interface_async ();
+      this._test_email_details_interface_async.begin ();
 
       Timeout.add_seconds (5, () =>
         {

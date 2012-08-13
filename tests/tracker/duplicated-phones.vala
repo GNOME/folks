@@ -59,7 +59,7 @@ public class DuplicatedPhonesTests : Folks.TestCase
     {
       this._main_loop = new GLib.MainLoop (null, false);
 
-      this._test_duplicated_phones_async ();
+      this._test_duplicated_phones_async.begin ();
 
       Timeout.add_seconds (5, () =>
         {
@@ -92,7 +92,7 @@ public class DuplicatedPhonesTests : Folks.TestCase
             }
           assert (this._pstore != null);
           this._pstore.notify["is-prepared"].connect (this._notify_pstore_cb);
-          this._try_to_add ();
+          this._try_to_add.begin ();
         }
       catch (GLib.Error e)
         {
@@ -136,7 +136,7 @@ public class DuplicatedPhonesTests : Folks.TestCase
 
   private void _notify_pstore_cb (Object _pstore, ParamSpec ps)
     {
-      this._try_to_add ();
+      this._try_to_add.begin ();
     }
 
   private async void _try_to_add ()

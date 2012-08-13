@@ -325,7 +325,7 @@ public class TrackerTest.Backend
           "nco:region '%s' ";
 
       string urn_contact;
-      if (contact.unset (this.URN, out urn_contact) == false)
+      if (contact.unset (TrackerTest.Backend.URN, out urn_contact) == false)
         {
           urn_contact = "_:x";
         }
@@ -378,7 +378,7 @@ public class TrackerTest.Backend
               v = this._build_relation (Trf.OntologyDefs.NCO_HAS_AFFILIATION,
                   emails);
             }
-          else if (k == this.URLS)
+          else if (k == TrackerTest.Backend.URLS)
             {
               urls = v.split (",");
               k = "";

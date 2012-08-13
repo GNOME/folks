@@ -64,7 +64,7 @@ public class DefaultContactTests : Folks.TestCase
       this._found_not_user = false;
       this._found_unknown_user = false;
 
-      _test_default_contact_async ();
+      _test_default_contact_async.begin ();
 
       Timeout.add_seconds (5, () =>
         {

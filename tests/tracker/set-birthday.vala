@@ -69,7 +69,7 @@ public class SetBirthdayTests : Folks.TestCase
 
       this._bday_found = false;
 
-      this._test_set_bday_async ();
+      this._test_set_bday_async.begin ();
 
       Timeout.add_seconds (5, () =>
         {

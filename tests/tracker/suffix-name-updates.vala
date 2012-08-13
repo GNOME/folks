@@ -76,7 +76,7 @@ public class SuffixNameUpdatesTests : Folks.TestCase
       this._deleted_suffix_name_found = false;
       this._individual_id = "";
 
-      this._test_suffix_name_updates_async ();
+      this._test_suffix_name_updates_async.begin ();
 
       Timeout.add_seconds (5, () =>
         {

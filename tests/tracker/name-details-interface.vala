@@ -68,7 +68,7 @@ public class NameDetailsInterfaceTests : Folks.TestCase
 
       this._tracker_backend.set_up ();
 
-      this._test_name_details_interface_async ();
+      this._test_name_details_interface_async.begin ();
 
       Timeout.add_seconds (5, () =>
         {

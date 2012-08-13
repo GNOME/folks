@@ -64,7 +64,7 @@ public class RemoveContactTests : Folks.TestCase
       this._contact_removed = false;
       this._individual_id = "";
 
-      this._test_remove_contact_async ();
+      this._test_remove_contact_async.begin ();
 
       Timeout.add_seconds (5, () =>
         {

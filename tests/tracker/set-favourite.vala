@@ -74,7 +74,7 @@ public class SetFavouriteTests : Folks.TestCase
       this._c2_initially_favourite = false;
       this._c2_finally_not_favourite = false;
 
-      this._test_set_alias_async ();
+      this._test_set_alias_async.begin ();
 
       Timeout.add_seconds (5, () =>
         {

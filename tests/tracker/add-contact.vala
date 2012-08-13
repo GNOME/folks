@@ -59,7 +59,7 @@ public class AddContactTests : Folks.TestCase
       this._tracker_backend.add_contact (c1);
       this._tracker_backend.set_up ();
 
-      this._test_add_contact_async ();
+      this._test_add_contact_async.begin ();
 
       Timeout.add_seconds (5, () =>
           {

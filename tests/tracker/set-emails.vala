@@ -67,7 +67,7 @@ public class SetEmailsTests : Folks.TestCase
       this._email_1_found = false;
       this._email_2_found = false;
 
-      this._test_set_emails_async ();
+      this._test_set_emails_async.begin ();
 
       Timeout.add_seconds (5, () =>
         {

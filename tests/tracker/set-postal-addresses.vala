@@ -74,7 +74,7 @@ public class SetPostalAddressesTests : Folks.TestCase
 
       this._postal_address_found = false;
 
-      this._test_set_postal_addresses_async ();
+      this._test_set_postal_addresses_async.begin ();
 
       Timeout.add_seconds (5, () =>
         {

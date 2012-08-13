@@ -74,7 +74,7 @@ public class GivenNameUpdatesTests : Folks.TestCase
       this._updated_given_name_found = false;
       this._individual_id = "";
 
-      this._test_given_name_updates_async ();
+      this._test_given_name_updates_async.begin ();
 
       Timeout.add_seconds (5, () =>
         {
