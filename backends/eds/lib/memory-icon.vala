@@ -51,10 +51,10 @@ internal class Edsf.MemoryIcon : Object, Icon, LoadableIcon
 
   /**
    * Decide whether two {@link MemoryIcon} instances are equal. This compares
-   * their image data and returns `true` if they are identical.
+   * their image data and returns ``true`` if they are identical.
    *
    * @param icon2 the {@link MemoryIcon} instance to compare against
-   * @return `true` if the instances are equal, `false` otherwise
+   * @return ``true`` if the instances are equal, ``false`` otherwise
    * @since 0.6.0
    */
   public bool equal (Icon? icon2)
@@ -102,8 +102,8 @@ internal class Edsf.MemoryIcon : Object, Icon, LoadableIcon
    * without blocking on I/O.
    *
    * @param size the square dimensions to output the image at (unused), or -1
-   * @param type return location for the content type of the image, or `null`
-   * @param cancellable optional {@link GLib.Cancellable}, or `null`
+   * @param type return location for the content type of the image, or ``null``
+   * @param cancellable optional {@link GLib.Cancellable}, or ``null``
    * @return an input stream providing access to the image data
    * @since 0.6.0
    */
@@ -119,8 +119,8 @@ internal class Edsf.MemoryIcon : Object, Icon, LoadableIcon
    * will complete without blocking on I/O.
    *
    * @param size the square dimensions to output the image at (unused), or -1
-   * @param cancellable optional {@link GLib.Cancellable}, or `null`
-   * @param type return location for the content type of the image, or `null`
+   * @param cancellable optional {@link GLib.Cancellable}, or ``null``
+   * @param type return location for the content type of the image, or ``null``
    * @return an input stream providing access to the image data
    * @since 0.6.0
    */

@@ -429,7 +429,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
   /**
    * Add a new {@link Persona} to the PersonaStore.
    *
-   * Accepted keys for `details` are:
+   * Accepted keys for ``details`` are:
    * - PersonaStore.detail_key (PersonaDetail.IM_ADDRESSES)
    * - PersonaStore.detail_key (PersonaDetail.NICKNAME)
    * - PersonaStore.detail_key (PersonaDetail.FULL_NAME)
@@ -450,7 +450,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
    * See {@link Folks.PersonaStore.add_persona_from_details}.
    *
    * @throws Folks.PersonaStoreError.INVALID_ARGUMENT if an unrecognised detail
-   * key was passed in `details`
+   * key was passed in ``details``
    */
   public override async Folks.Persona? add_persona_from_details (
       HashTable<string, Value?> details) throws Folks.PersonaStoreError

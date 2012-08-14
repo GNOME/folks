@@ -28,7 +28,7 @@ using GLib;
  *
  * Represents a full name split in its constituent parts (given name,
  * family name, etc.). This structure corresponds to the "N" field in
- * vCards. The parts of the name are never `null`: an empty string
+ * vCards. The parts of the name are never ``null``: an empty string
  * indicates that a property is not set.
  *
  * @since 0.3.5
@@ -110,7 +110,7 @@ public class Folks.StructuredName : Object
   /**
    * Create a StructuredName.
    *
-   * You can pass `null` if a component is not set.
+   * You can pass ``null`` if a component is not set.
    *
    * @param family_name the family (last) name
    * @param given_name the given (first) name
@@ -136,7 +136,7 @@ public class Folks.StructuredName : Object
    *
    * Shorthand for the common case of just having the family and given
    * name of a contact. It's equivalent to calling
-   * {@link StructuredName.StructuredName} and passing `null` for all
+   * {@link StructuredName.StructuredName} and passing ``null`` for all
    * the other components.
    *
    * @param family_name the family (last) name
@@ -154,7 +154,7 @@ public class Folks.StructuredName : Object
   /**
    * Whether none of the components is set.
    *
-   * @return `true` if all the components are the empty string, `false`
+   * @return ``true`` if all the components are the empty string, ``false``
    * otherwise.
    *
    * @since 0.3.5
@@ -172,7 +172,7 @@ public class Folks.StructuredName : Object
    * Whether two StructuredNames are the same.
    *
    * @param other the other structured name to compare with
-   * @return `true` if all the components are the same, `false`
+   * @return ``true`` if all the components are the same, ``false``
    * otherwise.
    *
    * @since 0.5.0
@@ -217,9 +217,9 @@ public interface Folks.NameDetails : Object
    * The contact name split in its constituent parts.
    *
    * Note that most of the time the structured name is not set (i.e.
-   * it's `null`) or just some of the components are set.
+   * it's ``null``) or just some of the components are set.
    * The components are immutable. To get notification of changes of
-   * the structured name, you just have to connect to the `notify` signal
+   * the structured name, you just have to connect to the ``notify`` signal
    * of this property.
    *
    * @since 0.3.5
@@ -234,7 +234,7 @@ public interface Folks.NameDetails : Object
    * notification and will only return once the name has been written to the
    * relevant backing store (or the operation's failed).
    *
-   * @param name the structured name (`null` to unset it)
+   * @param name the structured name (``null`` to unset it)
    * @throws PropertyError if setting the structured name failed
    * @since 0.6.2
    */
@@ -256,8 +256,8 @@ public interface Folks.NameDetails : Object
    * The full name could or could not contain additional names (like a
    * middle name), prefixes or suffixes.
    *
-   * The full name must not be `null`: the empty string represents an unset full
-   * name.
+   * The full name must not be ``null``: the empty string represents an unset
+   * full name.
    *
    * @since 0.3.5
    */
@@ -294,7 +294,7 @@ public interface Folks.NameDetails : Object
    * address book when updating the information a contact has specified about
    * themselves.
    *
-   * The nickname must not be `null`: the empty string represents an unset
+   * The nickname must not be ``null``: the empty string represents an unset
    * nickname.
    *
    * @since 0.3.5

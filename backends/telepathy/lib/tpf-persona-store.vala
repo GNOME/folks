@@ -237,7 +237,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
    * Create a new PersonaStore.
    *
    * Create a new persona store to store the {@link Persona}s for the contacts
-   * in the Telepathy account provided by `account`.
+   * in the Telepathy account provided by ``account``.
    *
    * @param account the Telepathy account being represented by the persona store
    */
@@ -1190,7 +1190,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
    *
    * See {@link Folks.PersonaStore.remove_persona}.
    *
-   * @throws Folks.PersonaStoreError.UNSUPPORTED_ON_USER if `persona` is the
+   * @throws Folks.PersonaStoreError.UNSUPPORTED_ON_USER if ``persona`` is the
    * local user — removing the local user isn’t supported
    * @throws Folks.PersonaStoreError.REMOVE_FAILED if removing the contact
    * failed
@@ -1238,8 +1238,8 @@ public class Tpf.PersonaStore : Folks.PersonaStore
    *
    * See {@link Folks.PersonaStore.add_persona_from_details}.
    *
-   * @throws Folks.PersonaStoreError.INVALID_ARGUMENT if the `contact` key was
-   * not provided in `details`
+   * @throws Folks.PersonaStoreError.INVALID_ARGUMENT if the ``contact`` key was
+   * not provided in ``details``
    * @throws Folks.PersonaStoreError.STORE_OFFLINE if the CM is offline
    * @throws Folks.PersonaStoreError.CREATE_FAILED if adding the contact failed
    */

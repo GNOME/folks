@@ -244,7 +244,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
    * Create a new PersonaStore.
    *
    * Create a new persona store to store the {@link Persona}s for the contacts
-   * in `s`. Passing a re-used source registry to the constructor (compared to
+   * in ``s``. Passing a re-used source registry to the constructor (compared to
    * the old {@link Edsf.PersonaStore} constructor) saves a lot of time and
    * D-Bus round trips.
    *
@@ -316,7 +316,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
   /**
    * Add a new {@link Persona} to the PersonaStore.
    *
-   * Accepted keys for `details` are:
+   * Accepted keys for ``details`` are:
    * - PersonaStore.detail_key (PersonaDetail.AVATAR)
    * - PersonaStore.detail_key (PersonaDetail.BIRTHDAY)
    * - PersonaStore.detail_key (PersonaDetail.EMAIL_ADDRESSES)

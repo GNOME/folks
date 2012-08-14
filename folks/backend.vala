@@ -60,9 +60,9 @@ public abstract class Folks.Backend : Object
    * {@link PersonaStore}s that it originally knows about have been loaded.
    *
    * It's guaranteed that this property's value will only ever change after
-   * {@link Backend.is_prepared} has changed to `true`.
+   * {@link Backend.is_prepared} has changed to ``true``.
    *
-   * When {@link Backend.unprepare} is called, this will be reset to `false`.
+   * When {@link Backend.unprepare} is called, this will be reset to ``false``.
    *
    * @since 0.6.2
    */

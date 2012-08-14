@@ -45,7 +45,8 @@ public interface Folks.FavouriteDetails : Object
    * notification and will only return once the favouriteness has been written
    * to the relevant backing store (or the operation's failed).
    *
-   * @param is_favourite `true` if the contact is a favourite; `false` otherwise
+   * @param is_favourite ``true`` if the contact is a favourite; ``false``
+   * otherwise
    * @throws PropertyError if setting the favouriteness failed
    * @since 0.6.2
    */

@@ -80,7 +80,7 @@ public errordomain Folks.PersonaStoreError
 
   /**
    * Such an operation may not be performed on a {@link Persona} with
-   * {@link Persona.is_user} set to `true`.
+   * {@link Persona.is_user} set to ``true``.
    *
    * @since 0.3.0
    */
@@ -118,7 +118,7 @@ public errordomain Folks.PersonaStoreError
 
   /**
    * Such an operation may only be performed on a {@link Persona} with
-   * {@link Persona.is_user} set to `true`.
+   * {@link Persona.is_user} set to ``true``.
    *
    * @since 0.6.4
    */
@@ -369,7 +369,8 @@ public abstract class Folks.PersonaStore : Object
    * the details param of {@link PersonaStore.add_persona_from_details}.
    *
    * @param detail the {@link PersonaDetail} to lookup
-   * @return the corresponding property name, or `null` if `detail` is invalid
+   * @return the corresponding property name, or ``null`` if ``detail`` is
+   * invalid
    *
    * @since 0.5.0
    */
@@ -470,7 +471,7 @@ public abstract class Folks.PersonaStore : Object
    * The human-readable, service-specific name used to represent the
    * PersonaStore to the user.
    *
-   * For example: `foo@@xmpp.example.org`.
+   * For example: ``foo@@xmpp.example.org``.
    *
    * This should be used whenever the user needs to be presented with a
    * familiar, service-specific name. For instance, in a prompt for the user to
@@ -558,7 +559,7 @@ public abstract class Folks.PersonaStore : Object
    * it originally knows about have been loaded.
    *
    * It's guaranteed that this property's value will only ever change after
-   * {@link IndividualAggregator.is_prepared} has changed to `true`.
+   * {@link IndividualAggregator.is_prepared} has changed to ``true``.
    *
    * @since 0.6.2
    */
@@ -571,8 +572,8 @@ public abstract class Folks.PersonaStore : Object
    * changes to the {@link Individual}s containing them, and those changes then
    * be written out to the relevant backing store.
    *
-   * If this property is `false`, it doesn't mean that {@link Persona}s in this
-   * persona store aren't writeable at all. If their properties are updated
+   * If this property is ``false``, it doesn't mean that {@link Persona}s in
+   * this persona store aren't writeable at all. If their properties are updated
    * through the {@link Persona}, rather than through the {@link Individual}
    * containing that persona, changes may be propagated to the backing store.
    *
@@ -686,7 +687,7 @@ public abstract class Folks.PersonaStore : Object
    * Add a new {@link Persona} to the PersonaStore.
    *
    * The {@link Persona} will be created by the PersonaStore backend from the
-   * key-value pairs given in `details`.
+   * key-value pairs given in ``details``.
    *
    * All additions through this function will later be emitted through the
    * personas-changed signal to be notified of the new {@link Persona}. The
@@ -705,13 +706,13 @@ public abstract class Folks.PersonaStore : Object
    * can either support a subset or superset of the suggested defaults.
    *
    * If a {@link Persona} with the given details already exists in the store, no
-   * error will be thrown and this function will return `null`.
+   * error will be thrown and this function will return ``null``.
    *
    * @param details a key-value map of details to use in creating the new
    * {@link Persona}
    *
-   * @return the new {@link Persona} or `null` if the corresponding Persona
-   * already existed. If non-`null`, the new {@link Persona} will also be
+   * @return the new {@link Persona} or ``null`` if the corresponding Persona
+   * already existed. If non-``null``, the new {@link Persona} will also be
    * amongst the {@link Persona}(s) in a future emission of
    * {@link PersonaStore.personas_changed}.
    * @throws PersonaStoreError if adding the persona failed

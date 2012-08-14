@@ -35,7 +35,7 @@ public interface Folks.AvatarDetails : Object
   /**
    * An avatar for the contact.
    *
-   * The avatar may be `null` if unset. Otherwise, the image data may be
+   * The avatar may be ``null`` if unset. Otherwise, the image data may be
    * asynchronously loaded using the methods of the {@link GLib.LoadableIcon}
    * implementation.
    *
@@ -51,7 +51,7 @@ public interface Folks.AvatarDetails : Object
    * notification and will only return once the avatar has been written to the
    * relevant backing store (or the operation's failed).
    *
-   * @param avatar the new avatar (or `null` to unset the avatar)
+   * @param avatar the new avatar (or ``null`` to unset the avatar)
    * @throws PropertyError if setting the avatar failed
    * @since 0.6.2
    */

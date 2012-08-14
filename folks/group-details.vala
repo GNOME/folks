@@ -130,8 +130,8 @@ public interface Folks.GroupDetails : Object
   /**
    * Add or remove the contact from the specified group.
    *
-   * If `is_member` is `true`, the contact will be added to the `group`. If
-   * it is `false`, they will be removed from the `group`.
+   * If ``is_member`` is ``true``, the contact will be added to the ``group``.
+   * If it is ``false``, they will be removed from the ``group``.
    *
    * @param group a freeform group identifier
    * @param is_member whether the contact should be a member of the group

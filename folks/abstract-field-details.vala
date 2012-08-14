@@ -29,9 +29,9 @@ using Gee;
  * Some contact details, like phone numbers or URLs, can have some
  * extra details associated with them.
  * For instance, a phone number expressed in vcard notation as
- * `tel;type=work,voice:(111) 555-1234` would be represented as
+ * ``tel;type=work,voice:(111) 555-1234`` would be represented as
  * a AbstractFieldDetails with value "(111) 555-1234" and with parameters
- * `['type': ('work', 'voice')]`.
+ * ``['type': ('work', 'voice')]``.
  *
  * The parameter name "type" with values "work", "home", or "other" are common
  * amongst most vCard attributes (and thus most AbstractFieldDetails-derived
@@ -161,7 +161,7 @@ public abstract class Folks.AbstractFieldDetails<T> : Object
    * Get the values for a parameter
    *
    * @param parameter_name the parameter name
-   * @return a collection of values for `parameter_name` or `null` (i.e. no
+   * @return a collection of values for ``parameter_name`` or ``null`` (i.e. no
    * collection) if there are no such parameters.
    *
    * @since 0.6.0
@@ -179,8 +179,8 @@ public abstract class Folks.AbstractFieldDetails<T> : Object
   /**
    * Add a new value for a parameter.
    *
-   * If there is already a parameter called `parameter_name` then
-   * `parameter_value` is added to the existing ones.
+   * If there is already a parameter called ``parameter_name`` then
+   * ``parameter_value`` is added to the existing ones.
    *
    * @param parameter_name the name of the parameter
    * @param parameter_value the value to add
@@ -195,7 +195,7 @@ public abstract class Folks.AbstractFieldDetails<T> : Object
   /**
    * Set the value of a parameter.
    *
-   * Sets the parameter called `parameter_name` to be `parameter_value`.
+   * Sets the parameter called ``parameter_name`` to be ``parameter_value``.
    * If there were already parameters with the same name they are replaced.
    *
    * @param parameter_name the name of the parameter
@@ -212,7 +212,7 @@ public abstract class Folks.AbstractFieldDetails<T> : Object
   /**
    * Extend the existing parameters.
    *
-   * Merge the parameters from `additional` into the existing ones.
+   * Merge the parameters from ``additional`` into the existing ones.
    *
    * @param additional the parameters to add
    *

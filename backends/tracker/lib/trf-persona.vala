@@ -511,7 +511,7 @@ public class Trf.Persona : Folks.Persona,
   /**
    * Create a new persona.
    *
-   * Create a new persona for the {@link PersonaStore} `store`, representing
+   * Create a new persona for the {@link PersonaStore} ``store``, representing
    * the nco:Contact whose details are stored in the cursor.
    */
   public Persona (PersonaStore store, string tracker_id,

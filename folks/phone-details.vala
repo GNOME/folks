@@ -57,8 +57,8 @@ public class Folks.PhoneFieldDetails : AbstractFieldDetails<string>
    * @param value the value of the field, which should be a non-empty phone
    * number (no particular format is mandated)
    * @param parameters initial parameters. See
-   * {@link AbstractFieldDetails.parameters}. A `null` value is equivalent to a
-   * empty map of parameters.
+   * {@link AbstractFieldDetails.parameters}. A ``null`` value is equivalent to
+   * an empty map of parameters.
    *
    * @return a new PhoneFieldDetails
    *
@@ -129,11 +129,11 @@ public class Folks.PhoneFieldDetails : AbstractFieldDetails<string>
    *
    * Typical normalisations:
    *
-   *  - `1-800-123-4567` → `18001234567`
-   *  - `+1-800-123-4567` → `18001234567`
-   *  - `+1-800-123-4567P123` → `18001234567P123`
+   *  - ``1-800-123-4567`` → ``18001234567``
+   *  - ``+1-800-123-4567`` → ``18001234567``
+   *  - ``+1-800-123-4567P123`` → ``18001234567P123``
    *
-   * @return the normalised form of `number`
+   * @return the normalised form of ``number``
    *
    * @since 0.6.0
    */

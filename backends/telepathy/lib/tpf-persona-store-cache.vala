@@ -28,18 +28,18 @@ using Folks;
  *
  * Each {@link Tpf.Persona} is stored as a serialised {@link Variant} which is
  * a tuple containing the following fields:
- *  # UID (`s`)
- *  # IID (`s`)
- *  # IM address (`s`)
- *  # Protocol (`s`)
- *  # Set of group names (`as`)
- *  # Favourite? (`b`)
- *  # Alias (`s`)
- *  # In contact list? (`b`)
- *  # Avatar file URI (`s`)
- *  # Birthday date as a Unix timestamp (`s`)
- *  # Set of e-mail addresses and parameters (`a(sa(ss))`)
- *  # Full name (`s`)
+ *  # UID (``s``)
+ *  # IID (``s``)
+ *  # IM address (``s``)
+ *  # Protocol (``s``)
+ *  # Set of group names (``as``)
+ *  # Favourite? (``b``)
+ *  # Alias (``s``)
+ *  # In contact list? (``b``)
+ *  # Avatar file URI (``s``)
+ *  # Birthday date as a Unix timestamp (``s``)
+ *  # Set of e-mail addresses and parameters (``a(sa(ss))``)
+ *  # Full name (``s``)
  *
  * @since 0.6.0
  */

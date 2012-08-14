@@ -105,7 +105,7 @@ public class Folks.AvatarCache : Object
    * Fetch an avatar from the cache by its globally unique ID.
    *
    * @param id the globally unique ID for the avatar
-   * @return Avatar from the cache, or `null` if it doesn't exist in the cache
+   * @return Avatar from the cache, or ``null`` if it doesn't exist in the cache
    * @throws GLib.Error if checking for existence of the cache file failed
    * @since 0.6.0
    */

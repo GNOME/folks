@@ -63,7 +63,7 @@ public class Folks.Utils : Object
    *
    * @param a a multi-map to compare
    * @param b another multi-map to compare
-   * @return `true` if the multi-maps are equal, `false` otherwise
+   * @return ``true`` if the multi-maps are equal, ``false`` otherwise
    *
    * @since 0.6.0
    */
@@ -114,7 +114,7 @@ public class Folks.Utils : Object
    *
    * @param a a multi-map to compare
    * @param b another multi-map to compare
-   * @return `true` if the multi-maps are equal, `false` otherwise
+   * @return ``true`` if the multi-maps are equal, ``false`` otherwise
    *
    * @since 0.6.0
    */
@@ -165,7 +165,7 @@ public class Folks.Utils : Object
    *
    * @param a a set to compare
    * @param b another set to compare
-   * @return `true` if the sets are equal, `false` otherwise
+   * @return ``true`` if the sets are equal, ``false`` otherwise
    *
    * @since 0.6.0
    */

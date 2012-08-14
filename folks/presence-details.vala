@@ -73,8 +73,8 @@ public enum Folks.PresenceType
  * their current availability, such as for chatting.
  *
  * If the {@link Backend} providing the {@link Persona} doesn't support
- * presence, the {@link Persona}'s `presence_type` will be set to
- * {@link PresenceType.UNSET} and their `presence_message` will be an empty
+ * presence, the {@link Persona}'s ``presence_type`` will be set to
+ * {@link PresenceType.UNSET} and their ``presence_message`` will be an empty
  * string.
  */
 public interface Folks.PresenceDetails : Object
@@ -179,8 +179,8 @@ public interface Folks.PresenceDetails : Object
   /**
    * Compare two {@link PresenceType}s.
    *
-   * `0` will be returned if the types are equal, a positive number will be
-   * returned if `type_a` is more available than `type_b`, and a negative
+   * ``0`` will be returned if the types are equal, a positive number will be
+   * returned if ``type_a`` is more available than ``type_b``, and a negative
    * number will be returned if the opposite is true.
    *
    * @param type_a the first {@link PresenceType} to compare
@@ -197,11 +197,11 @@ public interface Folks.PresenceDetails : Object
   /**
    * Whether the contact is online.
    *
-   * This will be `true` if the contact's presence type is higher than
+   * This will be ``true`` if the contact's presence type is higher than
    * {@link PresenceType.OFFLINE}, as determined by
    * {@link PresenceDetails.typecmp}.
    *
-   * @return `true` if the contact is online, `false` otherwise
+   * @return ``true`` if the contact is online, ``false`` otherwise
    */
   public bool is_online ()
     {

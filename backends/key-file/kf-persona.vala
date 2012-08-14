@@ -306,8 +306,8 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
   /**
    * Create a new persona.
    *
-   * Create a new persona for the {@link PersonaStore} `store`, representing
-   * the Persona given by the group `uid` in the key file `key_file`.
+   * Create a new persona for the {@link PersonaStore} ``store``, representing
+   * the Persona given by the group ``uid`` in the key file ``key_file``.
    */
   public Persona (string id, Folks.PersonaStore store)
     {

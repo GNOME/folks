@@ -40,8 +40,8 @@ public class Folks.EmailFieldDetails : AbstractFieldDetails<string>
    * @param value the value of the field, which should be a valid, non-empty
    * e-mail address
    * @param parameters initial parameters. See
-   * {@link AbstractFieldDetails.parameters}. A `null` value is equivalent to an
-   * empty map of parameters.
+   * {@link AbstractFieldDetails.parameters}. A ``null`` value is equivalent to
+   * an empty map of parameters.
    *
    * @return a new EmailFieldDetails
    *

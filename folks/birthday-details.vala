@@ -36,7 +36,7 @@ public interface Folks.BirthdayDetails : Object
    * The birthday of the {@link Persona} and {@link Individual}. This
    * is assumed to be in UTC.
    *
-   * If this is `null`, the contact's birthday isn't known.
+   * If this is ``null``, the contact's birthday isn't known.
    *
    * @since 0.4.0
    */
@@ -50,7 +50,7 @@ public interface Folks.BirthdayDetails : Object
    * notification and will only return once the birthday has been written to the
    * relevant backing store (or the operation's failed).
    *
-   * @param birthday the new birthday (or `null` to unset the birthday)
+   * @param birthday the new birthday (or ``null`` to unset the birthday)
    * @throws PropertyError if setting the birthday failed
    * @since 0.6.2
    */
@@ -65,7 +65,7 @@ public interface Folks.BirthdayDetails : Object
   /**
    * The event ID of the birthday event from the source calendar.
    *
-   * If this is `null`, the birthday event is unknown. The semantics of the
+   * If this is ``null``, the birthday event is unknown. The semantics of the
    * event ID are left unspecified by folks.
    *
    * @since 0.4.0
@@ -80,7 +80,8 @@ public interface Folks.BirthdayDetails : Object
    * error notification and will only return once the event has been written to
    * the relevant backing store (or the operation's failed).
    *
-   * @param event_id the new birthday event ID (or `null` to unset the event ID)
+   * @param event_id the new birthday event ID (or ``null`` to unset the event
+   * ID)
    * @throws PropertyError if setting the birthday event ID failed
    * @since 0.6.2
    */

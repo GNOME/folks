@@ -37,8 +37,8 @@ public class Folks.WebServiceFieldDetails : AbstractFieldDetails<string>
    *
    * @param value the value of the field, a non-empty web service address
    * @param parameters initial parameters. See
-   * {@link AbstractFieldDetails.parameters}. A `null` value is equivalent to an
-   * empty map of parameters.
+   * {@link AbstractFieldDetails.parameters}. A ``null`` value is equivalent to
+   * an empty map of parameters.
    *
    * @return a new WebServiceFieldDetails
    *

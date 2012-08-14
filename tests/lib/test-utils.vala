@@ -28,7 +28,7 @@ public class Folks.TestUtils
   /**
    * Compare the content of two {@link LoadableIcon}s for equality.
    *
-   * This is in contrast to {@link Icon.equal}, which returns `false` for
+   * This is in contrast to {@link Icon.equal}, which returns ``false`` for
    * identical icons stored in different subclasses or in different storage
    * locations.
    *
@@ -39,7 +39,7 @@ public class Folks.TestUtils
    * @param a the first icon
    * @param b the second icon
    * @param size the size at which to compare the icons
-   * @return `true` if the instances are equal, `false` otherwise
+   * @return ``true`` if the instances are equal, ``false`` otherwise
    */
   public static async bool loadable_icons_content_equal (LoadableIcon a,
       LoadableIcon b,

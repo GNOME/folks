@@ -30,7 +30,7 @@ using Zeitgeist;
  *
  * There is a one-to-one correspondence between {@link Tpf.Persona}s and
  * {@link TelepathyGLib.Contact}s, although at any time the
- * {@link Tpf.Persona.contact} property of a persona may be `null` if the
+ * {@link Tpf.Persona.contact} property of a persona may be ``null`` if the
  * contact's Telepathy connection isn't available (e.g. due to being offline).
  * In this case, the persona's properties persist from a local cache.
  */
@@ -573,7 +573,7 @@ public class Tpf.Persona : Folks.Persona,
   /**
    * The Telepathy contact represented by this persona.
    *
-   * Note that this may be `null` if the {@link PersonaStore} providing this
+   * Note that this may be ``null`` if the {@link PersonaStore} providing this
    * {@link Persona} isn't currently available (e.g. due to not being connected
    * to the network). In this case, most other properties of the {@link Persona}
    * are being retrieved from a cache and may not be current (though there's no
@@ -700,8 +700,8 @@ public class Tpf.Persona : Folks.Persona,
   /**
    * Create a new persona.
    *
-   * Create a new persona for the {@link PersonaStore} `store`, representing
-   * the Telepathy contact given by `contact`.
+   * Create a new persona for the {@link PersonaStore} ``store``, representing
+   * the Telepathy contact given by ``contact``.
    *
    * @param contact the Telepathy contact being represented by the persona
    * @param store the persona store to place the persona in
@@ -1015,7 +1015,7 @@ public class Tpf.Persona : Folks.Persona,
     }
 
   /**
-   * Create a new persona for the {@link PersonaStore} `store`, representing
+   * Create a new persona for the {@link PersonaStore} ``store``, representing
    * a cached contact for which we currently have no Telepathy contact.
    *
    * @param store The persona store to place the persona in.
@@ -1030,18 +1030,18 @@ public class Tpf.Persona : Folks.Persona,
    * @param is_in_contact_list Whether the persona is in the user's contact
    * list.
    * @param is_user Whether the persona is the user.
-   * @param avatar The icon for the persona's cached avatar, or `null` if they
+   * @param avatar The icon for the persona's cached avatar, or ``null`` if they
    * have no avatar.
-   * @param birthday The date/time of birth of the persona, or `null` if it's
+   * @param birthday The date/time of birth of the persona, or ``null`` if it's
    * unknown.
    * @param full_name The persona's full name, or the empty string if it's
    * unknown.
    * @param email_addresses A set of the persona's e-mail addresses, which may
-   * be empty (but may not be `null`).
+   * be empty (but may not be ``null``).
    * @param phone_numbers A set of the persona's phone numbers, which may be
-   * empty (but may not be `null`).
+   * empty (but may not be ``null``).
    * @param urls A set of the persona's URLs, which may be empty (but may not be
-   * `null`).
+   * ``null``).
    * @return A new {@link Tpf.Persona} representing the cached persona.
    *
    * @since 0.6.0
@@ -1221,16 +1221,16 @@ public class Tpf.Persona : Folks.Persona,
    * Look up a {@link Tpf.Persona} by its {@link TelepathyGLib.Contact}.
    *
    * If the {@link TelepathyGLib.Account} for the contact's
-   * {@link TelepathyGLib.Connection} is `null`, or if a
-   * {@link Tpf.PersonaStore} can't be found for that account, `null` will be
+   * {@link TelepathyGLib.Connection} is ``null``, or if a
+   * {@link Tpf.PersonaStore} can't be found for that account, ``null`` will be
    * returned. Otherwise, if a {@link Tpf.Persona} already exists for the given
    * contact, that will be returned; if one doesn't exist a new one will be
    * created and returned. In this case, the {@link Tpf.Persona} will be added
    * to the {@link PersonaStore} associated with the account, and will be
-   * removed when `contact` is destroyed.
+   * removed when ``contact`` is destroyed.
    *
    * @param contact the Telepathy contact of the persona
-   * @return the persona associated with the contact, or `null`
+   * @return the persona associated with the contact, or ``null``
    * @since 0.6.6
    */
   public static Persona? dup_for_contact (Contact contact)

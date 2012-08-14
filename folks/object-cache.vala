@@ -62,8 +62,8 @@ public abstract class Folks.ObjectCache<T> : Object
    * changes, this may be modified to take a version parameter.
    *
    * @param object_version the version of the object format to use, or
-   * `uint8.MAX` for the latest version
-   * @return variant type for that object version, or `null` if the version is
+   * ``uint8.MAX`` for the latest version
+   * @return variant type for that object version, or ``null`` if the version is
    * unsupported
    * @since 0.6.0
    */
@@ -81,20 +81,20 @@ public abstract class Folks.ObjectCache<T> : Object
   protected abstract uint8 get_serialised_object_version ();
 
   /**
-   * Serialise the given `object` to a {@link GLib.Variant} and return the
+   * Serialise the given ``object`` to a {@link GLib.Variant} and return the
    * variant. The variant must be of the type returned by
    * {@link ObjectCache.get_serialised_object_type}.
    *
    * @param object the object to serialise
-   * @return serialised form of `object`
+   * @return serialised form of ``object``
    *
    * @since 0.6.0
    */
   protected abstract Variant serialise_object (T object);
 
   /**
-   * Deserialise the given `variant` to a new instance of an object. The variant
-   * is guaranteed to have the type returned by
+   * Deserialise the given ``variant`` to a new instance of an object. The
+   * variant is guaranteed to have the type returned by
    * {@link ObjectCache.get_serialised_object_type}.
    *
    * @param variant the serialised form to deserialise
@@ -133,7 +133,8 @@ public abstract class Folks.ObjectCache<T> : Object
 
   /**
    * Create a new cache instance using the given type ID and ID. This is
-   * protected as the `type_id` will typically be set statically by subclasses.
+   * protected as the ``type_id`` will typically be set statically by
+   * subclasses.
    *
    * @param type_id A string identifying the type of object being cached. This
    * has to be suitable for use as a directory name; i.e. lower case,
@@ -169,18 +170,19 @@ public abstract class Folks.ObjectCache<T> : Object
 
   /**
    * Load a set of objects from the cache and return them as a new set. If the
-   * cache file doesn't exist, `null` will be returned. An empty set will be
+   * cache file doesn't exist, ``null`` will be returned. An empty set will be
    * returned if the cache file existed but was empty (i.e. was stored with
    * an empty set originally).
    *
-   * Loading the objects can be cancelled using `cancellable`. If it is, `null`
-   * will be returned.
+   * Loading the objects can be cancelled using ``cancellable``. If it is,
+   * ``null`` will be returned.
    *
    * If any errors are encountered while loading the objects, warnings will be
-   * logged as appropriate and `null` will be returned.
+   * logged as appropriate and ``null`` will be returned.
    *
-   * @param cancellable A {@link GLib.Cancellable} for the operation, or `null`.
-   * @return A set of objects from the cache, or `null`.
+   * @param cancellable A {@link GLib.Cancellable} for the operation, or
+   * ``null``.
+   * @return A set of objects from the cache, or ``null``.
    *
    * @since 0.6.0
    */
@@ -318,13 +320,14 @@ public abstract class Folks.ObjectCache<T> : Object
    * objects in the cache, or creating the cache file from scratch if it didn't
    * previously exist.
    *
-   * Storing the objects can be cancelled using `cancellable`. If it is, the
+   * Storing the objects can be cancelled using ``cancellable``. If it is, the
    * cache will be left in a consistent state, but may be storing the old set
    * of objects or the new set.
    *
    * @param objects A set of objects to store. This may be empty, but may not
-   * be `null`.
-   * @param cancellable A {@link GLib.Cancellable} for the operation, or `null`.
+   * be ``null``.
+   * @param cancellable A {@link GLib.Cancellable} for the operation, or
+   * ``null``.
    *
    * @since 0.6.0
    */

@@ -40,7 +40,7 @@ public interface Folks.AntiLinkable : Folks.Persona
    * not be linked to this {@link Persona}, even if their linkable properties
    * match.
    *
-   * No UIDs may be `null`. Well-formed but non-existent UIDs (i.e. UIDs which
+   * No UIDs may be ``null``. Well-formed but non-existent UIDs (i.e. UIDs which
    * can be successfully parsed, but which don't currently correspond to a
    * {@link Persona} instance) are permitted, as personas may appear and
    * disappear over time.
@@ -84,11 +84,11 @@ public interface Folks.AntiLinkable : Folks.Persona
   /**
    * Check for an anti-link with another persona.
    *
-   * This will return `true` if `other_persona`'s UID is listed in this
+   * This will return ``true`` if ``other_persona``'s UID is listed in this
    * persona's anti-links set. Note that this check is not symmetric.
    *
    * @param other_persona the persona to check is anti-linked
-   * @return `true` if an anti-link exists, `false` otherwise
+   * @return ``true`` if an anti-link exists, ``false`` otherwise
    * @since 0.7.3
    */
   public bool has_anti_link_with_persona (Persona other_persona)
@@ -99,7 +99,7 @@ public interface Folks.AntiLinkable : Folks.Persona
   /**
    * Add anti-links to other personas.
    *
-   * The UIDs of all personas in `other_personas` will be added to this
+   * The UIDs of all personas in ``other_personas`` will be added to this
    * persona's anti-links set and the changes propagated to backends.
    *
    * Any attempt to anti-link a persona with itself is not an error, but is
@@ -132,7 +132,7 @@ public interface Folks.AntiLinkable : Folks.Persona
   /**
    * Remove anti-links to other personas.
    *
-   * The UIDs of all personas in `other_personas` will be removed from this
+   * The UIDs of all personas in ``other_personas`` will be removed from this
    * persona's anti-links set and the changes propagated to backends.
    *
    * @param other_personas the personas to remove anti-links from this one

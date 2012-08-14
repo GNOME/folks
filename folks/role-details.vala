@@ -102,7 +102,7 @@ public class Folks.Role : Object
   /**
    * Whether none of the components is set.
    *
-   * @return `true` if all the components are the empty string, `false`
+   * @return ``true`` if all the components are the empty string, ``false``
    * otherwise.
    *
    * @since 0.6.7
@@ -120,7 +120,7 @@ public class Folks.Role : Object
    *
    * @param a a role to compare
    * @param b another role to compare
-   * @return `true` if the roles are equal, `false` otherwise
+   * @return ``true`` if the roles are equal, ``false`` otherwise
    */
   public static bool equal (Role a, Role b)
     {
@@ -184,7 +184,7 @@ public class Folks.RoleFieldDetails : AbstractFieldDetails<Role>
    *
    * @param value the non-empty {@link Role} of the field
    * @param parameters initial parameters. See
-   * {@link AbstractFieldDetails.parameters}. A `null` value is equivalent to an
+   * {@link AbstractFieldDetails.parameters}. A ``null`` value is equivalent to an
    * empty map of parameters.
    *
    * @return a new RoleFieldDetails

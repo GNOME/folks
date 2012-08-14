@@ -134,7 +134,7 @@ public class Folks.IndividualAggregator : Object
    * quiescent state.
    *
    * It's guaranteed that this property's value will only ever change after
-   * {@link IndividualAggregator.is_prepared} has changed to `true`.
+   * {@link IndividualAggregator.is_prepared} has changed to ``true``.
    *
    * @since 0.6.2
    */
@@ -150,8 +150,8 @@ public class Folks.IndividualAggregator : Object
    * by:
    *
    * - the FOLKS_PRIMARY_STORE env var (mostly for debugging)
-   * - the GSettings key set in `_PRIMARY_STORE_CONFIG_KEY` (system set store)
-   * - going with the `key-file` or `eds` store as the fall-back option
+   * - the GSettings key set in ``_PRIMARY_STORE_CONFIG_KEY`` (system set store)
+   * - going with the ``key-file`` or ``eds`` store as the fall-back option
    *
    * @since 0.5.0
    */
@@ -237,7 +237,7 @@ public class Folks.IndividualAggregator : Object
    * mappings from the old individuals to the single new individual which
    * replaces them (i.e. each of the old individuals will map to the same new
    * individual). This new individual is the one which will be specified as the
-   * `replacement_individual` in the {@link Individual.removed} signal for the
+   * ``replacement_individual`` in the {@link Individual.removed} signal for the
    * old individuals.
    *
    * Individuals which have been unlinked will be listed in the multi-map as
@@ -245,11 +245,11 @@ public class Folks.IndividualAggregator : Object
    * which replace it.
    *
    * Individuals which have been added will be listed in the multi-map as a
-   * mapping from `null` to the set of added individuals. If `null` doesn't
+   * mapping from ``null`` to the set of added individuals. If ``null`` doesn't
    * map to anything, no individuals have been added to the aggregator.
    *
    * Individuals which have been removed will be listed in the multi-map as
-   * mappings from the removed individual to `null`.
+   * mappings from the removed individual to ``null``.
    *
    * This will not be emitted until after {@link IndividualAggregator.prepare}
    * has been called.
@@ -611,7 +611,7 @@ public class Folks.IndividualAggregator : Object
    * @param matchee the individual to find matches for
    * @param min_threshold the threshold for accepting a match
    * @return a map from matched individuals to the degree with which they match
-   * `matchee` (which is guaranteed to at least equal `min_threshold`);
+   * ``matchee`` (which is guaranteed to at least equal ``min_threshold``);
    * if no matches could be found, an empty map is returned
    *
    * @since 0.5.1
@@ -645,7 +645,7 @@ public class Folks.IndividualAggregator : Object
    * @return a map from each individual in the aggregator to a map of the
    * other individuals in the aggregator which can be matched with that
    * individual, mapped to the degree with which they match the original
-   * individual (which is guaranteed to at least equal `min_threshold`)
+   * individual (which is guaranteed to at least equal ``min_threshold``)
    *
    * @since 0.5.1
    */
@@ -761,7 +761,7 @@ public class Folks.IndividualAggregator : Object
 
       /* We use the configured PersonaStore as the primary PersonaStore.
        *
-       * If the type_id is `eds` we *must* know the actual store
+       * If the type_id is ``eds`` we *must* know the actual store
        * (address book) we are talking about or we might end up using
        * a random store on every run.
        */
@@ -1004,13 +1004,13 @@ public class Folks.IndividualAggregator : Object
           PersonaStoreTrust trust_level = persona.store.trust_level;
 
           /* These are the Individuals whose Personas will be linked together
-           * to form the `final_individual`.
+           * to form the ``final_individual``.
            * Since a given Persona can only be part of one Individual, and the
            * code in Persona._set_personas() ensures that there are no duplicate
            * Personas in a given Individual, ensuring that there are no
-           * duplicate Individuals in `candidate_inds` (by using a
+           * duplicate Individuals in ``candidate_inds`` (by using a
            * HashSet) guarantees that there will be no duplicate Personas
-           * in the `final_individual`. */
+           * in the ``final_individual``. */
           HashSet<Individual> candidate_inds = new HashSet<Individual> ();
 
           var final_personas = new HashSet<Persona> ();
@@ -1698,8 +1698,8 @@ public class Folks.IndividualAggregator : Object
     }
 
   /**
-   * Add a new persona in the given {@link PersonaStore} based on the `details`
-   * provided.
+   * Add a new persona in the given {@link PersonaStore} based on the
+   * ``details`` provided.
    *
    * If the target store is offline, this function will throw
    * {@link IndividualAggregatorError.STORE_OFFLINE}. It's the responsibility of
@@ -1713,15 +1713,15 @@ public class Folks.IndividualAggregator : Object
    *  * message - a user-readable message to pass to the persona being added
    *
    * If a {@link Persona} with the given details already exists in the store, no
-   * error will be thrown and this function will return `null`.
+   * error will be thrown and this function will return ``null``.
    *
    * @param parent an optional {@link Individual} to add the new {@link Persona}
    * to. This persona will be appended to its ordered list of personas.
    * @param persona_store the {@link PersonaStore} to add the persona to
    * @param details a key-value map of details to use in creating the new
    * {@link Persona}
-   * @return the new {@link Persona} or `null` if the corresponding
-   * {@link Persona} already existed. If non-`null`, the new {@link Persona}
+   * @return the new {@link Persona} or ``null`` if the corresponding
+   * {@link Persona} already existed. If non-``null``, the new {@link Persona}
    * will also be added to a new or existing {@link Individual} as necessary.
    * @throws IndividualAggregatorError.STORE_OFFLINE if the persona store was
    * offline
@@ -1900,7 +1900,7 @@ public class Folks.IndividualAggregator : Object
   private HashTable<string, Value?> _build_linking_details (
       Set<Persona> personas)
     {
-      /* `protocols_addrs_set` will be passed to the new Kf.Persona */
+      /* ``protocols_addrs_set`` will be passed to the new Kf.Persona */
       var protocols_addrs_set = new HashMultiMap<string, ImFieldDetails> (
             null, null,
             (GLib.HashFunc) ImFieldDetails.hash,
@@ -2073,7 +2073,7 @@ public class Folks.IndividualAggregator : Object
    * {@link Individual}.
    *
    * This makes sure that there is at least one {@link Persona} in the
-   * individual which has `property_name` in its
+   * individual which has ``property_name`` in its
    * {@link Persona.writeable_properties}. If no such persona exists in the
    * individual, a new one will be created and linked to the individual. (Note
    * that due to the design of the aggregator, this will result in the previous
@@ -2086,7 +2086,7 @@ public class Folks.IndividualAggregator : Object
    * {@link IndividualAggregatorError.PROPERTY_NOT_WRITEABLE} error will be
    * thrown.
    *
-   * @param individual the individual for which `property_name` should be
+   * @param individual the individual for which ``property_name`` should be
    * writeable
    * @param property_name the name of the property which needs to be writeable
    * (this should be in lower case using hyphens, e.g. “web-service-addresses”)
@@ -2095,7 +2095,7 @@ public class Folks.IndividualAggregator : Object
    * @throws IndividualAggregatorError.NO_PRIMARY_STORE if no primary store was
    * configured for this individual aggregator
    * @throws IndividualAggregatorError.PROPERTY_NOT_WRITEABLE if the given
-   * `property_name` referred to a non-writeable property
+   * ``property_name`` referred to a non-writeable property
    * @throws IndividualAggregatorError if adding a new persona (using
    * {@link IndividualAggregator.add_persona_from_details}) failed, or if
    * linking personas (using {@link IndividualAggregator.link_personas}) failed
@@ -2204,8 +2204,8 @@ public class Folks.IndividualAggregator : Object
   /**
    * Look up an individual in the aggregator.
    *
-   * This returns the {@link Individual} with the given `id` if it exists in
-   * the aggregator, and `null` otherwise.
+   * This returns the {@link Individual} with the given ``id`` if it exists in
+   * the aggregator, and ``null`` otherwise.
    *
    * In future, when lazy-loading of individuals' properties is added to folks,
    * this method guarantees to load all properties of the individual, even if
@@ -2216,7 +2216,7 @@ public class Folks.IndividualAggregator : Object
    * that case.
    *
    * @param id ID of the individual to look up
-   * @return individual with `id`, or `null` if no such individual was found
+   * @return individual with ``id``, or ``null`` if no such individual was found
    * @throws GLib.Error from {@link IndividualAggregator.prepare}
    *
    * @since 0.7.0

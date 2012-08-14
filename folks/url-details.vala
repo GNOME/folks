@@ -76,8 +76,8 @@ public class Folks.UrlFieldDetails : AbstractFieldDetails<string>
    *
    * @param value the value of the field, a non-empty URI
    * @param parameters initial parameters. See
-   * {@link AbstractFieldDetails.parameters}. A `null` value is equivalent to a
-   * empty map of parameters.
+   * {@link AbstractFieldDetails.parameters}. A ``null`` value is equivalent to
+   * an empty map of parameters.
    *
    * @return a new UrlFieldDetails
    *

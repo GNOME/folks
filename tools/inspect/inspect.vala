@@ -455,8 +455,8 @@ public class Folks.Inspect.Client : Object
 
               /* Reset the readline state ready to display a new prompt. If the
                * pager exited as the result of a signal, it probably didn't
-               * tidy up after itself (e.g. `less` leaves a colon prompt behind
-               * on the current line), so move to a new line. Doing this
+               * tidy up after itself (e.g. ``less`` leaves a colon prompt
+               * behind on the current line), so move to a new line. Doing this
                * normally just looks a bit weird. */
               if (Process.if_signaled (status))
                 {

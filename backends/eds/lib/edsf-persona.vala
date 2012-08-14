@@ -754,8 +754,8 @@ public class Edsf.Persona : Folks.Persona,
   /**
    * Create a new persona.
    *
-   * Create a new persona for the {@link PersonaStore} `store`, representing
-   * the EDS contact given by `contact`.
+   * Create a new persona for the {@link PersonaStore} ``store``, representing
+   * the EDS contact given by ``contact``.
    *
    * @param store the store which will contain the persona
    * @param contact the EDS contact being represented by the persona

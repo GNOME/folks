@@ -158,7 +158,7 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
    * Create a new PersonaStore.
    *
    * Create a new persona store to expose the {@link Persona}s provided by the
-   * different groups in the key file given by `key_file`.
+   * different groups in the key file given by ``key_file``.
    */
   public PersonaStore (File key_file)
     {
@@ -360,7 +360,7 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
   /**
    * Add a new {@link Persona} to the PersonaStore.
    *
-   * Accepted keys for `details` are:
+   * Accepted keys for ``details`` are:
    * - PersonaStore.detail_key (PersonaDetail.IM_ADDRESSES)
    * - PersonaStore.detail_key (PersonaDetail.WEB_SERVICE_ADDRESSES)
    *

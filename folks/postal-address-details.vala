@@ -27,7 +27,7 @@ using Gee;
 /**
  * Object representing a postal mail address.
  *
- * The components of the address are never `null`: an empty string
+ * The components of the address are never ``null``: an empty string
  * indicates that a property is not set.
  */
 public class Folks.PostalAddress : Object
@@ -145,7 +145,7 @@ public class Folks.PostalAddress : Object
   /**
    * Create a PostalAddress.
    *
-   * You can pass `null` if a component is not set.
+   * You can pass ``null`` if a component is not set.
    *
    * @param po_box the PO Box
    * @param extension the address extension
@@ -176,7 +176,7 @@ public class Folks.PostalAddress : Object
   /**
    * Whether none of the components is set.
    *
-   * @return `true` if all the components are the empty string, `false`
+   * @return ``true`` if all the components are the empty string, ``false``
    * otherwise.
    *
    * @since 0.6.7
@@ -195,13 +195,13 @@ public class Folks.PostalAddress : Object
 
   /**
    * Compare if two postal addresses are equal. Addresses are equal if all their
-   * components are equal (where `null` compares equal only with `null`) and
+   * components are equal (where ``null`` compares equal only with ``null``) and
    * they have the same set of types (or both have no types).
    *
    * This does not factor in the {@link PostalAddress.uid}.
    *
    * @param with another postal address to compare with
-   * @return `true` if the addresses are equal, `false` otherwise
+   * @return ``true`` if the addresses are equal, ``false`` otherwise
    */
   public bool equal (PostalAddress with)
     {
@@ -268,8 +268,8 @@ public class Folks.PostalAddressFieldDetails :
    *
    * @param value the value of the field, a non-empty {@link PostalAddress}
    * @param parameters initial parameters. See
-   * {@link AbstractFieldDetails.parameters}. A `null` value is equivalent to an
-   * empty map of parameters.
+   * {@link AbstractFieldDetails.parameters}. A ``null`` value is equivalent to
+   * an empty map of parameters.
    *
    *
    * @return a new PostalAddressFieldDetails

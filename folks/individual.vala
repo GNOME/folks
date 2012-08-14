@@ -152,9 +152,9 @@ public class Folks.Individual : Object,
    * Setting this property is only guaranteed to succeed (and be written to
    * the backing store) if
    * {@link IndividualAggregator.ensure_individual_property_writeable} has been
-   * called successfully on the individual for the property name `avatar`.
+   * called successfully on the individual for the property name ``avatar``.
    *
-   * @param avatar the new avatar (or `null` to unset the avatar)
+   * @param avatar the new avatar (or ``null`` to unset the avatar)
    * @throws PropertyError if setting the avatar failed
    * @since 0.6.3
    */
@@ -232,22 +232,22 @@ public class Folks.Individual : Object,
    *
    * Iff the Individual represents the user – the person who owns the
    * account in the backend for each {@link Persona} in the Individual –
-   * this is `true`.
+   * this is ``true``.
    *
    * It is //not// guaranteed that every {@link Persona} in the Individual has
    * its {@link Persona.is_user} set to the same value as the Individual. For
    * example, the user could own two Telepathy accounts, and have added the
    * other account as a contact in each account. The accounts will expose a
    * {@link Persona} for the user (which will have {@link Persona.is_user} set
-   * to `true`) //and// a {@link Persona} for the contact for the other account
-   * (which will have {@link Persona.is_user} set to `false`).
+   * to ``true``) //and// a {@link Persona} for the contact for the other
+   * account (which will have {@link Persona.is_user} set to ``false``).
    *
-   * It is guaranteed that iff this property is set to `true` on an Individual,
-   * there will be at least one {@link Persona} in the Individual with its
-   * {@link Persona.is_user} set to `true`.
+   * It is guaranteed that iff this property is set to ``true`` on an
+   * Individual, there will be at least one {@link Persona} in the Individual
+   * with its {@link Persona.is_user} set to ``true``.
    *
    * It is guaranteed that there will only ever be one Individual with this
-   * property set to `true`.
+   * property set to ``true``.
    *
    * @since 0.3.0
    */
@@ -279,7 +279,8 @@ public class Folks.Individual : Object,
    * should unreference it and remove it from their UI.
    *
    * @param replacement_individual the individual which has replaced this one
-   * due to linking, or `null` if this individual was removed for another reason
+   * due to linking, or ``null`` if this individual was removed for another
+   * reason
    * @since 0.1.13
    */
   public signal void removed (Individual? replacement_individual);
@@ -604,7 +605,7 @@ public class Folks.Individual : Object,
   /**
    * Whether this Individual is a user-defined favourite.
    *
-   * This property is `true` if any of this Individual's {@link Persona}s are
+   * This property is ``true`` if any of this Individual's {@link Persona}s are
    * favourites).
    */
   [CCode (notify = false)]
@@ -995,8 +996,8 @@ public class Folks.Individual : Object,
   /**
    * Add or remove the Individual from the specified group.
    *
-   * If `is_member` is `true`, the Individual will be added to the `group`. If
-   * it is `false`, they will be removed from the `group`.
+   * If ``is_member`` is ``true``, the Individual will be added to the
+   * ``group``. If it is ``false``, they will be removed from the ``group``.
    *
    * The group membership change will propagate to every {@link Persona} in
    * the Individual.
@@ -1079,11 +1080,11 @@ public class Folks.Individual : Object,
    * Create a new Individual.
    *
    * The Individual can optionally be seeded with the {@link Persona}s in
-   * `personas`. Otherwise, it will have to have personas added using the
+   * ``personas``. Otherwise, it will have to have personas added using the
    * {@link Folks.Individual.personas} property after construction.
    *
    * @param personas a list of {@link Persona}s to initialise the
-   * {@link Folks.Individual} with, or `null`
+   * {@link Folks.Individual} with, or ``null``
    * @return a new Individual
    *
    * @since 0.5.1
@@ -1230,17 +1231,17 @@ public class Folks.Individual : Object,
    * this individual, with the highest-positioned persona (the “greatest”
    * persona in the total order) finally being passed to the setter function to
    * use in updating the individual's value for the given property. i.e. If
-   * `compare_func(a, b)` is called and returns > 0, persona `a` will be passed
-   * to the setter.
+   * ``compare_func(a, b)`` is called and returns > 0, persona ``a`` will be
+   * passed to the setter.
    *
-   * At a level above `compare_func`, the function always prefers personas from
-   * the primary store (see {@link IndividualAggregator.primary_store}) over
-   * those which aren't.
+   * At a level above ``compare_func``, the function always prefers personas
+   * from the primary store (see {@link IndividualAggregator.primary_store})
+   * over those which aren't.
    *
    * Note that if a suitable persona isn't found in the individual (if, for
    * example, no personas in the individual implement the desired interface),
-   * `null` will be passed to `setter`, which should then set the individual's
-   * property to a default value.
+   * ``null`` will be passed to ``setter``, which should then set the
+   * individual's property to a default value.
    *
    * @param interface_type the type of interface which all personas under
    * consideration must implement ({@link Persona} to select all personas)
@@ -2223,14 +2224,16 @@ public class Folks.Individual : Object,
   /**
    * Anti-linked with a persona?
    *
-   * Check whether this individual is anti-linked to {@link Persona} `p` at all.
-   * If so, `true` will be returned — `false` will be returned otherwise.
+   * Check whether this individual is anti-linked to {@link Persona} ``p`` at
+   * all. If so, ``true`` will be returned — ``false`` will be returned
+   * otherwise.
    *
    * Note that this will check for anti-links in either direction, since
    * anti-links are not necessarily symmetric.
    *
    * @param p persona to check for anti-links with
-   * @return `true` if this individual is anti-linked with persona `p`; `false`
+   * @return ``true`` if this individual is anti-linked with persona ``p``;
+   * ``false``
    * otherwise
    * @since 0.7.3
    */
@@ -2256,15 +2259,15 @@ public class Folks.Individual : Object,
    * Anti-linked with an individual?
    *
    * Check whether this individual is anti-linked to any of the {@link Persona}s
-   * in {@link Folks.Individual} `i`. If so, `true` will be returned — `false`
-   * will be returned otherwise.
+   * in {@link Folks.Individual} ``i``. If so, ``true`` will be returned —
+   * ``false`` will be returned otherwise.
    *
    * Note that this will check for anti-links in either direction, since
    * anti-links are not necessarily symmetric.
    *
    * @param i individual to check for anti-links with
-   * @return `true` if this individual is anti-linked with individual `i`;
-   * `false` otherwise
+   * @return ``true`` if this individual is anti-linked with individual ``i``;
+   * ``false`` otherwise
    * @since 0.7.3
    */
   public bool has_anti_link_with_individual (Individual i)

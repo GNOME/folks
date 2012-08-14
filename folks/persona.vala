@@ -106,7 +106,7 @@ public abstract class Folks.Persona : Object
    * The human-readable, service-specific universal ID used to represent the
    * Persona.
    *
-   * For example: `foo@@xmpp.example.org`.
+   * For example: ``foo@@xmpp.example.org``.
    *
    * This should be used whenever the user needs to be presented with a
    * familiar, service-specific ID. For instance, in a prompt for the user to
@@ -124,7 +124,7 @@ public abstract class Folks.Persona : Object
    * Whether the Persona is the user.
    *
    * Iff the Persona represents the user (the person who owns the account in
-   * the respective backend) this is `true`.
+   * the respective backend) this is ``true``.
    *
    * @since 0.3.0
    */
@@ -148,7 +148,7 @@ public abstract class Folks.Persona : Object
   /**
    * The {@link Individual} which contains this Persona.
    *
-   * This may be `null`, but should only ever be so when the Persona has just
+   * This may be ``null``, but should only ever be so when the Persona has just
    * been created, when its {@link PersonaStore} is being destroyed, or when
    * it's moving between {@link Individual}s.
    *
@@ -224,7 +224,7 @@ public abstract class Folks.Persona : Object
    *
    * This is a callback provided by the {@link IndividualAggregator} whenever
    * a {@link Persona.linkable_property_to_links} method is called, which should
-   * be called by the `linkable_property_to_links` implementation for each
+   * be called by the ``linkable_property_to_links`` implementation for each
    * linkable-property-to-individual mapping it wants to add or remove in the
    * aggregator.
    *
@@ -242,7 +242,7 @@ public abstract class Folks.Persona : Object
    * This is a virtual method, to be overridden by subclasses of {@link Persona}
    * who have linkable properties. Each of their linkable properties should be
    * handled by their implementation of this function, examining the current
-   * value of the property and calling `callback` with one or more mapping
+   * value of the property and calling ``callback`` with one or more mapping
    * strings for the property's value. Each of these mapping strings will be
    * added to the {@link IndividualAggregator}'s link map, related to the
    * {@link Individual} instance which contains this {@link Persona}.

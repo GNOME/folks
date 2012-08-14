@@ -250,8 +250,8 @@ public class Swf.Persona : Folks.Persona,
   /**
    * Create a new persona.
    *
-   * Create a new persona for the {@link PersonaStore} `store`, representing
-   * the libsocialweb contact given by `contact`.
+   * Create a new persona for the {@link PersonaStore} ``store``, representing
+   * the libsocialweb contact given by ``contact``.
    *
    * @param store the store which will contain the persona
    * @param contact the libsocialweb contact being represented by the new
@@ -314,7 +314,7 @@ public class Swf.Persona : Folks.Persona,
    * Get the ID of the libsocialweb contact.
    *
    * @param contact contact to return the ID from
-   * @return ID of `contact`
+   * @return ID of ``contact``
    *
    * @since 0.5.0
    */

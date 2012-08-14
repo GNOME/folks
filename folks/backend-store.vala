@@ -271,9 +271,9 @@ public class Folks.BackendStore : Object {
   /**
    * Find, load, and prepare all backends which are not disabled.
    *
-   * Backends will be searched for in the path given by the `FOLKS_BACKEND_PATH`
-   * environment variable, if it's set. If it's not set, backends will be
-   * searched for in a path set at compilation time.
+   * Backends will be searched for in the path given by the
+   * ``FOLKS_BACKEND_PATH`` environment variable, if it's set. If it's not set,
+   * backends will be searched for in a path set at compilation time.
    *
    * @throws GLib.Error currently unused
    */
@@ -513,7 +513,7 @@ public class Folks.BackendStore : Object {
    * reference count is increased.
    *
    * @param name the backend name to retrieve
-   * @return the backend, or `null` if none could be found
+   * @return the backend, or ``null`` if none could be found
    *
    * @since 0.3.5
    */
