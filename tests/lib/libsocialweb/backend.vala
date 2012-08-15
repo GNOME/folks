@@ -225,7 +225,7 @@ public class LibsocialwebTest.LibsocialwebServiceTest : Object,
               (query, p, path);
           conn.register_object (path, contact_view);
           contact_views[path] = contact_view;
-          this.view_count++;
+          LibsocialwebTest.LibsocialwebServiceTest.view_count++;
         }
       catch (GLib.IOError e)
         {

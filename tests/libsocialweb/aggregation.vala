@@ -48,7 +48,7 @@ public class AggregationTests : Folks.TestCase
       /* Initialize an empty key file for the relationships*/
       var kf_relationships_path = Path.build_filename (
           Environment.get_tmp_dir (),
-          this.KF_RELATIONSHIPS_FILE_PATH, null);
+          AggregationTests.KF_RELATIONSHIPS_FILE_PATH, null);
       Environment.set_variable ("FOLKS_BACKEND_KEY_FILE_PATH",
           kf_relationships_path, true);
       string kf_relationships_data = "#\n";
@@ -66,7 +66,7 @@ public class AggregationTests : Folks.TestCase
 
       /* Use a temporary key file for the BackendStore */
       var kf_path = Path.build_filename (Environment.get_tmp_dir (),
-          this.STORE_FILE_PATH, null);
+          AggregationTests.STORE_FILE_PATH, null);
 
       FileUtils.remove (kf_path);
 
@@ -195,7 +195,7 @@ public class AggregationTests : Folks.TestCase
           if (individual_gathered.length >= 2)
             main_loop.quit ();
         });
-      aggregator.prepare ();
+      aggregator.prepare.begin ();
 
       timer_id = Timeout.add_seconds (5, () =>
         {
@@ -268,7 +268,7 @@ public class AggregationTests : Folks.TestCase
 
       Idle.add (() =>
         {
-          aggregator.link_personas (personas);
+          aggregator.link_personas.begin (personas);
           return false;
         });
 

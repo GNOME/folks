@@ -74,7 +74,7 @@ public class DummyLswTests : Folks.TestCase
             {
               LibsocialwebTest.ContactView view
                   = (LibsocialwebTest.ContactView)v;
-              view.Start();
+              view.Start.begin ();
               mysocialnetwork.contact_views[view_path].ContactsAdded
                   (new LibsocialwebTest.LibsocialwebContactViewTest
                       .ContactsAddedElement[0]);
@@ -163,7 +163,7 @@ public class DummyLswTests : Folks.TestCase
 
           main_loop.quit ();
         });
-      aggregator.prepare ();
+      aggregator.prepare.begin ();
 
       timer_id = Timeout.add_seconds (5, () =>
         {
