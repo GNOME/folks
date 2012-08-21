@@ -3,8 +3,11 @@ SUBDIRS = \
     lib \
     tools \
     folks \
-    telepathy \
     $(NULL)
+
+if ENABLE_TELEPATHY
+SUBDIRS += telepathy
+endif
 
 if ENABLE_LIBSOCIALWEB
 SUBDIRS += libsocialweb

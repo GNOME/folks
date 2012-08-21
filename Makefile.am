@@ -3,10 +3,13 @@ ACLOCAL_AMFLAGS = -I m4
 SUBDIRS = \
 	folks \
 	backends \
-	tests \
 	tools \
 	po \
 	$(NULL)
+
+if ENABLE_TESTS
+SUBDIRS += tests
+endif
 
 if HAVE_VALADOC
 SUBDIRS += docs
@@ -14,7 +17,9 @@ endif
 
 DISTCHECK_CONFIGURE_FLAGS = \
 	--enable-docs \
+	--enable-tests \
 	--enable-eds-backend \
+	--enable-telepathy-backend \
 	--enable-libsocialweb-backend \
 	--enable-tracker-backend \
 	--enable-zeitgeist \

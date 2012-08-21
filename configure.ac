@@ -98,8 +98,21 @@ else
         AC_DEFINE(HAVE_EDS, [0], [Define as 1 if you have the eds backend])
 fi
 
-
 AM_CONDITIONAL([ENABLE_EDS], [test "x$enable_eds_backend" = "xyes"])
+
+AC_ARG_ENABLE(telepathy-backend,
+        AC_HELP_STRING([--enable-telepathy-backend],
+                       [ build the Telepathy backend]),
+        enable_telepathy_backend=$enableval,
+        enable_telepathy_backend=yes )
+
+if test "x$enable_telepathy_backend" = "xyes"; then
+        AC_DEFINE(HAVE_TELEPATHY, [1], [Define as 1 if you have the Telepathy backend])
+else
+        AC_DEFINE(HAVE_TELEPATHY, [0], [Define as 1 if you have the Telepathy backend])
+fi
+
+AM_CONDITIONAL([ENABLE_TELEPATHY], [test "x$enable_eds_backend" = "xyes"])
 
 # Automatically check the dependencies for the libsocialweb backend
 SW_CLIENT_REQUIRED=0.25.20
@@ -177,7 +190,10 @@ Gee 0.6.x)])
 fi
 
 TP_GLIB_REQUIRED=0.19.0
-PKG_CHECK_MODULES([TP_GLIB], [telepathy-glib >= $TP_GLIB_REQUIRED])
+if test x$enable_telepathy_backend = xyes; then
+        PKG_CHECK_MODULES([TP_GLIB], [telepathy-glib >= $TP_GLIB_REQUIRED])
+        PKG_CHECK_MODULES([ZEITGEIST], [zeitgeist-1.0 >= $ZEITGEIST_REQUIRED])
+fi
 
 # Ignore post 0.20 deprecations
 TP_GLIB_CFLAGS="$TP_GLIB_CFLAGS -DTP_VERSION_MIN_REQUIRED=TP_VERSION_0_20"
@@ -194,8 +210,6 @@ if test x$enable_eds_backend = xyes; then
         PKG_CHECK_MODULES([EBOOK], [libebook-1.2 >= $EBOOK_REQUIRED])
         PKG_CHECK_MODULES([EDATASERVER], [libedataserver-1.2 >= $EDATASERVER_REQUIRED])
 fi
-
-PKG_CHECK_MODULES([ZEITGEIST], [zeitgeist-1.0 >= $ZEITGEIST_REQUIRED])
 
 #
 # Vala building options -- allows tarball builds without installing Vala
@@ -268,10 +282,12 @@ if test "x$enable_vala" = "xyes" ; then
         AC_SUBST([VAPIGENFLAGS])
         AC_SUBST([VAPIDIR])
 
-        VALA_CHECK_PACKAGES([telepathy-glib
-                             gio-2.0
-                             gee-1.0
-                             zeitgeist-1.0])
+        VALA_CHECK_PACKAGES([gio-2.0
+                             gee-1.0])
+
+        if test x$enable_telepathy_backend = xyes; then
+          VALA_CHECK_PACKAGES([telepathy-glib zeitgeist-1.0])
+        fi
 
         if test x$enable_tracker_backend = xyes; then
           VALA_CHECK_PACKAGES([tracker-sparql-$TRACKER_SPARQL_MAJOR])
@@ -381,6 +397,17 @@ AS_IF([test "$enable_inspect_tool" != "no" -a "$with_inspect_tool" = "yes" -a \
 AS_IF([test "$enable_inspect_tool" = "yes" -a "$with_inspect_tool" = "no"],
       [AC_MSG_ERROR([Inspect tool explicitly enabled, but readline not found])])
 AM_CONDITIONAL([ENABLE_INSPECT_TOOL], [test "$with_inspect_tool" = "yes"])
+
+# -----------------------------------------------------------
+# Tests
+# -----------------------------------------------------------
+
+AC_ARG_ENABLE([tests],
+              AS_HELP_STRING([--enable-tests],[Enable building of tests]),
+              [enable_tests=$enableval], [enable_tests=yes])
+AS_IF([test "$enable_tests" = "yes" -a "$enable_telepathy_backend" = "no"],
+      [AC_MSG_ERROR([The Telepathy backend must be enabled to build tests])])
+AM_CONDITIONAL([ENABLE_TESTS], [test x$enable_tests = xyes])
 
 # -----------------------------------------------------------
 # Documentation
@@ -617,8 +644,9 @@ Configure summary:
         Documentation...............:  ${have_valadoc}
         Import tool.................:  ${with_import_tool}
         Inspector tool..............:  ${with_inspect_tool}
+        Telepathy backend...........:  ${enable_telepathy_backend}
         Tracker backend.............:  ${enable_tracker_backend}
         Libsocialweb backend........:  ${have_libsocialweb_backend}
         E-D-S backend...............:  ${enable_eds_backend}
-
+        Build tests.................:  ${enable_tests}
 "

@@ -1,7 +1,10 @@
 SUBDIRS = \
-	telepathy \
 	key-file \
 	$(NULL)
+
+if ENABLE_TELEPATHY
+SUBDIRS += telepathy
+endif
 
 if ENABLE_LIBSOCIALWEB
 SUBDIRS += libsocialweb
