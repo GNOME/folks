@@ -1,3 +1,5 @@
+backends/bluez/bluez-backend.c
+backends/bluez/bluez-persona-store.c
 backends/eds/lib/edsf-persona-store.c
 backends/key-file/kf-backend-factory.c
 backends/key-file/kf-persona-store.c

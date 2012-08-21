@@ -119,6 +119,20 @@ AS_IF([test "x$enable_ofono_backend" = "xyes"], [
 
 AM_CONDITIONAL([ENABLE_OFONO], [test "x$enable_ofono_backend" = "xyes"])
 
+AC_ARG_ENABLE(bluez-backend,
+	AC_HELP_STRING([--enable-bluez-backend],
+		       [ build the bluez backend]),
+	enable_bluez_backend=$enableval,
+	enable_bluez_backend=yes )
+
+AS_IF([test "x$enable_bluez_backend" = "xyes"], [
+        AC_DEFINE(HAVE_BLUEZ, [1], [Define as 1 if you have the BlueZ backend])
+], [
+        AC_DEFINE(HAVE_BLUEZ, [0], [Define as 1 if you have the BlueZ backend])
+])
+
+AM_CONDITIONAL([ENABLE_BLUEZ], [test "x$enable_bluez_backend" = "xyes"])
+
 AC_ARG_ENABLE(telepathy-backend,
         AC_HELP_STRING([--enable-telepathy-backend],
                        [ build the Telepathy backend]),
@@ -183,8 +197,8 @@ AM_CONDITIONAL([ENABLE_LIBSOCIALWEB],
 # Dependencies
 # -----------------------------------------------------------
 
-GLIB_REQUIRED=2.37.6
-VALA_REQUIRED=0.17.6
+GLIB_REQUIRED=2.39.0
+VALA_REQUIRED=0.22.0.28-9090
 VALADOC_REQUIRED=0.3.1
 TRACKER_SPARQL_MAJOR=0.16
 TRACKER_SPARQL_REQUIRED=0.15.2
@@ -256,6 +270,10 @@ AS_IF([test x$enable_eds_backend = xyes], [
 ])
 
 AS_IF([test x$enable_ofono_backend = xyes], [
+        PKG_CHECK_MODULES([EBOOK], [libebook-1.2 >= $EBOOK_REQUIRED])
+])
+
+AS_IF([test x$enable_bluez_backend = xyes], [
         PKG_CHECK_MODULES([EBOOK], [libebook-1.2 >= $EBOOK_REQUIRED])
 ])
 
@@ -352,6 +370,10 @@ AS_IF([test "x$enable_vala" = "xyes"], [
         ])
 
         AS_IF([test x$enable_ofono_backend = xyes], [
+          VALA_CHECK_PACKAGES([libebook-1.2])
+        ])
+
+        AS_IF([test x$enable_bluez_backend = xyes], [
           VALA_CHECK_PACKAGES([libebook-1.2])
         ])
 ])
@@ -657,6 +679,7 @@ AC_CONFIG_FILES([
     backends/eds/Makefile
     backends/eds/lib/Makefile
     backends/ofono/Makefile
+    backends/bluez/Makefile
     folks/Makefile
     docs/Makefile
     po/Makefile.in
@@ -700,6 +723,7 @@ Configure summary:
         Libsocialweb backend........:  ${have_libsocialweb_backend}
         E-D-S backend...............:  ${enable_eds_backend}
         Ofono backend...............:  ${enable_ofono_backend}
+        BlueZ backend...............:  ${enable_bluez_backend}
         Zeitgeist support...........:  ${have_zeitgeist}
         Build tests.................:  ${enable_tests}
 "

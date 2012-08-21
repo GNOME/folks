@@ -54,6 +54,9 @@ public class Folks.BuildConf
   [CCode (cname = "HAVE_OFONO")]
   public static bool HAVE_OFONO;
 
+  [CCode (cname = "HAVE_BLUEZ")]
+  public static bool HAVE_BLUEZ;
+
   [CCode (cname = "HAVE_TELEPATHY")]
   public static bool HAVE_TELEPATHY;
 
