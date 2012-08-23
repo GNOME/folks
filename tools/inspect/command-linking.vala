@@ -342,7 +342,7 @@ private class Folks.Inspect.Commands.Linking : Folks.Inspect.Command
       /* @subcommand should be either “link-personas”, “link-individuals”
        * or “unlink-individual” */
       return Readline.completion_matches (subcommand,
-          this.subcommand_name_completion_cb);
+          Linking.subcommand_name_completion_cb);
     }
 }
 

@@ -136,7 +136,7 @@ public class Folks.Inspect.SignalManager : Object
       Utils.print_line ("Signal name      %s", query_info.signal_name);
       Utils.print_line ("Emitting type    %s", query_info.itype.name ());
       Utils.print_line ("Signal flags     %s",
-          this.signal_flags_to_string (query_info.signal_flags));
+          SignalManager.signal_flags_to_string (query_info.signal_flags));
       Utils.print_line ("Return type      %s", query_info.return_type.name ());
       Utils.print_line ("Parameter types:");
       Utils.indent ();
@@ -343,8 +343,8 @@ public class Folks.Inspect.SignalManager : Object
       uint signal_id,
       string? detail_string)
     {
-      Closure closure = new Closure (this.CLOSURE_STRUCT_SIZE, this);
-      closure.set_meta_marshal (null, this.signal_meta_marshaller);
+      Closure closure = new Closure (SignalManager.CLOSURE_STRUCT_SIZE, this);
+      closure.set_meta_marshal (null, SignalManager.signal_meta_marshaller);
 
       Quark detail_quark = 0;
       if (detail_string != null)

@@ -76,10 +76,10 @@ public class Folks.Inspect.Client : Object
       Unix.signal_add (Posix.SIGTERM, () =>
         {
           /* Propagate the signal to our pager process, if it's running. */
-          if (main_client._pager_pid != 0)
+          if (Client._pager_pid != 0)
             {
               main_client._quit_after_pager_dies = true;
-              kill (main_client._pager_pid, Posix.SIGTERM);
+              kill (Client._pager_pid, Posix.SIGTERM);
             }
           else
             {
@@ -149,7 +149,7 @@ public class Folks.Inspect.Client : Object
       this._stop_paged_output ();
 
       /* Uninstall readline, if it's installed. */
-      if (this._is_readline_installed)
+      if (Client._is_readline_installed)
         {
           this._uninstall_readline_and_stdin ();
         }
@@ -204,7 +204,7 @@ public class Folks.Inspect.Client : Object
       /* Check we can parse the command first. */
       string subcommand;
       string command_name;
-      var command = this.parse_command_line (command_line, out command_name,
+      var command = Client.parse_command_line (command_line, out command_name,
           out subcommand);
 
       if (command == null)
@@ -284,7 +284,7 @@ public class Folks.Inspect.Client : Object
       this._install_readline_and_stdin ();
 
       /* Run the aggregator and the main loop. */
-      this.aggregator.prepare ();
+      this.aggregator.prepare.begin ();
 
       this.main_loop.run ();
     }
@@ -292,7 +292,7 @@ public class Folks.Inspect.Client : Object
   private void _install_readline_and_stdin ()
     {
       /* stdin handler. */
-      this._stdin_watch_id = this._stdin_channel.add_watch (IOCondition.IN,
+      Client._stdin_watch_id = this._stdin_channel.add_watch (IOCondition.IN,
           this._stdin_handler_cb);
 
       /* Callback for each character appearing on stdin. */
@@ -305,8 +305,8 @@ public class Folks.Inspect.Client : Object
       Readline.callback_handler_remove ();
       Client._is_readline_installed = false;
 
-      Source.remove (this._stdin_watch_id);
-      this._stdin_watch_id = 0;
+      Source.remove (Client._stdin_watch_id);
+      Client._stdin_watch_id = 0;
     }
 
   /* This should only ever be called while readline is installed. */
@@ -353,7 +353,7 @@ public class Folks.Inspect.Client : Object
 
       string subcommand;
       string command_name;
-      Command command = main_client.parse_command_line (command_line,
+      Command command = Client.parse_command_line (command_line,
           out command_name, out subcommand);
 
       /* Run the command */
@@ -431,7 +431,7 @@ public class Folks.Inspect.Client : Object
                   GLib.SpawnFlags.SEARCH_PATH |
                   GLib.SpawnFlags.DO_NOT_REAP_CHILD /* we use a ChildWatch */,
               null,
-              out this._pager_pid,
+              out Client._pager_pid,
               out pager_fd, // Std input
               null, // Std out
               null); // Std error
@@ -447,7 +447,7 @@ public class Folks.Inspect.Client : Object
       Utils.output_filestream = this._pager_channel;
 
       /* Watch for when the pager exits. */
-      this._pager_child_watch_id = ChildWatch.add (this._pager_pid,
+      this._pager_child_watch_id = ChildWatch.add (Client._pager_pid,
           (pid, status) =>
             {
               /* $PAGER died or was killed. */
@@ -480,17 +480,17 @@ public class Folks.Inspect.Client : Object
 
   private void _stop_paged_output ()
     {
-      if (this._pager_pid == 0)
+      if (Client._pager_pid == 0)
         {
           return;
         }
 
-      Process.close_pid (this._pager_pid);
+      Process.close_pid (Client._pager_pid);
       Source.remove (this._pager_child_watch_id);
 
       this._pager_channel = null;
       Utils.output_filestream = GLib.stdout;
-      this._pager_pid = 0;
+      Client._pager_pid = 0;
       this._pager_child_watch_id = 0;
 
       /* Reset the terminal state (e.g. ECHO, which can get left turned
