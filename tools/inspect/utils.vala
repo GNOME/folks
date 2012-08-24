@@ -34,6 +34,8 @@ private class Folks.Inspect.Utils
   public static void init ()
     {
       Utils.indentation_string = "";
+      Utils.indentation = 0;
+      Utils.output_filestream = GLib.stdout;
 
       /* Register some general transformation functions */
       Value.register_transform_func (typeof (Object), typeof (string),
