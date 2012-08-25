@@ -8,6 +8,7 @@ Bugs fixed:
 • Bug 664072 — Folks should only use assert*() for critical, program-terminating
   errors
 • Bug 682572 — Build failures due to accessing static members
+• Bug 682346 — build: Make telepathy backend optional
 
 Overview of changes from libfolks 0.7.2 to libfolks 0.7.3
 =========================================================
