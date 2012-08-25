@@ -78,13 +78,13 @@ AC_ARG_ENABLE(tracker-backend,
 
 AM_CONDITIONAL([ENABLE_TRACKER], [test "x$enable_tracker_backend" = "xyes"])
 
-if test "x$enable_tracker_backend" = "xyes"; then
+AS_IF([test "x$enable_tracker_backend" = "xyes"], [
         AC_DEFINE(HAVE_TRACKER, [1],
                   [Define as 1 if you have the Tracker backend])
-else
+], [
         AC_DEFINE(HAVE_TRACKER, [0],
                   [Define as 1 if you have the Tracker backend])
-fi
+])
 
 AC_ARG_ENABLE(eds-backend,
         AC_HELP_STRING([--enable-eds-backend],
@@ -92,11 +92,11 @@ AC_ARG_ENABLE(eds-backend,
         enable_eds_backend=$enableval,
         enable_eds_backend=yes )
 
-if test "x$enable_eds_backend" = "xyes"; then
+AS_IF([test "x$enable_eds_backend" = "xyes"], [
         AC_DEFINE(HAVE_EDS, [1], [Define as 1 if you have the eds backend])
-else
+], [
         AC_DEFINE(HAVE_EDS, [0], [Define as 1 if you have the eds backend])
-fi
+])
 
 AM_CONDITIONAL([ENABLE_EDS], [test "x$enable_eds_backend" = "xyes"])
 
@@ -106,11 +106,11 @@ AC_ARG_ENABLE(telepathy-backend,
         enable_telepathy_backend=$enableval,
         enable_telepathy_backend=yes )
 
-if test "x$enable_telepathy_backend" = "xyes"; then
+AS_IF([test "x$enable_telepathy_backend" = "xyes"], [
         AC_DEFINE(HAVE_TELEPATHY, [1], [Define as 1 if you have the Telepathy backend])
-else
+], [
         AC_DEFINE(HAVE_TELEPATHY, [0], [Define as 1 if you have the Telepathy backend])
-fi
+])
 
 AM_CONDITIONAL([ENABLE_TELEPATHY], [test "x$enable_eds_backend" = "xyes"])
 
@@ -125,31 +125,31 @@ AC_ARG_ENABLE(libsocialweb-backend,
 # this may be overwritten farther down
 AC_DEFINE(HAVE_LIBSOCIALWEB, [0],
           [Define as 1 if you have the libsocialweb backend])
-if test "x$enable_libsocialweb_backend" != "xno"; then
+AS_IF([test "x$enable_libsocialweb_backend" != "xno"], [
   PKG_CHECK_MODULES([SW_CLIENT], [libsocialweb-client >= $SW_CLIENT_REQUIRED],
       have_libsocialweb_backend="yes", have_libsocialweb_backend="no")
-  if test "x$have_libsocialweb_backend" = "xyes" -a \
-          "x$enable_vala" = "xyes"; then
+  AS_IF([test "x$have_libsocialweb_backend" = "xyes" -a \
+          "x$enable_vala" = "xyes"], [
     VALA_CHECK_PACKAGES([telepathy-glib
                          gio-2.0
                          gee-1.0
                          libsocialweb-client],
         ,
         have_libsocialweb_backend="no")
-  fi
+  ])
 
-  if test "x$have_libsocialweb_backend" = "xyes"; then
+  AS_IF([test "x$have_libsocialweb_backend" = "xyes"], [
     AC_DEFINE(HAVE_LIBSOCIALWEB, [1],
               [Define if you have the libsocialweb backend])
-  fi
-else
+  ])
+], [
    have_libsocialweb_backend=no
-fi
+])
 
-if test "x$enable_libsocialweb_backend" = "xyes" -a \
-  "x$have_libsocialweb_backend" != "xyes"; then
+AS_IF([test "x$enable_libsocialweb_backend" = "xyes" -a \
+  "x$have_libsocialweb_backend" != "xyes"], [
     AC_MSG_ERROR([Cannot find libsocialweb dependencies.])
-fi
+])
 
 AM_CONDITIONAL([ENABLE_LIBSOCIALWEB],
         [test "x$have_libsocialweb_backend" = "xyes"])
@@ -181,35 +181,35 @@ PKG_CHECK_MODULES([GEE], [gee-1.0 < 0.7],
                   have_gee_0_6_x="yes",
                   have_gee_0_6_x="no")
 
-if test "x$have_gee_0_6_x" != "xyes"; then
+AS_IF([test "x$have_gee_0_6_x" != "xyes"], [
     AC_MSG_ERROR([
 Gee 0.6.x required but not installed.
 
 Note that Gee 0.8.x provides gee-0.8 (but gee-1.0 is, confusingly, provided by
 Gee 0.6.x)])
-fi
+])
 
 TP_GLIB_REQUIRED=0.19.0
-if test x$enable_telepathy_backend = xyes; then
+AS_IF([test x$enable_telepathy_backend = xyes], [
         PKG_CHECK_MODULES([TP_GLIB], [telepathy-glib >= $TP_GLIB_REQUIRED])
         PKG_CHECK_MODULES([ZEITGEIST], [zeitgeist-1.0 >= $ZEITGEIST_REQUIRED])
-fi
+])
 
 # Ignore post 0.20 deprecations
 TP_GLIB_CFLAGS="$TP_GLIB_CFLAGS -DTP_VERSION_MIN_REQUIRED=TP_VERSION_0_20"
 # Prevent post 0.20 APIs
 TP_GLIB_CFLAGS="$TP_GLIB_CFLAGS -DTP_VERSION_MAX_ALLOWED=TP_VERSION_0_20"
 
-if test x$enable_tracker_backend = xyes; then
+AS_IF([test x$enable_tracker_backend = xyes], [
         PKG_CHECK_MODULES([TRACKER_SPARQL],
                           [tracker-sparql-$TRACKER_SPARQL_MAJOR >= \
                            $TRACKER_SPARQL_REQUIRED])
-fi
+])
 
-if test x$enable_eds_backend = xyes; then
+AS_IF([test x$enable_eds_backend = xyes], [
         PKG_CHECK_MODULES([EBOOK], [libebook-1.2 >= $EBOOK_REQUIRED])
         PKG_CHECK_MODULES([EDATASERVER], [libedataserver-1.2 >= $EDATASERVER_REQUIRED])
-fi
+])
 
 #
 # Vala building options -- allows tarball builds without installing Vala
@@ -232,7 +232,7 @@ m4_if(folks_released, [1], [],
     ])
 
 # Force Vala if generated source is missing or outdated
-if test \
+AS_IF([test \
         ! -e ${sd}tools/folks_import_vala.stamp -o \
         ! -e ${sd}tests/folks/abstract_field_details_vala.stamp -o \
         ! -e ${sd}tests/folks/aggregation_vala.stamp -o \
@@ -259,21 +259,22 @@ if test \
         ! -e ${sd}folks/folks-internal.vapi -o \
         ! -e ${sd}folks/libfolks_internal_la_vala.stamp -o \
         ! -e ${sd}folks/folks.vapi -o \
-        ! -e ${sd}folks/libfolks_la_vala.stamp ; then
+        ! -e ${sd}folks/libfolks_la_vala.stamp \
+      ], [
         enable_vala=yes
         echo "Vala source needs to be re-compiled; requiring Vala..."
-fi
+])
 
-if test "x$enable_vala" = "xyes" ; then
+AS_IF([test "x$enable_vala" = "xyes"], [
         AM_PROG_VALAC([$VALA_REQUIRED])
-        if test "x$VALAC" = "x"; then
+        AS_IF([test "x$VALAC" = "x"], [
               AC_MSG_ERROR([Vala requested but valac is not installed])
-        fi
+        ])
 
         AC_PATH_PROG([VAPIGEN], [vapigen], [])
-        if test "x$VAPIGEN" = "x"; then
+        AS_IF([test "x$VAPIGEN" = "x"], [
               AC_MSG_ERROR([Vala must be built with --enable-vapigen])
-        fi
+        ])
 
         # require GLib >= 2.24 so GLib.Array, etc. reffing is handled
         # automatically
@@ -285,18 +286,18 @@ if test "x$enable_vala" = "xyes" ; then
         VALA_CHECK_PACKAGES([gio-2.0
                              gee-1.0])
 
-        if test x$enable_telepathy_backend = xyes; then
+        AS_IF([test x$enable_telepathy_backend = xyes], [
           VALA_CHECK_PACKAGES([telepathy-glib zeitgeist-1.0])
-        fi
+        ])
 
-        if test x$enable_tracker_backend = xyes; then
+        AS_IF([test x$enable_tracker_backend = xyes], [
           VALA_CHECK_PACKAGES([tracker-sparql-$TRACKER_SPARQL_MAJOR])
-        fi
+        ])
 
-        if test x$enable_eds_backend = xyes; then
+        AS_IF([test x$enable_eds_backend = xyes], [
           VALA_CHECK_PACKAGES([libebook-1.2 libedataserver-1.2 libxml-2.0])
-        fi
-fi
+        ])
+])
 
 # this will set HAVE_INTROSPECTION
 GOBJECT_INTROSPECTION_REQUIRE([1.30])
@@ -325,35 +326,35 @@ AC_SUBST([BACKEND_KF])
 BACKEND_TP='$(top_builddir)/backends/telepathy/.libs/telepathy.so'
 AC_SUBST([BACKEND_TP])
 
-if test x$have_libsocialweb_backend = xyes; then
+AS_IF([test x$have_libsocialweb_backend = xyes], [
   BACKEND_LIBSOCIALWEB='$(top_builddir)/backends/libsocialweb/.libs/libsocialweb.so'
   AC_SUBST([BACKEND_LIBSOCIALWEB])
-fi
+])
 
-if test x$enable_tracker_backend = xyes; then
+AS_IF([test x$enable_tracker_backend = xyes], [
   BACKEND_TRACKER='$(top_builddir)/backends/tracker/.libs/tracker.so'
   AC_SUBST([BACKEND_TRACKER])
-fi
+])
 
-if test x$enable_eds_backend = xyes; then
+AS_IF([test x$enable_eds_backend = xyes], [
   BACKEND_EDS='$(top_builddir)/backends/eds/.libs/eds.so'
   AC_SUBST([BACKEND_EDS])
-fi
+])
 
 # All of the backend libraries in our tree; to be used by the tests
 BACKEND_UNINST_PATH='$(BACKEND_KF):$(BACKEND_TP)'
-if test x$have_libsocialweb_backend = xyes; then
+AS_IF([test x$have_libsocialweb_backend = xyes], [
   LIBSOCIALWEB_BACKEND_UNINST_PATH='$(BACKEND_LIBSOCIALWEB)'
   BACKEND_UNINST_PATH="$BACKEND_UNINST_PATH:$LIBSOCIALWEB_BACKEND_UNINST_PATH"
-fi
-if test x$enable_tracker_backend = xyes; then
+])
+AS_IF([test x$enable_tracker_backend = xyes], [
   TRACKER_BACKEND_UNINST_PATH='$(BACKEND_TRACKER)'
   BACKEND_UNINST_PATH="$BACKEND_UNINST_PATH:$TRACKER_BACKEND_UNINST_PATH"
-fi
-if test x$enable_eds_backend = xyes; then
+])
+AS_IF([test x$enable_eds_backend = xyes], [
   EDS_BACKEND_UNINST_PATH='$(BACKEND_EDS)'
   BACKEND_UNINST_PATH="$BACKEND_UNINST_PATH:$EDS_BACKEND_UNINST_PATH"
-fi
+])
 AC_SUBST([BACKEND_UNINST_PATH])
 
 # -----------------------------------------------------------
@@ -419,17 +420,17 @@ AC_ARG_ENABLE([docs],
 AM_CONDITIONAL([ENABLE_DOCS], [test x$enable_docs = xyes])
 
 have_valadoc=no
-if test x$enable_docs = xyes; then
+AS_IF([test x$enable_docs = xyes], [
   # make sure the library is new enough and the program exists
   PKG_CHECK_MODULES([VALADOC], [valadoc-1.0 >= $VALADOC_REQUIRED])
   AC_PATH_PROG([VALADOC], [valadoc], [:])
   AS_IF([test "$VALADOC" != :], have_valadoc=yes)
-fi
+])
 AM_CONDITIONAL([HAVE_VALADOC], [test x$have_valadoc = xyes])
 
-if test "x$enable_docs" = "xyes" -a "x$have_valadoc" != "xyes"; then
+AS_IF([test "x$enable_docs" = "xyes" -a "x$have_valadoc" != "xyes"], [
     AC_MSG_ERROR([Doc building requested but valadoc not installed.])
-fi
+])
 
 # -----------------------------------------------------------
 # Gettext
