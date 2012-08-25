@@ -15,6 +15,15 @@ if HAVE_VALADOC
 SUBDIRS += docs
 endif
 
+DIST_SUBDIRS = \
+	backends \
+	docs \
+	folks \
+	tests \
+	tools \
+	po \
+	$(NULL)
+
 DISTCHECK_CONFIGURE_FLAGS = \
 	--enable-docs \
 	--enable-tests \
