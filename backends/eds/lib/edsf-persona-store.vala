@@ -2099,17 +2099,15 @@ public class Edsf.PersonaStore : Folks.PersonaStore
   private void _contacts_added_cb (GLib.List<E.Contact> contacts)
     {
       var added_personas = new HashSet<Persona> ();
-      lock (this._personas)
+
+      foreach (E.Contact c in contacts)
         {
-          foreach (E.Contact c in contacts)
+          var iid = Edsf.Persona.build_iid_from_contact (this.id, c);
+          if (this._personas.has_key (iid) == false)
             {
-              var iid = Edsf.Persona.build_iid_from_contact (this.id, c);
-              if (this._personas.has_key (iid) == false)
-                {
-                  var persona = new Persona (this, c);
-                  this._personas.set (persona.iid, persona);
-                  added_personas.add (persona);
-                }
+              var persona = new Persona (this, c);
+              this._personas.set (persona.iid, persona);
+              added_personas.add (persona);
             }
         }
 
