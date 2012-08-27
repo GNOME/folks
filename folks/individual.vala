@@ -470,10 +470,8 @@ public class Folks.Individual : Object,
       set { this.change_gender.begin (value); } /* not writeable */
     }
 
-  private HashSet<UrlFieldDetails> _urls = new HashSet<UrlFieldDetails> (
-      (GLib.HashFunc) UrlFieldDetails.hash,
-      (GLib.EqualFunc) UrlFieldDetails.equal);
-  private Set<UrlFieldDetails> _urls_ro;
+  private HashSet<UrlFieldDetails>? _urls = null;
+  private Set<UrlFieldDetails>? _urls_ro = null;
 
   /**
    * {@inheritDoc}
@@ -481,15 +479,16 @@ public class Folks.Individual : Object,
   [CCode (notify = false)]
   public Set<UrlFieldDetails> urls
     {
-      get { return this._urls_ro; }
+      get
+        {
+          this._update_urls (true);
+          return this._urls_ro;
+        }
       set { this.change_urls.begin (value); } /* not writeable */
     }
 
-  private HashSet<PhoneFieldDetails> _phone_numbers =
-      new HashSet<PhoneFieldDetails> (
-          (GLib.HashFunc) PhoneFieldDetails.hash,
-          (GLib.EqualFunc) PhoneFieldDetails.equal);
-  private Set<PhoneFieldDetails> _phone_numbers_ro;
+  private HashSet<PhoneFieldDetails>? _phone_numbers = null;
+  private Set<PhoneFieldDetails>? _phone_numbers_ro = null;
 
   /**
    * {@inheritDoc}
@@ -497,15 +496,16 @@ public class Folks.Individual : Object,
   [CCode (notify = false)]
   public Set<PhoneFieldDetails> phone_numbers
     {
-      get { return this._phone_numbers_ro; }
+      get
+        {
+          this._update_phone_numbers (true);
+          return this._phone_numbers_ro;
+        }
       set { this.change_phone_numbers.begin (value); } /* not writeable */
     }
 
-  private HashSet<EmailFieldDetails> _email_addresses =
-      new HashSet<EmailFieldDetails> (
-          (GLib.HashFunc) EmailFieldDetails.hash,
-          (GLib.EqualFunc) EmailFieldDetails.equal);
-  private Set<EmailFieldDetails> _email_addresses_ro;
+  private HashSet<EmailFieldDetails>? _email_addresses = null;
+  private Set<EmailFieldDetails>? _email_addresses_ro = null;
 
   /**
    * {@inheritDoc}
@@ -513,14 +513,16 @@ public class Folks.Individual : Object,
   [CCode (notify = false)]
   public Set<EmailFieldDetails> email_addresses
     {
-      get { return this._email_addresses_ro; }
+      get
+        {
+          this._update_email_addresses (true);
+          return this._email_addresses_ro;
+        }
       set { this.change_email_addresses.begin (value); } /* not writeable */
     }
 
-  private HashSet<RoleFieldDetails> _roles = new HashSet<RoleFieldDetails> (
-      (GLib.HashFunc) RoleFieldDetails.hash,
-      (GLib.EqualFunc) RoleFieldDetails.equal);
-  private Set<RoleFieldDetails> _roles_ro;
+  private HashSet<RoleFieldDetails>? _roles = null;
+  private Set<RoleFieldDetails>? _roles_ro = null;
 
   /**
    * {@inheritDoc}
@@ -528,12 +530,16 @@ public class Folks.Individual : Object,
   [CCode (notify = false)]
   public Set<RoleFieldDetails> roles
     {
-      get { return this._roles_ro; }
+      get
+        {
+          this._update_roles (true);
+          return this._roles_ro;
+        }
       set { this.change_roles.begin (value); } /* not writeable */
     }
 
-  private HashSet<string> _local_ids = new HashSet<string> ();
-  private Set<string> _local_ids_ro;
+  private HashSet<string>? _local_ids = null;
+  private Set<string>? _local_ids_ro = null;
 
   /**
    * {@inheritDoc}
@@ -541,7 +547,11 @@ public class Folks.Individual : Object,
   [CCode (notify = false)]
   public Set<string> local_ids
     {
-      get { return this._local_ids_ro; }
+      get
+        {
+          this._update_local_ids (true);
+          return this._local_ids_ro;
+        }
       set { this.change_local_ids.begin (value); } /* not writeable */
     }
 
@@ -569,10 +579,8 @@ public class Folks.Individual : Object,
       set { this.change_calendar_event_id.begin (value); } /* not writeable */
     }
 
-  private HashSet<NoteFieldDetails> _notes = new HashSet<NoteFieldDetails> (
-      (GLib.HashFunc) NoteFieldDetails.hash,
-      (GLib.EqualFunc) NoteFieldDetails.equal);
-  private Set<NoteFieldDetails> _notes_ro;
+  private HashSet<NoteFieldDetails>? _notes = null;
+  private Set<NoteFieldDetails>? _notes_ro = null;
 
   /**
    * {@inheritDoc}
@@ -580,15 +588,16 @@ public class Folks.Individual : Object,
   [CCode (notify = false)]
   public Set<NoteFieldDetails> notes
     {
-      get { return this._notes_ro; }
+      get
+        {
+          this._update_notes (true);
+          return this._notes_ro;
+        }
       set { this.change_notes.begin (value); } /* not writeable */
     }
 
-  private HashSet<PostalAddressFieldDetails> _postal_addresses =
-      new HashSet<PostalAddressFieldDetails> (
-          (GLib.HashFunc) PostalAddressFieldDetails.hash,
-          (GLib.EqualFunc) PostalAddressFieldDetails.equal);
-  private Set<PostalAddressFieldDetails> _postal_addresses_ro;
+  private HashSet<PostalAddressFieldDetails>? _postal_addresses = null;
+  private Set<PostalAddressFieldDetails>? _postal_addresses_ro = null;
 
   /**
    * {@inheritDoc}
@@ -596,7 +605,11 @@ public class Folks.Individual : Object,
   [CCode (notify = false)]
   public Set<PostalAddressFieldDetails> postal_addresses
     {
-      get { return this._postal_addresses_ro; }
+      get
+        {
+          this._update_postal_addresses (true);
+          return this._postal_addresses_ro;
+        }
       set { this.change_postal_addresses.begin (value); } /* not writeable */
     }
 
@@ -680,8 +693,8 @@ public class Folks.Individual : Object,
       this.notify_property ("is-favourite");
     }
 
-  private HashSet<string> _groups = new HashSet<string> ();
-  private Set<string> _groups_ro;
+  private HashSet<string>? _groups = null;
+  private Set<string>? _groups_ro = null;
 
   /**
    * {@inheritDoc}
@@ -689,7 +702,11 @@ public class Folks.Individual : Object,
   [CCode (notify = false)]
   public Set<string> groups
     {
-      get { return this._groups_ro; }
+      get
+        {
+          this._update_groups (true);
+          return this._groups_ro;
+        }
       set { this.change_groups.begin (value); }
     }
 
@@ -742,14 +759,9 @@ public class Folks.Individual : Object,
           assert (persona_error != null);
           throw persona_error;
         }
-
-      /* Update our copy of the property. */
-      this._update_groups ();
     }
 
-  private HashMultiMap<string, ImFieldDetails> _im_addresses =
-      new HashMultiMap<string, ImFieldDetails> (
-          null, null, ImFieldDetails.hash, (EqualFunc) ImFieldDetails.equal);
+  private HashMultiMap<string, ImFieldDetails>? _im_addresses = null;
 
   /**
    * {@inheritDoc}
@@ -757,14 +769,16 @@ public class Folks.Individual : Object,
   [CCode (notify = false)]
   public MultiMap<string, ImFieldDetails> im_addresses
     {
-      get { return this._im_addresses; }
+      get
+        {
+          this._update_im_addresses (true);
+          return this._im_addresses;
+        }
       set { this.change_im_addresses.begin (value); } /* not writeable */
     }
 
-  private HashMultiMap<string, WebServiceFieldDetails> _web_service_addresses =
-      new HashMultiMap<string, WebServiceFieldDetails> (null, null,
-          (GLib.HashFunc) WebServiceFieldDetails.hash,
-          (GLib.EqualFunc) WebServiceFieldDetails.equal);
+  private HashMultiMap<string, WebServiceFieldDetails>? _web_service_addresses =
+      null;
 
   /**
    * {@inheritDoc}
@@ -772,7 +786,11 @@ public class Folks.Individual : Object,
   [CCode (notify = false)]
   public MultiMap<string, WebServiceFieldDetails> web_service_addresses
     {
-      get { return this._web_service_addresses; }
+      get
+        {
+          this._update_web_service_addresses (true);
+          return this._web_service_addresses;
+        }
       /* Not writeable: */
       set { this.change_web_service_addresses.begin (value); }
     }
@@ -945,7 +963,7 @@ public class Folks.Individual : Object,
 
   private void _persona_group_changed_cb (string group, bool is_member)
     {
-      this._update_groups ();
+      this._update_groups (false);
     }
 
   private void _notify_gender_cb ()
@@ -955,27 +973,27 @@ public class Folks.Individual : Object,
 
   private void _notify_urls_cb ()
     {
-      this._update_urls ();
+      this._update_urls (false);
     }
 
   private void _notify_phone_numbers_cb ()
     {
-      this._update_phone_numbers ();
+      this._update_phone_numbers (false);
     }
 
   private void _notify_postal_addresses_cb ()
     {
-      this._update_postal_addresses ();
+      this._update_postal_addresses (false);
     }
 
   private void _notify_email_addresses_cb ()
     {
-      this._update_email_addresses ();
+      this._update_email_addresses (false);
     }
 
   private void _notify_roles_cb ()
     {
-      this._update_roles ();
+      this._update_roles (false);
     }
 
   private void _notify_birthday_cb ()
@@ -985,12 +1003,12 @@ public class Folks.Individual : Object,
 
   private void _notify_notes_cb ()
     {
-      this._update_notes ();
+      this._update_notes (false);
     }
 
   private void _notify_local_ids_cb ()
     {
-      this._update_local_ids ();
+      this._update_local_ids (false);
     }
 
   /**
@@ -1025,12 +1043,12 @@ public class Folks.Individual : Object,
 
   private void _notify_im_addresses_cb (Object obj, ParamSpec ps)
     {
-      this._update_im_addresses ();
+      this._update_im_addresses (false);
     }
 
   private void _notify_web_service_addresses_cb (Object obj, ParamSpec ps)
     {
-      this._update_web_service_addresses ();
+      this._update_web_service_addresses (false);
     }
 
   private void _notify_is_favourite_cb (Object obj, ParamSpec ps)
@@ -1100,14 +1118,6 @@ public class Folks.Individual : Object,
           this._persona_set.size, this);
 
       this._persona_set_ro = this._persona_set.read_only_view;
-      this._urls_ro = this._urls.read_only_view;
-      this._phone_numbers_ro = this._phone_numbers.read_only_view;
-      this._email_addresses_ro = this._email_addresses.read_only_view;
-      this._roles_ro = this._roles.read_only_view;
-      this._local_ids_ro = this._local_ids.read_only_view;
-      this._postal_addresses_ro = this._postal_addresses.read_only_view;
-      this._notes_ro = this._notes.read_only_view;
-      this._groups_ro = this._groups.read_only_view;
     }
 
   ~Individual ()
@@ -1185,26 +1195,26 @@ public class Folks.Individual : Object,
 
   private void _update_fields ()
     {
-      this._update_groups ();
+      this._update_groups (false);
       this._update_presence ();
       this._update_is_favourite ();
       this._update_avatar ();
       this._update_alias ();
       this._update_trust_level ();
-      this._update_im_addresses ();
-      this._update_web_service_addresses ();
+      this._update_im_addresses (false);
+      this._update_web_service_addresses (false);
       this._update_structured_name ();
       this._update_full_name ();
       this._update_nickname ();
       this._update_gender ();
-      this._update_urls ();
-      this._update_phone_numbers ();
-      this._update_email_addresses ();
-      this._update_roles ();
+      this._update_urls (false);
+      this._update_phone_numbers (false);
+      this._update_email_addresses (false);
+      this._update_roles (false);
       this._update_birthday ();
-      this._update_notes ();
-      this._update_postal_addresses ();
-      this._update_local_ids ();
+      this._update_notes (false);
+      this._update_postal_addresses (false);
+      this._update_local_ids (false);
     }
 
   /* Delegate to update the value of a property on this individual from the
@@ -1325,8 +1335,25 @@ public class Folks.Individual : Object,
       setter (candidate_p);
     }
 
-  private void _update_groups ()
+  private void _update_groups (bool create_if_not_exist)
     {
+      /* If the set of groups doesn't exist, and we're not meant to lazily
+       * create it, then simply emit a notification (since the set might've
+       * changed — we can't be sure, but emitting is a safe over-estimate) and
+       * return. */
+      if (this._groups == null && create_if_not_exist == false)
+        {
+          this.notify_property ("groups");
+          return;
+        }
+
+      /* Lazily instantiate the set of groups. */
+      else if (this._groups == null)
+        {
+          this._groups = new HashSet<string> ();
+          this._groups_ro = this._groups.read_only_view;
+        }
+
       var new_groups = new HashSet<string> ();
 
       /* FIXME: this should partition the personas by store (maybe we should
@@ -1535,8 +1562,26 @@ public class Folks.Individual : Object,
         this.trust_level = trust_level;
     }
 
-  private void _update_im_addresses ()
+  private void _update_im_addresses (bool create_if_not_exist)
     {
+      /* If the set of IM addresses doesn't exist, and we're not meant to lazily
+       * create it, then simply emit a notification (since the set might've
+       * changed — we can't be sure, but emitting is a safe over-estimate) and
+       * return. */
+      if (this._im_addresses == null && create_if_not_exist == false)
+        {
+          this.notify_property ("im-addresses");
+          return;
+        }
+
+      /* Lazily instantiate the set of IM addresses. */
+      else if (this._im_addresses == null)
+        {
+          this._im_addresses = new HashMultiMap<string, ImFieldDetails> (
+              null, null, ImFieldDetails.hash,
+              (EqualFunc) ImFieldDetails.equal);
+        }
+
       /* populate the IM addresses as the union of our Personas' addresses */
       this._im_addresses.clear ();
 
@@ -1560,8 +1605,27 @@ public class Folks.Individual : Object,
       this.notify_property ("im-addresses");
     }
 
-  private void _update_web_service_addresses ()
+  private void _update_web_service_addresses (bool create_if_not_exist)
     {
+      /* If the set of web service addresses doesn't exist, and we're not meant
+       * to lazily create it, then simply emit a notification (since the set
+       * might've changed — we can't be sure, but emitting is a safe
+       * over-estimate) and return. */
+      if (this._web_service_addresses == null && create_if_not_exist == false)
+        {
+          this.notify_property ("web-service-addresses");
+          return;
+        }
+
+      /* Lazily instantiate the set of web service addresses. */
+      else if (this._web_service_addresses == null)
+        {
+          this._web_service_addresses =
+              new HashMultiMap<string, WebServiceFieldDetails> (null, null,
+                  (GLib.HashFunc) WebServiceFieldDetails.hash,
+                  (GLib.EqualFunc) WebServiceFieldDetails.equal);;
+        }
+
       /* populate the web service addresses as the union of our Personas' addresses */
       this._web_service_addresses.clear ();
 
@@ -1825,11 +1889,29 @@ public class Folks.Individual : Object,
         });
     }
 
-  private void _update_urls ()
+  private void _update_urls (bool create_if_not_exist)
     {
+      /* If the set of URIs doesn't exist, and we're not meant to lazily create
+       * it, then simply emit a notification (since the set might've changed —
+       * we can't be sure, but emitting is a safe over-estimate) and return. */
+      if (this._urls == null && create_if_not_exist == false)
+        {
+          this.notify_property ("urls");
+          return;
+        }
+
+      /* Lazily instantiate the set of URIs. */
+      else if (this._urls == null)
+        {
+          this._urls = new HashSet<UrlFieldDetails> (
+              (GLib.HashFunc) UrlFieldDetails.hash,
+              (GLib.EqualFunc) UrlFieldDetails.equal);
+          this._urls_ro = this._urls.read_only_view;
+        }
+
       /* Populate the URLs as the union of our Personas' URLs.
        * If the same URL exists multiple times we merge the parameters. */
-      var urls_set = new HashMap<unowned string, unowned UrlFieldDetails> (
+      var urls_set = new HashMap<string, UrlFieldDetails> (
           null, null, (GLib.EqualFunc) UrlFieldDetails.equal);
 
       this._urls.clear ();
@@ -1848,7 +1930,7 @@ public class Folks.Individual : Object,
                     {
                       var new_url_fd = new UrlFieldDetails (url_fd.value);
                       new_url_fd.extend_parameters (url_fd.parameters);
-                      urls_set.set (url_fd.value, new_url_fd);
+                      urls_set.set (new_url_fd.value, new_url_fd);
                       this._urls.add (new_url_fd);
                     }
                 }
@@ -1858,12 +1940,30 @@ public class Folks.Individual : Object,
       this.notify_property ("urls");
     }
 
-  private void _update_phone_numbers ()
+  private void _update_phone_numbers (bool create_if_not_exist)
     {
+      /* If the set of phone numbers doesn't exist, and we're not meant to
+       * lazily create it, then simply emit a notification (since the set
+       * might've changed — we can't be sure, but emitting is a safe
+       * over-estimate) and return. */
+      if (this._phone_numbers == null && create_if_not_exist == false)
+        {
+          this.notify_property ("phone-numbers");
+          return;
+        }
+
+      /* Lazily instantiate the set of phone numbers. */
+      else if (this._phone_numbers == null)
+        {
+          this._phone_numbers = new HashSet<PhoneFieldDetails> (
+              (GLib.HashFunc) PhoneFieldDetails.hash,
+              (GLib.EqualFunc) PhoneFieldDetails.equal);
+          this._phone_numbers_ro = this._phone_numbers.read_only_view;
+        }
+
       /* Populate the phone numbers as the union of our Personas' numbers
        * If the same number exists multiple times we merge the parameters. */
-      var phone_numbers_set =
-          new HashMap<unowned string, unowned PhoneFieldDetails> (
+      var phone_numbers_set = new HashMap<string, PhoneFieldDetails> (
               null, null, (GLib.EqualFunc) PhoneFieldDetails.equal);
 
       this._phone_numbers.clear ();
@@ -1882,7 +1982,7 @@ public class Folks.Individual : Object,
                     {
                       var new_fd = new PhoneFieldDetails (phone_fd.value);
                       new_fd.extend_parameters (phone_fd.parameters);
-                      phone_numbers_set.set (phone_fd.value, new_fd);
+                      phone_numbers_set.set (new_fd.value, new_fd);
                       this._phone_numbers.add (new_fd);
                     }
                 }
@@ -1892,11 +1992,30 @@ public class Folks.Individual : Object,
       this.notify_property ("phone-numbers");
     }
 
-  private void _update_email_addresses ()
+  private void _update_email_addresses (bool create_if_not_exist)
     {
+      /* If the set of e-mail addresses doesn't exist, and we're not meant to
+       * lazily create it, then simply emit a notification (since the set
+       * might've changed — we can't be sure, but emitting is a safe
+       * over-estimate) and return. */
+      if (this._email_addresses == null && create_if_not_exist == false)
+        {
+          this.notify_property ("email-addresses");
+          return;
+        }
+
+      /* Lazily instantiate the set of e-mail addresses. */
+      else if (this._email_addresses == null)
+        {
+          this._email_addresses = new HashSet<EmailFieldDetails> (
+              (GLib.HashFunc) EmailFieldDetails.hash,
+              (GLib.EqualFunc) EmailFieldDetails.equal);
+          this._email_addresses_ro = this._email_addresses.read_only_view;
+        }
+
       /* Populate the email addresses as the union of our Personas' addresses.
        * If the same address exists multiple times we merge the parameters. */
-      var emails_set = new HashMap<unowned string, unowned EmailFieldDetails> (
+      var emails_set = new HashMap<string, EmailFieldDetails> (
           null, null, (GLib.EqualFunc) EmailFieldDetails.equal);
 
       this._email_addresses.clear ();
@@ -1915,7 +2034,7 @@ public class Folks.Individual : Object,
                     {
                       var new_email_fd = new EmailFieldDetails (email_fd.value,
                           email_fd.parameters);
-                      emails_set.set (email_fd.value, new_email_fd);
+                      emails_set.set (new_email_fd.value, new_email_fd);
                       this._email_addresses.add (new_email_fd);
                     }
                 }
@@ -1925,8 +2044,27 @@ public class Folks.Individual : Object,
       this.notify_property ("email-addresses");
     }
 
-  private void _update_roles ()
+  private void _update_roles (bool create_if_not_exist)
     {
+      /* If the set of roles doesn't exist, and we're not meant to
+       * lazily create it, then simply emit a notification (since the set
+       * might've changed — we can't be sure, but emitting is a safe
+       * over-estimate) and return. */
+      if (this._roles == null && create_if_not_exist == false)
+        {
+          this.notify_property ("roles");
+          return;
+        }
+
+      /* Lazily instantiate the set of roles. */
+      else if (this._roles == null)
+        {
+          this._roles = new HashSet<RoleFieldDetails> (
+              (GLib.HashFunc) RoleFieldDetails.hash,
+              (GLib.EqualFunc) RoleFieldDetails.equal);
+          this._roles_ro = this._roles.read_only_view;
+        }
+
       this._roles.clear ();
 
       foreach (var persona in this._persona_set)
@@ -1944,8 +2082,25 @@ public class Folks.Individual : Object,
       this.notify_property ("roles");
     }
 
-  private void _update_local_ids ()
+  private void _update_local_ids (bool create_if_not_exist)
     {
+      /* If the set of local IDs doesn't exist, and we're not meant to
+       * lazily create it, then simply emit a notification (since the set
+       * might've changed — we can't be sure, but emitting is a safe
+       * over-estimate) and return. */
+      if (this._local_ids == null && create_if_not_exist == false)
+        {
+          this.notify_property ("local-ids");
+          return;
+        }
+
+      /* Lazily instantiate the set of local IDs. */
+      else if (this._local_ids == null)
+        {
+          this._local_ids = new HashSet<string> ();
+          this._local_ids_ro = this._local_ids.read_only_view;
+        }
+
       this._local_ids.clear ();
 
       foreach (var persona in this._persona_set)
@@ -1963,8 +2118,27 @@ public class Folks.Individual : Object,
       this.notify_property ("local-ids");
     }
 
-  private void _update_postal_addresses ()
+  private void _update_postal_addresses (bool create_if_not_exist)
     {
+      /* If the set of addresses doesn't exist, and we're not meant to lazily
+       * create it, then simply emit a notification (since the set might've
+       * changed — we can't be sure, but emitting is a safe over-estimate) and
+       * return. */
+      if (this._postal_addresses == null && create_if_not_exist == false)
+        {
+          this.notify_property ("postal-addresses");
+          return;
+        }
+
+      /* Lazily instantiate the set of addresses. */
+      else if (this._postal_addresses == null)
+        {
+          this._postal_addresses = new HashSet<PostalAddressFieldDetails> (
+              (GLib.HashFunc) PostalAddressFieldDetails.hash,
+              (GLib.EqualFunc) PostalAddressFieldDetails.equal);
+          this._postal_addresses_ro = this._postal_addresses.read_only_view;
+        }
+
       this._postal_addresses.clear ();
 
       /* FIXME: Detect duplicates somehow? */
@@ -2033,8 +2207,27 @@ public class Folks.Individual : Object,
         });
     }
 
-  private void _update_notes ()
+  private void _update_notes (bool create_if_not_exist)
     {
+      /* If the set of notes doesn't exist, and we're not meant to lazily
+       * create it, then simply emit a notification (since the set might've
+       * changed — we can't be sure, but emitting is a safe over-estimate) and
+       * return. */
+      if (this._notes == null && create_if_not_exist == false)
+        {
+          this.notify_property ("notes");
+          return;
+        }
+
+      /* Lazily instantiate the set of notes. */
+      else if (this._notes == null)
+        {
+          this._notes = new HashSet<NoteFieldDetails> (
+              (GLib.HashFunc) NoteFieldDetails.hash,
+              (GLib.EqualFunc) NoteFieldDetails.equal);
+          this._notes_ro = this._notes.read_only_view;
+        }
+
       this._notes.clear ();
 
       foreach (var persona in this._persona_set)
