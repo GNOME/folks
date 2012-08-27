@@ -352,11 +352,8 @@ public class Tpf.Persona : Folks.Persona,
       ((Tpf.PersonaStore) this.store)._set_cache_needs_update ();
     }
 
-  private HashSet<EmailFieldDetails> _email_addresses =
-      new HashSet<EmailFieldDetails> (
-          (GLib.HashFunc) EmailFieldDetails.hash,
-          (GLib.EqualFunc) EmailFieldDetails.equal);
-  private Set<EmailFieldDetails> _email_addresses_ro;
+  private HashSet<EmailFieldDetails>? _email_addresses = null;
+  private Set<EmailFieldDetails>? _email_addresses_ro = null;
 
   /**
    * {@inheritDoc}
@@ -366,7 +363,11 @@ public class Tpf.Persona : Folks.Persona,
   [CCode (notify = false)]
   public Set<EmailFieldDetails> email_addresses
     {
-      get { return this._email_addresses_ro; }
+      get
+        {
+          this._contact_notify_contact_info (true);
+          return this._email_addresses_ro;
+        }
       set { this.change_email_addresses.begin (value); }
     }
 
@@ -382,6 +383,8 @@ public class Tpf.Persona : Folks.Persona,
           this._email_addresses, "email");
     }
 
+  /* NOTE: Other properties support lazy initialisation, but im-addresses
+   * doesn't as it's a linkable property, so always has to be loaded anyway. */
   private HashMultiMap<string, ImFieldDetails> _im_addresses =
       new HashMultiMap<string, ImFieldDetails> (null, null,
           (GLib.HashFunc) ImFieldDetails.hash,
@@ -602,11 +605,8 @@ public class Tpf.Persona : Folks.Persona,
         }
     }
 
-  private HashSet<PhoneFieldDetails> _phone_numbers =
-      new HashSet<PhoneFieldDetails> (
-          (GLib.HashFunc) PhoneFieldDetails.hash,
-          (GLib.EqualFunc) PhoneFieldDetails.equal);
-  private Set<PhoneFieldDetails> _phone_numbers_ro;
+  private HashSet<PhoneFieldDetails>? _phone_numbers = null;
+  private Set<PhoneFieldDetails>? _phone_numbers_ro = null;
 
   /**
    * {@inheritDoc}
@@ -616,7 +616,11 @@ public class Tpf.Persona : Folks.Persona,
   [CCode (notify = false)]
   public Set<PhoneFieldDetails> phone_numbers
     {
-      get { return this._phone_numbers_ro; }
+      get
+        {
+          this._contact_notify_contact_info (true);
+          return this._phone_numbers_ro;
+        }
       set { this.change_phone_numbers.begin (value); }
     }
 
@@ -632,10 +636,8 @@ public class Tpf.Persona : Folks.Persona,
           this._phone_numbers, "tel");
     }
 
-  private HashSet<UrlFieldDetails> _urls = new HashSet<UrlFieldDetails> (
-      (GLib.HashFunc) UrlFieldDetails.hash,
-      (GLib.EqualFunc) UrlFieldDetails.equal);
-  private Set<UrlFieldDetails> _urls_ro;
+  private HashSet<UrlFieldDetails>? _urls = null;
+  private Set<UrlFieldDetails>? _urls_ro = null;
 
   /**
    * {@inheritDoc}
@@ -645,7 +647,11 @@ public class Tpf.Persona : Folks.Persona,
   [CCode (notify = false)]
   public Set<UrlFieldDetails> urls
     {
-      get { return this._urls_ro; }
+      get
+        {
+          this._contact_notify_contact_info (true);
+          return this._urls_ro;
+        }
       set { this.change_urls.begin (value); }
     }
 
@@ -662,13 +668,14 @@ public class Tpf.Persona : Folks.Persona,
 
   private async void _change_details<T> (
       Set<AbstractFieldDetails<string>> details,
-      Set<AbstractFieldDetails<string>> member_set,
+      Set<AbstractFieldDetails<string>>? member_set,
       string field_name)
         throws PropertyError
     {
       var tpf_store = this.store as Tpf.PersonaStore;
 
-      if (Folks.Internal.equal_sets<T> (details, member_set))
+      if (member_set != null &&
+          Folks.Internal.equal_sets<T> (details, member_set))
         {
           return;
         }
@@ -731,9 +738,6 @@ public class Tpf.Persona : Folks.Persona,
   construct
     {
       this._groups_ro = this._groups.read_only_view;
-      this._email_addresses_ro = this._email_addresses.read_only_view;
-      this._phone_numbers_ro = this._phone_numbers.read_only_view;
-      this._urls_ro = this._urls.read_only_view;
 
       /* Contact can be null if we've been created from the cache. All the code
        * below this point is for non-cached personas. */
@@ -801,9 +805,9 @@ public class Tpf.Persona : Folks.Persona,
 
       this.contact.notify["contact-info"].connect ((s, p) =>
         {
-          this._contact_notify_contact_info ();
+          this._contact_notify_contact_info (false);
         });
-      this._contact_notify_contact_info ();
+      this._contact_notify_contact_info (false);
 
       this.contact.contact_groups_changed.connect ((added, removed) =>
         {
@@ -855,8 +859,48 @@ public class Tpf.Persona : Folks.Persona,
         }
     }
 
-  private void _contact_notify_contact_info ()
+  private void _contact_notify_contact_info (bool create_if_not_exists)
     {
+      assert ((
+          (this._email_addresses == null) &&
+          (this._phone_numbers == null) &&
+          (this._urls == null)
+        ) || (
+          (this._email_addresses != null) &&
+          (this._phone_numbers != null) &&
+          (this._urls != null)
+        ));
+
+      /* See the comments in Folks.Individual about the lazy instantiation
+       * strategy for URIs, etc.
+       *
+       * It's necessary to notify for all three properties here, as this
+       * function is called identically for all of them. */
+      if (this._urls == null && create_if_not_exists == false)
+        {
+          this.notify_property ("email-addresses");
+          this.notify_property ("phone-numbers");
+          this.notify_property ("urls");
+          return;
+        }
+      else if (this._urls == null)
+        {
+          this._urls = new HashSet<UrlFieldDetails> (
+              (GLib.HashFunc) UrlFieldDetails.hash,
+              (GLib.EqualFunc) UrlFieldDetails.equal);
+          this._urls_ro = this._urls.read_only_view;
+
+          this._email_addresses = new HashSet<EmailFieldDetails> (
+              (GLib.HashFunc) EmailFieldDetails.hash,
+              (GLib.EqualFunc) EmailFieldDetails.equal);
+          this._email_addresses_ro = this._email_addresses.read_only_view;
+
+          this._phone_numbers = new HashSet<PhoneFieldDetails> (
+              (GLib.HashFunc) PhoneFieldDetails.hash,
+              (GLib.EqualFunc) PhoneFieldDetails.equal);
+          this._phone_numbers_ro = this._phone_numbers.read_only_view;
+        }
+
       var changed = false;
       var new_birthday_str = "";
       var new_full_name = "";
