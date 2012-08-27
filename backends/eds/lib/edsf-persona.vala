@@ -149,21 +149,7 @@ public class Edsf.Persona : Folks.Persona,
                                                   "local-ids",
                                                   "web-service-addresses" };
 
-  private HashSet<PhoneFieldDetails> _phone_numbers;
-  private Set<PhoneFieldDetails> _phone_numbers_ro;
-  private HashSet<EmailFieldDetails> _email_addresses;
-  private Set<EmailFieldDetails> _email_addresses_ro;
-  private HashSet<NoteFieldDetails> _notes;
-  private Set<NoteFieldDetails> _notes_ro;
   private static HashTable<string, E.ContactField>? _im_eds_map = null;
-
-  private HashSet<PostalAddressFieldDetails> _postal_addresses;
-  private Set<PostalAddressFieldDetails> _postal_addresses_ro;
-
-  private HashSet<string> _local_ids;
-  private Set<string> _local_ids_ro;
-
-  private HashMultiMap<string, WebServiceFieldDetails> _web_service_addresses;
 
   private bool _is_favourite;
 
@@ -177,6 +163,11 @@ public class Edsf.Persona : Folks.Persona,
       get { return this._contact; }
       construct { this._contact = value; }
     }
+
+  /* NOTE: Other properties support lazy initialisation, but
+   * web-service-addresses doesn't as it's a linkable property, so always has to
+   * be loaded anyway. */
+  private HashMultiMap<string, WebServiceFieldDetails> _web_service_addresses;
 
   /**
    * {@inheritDoc}
@@ -200,6 +191,11 @@ public class Edsf.Persona : Folks.Persona,
       yield ((Edsf.PersonaStore) this.store)._set_web_service_addresses (this,
           web_service_addresses);
     }
+
+  /* NOTE: Other properties support lazy initialisation, but local-ids doesn't
+   * as it's a linkable property, so always has to be loaded anyway. */
+  private HashSet<string> _local_ids = new HashSet<string> ();
+  private Set<string> _local_ids_ro;
 
   /**
    * IDs used to link {@link Edsf.Persona}s.
@@ -229,6 +225,9 @@ public class Edsf.Persona : Folks.Persona,
       yield ((Edsf.PersonaStore) this.store)._set_local_ids (this, local_ids);
     }
 
+  private HashSet<PostalAddressFieldDetails>? _postal_addresses = null;
+  private Set<PostalAddressFieldDetails>? _postal_addresses_ro = null;
+
   /**
    * The postal addresses of the contact.
    *
@@ -239,7 +238,11 @@ public class Edsf.Persona : Folks.Persona,
   [CCode (notify = false)]
   public Set<PostalAddressFieldDetails> postal_addresses
     {
-      get { return this._postal_addresses_ro; }
+      get
+        {
+          this._update_addresses (true);
+          return this._postal_addresses_ro;
+        }
       set { this.change_postal_addresses.begin (value); }
     }
 
@@ -255,6 +258,9 @@ public class Edsf.Persona : Folks.Persona,
           postal_addresses);
     }
 
+  private HashSet<PhoneFieldDetails>? _phone_numbers = null;
+  private Set<PhoneFieldDetails>? _phone_numbers_ro = null;
+
   /**
    * {@inheritDoc}
    *
@@ -263,7 +269,11 @@ public class Edsf.Persona : Folks.Persona,
   [CCode (notify = false)]
   public Set<PhoneFieldDetails> phone_numbers
     {
-      get { return this._phone_numbers_ro; }
+      get
+        {
+          this._update_phones (true);
+          return this._phone_numbers_ro;
+        }
       set { this.change_phone_numbers.begin (value); }
     }
 
@@ -278,6 +288,9 @@ public class Edsf.Persona : Folks.Persona,
       yield ((Edsf.PersonaStore) this.store)._set_phones (this, phone_numbers);
     }
 
+  private HashSet<EmailFieldDetails>? _email_addresses = null;
+  private Set<EmailFieldDetails>? _email_addresses_ro = null;
+
   /**
    * {@inheritDoc}
    *
@@ -286,7 +299,11 @@ public class Edsf.Persona : Folks.Persona,
   [CCode (notify = false)]
   public Set<EmailFieldDetails> email_addresses
     {
-      get { return this._email_addresses_ro; }
+      get
+        {
+          this._update_emails (true);
+          return this._email_addresses_ro;
+        }
       set { this.change_email_addresses.begin (value); }
     }
 
@@ -302,6 +319,9 @@ public class Edsf.Persona : Folks.Persona,
           email_addresses);
     }
 
+  private HashSet<NoteFieldDetails>? _notes = null;
+  private Set<NoteFieldDetails>? _notes_ro = null;
+
   /**
    * {@inheritDoc}
    *
@@ -310,7 +330,11 @@ public class Edsf.Persona : Folks.Persona,
   [CCode (notify = false)]
   public Set<NoteFieldDetails> notes
     {
-      get { return this._notes_ro; }
+      get
+        {
+          this._update_notes (true);
+          return this._notes_ro;
+        }
       set { this.change_notes.begin (value); }
     }
 
@@ -471,8 +495,8 @@ public class Edsf.Persona : Folks.Persona,
       yield ((Edsf.PersonaStore) this.store)._set_gender (this, gender);
     }
 
-  private HashSet<UrlFieldDetails> _urls;
-  private Set<UrlFieldDetails> _urls_ro;
+  private HashSet<UrlFieldDetails>? _urls = null;
+  private Set<UrlFieldDetails>? _urls_ro = null;
   /**
    * {@inheritDoc}
    *
@@ -481,7 +505,11 @@ public class Edsf.Persona : Folks.Persona,
   [CCode (notify = false)]
   public Set<UrlFieldDetails> urls
     {
-      get { return this._urls_ro; }
+      get
+        {
+          this._update_urls (true);
+          return this._urls_ro;
+        }
       set { this.change_urls.begin (value); }
     }
 
@@ -495,6 +523,8 @@ public class Edsf.Persona : Folks.Persona,
       yield ((Edsf.PersonaStore) this.store)._set_urls (this, urls);
     }
 
+  /* NOTE: Other properties support lazy initialisation, but im-addresses
+   * doesn't as it's a linkable property, so always has to be loaded anyway. */
   private HashMultiMap<string, ImFieldDetails> _im_addresses =
       new HashMultiMap<string, ImFieldDetails> (null, null,
           (GLib.HashFunc) ImFieldDetails.hash,
@@ -523,8 +553,8 @@ public class Edsf.Persona : Folks.Persona,
       yield ((Edsf.PersonaStore) this.store)._set_im_fds (this, im_addresses);
     }
 
-  private HashSet<string> _groups;
-  private Set<string> _groups_ro;
+  private HashSet<string>? _groups = null;
+  private Set<string>? _groups_ro = null;
 
   /**
    * {@inheritDoc}
@@ -534,7 +564,11 @@ public class Edsf.Persona : Folks.Persona,
   [CCode (notify = false)]
   public Set<string> groups
     {
-      get { return this._groups_ro; }
+      get
+        {
+          this._update_groups (true);
+          return this._groups_ro;
+        }
       set { this.change_groups.begin (value); }
     }
 
@@ -546,16 +580,19 @@ public class Edsf.Persona : Folks.Persona,
   public async void change_group (string group, bool is_member)
       throws GLib.Error
     {
+      /* NOTE: This method specifically accesses this.groups rather than
+       * this._groups, so that lazy loading is guaranteed to happen if
+       * necessary. */
       /* Nothing to do? */
-      if ((is_member == true && this._groups.contains (group) == true) ||
-          (is_member == false && this._groups.contains (group) == false))
+      if ((is_member == true && this.groups.contains (group) == true) ||
+          (is_member == false && this.groups.contains (group) == false))
         {
           return;
         }
 
       /* Replace the current set of groups with a modified one. */
       var new_groups = new HashSet<string> ();
-      foreach (var category_name in this._groups)
+      foreach (var category_name in this.groups)
         {
           new_groups.add (category_name);
         }
@@ -625,8 +662,8 @@ public class Edsf.Persona : Folks.Persona,
           bday);
     }
 
-  private HashSet<RoleFieldDetails> _roles;
-  private Set<RoleFieldDetails> _roles_ro;
+  private HashSet<RoleFieldDetails>? _roles = null;
+  private Set<RoleFieldDetails>? _roles_ro = null;
 
   /**
    * {@inheritDoc}
@@ -636,7 +673,11 @@ public class Edsf.Persona : Folks.Persona,
   [CCode (notify = false)]
   public Set<RoleFieldDetails> roles
     {
-      get { return this._roles_ro; }
+      get
+        {
+          this._update_roles (true);
+          return this._roles_ro;
+        }
       set { this.change_roles.begin (value); }
     }
 
@@ -790,39 +831,12 @@ public class Edsf.Persona : Folks.Persona,
       debug ("Creating new Edsf.Persona with IID '%s'", this.iid);
 
       this._gender = Gender.UNSPECIFIED;
-      this._phone_numbers = new HashSet<PhoneFieldDetails> (
-          (GLib.HashFunc) PhoneFieldDetails.hash,
-          (GLib.EqualFunc) PhoneFieldDetails.equal);
-      this._phone_numbers_ro = this._phone_numbers.read_only_view;
-      this._email_addresses = new HashSet<EmailFieldDetails> (
-          (GLib.HashFunc) EmailFieldDetails.hash,
-          (GLib.EqualFunc) EmailFieldDetails.equal);
-      this._email_addresses_ro = this._email_addresses.read_only_view;
-      this._notes = new HashSet<NoteFieldDetails> (
-          (GLib.HashFunc) NoteFieldDetails.hash,
-          (GLib.EqualFunc) NoteFieldDetails.equal);
-      this._notes_ro = this._notes.read_only_view;
-      this._urls = new HashSet<UrlFieldDetails> (
-          (GLib.HashFunc) UrlFieldDetails.hash,
-          (GLib.EqualFunc) UrlFieldDetails.equal);
-      this._urls_ro = this._urls.read_only_view;
-      this._postal_addresses = new HashSet<PostalAddressFieldDetails> (
-          (GLib.HashFunc) PostalAddressFieldDetails.hash,
-          (GLib.EqualFunc) PostalAddressFieldDetails.equal);
-      this._postal_addresses_ro = this._postal_addresses.read_only_view;
-      this._local_ids = new HashSet<string> ();
       this._local_ids_ro = this._local_ids.read_only_view;
       this._web_service_addresses =
         new HashMultiMap<string, WebServiceFieldDetails> (
             null, null,
             (GLib.HashFunc) WebServiceFieldDetails.hash,
             (GLib.EqualFunc) WebServiceFieldDetails.equal);
-      this._groups = new HashSet<string> ();
-      this._groups_ro = this._groups.read_only_view;
-      this._roles = new HashSet<RoleFieldDetails> (
-          (GLib.HashFunc) RoleFieldDetails.hash,
-          (GLib.EqualFunc) RoleFieldDetails.equal);
-      this._roles_ro = this._roles.read_only_view;
       this._anti_links = new HashSet<string> ();
       this._anti_links_ro = this._anti_links.read_only_view;
 
@@ -895,10 +909,10 @@ public class Edsf.Persona : Folks.Persona,
 
       this._update_names ();
       this._update_avatar ();
-      this._update_urls ();
-      this._update_phones ();
-      this._update_addresses ();
-      this._update_emails ();
+      this._update_urls (false);
+      this._update_phones (false);
+      this._update_addresses (false);
+      this._update_emails (false);
 
       /* Note: because we assume certain e-mail addresses
        * (@gmail, @msn, etc) to also be IM IDs we /must/
@@ -906,13 +920,13 @@ public class Edsf.Persona : Folks.Persona,
        */
       this._update_im_addresses ();
 
-      this._update_groups ();
-      this._update_notes ();
+      this._update_groups (false);
+      this._update_notes (false);
       this._update_local_ids ();
       this._update_web_services_addresses ();
       this._update_gender ();
       this._update_birthday ();
-      this._update_roles ();
+      this._update_roles (false);
       this._update_favourite ();
       this._update_anti_links ();
 
@@ -1005,8 +1019,23 @@ public class Edsf.Persona : Folks.Persona,
         }
     }
 
-  private void _update_roles ()
+  private void _update_roles (bool create_if_not_exist)
     {
+      /* See the comments in Folks.Individual about the lazy instantiation
+       * strategy for roles. */
+      if (this._roles == null && create_if_not_exist == false)
+        {
+          this.notify_property ("roles");
+          return;
+        }
+      else if (this._roles == null)
+        {
+          this._roles = new HashSet<RoleFieldDetails> (
+              (GLib.HashFunc) RoleFieldDetails.hash,
+              (GLib.EqualFunc) RoleFieldDetails.equal);
+          this._roles_ro = this._roles.read_only_view;
+        }
+
       var new_roles = new HashSet<RoleFieldDetails> (
           (GLib.HashFunc) RoleFieldDetails.hash,
           (GLib.EqualFunc) RoleFieldDetails.equal);
@@ -1159,8 +1188,23 @@ public class Edsf.Persona : Folks.Persona,
         }
     }
 
-  private void _update_emails ()
+  private void _update_emails (bool create_if_not_exist)
     {
+      /* See the comments in Folks.Individual about the lazy instantiation
+       * strategy for e-mail addresses. */
+      if (this._email_addresses == null && create_if_not_exist == false)
+        {
+          this.notify_property ("email-addresses");
+          return;
+        }
+      else if (this._email_addresses == null)
+        {
+          this._email_addresses = new HashSet<EmailFieldDetails> (
+              (GLib.HashFunc) EmailFieldDetails.hash,
+              (GLib.EqualFunc) EmailFieldDetails.equal);
+          this._email_addresses_ro = this._email_addresses.read_only_view;
+        }
+
       var new_email_addresses = new HashSet<EmailFieldDetails> (
           (GLib.HashFunc) EmailFieldDetails.hash,
           (GLib.EqualFunc) EmailFieldDetails.equal);
@@ -1188,8 +1232,23 @@ public class Edsf.Persona : Folks.Persona,
        }
     }
 
-  private void _update_notes ()
+  private void _update_notes (bool create_if_not_exist)
     {
+      /* See the comments in Folks.Individual about the lazy instantiation
+       * strategy for notes. */
+      if (this._notes == null && create_if_not_exist == false)
+        {
+          this.notify_property ("notes");
+          return;
+        }
+      else if (this._notes == null)
+        {
+          this._notes = new HashSet<NoteFieldDetails> (
+              (GLib.HashFunc) NoteFieldDetails.hash,
+              (GLib.EqualFunc) NoteFieldDetails.equal);
+          this._notes_ro = this._notes.read_only_view;
+        }
+
       var new_notes = new HashSet<NoteFieldDetails> (
           (GLib.HashFunc) NoteFieldDetails.hash,
           (GLib.EqualFunc) NoteFieldDetails.equal);
@@ -1350,9 +1409,26 @@ public class Edsf.Persona : Folks.Persona,
         }
     }
 
-  private void _update_urls ()
+  private void _update_urls (bool create_if_not_exist)
     {
-      var new_urls = new HashSet<UrlFieldDetails> ();
+      /* See the comments in Folks.Individual about the lazy instantiation
+       * strategy for URIs. */
+      if (this._urls == null && create_if_not_exist == false)
+        {
+          this.notify_property ("urls");
+          return;
+        }
+      else if (this._urls == null)
+        {
+          this._urls = new HashSet<UrlFieldDetails> (
+              (GLib.HashFunc) UrlFieldDetails.hash,
+              (GLib.EqualFunc) UrlFieldDetails.equal);
+          this._urls_ro = this._urls.read_only_view;
+        }
+
+      var new_urls = new HashSet<UrlFieldDetails> (
+          (GLib.HashFunc) UrlFieldDetails.hash,
+          (GLib.EqualFunc) UrlFieldDetails.equal);
 
       /* First we get the standard Evo urls.. */
       foreach (var mapping in Persona._url_properties)
@@ -1444,6 +1520,10 @@ public class Edsf.Persona : Folks.Persona,
        * who don't actually use GMail or MSN addresses for IM).
        *
        * See bgo#657142
+       *
+       * NOTE: The public property name (this.email_addresses, as opposed to
+       * this._email_addresses) is used here to ensure the values are
+       * lazy-loaded correctly.
        */
       foreach (var email in this.email_addresses)
         {
@@ -1495,8 +1575,21 @@ public class Edsf.Persona : Folks.Persona,
         }
     }
 
-  private void _update_groups ()
+  private void _update_groups (bool create_if_not_exist)
     {
+      /* See the comments in Folks.Individual about the lazy instantiation
+       * strategy for groups. */
+      if (this._groups == null && create_if_not_exist == false)
+        {
+          this.notify_property ("groups");
+          return;
+        }
+      else if (this._groups == null)
+        {
+          this._groups = new HashSet<string> ();
+          this._groups_ro = this._groups.read_only_view;
+        }
+
       var category_names =
           this._contact.get<GLib.List<string>> (E.ContactField.CATEGORY_LIST);
       var new_categories = new HashSet<string> ();
@@ -1638,8 +1731,23 @@ public class Edsf.Persona : Folks.Persona,
       return retval;
     }
 
-  private void _update_phones ()
+  private void _update_phones (bool create_if_not_exist)
     {
+      /* See the comments in Folks.Individual about the lazy instantiation
+       * strategy for phone numbers. */
+      if (this._phone_numbers == null && create_if_not_exist == false)
+        {
+          this.notify_property ("phone-numbers");
+          return;
+        }
+      else if (this._phone_numbers == null)
+        {
+          this._phone_numbers = new HashSet<PhoneFieldDetails> (
+              (GLib.HashFunc) PhoneFieldDetails.hash,
+              (GLib.EqualFunc) PhoneFieldDetails.equal);
+          this._phone_numbers_ro = this._phone_numbers.read_only_view;
+        }
+
       var new_phone_numbers = new HashSet<PhoneFieldDetails> (
           (GLib.HashFunc) PhoneFieldDetails.hash,
           (GLib.EqualFunc) PhoneFieldDetails.equal);
@@ -1727,11 +1835,26 @@ public class Edsf.Persona : Folks.Persona,
    *       are the same and if so instantiate only one PostalAddress
    *       (with the given types).
    */
-  private void _update_addresses ()
+  private void _update_addresses (bool create_if_not_exist)
     {
+      /* See the comments in Folks.Individual about the lazy instantiation
+       * strategy for addresses. */
+      if (this._postal_addresses == null && create_if_not_exist == false)
+        {
+          this.notify_property ("postal-addresses");
+          return;
+        }
+      else if (this._postal_addresses == null)
+        {
+          this._postal_addresses = new HashSet<PostalAddressFieldDetails> (
+              (GLib.HashFunc) PostalAddressFieldDetails.hash,
+              (GLib.EqualFunc) PostalAddressFieldDetails.equal);
+          this._postal_addresses_ro = this._postal_addresses.read_only_view;
+        }
+
       var new_postal_addresses = new HashSet<PostalAddressFieldDetails> (
-          (GLib.HashFunc) PhoneFieldDetails.hash,
-          (GLib.EqualFunc) PhoneFieldDetails.equal);
+          (GLib.HashFunc) PostalAddressFieldDetails.hash,
+          (GLib.EqualFunc) PostalAddressFieldDetails.equal);
 
       var attrs = this.contact.get_attributes (E.ContactField.ADDRESS);
       foreach (unowned E.VCardAttribute attr in attrs)
@@ -1753,10 +1876,8 @@ public class Edsf.Persona : Folks.Persona,
         {
           this._postal_addresses = new_postal_addresses;
           this._postal_addresses_ro = new_postal_addresses.read_only_view;
-          this.notify_property ("phone-numbers");
+          this.notify_property ("postal-addresses");
         }
-
-      this.notify_property ("postal-addresses");
     }
 
   private void _update_local_ids ()
