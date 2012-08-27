@@ -433,7 +433,7 @@ public abstract class Folks.PersonaStore : Object
         }
 
       Internal.profiling_point ("emitting PersonaStore::personas-changed " +
-          "(ID: %s)", this.id);
+          "(ID: %s, count: %u)", this.id, _added.size + _removed.size);
 
       // We've now guaranteed that both _added and _removed are non-null.
       this.personas_changed (((!) _added).read_only_view,
