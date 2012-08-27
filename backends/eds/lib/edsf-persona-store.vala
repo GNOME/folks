@@ -46,6 +46,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
   private bool _is_prepared = false;
   private bool _prepare_pending = false;
   private bool _is_quiescent = false;
+  private HashSet<Persona>? _pending_personas = null; /* null before prepare()*/
   private E.BookClient? _addressbook = null; /* null before prepare() */
   private E.BookClientView? _ebookview = null; /* null before prepare() */
   private E.SourceRegistry? _source_registry = null; /* null before prepare() */
@@ -960,6 +961,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
            * a quiescent state immediately. */
           if (do_initial_query == false && this._is_quiescent == false)
             {
+              assert (this._pending_personas == null); /* no initial query */
               this._is_quiescent = true;
               this.notify_property ("is-quiescent");
             }
@@ -2098,7 +2100,25 @@ public class Edsf.PersonaStore : Folks.PersonaStore
 
   private void _contacts_added_cb (GLib.List<E.Contact> contacts)
     {
-      var added_personas = new HashSet<Persona> ();
+      HashSet<Persona> added_personas;
+
+      /* If the persona store hasn't yet reached quiescence, queue up the
+       * personas and emit a notification about them later; see
+       * _contacts_complete_cb() for details. */
+      if (this._is_quiescent == false)
+        {
+          /* Lazily create pending_personas. */
+          if (this._pending_personas == null)
+            {
+              this._pending_personas = new HashSet<Persona> ();
+            }
+
+          added_personas = this._pending_personas;
+        }
+      else
+        {
+          added_personas = new HashSet<Persona> ();
+        }
 
       foreach (E.Contact c in contacts)
         {
@@ -2111,7 +2131,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
             }
         }
 
-      if (added_personas.size > 0)
+      if (added_personas.size > 0 && this._is_quiescent == true)
         {
           this._emit_personas_changed (added_personas, null);
         }
@@ -2142,6 +2162,13 @@ public class Edsf.PersonaStore : Folks.PersonaStore
             {
               removed_personas.add ((!) persona);
               this._personas.unset (((!) persona).iid);
+
+              /* Handle the case where a contact is removed before the persona
+               * store has reached quiescence. */
+              if (this._pending_personas != null)
+                {
+                  this._pending_personas.remove ((!) persona);
+                }
             }
         }
 
@@ -2176,6 +2203,19 @@ public class Edsf.PersonaStore : Folks.PersonaStore
                   "Removing persona store.");
               this.removed ();
               return;
+            }
+
+          /* Emit a notification about all the personas which were found in the
+           * initial query. They're queued up in _contacts_added_cb() and only
+           * emitted here as _contacts_added_cb() may be called many times
+           * before _contacts_complete_cb() is called. For example, EDS seems to
+           * like emitting contacts in batches of 16 at the moment.
+           * Queueing the personas up and emitting a single notification is a
+           * lot more efficient for the individual aggregator to handle. */
+          if (this._pending_personas != null)
+            {
+              this._emit_personas_changed (this._pending_personas, null);
+              this._pending_personas = null;
             }
 
           this._is_quiescent = true;
