@@ -1335,6 +1335,87 @@ public class Folks.Individual : Object,
       setter (candidate_p);
     }
 
+  /* Delegate to add the values of a property from all personas to the
+   * collection of values for that property in this individual.
+   *
+   * Used in _update_multi_valued_property(), below. */
+  private delegate void MultiValuedPropertySetter ();
+
+  /* Delegate to get whether a multi-valued property in this Individual has not
+   * been initialised yet (and is thus still null).
+   *
+   * Used in _update_multi_valued_property(), below. */
+  private delegate bool PropertyIsNull ();
+
+  /* Delegate to create a new empty collection for a multi-valued property in
+   * this Individual and assign it to the property.
+   *
+   * Used in _update_multi_valued_property(), below. */
+  private delegate void CollectionCreator ();
+
+  /*
+   * Update a multi-valued property from the values in the personas.
+   *
+   * Multi-valued properties are ones such as {@link Individual.notes} or
+   * {@link Individual.email_addresses} which have multiple values taken as the
+   * union of the values listed by the personas for those properties.
+   *
+   * This function handles lazy instantiation of the multi-valued property. If
+   * ``create_if_not_exist`` is ``true``, the property is guaranteed to be
+   * created (by ``create_collection``) and set to a non-``null`` value before
+   * this function returns.
+   *
+   * If ``create_if_not_exist`` is ``false``, however, the property may not be
+   * instantiated if it hasn't already been accessed through its property
+   * getter. In this case, a change notification will be emitted for the
+   * property and this function will return immediately.
+   *
+   * If the property value is to be instantiated, or already has been
+   * instantiated, its value is updated by ``setter`` from the values of the
+   * property in the individual's personas.
+   *
+   * @param prop_name name of the property being set, as used in
+   * {@link Persona.writeable_properties}
+   * @param create_if_not_exist ``true`` to ensure the property is non-null;
+   * ``false`` otherwise
+   * @param prop_is_null function returning ``true`` iff the property is
+   * currently ``null``
+   * @param create_collection function creating a new collection/container for
+   * the property values and assigning it to the property (and updating the
+   * property's read-only view as necessary)
+   * @param setter function which adds the values from the individual's
+   * personas' values for the property to the individual's value for the
+   * property
+   * @since UNRELEASED
+   */
+  private void _update_multi_valued_property (string prop_name,
+      bool create_if_not_exist, PropertyIsNull prop_is_null,
+      CollectionCreator create_collection, MultiValuedPropertySetter setter)
+    {
+      /* If the set of values doesn't exist, and we're not meant to lazily
+       * create it, then simply emit a notification (since the set might've
+       * changed — we can't be sure, but emitting is a safe over-estimate) and
+       * return. */
+      if (prop_is_null ())
+        {
+          /* Notify and return. */
+          if (create_if_not_exist == false)
+            {
+              this.notify_property (prop_name);
+              return;
+            }
+
+          /* Lazily instantiate the set of IM addresses. */
+          create_collection ();
+        }
+
+      /* Re-populate the collection as the union of the values in the
+       * individual's personas. */
+      setter ();
+
+      this.notify_property (prop_name);
+    }
+
   private void _update_groups (bool create_if_not_exist)
     {
       /* If the set of groups doesn't exist, and we're not meant to lazily
@@ -1564,89 +1645,77 @@ public class Folks.Individual : Object,
 
   private void _update_im_addresses (bool create_if_not_exist)
     {
-      /* If the set of IM addresses doesn't exist, and we're not meant to lazily
-       * create it, then simply emit a notification (since the set might've
-       * changed — we can't be sure, but emitting is a safe over-estimate) and
-       * return. */
-      if (this._im_addresses == null && create_if_not_exist == false)
-        {
-          this.notify_property ("im-addresses");
-          return;
-        }
-
-      /* Lazily instantiate the set of IM addresses. */
-      else if (this._im_addresses == null)
-        {
-          this._im_addresses = new HashMultiMap<string, ImFieldDetails> (
-              null, null, ImFieldDetails.hash,
-              (EqualFunc) ImFieldDetails.equal);
-        }
-
-      /* populate the IM addresses as the union of our Personas' addresses */
-      this._im_addresses.clear ();
-
-      foreach (var persona in this._persona_set)
-        {
-          if (persona is ImDetails)
+      this._update_multi_valued_property ("im-addresses",
+          create_if_not_exist, () => { return this._im_addresses == null; },
+          () =>
             {
-              var im_details = (ImDetails) persona;
-              foreach (var cur_protocol in im_details.im_addresses.get_keys ())
-                {
-                  var cur_addresses =
-                      im_details.im_addresses.get (cur_protocol);
+              this._im_addresses = new HashMultiMap<string, ImFieldDetails> (
+                  null, null, ImFieldDetails.hash,
+                  (EqualFunc) ImFieldDetails.equal);
+            },
+          () =>
+            {
+              this._im_addresses.clear ();
 
-                  foreach (var address in cur_addresses)
+              foreach (var persona in this._persona_set)
+                {
+                  /* We only care about personas implementing the given interface. */
+                  var im_details = persona as ImDetails;
+                  if (im_details != null)
                     {
-                      this._im_addresses.set (cur_protocol, address);
+                      foreach (var cur_protocol in im_details.im_addresses.get_keys ())
+                        {
+                          var cur_addresses =
+                              im_details.im_addresses.get (cur_protocol);
+
+                          foreach (var address in cur_addresses)
+                            {
+                              this._im_addresses.set (cur_protocol, address);
+                            }
+                        }
                     }
                 }
-            }
-        }
-      this.notify_property ("im-addresses");
+            });
     }
 
   private void _update_web_service_addresses (bool create_if_not_exist)
     {
-      /* If the set of web service addresses doesn't exist, and we're not meant
-       * to lazily create it, then simply emit a notification (since the set
-       * might've changed — we can't be sure, but emitting is a safe
-       * over-estimate) and return. */
-      if (this._web_service_addresses == null && create_if_not_exist == false)
-        {
-          this.notify_property ("web-service-addresses");
-          return;
-        }
-
-      /* Lazily instantiate the set of web service addresses. */
-      else if (this._web_service_addresses == null)
-        {
-          this._web_service_addresses =
-              new HashMultiMap<string, WebServiceFieldDetails> (null, null,
-                  (GLib.HashFunc) WebServiceFieldDetails.hash,
-                  (GLib.EqualFunc) WebServiceFieldDetails.equal);;
-        }
-
-      /* populate the web service addresses as the union of our Personas' addresses */
-      this._web_service_addresses.clear ();
-
-      foreach (var persona in this.personas)
-        {
-          if (persona is WebServiceDetails)
+      this._update_multi_valued_property ("web-service-addresses",
+          create_if_not_exist,
+          () => { return this._web_service_addresses == null; },
+          () =>
             {
-              var web_service_details = (WebServiceDetails) persona;
-              foreach (var cur_web_service in
-                  web_service_details.web_service_addresses.get_keys ())
-                {
-                  var cur_addresses =
-                      web_service_details.web_service_addresses.get (
-                          cur_web_service);
+              this._web_service_addresses =
+                  new HashMultiMap<string, WebServiceFieldDetails> (null, null,
+                      (GLib.HashFunc) WebServiceFieldDetails.hash,
+                      (GLib.EqualFunc) WebServiceFieldDetails.equal);
+            },
+          () =>
+            {
+              this._web_service_addresses.clear ();
 
-                  foreach (var ws_fd in cur_addresses)
-                    this._web_service_addresses.set (cur_web_service, ws_fd);
+              foreach (var persona in this._persona_set)
+                {
+                  /* We only care about personas implementing the given interface. */
+                  var web_service_details = persona as WebServiceDetails;
+                  if (web_service_details != null)
+                    {
+                      foreach (var cur_web_service in
+                          web_service_details.web_service_addresses.get_keys ())
+                        {
+                          var cur_addresses =
+                              web_service_details.web_service_addresses.get (
+                                  cur_web_service);
+
+                          foreach (var ws_fd in cur_addresses)
+                            {
+                              this._web_service_addresses.set (cur_web_service,
+                                  ws_fd);
+                            }
+                        }
+                    }
                 }
-            }
-        }
-      this.notify_property ("web-service-addresses");
+            });
     }
 
   private void _connect_to_persona (Persona persona)
@@ -1891,268 +1960,227 @@ public class Folks.Individual : Object,
 
   private void _update_urls (bool create_if_not_exist)
     {
-      /* If the set of URIs doesn't exist, and we're not meant to lazily create
-       * it, then simply emit a notification (since the set might've changed —
-       * we can't be sure, but emitting is a safe over-estimate) and return. */
-      if (this._urls == null && create_if_not_exist == false)
-        {
-          this.notify_property ("urls");
-          return;
-        }
-
-      /* Lazily instantiate the set of URIs. */
-      else if (this._urls == null)
-        {
-          this._urls = new HashSet<UrlFieldDetails> (
-              (GLib.HashFunc) UrlFieldDetails.hash,
-              (GLib.EqualFunc) UrlFieldDetails.equal);
-          this._urls_ro = this._urls.read_only_view;
-        }
-
-      /* Populate the URLs as the union of our Personas' URLs.
-       * If the same URL exists multiple times we merge the parameters. */
-      var urls_set = new HashMap<string, UrlFieldDetails> (
-          null, null, (GLib.EqualFunc) UrlFieldDetails.equal);
-
-      this._urls.clear ();
-
-      foreach (var persona in this._persona_set)
-        {
-          var url_details = persona as UrlDetails;
-          if (url_details != null)
+      this._update_multi_valued_property ("urls", create_if_not_exist,
+          () => { return this._urls == null; },
+          () =>
             {
-              foreach (var url_fd in ((!) url_details).urls)
+              this._urls = new HashSet<UrlFieldDetails> (
+                  (GLib.HashFunc) UrlFieldDetails.hash,
+                  (GLib.EqualFunc) UrlFieldDetails.equal);
+              this._urls_ro = this._urls.read_only_view;
+            },
+          () =>
+            {
+              this._urls.clear ();
+              var urls_set = new HashMap<string, UrlFieldDetails> (null, null,
+                  (GLib.EqualFunc) UrlFieldDetails.equal);
+
+              foreach (var persona in this._persona_set)
                 {
-                  var existing = urls_set.get (url_fd.value);
-                  if (existing != null)
-                    existing.extend_parameters (url_fd.parameters);
-                  else
+                  /* We only care about personas implementing the given
+                   * interface. If the same URL exists multiple times we merge
+                   * the parameters. */
+                  var url_details = persona as UrlDetails;
+                  if (url_details != null)
                     {
-                      var new_url_fd = new UrlFieldDetails (url_fd.value);
-                      new_url_fd.extend_parameters (url_fd.parameters);
-                      urls_set.set (new_url_fd.value, new_url_fd);
-                      this._urls.add (new_url_fd);
+                      foreach (var url_fd in ((!) url_details).urls)
+                        {
+                          var existing = urls_set.get (url_fd.value);
+                          if (existing != null)
+                            {
+                              existing.extend_parameters (url_fd.parameters);
+                            }
+                          else
+                            {
+                              var new_url_fd =
+                                  new UrlFieldDetails (url_fd.value);
+                              new_url_fd.extend_parameters (url_fd.parameters);
+                              urls_set.set (new_url_fd.value, new_url_fd);
+                              this._urls.add (new_url_fd);
+                            }
+                        }
                     }
                 }
-            }
-        }
-
-      this.notify_property ("urls");
+            });
     }
 
   private void _update_phone_numbers (bool create_if_not_exist)
     {
-      /* If the set of phone numbers doesn't exist, and we're not meant to
-       * lazily create it, then simply emit a notification (since the set
-       * might've changed — we can't be sure, but emitting is a safe
-       * over-estimate) and return. */
-      if (this._phone_numbers == null && create_if_not_exist == false)
-        {
-          this.notify_property ("phone-numbers");
-          return;
-        }
-
-      /* Lazily instantiate the set of phone numbers. */
-      else if (this._phone_numbers == null)
-        {
-          this._phone_numbers = new HashSet<PhoneFieldDetails> (
-              (GLib.HashFunc) PhoneFieldDetails.hash,
-              (GLib.EqualFunc) PhoneFieldDetails.equal);
-          this._phone_numbers_ro = this._phone_numbers.read_only_view;
-        }
-
-      /* Populate the phone numbers as the union of our Personas' numbers
-       * If the same number exists multiple times we merge the parameters. */
-      var phone_numbers_set = new HashMap<string, PhoneFieldDetails> (
-              null, null, (GLib.EqualFunc) PhoneFieldDetails.equal);
-
-      this._phone_numbers.clear ();
-
-      foreach (var persona in this._persona_set)
-        {
-          var phone_details = persona as PhoneDetails;
-          if (phone_details != null)
+      this._update_multi_valued_property ("phone-numbers", create_if_not_exist,
+          () => { return this._phone_numbers == null; },
+          () =>
             {
-              foreach (var phone_fd in ((!) phone_details).phone_numbers)
+              this._phone_numbers = new HashSet<PhoneFieldDetails> (
+                  (GLib.HashFunc) PhoneFieldDetails.hash,
+                  (GLib.EqualFunc) PhoneFieldDetails.equal);
+              this._phone_numbers_ro = this._phone_numbers.read_only_view;
+            },
+          () =>
+            {
+              this._phone_numbers.clear ();
+              var phone_numbers_set = new HashMap<string, PhoneFieldDetails> (
+                  null, null, (GLib.EqualFunc) PhoneFieldDetails.equal);
+
+              foreach (var persona in this._persona_set)
                 {
-                  var existing = phone_numbers_set.get (phone_fd.value);
-                  if (existing != null)
-                    existing.extend_parameters (phone_fd.parameters);
-                  else
+                  /* We only care about personas implementing the given
+                   * interface. If the same phone number exists multiple times
+                   * we merge the parameters. */
+                  var phone_details = persona as PhoneDetails;
+                  if (phone_details != null)
                     {
-                      var new_fd = new PhoneFieldDetails (phone_fd.value);
-                      new_fd.extend_parameters (phone_fd.parameters);
-                      phone_numbers_set.set (new_fd.value, new_fd);
-                      this._phone_numbers.add (new_fd);
+                      foreach (var phone_fd in ((!) phone_details).phone_numbers)
+                        {
+                          var existing = phone_numbers_set.get (phone_fd.value);
+                          if (existing != null)
+                            {
+                              existing.extend_parameters (phone_fd.parameters);
+                            }
+                          else
+                            {
+                              var new_fd =
+                                  new PhoneFieldDetails (phone_fd.value);
+                              new_fd.extend_parameters (phone_fd.parameters);
+                              phone_numbers_set.set (new_fd.value, new_fd);
+                              this._phone_numbers.add (new_fd);
+                            }
+                        }
                     }
                 }
-            }
-        }
-
-      this.notify_property ("phone-numbers");
+            });
     }
 
   private void _update_email_addresses (bool create_if_not_exist)
     {
-      /* If the set of e-mail addresses doesn't exist, and we're not meant to
-       * lazily create it, then simply emit a notification (since the set
-       * might've changed — we can't be sure, but emitting is a safe
-       * over-estimate) and return. */
-      if (this._email_addresses == null && create_if_not_exist == false)
-        {
-          this.notify_property ("email-addresses");
-          return;
-        }
-
-      /* Lazily instantiate the set of e-mail addresses. */
-      else if (this._email_addresses == null)
-        {
-          this._email_addresses = new HashSet<EmailFieldDetails> (
-              (GLib.HashFunc) EmailFieldDetails.hash,
-              (GLib.EqualFunc) EmailFieldDetails.equal);
-          this._email_addresses_ro = this._email_addresses.read_only_view;
-        }
-
-      /* Populate the email addresses as the union of our Personas' addresses.
-       * If the same address exists multiple times we merge the parameters. */
-      var emails_set = new HashMap<string, EmailFieldDetails> (
-          null, null, (GLib.EqualFunc) EmailFieldDetails.equal);
-
-      this._email_addresses.clear ();
-
-      foreach (var persona in this._persona_set)
-        {
-          var email_details = persona as EmailDetails;
-          if (email_details != null)
+      this._update_multi_valued_property ("email-addresses",
+          create_if_not_exist, () => { return this._email_addresses == null; },
+          () =>
             {
-              foreach (var email_fd in ((!) email_details).email_addresses)
+              this._email_addresses = new HashSet<EmailFieldDetails> (
+                  (GLib.HashFunc) EmailFieldDetails.hash,
+                  (GLib.EqualFunc) EmailFieldDetails.equal);
+              this._email_addresses_ro = this._email_addresses.read_only_view;
+            },
+          () =>
+            {
+              this._email_addresses.clear ();
+              var emails_set = new HashMap<string, EmailFieldDetails> (
+                  null, null, (GLib.EqualFunc) EmailFieldDetails.equal);
+
+              foreach (var persona in this._persona_set)
                 {
-                  var existing = emails_set.get (email_fd.value);
-                  if (existing != null)
-                    existing.extend_parameters (email_fd.parameters);
-                  else
+                  /* We only care about personas implementing the given
+                   * interface. If the same e-mail address exists multiple times
+                   * we merge the parameters. */
+                  var email_details = persona as EmailDetails;
+                  if (email_details != null)
                     {
-                      var new_email_fd = new EmailFieldDetails (email_fd.value,
-                          email_fd.parameters);
-                      emails_set.set (new_email_fd.value, new_email_fd);
-                      this._email_addresses.add (new_email_fd);
+                      foreach (var email_fd in ((!) email_details).email_addresses)
+                        {
+                          var existing = emails_set.get (email_fd.value);
+                          if (existing != null)
+                            {
+                              existing.extend_parameters (email_fd.parameters);
+                            }
+                          else
+                            {
+                              var new_email_fd =
+                                  new EmailFieldDetails (email_fd.value,
+                                      email_fd.parameters);
+                              emails_set.set (new_email_fd.value, new_email_fd);
+                              this._email_addresses.add (new_email_fd);
+                            }
+                        }
                     }
                 }
-            }
-        }
-
-      this.notify_property ("email-addresses");
+            });
     }
 
   private void _update_roles (bool create_if_not_exist)
     {
-      /* If the set of roles doesn't exist, and we're not meant to
-       * lazily create it, then simply emit a notification (since the set
-       * might've changed — we can't be sure, but emitting is a safe
-       * over-estimate) and return. */
-      if (this._roles == null && create_if_not_exist == false)
-        {
-          this.notify_property ("roles");
-          return;
-        }
-
-      /* Lazily instantiate the set of roles. */
-      else if (this._roles == null)
-        {
-          this._roles = new HashSet<RoleFieldDetails> (
-              (GLib.HashFunc) RoleFieldDetails.hash,
-              (GLib.EqualFunc) RoleFieldDetails.equal);
-          this._roles_ro = this._roles.read_only_view;
-        }
-
-      this._roles.clear ();
-
-      foreach (var persona in this._persona_set)
-        {
-          var role_details = persona as RoleDetails;
-          if (role_details != null)
+      this._update_multi_valued_property ("roles", create_if_not_exist,
+          () => { return this._roles == null; },
+          () =>
             {
-              foreach (var role_fd in ((!) role_details).roles)
-                {
-                  this._roles.add (role_fd);
-                }
-            }
-        }
+              this._roles = new HashSet<RoleFieldDetails> (
+                  (GLib.HashFunc) RoleFieldDetails.hash,
+                  (GLib.EqualFunc) RoleFieldDetails.equal);
+              this._roles_ro = this._roles.read_only_view;
+            },
+          () =>
+            {
+              this._roles.clear ();
 
-      this.notify_property ("roles");
+              foreach (var persona in this._persona_set)
+                {
+                  var role_details = persona as RoleDetails;
+                  if (role_details != null)
+                    {
+                      foreach (var role_fd in ((!) role_details).roles)
+                        {
+                          this._roles.add (role_fd);
+                        }
+                    }
+                }
+            });
     }
 
   private void _update_local_ids (bool create_if_not_exist)
     {
-      /* If the set of local IDs doesn't exist, and we're not meant to
-       * lazily create it, then simply emit a notification (since the set
-       * might've changed — we can't be sure, but emitting is a safe
-       * over-estimate) and return. */
-      if (this._local_ids == null && create_if_not_exist == false)
-        {
-          this.notify_property ("local-ids");
-          return;
-        }
-
-      /* Lazily instantiate the set of local IDs. */
-      else if (this._local_ids == null)
-        {
-          this._local_ids = new HashSet<string> ();
-          this._local_ids_ro = this._local_ids.read_only_view;
-        }
-
-      this._local_ids.clear ();
-
-      foreach (var persona in this._persona_set)
-        {
-          var local_ids_details = persona as LocalIdDetails;
-          if (local_ids_details != null)
+      this._update_multi_valued_property ("local-ids", create_if_not_exist,
+          () => { return this._local_ids == null; },
+          () =>
             {
-              foreach (var id in ((!) local_ids_details).local_ids)
-                {
-                  this._local_ids.add (id);
-                }
-            }
-        }
+              this._local_ids = new HashSet<string> ();
+              this._local_ids_ro = this._local_ids.read_only_view;
+            },
+          () =>
+            {
+              this._local_ids.clear ();
 
-      this.notify_property ("local-ids");
+              foreach (var persona in this._persona_set)
+                {
+                  var local_id_details = persona as LocalIdDetails;
+                  if (local_id_details != null)
+                    {
+                      foreach (var id in ((!) local_id_details).local_ids)
+                        {
+                          this._local_ids.add (id);
+                        }
+                    }
+                }
+            });
     }
 
   private void _update_postal_addresses (bool create_if_not_exist)
     {
-      /* If the set of addresses doesn't exist, and we're not meant to lazily
-       * create it, then simply emit a notification (since the set might've
-       * changed — we can't be sure, but emitting is a safe over-estimate) and
-       * return. */
-      if (this._postal_addresses == null && create_if_not_exist == false)
-        {
-          this.notify_property ("postal-addresses");
-          return;
-        }
-
-      /* Lazily instantiate the set of addresses. */
-      else if (this._postal_addresses == null)
-        {
-          this._postal_addresses = new HashSet<PostalAddressFieldDetails> (
-              (GLib.HashFunc) PostalAddressFieldDetails.hash,
-              (GLib.EqualFunc) PostalAddressFieldDetails.equal);
-          this._postal_addresses_ro = this._postal_addresses.read_only_view;
-        }
-
-      this._postal_addresses.clear ();
-
       /* FIXME: Detect duplicates somehow? */
-      foreach (var persona in this._persona_set)
-        {
-          var address_details = persona as PostalAddressDetails;
-          if (address_details != null)
+      this._update_multi_valued_property ("postal-addresses",
+          create_if_not_exist, () => { return this._postal_addresses == null; },
+          () =>
             {
-              foreach (var pafd in ((!) address_details).postal_addresses)
-                this._postal_addresses.add (pafd);
-            }
-        }
+              this._postal_addresses = new HashSet<PostalAddressFieldDetails> (
+                  (GLib.HashFunc) PostalAddressFieldDetails.hash,
+                  (GLib.EqualFunc) PostalAddressFieldDetails.equal);
+              this._postal_addresses_ro = this._postal_addresses.read_only_view;
+            },
+          () =>
+            {
+              this._postal_addresses.clear ();
 
-      this.notify_property ("postal-addresses");
+              foreach (var persona in this._persona_set)
+                {
+                  var postal_address_details = persona as PostalAddressDetails;
+                  if (postal_address_details != null)
+                    {
+                      foreach (var pafd in
+                          ((!) postal_address_details).postal_addresses)
+                        {
+                          this._postal_addresses.add (pafd);
+                        }
+                    }
+                }
+            });
     }
 
   private void _update_birthday ()
@@ -2209,40 +2237,31 @@ public class Folks.Individual : Object,
 
   private void _update_notes (bool create_if_not_exist)
     {
-      /* If the set of notes doesn't exist, and we're not meant to lazily
-       * create it, then simply emit a notification (since the set might've
-       * changed — we can't be sure, but emitting is a safe over-estimate) and
-       * return. */
-      if (this._notes == null && create_if_not_exist == false)
-        {
-          this.notify_property ("notes");
-          return;
-        }
-
-      /* Lazily instantiate the set of notes. */
-      else if (this._notes == null)
-        {
-          this._notes = new HashSet<NoteFieldDetails> (
-              (GLib.HashFunc) NoteFieldDetails.hash,
-              (GLib.EqualFunc) NoteFieldDetails.equal);
-          this._notes_ro = this._notes.read_only_view;
-        }
-
-      this._notes.clear ();
-
-      foreach (var persona in this._persona_set)
-        {
-          var note_details = persona as NoteDetails;
-          if (note_details != null)
+      this._update_multi_valued_property ("notes", create_if_not_exist,
+          () => { return this._notes == null; },
+          () =>
             {
-              foreach (var n in ((!) note_details).notes)
-                {
-                  this._notes.add (n);
-                }
-            }
-        }
+              this._notes = new HashSet<NoteFieldDetails> (
+                  (GLib.HashFunc) NoteFieldDetails.hash,
+                  (GLib.EqualFunc) NoteFieldDetails.equal);
+              this._notes_ro = this._notes.read_only_view;
+            },
+          () =>
+            {
+              this._notes.clear ();
 
-      this.notify_property ("notes");
+              foreach (var persona in this._persona_set)
+                {
+                  var note_details = persona as NoteDetails;
+                  if (note_details != null)
+                    {
+                      foreach (var n in ((!) note_details).notes)
+                        {
+                          this._notes.add (n);
+                        }
+                    }
+                }
+            });
     }
 
   private void _set_personas (Set<Persona>? personas,
