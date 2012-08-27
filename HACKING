@@ -107,6 +107,23 @@ Vala-specific rules
 
     This makes scope immediately clear, helping readability.
 
+11. Use nullable types correctly. This helps readability (and makes the
+    programmer's intentions clearer about whether a variable may be null). The
+    ultimate goal is for folks to compile correctly with Vala’s strict-non-null
+    mode enabled (https://live.gnome.org/Vala/Tutorial#Strict_Non-Null_Mode).
+
+12. Place the (private) member variable declaration for a variable which backs a
+    property next to the (public) property declaration, rather than at the top
+    of the file. This keeps as much of the code pertaining to a property as
+    possible in one location.
+
+13. Initialise member variables when declaring them, if possible, rather than in
+    a constructor or construct{} block. If it’s not possible to initialise a
+    member variable at declaration time (e.g. because its value depends on
+    another variable), perform the initialisation in a construct{} block rather
+    than a specific constructor. This means that the initialisation doesn’t have
+    to be copied between multiple alternate constructors.
+
 Build health
 ============
 
