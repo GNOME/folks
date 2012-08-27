@@ -226,28 +226,28 @@ msgstr "বৈশিষ্ট ‘%s’ সংহতি কৰোতে অজ্
 #: ../backends/key-file/kf-persona-store.vala:233
 #, c-format
 msgid "The relationship key file '%s' could not be loaded: %s"
-msgstr "সম্পৰ্ক কি' নথিপত্ৰ '%s' ল'ড কৰিব নোৱাৰি: %s"
+msgstr "সম্পৰ্ক কি' ফাইল '%s' ল'ড কৰিব নোৱাৰি: %s"
 
 #. Translators: the first parameter is a path, and the
 #. * second is an error message.
 #: ../backends/key-file/kf-persona-store.vala:255
 #, c-format
 msgid "The relationship key file directory '%s' could not be created: %s"
-msgstr "সম্পৰ্ক কি' নথিপত্ৰ ডাইৰেকটৰি '%s' সৃষ্টি কৰিব নোৱাৰি: %s"
+msgstr "সম্পৰ্ক কি' ফাইল ডাইৰেকটৰি '%s' সৃষ্টি কৰিব নোৱাৰি: %s"
 
 #. Translators: the first parameter is a filename, and
 #. * the second is an error message.
 #: ../backends/key-file/kf-persona-store.vala:279
 #, c-format
 msgid "The relationship key file '%s' could not be created: %s"
-msgstr "সম্পৰ্ক কি' নথিপত্ৰ '%s' সৃষ্টি কৰিব পৰা নগল: %s"
+msgstr "সম্পৰ্ক কি' ফাইল '%s' সৃষ্টি কৰিব পৰা নগল: %s"
 
 #. Translators: the first parameter is a filename, the second is
 #. * an error message.
 #: ../backends/key-file/kf-persona-store.vala:468
 #, c-format
 msgid "Could not write updated key file '%s': %s"
-msgstr "আপডেইটেড কি' নথিপত্ৰ '%s' লিখিব পৰা নগল: %s"
+msgstr "আপডেইটেড কি' ফাইল '%s' লিখিব পৰা নগল: %s"
 
 #. Translators: this is an error message for if the user
 #. * provides an invalid IM address. The first parameter is
@@ -263,7 +263,7 @@ msgstr "প্ৰটোকল ‘%s’ ৰ বাবে অবৈধ IM ঠি�
 #: ../backends/key-file/kf-persona.vala:432
 #, c-format
 msgid "Couldn't load data from key file: %s"
-msgstr "কি' নথিপত্ৰৰ পৰা তথ্য ল'ড কৰিব পৰা নগল: %s"
+msgstr "কি' ফাইলৰ পৰা তথ্য ল'ড কৰিব পৰা নগল: %s"
 
 #. Translators: the parameter is an error message.
 #: ../backends/libsocialweb/lib/swf-persona-store.vala:344
@@ -538,26 +538,26 @@ msgstr "শীৰ্ষক: %s, সংগঠন: %s, ভূমিকা: %s"
 #: ../tools/import-pidgin.vala:48
 #, c-format
 msgid "File %s does not exist."
-msgstr "নথিপত্ৰ %s অস্তিত্ববান নহয়।"
+msgstr "ফাইল %s অস্তিত্ববান নহয়।"
 
 #. Translators: the first parameter is a filename, and the second
 #. * is an error message.
 #: ../tools/import-pidgin.vala:64
 #, c-format
 msgid "Failed to get information about file %s: %s"
-msgstr "নথিপত্ৰ %s ৰ বিষয়ে তথ্য প্ৰাপ্ত কৰিবলে ব্যৰ্থ: %s"
+msgstr "ফাইল %s ৰ বিষয়ে তথ্য প্ৰাপ্ত কৰিবলে ব্যৰ্থ: %s"
 
 #. Translators: the parameter is a filename.
 #: ../tools/import-pidgin.vala:71
 #, c-format
 msgid "File %s is not readable."
-msgstr "নথিপত্ৰ %s পঢ়িব নোৱাৰি।"
+msgstr "ফাইল %s পঢ়িব নোৱাৰি।"
 
 #. Translators: the parameter is a filename.
 #: ../tools/import-pidgin.vala:81
 #, c-format
 msgid "The Pidgin buddy list file '%s' could not be loaded."
-msgstr "Pidgin বন্ধু তালিকা নথিপত্ৰ '%s' ল'ড কৰিব পৰা নগল।"
+msgstr "Pidgin বন্ধু তালিকা ফাইল '%s' ল'ড কৰিব পৰা নগল।"
 
 #. Translators: the parameter is a filename.
 #: ../tools/import-pidgin.vala:96
@@ -626,7 +626,7 @@ msgstr "উৎস বেকএন্ড নাম (অবিকল্পিত: 
 
 #: ../tools/import.vala:47
 msgid "Source filename (default: specific to source backend)"
-msgstr "উৎস নথিপত্ৰনাম (অবিকল্পিত: উৎস বেকএন্ড বিশেষ)"
+msgstr "উৎস ফাইলনাম (অবিকল্পিত: উৎস বেকএন্ড বিশেষ)"
 
 #: ../tools/import.vala:57
 msgid "— import meta-contact information to libfolks"
