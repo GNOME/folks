@@ -160,6 +160,9 @@ public class Folks.Individual : Object,
    */
   public async void change_avatar (LoadableIcon? avatar) throws PropertyError
     {
+      /* FIXME: Once https://bugzilla.gnome.org/show_bug.cgi?id=604827 is fixed,
+       * this should be rewritten to use async delegates passed to a generic
+       * _change_single_valued_property() method. */
       if ((this._avatar != null && ((!) this._avatar).equal (avatar)) ||
           (this._avatar == null && avatar == null))
         {
@@ -169,7 +172,7 @@ public class Folks.Individual : Object,
       debug ("Setting avatar of individual '%s' to '%p'…", this.id, avatar);
 
       PropertyError? persona_error = null;
-      var avatar_changed = false;
+      var prop_changed = false;
 
       /* Try to write it to only the writeable Personas which have the
        * "avatar" property as writeable. */
@@ -188,7 +191,7 @@ public class Folks.Individual : Object,
                 {
                   yield a.change_avatar (avatar);
                   debug ("    written to writeable persona '%s'", p.uid);
-                  avatar_changed = true;
+                  prop_changed = true;
                 }
               catch (PropertyError e)
                 {
@@ -202,10 +205,17 @@ public class Folks.Individual : Object,
             }
         }
 
-      /* Failure? */
-      if (avatar_changed == false)
+      /* Failure? Changing the property failed on every suitable persona found
+       * (and potentially zero suitable personas were found). */
+      if (prop_changed == false)
         {
-          assert (persona_error != null);
+          if (persona_error == null)
+            {
+              persona_error = new PropertyError.NOT_WRITEABLE (
+                  _("Failed to change property ‘%s’: No suitable personas were found."),
+                  "avatar");
+            }
+
           throw persona_error;
         }
     }
@@ -304,6 +314,9 @@ public class Folks.Individual : Object,
    */
   public async void change_alias (string alias) throws PropertyError
     {
+      /* FIXME: Once https://bugzilla.gnome.org/show_bug.cgi?id=604827 is fixed,
+       * this should be rewritten to use async delegates passed to a generic
+       * _change_single_valued_property() method. */
       if (this._alias == alias)
         {
           return;
@@ -312,7 +325,7 @@ public class Folks.Individual : Object,
       debug ("Setting alias of individual '%s' to '%s'…", this.id, alias);
 
       PropertyError? persona_error = null;
-      var alias_changed = false;
+      var prop_changed = false;
 
       /* Try to write it to only the writeable Personas which have "alias"
        * as a writeable property. */
@@ -331,7 +344,7 @@ public class Folks.Individual : Object,
                 {
                   yield a.change_alias (alias);
                   debug ("    written to writeable persona '%s'", p.uid);
-                  alias_changed = true;
+                  prop_changed = true;
                 }
               catch (PropertyError e)
                 {
@@ -345,16 +358,19 @@ public class Folks.Individual : Object,
             }
         }
 
-      /* Failure? */
-      if (alias_changed == false)
+      /* Failure? Changing the property failed on every suitable persona found
+       * (and potentially zero suitable personas were found). */
+      if (prop_changed == false)
         {
-          assert (persona_error != null);
+          if (persona_error == null)
+            {
+              persona_error = new PropertyError.NOT_WRITEABLE (
+                  _("Failed to change property ‘%s’: No suitable personas were found."),
+                  "alias");
+            }
+
           throw persona_error;
         }
-
-      /* Update our copy of the alias. */
-      this._alias = alias;
-      this.notify_property ("alias");
     }
 
   private StructuredName? _structured_name = null;
@@ -400,6 +416,10 @@ public class Folks.Individual : Object,
    */
   public async void change_nickname (string nickname) throws PropertyError
     {
+      /* FIXME: Once https://bugzilla.gnome.org/show_bug.cgi?id=604827 is fixed,
+       * this should be rewritten to use async delegates passed to a generic
+       * _change_single_valued_property() method. */
+
       // Normalise null values to the empty string
       if (nickname == null)
         {
@@ -414,7 +434,7 @@ public class Folks.Individual : Object,
       debug ("Setting nickname of individual '%s' to '%s'…", this.id, nickname);
 
       PropertyError? persona_error = null;
-      var nickname_changed = false;
+      var prop_changed = false;
 
       /* Try to write it to only the writeable Personas which have "nickname"
        * as a writeable property. */
@@ -433,7 +453,7 @@ public class Folks.Individual : Object,
                 {
                   yield n.change_nickname (nickname);
                   debug ("    written to writeable persona '%s'", p.uid);
-                  nickname_changed = true;
+                  prop_changed = true;
                 }
               catch (PropertyError e)
                 {
@@ -447,16 +467,19 @@ public class Folks.Individual : Object,
             }
         }
 
-      /* Failure? */
-      if (nickname_changed == false)
+      /* Failure? Changing the property failed on every suitable persona found
+       * (and potentially zero suitable personas were found). */
+      if (prop_changed == false)
         {
-          assert (persona_error != null);
+          if (persona_error == null)
+            {
+              persona_error = new PropertyError.NOT_WRITEABLE (
+                  _("Failed to change property ‘%s’: No suitable personas were found."),
+                  "nickname");
+            }
+
           throw persona_error;
         }
-
-      /* Update our copy of the nickname. */
-      this._nickname = nickname;
-      this.notify_property ("nickname");
     }
 
   private Gender _gender = Gender.UNSPECIFIED;
@@ -635,6 +658,9 @@ public class Folks.Individual : Object,
    */
   public async void change_is_favourite (bool is_favourite) throws PropertyError
     {
+      /* FIXME: Once https://bugzilla.gnome.org/show_bug.cgi?id=604827 is fixed,
+       * this should be rewritten to use async delegates passed to a generic
+       * _change_single_valued_property() method. */
       if (this._is_favourite == is_favourite)
         {
           return;
@@ -644,7 +670,7 @@ public class Folks.Individual : Object,
         is_favourite ? "TRUE" : "FALSE");
 
       PropertyError? persona_error = null;
-      var is_favourite_changed = false;
+      var prop_changed = false;
 
       /* Try to write it to only the Personas which have "is-favourite" as a
        * writeable property.
@@ -667,7 +693,7 @@ public class Folks.Individual : Object,
                 {
                   yield a.change_is_favourite (is_favourite);
                   debug ("    written to persona '%s'", p.uid);
-                  is_favourite_changed = true;
+                  prop_changed = true;
                 }
               catch (PropertyError e)
                 {
@@ -681,16 +707,19 @@ public class Folks.Individual : Object,
             }
         }
 
-      /* Failure? */
-      if (is_favourite_changed == false)
+      /* Failure? Changing the property failed on every suitable persona found
+       * (and potentially zero suitable personas were found). */
+      if (prop_changed == false)
         {
-          assert (persona_error != null);
+          if (persona_error == null)
+            {
+              persona_error = new PropertyError.NOT_WRITEABLE (
+                  _("Failed to change property ‘%s’: No suitable personas were found."),
+                  "is-favourite");
+            }
+
           throw persona_error;
         }
-
-      /* Update our copy of the property. */
-      this._is_favourite = is_favourite;
-      this.notify_property ("is-favourite");
     }
 
   private HashSet<string>? _groups = null;
@@ -717,10 +746,13 @@ public class Folks.Individual : Object,
    */
   public async void change_groups (Set<string> groups) throws PropertyError
     {
+      /* FIXME: Once https://bugzilla.gnome.org/show_bug.cgi?id=604827 is fixed,
+       * this should be rewritten to use async delegates passed to a generic
+       * _change_single_valued_property() method. */
       debug ("Setting '%s' groups…", this.id);
 
       PropertyError? persona_error = null;
-      var groups_changed = false;
+      var prop_changed = false;
 
       /* Try to write it to only the Personas which have "groups" as a
        * writeable property. */
@@ -739,7 +771,7 @@ public class Folks.Individual : Object,
                 {
                   yield g.change_groups (groups);
                   debug ("    written to persona '%s'", p.uid);
-                  groups_changed = true;
+                  prop_changed = true;
                 }
               catch (PropertyError e)
                 {
@@ -753,10 +785,17 @@ public class Folks.Individual : Object,
             }
         }
 
-      /* Failure? */
-      if (groups_changed == false)
+      /* Failure? Changing the property failed on every suitable persona found
+       * (and potentially zero suitable personas were found). */
+      if (prop_changed == false)
         {
-          assert (persona_error != null);
+          if (persona_error == null)
+            {
+              persona_error = new PropertyError.NOT_WRITEABLE (
+                  _("Failed to change property ‘%s’: No suitable personas were found."),
+                  "groups");
+            }
+
           throw persona_error;
         }
     }

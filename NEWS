@@ -15,6 +15,7 @@ Bugs fixed:
 • Bug 681164 — Folks-inspect linking fails
 • Bug 680335 — empathy crashed with SIGSEGV in
   _tpf_persona_contact_weak_notify_cb()
+• Bug 681726 — empathy crashed with SIGABRT in g_assertion_message()
 
 API changes:
 • Add PropertyError.UNAVAILABLE
