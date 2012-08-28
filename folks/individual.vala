@@ -1339,7 +1339,7 @@ public class Folks.Individual : Object,
    * collection of values for that property in this individual.
    *
    * Used in _update_multi_valued_property(), below. */
-  private delegate void MultiValuedPropertySetter ();
+  private delegate bool MultiValuedPropertySetter ();
 
   /* Delegate to get whether a multi-valued property in this Individual has not
    * been initialised yet (and is thus still null).
@@ -1385,7 +1385,7 @@ public class Folks.Individual : Object,
    * property's read-only view as necessary)
    * @param setter function which adds the values from the individual's
    * personas' values for the property to the individual's value for the
-   * property
+   * property; it returns ``true`` if the property value has changed
    * @since UNRELEASED
    */
   private void _update_multi_valued_property (string prop_name,
@@ -1411,9 +1411,10 @@ public class Folks.Individual : Object,
 
       /* Re-populate the collection as the union of the values in the
        * individual's personas. */
-      setter ();
-
-      this.notify_property (prop_name);
+      if (setter () == true)
+        {
+          this.notify_property (prop_name);
+        }
     }
 
   private void _update_groups (bool create_if_not_exist)
@@ -1655,7 +1656,9 @@ public class Folks.Individual : Object,
             },
           () =>
             {
-              this._im_addresses.clear ();
+              var new_im_addresses = new HashMultiMap<string, ImFieldDetails> (
+                  null, null, (GLib.HashFunc) ImFieldDetails.hash,
+                  (GLib.EqualFunc) ImFieldDetails.equal);
 
               foreach (var persona in this._persona_set)
                 {
@@ -1663,18 +1666,28 @@ public class Folks.Individual : Object,
                   var im_details = persona as ImDetails;
                   if (im_details != null)
                     {
-                      foreach (var cur_protocol in im_details.im_addresses.get_keys ())
+                      foreach (var cur_protocol in
+                          im_details.im_addresses.get_keys ())
                         {
                           var cur_addresses =
                               im_details.im_addresses.get (cur_protocol);
 
                           foreach (var address in cur_addresses)
                             {
-                              this._im_addresses.set (cur_protocol, address);
+                              new_im_addresses.set (cur_protocol, address);
                             }
                         }
                     }
                 }
+
+              if (!Utils.multi_map_str_afd_equal (new_im_addresses,
+                  this._im_addresses))
+                {
+                  this._im_addresses = new_im_addresses;
+                  return true;
+                }
+
+              return false;
             });
     }
 
@@ -1692,7 +1705,10 @@ public class Folks.Individual : Object,
             },
           () =>
             {
-              this._web_service_addresses.clear ();
+              var new_web_service_addresses =
+                  new HashMultiMap<string, WebServiceFieldDetails> (null, null,
+                      (GLib.HashFunc) WebServiceFieldDetails.hash,
+                      (GLib.EqualFunc) WebServiceFieldDetails.equal);
 
               foreach (var persona in this._persona_set)
                 {
@@ -1709,12 +1725,21 @@ public class Folks.Individual : Object,
 
                           foreach (var ws_fd in cur_addresses)
                             {
-                              this._web_service_addresses.set (cur_web_service,
+                              new_web_service_addresses.set (cur_web_service,
                                   ws_fd);
                             }
                         }
                     }
                 }
+
+              if (!Utils.multi_map_str_afd_equal (new_web_service_addresses,
+                  this._web_service_addresses))
+                {
+                  this._web_service_addresses = new_web_service_addresses;
+                  return true;
+                }
+
+              return false;
             });
     }
 
@@ -1971,7 +1996,9 @@ public class Folks.Individual : Object,
             },
           () =>
             {
-              this._urls.clear ();
+              var new_urls = new HashSet<UrlFieldDetails> (
+                  (GLib.HashFunc) UrlFieldDetails.hash,
+                  (GLib.EqualFunc) UrlFieldDetails.equal);
               var urls_set = new HashMap<string, UrlFieldDetails> (null, null,
                   (GLib.EqualFunc) UrlFieldDetails.equal);
 
@@ -1996,11 +2023,20 @@ public class Folks.Individual : Object,
                                   new UrlFieldDetails (url_fd.value);
                               new_url_fd.extend_parameters (url_fd.parameters);
                               urls_set.set (new_url_fd.value, new_url_fd);
-                              this._urls.add (new_url_fd);
+                              new_urls.add (new_url_fd);
                             }
                         }
                     }
                 }
+
+              if (!Utils.set_afd_equal (new_urls, this._urls))
+                {
+                  this._urls = new_urls;
+                  this._urls_ro = new_urls.read_only_view;
+                  return true;
+                }
+
+              return false;
             });
     }
 
@@ -2017,7 +2053,9 @@ public class Folks.Individual : Object,
             },
           () =>
             {
-              this._phone_numbers.clear ();
+              var new_phone_numbers = new HashSet<PhoneFieldDetails> (
+                  (GLib.HashFunc) PhoneFieldDetails.hash,
+                  (GLib.EqualFunc) PhoneFieldDetails.equal);
               var phone_numbers_set = new HashMap<string, PhoneFieldDetails> (
                   null, null, (GLib.EqualFunc) PhoneFieldDetails.equal);
 
@@ -2042,11 +2080,20 @@ public class Folks.Individual : Object,
                                   new PhoneFieldDetails (phone_fd.value);
                               new_fd.extend_parameters (phone_fd.parameters);
                               phone_numbers_set.set (new_fd.value, new_fd);
-                              this._phone_numbers.add (new_fd);
+                              new_phone_numbers.add (new_fd);
                             }
                         }
                     }
                 }
+
+              if (!Utils.set_afd_equal (new_phone_numbers, this._phone_numbers))
+                {
+                  this._phone_numbers = new_phone_numbers;
+                  this._phone_numbers_ro = new_phone_numbers.read_only_view;
+                  return true;
+                }
+
+              return false;
             });
     }
 
@@ -2063,7 +2110,9 @@ public class Folks.Individual : Object,
             },
           () =>
             {
-              this._email_addresses.clear ();
+              var new_email_addresses = new HashSet<EmailFieldDetails> (
+                  (GLib.HashFunc) EmailFieldDetails.hash,
+                  (GLib.EqualFunc) EmailFieldDetails.equal);
               var emails_set = new HashMap<string, EmailFieldDetails> (
                   null, null, (GLib.EqualFunc) EmailFieldDetails.equal);
 
@@ -2088,11 +2137,21 @@ public class Folks.Individual : Object,
                                   new EmailFieldDetails (email_fd.value,
                                       email_fd.parameters);
                               emails_set.set (new_email_fd.value, new_email_fd);
-                              this._email_addresses.add (new_email_fd);
+                              new_email_addresses.add (new_email_fd);
                             }
                         }
                     }
                 }
+
+              if (!Utils.set_afd_equal (new_email_addresses,
+                  this._email_addresses))
+                {
+                  this._email_addresses = new_email_addresses;
+                  this._email_addresses_ro = new_email_addresses.read_only_view;
+                  return true;
+                }
+
+              return false;
             });
     }
 
@@ -2109,7 +2168,9 @@ public class Folks.Individual : Object,
             },
           () =>
             {
-              this._roles.clear ();
+              var new_roles = new HashSet<RoleFieldDetails> (
+                  (GLib.HashFunc) RoleFieldDetails.hash,
+                  (GLib.EqualFunc) RoleFieldDetails.equal);
 
               foreach (var persona in this._persona_set)
                 {
@@ -2118,10 +2179,19 @@ public class Folks.Individual : Object,
                     {
                       foreach (var role_fd in ((!) role_details).roles)
                         {
-                          this._roles.add (role_fd);
+                          new_roles.add (role_fd);
                         }
                     }
                 }
+
+              if (!Utils.set_afd_equal (new_roles, this._roles))
+                {
+                  this._roles = new_roles;
+                  this._roles_ro = new_roles.read_only_view;
+                  return true;
+                }
+
+              return false;
             });
     }
 
@@ -2136,7 +2206,7 @@ public class Folks.Individual : Object,
             },
           () =>
             {
-              this._local_ids.clear ();
+              var new_local_ids = new HashSet<string> ();
 
               foreach (var persona in this._persona_set)
                 {
@@ -2145,10 +2215,19 @@ public class Folks.Individual : Object,
                     {
                       foreach (var id in ((!) local_id_details).local_ids)
                         {
-                          this._local_ids.add (id);
+                          new_local_ids.add (id);
                         }
                     }
                 }
+
+              if (!Utils.set_afd_equal (new_local_ids, this._local_ids))
+                {
+                  this._local_ids = new_local_ids;
+                  this._local_ids_ro = new_local_ids.read_only_view;
+                  return true;
+                }
+
+              return false;
             });
     }
 
@@ -2166,7 +2245,10 @@ public class Folks.Individual : Object,
             },
           () =>
             {
-              this._postal_addresses.clear ();
+              var new_postal_addresses =
+                  new HashSet<PostalAddressFieldDetails> (
+                      (GLib.HashFunc) PostalAddressFieldDetails.hash,
+                      (GLib.EqualFunc) PostalAddressFieldDetails.equal);
 
               foreach (var persona in this._persona_set)
                 {
@@ -2176,10 +2258,21 @@ public class Folks.Individual : Object,
                       foreach (var pafd in
                           ((!) postal_address_details).postal_addresses)
                         {
-                          this._postal_addresses.add (pafd);
+                          new_postal_addresses.add (pafd);
                         }
                     }
                 }
+
+              if (!Utils.set_afd_equal (new_postal_addresses,
+                  this._postal_addresses))
+                {
+                  this._postal_addresses = new_postal_addresses;
+                  this._postal_addresses_ro =
+                      new_postal_addresses.read_only_view;
+                  return true;
+                }
+
+              return false;
             });
     }
 
@@ -2248,7 +2341,9 @@ public class Folks.Individual : Object,
             },
           () =>
             {
-              this._notes.clear ();
+              var new_notes = new HashSet<NoteFieldDetails> (
+                  (GLib.HashFunc) NoteFieldDetails.hash,
+                  (GLib.EqualFunc) NoteFieldDetails.equal);
 
               foreach (var persona in this._persona_set)
                 {
@@ -2257,10 +2352,19 @@ public class Folks.Individual : Object,
                     {
                       foreach (var n in ((!) note_details).notes)
                         {
-                          this._notes.add (n);
+                          new_notes.add (n);
                         }
                     }
                 }
+
+              if (!Utils.set_afd_equal (new_notes, this._notes))
+                {
+                  this._notes = new_notes;
+                  this._notes_ro = new_notes.read_only_view;
+                  return true;
+                }
+
+              return false;
             });
     }
 
