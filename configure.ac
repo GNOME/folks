@@ -158,7 +158,7 @@ AM_CONDITIONAL([ENABLE_LIBSOCIALWEB],
 # Dependencies
 # -----------------------------------------------------------
 
-GLIB_REQUIRED=2.26.0
+GLIB_REQUIRED=2.32.0
 VALA_REQUIRED=0.15.2
 VALADOC_REQUIRED=0.3.1
 TRACKER_SPARQL_MAJOR=0.14

@@ -562,14 +562,22 @@ public class Tpf.Persona : Folks.Persona,
     }
 
   /* This has to be weak since, in general, we can't force any TpContacts to
-   * remain alive if we want to solve bgo#665376. */
-  private weak Contact? _contact = null;
+   * remain alive if we want to solve bgo#665376.
+   * As per bgo#680335, we have to use a WeakRef rather than a
+   * ‘weak Contact?’ to avoid races when clearing the pointer. We still have
+   * to use a weak ref. notifier as well, though, in order to be able to emit
+   * a property change notification for ::contact.
+   *
+   * FIXME: Once bgo#554344 is fixed, _contact could be changed back to
+   * being a 'weak Contact?', assuming Vala implements weak references using
+   * GWeakRef. */
+  private WeakRef _contact = WeakRef (null);
 
   private void _contact_weak_notify_cb (Object obj)
     {
       debug ("TpContact %p destroyed; setting ._contact = null in Persona %p",
           obj, this);
-      this._contact = null;
+      /* _contact is cleared automatically as it's a WeakRef. */
       this.notify_property ("contact");
     }
 
@@ -586,12 +594,21 @@ public class Tpf.Persona : Folks.Persona,
     {
       get
         {
-          if (this._contact == null)
+          /* FIXME: This property should be changed to transfer its reference
+           * when the API is next broken. This is necessary because the
+           * TpfPersona doesn't hold a strong ref to the TpContact, so any
+           * pointer which is returned might be invalidated before reaching the
+           * caller. Probably not a problem in practice since folks won't be
+           * run multi-threaded. */
+          Contact? contact = (Contact?) this._contact.get ();
+          if (contact == null)
             {
               return null;
             }
 
-          return this._contact;
+          /* FIXME: I'm so very, very sorry. This is to cause Vala to forget
+           * we have a strong ref on 'contact' and not transfer it out. */
+          return (Contact) ((void*) contact);
         }
 
       construct
@@ -601,7 +618,7 @@ public class Tpf.Persona : Folks.Persona,
               value.weak_ref (this._contact_weak_notify_cb);
             }
 
-          this._contact = value;
+          this._contact.set (value);
         }
     }
 
@@ -1163,9 +1180,10 @@ public class Tpf.Persona : Folks.Persona,
     {
       debug ("Destroying Tpf.Persona '%s': %p", this.uid, this);
 
-      if (this._contact != null)
+      var contact = this._contact.get ();
+      if (contact != null)
         {
-          this._contact.weak_unref (this._contact_weak_notify_cb);
+          contact.weak_unref (this._contact_weak_notify_cb);
         }
     }
 

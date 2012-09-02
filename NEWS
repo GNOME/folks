@@ -13,6 +13,8 @@ Bugs fixed:
 • Bug 682719 — eds test fails to compile
 • Bug 683319 — Crash in individual-aggregator: _personas_changed_cb
 • Bug 681164 — Folks-inspect linking fails
+• Bug 680335 — empathy crashed with SIGSEGV in
+  _tpf_persona_contact_weak_notify_cb()
 
 Overview of changes from libfolks 0.7.2 to libfolks 0.7.3
 =========================================================
