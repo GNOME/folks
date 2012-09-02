@@ -62,7 +62,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
    * this should *not* be cleared in _reset(). */
   private HashMap<string, File> _avatars = new HashMap<string, File> ();
 
-  private Connection _conn;
+  private Connection? _conn; /* null when disconnected */
   private AccountManager? _account_manager; /* only null before prepare() */
   private Logger _logger;
   private Persona? _self_persona;
