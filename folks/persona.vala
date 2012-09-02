@@ -48,7 +48,17 @@ public errordomain Folks.PropertyError
    *
    * @since 0.6.2
    */
-  UNKNOWN_ERROR
+  UNKNOWN_ERROR,
+
+  /**
+   * The backing store is offline or otherwise unavailable.
+   *
+   * This is a temporary error which should be retifiable by going online or
+   * ensuring the backing store is logged in.
+   *
+   * @since UNRELEASED
+   */
+  UNAVAILABLE
 }
 
 /**

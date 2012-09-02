@@ -486,15 +486,29 @@ public class Tpf.Persona : Folks.Persona,
   public async void change_group (string group, bool is_member)
       throws GLib.Error
     {
+      /* Ensure we have a strong ref to the contact for the duration of the
+       * operation. */
+      var contact = (Contact?) this._contact.get ();
+
+      if (contact == null)
+        {
+          /* The Tpf.Persona is being served out of the cache. */
+          throw new PropertyError.UNAVAILABLE (
+              _("Failed to change group membership: %s"),
+              /* Translators: "account" refers to an instant messaging
+               * account. */
+              _("Account is offline."));
+        }
+
       try
         {
           if (is_member && !this._groups.contains (group))
             {
-              yield this.contact.add_to_group_async (group);
+              yield contact.add_to_group_async (group);
             }
           else if (!is_member && this._groups.contains (group))
             {
-              yield this.contact.remove_from_group_async (group);
+              yield contact.remove_from_group_async (group);
             }
         }
       catch (GLib.Error e)
@@ -547,9 +561,21 @@ public class Tpf.Persona : Folks.Persona,
    */
   public async void change_groups (Set<string> groups) throws PropertyError
     {
+      var contact = (Contact?) this._contact.get ();
+
+      if (contact == null)
+        {
+          /* The Tpf.Persona is being served out of the cache. */
+          throw new PropertyError.UNAVAILABLE (
+              _("Failed to change group membership: %s"),
+              /* Translators: "account" refers to an instant messaging
+               * account. */
+              _("Account is offline."));
+        }
+
       try
         {
-          yield this.contact.set_contact_groups_async (groups.to_array ());
+          yield contact.set_contact_groups_async (groups.to_array ());
         }
       catch (GLib.Error e)
         {
@@ -758,22 +784,27 @@ public class Tpf.Persona : Folks.Persona,
 
       /* Contact can be null if we've been created from the cache. All the code
        * below this point is for non-cached personas. */
-      if (this.contact == null)
+      var contact = (Contact?) this._contact.get ();
+
+      if (contact == null)
         {
           return;
         }
 
       /* Set our alias. */
-      this._alias = this.contact.get_alias ();
+      this._alias = contact.get_alias ();
 
-      this.contact.notify["alias"].connect ((s, p) =>
+      contact.notify["alias"].connect ((s, p) =>
           {
-            /* Tp guarantees that aliases are always non-null. */
-            assert (this.contact.alias != null);
+            var c = (Contact?) this._contact.get ();
+            assert (c != null); /* should never be called while cached */
 
-            if (this._alias != this.contact.alias)
+            /* Tp guarantees that aliases are always non-null. */
+            assert (c.alias != null);
+
+            if (this._alias != c.alias)
               {
-                this._alias = this.contact.alias;
+                this._alias = c.alias;
                 this.notify_property ("alias");
 
                 /* Mark the cache as needing to be updated. */
@@ -782,7 +813,7 @@ public class Tpf.Persona : Folks.Persona,
           });
 
       /* Set our single IM address */
-      var connection = this.contact.connection;
+      var connection = contact.connection;
       var account = connection.get_account ();
 
       try
@@ -798,21 +829,21 @@ public class Tpf.Persona : Folks.Persona,
           warning (e.message);
         }
 
-      this.contact.notify["avatar-file"].connect ((s, p) =>
+      contact.notify["avatar-file"].connect ((s, p) =>
         {
           this._contact_notify_avatar ();
         });
       this._contact_notify_avatar ();
 
-      this.contact.notify["presence-message"].connect ((s, p) =>
+      contact.notify["presence-message"].connect ((s, p) =>
         {
           this._contact_notify_presence_message ();
         });
-      this.contact.notify["presence-type"].connect ((s, p) =>
+      contact.notify["presence-type"].connect ((s, p) =>
         {
           this._contact_notify_presence_type ();
         });
-      this.contact.notify["presence-status"].connect ((s, p) =>
+      contact.notify["presence-status"].connect ((s, p) =>
         {
           this._contact_notify_presence_status ();
         });
@@ -820,17 +851,17 @@ public class Tpf.Persona : Folks.Persona,
       this._contact_notify_presence_type ();
       this._contact_notify_presence_status ();
 
-      this.contact.notify["contact-info"].connect ((s, p) =>
+      contact.notify["contact-info"].connect ((s, p) =>
         {
           this._contact_notify_contact_info (false);
         });
       this._contact_notify_contact_info (false);
 
-      this.contact.contact_groups_changed.connect ((added, removed) =>
+      contact.contact_groups_changed.connect ((added, removed) =>
         {
           this._contact_groups_changed (added, removed);
         });
-      this._contact_groups_changed (this.contact.get_contact_groups (), {});
+      this._contact_groups_changed (contact.get_contact_groups (), {});
 
       var tpf_store = this.store as Tpf.PersonaStore;
 
@@ -918,6 +949,13 @@ public class Tpf.Persona : Folks.Persona,
           this._phone_numbers_ro = this._phone_numbers.read_only_view;
         }
 
+      var contact = (Contact?) this._contact.get ();
+      if (contact == null)
+        {
+          /* If operating from the cache, bail out early. */
+          return;
+        }
+
       var changed = false;
       var new_birthday_str = "";
       var new_full_name = "";
@@ -931,7 +969,7 @@ public class Tpf.Persona : Folks.Persona,
           (GLib.HashFunc) UrlFieldDetails.hash,
           (GLib.EqualFunc) UrlFieldDetails.equal);
 
-      var contact_info = this.contact.get_contact_info ();
+      var contact_info = contact.get_contact_info ();
       foreach (var info in contact_info)
         {
           if (info.field_name == "") {}
@@ -1180,7 +1218,7 @@ public class Tpf.Persona : Folks.Persona,
     {
       debug ("Destroying Tpf.Persona '%s': %p", this.uid, this);
 
-      var contact = this._contact.get ();
+      var contact = (Contact?) this._contact.get ();
       if (contact != null)
         {
           contact.weak_unref (this._contact_weak_notify_cb);
@@ -1189,18 +1227,24 @@ public class Tpf.Persona : Folks.Persona,
 
   private void _contact_notify_presence_message ()
     {
-      this.presence_message = this.contact.get_presence_message ();
+      var contact = (Contact?) this._contact.get ();
+      assert (contact != null); /* should never be called while cached */
+      this.presence_message = contact.get_presence_message ();
     }
 
   private void _contact_notify_presence_type ()
     {
+      var contact = (Contact?) this._contact.get ();
+      assert (contact != null); /* should never be called while cached */
       this.presence_type = Tpf.Persona._folks_presence_type_from_tp (
-          this.contact.get_presence_type ());
+          contact.get_presence_type ());
     }
 
   private void _contact_notify_presence_status ()
     {
-      this.presence_status = this.contact.get_presence_status ();
+      var contact = (Contact?) this._contact.get ();
+      assert (contact != null); /* should never be called while cached */
+      this.presence_status = contact.get_presence_status ();
     }
 
   private static PresenceType _folks_presence_type_from_tp (
@@ -1233,8 +1277,11 @@ public class Tpf.Persona : Folks.Persona,
 
   private void _contact_notify_avatar ()
     {
-      var file = this.contact.avatar_file;
-      var token = this.contact.avatar_token;
+      var contact = (Contact?) this._contact.get ();
+      assert (contact != null); /* should never be called while cached */
+
+      var file = contact.avatar_file;
+      var token = contact.avatar_token;
       Icon? icon = null;
       var from_cache = false;
 
