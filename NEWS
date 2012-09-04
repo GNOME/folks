@@ -11,6 +11,7 @@ Bugs fixed:
 • Bug 682346 — build: Make telepathy backend optional
 • Bug 682809 — Lazy instantiation of multi-valued properties
 • Bug 682719 — eds test fails to compile
+• Bug 683319 — Crash in individual-aggregator: _personas_changed_cb
 
 Overview of changes from libfolks 0.7.2 to libfolks 0.7.3
 =========================================================

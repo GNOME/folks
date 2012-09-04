@@ -1091,13 +1091,17 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       var personas_added = new HashSet<Persona> ();
       var personas_removed = new HashSet<Persona> ();
 
-      /* Remove old self persona if not also part of roster */
-      if (this._self_persona != null &&
-          !this._self_persona.is_in_contact_list &&
-          this._remove_persona (this._self_persona))
+      /* Remove old self persona if not also part of roster. Keep a reference
+       * to the persona so _remove_persona() doesn't unset it early. */
+      var self_persona = this._self_persona;
+
+      if (self_persona != null &&
+          !self_persona.is_in_contact_list &&
+          this._remove_persona (self_persona))
         {
-          personas_removed.add (this._self_persona);
+          personas_removed.add (self_persona);
         }
+
       this._self_persona = null;
 
       if (contact != null)
