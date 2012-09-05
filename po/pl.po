@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: folks\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-09-02 23:13+0200\n"
-"PO-Revision-Date: 2012-09-02 23:14+0200\n"
+"POT-Creation-Date: 2012-09-06 01:36+0200\n"
+"PO-Revision-Date: 2012-09-06 01:37+0200\n"
 "Last-Translator: Piotr Drąg <piotrdrag@gmail.com>\n"
 "Language-Team: Polish <gnomepl@aviary.pl>\n"
 "Language: pl\n"
@@ -305,19 +305,19 @@ msgstr ""
 "Określenie, czy można ustawić pseudonimy na koncie usługi Telepathy \"%s\" "
 "się nie powiodło: %s"
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1214
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1218
 msgid "Telepathy contacts representing the local user may not be removed."
 msgstr ""
 "Kontakty Telepathy reprezentujące lokalnego użytkownika nie mogą być usuwane."
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1225
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1229
 #, c-format
 msgid "Failed to remove a persona from store: %s"
 msgstr "Usunięcie osoby z przechowalni się nie powiodło: %s"
 
 #. Translators: the first two parameters are store identifiers and
 #. * the third is a contact identifier.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1255
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1259
 #, c-format
 msgid ""
 "Persona store (%s, %s) requires the following details:\n"
@@ -326,27 +326,27 @@ msgstr ""
 "Przechowalnia osoby (%s, %s) wymaga następujących informacji:\n"
 "    contact (dostarczono: \"%s\")\n"
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1270
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1274
 msgid "Cannot create a new Telepathy contact while offline."
 msgstr ""
 "Nie można utworzyć nowego kontaktu Telepathy podczas działania w trybie "
 "offline."
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1288
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1292
 #, c-format
 msgid "Failed to add a persona from details: %s"
 msgstr "Dodanie osoby z informacji się nie powiodło: %s"
 
 #. Translators: "telepathy-logger" is the name of an application,
 #. * and should not be translated.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1308
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1312
 msgid ""
 "Failed to change favorite without a connection to the telepathy-logger "
 "service."
 msgstr ""
 "Zmiana ulubionych bez połączenia z usługą telepathy-logger się nie powiodła."
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1314
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1318
 msgid ""
 "Failed to change favorite status of Telepathy Persona because it has no "
 "attached TpContact."
@@ -355,36 +355,45 @@ msgstr ""
 "posiada ona dołączonego TpContact."
 
 #. Translators: the parameter is a contact identifier.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1332
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1336
 #, c-format
 msgid "Failed to change favorite status for Telepathy contact ‘%s’."
 msgstr ""
 "Zmiana ulubionego stanu dla kontaktu Telepathy \"%s\" się nie powiodła."
 
 #. Translators: the parameter is an error message.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1364
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1368
 #, c-format
 msgid "Failed to change contact's alias: %s"
 msgstr "Zmiana pseudonimu kontaktu się nie powiodła: %s"
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1444
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1448
 msgid "Extended information may only be set on the user's Telepathy contact."
 msgstr ""
 "Rozszerzone informacje mogą być ustawiane tylko w kontakcie Telepathy "
 "użytkownika."
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1473
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1477
 msgid ""
 "Extended information cannot be written because the store is disconnected."
 msgstr ""
 "Nie można zapisać rozszerzonych informacji, ponieważ przechowalnia jest "
 "rozłączona."
 
-#: ../backends/telepathy/lib/tpf-persona.vala:504
-#: ../backends/telepathy/lib/tpf-persona.vala:558
+#: ../backends/telepathy/lib/tpf-persona.vala:497
+#: ../backends/telepathy/lib/tpf-persona.vala:518
+#: ../backends/telepathy/lib/tpf-persona.vala:570
+#: ../backends/telepathy/lib/tpf-persona.vala:584
 #, c-format
 msgid "Failed to change group membership: %s"
 msgstr "Zmiana członkostwa grupy się nie powiodła: %s"
+
+#. Translators: "account" refers to an instant messaging
+#. * account.
+#: ../backends/telepathy/lib/tpf-persona.vala:500
+#: ../backends/telepathy/lib/tpf-persona.vala:573
+msgid "Account is offline."
+msgstr "Konto jest w trybie offline."
 
 #. Translators: the first parameter is the unknown key that
 #. * was received with the details params, and the second
