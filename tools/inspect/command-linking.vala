@@ -58,7 +58,7 @@ private class Folks.Inspect.Commands.Linking : Folks.Inspect.Command
       base (client);
     }
 
-  public override void run (string? command_string)
+  public override async void run (string? command_string)
     {
       string[] parts = {};
 
@@ -178,27 +178,24 @@ private class Folks.Inspect.Commands.Linking : Folks.Inspect.Command
             }
 
           /* Link the personas */
-          this.client.aggregator.link_personas.begin (personas, (obj, res) =>
+          try
             {
-              try
-                {
-                  this.client.aggregator.link_personas.end (res);
-                }
-              catch (IndividualAggregatorError e)
-                {
-                  Utils.print_line ("Error (domain: %u, code: %u) linking %u " +
-                          "personas: %s",
-                      e.domain, e.code, personas.size, e.message);
-                }
+              yield this.client.aggregator.link_personas (personas);
+            }
+          catch (IndividualAggregatorError e)
+            {
+              Utils.print_line ("Error (domain: %u, code: %u) linking %u " +
+                      "personas: %s",
+                  e.domain, e.code, personas.size, e.message);
+            }
 
-              /* We can't print out the individual which was produced, as
-               * more than one may have been produced (due to anti-links)
-               * or several others may have been consumed in the process.
-               *
-               * Chaos, really. */
-              Utils.print_line ("Linking of %u personas was successful.",
-                  personas.size);
-            });
+          /* We can't print out the individual which was produced, as
+           * more than one may have been produced (due to anti-links)
+           * or several others may have been consumed in the process.
+           *
+           * Chaos, really. */
+          Utils.print_line ("Linking of %u personas was successful.",
+              personas.size);
         }
       else if (parts[0] == "unlink-individual")
         {
@@ -218,23 +215,20 @@ private class Folks.Inspect.Commands.Linking : Folks.Inspect.Command
             }
 
           /* Unlink the individual. */
-          this.client.aggregator.unlink_individual.begin (ind, (obj, res) =>
+          try
             {
-              try
-                {
-                  this.client.aggregator.unlink_individual.end (res);
-                }
-              catch (Error e)
-                {
-                  Utils.print_line ("Error (domain: %u, code: %u) unlinking " +
-                          "individual '%s': %s",
-                      e.domain, e.code, ind.id, e.message);
-                }
+              yield this.client.aggregator.unlink_individual (ind);
+            }
+          catch (Error e)
+            {
+              Utils.print_line ("Error (domain: %u, code: %u) unlinking " +
+                      "individual '%s': %s",
+                  e.domain, e.code, ind.id, e.message);
+            }
 
-              /* Success! */
-              Utils.print_line ("Unlinking of individual '%s' was successful.",
-                  ind.id);
-            });
+          /* Success! */
+          Utils.print_line ("Unlinking of individual '%s' was successful.",
+              ind.id);
         }
       else
         {

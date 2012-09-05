@@ -52,7 +52,7 @@ private class Folks.Inspect.Commands.Personas : Folks.Inspect.Command
       base (client);
     }
 
-  public override void run (string? command_string)
+  public override async void run (string? command_string)
     {
       foreach (var individual in this.client.aggregator.individuals.values)
         {

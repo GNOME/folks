@@ -93,7 +93,7 @@ public class Folks.Inspect.Client : Object
       /* Run the command. */
       if (args.length == 1)
         {
-          main_client.run_interactive ();
+          main_client.run_interactive.begin ();
         }
       else
         {
@@ -112,8 +112,14 @@ public class Folks.Inspect.Client : Object
               command_line = string.joinv (" ", args[1:0]);
             }
 
-          main_client.run_non_interactive (command_line);
+          main_client.run_non_interactive.begin (command_line, (obj, res) =>
+          {
+            main_client.run_non_interactive.end (res);
+            main_client.quit ();
+          });
         }
+        
+      main_client.main_loop.run ();
 
       return 0;
     }
@@ -195,7 +201,7 @@ public class Folks.Inspect.Client : Object
         }
     }
 
-  public void run_non_interactive (string command_line)
+  public async void run_non_interactive (string command_line)
     {
       /* Non-interactive mode: run a single command and output the results.
        * We do this all from the main thread, in a main loop, waiting for
@@ -215,28 +221,22 @@ public class Folks.Inspect.Client : Object
 
       /* Wait until we reach quiescence, or the results will probably be
        * useless. */
-      this._wait_for_quiescence.begin ((obj, res) =>
+      try
         {
-          try
-            {
-              this._wait_for_quiescence.end (res);
-            }
-          catch (GLib.Error e1)
-            {
-              GLib.stderr.printf ("Error preparing aggregator: %s\n", e1.message);
-              Process.exit (1);
-            }
+          yield this._wait_for_quiescence ();
+        }
+      catch (GLib.Error e1)
+        {
+          GLib.stderr.printf ("Error preparing aggregator: %s\n", e1.message);
+          Process.exit (1);
+        }
 
-          /* Run the command */
-          command.run (subcommand);
-
-          this.quit ();
-        });
-
-      this.main_loop.run ();
+      /* Run the command */
+      yield command.run (subcommand);
+      this.quit ();
     }
 
-  public void run_interactive ()
+  public async void run_interactive ()
     {
       /* Interactive mode: have a little shell which allows the data from
        * libfolks to be browsed and edited in real time. We do this by watching
@@ -285,8 +285,6 @@ public class Folks.Inspect.Client : Object
 
       /* Run the aggregator and the main loop. */
       this.aggregator.prepare.begin ();
-
-      this.main_loop.run ();
     }
 
   private void _install_readline_and_stdin ()
@@ -365,11 +363,14 @@ public class Folks.Inspect.Client : Object
               main_client._start_paged_output ();
             }
 
-          command.run (subcommand);
+          command.run.begin (subcommand, (obj, res) =>
+            {
+              command.run.end (res);
+              /* Close the stream to the pager so it knows it's reached EOF. */
+              main_client._pager_channel = null;
+              Utils.output_filestream = GLib.stdout;
+            });
 
-          /* Close the stream to the pager so it knows it's reached EOF. */
-          main_client._pager_channel = null;
-          Utils.output_filestream = GLib.stdout;
         }
       else
         {
@@ -571,7 +572,7 @@ public abstract class Folks.Inspect.Command
   public abstract string description { get; }
   public abstract string help { get; }
 
-  public abstract void run (string? command_string);
+  public abstract async void run (string? command_string);
 
   public virtual string[]? complete_subcommand (string subcommand)
     {

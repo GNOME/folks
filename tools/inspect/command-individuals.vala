@@ -53,7 +53,7 @@ private class Folks.Inspect.Commands.Individuals : Folks.Inspect.Command
       base (client);
     }
 
-  public override void run (string? command_string)
+  public override async void run (string? command_string)
     {
       if (command_string == null)
         {
