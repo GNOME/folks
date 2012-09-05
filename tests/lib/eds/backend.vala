@@ -276,7 +276,7 @@ public class EdsTest.Backend
 
       try
         {
-          this._source.remove_sync ();
+          this._source.remove_sync (null);
         }
       catch (GLib.Error e)
         {
