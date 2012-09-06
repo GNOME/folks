@@ -395,6 +395,8 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       else
         this.trust_level = PersonaStoreTrust.PARTIAL;
 
+      this._emit_personas_changed (null, this._persona_set);
+
       this._personas = new HashMap<string, Persona> ();
       this._personas_ro = this._personas.read_only_view;
       this._persona_set = new HashSet<Persona> ();
