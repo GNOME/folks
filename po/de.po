@@ -3,15 +3,16 @@
 # This file is distributed under the same license as the folks package.
 # Mario Blättermann <mario.blaettermann@gmail.com>, 2010, 2011, 2012.
 # Christian Kirbach <Christian.Kirbach@googlemail.com>, 2012.
+# Tobias Endrigkeit <tobiasendrigkeit@googlemail.com>, 2012.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: folks master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=folks&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2012-07-24 19:22+0000\n"
-"PO-Revision-Date: 2012-07-29 00:16+0200\n"
-"Last-Translator: Christian Kirbach <Christian.Kirbach@googlemail.com>\n"
+"POT-Creation-Date: 2012-09-06 08:50+0000\n"
+"PO-Revision-Date: 2012-09-06 12:12+0100\n"
+"Last-Translator: Mario Blättermann <mario.blaettermann@gmail.com>\n"
 "Language-Team: Deutsch <gnome-de@gnome.org>\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
@@ -33,13 +34,13 @@ msgstr ""
 #. * Android” group in Google Contacts for your language. If Google have not
 #. * localised the group for your language, or Google Contacts isn't available
 #. * in your language, please *do not* translate this string.
-#: ../backends/eds/lib/edsf-persona-store.vala:60
+#: ../backends/eds/lib/edsf-persona-store.vala:63
 msgid "Starred in Android"
 msgstr "Starred in Android"
 
 #. Translators: the first parameter is an address book
 #. * URI and the second is a persona UID.
-#: ../backends/eds/lib/edsf-persona-store.vala:585
+#: ../backends/eds/lib/edsf-persona-store.vala:587
 #, c-format
 msgid "Address book ‘%s’ is offline, so contact ‘%s’ cannot be removed."
 msgstr ""
@@ -48,174 +49,172 @@ msgstr ""
 
 #. Translators: the first parameter is an address book
 #. * URI and the second is an error message.
-#: ../backends/eds/lib/edsf-persona-store.vala:591
+#: ../backends/eds/lib/edsf-persona-store.vala:593
 #, c-format
 msgid "Permission denied to remove contact ‘%s’: %s"
 msgstr "Kontakt »%s« kann nicht entfernt werden: %s"
 
 #. Translators: the parameter is an error message.
-#: ../backends/eds/lib/edsf-persona-store.vala:596
+#: ../backends/eds/lib/edsf-persona-store.vala:598
 #, c-format
 msgid "Removing contacts isn't supported by this persona store: %s"
 msgstr ""
 "Das Entfernen von Kontakten wird für diesen Personenspeicher nicht "
 "unterstützt: %s"
 
-#: ../backends/eds/lib/edsf-persona-store.vala:625
+#: ../backends/eds/lib/edsf-persona-store.vala:627
 #, c-format
 msgid "Can't remove contact ‘%s’: %s"
 msgstr "Kontakt »%s« konnte nicht entfernt werden: %s"
 
 #. Translators: the parameter is an address book
 #. * URI.
-#: ../backends/eds/lib/edsf-persona-store.vala:718
-#: ../backends/eds/lib/edsf-persona-store.vala:912
+#: ../backends/eds/lib/edsf-persona-store.vala:720
+#: ../backends/eds/lib/edsf-persona-store.vala:914
 #, c-format
 msgid "Address book ‘%s’ is offline."
 msgstr "Das Adressbuch »%s« ist nicht verfügbar."
 
 #. Translators: the first parameter is an address
 #. * book URI and the second is an error message.
-#: ../backends/eds/lib/edsf-persona-store.vala:723
-#: ../backends/eds/lib/edsf-persona-store.vala:917
+#: ../backends/eds/lib/edsf-persona-store.vala:725
+#: ../backends/eds/lib/edsf-persona-store.vala:919
 #, c-format
 msgid "Permission denied to open address book ‘%s’: %s"
 msgstr "Der Zugriff zum Öffnen des Adressbuchs »%s« wurde verweigert: %s"
 
 #. Translators: the first parameter is an address book URI
 #. * and the second is an error message.
-#: ../backends/eds/lib/edsf-persona-store.vala:756
+#: ../backends/eds/lib/edsf-persona-store.vala:758
 #, c-format
 msgid "Couldn't open address book ‘%s’: %s"
 msgstr "Adressbuch »%s« konnte nicht geöffnet werden: %s"
 
 #. Translators: the parameteter is an error message.
-#: ../backends/eds/lib/edsf-persona-store.vala:822
-#: ../backends/eds/lib/edsf-persona-store.vala:852
+#: ../backends/eds/lib/edsf-persona-store.vala:824
+#: ../backends/eds/lib/edsf-persona-store.vala:854
 #, c-format
 msgid "Couldn't get address book capabilities: %s"
 msgstr "Fähigkeiten des Adressbuchs konnten nicht ermittelt werden: %s"
 
 #. Translators: the parameter is an address book URI.
-#: ../backends/eds/lib/edsf-persona-store.vala:868
+#: ../backends/eds/lib/edsf-persona-store.vala:870
 #, c-format
 msgid "Couldn't get view for address book ‘%s’."
 msgstr "Ansicht für Adressbuch »%s« konnte nicht abgerufen werden."
 
 #. Translators: the first parameter is an address book URI
 #. * and the second is an error message.
-#: ../backends/eds/lib/edsf-persona-store.vala:950
+#: ../backends/eds/lib/edsf-persona-store.vala:952
 #, c-format
 msgid "Couldn't get view for address book ‘%s’: %s"
 msgstr "Ansicht für Adressbuch »%s« konnte nicht abgerufen werden: %s"
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1303
+#: ../backends/eds/lib/edsf-persona-store.vala:1306
 #, c-format
 msgid "Changing the ‘%s’ property failed due to reaching the timeout."
 msgstr ""
 "Das Ändern der Eigenschaft »%s« ist wegen Zeitüberschreitung fehlgeschlagen."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1341
-#: ../folks/avatar-details.vala:59
+#: ../backends/eds/lib/edsf-persona-store.vala:1344
+#: ../folks/avatar-details.vala:63
 msgid "Avatar is not writeable on this contact."
 msgstr "Benutzerbild ist für diesen Kontakt schreibgeschützt."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1362
+#: ../backends/eds/lib/edsf-persona-store.vala:1365
 #: ../folks/web-service-details.vala:123
 msgid "Web service addresses are not writeable on this contact."
 msgstr "Webdienst-Adressen sind für diesen Kontakt schreibgeschützt."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1398
+#: ../backends/eds/lib/edsf-persona-store.vala:1401
 #: ../folks/url-details.vala:152
 msgid "URLs are not writeable on this contact."
 msgstr "URLs sind für diesen Kontakt schreibgeschützt."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1475
+#: ../backends/eds/lib/edsf-persona-store.vala:1478
 #: ../folks/local-id-details.vala:64
 msgid "Local IDs are not writeable on this contact."
 msgstr "Lokale Kennungen sind für diesen Kontakt schreibgeschützt."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1501
+#: ../backends/eds/lib/edsf-persona-store.vala:1504
 msgid "The contact cannot be marked as favourite."
 msgstr "Der Kontakt kann nicht als Favorit markiert werden."
 
 #. Translators: the parameter is an error message.
-#: ../backends/eds/lib/edsf-persona-store.vala:1570
+#: ../backends/eds/lib/edsf-persona-store.vala:1573
 #, c-format
 msgid "Can't update avatar: %s"
 msgstr "Benutzerbild kann nicht aktualisiert werden: %s"
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1581
+#: ../backends/eds/lib/edsf-persona-store.vala:1584
 #: ../folks/email-details.vala:120
 msgid "E-mail addresses are not writeable on this contact."
 msgstr "E-Mail-Adressen sind für diesen Kontakt schreibgeschützt."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1595
+#: ../backends/eds/lib/edsf-persona-store.vala:1598
 #: ../folks/phone-details.vala:229
 msgid "Phone numbers are not writeable on this contact."
 msgstr "Telefonnummern sind für diesen Kontakt schreibgeschützt."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1609
-#: ../folks/postal-address-details.vala:360
+#: ../backends/eds/lib/edsf-persona-store.vala:1612
+#: ../folks/postal-address-details.vala:361
 msgid "Postal addresses are not writeable on this contact."
 msgstr "Postanschriften sind für diesen Kontakt schreibgeschützt."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1676
-#: ../folks/name-details.vala:281
+#: ../backends/eds/lib/edsf-persona-store.vala:1679
+#: ../folks/name-details.vala:283
 msgid "Full name is not writeable on this contact."
 msgstr "Der vollständige Name ist für diesen Kontakt schreibgeschützt."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1698
-#: ../folks/name-details.vala:319
+#: ../backends/eds/lib/edsf-persona-store.vala:1701
+#: ../folks/name-details.vala:321
 msgid "Nickname is not writeable on this contact."
 msgstr "Der Spitzname ist für diesen Kontakt schreibgeschützt."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1720
+#: ../backends/eds/lib/edsf-persona-store.vala:1723
 #: ../folks/note-details.vala:138
 msgid "Notes are not writeable on this contact."
 msgstr "Notizen sind für diesen Kontakt schreibgeschützt."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1749
-#: ../folks/birthday-details.vala:60
+#: ../backends/eds/lib/edsf-persona-store.vala:1752
+#: ../folks/birthday-details.vala:62
 msgid "Birthday is not writeable on this contact."
 msgstr "Der Geburtstag ist für diesen Kontakt schreibgeschützt."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1792
-#: ../folks/role-details.vala:277
+#: ../backends/eds/lib/edsf-persona-store.vala:1795
+#: ../folks/role-details.vala:279
 msgid "Roles are not writeable on this contact."
 msgstr "Funktionen sind für diesen Kontakt schreibgeschützt."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1893
-#: ../folks/name-details.vala:244
+#: ../backends/eds/lib/edsf-persona-store.vala:1896
+#: ../folks/name-details.vala:246
 msgid "Structured name is not writeable on this contact."
 msgstr "Der strukturierte Name ist für diesen Kontakt schreibgeschützt."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1932
+#: ../backends/eds/lib/edsf-persona-store.vala:1935
 #: ../folks/im-details.vala:136
 msgid "IM addresses are not writeable on this contact."
 msgstr "Sofortnachrichtenadressen sind für diesen Kontakt schreibgeschützt."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1982
-#: ../folks/group-details.vala:170
+#: ../backends/eds/lib/edsf-persona-store.vala:1985
+#: ../folks/group-details.vala:174
 msgid "Groups are not writeable on this contact."
 msgstr "Gruppen sind für diesen Kontakt schreibgeschützt."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:2026
-#: ../folks/gender-details.vala:77
+#: ../backends/eds/lib/edsf-persona-store.vala:2029
+#: ../folks/gender-details.vala:79
 msgid "Gender is not writeable on this contact."
 msgstr "Das Geschlecht ist für diesen Kontakt schreibgeschützt."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:2061
+#: ../backends/eds/lib/edsf-persona-store.vala:2064
 #: ../folks/anti-linkable.vala:81
-#, fuzzy
-#| msgid "Notes are not writeable on this contact."
 msgid "Anti-links are not writeable on this contact."
-msgstr "Notizen sind für diesen Kontakt schreibgeschützt."
+msgstr "Anti-Links sind für diesen Kontakt schreibgeschützt."
 
 #. Translators: the first parameter is a non-human-readable
 #. * property name and the second parameter is an error
 #. * message.
-#: ../backends/eds/lib/edsf-persona-store.vala:2220
+#: ../backends/eds/lib/edsf-persona-store.vala:2259
 #, c-format
 msgid "Property ‘%s’ is not writeable: %s"
 msgstr "Die Eigenschaft »%s« ist schreibgeschützt: %s"
@@ -223,14 +222,14 @@ msgstr "Die Eigenschaft »%s« ist schreibgeschützt: %s"
 #. Translators: the first parameter is a non-human-readable
 #. * property name and the second parameter is an error
 #. * message.
-#: ../backends/eds/lib/edsf-persona-store.vala:2229
+#: ../backends/eds/lib/edsf-persona-store.vala:2268
 #, c-format
 msgid "Invalid value for property ‘%s’: %s"
 msgstr "Ungültiger Wert für Eigenschaft »%s«: %s"
 
 #. Translators: the first parameter is a non-human-readable
 #. * property name and the second parameter is an error message.
-#: ../backends/eds/lib/edsf-persona-store.vala:2255
+#: ../backends/eds/lib/edsf-persona-store.vala:2294
 #, c-format
 msgid "Unknown error setting property ‘%s’: %s"
 msgstr "Unbekannter Fehler beim Setzen der Eigenschaft »%s«: %s"
@@ -280,22 +279,22 @@ msgid "Couldn't load data from key file: %s"
 msgstr "Daten konnten nicht aus Schlüsseldatei geladen werden: %s"
 
 #. Translators: the parameter is an error message.
-#: ../backends/libsocialweb/lib/swf-persona-store.vala:344
-#: ../backends/libsocialweb/lib/swf-persona-store.vala:366
-#: ../backends/libsocialweb/lib/swf-persona-store.vala:387
+#: ../backends/libsocialweb/lib/swf-persona-store.vala:345
+#: ../backends/libsocialweb/lib/swf-persona-store.vala:367
+#: ../backends/libsocialweb/lib/swf-persona-store.vala:388
 #, c-format
 msgid "Couldn’t prepare libsocialweb service: %s"
 msgstr "libsocialweb-Dienst konnte nicht vorbereitet werden: %s"
 
-#: ../backends/libsocialweb/lib/swf-persona-store.vala:345
+#: ../backends/libsocialweb/lib/swf-persona-store.vala:346
 msgid "No capabilities were found."
 msgstr "Es wurden keine Fähigkeiten gefunden."
 
-#: ../backends/libsocialweb/lib/swf-persona-store.vala:367
+#: ../backends/libsocialweb/lib/swf-persona-store.vala:368
 msgid "No contacts capability was found."
 msgstr "Es wurde keine Kontakte-Fähigkeit gefunden."
 
-#: ../backends/libsocialweb/lib/swf-persona-store.vala:388
+#: ../backends/libsocialweb/lib/swf-persona-store.vala:389
 msgid "Error opening contacts view."
 msgstr "Fehler beim Öffnen der Kontakte-Ansicht."
 
@@ -310,20 +309,20 @@ msgstr ""
 "Es konnte nicht ermittelt werden, ob Aliase für das Telepathy-Konto »%s« "
 "gesetzt werden können: %s"
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1214
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1218
 msgid "Telepathy contacts representing the local user may not be removed."
 msgstr ""
 "Telepathy-Kontakte, die den lokalen Benutzer verkörpern, können nicht "
 "entfernt werden."
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1225
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1229
 #, c-format
 msgid "Failed to remove a persona from store: %s"
 msgstr "Entfernen einer Person aus dem Speicher ist fehlgeschlagen: %s"
 
 #. Translators: the first two parameters are store identifiers and
 #. * the third is a contact identifier.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1255
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1259
 #, c-format
 msgid ""
 "Persona store (%s, %s) requires the following details:\n"
@@ -332,19 +331,19 @@ msgstr ""
 "Personenspeicher (%s, %s) erfordert die folgenden Details:\n"
 "    Kontakt (angegeben: »%s«)\n"
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1270
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1274
 msgid "Cannot create a new Telepathy contact while offline."
 msgstr ""
 "Ein neuer Telepathy-Kontakt kann im Offline-Modus nicht erstellt werden."
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1288
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1292
 #, c-format
 msgid "Failed to add a persona from details: %s"
 msgstr "Hinzufügen der Person aus den Details schlug fehl: %s"
 
 #. Translators: "telepathy-logger" is the name of an application,
 #. * and should not be translated.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1308
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1312
 msgid ""
 "Failed to change favorite without a connection to the telepathy-logger "
 "service."
@@ -352,7 +351,7 @@ msgstr ""
 "Ändern eines Favoriten ohne Verbindung zum telepathy-logger-Dienst schlug "
 "fehl."
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1314
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1318
 msgid ""
 "Failed to change favorite status of Telepathy Persona because it has no "
 "attached TpContact."
@@ -361,36 +360,45 @@ msgstr ""
 "TpContact zugeordnet ist."
 
 #. Translators: the parameter is a contact identifier.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1332
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1336
 #, c-format
 msgid "Failed to change favorite status for Telepathy contact ‘%s’."
 msgstr ""
 "Favoritenstatus für Telepathy-Kontakt »%s« konnte nicht geändert werden."
 
 #. Translators: the parameter is an error message.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1364
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1368
 #, c-format
 msgid "Failed to change contact's alias: %s"
 msgstr "Alias des Kontakts konnte nicht geändert werden: %s"
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1444
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1448
 msgid "Extended information may only be set on the user's Telepathy contact."
 msgstr ""
 "Erweiterte Informationen können nur für den Telepathy-Kontakt des Benutzers "
 "angegeben werden."
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1473
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1477
 msgid ""
 "Extended information cannot be written because the store is disconnected."
 msgstr ""
 "Erweiterte Informationen können nicht gespeichert werden, da die Verbindung "
 "zum Speicher unterbrochen ist."
 
-#: ../backends/telepathy/lib/tpf-persona.vala:495
-#: ../backends/telepathy/lib/tpf-persona.vala:549
+#: ../backends/telepathy/lib/tpf-persona.vala:497
+#: ../backends/telepathy/lib/tpf-persona.vala:518
+#: ../backends/telepathy/lib/tpf-persona.vala:570
+#: ../backends/telepathy/lib/tpf-persona.vala:584
 #, c-format
 msgid "Failed to change group membership: %s"
 msgstr "Ändern einer Gruppenmitgliedschaft ist fehlgeschlagen: %s"
+
+#. Translators: "account" refers to an instant messaging
+#. * account.
+#: ../backends/telepathy/lib/tpf-persona.vala:500
+#: ../backends/telepathy/lib/tpf-persona.vala:573
+msgid "Account is offline."
+msgstr "Das Konto ist abgemeldet."
 
 #. Translators: the first parameter is the unknown key that
 #. * was received with the details params, and the second
@@ -401,7 +409,7 @@ msgid "Unrecognized parameter '%s' passed to persona store '%s'."
 msgstr ""
 "Unbekannter Parameter »%s« wurde an den Personenspeicher »%s« übergeben."
 
-#: ../folks/alias-details.vala:57
+#: ../folks/alias-details.vala:61
 msgid "Alias is not writeable on this contact."
 msgstr "Alias ist für diesen Kontakt schreibgeschützt."
 
@@ -424,12 +432,12 @@ msgstr "Datei oder Ordner »%s« existiert nicht."
 msgid "Failed to get content type for '%s'."
 msgstr "Typ des Inhalts konnte für »%s« nicht abgefragt werden."
 
-#: ../folks/birthday-details.vala:89
+#: ../folks/birthday-details.vala:93
 msgid "Birthday event ID is not writeable on this contact."
 msgstr ""
 "Die Geburtstags-Ereigniskennung ist für diesen Kontakt schreibgeschützt."
 
-#: ../folks/favourite-details.vala:52
+#: ../folks/favourite-details.vala:58
 msgid "Favorite status is not writeable on this contact."
 msgstr "Der Favoritenstatus ist für diesen Kontakt schreibgeschützt."
 
@@ -490,6 +498,8 @@ msgstr ""
 #: ../folks/individual-aggregator.vala:1884
 msgid "Anti-links can't be removed between personas being linked."
 msgstr ""
+"Anti-Links können nicht zwischen Personen, die verlinkt sind, gelöscht "
+"werden."
 
 #: ../folks/individual-aggregator.vala:2184
 msgid "Can’t add personas with no primary store."
@@ -507,10 +517,6 @@ msgid "Primary store ID"
 msgstr "Primäre Speicherkennung"
 
 #: ../folks/org.freedesktop.folks.gschema.xml.in.h:2
-#| msgid ""
-#| "The ID of the persona store which folks should use as primary (i.e. to "
-#| "store linking data in). The type ID of the store may optionally be "
-#| "prepended, separated by a colon. For example: “eds:system” or “key-file”."
 msgid ""
 "The ID of the persona store which folks should use as primary (i.e. to store "
 "linking data in). The type ID of the store may optionally be prepended, "
@@ -521,7 +527,7 @@ msgstr ""
 "Speichers darf optional nachgesetzt werden, durch einen Doppelpunkt "
 "getrennt. Zum Beispiel: »eds:system-address-book« oder »key-file«."
 
-#: ../folks/postal-address-details.vala:230
+#: ../folks/postal-address-details.vala:231
 #, c-format
 msgid "%s, %s, %s, %s, %s, %s, %s"
 msgstr "%s, %s, %s, %s, %s, %s, %s"
@@ -558,7 +564,7 @@ msgstr "Beschäftigt"
 msgid "Hidden"
 msgstr "Unsichtbar"
 
-#: ../folks/role-details.vala:148
+#: ../folks/role-details.vala:150
 #, c-format
 msgid "Title: %s, Organisation: %s, Role: %s"
 msgstr "Titel: %s, Organisation: %s, Funktion: %s"
