@@ -19,6 +19,7 @@ Bugs fixed:
 • Bug 683452 — gnome-contacts starts up with an empty address book
 • Bug 681476 — folks-inspect could use some methods to set values
 • Bug 683390 — Individuals sometimes not removed when disabling their Telepathy account
+• Bug 683267 — Warning when starting in non group mode
 
 API changes:
 • Add PropertyError.UNAVAILABLE

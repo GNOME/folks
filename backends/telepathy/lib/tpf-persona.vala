@@ -365,7 +365,7 @@ public class Tpf.Persona : Folks.Persona,
     {
       get
         {
-          this._contact_notify_contact_info (true);
+          this._contact_notify_contact_info (true, false);
           return this._email_addresses_ro;
         }
       set { this.change_email_addresses.begin (value); }
@@ -661,7 +661,7 @@ public class Tpf.Persona : Folks.Persona,
     {
       get
         {
-          this._contact_notify_contact_info (true);
+          this._contact_notify_contact_info (true, false);
           return this._phone_numbers_ro;
         }
       set { this.change_phone_numbers.begin (value); }
@@ -907,7 +907,7 @@ public class Tpf.Persona : Folks.Persona,
         }
     }
 
-  private void _contact_notify_contact_info (bool create_if_not_exists)
+  private void _contact_notify_contact_info (bool create_if_not_exists, bool emit_notification = true)
     {
       assert ((
           (this._email_addresses == null) &&
@@ -926,9 +926,12 @@ public class Tpf.Persona : Folks.Persona,
        * function is called identically for all of them. */
       if (this._urls == null && create_if_not_exists == false)
         {
-          this.notify_property ("email-addresses");
-          this.notify_property ("phone-numbers");
-          this.notify_property ("urls");
+          if (emit_notification)
+            {
+              this.notify_property ("email-addresses");
+              this.notify_property ("phone-numbers");
+              this.notify_property ("urls");
+            }
           return;
         }
       else if (this._urls == null)
@@ -1032,7 +1035,10 @@ public class Tpf.Persona : Folks.Persona,
                     !this._birthday.equal (d.to_utc ())))
                 {
                   this._birthday = d.to_utc ();
-                  this.notify_property ("birthday");
+                  if (emit_notification)
+                    {
+                      this.notify_property ("birthday");
+                    }
                   changed = true;
                 }
             }
@@ -1047,7 +1053,10 @@ public class Tpf.Persona : Folks.Persona,
           if (this._birthday != null)
             {
               this._birthday = null;
-              this.notify_property ("birthday");
+              if (emit_notification)
+                {
+                  this.notify_property ("birthday");
+                }
               changed = true;
             }
         }
@@ -1057,14 +1066,20 @@ public class Tpf.Persona : Folks.Persona,
         {
           this._email_addresses = new_email_addresses;
           this._email_addresses_ro = new_email_addresses.read_only_view;
-          this.notify_property ("email-addresses");
+          if (emit_notification)
+            {
+              this.notify_property ("email-addresses");
+            }
           changed = true;
         }
 
       if (new_full_name != this._full_name)
         {
           this._full_name = new_full_name;
-          this.notify_property ("full-name");
+          if (emit_notification)
+            {
+              this.notify_property ("full-name");
+            }
           changed = true;
         }
 
@@ -1073,7 +1088,10 @@ public class Tpf.Persona : Folks.Persona,
         {
           this._phone_numbers = new_phone_numbers;
           this._phone_numbers_ro = new_phone_numbers.read_only_view;
-          this.notify_property ("phone-numbers");
+          if (emit_notification)
+            {
+              this.notify_property ("phone-numbers");
+            }
           changed = true;
         }
 
@@ -1081,7 +1099,10 @@ public class Tpf.Persona : Folks.Persona,
         {
           this._urls = new_urls;
           this._urls_ro = new_urls.read_only_view;
-          this.notify_property ("urls");
+          if (emit_notification)
+            {
+              this.notify_property ("urls");
+            }
           changed = true;
         }
 
