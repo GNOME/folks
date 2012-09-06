@@ -139,6 +139,7 @@ public class Folks.Inspect.Client : Object
       this.commands.set ("personas", new Commands.Personas (this));
       this.commands.set ("backends", new Commands.Backends (this));
       this.commands.set ("persona-stores", new Commands.PersonaStores (this));
+      this.commands.set ("set", new Commands.Set (this));
       this.commands.set ("signals", new Commands.Signals (this));
       this.commands.set ("debug", new Commands.Debug (this));
 
