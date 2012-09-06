@@ -151,8 +151,6 @@ public class Edsf.Persona : Folks.Persona,
 
   private static HashTable<string, E.ContactField>? _im_eds_map = null;
 
-  private bool _is_favourite;
-
   private E.Contact _contact; /* should be set on construct */
 
   /**
@@ -692,6 +690,8 @@ public class Edsf.Persona : Folks.Persona,
       yield ((Edsf.PersonaStore) this.store)._set_roles (this, roles);
     }
 
+  private bool _is_favourite = false;
+
   /**
    * Whether this contact is a user-defined favourite.
    *
@@ -700,7 +700,11 @@ public class Edsf.Persona : Folks.Persona,
   [CCode (notify = false)]
   public bool is_favourite
       {
-        get { return this._is_favourite; }
+        get
+          {
+            this._update_groups (true); /* also checks for favourites */
+            return this._is_favourite;
+          }
         set { this.change_is_favourite.begin (value); }
       }
 
@@ -757,7 +761,11 @@ public class Edsf.Persona : Folks.Persona,
   [CCode (notify = false)]
   public bool in_google_personal_group
     {
-      get { return this._in_google_personal_group; }
+      get
+        {
+          this._update_groups (true); /* also checks for the personal group */
+          return this._in_google_personal_group;
+        }
     }
 
   /**
