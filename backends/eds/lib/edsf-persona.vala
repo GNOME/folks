@@ -238,7 +238,7 @@ public class Edsf.Persona : Folks.Persona,
     {
       get
         {
-          this._update_addresses (true);
+          this._update_addresses (true, false);
           return this._postal_addresses_ro;
         }
       set { this.change_postal_addresses.begin (value); }
@@ -269,7 +269,7 @@ public class Edsf.Persona : Folks.Persona,
     {
       get
         {
-          this._update_phones (true);
+          this._update_phones (true, false);
           return this._phone_numbers_ro;
         }
       set { this.change_phone_numbers.begin (value); }
@@ -299,7 +299,7 @@ public class Edsf.Persona : Folks.Persona,
     {
       get
         {
-          this._update_emails (true);
+          this._update_emails (true, false);
           return this._email_addresses_ro;
         }
       set { this.change_email_addresses.begin (value); }
@@ -330,7 +330,7 @@ public class Edsf.Persona : Folks.Persona,
     {
       get
         {
-          this._update_notes (true);
+          this._update_notes (true, false);
           return this._notes_ro;
         }
       set { this.change_notes.begin (value); }
@@ -505,7 +505,7 @@ public class Edsf.Persona : Folks.Persona,
     {
       get
         {
-          this._update_urls (true);
+          this._update_urls (true, false);
           return this._urls_ro;
         }
       set { this.change_urls.begin (value); }
@@ -564,7 +564,7 @@ public class Edsf.Persona : Folks.Persona,
     {
       get
         {
-          this._update_groups (true);
+          this._update_groups (true, false);
           return this._groups_ro;
         }
       set { this.change_groups.begin (value); }
@@ -673,7 +673,7 @@ public class Edsf.Persona : Folks.Persona,
     {
       get
         {
-          this._update_roles (true);
+          this._update_roles (true, false);
           return this._roles_ro;
         }
       set { this.change_roles.begin (value); }
@@ -702,7 +702,7 @@ public class Edsf.Persona : Folks.Persona,
       {
         get
           {
-            this._update_groups (true); /* also checks for favourites */
+            this._update_groups (true, false); /* also checks for favourites */
             return this._is_favourite;
           }
         set { this.change_is_favourite.begin (value); }
@@ -1027,13 +1027,16 @@ public class Edsf.Persona : Folks.Persona,
         }
     }
 
-  private void _update_roles (bool create_if_not_exist)
+  private void _update_roles (bool create_if_not_exist, bool emit_notification = true)
     {
       /* See the comments in Folks.Individual about the lazy instantiation
        * strategy for roles. */
       if (this._roles == null && create_if_not_exist == false)
         {
-          this.notify_property ("roles");
+          if (emit_notification)
+            {
+              this.notify_property ("roles");
+            }
           return;
         }
       else if (this._roles == null)
@@ -1110,7 +1113,10 @@ public class Edsf.Persona : Folks.Persona,
         {
           this._roles = new_roles;
           this._roles_ro = new_roles.read_only_view;
-          this.notify_property ("roles");
+          if (emit_notification)
+            {
+              this.notify_property ("roles");
+            }
         }
     }
 
@@ -1196,13 +1202,16 @@ public class Edsf.Persona : Folks.Persona,
         }
     }
 
-  private void _update_emails (bool create_if_not_exist)
+  private void _update_emails (bool create_if_not_exist, bool emit_notification = true)
     {
       /* See the comments in Folks.Individual about the lazy instantiation
        * strategy for e-mail addresses. */
       if (this._email_addresses == null && create_if_not_exist == false)
         {
-          this.notify_property ("email-addresses");
+          if (emit_notification)
+            {
+              this.notify_property ("email-addresses");
+            }
           return;
         }
       else if (this._email_addresses == null)
@@ -1234,19 +1243,25 @@ public class Edsf.Persona : Folks.Persona,
       if (!Folks.Internal.equal_sets<EmailFieldDetails> (new_email_addresses,
               this._email_addresses))
         {
-         this._email_addresses = new_email_addresses;
-         this._email_addresses_ro = new_email_addresses.read_only_view;
-         this.notify_property ("email-addresses");
+          this._email_addresses = new_email_addresses;
+          this._email_addresses_ro = new_email_addresses.read_only_view;
+          if (emit_notification)
+            {
+              this.notify_property ("email-addresses");
+            }
        }
     }
 
-  private void _update_notes (bool create_if_not_exist)
+  private void _update_notes (bool create_if_not_exist, bool emit_notification = true)
     {
       /* See the comments in Folks.Individual about the lazy instantiation
        * strategy for notes. */
       if (this._notes == null && create_if_not_exist == false)
         {
-          this.notify_property ("notes");
+          if (emit_notification)
+            {
+              this.notify_property ("notes");
+            }
           return;
         }
       else if (this._notes == null)
@@ -1272,7 +1287,10 @@ public class Edsf.Persona : Folks.Persona,
         {
           this._notes = new_notes;
           this._notes_ro = this._notes.read_only_view;
-          this.notify_property ("notes");
+          if (emit_notification)
+            {
+              this.notify_property ("notes");
+            }
         }
     }
 
@@ -1417,13 +1435,16 @@ public class Edsf.Persona : Folks.Persona,
         }
     }
 
-  private void _update_urls (bool create_if_not_exist)
+  private void _update_urls (bool create_if_not_exist, bool emit_notification = true)
     {
       /* See the comments in Folks.Individual about the lazy instantiation
        * strategy for URIs. */
       if (this._urls == null && create_if_not_exist == false)
         {
-          this.notify_property ("urls");
+          if (emit_notification)
+            {
+              this.notify_property ("urls");
+            }
           return;
         }
       else if (this._urls == null)
@@ -1475,7 +1496,10 @@ public class Edsf.Persona : Folks.Persona,
         {
           this._urls = new_urls;
           this._urls_ro = new_urls.read_only_view;
-          this.notify_property ("urls");
+          if (emit_notification)
+            {
+              this.notify_property ("urls");
+            }
         }
     }
 
@@ -1583,13 +1607,16 @@ public class Edsf.Persona : Folks.Persona,
         }
     }
 
-  private void _update_groups (bool create_if_not_exist)
+  private void _update_groups (bool create_if_not_exist, bool emit_notification = true)
     {
       /* See the comments in Folks.Individual about the lazy instantiation
        * strategy for groups. */
       if (this._groups == null && create_if_not_exist == false)
         {
-          this.notify_property ("groups");
+          if (emit_notification)
+            {
+              this.notify_property ("groups");
+            }
           return;
         }
       else if (this._groups == null)
@@ -1690,18 +1717,22 @@ public class Edsf.Persona : Folks.Persona,
       /* Notify if anything's changed. */
       this.freeze_notify ();
 
-      if (added_categories.size != 0 || removed_categories.size != 0)
+      if ((added_categories.size != 0 || removed_categories.size != 0) &&
+         emit_notification)
         {
           this.notify_property ("groups");
         }
-      if (this._is_favourite != old_is_favourite)
+      if (this._is_favourite != old_is_favourite && emit_notification)
         {
           this.notify_property ("is-favourite");
         }
       if (in_google_personal_group != this._in_google_personal_group)
         {
           this._in_google_personal_group = in_google_personal_group;
-          this.notify_property ("in-google-personal-group");
+          if (emit_notification)
+            {
+              this.notify_property ("in-google-personal-group");
+            }
         }
 
       this.thaw_notify ();
@@ -1739,7 +1770,7 @@ public class Edsf.Persona : Folks.Persona,
       return retval;
     }
 
-  private void _update_phones (bool create_if_not_exist)
+  private void _update_phones (bool create_if_not_exist, bool emit_notification = true)
     {
       /* See the comments in Folks.Individual about the lazy instantiation
        * strategy for phone numbers. */
@@ -1779,7 +1810,10 @@ public class Edsf.Persona : Folks.Persona,
         {
           this._phone_numbers = new_phone_numbers;
           this._phone_numbers_ro = new_phone_numbers.read_only_view;
-          this.notify_property ("phone-numbers");
+          if (emit_notification)
+            {
+              this.notify_property ("phone-numbers");
+            }
         }
    }
 
@@ -1843,13 +1877,16 @@ public class Edsf.Persona : Folks.Persona,
    *       are the same and if so instantiate only one PostalAddress
    *       (with the given types).
    */
-  private void _update_addresses (bool create_if_not_exist)
+  private void _update_addresses (bool create_if_not_exist, bool emit_notification = true)
     {
       /* See the comments in Folks.Individual about the lazy instantiation
        * strategy for addresses. */
       if (this._postal_addresses == null && create_if_not_exist == false)
         {
-          this.notify_property ("postal-addresses");
+          if (emit_notification)
+            {
+              this.notify_property ("postal-addresses");
+            }
           return;
         }
       else if (this._postal_addresses == null)
@@ -1884,7 +1921,10 @@ public class Edsf.Persona : Folks.Persona,
         {
           this._postal_addresses = new_postal_addresses;
           this._postal_addresses_ro = new_postal_addresses.read_only_view;
-          this.notify_property ("postal-addresses");
+          if (emit_notification)
+            {
+              this.notify_property ("postal-addresses");
+            }
         }
     }
 
