@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: folks master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=folks&keywords=I18N+L10N&component=general\n"
 "POT-Creation-Date: 2012-09-06 16:25+0000\n"
-"PO-Revision-Date: 2012-09-06 21:36+0100\n"
+"PO-Revision-Date: 2012-09-07 15:10+0100\n"
 "Last-Translator: Matej Urbančič <mateju@svn.gnome.org>\n"
 "Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups.com>\n"
 "Language: Slovenian\n"
@@ -476,7 +476,7 @@ msgstr "Osnovni ID sklada"
 
 #: ../folks/org.freedesktop.folks.gschema.xml.in.h:2
 msgid "The ID of the persona store which folks should use as primary (i.e. to store linking data in). The type ID of the store may optionally be prepended, separated by a colon. For example: “eds:system-address-book” or “key-file”."
-msgstr ""
+msgstr "ID zaloge stikov, ki naj bo privzeto uporabljena (na primer za shranjevanje podatkov povezav). Vrsta ID zaloge je lahko izbirno določena kot predpona, ločena z dvopičjem. Na primer: “eds:sistemski-imenik” ali pa “datoteka-ključa”."
 
 #: ../folks/postal-address-details.vala:231
 #, c-format
