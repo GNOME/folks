@@ -744,6 +744,43 @@ public class Tpf.PersonaStore : Folks.PersonaStore
 
       this._conn = this.account.connection;
 
+      /* Connect signals early so that cleaning up is easier if the connection
+       * is disconnected during the 'yield' below. */
+      this._conn.notify["self-contact"].connect (
+          this._self_contact_changed_cb);
+      this._conn.notify["contact-list-state"].connect (
+          this._contact_list_state_changed_cb);
+
+      /* FIXME: TpConnection still does not have high-level API for this.
+       * See fd.o#14540 */
+      /* We have to do this before emitting the self persona so that code which
+       * checks the self persona's writeable fields gets correct values. */
+      var flags = 0;
+
+      try
+        {
+          flags = yield FolksTpLowlevel.connection_get_alias_flags_async (
+              this._conn);
+
+          /* It's possible for the connection to have disconnected while in
+           * the async function call. (See bgo#683093.) If so, bail. */
+          if (this._conn == null)
+            {
+              return;
+            }
+        }
+      catch (GLib.Error e)
+        {
+          GLib.warning (
+              /* Translators: the first parameter is the display name for
+               * the Telepathy account, and the second is an error
+               * message. */
+              _("Failed to determine whether we can set aliases on Telepathy account '%s': %s"),
+              this.display_name, e.message);
+        }
+
+      /* Emit all the notifications after the 'yield' just in case the
+       * connection disappears during it. This makes cleaning up easier. */
       this.freeze_notify ();
       this._marshall_supported_fields ();
       this.notify_property ("supported-fields");
@@ -774,34 +811,14 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       this.notify_property ("can-add-personas");
       this.notify_property ("can-remove-personas");
 
-      /* FIXME: TpConnection still does not have high-level API for this.
-       * See fd.o#14540 */
-      /* We have to do this before emitting the self persona so that code which
-       * checks the self persona's writeable fields gets correct values. */
       var new_can_alias = MaybeBool.FALSE;
 
-      try
+      if ((flags & ConnectionAliasFlags.CONNECTION_ALIAS_FLAG_USER_SET) > 0)
         {
-          var flags = yield FolksTpLowlevel.connection_get_alias_flags_async (
-              this._conn);
+          new_can_alias = MaybeBool.TRUE;
 
-          if ((flags &
-               ConnectionAliasFlags.CONNECTION_ALIAS_FLAG_USER_SET) > 0)
-            {
-              new_can_alias = MaybeBool.TRUE;
-
-              this._always_writeable_properties += "alias";
-              this.notify_property ("always-writeable-properties");
-            }
-        }
-      catch (GLib.Error e)
-        {
-          GLib.warning (
-              /* Translators: the first parameter is the display name for
-               * the Telepathy account, and the second is an error
-               * message. */
-              _("Failed to determine whether we can set aliases on Telepathy account '%s': %s"),
-              this.display_name, e.message);
+          this._always_writeable_properties += "alias";
+          this.notify_property ("always-writeable-properties");
         }
 
       this._can_alias_personas = new_can_alias;
@@ -810,10 +827,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       this.thaw_notify ();
 
       /* Add the local user */
-      this._conn.notify["self-contact"].connect (this._self_contact_changed_cb);
       this._self_contact_changed_cb (this._conn, null);
-
-      this._conn.notify["contact-list-state"].connect (this._contact_list_state_changed_cb);
       this._contact_list_state_changed_cb (this._conn, null);
 
       Internal.profiling_end ("notify connection for Tpf.PersonaStore " +

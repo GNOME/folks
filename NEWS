@@ -20,6 +20,8 @@ Bugs fixed:
 • Bug 681476 — folks-inspect could use some methods to set values
 • Bug 683390 — Individuals sometimes not removed when disabling their Telepathy account
 • Bug 683267 — Warning when starting in non group mode
+• Bug 683093 — Crash in
+  __tpf_persona_store_self_contact_changed_cb_g_object_notify
 
 API changes:
 • Add PropertyError.UNAVAILABLE
