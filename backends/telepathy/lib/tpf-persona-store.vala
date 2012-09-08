@@ -78,6 +78,10 @@ public class Tpf.PersonaStore : Folks.PersonaStore
   private bool _is_quiescent = false;
   private bool _got_initial_members = false;
   private bool _got_initial_self_contact = false;
+  /* true iff in the middle of storing/loading the cache while disconnecting */
+  private bool _disconnect_pending = false;
+  /* true iff the store should be removed after disconnection is complete */
+  private bool _removal_pending = false;
 
   private Debug _debug;
   private PersonaStoreCache _cache;
@@ -395,8 +399,6 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       else
         this.trust_level = PersonaStoreTrust.PARTIAL;
 
-      this._emit_personas_changed (null, this._persona_set);
-
       this._personas = new HashMap<string, Persona> ();
       this._personas_ro = this._personas.read_only_view;
       this._persona_set = new HashSet<Persona> ();
@@ -431,12 +433,26 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       this._self_persona = null;
     }
 
-  private void _remove_store ()
+  private void _remove_store (Set<Persona> old_personas)
     {
-      debug ("Removing store %s (%p)", this.id, this);
-      this._emit_personas_changed (null, this._persona_set);
-      this._cache.clear_cache.begin ();
-      this.removed ();
+      if (this._disconnect_pending == true)
+        {
+          /* The removal will be completed in _notify_connection_cb().
+           * See: bgo#683390. */
+          debug ("Delaying removing store %s (%p) due to pending disconnect.",
+              this.id, this);
+          this._removal_pending = true;
+        }
+      else
+        {
+          debug ("Removing store %s (%p)", this.id, this);
+          this._removal_pending = false;
+
+          this._emit_personas_changed (null, old_personas);
+          this._cache.clear_cache.begin ();
+
+          this.removed ();
+        }
     }
 
   /**
@@ -490,7 +506,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
               if (this.account == a)
                 {
                   debug ("Account %p (‘%s’) removed.", a, a.display_name);
-                  this._remove_store ();
+                  this._remove_store (this._persona_set);
                 }
             });
           this._account_manager.account_validity_changed.connect (
@@ -500,7 +516,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
                     {
                       debug ("Account %p (‘%s’) invalid.", a,
                           a.display_name);
-                      this._remove_store ();
+                      this._remove_store (this._persona_set);
                     }
                 });
           this._account_manager.account_disabled.connect ((a) =>
@@ -508,7 +524,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
               if (this.account == a)
                 {
                   debug ("Account %p (‘%s’) disabled.", a, a.display_name);
-                  this._remove_store ();
+                  this._remove_store (this._persona_set);
                 }
             });
 
@@ -580,14 +596,14 @@ public class Tpf.PersonaStore : Folks.PersonaStore
     {
       debug ("TpAccountManager invalidated (%u, %i, “%s”) for " +
           "Tpf.PersonaStore %p (‘%s’).", domain, code, message, this, this.id);
-      this._remove_store ();
+      this._remove_store (this._persona_set);
     }
 
   private void _account_invalidated_cb (uint domain, int code, string message)
     {
       debug ("TpAccount invalidated (%u, %i, “%s”) for " +
           "Tpf.PersonaStore %p (‘%s’).", domain, code, message, this, this.id);
-      this._remove_store ();
+      this._remove_store (this._persona_set);
     }
 
   private void _logger_invalidated_cb ()
@@ -676,6 +692,8 @@ public class Tpf.PersonaStore : Folks.PersonaStore
            * cache, assuming we were connected before. */
           if (this._conn != null)
             {
+              this._disconnect_pending = true;
+
               /* Call reset immediately, otherwise TpConnection's invalidation
                * will cause all contacts to weak notify. See bug #675141 */
               var old_personas = this._persona_set;
@@ -691,12 +709,24 @@ public class Tpf.PersonaStore : Folks.PersonaStore
                 {
                   this._store_cache.end (r);
 
-                  if (this.account.enabled && this.account.valid)
+                  this._disconnect_pending = false;
+
+                  if (this._removal_pending == false)
                     {
                       this._load_cache.begin (old_personas, (o2, r2) =>
                         {
                           this._load_cache.end (r2);
                         });
+                    }
+                  else
+                    {
+                      /* If the PersonaStore has been invalidated or disabled,
+                       * remove it. This is done here rather than in the
+                       * signal handlers for account-disabled or
+                       * account-validity-changed so that the cache is handled
+                       * properly. See: bgo#683390. */
+                      assert (this._disconnect_pending == false);
+                      this._remove_store (old_personas);
                     }
                 });
             }
@@ -734,7 +764,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
           debug ("Connection does not implement ContactList iface; " +
               "legacy CMs are not supported any more.");
 
-          this._remove_store ();
+          this._remove_store (this._persona_set);
 
           return;
         }
