@@ -18,6 +18,7 @@ folks/gender-details.c
 folks/group-details.c
 folks/im-details.c
 folks/individual-aggregator.c
+folks/individual.c
 folks/local-id-details.c
 folks/name-details.c
 folks/note-details.c
