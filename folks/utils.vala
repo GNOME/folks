@@ -50,7 +50,7 @@ public class Folks.Utils : Object
    * @return a new utilities object
    * @since 0.6.0
    */
-  [Deprecated (since = "UNRELEASED", replacement = "Folks.Utils")]
+  [Deprecated (since = "0.7.4", replacement = "Folks.Utils")]
   public Utils ()
     {
       base ();
