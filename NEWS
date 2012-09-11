@@ -5,6 +5,8 @@ Bugs fixed:
 • Bug 684014 — A few outstanding issues in the internationalisation
 • Bug 683390 — Individuals sometimes not removed when disabling their
   Telepathy account
+• Bug 672709 — Add new interaction details properties to individuals
+  (follow-up patch)
 
 Overview of changes from libfolks 0.7.4 to libfolks 0.7.4.1
 ===========================================================

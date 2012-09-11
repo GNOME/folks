@@ -1731,18 +1731,10 @@ public class Tpf.PersonaStore : Folks.PersonaStore
        * Zeitgeist */
       var origin = this.id.replace (TelepathyGLib.ACCOUNT_OBJECT_PATH_BASE,
                                     "x-telepathy-account-path:");
-
       Event ev1 = new Event.full ("", "", "dbus://org.freedesktop.Telepathy.Logger.service");
-      ev1.add_subject (new Subject.full ("", Zeitgeist.NMO_IMMESSAGE, "", "", "", "", ""));
       ev1.set_origin (origin);
-
-      Event ev2 = new Event.full ("", "", "dbus://org.freedesktop.Telepathy.Logger.service");
-      ev2.add_subject (new Subject.full ("", "", Zeitgeist.NFO_MEDIA_STREAM, "", "", "", ""));
-      ev2.set_origin (origin);
-
       var templates = new PtrArray ();
       templates.add (ev1.ref ());
-      templates.add (ev2.ref ());
       return templates;
     }
 
@@ -1757,11 +1749,16 @@ public class Tpf.PersonaStore : Folks.PersonaStore
        * the counters of the personas */
       try
         {
+          TimeVal tm = TimeVal ();
+          int64 end_timestamp = tm.tv_sec;
+          /* We want events from the last 30 days only, A day has 86400 seconds.
+           * start_timestamp = end_timestamp - 30 days in seconds*/
+          int64 start_timestamp = end_timestamp - (86400 * 30);
           PtrArray events = this._get_zeitgeist_event_templates ();
-          var results = yield this._log.find_events (new TimeRange.anytime (),
+          var results = yield this._log.find_events (
+              new TimeRange (start_timestamp * 1000, end_timestamp * 1000),
               (owned) events, StorageState.ANY, 0, ResultType.MOST_RECENT_EVENTS,
               null);
-
           foreach (var persona in this._personas.values)
             {
               persona.freeze_notify ();
