@@ -597,7 +597,7 @@ public class Tpf.Persona : Folks.Persona,
    * FIXME: Once bgo#554344 is fixed, _contact could be changed back to
    * being a 'weak Contact?', assuming Vala implements weak references using
    * GWeakRef. */
-  private WeakRef _contact = WeakRef (null);
+  private GLib.WeakRef _contact = GLib.WeakRef (null);
 
   private void _contact_weak_notify_cb (Object obj)
     {
