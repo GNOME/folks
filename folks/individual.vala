@@ -1425,7 +1425,7 @@ public class Folks.Individual : Object,
    * @param setter function which adds the values from the individual's
    * personas' values for the property to the individual's value for the
    * property; it returns ``true`` if the property value has changed
-   * @since UNRELEASED
+   * @since 0.7.4
    */
   private void _update_multi_valued_property (string prop_name,
       bool create_if_not_exist, PropertyIsNull prop_is_null,

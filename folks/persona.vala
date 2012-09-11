@@ -56,7 +56,7 @@ public errordomain Folks.PropertyError
    * This is a temporary error which should be retifiable by going online or
    * ensuring the backing store is logged in.
    *
-   * @since UNRELEASED
+   * @since 0.7.4
    */
   UNAVAILABLE
 }

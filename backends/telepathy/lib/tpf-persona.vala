@@ -597,7 +597,7 @@ public class Tpf.Persona : Folks.Persona,
    * FIXME: Once bgo#554344 is fixed, _contact could be changed back to
    * being a 'weak Contact?', assuming Vala implements weak references using
    * GWeakRef. */
-  private WeakRef _contact = WeakRef (null);
+  private GLib.WeakRef _contact = GLib.WeakRef (null);
 
   private void _contact_weak_notify_cb (Object obj)
     {
@@ -692,7 +692,7 @@ public class Tpf.Persona : Folks.Persona,
     {
       get
         {
-          this._contact_notify_contact_info (true);
+          this._contact_notify_contact_info (true, false);
           return this._urls_ro;
         }
       set { this.change_urls.begin (value); }
@@ -1076,10 +1076,7 @@ public class Tpf.Persona : Folks.Persona,
       if (new_full_name != this._full_name)
         {
           this._full_name = new_full_name;
-          if (emit_notification)
-            {
-              this.notify_property ("full-name");
-            }
+          this.notify_property ("full-name");
           changed = true;
         }
 
@@ -1099,10 +1096,7 @@ public class Tpf.Persona : Folks.Persona,
         {
           this._urls = new_urls;
           this._urls_ro = new_urls.read_only_view;
-          if (emit_notification)
-            {
-              this.notify_property ("urls");
-            }
+          this.notify_property ("urls");
           changed = true;
         }
 
