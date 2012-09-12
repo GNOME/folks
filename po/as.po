@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: folks master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug."
 "cgi?product=folks&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2012-09-05 23:05+0000\n"
-"PO-Revision-Date: 2012-09-11 20:22+0530\n"
+"POT-Creation-Date: 2012-09-11 21:28+0000\n"
+"PO-Revision-Date: 2012-09-12 14:34+0530\n"
 "Last-Translator: Nilamdyuti Goswami <ngoswami@redhat.com>\n"
 "Language-Team: as_IN <kde-i18n-doc@kde.org>\n"
 "Language: as\n"
@@ -288,24 +288,24 @@ msgstr "পৰিচয় দৰ্শন খোলোতে ত্ৰুটি।
 #. Translators: the first parameter is the display name for
 #. * the Telepathy account, and the second is an error
 #. * message.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:801
+#: ../backends/telepathy/lib/tpf-persona-store.vala:778
 #, c-format
 msgid "Failed to determine whether we can set aliases on Telepathy account '%s': %s"
 msgstr ""
 "টেলিপেথী একাওন্ট '%s' ত আমি এলিয়াচ সংহতি কৰিব পাৰিম নে নিৰ্ধাৰণ কৰিবলে ব্যৰ্থ: %s"
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1218
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1234
 msgid "Telepathy contacts representing the local user may not be removed."
 msgstr "স্থানীয় ব্যৱহাৰকাৰীক প্ৰতিনিদ্ধিত্ব কৰা টেলিপেথী পৰিচয়সমূহ আতৰোৱা নহবও পাৰে।"
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1229
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1245
 #, c-format
 msgid "Failed to remove a persona from store: %s"
 msgstr "ভঁৰালৰ পৰা এটা ব্যক্তিত্ব আতৰাবলে ব্যৰ্থ: %s"
 
 #. Translators: the first two parameters are store identifiers and
 #. * the third is a contact identifier.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1259
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1275
 #, c-format
 msgid ""
 "Persona store (%s, %s) requires the following details:\n"
@@ -314,24 +314,24 @@ msgstr ""
 "ব্যক্তিত্ব ভঁৰাল (%s, %s) ৰ নিম্নলিখিত বিৱৰণসমূহৰ প্ৰয়োজন: \n"
 "    পৰিচয় (প্ৰদান কৰা: '%s')\n"
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1274
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1290
 msgid "Cannot create a new Telepathy contact while offline."
 msgstr "অফলাইন অৱস্থাত এটা নতুন টেলিপেথী পৰিচয় সৃষ্টি কৰিব নোৱাৰি।"
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1292
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1308
 #, c-format
 msgid "Failed to add a persona from details: %s"
 msgstr "বিৱৰণসমূহৰ পৰা এটা ব্যক্তিত্ব যোগ কৰিবলে ব্যৰ্থ: %s"
 
 #. Translators: "telepathy-logger" is the name of an application,
 #. * and should not be translated.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1312
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1328
 msgid ""
 "Failed to change favorite without a connection to the telepathy-logger "
 "service."
 msgstr "টেলিপেথী-লগাৰ সেৱালে এটা সংযোগ নহোৱাকৈ পছন্দ পৰিবৰ্তন কৰিবলে ব্যৰ্থ।"
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1318
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1334
 msgid ""
 "Failed to change favorite status of Telepathy Persona because it has no "
 "attached TpContact."
@@ -340,22 +340,22 @@ msgstr ""
 "TpContact নাই।"
 
 #. Translators: the parameter is a contact identifier.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1336
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1352
 #, c-format
 msgid "Failed to change favorite status for Telepathy contact ‘%s’."
 msgstr "টেলিপেথী পৰিচয় ‘%s’ ৰ বাবে পছন্দ অৱস্থা পৰিবৰ্তন কৰিবলে ব্যৰ্থ।"
 
 #. Translators: the parameter is an error message.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1368
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1384
 #, c-format
 msgid "Failed to change contact's alias: %s"
 msgstr "পৰিচয়ৰ এলিয়াচ পৰিবৰ্তন কৰিবলে ব্যৰ্থ: %s"
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1448
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1464
 msgid "Extended information may only be set on the user's Telepathy contact."
 msgstr "প্ৰসাৰিত তথ্য কেৱল ব্যৱহাৰকাৰীৰ টেলিপেথী পৰিচয়ত সংহতি কৰিব পাৰি।"
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1477
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1493
 msgid "Extended information cannot be written because the store is disconnected."
 msgstr "প্ৰসাৰিত তথ্য লিখিব নোৱাৰি কাৰণ ভঁৰাল বিচ্ছিন্নিত।"
 
@@ -477,6 +477,13 @@ msgstr "কোনো প্ৰাথমিক ভঁৰাল নহোৱাক
 #, c-format
 msgid "Can't write to requested property (“%s”) of the writeable store."
 msgstr "লিখিব পৰা ভঁৰালৰ অনুৰোধ কৰা বৈশিষ্ট (“%s”) লে লিখিব নোৱাৰি।"
+
+#: ../folks/individual.vala:215 ../folks/individual.vala:368
+#: ../folks/individual.vala:477 ../folks/individual.vala:717
+#: ../folks/individual.vala:795
+#, c-format
+msgid "Failed to change property ‘%s’: No suitable personas were found."
+msgstr "বৈশিষ্ট্য ‘%s’ পৰিবৰ্তন কৰিবলে ব্যৰ্থ: কোনো উপযুক্ত পাৰচনা পোৱা নগল।"
 
 #: ../folks/org.freedesktop.folks.gschema.xml.in.h:1
 msgid "Primary store ID"
