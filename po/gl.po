@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: folks master\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-09-10 15:07+0200\n"
-"PO-Revision-Date: 2012-09-10 15:07+0200\n"
+"POT-Creation-Date: 2012-09-12 02:01+0200\n"
+"PO-Revision-Date: 2012-09-12 02:02+0200\n"
 "Last-Translator: Fran Dieguez <frandieguez@gnome.org>\n"
 "Language-Team: gnome-l10n-gl@gnome.org\n"
 "Language: gl\n"
@@ -295,7 +295,7 @@ msgstr "Produciuse un erro ao abrir a vista de contactos"
 #. Translators: the first parameter is the display name for
 #. * the Telepathy account, and the second is an error
 #. * message.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:803
+#: ../backends/telepathy/lib/tpf-persona-store.vala:778
 #, c-format
 msgid ""
 "Failed to determine whether we can set aliases on Telepathy account '%s': %s"
@@ -303,20 +303,20 @@ msgstr ""
 "Produciuse un erro ao determinar se se poden definir alias na conta «%s» de "
 "Telepathy: %s"
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1220
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1234
 msgid "Telepathy contacts representing the local user may not be removed."
 msgstr ""
 "Os contactos de Telepathy que representan ao usuario local non se deben "
 "retirar."
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1231
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1245
 #, c-format
 msgid "Failed to remove a persona from store: %s"
 msgstr "Produciuse un erro ao retirar un contacto do almacén: %s"
 
 #. Translators: the first two parameters are store identifiers and
 #. * the third is a contact identifier.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1261
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1275
 #, c-format
 msgid ""
 "Persona store (%s, %s) requires the following details:\n"
@@ -325,18 +325,18 @@ msgstr ""
 "O almacén de contactos (%s, %s) require os seguintes detalles:\n"
 "    contacto (fornecido: «%s»)\n"
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1276
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1290
 msgid "Cannot create a new Telepathy contact while offline."
 msgstr "Non é posíbel crear un contacto de Telepathy novo estando desconectado"
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1294
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1308
 #, c-format
 msgid "Failed to add a persona from details: %s"
 msgstr "Produciuse un erro ao engadir un contacto desde os detalles: %s"
 
 #. Translators: "telepathy-logger" is the name of an application,
 #. * and should not be translated.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1314
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1328
 msgid ""
 "Failed to change favorite without a connection to the telepathy-logger "
 "service."
@@ -344,7 +344,7 @@ msgstr ""
 "Produciuse un erro ao cambiar o estado de favorito sen unha conexión ao "
 "servizo de telepathy-logger"
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1320
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1334
 msgid ""
 "Failed to change favorite status of Telepathy Persona because it has no "
 "attached TpContact."
@@ -353,7 +353,7 @@ msgstr ""
 "Telepathy xa que non ten TpContact anexo."
 
 #. Translators: the parameter is a contact identifier.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1338
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1352
 #, c-format
 msgid "Failed to change favorite status for Telepathy contact ‘%s’."
 msgstr ""
@@ -361,18 +361,18 @@ msgstr ""
 "Telepathy «%s»."
 
 #. Translators: the parameter is an error message.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1370
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1384
 #, c-format
 msgid "Failed to change contact's alias: %s"
 msgstr "Produciuse un erro ao cambiar o alias do contacto: %s"
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1450
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1464
 msgid "Extended information may only be set on the user's Telepathy contact."
 msgstr ""
 "A información extendida só pode estabelecerse no contacto de Telepathy do "
 "usuario."
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1479
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1493
 msgid ""
 "Extended information cannot be written because the store is disconnected."
 msgstr ""
@@ -501,6 +501,15 @@ msgid "Can't write to requested property (“%s”) of the writeable store."
 msgstr ""
 "Non é posíbel escribir a propiedade solicitada (\"%s\") do almacen "
 "escribíbel."
+
+#: ../folks/individual.vala:215 ../folks/individual.vala:368
+#: ../folks/individual.vala:477 ../folks/individual.vala:717
+#: ../folks/individual.vala:795
+#, c-format
+msgid "Failed to change property ‘%s’: No suitable personas were found."
+msgstr ""
+"Produciuse un fallo ao cambiar a propiedade «%s»: Non se atoparon os "
+"contactos axeitados."
 
 #: ../folks/org.freedesktop.folks.gschema.xml.in.h:1
 msgid "Primary store ID"
