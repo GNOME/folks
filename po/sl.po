@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: folks master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=folks&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2012-09-06 16:25+0000\n"
-"PO-Revision-Date: 2012-09-07 15:10+0100\n"
+"POT-Creation-Date: 2012-09-12 09:20+0000\n"
+"PO-Revision-Date: 2012-09-12 13:06+0100\n"
 "Last-Translator: Matej Urbančič <mateju@svn.gnome.org>\n"
 "Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups.com>\n"
 "Language: Slovenian\n"
@@ -293,23 +293,23 @@ msgstr "Napaka med odpiranjem pogleda stikov."
 #. Translators: the first parameter is the display name for
 #. * the Telepathy account, and the second is an error
 #. * message.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:801
+#: ../backends/telepathy/lib/tpf-persona-store.vala:778
 #, c-format
 msgid "Failed to determine whether we can set aliases on Telepathy account '%s': %s"
 msgstr "Določevanje ali je mogoče določiti vzdevke računa Telepathy '%s' je spodletelo: %s"
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1218
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1234
 msgid "Telepathy contacts representing the local user may not be removed."
 msgstr "Stikov Telepathy, ki predstavljajo krajevnega uporabnika ni mogoče odstraniti."
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1229
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1245
 #, c-format
 msgid "Failed to remove a persona from store: %s"
 msgstr "Odstranjevanje stika iz zaloge je spodletelo: %s"
 
 #. Translators: the first two parameters are store identifiers and
 #. * the third is a contact identifier.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1259
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1275
 #, c-format
 msgid ""
 "Persona store (%s, %s) requires the following details:\n"
@@ -318,42 +318,42 @@ msgstr ""
 "Zaloga stika (%s, %s) zahteva naslednje podatke:\n"
 "    stik (ponujen: '%s')\n"
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1274
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1290
 msgid "Cannot create a new Telepathy contact while offline."
 msgstr "Novega stika Telepathy brez povezave ni mogoče ustvariti."
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1292
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1308
 #, c-format
 msgid "Failed to add a persona from details: %s"
 msgstr "Dodajanje stika iz podatkov je spodletelo: %s"
 
 #. Translators: "telepathy-logger" is the name of an application,
 #. * and should not be translated.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1312
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1328
 msgid "Failed to change favorite without a connection to the telepathy-logger service."
 msgstr "Spreminjanje priljubljenih ni mogoče brez povezave s storitvijo telepathy-logger."
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1318
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1334
 msgid "Failed to change favorite status of Telepathy Persona because it has no attached TpContact."
 msgstr "Spreminjanje stanja priljubljenih za stik Telepathy je spodletelo, ker ni ustreznega predmeta TpContact."
 
 #. Translators: the parameter is a contact identifier.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1336
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1352
 #, c-format
 msgid "Failed to change favorite status for Telepathy contact ‘%s’."
 msgstr "Spreminjanje stanja priljubljenih za stik Telepathy ‘%s’ je spodledelo."
 
 #. Translators: the parameter is an error message.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1368
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1384
 #, c-format
 msgid "Failed to change contact's alias: %s"
 msgstr "Spreminjanje vzdevka stika je spodletelo: %s"
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1448
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1464
 msgid "Extended information may only be set on the user's Telepathy contact."
 msgstr "Razširjene podrobnost je mogoče določiti le na stiku uporabnika programa Telepathy."
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1477
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1493
 msgid "Extended information cannot be written because the store is disconnected."
 msgstr "Razširjenih podrobnosti ni mogoče zapisati, saj povezava s trgovino ni vzpostavljena."
 
@@ -469,6 +469,15 @@ msgstr "Ni mogoče dodati stikov brez osnovne zaloge osebe."
 #, c-format
 msgid "Can't write to requested property (“%s”) of the writeable store."
 msgstr "Ni mogoče pisati v zahtevano lastnost (“%s”) zapisljive zaloge."
+
+#: ../folks/individual.vala:215
+#: ../folks/individual.vala:368
+#: ../folks/individual.vala:477
+#: ../folks/individual.vala:717
+#: ../folks/individual.vala:795
+#, c-format
+msgid "Failed to change property ‘%s’: No suitable personas were found."
+msgstr "Spreminjanje lastnosti ‘%s’ je spodletelo: ni najdenih ustreznih stikov."
 
 #: ../folks/org.freedesktop.folks.gschema.xml.in.h:1
 msgid "Primary store ID"
