@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: folks master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=folks&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2012-09-05 23:05+0000\n"
-"PO-Revision-Date: 2012-09-07 20:22+0300\n"
+"POT-Creation-Date: 2012-09-11 21:28+0000\n"
+"PO-Revision-Date: 2012-09-13 22:48+0300\n"
 "Last-Translator: Aurimas Černius <aurisc4@gmail.com>\n"
 "Language-Team: Lithuanian <gnome-lt@lists.akl.lt>\n"
 "Language: lt\n"
@@ -286,23 +286,23 @@ msgstr "Klaida atveriant kontaktų rodinį."
 #. Translators: the first parameter is the display name for
 #. * the Telepathy account, and the second is an error
 #. * message.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:801
+#: ../backends/telepathy/lib/tpf-persona-store.vala:778
 #, c-format
 msgid "Failed to determine whether we can set aliases on Telepathy account '%s': %s"
 msgstr "Nepavyko nustatyti, ar galima nustatyti vardų pakaitalus Telepathy paskyrai „%s“: %s"
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1218
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1234
 msgid "Telepathy contacts representing the local user may not be removed."
 msgstr "Telepathy kontaktai, nusakantys vietinį naudotoją, negali būti pašalinti."
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1229
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1245
 #, c-format
 msgid "Failed to remove a persona from store: %s"
 msgstr "Nepavyko pašalinti asmens iš saugyklos: %s"
 
 #. Translators: the first two parameters are store identifiers and
 #. * the third is a contact identifier.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1259
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1275
 #, c-format
 msgid ""
 "Persona store (%s, %s) requires the following details:\n"
@@ -311,42 +311,42 @@ msgstr ""
 "Asmens saugykla (%s, %s) reikalauja šių duomenų:\n"
 "    kontaktas (pateikta: „%s“)\n"
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1274
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1290
 msgid "Cannot create a new Telepathy contact while offline."
 msgstr "Negalima sukurti naujo Telepathy kontakto esant atsijungus."
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1292
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1308
 #, c-format
 msgid "Failed to add a persona from details: %s"
 msgstr "Nepavyko pridėti asmens iš duomenų: %s"
 
 #. Translators: "telepathy-logger" is the name of an application,
 #. * and should not be translated.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1312
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1328
 msgid "Failed to change favorite without a connection to the telepathy-logger service."
 msgstr "Nepavyko pakeisti mėgiamojo be ryšio su telepathy-logger tarnyba."
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1318
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1334
 msgid "Failed to change favorite status of Telepathy Persona because it has no attached TpContact."
 msgstr "Nepavyko pakeisti mėgiamojo būsenos Telepathy asmeniui, nes jis neturi susieto TpContact."
 
 #. Translators: the parameter is a contact identifier.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1336
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1352
 #, c-format
 msgid "Failed to change favorite status for Telepathy contact ‘%s’."
 msgstr "Nepavyko pakeisti mėgiamojo būsenos Telepathy kontaktui „%s“."
 
 #. Translators: the parameter is an error message.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1368
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1384
 #, c-format
 msgid "Failed to change contact's alias: %s"
 msgstr "Nepavyko pakeisti kontakto vardo pakaitalo: %s"
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1448
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1464
 msgid "Extended information may only be set on the user's Telepathy contact."
 msgstr "Išplėstinė informacija gali būti nustatyta naudotojo Telepathy kontakte."
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1477
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1493
 msgid "Extended information cannot be written because the store is disconnected."
 msgstr "Išplėstinė informacija negali būti įrašyta, nes saugykla yra atjungta."
 
@@ -462,6 +462,15 @@ msgstr "Negalima pridėti asmenų be pirminės saugyklos."
 #, c-format
 msgid "Can't write to requested property (“%s”) of the writeable store."
 msgstr "Nepavyksta rašyti prašomos savybės („%s“) rašomojo saugykloje."
+
+#: ../folks/individual.vala:215
+#: ../folks/individual.vala:368
+#: ../folks/individual.vala:477
+#: ../folks/individual.vala:717
+#: ../folks/individual.vala:795
+#, c-format
+msgid "Failed to change property ‘%s’: No suitable personas were found."
+msgstr "Nepavyko pakeisti savybės „%s“: nerasta tinkamų personų."
 
 #: ../folks/org.freedesktop.folks.gschema.xml.in.h:1
 msgid "Primary store ID"
