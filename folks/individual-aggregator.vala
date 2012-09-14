@@ -282,10 +282,28 @@ public class Folks.IndividualAggregator : Object
    * }}}
    */
   public IndividualAggregator ()
-    {
-      Object ();
-    }
-
+  {
+    Object ();
+    this._backend_store = BackendStore.dup ();
+  }
+  
+  /**
+   * Create a new IndividualAggregator with a custom {@link BackendStore}.
+   *
+   * This behaves the same as the default constructor for 
+   * {@link IndivdiualAggregator}, but uses the given {@link BackendStore}
+   * rather than the default one.
+   *
+   * @param store the {@link BackendStore} to use instead of the default one.
+   *
+   * @since UNRELEASED
+   */
+  public IndividualAggregator.with_backend_store (BackendStore store)
+  {
+    Object ();
+    this._backend_store = store;
+  }
+  
   construct
     {
       this._stores = new HashMap<string, PersonaStore> ();
