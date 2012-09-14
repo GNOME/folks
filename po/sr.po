@@ -7,8 +7,8 @@ msgstr ""
 "Project-Id-Version: folks master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=folks&"
 "keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2012-09-05 23:05+0000\n"
-"PO-Revision-Date: 2012-09-06 22:46+0200\n"
+"POT-Creation-Date: 2012-09-11 21:28+0000\n"
+"PO-Revision-Date: 2012-09-14 09:36+0200\n"
 "Last-Translator: Мирослав Николић <miroslavnikolic@rocketmail.com>\n"
 "Language-Team: Serbian <gnom@prevod.org>\n"
 "Language: sr\n"
@@ -288,7 +288,7 @@ msgstr "Грешка отварања прегледа контаката."
 #. Translators: the first parameter is the display name for
 #. * the Telepathy account, and the second is an error
 #. * message.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:801
+#: ../backends/telepathy/lib/tpf-persona-store.vala:778
 #, c-format
 msgid ""
 "Failed to determine whether we can set aliases on Telepathy account '%s': %s"
@@ -296,20 +296,20 @@ msgstr ""
 "Нисам успео да одредим да ли можемо да подесимо алијасе на налогу Интернет "
 "писмоноше „%s“: %s"
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1218
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1234
 msgid "Telepathy contacts representing the local user may not be removed."
 msgstr ""
 "Контакти Интернет писмоноше који представљају месног корисника не могу бити "
 "уклоњени."
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1229
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1245
 #, c-format
 msgid "Failed to remove a persona from store: %s"
 msgstr "Нисам успео да уклоним особу из радње: %s"
 
 #. Translators: the first two parameters are store identifiers and
 #. * the third is a contact identifier.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1259
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1275
 #, c-format
 msgid ""
 "Persona store (%s, %s) requires the following details:\n"
@@ -318,18 +318,18 @@ msgstr ""
 "Радња особе (%s, %s) захтева следеће појединости:\n"
 "    контакт (достављен: „%s“)\n"
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1274
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1290
 msgid "Cannot create a new Telepathy contact while offline."
 msgstr "Не могу да направим нови контакт Интернет писмоноше док сам ван мреже."
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1292
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1308
 #, c-format
 msgid "Failed to add a persona from details: %s"
 msgstr "Нисам успео да додам особу из појединости: %s"
 
 #. Translators: "telepathy-logger" is the name of an application,
 #. * and should not be translated.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1312
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1328
 msgid ""
 "Failed to change favorite without a connection to the telepathy-logger "
 "service."
@@ -337,7 +337,7 @@ msgstr ""
 "Нисам успео да именим омиљеног без везе са услугом записничара интернет "
 "писмоноше."
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1318
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1334
 msgid ""
 "Failed to change favorite status of Telepathy Persona because it has no "
 "attached TpContact."
@@ -346,25 +346,25 @@ msgstr ""
 "прикачен ТпКонтакт."
 
 #. Translators: the parameter is a contact identifier.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1336
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1352
 #, c-format
 msgid "Failed to change favorite status for Telepathy contact ‘%s’."
 msgstr ""
 "Нисам успео да изменим стање омиљеног за контакт Интернет писмоноше „%s“."
 
 #. Translators: the parameter is an error message.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1368
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1384
 #, c-format
 msgid "Failed to change contact's alias: %s"
 msgstr "Нисам успео да изменим алијаса контакта: %s"
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1448
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1464
 msgid "Extended information may only be set on the user's Telepathy contact."
 msgstr ""
 "Опширни подаци могу бити подешени само на корисниковом контакту Интернет "
 "писмоноше."
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1477
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1493
 msgid ""
 "Extended information cannot be written because the store is disconnected."
 msgstr ""
@@ -488,6 +488,14 @@ msgstr "Не могу да додам особе које немају осно�
 #, c-format
 msgid "Can't write to requested property (“%s”) of the writeable store."
 msgstr "Не могу да пишем у затражено својство („%s“) уписиве радње."
+
+#: ../folks/individual.vala:215 ../folks/individual.vala:368
+#: ../folks/individual.vala:477 ../folks/individual.vala:717
+#: ../folks/individual.vala:795
+#, c-format
+msgid "Failed to change property ‘%s’: No suitable personas were found."
+msgstr ""
+"Нисам успео да изменим својство „%s“: Нисам пронашао одговарајуће особе."
 
 #: ../folks/org.freedesktop.folks.gschema.xml.in.h:1
 msgid "Primary store ID"
