@@ -10,8 +10,8 @@ msgstr ""
 "Project-Id-Version: folks master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=folks&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2012-09-05 23:05+0000\n"
-"PO-Revision-Date: 2012-09-07 20:47+0400\n"
+"POT-Creation-Date: 2012-09-11 21:28+0000\n"
+"PO-Revision-Date: 2012-09-17 20:43+0400\n"
 "Last-Translator: Yuri Myasoedov <omerta13@yandex.ru>\n"
 "Language-Team: русский <gnome-cyr@gnome.org>\n"
 "Language: ru\n"
@@ -295,7 +295,7 @@ msgstr "Ошибка при открытии списка контактов."
 #. Translators: the first parameter is the display name for
 #. * the Telepathy account, and the second is an error
 #. * message.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:801
+#: ../backends/telepathy/lib/tpf-persona-store.vala:778
 #, c-format
 msgid ""
 "Failed to determine whether we can set aliases on Telepathy account '%s': %s"
@@ -303,19 +303,19 @@ msgstr ""
 "Не удалось определить возможность установки псевдонима на учётной записи "
 "Telepathy '%s': %s"
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1218
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1234
 msgid "Telepathy contacts representing the local user may not be removed."
 msgstr ""
 "Нельзя удалить контакты Telepathy, представляющие локального пользователя."
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1229
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1245
 #, c-format
 msgid "Failed to remove a persona from store: %s"
 msgstr "Не удалось удалить контакт из хранилища: %s"
 
 #. Translators: the first two parameters are store identifiers and
 #. * the third is a contact identifier.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1259
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1275
 #, c-format
 msgid ""
 "Persona store (%s, %s) requires the following details:\n"
@@ -324,18 +324,18 @@ msgstr ""
 "Хранилищу (%s, %s) требуются следущие сведения:\n"
 "    контакт (идентификатор: «%s»)\n"
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1274
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1290
 msgid "Cannot create a new Telepathy contact while offline."
 msgstr "Невозможно создать новый контакт Telepathy в автономном режиме"
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1292
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1308
 #, c-format
 msgid "Failed to add a persona from details: %s"
 msgstr "Не удалось добавить контакт из дополнительной информации: %s"
 
 #. Translators: "telepathy-logger" is the name of an application,
 #. * and should not be translated.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1312
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1328
 msgid ""
 "Failed to change favorite without a connection to the telepathy-logger "
 "service."
@@ -343,7 +343,7 @@ msgstr ""
 "Не удалось изменить статус избранности без подключения к службе telepathy-"
 "logger."
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1318
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1334
 msgid ""
 "Failed to change favorite status of Telepathy Persona because it has no "
 "attached TpContact."
@@ -352,24 +352,24 @@ msgstr ""
 "прикреплённого объекта TpContact."
 
 #. Translators: the parameter is a contact identifier.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1336
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1352
 #, c-format
 msgid "Failed to change favorite status for Telepathy contact ‘%s’."
 msgstr "Не удалось изменить состояние избранности для контакта Telepathy «%s»."
 
 #. Translators: the parameter is an error message.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1368
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1384
 #, c-format
 msgid "Failed to change contact's alias: %s"
 msgstr "Не удалось изменить псевдоним контакта: %s"
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1448
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1464
 msgid "Extended information may only be set on the user's Telepathy contact."
 msgstr ""
 "Дополнительная информация может быть установлена только для "
 "пользовательского контакта Telepathy."
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1477
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1493
 msgid ""
 "Extended information cannot be written because the store is disconnected."
 msgstr ""
@@ -484,7 +484,7 @@ msgstr ""
 
 #: ../folks/individual-aggregator.vala:1884
 msgid "Anti-links can't be removed between personas being linked."
-msgstr ""
+msgstr "Нельзя удалять антиссылки между связываемыми контактами."
 
 #: ../folks/individual-aggregator.vala:2184
 msgid "Can’t add personas with no primary store."
@@ -494,6 +494,14 @@ msgstr "Невозможно добавить контакты без основ
 #, c-format
 msgid "Can't write to requested property (“%s”) of the writeable store."
 msgstr "Не удалось выполнить запись в запрошенное свойство («%s») хранилища."
+
+#: ../folks/individual.vala:215 ../folks/individual.vala:368
+#: ../folks/individual.vala:477 ../folks/individual.vala:717
+#: ../folks/individual.vala:795
+#, c-format
+msgid "Failed to change property ‘%s’: No suitable personas were found."
+msgstr ""
+"Не удалось изменить свойство «%s»: не найдено соответствующих контактов."
 
 #: ../folks/org.freedesktop.folks.gschema.xml.in.h:1
 msgid "Primary store ID"
@@ -676,14 +684,14 @@ msgstr "Не удалось подготовить драйвер «%s»: %s"
 
 #. Translators: the parameter is a backend identifier.
 #: ../tools/import.vala:145
-#, fuzzy, c-format
+#, c-format
 msgid "Couldn't load the ‘%s’ backend's persona store."
-msgstr "Не удалось загрузить драйвер «%s»: %s"
+msgstr "Не удалось загрузить хранилище драйвера «%s»."
 
 #: ../tools/import.vala:166
 #, c-format
 msgid "Couldn't prepare the ‘%s’ backend's persona store: %s"
-msgstr ""
+msgstr "Не удалось подготовить хранилище драйвера «%s»: %s"
 
 #. Translators: the parameter is an error message.
 #: ../tools/import.vala:184
@@ -698,3 +706,5 @@ msgid ""
 "Unrecognized source backend name ‘%s’. ‘%s’ is currently the only supported "
 "source backend."
 msgstr ""
+"Нераспознанное имя драйвера источника «%s». «%s» в настоящий момент является "
+"единственным поддерживаемым драйвером источника."
