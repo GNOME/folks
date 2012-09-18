@@ -59,7 +59,8 @@ public class Edsf.PersonaStore : Folks.PersonaStore
   /* Translators: This should be translated to the name of the “Starred in
    * Android” group in Google Contacts for your language. If Google have not
    * localised the group for your language, or Google Contacts isn't available
-   * in your language, please *do not* translate this string. */
+   * in your language, please *do not* translate this string (i.e. just copy
+   * the msgid to the msgstr unchanged). */
   internal const string android_favourite_group_name = N_("Starred in Android");
 
   internal static const string anti_links_attribute_name = "X-FOLKS-ANTI-LINKS";
@@ -1303,6 +1304,9 @@ public class Edsf.PersonaStore : Folks.PersonaStore
           if (received_notification == false)
             {
               throw new PropertyError.UNKNOWN_ERROR (
+                  /* Translators: the parameter is the name of a property on a
+                   * contact, formatted in the normal GObject style (e.g.
+                   * lowercase with hyphens to separate words). */
                   _("Changing the ‘%s’ property failed due to reaching the timeout."),
                   property_name);
             }
