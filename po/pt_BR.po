@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: folks master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=folks&"
 "keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2012-09-11 21:28+0000\n"
-"PO-Revision-Date: 2012-09-17 22:51-0200\n"
+"POT-Creation-Date: 2012-09-18 01:56+0000\n"
+"PO-Revision-Date: 2012-09-17 23:04-0200\n"
 "Last-Translator: Djavan Fagundes <djavan@comum.org>\n"
 "Language-Team: Brazilian Portuguese <gnome-pt_br-list@gnome.org>\n"
 "Language: pt_BR\n"
@@ -38,8 +38,8 @@ msgstr "Favorito no Android"
 #, c-format
 msgid "Address book ‘%s’ is offline, so contact ‘%s’ cannot be removed."
 msgstr ""
-"O Catálogo de endereços \"%s\" está desconectado, por conta disso o contato \"%"
-"s\" não pode ser removido."
+"O Catálogo de endereços \"%s\" está desconectado, por conta disso o contato "
+"\"%s\" não pode ser removido."
 
 #. Translators: the first parameter is an address book
 #. * URI and the second is an error message.
@@ -200,7 +200,6 @@ msgstr "Sexo não é gravável neste contato."
 
 #: ../backends/eds/lib/edsf-persona-store.vala:2064
 #: ../folks/anti-linkable.vala:81
-#| msgid "Notes are not writeable on this contact."
 msgid "Anti-links are not writeable on this contact."
 msgstr "Anti-links não são graváveis neste contato."
 
@@ -290,7 +289,6 @@ msgid "No contacts capability was found."
 msgstr "Nenhuma capacidade de contatos foi encontrada."
 
 #: ../backends/libsocialweb/lib/swf-persona-store.vala:389
-#| msgid "Error importing contacts: %s"
 msgid "Error opening contacts view."
 msgstr "Erro ao abrir visão de contatos."
 
@@ -312,7 +310,6 @@ msgstr ""
 
 #: ../backends/telepathy/lib/tpf-persona-store.vala:1245
 #, c-format
-#| msgid "Failed to add a persona from details: %s"
 msgid "Failed to remove a persona from store: %s"
 msgstr "Falhou ao remover um contato da loja: %s"
 
@@ -348,7 +345,6 @@ msgstr ""
 "Falhou ao modificar favorito sem uma conexão ao serviço telepathy-logger."
 
 #: ../backends/telepathy/lib/tpf-persona-store.vala:1334
-#| msgid "Failed to change favorite status for Telepathy contact ‘%s’."
 msgid ""
 "Failed to change favorite status of Telepathy Persona because it has no "
 "attached TpContact."
@@ -386,7 +382,6 @@ msgstr ""
 #: ../backends/telepathy/lib/tpf-persona.vala:570
 #: ../backends/telepathy/lib/tpf-persona.vala:584
 #, c-format
-#| msgid "Failed to create group channel: %s"
 msgid "Failed to change group membership: %s"
 msgstr "Falhou ao alterar a participação no grupo: %s"
 
@@ -467,7 +462,6 @@ msgid "Failed to add contact for persona store ID '%s': %s"
 msgstr "Falhou ao adicionar contato à ID \"%s\" do armazém de contatos: %s"
 
 #: ../folks/individual-aggregator.vala:1850
-#| msgid "Can't link personas with no primary store."
 msgid "Can’t link personas with no primary store."
 msgstr "Não é possível vincular contatos sem um armazém primário."
 
@@ -496,7 +490,6 @@ msgid "Anti-links can't be removed between personas being linked."
 msgstr "Anti-links não pode ser removido entre contatos sendo vinculadas."
 
 #: ../folks/individual-aggregator.vala:2184
-#| msgid "Can't add personas with no primary store."
 msgid "Can’t add personas with no primary store."
 msgstr "Não é possível adicionar contatos sem um armazém primário."
 
@@ -512,6 +505,21 @@ msgstr "Não é possível gravar para a propriedade (\"%s\") do armazém graváv
 msgid "Failed to change property ‘%s’: No suitable personas were found."
 msgstr ""
 "Falhou ao alterar a propriedade \"%s\": Sem contatos apropriados encontrados."
+
+#: ../folks/org.freedesktop.folks.gschema.xml.in.h:1
+msgid "Primary store ID"
+msgstr "ID do armazém primário"
+
+#: ../folks/org.freedesktop.folks.gschema.xml.in.h:2
+msgid ""
+"The ID of the persona store which folks should use as primary (i.e. to store "
+"linking data in). The type ID of the store may optionally be prepended, "
+"separated by a colon. For example: “eds:system-address-book” or “key-file”."
+msgstr ""
+"O ID do armazém de pessoas que pode ser usado como primário (ex: para "
+"armazenar os dados vinculados). O tipo de ID do armazenamento pode ser "
+"opcionalmente adicionados, separados por hífen. Por exemplo \"eds:system-"
+"address-book\" ou \"key-file\"."
 
 #: ../folks/postal-address-details.vala:231
 #, c-format
