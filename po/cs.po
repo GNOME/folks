@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: folks master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=folks&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2012-09-05 23:05+0000\n"
+"POT-Creation-Date: 2012-09-11 21:28+0000\n"
 "PO-Revision-Date: 2012-09-09 07:39+0200\n"
 "Last-Translator: Marek Černocký <marek@manet.cz>\n"
 "Language-Team: Czech <gnome-cs-list@gnome.org>\n"
@@ -289,25 +289,25 @@ msgstr "Chyba při otevírání zobrazení kontaktů."
 #. Translators: the first parameter is the display name for
 #. * the Telepathy account, and the second is an error
 #. * message.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:801
+#: ../backends/telepathy/lib/tpf-persona-store.vala:778
 #, c-format
 msgid ""
 "Failed to determine whether we can set aliases on Telepathy account '%s': %s"
 msgstr ""
 "Selhalo zjišťování, zda můžeme nastavovat aliasy u účtu Telepathy „%s“: %s"
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1218
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1234
 msgid "Telepathy contacts representing the local user may not be removed."
 msgstr "Kontakt Telepathy představující místní uživatele není možné odebrat."
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1229
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1245
 #, c-format
 msgid "Failed to remove a persona from store: %s"
 msgstr "Selhalo odebrání osoby z úložiště: %s"
 
 #. Translators: the first two parameters are store identifiers and
 #. * the third is a contact identifier.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1259
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1275
 #, c-format
 msgid ""
 "Persona store (%s, %s) requires the following details:\n"
@@ -316,24 +316,24 @@ msgstr ""
 "Úložiště osob (%s, %s) vyžaduje následující podrobnosti:\n"
 "    kontakt (poskytuje: „%s“)\n"
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1274
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1290
 msgid "Cannot create a new Telepathy contact while offline."
 msgstr "Nelze vytvořit nový kontakt Telepathy, když jste off-line."
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1292
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1308
 #, c-format
 msgid "Failed to add a persona from details: %s"
 msgstr "Selhalo přidání osoby z podrobností: %s"
 
 #. Translators: "telepathy-logger" is the name of an application,
 #. * and should not be translated.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1312
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1328
 msgid ""
 "Failed to change favorite without a connection to the telepathy-logger "
 "service."
 msgstr "Selhala změna oblíbených bez připojení ke službě telepathy-logger."
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1318
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1334
 msgid ""
 "Failed to change favorite status of Telepathy Persona because it has no "
 "attached TpContact."
@@ -342,23 +342,23 @@ msgstr ""
 "TpContact."
 
 #. Translators: the parameter is a contact identifier.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1336
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1352
 #, c-format
 msgid "Failed to change favorite status for Telepathy contact ‘%s’."
 msgstr "Selhala změna stavu oblíbenosti pro kontakt Telepathy „%s“."
 
 #. Translators: the parameter is an error message.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1368
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1384
 #, c-format
 msgid "Failed to change contact's alias: %s"
 msgstr "Selhala změna aliasu kontaktu: %s"
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1448
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1464
 msgid "Extended information may only be set on the user's Telepathy contact."
 msgstr ""
 "Rozšiřující informace je možné nastavit pouze u kontaktu uživatele Telepathy."
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1477
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1493
 msgid ""
 "Extended information cannot be written because the store is disconnected."
 msgstr "Rozšiřující informace nelze zapsat, protože úložiště je odpojeno."
@@ -482,6 +482,13 @@ msgstr "Bez hlavního úložiště nelze přidávat osoby."
 #, c-format
 msgid "Can't write to requested property (“%s”) of the writeable store."
 msgstr "Nelze zapsat požadovanou vlastnost („%s“) v zapisovatelném úložišti."
+
+#: ../folks/individual.vala:215 ../folks/individual.vala:368
+#: ../folks/individual.vala:477 ../folks/individual.vala:717
+#: ../folks/individual.vala:795
+#, c-format
+msgid "Failed to change property ‘%s’: No suitable personas were found."
+msgstr "Selhala změna vlastnosti „%s“: Nebyla nalezena žádná vyhovující osoba."
 
 #: ../folks/org.freedesktop.folks.gschema.xml.in.h:1
 msgid "Primary store ID"
