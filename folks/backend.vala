@@ -91,6 +91,32 @@ public abstract class Folks.Backend : Object
   public abstract Map<string, PersonaStore> persona_stores { get; }
 
   /**
+   * Disable a {@link PersonaStore}.
+   *
+   * If the given persona store is in this backend {@link Backend.persona_stores},
+   * it will be removed, and we will disconnect from its signals.
+   *
+   * @param store the {@link PersonaStore} to disable.
+   *
+   * @since UNRELEASED
+   */
+  public abstract void disable_persona_store (PersonaStore store);
+
+  /**
+   * Enable a {@link PersonaStore}.
+   *
+   * If the given persona store is not already in this backend
+   * {@link Backend.persona_stores}, it will be added to the backend and 
+   * {@link Backend.persona_stores} property notification will be emitted, 
+   * along with {@link Backend.persona_store_added}.
+   *
+   * @param store the {@link PersonaStore} to enable.
+   *
+   * @since UNRELEASED
+   */
+  public abstract void enable_persona_store (PersonaStore store);
+
+  /**
    * Emitted when a {@link PersonaStore} is added to the backend.
    *
    * This will not be emitted until after {@link Backend.prepare} has been

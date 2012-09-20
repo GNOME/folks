@@ -64,6 +64,33 @@ public class Folks.Backends.Eds.Backend : Folks.Backend
   /**
    * {@inheritDoc}
    */
+  public override void disable_persona_store (PersonaStore store)
+    {
+      if (this._persona_stores.has_key (store.id))
+        {
+          this._remove_address_book (store);
+        }
+    }
+  
+  /**
+   * {@inheritDoc}
+   */
+  public override void enable_persona_store (PersonaStore store)
+    {
+      if (!this._persona_stores.has_key (store.id))
+        {
+          store.removed.connect (this._store_removed_cb);
+          
+          this._persona_stores.set (store.id, store);
+          this.notify_property ("persona-stores");
+          
+          this.persona_store_added (store);
+        }
+    }
+    
+  /**
+   * {@inheritDoc}
+   */
   public Backend ()
     {
       Object ();
@@ -238,12 +265,7 @@ public class Folks.Backends.Eds.Backend : Folks.Backend
       var store =
           new Edsf.PersonaStore.with_source_registry (this._ab_sources, s);
 
-      store.removed.connect (this._store_removed_cb);
-
-      this._persona_stores.set (store.id, store);
-      this.notify_property ("persona-stores");
-
-      this.persona_store_added (store);
+      this.enable_persona_store (store);
     }
 
   private void _remove_address_book (Folks.PersonaStore store)
