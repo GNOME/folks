@@ -1,0 +1,704 @@
+# Hungarian translation of folks
+# Copyright (C) 2012. Free Software Foundation, Inc.
+# This file is distributed under the same license as the folks package.
+#
+# Gabor Kelemen <kelemeng at gnome dot hu>, 2012.
+msgid ""
+msgstr ""
+"Project-Id-Version: folks master\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2012-09-20 15:13+0200\n"
+"PO-Revision-Date: 2012-09-20 15:13+0200\n"
+"Last-Translator: Gabor Kelemen <kelemeng at gnome dot hu>\n"
+"Language-Team: Hungarian <gnome-hu-list at gnome dot org>\n"
+"Language: hu\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms:  nplurals=2; plural=(n != 1);\n"
+"X-Generator: KBabel 1.11.4\n"
+
+#. The timeout after which we consider a property change to have failed if we
+#. * haven't received a property change notification for it.
+#. seconds
+#. Translators: This should be translated to the name of the “Starred in
+#. * Android” group in Google Contacts for your language. If Google have not
+#. * localised the group for your language, or Google Contacts isn't available
+#. * in your language, please *do not* translate this string (i.e. just copy
+#. * the msgid to the msgstr unchanged).
+#: ../backends/eds/lib/edsf-persona-store.vala:64
+msgid "Starred in Android"
+msgstr "Csillagozva Androidban"
+
+#. Translators: the first parameter is an address book
+#. * URI and the second is a persona UID.
+#: ../backends/eds/lib/edsf-persona-store.vala:588
+#, c-format
+msgid "Address book ‘%s’ is offline, so contact ‘%s’ cannot be removed."
+msgstr "„%s” címtár nem érhető el, így a(z) „%s” névjegy nem távolítható el."
+
+#. Translators: the first parameter is an address book
+#. * URI and the second is an error message.
+#: ../backends/eds/lib/edsf-persona-store.vala:594
+#, c-format
+msgid "Permission denied to remove contact ‘%s’: %s"
+msgstr "Hozzáférés megtagadva „%s” névjegy eltávolításához: %s"
+
+#. Translators: the parameter is an error message.
+#: ../backends/eds/lib/edsf-persona-store.vala:599
+#, c-format
+msgid "Removing contacts isn't supported by this persona store: %s"
+msgstr "A névjegyek eltávolítását nem támogatja ez a névjegytároló: %s"
+
+#: ../backends/eds/lib/edsf-persona-store.vala:628
+#, c-format
+msgid "Can't remove contact ‘%s’: %s"
+msgstr "„%s” névjegy nem távolítható el: %s"
+
+#. Translators: the parameter is an address book
+#. * URI.
+#: ../backends/eds/lib/edsf-persona-store.vala:721
+#: ../backends/eds/lib/edsf-persona-store.vala:915
+#, c-format
+msgid "Address book ‘%s’ is offline."
+msgstr "A(z) „%s” címjegyzék nem érhető el."
+
+#. Translators: the first parameter is an address
+#. * book URI and the second is an error message.
+#: ../backends/eds/lib/edsf-persona-store.vala:726
+#: ../backends/eds/lib/edsf-persona-store.vala:920
+#, c-format
+msgid "Permission denied to open address book ‘%s’: %s"
+msgstr "A hozzáférés megtagadva a(z) „%s” címjegyzék megnyitása közben: %s"
+
+#. Translators: the first parameter is an address book URI
+#. * and the second is an error message.
+#: ../backends/eds/lib/edsf-persona-store.vala:759
+#, c-format
+msgid "Couldn't open address book ‘%s’: %s"
+msgstr "Nem sikerült megnyitni a(z) „%s” címjegyzéket: %s"
+
+#. Translators: the parameteter is an error message.
+#: ../backends/eds/lib/edsf-persona-store.vala:825
+#: ../backends/eds/lib/edsf-persona-store.vala:855
+#, c-format
+msgid "Couldn't get address book capabilities: %s"
+msgstr "A címjegyzék képességei nem kérhetők le: %s"
+
+#. Translators: the parameter is an address book URI.
+#: ../backends/eds/lib/edsf-persona-store.vala:871
+#, c-format
+msgid "Couldn't get view for address book ‘%s’."
+msgstr "A(z) „%s” címjegyzék nézete nem kérhető le."
+
+#. Translators: the first parameter is an address book URI
+#. * and the second is an error message.
+#: ../backends/eds/lib/edsf-persona-store.vala:953
+#, c-format
+msgid "Couldn't get view for address book ‘%s’: %s"
+msgstr "A(z) „%s” címjegyzék nézete nem kérhető le: %s"
+
+#. Translators: the parameter is the name of a property on a
+#. * contact, formatted in the normal GObject style (e.g.
+#. * lowercase with hyphens to separate words).
+#: ../backends/eds/lib/edsf-persona-store.vala:1310
+#, c-format
+msgid "Changing the ‘%s’ property failed due to reaching the timeout."
+msgstr "A(z) „%s” tulajdonság módosítása az időkorlát elérése miatt meghiúsult."
+
+#: ../backends/eds/lib/edsf-persona-store.vala:1348
+#: ../folks/avatar-details.vala:63
+msgid "Avatar is not writeable on this contact."
+msgstr "A névjegy avatarja nem írható."
+
+#: ../backends/eds/lib/edsf-persona-store.vala:1369
+#: ../folks/web-service-details.vala:123
+msgid "Web service addresses are not writeable on this contact."
+msgstr "A névjegy webszolgáltatás-címei nem írhatók."
+
+#: ../backends/eds/lib/edsf-persona-store.vala:1405
+#: ../folks/url-details.vala:152
+msgid "URLs are not writeable on this contact."
+msgstr "A névjegy URL-címei nem írhatók."
+
+#: ../backends/eds/lib/edsf-persona-store.vala:1482
+#: ../folks/local-id-details.vala:64
+msgid "Local IDs are not writeable on this contact."
+msgstr "A névjegy helyi azonosítói nem írhatók."
+
+#: ../backends/eds/lib/edsf-persona-store.vala:1508
+msgid "The contact cannot be marked as favourite."
+msgstr "A névjegy nem jelölhető meg kedvencként."
+
+#. Translators: the parameter is an error message.
+#: ../backends/eds/lib/edsf-persona-store.vala:1577
+#, c-format
+msgid "Can't update avatar: %s"
+msgstr "Nem frissíthető az avatar: %s"
+
+#: ../backends/eds/lib/edsf-persona-store.vala:1588
+#: ../folks/email-details.vala:120
+msgid "E-mail addresses are not writeable on this contact."
+msgstr "A névjegy e-mail címei nem írhatók."
+
+#: ../backends/eds/lib/edsf-persona-store.vala:1602
+#: ../folks/phone-details.vala:229
+msgid "Phone numbers are not writeable on this contact."
+msgstr "A névjegy telefonszámai nem írhatók."
+
+#: ../backends/eds/lib/edsf-persona-store.vala:1616
+#: ../folks/postal-address-details.vala:361
+msgid "Postal addresses are not writeable on this contact."
+msgstr "A névjegy postai címei nem írhatók."
+
+#: ../backends/eds/lib/edsf-persona-store.vala:1683
+#: ../folks/name-details.vala:283
+msgid "Full name is not writeable on this contact."
+msgstr "A névjegy teljes neve nem írható."
+
+#: ../backends/eds/lib/edsf-persona-store.vala:1705
+#: ../folks/name-details.vala:321
+msgid "Nickname is not writeable on this contact."
+msgstr "A névjegy beceneve nem írható."
+
+#: ../backends/eds/lib/edsf-persona-store.vala:1727
+#: ../folks/note-details.vala:138
+msgid "Notes are not writeable on this contact."
+msgstr "A névjegy jegyzetei nem írhatók."
+
+#: ../backends/eds/lib/edsf-persona-store.vala:1756
+#: ../folks/birthday-details.vala:62
+msgid "Birthday is not writeable on this contact."
+msgstr "A névjegy születésnapja nem írható."
+
+#: ../backends/eds/lib/edsf-persona-store.vala:1799
+#: ../folks/role-details.vala:279
+msgid "Roles are not writeable on this contact."
+msgstr "A névjegy szerepei nem írhatók."
+
+#: ../backends/eds/lib/edsf-persona-store.vala:1900
+#: ../folks/name-details.vala:246
+msgid "Structured name is not writeable on this contact."
+msgstr "A névjegy strukturált neve nem írható."
+
+#: ../backends/eds/lib/edsf-persona-store.vala:1939
+#: ../folks/im-details.vala:136
+msgid "IM addresses are not writeable on this contact."
+msgstr "A névjegy azonnaliüzenő-címei nem írhatók."
+
+#: ../backends/eds/lib/edsf-persona-store.vala:1989
+#: ../folks/group-details.vala:174
+msgid "Groups are not writeable on this contact."
+msgstr "A névjegy csoportjai nem írhatók."
+
+#: ../backends/eds/lib/edsf-persona-store.vala:2033
+#: ../folks/gender-details.vala:79
+msgid "Gender is not writeable on this contact."
+msgstr "A névjegy neme nem írható."
+
+#: ../backends/eds/lib/edsf-persona-store.vala:2068
+#: ../folks/anti-linkable.vala:81
+msgid "Anti-links are not writeable on this contact."
+msgstr "A névjegy ellenkapcsolatai nem írhatók."
+
+#. Translators: the first parameter is a non-human-readable
+#. * property name and the second parameter is an error
+#. * message.
+#: ../backends/eds/lib/edsf-persona-store.vala:2263
+#, c-format
+msgid "Property ‘%s’ is not writeable: %s"
+msgstr "A(z) „%s” tulajdonság nem írható: %s"
+
+#. Translators: the first parameter is a non-human-readable
+#. * property name and the second parameter is an error
+#. * message.
+#: ../backends/eds/lib/edsf-persona-store.vala:2272
+#, c-format
+msgid "Invalid value for property ‘%s’: %s"
+msgstr "Érvénytelen érték a(z) „%s” tulajdonsághoz: %s"
+
+#. Translators: the first parameter is a non-human-readable
+#. * property name and the second parameter is an error message.
+#: ../backends/eds/lib/edsf-persona-store.vala:2298
+#, c-format
+msgid "Unknown error setting property ‘%s’: %s"
+msgstr "Ismeretlen hiba a(z) „%s” tulajdonság beállításakor: „%s”"
+
+#. Translators: the first parameter is a filename, and
+#. * the second is an error message.
+#: ../backends/key-file/kf-persona-store.vala:233
+#, c-format
+msgid "The relationship key file '%s' could not be loaded: %s"
+msgstr "A(z) „%s” kapcsolat-kulcsfájl nem tölthető be: %s"
+
+#. Translators: the first parameter is a path, and the
+#. * second is an error message.
+#: ../backends/key-file/kf-persona-store.vala:255
+#, c-format
+msgid "The relationship key file directory '%s' could not be created: %s"
+msgstr "A(z) „%s” kapcsolat-kulcsfájl könyvtár nem hozható létre: %s"
+
+#. Translators: the first parameter is a filename, and
+#. * the second is an error message.
+#: ../backends/key-file/kf-persona-store.vala:279
+#, c-format
+msgid "The relationship key file '%s' could not be created: %s"
+msgstr "A(z) „%s” kapcsolat-kulcsfájl nem hozható létre: %s"
+
+#. Translators: the first parameter is a filename, the second is
+#. * an error message.
+#: ../backends/key-file/kf-persona-store.vala:468
+#, c-format
+msgid "Could not write updated key file '%s': %s"
+msgstr "Nem írható a frissített „%s” kulcsfájl: %s"
+
+#. Translators: this is an error message for if the user
+#. * provides an invalid IM address. The first parameter is
+#. * an IM address (e.g. “foo@jabber.org”), the second is
+#. * the name of a protocol (e.g. “jabber”) and the third is
+#. * an error message.
+#: ../backends/key-file/kf-persona.vala:173
+#, c-format
+msgid "Invalid IM address ‘%s’ for protocol ‘%s’: %s"
+msgstr "Érvénytelen azonnaliüzenő cím („%s”) a(z) „%s” protokollhoz: %s"
+
+#. Translators: the parameter is an error message.
+#: ../backends/key-file/kf-persona.vala:432
+#, c-format
+msgid "Couldn't load data from key file: %s"
+msgstr "Nem tölthetők be az adatok a kulcsfájlból: %s"
+
+#. Translators: the parameter is an error message.
+#: ../backends/libsocialweb/lib/swf-persona-store.vala:345
+#: ../backends/libsocialweb/lib/swf-persona-store.vala:367
+#: ../backends/libsocialweb/lib/swf-persona-store.vala:388
+#, c-format
+msgid "Couldn’t prepare libsocialweb service: %s"
+msgstr "Nem készíthető elő a libsocialweb szolgáltatás: %s"
+
+#: ../backends/libsocialweb/lib/swf-persona-store.vala:346
+msgid "No capabilities were found."
+msgstr "Nem találhatók képességek."
+
+#: ../backends/libsocialweb/lib/swf-persona-store.vala:368
+msgid "No contacts capability was found."
+msgstr "Nem található névjegykezelési képesség."
+
+#: ../backends/libsocialweb/lib/swf-persona-store.vala:389
+msgid "Error opening contacts view."
+msgstr "Hiba a névjegyek nézet megnyitásakor."
+
+#. Translators: the first parameter is the display name for
+#. * the Telepathy account, and the second is an error
+#. * message.
+#: ../backends/telepathy/lib/tpf-persona-store.vala:778
+#, c-format
+msgid "Failed to determine whether we can set aliases on Telepathy account '%s': %s"
+msgstr ""
+"Nem sikerült megállapítani, hogy be lehet-e állítani álneveket a(z) „%s” "
+"Telepathy fiókon: %s"
+
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1234
+msgid "Telepathy contacts representing the local user may not be removed."
+msgstr "A helyi felhasználót képviselő Telepathy névjegyek nem távolíthatók el."
+
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1245
+#, c-format
+msgid "Failed to remove a persona from store: %s"
+msgstr "A névjegy eltávolítása sikertelen a tárolóból: %s"
+
+#. Translators: the first two parameters are store identifiers and
+#. * the third is a contact identifier.
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1275
+#, c-format
+msgid ""
+"Persona store (%s, %s) requires the following details:\n"
+"    contact (provided: '%s')\n"
+msgstr ""
+"A névjegytároló (%s, %s) a következő adatokat igényli:\n"
+"    névjegy (megadva: „%s”)\n"
+
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1290
+msgid "Cannot create a new Telepathy contact while offline."
+msgstr "Nem hozható létre új Telepathy névjegy kapcsolat nélküli módban."
+
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1308
+#, c-format
+msgid "Failed to add a persona from details: %s"
+msgstr "Nem sikerült névjegyet hozzáadni az adatokból: %s"
+
+#. Translators: "telepathy-logger" is the name of an application,
+#. * and should not be translated.
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1328
+msgid ""
+"Failed to change favorite without a connection to the telepathy-logger "
+"service."
+msgstr ""
+"Nem sikerült a kedvenc módosítása a telepathy-logger szolgáltatáshoz való "
+"kapcsolat nélkül."
+
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1334
+msgid ""
+"Failed to change favorite status of Telepathy Persona because it has no "
+"attached TpContact."
+msgstr ""
+"A Telepathy névjegy kedvenc állapotának módosítása nem sikerült, mert nem "
+"tartozik hozzá TpContact."
+
+#. Translators: the parameter is a contact identifier.
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1352
+#, c-format
+msgid "Failed to change favorite status for Telepathy contact ‘%s’."
+msgstr "A(z) „%s” Telepathy névjegy kedvenc állapotának módosítása nem sikerült."
+
+#. Translators: the parameter is an error message.
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1384
+#, c-format
+msgid "Failed to change contact's alias: %s"
+msgstr "A névjegy álnevének módosítása nem sikerült: %s"
+
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1464
+msgid "Extended information may only be set on the user's Telepathy contact."
+msgstr "Bővített információk csak a felhasználó Telepathy névjegyében állíthatók be."
+
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1493
+msgid "Extended information cannot be written because the store is disconnected."
+msgstr "Nem írhatók bővített információk, mert a tároló le van választva."
+
+#: ../backends/telepathy/lib/tpf-persona.vala:497
+#: ../backends/telepathy/lib/tpf-persona.vala:518
+#: ../backends/telepathy/lib/tpf-persona.vala:570
+#: ../backends/telepathy/lib/tpf-persona.vala:584
+#, c-format
+msgid "Failed to change group membership: %s"
+msgstr "Nem sikerült a csoporttagság módosítása: %s"
+
+#. Translators: "account" refers to an instant messaging
+#. * account.
+#: ../backends/telepathy/lib/tpf-persona.vala:500
+#: ../backends/telepathy/lib/tpf-persona.vala:573
+msgid "Account is offline."
+msgstr "A fiók nem érhető el."
+
+#. Translators: the first parameter is the unknown key that
+#. * was received with the details params, and the second
+#. * identifies the persona store.
+#: ../backends/tracker/lib/trf-persona-store.vala:742
+#, c-format
+msgid "Unrecognized parameter '%s' passed to persona store '%s'."
+msgstr "Ismeretlen „%s” paraméter lett átadva a(z) „%s” névjegytárolónak."
+
+#: ../folks/alias-details.vala:61
+msgid "Alias is not writeable on this contact."
+msgstr "A névjegy álneve nem írható."
+
+#. Translators: the first parameter is a folder path and the second
+#. * is an error message.
+#: ../folks/backend-store.vala:591
+#, c-format
+msgid "Error listing contents of folder '%s': %s"
+msgstr "Hiba a mappa („%s”) tartalmának felsorolásakor: %s"
+
+#. Translators: the parameter is a filename.
+#: ../folks/backend-store.vala:720
+#, c-format
+msgid "File or directory '%s' does not exist."
+msgstr "A(z) „%s” fájl vagy könyvtár nem létezik."
+
+#. Translators: the parameter is a filename.
+#: ../folks/backend-store.vala:726
+#, c-format
+msgid "Failed to get content type for '%s'."
+msgstr "A tartalomtípus lekérése meghiúsult ehhez: „%s”."
+
+#: ../folks/birthday-details.vala:93
+msgid "Birthday event ID is not writeable on this contact."
+msgstr "A névjegy születésnap-eseményének azonosítója nem írható."
+
+#: ../folks/favourite-details.vala:58
+msgid "Favorite status is not writeable on this contact."
+msgstr "A névjegy kedvenc állapota nem írható."
+
+#. Translators: the parameter is an IM address.
+#: ../folks/im-details.vala:178 ../folks/im-details.vala:192
+#: ../folks/im-details.vala:214 ../folks/im-details.vala:241
+#, c-format
+msgid "The IM address '%s' could not be understood."
+msgstr "A(z) „%s” azonnaliüzenő-cím nem értelmezhető."
+
+#. Translators: the first parameter is a persona store identifier
+#. * and the second is an error message.
+#: ../folks/individual-aggregator.vala:863
+#, c-format
+msgid "Error preparing persona store '%s': %s"
+msgstr "Hiba a(z) „%s” névjegytároló előkészítésekor: %s"
+
+#. Translators: the parameter is a property name.
+#: ../folks/individual-aggregator.vala:1069
+#: ../folks/individual-aggregator.vala:1295
+#, c-format
+msgid "Unknown property '%s' in linkable property list."
+msgstr "Ismeretlen „%s” tulajdonság az összekapcsolható tulajdonságlistában."
+
+#. Translators: the first parameter is a store identifier
+#. * and the second parameter is an error message.
+#: ../folks/individual-aggregator.vala:1757
+#, c-format
+msgid "Failed to add contact for persona store ID '%s': %s"
+msgstr "Nem sikerült hozzáadni a névjegyet a(z) „%s” azonosítójú névjegytárolóhoz: %s"
+
+#: ../folks/individual-aggregator.vala:1850
+msgid "Can’t link personas with no primary store."
+msgstr "Nem kapcsolhatók össze elsődleges tároló nélküli névjegyek."
+
+#: ../folks/individual-aggregator.vala:1851
+#: ../folks/individual-aggregator.vala:2185
+#, c-format
+msgid ""
+"Persona store ‘%s:%s’ is configured as primary, but could not be found or "
+"failed to load."
+msgstr ""
+"A(z) „%s:%s” névjegytároló elsődlegesként van beállítva, de nem található "
+"vagy a betöltése meghiúsult."
+
+#: ../folks/individual-aggregator.vala:1852
+#: ../folks/individual-aggregator.vala:2186
+#, c-format
+msgid ""
+"Check the relevant service is running, or change the default store in that "
+"service or using the “%s” GSettings key."
+msgstr ""
+"Ellenőrizze, hogy a megfelelő szolgáltatás fut-e, vagy módosítsa az "
+"alapértelmezett tárolót az adott szolgáltatásban vagy a(z) „%s” GSettings "
+"kulcs használatával."
+
+#: ../folks/individual-aggregator.vala:1884
+msgid "Anti-links can't be removed between personas being linked."
+msgstr "Az ellenkapcsolatok nem távolíthatók el a összekapcsolás alatti névjegyekből."
+
+#: ../folks/individual-aggregator.vala:2184
+msgid "Can’t add personas with no primary store."
+msgstr "Nem vehetők fel elsődleges tároló nélküli névjegyek."
+
+#: ../folks/individual-aggregator.vala:2195
+#, c-format
+msgid "Can't write to requested property (“%s”) of the writeable store."
+msgstr "Nem lehet a kért tulajdonságot („%s”) az írható tárolóba írni."
+
+#: ../folks/individual.vala:215 ../folks/individual.vala:368
+#: ../folks/individual.vala:477 ../folks/individual.vala:717
+#: ../folks/individual.vala:795
+#, c-format
+msgid "Failed to change property ‘%s’: No suitable personas were found."
+msgstr ""
+"A tulajdonság („%s”) módosítása meghiúsult: nem találhatók megfelelő "
+"névjegyek."
+
+#: ../folks/org.freedesktop.folks.gschema.xml.in.h:1
+msgid "Primary store ID"
+msgstr "Elsődleges tároló azonosítója"
+
+#: ../folks/org.freedesktop.folks.gschema.xml.in.h:2
+msgid ""
+"The ID of the persona store which folks should use as primary (i.e. to store "
+"linking data in). The type ID of the store may optionally be prepended, "
+"separated by a colon. For example: “eds:system-address-book” or “key-file”."
+msgstr ""
+"A folks által elsődlegesként (azaz összekapcsolási adatok tárolására) "
+"használandó névjegytároló azonosítója. A tároló típusazonosítója megelőzheti "
+"ezt, kettősponttal elválasztva. Például: „eds:system-address-book” vagy „key-"
+"file”."
+
+#: ../folks/postal-address-details.vala:231
+#, c-format
+msgid "%s, %s, %s, %s, %s, %s, %s"
+msgstr "%s, %s, %s, %s, %s, %s, %s"
+
+#: ../folks/presence-details.vala:159
+msgid "Unknown status"
+msgstr "Ismeretlen állapot"
+
+#: ../folks/presence-details.vala:161
+msgid "Offline"
+msgstr "Kilépett"
+
+#: ../folks/presence-details.vala:165
+msgid "Error"
+msgstr "Hiba"
+
+#: ../folks/presence-details.vala:167
+msgid "Available"
+msgstr "Elérhető"
+
+#: ../folks/presence-details.vala:169
+msgid "Away"
+msgstr "Távol"
+
+#: ../folks/presence-details.vala:171
+msgid "Extended away"
+msgstr "Tartós távollét"
+
+#: ../folks/presence-details.vala:173
+msgid "Busy"
+msgstr "Elfoglalt"
+
+#: ../folks/presence-details.vala:175
+msgid "Hidden"
+msgstr "Rejtett"
+
+#: ../folks/role-details.vala:150
+#, c-format
+msgid "Title: %s, Organisation: %s, Role: %s"
+msgstr "Megszólítás: %s, Szervezet: %s, Szerep: %s"
+
+#. Translators: the parameter is a filename.
+#: ../tools/import-pidgin.vala:48
+#, c-format
+msgid "File %s does not exist."
+msgstr "A(z) „%s” fájl nem létezik"
+
+#. Translators: the first parameter is a filename, and the second
+#. * is an error message.
+#: ../tools/import-pidgin.vala:64
+#, c-format
+msgid "Failed to get information about file %s: %s"
+msgstr "Nem sikerült információkat kapni a(z) %s fájlról: %s"
+
+#. Translators: the parameter is a filename.
+#: ../tools/import-pidgin.vala:71
+#, c-format
+msgid "File %s is not readable."
+msgstr "A(z) „%s” fájl nem olvasható."
+
+#. Translators: the parameter is a filename.
+#: ../tools/import-pidgin.vala:81
+#, c-format
+msgid "The Pidgin buddy list file '%s' could not be loaded."
+msgstr "A(z) „%s” Pidgin partnerlistafájl nem tölthető be."
+
+#. Translators: the parameter is a filename.
+#: ../tools/import-pidgin.vala:96
+#, c-format
+msgid ""
+"The Pidgin buddy list file ‘%s’ could not be loaded: the root element could "
+"not be found or was not recognized."
+msgstr ""
+"A(z) „%s” Pidgin partnerlistafájl nem tölthető be: a gyökérelem nem "
+"található vagy nem ismerhető fel."
+
+#. Translators: the first parameter is the number of buddies which
+#. * were successfully imported, and the second is a filename.
+#: ../tools/import-pidgin.vala:116
+#, c-format
+msgid "Imported %u buddy from '%s'."
+msgid_plural "Imported %u buddies from '%s'."
+msgstr[0] "%u partner importálva innen: „%s”."
+msgstr[1] "%u partner importálva innen: „%s”."
+
+#. Translators: the first parameter is a persona identifier,
+#. * and the second is an error message.
+#: ../tools/import-pidgin.vala:163
+#, c-format
+msgid "Error changing group of contact ‘%s’: %s"
+msgstr "Hiba a(z) „%s” névjegy csoportjának megváltoztatásakor: %s"
+
+#. Translators: the parameter is the buddy's IM address.
+#: ../tools/import-pidgin.vala:220
+#, c-format
+msgid ""
+"Ignoring buddy with no alias and only one IM address:\n"
+"%s"
+msgstr ""
+"Álnév nélküli és csak egy azonnaliüzenő címmel rendelkező partner figyelmen "
+"kívül hagyása:\n"
+"%s"
+
+#: ../tools/import-pidgin.vala:244
+#, c-format
+msgid ""
+"Failed to create new contact for buddy with alias ‘%s’ and IM addresses:\n"
+"%s\n"
+"Error: %s\n"
+msgstr ""
+"Nem sikerült új névjegyet hozzáadni a(z) „%s” álnevű és következő "
+"azonnaliüzenő-című partnerhez:\n"
+"%s\n"
+"Hiba: %s\n"
+
+#. Translators: the first parameter is a persona identifier, the
+#. * second is an alias for the persona, and the third is a set of IM
+#. * addresses each on a new line.
+#: ../tools/import-pidgin.vala:258
+#, c-format
+msgid ""
+"Created contact ‘%s’ for buddy with alias ‘%s’ and IM addresses:\n"
+"%s"
+msgstr ""
+"„%s” névjegy hozzáadva a(z) „%s” álnevű és következő azonnaliüzenő-című "
+"partnerhez:\n"
+"%s"
+
+#: ../tools/import.vala:44
+msgid "Source backend name (default: 'pidgin')"
+msgstr "Forrás háttérprogram neve (alapértelmezett: „pidgin”)"
+
+#: ../tools/import.vala:47
+msgid "Source filename (default: specific to source backend)"
+msgstr "Forrásfájl neve (alapértelmezett: háttérprogramtól függ)"
+
+#: ../tools/import.vala:57
+msgid "— import meta-contact information to libfolks"
+msgstr "– metanévjegy-információk importálása a libfolksba"
+
+#. Translators: the parameter is an error message.
+#: ../tools/import.vala:67
+#, c-format
+msgid "Couldn't parse command line options: %s"
+msgstr "Nem dolgozhatók fel a parancssori kapcsolók: %s"
+
+#. Translators: the parameter is an error message.
+#: ../tools/import.vala:108
+#, c-format
+msgid "Couldn't load the backends: %s"
+msgstr "A háttérprogramok nem tölthetők be: %s"
+
+#. Translators: the parameter is a backend identifier.
+#: ../tools/import.vala:119
+#, c-format
+msgid "Couldn't load the ‘%s’ backend."
+msgstr "Nem tölthető be a(z) „%s” háttérprogram."
+
+#. Translators: the first parameter is a backend identifier and the
+#. * second parameter is an error message.
+#: ../tools/import.vala:132
+#, c-format
+msgid "Couldn't prepare the ‘%s’ backend: %s"
+msgstr "Nem készíthető elő a(z) „%s” háttérprogram: %s"
+
+#. Translators: the parameter is a backend identifier.
+#: ../tools/import.vala:145
+#, c-format
+msgid "Couldn't load the ‘%s’ backend's persona store."
+msgstr "Nem tölthető be a(z) „%s” háttérprogram névjegytárolója."
+
+#: ../tools/import.vala:166
+#, c-format
+msgid "Couldn't prepare the ‘%s’ backend's persona store: %s"
+msgstr "Nem készíthető elő a(z) „%s” háttérprogram névjegytárolója: %s"
+
+#. Translators: the parameter is an error message.
+#: ../tools/import.vala:184
+#, c-format
+msgid "Error importing contacts: %s"
+msgstr "Hiba a névjegyek importálásakor: %s"
+
+#. Translators: both parameters are identifiers for backends.
+#: ../tools/import.vala:198
+#, c-format
+msgid ""
+"Unrecognized source backend name ‘%s’. ‘%s’ is currently the only supported "
+"source backend."
+msgstr ""
+"Ismeretlen forrás háttérprogramnév „%s”. Jelenleg a(z) „%s” az egyetlen "
+"támogatott forrás háttérprogram."
+
