@@ -9,7 +9,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=folks&keywords=I18N+L10N&component=general\n"
 "POT-Creation-Date: 2012-09-13 02:02+0000\n"
-"PO-Revision-Date: 2012-09-13 17:56+0530\n"
+"PO-Revision-Date: 2012-09-21 12:42+0530\n"
 "Last-Translator: Shankar Prasad <svenkate@redhat.com>\n"
 "Language-Team: Kannada <kn@li.org>\n"
 "Language: kn\n"
@@ -28,7 +28,7 @@ msgstr ""
 #. * in your language, please *do not* translate this string.
 #: ../backends/eds/lib/edsf-persona-store.vala:63
 msgid "Starred in Android"
-msgstr ""
+msgstr "Android ನಲ್ಲಿ ಹಂಚಲಾದ"
 
 #. Translators: the first parameter is an address book
 #. * URI and the second is a persona UID.
@@ -50,7 +50,7 @@ msgstr "‘%s’ ಸಂಪರ್ಕವನ್ನು ತೆಗೆದುಹಾಕ�
 #: ../backends/eds/lib/edsf-persona-store.vala:598
 #, c-format
 msgid "Removing contacts isn't supported by this persona store: %s"
-msgstr ""
+msgstr "ಈ ಪರ್ಸೋನಾ ಶೇಖರಣೆಯನ್ನು ಸಂಪರ್ಕಗಳನ್ನು ತೆಗೆದುಹಾಕುವಿಕೆಗೆ ಬೆಂಬಲವಿಲ್ಲ: %s"
 
 #: ../backends/eds/lib/edsf-persona-store.vala:627
 #, c-format
@@ -85,7 +85,7 @@ msgstr "‘%s’ ವಿಳಾಸಪುಸ್ತಕವನ್ನು ತೆರೆ�
 #: ../backends/eds/lib/edsf-persona-store.vala:854
 #, c-format
 msgid "Couldn't get address book capabilities: %s"
-msgstr ""
+msgstr "ವಿಳಾಸಪುಸ್ತಕದ ಸಾಮರ್ಥ್ಯಗಳನ್ನು ಪಡೆಯಲು ಸಾಧ್ಯವಾಗಿಲ್ಲ: %s"
 
 #. Translators: the parameter is an address book URI.
 #: ../backends/eds/lib/edsf-persona-store.vala:870
@@ -103,7 +103,7 @@ msgstr "‘%s’ ವಿಳಾಸಪುಸ್ತಕವನ್ನು ನೋಡಲ�
 #: ../backends/eds/lib/edsf-persona-store.vala:1306
 #, c-format
 msgid "Changing the ‘%s’ property failed due to reaching the timeout."
-msgstr ""
+msgstr "ಕಾಲವಧಿ ತೀರಿಕೆಯನ್ನು ತಲುಪಿದ್ದರಿಂದ ‘%s’ ಗುಣವು ವಿಫಲಗೊಂಡಿದೆ."
 
 #: ../backends/eds/lib/edsf-persona-store.vala:1344
 #: ../folks/avatar-details.vala:63
@@ -294,11 +294,12 @@ msgstr "ಸಂಪರ್ಕಗಳ ನೋಟವನ್ನು ತೆರೆಯುವ�
 #, c-format
 msgid ""
 "Failed to determine whether we can set aliases on Telepathy account '%s': %s"
-msgstr ""
+msgstr "'%s' ಎಂಬ ಟೆಲಿಪತಿ ಖಾತೆಯಲ್ಲಿ ಉಪನಾಮವನ್ನು ಹೊಂದಿಸುವಲ್ಲಿ ವಿಫಲಗೊಂಡಿದೆ: %s"
 
 #: ../backends/telepathy/lib/tpf-persona-store.vala:1234
 msgid "Telepathy contacts representing the local user may not be removed."
 msgstr ""
+"ಸ್ಥಳೀಯ ಬಳಕೆದಾರರನ್ನು ಪ್ರತಿನಿಧಿಸುವ ಟೆಲಿಪತಿ ಸಂಪರ್ಕಗಳನ್ನು ತೆಗೆದುಹಾಕಲಾಗದೆ ಇರಬಹುದು."
 
 #: ../backends/telepathy/lib/tpf-persona-store.vala:1245
 #, c-format
@@ -313,10 +314,12 @@ msgid ""
 "Persona store (%s, %s) requires the following details:\n"
 "    contact (provided: '%s')\n"
 msgstr ""
+"ಪರ್ಸೋನಾ ಶೇಖರಣೆಗಾಗಿ (%s, %s) ಈ ಕೆಳಗಿನ ವಿವರಗಳ ಅಗತ್ಯವಿದೆ:\n"
+"    ಸಂಪರ್ಕ (ಒದಗಿಸಲಾಗಿದೆ: '%s')\n"
 
 #: ../backends/telepathy/lib/tpf-persona-store.vala:1290
 msgid "Cannot create a new Telepathy contact while offline."
-msgstr ""
+msgstr "ಆಫ್‌ಲೈನಿನಲ್ಲಿದ್ದಾಗ ಒಂದು ಹೊಸ ಟೆಲಿಪತಿ ಸಂಪರ್ಕವನ್ನು ರಚಿಸಲು ಸಾಧ್ಯವಾಗಿಲ್ಲ."
 
 #: ../backends/telepathy/lib/tpf-persona-store.vala:1308
 #, c-format
@@ -330,18 +333,23 @@ msgid ""
 "Failed to change favorite without a connection to the telepathy-logger "
 "service."
 msgstr ""
+"ಟೆಲಿಪತಿ-ದಿನಚರಿ ಸೇವೆಯೊಂದಿಗೆ ಸಂಪರ್ಕವನ್ನು ಹೊಂದಿರದ ಕಾರಣ ಮೆಚ್ಚಿನದ್ದನ್ನು "
+"ಬದಲಾಯಿಸುವಲ್ಲಿ ವಿಫಲಗೊಂಡಿದೆ."
 
 #: ../backends/telepathy/lib/tpf-persona-store.vala:1334
 msgid ""
 "Failed to change favorite status of Telepathy Persona because it has no "
 "attached TpContact."
 msgstr ""
+"ಟೆಲಿಪತಿ ಪರ್ಸೋನಾವು ಲಗತ್ತಿಸಲಾದ ಯಾವುದೆ TpContact ಅನ್ನು ಹೊಂದಿರದ ಕಾರಣ ಅದರ ಮೆಚ್ಚಿನ "
+"ಸ್ಥಿತಿಯನ್ನು ಬದಲಾಯಿಸುವಲ್ಲಿ ವಿಫಲಗೊಂಡಿದೆ."
 
 #. Translators: the parameter is a contact identifier.
 #: ../backends/telepathy/lib/tpf-persona-store.vala:1352
 #, c-format
 msgid "Failed to change favorite status for Telepathy contact ‘%s’."
 msgstr ""
+"‘%s’ ಎಂಬ ಟೆಲಿಪತಿ ಸಂಪರ್ಕದ ಮೆಚ್ಚಿನ ಸ್ಥಿತಿಯನ್ನು ಬದಲಾಯಿಸುವಲ್ಲಿ ವಿಫಲಗೊಂಡಿದೆ."
 
 #. Translators: the parameter is an error message.
 #: ../backends/telepathy/lib/tpf-persona-store.vala:1384
@@ -352,11 +360,14 @@ msgstr "ಸಂಪರ್ಕಗಳ ಉಪನಾಮಗಳನ್ನು ಬದಲಾ�
 #: ../backends/telepathy/lib/tpf-persona-store.vala:1464
 msgid "Extended information may only be set on the user's Telepathy contact."
 msgstr ""
+"ವಿಸ್ತರಿಸಲಾದ ಮಾಹಿತಿಯನ್ನು ಕೇವಲ ಬಳಕೆದಾರರ ಟೆಲಿಪತಿ ಸಂಪರ್ಕವಿಳಾಸಕ್ಕೆ ಮಾತ್ರ "
+"ಹೊಂದಿಸಬಹುದಾಗಿರುತ್ತದೆ."
 
 #: ../backends/telepathy/lib/tpf-persona-store.vala:1493
 msgid ""
 "Extended information cannot be written because the store is disconnected."
 msgstr ""
+"ವಿಸ್ತರಿಸಲಾದ ಮಾಹಿತಿಯನ್ನು ಬರೆಯಲು ಸಾಧ್ಯವಿಲ್ಲ ಏಕೆಂದರೆ ಶೇಖರಣೆಯಿಂದ ಸಂಪರ್ಕ ಕಡಿದಿದೆ."
 
 #: ../backends/telepathy/lib/tpf-persona.vala:497
 #: ../backends/telepathy/lib/tpf-persona.vala:518
@@ -379,7 +390,7 @@ msgstr "ಖಾತೆಯು ಆಫ್‌ಲೈನಿನಲ್ಲಿದೆ."
 #: ../backends/tracker/lib/trf-persona-store.vala:742
 #, c-format
 msgid "Unrecognized parameter '%s' passed to persona store '%s'."
-msgstr ""
+msgstr "ಗುರುತಿಸಲಾದ '%s' ಎಂಬ ನಿಯತಾಂಕವನ್ನು '%s' ಎಂಬ ಪರ್ಸೋನಾ ಶೇಖರಣೆಗೆ ನೀಡಲಾಗಿದೆ."
 
 #: ../folks/alias-details.vala:61
 msgid "Alias is not writeable on this contact."
@@ -431,18 +442,18 @@ msgstr "'%s' ಎಂಬ ಪರ್ಸೋನಾ ಶೇಖರಣೆಯನ್ನು �
 #: ../folks/individual-aggregator.vala:1295
 #, c-format
 msgid "Unknown property '%s' in linkable property list."
-msgstr ""
+msgstr "ಸಂಪರ್ಕ ಜೋಡಿಸಬಹುದಾದ ಗುಣದ ಪಟ್ಟಿಯಲ್ಲಿ ಗೊತ್ತಿರದ ಗುಣಲಕ್ಷಣ '%s'."
 
 #. Translators: the first parameter is a store identifier
 #. * and the second parameter is an error message.
 #: ../folks/individual-aggregator.vala:1757
 #, c-format
 msgid "Failed to add contact for persona store ID '%s': %s"
-msgstr ""
+msgstr "'%s' ಎಂಬ ಪರ್ಸೋನಾ ಶೇಖರಣೆ IDಗಾಗಿ ಸಂಪರ್ಕವನ್ನು ಸೇರಿಸುವಲ್ಲಿ ವಿಫಲಗೊಂಡಿದೆ: %s"
 
 #: ../folks/individual-aggregator.vala:1850
 msgid "Can’t link personas with no primary store."
-msgstr ""
+msgstr "ಪ್ರಾಥಮಿಕ ಶೇಖರಣೆಯನ್ನು ಹೊಂದಿರದೆ ಪರ್ಸೋನಾಗಳೊಂದಿಗೆ ಸಂಪರ್ಕಜೋಡಿಸಲಾಗಿಲ್ಲ."
 
 #: ../folks/individual-aggregator.vala:1851
 #: ../folks/individual-aggregator.vala:2185
@@ -451,6 +462,8 @@ msgid ""
 "Persona store ‘%s:%s’ is configured as primary, but could not be found or "
 "failed to load."
 msgstr ""
+"ಪರ್ಸೋನಾ ಶೇಖರಣೆ ‘%s:%s’ ಅನ್ನು ಪ್ರಾಥಮಿಕ ಎಂದು ಸಂರಚಿಸಲಾಗಿದೆ, ಆದರೆ ಅದು ಕಂಡುಬಂದಿಲ್ಲ "
+"ಅಥವ ಲೋಡ್ ಮಾಡಲು ವಿಫಲಗೊಂಡಿದೆ."
 
 #: ../folks/individual-aggregator.vala:1852
 #: ../folks/individual-aggregator.vala:2186
@@ -459,19 +472,23 @@ msgid ""
 "Check the relevant service is running, or change the default store in that "
 "service or using the “%s” GSettings key."
 msgstr ""
+"ಸೂಕ್ತವಾದ ಸೇವೆಯು ಚಾಲನೆಯಲ್ಲಿದೆಯೆ ಎಂದು ಪರಿಶೀಲಿಸಿ, ಅಥವ ಆ ಸೇವೆಯಲ್ಲಿನ ಪೂರ್ವನಿಯೋಜಿತ "
+"ಶೇಖರಣೆಯನ್ನು ಬದಲಾಯಿಸಿ ಅಥವ “%s” GSettings ಕೀಲಿಯನ್ನು ಬಳಸಿ."
 
 #: ../folks/individual-aggregator.vala:1884
 msgid "Anti-links can't be removed between personas being linked."
 msgstr ""
+"ಸಂಪರ್ಕಜೋಡಿಸಲಾಗುತ್ತಿರುವ ಪರ್ಸೋನಾಗಳ ನಡುವೆ ಪ್ರತಿ-ಸಂಪರ್ಕಗಳನ್ನು ತೆಗೆದುಹಾಕು "
+"ಸಾಧ್ಯವಿಲ್ಲ."
 
 #: ../folks/individual-aggregator.vala:2184
 msgid "Can’t add personas with no primary store."
-msgstr ""
+msgstr "ಪ್ರಾಥಮಿಕ ಶೇಖರಣೆಯನ್ನು ಹೊಂದಿರದೆ ಪರ್ಸೋನಾಗಳನ್ನು ಸೇರಿಸಲು ಸಾಧ್ಯವಾಗಿಲ್ಲ."
 
 #: ../folks/individual-aggregator.vala:2195
 #, c-format
 msgid "Can't write to requested property (“%s”) of the writeable store."
-msgstr ""
+msgstr "ಬರೆಯಬಹುದಾದ ಶೇಖರಣೆಯ ಮನವಿ ಮಾಡಲಾದ ಗುಣವನ್ನು (“%s”) ಬರೆಯಲು ಸಾಧ್ಯವಿಲ್ಲ."
 
 #: ../folks/individual.vala:215 ../folks/individual.vala:368
 #: ../folks/individual.vala:477 ../folks/individual.vala:717
@@ -491,6 +508,10 @@ msgid ""
 "linking data in). The type ID of the store may optionally be prepended, "
 "separated by a colon. For example: “eds:system-address-book” or “key-file”."
 msgstr ""
+"folks ಪ್ರಮುಖವಾಗಿ ಬಳಸಬೇಕಿರುವ ಪರ್ಸೋನಾ ಶೇಖರಣೆಯ ID (ಅಂದರೆ, ಸಂಬಂಧಿಸಿದ ದತ್ತಾಂಶವನ್ನು "
+"ಶೇಖರಿಸಿ ಇರಿಸಲು). ಶೇಖರಣೆಯ ಬಗೆಯ ID ಯನ್ನು ಮೊದಲಿಗೆ ಸೇರಿಸಲಾಗುತ್ತದೆ, ಹಾಗು ವಿವರಣ "
+"ಚಿಹ್ನೆಯಿಂದ ಬೇರ್ಪಟ್ಟಿರಬೇಕು. ಉದಾಹರಣೆಗೆ: “eds:system-address-book” ಅಥವ  "
+"“key-file”."
 
 #: ../folks/postal-address-details.vala:231
 #, c-format
@@ -557,7 +578,7 @@ msgstr "%s ಕಡತವನ್ನು ಓದಲು ಸಾಧ್ಯವಿಲ್ಲ.
 #: ../tools/import-pidgin.vala:81
 #, c-format
 msgid "The Pidgin buddy list file '%s' could not be loaded."
-msgstr ""
+msgstr "ಪಿಜಿನ್ ಗೆಳೆಯರ ಪಟ್ಟಿಯ ಕಡತವಾದ ‘%s’ ಅನ್ನು ಲೋಡ್ ಮಾಡಲಾಗಿಲ್ಲ."
 
 #. Translators: the parameter is a filename.
 #: ../tools/import-pidgin.vala:96
@@ -566,6 +587,8 @@ msgid ""
 "The Pidgin buddy list file ‘%s’ could not be loaded: the root element could "
 "not be found or was not recognized."
 msgstr ""
+"ಪಿಜಿನ್ ಗೆಳೆಯರ ಪಟ್ಟಿಯ ಕಡತವಾದ ‘%s’ ಅನ್ನು ಲೋಡ್ ಮಾಡಲಾಗಿಲ್ಲ: ಮೂಲ ಘಟಕವು ಕಂಡುಬಂದಿಲ್ಲ "
+"ಅಥವ ಗುರುತಿಸಲಾಗಿಲ್ಲ."
 
 #. Translators: the first parameter is the number of buddies which
 #. * were successfully imported, and the second is a filename.
@@ -573,8 +596,8 @@ msgstr ""
 #, c-format
 msgid "Imported %u buddy from '%s'."
 msgid_plural "Imported %u buddies from '%s'."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%u ಗೆಳೆಯನನ್ನ್ನು '%s' ಇಂದ ಆಮದು ಮಾಡಲಾಗಿದೆ."
+msgstr[1] "%u ಗೆಳೆಯರನ್ನ್ನು '%s' ಇಂದ ಆಮದು ಮಾಡಲಾಗಿದೆ."
 
 #. Translators: the first parameter is a persona identifier,
 #. * and the second is an error message.
@@ -590,6 +613,9 @@ msgid ""
 "Ignoring buddy with no alias and only one IM address:\n"
 "%s"
 msgstr ""
+"ಯಾವುದೆ ಉಪನಾಮ ಮತ್ತು ಕೇವಲ ಒಂದು IM ವಿಳಾಸವನ್ನು ಹೊಂದಿರುವ ಗೆಳೆಯರನ್ನು "
+"ಕಡೆಗಣಿಸಲಾಗುತ್ತಿದೆ:\n"
+"%s"
 
 #: ../tools/import-pidgin.vala:244
 #, c-format
@@ -598,6 +624,10 @@ msgid ""
 "%s\n"
 "Error: %s\n"
 msgstr ""
+"‘%s’ ಎಂಬ ಉಪನಾಮ ಮತ್ತು IM ವಿಳಾಸಗಳನ್ನು ಹೊಂದಿರುವ ಗೆಳೆಯನಿಗಾಗಿ ಹೊಸ ಸಂಪರ್ಕವನ್ನು "
+"ರಚಿಸುವಲ್ಲಿ ವಿಫಲಗೊಂಡಿದೆ:\n"
+"%s\n"
+"ದೋಷ: %s\n"
 
 #. Translators: the first parameter is a persona identifier, the
 #. * second is an alias for the persona, and the third is a set of IM
@@ -608,18 +638,21 @@ msgid ""
 "Created contact ‘%s’ for buddy with alias ‘%s’ and IM addresses:\n"
 "%s"
 msgstr ""
+"‘%s’ ಎನ್ನುವ ಸಂಪರ್ಕವನ್ನು ‘%s’ ಎಂಬ ಉಪನಾಮ ಮತ್ತು IM ವಿಳಾಸಗಳನ್ನು ಹೊಂದಿರುವ "
+"ಗೆಳೆಯನಿಗಾಗಿ ರಚಿಸಲಾಗಿದೆ:\n"
+"%s"
 
 #: ../tools/import.vala:44
 msgid "Source backend name (default: 'pidgin')"
-msgstr ""
+msgstr "ಆಕರ ಬ್ಯಾಕೆಂಡ್‌ನ ಹೆಸರು (ಪೂರ್ವನಿಯೋಜಿತ: 'pidgin')"
 
 #: ../tools/import.vala:47
 msgid "Source filename (default: specific to source backend)"
-msgstr ""
+msgstr "ಆಕರ ಕಡತದ ಹೆಸರು (ಪೂರ್ವನಿಯೋಜಿತ: ಆಕರ ಬ್ಯಾಕೆಂಡ್‌ಗೆ ನಿಶ್ಚಿತವಾಗಿದೆ)"
 
 #: ../tools/import.vala:57
 msgid "— import meta-contact information to libfolks"
-msgstr ""
+msgstr "— ಮೆಟಾ-ಸಂಪರ್ಕ ಮಾಹಿತಿಯನ್ನು libfolks ಗೆ ಆಮದು ಮಾಡು"
 
 #. Translators: the parameter is an error message.
 #: ../tools/import.vala:67
@@ -631,31 +664,31 @@ msgstr "ಆಜ್ಞಾ ಸಾಲಿನ ಆಯ್ಕೆಗಳನ್ನು ಪಾ
 #: ../tools/import.vala:108
 #, c-format
 msgid "Couldn't load the backends: %s"
-msgstr ""
+msgstr "ಬ್ಯಾಕೆಂಡ್‌ಗಳನ್ನು ಲೋಡ್ ಮಾಡಲು ಸಾಧ್ಯವಾಗಿಲ್ಲ: %s"
 
 #. Translators: the parameter is a backend identifier.
 #: ../tools/import.vala:119
 #, c-format
 msgid "Couldn't load the ‘%s’ backend."
-msgstr ""
+msgstr "‘%s’ ಬ್ಯಾಕೆಂಡ್‌ಗಳನ್ನು ಲೋಡ್ ಮಾಡಲು ಸಾಧ್ಯವಾಗಿಲ್ಲ."
 
 #. Translators: the first parameter is a backend identifier and the
 #. * second parameter is an error message.
 #: ../tools/import.vala:132
 #, c-format
 msgid "Couldn't prepare the ‘%s’ backend: %s"
-msgstr ""
+msgstr "‘%s’ ಬ್ಯಾಕೆಂಡ್‌ಗಳನ್ನು ಸಿದ್ಧಗೊಳಿಸಲು ಸಾಧ್ಯವಾಗಿಲ್ಲ: %s"
 
 #. Translators: the parameter is a backend identifier.
 #: ../tools/import.vala:145
 #, c-format
 msgid "Couldn't load the ‘%s’ backend's persona store."
-msgstr ""
+msgstr "‘%s’ ಬ್ಯಾಕೆಂಡ್‌ನ ಪರ್ಸೋನಾ ಶೇಖರಣೆಯನ್ನು ಲೋಡ್ ಮಾಡಲು ಸಾಧ್ಯವಾಗಿಲ್ಲ."
 
 #: ../tools/import.vala:166
 #, c-format
 msgid "Couldn't prepare the ‘%s’ backend's persona store: %s"
-msgstr ""
+msgstr "‘%s’ ಬ್ಯಾಕೆಂಡ್‌ನ ಪರ್ಸೋನಾ ಶೇಖರಣೆಯನ್ನು ಸಿದ್ಧಗೊಳಿಸಲು ಸಾಧ್ಯವಾಗಿಲ್ಲ: %s"
 
 #. Translators: the parameter is an error message.
 #: ../tools/import.vala:184
@@ -670,5 +703,7 @@ msgid ""
 "Unrecognized source backend name ‘%s’. ‘%s’ is currently the only supported "
 "source backend."
 msgstr ""
+"ಗುರುತಿಸಲಾಗದ ಬ್ಯಾಕೆಂಡ್ ಹೆಸರು ‘%s’. ‘%s’ ಎನ್ನುವುದು ಪ್ರಸಕ್ತ ಬೆಂಬಲಿಸಲಾಗುತ್ತಿರುವ "
+"ಒಂದೇ ಒಂದು ಆಕರ ಬ್ಯಾಕೆಂಡ್ ಆಗಿದೆ."
 
 
