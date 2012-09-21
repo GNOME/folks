@@ -62,7 +62,8 @@ public enum Folks.TrustLevel
 
 /**
  * A physical person, aggregated from the various {@link Persona}s the person
- * might have, such as their different IM addresses or vCard entries.
+ * might have, such as their different IM addresses or vCard entries. An
+ * individual must always contain at least one {@link Persona}.
  *
  * When choosing the values of single-valued properties (such as
  * {@link Individual.alias} and {@link Individual.avatar}; but not multi-valued
@@ -940,6 +941,8 @@ public class Folks.Individual : Object,
 
   /**
    * The set of {@link Persona}s encapsulated by this Individual.
+   *
+   * There must always be at least one Persona in this set.
    *
    * No order is specified over the set of personas, as such an order may be
    * different across each of the properties implemented by the personas (e.g.
