@@ -1,0 +1,735 @@
+# Catalan translation for folks.
+# Copyright (C) 2012 Free Software Foundation, Inc.
+# This file is distributed under the same license as the folks package.
+# Gil Forcada <gilforcada@guifi.net>, 2012.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: folks\n"
+"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
+"product=folks&keywords=I18N+L10N&component=general\n"
+"POT-Creation-Date: 2012-09-21 14:20+0000\n"
+"PO-Revision-Date: 2012-09-15 17:37+0200\n"
+"Last-Translator: Gil Forcada <gilforcada@guifi.net>\n"
+"Language-Team: Catalan <tradgnome@softcatala.org>\n"
+"Language: ca\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bits\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+#. The timeout after which we consider a property change to have failed if we
+#. * haven't received a property change notification for it.
+#. seconds
+#. Translators: This should be translated to the name of the “Starred in
+#. * Android” group in Google Contacts for your language. If Google have not
+#. * localised the group for your language, or Google Contacts isn't available
+#. * in your language, please *do not* translate this string (i.e. just copy
+#. * the msgid to the msgstr unchanged).
+#: ../backends/eds/lib/edsf-persona-store.vala:64
+msgid "Starred in Android"
+msgstr "Preferit a l'Android"
+
+#. Translators: the first parameter is an address book
+#. * URI and the second is a persona UID.
+#: ../backends/eds/lib/edsf-persona-store.vala:588
+#, c-format
+msgid "Address book ‘%s’ is offline, so contact ‘%s’ cannot be removed."
+msgstr ""
+"La llibreta d'adreces «%s» està fora de línia, de manera que no es pot "
+"suprimir el contacte «%s»."
+
+#. Translators: the first parameter is an address book
+#. * URI and the second is an error message.
+#: ../backends/eds/lib/edsf-persona-store.vala:594
+#, c-format
+msgid "Permission denied to remove contact ‘%s’: %s"
+msgstr "S'ha denegat el permís per suprimir el contacte «%s»: %s"
+
+#. Translators: the parameter is an error message.
+#: ../backends/eds/lib/edsf-persona-store.vala:599
+#, c-format
+msgid "Removing contacts isn't supported by this persona store: %s"
+msgstr "Aquest magatzem de contactes no permet suprimir contactes: %s"
+
+#: ../backends/eds/lib/edsf-persona-store.vala:628
+#, c-format
+msgid "Can't remove contact ‘%s’: %s"
+msgstr "No s'ha pogut suprimir el contacte «%s»: %s"
+
+#. Translators: the parameter is an address book
+#. * URI.
+#: ../backends/eds/lib/edsf-persona-store.vala:721
+#: ../backends/eds/lib/edsf-persona-store.vala:915
+#, c-format
+msgid "Address book ‘%s’ is offline."
+msgstr "La llibreta d'adreces «%s» no està en línia."
+
+#. Translators: the first parameter is an address
+#. * book URI and the second is an error message.
+#: ../backends/eds/lib/edsf-persona-store.vala:726
+#: ../backends/eds/lib/edsf-persona-store.vala:920
+#, c-format
+msgid "Permission denied to open address book ‘%s’: %s"
+msgstr "S'ha denegat el permís per obrir la llibreta d'adreces «%s»: %s"
+
+#. Translators: the first parameter is an address book URI
+#. * and the second is an error message.
+#: ../backends/eds/lib/edsf-persona-store.vala:759
+#, c-format
+msgid "Couldn't open address book ‘%s’: %s"
+msgstr "No s'ha pogut obrir la llibreta d'adreces «%s»: %s"
+
+#. Translators: the parameteter is an error message.
+#: ../backends/eds/lib/edsf-persona-store.vala:825
+#: ../backends/eds/lib/edsf-persona-store.vala:855
+#, c-format
+msgid "Couldn't get address book capabilities: %s"
+msgstr "No s'ha pogut obtenir les capacitats de la llibreta d'adreces: %s"
+
+#. Translators: the parameter is an address book URI.
+#: ../backends/eds/lib/edsf-persona-store.vala:871
+#, c-format
+msgid "Couldn't get view for address book ‘%s’."
+msgstr "No s'ha pogut obtenir la vista de la llibreta d'adreces «%s»."
+
+#. Translators: the first parameter is an address book URI
+#. * and the second is an error message.
+#: ../backends/eds/lib/edsf-persona-store.vala:953
+#, c-format
+msgid "Couldn't get view for address book ‘%s’: %s"
+msgstr "No s'ha pogut obtenir la vista de la llibreta d'adreces «%s»: %s"
+
+#. Translators: the parameter is the name of a property on a
+#. * contact, formatted in the normal GObject style (e.g.
+#. * lowercase with hyphens to separate words).
+#: ../backends/eds/lib/edsf-persona-store.vala:1310
+#, c-format
+msgid "Changing the ‘%s’ property failed due to reaching the timeout."
+msgstr ""
+"No s'ha pogut canviar la propietat «%s» perquè s'ha esgotat el temps "
+"d'espera."
+
+#: ../backends/eds/lib/edsf-persona-store.vala:1348
+#: ../folks/avatar-details.vala:63
+msgid "Avatar is not writeable on this contact."
+msgstr "No es pot canviar l'avatar d'aquest contacte."
+
+#: ../backends/eds/lib/edsf-persona-store.vala:1369
+#: ../folks/web-service-details.vala:123
+msgid "Web service addresses are not writeable on this contact."
+msgstr "No es poden canviar les adreces dels serveis web d'aquest contacte."
+
+#: ../backends/eds/lib/edsf-persona-store.vala:1405
+#: ../folks/url-details.vala:152
+msgid "URLs are not writeable on this contact."
+msgstr "No es poden canviar els URL d'aquest contacte."
+
+#: ../backends/eds/lib/edsf-persona-store.vala:1482
+#: ../folks/local-id-details.vala:64
+msgid "Local IDs are not writeable on this contact."
+msgstr "No es poden canviar els identificadors locals d'aquest contacte."
+
+#: ../backends/eds/lib/edsf-persona-store.vala:1508
+msgid "The contact cannot be marked as favourite."
+msgstr "No es pot marcar el contacte com a preferit."
+
+#. Translators: the parameter is an error message.
+#: ../backends/eds/lib/edsf-persona-store.vala:1577
+#, c-format
+msgid "Can't update avatar: %s"
+msgstr "No es pot actualitzar l'avatar: %s"
+
+#: ../backends/eds/lib/edsf-persona-store.vala:1588
+#: ../folks/email-details.vala:120
+msgid "E-mail addresses are not writeable on this contact."
+msgstr "No es poden canviar les adreces electròniques d'aquest contacte."
+
+#: ../backends/eds/lib/edsf-persona-store.vala:1602
+#: ../folks/phone-details.vala:229
+msgid "Phone numbers are not writeable on this contact."
+msgstr "No es poden canviar els números de telèfon d'aquest contacte."
+
+#: ../backends/eds/lib/edsf-persona-store.vala:1616
+#: ../folks/postal-address-details.vala:361
+msgid "Postal addresses are not writeable on this contact."
+msgstr "No es poden canviar les adreces postals d'aquest contacte."
+
+#: ../backends/eds/lib/edsf-persona-store.vala:1683
+#: ../folks/name-details.vala:283
+msgid "Full name is not writeable on this contact."
+msgstr "No es pot canviar el nom complet d'aquest contacte."
+
+#: ../backends/eds/lib/edsf-persona-store.vala:1705
+#: ../folks/name-details.vala:321
+msgid "Nickname is not writeable on this contact."
+msgstr "No es pot canviar el sobrenom d'aquest contacte."
+
+#: ../backends/eds/lib/edsf-persona-store.vala:1727
+#: ../folks/note-details.vala:138
+msgid "Notes are not writeable on this contact."
+msgstr "No es poden canviar les notes d'aquest contacte."
+
+#: ../backends/eds/lib/edsf-persona-store.vala:1756
+#: ../folks/birthday-details.vala:62
+msgid "Birthday is not writeable on this contact."
+msgstr "No es pot canviar l'aniversari d'aquest contacte."
+
+#: ../backends/eds/lib/edsf-persona-store.vala:1799
+#: ../folks/role-details.vala:279
+msgid "Roles are not writeable on this contact."
+msgstr "No es poden canviar els rols d'aquest contacte."
+
+#: ../backends/eds/lib/edsf-persona-store.vala:1900
+#: ../folks/name-details.vala:246
+msgid "Structured name is not writeable on this contact."
+msgstr "No es pot canviar el nom estructurat d'aquest contacte."
+
+#: ../backends/eds/lib/edsf-persona-store.vala:1939
+#: ../folks/im-details.vala:136
+msgid "IM addresses are not writeable on this contact."
+msgstr ""
+"No es poden canviar les adreces de missatgeria instantània d'aquest contacte."
+
+#: ../backends/eds/lib/edsf-persona-store.vala:1989
+#: ../folks/group-details.vala:174
+msgid "Groups are not writeable on this contact."
+msgstr "No es poden canviar els grups d'aquest contacte."
+
+#: ../backends/eds/lib/edsf-persona-store.vala:2033
+#: ../folks/gender-details.vala:79
+msgid "Gender is not writeable on this contact."
+msgstr "No es pot canviar el gènere d'aquest contacte."
+
+#: ../backends/eds/lib/edsf-persona-store.vala:2068
+#: ../folks/anti-linkable.vala:81
+msgid "Anti-links are not writeable on this contact."
+msgstr "No es poden canviar els anti-links d'aquest contacte."
+
+#. Translators: the first parameter is a non-human-readable
+#. * property name and the second parameter is an error
+#. * message.
+#: ../backends/eds/lib/edsf-persona-store.vala:2263
+#, c-format
+msgid "Property ‘%s’ is not writeable: %s"
+msgstr "No es pot canviar la propietat «%s»: %s"
+
+#. Translators: the first parameter is a non-human-readable
+#. * property name and the second parameter is an error
+#. * message.
+#: ../backends/eds/lib/edsf-persona-store.vala:2272
+#, c-format
+msgid "Invalid value for property ‘%s’: %s"
+msgstr "El valor de la propietat «%s» no és vàlid: %s"
+
+#. Translators: the first parameter is a non-human-readable
+#. * property name and the second parameter is an error message.
+#: ../backends/eds/lib/edsf-persona-store.vala:2298
+#, c-format
+msgid "Unknown error setting property ‘%s’: %s"
+msgstr ""
+"S'ha produït un error desconegut en establir el valor per la propietat «%s»: "
+"%s"
+
+#. Translators: the first parameter is a filename, and
+#. * the second is an error message.
+#: ../backends/key-file/kf-persona-store.vala:233
+#, c-format
+msgid "The relationship key file '%s' could not be loaded: %s"
+msgstr "No s'ha pogut carregar el fitxer de claus «%s» de la relació: %s"
+
+#. Translators: the first parameter is a path, and the
+#. * second is an error message.
+#: ../backends/key-file/kf-persona-store.vala:255
+#, c-format
+msgid "The relationship key file directory '%s' could not be created: %s"
+msgstr ""
+"No s'ha pogut crear el directori de fitxers de claus «%s» de la relació: %s"
+
+#. Translators: the first parameter is a filename, and
+#. * the second is an error message.
+#: ../backends/key-file/kf-persona-store.vala:279
+#, c-format
+msgid "The relationship key file '%s' could not be created: %s"
+msgstr "No s'ha pogut crear el fitxer de claus «%s» de la relació: %s"
+
+#. Translators: the first parameter is a filename, the second is
+#. * an error message.
+#: ../backends/key-file/kf-persona-store.vala:468
+#, c-format
+msgid "Could not write updated key file '%s': %s"
+msgstr "No s'ha pogut escriure l'actualització del fitxer de claus «%s»: %s"
+
+#. Translators: this is an error message for if the user
+#. * provides an invalid IM address. The first parameter is
+#. * an IM address (e.g. “foo@jabber.org”), the second is
+#. * the name of a protocol (e.g. “jabber”) and the third is
+#. * an error message.
+#: ../backends/key-file/kf-persona.vala:173
+#, c-format
+msgid "Invalid IM address ‘%s’ for protocol ‘%s’: %s"
+msgstr ""
+"L'adreça de missatgeria instantània «%s» pel protocol «%s» no és vàlida: %s"
+
+#. Translators: the parameter is an error message.
+#: ../backends/key-file/kf-persona.vala:432
+#, c-format
+msgid "Couldn't load data from key file: %s"
+msgstr "No s'han pogut carregar les dades del fitxer de claus: %s"
+
+#. Translators: the parameter is an error message.
+#: ../backends/libsocialweb/lib/swf-persona-store.vala:345
+#: ../backends/libsocialweb/lib/swf-persona-store.vala:367
+#: ../backends/libsocialweb/lib/swf-persona-store.vala:388
+#, c-format
+msgid "Couldn’t prepare libsocialweb service: %s"
+msgstr "No s'ha pogut preparar el servei libsocialweb: %s"
+
+#: ../backends/libsocialweb/lib/swf-persona-store.vala:346
+msgid "No capabilities were found."
+msgstr "No s'han trobat capacitats."
+
+#: ../backends/libsocialweb/lib/swf-persona-store.vala:368
+msgid "No contacts capability was found."
+msgstr "No s'han trobat capacitats dels contactes."
+
+#: ../backends/libsocialweb/lib/swf-persona-store.vala:389
+msgid "Error opening contacts view."
+msgstr "S'ha produït un error en obrir la vista de contactes."
+
+#. Translators: the first parameter is the display name for
+#. * the Telepathy account, and the second is an error
+#. * message.
+#: ../backends/telepathy/lib/tpf-persona-store.vala:778
+#, c-format
+msgid ""
+"Failed to determine whether we can set aliases on Telepathy account '%s': %s"
+msgstr ""
+"No s'ha pogut determinar si es poden establir àlies al compte del Telepathy "
+"«%s»: %s"
+
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1234
+msgid "Telepathy contacts representing the local user may not be removed."
+msgstr ""
+"No s'haurien de suprimir els contactes del Telepathy que representen "
+"l'usuari local."
+
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1245
+#, c-format
+msgid "Failed to remove a persona from store: %s"
+msgstr "No s'ha pogut suprimir un contacte del magatzem: %s"
+
+#. Translators: the first two parameters are store identifiers and
+#. * the third is a contact identifier.
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1275
+#, c-format
+msgid ""
+"Persona store (%s, %s) requires the following details:\n"
+"    contact (provided: '%s')\n"
+msgstr ""
+"El magatzem de contactes (%s, %s) requereix les dades següents:\n"
+"    contacte (proporcionat per: «%s»)\n"
+
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1290
+msgid "Cannot create a new Telepathy contact while offline."
+msgstr ""
+"No es poden crear contactes del Telepathy nous mentre s'està fora de línia."
+
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1308
+#, c-format
+msgid "Failed to add a persona from details: %s"
+msgstr "No s'ha pogut afegir el contacte a partir de les dades: %s"
+
+#. Translators: "telepathy-logger" is the name of an application,
+#. * and should not be translated.
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1328
+msgid ""
+"Failed to change favorite without a connection to the telepathy-logger "
+"service."
+msgstr ""
+"No s'ha pogut canviar un preferit sense una connexió al servei «telepathy-"
+"logger»."
+
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1334
+msgid ""
+"Failed to change favorite status of Telepathy Persona because it has no "
+"attached TpContact."
+msgstr ""
+"No s'ha pogut canviar l'estat de preferit d'un contacte del Telepathy perquè "
+"no té cap TpContact associat."
+
+#. Translators: the parameter is a contact identifier.
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1352
+#, c-format
+msgid "Failed to change favorite status for Telepathy contact ‘%s’."
+msgstr ""
+"No s'ha pogut canviar l'estat de preferit del contacte del Telepathy «%s»."
+
+#. Translators: the parameter is an error message.
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1384
+#, c-format
+msgid "Failed to change contact's alias: %s"
+msgstr "No s'ha pogut canviar l'àlies del contacte: %s"
+
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1464
+msgid "Extended information may only be set on the user's Telepathy contact."
+msgstr ""
+"La informació estesa només s'hauria d'afegir al contacte del Telepathy de "
+"l'usuari."
+
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1493
+msgid ""
+"Extended information cannot be written because the store is disconnected."
+msgstr ""
+"No s'ha pogut escriure la informació estesa perquè el magatzem està "
+"desconnectat."
+
+#: ../backends/telepathy/lib/tpf-persona.vala:497
+#: ../backends/telepathy/lib/tpf-persona.vala:518
+#: ../backends/telepathy/lib/tpf-persona.vala:570
+#: ../backends/telepathy/lib/tpf-persona.vala:584
+#, c-format
+msgid "Failed to change group membership: %s"
+msgstr "No s'ha pogut canviar l'afiliació del grup: %s"
+
+#. Translators: "account" refers to an instant messaging
+#. * account.
+#: ../backends/telepathy/lib/tpf-persona.vala:500
+#: ../backends/telepathy/lib/tpf-persona.vala:573
+msgid "Account is offline."
+msgstr "El compte està fora de línia."
+
+#. Translators: the first parameter is the unknown key that
+#. * was received with the details params, and the second
+#. * identifies the persona store.
+#: ../backends/tracker/lib/trf-persona-store.vala:742
+#, c-format
+msgid "Unrecognized parameter '%s' passed to persona store '%s'."
+msgstr ""
+"No s'ha reconegut el paràmetre «%s» que s'ha passat al magatzem de contactes "
+"«%s»."
+
+#: ../folks/alias-details.vala:61
+msgid "Alias is not writeable on this contact."
+msgstr "Aquest compte no permet canviar l'àlies."
+
+#. Translators: the first parameter is a folder path and the second
+#. * is an error message.
+#: ../folks/backend-store.vala:591
+#, c-format
+msgid "Error listing contents of folder '%s': %s"
+msgstr "S'ha produït un error en llistar el contingut del directori «%s»: %s"
+
+#. Translators: the parameter is a filename.
+#: ../folks/backend-store.vala:720
+#, c-format
+msgid "File or directory '%s' does not exist."
+msgstr "No existeix el fitxer o directori «%s»."
+
+#. Translators: the parameter is a filename.
+#: ../folks/backend-store.vala:726
+#, c-format
+msgid "Failed to get content type for '%s'."
+msgstr "No s'ha pogut obtenir el tipus de contingut per «%s»."
+
+#: ../folks/birthday-details.vala:93
+msgid "Birthday event ID is not writeable on this contact."
+msgstr ""
+"Aquest compte no permet canviar l'identificador d'esdeveniment d'aniversari."
+
+#: ../folks/favourite-details.vala:58
+msgid "Favorite status is not writeable on this contact."
+msgstr "Aquest compte no permet canviar l'estat de preferit."
+
+#. Translators: the parameter is an IM address.
+#: ../folks/im-details.vala:178 ../folks/im-details.vala:192
+#: ../folks/im-details.vala:214 ../folks/im-details.vala:241
+#, c-format
+msgid "The IM address '%s' could not be understood."
+msgstr "No s'ha pogut reconèixer l'adreça de missatgeria instantània «%s»."
+
+#. Translators: the first parameter is a persona store identifier
+#. * and the second is an error message.
+#: ../folks/individual-aggregator.vala:863
+#, c-format
+msgid "Error preparing persona store '%s': %s"
+msgstr "S'ha produït un error en preparar el magatzem del contacte «%s»: %s"
+
+#. Translators: the parameter is a property name.
+#: ../folks/individual-aggregator.vala:1069
+#: ../folks/individual-aggregator.vala:1295
+#, c-format
+msgid "Unknown property '%s' in linkable property list."
+msgstr "Es desconeix la propietat «%s» de la llista de propietats enllaçades."
+
+#. Translators: the first parameter is a store identifier
+#. * and the second parameter is an error message.
+#: ../folks/individual-aggregator.vala:1757
+#, c-format
+msgid "Failed to add contact for persona store ID '%s': %s"
+msgstr ""
+"No s'ha pogut afegir el contacte a l'identificador de magatzem de contactes "
+"«%s»: %s"
+
+#: ../folks/individual-aggregator.vala:1850
+msgid "Can’t link personas with no primary store."
+msgstr "No es poden enllaçar contactes que no tinguin un magatzem primari."
+
+#: ../folks/individual-aggregator.vala:1851
+#: ../folks/individual-aggregator.vala:2185
+#, c-format
+msgid ""
+"Persona store ‘%s:%s’ is configured as primary, but could not be found or "
+"failed to load."
+msgstr ""
+"El magatzem de contactes «%s:%s» està configurat com a primari, però no s'ha "
+"pogut trobar o carregar."
+
+#: ../folks/individual-aggregator.vala:1852
+#: ../folks/individual-aggregator.vala:2186
+#, c-format
+msgid ""
+"Check the relevant service is running, or change the default store in that "
+"service or using the “%s” GSettings key."
+msgstr ""
+"Comproveu que el servei estigui funcionant, canvieu el magatzem per defecte "
+"d'aquest servei o utilitzeu la clau del GSettings «%s»."
+
+#: ../folks/individual-aggregator.vala:1884
+msgid "Anti-links can't be removed between personas being linked."
+msgstr ""
+"No es poden suprimir els anti-links de contactes que s'estan enllaçant."
+
+#: ../folks/individual-aggregator.vala:2184
+msgid "Can’t add personas with no primary store."
+msgstr "No es poden afegir contactes que no tinguin magatzem primari."
+
+#: ../folks/individual-aggregator.vala:2195
+#, c-format
+msgid "Can't write to requested property (“%s”) of the writeable store."
+msgstr ""
+"No es pot escriure la propietat sol·licitada («%s») del magatzem "
+"d'escriptura."
+
+#: ../folks/individual.vala:216 ../folks/individual.vala:369
+#: ../folks/individual.vala:478 ../folks/individual.vala:718
+#: ../folks/individual.vala:796
+#, c-format
+msgid "Failed to change property ‘%s’: No suitable personas were found."
+msgstr ""
+"No s'ha pogut canviar la propietat «%s»: no s'han trobat els contactes "
+"adequats."
+
+#: ../folks/org.freedesktop.folks.gschema.xml.in.h:1
+msgid "Primary store ID"
+msgstr "Identificador del magatzem primari"
+
+#: ../folks/org.freedesktop.folks.gschema.xml.in.h:2
+msgid ""
+"The ID of the persona store which folks should use as primary (i.e. to store "
+"linking data in). The type ID of the store may optionally be prepended, "
+"separated by a colon. For example: “eds:system-address-book” or “key-file”."
+msgstr ""
+"L'identificador del magatzem de contactes que la folks hauria d'utilitzar "
+"com a primari (p. ex. per desar-hi dades de contactes enllaçats). "
+"Opcionalment, es pot afegir al principi el tipus d'identificador del "
+"magatzem, separat per dos punts. Per exemple: «eds:system-address-book» o "
+"«key-file»."
+
+#: ../folks/postal-address-details.vala:231
+#, c-format
+msgid "%s, %s, %s, %s, %s, %s, %s"
+msgstr "%s, %s, %s, %s, %s, %s, %s"
+
+# Notes:
+# Afegeix una nota
+#
+# Camins:
+# ../folks/presence-details.vala:159
+#: ../folks/presence-details.vala:159
+msgid "Unknown status"
+msgstr "Es desconeix l'estat"
+
+#: ../folks/presence-details.vala:161
+msgid "Offline"
+msgstr "Fora de línia"
+
+#: ../folks/presence-details.vala:165
+msgid "Error"
+msgstr "Error"
+
+#: ../folks/presence-details.vala:167
+msgid "Available"
+msgstr "Disponible"
+
+#: ../folks/presence-details.vala:169
+msgid "Away"
+msgstr "Absent"
+
+#: ../folks/presence-details.vala:171
+msgid "Extended away"
+msgstr "Absent de fa estona"
+
+#: ../folks/presence-details.vala:173
+msgid "Busy"
+msgstr "Ocupat"
+
+#: ../folks/presence-details.vala:175
+msgid "Hidden"
+msgstr "Ocult"
+
+#: ../folks/role-details.vala:150
+#, c-format
+msgid "Title: %s, Organisation: %s, Role: %s"
+msgstr "Títol: %s, organització: %s, rol: %s"
+
+#. Translators: the parameter is a filename.
+#: ../tools/import-pidgin.vala:48
+#, c-format
+msgid "File %s does not exist."
+msgstr "No existeix el fitxer «%s»."
+
+#. Translators: the first parameter is a filename, and the second
+#. * is an error message.
+#: ../tools/import-pidgin.vala:64
+#, c-format
+msgid "Failed to get information about file %s: %s"
+msgstr "No s'ha pogut obtenir informació sobre el fitxer «%s»: %s"
+
+#. Translators: the parameter is a filename.
+#: ../tools/import-pidgin.vala:71
+#, c-format
+msgid "File %s is not readable."
+msgstr "No es pot llegir el fitxer «%s»."
+
+#. Translators: the parameter is a filename.
+#: ../tools/import-pidgin.vala:81
+#, c-format
+msgid "The Pidgin buddy list file '%s' could not be loaded."
+msgstr "No s'ha pogut carregar el fitxer de llista d'amics del Pidgin «%s»."
+
+#. Translators: the parameter is a filename.
+#: ../tools/import-pidgin.vala:96
+#, c-format
+msgid ""
+"The Pidgin buddy list file ‘%s’ could not be loaded: the root element could "
+"not be found or was not recognized."
+msgstr ""
+"No s'ha pogut carregar el fitxer de llista d'amics del Pidgin «%s»: no s'ha "
+"pogut trobar l'element arrel o no s'ha pogut reconèixer."
+
+#. Translators: the first parameter is the number of buddies which
+#. * were successfully imported, and the second is a filename.
+#: ../tools/import-pidgin.vala:116
+#, c-format
+msgid "Imported %u buddy from '%s'."
+msgid_plural "Imported %u buddies from '%s'."
+msgstr[0] "S'ha importat %u amic de «%s»."
+msgstr[1] "S'han importat %u amics de «%s»."
+
+#. Translators: the first parameter is a persona identifier,
+#. * and the second is an error message.
+#: ../tools/import-pidgin.vala:163
+#, c-format
+msgid "Error changing group of contact ‘%s’: %s"
+msgstr "S'ha produït un error en canviar el grup del contacte «%s»: %s"
+
+#. Translators: the parameter is the buddy's IM address.
+#: ../tools/import-pidgin.vala:220
+#, c-format
+msgid ""
+"Ignoring buddy with no alias and only one IM address:\n"
+"%s"
+msgstr ""
+"S'està ignorant l'amic sense cap àlies i amb només una adreça de missatgeria "
+"instantània:\n"
+"%s"
+
+#: ../tools/import-pidgin.vala:244
+#, c-format
+msgid ""
+"Failed to create new contact for buddy with alias ‘%s’ and IM addresses:\n"
+"%s\n"
+"Error: %s\n"
+msgstr ""
+"No s'ha pogut crear un contacte nou per l'amic amb l'àlies «%s» i les "
+"adreces de missatgeria instantània:\n"
+"%s\n"
+"Error: %s\n"
+
+#. Translators: the first parameter is a persona identifier, the
+#. * second is an alias for the persona, and the third is a set of IM
+#. * addresses each on a new line.
+#: ../tools/import-pidgin.vala:258
+#, c-format
+msgid ""
+"Created contact ‘%s’ for buddy with alias ‘%s’ and IM addresses:\n"
+"%s"
+msgstr ""
+"S'ha creat el contacte «%s» per l'amic amb l'àlies «%s» i les adreces de "
+"missatgeria instantània::\n"
+"%s"
+
+#: ../tools/import.vala:44
+msgid "Source backend name (default: 'pidgin')"
+msgstr "Nom de la font del rerefons (per defecte: «pidgin»)"
+
+#: ../tools/import.vala:47
+msgid "Source filename (default: specific to source backend)"
+msgstr "Nom del fitxer font (per defecte: específic de cada rerefons font)"
+
+#: ../tools/import.vala:57
+msgid "— import meta-contact information to libfolks"
+msgstr "— importació d'informació de metacontactes a la libfolks"
+
+#. Translators: the parameter is an error message.
+#: ../tools/import.vala:67
+#, c-format
+msgid "Couldn't parse command line options: %s"
+msgstr "No s'han pogut analitzar les opcions de línia d'ordres: %s"
+
+#. Translators: the parameter is an error message.
+#: ../tools/import.vala:108
+#, c-format
+msgid "Couldn't load the backends: %s"
+msgstr "No s'han pogut carregar els rerefons: %s"
+
+#. Translators: the parameter is a backend identifier.
+#: ../tools/import.vala:119
+#, c-format
+msgid "Couldn't load the ‘%s’ backend."
+msgstr "No s'ha pogut carregar el rerefons «%s»."
+
+#. Translators: the first parameter is a backend identifier and the
+#. * second parameter is an error message.
+#: ../tools/import.vala:132
+#, c-format
+msgid "Couldn't prepare the ‘%s’ backend: %s"
+msgstr "No s'ha pogut preparar el rerefons «%s»: %s"
+
+#. Translators: the parameter is a backend identifier.
+#: ../tools/import.vala:145
+#, c-format
+msgid "Couldn't load the ‘%s’ backend's persona store."
+msgstr "No s'ha pogut carregar el magatzem de contactes del rerefons «%s»."
+
+#: ../tools/import.vala:166
+#, c-format
+msgid "Couldn't prepare the ‘%s’ backend's persona store: %s"
+msgstr "No s'ha pogut preparar el magatzem de contactes del rerefons «%s»: %s"
+
+#. Translators: the parameter is an error message.
+#: ../tools/import.vala:184
+#, c-format
+msgid "Error importing contacts: %s"
+msgstr "S'ha produït un error en importar els contactes: %s"
+
+#. Translators: both parameters are identifiers for backends.
+#: ../tools/import.vala:198
+#, c-format
+msgid ""
+"Unrecognized source backend name ‘%s’. ‘%s’ is currently the only supported "
+"source backend."
+msgstr ""
+"No es reconeix el nom del rerefons font «%s». L'únic rerefons font que es "
+"pot utilitzar ara mateix és «%s»."
