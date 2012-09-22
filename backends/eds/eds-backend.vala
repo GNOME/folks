@@ -47,6 +47,7 @@ public class Folks.Backends.Eds.Backend : Folks.Backend
   private HashMap<string, PersonaStore> _persona_stores;
   private Map<string, PersonaStore> _persona_stores_ro;
   private E.SourceRegistry _ab_sources;
+  private Set<string>? _storeids;
 
   /**
    * {@inheritDoc}
@@ -71,20 +72,81 @@ public class Folks.Backends.Eds.Backend : Folks.Backend
           this._remove_address_book (store);
         }
     }
-  
+
   /**
    * {@inheritDoc}
    */
   public override void enable_persona_store (PersonaStore store)
     {
-      if (!this._persona_stores.has_key (store.id))
+      if (this._persona_stores.has_key (store.id) == false)
         {
-          store.removed.connect (this._store_removed_cb);
-          
-          this._persona_stores.set (store.id, store);
+          this._add_persona_store (store);
+        }
+    }
+    
+  private void _add_persona_store (PersonaStore store, bool notify = true)
+    {
+      store.removed.connect (this._store_removed_cb);
+      
+      this._persona_stores.set (store.id, store);
+      
+      this.persona_store_added (store);
+      if (notify)
+        {
           this.notify_property ("persona-stores");
-          
-          this.persona_store_added (store);
+        }
+    }
+  
+  /**
+   * {@inheritDoc}
+   */
+  public override void set_persona_stores (Set<string>? storeids)
+    {
+      this._storeids = storeids;
+      bool stores_changed = false;
+      /* First handle adding any missing persona stores. */
+      foreach (string id in storeids)
+        {
+          if (this._persona_stores.has_key (id) == false)
+            {
+              E.Source? s = this._ab_sources.ref_source (id);
+              
+              if (s == null)
+                {
+                  warning ("Unable to reference EDS source with ID %s", id);
+                  continue;
+                }
+
+              var store = 
+                new Edsf.PersonaStore.with_source_registry (this._ab_sources, s);
+              this._add_persona_store (store, false);
+              
+              stores_changed = true;
+            }
+        }
+
+      /* Keep persona stores to remove in a separate array so we don't
+       * invalidate the list we are iterating over. */
+      PersonaStore[] stores_to_remove = {};
+      
+      foreach (PersonaStore store in this._persona_stores.values)
+        {
+          if (!storeids.contains (store.id))
+            {
+              stores_to_remove += store;
+              stores_changed = true;
+            }
+        }
+        
+      for (int i = 0; i < stores_to_remove.length; ++i)
+        {
+          this._remove_address_book (stores_to_remove[i], false);
+        }
+        
+      /* Finally, if anything changed, emit the persona-stores notification. */
+      if (stores_changed)
+        {
+          this.notify_property ("persona-stores");
         }
     }
     
@@ -100,6 +162,7 @@ public class Folks.Backends.Eds.Backend : Folks.Backend
     {
       this._persona_stores = new HashMap<string, PersonaStore> ();
       this._persona_stores_ro = this._persona_stores.read_only_view;
+      this._storeids = null;
     }
 
   /**
@@ -236,6 +299,12 @@ public class Folks.Backends.Eds.Backend : Folks.Backend
             {
               continue;
             }
+            
+          if (this._storeids != null &&
+              !(uid in this._storeids))
+            {
+              continue;
+            }
 
           if (!this._persona_stores.has_key (uid))
             {
@@ -268,14 +337,17 @@ public class Folks.Backends.Eds.Backend : Folks.Backend
       this.enable_persona_store (store);
     }
 
-  private void _remove_address_book (Folks.PersonaStore store)
+  private void _remove_address_book (Folks.PersonaStore store, bool notify = true)
     {
       debug ("Removing address book '%s'.", store.id);
 
       this.persona_store_removed (store);
 
       this._persona_stores.unset (store.id);
-      this.notify_property ("persona-stores");
+      if (notify)
+        {
+          this.notify_property ("persona-stores");
+        }
 
       store.removed.disconnect (this._store_removed_cb);
     }
