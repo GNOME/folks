@@ -10,8 +10,8 @@ msgstr ""
 "Project-Id-Version: folks master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=folks&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2012-09-06 08:50+0000\n"
-"PO-Revision-Date: 2012-09-06 12:12+0100\n"
+"POT-Creation-Date: 2012-09-11 21:28+0000\n"
+"PO-Revision-Date: 2012-09-23 13:11+0100\n"
 "Last-Translator: Mario Blättermann <mario.blaettermann@gmail.com>\n"
 "Language-Team: Deutsch <gnome-de@gnome.org>\n"
 "Language: \n"
@@ -301,7 +301,7 @@ msgstr "Fehler beim Öffnen der Kontakte-Ansicht."
 #. Translators: the first parameter is the display name for
 #. * the Telepathy account, and the second is an error
 #. * message.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:801
+#: ../backends/telepathy/lib/tpf-persona-store.vala:778
 #, c-format
 msgid ""
 "Failed to determine whether we can set aliases on Telepathy account '%s': %s"
@@ -309,20 +309,20 @@ msgstr ""
 "Es konnte nicht ermittelt werden, ob Aliase für das Telepathy-Konto »%s« "
 "gesetzt werden können: %s"
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1218
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1234
 msgid "Telepathy contacts representing the local user may not be removed."
 msgstr ""
 "Telepathy-Kontakte, die den lokalen Benutzer verkörpern, können nicht "
 "entfernt werden."
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1229
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1245
 #, c-format
 msgid "Failed to remove a persona from store: %s"
 msgstr "Entfernen einer Person aus dem Speicher ist fehlgeschlagen: %s"
 
 #. Translators: the first two parameters are store identifiers and
 #. * the third is a contact identifier.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1259
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1275
 #, c-format
 msgid ""
 "Persona store (%s, %s) requires the following details:\n"
@@ -331,19 +331,19 @@ msgstr ""
 "Personenspeicher (%s, %s) erfordert die folgenden Details:\n"
 "    Kontakt (angegeben: »%s«)\n"
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1274
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1290
 msgid "Cannot create a new Telepathy contact while offline."
 msgstr ""
 "Ein neuer Telepathy-Kontakt kann im Offline-Modus nicht erstellt werden."
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1292
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1308
 #, c-format
 msgid "Failed to add a persona from details: %s"
 msgstr "Hinzufügen der Person aus den Details schlug fehl: %s"
 
 #. Translators: "telepathy-logger" is the name of an application,
 #. * and should not be translated.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1312
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1328
 msgid ""
 "Failed to change favorite without a connection to the telepathy-logger "
 "service."
@@ -351,7 +351,7 @@ msgstr ""
 "Ändern eines Favoriten ohne Verbindung zum telepathy-logger-Dienst schlug "
 "fehl."
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1318
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1334
 msgid ""
 "Failed to change favorite status of Telepathy Persona because it has no "
 "attached TpContact."
@@ -360,25 +360,25 @@ msgstr ""
 "TpContact zugeordnet ist."
 
 #. Translators: the parameter is a contact identifier.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1336
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1352
 #, c-format
 msgid "Failed to change favorite status for Telepathy contact ‘%s’."
 msgstr ""
 "Favoritenstatus für Telepathy-Kontakt »%s« konnte nicht geändert werden."
 
 #. Translators: the parameter is an error message.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1368
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1384
 #, c-format
 msgid "Failed to change contact's alias: %s"
 msgstr "Alias des Kontakts konnte nicht geändert werden: %s"
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1448
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1464
 msgid "Extended information may only be set on the user's Telepathy contact."
 msgstr ""
 "Erweiterte Informationen können nur für den Telepathy-Kontakt des Benutzers "
 "angegeben werden."
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1477
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1493
 msgid ""
 "Extended information cannot be written because the store is disconnected."
 msgstr ""
@@ -498,8 +498,7 @@ msgstr ""
 #: ../folks/individual-aggregator.vala:1884
 msgid "Anti-links can't be removed between personas being linked."
 msgstr ""
-"Anti-Links können nicht zwischen Personen, die verlinkt sind, gelöscht "
-"werden."
+"Anti-Links können nicht zwischen Personen, die verlinkt sind, gelöscht werden."
 
 #: ../folks/individual-aggregator.vala:2184
 msgid "Can’t add personas with no primary store."
@@ -512,6 +511,15 @@ msgstr ""
 "In angeforderte Eigenschaft (»%s«) des schreibbaren Speichers konnte nicht "
 "geschrieben werden."
 
+#: ../folks/individual.vala:215 ../folks/individual.vala:368
+#: ../folks/individual.vala:477 ../folks/individual.vala:717
+#: ../folks/individual.vala:795
+#, c-format
+msgid "Failed to change property ‘%s’: No suitable personas were found."
+msgstr ""
+"Eigenschaft »%s« konnte nicht geändert werden: Es wurden keine passenden "
+"Personen gefunden."
+
 #: ../folks/org.freedesktop.folks.gschema.xml.in.h:1
 msgid "Primary store ID"
 msgstr "Primäre Speicherkennung"
@@ -522,10 +530,10 @@ msgid ""
 "linking data in). The type ID of the store may optionally be prepended, "
 "separated by a colon. For example: “eds:system-address-book” or “key-file”."
 msgstr ""
-"Die Kennung des Personenspeichers, den folks als primären (d.h. zum "
-"Speichern von Verknüpfungsdaten) verwenden soll. Die Typenkennung des "
-"Speichers darf optional nachgesetzt werden, durch einen Doppelpunkt "
-"getrennt. Zum Beispiel: »eds:system-address-book« oder »key-file«."
+"Die Kennung des Personenspeichers, den folks als primären (d.h. zum Speichern "
+"von Verknüpfungsdaten) verwenden soll. Die Typenkennung des Speichers darf "
+"optional nachgesetzt werden, durch einen Doppelpunkt getrennt. Zum Beispiel: "
+"»eds:system-address-book« oder »key-file«."
 
 #: ../folks/postal-address-details.vala:231
 #, c-format
@@ -697,15 +705,13 @@ msgstr "Das Backend »%s« konnte nicht vorbereitet werden: %s"
 #: ../tools/import.vala:145
 #, c-format
 msgid "Couldn't load the ‘%s’ backend's persona store."
-msgstr ""
-"Der Personenspeicher des Backends für »%s« konnte nicht geladen werden."
+msgstr "Der Personenspeicher des Backends für »%s« konnte nicht geladen werden."
 
 #: ../tools/import.vala:166
 #, c-format
 msgid "Couldn't prepare the ‘%s’ backend's persona store: %s"
 msgstr ""
-"Der Personenspeicher des Backends für »%s« konnte nicht vorbereitet werden: "
-"%s"
+"Der Personenspeicher des Backends für »%s« konnte nicht vorbereitet werden: %s"
 
 #. Translators: the parameter is an error message.
 #: ../tools/import.vala:184
@@ -737,8 +743,7 @@ msgstr ""
 #~ msgstr "Laden des Moduls aus Pfad »%s« schlug fehl: %s"
 
 #~ msgid "Failed to find entry point function '%s' in '%s': %s"
-#~ msgstr ""
-#~ "Eintrittspunktfunktion »%s« konnte nicht in »%s« gefunden werden: %s"
+#~ msgstr "Eintrittspunktfunktion »%s« konnte nicht in »%s« gefunden werden: %s"
 
 #~ msgid "Error requesting a group channel: %s"
 #~ msgstr "Fehler beim Anfordern eines Gruppenkanals: %s"
@@ -779,8 +784,7 @@ msgstr ""
 #~ msgstr "Favorisierte Kontakte konnten nicht entfernt werden: %s"
 
 #~ msgid ""
-#~ "Failed to determine whether we can set groups on Telepathy account '%s': "
-#~ "%s"
+#~ "Failed to determine whether we can set groups on Telepathy account '%s': %s"
 #~ msgstr ""
 #~ "Es konnte nicht ermittelt werden, ob Gruppen für das Telepathy-Konto »%s« "
 #~ "gesetzt werden können: %s"
@@ -796,8 +800,7 @@ msgstr ""
 #~ "Telepathy-Kontakt »%s« konnte nicht zu Gruppe »%s« hinzugefügt werden."
 
 #~ msgid "Failed to remove Telepathy contact ‘%s’ from group ‘%s’."
-#~ msgstr ""
-#~ "Telepathy-Kontakt »%s« konnte nicht aus Gruppe »%s« entfernt werden."
+#~ msgstr "Telepathy-Kontakt »%s« konnte nicht aus Gruppe »%s« entfernt werden."
 
 #~ msgid "Failed to remove Telepathy contact ‘%s’ from ‘%s’ list: %s"
 #~ msgstr ""
