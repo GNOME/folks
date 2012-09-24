@@ -76,6 +76,7 @@ noinst_PROGRAMS = \
 	set-birthday \
 	set-roles \
 	link-personas-diff-stores \
+	enable-disable-stores \
 	set-is-favourite \
 	$(NULL)
 
@@ -214,6 +215,10 @@ set_roles_SOURCES = \
 
 link_personas_diff_stores_SOURCES = \
 	link-personas-diff-stores.vala \
+	$(NULL)
+
+enable_disable_stores_SOURCES = \
+	enable-disable-stores.vala \
 	$(NULL)
 
 set_is_favourite_SOURCES = \

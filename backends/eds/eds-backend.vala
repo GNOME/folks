@@ -341,9 +341,10 @@ public class Folks.Backends.Eds.Backend : Folks.Backend
     {
       debug ("Removing address book '%s'.", store.id);
 
+      this._persona_stores.unset (store.id);
+
       this.persona_store_removed (store);
 
-      this._persona_stores.unset (store.id);
       if (notify)
         {
           this.notify_property ("persona-stores");
