@@ -131,7 +131,8 @@ public class Folks.IndividualAggregator : Object
    * some point after {@link IndividualAggregator.prepare} has successfully
    * completed for the aggregator. An aggregator is in a quiescent state when
    * all the {@link PersonaStore}s listed by its backends have reached a
-   * quiescent state.
+   * quiescent state. Once it's reached a quiescent state, this property will
+   * never change again (from ``true`` to ``false``).
    *
    * It's guaranteed that this property's value will only ever change after
    * {@link IndividualAggregator.is_prepared} has changed to ``true``.
