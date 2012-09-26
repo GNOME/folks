@@ -53,6 +53,35 @@ public class Folks.Backends.Tp.Backend : Folks.Backend
   /**
    * {@inheritDoc}
    */
+  public override void enable_persona_store (PersonaStore store)
+    {
+      if (this.persona_stores.has_key (store.id) == false)
+        {
+          this._add_store (store);
+        }
+    }
+    
+  /**
+   * {@inheritDoc}
+   */
+  public override void disable_persona_store (PersonaStore store)
+    {
+      if (this.persona_stores.has_key (store.id))
+        {
+          this._remove_store (store);
+        }
+    }
+    
+  /**
+   * {@inheritDoc}
+   */
+  public override void set_persona_stores (Set<string>? storeids)
+    {
+    }
+
+  /**
+   * {@inheritDoc}
+   */
   public Backend ()
     {
       Object ();
@@ -171,17 +200,33 @@ public class Folks.Backends.Tp.Backend : Folks.Backend
         }
 
       var store = Tpf.PersonaStore.dup_for_account (account);
-      store.removed.connect (this._store_removed_cb);
-
-      this.notify_property ("persona-stores");
-      this.persona_store_added (store);
+      this._add_store (store);
     }
 
-  private void _store_removed_cb (PersonaStore store)
+  private void _add_store (PersonaStore store, bool notify = true)
+    {
+      store.removed.connect (this._store_removed_cb);
+      this.persona_store_added (store);
+
+      if (notify)
+        {
+          this.notify_property ("persona-stores");
+        }
+    }
+  
+  private void _remove_store (PersonaStore store, bool notify = true)
     {
       store.removed.disconnect (this._store_removed_cb);
-
       this.persona_store_removed (store);
-      this.notify_property ("persona-stores");
+      
+      if (notify)
+      {
+        this.notify_property ("persona-stores");
+      }
+    }
+    
+  private void _store_removed_cb (PersonaStore store)
+    {
+      this._remove_store (store);
     }
 }
