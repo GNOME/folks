@@ -80,6 +80,83 @@ public class Folks.Backends.Kf.Backend : Folks.Backend
   /**
    * {@inheritDoc}
    */
+  public override void enable_persona_store (Folks.PersonaStore store)
+    {
+      if (this._persona_stores.has_key (store.id) == false)
+        {
+          this._add_store ((Kf.PersonaStore) store);
+        }
+    }
+    
+  /**
+   * {@inheritDoc}
+   */
+  public override void disable_persona_store (Folks.PersonaStore store)
+    {
+      if (this._persona_stores.has_key (store.id))
+        {
+          this._store_removed_cb (store);
+        }
+    }
+
+  private File _get_default_file (string basename = "relationships")
+    {
+      string filename = basename + ".ini";
+      File file = File.new_for_path (Environment.get_user_data_dir ());
+      file = file.get_child ("folks");
+      file = file.get_child (filename);
+      return file;
+    }
+    
+  /**
+   * {@inheritDoc}
+   * In this implementation storeids are assumed to be base filenames for
+   * ini files under user_data_dir()/folks/ like the default relationships 
+   * {@link PersonaStore}.
+   */
+  public override void set_persona_stores (Set<string>? storeids)
+    {
+      /* All ids represent ini files in user_data_dir/folks/ */
+      
+      bool added_stores = false;
+      PersonaStore[] removed_stores = {};
+      
+      /* First handle adding any missing persona stores. */
+      foreach (string id in storeids)
+        {
+          if (this._persona_stores.has_key (id) == false)
+            {
+              File file = this._get_default_file (id);
+              
+              PersonaStore store = new Kf.PersonaStore (file);
+              this._add_store (store, false);
+              added_stores = true;
+            }
+        }
+        
+        foreach (PersonaStore store in this._persona_stores.values)
+          {
+            if (!storeids.contains (store.id))
+              {
+                removed_stores += store;
+              }
+          }
+        
+        for (int i = 0; i < removed_stores.length; ++i)
+          {
+            this._remove_store ((Kf.PersonaStore) removed_stores[i], false);
+          }
+        
+        /* Finally, if anything changed, emit the persona-stores notification. */
+        if (added_stores || removed_stores.length > 0)
+          {
+            this.notify_property ("persona-stores");
+          }
+    }
+  
+  /**
+   * {@inheritDoc}
+   */
   public Backend ()
     {
       Object ();
@@ -112,9 +189,7 @@ public class Folks.Backends.Kf.Backend : Folks.Backend
               "FOLKS_BACKEND_KEY_FILE_PATH");
           if (path == null)
             {
-              file = File.new_for_path (Environment.get_user_data_dir ());
-              file = file.get_child ("folks");
-              file = file.get_child ("relationships.ini");
+              file = this._get_default_file ();
 
               debug ("Using built-in key file '%s' (override with " +
                   "environment variable FOLKS_BACKEND_KEY_FILE_PATH)",
@@ -130,12 +205,8 @@ public class Folks.Backends.Kf.Backend : Folks.Backend
 
           /* Create the PersonaStore for the key file */
           PersonaStore store = new Kf.PersonaStore (file);
-
-          this._persona_stores.set (store.id, store);
-          store.removed.connect (this._store_removed_cb);
-          this.notify_property ("persona-stores");
-
-          this.persona_store_added (store);
+          
+          this._add_store (store);
 
           this._is_prepared = true;
           this.notify_property ("is-prepared");
@@ -151,6 +222,41 @@ public class Folks.Backends.Kf.Backend : Folks.Backend
       Internal.profiling_end ("preparing Kf.Backend");
     }
 
+  /**
+   * Utility function to add a persona store.
+   *
+   * @param store the store to add.
+   * @param notify whether or not to emit notification signals.
+   */
+  private void _add_store (PersonaStore store, bool notify = true)
+    {
+      this._persona_stores.set (store.id, store);
+      store.removed.connect (this._store_removed_cb);
+      this.persona_store_added (store);
+      if (notify)
+        {
+          this.notify_property ("persona-stores");
+        }
+    }
+    
+  /**
+   * Utility function to remove a persona store.
+   *
+   * @param store the store to remove.
+   * @param notify whether or not to emit notification signals.
+   */
+  private void _remove_store (PersonaStore store, bool notify = true)
+    {
+      store.removed.disconnect (this._store_removed_cb);
+      this._persona_stores.unset (store.id);
+      this.persona_store_removed (store);
+
+      if (notify)
+        {
+          this.notify_property ("persona-stores");
+        }
+    }
+  
   /**
    * {@inheritDoc}
    */
@@ -187,9 +293,6 @@ public class Folks.Backends.Kf.Backend : Folks.Backend
 
   private void _store_removed_cb (Folks.PersonaStore store)
     {
-      store.removed.disconnect (this._store_removed_cb);
-      this.persona_store_removed (store);
-      this._persona_stores.unset (store.id);
-      this.notify_property ("persona-stores");
+      this._remove_store ((Kf.PersonaStore) store);
     }
 }
