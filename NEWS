@@ -7,6 +7,7 @@ Bugs fixed:
   Telepathy account
 • Bug 672709 — Add new interaction details properties to individuals
   (follow-up patch)
+• Bug 684954 — Debug message claim that Individual are created with no personas
 
 Overview of changes from libfolks 0.7.4 to libfolks 0.7.4.1
 ===========================================================

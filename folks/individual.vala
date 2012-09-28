@@ -1152,13 +1152,13 @@ public class Folks.Individual : Object,
   public Individual (Set<Persona>? personas)
     {
       Object (personas: personas);
+
+      debug ("Creating new Individual with %u Personas: %p",
+          this._persona_set.size, this);
     }
 
   construct
     {
-      debug ("Creating new Individual with %u Personas: %p",
-          this._persona_set.size, this);
-
       this._persona_set_ro = this._persona_set.read_only_view;
     }
 
