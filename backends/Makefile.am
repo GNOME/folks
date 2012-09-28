@@ -18,6 +18,10 @@ if ENABLE_EDS
 SUBDIRS += eds
 endif
 
+if ENABLE_OFONO
+SUBDIRS += ofono
+endif
+
 DIST_SUBDIRS = \
 	telepathy \
 	key-file \

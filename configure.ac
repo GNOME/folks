@@ -100,6 +100,20 @@ AS_IF([test "x$enable_eds_backend" = "xyes"], [
 
 AM_CONDITIONAL([ENABLE_EDS], [test "x$enable_eds_backend" = "xyes"])
 
+AC_ARG_ENABLE(ofono-backend,
+	AC_HELP_STRING([--enable-ofono-backend],
+		       [ build the ofono backend]),
+	enable_ofono_backend=$enableval,
+	enable_ofono_backend=yes )
+
+AS_IF([test "x$enable_ofono_backend" = "xyes"], [
+        AC_DEFINE(HAVE_OFONO, [1], [Define as 1 if you have the ofono backend])
+], [
+        AC_DEFINE(HAVE_OFONO, [0], [Define as 1 if you have the ofono backend])
+])
+
+AM_CONDITIONAL([ENABLE_OFONO], [test "x$enable_ofono_backend" = "xyes"])
+
 AC_ARG_ENABLE(telepathy-backend,
         AC_HELP_STRING([--enable-telepathy-backend],
                        [ build the Telepathy backend]),
@@ -211,6 +225,10 @@ AS_IF([test x$enable_eds_backend = xyes], [
         PKG_CHECK_MODULES([EDATASERVER], [libedataserver-1.2 >= $EDATASERVER_REQUIRED])
 ])
 
+AS_IF([test x$enable_ofono_backend = xyes], [
+        PKG_CHECK_MODULES([EBOOK], [libebook-1.2 >= $EBOOK_REQUIRED])
+])
+
 #
 # Vala building options -- allows tarball builds without installing Vala
 #
@@ -297,6 +315,10 @@ AS_IF([test "x$enable_vala" = "xyes"], [
         AS_IF([test x$enable_eds_backend = xyes], [
           VALA_CHECK_PACKAGES([libebook-1.2 libedataserver-1.2 libxml-2.0])
         ])
+
+        AS_IF([test x$enable_ofono_backend = xyes], [
+          VALA_CHECK_PACKAGES([libebook-1.2])
+        ])
 ])
 
 # this will set HAVE_INTROSPECTION
@@ -341,6 +363,11 @@ AS_IF([test x$enable_eds_backend = xyes], [
   AC_SUBST([BACKEND_EDS])
 ])
 
+if test x$enable_ofono_backend = xyes; then
+  BACKEND_OFONO='$(top_builddir)/backends/ofono/.libs/ofono.so'
+  AC_SUBST([BACKEND_OFONO])
+fi
+
 # All of the backend libraries in our tree; to be used by the tests
 BACKEND_UNINST_PATH='$(BACKEND_KF):$(BACKEND_TP)'
 AS_IF([test x$have_libsocialweb_backend = xyes], [
@@ -354,6 +381,10 @@ AS_IF([test x$enable_tracker_backend = xyes], [
 AS_IF([test x$enable_eds_backend = xyes], [
   EDS_BACKEND_UNINST_PATH='$(BACKEND_EDS)'
   BACKEND_UNINST_PATH="$BACKEND_UNINST_PATH:$EDS_BACKEND_UNINST_PATH"
+])
+AS_IF([test x$enable_ofono_backend = xyes], 
+  OFONO_BACKEND_UNINST_PATH='$(BACKEND_OFONO)'
+  BACKEND_UNINST_PATH="$BACKEND_UNINST_PATH:$OFONO_BACKEND_UNINST_PATH"
 ])
 AC_SUBST([BACKEND_UNINST_PATH])
 
@@ -605,6 +636,7 @@ AC_CONFIG_FILES([
     backends/tracker/lib/Makefile
     backends/eds/Makefile
     backends/eds/lib/Makefile
+    backends/ofono/Makefile
     folks/Makefile
     docs/Makefile
     po/Makefile.in
@@ -649,5 +681,6 @@ Configure summary:
         Tracker backend.............:  ${enable_tracker_backend}
         Libsocialweb backend........:  ${have_libsocialweb_backend}
         E-D-S backend...............:  ${enable_eds_backend}
+        Ofono backend...............:  ${enable_ofono_backend}
         Build tests.................:  ${enable_tests}
 "
