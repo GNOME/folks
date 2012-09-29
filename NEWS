@@ -6,8 +6,12 @@ Dependencies:
 Major changes:
 
 Bugs fixed:
+• Bug 682941 — API to configure input of aggregation
 
 API changes:
+• Add Backend.enable_persona_store and disable_persona_store.
+• Add Backend.set_persona_stores.
+• Add IndividualAggregator.new_with_backend_store.
 
 Overview of changes from libfolks 0.7.4.1 to libfolks 0.8.0
 ===========================================================
