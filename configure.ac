@@ -112,7 +112,7 @@ AS_IF([test "x$enable_telepathy_backend" = "xyes"], [
         AC_DEFINE(HAVE_TELEPATHY, [0], [Define as 1 if you have the Telepathy backend])
 ])
 
-AM_CONDITIONAL([ENABLE_TELEPATHY], [test "x$enable_eds_backend" = "xyes"])
+AM_CONDITIONAL([ENABLE_TELEPATHY], [test "x$enable_telepathy_backend" = "xyes"])
 
 # Automatically check the dependencies for the libsocialweb backend
 SW_CLIENT_REQUIRED=0.25.20
