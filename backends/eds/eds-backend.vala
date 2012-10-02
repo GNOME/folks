@@ -103,6 +103,14 @@ public class Folks.Backends.Eds.Backend : Folks.Backend
   public override void set_persona_stores (Set<string>? storeids)
     {
       this._storeids = storeids;
+      
+      /* If the set is empty, load all unloaded stores then return. */
+      if (storeids == null)
+        {
+          this._ab_source_list_changed_cb ();
+          return;
+        }
+
       bool stores_changed = false;
       /* First handle adding any missing persona stores. */
       foreach (string id in storeids)
