@@ -38,11 +38,12 @@ errordomain EdsTest.BackendSetupError
 public class EdsTest.Backend
 {
   private string _addressbook_name;
-  private E.BookClient _addressbook;
+  private E.BookClient? _addressbook = null;
   private GLib.List<string> _e_contacts;
   private GLib.List<Gee.HashMap<string, Value?>> _contacts;
   E.SourceRegistry _source_registry;
-  E.Source _source;
+  E.Source? _source = null;
+  File? _source_file = null;
 
   public string address_book_uid
     {
@@ -127,25 +128,65 @@ public class EdsTest.Backend
     {
       var mainloop = new GLib.MainLoop (null, false);
 
-      create_source_registry.begin (null, (obj, async_res) =>
+      this._prepare_source_async.begin (is_default, (obj, async_res) =>
         {
           try
             {
-              this._source_registry = create_source_registry.end (async_res);
+              this._prepare_source_async.end (async_res);
+              mainloop.quit ();
             }
           catch (GLib.Error e)
             {
               GLib.critical (e.message);
             }
-          mainloop.quit();
         });
 
-      mainloop.run();
+      mainloop.run ();
+    }
 
+  private async void _prepare_source_async (bool is_default) throws GLib.Error
+    {
+      /* Create a new source file. */
+      var source_file_name = this._addressbook_name + ".source";
+
+      var config_dir = File.new_for_path (Environment.get_user_config_dir ());
+      var source_file = config_dir.get_child ("evolution")
+          .get_child ("sources").get_child (source_file_name);
+
+      var source_file_content = ("[Data Source]\n" +
+          "DisplayName=%s\n" +
+          "Parent=local-stub\n" +
+          "\n" +
+          "[Address Book]\n" +
+          "BackendName=local").printf (this._addressbook_name);
+
+      /* Build a SourceRegistry to manage the sources. */
+      this._source_registry = yield create_source_registry (null);
+      var signal_id = this._source_registry.source_added.connect ((r, s) =>
+        {
+          this._source = s;
+          this._prepare_source_async.callback ();
+        });
+
+      /* Perform the write and then wait for the SourceRegistry to notify. */
+      yield source_file.replace_contents_async (source_file_content.data, null,
+          false, FileCreateFlags.NONE, null, null);
       this._source = this._source_registry.ref_source (this._addressbook_name);
+      if (this._source == null)
+        {
+          yield;
+        }
+
+      /* Sanity check then tidy up. */
+      assert (this._source != null);
+      this._source_registry.disconnect (signal_id);
+
+      this._source_file = source_file;
 
       if (is_default)
-        this.set_as_default();
+        {
+          this.set_as_default ();
+        }
     }
 
   public async void commit_contacts_to_addressbook ()
@@ -276,7 +317,7 @@ public class EdsTest.Backend
 
       try
         {
-          this._source.remove_sync (null);
+          this._source_file.delete ();
         }
       catch (GLib.Error e)
         {
@@ -285,6 +326,8 @@ public class EdsTest.Backend
         }
       finally
         {
+          this._source_file = null;
+          this._source = null;
           this._addressbook = null;
         }
     }

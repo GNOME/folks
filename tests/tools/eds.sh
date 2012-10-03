@@ -19,8 +19,6 @@ eds_init_settings () {
     export XDG_CACHE_HOME=$eds_tmpdir/.cache
     export XDG_CONFIG_HOME=$eds_tmpdir/.config
     mkdir -p $XDG_CONFIG_HOME/evolution/sources
-    cp $cur_dir/test.source $XDG_CONFIG_HOME/evolution/sources/
-    cp $cur_dir/other.source $XDG_CONFIG_HOME/evolution/sources/
 }
 
 eds_start () {
