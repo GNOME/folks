@@ -36,6 +36,7 @@ public class Folks.Backends.Tp.Backend : Folks.Backend
   private bool _is_prepared = false;
   private bool _prepare_pending = false; /* used by unprepare() too */
   private bool _is_quiescent = false;
+  private Set<string>? _storeids = null;
 
   /**
    * {@inheritDoc}
@@ -77,7 +78,46 @@ public class Folks.Backends.Tp.Backend : Folks.Backend
    */
   public override void set_persona_stores (Set<string>? storeids)
     {
+      this._storeids = storeids;
+      
+      bool added_stores = false;
+      PersonaStore[] removed_stores = {};
+
+      /* First handle adding any missing persona stores. */
+      GLib.List<unowned Account> accounts =
+        this._account_manager.get_valid_accounts ();
+      foreach (Account account in accounts)
+        {
+          string id = account.get_object_path ();
+          if (this.persona_stores.has_key (id) == false &&
+             id in storeids)
+            {
+              var store = Tpf.PersonaStore.dup_for_account (account);
+              this._add_store (store, false);
+              added_stores = true;
+            }
+        }
+        
+      foreach (PersonaStore store in this.persona_stores.values)
+        {
+          if (!storeids.contains (store.id))
+            {
+              removed_stores += store;
+            }
+        }
+        
+      foreach (PersonaStore store in removed_stores)
+        {
+          this._remove_store ((Tpf.PersonaStore) store, false);
+        }
+        
+        /* Finally, if anything changed, emit the persona-stores notification. */
+      if (added_stores || removed_stores.length > 0)
+        {
+          this.notify_property ("persona-stores");
+        }
     }
+      
 
   /**
    * {@inheritDoc}
@@ -134,7 +174,7 @@ public class Folks.Backends.Tp.Backend : Folks.Backend
               this._account_validity_changed_cb);
 
           GLib.List<unowned Account> accounts =
-              this._account_manager.get_valid_accounts ();
+          this._account_manager.get_valid_accounts ();
           foreach (Account account in accounts)
             {
               this._account_enabled_cb (account);
@@ -199,6 +239,13 @@ public class Folks.Backends.Tp.Backend : Folks.Backend
           return;
         }
 
+      /* Ignore if this account's object path isn't in our storeids */
+      if (this._storeids != null && (account.get_object_path () in
+           this._storeids) == false)
+        {
+          return;
+        }
+        
       var store = Tpf.PersonaStore.dup_for_account (account);
       this._add_store (store);
     }
