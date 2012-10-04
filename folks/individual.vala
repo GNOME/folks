@@ -2272,7 +2272,8 @@ public class Folks.Individual : Object,
                     }
                 }
 
-              if (!Utils.set_afd_equal (new_local_ids, this._local_ids))
+              if (new_local_ids.size != this._local_ids.size ||
+                  !new_local_ids.contains_all (this._local_ids))
                 {
                   this._local_ids = new_local_ids;
                   this._local_ids_ro = new_local_ids.read_only_view;
