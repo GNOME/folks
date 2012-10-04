@@ -1,5 +1,9 @@
-Overview of changes from libfolks 0.7.4.1 to libfolks 0.7.5
-=========================================================
+Overview of changes from libfolks 0.7.4.1 to libfolks 0.8.0
+===========================================================
+
+Major changes:
+• Some translation comment and documentation improvements
+• Lots of updated translations
 
 Bugs fixed:
 • Bug 684014 — A few outstanding issues in the internationalisation
