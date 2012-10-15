@@ -74,6 +74,58 @@ public class Edsf.PersonaStore : Folks.PersonaStore
    */
   public override string type_id { get { return BACKEND_NAME; } }
 
+  /**
+   * Create a new address book with the given ID.
+   *
+   * A new Address Book will be created with the given ID and the EDS
+   * SourceRegistry will notice the new Address Book source and will emit
+   * source_added with the new {@link E.Source} object which {@link Eds.Backend}
+   * will then create a new {@link Edsf.PersonaStore} from.
+   *
+   * @param id the name and id for the new address book
+   * @throws GLib.Error
+   *
+   * @since UNRELEASED
+   */
+  public static async void create_address_book (string id) throws GLib.Error
+    {
+      debug ("Creating addressbook %s", id);
+      /* In order to create a new Address Book with the given id we follow
+       * the guidelines explained here: 
+       * https://live.gnome.org/Evolution/ESourceMigrationGuide#How_do_I_create_a_new_calendar_or_address_book.3F
+       * for setting the backend name and parent UID to "local" and 
+       * "local-stub" respectively.
+       */
+      E.Source new_source = new E.Source.with_uid (id, null);
+      
+      new_source.set_parent ("local-stub");
+      new_source.set_display_name (id);
+      
+      E.SourceAddressBook ab_extension =
+        (E.SourceAddressBook) new_source.get_extension ("Address Book");
+      ab_extension.set_backend_name ("local");
+  
+      E.SourceRegistry registry = yield create_source_registry ();
+      yield registry.commit_source (new_source, null);
+    }
+
+  /**
+   * Remove a persona store's address book permamently.
+   *
+   * This is a utility function to remove an {@link Edsf.PersonaStore}'s address
+   * book from the disk permanently.  This simply wraps the EDS API to do 
+   * the same.
+   *
+   * @param store the PersonaStore to delete the address book for.
+   * @throws GLib.Error
+   *
+   * @since UNRELEASED
+   */
+  public static async void remove_address_book (Edsf.PersonaStore store) throws GLib.Error
+    {
+      yield store.source.remove (null);
+    }
+  
   private void _address_book_notify_read_only_cb (Object address_book,
       ParamSpec pspec)
     {
