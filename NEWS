@@ -9,11 +9,13 @@ Major changes:
 Bugs fixed:
 • Bug 682941 — API to configure input of aggregation
 • Bug 685084 — Add a folks backend for ofono phonebook
+• Bug 686056 — Add api to create and remove address books
 
 API changes:
 • Add Backend.enable_persona_store and disable_persona_store.
 • Add Backend.set_persona_stores.
 • Add IndividualAggregator.new_with_backend_store.
+• Add Edsf.PersonaStore.create|remove_address_book.
 
 Overview of changes from libfolks 0.7.4.1 to libfolks 0.8.0
 ===========================================================
