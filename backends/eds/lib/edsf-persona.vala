@@ -618,6 +618,80 @@ public class Edsf.Persona : Folks.Persona,
     }
 
   /**
+   * Change the contact's system groups.
+   *
+   * The system groups are a property exposed by Google Contacts address books,
+   * and can include any combination of the following identifier:
+   * - "Contacts"
+   * - "Family"
+   * - "Friends"
+   * - "Coworkers"
+   *
+   * Setting the system groups will also change the group membership to include
+   * the localized version of those groups, and may change the value of {@link
+   * EdsfPersona.in_google_personal_group}
+   *
+   * Attempting to call this method on a persona beloging to a PersonaStore which
+   * is not Google will throw a PropertyError.
+   *
+   * It's preferred to call this rather than setting {@link Persona.system_groups}
+   * directly, as this method gives error notification and will only return once
+   * the groups have been written to the relevant backing store (or the
+   * operation's failed).
+   *
+   * @param system_groups the complete set of system group ids the contact should be a member of
+   * @throws PropertyError if setting the groups failed
+   * @since UNRELEASED
+   */
+  public async void change_system_groups (Set<string> system_groups) throws PropertyError
+    {
+      yield ((Edsf.PersonaStore) this.store)._set_system_groups (this, system_groups);
+    }
+
+  private static const string GOOGLE_PERSONAL_GROUP_NAME = "Contacts";
+
+  /**
+   * Change whether this contact belongs to the personal group or not.
+   *
+   * The personal contact group is a concept that exists only in Google
+   * address books. Other backends will throw a PropertyError.
+   *
+   * It's preferred to call this rather than setting {@link Persona.in_google_personal_group}
+   * directly, as this method gives error notification and will only return once
+   * the membership has been written to the relevant backing store (or the
+   * operation's failed).
+   *
+   * @param in_personal Whether to add or remove the personal group membership
+   * @throws PropertyError if the address book is not Google, or if setting the property failed
+   * @since UNRELEASED
+   */
+  public async void change_in_google_personal_group (bool in_personal) throws PropertyError
+    {
+      if (in_personal == this._in_google_personal_group)
+        {
+          return;
+        }
+
+      HashSet<string> new_system_groups = new HashSet<string> ();
+      foreach (var sg in this._system_groups)
+        {
+          if (sg == GOOGLE_PERSONAL_GROUP_NAME && !in_personal)
+            {
+              continue;
+            }
+
+          new_system_groups.add (sg);
+        }
+
+      if (in_personal)
+        {
+          new_system_groups.add (GOOGLE_PERSONAL_GROUP_NAME);
+        }
+
+      yield ((Edsf.PersonaStore) this.store)._set_system_groups (this, new_system_groups);
+    }
+
+  /**
    * {@inheritDoc}
    *
    * e-d-s has no equivalent field, so this is unsupported.
@@ -750,7 +824,27 @@ public class Edsf.Persona : Folks.Persona,
       yield ((Edsf.PersonaStore) this.store)._set_anti_links (this, anti_links);
     }
 
+  private HashSet<string>? _system_groups = null;
+  private Set<string>? _system_groups_ro = null;
   private bool _in_google_personal_group;
+
+  /**
+   * The complete set of system group identifiers the contact belongs to.
+   * See {@link Persona.change_system_groups} for details.
+   *
+   * @since UNRELEASED
+   */
+  [CCode (notify = false)]
+  public Set<string>? system_groups
+    {
+      get
+        {
+          this._update_groups (true);
+          return this._system_groups_ro;
+        }
+
+      set { this.change_system_groups.begin (value); }
+    }
 
   /**
    * Whether this contact is in the “My Contacts” section of the user’s address
@@ -766,6 +860,8 @@ public class Edsf.Persona : Folks.Persona,
           this._update_groups (true); /* also checks for the personal group */
           return this._in_google_personal_group;
         }
+
+      set { this.change_in_google_personal_group.begin (value); }
     }
 
   /**
@@ -1603,16 +1699,11 @@ public class Edsf.Persona : Folks.Persona,
             }
           return;
         }
-      else if (this._groups == null)
-        {
-          this._groups = new HashSet<string> ();
-          this._groups_ro = this._groups.read_only_view;
-        }
 
       var category_names =
           this._contact.get<GLib.List<string>> (E.ContactField.CATEGORY_LIST);
       var new_categories = new HashSet<string> ();
-      var added_categories = new LinkedList<string> ();
+      bool any_added_categories = false;
 
       foreach (var category_name in category_names)
         {
@@ -1627,34 +1718,41 @@ public class Edsf.Persona : Folks.Persona,
           new_categories.add (category_name);
 
           /* Is this a new category? */
-          if (!this._groups.contains (category_name))
+          if (this._groups == null || !this._groups.contains (category_name))
             {
-              added_categories.add (category_name);
+              any_added_categories = true;
             }
         }
 
-      /* Work out which categories have been removed. */
-      var removed_categories = new LinkedList<string> ();
+      /* Work out if categories have been removed. */
+      bool any_removed_categories = false;
 
-      foreach (var category_name in this._groups)
+      if (this._groups != null)
         {
-          /* Skip the “Starred in Android” group for Google personas; we handle
-           * it later. */
-          if (((Edsf.PersonaStore) store)._is_google_contacts_address_book () &&
-              category_name == Edsf.PersonaStore.android_favourite_group_name)
+          foreach (var category_name in this._groups)
             {
-              continue;
-            }
+              /* Skip the “Starred in Android” group for Google personas; we handle
+               * it later. */
+              if (((Edsf.PersonaStore) store)._is_google_contacts_address_book () &&
+                  category_name == Edsf.PersonaStore.android_favourite_group_name)
+                {
+                  continue;
+                }
 
-          if (!new_categories.contains (category_name))
-            {
-              removed_categories.add (category_name);
+              if (!new_categories.contains (category_name))
+                {
+                  any_removed_categories = true;
+                }
             }
         }
+
+      this._groups = new_categories;
+      this._groups_ro = this._groups.read_only_view;
 
       /* Check our new set of system groups if this is a Google address book. */
       var store = (Edsf.PersonaStore) this.store;
       var in_google_personal_group = false;
+      var should_notify_sysgroups = false;
 
       if (store._is_google_contacts_address_book ())
         {
@@ -1663,19 +1761,53 @@ public class Edsf.Persona : Folks.Persona,
              vcard.get_attribute ("X-GOOGLE-SYSTEM-GROUP-IDS");
           if (attr != null)
             {
-              unowned GLib.List<string> vals = attr.get_values ();
+              unowned GLib.List<string> system_group_ids = attr.get_values();
+              var new_sysgroups = new HashSet<string> ();
+              bool any_added_sysgroups = false;
+
+              foreach (var system_group_id in system_group_ids)
+                {
+                  new_sysgroups.add (system_group_id);
+
+                  if (this._system_groups == null ||
+                      !this._system_groups.contains (system_group_id))
+                    {
+                      any_added_sysgroups = true;
+                    }
+                }
+
+              /* Work out if categories have been removed. */
+              bool any_removed_sysgroups = false;
+
+              if (this._system_groups != null)
+                {
+                  foreach (var system_group_id in this._system_groups)
+                    {
+                      if (!new_sysgroups.contains (system_group_id))
+                        {
+                          any_removed_sysgroups = true;
+                        }
+                    }
+                }
 
               /* If we're in the GDATA_CONTACTS_GROUP_CONTACTS group, then
                * we're in the user's "My Contacts" address book, as opposed
                * to their "Other" address book. */
-              foreach (var system_group_id in vals)
+              if (new_sysgroups.contains (GOOGLE_PERSONAL_GROUP_NAME))
                 {
-                  if (system_group_id == "Contacts")
-                    {
-                      in_google_personal_group = true;
-                      break;
-                    }
+                  in_google_personal_group = true;
                 }
+
+              this._system_groups = new_sysgroups;
+              this._system_groups_ro = new_sysgroups.read_only_view;
+
+              if (any_added_sysgroups || any_removed_sysgroups)
+                should_notify_sysgroups = true;
+            }
+          else
+            {
+              this._system_groups = new HashSet<string>();
+              this._system_groups_ro = this._system_groups.read_only_view;
             }
         }
 
@@ -1701,10 +1833,14 @@ public class Edsf.Persona : Folks.Persona,
       /* Notify if anything's changed. */
       this.freeze_notify ();
 
-      if ((added_categories.size != 0 || removed_categories.size != 0) &&
-         emit_notification)
+      if ((any_added_categories || any_removed_categories) &&
+          emit_notification)
         {
           this.notify_property ("groups");
+        }
+      if (should_notify_sysgroups && emit_notification)
+        {
+          this.notify_property ("system-groups");
         }
       if (this._is_favourite != old_is_favourite && emit_notification)
         {

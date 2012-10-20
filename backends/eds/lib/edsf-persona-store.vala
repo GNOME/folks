@@ -2046,6 +2046,18 @@ public class Edsf.PersonaStore : Folks.PersonaStore
       yield this._commit_modified_property (persona, "groups");
     }
 
+  internal async void _set_system_groups (Edsf.Persona persona,
+      Set<string> system_groups) throws PropertyError
+    {
+      if (!this._is_google_contacts_address_book ())
+        {
+          throw new PropertyError.NOT_WRITEABLE (_("My Contacts is only available for Google Contacts"));
+        }
+
+      this._set_contact_system_groups (persona.contact, system_groups);
+      yield this._commit_modified_property (persona, "system-groups");
+    }
+
   private void _set_contact_groups (E.Contact contact, Set<string> groups,
       bool is_favourite)
     {
@@ -2075,6 +2087,29 @@ public class Edsf.PersonaStore : Folks.PersonaStore
         }
 
       contact.set (ContactField.CATEGORY_LIST, categories);
+    }
+
+  private void _set_contact_system_groups (E.Contact contact, Set<string> system_groups)
+    {
+      var vcard = (E.VCard) contact;
+      unowned E.VCardAttribute? prev_attr =
+          vcard.get_attribute ("X-GOOGLE-SYSTEM-GROUP-IDS");
+
+      if (prev_attr != null)
+        contact.remove_attribute (prev_attr);
+
+      E.VCardAttribute new_attr = new E.VCardAttribute ("", "X-GOOGLE-SYSTEM-GROUP-IDS");
+      foreach (var group in system_groups)
+        {
+          if (group == null || group == "")
+            {
+              continue;
+            }
+
+          new_attr.add_value (group);
+        }
+
+      vcard.add_attribute (new_attr);
     }
 
   internal async void _set_gender (Edsf.Persona persona,
