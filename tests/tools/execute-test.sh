@@ -19,7 +19,9 @@ fi
 
 # if exit code is 0, check for skipped tests
 if test z$e = z0; then
-  grep -i skipped capture-$$.log || true
+  if test -f capture-$$.log; then
+    grep -i skipped capture-$$.log || true
+  fi
   rm -f capture-$$.log
 # exit code is not 0, so output log and exit
 else
