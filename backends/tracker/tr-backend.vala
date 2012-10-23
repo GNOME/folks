@@ -54,6 +54,50 @@ public class Folks.Backends.Tr.Backend : Folks.Backend
   /**
    * {@inheritDoc}
    */
+  public override void enable_persona_store (Folks.PersonaStore store)
+    {
+      if (this._persona_stores.has_key (store.id) == false)
+        {
+          this._add_store ((Trf.PersonaStore) store);
+        }
+    }
+
+  /**
+   * {@inheritDoc}
+   */
+  public override void disable_persona_store (Folks.PersonaStore store)
+    {
+      if (this._persona_stores.has_key (store.id))
+        {
+          this._store_removed_cb (store);
+        }
+    }
+
+  /**
+   * {@inheritDoc}
+   */
+  public override void set_persona_stores (Set<string>? storeids)
+    {
+      if (storeids != null)
+        {
+          if (storeids.size == 0)
+            {
+              this.disable_persona_store (this._persona_stores.get (BACKEND_NAME));
+            }
+          else
+            {
+              this._add_default_persona_store ();
+            }
+        }
+      else
+        {
+          this._add_default_persona_store ();
+        }
+    }
+
+  /**
+   * {@inheritDoc}
+   */
   public Backend ()
     {
       Object ();
@@ -159,11 +203,28 @@ public class Folks.Backends.Tr.Backend : Folks.Backend
    */
   private void _add_default_persona_store ()
     {
-      var store = new Trf.PersonaStore ();
+      if (this._persona_stores.has_key (BACKEND_NAME) == false)
+        {
+          var store = new Trf.PersonaStore ();
+          this._add_store (store);
+        }
+    }
+
+  /**
+   * Utility function to add a persona store.
+   *
+   * @param store the store to add.
+   * @param notify whether or not to emit notification signals.
+   */
+  private void _add_store (PersonaStore store, bool notify = true)
+    {
       this._persona_stores.set (store.id, store);
       store.removed.connect (this._store_removed_cb);
-      this.notify_property ("persona-stores");
       this.persona_store_added (store);
+      if (notify)
+        {
+          this.notify_property ("persona-stores");
+        }
     }
 
   private void _store_removed_cb (Folks.PersonaStore store)

@@ -11,6 +11,7 @@ Bugs fixed:
 • Bug 685084 — Add a folks backend for ofono phonebook
 • Bug 686056 — Add api to create and remove address books
 • Bug 685250 — make <test>.gdb deadlocks
+• Bug 686674 — Tracker backend doesn't implement new Backend functions
 
 API changes:
 • Add Backend.enable_persona_store and disable_persona_store.

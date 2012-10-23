@@ -106,8 +106,8 @@ public abstract class Folks.Backend : Object
    * Enable a {@link PersonaStore}.
    *
    * If the given persona store is not already in this backend
-   * {@link Backend.persona_stores}, it will be added to the backend and 
-   * {@link Backend.persona_stores} property notification will be emitted, 
+   * {@link Backend.persona_stores}, it will be added to the backend and
+   * {@link Backend.persona_stores} property notification will be emitted,
    * along with {@link Backend.persona_store_added}.
    *
    * @param store the {@link PersonaStore} to enable.
@@ -120,11 +120,11 @@ public abstract class Folks.Backend : Object
    * Set the {@link PersonaStore}s to use in this backend.
    *
    * This will cause {@link Backend.persona_store_removed} signals to be emitted
-   * for all removed stores, followed by {@link Backend.persona_store_added} 
+   * for all removed stores, followed by {@link Backend.persona_store_added}
    * signals for all added stores. As these signals are emitted, the sets of
-   * individuals in any associated {@link IndividualAggregator}s will be 
-   * updated, and {@link IndividualAggregator.individuals_changed} may be 
-   * emitted multiple times as appropriate. A property change notification for 
+   * individuals in any associated {@link IndividualAggregator}s will be
+   * updated, and {@link IndividualAggregator.individuals_changed} may be
+   * emitted multiple times as appropriate. A property change notification for
    * {@link Backend.persona_stores} will be emitted last.
    * Note: pass null storeids to use all available persona stores.
    *
