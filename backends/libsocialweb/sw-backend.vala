@@ -53,6 +53,75 @@ public class Folks.Backends.Sw.Backend : Folks.Backend
       get { return this._persona_stores_ro; }
     }
 
+  /**
+   * {@inheritDoc}
+   *
+   * @since UNRELEASED
+   */
+  public override void enable_persona_store (Folks.PersonaStore store)
+    {
+      if (this._persona_stores.has_key (store.id) == false)
+        {
+          this._add_store ((Swf.PersonaStore) store);
+        }
+    }
+
+  /**
+   * {@inheritDoc}
+   *
+   * @since UNRELEASED
+   */
+  public override void disable_persona_store (Folks.PersonaStore store)
+    {
+      if (this._persona_stores.has_key (store.id))
+        {
+          this._store_removed_cb (store);
+        }
+    }
+
+  /**
+   * {@inheritDoc}
+   *
+   * @since UNRELEASED
+   */
+  public override void set_persona_stores (Set<string>? storeids)
+    {
+      /* All ids represent ini files in user_data_dir/folks/ */
+
+      bool added_stores = false;
+      PersonaStore[] removed_stores = {};
+
+      /* First handle adding any missing persona stores. */
+      foreach (string id in storeids)
+        {
+          if (this._persona_stores.has_key (id) == false)
+            {
+              ClientService service = this._client.get_service (id);
+              var store = new Swf.PersonaStore (service);
+              this._add_store (store, false);
+              added_stores = true;
+            }
+        }
+
+      foreach (PersonaStore store in this._persona_stores.values)
+        {
+          if (!storeids.contains (store.id))
+            {
+              removed_stores += store;
+            }
+        }
+
+      foreach (var store in removed_stores)
+        {
+          this._remove_store ((Swf.PersonaStore) store, false);
+        }
+
+      /* Finally, if anything changed, emit the persona-stores notification. */
+      if (added_stores || removed_stores.length > 0)
+        {
+          this.notify_property ("persona-stores");
+        }
+    }
 
   /**
    * {@inheritDoc}
@@ -101,14 +170,14 @@ public class Folks.Backends.Sw.Backend : Folks.Backend
         {
           return;
         }
-        
+
       /* Hold a ref. on the Backend while we wait for the callback from
        * this._client.get_services() to prevent the Backend being
        * destroyed in the mean time. See: bgo#665039. */
       this.ref ();
 
       this._prepare_pending = true;
-      
+
       this._client = new Client ();
       this._client.get_services((client, services) =>
         {
@@ -150,7 +219,7 @@ public class Folks.Backends.Sw.Backend : Folks.Backend
 
           foreach (var store in this._persona_stores.values)
             {
-              store.removed.disconnect (this.store_removed_cb);
+              store.removed.disconnect (this._store_removed_cb);
               this.persona_store_removed (store);
             }
 
@@ -171,20 +240,54 @@ public class Folks.Backends.Sw.Backend : Folks.Backend
         }
     }
 
+  /**
+   * Utility function to add a persona store.
+   *
+   * @param store the store to add.
+   * @param notify whether or not to emit notification signals.
+   * @since UNRELEASED
+   */
+  private void _add_store (PersonaStore store, bool notify = true)
+    {
+      this._persona_stores.set (store.id, store);
+      store.removed.connect (this._store_removed_cb);
+      this.persona_store_added (store);
+      if (notify)
+        {
+          this.notify_property ("persona-stores");
+        }
+    }
+
+  /**
+   * Utility function to remove a persona store.
+   *
+   * @param store the store to remove.
+   * @param notify whether or not to emit notification signals.
+   * @since UNRELEASED
+   */
+  private void _remove_store (PersonaStore store, bool notify = true)
+    {
+      store.removed.disconnect (this._store_removed_cb);
+      this._persona_stores.unset (store.id);
+      this.persona_store_removed (store);
+
+      if (notify)
+        {
+          this.notify_property ("persona-stores");
+        }
+    }
+
   private void add_service (string service_name)
     {
       if (this._persona_stores.get (service_name) != null)
         return;
 
       var store = new Swf.PersonaStore (this._client.get_service (service_name));
-      this._persona_stores.set (store.id, store);
-      store.removed.connect (this.store_removed_cb);
-      this.persona_store_added (store);
+      this._add_store (store);
     }
 
-  private void store_removed_cb (Folks.PersonaStore store)
+  private void _store_removed_cb (Folks.PersonaStore store)
     {
-      this.persona_store_removed (store);
-      this._persona_stores.unset (store.id);
+      this._remove_store ((Swf.PersonaStore) store);
     }
 }

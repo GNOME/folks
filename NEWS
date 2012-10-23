@@ -16,6 +16,8 @@ Bugs fixed:
 • Bug 686693 — writing birthday lacks conversion from UTC
 • Bug 685401 — linking by email
 • Bug 687050 — eds: expose Google system groups in the API
+• Bug 686673 — Build error: libsocialweb backend doesn't implement new Backend
+  functions
 
 API changes:
 • Add Backend.enable_persona_store and disable_persona_store.
