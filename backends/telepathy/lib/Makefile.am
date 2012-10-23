@@ -117,6 +117,7 @@ libfolks_telepathy_la_SOURCES = \
 libfolks_telepathy_la_VALAFLAGS = \
 	$(AM_VALAFLAGS) \
 	$(ERROR_VALAFLAGS) \
+	$(ZEITGEIST_VALAFLAGS) \
 	--vapidir=. \
 	--vapidir=$(top_srcdir)/folks \
 	--pkg folks \
@@ -126,7 +127,7 @@ libfolks_telepathy_la_VALAFLAGS = \
 	--pkg gio-2.0 \
 	--pkg gee-1.0 \
 	--pkg telepathy-glib \
-	--pkg zeitgeist-1.0 \
+	$(ZEITGEIST_PKG) \
 	--includedir folks \
 	--vapi folks-telepathy.vapi \
 	-H folks/folks-telepathy.h \

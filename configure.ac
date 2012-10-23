@@ -206,7 +206,13 @@ Gee 0.6.x)])
 TP_GLIB_REQUIRED=0.19.0
 AS_IF([test x$enable_telepathy_backend = xyes], [
         PKG_CHECK_MODULES([TP_GLIB], [telepathy-glib >= $TP_GLIB_REQUIRED])
-        PKG_CHECK_MODULES([ZEITGEIST], [zeitgeist-1.0 >= $ZEITGEIST_REQUIRED])
+        PKG_CHECK_MODULES([ZEITGEIST], [zeitgeist-1.0 >= $ZEITGEIST_REQUIRED],
+	                   have_zeitgeist="yes",have_zeitgeist="no")])
+AS_IF([test "x$have_zeitgeist" == "xyes"], [
+   ZEITGEIST_VALAFLAGS="-DHAVE_ZEITGEIST"
+   AC_SUBST([ZEITGEIST_VALAFLAGS])
+   ZEITGEIST_PKG="-pkg zeitgeist"
+   AC_SUBST([ZEITGEIST_PKG])
 ])
 
 # Ignore post 0.20 deprecations
@@ -305,7 +311,10 @@ AS_IF([test "x$enable_vala" = "xyes"], [
                              gee-1.0])
 
         AS_IF([test x$enable_telepathy_backend = xyes], [
-          VALA_CHECK_PACKAGES([telepathy-glib zeitgeist-1.0])
+          VALA_CHECK_PACKAGES([telepathy-glib])
+	  AS_IF([test "x$have_zeitgeist" == "xyes"], [
+	      VALA_CHECK_PACKAGES([zeitgeist-1.0])
+	  ])
         ])
 
         AS_IF([test x$enable_tracker_backend = xyes], [
@@ -682,5 +691,6 @@ Configure summary:
         Libsocialweb backend........:  ${have_libsocialweb_backend}
         E-D-S backend...............:  ${enable_eds_backend}
         Ofono backend...............:  ${enable_ofono_backend}
+        Zeitgeist support...........:  ${have_zeitgeist}
         Build tests.................:  ${enable_tests}
 "

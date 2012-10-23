@@ -24,7 +24,10 @@ using GLib;
 using Gee;
 using TelepathyGLib;
 using Folks;
+#if HAVE_ZEITGEIST
 using Zeitgeist;
+#endif
+
 extern const string G_LOG_DOMAIN;
 extern const string BACKEND_NAME;
 
@@ -97,8 +100,10 @@ public class Tpf.PersonaStore : Folks.PersonaStore
 
   private Account _account;
 
+#if HAVE_ZEITGEIST
   private Zeitgeist.Log? _log= null;
   private Zeitgeist.Monitor? _monitor = null;
+#endif
 
   /**
    * The Telepathy account this store is based upon.
@@ -1176,7 +1181,9 @@ public class Tpf.PersonaStore : Folks.PersonaStore
           new GLib.GenericArray<TelepathyGLib.Contact> ());
 
       this._got_initial_members = true;
+#if HAVE_ZEITGEIST
       this._populate_counters.begin ();
+#endif
       this._notify_if_is_quiescent ();
     }
 
@@ -1686,6 +1693,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       return store;
     }
 
+#if HAVE_ZEITGEIST
   private string? _get_iid_from_event_metadata (string? uri)
     {
       /* Format a proper id represting a persona in the store.
@@ -1796,4 +1804,5 @@ public class Tpf.PersonaStore : Folks.PersonaStore
 
       this._notify_if_is_quiescent ();
     }
+#endif
 }

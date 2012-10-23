@@ -22,7 +22,9 @@ using Gee;
 using GLib;
 using TelepathyGLib;
 using Folks;
+#if HAVE_ZEITGEIST
 using Zeitgeist;
+#endif
 
 /**
  * A persona subclass which represents a single instant messaging contact from
@@ -1374,6 +1376,7 @@ public class Tpf.Persona : Folks.Persona,
       return store._ensure_persona_for_contact (contact);
     }
 
+#if HAVE_ZEITGEIST
   internal void _increase_counter (string id, string interaction_type, Event event)
     {
       var timestamp = (uint) (event.get_timestamp () / 1000);
@@ -1420,4 +1423,5 @@ public class Tpf.Persona : Folks.Persona,
       this._last_call_interaction_datetime = null;
       this._last_im_interaction_datetime = null;
     }
+#endif
 }
