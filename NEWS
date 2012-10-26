@@ -12,6 +12,7 @@ Bugs fixed:
 • Bug 686056 — Add api to create and remove address books
 • Bug 685250 — make <test>.gdb deadlocks
 • Bug 686674 — Tracker backend doesn't implement new Backend functions
+• Bug 686506 — Make zeitgeist dependency optional again
 
 API changes:
 • Add Backend.enable_persona_store and disable_persona_store.
