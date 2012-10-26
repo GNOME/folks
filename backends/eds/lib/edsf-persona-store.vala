@@ -1829,12 +1829,13 @@ public class Edsf.PersonaStore : Folks.PersonaStore
       if (_bday != null)
         {
           var bday = (!) _bday;
+          var bdaylocal = bday.to_local();
           E.ContactDate contact_bday;
 
           contact_bday = new E.ContactDate ();
-          contact_bday.year = (uint) bday.get_year ();
-          contact_bday.month = (uint) bday.get_month ();
-          contact_bday.day = (uint) bday.get_day_of_month ();
+          contact_bday.year = (uint) bdaylocal.get_year ();
+          contact_bday.month = (uint) bdaylocal.get_month ();
+          contact_bday.day = (uint) bdaylocal.get_day_of_month ();
 
           _contact_bday = contact_bday;
         }

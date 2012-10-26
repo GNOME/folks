@@ -13,6 +13,7 @@ Bugs fixed:
 • Bug 685250 — make <test>.gdb deadlocks
 • Bug 686674 — Tracker backend doesn't implement new Backend functions
 • Bug 686506 — Make zeitgeist dependency optional again
+• Bug 686693 — writing birthday lacks conversion from UTC
 
 API changes:
 • Add Backend.enable_persona_store and disable_persona_store.
