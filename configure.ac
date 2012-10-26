@@ -209,9 +209,9 @@ AS_IF([test x$enable_telepathy_backend = xyes], [
         PKG_CHECK_MODULES([ZEITGEIST], [zeitgeist-1.0 >= $ZEITGEIST_REQUIRED],
 	                   have_zeitgeist="yes",have_zeitgeist="no")])
 AS_IF([test "x$have_zeitgeist" == "xyes"], [
-   ZEITGEIST_VALAFLAGS="-DHAVE_ZEITGEIST"
+   ZEITGEIST_VALAFLAGS="-D HAVE_ZEITGEIST"
    AC_SUBST([ZEITGEIST_VALAFLAGS])
-   ZEITGEIST_PKG="-pkg zeitgeist"
+   ZEITGEIST_PKG="--pkg zeitgeist-1.0"
    AC_SUBST([ZEITGEIST_PKG])
 ])
 
