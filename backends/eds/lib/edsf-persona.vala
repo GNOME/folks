@@ -291,6 +291,7 @@ public class Edsf.Persona : Folks.Persona,
           new HashSet<EmailFieldDetails> (
                   (GLib.HashFunc) EmailFieldDetails.hash,
                   (GLib.EqualFunc) EmailFieldDetails.equal);
+  private Set<EmailFieldDetails> _email_addresses_ro;
 
   /**
    * {@inheritDoc}
@@ -300,7 +301,7 @@ public class Edsf.Persona : Folks.Persona,
   [CCode (notify = false)]
   public Set<EmailFieldDetails> email_addresses
     {
-      get { return this._email_addresses; }
+      get { return this._email_addresses_ro; }
       set { this.change_email_addresses.begin (value); }
     }
 
@@ -526,8 +527,6 @@ public class Edsf.Persona : Folks.Persona,
       new HashMultiMap<string, ImFieldDetails> (null, null,
           (GLib.HashFunc) ImFieldDetails.hash,
           (GLib.EqualFunc) ImFieldDetails.equal);
-
-  
 
   /**
    * {@inheritDoc}
@@ -846,6 +845,7 @@ public class Edsf.Persona : Folks.Persona,
             null, null,
             (GLib.HashFunc) WebServiceFieldDetails.hash,
             (GLib.EqualFunc) WebServiceFieldDetails.equal);
+      this._email_addresses_ro = this._email_addresses.read_only_view;
       this._anti_links = new HashSet<string> ();
       this._anti_links_ro = this._anti_links.read_only_view;
 
@@ -1232,6 +1232,7 @@ public class Edsf.Persona : Folks.Persona,
               this._email_addresses))
         {
           this._email_addresses = new_email_addresses;
+          this._email_addresses_ro = new_email_addresses.read_only_view;
           if (emit_notification)
             {
               this.notify_property ("email-addresses");
