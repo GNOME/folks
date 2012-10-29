@@ -146,6 +146,7 @@ public class Edsf.Persona : Folks.Persona,
   public static const string gender_female = "F";
 
   private const string[] _linkable_properties = { "im-addresses",
+                                                  "email-addresses",
                                                   "local-ids",
                                                   "web-service-addresses" };
 
@@ -286,8 +287,10 @@ public class Edsf.Persona : Folks.Persona,
       yield ((Edsf.PersonaStore) this.store)._set_phones (this, phone_numbers);
     }
 
-  private HashSet<EmailFieldDetails>? _email_addresses = null;
-  private Set<EmailFieldDetails>? _email_addresses_ro = null;
+  private HashSet<EmailFieldDetails>? _email_addresses =
+          new HashSet<EmailFieldDetails> (
+                  (GLib.HashFunc) EmailFieldDetails.hash,
+                  (GLib.EqualFunc) EmailFieldDetails.equal);
 
   /**
    * {@inheritDoc}
@@ -297,11 +300,7 @@ public class Edsf.Persona : Folks.Persona,
   [CCode (notify = false)]
   public Set<EmailFieldDetails> email_addresses
     {
-      get
-        {
-          this._update_emails (true, false);
-          return this._email_addresses_ro;
-        }
+      get { return this._email_addresses; }
       set { this.change_email_addresses.begin (value); }
     }
 
@@ -527,6 +526,8 @@ public class Edsf.Persona : Folks.Persona,
       new HashMultiMap<string, ImFieldDetails> (null, null,
           (GLib.HashFunc) ImFieldDetails.hash,
           (GLib.EqualFunc) ImFieldDetails.equal);
+
+  
 
   /**
    * {@inheritDoc}
@@ -891,6 +892,11 @@ public class Edsf.Persona : Folks.Persona,
                   callback (web_service + ":" + ws_fd.value);
             }
         }
+      else if (prop_name == "email-addresses")
+        {
+          foreach (var email in this._email_addresses)
+              callback (email.value);
+        }
       else
         {
           /* Chain up */
@@ -920,7 +926,7 @@ public class Edsf.Persona : Folks.Persona,
       this._update_urls (false);
       this._update_phones (false);
       this._update_addresses (false);
-      this._update_emails (false);
+      this._update_emails ();
 
       /* Note: because we assume certain e-mail addresses
        * (@gmail, @msn, etc) to also be IM IDs we /must/
@@ -1202,26 +1208,8 @@ public class Edsf.Persona : Folks.Persona,
         }
     }
 
-  private void _update_emails (bool create_if_not_exist, bool emit_notification = true)
+  private void _update_emails (bool emit_notification = true)
     {
-      /* See the comments in Folks.Individual about the lazy instantiation
-       * strategy for e-mail addresses. */
-      if (this._email_addresses == null && create_if_not_exist == false)
-        {
-          if (emit_notification)
-            {
-              this.notify_property ("email-addresses");
-            }
-          return;
-        }
-      else if (this._email_addresses == null)
-        {
-          this._email_addresses = new HashSet<EmailFieldDetails> (
-              (GLib.HashFunc) EmailFieldDetails.hash,
-              (GLib.EqualFunc) EmailFieldDetails.equal);
-          this._email_addresses_ro = this._email_addresses.read_only_view;
-        }
-
       var new_email_addresses = new HashSet<EmailFieldDetails> (
           (GLib.HashFunc) EmailFieldDetails.hash,
           (GLib.EqualFunc) EmailFieldDetails.equal);
@@ -1244,7 +1232,6 @@ public class Edsf.Persona : Folks.Persona,
               this._email_addresses))
         {
           this._email_addresses = new_email_addresses;
-          this._email_addresses_ro = new_email_addresses.read_only_view;
           if (emit_notification)
             {
               this.notify_property ("email-addresses");
@@ -1552,12 +1539,8 @@ public class Edsf.Persona : Folks.Persona,
        * who don't actually use GMail or MSN addresses for IM).
        *
        * See bgo#657142
-       *
-       * NOTE: The public property name (this.email_addresses, as opposed to
-       * this._email_addresses) is used here to ensure the values are
-       * lazy-loaded correctly.
        */
-      foreach (var email in this.email_addresses)
+      foreach (var email in this._email_addresses)
         {
           var _proto = this._im_proto_from_addr (email.value);
           if (_proto != null)
