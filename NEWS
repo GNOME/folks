@@ -15,6 +15,7 @@ Bugs fixed:
 • Bug 686506 — Make zeitgeist dependency optional again
 • Bug 686693 — writing birthday lacks conversion from UTC
 • Bug 685401 — linking by email
+• Bug 687050 — eds: expose Google system groups in the API
 
 API changes:
 • Add Backend.enable_persona_store and disable_persona_store.
