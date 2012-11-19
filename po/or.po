@@ -601,15 +601,15 @@ msgstr ""
 #, c-format
 msgid "Imported %u buddy from '%s'."
 msgid_plural "Imported %u buddies from '%s'."
-msgstr[0] "'%s' ରୁ ଆମଦାନୀ ହୋଇଥିବା %u ସାଙ୍ଗ।"
-msgstr[1] "'%s' ରୁ ଆମଦାନୀ ହୋଇଥିବା %u ସାଙ୍ଗମାନେ।"
+msgstr[0] "ଆମଦାନୀ ହୋଇଥିବା %u ସାଙ୍ଗ '%s' ରୁ।"
+msgstr[1] "ଆମଦାନୀ ହୋଇଥିବା %u ସାଙ୍ଗମାନେ '%s' ରୁ ।"
 
 #. Translators: the first parameter is a persona identifier,
 #. * and the second is an error message.
 #: ../tools/import-pidgin.vala:163
 #, c-format
 msgid "Error changing group of contact ‘%s’: %s"
-msgstr "ସମ୍ପର୍କ `s' ର ଶ୍ରେଣୀ ପରିବର୍ତ୍ତନ କରିବା ସମୟରେ ତ୍ରୁଟି: %s"
+msgstr "ସମ୍ପର୍କ ‘%s’ ର ଶ୍ରେଣୀ ପରିବର୍ତ୍ତନ କରିବା ସମୟରେ ତ୍ରୁଟି: %s"
 
 #. Translators: the parameter is the buddy's IM address.
 #: ../tools/import-pidgin.vala:220
