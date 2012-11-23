@@ -1416,6 +1416,10 @@ public class Edsf.PersonaStore : Folks.PersonaStore
     {
       var vcard = (E.VCard) contact;
       vcard.remove_attributes (null, "X-URIS");
+      contact.set (ContactField.HOMEPAGE_URL, null);
+      contact.set (ContactField.VIDEO_URL, null);
+      contact.set (ContactField.BLOG_URL, null);
+      contact.set (ContactField.FREEBUSY_URL, null);
 
       foreach (var u in urls)
         {

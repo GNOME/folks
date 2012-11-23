@@ -3,6 +3,7 @@ Overview of changes from libfolks 0.8.0 to libfolks 0.8.1
 
 Bugs fixed:
 • Bug 688834 — getting properties creates data structures over and over again
+• Bug 688923 — remove URLs (blog, free/busy, video, home page)
 
 Overview of changes from libfolks 0.7.4.1 to libfolks 0.8.0
 ===========================================================
