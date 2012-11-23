@@ -19,6 +19,7 @@ Bugs fixed:
 • Bug 686673 — Build error: libsocialweb backend doesn't implement new Backend
   functions
 • Bug 688834 — getting properties creates data structures over and over again
+• Bug 688923 — remove URLs (blog, free/busy, video, home page)
 
 API changes:
 • Add Backend.enable_persona_store and disable_persona_store.
