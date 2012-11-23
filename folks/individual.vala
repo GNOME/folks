@@ -505,7 +505,7 @@ public class Folks.Individual : Object,
     {
       get
         {
-          this._update_urls (true, false);
+          this._update_urls (true, false, false);
           return this._urls_ro;
         }
       set { this.change_urls.begin (value); } /* not writeable */
@@ -522,7 +522,7 @@ public class Folks.Individual : Object,
     {
       get
         {
-          this._update_phone_numbers (true, false);
+          this._update_phone_numbers (true, false, false);
           return this._phone_numbers_ro;
         }
       set { this.change_phone_numbers.begin (value); } /* not writeable */
@@ -539,7 +539,7 @@ public class Folks.Individual : Object,
     {
       get
         {
-          this._update_email_addresses (true, false);
+          this._update_email_addresses (true, false, false);
           return this._email_addresses_ro;
         }
       set { this.change_email_addresses.begin (value); } /* not writeable */
@@ -556,7 +556,7 @@ public class Folks.Individual : Object,
     {
       get
         {
-          this._update_roles (true, false);
+          this._update_roles (true, false, false);
           return this._roles_ro;
         }
       set { this.change_roles.begin (value); } /* not writeable */
@@ -573,7 +573,7 @@ public class Folks.Individual : Object,
     {
       get
         {
-          this._update_local_ids (true, false);
+          this._update_local_ids (true, false, false);
           return this._local_ids_ro;
         }
       set { this.change_local_ids.begin (value); } /* not writeable */
@@ -614,7 +614,7 @@ public class Folks.Individual : Object,
     {
       get
         {
-          this._update_notes (true, false);
+          this._update_notes (true, false, false);
           return this._notes_ro;
         }
       set { this.change_notes.begin (value); } /* not writeable */
@@ -631,7 +631,7 @@ public class Folks.Individual : Object,
     {
       get
         {
-          this._update_postal_addresses (true, false);
+          this._update_postal_addresses (true, false, false);
           return this._postal_addresses_ro;
         }
       set { this.change_postal_addresses.begin (value); } /* not writeable */
@@ -734,7 +734,7 @@ public class Folks.Individual : Object,
     {
       get
         {
-          this._update_groups (true, false);
+          this._update_groups (true, false, false);
           return this._groups_ro;
         }
       set { this.change_groups.begin (value); }
@@ -811,7 +811,7 @@ public class Folks.Individual : Object,
     {
       get
         {
-          this._update_im_addresses (true, false);
+          this._update_im_addresses (true, false, false);
           return this._im_addresses;
         }
       set { this.change_im_addresses.begin (value); } /* not writeable */
@@ -828,7 +828,7 @@ public class Folks.Individual : Object,
     {
       get
         {
-          this._update_web_service_addresses (true, false);
+          this._update_web_service_addresses (true, false, false);
           return this._web_service_addresses;
         }
       /* Not writeable: */
@@ -1412,6 +1412,12 @@ public class Folks.Individual : Object,
    * getter. In this case, a change notification will be emitted for the
    * property and this function will return immediately.
    *
+   * If ``force_update`` is ``true``, then existing values get updated (if
+   * the current value is different) or created (according to the
+   * ``create_if_not_exist`` value). Otherwise the function only ensures
+   * that there is a value (if ``create_if_not_exist`` is set) and leaves
+   * existing values unchanged.
+   *
    * If the property value is to be instantiated, or already has been
    * instantiated, its value is updated by ``setter`` from the values of the
    * property in the individual's personas.
@@ -1433,12 +1439,14 @@ public class Folks.Individual : Object,
   private void _update_multi_valued_property (string prop_name,
       bool create_if_not_exist, PropertyIsNull prop_is_null,
       CollectionCreator create_collection, MultiValuedPropertySetter setter,
-      bool emit_notification = true)
+      bool emit_notification = true,
+      bool force_update = true)
     {
       /* If the set of values doesn't exist, and we're not meant to lazily
        * create it, then simply emit a notification (since the set might've
        * changed — we can't be sure, but emitting is a safe over-estimate) and
        * return. */
+      bool created = false;
       if (prop_is_null ())
         {
           /* Notify and return. */
@@ -1453,22 +1461,27 @@ public class Folks.Individual : Object,
 
           /* Lazily instantiate the set of IM addresses. */
           create_collection ();
+          created = true;
         }
 
       /* Re-populate the collection as the union of the values in the
-       * individual's personas. */
-      if (setter () == true && emit_notification)
+       * individual's personas. Do this when an empty property was just
+       * created or we were asked to explicitly (usually because the caller
+       * knows that the current value is out-dated).
+       */
+      if ((created || force_update) && setter () == true && emit_notification)
         {
           this.notify_property (prop_name);
         }
     }
 
-  private void _update_groups (bool create_if_not_exist, bool emit_notification = true)
+  private void _update_groups (bool create_if_not_exist, bool emit_notification = true, bool force_update = true)
     {
       /* If the set of groups doesn't exist, and we're not meant to lazily
        * create it, then simply emit a notification (since the set might've
        * changed — we can't be sure, but emitting is a safe over-estimate) and
        * return. */
+      bool created = false;
       if (this._groups == null && create_if_not_exist == false)
         {
           if (emit_notification)
@@ -1483,7 +1496,12 @@ public class Folks.Individual : Object,
         {
           this._groups = new HashSet<string> ();
           this._groups_ro = this._groups.read_only_view;
+          created = true;
         }
+
+      /* Don't touch existing content in get(). */
+      if (!created && !force_update)
+         return;
 
       var new_groups = new HashSet<string> ();
 
@@ -1696,7 +1714,7 @@ public class Folks.Individual : Object,
         this.trust_level = trust_level;
     }
 
-  private void _update_im_addresses (bool create_if_not_exist, bool emit_notification = true)
+  private void _update_im_addresses (bool create_if_not_exist, bool emit_notification = true, bool force_update = true)
     {
       this._update_multi_valued_property ("im-addresses",
           create_if_not_exist, () => { return this._im_addresses == null; },
@@ -1740,10 +1758,10 @@ public class Folks.Individual : Object,
                 }
 
               return false;
-            }, emit_notification);
+            }, emit_notification, force_update);
     }
 
-  private void _update_web_service_addresses (bool create_if_not_exist, bool emit_notification = true)
+  private void _update_web_service_addresses (bool create_if_not_exist, bool emit_notification = true, bool force_update = true)
     {
       this._update_multi_valued_property ("web-service-addresses",
           create_if_not_exist,
@@ -1792,7 +1810,7 @@ public class Folks.Individual : Object,
                 }
 
               return false;
-            }, emit_notification);
+            }, emit_notification, force_update);
     }
 
   private void _connect_to_persona (Persona persona)
@@ -2035,7 +2053,7 @@ public class Folks.Individual : Object,
         });
     }
 
-  private void _update_urls (bool create_if_not_exist, bool emit_notification = true)
+  private void _update_urls (bool create_if_not_exist, bool emit_notification = true, bool force_update = true)
     {
       this._update_multi_valued_property ("urls", create_if_not_exist,
           () => { return this._urls == null; },
@@ -2089,10 +2107,10 @@ public class Folks.Individual : Object,
                 }
 
               return false;
-            }, emit_notification);
+            }, emit_notification, force_update);
     }
 
-  private void _update_phone_numbers (bool create_if_not_exist, bool emit_notification = true)
+  private void _update_phone_numbers (bool create_if_not_exist, bool emit_notification = true, bool force_update = true)
     {
       this._update_multi_valued_property ("phone-numbers", create_if_not_exist,
           () => { return this._phone_numbers == null; },
@@ -2146,10 +2164,10 @@ public class Folks.Individual : Object,
                 }
 
               return false;
-            }, emit_notification);
+            }, emit_notification, force_update);
     }
 
-  private void _update_email_addresses (bool create_if_not_exist, bool emit_notification = true)
+  private void _update_email_addresses (bool create_if_not_exist, bool emit_notification = true, bool force_update = true)
     {
       this._update_multi_valued_property ("email-addresses",
           create_if_not_exist, () => { return this._email_addresses == null; },
@@ -2204,10 +2222,10 @@ public class Folks.Individual : Object,
                 }
 
               return false;
-            }, emit_notification);
+            }, emit_notification, force_update);
     }
 
-  private void _update_roles (bool create_if_not_exist, bool emit_notification = true)
+  private void _update_roles (bool create_if_not_exist, bool emit_notification = true, bool force_update = true)
     {
       this._update_multi_valued_property ("roles", create_if_not_exist,
           () => { return this._roles == null; },
@@ -2244,10 +2262,10 @@ public class Folks.Individual : Object,
                 }
 
               return false;
-            }, emit_notification);
+            }, emit_notification, force_update);
     }
 
-  private void _update_local_ids (bool create_if_not_exist, bool emit_notification = true)
+  private void _update_local_ids (bool create_if_not_exist, bool emit_notification = true, bool force_update = true)
     {
       this._update_multi_valued_property ("local-ids", create_if_not_exist,
           () => { return this._local_ids == null; },
@@ -2281,10 +2299,10 @@ public class Folks.Individual : Object,
                 }
 
               return false;
-            }, emit_notification);
+            }, emit_notification, force_update);
     }
 
-  private void _update_postal_addresses (bool create_if_not_exist, bool emit_notification = true)
+  private void _update_postal_addresses (bool create_if_not_exist, bool emit_notification = true, bool force_update = true)
     {
       /* FIXME: Detect duplicates somehow? */
       this._update_multi_valued_property ("postal-addresses",
@@ -2326,7 +2344,7 @@ public class Folks.Individual : Object,
                 }
 
               return false;
-            }, emit_notification);
+            }, emit_notification, force_update);
     }
 
   private void _update_birthday ()
@@ -2381,7 +2399,7 @@ public class Folks.Individual : Object,
         });
     }
 
-  private void _update_notes (bool create_if_not_exist, bool emit_notification = true)
+  private void _update_notes (bool create_if_not_exist, bool emit_notification = true, bool force_update = true)
     {
       this._update_multi_valued_property ("notes", create_if_not_exist,
           () => { return this._notes == null; },
@@ -2418,7 +2436,7 @@ public class Folks.Individual : Object,
                 }
 
               return false;
-            }, emit_notification);
+            }, emit_notification, force_update);
     }
 
   private void _set_personas (Set<Persona>? personas,
