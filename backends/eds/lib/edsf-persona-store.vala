@@ -83,7 +83,8 @@ public class Edsf.PersonaStore : Folks.PersonaStore
    * will then create a new {@link Edsf.PersonaStore} from.
    *
    * @param id the name and id for the new address book
-   * @throws GLib.Error
+   * @throws GLib.Error if an error occurred while creating or committing to
+   * the {@link E.SourceRegistry}
    *
    * @since UNRELEASED
    */
@@ -117,7 +118,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
    * the same.
    *
    * @param store the PersonaStore to delete the address book for.
-   * @throws GLib.Error
+   * @throws GLib.Error if an error occurred in {@link E.Source.remove}
    *
    * @since UNRELEASED
    */

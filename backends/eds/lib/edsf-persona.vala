@@ -628,8 +628,8 @@ public class Edsf.Persona : Folks.Persona,
    * - "Coworkers"
    *
    * Setting the system groups will also change the group membership to include
-   * the localized version of those groups, and may change the value of {@link
-   * EdsfPersona.in_google_personal_group}
+   * the localized version of those groups, and may change the value of
+   * {@link Edsf.Persona.in_google_personal_group}.
    *
    * Attempting to call this method on a persona beloging to a PersonaStore which
    * is not Google will throw a PropertyError.
