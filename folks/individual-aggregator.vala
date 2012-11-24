@@ -291,7 +291,7 @@ public class Folks.IndividualAggregator : Object
    * Create a new IndividualAggregator with a custom {@link BackendStore}.
    *
    * This behaves the same as the default constructor for 
-   * {@link IndivdiualAggregator}, but uses the given {@link BackendStore}
+   * {@link IndividualAggregator}, but uses the given {@link BackendStore}
    * rather than the default one.
    *
    * @param store the {@link BackendStore} to use instead of the default one.
