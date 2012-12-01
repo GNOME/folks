@@ -2,14 +2,15 @@
 # Copyright (C) 2012 folks's COPYRIGHT HOLDER
 # This file is distributed under the same license as the folks package.
 # Nishio Futoshi <fut_nis@d3.dion.ne.jp>, 2012.
+# Takayuki KUSANO <AE5T-KSN@asahi-net.or.jp>, 2012.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: folks master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=folks&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2012-09-23 14:49+0000\n"
-"PO-Revision-Date: 2012-09-24 23:45+0900\n"
-"Last-Translator: Nishio Futoshi <fut_nis@d3.dion.ne.jp>\n"
+"POT-Creation-Date: 2012-11-28 10:19+0000\n"
+"PO-Revision-Date: 2012-10-15 22:57+0900\n"
+"Last-Translator: Takayuki KUSANO <AE5T-KSN@asahi-net.or.jp>\n"
 "Language-Team: Japanese <gnome-translation@gnome.gr.jp>\n"
 "Language: ja\n"
 "MIME-Version: 1.0\n"
@@ -31,69 +32,69 @@ msgstr "Android 内の星付き"
 
 #. Translators: the first parameter is an address book
 #. * URI and the second is a persona UID.
-#: ../backends/eds/lib/edsf-persona-store.vala:588
+#: ../backends/eds/lib/edsf-persona-store.vala:641
 #, c-format
 msgid "Address book ‘%s’ is offline, so contact ‘%s’ cannot be removed."
 msgstr "住所録 '%s' はオフラインなので、連絡先の '%s' は削除できません。"
 
 #. Translators: the first parameter is an address book
 #. * URI and the second is an error message.
-#: ../backends/eds/lib/edsf-persona-store.vala:594
+#: ../backends/eds/lib/edsf-persona-store.vala:647
 #, c-format
 msgid "Permission denied to remove contact ‘%s’: %s"
 msgstr "連絡先 '%s' の削除権限がありません: %s"
 
 # persona store の意味が不明。
 #. Translators: the parameter is an error message.
-#: ../backends/eds/lib/edsf-persona-store.vala:599
+#: ../backends/eds/lib/edsf-persona-store.vala:652
 #, c-format
 msgid "Removing contacts isn't supported by this persona store: %s"
 msgstr "連絡先の削除は、このペルソナストアーではサポートされていません: %s"
 
-#: ../backends/eds/lib/edsf-persona-store.vala:628
+#: ../backends/eds/lib/edsf-persona-store.vala:681
 #, c-format
 msgid "Can't remove contact ‘%s’: %s"
 msgstr "連絡先 '%s' を削除できません: %s"
 
 #. Translators: the parameter is an address book
 #. * URI.
-#: ../backends/eds/lib/edsf-persona-store.vala:721
-#: ../backends/eds/lib/edsf-persona-store.vala:915
+#: ../backends/eds/lib/edsf-persona-store.vala:774
+#: ../backends/eds/lib/edsf-persona-store.vala:968
 #, c-format
 msgid "Address book ‘%s’ is offline."
 msgstr "住所録 '%s' はオフラインです。"
 
 #. Translators: the first parameter is an address
 #. * book URI and the second is an error message.
-#: ../backends/eds/lib/edsf-persona-store.vala:726
-#: ../backends/eds/lib/edsf-persona-store.vala:920
+#: ../backends/eds/lib/edsf-persona-store.vala:779
+#: ../backends/eds/lib/edsf-persona-store.vala:973
 #, c-format
 msgid "Permission denied to open address book ‘%s’: %s"
 msgstr "住所録 '%s' を開く権限がありません: %s"
 
 #. Translators: the first parameter is an address book URI
 #. * and the second is an error message.
-#: ../backends/eds/lib/edsf-persona-store.vala:759
+#: ../backends/eds/lib/edsf-persona-store.vala:812
 #, c-format
 msgid "Couldn't open address book ‘%s’: %s"
 msgstr "住所録 '%s' が開けませんでした: %s"
 
 #. Translators: the parameteter is an error message.
-#: ../backends/eds/lib/edsf-persona-store.vala:825
-#: ../backends/eds/lib/edsf-persona-store.vala:855
+#: ../backends/eds/lib/edsf-persona-store.vala:878
+#: ../backends/eds/lib/edsf-persona-store.vala:908
 #, c-format
 msgid "Couldn't get address book capabilities: %s"
-msgstr "住所録の権限を取得できませんでした: %s"
+msgstr "住所録の機能にアクセスできませんでした: %s"
 
 #. Translators: the parameter is an address book URI.
-#: ../backends/eds/lib/edsf-persona-store.vala:871
+#: ../backends/eds/lib/edsf-persona-store.vala:924
 #, c-format
 msgid "Couldn't get view for address book ‘%s’."
 msgstr "住所録 '%s' のビューを取得できませんでした。"
 
 #. Translators: the first parameter is an address book URI
 #. * and the second is an error message.
-#: ../backends/eds/lib/edsf-persona-store.vala:953
+#: ../backends/eds/lib/edsf-persona-store.vala:1006
 #, c-format
 msgid "Couldn't get view for address book ‘%s’: %s"
 msgstr "住所録 '%s' のビューを取得できませんでした: %s"
@@ -101,103 +102,107 @@ msgstr "住所録 '%s' のビューを取得できませんでした: %s"
 #. Translators: the parameter is the name of a property on a
 #. * contact, formatted in the normal GObject style (e.g.
 #. * lowercase with hyphens to separate words).
-#: ../backends/eds/lib/edsf-persona-store.vala:1310
+#: ../backends/eds/lib/edsf-persona-store.vala:1363
 #, c-format
 msgid "Changing the ‘%s’ property failed due to reaching the timeout."
 msgstr "'%s' のプロパティの変更は、時間切れで失敗しました。"
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1348
+#: ../backends/eds/lib/edsf-persona-store.vala:1401
 #: ../folks/avatar-details.vala:63
 msgid "Avatar is not writeable on this contact."
 msgstr "アバターはこの連絡先には書き込みできません。"
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1369
+#: ../backends/eds/lib/edsf-persona-store.vala:1422
 #: ../folks/web-service-details.vala:123
 msgid "Web service addresses are not writeable on this contact."
 msgstr "Webサービスのアドレスは、この連絡先には書き込みできません。"
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1405
+#: ../backends/eds/lib/edsf-persona-store.vala:1458
 #: ../folks/url-details.vala:152
 msgid "URLs are not writeable on this contact."
 msgstr "URL は、この連絡先には書き込みできません。"
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1482
+#: ../backends/eds/lib/edsf-persona-store.vala:1539
 #: ../folks/local-id-details.vala:64
 msgid "Local IDs are not writeable on this contact."
 msgstr "ローカル ID は、この連絡先には書き込みできません。"
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1508
+#: ../backends/eds/lib/edsf-persona-store.vala:1565
 msgid "The contact cannot be marked as favourite."
 msgstr "連絡先は、お気に入りとして印をつけることはできません。"
 
 #. Translators: the parameter is an error message.
-#: ../backends/eds/lib/edsf-persona-store.vala:1577
+#: ../backends/eds/lib/edsf-persona-store.vala:1634
 #, c-format
 msgid "Can't update avatar: %s"
 msgstr "アバターの更新ができません: %s"
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1588
+#: ../backends/eds/lib/edsf-persona-store.vala:1645
 #: ../folks/email-details.vala:120
 msgid "E-mail addresses are not writeable on this contact."
 msgstr "E-メールアドレスはこの連絡先には書き込みできません。"
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1602
+#: ../backends/eds/lib/edsf-persona-store.vala:1659
 #: ../folks/phone-details.vala:229
 msgid "Phone numbers are not writeable on this contact."
 msgstr "電話番号は、この連絡先には書き込みできません。"
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1616
+#: ../backends/eds/lib/edsf-persona-store.vala:1673
 #: ../folks/postal-address-details.vala:361
 msgid "Postal addresses are not writeable on this contact."
 msgstr "住所は、この連絡先には書き込みできません。"
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1683
+#: ../backends/eds/lib/edsf-persona-store.vala:1740
 #: ../folks/name-details.vala:283
 msgid "Full name is not writeable on this contact."
 msgstr "フルネームは、この連絡先には書き込みできません。"
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1705
+#: ../backends/eds/lib/edsf-persona-store.vala:1762
 #: ../folks/name-details.vala:321
 msgid "Nickname is not writeable on this contact."
 msgstr "ニックネームは、この連絡先には書き込みできません。"
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1727
+#: ../backends/eds/lib/edsf-persona-store.vala:1784
 #: ../folks/note-details.vala:138
 msgid "Notes are not writeable on this contact."
 msgstr "メモは、この連絡先には書き込みできません。"
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1756
+#: ../backends/eds/lib/edsf-persona-store.vala:1813
 #: ../folks/birthday-details.vala:62
 msgid "Birthday is not writeable on this contact."
 msgstr "誕生日は、この連絡先には書き込みできません。"
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1799
+#: ../backends/eds/lib/edsf-persona-store.vala:1857
 #: ../folks/role-details.vala:279
 msgid "Roles are not writeable on this contact."
 msgstr "役職は、この連絡先には書き込みできません。"
 
 # Google 用語で、xml 形式の氏名らしい。https://developers.google.com/checkout/developer/Google_Checkout_XML_API_Structured_Names#Receiving_Structured_Names
-#: ../backends/eds/lib/edsf-persona-store.vala:1900
+#: ../backends/eds/lib/edsf-persona-store.vala:1958
 #: ../folks/name-details.vala:246
 msgid "Structured name is not writeable on this contact."
 msgstr "構造的な名前は、この連絡先には書き込みできません。"
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1939
+#: ../backends/eds/lib/edsf-persona-store.vala:1997
 #: ../folks/im-details.vala:136
 msgid "IM addresses are not writeable on this contact."
 msgstr "IM アドレスは、この連絡先には書き込みできません。"
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1989
+#: ../backends/eds/lib/edsf-persona-store.vala:2047
 #: ../folks/group-details.vala:174
 msgid "Groups are not writeable on this contact."
 msgstr "グループは、この連絡先には書き込みできません。"
 
-#: ../backends/eds/lib/edsf-persona-store.vala:2033
+#: ../backends/eds/lib/edsf-persona-store.vala:2059
+msgid "My Contacts is only available for Google Contacts"
+msgstr ""
+
+#: ../backends/eds/lib/edsf-persona-store.vala:2126
 #: ../folks/gender-details.vala:79
 msgid "Gender is not writeable on this contact."
 msgstr "性別は、この連絡先には書き込みできません。"
 
-#: ../backends/eds/lib/edsf-persona-store.vala:2068
+#: ../backends/eds/lib/edsf-persona-store.vala:2161
 #: ../folks/anti-linkable.vala:81
 msgid "Anti-links are not writeable on this contact."
 msgstr "アンチリンクは、この連絡先には書き込みできません。"
@@ -205,7 +210,7 @@ msgstr "アンチリンクは、この連絡先には書き込みできません
 #. Translators: the first parameter is a non-human-readable
 #. * property name and the second parameter is an error
 #. * message.
-#: ../backends/eds/lib/edsf-persona-store.vala:2263
+#: ../backends/eds/lib/edsf-persona-store.vala:2356
 #, c-format
 msgid "Property ‘%s’ is not writeable: %s"
 msgstr "プロパティ '%s' は書き込みできません: %s"
@@ -213,14 +218,14 @@ msgstr "プロパティ '%s' は書き込みできません: %s"
 #. Translators: the first parameter is a non-human-readable
 #. * property name and the second parameter is an error
 #. * message.
-#: ../backends/eds/lib/edsf-persona-store.vala:2272
+#: ../backends/eds/lib/edsf-persona-store.vala:2365
 #, c-format
 msgid "Invalid value for property ‘%s’: %s"
 msgstr "'%s' はプロパティに対して無効な値です: %s"
 
 #. Translators: the first parameter is a non-human-readable
 #. * property name and the second parameter is an error message.
-#: ../backends/eds/lib/edsf-persona-store.vala:2298
+#: ../backends/eds/lib/edsf-persona-store.vala:2391
 #, c-format
 msgid "Unknown error setting property ‘%s’: %s"
 msgstr "プロパティ '%s' の設定時に不明なエラー: %s"
@@ -278,15 +283,18 @@ msgid "Couldn’t prepare libsocialweb service: %s"
 msgstr "libsocialweb サービスの準備ができませんでした: %s"
 
 # capabilities は Linux のケーパビリティのことだと思うのだが、folksとの関係が不明。権限と訳出する。
+# => 機能、的な意味。D-BUS などでは一般に使われてる。ここでは
+#    libsocialweb 経由で利用する各種 SNS にある「機能」があるかどうかを確認している。
+# 「機能」としました。
 #: ../backends/libsocialweb/lib/swf-persona-store.vala:346
 msgid "No capabilities were found."
-msgstr "権限が見つかりませんでした。"
+msgstr "機能が見つかりませんでした。"
 
 # capability は ケーパビリティと訳すべきか？個別権限といった意味合いだと思われる。
+# => 同上
 #: ../backends/libsocialweb/lib/swf-persona-store.vala:368
-#, fuzzy
 msgid "No contacts capability was found."
-msgstr "連絡先の権限が見つかりませんでした。"
+msgstr "連絡先の機能が見つかりませんでした。"
 
 #: ../backends/libsocialweb/lib/swf-persona-store.vala:389
 msgid "Error opening contacts view."
@@ -295,16 +303,16 @@ msgstr "連絡先のビューを開くときエラーが発生しました。"
 #. Translators: the first parameter is the display name for
 #. * the Telepathy account, and the second is an error
 #. * message.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:778
+#: ../backends/telepathy/lib/tpf-persona-store.vala:813
 #, c-format
 msgid "Failed to determine whether we can set aliases on Telepathy account '%s': %s"
 msgstr "Telepathy アカウント '%s' のエイリアスを設定するかどうか決定できませんでした: '%s'"
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1234
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1271
 msgid "Telepathy contacts representing the local user may not be removed."
 msgstr "ローカルユーザーの Telepathy 連絡先表示を削除することはできません。"
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1245
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1282
 #, c-format
 msgid "Failed to remove a persona from store: %s"
 msgstr "ペルソナのストアーからの削除に失敗しました: %s"
@@ -312,7 +320,7 @@ msgstr "ペルソナのストアーからの削除に失敗しました: %s"
 # details を ディテールとした
 #. Translators: the first two parameters are store identifiers and
 #. * the third is a contact identifier.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1275
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1312
 #, c-format
 msgid ""
 "Persona store (%s, %s) requires the following details:\n"
@@ -321,57 +329,57 @@ msgstr ""
 "ペルソナストアー (%s, %s) には、以下のディテールが必要です:\n"
 "    連絡先 (提供元: '%s')\n"
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1290
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1327
 msgid "Cannot create a new Telepathy contact while offline."
 msgstr "オフライン時に、新規の Telepathy の連絡先を作成できませんでした。"
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1308
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1345
 #, c-format
 msgid "Failed to add a persona from details: %s"
 msgstr "ペルソナを以下のディテールから追加するのに失敗しました: %s"
 
 #. Translators: "telepathy-logger" is the name of an application,
 #. * and should not be translated.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1328
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1365
 msgid "Failed to change favorite without a connection to the telepathy-logger service."
 msgstr "telepathy-logger サービスに接続せずに、お気に入りを変更することに失敗しました。"
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1334
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1371
 msgid "Failed to change favorite status of Telepathy Persona because it has no attached TpContact."
 msgstr "TpContact のアタッチが無いため、Telepathy ペルソナのお気に入りの状態の変更に失敗しました。"
 
 #. Translators: the parameter is a contact identifier.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1352
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1389
 #, c-format
 msgid "Failed to change favorite status for Telepathy contact ‘%s’."
 msgstr "Telepathy の連絡先 '%s' のお気に入りの状態の変更に失敗しました。"
 
 #. Translators: the parameter is an error message.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1384
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1421
 #, c-format
 msgid "Failed to change contact's alias: %s"
 msgstr "連絡先のエイリアスの変更に失敗しました: %s"
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1464
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1501
 msgid "Extended information may only be set on the user's Telepathy contact."
 msgstr "拡張された情報は、ユーザーの Telepathy の連絡先にだけ設定できます。"
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1493
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1530
 msgid "Extended information cannot be written because the store is disconnected."
 msgstr "拡張された情報は、ストアーに接続していないため書き込みできません。"
 
-#: ../backends/telepathy/lib/tpf-persona.vala:497
-#: ../backends/telepathy/lib/tpf-persona.vala:518
-#: ../backends/telepathy/lib/tpf-persona.vala:570
-#: ../backends/telepathy/lib/tpf-persona.vala:584
+#: ../backends/telepathy/lib/tpf-persona.vala:499
+#: ../backends/telepathy/lib/tpf-persona.vala:520
+#: ../backends/telepathy/lib/tpf-persona.vala:572
+#: ../backends/telepathy/lib/tpf-persona.vala:586
 #, c-format
 msgid "Failed to change group membership: %s"
 msgstr "グループメンバーの変更に失敗しました: %s"
 
 #. Translators: "account" refers to an instant messaging
 #. * account.
-#: ../backends/telepathy/lib/tpf-persona.vala:500
-#: ../backends/telepathy/lib/tpf-persona.vala:573
+#: ../backends/telepathy/lib/tpf-persona.vala:502
+#: ../backends/telepathy/lib/tpf-persona.vala:575
 msgid "Account is offline."
 msgstr "アカウントはオフラインです。"
 
@@ -423,51 +431,51 @@ msgstr "IM アドレス '%s' が理解できませんでした。"
 
 #. Translators: the first parameter is a persona store identifier
 #. * and the second is an error message.
-#: ../folks/individual-aggregator.vala:863
+#: ../folks/individual-aggregator.vala:882
 #, c-format
 msgid "Error preparing persona store '%s': %s"
 msgstr "ペルソナストアー '%s' の準備時にエラーが発生しました: %s"
 
 #. Translators: the parameter is a property name.
-#: ../folks/individual-aggregator.vala:1069
-#: ../folks/individual-aggregator.vala:1295
+#: ../folks/individual-aggregator.vala:1088
+#: ../folks/individual-aggregator.vala:1314
 #, c-format
 msgid "Unknown property '%s' in linkable property list."
 msgstr "リンク可能なプロパティリストのプロパティ '%s' は未知です。"
 
 #. Translators: the first parameter is a store identifier
 #. * and the second parameter is an error message.
-#: ../folks/individual-aggregator.vala:1757
+#: ../folks/individual-aggregator.vala:1776
 #, c-format
 msgid "Failed to add contact for persona store ID '%s': %s"
 msgstr "ペルソナストアー ID '%s' への連絡先の追加に失敗しました: %s"
 
-#: ../folks/individual-aggregator.vala:1850
+#: ../folks/individual-aggregator.vala:1869
 msgid "Can’t link personas with no primary store."
 msgstr "初期値のストアーにないペルソナにリンクできません。"
 
-#: ../folks/individual-aggregator.vala:1851
-#: ../folks/individual-aggregator.vala:2185
+#: ../folks/individual-aggregator.vala:1870
+#: ../folks/individual-aggregator.vala:2204
 #, c-format
 msgid "Persona store ‘%s:%s’ is configured as primary, but could not be found or failed to load."
 msgstr "ペルソナストアー '%s:%s' が初期値として配置されましたが、見つからない、または、ロードに失敗しました。"
 
 # 英文が理解できない。2つ目の or がどれと並列なのか分からない。
-#: ../folks/individual-aggregator.vala:1852
-#: ../folks/individual-aggregator.vala:2186
+#: ../folks/individual-aggregator.vala:1871
+#: ../folks/individual-aggregator.vala:2205
 #, c-format
 msgid "Check the relevant service is running, or change the default store in that service or using the “%s” GSettings key."
 msgstr "適切なサービスが実行されていることを調査するか、そのサービスのデフォルトのストアーを GSettings のキー “%s” で変更してください。"
 
-#: ../folks/individual-aggregator.vala:1884
+#: ../folks/individual-aggregator.vala:1903
 msgid "Anti-links can't be removed between personas being linked."
 msgstr "ペルソナとリンクしているアンチリンクは削除できません。"
 
-#: ../folks/individual-aggregator.vala:2184
+#: ../folks/individual-aggregator.vala:2203
 msgid "Can’t add personas with no primary store."
 msgstr "初期のストアーにペルソナを追加できません。"
 
-#: ../folks/individual-aggregator.vala:2195
+#: ../folks/individual-aggregator.vala:2214
 #, c-format
 msgid "Can't write to requested property (“%s”) of the writeable store."
 msgstr "書き込み可能なストアーを要求されたプロパティ (\"%s\") に書き込むことはできません。"
