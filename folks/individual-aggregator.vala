@@ -886,9 +886,24 @@ public class Folks.IndividualAggregator : Object
           this._notify_if_is_quiescent ();
         }
 
-      /* no need to remove this store's personas from all the individuals, since
-       * they'll do that themselves (and emit their own 'removed' signal if
-       * necessary) */
+      /* Not all stores emit a 'removed' signal under all circumstances.
+       * The EDS backend doesn't do it when set_persona_stores() or disable_store()
+       * are used to disable a store.
+       * Therefore remove this store's personas from all the individuals. Should
+       * not have any effect if a store already triggered the 'removed' signals,
+       * because then we won't have anything here.
+       * See https://bugzilla.gnome.org/show_bug.cgi?id=689146
+       */
+
+      var removed_personas = new HashSet<Persona> ();
+      var iter = store.personas.map_iterator ();
+
+      while (iter.next () == true)
+        {
+          removed_personas.add (iter.get_value ());
+        }
+      this._personas_changed_cb (store, new HashSet<Persona> (), removed_personas,
+          null, null, GroupDetails.ChangeReason.NONE);
 
       if (this._primary_store == store)
         {
