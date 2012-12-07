@@ -21,6 +21,7 @@ Bugs fixed:
 • Bug 688834 — getting properties creates data structures over and over again
 • Bug 688923 — remove URLs (blog, free/busy, video, home page)
 • Bug 689146 — disabling EDS address books does not remove personas
+• Bug 689859 — core folks does not depend on telepathy
 
 API changes:
 • Add Backend.enable_persona_store and disable_persona_store.
