@@ -118,7 +118,7 @@ public class SetBirthdayTests : Folks.TestCase
               i.notify["birthday"].connect (this._notify_birthday_cb);
               this._found_before_update = true;
 
-              var dobj = new  DateTime.utc (1980, 1, 1, 0, 0, 0.0);
+              var dobj = new  DateTime.local (1980, 1, 1, 0, 0, 0.0).to_utc ();
               foreach (var p in i.personas)
                 {
                   ((BirthdayDetails) p).birthday = dobj;

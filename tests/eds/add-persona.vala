@@ -249,7 +249,7 @@ public class AddPersonaTests : Folks.TestCase
           (owned) v8);
 
       Value? v9 = Value (typeof (DateTime));
-      DateTime dobj = new  DateTime.utc (1980, 1, 1, 0, 0, 0.0);
+      DateTime dobj = new DateTime.local (1980, 1, 1, 0, 0, 0.0).to_utc ();
       v9.set_boxed (dobj);
       details.insert (Folks.PersonaStore.detail_key (PersonaDetail.BIRTHDAY),
           (owned) v9);
