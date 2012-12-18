@@ -7,10 +7,10 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: folks master\n"
-"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
-"product=folks&keywords=I18N+L10N&component=general\n"
+"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug."
+"cgi?product=folks&keywords=I18N+L10N&component=general\n"
 "POT-Creation-Date: 2012-12-07 17:30+0000\n"
-"PO-Revision-Date: 2012-11-28 12:38+0530\n"
+"PO-Revision-Date: 2012-12-18 15:27+0530\n"
 "Last-Translator: Shantha kumar <shkumar@redhat.com>\n"
 "Language-Team: Tamil <>\n"
 "Language: ta\n"
@@ -300,8 +300,7 @@ msgstr "தொடர்புகள் காட்சியைத் திற�
 #. * message.
 #: ../backends/telepathy/lib/tpf-persona-store.vala:813
 #, c-format
-msgid ""
-"Failed to determine whether we can set aliases on Telepathy account '%s': %s"
+msgid "Failed to determine whether we can set aliases on Telepathy account '%s': %s"
 msgstr ""
 "'%s' என்ற டெலிபதி கணக்கில் மாற்றுப் பெயரை அமைக்க முடியுமா எனத் தீர்மானிப்பது "
 "தோல்வியடைந்தது: %s"
@@ -355,8 +354,7 @@ msgstr ""
 #: ../backends/telepathy/lib/tpf-persona-store.vala:1389
 #, c-format
 msgid "Failed to change favorite status for Telepathy contact ‘%s’."
-msgstr ""
-"‘%s’ என்ற டெலிபதி தொடர்பின் பிடித்தவை தொடர்பான நிலையை மாற்றுவது தோல்வியடைந்தது."
+msgstr "‘%s’ என்ற டெலிபதி தொடர்பின் பிடித்தவை தொடர்பான நிலையை மாற்றுவது தோல்வியடைந்தது."
 
 #. Translators: the parameter is an error message.
 #: ../backends/telepathy/lib/tpf-persona-store.vala:1421
@@ -369,8 +367,7 @@ msgid "Extended information may only be set on the user's Telepathy contact."
 msgstr "பயனரின் டெலிபதி தொடர்பில் மட்டுமே விரிவான தகவலை அமைக்க முடியும்."
 
 #: ../backends/telepathy/lib/tpf-persona-store.vala:1530
-msgid ""
-"Extended information cannot be written because the store is disconnected."
+msgid "Extended information cannot be written because the store is disconnected."
 msgstr "ஸ்டோர் இணைப்பின்றி இருப்பதால் விரிவான தகவலை எழுத முடியாது."
 
 #: ../backends/telepathy/lib/tpf-persona.vala:499
@@ -394,8 +391,7 @@ msgstr "கணக்கு இணைப்பில் இல்லை."
 #: ../backends/tracker/lib/trf-persona-store.vala:742
 #, c-format
 msgid "Unrecognized parameter '%s' passed to persona store '%s'."
-msgstr ""
-"'%s' என்ற பெர்சனா ஸ்டோருக்கு '%s' எனும் அடையாளம் காணப்படாத அளவுரு செலுத்தப்பட்டது."
+msgstr "'%s' என்ற பெர்சனா ஸ்டோருக்கு '%s' எனும் அடையாளம் காணப்படாத அளவுரு செலுத்தப்பட்டது."
 
 #: ../folks/alias-details.vala:61
 msgid "Alias is not writeable on this contact."
@@ -707,3 +703,4 @@ msgid ""
 msgstr ""
 "அறியப்படாத மூல பின்னமைப்புப் பெயர் ‘%s’. ‘%s’ மட்டுமே தற்போது ஆதரிக்கப்படும் மூல "
 "பின்னமைப்பாகும்."
+
