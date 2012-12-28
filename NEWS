@@ -6,6 +6,7 @@ Bugs fixed:
 • Bug 688923 — remove URLs (blog, free/busy, video, home page)
 • Bug 689146 — disabling EDS address books does not remove personas
 • Bug 689859 — core folks does not depend on telepathy
+• Bug 677633 — Cannot delete favourite
 
 Overview of changes from libfolks 0.7.4.1 to libfolks 0.8.0
 ===========================================================
