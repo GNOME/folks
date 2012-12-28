@@ -75,6 +75,7 @@ noinst_PROGRAMS = \
 	set-properties-race \
 	set-birthday \
 	set-roles \
+	linkable-properties \
 	link-personas-diff-stores \
 	enable-disable-stores \
 	create-remove-stores \
@@ -151,6 +152,10 @@ remove_persona_SOURCES = \
 
 set_avatar_SOURCES = \
 	set-avatar.vala \
+	$(NULL)
+
+linkable_properties_SOURCES = \
+	linkable-properties.vala \
 	$(NULL)
 
 set_emails_SOURCES = \

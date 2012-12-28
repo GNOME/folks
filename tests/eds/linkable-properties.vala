@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 Collabora Ltd.
+ * Copyright (C) 2012 Collabora Ltd.
  *
  * This library is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -15,6 +15,7 @@
  * along with this library.  If not, see <http://www.gnu.org/licenses/>.
  *
  * Authors: Raul Gutierrez Segales <raul.gutierrez.segales@collabora.co.uk>
+ *          Travis Reitter <travis.reitter@collabora.co.uk>
  *
  */
 
@@ -22,7 +23,7 @@ using EdsTest;
 using Folks;
 using Gee;
 
-public class SetEmailsTests : Folks.TestCase
+public class LinkablePropertiesTests : Folks.TestCase
 {
   private EdsTest.Backend _eds_backend;
   private IndividualAggregator _aggregator;
@@ -30,11 +31,12 @@ public class SetEmailsTests : Folks.TestCase
   private bool _found_before_update;
   private bool _found_after_update;
 
-  public SetEmailsTests ()
+  public LinkablePropertiesTests ()
     {
-      base ("SetEmails");
+      base ("LinkableProperties");
 
-      this.add_test ("setting emails on e-d-s persona", this.test_set_emails);
+      this.add_test ("expected behavior from linkable properties",
+          this.test_linkable_properties_excess_individuals);
     }
 
   public override void set_up ()
@@ -52,7 +54,13 @@ public class SetEmailsTests : Folks.TestCase
       this._eds_backend.tear_down ();
     }
 
-  void test_set_emails ()
+  /* Ensure that changes to linkable properties do not result in excessive
+   * Individual constructions and destructions.
+   *
+   * This test is intended to remove those concerns from the other, more-basic
+   * property tests.
+   */
+  void test_linkable_properties_excess_individuals ()
     {
       Gee.HashMap<string, Value?> c1 = new Gee.HashMap<string, Value?> ();
       this._main_loop = new GLib.MainLoop (null, false);
@@ -68,12 +76,13 @@ public class SetEmailsTests : Folks.TestCase
       c1.set ("full_name", (owned) v);
       this._eds_backend.add_contact (c1);
 
-      this._test_set_emails_async.begin ();
+      this._test_linkable_properties_excess_individuals_async.begin ();
 
-      Timeout.add_seconds (5, () => {
-            this._main_loop.quit ();
-            assert_not_reached ();
-          });
+      Timeout.add_seconds (5, () =>
+        {
+          this._main_loop.quit ();
+          assert_not_reached ();
+        });
 
       this._main_loop.run ();
 
@@ -81,7 +90,7 @@ public class SetEmailsTests : Folks.TestCase
       assert (this._found_after_update);
     }
 
-  private async void _test_set_emails_async ()
+  private async void _test_linkable_properties_excess_individuals_async ()
     {
       yield this._eds_backend.commit_contacts_to_addressbook ();
 
@@ -104,6 +113,7 @@ public class SetEmailsTests : Folks.TestCase
        MultiMap<Individual?, Individual?> changes)
     {
       var added = changes.get_values ();
+      var removed = changes.get_keys ();
 
       foreach (Individual i in added)
         {
@@ -129,6 +139,13 @@ public class SetEmailsTests : Folks.TestCase
                 }
             }
         }
+
+      assert (removed.size == 1);
+
+      foreach (var i in removed)
+        {
+          assert (i == null);
+        }
     }
 
   private void _notify_emails_cb (Object individual_obj, ParamSpec ps)
@@ -150,7 +167,7 @@ public int main (string[] args)
   Test.init (ref args);
 
   TestSuite root = TestSuite.get_root ();
-  root.add_suite (new SetEmailsTests ().get_suite ());
+  root.add_suite (new LinkablePropertiesTests ().get_suite ());
 
   Test.run ();
 
