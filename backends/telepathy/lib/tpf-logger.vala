@@ -45,6 +45,7 @@ private interface LoggerIface : Object
 
 internal class Logger : GLib.Object
 {
+  private static DBusConnection _dbus_conn;
   private static LoggerIface _logger;
   private uint _logger_watch_id;
 
@@ -93,12 +94,13 @@ internal class Logger : GLib.Object
               return retval;
             }
 
-          this._logger_watch_id = Bus.watch_name_on_connection (dbus_conn,
-              "org.freedesktop.Telepathy.Logger", BusNameWatcherFlags.NONE,
-              null, this._logger_vanished);
-
+          Logger._dbus_conn = dbus_conn;
           retval = true;
         }
+
+      this._logger_watch_id = Bus.watch_name_on_connection (Logger._dbus_conn,
+          "org.freedesktop.Telepathy.Logger", BusNameWatcherFlags.NONE,
+          null, this._logger_vanished);
 
       Logger._logger.favourite_contacts_changed.connect ((ap, a, r) =>
         {
@@ -115,6 +117,7 @@ internal class Logger : GLib.Object
     {
       /* The logger has vanished on the bus, so it and we are no longer valid */
       Logger._logger = null;
+      Logger._dbus_conn = null;
       this.invalidated ();
     }
 
