@@ -43,10 +43,19 @@ private interface LoggerIface : Object
       ObjectPath account_path, string[] added, string[] removed);
 }
 
+/* See: https://mail.gnome.org/archives/vala-list/2011-June/msg00008.html */
+[Compact]
+private class DelegateWrapper
+{
+  public SourceFunc cb;
+}
+
 internal class Logger : GLib.Object
 {
   private static DBusConnection _dbus_conn;
   private static LoggerIface _logger;
+  private static DelegateWrapper[] _prepare_waiters = null;
+
   private uint _logger_watch_id;
 
   public signal void invalidated ();
@@ -77,22 +86,48 @@ internal class Logger : GLib.Object
 
   public async void prepare () throws GLib.Error
     {
-      if (Logger._logger == null)
+      if (Logger._logger == null && Logger._prepare_waiters == null)
         {
+          /* If this is the first call to prepare(), start some async calls. We
+           * then yield to the main thread. Any subsequent calls to prepare()
+           * will have their continuations added to the _prepare_waiters list,
+           * and will be signalled once the first call returns.
+           * See: https://bugzilla.gnome.org/show_bug.cgi?id=677633 */
+          Logger._prepare_waiters = new DelegateWrapper[0];
+
           /* Create a logger proxy for favourites support */
           var dbus_conn = yield Bus.get (BusType.SESSION);
           Logger._logger = yield dbus_conn.get_proxy<LoggerIface> (
               "org.freedesktop.Telepathy.Logger",
               "/org/freedesktop/Telepathy/Logger");
 
-          /* Failure? */
-          if (Logger._logger == null)
+          if (Logger._logger != null)
             {
-              this.invalidated ();
-              return;
+              Logger._dbus_conn = dbus_conn;
             }
 
-          Logger._dbus_conn = dbus_conn;
+          /* Wake up any waiters. */
+          foreach (unowned DelegateWrapper wrapper in Logger._prepare_waiters)
+            {
+              wrapper.cb ();
+            }
+
+          Logger._prepare_waiters = null;
+        }
+      else if (Logger._logger == null && Logger._prepare_waiters != null)
+        {
+          /* Yield until the first ongoing prepare() call finishes. */
+          var wrapper = new DelegateWrapper ();
+          wrapper.cb = prepare.callback;
+          Logger._prepare_waiters += (owned) wrapper;
+          yield;
+        }
+
+      /* Failure? */
+      if (Logger._logger == null)
+        {
+          this.invalidated ();
+          return;
         }
 
       this._logger_watch_id = Bus.watch_name_on_connection (Logger._dbus_conn,

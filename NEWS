@@ -22,6 +22,7 @@ Bugs fixed:
 • Bug 688923 — remove URLs (blog, free/busy, video, home page)
 • Bug 689146 — disabling EDS address books does not remove personas
 • Bug 689859 — core folks does not depend on telepathy
+• Bug 677633 — Cannot delete favourite
 
 API changes:
 • Add Backend.enable_persona_store and disable_persona_store.
