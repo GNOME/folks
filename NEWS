@@ -23,6 +23,8 @@ Bugs fixed:
 • Bug 689146 — disabling EDS address books does not remove personas
 • Bug 689859 — core folks does not depend on telepathy
 • Bug 677633 — Cannot delete favourite
+• Bug 685992 — empathy strips the "+" (plus) from the numbers from the
+  gnome-contacts
 
 API changes:
 • Add Backend.enable_persona_store and disable_persona_store.

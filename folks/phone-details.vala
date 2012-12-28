@@ -130,8 +130,8 @@ public class Folks.PhoneFieldDetails : AbstractFieldDetails<string>
    * Typical normalisations:
    *
    *  - ``1-800-123-4567`` → ``18001234567``
-   *  - ``+1-800-123-4567`` → ``18001234567``
-   *  - ``+1-800-123-4567P123`` → ``18001234567P123``
+   *  - ``+1-800-123-4567`` → ``+18001234567``
+   *  - ``+1-800-123-4567P123`` → ``+18001234567P123``
    *
    * @return the normalised form of ``number``
    *
@@ -145,12 +145,7 @@ public class Folks.PhoneFieldDetails : AbstractFieldDetails<string>
         {
           var digit = this.value.slice (i, i + 1);
 
-          if (i == 0 && digit == "+")
-            {
-              /* we drop the initial + */
-              continue;
-            }
-          else if (digit in PhoneFieldDetails._extension_chars ||
+          if (digit in PhoneFieldDetails._extension_chars ||
               digit in PhoneFieldDetails._valid_digits)
             {
               /* lets keep valid digits */
