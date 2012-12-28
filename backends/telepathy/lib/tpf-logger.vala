@@ -75,10 +75,8 @@ internal class Logger : GLib.Object
         }
     }
 
-  public async bool prepare () throws GLib.Error
+  public async void prepare () throws GLib.Error
     {
-      bool retval = false;
-
       if (Logger._logger == null)
         {
           /* Create a logger proxy for favourites support */
@@ -91,11 +89,10 @@ internal class Logger : GLib.Object
           if (Logger._logger == null)
             {
               this.invalidated ();
-              return retval;
+              return;
             }
 
           Logger._dbus_conn = dbus_conn;
-          retval = true;
         }
 
       this._logger_watch_id = Bus.watch_name_on_connection (Logger._dbus_conn,
@@ -109,8 +106,6 @@ internal class Logger : GLib.Object
 
           this.favourite_contacts_changed (a, r);
         });
-
-      return retval;
     }
 
   private void _logger_vanished (DBusConnection conn, string name)
