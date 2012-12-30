@@ -130,6 +130,10 @@ public class Folks.AvatarCache : Object
    * example, this ID could be the UID of a persona. The URI of the cached
    * avatar file will be returned.
    *
+   * This method may be called multiple times concurrently for the same avatar
+   * ID (e.g. an asynchronous call may be made, and a subsequent asynchronous
+   * call may begin before the first has finished).
+   *
    * @param id the globally unique ID for the avatar
    * @param avatar the avatar data to cache
    * @return a URI for the file storing the cached avatar
@@ -155,6 +159,10 @@ public class Folks.AvatarCache : Object
 
           try
             {
+              /* In order for this to be concurrency-safe, we assume that
+               * replace_async() does an atomic substitution of the new file for
+               * the old when the stream is closed. (i.e. It's
+               * concurrency-safe). */
               dest_avatar_stream =
                   yield dest_avatar_file.replace_async (null, false,
                       FileCreateFlags.PRIVATE);

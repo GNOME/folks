@@ -887,7 +887,8 @@ public class Trf.PersonaStore : Folks.PersonaStore
   /**
    * Remove a {@link Persona} from the PersonaStore.
    *
-   * See {@link Folks.PersonaStore.remove_persona}.
+   * See {@link Folks.PersonaStore.remove_persona}. This method is not safe to
+   * call multiple times concurrently on the same persona.
    *
    * @throws Folks.PersonaStoreError currently unused
    */
@@ -907,6 +908,9 @@ public class Trf.PersonaStore : Folks.PersonaStore
       yield this._tracker_update (q.printf (urn, urn), "remove_persona");
     }
 
+  /* This method is not safe to call multiple times concurrently, since one call
+   * could be part-way through removing attributes of the URN while a subsequent
+   * call is attempting to retrieve the URN. */
   private async string _remove_attributes_from_persona (Folks.Persona persona,
       char remove_flag)
     {
@@ -915,6 +919,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
       return urn;
     }
 
+  /* This method is safe to call multiple times concurrently. */
   private async void _build_update_query_set (
       Tracker.Sparql.Builder builder,
       Set<AbstractFieldDetails<string>> properties,
@@ -982,6 +987,9 @@ public class Trf.PersonaStore : Folks.PersonaStore
    *    check to if the deleted nco:Person
    *    is the only one holding a link, if so we
    *    remove the resource.
+   *
+   * This method is not safe to call multiple times concurrently, since the
+   * deletions will race.
    */
   private async void _remove_attributes (string urn, char remove_flag)
     {
@@ -1169,6 +1177,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
           (Trf.OntologyDefs.NCO_FEMALE);
     }
 
+  /* This is safe to call multiple times concurrently. */
   private async void _build_predicates_table ()
     {
       if (PersonaStore._prefix_tracker_id != null)
@@ -1405,6 +1414,8 @@ public class Trf.PersonaStore : Folks.PersonaStore
       return added_personas;
     }
 
+  /* This method is not safe to call multiple times concurrently on the same
+   * persona, since the queries and updates will race. */
   private async void _do_update (Persona p, Event e, bool adding = true)
     {
       if (e.pred_id ==
@@ -1673,6 +1684,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
         }
     }
 
+  /* This method is safe to call multiple times concurrently. */
   private async string _get_property
       (int subject_tracker_id, string property,
        string subject_type = Trf.OntologyDefs.NCO_PERSON)
@@ -1688,6 +1700,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
       return yield this._single_value_query (query);
     }
 
+  /* This method is safe to call multiple times concurrently. */
   private async string _get_nao_property_by_person_id (int nco_person_id,
       string prop_name)
     {
@@ -1704,6 +1717,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
       return yield this._single_value_query (query);
     }
 
+  /* This method is safe to call multiple times concurrently. */
   private async string[] _get_nao_property_by_prop_id (int nao_prop_id)
     {
       const string query_t = "SELECT " +
@@ -1722,6 +1736,8 @@ public class Trf.PersonaStore : Folks.PersonaStore
 
   /*
    * This should be kept in sync with Trf.AfflInfoFields
+   *
+   * This method is safe to call multiple times concurrently.
    */
   private async Trf.AfflInfo _get_affl_info (
       string person_id, string affiliation_id)
@@ -1842,6 +1858,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
       return affl_info;
     }
 
+  /* This method is safe to call multiple times concurrently. */
   private async string? _insert_persona (string query, string persona_var)
     throws PersonaStoreError
     {
@@ -1895,6 +1912,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
       return null;
     }
 
+  /* This method is safe to call multiple times concurrently. */
   private async string _single_value_query (string query)
     {
       Gee.HashSet<string> rows = yield this._multi_value_query (query);
@@ -1905,6 +1923,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
       return "";
     }
 
+  /* This method is safe to call multiple times concurrently. */
   private async Gee.HashSet<string> _multi_value_query (string query)
     {
       Gee.HashSet<string> ret = new Gee.HashSet<string> ();
@@ -1933,6 +1952,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
       return ret;
     }
 
+  /* This method is safe to call multiple times concurrently. */
   private async string _urn_from_tracker_id (string tracker_id)
     {
       const string query = "SELECT fn:concat('<', tracker:uri(%s), '>') " +
@@ -1940,6 +1960,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
       return yield this._single_value_query (query.printf (tracker_id));
     }
 
+  /* This method is safe to call multiple times concurrently. */
   internal async void _set_nickname (Trf.Persona persona, string nickname)
     {
       const string query_t = "DELETE { "+
@@ -1964,6 +1985,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
       yield this._tracker_update (query, "change_nickname");
     }
 
+  /* This method is safe to call multiple times concurrently. */
   internal async void _set_local_ids (Trf.Persona persona,
       Set<string> local_ids)
     {
@@ -1973,6 +1995,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
           "_set_local_ids");
     }
 
+  /* This method is safe to call multiple times concurrently. */
   internal async void _set_web_service_addrs (Trf.Persona persona,
       MultiMap<string, WebServiceFieldDetails> ws_obj)
     {
@@ -1982,6 +2005,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
           "_set_web_service_addrs");
     }
 
+  /* This method is safe to call multiple times concurrently. */
   private async void _set_tracker_property(Trf.Persona persona,
       string prop_name, string prop_value, string callers_name)
     {
@@ -2008,6 +2032,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
       yield this._tracker_update (query, callers_name);
     }
 
+  /* This method is safe to call multiple times concurrently. */
   internal async void _set_is_favourite (Folks.Persona persona,
       bool is_favourite)
     {
@@ -2041,6 +2066,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
       yield this._tracker_update (query, "change_is_favourite");
     }
 
+  /* This method may not be safe to call multiple times concurrently. */
   internal async void _set_emails (Folks.Persona persona,
       Set<EmailFieldDetails> emails)
     {
@@ -2048,6 +2074,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
           Trf.Attrib.EMAILS);
     }
 
+  /* This method may not be safe to call multiple times concurrently. */
   internal async void _set_phones (Folks.Persona persona,
       Set<PhoneFieldDetails> phone_numbers)
     {
@@ -2055,6 +2082,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
           Trf.Attrib.PHONES);
     }
 
+  /* This method may not be safe to call multiple times concurrently. */
   internal async void _set_unique_attrib_set (Folks.Persona persona,
       Set<AbstractFieldDetails<string>> properties, Trf.Attrib attrib)
     {
@@ -2092,6 +2120,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
       yield this._tracker_update (builder.result, query_name);
     }
 
+  /* This method is probably not safe to call multiple times concurrently. */
   internal async void _set_urls (Folks.Persona persona,
       Set<UrlFieldDetails> urls)
     {
@@ -2099,6 +2128,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
           Trf.Attrib.URLS);
     }
 
+  /* This method is probably not safe to call multiple times concurrently. */
   internal async void _set_im_addresses (Folks.Persona persona,
       MultiMap<string, ImFieldDetails> im_addresses)
     {
@@ -2117,6 +2147,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
        yield this._set_attrib_set (persona, ims, Trf.Attrib.IM_ADDRESSES);
     }
 
+  /* This method is probably not safe to call multiple times concurrently. */
   internal async void _set_postal_addresses (Folks.Persona persona,
       Set<PostalAddressFieldDetails> postal_addresses)
     {
@@ -2124,6 +2155,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
           Trf.Attrib.POSTAL_ADDRESSES);
     }
 
+  /* This method is safe to call multiple times concurrently. */
   internal async void _set_roles (Folks.Persona persona,
       Set<RoleFieldDetails> roles)
     {
@@ -2176,6 +2208,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
       yield this._tracker_update (del_q + builder.result, "_set_roles");
    }
 
+  /* This method is safe to call multiple times concurrently. */
   internal async void _set_notes (Folks.Persona persona,
       Set<NoteFieldDetails> notes)
     {
@@ -2213,6 +2246,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
       yield this._tracker_update (del_q + builder.result, "_set_notes");
     }
 
+  /* This method is safe to call multiple times concurrently. */
   internal async void _set_birthday (Folks.Persona persona,
       owned DateTime bday)
     {
@@ -2240,6 +2274,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
       yield this._tracker_update (query, "_set_birthday");
     }
 
+  /* This method is safe to call multiple times concurrently. */
   internal async void _set_gender (Folks.Persona persona,
       owned Gender gender)
     {
@@ -2281,6 +2316,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
       yield this._tracker_update (query, "_set_gender");
     }
 
+  /* This method is not safe to call multiple times concurrently. */
   internal async void _set_avatar (Folks.Persona persona,
       LoadableIcon? avatar)
     {
@@ -2343,6 +2379,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
       yield this._tracker_update (query, "_set_avatar");
     }
 
+  /* This method is safe to call multiple times concurrently. */
   internal async void _set_structured_name (Folks.Persona persona,
       StructuredName? sname)
     {
@@ -2386,6 +2423,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
       yield this._tracker_update (query, "_set_structured_name");
     }
 
+  /* This method is safe to call multiple times concurrently. */
   internal async void _set_full_name  (Folks.Persona persona,
       string full_name)
     {
@@ -2413,6 +2451,8 @@ public class Trf.PersonaStore : Folks.PersonaStore
   /* NOTE:
    * - first we nuke old attribs
    * - we create new affls with the new attribs
+   *
+   * This method is probably not safe to call multiple times concurrently.
    */
   private async void _set_attrib_set (Folks.Persona persona,
       Set<Object> attribs, Trf.Attrib what)
@@ -2547,6 +2587,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
       yield this._tracker_update (builder.result, "set_attrib");
     }
 
+  /* This method is safe to call multiple times concurrently. */
   private async bool _tracker_update (string query, string caller)
     {
       bool ret = false;
@@ -2577,12 +2618,14 @@ public class Trf.PersonaStore : Folks.PersonaStore
       return ret;
     }
 
+  /* This method is safe to call multiple times concurrently. */
   private async Gee.HashSet<string> _affiliations_from_persona (string urn)
     {
       return yield this._linked_resources (urn, Trf.OntologyDefs.NCO_PERSON,
           Trf.OntologyDefs.NCO_HAS_AFFILIATION);
     }
 
+  /* This method is safe to call multiple times concurrently. */
   private async Gee.HashSet<string> _phones_from_affiliation (string affl)
     {
       return yield this._linked_resources (affl,
@@ -2590,6 +2633,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
           Trf.OntologyDefs.NCO_HAS_PHONE);
     }
 
+  /* This method is safe to call multiple times concurrently. */
   private async Gee.HashSet<string>  _postals_from_affiliation (string affl)
     {
       return yield this._linked_resources (affl,
@@ -2597,6 +2641,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
           Trf.OntologyDefs.NCO_HAS_POSTAL_ADDRESS);
     }
 
+  /* This method is safe to call multiple times concurrently. */
   private async Gee.HashSet<string> _imaddrs_from_affiliation  (string affl)
     {
       return yield this._linked_resources (affl,
@@ -2604,6 +2649,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
           Trf.OntologyDefs.NCO_HAS_IMADDRESS);
     }
 
+  /* This method is safe to call multiple times concurrently. */
   private async Gee.HashSet<string> _emails_from_affiliation (string affl)
     {
       return yield this._linked_resources (affl,
@@ -2613,6 +2659,8 @@ public class Trf.PersonaStore : Folks.PersonaStore
 
   /**
    * Retrieve the list of linked resources of a given subject
+   *
+   * This method is safe to call multiple times concurrently.
    *
    * @param resource          the urn of the resource in <urn> format
    * @return number of resources linking to this resource
@@ -2640,6 +2688,9 @@ public class Trf.PersonaStore : Folks.PersonaStore
    * This means that _delete_resource shold be called before
    * removing the resources that hold a link to it (which also
    * makes sense from the signaling perspective).
+   *
+   * This method is not safe to call multiple times concurrently, as the
+   * resource count check races with deletion.
    */
   private async bool _delete_resource (string resource_urn,
       bool check_count = true)
@@ -2672,6 +2723,8 @@ public class Trf.PersonaStore : Folks.PersonaStore
   /**
    * Retrieve the list of linked resources of a given subject
    *
+   * This method is safe to call multiple times concurrently.
+   *
    * @param urn               the urn of the subject in <urn> format
    * @param subject_type      i.e: nco:Person, nco:Affiliation, etc
    * @param linking_predicate i.e.: nco:hasAffiliation
@@ -2691,6 +2744,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
       return yield this._multi_value_query (query);
     }
 
+  /* This method is safe to call multiple times concurrently. */
   private async string _urn_from_persona (Folks.Persona persona)
     {
       var id = ((Trf.Persona) persona).tracker_id;
@@ -2700,6 +2754,8 @@ public class Trf.PersonaStore : Folks.PersonaStore
   /**
    * Helper method to figure out if a constrained property
    * already exists.
+   *
+   * This method is safe to call multiple times concurrently.
    */
   private async string _urn_from_property (string class_name,
       string property_name,

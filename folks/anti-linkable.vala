@@ -105,6 +105,9 @@ public interface Folks.AntiLinkable : Folks.Persona
    * Any attempt to anti-link a persona with itself is not an error, but is
    * ignored.
    *
+   * This method is safe to call multiple times concurrently (e.g. begin one
+   * asynchronous call, then begin another before the first has finished).
+   *
    * @param other_personas the personas to anti-link to this one
    * @throws PropertyError if setting the anti-links failed
    * @since 0.7.3
@@ -134,6 +137,9 @@ public interface Folks.AntiLinkable : Folks.Persona
    *
    * The UIDs of all personas in ``other_personas`` will be removed from this
    * persona's anti-links set and the changes propagated to backends.
+   *
+   * This method is safe to call multiple times concurrently (e.g. begin one
+   * asynchronous call, then begin another before the first has finished).
    *
    * @param other_personas the personas to remove anti-links from this one
    * @throws PropertyError if setting the anti-links failed

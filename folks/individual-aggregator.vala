@@ -1817,6 +1817,9 @@ public class Folks.IndividualAggregator : Object
    * Completely remove the individual and all of its personas from their
    * backing stores.
    *
+   * This method is safe to call multiple times concurrently (for the same
+   * individual or different individuals).
+   *
    * @param individual the {@link Individual} to remove
    * @throws GLib.Error if removing the persona failed — this will be passed
    * through from {@link PersonaStore.remove_persona}
@@ -1844,6 +1847,9 @@ public class Folks.IndividualAggregator : Object
    *
    * This will leave other personas in the same individual alone.
    *
+   * This method is safe to call multiple times concurrently (for the same
+   * persona or different personas).
+   *
    * @param persona the {@link Persona} to remove
    * @throws GLib.Error if removing the persona failed — this will be passed
    * through from {@link PersonaStore.remove_persona}
@@ -1865,6 +1871,8 @@ public class Folks.IndividualAggregator : Object
    * Removal of the {@link Individual}s which the {@link Persona}s were in
    * before is signalled by {@link IndividualAggregator.individuals_changed} and
    * {@link Individual.removed}.
+   *
+   * This method is safe to call multiple times concurrently.
    *
    * @param personas the {@link Persona}s to be linked
    * @throws IndividualAggregatorError.NO_PRIMARY_STORE if no primary store has
@@ -2039,6 +2047,10 @@ public class Folks.IndividualAggregator : Object
    * new {@link Individual}s will be signalled by
    * {@link IndividualAggregator.individuals_changed}.
    *
+   * This method is safe to call multiple times concurrently, although
+   * concurrent calls for the same individual may result in duplicate personas
+   * being created.
+   *
    * @param individual the {@link Individual} to unlink
    * @throws GLib.Error if removing the linking persona failed — this will be
    * passed through from {@link PersonaStore.remove_persona}
@@ -2120,6 +2132,10 @@ public class Folks.IndividualAggregator : Object
    * {@link IndividualAggregatorError.PROPERTY_NOT_WRITEABLE} error will be
    * thrown.
    *
+   * This method is safe to call multiple times concurrently, although
+   * concurrent calls for the same individual may result in duplicate personas
+   * being created.
+   *
    * @param individual the individual for which ``property_name`` should be
    * writeable
    * @param property_name the name of the property which needs to be writeable
@@ -2148,6 +2164,9 @@ public class Folks.IndividualAggregator : Object
       return p;
     }
 
+  /* This is safe to call multiple times concurrently, *but* if the set of
+   * personas doesn't change, multiple duplicate personas may be created in the
+   * writeable store. */
   private async Persona _ensure_personas_property_writeable (
       Set<Persona> personas, string property_name)
       throws IndividualAggregatorError
@@ -2248,6 +2267,8 @@ public class Folks.IndividualAggregator : Object
    * This method is safe to call before {@link IndividualAggregator.prepare} has
    * been called, and will call {@link IndividualAggregator.prepare} itself in
    * that case.
+   *
+   * This method is safe to call multiple times concurrently.
    *
    * @param id ID of the individual to look up
    * @return individual with ``id``, or ``null`` if no such individual was found

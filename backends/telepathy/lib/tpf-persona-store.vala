@@ -619,6 +619,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       this._logger = null;
     }
 
+  /* This method is not safe to call multiple times concurrently. */
   private async void _initialise_favourite_contacts () throws GLib.Error
     {
       if (this._logger == null)
@@ -898,6 +899,9 @@ public class Tpf.PersonaStore : Folks.PersonaStore
   /**
    * If our account is disconnected, we want to continue to export a static
    * view of personas from the cache. old_personas will be notified as removed.
+   *
+   * This method is safe to call multiple times concurrently. Previous calls
+   * will be cancelled by subsequent calls.
    */
   private async void _load_cache (HashSet<Persona>? old_personas)
     {
@@ -967,6 +971,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       this.notify_property ("always-writeable-properties");
     }
 
+  /* This method is safe to call multiple times concurrently. */
   public override async void flush ()
     {
       debug ("Flushing Tpf.PersonaStore %p (‘%s’).", this, this.id);
@@ -990,6 +995,8 @@ public class Tpf.PersonaStore : Folks.PersonaStore
   /**
    * When we're about to disconnect, store the current set of personas to the
    * cache file so that we can access them once offline.
+   *
+   * This method is safe to call multiple times concurrently.
    */
   private async void _store_cache (HashSet<Persona> old_personas)
     {
@@ -1283,6 +1290,8 @@ public class Tpf.PersonaStore : Folks.PersonaStore
         }
     }
 
+  /* This method is safe to call multiple times concurrently for the same (or
+   * different) contact ID, assuming Telepathy is safe. */
   private async Persona _ensure_persona_for_id (string contact_id)
       throws GLib.Error
     {
@@ -1294,6 +1303,9 @@ public class Tpf.PersonaStore : Folks.PersonaStore
    * Add a new {@link Persona} to the PersonaStore.
    *
    * See {@link Folks.PersonaStore.add_persona_from_details}.
+   *
+   * This method is safe to call multiple times concurrently for the same (or
+   * different) contact IDs (assuming Telepathy is safe).
    *
    * @throws Folks.PersonaStoreError.INVALID_ARGUMENT if the ``contact`` key was
    * not provided in ``details``
@@ -1746,6 +1758,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       return templates;
     }
 
+  /* This method is safe to call multiple times concurrently. */
   private async void _populate_counters ()
     {
       if (this._log == null)

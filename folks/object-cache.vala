@@ -180,6 +180,8 @@ public abstract class Folks.ObjectCache<T> : Object
    * If any errors are encountered while loading the objects, warnings will be
    * logged as appropriate and ``null`` will be returned.
    *
+   * This method is safe to call multiple times concurrently.
+   *
    * @param cancellable A {@link GLib.Cancellable} for the operation, or
    * ``null``.
    * @return A set of objects from the cache, or ``null``.
@@ -324,6 +326,8 @@ public abstract class Folks.ObjectCache<T> : Object
    * cache will be left in a consistent state, but may be storing the old set
    * of objects or the new set.
    *
+   * This method is safe to call multiple times concurrently.
+   *
    * @param objects A set of objects to store. This may be empty, but may not
    * be ``null``.
    * @param cancellable A {@link GLib.Cancellable} for the operation, or
@@ -374,6 +378,7 @@ public abstract class Folks.ObjectCache<T> : Object
         {
           try
             {
+              /* We assume that replace_contents_async() is atomic. */
               yield this._cache_file.replace_contents_async (
                   data, null, false,
                   FileCreateFlags.PRIVATE, cancellable, null);

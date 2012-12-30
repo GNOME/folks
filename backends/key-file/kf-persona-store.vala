@@ -436,6 +436,8 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
       return this._key_file;
     }
 
+  /* This is safe to call multiple times concurrently (in the same thread).
+   * Previous calls will be cancelled when a new call begins. */
   internal async void save_key_file ()
     {
       var key_file_data = this._key_file.to_data ();

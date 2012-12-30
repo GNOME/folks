@@ -1033,7 +1033,9 @@ public class Edsf.PersonaStore : Folks.PersonaStore
   SourceFunc? _open_address_book_callback = null; /* non-null iff yielded */
 
   /* Guarantees that either the address book will be open once the method
-   * returns, or an error will be thrown. */
+   * returns, or an error will be thrown.
+   *
+   * This method is not safe to run multiple times concurrently. */
   private async void _open_address_book () throws GLib.Error
     {
       Error? err_out = null;

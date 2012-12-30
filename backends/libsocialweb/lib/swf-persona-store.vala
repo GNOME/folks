@@ -222,6 +222,8 @@ public class Swf.PersonaStore : Folks.PersonaStore
           "Personas cannot be removed from this store.");
     }
 
+  /* This is safe to call multiple times concurrently (assuming libsocialweb
+   * itself is safe). */
   private async string[]? _get_static_capabilities () throws GLib.Error
     {
       /* Take a reference to the PersonaStore while waiting for the async call
@@ -267,6 +269,8 @@ public class Swf.PersonaStore : Folks.PersonaStore
       return caps;
     }
 
+  /* This is safe to call multiple times concurrently (assuming libsocialweb
+   * itself is safe). */
   private async ClientContactView? _contacts_query_open_view (string query,
       HashTable<weak string, weak string> parameters)
     {

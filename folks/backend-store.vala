@@ -250,6 +250,10 @@ public class Folks.BackendStore : Object {
    * called for the first time. If it isn't called explicitly,
    * {@link BackendStore.load_backends} will call it.
    *
+   * This method is safe to call multiple times concurrently (e.g. an
+   * asynchronous call may begin between a subsequent asynchronous call
+   * beginning and finishing).
+   *
    * @since 0.3.0
    */
   public async void prepare ()
@@ -274,6 +278,8 @@ public class Folks.BackendStore : Object {
    * Backends will be searched for in the path given by the
    * ``FOLKS_BACKEND_PATH`` environment variable, if it's set. If it's not set,
    * backends will be searched for in a path set at compilation time.
+   *
+   * This method is not safe to call multiple times concurrently.
    *
    * @throws GLib.Error currently unused
    */
@@ -379,6 +385,8 @@ public class Folks.BackendStore : Object {
       Internal.profiling_end ("loading backends in BackendStore");
     }
 
+  /* This method is not safe to call multiple times concurrently, since there's
+   * a race in updating this._prepared_backends. */
   private async void _backend_load_if_needed (Backend backend)
     {
       if (this._backend_is_enabled (backend.name))
@@ -402,6 +410,8 @@ public class Folks.BackendStore : Object {
         }
     }
 
+  /* This method is not safe to call multiple times concurrently, since there's
+   * a race in updating this._prepared_backends. */
   private async bool _backend_unload_if_needed (Backend backend)
     {
       var unloaded = false;
@@ -539,6 +549,10 @@ public class Folks.BackendStore : Object {
    * to load it when {@link BackendStore.load_backends} is called. This will
    * not load the backend if it's not currently loaded.
    *
+   * This method is safe to call multiple times concurrently (e.g. an
+   * asynchronous call may begin after a previous asynchronous call for the same
+   * backend name has begun and before it has finished).
+   *
    * @param name the name of the backend to enable
    * @since 0.3.2
    */
@@ -555,6 +569,10 @@ public class Folks.BackendStore : Object {
    * client application is restarted. This will not remove the backend if it's
    * already loaded.
    *
+   * This method is safe to call multiple times concurrently (e.g. an
+   * asynchronous call may begin after a previous asynchronous call for the same
+   * backend name has begun and before it has finished).
+   *
    * @param name the name of the backend to disable
    * @since 0.3.2
    */
@@ -564,6 +582,7 @@ public class Folks.BackendStore : Object {
       yield this._save_key_file ();
     }
 
+  /* This method is safe to call multiple times concurrently. */
   private async HashMap<string, File>? _get_modules_from_dir (File dir)
     {
       debug ("Searching for modules in folder '%s' ..", dir.get_path ());
@@ -697,6 +716,7 @@ public class Folks.BackendStore : Object {
       debug ("Loaded module source: '%s'", module.name ());
     }
 
+  /* This method is safe to call multiple times concurrently. */
   private async static void _get_file_info (File file,
       out bool is_file,
       out bool is_dir)
@@ -734,6 +754,7 @@ public class Folks.BackendStore : Object {
       is_dir = (file_info.get_file_type () == FileType.DIRECTORY);
     }
 
+  /* This method is safe to call multiple times concurrently. */
   private async void _load_disabled_backend_names ()
     {
       File file;
@@ -760,7 +781,7 @@ public class Folks.BackendStore : Object {
       this._config_file = file;
 
       /* Load the disabled backends file */
-      this._backends_key_file = new GLib.KeyFile ();
+      var key_file = new GLib.KeyFile ();
       try
         {
           uint8[] contents;
@@ -770,7 +791,7 @@ public class Folks.BackendStore : Object {
 
           if (contents_s.length > 0)
             {
-              this._backends_key_file.load_from_data (contents_s,
+              key_file.load_from_data (contents_s,
                   contents_s.length, KeyFileFlags.KEEP_COMMENTS);
             }
         }
@@ -783,8 +804,15 @@ public class Folks.BackendStore : Object {
               return;
             }
         }
+      finally
+        {
+          /* Update the key file in memory, whether the new one is empty or
+           * full. */
+          this._backends_key_file = (owned) key_file;
+        }
     }
 
+  /* This method is safe to call multiple times concurrently. */
   private async void _save_key_file ()
     {
       var key_file_data = this._backends_key_file.to_data ();
