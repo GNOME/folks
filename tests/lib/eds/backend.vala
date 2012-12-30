@@ -272,6 +272,16 @@ public class EdsTest.Backend
                       e.message);
                 }
             }
+          else if (k == "email_addresses")
+            {
+              var v = c.get (k).get_string ();
+              var addresses = v.split (",");
+
+              foreach (var addr in addresses)
+                {
+                  contact.set (E.Contact.field_id ("email"), addr);
+                }
+            }
           else if (k == "im_addresses")
             {
               var v = c.get (k).get_string ();
