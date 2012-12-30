@@ -275,7 +275,7 @@ public class EdsTest.Backend
           else if (k == "im_addresses")
             {
               var v = c.get (k).get_string ();
-              var addresses = this._parse_addrs (v);
+              var addresses = this._parse_im_addrs (v);
               foreach (var addr in addresses.keys)
                 {
                   var proto = addresses.get (addr);
@@ -332,10 +332,10 @@ public class EdsTest.Backend
         }
     }
 
-  private Gee.HashMap<string, string> _parse_addrs (string addr_s)
+  private Gee.HashMap<string, string> _parse_im_addrs (string addr_str)
     {
       Gee.HashMap<string, string> ret = new Gee.HashMap<string, string> ();
-      string[] im_addrs = addr_s.split (",");
+      string[] im_addrs = addr_str.split (",");
 
       foreach (var a in im_addrs)
         {
