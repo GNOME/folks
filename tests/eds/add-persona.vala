@@ -27,6 +27,7 @@ public class AddPersonaTests : Folks.TestCase
   private EdsTest.Backend _eds_backend;
   private IndividualAggregator _aggregator;
   private string _persona_fullname;
+  private string _persona_nickname;
   private string _email_1;
   private Edsf.PersonaStore _pstore;
   private bool _added_persona = false;
@@ -77,6 +78,7 @@ public class AddPersonaTests : Folks.TestCase
     {
       this._main_loop = new GLib.MainLoop (null, false);
       this._persona_fullname = "persona #1";
+      this._persona_nickname = "Jo";
       this._email_1 = "someone-1@example.org";
       this._avatar_path = Environment.get_variable ("AVATAR_FILE_PATH");
       this._im_addr_1 = "someone-1@jabber.example.org";
@@ -98,6 +100,7 @@ public class AddPersonaTests : Folks.TestCase
       this._properties_found = new HashTable<string, bool>
           (str_hash, str_equal);
       this._properties_found.insert ("full_name", false);
+      this._properties_found.insert ("nickname", false);
       this._properties_found.insert ("email-1", false);
       this._properties_found.insert ("avatar", false);
       this._properties_found.insert ("im-addr-1", false);
@@ -272,6 +275,11 @@ public class AddPersonaTests : Folks.TestCase
           Folks.PersonaStore.detail_key (PersonaDetail.IS_FAVOURITE),
           (owned) v11);
 
+      Value? v12 = Value (typeof (string));
+      v12.set_string (this._persona_nickname);
+      details.insert (Folks.PersonaStore.detail_key (PersonaDetail.NICKNAME),
+          (owned) v12);
+
       try
         {
           yield this._aggregator.add_persona_from_details (null,
@@ -320,6 +328,7 @@ public class AddPersonaTests : Folks.TestCase
           if (this._individual_received != null)
             {
               i.notify["full-name"].disconnect (this._notify_cb);
+              i.notify["nickname"].disconnect (this._notify_cb);
               i.notify["email-addresses"].disconnect (this._notify_cb);
               i.notify["avatar"].disconnect (this._notify_cb);
               i.notify["im-addresses"].disconnect (this._notify_cb);
@@ -338,6 +347,7 @@ public class AddPersonaTests : Folks.TestCase
           retval++;
 
           i.notify["full-name"].connect (this._notify_cb);
+          i.notify["nickname"].connect (this._notify_cb);
           i.notify["email-addresses"].connect (this._notify_cb);
           i.notify["avatar"].connect (this._notify_cb);
           i.notify["im-addresses"].connect (this._notify_cb);
@@ -383,6 +393,11 @@ public class AddPersonaTests : Folks.TestCase
     {
       if (i.full_name == this._persona_fullname)
         this._properties_found.replace ("full_name", true);
+
+      if (i.nickname == this._persona_nickname)
+        {
+          this._properties_found.replace ("nickname", true);
+        }
 
       foreach (var e in i.email_addresses)
         {

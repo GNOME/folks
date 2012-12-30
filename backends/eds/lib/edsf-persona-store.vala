@@ -379,6 +379,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
    * - PersonaStore.detail_key (PersonaDetail.GENDER)
    * - PersonaStore.detail_key (PersonaDetail.IM_ADDRESSES)
    * - PersonaStore.detail_key (PersonaDetail.IS_FAVOURITE)
+   * - PersonaStore.detail_key (PersonaDetail.NICKNAME)
    * - PersonaStore.detail_key (PersonaDetail.PHONE_NUMBERS)
    * - PersonaStore.detail_key (PersonaDetail.POSTAL_ADDRESSES)
    * - PersonaStore.detail_key (PersonaDetail.ROLES)
@@ -431,6 +432,17 @@ public class Edsf.PersonaStore : Folks.PersonaStore
                 }
 
               contact.set (E.Contact.field_id ("full_name"), full_name);
+            }
+          else if (k == Folks.PersonaStore.detail_key (
+                PersonaDetail.NICKNAME))
+            {
+              string? nickname = v.get_string ();
+              if (nickname != null && (!) nickname == "")
+                {
+                  nickname = null;
+                }
+
+              contact.set (E.Contact.field_id ("nickname"), nickname);
             }
           else if (k == Folks.PersonaStore.detail_key (
                 PersonaDetail.EMAIL_ADDRESSES))
