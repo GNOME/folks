@@ -2059,12 +2059,13 @@ public class Folks.IndividualAggregator : Object
             {
               var personas = new HashSet<Persona> ();
               personas.add (pers);
-              message ("Anti-linking persona '%s' (%p)", pers.uid, pers);
+              debug ("        Anti-linking persona '%s' (%p)", pers.uid, pers);
 
               var writeable_persona =
                   yield this._ensure_personas_property_writeable (personas,
                       "anti-links");
-              message ("Writeable persona '%s' (%p)", writeable_persona.uid, writeable_persona);
+              debug ("        Writeable persona '%s' (%p)",
+                  writeable_persona.uid, writeable_persona);
 
               /* Make sure not to anti-link the new persona to pers. */
               var anti_link_personas = new HashSet<Persona> ();
@@ -2074,7 +2075,7 @@ public class Folks.IndividualAggregator : Object
               var al = writeable_persona as AntiLinkable;
               assert (al != null);
               yield ((!) al).add_anti_links (anti_link_personas);
-              message ("");
+              debug ("");
             }
           catch (IndividualAggregatorError e1)
             {
