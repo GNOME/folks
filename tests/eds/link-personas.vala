@@ -48,6 +48,7 @@ public class LinkPersonasTests : Folks.TestCase
   private HashSet<Persona> _personas;
   private Gee.HashMap<string, string> _linking_props;
   private LinkingMethod _linking_method;
+  private int _test_num = -1;
 
   public LinkPersonasTests ()
     {
@@ -66,7 +67,11 @@ public class LinkPersonasTests : Folks.TestCase
   public override void set_up ()
     {
       this._eds_backend = new EdsTest.Backend ();
-      this._eds_backend.set_up ();
+
+      /* Create a new backend (by name) each set up to guarantee we don't
+       * inherit state from the last test */
+      this._test_num++;
+      this._eds_backend.set_up (false, @"test$_test_num");
 
       /* We configure eds as the primary store */
       var config_val = "eds:%s".printf (this._eds_backend.address_book_uid);
