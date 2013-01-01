@@ -391,7 +391,7 @@ AS_IF([test x$enable_eds_backend = xyes], [
   EDS_BACKEND_UNINST_PATH='$(BACKEND_EDS)'
   BACKEND_UNINST_PATH="$BACKEND_UNINST_PATH:$EDS_BACKEND_UNINST_PATH"
 ])
-AS_IF([test x$enable_ofono_backend = xyes], 
+AS_IF([test x$enable_ofono_backend = xyes], [
   OFONO_BACKEND_UNINST_PATH='$(BACKEND_OFONO)'
   BACKEND_UNINST_PATH="$BACKEND_UNINST_PATH:$OFONO_BACKEND_UNINST_PATH"
 ])
