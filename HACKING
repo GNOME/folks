@@ -145,6 +145,12 @@ hooks for each test. Simply run:
 
 Then use gdb as normal.
 
+To run a single test:
+  make check TESTS=avatar-cache
+
+To run a single test with debugging output:
+  make check TESTS=avatar-cache CHECK_VERBOSE=1
+
 Profiling folks
 ===============
 
