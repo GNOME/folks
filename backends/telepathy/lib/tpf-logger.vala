@@ -109,7 +109,7 @@ internal class Logger : GLib.Object
           /* Wake up any waiters. */
           foreach (unowned DelegateWrapper wrapper in Logger._prepare_waiters)
             {
-              Idle.add (wrapper.cb);
+              Idle.add ((owned) wrapper.cb);
             }
 
           Logger._prepare_waiters = null;
