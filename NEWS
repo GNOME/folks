@@ -26,6 +26,7 @@ Bugs fixed:
 • Bug 685992 — empathy strips the "+" (plus) from the numbers from the
   gnome-contacts
 • Bug 690989 — "warning: copying delegates is discouraged"
+• Bug 690990 — Add tests/README
 
 API changes:
 • Add Backend.enable_persona_store and disable_persona_store.
