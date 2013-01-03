@@ -48,8 +48,6 @@ public class LinkablePropertiesTests : Folks.TestCase
     {
       base ("LinkableProperties");
 
-      this.add_test ("expected behavior from linkable properties",
-          this.test_linkable_properties_excess_individuals);
       this.add_test ("correct aggregation after linkable property change",
           this.test_linkable_properties_aggregate_after_change);
     }
@@ -69,113 +67,6 @@ public class LinkablePropertiesTests : Folks.TestCase
   public override void tear_down ()
     {
       this._eds_backend.tear_down ();
-    }
-
-  /* Ensure that changes to linkable properties do not result in excessive
-   * Individual constructions and destructions.
-   *
-   * This test is intended to remove those concerns from the other, more-basic
-   * property tests.
-   */
-  void test_linkable_properties_excess_individuals ()
-    {
-      Gee.HashMap<string, Value?> c1 = new Gee.HashMap<string, Value?> ();
-      this._main_loop = new GLib.MainLoop (null, false);
-      Value? v;
-
-      this._found_before_update = false;
-      this._found_after_update = false;
-
-      this._eds_backend.reset ();
-
-      v = Value (typeof (string));
-      v.set_string ("bernie h. innocenti");
-      c1.set ("full_name", (owned) v);
-      this._eds_backend.add_contact (c1);
-
-      this._test_linkable_properties_excess_individuals_async.begin ();
-
-      Timeout.add_seconds (5, () =>
-        {
-          this._main_loop.quit ();
-          assert_not_reached ();
-        });
-
-      this._main_loop.run ();
-
-      assert (this._found_before_update);
-      assert (this._found_after_update);
-    }
-
-  private async void _test_linkable_properties_excess_individuals_async ()
-    {
-      yield this._eds_backend.commit_contacts_to_addressbook ();
-
-      var store = BackendStore.dup ();
-      yield store.prepare ();
-      this._aggregator = new IndividualAggregator ();
-      this._aggregator.individuals_changed_detailed.connect
-          (this._individuals_changed_cb);
-      try
-        {
-          yield this._aggregator.prepare ();
-        }
-      catch (GLib.Error e)
-        {
-          GLib.warning ("Error when calling prepare: %s\n", e.message);
-        }
-    }
-
-  private void _individuals_changed_cb (
-       MultiMap<Individual?, Individual?> changes)
-    {
-      var added = changes.get_values ();
-      var removed = changes.get_keys ();
-
-      foreach (Individual i in added)
-        {
-          assert (i != null);
-
-          var name = (Folks.NameDetails) i;
-
-          if (name.full_name == "bernie h. innocenti")
-            {
-              i.notify["email-addresses"].connect (this._notify_emails_cb);
-              this._found_before_update = true;
-
-              foreach (var p in i.personas)
-                {
-                  var emails = new HashSet<EmailFieldDetails> (
-                      (GLib.HashFunc) EmailFieldDetails.hash,
-                      (GLib.EqualFunc) EmailFieldDetails.equal);
-                  var email_1 = new EmailFieldDetails ("bernie@example.org");
-                  email_1.set_parameter (AbstractFieldDetails.PARAM_TYPE,
-                      AbstractFieldDetails.PARAM_TYPE_OTHER);
-                  emails.add (email_1);
-                  ((EmailDetails) p).email_addresses = emails;
-                }
-            }
-        }
-
-      assert (removed.size == 1);
-
-      foreach (var i in removed)
-        {
-          assert (i == null);
-        }
-    }
-
-  private void _notify_emails_cb (Object individual_obj, ParamSpec ps)
-    {
-      Folks.Individual i = (Folks.Individual) individual_obj;
-      foreach (var e in i.email_addresses)
-        {
-          if (e.value == "bernie@example.org")
-            {
-              this._found_after_update = true;
-              this._main_loop.quit ();
-            }
-        }
     }
 
   /* Check that two unaggregated Personas get aggregated after one changes its
