@@ -77,6 +77,7 @@ noinst_PROGRAMS = \
 	set-roles \
 	linkable-properties \
 	link-personas-diff-stores \
+	anti-linking \
 	enable-disable-stores \
 	create-remove-stores \
 	set-is-favourite \
@@ -101,6 +102,10 @@ TESTS = $(noinst_PROGRAMS)
 #store_removed_SOURCES = \
 #	store-removed.vala \
 #	$(NULL)
+
+anti_linking_SOURCES = \
+	anti-linking.vala \
+	$(NULL)
 
 persona_store_tests_SOURCES = \
 	persona-store-tests.vala \
