@@ -242,37 +242,9 @@ CLEANFILES = \
 #	$(NULL)
 
 MAINTAINERCLEANFILES = \
-        $(addsuffix .c,$(noinst_PROGRAMS)) \
-        persona_store_tests_vala.stamp \
-        individual_retrieval_vala.stamp \
-        removing_contacts_vala.stamp \
-        updating_contacts_vala.stamp \
-        phone_details_vala.stamp \
-        name_details_vala.stamp \
-        email_details_vala.stamp \
-        avatar_details_vala.stamp \
-        add_persona_vala.stamp \
-        im_details_vala.stamp \
-        postal_address_details_vala.stamp \
-        remove_persona_vala.stamp \
-        set_avatar_vala.stamp \
-        set_emails_vala.stamp \
-        set_im_addresses_vala.stamp \
-        set_names_vala.stamp \
-        set_structured_name_vala.stamp \
-        set_phones_vala.stamp \
-        set_postal_addresses_vala.stamp \
-        set_properties_race_vala.stamp \
-        link_personas_vala.stamp \
-        set_notes_vala.stamp \
-	add_contacts_stress_test_vala.stamp \
-	set_gender_vala.stamp \
-	set_urls_vala.stamp \
-	set_birthday_vala.stamp \
-	set_roles_vala.stamp \
-	link_personas_diff_stores_vala.stamp \
-	set_is_favourite_vala.stamp \
-        $(NULL)
+	$(addsuffix .c,$(noinst_PROGRAMS)) \
+	$(addsuffix _vala.stamp,$(subst -,_,$(noinst_PROGRAMS))) \
+	$(NULL)
 
 EXTRA_DIST = \
 	$(MAINTAINERCLEANFILES) \
