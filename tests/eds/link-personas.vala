@@ -69,7 +69,8 @@ public class LinkPersonasTests : Folks.TestCase
       this._eds_backend = new EdsTest.Backend ();
 
       /* Create a new backend (by name) each set up to guarantee we don't
-       * inherit state from the last test */
+       * inherit state from the last test.
+       * FIXME: bgo#690830 */
       this._test_num++;
       this._eds_backend.set_up (false, @"test$_test_num");
 
