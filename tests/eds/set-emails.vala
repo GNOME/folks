@@ -111,9 +111,14 @@ public class SetEmailsTests : Folks.TestCase
 
           var name = (Folks.NameDetails) i;
 
-          if (name.full_name == "bernie h. innocenti")
+          if (name.full_name != "bernie h. innocenti")
+            continue;
+
+          /* Because we update a linkable property, we'll get a new individual
+           * because re-linking has to happen.
+           */
+          if (!this._found_before_update)
             {
-              i.notify["email-addresses"].connect (this._notify_emails_cb);
               this._found_before_update = true;
 
               foreach (var p in i.personas)
@@ -128,18 +133,16 @@ public class SetEmailsTests : Folks.TestCase
                   ((EmailDetails) p).email_addresses = emails;
                 }
             }
-        }
-    }
-
-  private void _notify_emails_cb (Object individual_obj, ParamSpec ps)
-    {
-      Folks.Individual i = (Folks.Individual) individual_obj;
-      foreach (var e in i.email_addresses)
-        {
-          if (e.value == "bernie@example.org")
+          else
             {
-              this._found_after_update = true;
-              this._main_loop.quit ();
+              foreach (var e in i.email_addresses)
+                {
+                  if (e.value == "bernie@example.org")
+                    {
+                      this._found_after_update = true;
+                      this._main_loop.quit ();
+                    }
+                }
             }
         }
     }
