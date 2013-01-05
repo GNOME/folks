@@ -1,7 +1,9 @@
+# NOTE: the data and lib dirs are first because they provide dependencies for
+# the others
 SUBDIRS = \
 	data \
-	key-file \
 	lib \
+	key-file \
 	tools \
 	folks \
 	$(NULL)
