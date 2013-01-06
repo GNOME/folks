@@ -27,6 +27,7 @@ Bugs fixed:
   gnome-contacts
 • Bug 690989 — "warning: copying delegates is discouraged"
 • Bug 690990 — Add tests/README
+• Bug 690876 — eds: fix various test failures
 
 API changes:
 • Add Backend.enable_persona_store and disable_persona_store.
