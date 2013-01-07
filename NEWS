@@ -30,6 +30,7 @@ Bugs fixed:
 • Bug 690876 — eds: fix various test failures
 • Bug 691167 — Build failure: key-file tests built before dependencies
 • Bug 686695 — support nickname in add_persona_from_details
+• Bug 691382 — Restore tests disabled by bug #668415 (which has been fixed)
 
 API changes:
 • Add Backend.enable_persona_store and disable_persona_store.

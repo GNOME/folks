@@ -41,11 +41,6 @@ AM_VALAFLAGS = \
 	-g \
 	$(NULL)
 
-# FIXME: these tests have been removed temporarily due to bgo#668415
-#	store-removed \
-#	change-primary-store \
-#	$(NULL)
-
 # in order from least to most complex
 noinst_PROGRAMS = \
 	persona-store-tests \
@@ -77,6 +72,7 @@ noinst_PROGRAMS = \
 	set-roles \
 	linkable-properties \
 	link-personas-diff-stores \
+	store-removed \
 	anti-linking \
 	enable-disable-stores \
 	create-remove-stores \
@@ -97,11 +93,6 @@ TESTS_ENVIRONMENT = \
 	--
 
 TESTS = $(noinst_PROGRAMS)
-
-# FIXME: temporarily removed due to bgo#668415
-#store_removed_SOURCES = \
-#	store-removed.vala \
-#	$(NULL)
 
 anti_linking_SOURCES = \
 	anti-linking.vala \
@@ -219,11 +210,6 @@ set_roles_SOURCES = \
 	set-roles.vala \
 	$(NULL)
 
-# FIXME: temporarily removed due to bgo#668415
-#change_primary_store_SOURCES = \
-#	change-primary-store.vala \
-#	$(NULL)
-
 link_personas_diff_stores_SOURCES = \
 	link-personas-diff-stores.vala \
 	$(NULL)
@@ -240,16 +226,15 @@ set_is_favourite_SOURCES = \
 	set-is-favourite.vala \
 	$(NULL)
 
+store_removed_SOURCES = \
+	store-removed.vala \
+	$(NULL)
+
 CLEANFILES = \
         *.pid \
         *.address \
         $(TESTS) \
         $(NULL)
-
-# FIXME: temporarily removed due to bgo#668415
-#	store_removed_vala.stamp \
-#	change_primary_store_vala.stamp \
-#	$(NULL)
 
 MAINTAINERCLEANFILES = \
 	$(addsuffix .c,$(noinst_PROGRAMS)) \

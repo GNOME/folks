@@ -19,6 +19,7 @@
  */
 
 using EdsTest;
+using E;
 using Folks;
 using Gee;
 
@@ -70,7 +71,7 @@ public class StoreRemovedTests : Folks.TestCase
       this._eds_backend.add_contact (c1);
 
       /* Schedule the test to start with the main loop. */
-      this._test_single_store_part1_async ();
+      this._test_single_store_part1_async.begin ();
 
       var timeout_id = Timeout.add_seconds (5, () =>
         {
@@ -83,10 +84,10 @@ public class StoreRemovedTests : Folks.TestCase
       /* We should have a single individual by now. */
       assert (this._aggregator.individuals.size == 1);
 
-      Source.remove (timeout_id);
+      GLib.Source.remove (timeout_id);
 
       /* Part 2, where we remove the address book. */
-      this._test_single_store_part2_async ();
+      this._test_single_store_part2_async.begin ();
 
       timeout_id = Timeout.add_seconds (5, () =>
         {
@@ -99,7 +100,7 @@ public class StoreRemovedTests : Folks.TestCase
       /* The individual should be gone. */
       assert (this._aggregator.individuals.size == 0);
 
-      Source.remove (timeout_id);
+      GLib.Source.remove (timeout_id);
     }
 
   private async void _test_single_store_part1_async ()
@@ -181,16 +182,7 @@ public class StoreRemovedTests : Folks.TestCase
 
       /* Tear down the backend. This should remove all individuals. We check
        * for this above. */
-      E.SourceList? source_list = null;
-      try
-        {
-          E.BookClient.get_sources (out source_list);
-          source_list.remove_source_by_uid (this._eds_backend.address_book_uid);
-        }
-      catch (GLib.Error e1)
-        {
-          critical ("Error getting source list: %s", e1.message);
-        }
+      this._eds_backend.tear_down ();
     }
 }
 

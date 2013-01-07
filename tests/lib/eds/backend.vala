@@ -327,7 +327,10 @@ public class EdsTest.Backend
 
       try
         {
-          this._source_file.delete ();
+          if (this._source_file != null)
+            {
+              this._source_file.delete ();
+            }
         }
       catch (GLib.Error e)
         {
