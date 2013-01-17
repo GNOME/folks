@@ -4,7 +4,7 @@ distclean_dirs = \
 	gtk-doc \
 	$(NULL)
 
-phony_deps = \
+docs = \
 	folks-doc \
 	folks-gtk-doc \
 	folks-telepathy-doc \
@@ -61,10 +61,10 @@ folkstelepathyimg_DATA = \
 	folks-telepathy/folks-telepathy/img/*.png \
 	$(NULL)
 
-$(folksdoc_DATA) $(folksimg_DATA): folks-doc
-$(folkstelepathydoc_DATA) $(folkstelepathyimg_DATA): folks-telepathy-doc
-$(folksgtkdoc_DATA): folks-gtk-doc
-$(folkstelepathygtkdoc_DATA): folks-telepathy-gtk-doc
+$(folksdoc_DATA) $(folksimg_DATA): folks-doc.stamp
+$(folkstelepathydoc_DATA) $(folkstelepathyimg_DATA): folks-telepathy-doc.stamp
+$(folksgtkdoc_DATA): folks-gtk-doc.stamp
+$(folkstelepathygtkdoc_DATA): folks-telepathy-gtk-doc.stamp
 
 valadoc_flags = \
 	--force \
@@ -104,20 +104,22 @@ valadoc_flags_folks = \
 	$(folks_doc_files) \
 	$(NULL)
 
-folks-doc: $(folks_doc_files) $(folks_wiki_files)
+folks-doc.stamp: $(folks_doc_files) $(folks_wiki_files)
 	$(AM_V_GEN)$(VALADOC) \
 		-o folks/ \
 		--doclet=devhelp \
 		$(valadoc_flags_folks) \
 		$(NULL)
+	@touch $@
 
-folks-gtk-doc: $(folks_doc_files) $(folks_wiki_files)
+folks-gtk-doc.stamp: $(folks_doc_files) $(folks_wiki_files)
 	$(AM_V_GEN)$(VALADOC) \
 		-X -l -X $(top_builddir)/folks/.libs/libfolks.so \
 		-o gtk-doc/folks \
 		--doclet=gtkdoc \
 		$(valadoc_flags_folks) \
 		$(NULL)
+	@touch $@
 
 # folks-telepathy documentation
 folks_telepathy_doc_files = $(top_srcdir)/backends/telepathy/lib/*.vala
@@ -141,14 +143,15 @@ valadoc_flags_folks_telepathy = \
 	$(folks_telepathy_doc_files) \
 	$(NULL)
 
-folks-telepathy-doc: $(folks_telepathy_doc_files)
+folks-telepathy-doc.stamp: $(folks_telepathy_doc_files)
 	$(AM_V_GEN)$(VALADOC) \
 		-o folks-telepathy/ \
 		--doclet=devhelp \
 		$(valadoc_flags_folks_telepathy) \
 		$(NULL)
+	@touch $@
 
-folks-telepathy-gtk-doc: $(folks_telepathy_doc_files)
+folks-telepathy-gtk-doc.stamp: $(folks_telepathy_doc_files)
 	$(AM_V_GEN)$(VALADOC) \
 		-X -l -X $(top_builddir)/folks/.libs/libfolks.so \
 		-X -l -X $(top_builddir)/backends/telepathy/lib/.libs/libfolks-telepathy.so \
@@ -157,6 +160,7 @@ folks-telepathy-gtk-doc: $(folks_telepathy_doc_files)
 		--doclet=gtkdoc \
 		$(valadoc_flags_folks_telepathy) \
 		$(NULL)
+	@touch $@
 
 #####################
 # EDS docs #
@@ -178,9 +182,9 @@ folksedsimg_DATA = \
 	$(NULL)
 
 $(folksedsdoc_DATA) $(folksedsimg_DATA): \
-	folks-eds-doc \
+	folks-eds-doc.stamp \
 	$(NULL)
-$(folksedsgtkdoc_DATA): folks-eds-gtk-doc
+$(folksedsgtkdoc_DATA): folks-eds-gtk-doc.stamp
 
 folks_eds_doc_files = $(top_srcdir)/backends/eds/lib/*.vala
 folks_eds_doc_deps = \
@@ -202,14 +206,15 @@ valadoc_flags_folks_eds = \
 	$(folks_eds_doc_files) \
 	$(NULL)
 
-folks-eds-doc: $(folks_eds_doc_files)
+folks-eds-doc.stamp: $(folks_eds_doc_files)
 	$(AM_V_GEN)$(VALADOC) \
 		-o folks-eds/ \
 		--doclet=devhelp \
 		$(valadoc_flags_folks_eds) \
 		$(NULL)
+	@touch $@
 
-folks-eds-gtk-doc: $(folks_eds_doc_files)
+folks-eds-gtk-doc.stamp: $(folks_eds_doc_files)
 	$(AM_V_GEN)$(VALADOC) \
 		-X -l -X $(top_builddir)/folks/.libs/libfolks.so \
 		-X -l -X $(top_builddir)/backends/eds/lib/.libs/libfolks-eds.so \
@@ -217,9 +222,10 @@ folks-eds-gtk-doc: $(folks_eds_doc_files)
 		--doclet=gtkdoc \
 		$(valadoc_flags_folks_eds) \
 		$(NULL)
+	@touch $@
 
 distclean_dirs += folks-eds
-phony_deps += \
+docs += \
 	folks-eds-doc \
 	folks-eds-gtk-doc \
 	$(NULL)
@@ -247,9 +253,9 @@ folkslibsocialwebimg_DATA = \
 	$(NULL)
 
 $(folkslibsocialwebdoc_DATA) $(folkslibsocialwebimg_DATA): \
-	folks-libsocialweb-doc \
+	folks-libsocialweb-doc.stamp \
 	$(NULL)
-$(folkslibsocialwebgtkdoc_DATA): folks-libsocialweb-gtk-doc
+$(folkslibsocialwebgtkdoc_DATA): folks-libsocialweb-gtk-doc.stamp
 
 folks_libsocialweb_doc_files = $(top_srcdir)/backends/libsocialweb/lib/*.vala
 folks_libsocialweb_doc_deps = \
@@ -270,14 +276,15 @@ valadoc_flags_folks_libsocialweb = \
 	$(folks_libsocialweb_doc_files) \
 	$(NULL)
 
-folks-libsocialweb-doc: $(folks_libsocialweb_doc_files)
+folks-libsocialweb-doc.stamp: $(folks_libsocialweb_doc_files)
 	$(AM_V_GEN)$(VALADOC) \
 		-o folks-libsocialweb/ \
 		--doclet=devhelp \
 		$(valadoc_flags_folks_libsocialweb) \
 		$(NULL)
+	@touch $@
 
-folks-libsocialweb-gtk-doc: $(folks_libsocialweb_doc_files)
+folks-libsocialweb-gtk-doc.stamp: $(folks_libsocialweb_doc_files)
 	$(AM_V_GEN)$(VALADOC) \
 		-X -l -X $(top_builddir)/folks/.libs/libfolks.so \
 		-X -l -X $(top_builddir)/backends/libsocialweb/lib/.libs/libfolks-libsocialweb.so \
@@ -285,9 +292,10 @@ folks-libsocialweb-gtk-doc: $(folks_libsocialweb_doc_files)
 		--doclet=gtkdoc \
 		$(valadoc_flags_folks_libsocialweb) \
 		$(NULL)
+	@touch $@
 
 distclean_dirs += folks-libsocialweb
-phony_deps += \
+docs += \
 	folks-libsocialweb-doc \
 	folks-libsocialweb-gtk-doc \
 	$(NULL)
@@ -302,7 +310,11 @@ endif # ENABLE_LIBSOCIALWEB
 # end optional docs #
 #####################
 
-.PHONY: $(phony_deps)
+stamps = $(addsuffix .stamp, $(docs))
+
+all: $(stamps)
+
+CLEANFILES = $(stamps)
 
 doc_host = telepathy.freedesktop.org
 doc_host_dir = /srv/telepathy.freedesktop.org/www/doc
