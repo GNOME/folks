@@ -32,6 +32,7 @@ Bugs fixed:
 • Bug 686695 — support nickname in add_persona_from_details
 • Bug 691382 — Restore tests disabled by bug #668415 (which has been fixed)
 • Bug 691923 — Don't rebuild docs on every "make" run
+• Bug 692122 — build: Don't use make functions for defining TESTS
 
 API changes:
 • Add Backend.enable_persona_store and disable_persona_store.

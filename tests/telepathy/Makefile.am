@@ -44,15 +44,6 @@ AM_VALAFLAGS = \
 	-g \
 	$(NULL)
 
-noinst_PROGRAMS = \
-	fake-tp-backend \
-	persona-store-capabilities \
-	individual-retrieval \
-	individual-properties \
-	individual-zeitgeist \
-	init \
-	$(NULL)
-
 SESSION_CONF = $(top_builddir)/tests/lib/telepathy/contactlist/session.conf
 backend_store_key_file=$(srcdir)/data/backend-store-telepathy-only.ini
 TESTS_ENVIRONMENT = \
@@ -63,7 +54,18 @@ TESTS_ENVIRONMENT = \
 	$(RUN_WITH_PRIVATE_BUS) \
 	--config-file=$(SESSION_CONF) \
 	--
-TESTS = $(filter-out fake-tp-backend individual-zeitgeist,$(noinst_PROGRAMS))
+TESTS = \
+	persona-store-capabilities \
+	individual-retrieval \
+	individual-properties \
+	init \
+	$(NULL)
+
+noinst_PROGRAMS = \
+	fake-tp-backend \
+	individual-zeitgeist \
+	$(TESTS) \
+	$(NULL)
 
 fake_tp_backend_SOURCES = \
 	fake-tp-backend.vala \
