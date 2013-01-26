@@ -1,21 +1,24 @@
 # Lithuanian translation for folks.
 # Copyright (C) 2012 folks's COPYRIGHT HOLDER
 # This file is distributed under the same license as the folks package.
-# Aurimas Černius <aurisc4@gmail.com>, 2012.
+# Aurimas Černius <aurisc4@gmail.com>, 2012, 2013.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: folks master\n"
-"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=folks&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2012-09-11 21:28+0000\n"
-"PO-Revision-Date: 2012-09-13 22:48+0300\n"
+"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
+"product=folks&keywords=I18N+L10N&component=general\n"
+"POT-Creation-Date: 2012-11-06 18:33+0000\n"
+"PO-Revision-Date: 2013-01-26 20:06+0200\n"
 "Last-Translator: Aurimas Černius <aurisc4@gmail.com>\n"
-"Language-Team: Lithuanian <gnome-lt@lists.akl.lt>\n"
+"Language-Team: Lietuvių <gnome-lt@lists.akl.lt>\n"
 "Language: lt\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && (n"
+"%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Generator: Gtranslator 2.91.6\n"
 
 #. The timeout after which we consider a property change to have failed if we
 #. * haven't received a property change notification for it.
@@ -23,175 +26,184 @@ msgstr ""
 #. Translators: This should be translated to the name of the “Starred in
 #. * Android” group in Google Contacts for your language. If Google have not
 #. * localised the group for your language, or Google Contacts isn't available
-#. * in your language, please *do not* translate this string.
-#: ../backends/eds/lib/edsf-persona-store.vala:63
+#. * in your language, please *do not* translate this string (i.e. just copy
+#. * the msgid to the msgstr unchanged).
+#: ../backends/eds/lib/edsf-persona-store.vala:64
 msgid "Starred in Android"
 msgstr "Starred in Android"
 
 #. Translators: the first parameter is an address book
 #. * URI and the second is a persona UID.
-#: ../backends/eds/lib/edsf-persona-store.vala:587
+#: ../backends/eds/lib/edsf-persona-store.vala:640
 #, c-format
 msgid "Address book ‘%s’ is offline, so contact ‘%s’ cannot be removed."
-msgstr "Adresų knyga „%s“ yra atsijungusi, todėl kontakto „%s“ negalima pašalinti."
+msgstr ""
+"Adresų knyga „%s“ yra atsijungusi, todėl kontakto „%s“ negalima pašalinti."
 
 #. Translators: the first parameter is an address book
 #. * URI and the second is an error message.
-#: ../backends/eds/lib/edsf-persona-store.vala:593
+#: ../backends/eds/lib/edsf-persona-store.vala:646
 #, c-format
 msgid "Permission denied to remove contact ‘%s’: %s"
 msgstr "Nėra leidimo pašalinti kontaktą „%s“: %s"
 
 #. Translators: the parameter is an error message.
-#: ../backends/eds/lib/edsf-persona-store.vala:598
+#: ../backends/eds/lib/edsf-persona-store.vala:651
 #, c-format
 msgid "Removing contacts isn't supported by this persona store: %s"
 msgstr "Šio asmens saugykla nepalaiko kontaktų pašalinimo: %s"
 
-#: ../backends/eds/lib/edsf-persona-store.vala:627
+#: ../backends/eds/lib/edsf-persona-store.vala:680
 #, c-format
 msgid "Can't remove contact ‘%s’: %s"
 msgstr "Negalima pašalinti kontakto „%s“: %s"
 
 #. Translators: the parameter is an address book
 #. * URI.
-#: ../backends/eds/lib/edsf-persona-store.vala:720
-#: ../backends/eds/lib/edsf-persona-store.vala:914
+#: ../backends/eds/lib/edsf-persona-store.vala:773
+#: ../backends/eds/lib/edsf-persona-store.vala:967
 #, c-format
 msgid "Address book ‘%s’ is offline."
 msgstr "Adresų knyga „%s“ yra atsijungusi."
 
 #. Translators: the first parameter is an address
 #. * book URI and the second is an error message.
-#: ../backends/eds/lib/edsf-persona-store.vala:725
-#: ../backends/eds/lib/edsf-persona-store.vala:919
+#: ../backends/eds/lib/edsf-persona-store.vala:778
+#: ../backends/eds/lib/edsf-persona-store.vala:972
 #, c-format
 msgid "Permission denied to open address book ‘%s’: %s"
 msgstr "Nėra leidimo atverti adresų knygą „%s“: %s"
 
 #. Translators: the first parameter is an address book URI
 #. * and the second is an error message.
-#: ../backends/eds/lib/edsf-persona-store.vala:758
+#: ../backends/eds/lib/edsf-persona-store.vala:811
 #, c-format
 msgid "Couldn't open address book ‘%s’: %s"
 msgstr "Nepavyko atverti adresų knygos „%s“: %s"
 
 #. Translators: the parameteter is an error message.
-#: ../backends/eds/lib/edsf-persona-store.vala:824
-#: ../backends/eds/lib/edsf-persona-store.vala:854
+#: ../backends/eds/lib/edsf-persona-store.vala:877
+#: ../backends/eds/lib/edsf-persona-store.vala:907
 #, c-format
 msgid "Couldn't get address book capabilities: %s"
 msgstr "Nepavyko gauti adresų knygos galimybių: %s"
 
 #. Translators: the parameter is an address book URI.
-#: ../backends/eds/lib/edsf-persona-store.vala:870
+#: ../backends/eds/lib/edsf-persona-store.vala:923
 #, c-format
 msgid "Couldn't get view for address book ‘%s’."
 msgstr "Nepavyko gauti rodinio adresų knygai „%s“."
 
 #. Translators: the first parameter is an address book URI
 #. * and the second is an error message.
-#: ../backends/eds/lib/edsf-persona-store.vala:952
+#: ../backends/eds/lib/edsf-persona-store.vala:1005
 #, c-format
 msgid "Couldn't get view for address book ‘%s’: %s"
 msgstr "Nepavyko gauti rodinio adresų knygai „%s“: %s"
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1306
+#. Translators: the parameter is the name of a property on a
+#. * contact, formatted in the normal GObject style (e.g.
+#. * lowercase with hyphens to separate words).
+#: ../backends/eds/lib/edsf-persona-store.vala:1362
 #, c-format
 msgid "Changing the ‘%s’ property failed due to reaching the timeout."
 msgstr "Nepavyko pakeisti savybės „%s“ dėl pasibaigusio laiko."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1344
+#: ../backends/eds/lib/edsf-persona-store.vala:1400
 #: ../folks/avatar-details.vala:63
 msgid "Avatar is not writeable on this contact."
 msgstr "Atvaizdas nėra rašomas šiam kontaktui."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1365
+#: ../backends/eds/lib/edsf-persona-store.vala:1421
 #: ../folks/web-service-details.vala:123
 msgid "Web service addresses are not writeable on this contact."
 msgstr "Šiam kontaktui internetinių tarnybų adresai nėra rašomi."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1401
+#: ../backends/eds/lib/edsf-persona-store.vala:1457
 #: ../folks/url-details.vala:152
 msgid "URLs are not writeable on this contact."
 msgstr "Šiam kontaktui URL nėra rašomi."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1478
+#: ../backends/eds/lib/edsf-persona-store.vala:1534
 #: ../folks/local-id-details.vala:64
 msgid "Local IDs are not writeable on this contact."
 msgstr "Šiam kontaktui ID nėra rašomi."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1504
+#: ../backends/eds/lib/edsf-persona-store.vala:1560
 msgid "The contact cannot be marked as favourite."
 msgstr "Šis kontaktas negali būti pažymėtas kaip mėgiamas."
 
 #. Translators: the parameter is an error message.
-#: ../backends/eds/lib/edsf-persona-store.vala:1573
+#: ../backends/eds/lib/edsf-persona-store.vala:1629
 #, c-format
 msgid "Can't update avatar: %s"
 msgstr "Nepavyko atnaujinti atvaizdo: %s"
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1584
+#: ../backends/eds/lib/edsf-persona-store.vala:1640
 #: ../folks/email-details.vala:120
 msgid "E-mail addresses are not writeable on this contact."
 msgstr "Šiam kontaktui el. pašto adresai nėra rašomi."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1598
+#: ../backends/eds/lib/edsf-persona-store.vala:1654
 #: ../folks/phone-details.vala:229
 msgid "Phone numbers are not writeable on this contact."
 msgstr "Šiam kontaktui telefono numeriai nėra rašomi."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1612
+#: ../backends/eds/lib/edsf-persona-store.vala:1668
 #: ../folks/postal-address-details.vala:361
 msgid "Postal addresses are not writeable on this contact."
 msgstr "Šiam kontaktui pašto adresai nėra rašomi."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1679
+#: ../backends/eds/lib/edsf-persona-store.vala:1735
 #: ../folks/name-details.vala:283
 msgid "Full name is not writeable on this contact."
 msgstr "Šiam kontaktui vardai nėra rašomi."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1701
+#: ../backends/eds/lib/edsf-persona-store.vala:1757
 #: ../folks/name-details.vala:321
 msgid "Nickname is not writeable on this contact."
 msgstr "Šiam kontaktui slapyvardžiai nėra rašomi."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1723
+#: ../backends/eds/lib/edsf-persona-store.vala:1779
 #: ../folks/note-details.vala:138
 msgid "Notes are not writeable on this contact."
 msgstr "Šiam kontaktui rašteliai nėra rašomi."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1752
+#: ../backends/eds/lib/edsf-persona-store.vala:1808
 #: ../folks/birthday-details.vala:62
 msgid "Birthday is not writeable on this contact."
 msgstr "Šiam kontaktui gimtadieniai nėra rašomi."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1795
+#: ../backends/eds/lib/edsf-persona-store.vala:1852
 #: ../folks/role-details.vala:279
 msgid "Roles are not writeable on this contact."
 msgstr "Šiam kontaktui rolės nėra rašomi."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1896
+#: ../backends/eds/lib/edsf-persona-store.vala:1953
 #: ../folks/name-details.vala:246
 msgid "Structured name is not writeable on this contact."
 msgstr "Šiam kontaktui struktūrizuoti vardai nėra rašomi."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1935
+#: ../backends/eds/lib/edsf-persona-store.vala:1992
 #: ../folks/im-details.vala:136
 msgid "IM addresses are not writeable on this contact."
 msgstr "Šiam kontaktui pranešimų adresai nėra rašomi."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1985
+#: ../backends/eds/lib/edsf-persona-store.vala:2042
 #: ../folks/group-details.vala:174
 msgid "Groups are not writeable on this contact."
 msgstr "Šiam kontaktui grupės nėra rašomi."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:2029
+#: ../backends/eds/lib/edsf-persona-store.vala:2054
+msgid "My Contacts is only available for Google Contacts"
+msgstr "Mano kontaktai yra pasiekiami tik Google kontaktams"
+
+#: ../backends/eds/lib/edsf-persona-store.vala:2121
 #: ../folks/gender-details.vala:79
 msgid "Gender is not writeable on this contact."
 msgstr "Šiam kontaktui lytis nėra rašoma."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:2064
+#: ../backends/eds/lib/edsf-persona-store.vala:2156
 #: ../folks/anti-linkable.vala:81
 msgid "Anti-links are not writeable on this contact."
 msgstr "Šiam kontaktui anti-saitai nėra rašomi."
@@ -199,7 +211,7 @@ msgstr "Šiam kontaktui anti-saitai nėra rašomi."
 #. Translators: the first parameter is a non-human-readable
 #. * property name and the second parameter is an error
 #. * message.
-#: ../backends/eds/lib/edsf-persona-store.vala:2259
+#: ../backends/eds/lib/edsf-persona-store.vala:2351
 #, c-format
 msgid "Property ‘%s’ is not writeable: %s"
 msgstr "Savybė „%s“ nėra rašoma: %s"
@@ -207,14 +219,14 @@ msgstr "Savybė „%s“ nėra rašoma: %s"
 #. Translators: the first parameter is a non-human-readable
 #. * property name and the second parameter is an error
 #. * message.
-#: ../backends/eds/lib/edsf-persona-store.vala:2268
+#: ../backends/eds/lib/edsf-persona-store.vala:2360
 #, c-format
 msgid "Invalid value for property ‘%s’: %s"
 msgstr "Netinkamas savybės „%s“ reikšmė: %s"
 
 #. Translators: the first parameter is a non-human-readable
 #. * property name and the second parameter is an error message.
-#: ../backends/eds/lib/edsf-persona-store.vala:2294
+#: ../backends/eds/lib/edsf-persona-store.vala:2386
 #, c-format
 msgid "Unknown error setting property ‘%s’: %s"
 msgstr "Nežinoma klaida nustatant savybę „%s“: %s"
@@ -286,23 +298,27 @@ msgstr "Klaida atveriant kontaktų rodinį."
 #. Translators: the first parameter is the display name for
 #. * the Telepathy account, and the second is an error
 #. * message.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:778
+#: ../backends/telepathy/lib/tpf-persona-store.vala:813
 #, c-format
-msgid "Failed to determine whether we can set aliases on Telepathy account '%s': %s"
-msgstr "Nepavyko nustatyti, ar galima nustatyti vardų pakaitalus Telepathy paskyrai „%s“: %s"
+msgid ""
+"Failed to determine whether we can set aliases on Telepathy account '%s': %s"
+msgstr ""
+"Nepavyko nustatyti, ar galima nustatyti vardų pakaitalus Telepathy paskyrai "
+"„%s“: %s"
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1234
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1271
 msgid "Telepathy contacts representing the local user may not be removed."
-msgstr "Telepathy kontaktai, nusakantys vietinį naudotoją, negali būti pašalinti."
+msgstr ""
+"Telepathy kontaktai, nusakantys vietinį naudotoją, negali būti pašalinti."
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1245
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1282
 #, c-format
 msgid "Failed to remove a persona from store: %s"
 msgstr "Nepavyko pašalinti asmens iš saugyklos: %s"
 
 #. Translators: the first two parameters are store identifiers and
 #. * the third is a contact identifier.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1275
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1312
 #, c-format
 msgid ""
 "Persona store (%s, %s) requires the following details:\n"
@@ -311,57 +327,65 @@ msgstr ""
 "Asmens saugykla (%s, %s) reikalauja šių duomenų:\n"
 "    kontaktas (pateikta: „%s“)\n"
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1290
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1327
 msgid "Cannot create a new Telepathy contact while offline."
 msgstr "Negalima sukurti naujo Telepathy kontakto esant atsijungus."
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1308
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1345
 #, c-format
 msgid "Failed to add a persona from details: %s"
 msgstr "Nepavyko pridėti asmens iš duomenų: %s"
 
 #. Translators: "telepathy-logger" is the name of an application,
 #. * and should not be translated.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1328
-msgid "Failed to change favorite without a connection to the telepathy-logger service."
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1365
+msgid ""
+"Failed to change favorite without a connection to the telepathy-logger "
+"service."
 msgstr "Nepavyko pakeisti mėgiamojo be ryšio su telepathy-logger tarnyba."
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1334
-msgid "Failed to change favorite status of Telepathy Persona because it has no attached TpContact."
-msgstr "Nepavyko pakeisti mėgiamojo būsenos Telepathy asmeniui, nes jis neturi susieto TpContact."
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1371
+msgid ""
+"Failed to change favorite status of Telepathy Persona because it has no "
+"attached TpContact."
+msgstr ""
+"Nepavyko pakeisti mėgiamojo būsenos Telepathy asmeniui, nes jis neturi "
+"susieto TpContact."
 
 #. Translators: the parameter is a contact identifier.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1352
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1389
 #, c-format
 msgid "Failed to change favorite status for Telepathy contact ‘%s’."
 msgstr "Nepavyko pakeisti mėgiamojo būsenos Telepathy kontaktui „%s“."
 
 #. Translators: the parameter is an error message.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1384
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1421
 #, c-format
 msgid "Failed to change contact's alias: %s"
 msgstr "Nepavyko pakeisti kontakto vardo pakaitalo: %s"
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1464
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1501
 msgid "Extended information may only be set on the user's Telepathy contact."
-msgstr "Išplėstinė informacija gali būti nustatyta naudotojo Telepathy kontakte."
+msgstr ""
+"Išplėstinė informacija gali būti nustatyta naudotojo Telepathy kontakte."
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1493
-msgid "Extended information cannot be written because the store is disconnected."
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1530
+msgid ""
+"Extended information cannot be written because the store is disconnected."
 msgstr "Išplėstinė informacija negali būti įrašyta, nes saugykla yra atjungta."
 
-#: ../backends/telepathy/lib/tpf-persona.vala:497
-#: ../backends/telepathy/lib/tpf-persona.vala:518
-#: ../backends/telepathy/lib/tpf-persona.vala:570
-#: ../backends/telepathy/lib/tpf-persona.vala:584
+#: ../backends/telepathy/lib/tpf-persona.vala:499
+#: ../backends/telepathy/lib/tpf-persona.vala:520
+#: ../backends/telepathy/lib/tpf-persona.vala:572
+#: ../backends/telepathy/lib/tpf-persona.vala:586
 #, c-format
 msgid "Failed to change group membership: %s"
 msgstr "Nepavyko pakeisti grupės narystės: %s"
 
 #. Translators: "account" refers to an instant messaging
 #. * account.
-#: ../backends/telepathy/lib/tpf-persona.vala:500
-#: ../backends/telepathy/lib/tpf-persona.vala:573
+#: ../backends/telepathy/lib/tpf-persona.vala:502
+#: ../backends/telepathy/lib/tpf-persona.vala:575
 msgid "Account is offline."
 msgstr "Paskyra yra atsijungusi."
 
@@ -405,69 +429,73 @@ msgid "Favorite status is not writeable on this contact."
 msgstr "Mėgiamojo būsena nėra rašomas šiam kontaktui."
 
 #. Translators: the parameter is an IM address.
-#: ../folks/im-details.vala:178
-#: ../folks/im-details.vala:192
-#: ../folks/im-details.vala:214
-#: ../folks/im-details.vala:241
+#: ../folks/im-details.vala:178 ../folks/im-details.vala:192
+#: ../folks/im-details.vala:214 ../folks/im-details.vala:241
 #, c-format
 msgid "The IM address '%s' could not be understood."
 msgstr "Pranešimų adresas „%s“ nesuprantamas."
 
 #. Translators: the first parameter is a persona store identifier
 #. * and the second is an error message.
-#: ../folks/individual-aggregator.vala:863
+#: ../folks/individual-aggregator.vala:882
 #, c-format
 msgid "Error preparing persona store '%s': %s"
 msgstr "Klaida paruošiant asmens saugyklą „%s“: %s"
 
 #. Translators: the parameter is a property name.
-#: ../folks/individual-aggregator.vala:1069
-#: ../folks/individual-aggregator.vala:1295
+#: ../folks/individual-aggregator.vala:1088
+#: ../folks/individual-aggregator.vala:1314
 #, c-format
 msgid "Unknown property '%s' in linkable property list."
 msgstr "Nežinoma savybė „%s“ susiejamų savybių sąraše."
 
 #. Translators: the first parameter is a store identifier
 #. * and the second parameter is an error message.
-#: ../folks/individual-aggregator.vala:1757
+#: ../folks/individual-aggregator.vala:1776
 #, c-format
 msgid "Failed to add contact for persona store ID '%s': %s"
 msgstr "Nepavyko pridėti kontakto asmenų saugyklos ID „%s“: %s"
 
-#: ../folks/individual-aggregator.vala:1850
+#: ../folks/individual-aggregator.vala:1869
 msgid "Can’t link personas with no primary store."
 msgstr "Negalima susieti asmenų be pirminės saugyklos."
 
-#: ../folks/individual-aggregator.vala:1851
-#: ../folks/individual-aggregator.vala:2185
+#: ../folks/individual-aggregator.vala:1870
+#: ../folks/individual-aggregator.vala:2204
 #, c-format
-msgid "Persona store ‘%s:%s’ is configured as primary, but could not be found or failed to load."
-msgstr "Asmenų saugykla „%s:%s“ yra nustatyta kaip pirminė, bet jos nepavyko rasti arba įkelti."
+msgid ""
+"Persona store ‘%s:%s’ is configured as primary, but could not be found or "
+"failed to load."
+msgstr ""
+"Asmenų saugykla „%s:%s“ yra nustatyta kaip pirminė, bet jos nepavyko rasti "
+"arba įkelti."
 
-#: ../folks/individual-aggregator.vala:1852
-#: ../folks/individual-aggregator.vala:2186
+#: ../folks/individual-aggregator.vala:1871
+#: ../folks/individual-aggregator.vala:2205
 #, c-format
-msgid "Check the relevant service is running, or change the default store in that service or using the “%s” GSettings key."
-msgstr "Patikrinkite, ar atitinkama tarnyba veikia, arba pakeiskite numatytąją saugyklą toje tarnyboje arba naudodami GSettings raktą „%s“."
+msgid ""
+"Check the relevant service is running, or change the default store in that "
+"service or using the “%s” GSettings key."
+msgstr ""
+"Patikrinkite, ar atitinkama tarnyba veikia, arba pakeiskite numatytąją "
+"saugyklą toje tarnyboje arba naudodami GSettings raktą „%s“."
 
-#: ../folks/individual-aggregator.vala:1884
+#: ../folks/individual-aggregator.vala:1903
 msgid "Anti-links can't be removed between personas being linked."
 msgstr "Anti-saitai negali būti pašalinti tarp susietų asmenų."
 
-#: ../folks/individual-aggregator.vala:2184
+#: ../folks/individual-aggregator.vala:2203
 msgid "Can’t add personas with no primary store."
 msgstr "Negalima pridėti asmenų be pirminės saugyklos."
 
-#: ../folks/individual-aggregator.vala:2195
+#: ../folks/individual-aggregator.vala:2214
 #, c-format
 msgid "Can't write to requested property (“%s”) of the writeable store."
 msgstr "Nepavyksta rašyti prašomos savybės („%s“) rašomojo saugykloje."
 
-#: ../folks/individual.vala:215
-#: ../folks/individual.vala:368
-#: ../folks/individual.vala:477
-#: ../folks/individual.vala:717
-#: ../folks/individual.vala:795
+#: ../folks/individual.vala:216 ../folks/individual.vala:369
+#: ../folks/individual.vala:478 ../folks/individual.vala:718
+#: ../folks/individual.vala:796
 #, c-format
 msgid "Failed to change property ‘%s’: No suitable personas were found."
 msgstr "Nepavyko pakeisti savybės „%s“: nerasta tinkamų personų."
@@ -477,8 +505,14 @@ msgid "Primary store ID"
 msgstr "Pirminės saugyklos ID"
 
 #: ../folks/org.freedesktop.folks.gschema.xml.in.h:2
-msgid "The ID of the persona store which folks should use as primary (i.e. to store linking data in). The type ID of the store may optionally be prepended, separated by a colon. For example: “eds:system-address-book” or “key-file”."
-msgstr "Asmenų saugyklos ID, kurią folks turi naudoti kaip pirminę (pvz. saugyklą duomenų susiejimui). Saugyklos tipo ID gali būti papildomai pridėta, skiriant dvitaškiu. Pvz:„eds:sistemos-adresų-knyga“ arba „raktų-failas“."
+msgid ""
+"The ID of the persona store which folks should use as primary (i.e. to store "
+"linking data in). The type ID of the store may optionally be prepended, "
+"separated by a colon. For example: “eds:system-address-book” or “key-file”."
+msgstr ""
+"Asmenų saugyklos ID, kurią folks turi naudoti kaip pirminę (pvz. saugyklą "
+"duomenų susiejimui). Saugyklos tipo ID gali būti papildomai pridėta, "
+"skiriant dvitaškiu. Pvz:„eds:sistemos-adresų-knyga“ arba „raktų-failas“."
 
 #: ../folks/postal-address-details.vala:231
 #, c-format
@@ -550,8 +584,12 @@ msgstr "Nepavyko įkelti Pidgin draugų sąrašo failo „%s“."
 #. Translators: the parameter is a filename.
 #: ../tools/import-pidgin.vala:96
 #, c-format
-msgid "The Pidgin buddy list file ‘%s’ could not be loaded: the root element could not be found or was not recognized."
-msgstr "Nepavyko įkelti Pidgin draugų sąrašo failo „%s“: šakninis elementas nerastas arba neatpažintas."
+msgid ""
+"The Pidgin buddy list file ‘%s’ could not be loaded: the root element could "
+"not be found or was not recognized."
+msgstr ""
+"Nepavyko įkelti Pidgin draugų sąrašo failo „%s“: šakninis elementas nerastas "
+"arba neatpažintas."
 
 #. Translators: the first parameter is the number of buddies which
 #. * were successfully imported, and the second is a filename.
@@ -587,7 +625,8 @@ msgid ""
 "%s\n"
 "Error: %s\n"
 msgstr ""
-"Nepavyko sukurti naujo kontakto draugui su vardo pakaitalu „%s“ ir pranešimų adresais:\n"
+"Nepavyko sukurti naujo kontakto draugui su vardo pakaitalu „%s“ ir pranešimų "
+"adresais:\n"
 "%s\n"
 "Klaida: %s\n"
 
@@ -600,7 +639,8 @@ msgid ""
 "Created contact ‘%s’ for buddy with alias ‘%s’ and IM addresses:\n"
 "%s"
 msgstr ""
-"Sukurtas kontaktas „ %s“ draugui su vardo pakaitalu „%s“ ir pranešimų adresais:\n"
+"Sukurtas kontaktas „ %s“ draugui su vardo pakaitalu „%s“ ir pranešimų "
+"adresais:\n"
 "%s"
 
 #: ../tools/import.vala:44
@@ -660,6 +700,9 @@ msgstr "Klaida importuojant kontaktus: %s"
 #. Translators: both parameters are identifiers for backends.
 #: ../tools/import.vala:198
 #, c-format
-msgid "Unrecognized source backend name ‘%s’. ‘%s’ is currently the only supported source backend."
-msgstr "Neatpažintas šaltinio realizacijos pavadinimas „%s“. „%s“ šiuo metu yra vienintelė palaikoma šaltinio realizacija."
-
+msgid ""
+"Unrecognized source backend name ‘%s’. ‘%s’ is currently the only supported "
+"source backend."
+msgstr ""
+"Neatpažintas šaltinio realizacijos pavadinimas „%s“. „%s“ šiuo metu yra "
+"vienintelė palaikoma šaltinio realizacija."
