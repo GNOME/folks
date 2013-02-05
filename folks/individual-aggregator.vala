@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2010 Collabora Ltd.
- * Copyright (C) 2012 Philip Withnall
+ * Copyright (C) 2012, 2013 Philip Withnall
  *
  * This library is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -74,6 +74,29 @@ public errordomain Folks.IndividualAggregatorError
  * {@link Backend}s.
  *
  * This is the main interface for client applications.
+ *
+ * Linking and unlinking of personas and individuals is performed entirely
+ * through the aggregator. Personas may be linked together to form individuals;
+ * for example, the personas which form ``individual1`` and ``individual2`` may
+ * be linked together with ``another_persona`` to give a new {@link Individual}:
+ * {{{
+ *   var personas = new HashSet<Persona> ();
+ *   personas.add_all (individual1.personas);
+ *   personas.add_all (individual2.personas);
+ *   personas.add (another_persona);
+ *   yield my_individual_aggregator.link_personas (personas);
+ * }}}
+ *
+ * Similarly, an existing individual may be unlinked to form singleton
+ * individuals for each of its personas:
+ * {{{
+ *   yield my_individual_aggregator.unlink_individual (my_individual);
+ * }}}
+ *
+ * Note that to link two individuals together, their two sets of personas must
+ * be linked together. There is no API to directly link the individuals
+ * themselves, as conceptually folks links {@link Persona}s, not
+ * {@link Individual}s.
  */
 public class Folks.IndividualAggregator : Object
 {
