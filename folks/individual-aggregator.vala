@@ -86,8 +86,24 @@ public errordomain Folks.IndividualAggregatorError
  *   personas.add (another_persona);
  *   yield my_individual_aggregator.link_personas (personas);
  * }}}
+ * The individuals which contained those personas will be removed when
+ * {@link IndividualAggregator.link_personas} is called. Any personas in those
+ * individuals which were not included in the linking call may end up implicitly
+ * linked to the new individual, or may be aggregated into other new
+ * individuals.
  *
- * Similarly, an existing individual may be unlinked to form singleton
+ * For example, consider the situation where ``individual1`` contains two
+ * personas, ``persona1A`` and ``persona1B``; ``individual2`` contains one
+ * persona, ``persona2A``; and ``another_persona`` comes from ``individual3``,
+ * which also contains ``persona3A`` and ``persona3B``. Calling
+ * {@link IndividualAggregator.link_personas} on ``persona1A``, ``persona1B``,
+ * ``persona2A`` and ``another_persona`` will result in ``individual1`` and
+ * ``individual2`` being removed. A new {@link Individual} will be created
+ * containing all the personas passed to the linking function. It might also
+ * contain ``persona3A`` and ``persona3B``; or they might be in one or two other
+ * new individuals.
+ *
+ * An existing individual may be unlinked to form singleton
  * individuals for each of its personas:
  * {{{
  *   yield my_individual_aggregator.unlink_individual (my_individual);
