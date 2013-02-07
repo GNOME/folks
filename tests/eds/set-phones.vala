@@ -120,8 +120,8 @@ public class SetPhonesTests : Folks.TestCase
               foreach (var p in i.personas)
                 {
                   var phones = new HashSet<PhoneFieldDetails> (
-                      (GLib.HashFunc) PhoneFieldDetails.hash,
-                      (GLib.EqualFunc) PhoneFieldDetails.equal);
+                      AbstractFieldDetails<string>.hash_static,
+                      AbstractFieldDetails<string>.equal_static);
                   var phone_1 = new PhoneFieldDetails ("1234");
                   phone_1.set_parameter (AbstractFieldDetails.PARAM_TYPE,
                       AbstractFieldDetails.PARAM_TYPE_HOME);

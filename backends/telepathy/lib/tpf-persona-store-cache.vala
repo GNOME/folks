@@ -320,14 +320,14 @@ internal class Tpf.PersonaStoreCache : Folks.ObjectCache<Tpf.Persona>
         }
 
       var email_address_set = new HashSet<EmailFieldDetails> (
-          (GLib.HashFunc) EmailFieldDetails.hash,
-          (GLib.EqualFunc) EmailFieldDetails.equal);
+          AbstractFieldDetails<string>.hash_static,
+          AbstractFieldDetails<string>.equal_static);
       var phone_number_set = new HashSet<PhoneFieldDetails> (
-          (GLib.HashFunc) PhoneFieldDetails.hash,
-          (GLib.EqualFunc) PhoneFieldDetails.equal);
+          AbstractFieldDetails<string>.hash_static,
+          AbstractFieldDetails<string>.equal_static);
       var url_set = new HashSet<UrlFieldDetails> (
-          (GLib.HashFunc) UrlFieldDetails.hash,
-          (GLib.EqualFunc) UrlFieldDetails.equal);
+          AbstractFieldDetails<string>.hash_static,
+          AbstractFieldDetails<string>.equal_static);
 
       if (object_version == 2)
         {

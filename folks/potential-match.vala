@@ -102,7 +102,7 @@ public class Folks.PotentialMatch : Object
    * @since 0.5.1
    */
   public static Set<string> known_email_aliases =
-      new Gee.HashSet<string> (str_hash, str_equal);
+      new Gee.HashSet<string> ();
 
   private static double _DIST_THRESHOLD = 0.70;
   private const string _SEPARATORS = "._-+";

@@ -170,8 +170,8 @@ public class DuplicatedPhonesTests : Folks.TestCase
 
       val = Value (typeof (Set));
       var phones1 = new HashSet<PhoneFieldDetails> (
-          (GLib.HashFunc) PhoneFieldDetails.hash,
-          (GLib.EqualFunc) PhoneFieldDetails.equal);
+          AbstractFieldDetails<string>.hash_static,
+          AbstractFieldDetails<string>.equal_static);
       var phone_1 = new PhoneFieldDetails (this._phone_1);
       phones1.add (phone_1);
       val.set_object (phones1);
@@ -186,8 +186,8 @@ public class DuplicatedPhonesTests : Folks.TestCase
 
       val = Value (typeof (Set));
       var phones2 = new HashSet<PhoneFieldDetails> (
-          (GLib.HashFunc) PhoneFieldDetails.hash,
-          (GLib.EqualFunc) PhoneFieldDetails.equal);
+          AbstractFieldDetails<string>.hash_static,
+          AbstractFieldDetails<string>.equal_static);
       var phone_2 = new PhoneFieldDetails (this._phone_1);
       phones2.add (phone_2);
       val.set_object (phones2);

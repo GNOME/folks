@@ -177,8 +177,8 @@ public class MatchPhoneNumberTests : Folks.TestCase
 
       val = Value (typeof (Set));
       var phone_numbers1 = new HashSet<PhoneFieldDetails> (
-          (GLib.HashFunc) PhoneFieldDetails.hash,
-          (GLib.EqualFunc) PhoneFieldDetails.equal);
+          AbstractFieldDetails<string>.hash_static,
+          AbstractFieldDetails<string>.equal_static);
       var phone_number_1 = new PhoneFieldDetails (this._phone_1);
       phone_numbers1.add (phone_number_1);
       val.set_object (phone_numbers1);
@@ -193,8 +193,8 @@ public class MatchPhoneNumberTests : Folks.TestCase
 
       val = Value (typeof (Set));
       var phone_numbers2 = new HashSet<PhoneFieldDetails> (
-          (GLib.HashFunc) PhoneFieldDetails.hash,
-          (GLib.EqualFunc) PhoneFieldDetails.equal);
+          AbstractFieldDetails<string>.hash_static,
+          AbstractFieldDetails<string>.equal_static);
       var phone_number_2 = new PhoneFieldDetails (this._phone_2);
       phone_numbers2.add (phone_number_2);
       val.set_object (phone_numbers2);

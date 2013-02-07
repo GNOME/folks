@@ -148,8 +148,8 @@ public class LinkPersonasTests : Folks.TestCase
           (str_hash, str_equal);
       Value? v1 = Value (typeof (MultiMap));
       var im_addrs1 = new HashMultiMap<string, ImFieldDetails> (null, null,
-          (GLib.HashFunc) ImFieldDetails.hash,
-          (GLib.EqualFunc) ImFieldDetails.equal);
+          AbstractFieldDetails<string>.hash_static,
+          AbstractFieldDetails<string>.equal_static);
       im_addrs1.set (this._proto, new ImFieldDetails (this._im_address_1));
       v1.set_object (im_addrs1);
       details1.insert ("im-addresses", (owned) v1);
@@ -162,8 +162,8 @@ public class LinkPersonasTests : Folks.TestCase
           (str_hash, str_equal);
       Value? v3 = Value (typeof (MultiMap));
       var im_addrs2 = new HashMultiMap<string, ImFieldDetails> (null, null,
-          (GLib.HashFunc) ImFieldDetails.hash,
-          (GLib.EqualFunc) ImFieldDetails.equal);
+          AbstractFieldDetails<string>.hash_static,
+          AbstractFieldDetails<string>.equal_static);
       im_addrs2.set (this._proto, new ImFieldDetails (this._im_address_2));
       v3.set_object (im_addrs2);
       details2.insert ("im-addresses", (owned) v3);

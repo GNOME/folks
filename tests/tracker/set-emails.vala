@@ -115,8 +115,8 @@ public class SetEmailsTests : Folks.TestCase
               i.notify["email-addresses"].connect (this._notify_emails_cb);
 
               var emails = new HashSet<EmailFieldDetails> (
-                  (GLib.HashFunc) EmailFieldDetails.hash,
-                  (GLib.EqualFunc) EmailFieldDetails.equal);
+                  AbstractFieldDetails<string>.hash_static,
+                  AbstractFieldDetails<string>.equal_static);
               var p1 = new EmailFieldDetails (this._email_1);
               emails.add (p1);
               var p2 = new EmailFieldDetails (this._email_2);

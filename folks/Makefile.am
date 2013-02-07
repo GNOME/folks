@@ -25,7 +25,7 @@ libfolks_internal_la_VALAFLAGS = \
 	--vapidir=. \
 	--pkg gobject-2.0 \
 	--pkg gio-2.0 \
-	--pkg gee-1.0 \
+	--pkg gee-0.8 \
 	--pkg posix \
 	--vapi folks-internal.vapi \
 	-H folks-internal.h \
@@ -108,7 +108,7 @@ libfolks_la_VALAFLAGS = \
 	--pkg gobject-2.0 \
 	--pkg gmodule-2.0 \
 	--pkg gio-2.0 \
-	--pkg gee-1.0 \
+	--pkg gee-0.8 \
 	--includedir folks \
 	--vapi folks.vapi \
 	-H folks.h \

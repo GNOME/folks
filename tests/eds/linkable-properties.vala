@@ -172,8 +172,8 @@ public class LinkablePropertiesTests : Folks.TestCase
                   foreach (var p in i.personas)
                     {
                       var emails = new HashSet<EmailFieldDetails> (
-                          (GLib.HashFunc) EmailFieldDetails.hash,
-                          (GLib.EqualFunc) EmailFieldDetails.equal);
+                          AbstractFieldDetails<string>.hash_static,
+                          AbstractFieldDetails<string>.equal_static);
                       var email_1 = new EmailFieldDetails (_email_1);
                       email_1.set_parameter (AbstractFieldDetails.PARAM_TYPE,
                           AbstractFieldDetails.PARAM_TYPE_OTHER);

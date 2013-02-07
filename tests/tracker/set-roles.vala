@@ -114,9 +114,9 @@ public class SetRolesTests : Folks.TestCase
               i.notify["roles"].connect (this._notify_roles_cb);
 
               Gee.HashSet<RoleFieldDetails> role_fds =
-                new HashSet<RoleFieldDetails>
-                  ((GLib.HashFunc) RoleFieldDetails.hash,
-                   (GLib.EqualFunc) RoleFieldDetails.equal);
+                new HashSet<RoleFieldDetails> (
+                    AbstractFieldDetails<Role>.hash_static,
+                    AbstractFieldDetails<Role>.equal_static);
               var role = new Role ("some title", "some organisation");
               role.role = "some role";
               var role_fd = new RoleFieldDetails (role);

@@ -224,9 +224,8 @@ public class LinkPersonasTests : Folks.TestCase
         {
           v1 = Value (typeof (MultiMap));
           var im_addrs1 = new HashMultiMap<string, ImFieldDetails> (
-              null, null,
-              (GLib.HashFunc) ImFieldDetails.hash,
-              (GLib.EqualFunc) ImFieldDetails.equal);
+              null, null, AbstractFieldDetails<string>.hash_static,
+              AbstractFieldDetails<string>.equal_static);
           if (this._linking_method == LinkingMethod.EMAIL_AS_IM_ADDRESS)
             im_addrs1.set ("jabber",
                 new ImFieldDetails (this._auto_linkable_email));
@@ -239,9 +238,8 @@ public class LinkPersonasTests : Folks.TestCase
         {
           v1 = Value (typeof (MultiMap));
           var wsa1 = new HashMultiMap<string, WebServiceFieldDetails> (
-              null, null,
-              (GLib.HashFunc) WebServiceFieldDetails.hash,
-              (GLib.EqualFunc) WebServiceFieldDetails.equal);
+              null, null, AbstractFieldDetails<string>.hash_static,
+              AbstractFieldDetails<string>.equal_static);
           wsa1.set ("twitter", new WebServiceFieldDetails (this._im_address_1));
           v1.set_object (wsa1);
           details1.insert (wsk, (owned) v1);
@@ -259,9 +257,8 @@ public class LinkPersonasTests : Folks.TestCase
         {
           v3 = Value (typeof (MultiMap));
           var im_addrs2 = new HashMultiMap<string, ImFieldDetails> (
-              null, null,
-              (GLib.HashFunc) ImFieldDetails.hash,
-              (GLib.EqualFunc) ImFieldDetails.equal);
+              null, null, AbstractFieldDetails<string>.hash_static,
+              AbstractFieldDetails<string>.equal_static);
           im_addrs2.set ("yahoo", new ImFieldDetails (this._im_address_2));
           v3.set_object (im_addrs2);
           details2.insert ("im-addresses", (owned) v3);
@@ -270,9 +267,8 @@ public class LinkPersonasTests : Folks.TestCase
         {
           v3 = Value (typeof (MultiMap));
           var wsa2 = new HashMultiMap<string, WebServiceFieldDetails> (
-              null, null,
-              (GLib.HashFunc) WebServiceFieldDetails.hash,
-              (GLib.EqualFunc) WebServiceFieldDetails.equal);
+              null, null, AbstractFieldDetails<string>.hash_static,
+              AbstractFieldDetails<string>.equal_static);
           wsa2.set ("lastfm", new WebServiceFieldDetails (this._im_address_2));
           v3.set_object (wsa2);
           details2.insert (wsk, (owned) v3);
@@ -281,8 +277,8 @@ public class LinkPersonasTests : Folks.TestCase
         {
           v3 = Value (typeof (Set));
           var emails = new HashSet<EmailFieldDetails> (
-              (GLib.HashFunc) EmailFieldDetails.hash,
-              (GLib.EqualFunc) EmailFieldDetails.equal);
+              AbstractFieldDetails<string>.hash_static,
+              AbstractFieldDetails<string>.equal_static);
           var email_1 = new EmailFieldDetails (this._auto_linkable_email);
           emails.add (email_1);
           v3.set_object (emails);

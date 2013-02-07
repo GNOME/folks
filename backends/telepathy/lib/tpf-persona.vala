@@ -389,8 +389,8 @@ public class Tpf.Persona : Folks.Persona,
    * doesn't as it's a linkable property, so always has to be loaded anyway. */
   private HashMultiMap<string, ImFieldDetails> _im_addresses =
       new HashMultiMap<string, ImFieldDetails> (null, null,
-          (GLib.HashFunc) ImFieldDetails.hash,
-          (GLib.EqualFunc) ImFieldDetails.equal);
+          AbstractFieldDetails<string>.hash_static,
+          AbstractFieldDetails<string>.equal_static);
 
   /**
    * A mapping of IM protocol to an (unordered) set of IM addresses.
@@ -939,18 +939,18 @@ public class Tpf.Persona : Folks.Persona,
       else if (this._urls == null)
         {
           this._urls = new HashSet<UrlFieldDetails> (
-              (GLib.HashFunc) UrlFieldDetails.hash,
-              (GLib.EqualFunc) UrlFieldDetails.equal);
+              AbstractFieldDetails<string>.hash_static,
+              AbstractFieldDetails<string>.equal_static);
           this._urls_ro = this._urls.read_only_view;
 
           this._email_addresses = new HashSet<EmailFieldDetails> (
-              (GLib.HashFunc) EmailFieldDetails.hash,
-              (GLib.EqualFunc) EmailFieldDetails.equal);
+              AbstractFieldDetails<string>.hash_static,
+              AbstractFieldDetails<string>.equal_static);
           this._email_addresses_ro = this._email_addresses.read_only_view;
 
           this._phone_numbers = new HashSet<PhoneFieldDetails> (
-              (GLib.HashFunc) PhoneFieldDetails.hash,
-              (GLib.EqualFunc) PhoneFieldDetails.equal);
+              AbstractFieldDetails<string>.hash_static,
+              AbstractFieldDetails<string>.equal_static);
           this._phone_numbers_ro = this._phone_numbers.read_only_view;
         }
 
@@ -965,14 +965,14 @@ public class Tpf.Persona : Folks.Persona,
       var new_birthday_str = "";
       var new_full_name = "";
       var new_email_addresses = new HashSet<EmailFieldDetails> (
-          (GLib.HashFunc) EmailFieldDetails.hash,
-          (GLib.EqualFunc) EmailFieldDetails.equal);
+          AbstractFieldDetails<string>.hash_static,
+          AbstractFieldDetails<string>.equal_static);
       var new_phone_numbers = new HashSet<PhoneFieldDetails> (
-          (GLib.HashFunc) PhoneFieldDetails.hash,
-          (GLib.EqualFunc) PhoneFieldDetails.equal);
+           AbstractFieldDetails<string>.hash_static,
+           AbstractFieldDetails<string>.equal_static);
       var new_urls = new HashSet<UrlFieldDetails> (
-          (GLib.HashFunc) UrlFieldDetails.hash,
-          (GLib.EqualFunc) UrlFieldDetails.equal);
+           AbstractFieldDetails<string>.hash_static,
+           AbstractFieldDetails<string>.equal_static);
 
       var contact_info = contact.get_contact_info ();
       foreach (var info in contact_info)

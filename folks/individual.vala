@@ -103,7 +103,7 @@ public class Folks.Individual : Object,
 {
   /* Stores the Personas contained in this Individual. */
   private HashSet<Persona> _persona_set =
-      new HashSet<Persona> (direct_hash, direct_equal);
+      new HashSet<Persona> ();
   /* Read-only view of the above set */
   private Set<Persona> _persona_set_ro;
   /* Mapping from PersonaStore -> number of Personas from that store contained
@@ -863,7 +863,7 @@ public class Folks.Individual : Object,
 
   public DateTime? last_im_interaction_datetime
     {
-      get 
+      get
         {
           if (this._last_im_interaction_datetime == null)
             {
@@ -892,7 +892,7 @@ public class Folks.Individual : Object,
    */
   public uint call_interaction_count
     {
-      get 
+      get
         {
           uint counter = 0;
           /* Iterate over all personas and sum up their call interaction counts*/
@@ -1721,14 +1721,14 @@ public class Folks.Individual : Object,
           () =>
             {
               this._im_addresses = new HashMultiMap<string, ImFieldDetails> (
-                  null, null, ImFieldDetails.hash,
-                  (EqualFunc) ImFieldDetails.equal);
+                  null, null, AbstractFieldDetails<string>.hash_static,
+                  AbstractFieldDetails<string>.equal_static);
             },
           () =>
             {
               var new_im_addresses = new HashMultiMap<string, ImFieldDetails> (
-                  null, null, (GLib.HashFunc) ImFieldDetails.hash,
-                  (GLib.EqualFunc) ImFieldDetails.equal);
+                  null, null, AbstractFieldDetails<string>.hash_static,
+                  AbstractFieldDetails<string>.equal_static);
 
               foreach (var persona in this._persona_set)
                 {
@@ -1770,15 +1770,15 @@ public class Folks.Individual : Object,
             {
               this._web_service_addresses =
                   new HashMultiMap<string, WebServiceFieldDetails> (null, null,
-                      (GLib.HashFunc) WebServiceFieldDetails.hash,
-                      (GLib.EqualFunc) WebServiceFieldDetails.equal);
+                      AbstractFieldDetails<string>.hash_static,
+                      AbstractFieldDetails<string>.equal_static);
             },
           () =>
             {
               var new_web_service_addresses =
                   new HashMultiMap<string, WebServiceFieldDetails> (null, null,
-                      (GLib.HashFunc) WebServiceFieldDetails.hash,
-                      (GLib.EqualFunc) WebServiceFieldDetails.equal);
+                      AbstractFieldDetails<string>.hash_static,
+                      AbstractFieldDetails<string>.equal_static);
 
               foreach (var persona in this._persona_set)
                 {
@@ -1850,7 +1850,7 @@ public class Folks.Individual : Object,
         }
       /* Subscribe to the interactions signal for the persona */
       var p_interaction_details = persona as InteractionDetails;
-      if (p_interaction_details != null) 
+      if (p_interaction_details != null)
         {
           persona.notify["im-interaction-count"].connect (this._notify_im_interaction_count_cb);
           persona.notify["call-interaction-count"].connect (this._notify_call_interaction_count_cb);
@@ -1991,7 +1991,7 @@ public class Folks.Individual : Object,
 
       /* Unsubscribe from the interactions signal for the persona */
       var p_interaction_details = persona as InteractionDetails;
-      if (p_interaction_details != null) 
+      if (p_interaction_details != null)
         {
           persona.notify["im-interaction-count"].disconnect (this._notify_im_interaction_count_cb);
           persona.notify["call-interaction-count"].disconnect (this._notify_call_interaction_count_cb);
@@ -2060,17 +2060,18 @@ public class Folks.Individual : Object,
           () =>
             {
               this._urls = new HashSet<UrlFieldDetails> (
-                  (GLib.HashFunc) UrlFieldDetails.hash,
-                  (GLib.EqualFunc) UrlFieldDetails.equal);
+                  AbstractFieldDetails<string>.hash_static,
+                  AbstractFieldDetails<string>.equal_static);
               this._urls_ro = this._urls.read_only_view;
             },
           () =>
             {
               var new_urls = new HashSet<UrlFieldDetails> (
-                  (GLib.HashFunc) UrlFieldDetails.hash,
-                  (GLib.EqualFunc) UrlFieldDetails.equal);
-              var urls_set = new HashMap<string, UrlFieldDetails> (null, null,
-                  (GLib.EqualFunc) UrlFieldDetails.equal);
+                  AbstractFieldDetails<string>.hash_static,
+                  AbstractFieldDetails<string>.equal_static);
+              var urls_set = new HashMap<unowned string,
+                  unowned UrlFieldDetails> (
+                    null, null,  AbstractFieldDetails<string>.equal_static);
 
               foreach (var persona in this._persona_set)
                 {
@@ -2117,17 +2118,17 @@ public class Folks.Individual : Object,
           () =>
             {
               this._phone_numbers = new HashSet<PhoneFieldDetails> (
-                  (GLib.HashFunc) PhoneFieldDetails.hash,
-                  (GLib.EqualFunc) PhoneFieldDetails.equal);
+                  AbstractFieldDetails<string>.hash_static,
+                  AbstractFieldDetails<string>.equal_static);
               this._phone_numbers_ro = this._phone_numbers.read_only_view;
             },
           () =>
             {
               var new_phone_numbers = new HashSet<PhoneFieldDetails> (
-                  (GLib.HashFunc) PhoneFieldDetails.hash,
-                  (GLib.EqualFunc) PhoneFieldDetails.equal);
+                  AbstractFieldDetails<string>.hash_static,
+                  AbstractFieldDetails<string>.equal_static);
               var phone_numbers_set = new HashMap<string, PhoneFieldDetails> (
-                  null, null, (GLib.EqualFunc) PhoneFieldDetails.equal);
+                  null, null, AbstractFieldDetails<string>.equal_static);
 
               foreach (var persona in this._persona_set)
                 {
@@ -2174,17 +2175,17 @@ public class Folks.Individual : Object,
           () =>
             {
               this._email_addresses = new HashSet<EmailFieldDetails> (
-                  (GLib.HashFunc) EmailFieldDetails.hash,
-                  (GLib.EqualFunc) EmailFieldDetails.equal);
+                  AbstractFieldDetails<string>.hash_static,
+                  AbstractFieldDetails<string>.equal_static);
               this._email_addresses_ro = this._email_addresses.read_only_view;
             },
           () =>
             {
               var new_email_addresses = new HashSet<EmailFieldDetails> (
-                  (GLib.HashFunc) EmailFieldDetails.hash,
-                  (GLib.EqualFunc) EmailFieldDetails.equal);
+                  AbstractFieldDetails<string>.hash_static,
+                  AbstractFieldDetails<string>.equal_static);
               var emails_set = new HashMap<string, EmailFieldDetails> (
-                  null, null, (GLib.EqualFunc) EmailFieldDetails.equal);
+                  null, null, AbstractFieldDetails<string>.equal_static);
 
               foreach (var persona in this._persona_set)
                 {
@@ -2232,15 +2233,15 @@ public class Folks.Individual : Object,
           () =>
             {
               this._roles = new HashSet<RoleFieldDetails> (
-                  (GLib.HashFunc) RoleFieldDetails.hash,
-                  (GLib.EqualFunc) RoleFieldDetails.equal);
+                  AbstractFieldDetails<Role>.hash_static,
+                  AbstractFieldDetails<Role>.equal_static);
               this._roles_ro = this._roles.read_only_view;
             },
           () =>
             {
               var new_roles = new HashSet<RoleFieldDetails> (
-                  (GLib.HashFunc) RoleFieldDetails.hash,
-                  (GLib.EqualFunc) RoleFieldDetails.equal);
+                  AbstractFieldDetails<Role>.hash_static,
+                  AbstractFieldDetails<Role>.equal_static);
 
               foreach (var persona in this._persona_set)
                 {
@@ -2310,16 +2311,16 @@ public class Folks.Individual : Object,
           () =>
             {
               this._postal_addresses = new HashSet<PostalAddressFieldDetails> (
-                  (GLib.HashFunc) PostalAddressFieldDetails.hash,
-                  (GLib.EqualFunc) PostalAddressFieldDetails.equal);
+                  AbstractFieldDetails<PostalAddress>.hash_static,
+                  AbstractFieldDetails<PostalAddress>.equal_static);
               this._postal_addresses_ro = this._postal_addresses.read_only_view;
             },
           () =>
             {
               var new_postal_addresses =
                   new HashSet<PostalAddressFieldDetails> (
-                      (GLib.HashFunc) PostalAddressFieldDetails.hash,
-                      (GLib.EqualFunc) PostalAddressFieldDetails.equal);
+                      AbstractFieldDetails<PostalAddress>.hash_static,
+                      AbstractFieldDetails<PostalAddress>.equal_static);
 
               foreach (var persona in this._persona_set)
                 {
@@ -2406,15 +2407,15 @@ public class Folks.Individual : Object,
           () =>
             {
               this._notes = new HashSet<NoteFieldDetails> (
-                  (GLib.HashFunc) NoteFieldDetails.hash,
-                  (GLib.EqualFunc) NoteFieldDetails.equal);
+                  AbstractFieldDetails<string>.hash_static,
+                  AbstractFieldDetails<string>.equal_static);
               this._notes_ro = this._notes.read_only_view;
             },
           () =>
             {
               var new_notes = new HashSet<NoteFieldDetails> (
-                  (GLib.HashFunc) NoteFieldDetails.hash,
-                  (GLib.EqualFunc) NoteFieldDetails.equal);
+                  AbstractFieldDetails<string>.hash_static,
+                  AbstractFieldDetails<string>.equal_static);
 
               foreach (var persona in this._persona_set)
                 {

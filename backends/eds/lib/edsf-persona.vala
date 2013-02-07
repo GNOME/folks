@@ -289,8 +289,8 @@ public class Edsf.Persona : Folks.Persona,
 
   private HashSet<EmailFieldDetails>? _email_addresses =
           new HashSet<EmailFieldDetails> (
-                  (GLib.HashFunc) EmailFieldDetails.hash,
-                  (GLib.EqualFunc) EmailFieldDetails.equal);
+                  AbstractFieldDetails<string>.hash_static,
+                  AbstractFieldDetails<string>.equal_static);
   private Set<EmailFieldDetails> _email_addresses_ro;
 
   /**
@@ -525,8 +525,8 @@ public class Edsf.Persona : Folks.Persona,
    * doesn't as it's a linkable property, so always has to be loaded anyway. */
   private HashMultiMap<string, ImFieldDetails> _im_addresses =
       new HashMultiMap<string, ImFieldDetails> (null, null,
-          (GLib.HashFunc) ImFieldDetails.hash,
-          (GLib.EqualFunc) ImFieldDetails.equal);
+          AbstractFieldDetails<string>.hash_static,
+          AbstractFieldDetails<string>.equal_static);
 
   /**
    * {@inheritDoc}
@@ -935,13 +935,39 @@ public class Edsf.Persona : Folks.Persona,
       debug ("Creating new Edsf.Persona with IID '%s'", this.iid);
 
       this._gender = Gender.UNSPECIFIED;
+      this._phone_numbers = new HashSet<PhoneFieldDetails> (
+           AbstractFieldDetails<string>.hash_static,
+           AbstractFieldDetails<string>.equal_static);
+      this._phone_numbers_ro = this._phone_numbers.read_only_view;
+      this._email_addresses = new HashSet<EmailFieldDetails> (
+           AbstractFieldDetails<string>.hash_static,
+           AbstractFieldDetails<string>.equal_static);
+      this._email_addresses_ro = this._email_addresses.read_only_view;
+      this._notes = new HashSet<NoteFieldDetails> (
+           AbstractFieldDetails<string>.hash_static,
+           AbstractFieldDetails<string>.equal_static);
+      this._notes_ro = this._notes.read_only_view;
+      this._urls = new HashSet<UrlFieldDetails> (
+           AbstractFieldDetails<string>.hash_static,
+           AbstractFieldDetails<string>.equal_static);
+      this._urls_ro = this._urls.read_only_view;
+      this._postal_addresses = new HashSet<PostalAddressFieldDetails> (
+           AbstractFieldDetails<PostalAddress>.hash_static,
+           AbstractFieldDetails<PostalAddress>.equal_static);
+      this._postal_addresses_ro = this._postal_addresses.read_only_view;
+      this._local_ids = new HashSet<string> ();
       this._local_ids_ro = this._local_ids.read_only_view;
       this._web_service_addresses =
         new HashMultiMap<string, WebServiceFieldDetails> (
-            null, null,
-            (GLib.HashFunc) WebServiceFieldDetails.hash,
-            (GLib.EqualFunc) WebServiceFieldDetails.equal);
+          null, null, AbstractFieldDetails<string>.hash_static,
+          AbstractFieldDetails<string>.equal_static);
       this._email_addresses_ro = this._email_addresses.read_only_view;
+      this._groups = new HashSet<string> ();
+      this._groups_ro = this._groups.read_only_view;
+      this._roles = new HashSet<RoleFieldDetails> (
+           AbstractFieldDetails<Role>.hash_static,
+           AbstractFieldDetails<Role>.equal_static);
+      this._roles_ro = this._roles.read_only_view;
       this._anti_links = new HashSet<string> ();
       this._anti_links_ro = this._anti_links.read_only_view;
 
@@ -1144,14 +1170,14 @@ public class Edsf.Persona : Folks.Persona,
       else if (this._roles == null)
         {
           this._roles = new HashSet<RoleFieldDetails> (
-              (GLib.HashFunc) RoleFieldDetails.hash,
-              (GLib.EqualFunc) RoleFieldDetails.equal);
+              AbstractFieldDetails<Role>.hash_static,
+              AbstractFieldDetails<Role>.equal_static);
           this._roles_ro = this._roles.read_only_view;
         }
 
       var new_roles = new HashSet<RoleFieldDetails> (
-          (GLib.HashFunc) RoleFieldDetails.hash,
-          (GLib.EqualFunc) RoleFieldDetails.equal);
+          AbstractFieldDetails<Role>.hash_static,
+          AbstractFieldDetails<Role>.equal_static);
 
       var default_role_fd = this._get_default_role ();
       if (default_role_fd != null)
@@ -1273,9 +1299,8 @@ public class Edsf.Persona : Folks.Persona,
   private void _update_web_services_addresses ()
     {
       var new_services = new HashMultiMap<string, WebServiceFieldDetails> (
-          null, null,
-          (GLib.HashFunc) WebServiceFieldDetails.hash,
-          (GLib.EqualFunc) WebServiceFieldDetails.equal);
+          null, null, AbstractFieldDetails<string>.hash_static,
+          AbstractFieldDetails<string>.equal_static);
 
       var services = this.contact.get_attribute ("X-FOLKS-WEB-SERVICES-IDS");
       if (services != null)
@@ -1307,8 +1332,8 @@ public class Edsf.Persona : Folks.Persona,
   private void _update_emails (bool emit_notification = true)
     {
       var new_email_addresses = new HashSet<EmailFieldDetails> (
-          (GLib.HashFunc) EmailFieldDetails.hash,
-          (GLib.EqualFunc) EmailFieldDetails.equal);
+          AbstractFieldDetails<string>.hash_static,
+          AbstractFieldDetails<string>.equal_static);
 
       var attrs = this.contact.get_attributes (E.ContactField.EMAIL);
       foreach (var attr in attrs)
@@ -1351,14 +1376,14 @@ public class Edsf.Persona : Folks.Persona,
       else if (this._notes == null)
         {
           this._notes = new HashSet<NoteFieldDetails> (
-              (GLib.HashFunc) NoteFieldDetails.hash,
-              (GLib.EqualFunc) NoteFieldDetails.equal);
+              AbstractFieldDetails<string>.hash_static,
+              AbstractFieldDetails<string>.equal_static);
           this._notes_ro = this._notes.read_only_view;
         }
 
       var new_notes = new HashSet<NoteFieldDetails> (
-          (GLib.HashFunc) NoteFieldDetails.hash,
-          (GLib.EqualFunc) NoteFieldDetails.equal);
+          AbstractFieldDetails<string>.hash_static,
+          AbstractFieldDetails<string>.equal_static);
 
       var n = this._get_property<string> ("note");
       if (n != null && n != "")
@@ -1534,14 +1559,14 @@ public class Edsf.Persona : Folks.Persona,
       else if (this._urls == null)
         {
           this._urls = new HashSet<UrlFieldDetails> (
-              (GLib.HashFunc) UrlFieldDetails.hash,
-              (GLib.EqualFunc) UrlFieldDetails.equal);
+              AbstractFieldDetails<string>.hash_static,
+              AbstractFieldDetails<string>.equal_static);
           this._urls_ro = this._urls.read_only_view;
         }
 
       var new_urls = new HashSet<UrlFieldDetails> (
-          (GLib.HashFunc) UrlFieldDetails.hash,
-          (GLib.EqualFunc) UrlFieldDetails.equal);
+          AbstractFieldDetails<string>.hash_static,
+          AbstractFieldDetails<string>.equal_static);
 
       /* First we get the standard Evo urls.. */
       foreach (var mapping in Persona._url_properties)
@@ -1591,8 +1616,8 @@ public class Edsf.Persona : Folks.Persona,
     {
       var im_eds_map = Persona._get_im_eds_map ();
       var new_im_addresses = new HashMultiMap<string, ImFieldDetails> (null,
-          null, (GLib.HashFunc) ImFieldDetails.hash,
-          (GLib.EqualFunc) ImFieldDetails.equal);
+          null, AbstractFieldDetails<string>.hash_static,
+          AbstractFieldDetails<string>.equal_static);
 
       foreach (var im_proto in im_eds_map.get_keys ())
         {
@@ -1902,14 +1927,14 @@ public class Edsf.Persona : Folks.Persona,
       else if (this._phone_numbers == null)
         {
           this._phone_numbers = new HashSet<PhoneFieldDetails> (
-              (GLib.HashFunc) PhoneFieldDetails.hash,
-              (GLib.EqualFunc) PhoneFieldDetails.equal);
+              AbstractFieldDetails<string>.hash_static,
+              AbstractFieldDetails<string>.equal_static);
           this._phone_numbers_ro = this._phone_numbers.read_only_view;
         }
 
       var new_phone_numbers = new HashSet<PhoneFieldDetails> (
-          (GLib.HashFunc) PhoneFieldDetails.hash,
-          (GLib.EqualFunc) PhoneFieldDetails.equal);
+          AbstractFieldDetails<string>.hash_static,
+          AbstractFieldDetails<string>.equal_static);
 
       var attrs = this.contact.get_attributes (E.ContactField.TEL);
       foreach (var attr in attrs)
@@ -2012,14 +2037,14 @@ public class Edsf.Persona : Folks.Persona,
       else if (this._postal_addresses == null)
         {
           this._postal_addresses = new HashSet<PostalAddressFieldDetails> (
-              (GLib.HashFunc) PostalAddressFieldDetails.hash,
-              (GLib.EqualFunc) PostalAddressFieldDetails.equal);
+              AbstractFieldDetails<PostalAddress>.hash_static,
+              AbstractFieldDetails<PostalAddress>.equal_static);
           this._postal_addresses_ro = this._postal_addresses.read_only_view;
         }
 
       var new_postal_addresses = new HashSet<PostalAddressFieldDetails> (
-          (GLib.HashFunc) PostalAddressFieldDetails.hash,
-          (GLib.EqualFunc) PostalAddressFieldDetails.equal);
+          AbstractFieldDetails<PostalAddress>.hash_static,
+          AbstractFieldDetails<PostalAddress>.equal_static);
 
       var attrs = this.contact.get_attributes (E.ContactField.ADDRESS);
       foreach (unowned E.VCardAttribute attr in attrs)

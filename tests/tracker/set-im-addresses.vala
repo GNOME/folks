@@ -119,9 +119,8 @@ public class SetIMAddressesTests : Folks.TestCase
               i.notify["im-addresses"].connect (this._notify_im_addresses_cb);
 
               var im_addresses = new HashMultiMap<string, ImFieldDetails> (
-                  null, null,
-                  (GLib.HashFunc)ImFieldDetails.hash,
-                  (GLib.EqualFunc) ImFieldDetails.equal);
+                  null, null, AbstractFieldDetails<string>.hash_static,
+                  AbstractFieldDetails<string>.equal_static);
 
               im_addresses.set ("aim", new ImFieldDetails ("one@example.org"));
               im_addresses.set ("aim", new ImFieldDetails ("two@example.org"));

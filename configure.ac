@@ -146,7 +146,7 @@ AS_IF([test "x$enable_libsocialweb_backend" != "xno"], [
           "x$enable_vala" = "xyes"], [
     VALA_CHECK_PACKAGES([telepathy-glib
                          gio-2.0
-                         gee-1.0
+                         gee-0.8
                          libsocialweb-client],
         ,
         have_libsocialweb_backend="no")
@@ -180,6 +180,7 @@ TRACKER_SPARQL_REQUIRED=0.13.1
 EBOOK_REQUIRED=3.5.3
 EDATASERVER_REQUIRED=3.5.3.1
 ZEITGEIST_REQUIRED=0.3.14
+GEE_REQUIRED=0.8.4
 
 AC_SUBST([TRACKER_SPARQL_MAJOR])
 
@@ -190,18 +191,7 @@ PKG_CHECK_MODULES([GMODULE], [gmodule-no-export-2.0])
 PKG_CHECK_MODULES([GIO], [gio-2.0 >= $GLIB_REQUIRED])
 PKG_CHECK_MODULES([DBUS_GLIB], [dbus-glib-1])
 
-# FIXME: We depend on libgee < 0.7 because 0.7 breaks API. bgo#627746
-PKG_CHECK_MODULES([GEE], [gee-1.0 < 0.7],
-                  have_gee_0_6_x="yes",
-                  have_gee_0_6_x="no")
-
-AS_IF([test "x$have_gee_0_6_x" != "xyes"], [
-    AC_MSG_ERROR([
-Gee 0.6.x required but not installed.
-
-Note that Gee 0.8.x provides gee-0.8 (but gee-1.0 is, confusingly, provided by
-Gee 0.6.x)])
-])
+PKG_CHECK_MODULES([GEE], [gee-0.8 >= $GEE_REQUIRED])
 
 TP_GLIB_REQUIRED=0.19.0
 AS_IF([test x$enable_telepathy_backend = xyes], [
@@ -308,7 +298,7 @@ AS_IF([test "x$enable_vala" = "xyes"], [
         AC_SUBST([VAPIDIR])
 
         VALA_CHECK_PACKAGES([gio-2.0
-                             gee-1.0])
+                             gee-0.8])
 
         AS_IF([test x$enable_telepathy_backend = xyes], [
           VALA_CHECK_PACKAGES([telepathy-glib])

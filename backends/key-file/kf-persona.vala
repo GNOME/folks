@@ -145,9 +145,8 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
       /* Add the new IM addresses to the key file and build a normalised
        * table of them to set as the new property value */
       var new_im_addresses = new HashMultiMap<string, ImFieldDetails> (
-          null, null,
-          (GLib.HashFunc) ImFieldDetails.hash,
-          (GLib.EqualFunc) ImFieldDetails.equal);
+          null, null, AbstractFieldDetails<string>.hash_static,
+          AbstractFieldDetails<string>.equal_static);
 
       foreach (var protocol2 in im_addresses.get_keys ())
         {
@@ -232,9 +231,8 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
        * table of them to set as the new property value */
       var new_web_service_addresses =
         new HashMultiMap<string, WebServiceFieldDetails> (
-            null, null,
-            (GLib.HashFunc) WebServiceFieldDetails.hash,
-            (GLib.EqualFunc) WebServiceFieldDetails.equal);
+            null, null, AbstractFieldDetails<string>.hash_static,
+            AbstractFieldDetails<string>.equal_static);
 
       foreach (var web_service2 in web_service_addresses.get_keys ())
         {
@@ -327,12 +325,12 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
           this.iid, this.display_id);
 
       this._im_addresses = new HashMultiMap<string, ImFieldDetails> (
-          null, null, ImFieldDetails.hash, (EqualFunc) ImFieldDetails.equal);
+          null, null, AbstractFieldDetails<string>.hash_static,
+          AbstractFieldDetails<string>.equal_static);
       this._web_service_addresses =
         new HashMultiMap<string, WebServiceFieldDetails> (
-            null, null,
-            (GLib.HashFunc) WebServiceFieldDetails.hash,
-            (GLib.EqualFunc) WebServiceFieldDetails.equal);
+          null, null, AbstractFieldDetails<string>.hash_static,
+          AbstractFieldDetails<string>.equal_static);
       this._anti_links = new HashSet<string> ();
       this._anti_links_ro = this._anti_links.read_only_view;
 

@@ -58,8 +58,7 @@ public class IndividualRetrievalTests : Folks.TestCase
           "jabber=bar@jabber.org\n");
 
       /* Create a set of the individuals we expect to see */
-      HashSet<string> expected_individuals = new HashSet<string> (str_hash,
-          str_equal);
+      HashSet<string> expected_individuals = new HashSet<string> ();
 
       expected_individuals.add ("0");
       expected_individuals.add ("1");

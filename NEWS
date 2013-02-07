@@ -2,9 +2,11 @@ Overview of changes from libfolks 0.8.0 to libfolks 0.9.0
 =========================================================
 
 Dependencies:
+• libgee ≥ 0.8.4
 
 Major changes:
 • Added an ofono backend
+• Ported to libgee 0.8.x
 
 Bugs fixed:
 • Bug 682941 — API to configure input of aggregation
@@ -34,6 +36,7 @@ Bugs fixed:
 • Bug 691923 — Don't rebuild docs on every "make" run
 • Bug 692122 — build: Don't use make functions for defining TESTS
 • Bug 693435 — eds test: create-remove-stores fails sporadically
+• Bug 673918 — Port to newer libgee
 
 API changes:
 • Add Backend.enable_persona_store and disable_persona_store.

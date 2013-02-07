@@ -113,8 +113,8 @@ public class SetNotesTests : Folks.TestCase
 
               Gee.HashSet<NoteFieldDetails> notes =
                   new HashSet<NoteFieldDetails> (
-                          (GLib.HashFunc) NoteFieldDetails.hash,
-                          (GLib.EqualFunc) NoteFieldDetails.equal);
+                      AbstractFieldDetails<string>.hash_static,
+                      AbstractFieldDetails<string>.equal_static);
               var n = new NoteFieldDetails ("some note");
               notes.add ((owned) n);
 

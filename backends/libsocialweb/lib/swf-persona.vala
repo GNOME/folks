@@ -151,13 +151,13 @@ public class Swf.Persona : Folks.Persona,
 
   private HashMultiMap<string, ImFieldDetails> _im_addresses =
       new HashMultiMap<string, ImFieldDetails> (null, null,
-          ImFieldDetails.hash, (EqualFunc) ImFieldDetails.equal);
+          AbstractFieldDetails<string>.hash_static,
+          AbstractFieldDetails<string>.equal_static);
 
   private HashMultiMap<string, WebServiceFieldDetails> _web_service_addresses =
       new HashMultiMap<string, WebServiceFieldDetails> (
-          null, null,
-          (GLib.HashFunc) WebServiceFieldDetails.hash,
-          (GLib.EqualFunc) WebServiceFieldDetails.equal);
+          null, null, AbstractFieldDetails<string>.hash_static,
+          AbstractFieldDetails<string>.equal_static);
 
   /**
    * {@inheritDoc}
@@ -391,8 +391,8 @@ public class Swf.Persona : Folks.Persona,
         }
 
       var urls = new HashSet<UrlFieldDetails> (
-          (GLib.HashFunc) UrlFieldDetails.hash,
-          (GLib.EqualFunc) UrlFieldDetails.equal);
+          AbstractFieldDetails<string>.hash_static,
+          AbstractFieldDetails<string>.equal_static);
 
       var website = contact.get_value ("url");
       if (website != null)

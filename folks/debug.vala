@@ -237,7 +237,7 @@ public class Folks.Debug : Object
       lock (retval._domains)
         {
           retval._all = false;
-          retval._domains = new HashSet<string> (str_hash, str_equal);
+          retval._domains = new HashSet<string> ();
 
           if (debug_flags != null && debug_flags != "")
             {

@@ -132,8 +132,8 @@ public class SetDuplicateEmailTests : Folks.TestCase
           if (this._has_email ((Trf.Persona) p, this._email_1))
             {
               var emails1 = new HashSet<EmailFieldDetails> (
-                  (GLib.HashFunc) EmailFieldDetails.hash,
-                  (GLib.EqualFunc) EmailFieldDetails.equal);
+                  AbstractFieldDetails<string>.hash_static,
+                  AbstractFieldDetails<string>.equal_static);
               var email_1 = new EmailFieldDetails (this._email_1);
               emails1.add (email_1);
               ((EmailDetails) p).email_addresses = emails1;
@@ -200,8 +200,8 @@ public class SetDuplicateEmailTests : Folks.TestCase
 
       val = Value (typeof (Set));
       var emails1 = new HashSet<EmailFieldDetails> (
-          (GLib.HashFunc) EmailFieldDetails.hash,
-          (GLib.EqualFunc) EmailFieldDetails.equal);
+          AbstractFieldDetails<string>.hash_static,
+          AbstractFieldDetails<string>.equal_static);
       var email_1 = new EmailFieldDetails (this._email_1);
       emails1.add (email_1);
       val.set_object (emails1);
