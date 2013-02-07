@@ -389,6 +389,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
    * - PersonaStore.detail_key (PersonaDetail.WEB_SERVICE_ADDRESSES)
    * - PersonaStore.detail_key (PersonaDetail.NOTES)
    * - PersonaStore.detail_key (PersonaDetail.URLS)
+   * - PersonaStore.detail_key (PersonaDetail.GROUPS)
    *
    * See {@link Folks.PersonaStore.add_persona_from_details}.
    *
@@ -414,6 +415,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
       var iter = HashTableIter<string, Value?> (details);
       unowned string k;
       unowned Value? _v;
+      bool is_fav = false; // Remember this for _set_contact_groups.
 
       while (iter.next (out k, out _v) == true)
         {
@@ -535,10 +537,16 @@ public class Edsf.PersonaStore : Folks.PersonaStore
                 (Set<RoleFieldDetails>) v.get_object ();
               this._set_contact_roles (contact, roles);
             }
+          else if (k == Folks.PersonaStore.detail_key (PersonaDetail.GROUPS))
+            {
+              Set<string> groups =
+                (Set<string>) v.get_object ();
+              this._set_contact_groups (contact, groups, is_fav);
+            }
           else if (k == Folks.PersonaStore.detail_key (
                   PersonaDetail.IS_FAVOURITE))
             {
-              bool is_fav = v.get_boolean ();
+              is_fav = v.get_boolean ();
               this._set_contact_is_favourite (contact, is_fav);
             }
         }
