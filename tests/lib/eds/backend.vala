@@ -155,10 +155,11 @@ public class EdsTest.Backend
 
       var source_file_content = ("[Data Source]\n" +
           "DisplayName=%s\n" +
+          "Enabled=true\n" +
           "Parent=local-stub\n" +
           "\n" +
           "[Address Book]\n" +
-          "BackendName=local").printf (this._addressbook_name);
+          "BackendName=local\n").printf (this._addressbook_name);
 
       /* Build a SourceRegistry to manage the sources. */
       this._source_registry = yield create_source_registry (null);
