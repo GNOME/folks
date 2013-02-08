@@ -386,6 +386,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
    * - PersonaStore.detail_key (PersonaDetail.ROLES)
    * - PersonaStore.detail_key (PersonaDetail.STRUCTURED_NAME)
    * - PersonaStore.detail_key (PersonaDetail.LOCAL_IDS)
+   * - PersonaStore.detail_key (PersonaDetail.LOCATION)
    * - PersonaStore.detail_key (PersonaDetail.WEB_SERVICE_ADDRESSES)
    * - PersonaStore.detail_key (PersonaDetail.NOTES)
    * - PersonaStore.detail_key (PersonaDetail.URLS)
@@ -502,6 +503,11 @@ public class Edsf.PersonaStore : Folks.PersonaStore
             {
               Set<string> local_ids = (Set<string>) v.get_object ();
               this._set_contact_local_ids (contact, local_ids);
+            }
+          else if (k == Folks.PersonaStore.detail_key (PersonaDetail.LOCATION))
+            {
+              var location = (Location?) v.get_object ();
+              this._set_contact_location (contact, location);
             }
           else if (k == Folks.PersonaStore.detail_key
               (PersonaDetail.WEB_SERVICE_ADDRESSES))
@@ -1162,6 +1168,8 @@ public class Edsf.PersonaStore : Folks.PersonaStore
           case ContactField.FAMILY_NAME:
           case ContactField.NAME:
             return PersonaDetail.STRUCTURED_NAME;
+          case ContactField.GEO:
+            return PersonaDetail.LOCATION;
           case ContactField.NICKNAME:
             return PersonaDetail.NICKNAME;
           case ContactField.EMAIL_1:
@@ -1304,7 +1312,6 @@ public class Edsf.PersonaStore : Folks.PersonaStore
           case ContactField.LIST_SHOW_ADDRESSES:
           case ContactField.ANNIVERSARY:
           case ContactField.X509_CERT:
-          case ContactField.GEO:
           default:
             debug ("Unsupported/Unknown EDS field name '%s'.", eds_field_name);
             return PersonaDetail.INVALID;
@@ -2243,6 +2250,34 @@ public class Edsf.PersonaStore : Folks.PersonaStore
           attr.add_value (anti_link_uid);
 
           contact.add_attribute ((owned) attr);
+        }
+    }
+
+  internal async void _set_location (Edsf.Persona persona,
+      Location? location) throws PropertyError
+    {
+      if (!("location" in this._always_writeable_properties))
+        {
+          throw new PropertyError.NOT_WRITEABLE (
+              _("Location is not writeable on this contact."));
+        }
+
+      this._set_contact_location (persona.contact, location);
+      yield this._commit_modified_property (persona, "location");
+    }
+
+  private void _set_contact_location (E.Contact contact, Location? location)
+    {
+      if (location == null)
+        {
+          this._remove_attribute (contact, "GEO");
+        }
+      else
+        {
+          E.ContactGeo geo = new E.ContactGeo ();
+          geo.latitude = location.latitude;
+          geo.longitude = location.longitude;
+          contact.set (ContactField.GEO, geo);
         }
     }
 

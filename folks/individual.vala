@@ -92,6 +92,7 @@ public class Folks.Individual : Object,
     ImDetails,
     InteractionDetails,
     LocalIdDetails,
+    LocationDetails,
     NameDetails,
     NoteDetails,
     PresenceDetails,
@@ -579,6 +580,17 @@ public class Folks.Individual : Object,
       set { this.change_local_ids.begin (value); } /* not writeable */
     }
 
+  private Location? _location = null;
+  /**
+   * {@inheritDoc}
+   */
+  [CCode (notify = false)]
+  public Location? location
+    {
+      get { return this._location; }
+      set { this.change_location.begin (value); } /* not writeable */
+    }
+
   private DateTime? _birthday = null;
 
   /**
@@ -1053,6 +1065,11 @@ public class Folks.Individual : Object,
       this._update_local_ids (false);
     }
 
+  private void _notify_location_cb ()
+    {
+      this._update_location ();
+    }
+
   /**
    * Add or remove the Individual from the specified group.
    *
@@ -1257,6 +1274,7 @@ public class Folks.Individual : Object,
       this._update_notes (false);
       this._update_postal_addresses (false);
       this._update_local_ids (false);
+      this._update_location ();
     }
 
   /* Delegate to update the value of a property on this individual from the
@@ -1841,7 +1859,7 @@ public class Folks.Individual : Object,
           (this._notify_postal_addresses_cb);
       persona.notify["local-ids"].connect
           (this._notify_local_ids_cb);
-
+      persona.notify["location"].connect (this._notify_location_cb);
 
       if (persona is GroupDetails)
         {
@@ -1981,7 +1999,7 @@ public class Folks.Individual : Object,
       persona.notify["postal-addresses"].disconnect
           (this._notify_postal_addresses_cb);
       persona.notify["local-ids"].disconnect (this._notify_local_ids_cb);
-
+      persona.notify["location"].disconnect (this._notify_location_cb);
 
       if (persona is GroupDetails)
         {
@@ -2301,6 +2319,33 @@ public class Folks.Individual : Object,
 
               return false;
             }, emit_notification, force_update);
+    }
+
+  private void _update_location ()
+    {
+      this._update_single_valued_property (typeof (LocationDetails), (p) =>
+        {
+          return ((LocationDetails) p).location != null;
+        }, (a, b) =>
+        {
+          // TODO (https://bugzilla.gnome.org/show_bug.cgi?id=627400): pick the "better" location information. For now, pick more or less randomly.
+          return 0;
+        }, "location", (p) =>
+        {
+          unowned Location? new_location = null;
+
+          if (p != null)
+            {
+              new_location = ((LocationDetails) p).location;
+            }
+
+          if ((new_location == null) != (this.location == null) /* adding or removing a location? */ ||
+              new_location != null && !new_location.equal (this.location) /* different value? */)
+            {
+              this._location = new_location;
+              this.notify_property ("location");
+            }
+        });
     }
 
   private void _update_postal_addresses (bool create_if_not_exist, bool emit_notification = true, bool force_update = true)

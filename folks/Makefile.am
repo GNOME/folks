@@ -73,6 +73,7 @@ libfolks_la_SOURCES = \
 	im-details.vala \
 	interaction-details.vala \
 	local-id-details.vala \
+	location-details.vala \
 	name-details.vala \
 	note-details.vala \
 	phone-details.vala \

@@ -45,6 +45,7 @@ public class Edsf.Persona : Folks.Persona,
     GroupDetails,
     ImDetails,
     LocalIdDetails,
+    LocationDetails,
     NameDetails,
     NoteDetails,
     PhoneDetails,
@@ -223,6 +224,29 @@ public class Edsf.Persona : Folks.Persona,
       throws PropertyError
     {
       yield ((Edsf.PersonaStore) this.store)._set_local_ids (this, local_ids);
+    }
+
+  private Location? _location = null;
+  /**
+   * {@inheritDoc}
+   *
+   * @since UNRELEASED
+   */
+  [CCode (notify = false)]
+  public Location? location
+    {
+      get { return this._location; }
+      set { this.change_location.begin (value); }
+    }
+
+  /**
+   * {@inheritDoc}
+   *
+   * @since UNRELEASED
+   */
+  public async void change_location (Location? location) throws PropertyError
+    {
+      yield ((Edsf.PersonaStore) this.store)._set_location (this, location);
     }
 
   private HashSet<PostalAddressFieldDetails>? _postal_addresses = null;
@@ -958,6 +982,7 @@ public class Edsf.Persona : Folks.Persona,
       this._postal_addresses_ro = this._postal_addresses.read_only_view;
       this._local_ids = new HashSet<string> ();
       this._local_ids_ro = this._local_ids.read_only_view;
+      this._location = null;
       this._web_service_addresses =
         new HashMultiMap<string, WebServiceFieldDetails> (
           null, null, AbstractFieldDetails<string>.hash_static,
@@ -1060,6 +1085,7 @@ public class Edsf.Persona : Folks.Persona,
       this._update_groups (false);
       this._update_notes (false);
       this._update_local_ids ();
+      this._update_location ();
       this._update_web_services_addresses ();
       this._update_gender ();
       this._update_birthday ();
@@ -2101,6 +2127,41 @@ public class Edsf.Persona : Folks.Persona,
           this._local_ids = new_local_ids;
           this._local_ids_ro = this._local_ids.read_only_view;
           this.notify_property ("local-ids");
+        }
+    }
+
+  private void _update_location ()
+    {
+      var _geo = this._get_property<E.ContactGeo> ("geo");
+
+      if (_geo != null)
+        {
+          if (this._location == null ||
+              // Report all changes to the location because someone must
+              // have changed the values intentionally.
+              !this._location.equal_coordinates (_geo.latitude, _geo.longitude))
+            {
+              if (this._location != null)
+                {
+                  // Update existing instance instead of destroying it
+                  // and creating a new one. Minimizes memory thrashing.
+                  this._location.latitude = _geo.latitude;
+                  this._location.longitude = _geo.longitude;
+                }
+              else
+                {
+                  this._location = new Location (_geo.latitude, _geo.longitude);
+                }
+              this.notify_property ("location");
+            }
+        }
+      else
+        {
+          if (this._location != null)
+            {
+              this._location = null;
+              this.notify_property ("location");
+            }
         }
     }
 

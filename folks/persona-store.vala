@@ -206,6 +206,13 @@ public enum Folks.PersonaDetail
   LOCAL_IDS,
 
   /**
+   * Field for {@link LocationDetails.location}.
+   *
+   * @since UNRELEASED
+   */
+  LOCATION,
+
+  /**
    * Field for {@link NameDetails.nickname}.
    *
    * @since 0.5.0
@@ -348,6 +355,7 @@ public abstract class Folks.PersonaStore : Object
     "im-addresses",
     "is-favourite",
     "local-ids",
+    "location",
     "nickname",
     "notes",
     "phone-numbers",
