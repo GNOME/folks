@@ -37,6 +37,8 @@ Bugs fixed:
 • Bug 692122 — build: Don't use make functions for defining TESTS
 • Bug 693435 — eds test: create-remove-stores fails sporadically
 • Bug 673918 — Port to newer libgee
+• Bug 692951 — Detail saving times out if the data sent is the same as the one
+  already in EDS
 
 API changes:
 • Add Backend.enable_persona_store and disable_persona_store.

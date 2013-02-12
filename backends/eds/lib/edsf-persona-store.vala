@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2011 Collabora Ltd.
+ * Copyright (C) 2013 Philip Withnall
  *
  * This library is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -1553,6 +1554,9 @@ public class Edsf.PersonaStore : Folks.PersonaStore
               _("Local IDs are not writeable on this contact."));
         }
 
+      if (Folks.Internal.equal_sets<string> (local_ids, persona.local_ids))
+        return;
+
       this._set_contact_local_ids (persona.contact, local_ids);
       yield this._commit_modified_property (persona, "local-ids");
     }
@@ -1578,6 +1582,9 @@ public class Edsf.PersonaStore : Folks.PersonaStore
           throw new PropertyError.NOT_WRITEABLE (
               _("The contact cannot be marked as favourite."));
         }
+
+      if (is_favourite == persona.is_favourite)
+        return;
 
       this._set_contact_is_favourite (persona.contact, is_favourite);
       /* If this is a Google Contacts address book, change the user's membership
@@ -1659,6 +1666,10 @@ public class Edsf.PersonaStore : Folks.PersonaStore
               _("E-mail addresses are not writeable on this contact."));
         }
 
+      if (Folks.Internal.equal_sets<EmailFieldDetails> (emails,
+          persona.email_addresses))
+        return;
+
       this._set_contact_attributes_string (persona.contact, emails,
           "EMAIL", E.ContactField.EMAIL);
       yield this._commit_modified_property (persona, "email-addresses");
@@ -1673,6 +1684,10 @@ public class Edsf.PersonaStore : Folks.PersonaStore
               _("Phone numbers are not writeable on this contact."));
         }
 
+      if (Folks.Internal.equal_sets<PhoneFieldDetails> (phones,
+          persona.phone_numbers))
+        return;
+
       this._set_contact_attributes_string (persona.contact, phones, "TEL",
           E.ContactField.TEL);
       yield this._commit_modified_property (persona, "phone-numbers");
@@ -1686,6 +1701,10 @@ public class Edsf.PersonaStore : Folks.PersonaStore
           throw new PropertyError.NOT_WRITEABLE (
               _("Postal addresses are not writeable on this contact."));
         }
+
+      if (Folks.Internal.equal_sets<PostalAddressFieldDetails> (postal_fds,
+          persona.postal_addresses))
+        return;
 
       this._set_contact_postal_addresses (persona.contact, postal_fds);
       yield this._commit_modified_property (persona, "postal-addresses");
@@ -1797,6 +1816,9 @@ public class Edsf.PersonaStore : Folks.PersonaStore
           throw new PropertyError.NOT_WRITEABLE (
               _("Notes are not writeable on this contact."));
         }
+
+      if (Folks.Internal.equal_sets<NoteFieldDetails> (notes, persona.notes))
+        return;
 
       this._set_contact_notes (persona.contact, notes);
       yield this._commit_modified_property (persona, "notes");
@@ -2061,6 +2083,9 @@ public class Edsf.PersonaStore : Folks.PersonaStore
               _("Groups are not writeable on this contact."));
         }
 
+      if (Folks.Internal.equal_sets<string> (groups, persona.groups))
+        return;
+
       this._set_contact_groups (persona.contact, groups, persona.is_favourite);
       yield this._commit_modified_property (persona, "groups");
     }
@@ -2072,6 +2097,10 @@ public class Edsf.PersonaStore : Folks.PersonaStore
         {
           throw new PropertyError.NOT_WRITEABLE (_("My Contacts is only available for Google Contacts"));
         }
+
+      if (Folks.Internal.equal_sets<string> (system_groups,
+          persona.system_groups))
+        return;
 
       this._set_contact_system_groups (persona.contact, system_groups);
       yield this._commit_modified_property (persona, "system-groups");
@@ -2139,6 +2168,9 @@ public class Edsf.PersonaStore : Folks.PersonaStore
           throw new PropertyError.NOT_WRITEABLE (
               _("Gender is not writeable on this contact."));
         }
+
+      if (gender == persona.gender)
+        return;
 
       this._set_contact_gender (persona.contact, gender);
       yield this._commit_modified_property (persona, "gender");
