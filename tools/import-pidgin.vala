@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2010 Collabora Ltd.
+ * Copyright (C) 2013 Philip Withnall
  *
  * This library is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -223,8 +224,7 @@ public class Folks.Importers.Pidgin : Folks.Importer
         }
 
       /* Create or update the relevant Persona */
-      HashTable<string, Value?> details =
-          new HashTable<string, Value?> (str_hash, str_equal);
+      var details = new GLib.HashTable<string, Value?> (str_hash, str_equal);
       Value im_addresses_value = Value (typeof (MultiMap));
       im_addresses_value.set_object (im_addresses);
       details.insert ("im-addresses", im_addresses_value);
