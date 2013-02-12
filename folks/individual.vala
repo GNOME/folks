@@ -1721,14 +1721,16 @@ public class Folks.Individual : Object,
           () =>
             {
               this._im_addresses = new HashMultiMap<string, ImFieldDetails> (
-                  null, null, AbstractFieldDetails<string>.hash_static,
-                  AbstractFieldDetails<string>.equal_static);
+                  null, null,
+                  (Gee.HashDataFunc) AbstractFieldDetails<string>.hash_static,
+                  (Gee.EqualDataFunc) AbstractFieldDetails<string>.equal_static);
             },
           () =>
             {
               var new_im_addresses = new HashMultiMap<string, ImFieldDetails> (
-                  null, null, AbstractFieldDetails<string>.hash_static,
-                  AbstractFieldDetails<string>.equal_static);
+                  null, null,
+                  (Gee.HashDataFunc) AbstractFieldDetails<string>.hash_static,
+                  (Gee.EqualDataFunc) AbstractFieldDetails<string>.equal_static);
 
               foreach (var persona in this._persona_set)
                 {
@@ -1770,15 +1772,19 @@ public class Folks.Individual : Object,
             {
               this._web_service_addresses =
                   new HashMultiMap<string, WebServiceFieldDetails> (null, null,
-                      AbstractFieldDetails<string>.hash_static,
-                      AbstractFieldDetails<string>.equal_static);
+                      (Gee.HashDataFunc)
+                          AbstractFieldDetails<string>.hash_static,
+                      (Gee.EqualDataFunc)
+                          AbstractFieldDetails<string>.equal_static);
             },
           () =>
             {
               var new_web_service_addresses =
                   new HashMultiMap<string, WebServiceFieldDetails> (null, null,
-                      AbstractFieldDetails<string>.hash_static,
-                      AbstractFieldDetails<string>.equal_static);
+                      (Gee.HashDataFunc)
+                          AbstractFieldDetails<string>.hash_static,
+                      (Gee.EqualDataFunc)
+                          AbstractFieldDetails<string>.equal_static);
 
               foreach (var persona in this._persona_set)
                 {

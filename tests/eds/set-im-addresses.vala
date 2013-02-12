@@ -126,8 +126,11 @@ public class SetIMAddressesTests : Folks.TestCase
               foreach (var p in i.personas)
                 {
                   var im_addrs = new HashMultiMap<string, ImFieldDetails> (
-                      null, null, AbstractFieldDetails<string>.hash_static,
-                      AbstractFieldDetails<string>.equal_static);
+                      null, null,
+                      (Gee.HashDataFunc)
+                          AbstractFieldDetails<string>.hash_static,
+                      (Gee.EqualDataFunc)
+                          AbstractFieldDetails<string>.equal_static);
                   im_addrs.set ("jabber",
                       new ImFieldDetails ("bernie@example.org"));
                   ((ImDetails) p).im_addresses = im_addrs;

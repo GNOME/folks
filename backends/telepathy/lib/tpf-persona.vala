@@ -389,8 +389,8 @@ public class Tpf.Persona : Folks.Persona,
    * doesn't as it's a linkable property, so always has to be loaded anyway. */
   private HashMultiMap<string, ImFieldDetails> _im_addresses =
       new HashMultiMap<string, ImFieldDetails> (null, null,
-          AbstractFieldDetails<string>.hash_static,
-          AbstractFieldDetails<string>.equal_static);
+          (Gee.HashDataFunc) AbstractFieldDetails<string>.hash_static,
+          (Gee.EqualDataFunc) AbstractFieldDetails<string>.equal_static);
 
   /**
    * A mapping of IM protocol to an (unordered) set of IM addresses.
