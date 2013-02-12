@@ -58,7 +58,6 @@ TESTS = \
 	persona-store-capabilities \
 	individual-retrieval \
 	individual-properties \
-	init \
 	$(NULL)
 
 noinst_PROGRAMS = \
@@ -83,10 +82,6 @@ individual_zeitgeist_SOURCES = \
 	individual-zeitgeist.vala \
 	$(NULL)
 
-init_SOURCES = \
-	init.vala \
-	$(NULL)
-
 persona_store_capabilities_SOURCES = \
 	persona-store-capabilities.vala \
 	$(NULL)
@@ -96,7 +91,6 @@ BUILT_SOURCES = \
 	individual_properties_vala.stamp \
 	individual_retrieval_vala.stamp \
 	individual_zeitgeist_vala.stamp \
-	init_vala.stamp \
 	persona_store_capabilities_vala.stamp \
 	$(NULL)
 

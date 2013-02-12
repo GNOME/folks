@@ -75,7 +75,6 @@ noinst_PROGRAMS = \
 	store-removed \
 	anti-linking \
 	enable-disable-stores \
-	create-remove-stores \
 	set-is-favourite \
 	$(NULL)
 
@@ -217,10 +216,6 @@ link_personas_diff_stores_SOURCES = \
 enable_disable_stores_SOURCES = \
 	enable-disable-stores.vala \
 	$(NULL)
-
-create_remove_stores_SOURCES = \
-    create-remove-stores.vala \
-    $(NULL)
 
 set_is_favourite_SOURCES = \
 	set-is-favourite.vala \
