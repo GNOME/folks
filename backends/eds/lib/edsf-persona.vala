@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2011 Collabora Ltd.
+ * Copyright (C) 2013 Philip Withnall
  *
  * This library is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -150,7 +151,7 @@ public class Edsf.Persona : Folks.Persona,
                                                   "local-ids",
                                                   "web-service-addresses" };
 
-  private static HashTable<string, E.ContactField>? _im_eds_map = null;
+  private static GLib.HashTable<string, E.ContactField>? _im_eds_map = null;
 
   private E.Contact _contact; /* should be set on construct */
 
@@ -1886,16 +1887,17 @@ public class Edsf.Persona : Folks.Persona,
   /**
    * build a table of im protocols / im protocol aliases
    */
-  internal static HashTable<string, E.ContactField> _get_im_eds_map ()
+  internal static GLib.HashTable<string, E.ContactField> _get_im_eds_map ()
     {
-      HashTable<string, E.ContactField> retval;
+      GLib.HashTable<string, E.ContactField> retval;
 
       lock (Edsf.Persona._im_eds_map)
         {
           if (Edsf.Persona._im_eds_map == null)
             {
               var table =
-                  new HashTable<string, E.ContactField> (str_hash, str_equal);
+                  new GLib.HashTable<string, E.ContactField> (str_hash,
+                      str_equal);
 
               table.insert ("aim", ContactField.IM_AIM);
               table.insert ("yahoo", ContactField.IM_YAHOO);
