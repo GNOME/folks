@@ -51,6 +51,7 @@ libfolks_eds_la_VALAFLAGS = \
 	--pkg gio-2.0 \
 	--pkg gobject-2.0 \
 	--pkg libebook-1.2 \
+	--pkg libebook-contacts-1.2 \
 	--pkg libedataserver-1.2 \
 	--pkg libxml-2.0 \
 	--includedir folks \

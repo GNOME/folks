@@ -626,21 +626,21 @@ public class Edsf.PersonaStore : Folks.PersonaStore
         }
       catch (GLib.Error e)
         {
-          if (e.domain == BookClient.error_quark ())
+          if (e is BookClientError)
             {
-              switch ((BookClientError) e.code)
+              if (e is BookClientError.CONTACT_NOT_FOUND)
                 {
-                  case BookClientError.CONTACT_NOT_FOUND:
-                    /* Not an error, since we've got nothing to do! */
-                    return;
-                  /* We don't expect to receive any of the error codes below: */
-                  case BookClientError.NO_SUCH_BOOK:
-                  case BookClientError.CONTACT_ID_ALREADY_EXISTS:
-                  case BookClientError.NO_SUCH_SOURCE:
-                  case BookClientError.NO_SPACE:
-                  default:
-                    /* Fall out */
-                    break;
+                  /* Not an error, since we've got nothing to do! */
+                  return;
+                }
+
+              /* We don't expect to receive any of the error codes below: */
+              if (e is BookClientError.NO_SUCH_BOOK ||
+                  e is BookClientError.CONTACT_ID_ALREADY_EXISTS ||
+                  e is BookClientError.NO_SUCH_SOURCE ||
+                  e is BookClientError.NO_SPACE)
+                {
+                  /* Fall out */
                 }
             }
           else if (e.domain == Client.error_quark ())
@@ -760,20 +760,17 @@ public class Edsf.PersonaStore : Folks.PersonaStore
               /* Remove the persona store on error */
               this.removed ();
 
-              if (e1.domain == BookClient.error_quark ())
+              if (e1 is BookClientError)
                 {
-                  switch ((BookClientError) e1.code)
+                  /* We don't expect to receive any of the error codes
+                   * below: */
+                  if (e1 is BookClientError.NO_SUCH_BOOK ||
+                      e1 is BookClientError.NO_SUCH_SOURCE ||
+                      e1 is BookClientError.CONTACT_NOT_FOUND ||
+                      e1 is BookClientError.CONTACT_ID_ALREADY_EXISTS ||
+                      e1 is BookClientError.NO_SPACE)
                     {
-                      /* We don't expect to receive any of the error codes
-                       * below: */
-                      case BookClientError.NO_SUCH_BOOK:
-                      case BookClientError.NO_SUCH_SOURCE:
-                      case BookClientError.CONTACT_NOT_FOUND:
-                      case BookClientError.CONTACT_ID_ALREADY_EXISTS:
-                      case BookClientError.NO_SPACE:
-                      default:
                         /* Fall out */
-                        break;
                     }
                 }
               else if (e1.domain == Client.error_quark ())
@@ -954,20 +951,17 @@ public class Edsf.PersonaStore : Folks.PersonaStore
               /* Remove the persona store on error */
               this.removed ();
 
-              if (e3.domain == BookClient.error_quark ())
+              if (e3 is BookClientError)
                 {
-                  switch ((BookClientError) e3.code)
+                  /* We don't expect to receive any of the error codes
+                   * below: */
+                  if (e3 is BookClientError.NO_SUCH_BOOK ||
+                      e3 is BookClientError.NO_SUCH_SOURCE ||
+                      e3 is BookClientError.CONTACT_NOT_FOUND ||
+                      e3 is BookClientError.CONTACT_ID_ALREADY_EXISTS ||
+                      e3 is BookClientError.NO_SPACE)
                     {
-                      /* We don't expect to receive any of the error codes
-                       * below: */
-                      case BookClientError.NO_SUCH_BOOK:
-                      case BookClientError.NO_SUCH_SOURCE:
-                      case BookClientError.CONTACT_NOT_FOUND:
-                      case BookClientError.CONTACT_ID_ALREADY_EXISTS:
-                      case BookClientError.NO_SPACE:
-                      default:
                         /* Fall out */
-                        break;
                     }
                 }
               else if (e3.domain == Client.error_quark ())
@@ -2371,19 +2365,16 @@ public class Edsf.PersonaStore : Folks.PersonaStore
   private PropertyError e_client_error_to_property_error (string property_name,
       GLib.Error error_in)
     {
-      if (error_in.domain == BookClient.error_quark ())
+      if (error_in is BookClientError)
         {
-          switch ((BookClientError) error_in.code)
+          /* We don't expect to receive any of the error codes below: */
+          if (error_in is BookClientError.CONTACT_NOT_FOUND ||
+              error_in is BookClientError.NO_SUCH_BOOK ||
+              error_in is BookClientError.CONTACT_ID_ALREADY_EXISTS ||
+              error_in is BookClientError.NO_SUCH_SOURCE ||
+              error_in is BookClientError.NO_SPACE)
             {
-              /* We don't expect to receive any of the error codes below: */
-              case BookClientError.CONTACT_NOT_FOUND:
-              case BookClientError.NO_SUCH_BOOK:
-              case BookClientError.CONTACT_ID_ALREADY_EXISTS:
-              case BookClientError.NO_SUCH_SOURCE:
-              case BookClientError.NO_SPACE:
-              default:
                 /* Fall out */
-                break;
             }
         }
       else if (error_in.domain == Client.error_quark ())

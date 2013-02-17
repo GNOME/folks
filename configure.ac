@@ -177,7 +177,7 @@ VALA_REQUIRED=0.17.6
 VALADOC_REQUIRED=0.3.1
 TRACKER_SPARQL_MAJOR=0.16
 TRACKER_SPARQL_REQUIRED=0.15.2
-EBOOK_REQUIRED=3.5.3
+EBOOK_REQUIRED=3.7.90
 EDATASERVER_REQUIRED=3.5.3.1
 ZEITGEIST_REQUIRED=0.3.14
 GEE_REQUIRED=0.8.4
@@ -217,7 +217,8 @@ AS_IF([test x$enable_tracker_backend = xyes], [
 ])
 
 AS_IF([test x$enable_eds_backend = xyes], [
-        PKG_CHECK_MODULES([EBOOK], [libebook-1.2 >= $EBOOK_REQUIRED])
+        PKG_CHECK_MODULES([EBOOK], [libebook-1.2 >= $EBOOK_REQUIRED
+                                    libebook-contacts-1.2 >= $EBOOK_REQUIRED])
         PKG_CHECK_MODULES([EDATASERVER], [libedataserver-1.2 >= $EDATASERVER_REQUIRED])
 ])
 
@@ -312,7 +313,7 @@ AS_IF([test "x$enable_vala" = "xyes"], [
         ])
 
         AS_IF([test x$enable_eds_backend = xyes], [
-          VALA_CHECK_PACKAGES([libebook-1.2 libedataserver-1.2 libxml-2.0])
+          VALA_CHECK_PACKAGES([libebook-1.2 libebook-contacts-1.2 libedataserver-1.2 libxml-2.0])
         ])
 
         AS_IF([test x$enable_ofono_backend = xyes], [
