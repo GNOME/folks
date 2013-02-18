@@ -6,6 +6,8 @@ Dependencies:
 Major changes:
 
 Bugs fixed:
+• Bug 693333 - eds: creating a contact with specific groups and
+  fix "favourite" group setting for Android
 
 API changes:
 

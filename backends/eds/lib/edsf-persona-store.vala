@@ -547,7 +547,9 @@ public class Edsf.PersonaStore : Folks.PersonaStore
                   PersonaDetail.IS_FAVOURITE))
             {
               is_fav = v.get_boolean ();
-              this._set_contact_is_favourite (contact, is_fav);
+              // Use _set_is_favourite here to get the contact added
+              // to the Android "favourite" group.
+              this._set_is_favourite (contact, is_fav);
             }
         }
 
