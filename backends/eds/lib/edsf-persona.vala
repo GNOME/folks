@@ -526,8 +526,8 @@ public class Edsf.Persona : Folks.Persona,
    * doesn't as it's a linkable property, so always has to be loaded anyway. */
   private HashMultiMap<string, ImFieldDetails> _im_addresses =
       new HashMultiMap<string, ImFieldDetails> (null, null,
-          (Gee.HashDataFunc) AbstractFieldDetails<string>.hash_static,
-          (Gee.EqualDataFunc) AbstractFieldDetails<string>.equal_static);
+          AbstractFieldDetails<string>.hash_static,
+          AbstractFieldDetails<string>.equal_static);
 
   /**
    * {@inheritDoc}
@@ -960,9 +960,8 @@ public class Edsf.Persona : Folks.Persona,
       this._local_ids_ro = this._local_ids.read_only_view;
       this._web_service_addresses =
         new HashMultiMap<string, WebServiceFieldDetails> (
-          null, null,
-          (Gee.HashDataFunc) AbstractFieldDetails<string>.hash_static,
-          (Gee.EqualDataFunc) AbstractFieldDetails<string>.equal_static);
+          null, null, AbstractFieldDetails<string>.hash_static,
+          AbstractFieldDetails<string>.equal_static);
       this._email_addresses_ro = this._email_addresses.read_only_view;
       this._groups = new HashSet<string> ();
       this._groups_ro = this._groups.read_only_view;
@@ -1301,9 +1300,8 @@ public class Edsf.Persona : Folks.Persona,
   private void _update_web_services_addresses ()
     {
       var new_services = new HashMultiMap<string, WebServiceFieldDetails> (
-          null, null,
-          (Gee.HashDataFunc) AbstractFieldDetails<string>.hash_static,
-          (Gee.EqualDataFunc) AbstractFieldDetails<string>.equal_static);
+          null, null, AbstractFieldDetails<string>.hash_static,
+          AbstractFieldDetails<string>.equal_static);
 
       var services = this.contact.get_attribute ("X-FOLKS-WEB-SERVICES-IDS");
       if (services != null)
@@ -1619,8 +1617,8 @@ public class Edsf.Persona : Folks.Persona,
     {
       var im_eds_map = Persona._get_im_eds_map ();
       var new_im_addresses = new HashMultiMap<string, ImFieldDetails> (null,
-          null, (Gee.HashDataFunc) AbstractFieldDetails<string>.hash_static,
-          (Gee.EqualDataFunc) AbstractFieldDetails<string>.equal_static);
+          null, AbstractFieldDetails<string>.hash_static,
+          AbstractFieldDetails<string>.equal_static);
 
       foreach (var im_proto in im_eds_map.get_keys ())
         {

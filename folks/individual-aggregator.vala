@@ -1983,14 +1983,12 @@ public class Folks.IndividualAggregator : Object
     {
       /* ``protocols_addrs_set`` will be passed to the new Kf.Persona */
       var protocols_addrs_set = new HashMultiMap<string, ImFieldDetails> (
-            null, null,
-            (Gee.HashDataFunc) AbstractFieldDetails<string>.hash_static,
-            (Gee.EqualDataFunc) AbstractFieldDetails<string>.equal_static);
+            null, null, AbstractFieldDetails<string>.hash_static,
+            AbstractFieldDetails<string>.equal_static);
       var web_service_addrs_set =
         new HashMultiMap<string, WebServiceFieldDetails> (
-            null, null,
-            (Gee.HashDataFunc) AbstractFieldDetails<string>.hash_static,
-            (Gee.EqualDataFunc) AbstractFieldDetails<string>.equal_static);
+            null, null, AbstractFieldDetails<string>.hash_static,
+            AbstractFieldDetails<string>.equal_static);
 
       /* List of local_ids */
       var local_ids = new Gee.HashSet<string> ();
