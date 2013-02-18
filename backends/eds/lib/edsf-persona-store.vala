@@ -87,7 +87,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
    * @throws GLib.Error if an error occurred while creating or committing to
    * the {@link E.SourceRegistry}
    *
-   * @since UNRELEASED
+   * @since 0.9.0
    */
   public static async void create_address_book (string id) throws GLib.Error
     {
@@ -121,7 +121,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
    * @param store the PersonaStore to delete the address book for.
    * @throws GLib.Error if an error occurred in {@link E.Source.remove}
    *
-   * @since UNRELEASED
+   * @since 0.9.0
    */
   public static async void remove_address_book (Edsf.PersonaStore store) throws GLib.Error
     {

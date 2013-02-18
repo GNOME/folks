@@ -335,7 +335,7 @@ public class Folks.IndividualAggregator : Object
    *
    * @param store the {@link BackendStore} to use instead of the default one.
    *
-   * @since UNRELEASED
+   * @since 0.9.0
    */
   public IndividualAggregator.with_backend_store (BackendStore store)
   {

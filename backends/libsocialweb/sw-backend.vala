@@ -56,7 +56,7 @@ public class Folks.Backends.Sw.Backend : Folks.Backend
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.9.0
    */
   public override void enable_persona_store (Folks.PersonaStore store)
     {
@@ -69,7 +69,7 @@ public class Folks.Backends.Sw.Backend : Folks.Backend
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.9.0
    */
   public override void disable_persona_store (Folks.PersonaStore store)
     {
@@ -82,7 +82,7 @@ public class Folks.Backends.Sw.Backend : Folks.Backend
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.9.0
    */
   public override void set_persona_stores (Set<string>? storeids)
     {
@@ -245,7 +245,7 @@ public class Folks.Backends.Sw.Backend : Folks.Backend
    *
    * @param store the store to add.
    * @param notify whether or not to emit notification signals.
-   * @since UNRELEASED
+   * @since 0.9.0
    */
   private void _add_store (PersonaStore store, bool notify = true)
     {
@@ -263,7 +263,7 @@ public class Folks.Backends.Sw.Backend : Folks.Backend
    *
    * @param store the store to remove.
    * @param notify whether or not to emit notification signals.
-   * @since UNRELEASED
+   * @since 0.9.0
    */
   private void _remove_store (PersonaStore store, bool notify = true)
     {

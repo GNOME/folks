@@ -98,7 +98,7 @@ public abstract class Folks.Backend : Object
    *
    * @param store the {@link PersonaStore} to disable.
    *
-   * @since UNRELEASED
+   * @since 0.9.0
    */
   public abstract void disable_persona_store (PersonaStore store);
 
@@ -112,7 +112,7 @@ public abstract class Folks.Backend : Object
    *
    * @param store the {@link PersonaStore} to enable.
    *
-   * @since UNRELEASED
+   * @since 0.9.0
    */
   public abstract void enable_persona_store (PersonaStore store);
 
@@ -130,7 +130,7 @@ public abstract class Folks.Backend : Object
    *
    * @param storeids a Set of {@link PersonaStore} IDs to use.
    *
-   * @since UNRELEASED
+   * @since 0.9.0
    */
   public abstract void set_persona_stores (Set<string>? storeids);
 

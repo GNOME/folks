@@ -642,7 +642,7 @@ public class Edsf.Persona : Folks.Persona,
    *
    * @param system_groups the complete set of system group ids the contact should be a member of
    * @throws PropertyError if setting the groups failed
-   * @since UNRELEASED
+   * @since 0.9.0
    */
   public async void change_system_groups (Set<string> system_groups) throws PropertyError
     {
@@ -664,7 +664,7 @@ public class Edsf.Persona : Folks.Persona,
    *
    * @param in_personal Whether to add or remove the personal group membership
    * @throws PropertyError if the address book is not Google, or if setting the property failed
-   * @since UNRELEASED
+   * @since 0.9.0
    */
   public async void change_in_google_personal_group (bool in_personal) throws PropertyError
     {
@@ -833,7 +833,7 @@ public class Edsf.Persona : Folks.Persona,
    * The complete set of system group identifiers the contact belongs to.
    * See {@link Persona.change_system_groups} for details.
    *
-   * @since UNRELEASED
+   * @since 0.9.0
    */
   [CCode (notify = false)]
   public Set<string>? system_groups

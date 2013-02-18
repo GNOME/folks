@@ -34,7 +34,7 @@ extern const string BACKEND_NAME;
  * devices using the Ofono Phonebook D-Bus API and presents them
  * using one {@link PersonaStore} per device.
  *
- * @since UNRELEASED
+ * @since 0.9.0
  */
 public class Folks.Backends.Ofono.Backend : Folks.Backend
 {

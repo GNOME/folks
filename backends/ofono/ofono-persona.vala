@@ -29,7 +29,7 @@ using Folks.Backends.Ofono;
 /**
  * A persona subclass which represents a single persona from a simple key file.
  *
- * @since UNRELEASED
+ * @since 0.9.0
  */
 public class Folks.Backends.Ofono.Persona : Folks.Persona,
     EmailDetails,
@@ -125,7 +125,7 @@ public class Folks.Backends.Ofono.Persona : Folks.Persona,
    * @param vcard the vCard data to use for this {@link Persona}.
    * @param store the {@link PersonaStore} this {@link Persona} belongs to.
    *
-   * @since UNRELEASED
+   * @since 0.9.0
    */
   public Persona (string vcard, Folks.PersonaStore store)
     {

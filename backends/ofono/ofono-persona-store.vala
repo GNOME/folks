@@ -31,7 +31,7 @@ using Folks.Backends.Ofono;
  * A persona store which is associated with a single Ofono device. It will 
  * create a {@link Persona} for each contact on the SIM card phonebook.
  *
- * @since UNRELEASED
+ * @since 0.9.0
  */
 public class Folks.Backends.Ofono.PersonaStore : Folks.PersonaStore
 {
@@ -124,7 +124,7 @@ public class Folks.Backends.Ofono.PersonaStore : Folks.PersonaStore
    * @param path the D-Bus object path of this modem
    * @param alias the name this modem should display to users
    *
-   * @since UNRELEASED
+   * @since 0.9.0
    */
   public PersonaStore (ObjectPath path, string alias)
     {
@@ -261,7 +261,7 @@ public class Folks.Backends.Ofono.PersonaStore : Folks.PersonaStore
    *
    * @param persona the {@link Persona} to remove.
    *
-   * @since UNRELEASED
+   * @since 0.9.0
    */
   public override async void remove_persona (Folks.Persona persona)
       throws Folks.PersonaStoreError
@@ -280,7 +280,7 @@ public class Folks.Backends.Ofono.PersonaStore : Folks.PersonaStore
    *
    * @param details the details of the {@link Persona} to add.
    *
-   * @since UNRELEASED
+   * @since 0.9.0
    */
   public override async Folks.Persona? add_persona_from_details (
       HashTable<string, Value?> details) throws Folks.PersonaStoreError

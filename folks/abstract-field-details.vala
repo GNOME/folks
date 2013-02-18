@@ -288,7 +288,7 @@ public abstract class Folks.AbstractFieldDetails<T> : Object
    *
    * @return whether the elemants are equal
    *
-   * @since UNRELEASED
+   * @since 0.9.0
    */
   public static bool equal_static (AbstractFieldDetails left,
                                    AbstractFieldDetails right)
@@ -444,7 +444,7 @@ public abstract class Folks.AbstractFieldDetails<T> : Object
    *
    * @return the hash value
    *
-   * @since UNRELEASED
+   * @since 0.9.0
    */
   public static uint hash_static (AbstractFieldDetails value)
     {
