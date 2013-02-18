@@ -416,6 +416,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
       unowned string k;
       unowned Value? _v;
       bool is_fav = false; // Remember this for _set_contact_groups.
+      Set<string> groups = new HashSet<string> (); // For _set_is_favourite
 
       while (iter.next (out k, out _v) == true)
         {
@@ -539,17 +540,17 @@ public class Edsf.PersonaStore : Folks.PersonaStore
             }
           else if (k == Folks.PersonaStore.detail_key (PersonaDetail.GROUPS))
             {
-              Set<string> groups =
-                (Set<string>) v.get_object ();
+              groups = (Set<string>) v.get_object ();
               this._set_contact_groups (contact, groups, is_fav);
             }
           else if (k == Folks.PersonaStore.detail_key (
                   PersonaDetail.IS_FAVOURITE))
             {
               is_fav = v.get_boolean ();
-              // Use _set_is_favourite here to get the contact added
-              // to the Android "favourite" group.
-              this._set_is_favourite (contact, is_fav);
+              this._set_contact_is_favourite (contact, is_fav);
+              /* Ensure the contact is added to the “Starred in Android” group
+               * if appropriate. */
+              this._set_contact_groups (contact, groups, is_fav);
             }
         }
 
