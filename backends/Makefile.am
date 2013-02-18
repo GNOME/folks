@@ -23,11 +23,11 @@ SUBDIRS += ofono
 endif
 
 DIST_SUBDIRS = \
-	telepathy \
-	key-file \
-	tracker \
-	libsocialweb \
 	eds \
+	key-file \
+	libsocialweb \
+	telepathy \
+	tracker \
 	$(NULL)
 
 -include $(top_srcdir)/git.mk
