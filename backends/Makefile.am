@@ -26,6 +26,7 @@ DIST_SUBDIRS = \
 	eds \
 	key-file \
 	libsocialweb \
+	ofono \
 	telepathy \
 	tracker \
 	$(NULL)
