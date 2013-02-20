@@ -11,7 +11,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=folks&keywords=I18N+L10N&component=general\n"
 "POT-Creation-Date: 2013-02-20 14:29+0000\n"
-"PO-Revision-Date: 2013-02-20 20:18+0100\n"
+"PO-Revision-Date: 2013-02-20 20:19+0100\n"
 "Last-Translator: Bruno Brouard <annoa.b@gmail.com>\n"
 "Language-Team: GNOME French Team <gnomefr@traduc.org>\n"
 "Language: \n"
@@ -218,7 +218,7 @@ msgstr "Les anti-liens ne sont pas modifiables pour ce contact."
 #: ../backends/eds/lib/edsf-persona-store.vala:2262
 #: ../folks/location-details.vala:129
 msgid "Location is not writeable on this contact."
-msgstr "L'emplacement n'est pas modifiable pour ce contact."
+msgstr "La position n'est pas modifiable pour ce contact."
 
 #. Translators: the first parameter is a non-human-readable
 #. * property name and the second parameter is an error
