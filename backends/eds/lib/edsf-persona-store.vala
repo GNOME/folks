@@ -2281,7 +2281,104 @@ public class Edsf.PersonaStore : Folks.PersonaStore
         }
     }
 
+  // The EDS store receives change notifications as quickly as it
+  // can and then stores them for later processing in a glib idle
+  // callback.
+  //
+  // This avoids problems where many incoming D-Bus change notifications
+  // block processing of other incoming D-Bus messages. Delays of over a minute
+  // have been observed in worst-case (but not entirely unrealistic) scenarios
+  // (1000 contacts added one-by-one while folks is active).
+  //
+  // Cannot store a GLib.SourceFunc directly
+  // in a LinkedList ("Delegates with target are not supported as generic type arguments",
+  // https://mail.gnome.org/archives/vala-list/2011-June/msg00002.html)
+  // and thus have to wrap it in a class.
+  class IdleTask
+    {
+      public GLib.SourceFunc callback;
+    }
+
+
+  private Gee.LinkedList<IdleTask> _idle_tasks = new Gee.LinkedList<IdleTask> ();
+  private uint _idle_handle = 0;
+
+  // Deal with some chunk of work encapsulated in the delegate later.
+  // As in any other SourceFunc, the callback may request to be called
+  // again by returning true. In contrast to Idle.add, _idle_queue
+  // ensures that only one task is processed per idle cycle.
+  private void _idle_queue (owned GLib.SourceFunc callback)
+    {
+      IdleTask task = new IdleTask ();
+      task.callback = (owned) callback;
+      this._idle_tasks.add (task);
+      // Ensure that there is an active idle callback to process
+      // the task, otherwise register it. We cannot just
+      // queue each task separately, because then we might
+      // end up with multiple tasks being done at once
+      // when the process gets idle, instead of one
+      // task at a time.
+      if (this._idle_handle == 0)
+        {
+          this._idle_handle = Idle.add (this._idle_process);
+        }
+    }
+  private bool _idle_process ()
+    {
+        IdleTask? task = this._idle_tasks.peek ();
+        if (task != null)
+          {
+            if (task.callback ())
+              {
+                 // Task is not done yet, run it again later.
+                 return true;
+              }
+            this._idle_tasks.poll ();
+          }
+
+        // Check for future work.
+        if (this._idle_tasks.is_empty)
+          {
+             // Remember that we need to re-register idle
+             // processing when _idle_queue is called again.
+             this._idle_handle = 0;
+             // Done, will remove idle handler.
+             return false;
+          }
+        else
+          {
+             // Continue processing.
+             return true;
+          }
+    }
+
+  private Gee.LinkedList<E.Contact> _copy_contacts (GLib.List<E.Contact> contacts)
+    {
+      var copy = new Gee.LinkedList<E.Contact> ();
+      foreach (E.Contact c in contacts)
+        {
+          copy.add (c);
+        }
+      return copy;
+    }
+
+  private Gee.LinkedList<string> _copy_contacts_ids (GLib.List<string> contacts_ids)
+    {
+      var copy = new Gee.LinkedList<string> ();
+      foreach (unowned string s in contacts_ids)
+        {
+          copy.add (s);
+        }
+      return copy;
+    }
+
   private void _contacts_added_cb (GLib.List<E.Contact> contacts)
+    {
+      var copy = _copy_contacts (contacts);
+      this._idle_queue (() => { return this._contacts_added_idle (copy); });
+    }
+
+  private bool _contacts_added_idle (Gee.List<E.Contact> contacts)
     {
       HashSet<Persona> added_personas;
 
@@ -2318,9 +2415,18 @@ public class Edsf.PersonaStore : Folks.PersonaStore
         {
           this._emit_personas_changed (added_personas, null);
         }
+
+      // Done.
+      return false;
     }
 
   private void _contacts_changed_cb (GLib.List<E.Contact> contacts)
+    {
+      var copy = _copy_contacts (contacts);
+      this._idle_queue (() => { return this._contacts_changed_idle (copy); });
+    }
+
+  private bool _contacts_changed_idle (Gee.List<E.Contact> contacts)
     {
       foreach (E.Contact c in contacts)
         {
@@ -2331,9 +2437,16 @@ public class Edsf.PersonaStore : Folks.PersonaStore
               ((!) persona)._update (c);
             }
         }
+      return false;
     }
 
   private void _contacts_removed_cb (GLib.List<string> contacts_ids)
+    {
+      var copy = _copy_contacts_ids (contacts_ids);
+      this._idle_queue (() => { return this._contacts_removed_idle (copy); });
+    }
+
+  private bool _contacts_removed_idle (Gee.List<string> contacts_ids)
     {
       var removed_personas = new HashSet<Persona> ();
 
@@ -2359,6 +2472,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
          {
            this._emit_personas_changed (null, removed_personas);
          }
+      return false;
     }
 
   private void _contacts_complete_cb (Error err)
