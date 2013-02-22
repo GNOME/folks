@@ -20,6 +20,7 @@ folks/im-details.c
 folks/individual-aggregator.c
 folks/individual.c
 folks/local-id-details.c
+folks/location-details.c
 folks/name-details.c
 folks/note-details.c
 folks/phone-details.c
