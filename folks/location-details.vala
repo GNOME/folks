@@ -59,7 +59,7 @@ public class Folks.Location : Object
    * Compare this location to another by geographical position.
    *
    * @param other the instance to compare against
-   * @returns true iff the coordinates are exactly the same
+   * @return true iff the coordinates are exactly the same
    * @since UNRELEASED
    */
  public bool equal (Location other)
@@ -74,7 +74,7 @@ public class Folks.Location : Object
    *
    * @param latitude latitude of the other position
    * @param longitude longitude of the other position
-   * @returns true iff the coordinates are exactly the same
+   * @return true iff the coordinates are exactly the same
    * @since UNRELEASED
    */
   public bool equal_coordinates (double latitude, double longitude)
