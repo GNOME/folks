@@ -28,11 +28,16 @@ RUN_WITH_PRIVATE_BUS = $(top_srcdir)/tests/tools/with-session-bus.sh
 AM_VALAFLAGS = \
 	$(ERROR_VALAFLAGS) \
 	--disable-warnings \
-	--vapidir=. \
-	--vapidir=$(top_srcdir)/folks \
-	--vapidir=$(top_srcdir)/tests/lib \
-	--vapidir=$(top_srcdir)/tests/lib/key-file \
-	--vapidir=$(top_builddir)/tests/lib/telepathy/contactlist/ \
+	--vapidir=$(abs_srcdir) \
+	--vapidir=$(abs_builddir) \
+	--vapidir=$(abs_top_srcdir)/folks \
+	--vapidir=$(abs_top_builddir)/folks \
+	--vapidir=$(abs_top_srcdir)/tests/lib \
+	--vapidir=$(abs_top_builddir)/tests/lib \
+	--vapidir=$(abs_top_srcdir)/tests/lib/key-file \
+	--vapidir=$(abs_top_builddir)/tests/lib/key-file \
+	--vapidir=$(abs_top_srcdir)/tests/lib/telepathy/contactlist/ \
+	--vapidir=$(abs_top_builddir)/tests/lib/telepathy/contactlist/ \
 	--pkg gobject-2.0 \
 	--pkg gio-2.0 \
 	--pkg gee-0.8 \

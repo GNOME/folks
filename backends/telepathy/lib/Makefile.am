@@ -10,8 +10,11 @@ AM_CPPFLAGS = \
 	$(NULL)
 
 VAPIGENFLAGS += \
-	--vapidir=. \
-	--vapidir=$(top_srcdir)/folks
+	--vapidir=$(abs_builddir) \
+	--vapidir=$(abs_srcdir) \
+	--vapidir=$(abs_top_builddir)/folks \
+	--vapidir=$(abs_top_srcdir)/folks \
+	$(NULL)
 
 noinst_LTLIBRARIES = libtp-lowlevel.la
 folks_telepathydir = $(libdir)
@@ -119,8 +122,10 @@ libfolks_telepathy_la_VALAFLAGS = \
 	$(AM_VALAFLAGS) \
 	$(ERROR_VALAFLAGS) \
 	$(ZEITGEIST_VALAFLAGS) \
-	--vapidir=. \
-	--vapidir=$(top_srcdir)/folks \
+	--vapidir=$(abs_srcdir) \
+	--vapidir=$(abs_builddir) \
+	--vapidir=$(abs_top_srcdir)/folks \
+	--vapidir=$(abs_top_builddir)/folks \
 	--pkg folks \
 	--pkg folks-internal \
 	--pkg tp-lowlevel \

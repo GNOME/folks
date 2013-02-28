@@ -5,9 +5,12 @@ BACKEND_NAME = "telepathy"
 VALAFLAGS += \
 	$(AM_VALAFLAGS) \
 	$(ERROR_VALAFLAGS) \
-	--vapidir=. \
-	--vapidir=$(top_builddir)/backends/telepathy/lib \
-	--vapidir=$(top_srcdir)/folks \
+	--vapidir=$(abs_srcdir) \
+	--vapidir=$(abs_builddir) \
+	--vapidir=$(abs_top_srcdir)/backends/telepathy/lib \
+	--vapidir=$(abs_top_builddir)/backends/telepathy/lib \
+	--vapidir=$(abs_top_srcdir)/folks \
+	--vapidir=$(abs_top_builddir)/folks \
 	$(addprefix --pkg ,$(telepathy_deps)) \
 	$(NULL)
 
