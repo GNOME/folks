@@ -30,6 +30,7 @@ telepathy_deps = \
 	$(NULL)
 
 telepathy_la_CPPFLAGS = \
+	-I$(top_srcdir) \
 	-I$(top_srcdir)/folks \
 	-I$(top_srcdir)/backends/telepathy/lib \
 	-I$(top_srcdir)/backends/telepathy/lib/folks \

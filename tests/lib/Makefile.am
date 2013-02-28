@@ -39,6 +39,7 @@ libfolks_test_la_CFLAGS = \
 
 libfolks_test_la_CPPFLAGS = \
 	$(AM_CPPFLAGS) \
+	-I$(top_srcdir) \
 	-I$(top_srcdir)/folks \
 	$(NULL)
 

@@ -3,6 +3,7 @@ AM_CPPFLAGS = \
 	$(GIO_CFLAGS) \
 	$(GEE_CFLAGS) \
 	$(SW_CLIENT_CFLAGS) \
+	-I$(top_srcdir) \
 	-I$(top_srcdir)/folks \
 	-I$(top_srcdir)/backends/libsocialweb/lib \
 	-I$(top_srcdir)/backends/libsocialweb/lib/folks \

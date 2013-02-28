@@ -2,6 +2,7 @@ AM_CPPFLAGS = \
 	$(GLIB_CFLAGS) \
 	$(GEE_CFLAGS) \
 	$(TRACKER_SPARQL_CFLAGS) \
+	-I$(top_srcdir) \
 	-I$(top_srcdir)/folks \
 	-I$(top_srcdir)/backends/tracker/lib \
 	-I$(top_srcdir)/backends/tracker/lib/folks \

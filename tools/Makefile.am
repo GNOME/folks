@@ -27,6 +27,7 @@ folks_import_CPPFLAGS = \
 	$(AM_CPPFLAGS) \
 	-include $(CONFIG_HEADER) \
 	-DLOCALE_DIR=\"$(pkgdatadir)/locale\" \
+	-I$(top_srcdir) \
 	-I$(top_srcdir)/folks \
 	$(NULL)
 folks_import_CFLAGS = \

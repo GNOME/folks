@@ -31,6 +31,7 @@ tracker_deps = \
 	$(NULL)
 
 tracker_la_CPPFLAGS = \
+	-I$(top_srcdir) \
 	-I$(top_srcdir)/folks \
 	-I$(top_srcdir)/backends/tracker/lib \
 	-I$(top_srcdir)/backends/tracker/lib/folks \

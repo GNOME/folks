@@ -28,6 +28,7 @@ libeds_test_la_CFLAGS = \
 	$(GEE_CFLAGS) \
 	$(EBOOK_CFLAGS) \
 	$(EDATASERVER_CFLAGS) \
+	-I$(top_srcdir) \
 	-I$(top_srcdir)/folks \
 	-I$(top_srcdir)/backends/eds/lib \
 	-I$(top_srcdir)/backends/eds/lib/folks \

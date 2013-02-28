@@ -30,6 +30,7 @@ ofono_la_VALAFLAGS = \
 # in libebook-1.2.deps.
 
 ofono_la_CPPFLAGS = \
+	-I$(top_srcdir) \
 	-I$(top_srcdir)/folks \
 	-include $(CONFIG_HEADER) \
 	-DPACKAGE_DATADIR=\"$(pkgdatadir)\" \

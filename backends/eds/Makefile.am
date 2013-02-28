@@ -32,6 +32,7 @@ eds_deps = \
 	$(NULL)
 
 eds_la_CPPFLAGS = \
+	-I$(top_srcdir) \
 	-I$(top_srcdir)/folks \
 	-I$(top_srcdir)/backends/eds/lib \
 	-I$(top_srcdir)/backends/eds/lib/folks \

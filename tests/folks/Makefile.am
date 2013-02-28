@@ -2,6 +2,7 @@ AM_CPPFLAGS = \
 	$(GLIB_CFLAGS) \
 	$(GEE_CFLAGS) \
 	$(TP_GLIB_CFLAGS) \
+	-I$(top_srcdir) \
 	-I$(top_srcdir)/folks \
 	-I$(top_srcdir)/tests/lib \
 	-I$(top_srcdir)/tests/lib/key-file \

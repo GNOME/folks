@@ -30,6 +30,7 @@ libsocialweb_deps = \
 	$(NULL)
 
 libsocialweb_la_CPPFLAGS = \
+	-I$(top_srcdir) \
 	-I$(top_srcdir)/folks \
 	-I$(top_srcdir)/backends/libsocialweb/lib \
 	-I$(top_srcdir)/backends/libsocialweb/lib/folks \

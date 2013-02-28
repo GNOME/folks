@@ -23,6 +23,7 @@ key_file_la_VALAFLAGS = \
 	$(NULL)
 
 key_file_la_CPPFLAGS = \
+	-I$(top_srcdir) \
 	-I$(top_srcdir)/folks \
 	-include $(CONFIG_HEADER) \
 	-DPACKAGE_DATADIR=\"$(pkgdatadir)\" \

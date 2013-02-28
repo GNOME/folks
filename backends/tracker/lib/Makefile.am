@@ -44,6 +44,7 @@ folks_backend_tracker_deps = \
 	$(NULL)
 
 libfolks_tracker_la_CPPFLAGS = \
+	-I$(top_srcdir) \
 	-I$(top_srcdir)/folks \
 	-include $(CONFIG_HEADER) \
 	-DPACKAGE_DATADIR=\"$(pkgdatadir)\" \
