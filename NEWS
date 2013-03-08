@@ -8,6 +8,8 @@ Major changes:
 Bugs fixed:
 • Bug 693333 - eds: creating a contact with specific groups and
   fix "favourite" group setting for Android
+• Bug 694883 - srcdir != builddir (out-of-tree) builds don't work
+• Bug 682903 (partially) - Use gee's MultiMap iterators
 
 API changes:
 
