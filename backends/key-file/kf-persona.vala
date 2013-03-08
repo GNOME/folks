@@ -440,24 +440,17 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
     {
       if (prop_name == "im-addresses")
         {
-          foreach (var protocol in this._im_addresses.get_keys ())
-            {
-              var im_addresses = this._im_addresses.get (protocol);
+          var iter = this._im_addresses.map_iterator ();
 
-              foreach (var im_fd in im_addresses)
-                  callback (protocol + ":" + im_fd.value);
-            }
+          while (iter.next ())
+            callback (iter.get_key () + ":" + iter.get_value ().value);
         }
       else if (prop_name == "web-service-addresses")
         {
-          foreach (var web_service in this.web_service_addresses.get_keys ())
-            {
-              var web_service_addresses =
-                  this._web_service_addresses.get (web_service);
+          var iter = this.web_service_addresses.map_iterator ();
 
-              foreach (var ws_fd in web_service_addresses)
-                  callback (web_service + ":" + ws_fd.value);
-            }
+          while (iter.next ())
+            callback (iter.get_key () + ":" + iter.get_value ().value);
         }
       else
         {

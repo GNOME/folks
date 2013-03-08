@@ -517,16 +517,30 @@ public class Folks.IndividualAggregator : Object
           this._link_map.size);
       debug.indent ();
 
-      foreach (var link_key in this._link_map.get_keys ())
-        {
-          debug.print_line (domain, level, "%s → {", link_key);
-          debug.indent ();
+      string? last_key = null;
+      var iter = this._link_map.map_iterator ();
 
-          foreach (var individual in this._link_map.get (link_key))
+      while (iter.next ())
+        {
+          var link_key = iter.get_key ();
+
+          if (last_key == null || link_key != (!) last_key)
             {
-              debug.print_line (domain, level, "%p", individual);
+              if (last_key != null)
+                {
+                  debug.unindent ();
+                  debug.print_line (domain, level, "}");
+                }
+
+              debug.print_line (domain, level, "%s → {", link_key);
+              debug.indent ();
             }
 
+          debug.print_line (domain, level, "%p", iter.get_value ());
+        }
+
+      if (last_key != null)
+        {
           debug.unindent ();
           debug.print_line (domain, level, "}");
         }
@@ -1020,33 +1034,35 @@ public class Folks.IndividualAggregator : Object
           debug ("Emitting individuals-changed-detailed with %u mappings:",
               _changes.size);
 
-          foreach (var removed_ind in _changes.get_keys ())
+          var iter = _changes.map_iterator ();
+
+          while (iter.next ())
             {
-              foreach (var added_ind in _changes.get (removed_ind))
+              var removed_ind = iter.get_key ();
+              var added_ind = iter.get_value ();
+
+              debug ("    %s (%p) → %s (%p)",
+                  (removed_ind != null) ? ((!) removed_ind).id : "",
+                  removed_ind,
+                  (added_ind != null) ? ((!) added_ind).id : "", added_ind);
+
+              if (removed_ind != null)
                 {
-                  debug ("    %s (%p) → %s (%p)",
-                      (removed_ind != null) ? ((!) removed_ind).id : "",
-                      removed_ind,
-                      (added_ind != null) ? ((!) added_ind).id : "", added_ind);
+                  debug ("      Removed individual's personas:");
 
-                  if (removed_ind != null)
+                  foreach (var p in ((!) removed_ind).personas)
                     {
-                      debug ("      Removed individual's personas:");
-
-                      foreach (var p in ((!) removed_ind).personas)
-                        {
-                          debug ("        %s (%p)", p.uid, p);
-                        }
+                      debug ("        %s (%p)", p.uid, p);
                     }
+                }
 
-                  if (added_ind != null)
+              if (added_ind != null)
+                {
+                  debug ("      Added individual's personas:");
+
+                  foreach (var p in ((!) added_ind).personas)
                     {
-                      debug ("      Added individual's personas:");
-
-                      foreach (var p in ((!) added_ind).personas)
-                        {
-                          debug ("        %s (%p)", p.uid, p);
-                        }
+                      debug ("        %s (%p)", p.uid, p);
                     }
                 }
             }
@@ -1219,11 +1235,13 @@ public class Folks.IndividualAggregator : Object
                * iterating over it. */
               var transitive_updates = new HashSet<Individual?> ();
 
-              foreach (var k in individuals_changes.get_keys ())
+              var iter = individuals_changes.map_iterator ();
+
+              while (iter.next ())
                 {
-                  if (i in individuals_changes.get (k))
+                  if (i == iter.get_value ())
                     {
-                      transitive_updates.add (k);
+                      transitive_updates.add (iter.get_key ());
                     }
                 }
 
@@ -1396,10 +1414,14 @@ public class Folks.IndividualAggregator : Object
        * there's no iterator object. FIXME: bgo#675067 */
       var remove_keys = new string[0];
 
-      foreach (var link_key in this._link_map.get_keys ())
+      var iter = this._link_map.map_iterator ();
+
+      while (iter.next ())
         {
-          if (this._link_map.get (link_key).contains (individual))
+          if (iter.get_value () == individual)
             {
+              var link_key = iter.get_key ();
+
               debug ("    %s → %s (%p)",
                   link_key, individual.id, individual);
 
@@ -1550,27 +1572,29 @@ public class Folks.IndividualAggregator : Object
           /* Extract the deprecated added and removed sets from
            * individuals_changes, to be used in the individuals_changed
            * signal. */
-          foreach (var old_ind in individuals_changes.get_keys ())
+          var iter = individuals_changes.map_iterator ();
+
+          while (iter.next ())
             {
-              foreach (var new_ind in individuals_changes.get (old_ind))
+              var old_ind = iter.get_key ();
+              var new_ind = iter.get_value ();
+
+              assert (old_ind != null || new_ind != null);
+
+              if (old_ind != null)
                 {
-                  assert (old_ind != null || new_ind != null);
+                  removed_individuals.add ((!) old_ind);
+                }
 
-                  if (old_ind != null)
-                    {
-                      removed_individuals.add ((!) old_ind);
-                    }
+              if (new_ind != null)
+                {
+                  added_individuals.add ((!) new_ind);
+                  this._connect_to_individual ((!) new_ind);
+                }
 
-                  if (new_ind != null)
-                    {
-                      added_individuals.add ((!) new_ind);
-                      this._connect_to_individual ((!) new_ind);
-                    }
-
-                  if (old_ind != null && new_ind != null)
-                    {
-                      replaced_individuals.set ((!) old_ind, (!) new_ind);
-                    }
+              if (old_ind != null && new_ind != null)
+                {
+                  replaced_individuals.set ((!) old_ind, (!) new_ind);
                 }
             }
 
@@ -1596,21 +1620,24 @@ public class Folks.IndividualAggregator : Object
       /* Validate the link map. */
       if (this._debug.debug_output_enabled == true)
         {
-          foreach (var link_key in this._link_map.get_keys ())
+          var link_map_iter = this._link_map.map_iterator ();
+
+          while (link_map_iter.next ())
             {
-              foreach (var individual in this._link_map.get (link_key))
+              var individual = link_map_iter.get_value ();
+
+              if (this._individuals.get (individual.id) != individual)
                 {
-                  if (this._individuals.get (individual.id) != individual)
+                  var link_key = link_map_iter.get_key ();
+
+                  warning ("Link map contains invalid mapping:\n" +
+                      "    %s → %s (%p)",
+                          link_key, individual.id, individual);
+                  warning ("Individual %s (%p) personas:", individual.id,
+                      individual);
+                  foreach (var p in individual.personas)
                     {
-                      warning ("Link map contains invalid mapping:\n" +
-                          "    %s → %s (%p)",
-                              link_key, individual.id, individual);
-                      warning ("Individual %s (%p) personas:", individual.id,
-                          individual);
-                      foreach (var p in individual.personas)
-                        {
-                          warning ("    %s (%p)", p.uid, p);
-                        }
+                      warning ("    %s (%p)", p.uid, p);
                     }
                 }
             }
@@ -1998,33 +2025,21 @@ public class Folks.IndividualAggregator : Object
           if (persona is ImDetails)
             {
               ImDetails im_details = (ImDetails) persona;
+              var iter = im_details.im_addresses.map_iterator ();
 
               /* protocols_addrs_set = union (all personas' IM addresses) */
-              foreach (var protocol in im_details.im_addresses.get_keys ())
-                {
-                  var im_addresses = im_details.im_addresses.get (protocol);
-
-                  foreach (var im_address in im_addresses)
-                    {
-                      protocols_addrs_set.set (protocol, im_address);
-                    }
-                }
+              while (iter.next ())
+                protocols_addrs_set.set (iter.get_key (), iter.get_value ());
             }
 
           if (persona is WebServiceDetails)
             {
               WebServiceDetails ws_details = (WebServiceDetails) persona;
+              var iter = ws_details.web_service_addresses.map_iterator ();
 
               /* web_service_addrs_set = union (all personas' WS addresses) */
-              foreach (var web_service in
-                  ws_details.web_service_addresses.get_keys ())
-                {
-                  var ws_addresses =
-                      ws_details.web_service_addresses.get (web_service);
-
-                  foreach (var ws_fd in ws_addresses)
-                    web_service_addrs_set.set (web_service, ws_fd);
-                }
+              while (iter.next ())
+                web_service_addrs_set.set (iter.get_key (), iter.get_value ());
             }
 
           if (persona is LocalIdDetails)

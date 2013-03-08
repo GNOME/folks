@@ -220,14 +220,10 @@ public abstract class Folks.AbstractFieldDetails<T> : Object
    */
   public void extend_parameters (MultiMap<string, string> additional)
     {
-      foreach (var name in additional.get_keys ())
-        {
-          var values = additional.get (name);
-          foreach (var val in values)
-            {
-              this.add_parameter (name, val);
-            }
-        }
+      var iter = additional.map_iterator ();
+
+      while (iter.next ())
+        this.add_parameter (iter.get_key (), iter.get_value ());
     }
 
   /**

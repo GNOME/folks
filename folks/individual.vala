@@ -1754,17 +1754,11 @@ public class Folks.Individual : Object,
                   var im_details = persona as ImDetails;
                   if (im_details != null)
                     {
-                      foreach (var cur_protocol in
-                          im_details.im_addresses.get_keys ())
-                        {
-                          var cur_addresses =
-                              im_details.im_addresses.get (cur_protocol);
+                      var iter = im_details.im_addresses.map_iterator ();
 
-                          foreach (var address in cur_addresses)
-                            {
-                              new_im_addresses.set (cur_protocol, address);
-                            }
-                        }
+                      while (iter.next ())
+                        new_im_addresses.set (iter.get_key (),
+                            iter.get_value ());
                     }
                 }
 
@@ -1804,19 +1798,11 @@ public class Folks.Individual : Object,
                   var web_service_details = persona as WebServiceDetails;
                   if (web_service_details != null)
                     {
-                      foreach (var cur_web_service in
-                          web_service_details.web_service_addresses.get_keys ())
-                        {
-                          var cur_addresses =
-                              web_service_details.web_service_addresses.get (
-                                  cur_web_service);
+                      var iter = web_service_details.web_service_addresses.map_iterator ();
 
-                          foreach (var ws_fd in cur_addresses)
-                            {
-                              new_web_service_addresses.set (cur_web_service,
-                                  ws_fd);
-                            }
-                        }
+                      while (iter.next ())
+                        new_web_service_addresses.set (iter.get_key (),
+                            iter.get_value ());
                     }
                 }
 

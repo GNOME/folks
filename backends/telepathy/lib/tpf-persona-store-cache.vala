@@ -148,16 +148,14 @@ internal class Tpf.PersonaStoreCache : Folks.ObjectCache<Tpf.Persona>
           Variant[] parameters = new Variant[afd.parameters.size];
 
           uint f = 0;
-          foreach (var key in afd.parameters.get_keys ())
-            {
-              foreach (var val in afd.parameters.get (key))
-                {
-                  parameters[f++] = new Variant.tuple ({
-                    new Variant.string (key), // Key
-                    new Variant.string (val) // Value
-                  });
-                }
-            }
+
+          var iter = afd.parameters.map_iterator ();
+
+          while (iter.next ())
+            parameters[f++] = new Variant.tuple ({
+              new Variant.string (iter.get_key ()),
+              new Variant.string (iter.get_value ())
+            });
 
           output_variants[i++] = new Variant.tuple ({
             afd.value, // Variant value (e.g. e-mail address)
@@ -185,11 +183,10 @@ internal class Tpf.PersonaStoreCache : Folks.ObjectCache<Tpf.Persona>
       // Sort out the IM addresses (there's guaranteed to only be one)
       string? im_protocol = null;
 
-      foreach (var protocol in persona.im_addresses.get_keys ())
-        {
-          im_protocol = protocol;
-          break;
-        }
+      var iter = persona.im_addresses.map_iterator ();
+
+      if (iter.next ())
+        im_protocol = iter.get_key ();
 
       // Avatar
       var avatar_file = (persona.avatar != null && persona.avatar is FileIcon) ?

@@ -124,6 +124,10 @@ Vala-specific rules
     than a specific constructor. This means that the initialisation doesn’t have
     to be copied between multiple alternate constructors.
 
+14. When iterating over a MultiMap, try to use the map_iterator().
+    This is more efficient than iterating over the result of get_keys(),
+    then calling get() separately for each key.
+
 Build health
 ============
 

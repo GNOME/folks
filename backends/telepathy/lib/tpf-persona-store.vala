@@ -1485,13 +1485,14 @@ public class Tpf.PersonaStore : Folks.PersonaStore
           string[] values = { afd.value };
           string[] parameters = {};
 
-          foreach (var param_name in afd.parameters.get_keys ())
+          var iter = afd.parameters.map_iterator ();
+
+          while (iter.next ())
             {
-              var param_values = afd.parameters[param_name];
-              foreach (var param_value in param_values)
-                {
-                  parameters += @"$param_name=$param_value";
-                }
+              var param_name = iter.get_key ();
+              var param_value = iter.get_value ();
+
+              parameters += @"$param_name=$param_value";
             }
 
           if (parameters.length == 0)
