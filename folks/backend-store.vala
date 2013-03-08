@@ -43,6 +43,10 @@ public class Folks.BackendStore : Object {
 
   /* this contains all backends, regardless of enabled or prepared state */
   private HashMap<string,Backend> _backend_hash;
+  /* if null, all backends are allowed */
+  private HashSet<string>? _backends_allowed;
+  /* if null, no backends are disabled */
+  private HashSet<string>? _backends_disabled;
   private HashMap<string, Backend> _prepared_backends;
   private Map<string, Backend> _prepared_backends_ro;
   private File _config_file;
@@ -462,6 +466,15 @@ public class Folks.BackendStore : Object {
   private bool _backend_is_enabled (string name)
     {
       var all_others_enabled = true;
+
+      if (this._backends_allowed != null &&
+          !(name in (!) this._backends_allowed))
+        return false;
+
+      if (this._backends_disabled != null &&
+          name in (!) this._backends_disabled)
+        return false;
+
       try
         {
           all_others_enabled = this._backends_key_file.get_boolean (
@@ -551,6 +564,11 @@ public class Folks.BackendStore : Object {
    * This method is safe to call multiple times concurrently (e.g. an
    * asynchronous call may begin after a previous asynchronous call for the same
    * backend name has begun and before it has finished).
+   *
+   * If the backend is disallowed by the FOLKS_BACKENDS_ALLOWED
+   * and/or FOLKS_BACKENDS_DISABLED environment variables, this method
+   * will store the fact that it should be enabled in future, but will
+   * not enable it during this application run.
    *
    * @param name the name of the backend to enable
    * @since 0.3.2
@@ -756,6 +774,66 @@ public class Folks.BackendStore : Object {
   /* This method is safe to call multiple times concurrently. */
   private async void _load_disabled_backend_names ()
     {
+      /* If set, this is a list of allowed backends. No others can be enabled,
+       * even if the keyfile says they ought to be.
+       * The default is equivalent to "all", which allows any backend.
+       *
+       * Regression tests and benchmarks can use this to restrict themselves
+       * to a small set of backends for which they have done the necessary
+       * setup/configuration/sandboxing. */
+      var envvar = Environment.get_variable ("FOLKS_BACKENDS_ALLOWED");
+
+      if (envvar != null)
+        {
+          /* Allow space, comma or colon separation, consistent with
+           * g_parse_debug_string(). */
+          var tokens = envvar.split_set (" ,:");
+
+          this._backends_allowed = new HashSet<string> ();
+
+          foreach (unowned string s in tokens)
+            {
+              if (s == "all")
+                {
+                  this._backends_allowed = null;
+                  break;
+                }
+
+              if (s != "")
+                this._backends_allowed.add (s);
+            }
+
+          if (this._backends_allowed != null)
+            {
+              debug ("Backends limited by FOLKS_BACKENDS_ALLOWED:");
+
+              foreach (unowned string s in tokens)
+                debug ("Backend '%s' is allowed", s);
+
+              debug ("All other backends disabled by FOLKS_BACKENDS_ALLOWED");
+            }
+        }
+
+      /* If set, this is a list of disallowed backends.
+       * They are not enabled, even if the keyfile says they ought to be. */
+      envvar = Environment.get_variable ("FOLKS_BACKENDS_DISABLED");
+
+      if (envvar != null)
+        {
+          var tokens = envvar.split_set (" ,:");
+
+          this._backends_disabled = new HashSet<string> ();
+
+          foreach (unowned string s in tokens)
+            {
+              if (s != "")
+                {
+                  debug ("Backend '%s' disabled by FOLKS_BACKENDS_DISABLED", s);
+                  this._backends_disabled.add (s);
+                }
+            }
+        }
+
       File file;
       unowned string? path = Environment.get_variable (
           "FOLKS_BACKEND_STORE_KEY_FILE_PATH");

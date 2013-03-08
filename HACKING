@@ -174,3 +174,20 @@ This is based on Federico Mena Quintero’s plot-timeline.py, described on:
 http://people.gnome.org/~federico/news-2006-03.html#timeline-tools. The Python
 script itself can be downloaded from
 http://gitorious.org/projects/performance-scripts.
+
+Environment variables
+=====================
+
+FOLKS_BACKEND_STORE_KEY_FILE_PATH sets the keyfile used to control the set
+of enabled backends. The default is g_get_user_data_dir()/folks/backends.ini,
+and if it is empty, all backends are enabled.
+
+If FOLKS_BACKENDS_ALLOWED is set, it's a space-, comma- or
+colon-separated list of backends to allow, or "all". If unset, the
+default is equivalent to "all". Backends not in the list are disallowed,
+even if enabled in the keyfile or with enable_backend().
+
+If FOLKS_BACKENDS_DISABLED is set, it's a space-, comma- or
+colon-separated list of backends to disallow, or "all". If unset, the
+default is equivalent to "all". Backends in the list are disallowed,
+even if enabled in the keyfile or with enable_backend().
