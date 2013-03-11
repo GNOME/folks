@@ -10,8 +10,7 @@ if ENABLE_IMPORT_TOOL
 bin_PROGRAMS = folks-import
 endif
 
-VALAFLAGS = \
-	$(AM_VALAFLAGS) \
+AM_VALAFLAGS += \
 	--vapidir=$(top_builddir)/folks \
 	--pkg=gee-0.8 \
 	--pkg=libxml-2.0 \

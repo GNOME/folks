@@ -2,8 +2,7 @@ SUBDIRS = lib
 
 BACKEND_NAME = "telepathy"
 
-VALAFLAGS += \
-	$(AM_VALAFLAGS) \
+AM_VALAFLAGS += \
 	$(ERROR_VALAFLAGS) \
 	--vapidir=$(abs_srcdir) \
 	--vapidir=$(abs_builddir) \

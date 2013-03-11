@@ -53,7 +53,7 @@ libfolks_test_la_LIBADD = \
 
 libfolks_test_la_VALAFLAGS = \
 	$(ERROR_VALAFLAGS) \
-	$(VALAFLAGS) \
+	$(AM_VALAFLAGS) \
 	--vapidir=$(top_srcdir)/folks \
 	--pkg gobject-2.0 \
 	--pkg gio-2.0 \

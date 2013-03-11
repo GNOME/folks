@@ -293,8 +293,8 @@ AS_IF([test "x$enable_vala" = "xyes"], [
 
         # require GLib >= 2.24 so GLib.Array, etc. reffing is handled
         # automatically
-        VALAFLAGS="$VALAFLAGS --target-glib=2.24"
-        AC_SUBST([VALAFLAGS])
+        AM_VALAFLAGS="--target-glib=2.24"
+        AC_SUBST([AM_VALAFLAGS])
         AC_SUBST([VAPIGENFLAGS])
         AC_SUBST([VAPIDIR])
 

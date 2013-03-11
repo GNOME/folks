@@ -2,8 +2,7 @@ SUBDIRS = lib
 
 BACKEND_NAME = "eds"
 
-VALAFLAGS += \
-	$(AM_VALAFLAGS) \
+AM_VALAFLAGS += \
 	$(ERROR_VALAFLAGS) \
 	--vapidir=. \
 	--vapidir=$(top_builddir)/backends/eds/lib \

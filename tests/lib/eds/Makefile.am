@@ -1,4 +1,4 @@
-VALAFLAGS += \
+AM_VALAFLAGS += \
 	$(ERROR_VALAFLAGS) \
 	--library=eds-test \
 	--header=eds-test.h \

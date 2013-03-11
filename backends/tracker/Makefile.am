@@ -2,8 +2,7 @@ SUBDIRS = lib
 
 BACKEND_NAME = "tracker"
 
-VALAFLAGS += \
-	$(AM_VALAFLAGS) \
+AM_VALAFLAGS += \
 	$(ERROR_VALAFLAGS) \
 	--vapidir=. \
 	--vapidir=vapi \

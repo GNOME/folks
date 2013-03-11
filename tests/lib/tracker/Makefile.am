@@ -1,4 +1,4 @@
-VALAFLAGS += \
+AM_VALAFLAGS += \
 	$(ERROR_VALAFLAGS) \
 	--library=tracker-test \
 	--header=tracker-test.h \
