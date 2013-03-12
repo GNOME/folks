@@ -56,7 +56,7 @@ public abstract class Folks.TestCase : Object
       return this._suite;
     }
 
-	private class Adaptor
+  private class Adaptor
     {
       public string name { get; private set; }
       private unowned TestMethod _test;
