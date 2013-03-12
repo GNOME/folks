@@ -180,7 +180,7 @@ public class Swf.Persona : Folks.Persona,
       set { this.change_web_service_addresses.begin (value); }
     }
 
-  private Contact _lsw_contact;
+  private Contact? _lsw_contact = null;
 
   /**
    * The Contact from libsocialweb
@@ -190,11 +190,7 @@ public class Swf.Persona : Folks.Persona,
       get { return this._lsw_contact; }
       construct
         {
-          if (_lsw_contact != null && _lsw_contact != value)
-            {
-              _lsw_contact.unref ();
-            }
-          this._lsw_contact = value.ref ();
+          this._lsw_contact = value;
         }
     }
 
@@ -306,8 +302,6 @@ public class Swf.Persona : Folks.Persona,
   ~Persona ()
     {
       debug ("Destroying Sw.Persona '%s': %p", this.uid, this);
-      this._lsw_contact.unref ();
-      this._lsw_contact = null;
     }
 
   /**
