@@ -74,7 +74,15 @@ public class Folks.Utils : Object
       if (a == b)
         return true;
 
-      if (a.size == b.size)
+      var a_size = a.size;
+      var b_size = b.size;
+
+      if (a_size == 0 && b_size == 0)
+        {
+          /* fast path: avoid the actual iteration, which creates GObjects */
+          return true;
+        }
+      else if (a_size == b_size)
         {
           foreach (var key in a.get_keys ())
             {
@@ -125,7 +133,15 @@ public class Folks.Utils : Object
       if (a == b)
         return true;
 
-      if (a.size == b.size)
+      var a_size = a.size;
+      var b_size = b.size;
+
+      if (a_size == 0 && b_size == 0)
+        {
+          /* fast path: avoid the actual iteration, which creates GObjects */
+          return true;
+        }
+      else if (a_size == b_size)
         {
           foreach (var key in a.get_keys ())
             {
@@ -176,7 +192,15 @@ public class Folks.Utils : Object
       if (a == b)
         return true;
 
-      if (a.size == b.size)
+      var a_size = a.size;
+      var b_size = b.size;
+
+      if (a_size == 0 && b_size == 0)
+        {
+          /* fast path: avoid creating the iterator, which is a GObject */
+          return true;
+        }
+      else if (a_size == b_size)
         {
           foreach (var val in a)
             {
