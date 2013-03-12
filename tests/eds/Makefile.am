@@ -22,7 +22,7 @@ LDADD = \
 	-L$(top_srcdir)/backends/eds/lib \
 	$(NULL)
 
-AM_VALAFLAGS = \
+AM_VALAFLAGS += \
 	$(ERROR_VALAFLAGS) \
 	--vapidir=. \
 	--vapidir=$(top_srcdir)/folks \

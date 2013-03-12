@@ -16,7 +16,7 @@ LDADD = \
 	$(GEE_LIBS) \
 	$(NULL)
 
-AM_VALAFLAGS = \
+AM_VALAFLAGS += \
 	$(ERROR_VALAFLAGS) \
 	--vapidir=. \
 	--vapidir=$(top_srcdir)/folks \

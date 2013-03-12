@@ -25,7 +25,7 @@ RUN_WITH_PRIVATE_BUS = $(top_srcdir)/tests/tools/with-session-bus.sh
 
 # --disable-warnings is necessary so that we can test deprecated API such as
 # the IndividualAggregator.individuals_changed signal.
-AM_VALAFLAGS = \
+AM_VALAFLAGS += \
 	$(ERROR_VALAFLAGS) \
 	--disable-warnings \
 	--vapidir=$(abs_srcdir) \

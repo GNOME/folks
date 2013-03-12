@@ -26,7 +26,7 @@ LDADD = \
 
 RUN_WITH_PRIVATE_BUS = $(top_srcdir)/tests/tools/with-session-bus.sh
 
-AM_VALAFLAGS = \
+AM_VALAFLAGS += \
 	$(ERROR_VALAFLAGS) \
 	--vapidir=$(abs_top_srcdir)/tests/lib/telepathy/contactlist/ \
 	--vapidir=$(abs_top_builddir)/tests/lib/telepathy/contactlist/ \
