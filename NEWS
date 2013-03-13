@@ -10,6 +10,10 @@ Bugs fixed:
   fix "favourite" group setting for Android
 • Bug 694883 - srcdir != builddir (out-of-tree) builds don't work
 • Bug 695628 - assigns to VALAFLAGS which is reserved for the user
+• Bug 695648 - Utils: add a fast-path for empty sets and multimaps
+• Bug 695719 - lsw dummy test intermittently segfaults
+• Bug 695381 - add FOLKS_BACKENDS_ALLOWED, FOLKS_BACKENDS_DISABLED environment
+  variables (see HACKING)
 • Bug 682903 (partially) - Use gee's MultiMap iterators
 
 API changes:
