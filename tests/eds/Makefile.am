@@ -81,13 +81,10 @@ noinst_PROGRAMS = \
 
 RUN_WITH_PRIVATE_BUS = $(top_srcdir)/tests/tools/with-session-bus-eds.sh
 
-backend_store_key_file=$(srcdir)/data/backend-eds-only.ini
 avatar_file=@abs_top_srcdir@/tests/data/avatar-01.jpg
 TESTS_ENVIRONMENT = \
 	FOLKS_BACKEND_PATH=$(BACKEND_UNINST_PATH) \
-        FOLKS_BACKEND_STORE_KEY_FILE_PATH=$(backend_store_key_file) \
 	AVATAR_FILE_PATH=$(avatar_file) \
-	FOLKS_PRIMARY_STORE="eds:local://test" \
 	$(RUN_WITH_PRIVATE_BUS) \
 	--session \
 	--
@@ -239,7 +236,6 @@ MAINTAINERCLEANFILES = \
 
 EXTRA_DIST = \
 	$(MAINTAINERCLEANFILES) \
-	$(backend_store_key_file) \
 	$(NULL)
 
 -include $(top_srcdir)/git.mk

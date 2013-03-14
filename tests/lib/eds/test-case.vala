@@ -29,6 +29,10 @@ public class EdsTest.TestCase : Folks.TestCase
   public TestCase (string name)
     {
       base (name);
+
+      Environment.set_variable ("FOLKS_BACKENDS_ALLOWED", "eds", true);
+      Environment.set_variable ("FOLKS_PRIMARY_STORE", "eds:local://test",
+          true);
     }
 
   public override void set_up ()

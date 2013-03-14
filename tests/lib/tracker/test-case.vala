@@ -28,6 +28,9 @@ public class TrackerTest.TestCase : Folks.TestCase
     {
       base (name);
 
+      Environment.set_variable ("FOLKS_BACKENDS_ALLOWED", "tracker", true);
+      Environment.set_variable ("FOLKS_PRIMARY_STORE", "tracker", true);
+
       this.tracker_backend = new TrackerTest.Backend ();
     }
 

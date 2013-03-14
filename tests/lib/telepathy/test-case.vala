@@ -40,6 +40,19 @@ public class TpfTest.TestCase : Folks.TestCase
     {
       base (name);
 
+      if (use_keyfile_too)
+        {
+          Environment.set_variable ("FOLKS_BACKENDS_ALLOWED",
+              "telepathy,key-file", true);
+          Environment.set_variable ("FOLKS_PRIMARY_STORE", "key-file", true);
+        }
+      else
+        {
+          Environment.set_variable ("FOLKS_BACKENDS_ALLOWED",
+              "telepathy", true);
+          Environment.set_variable ("FOLKS_PRIMARY_STORE", "", true);
+        }
+
       this.create_kf_backend ();
       this.create_tp_backend ();
     }

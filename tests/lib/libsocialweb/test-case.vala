@@ -31,6 +31,9 @@ public class LibsocialwebTest.TestCase : Folks.TestCase
       base (name);
 
       this.lsw_backend = new LibsocialwebTest.Backend ();
+
+      Environment.set_variable ("FOLKS_BACKENDS_ALLOWED", "libsocialweb", true);
+      Environment.set_variable ("FOLKS_PRIMARY_STORE", "", true);
     }
 
   public override void set_up ()

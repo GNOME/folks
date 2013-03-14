@@ -40,6 +40,8 @@ public class AggregationTests : LibsocialwebTest.TestCase
   public override void set_up ()
     {
       /* Ensure we have a primary store for linking */
+      Environment.set_variable ("FOLKS_BACKENDS_ALLOWED",
+          "libsocialweb,key-file", true);
       Environment.set_variable ("FOLKS_PRIMARY_STORE", "key-file", true);
 
       /* Initialize an empty key file for the relationships*/

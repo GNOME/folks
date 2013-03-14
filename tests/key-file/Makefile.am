@@ -36,11 +36,8 @@ noinst_PROGRAMS = \
 	individual-retrieval \
 	$(NULL)
 
-backend_store_key_file=$(srcdir)/data/backend-store-key-file-only.ini
 TESTS_ENVIRONMENT = \
 	FOLKS_BACKEND_PATH=$(BACKEND_UNINST_PATH) \
-        FOLKS_BACKEND_STORE_KEY_FILE_PATH=$(backend_store_key_file) \
-        FOLKS_PRIMARY_STORE=key-file \
         $(NULL)
 
 TESTS = $(noinst_PROGRAMS)
@@ -62,7 +59,6 @@ MAINTAINERCLEANFILES = \
 
 EXTRA_DIST = \
 	$(MAINTAINERCLEANFILES) \
-	$(backend_store_key_file) \
 	$(NULL)
 
 -include $(top_srcdir)/git.mk

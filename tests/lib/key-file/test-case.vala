@@ -29,5 +29,8 @@ public class KfTest.TestCase : Folks.TestCase
       base (name);
 
       this.kf_backend = new KfTest.Backend ();
+
+      Environment.set_variable ("FOLKS_BACKENDS_ALLOWED", "key-file", true);
+      Environment.set_variable ("FOLKS_PRIMARY_STORE", "key-file", true);
     }
 }

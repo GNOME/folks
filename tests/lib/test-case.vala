@@ -34,6 +34,9 @@ public abstract class Folks.TestCase : Object
   public TestCase (string name)
     {
       this._suite = new GLib.TestSuite (name);
+
+      /* By default, no backend is allowed. Subclasses must override. */
+      Environment.set_variable ("FOLKS_BACKENDS_ALLOWED", "", true);
     }
 
   public void add_test (string name, TestMethod test)
