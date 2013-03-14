@@ -30,8 +30,6 @@ public class LibsocialwebTest.TestCase : Folks.TestCase
     {
       base (name);
 
-      this.lsw_backend = new LibsocialwebTest.Backend ();
-
       Environment.set_variable ("FOLKS_BACKENDS_ALLOWED", "libsocialweb", true);
       Environment.set_variable ("FOLKS_PRIMARY_STORE", "", true);
     }
@@ -40,25 +38,24 @@ public class LibsocialwebTest.TestCase : Folks.TestCase
     {
       base.set_up ();
 
-      if (this.lsw_backend != null)
+      this.lsw_backend = new LibsocialwebTest.Backend ();
+
+      var lsw_backend = (!) this.lsw_backend;
+
+      var main_loop = new GLib.MainLoop (null, false);
+
+      this.lsw_backend.ready.connect (() =>
         {
-          var lsw_backend = (!) this.lsw_backend;
+          main_loop.quit ();
+        });
+      uint timer_id = Timeout.add_seconds (5, () =>
+        {
+          assert_not_reached ();
+        });
 
-          var main_loop = new GLib.MainLoop (null, false);
-
-          this.lsw_backend.ready.connect (() =>
-            {
-              main_loop.quit ();
-            });
-          uint timer_id = Timeout.add_seconds (5, () =>
-            {
-              assert_not_reached ();
-            });
-
-          lsw_backend.set_up ();
-          main_loop.run ();
-          Source.remove (timer_id);
-        }
+      lsw_backend.set_up ();
+      main_loop.run ();
+      Source.remove (timer_id);
     }
 
   public override void tear_down ()
@@ -66,6 +63,7 @@ public class LibsocialwebTest.TestCase : Folks.TestCase
       if (this.lsw_backend != null)
         {
           ((!) this.lsw_backend).tear_down ();
+          this.lsw_backend = null;
         }
 
       base.tear_down ();
