@@ -49,7 +49,9 @@ public class LinkPersonasDiffStoresTests : EdsTest.TestCase
       this._eds_backend_other.set_up (false, "other");
 
       Environment.set_variable ("FOLKS_BACKEND_EDS_USE_ADDRESS_BOOKS",
-                                "test:other", true);
+                                (this.eds_backend.address_book_uid + ":" +
+                                 this._eds_backend_other.address_book_uid),
+                                true);
     }
 
   public override void tear_down ()

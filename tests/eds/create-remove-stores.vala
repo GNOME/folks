@@ -46,7 +46,9 @@ public class CreateRemoveStoresTests : EdsTest.TestCase
       this._backend_store = BackendStore.dup();
 
       Environment.set_variable ("FOLKS_BACKEND_EDS_USE_ADDRESS_BOOKS",
-                                "test:other:test1:test2", true);
+                                (this.eds_backend_address_book_uid +
+                                 ":other:test1:test2"),
+                                true);
     }
 
   public override void tear_down ()
