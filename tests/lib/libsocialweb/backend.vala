@@ -304,6 +304,7 @@ public class LibsocialwebTest.Backend
 
   public bool debug { get; set; }
   private LibsocialwebServerTest lsw_server;
+  private uint _name_id = 0;
 
   public signal void ready ();
 
@@ -325,7 +326,7 @@ public class LibsocialwebTest.Backend
           assert_not_reached ();
         }
 
-      Bus.own_name (
+      this._name_id = Bus.own_name (
         BusType.SESSION, LIBSOCIALWEB_BUS_NAME,
         BusNameOwnerFlags.NONE,
         on_bus_aquired,
@@ -352,5 +353,10 @@ public class LibsocialwebTest.Backend
 
   public void tear_down ()
     {
+      if (this._name_id != 0)
+        {
+          Bus.unown_name (this._name_id);
+          this._name_id = 0;
+        }
     }
 }
