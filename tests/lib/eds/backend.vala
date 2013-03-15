@@ -39,7 +39,7 @@ public class EdsTest.Backend
 {
   private string _addressbook_name;
   private E.BookClient? _addressbook = null;
-  private GLib.List<string> _e_contacts;
+  private string[] _e_contacts;
   private GLib.List<Gee.HashMap<string, Value?>> _contacts;
   E.SourceRegistry? _source_registry = null;
   E.Source? _source = null;
@@ -53,7 +53,7 @@ public class EdsTest.Backend
   public Backend ()
     {
       this._contacts = new GLib.List<Gee.HashMap<string, Value?>> ();
-      this._e_contacts = new GLib.List<string> ();
+      this._e_contacts = new string[0];
     }
 
   public void add_contact (owned Gee.HashMap<string, Value?> c)
@@ -64,7 +64,7 @@ public class EdsTest.Backend
   public async void update_contact (int contact_pos,
       owned Gee.HashMap<string, Value?> updated_data)
     {
-      var uid = this._e_contacts.nth_data (contact_pos);
+      var uid = this._e_contacts[contact_pos];
       E.Contact contact;
       try
         {
@@ -80,7 +80,7 @@ public class EdsTest.Backend
 
   public async void remove_contact (int contact_pos)
     {
-      var uid = this._e_contacts.nth_data (contact_pos);
+      var uid = this._e_contacts[contact_pos];
       E.Contact contact;
       try
         {
@@ -96,7 +96,7 @@ public class EdsTest.Backend
   public void reset ()
     {
       this._contacts = new GLib.List<Gee.HashMap<string, Value?>> ();
-      this._e_contacts = new GLib.List<string> ();
+      this._e_contacts = new string[0];
     }
 
   /* Create a temporary addressbook */
@@ -205,7 +205,7 @@ public class EdsTest.Backend
               string added_uid;
               yield this._addressbook.add_contact (contact,
                   null, out added_uid);
-              this._e_contacts.prepend ((owned) added_uid);
+              this._e_contacts += (owned) added_uid;
             }
           catch (GLib.Error e)
             {
@@ -213,7 +213,6 @@ public class EdsTest.Backend
                   e.message);
             }
         }
-        this._e_contacts.reverse ();
     }
 
   private void _set_contact_fields (E.Contact contact,
