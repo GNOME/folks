@@ -193,25 +193,32 @@ public class EdsTest.Backend
 
   public async void commit_contacts_to_addressbook ()
     {
+      GLib.SList<E.Contact> contacts = null;
+
       this._contacts.reverse ();
+
       foreach (var c in this._contacts)
         {
           E.Contact contact = new E.Contact ();
 
           this._set_contact_fields (contact, c);
 
-          try
-            {
-              string added_uid;
-              yield this._addressbook.add_contact (contact,
-                  null, out added_uid);
-              this._e_contacts += (owned) added_uid;
-            }
-          catch (GLib.Error e)
-            {
-              GLib.warning ("Couldn't add contact: %s\n",
-                  e.message);
-            }
+          contacts.prepend (contact);
+        }
+
+      try
+        {
+          GLib.SList<string> uids;
+
+          yield this._addressbook.add_contacts (contacts, null, out uids);
+
+          foreach (unowned string uid in uids)
+            this._e_contacts += uid;
+        }
+      catch (GLib.Error e)
+        {
+          GLib.warning ("Couldn't add contacts: %s\n",
+              e.message);
         }
     }
 
