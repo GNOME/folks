@@ -35,12 +35,11 @@
 public abstract class Folks.TestCase : Object
 {
   private GLib.TestSuite _suite;
-  private Adaptor[] _adaptors = new Adaptor[0];
-
   public delegate void TestMethod ();
 
   public TestCase (string name)
     {
+      LogAdaptor.set_up ();
       this._suite = new GLib.TestSuite (name);
 
       /* By default, no backend is allowed. Subclasses must override. */
@@ -49,17 +48,16 @@ public abstract class Folks.TestCase : Object
 
   public void register ()
     {
-      TestSuite.get_root ().add_suite (this.get_suite ());
+      TestSuite.get_root ().add_suite (this._suite);
     }
 
   public void add_test (string name, TestMethod test)
     {
-      var adaptor = new Adaptor (name, test, this);
-      this._adaptors += adaptor;
-
-      this._suite.add (new GLib.TestCase (
-            adaptor.name, adaptor.set_up, adaptor.run, adaptor.tear_down));
+      this._suite.add (add_test_helper (name, test));
     }
+
+  /* implemented in test-case-helper.c */
+  private extern GLib.TestCase add_test_helper (string name, TestMethod test);
 
   /**
    * Set up for one test. If you have more than one test, this will
@@ -103,30 +101,16 @@ public abstract class Folks.TestCase : Object
       this.final_tear_down ();
     }
 
-  private GLib.TestSuite get_suite ()
+  private class LogAdaptor
     {
-      return this._suite;
-    }
-
-  private class Adaptor
-    {
-      public string name { get; private set; }
-      private unowned TestMethod _test;
-      private TestCase _test_case;
-
-      public Adaptor (string name, TestMethod test, TestCase test_case)
+      public LogAdaptor ()
         {
-          this._name = name;
-          this._test = test;
-          this._test_case = test_case;
         }
 
-      public void set_up (void* fixture)
+      public static void set_up ()
         {
-          GLib.set_printerr_handler (Adaptor._printerr_func_stack_trace);
-          Log.set_default_handler (this._log_func_stack_trace);
-
-          this._test_case.set_up ();
+          GLib.set_printerr_handler (LogAdaptor._printerr_func_stack_trace);
+          Log.set_default_handler (LogAdaptor._log_func_stack_trace);
         }
 
       private static void _printerr_func_stack_trace (string? text)
@@ -140,7 +124,7 @@ public abstract class Folks.TestCase : Object
           GLib.on_error_stack_trace ("libtool --mode=execute gdb");
         }
 
-      private void _log_func_stack_trace (string? log_domain,
+      private static void _log_func_stack_trace (string? log_domain,
           LogLevelFlags log_levels,
           string message)
         {
@@ -155,16 +139,6 @@ public abstract class Folks.TestCase : Object
             {
               GLib.on_error_stack_trace ("libtool --mode=execute gdb");
             }
-        }
-
-      public void run (void* fixture)
-        {
-          this._test ();
-        }
-
-      public void tear_down (void* fixture)
-        {
-          this._test_case.tear_down ();
         }
     }
 }

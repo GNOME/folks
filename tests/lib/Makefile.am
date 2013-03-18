@@ -30,7 +30,11 @@ DIST_SUBDIRS = \
 
 noinst_LTLIBRARIES = libfolks-test.la
 
-libfolks_test_la_SOURCES = test-case.vala test-utils.vala
+libfolks_test_la_SOURCES = \
+	test-case.vala \
+	test-case-helper.c \
+	test-utils.vala \
+	$(NULL)
 
 libfolks_test_la_CFLAGS = \
 	$(AM_CFLAGS) \
@@ -65,6 +69,10 @@ libfolks_test_la_VALAFLAGS = \
 	--library folks-test \
 	-H folks-test.h \
 	-g \
+	$(NULL)
+
+BUILT_SOURCES = \
+	libfolks_test_la_vala.stamp \
 	$(NULL)
 
 MAINTAINERCLEANFILES = \
