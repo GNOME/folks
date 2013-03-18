@@ -24,7 +24,7 @@ using Gee;
 
 public class PersonaStoreTests : EdsTest.TestCase
 {
-  private HashSet<string> _capabilities_received;
+  private HashSet<string>? _capabilities_received = null;
 
   public PersonaStoreTests ()
     {
@@ -36,6 +36,12 @@ public class PersonaStoreTests : EdsTest.TestCase
     {
       base.set_up ();
       this._capabilities_received = new HashSet<string> ();
+    }
+
+  public override void tear_down ()
+    {
+      this._capabilities_received = null;
+      base.tear_down ();
     }
 
   public void test_persona_store ()

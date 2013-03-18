@@ -26,7 +26,7 @@ using Gee;
 
 public class PersonaStoreCapabilitiesTests : TpfTest.TestCase
 {
-  private HashSet<string> _capabilities_received;
+  private HashSet<string>? _capabilities_received = null;
   private int _test_timeout = 3;
 
   public PersonaStoreCapabilitiesTests ()
@@ -45,6 +45,13 @@ public class PersonaStoreCapabilitiesTests : TpfTest.TestCase
       base.set_up ();
 
       this._capabilities_received = new HashSet<string> ();
+    }
+
+  public override void tear_down ()
+    {
+      this._capabilities_received = null;
+
+      base.tear_down ();
     }
 
   public void test_persona_store_capabilities ()

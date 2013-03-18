@@ -27,7 +27,7 @@ using Gee;
 public class IndividualPropertiesTests : TpfTest.TestCase
 {
   private int _test_timeout = 3;
-  private HashSet<string> _changes_pending;
+  private HashSet<string>? _changes_pending = null;
 
   public IndividualPropertiesTests ()
     {
@@ -51,6 +51,13 @@ public class IndividualPropertiesTests : TpfTest.TestCase
       base.set_up ();
 
       this._changes_pending = new HashSet<string> ();
+    }
+
+  public override void tear_down ()
+    {
+      this._changes_pending = null;
+
+      base.tear_down ();
     }
 
   public void test_individual_properties ()
