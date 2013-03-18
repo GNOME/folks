@@ -31,6 +31,9 @@ trap cleanup INT HUP TERM
 dbus_init 0
 dbus_start
 
+FOLKS_TESTS_SANDBOXED_DBUS=no-services
+export FOLKS_TESTS_SANDBOXED_DBUS
+
 $cur_dir"/execute-test.sh" "$@" || e=$?
 
 trap - INT HUP TERM

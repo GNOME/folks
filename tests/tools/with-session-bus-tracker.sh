@@ -36,6 +36,9 @@ dbus_init 0
 dbus_start
 tracker_start
 
+FOLKS_TESTS_SANDBOXED_DBUS=tracker
+export FOLKS_TESTS_SANDBOXED_DBUS
+
 e=0
 $cur_dir"/execute-test.sh" "$@" || e=$?
 

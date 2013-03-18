@@ -42,6 +42,13 @@ public class LibsocialwebTest.TestCase : Folks.TestCase
 
   public TestCase (string name)
     {
+      /* This variable is set in the same place as the various variables we
+       * care about for sandboxing purposes, like XDG_CONFIG_HOME and
+       * DBUS_SESSION_BUS_ADDRESS. */
+      if (Environment.get_variable ("FOLKS_TESTS_SANDBOXED_DBUS")
+          != "no-services")
+        error ("libsocialweb tests must be run in a private D-Bus session");
+
       base (name);
 
       Environment.set_variable ("FOLKS_BACKENDS_ALLOWED", "libsocialweb", true);

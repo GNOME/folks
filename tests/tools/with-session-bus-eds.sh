@@ -38,6 +38,9 @@ eds_start
 
 e=0
 
+FOLKS_TESTS_SANDBOXED_DBUS=eds
+export FOLKS_TESTS_SANDBOXED_DBUS
+
 $cur_dir"/execute-test.sh" "$@" || e=$?
 
 trap - INT HUP TERM
