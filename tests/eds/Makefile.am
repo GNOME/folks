@@ -78,6 +78,7 @@ TESTS = \
 	anti-linking \
 	enable-disable-stores \
 	set-is-favourite \
+	perf \
 	$(NULL)
 
 RUN_WITH_PRIVATE_BUS = $(top_srcdir)/tests/tools/with-session-bus-eds.sh
@@ -225,6 +226,10 @@ set_is_favourite_SOURCES = \
 
 store_removed_SOURCES = \
 	store-removed.vala \
+	$(NULL)
+
+perf_SOURCES = \
+	perf.vala \
 	$(NULL)
 
 helper_create_many_contacts_SOURCES = \
