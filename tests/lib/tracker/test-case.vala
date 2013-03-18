@@ -20,10 +20,31 @@
  *      Simon McVittie <simon.mcvittie@collabora.co.uk>
  */
 
+/**
+ * A test case for the Tracker backend.
+ *
+ * Folks is configured to use the Tracker backend as primary store,
+ * and no other backends.
+ *
+ * FIXME: For now, this relies on running under with-session-bus-tracker.sh
+ * with AVATAR_FILE_PATH and FOLKS_BACKEND_PATH set.
+ */
 public class TrackerTest.TestCase : Folks.TestCase
 {
+  /**
+   * The Tracker backend.
+   *
+   * The subclass is expected to have called its set_up() method at
+   * some point before tear_down() is reached.
+   */
   public TrackerTest.Backend? tracker_backend = null;
 
+  /**
+   * Set environment variables and create the tracker backend.
+   *
+   * FIXME: maybe it shouldn't be created until set_up()? (Tests
+   * will need to be checked to make sure that's OK.)
+   */
   public TestCase (string name)
     {
       base (name);

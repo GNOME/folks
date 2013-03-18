@@ -22,8 +22,22 @@
  *      Simon McVittie <simon.mcvittie@collabora.co.uk>
  */
 
+/**
+ * A test case for the libsocialweb backend. Folks is configured
+ * to use that backend and no others, with no primary store.
+ *
+ * FIXME: for now, this relies on being run under with-session-bus.sh
+ * with no activatable services.
+ */
 public class LibsocialwebTest.TestCase : Folks.TestCase
 {
+  /**
+   * The libsocialweb test backend, or null outside the period from
+   * set_up() to tear_down().
+   *
+   * If this is non-null, the subclass is expected to have called
+   * its set_up() method at some point before tear_down() is reached.
+   */
   public LibsocialwebTest.Backend? lsw_backend = null;
 
   public TestCase (string name)
@@ -34,6 +48,9 @@ public class LibsocialwebTest.TestCase : Folks.TestCase
       Environment.set_variable ("FOLKS_PRIMARY_STORE", "", true);
     }
 
+  /**
+   * Set up the libsocialweb test backend and wait for it to become ready.
+   */
   public override void set_up ()
     {
       base.set_up ();

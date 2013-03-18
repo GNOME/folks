@@ -21,9 +21,17 @@
  * 	Julien Peeters <contact@julienpeeters.fr>
  * 	Simon McVittie <simon.mcvittie@collabora.co.uk>
  *
- * Copied from libgee/tests/testcase.vala.
+ * Adapted from libgee/tests/testcase.vala.
  */
 
+/**
+ * A test case for Folks, containing one or more individual tests.
+ *
+ * The constructor configures Folks to disallow all backends, via
+ * ``FOLKS_BACKENDS_ALLOWED``. Subclasses are expected to reset
+ * this variable to a suitable value in their constructors or
+ * set_up() methods.
+ */
 public abstract class Folks.TestCase : Object
 {
   private GLib.TestSuite _suite;
@@ -48,21 +56,39 @@ public abstract class Folks.TestCase : Object
             adaptor.name, adaptor.set_up, adaptor.run, adaptor.tear_down));
     }
 
-  /* Set up for one test. If you have more than one test case, this will
-   * be called once per test. */
+  /**
+   * Set up for one test. If you have more than one test, this will
+   * be called once per test.
+   *
+   * Subclasses may override this method. They are expected to chain up
+   * as the first thing in their implementation.
+   */
   public virtual void set_up ()
     {
     }
 
-  /* Clean up after one test. If you have more than one test case, this will
-   * be called once per test. It should undo set_up (). */
+  /**
+   * Clean up after one test, undoing set_up(). If you have more than
+   * one test, this will be called once per test.
+   *
+   * Subclasses may override this method. They are expected to chain up
+   * as the last thing in their implementation.
+   */
   public virtual void tear_down ()
     {
     }
 
-  /* Clean up after all tests. If you have more than one test case, this
+  /**
+   * Clean up after all tests. If you have more than one test case, this
    * will be called once, the last time only. It should undo the
-   * constructor, and must be idempotent (i.e. OK to call more than once). */
+   * constructor, and must be idempotent (i.e. OK to call more than once).
+   *
+   * Subclasses may override this method. They are expected to chain up
+   * as the last thing in their implementation.
+   *
+   * If there are no reference leaks, this method will be called
+   * automatically when the TestCase is destroyed.
+   */
   public virtual void final_tear_down ()
     {
     }
