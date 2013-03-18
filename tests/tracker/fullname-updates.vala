@@ -23,10 +23,9 @@ using TrackerTest;
 using Folks;
 using Gee;
 
-public class FullnameUpdatesTests : Folks.TestCase
+public class FullnameUpdatesTests : TrackerTest.TestCase
 {
   private GLib.MainLoop _main_loop;
-  private TrackerTest.Backend _tracker_backend;
   private IndividualAggregator _aggregator;
   private bool _updated_name_found;
   private bool _deleted_name_found;
@@ -40,18 +39,9 @@ public class FullnameUpdatesTests : Folks.TestCase
     {
       base ("FullnameUpdates");
 
-      this._tracker_backend = new TrackerTest.Backend ();
-      this._tracker_backend.debug = false;
+      ((!) this.tracker_backend).debug = false;
 
       this.add_test ("fullname updates", this.test_fullname_updates);
-    }
-
-  public override void set_up ()
-    {
-    }
-
-  public override void tear_down ()
-    {
     }
 
   public void test_fullname_updates ()
@@ -64,9 +54,9 @@ public class FullnameUpdatesTests : Folks.TestCase
 
       c1.set (TrackerTest.Backend.URN, this._contact_urn);
       c1.set (Trf.OntologyDefs.NCO_FULLNAME, this._initial_fullname);
-      this._tracker_backend.add_contact (c1);
+      ((!) this.tracker_backend).add_contact (c1);
 
-      this._tracker_backend.set_up ();
+      ((!) this.tracker_backend).set_up ();
 
       this._initial_name_found = false;
       this._updated_name_found = false;
@@ -85,8 +75,6 @@ public class FullnameUpdatesTests : Folks.TestCase
 
       assert (this._initial_name_found == true);
       assert (this._updated_name_found == true);
-
-      this._tracker_backend.tear_down ();
     }
 
   private async void _test_fullname_updates_async ()
@@ -121,7 +109,7 @@ public class FullnameUpdatesTests : Folks.TestCase
               i.notify["full-name"].connect (this._notify_full_name_cb);
               this._individual_id = i.id;
               this._initial_name_found = true;
-              this._tracker_backend.update_contact (this._contact_urn,
+              ((!) this.tracker_backend).update_contact (this._contact_urn,
                   Trf.OntologyDefs.NCO_FULLNAME, this._updated_fullname);
             }
         }

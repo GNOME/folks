@@ -36,14 +36,6 @@ public class EmailFieldDetailsTests : Folks.TestCase
           this.test_generic_afd_handling);
     }
 
-  public override void set_up ()
-    {
-    }
-
-  public override void tear_down ()
-    {
-    }
-
   public void test_param_replacement ()
     {
       string param_name = "metasyntactic-variables";

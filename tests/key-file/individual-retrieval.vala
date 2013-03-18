@@ -21,30 +21,19 @@ using Gee;
 using Folks;
 using KfTest;
 
-public class IndividualRetrievalTests : Folks.TestCase
+public class IndividualRetrievalTests : KfTest.TestCase
 {
-  private KfTest.Backend kf_backend;
   private int _test_timeout = 3;
 
   public IndividualRetrievalTests ()
     {
       base ("IndividualRetrieval");
 
-      this.kf_backend = new KfTest.Backend ();
-
       this.add_test ("singleton individuals", this.test_singleton_individuals);
       this.add_test ("aliases", this.test_aliases);
 
       if (Environment.get_variable ("FOLKS_TEST_VALGRIND") != null)
           this._test_timeout = 10;
-    }
-
-  public override void set_up ()
-    {
-    }
-
-  public override void tear_down ()
-    {
     }
 
   public void test_singleton_individuals ()

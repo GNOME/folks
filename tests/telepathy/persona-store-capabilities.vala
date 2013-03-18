@@ -24,18 +24,14 @@ using Tpf;
 using Folks;
 using Gee;
 
-public class PersonaStoreCapabilitiesTests : Folks.TestCase
+public class PersonaStoreCapabilitiesTests : TpfTest.TestCase
 {
-  private TpTests.Backend tp_backend;
-  private void* _account_handle;
   private HashSet<string> _capabilities_received;
   private int _test_timeout = 3;
 
   public PersonaStoreCapabilitiesTests ()
     {
       base ("PersonaStoreCapabilities");
-
-      this.tp_backend = new TpTests.Backend ();
 
       this.add_test ("persona store capabilities",
           this.test_persona_store_capabilities);
@@ -46,17 +42,9 @@ public class PersonaStoreCapabilitiesTests : Folks.TestCase
 
   public override void set_up ()
     {
+      base.set_up ();
+
       this._capabilities_received = new HashSet<string> ();
-
-      this.tp_backend.set_up ();
-      this._account_handle = this.tp_backend.add_account ("protocol",
-          "me@example.com", "cm", "account");
-    }
-
-  public override void tear_down ()
-    {
-      this.tp_backend.remove_account (this._account_handle);
-      this.tp_backend.tear_down ();
     }
 
   public void test_persona_store_capabilities ()

@@ -23,11 +23,10 @@ using TrackerTest;
 using Folks;
 using Gee;
 
-public class NoteDetailsInterfaceTests : Folks.TestCase
+public class NoteDetailsInterfaceTests : TrackerTest.TestCase
 {
   private GLib.MainLoop _main_loop;
   private IndividualAggregator _aggregator;
-  private TrackerTest.Backend _tracker_backend;
   private bool _found_note;
   private string _note;
   private string _fullname = "persona #1";
@@ -36,19 +35,10 @@ public class NoteDetailsInterfaceTests : Folks.TestCase
     {
       base ("NoteDetailsInterfaceTests");
 
-      this._tracker_backend = new TrackerTest.Backend ();
-      this._tracker_backend.debug = false;
+      ((!) this.tracker_backend).debug = false;
 
       this.add_test ("test note details interface",
           this.test_note_details_interface);
-    }
-
-  public override void set_up ()
-    {
-    }
-
-  public override void tear_down ()
-    {
     }
 
   public void test_note_details_interface ()
@@ -60,9 +50,9 @@ public class NoteDetailsInterfaceTests : Folks.TestCase
 
       c1.set (Trf.OntologyDefs.NCO_FULLNAME, this._fullname);
       c1.set (Trf.OntologyDefs.NCO_NOTE, this._note);
-      this._tracker_backend.add_contact (c1);
+      ((!) this.tracker_backend).add_contact (c1);
 
-      this._tracker_backend.set_up ();
+      ((!) this.tracker_backend).set_up ();
 
       this._found_note = false;
 
@@ -77,8 +67,6 @@ public class NoteDetailsInterfaceTests : Folks.TestCase
       this._main_loop.run ();
 
       assert (this._found_note == true);
-
-      this._tracker_backend.tear_down ();
     }
 
   private async void _test_note_details_interface_async ()

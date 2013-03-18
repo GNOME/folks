@@ -23,10 +23,9 @@ using TrackerTest;
 using Folks;
 using Gee;
 
-public class ImDetailsInterfaceTests : Folks.TestCase
+public class ImDetailsInterfaceTests : TrackerTest.TestCase
 {
   private GLib.MainLoop _main_loop;
-  private TrackerTest.Backend _tracker_backend;
   private IndividualAggregator _aggregator;
   private int _num_addrs;
   private bool _found_addr_1;
@@ -37,18 +36,8 @@ public class ImDetailsInterfaceTests : Folks.TestCase
     {
       base ("ImDetailsInterfaceTests");
 
-      this._tracker_backend = new TrackerTest.Backend ();
-
       this.add_test ("test im details interface",
           this.test_im_details_interface);
-    }
-
-  public override void set_up ()
-    {
-    }
-
-  public override void tear_down ()
-    {
     }
 
   public void test_im_details_interface ()
@@ -60,9 +49,9 @@ public class ImDetailsInterfaceTests : Folks.TestCase
       c1.set (Trf.OntologyDefs.NCO_FULLNAME, this._fullname);
       c1.set (Trf.OntologyDefs.NCO_IMADDRESS,
           "jabber#test1@example.org,aim#test2@example.org");
-      this._tracker_backend.add_contact (c1);
+      ((!) this.tracker_backend).add_contact (c1);
 
-      this._tracker_backend.set_up ();
+      ((!) this.tracker_backend).set_up ();
 
       this._num_addrs = 0;
       this._found_addr_1 = false;
@@ -81,8 +70,6 @@ public class ImDetailsInterfaceTests : Folks.TestCase
       assert (this._num_addrs == 2);
       assert (this._found_addr_1 == true);
       assert (this._found_addr_2 == true);
-
-      this._tracker_backend.tear_down ();
     }
 
   private async void _test_im_details_interface_async ()

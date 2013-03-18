@@ -1,6 +1,7 @@
 /* testcase.vala
  *
  * Copyright (C) 2009 Julien Peeters
+ * Copyright (C) 2013 Intel Corporation
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,6 +19,7 @@
  *
  * Author:
  * 	Julien Peeters <contact@julienpeeters.fr>
+ * 	Simon McVittie <simon.mcvittie@collabora.co.uk>
  *
  * Copied from libgee/tests/testcase.vala.
  */
@@ -43,12 +45,28 @@ public abstract class Folks.TestCase : Object
             adaptor.name, adaptor.set_up, adaptor.run, adaptor.tear_down));
     }
 
+  /* Set up for one test. If you have more than one test case, this will
+   * be called once per test. */
   public virtual void set_up ()
     {
     }
 
+  /* Clean up after one test. If you have more than one test case, this will
+   * be called once per test. It should undo set_up (). */
   public virtual void tear_down ()
     {
+    }
+
+  /* Clean up after all tests. If you have more than one test case, this
+   * will be called once, the last time only. It should undo the
+   * constructor, and must be idempotent (i.e. OK to call more than once). */
+  public virtual void final_tear_down ()
+    {
+    }
+
+  ~TestCase ()
+    {
+      this.final_tear_down ();
     }
 
   public GLib.TestSuite get_suite ()

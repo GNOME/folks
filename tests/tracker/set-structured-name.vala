@@ -23,10 +23,9 @@ using TrackerTest;
 using Folks;
 using Gee;
 
-public class SetStructuredNameTests : Folks.TestCase
+public class SetStructuredNameTests : TrackerTest.TestCase
 {
   private GLib.MainLoop _main_loop;
-  private TrackerTest.Backend _tracker_backend;
   private IndividualAggregator _aggregator;
   private string _persona_fullname;
   private bool _sname_found;
@@ -41,18 +40,8 @@ public class SetStructuredNameTests : Folks.TestCase
     {
       base ("SetStructuredNameTests");
 
-      this._tracker_backend = new TrackerTest.Backend ();
-
       this.add_test ("test setting structured name ",
           this.test_set_structured_name);
-    }
-
-  public override void set_up ()
-    {
-    }
-
-  public override void tear_down ()
-    {
     }
 
   public void test_set_structured_name ()
@@ -70,9 +59,9 @@ public class SetStructuredNameTests : Folks.TestCase
           this._additional_names, this._prefixes, this._suffixes);
 
       c1.set (Trf.OntologyDefs.NCO_FULLNAME, this._persona_fullname);
-      this._tracker_backend.add_contact (c1);
+      ((!) this.tracker_backend).add_contact (c1);
 
-      this._tracker_backend.set_up ();
+      ((!) this.tracker_backend).set_up ();
 
       this._sname_found = false;
 
@@ -87,8 +76,6 @@ public class SetStructuredNameTests : Folks.TestCase
       this._main_loop.run ();
 
       assert (this._sname_found);
-
-      this._tracker_backend.tear_down ();
     }
 
   private async void _test_set_structured_name_async ()

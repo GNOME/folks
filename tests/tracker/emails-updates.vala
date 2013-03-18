@@ -23,9 +23,8 @@ using TrackerTest;
 using Folks;
 using Gee;
 
-public class EmailsUpdatesTests : Folks.TestCase
+public class EmailsUpdatesTests : TrackerTest.TestCase
 {
-  private TrackerTest.Backend _tracker_backend;
   private IndividualAggregator _aggregator;
   private GLib.MainLoop _main_loop;
   private string _individual_id;
@@ -40,18 +39,9 @@ public class EmailsUpdatesTests : Folks.TestCase
     {
       base ("EmailsUpdates");
 
-      this._tracker_backend = new TrackerTest.Backend ();
-      this._tracker_backend.debug = false;
+      ((!) this.tracker_backend).debug = false;
 
       this.add_test ("emails updates", this.test_emails_updates);
-    }
-
-  public override void set_up ()
-    {
-    }
-
-  public override void tear_down ()
-    {
     }
 
   public void test_emails_updates ()
@@ -66,9 +56,9 @@ public class EmailsUpdatesTests : Folks.TestCase
       c1.set (TrackerTest.Backend.URN, this._contact_urn_1);
       c1.set (Trf.OntologyDefs.NCO_FULLNAME, this._initial_fullname_1);
       c1.set (Trf.OntologyDefs.NCO_EMAIL_PROP, this._email_1);
-      this._tracker_backend.add_contact (c1);
+      ((!) this.tracker_backend).add_contact (c1);
 
-      this._tracker_backend.set_up ();
+      ((!) this.tracker_backend).set_up ();
 
       this._individual_id = "";
       this._initial_email_found = false;
@@ -103,8 +93,6 @@ public class EmailsUpdatesTests : Folks.TestCase
 
       assert (initial_email_found_again == false);
       assert (this._updated_email_found == true);
-
-      this._tracker_backend.tear_down ();
     }
 
   private async void _test_emails_updates_async ()
@@ -147,25 +135,26 @@ public class EmailsUpdatesTests : Folks.TestCase
                       this._initial_email_found = true;
 
                       var urn_email_1 = "<" + this._email_1 + ">";
-                      this._tracker_backend.remove_triplet (this._contact_urn_1,
+                      ((!) this.tracker_backend).remove_triplet (
+                          this._contact_urn_1,
                           Trf.OntologyDefs.NCO_HAS_AFFILIATION, urn_email_1);
 
                       var urn_email_2 = "<email:" + this._email_2 + ">";
-                      this._tracker_backend.insert_triplet (urn_email_2,
+                      ((!) this.tracker_backend).insert_triplet (urn_email_2,
                           "a", Trf.OntologyDefs.NCO_EMAIL,
                           Trf.OntologyDefs.NCO_EMAIL_PROP,
                           this._email_2);
 
                       var affl_2 = "<" + this._email_2 + ">";
-                      this._tracker_backend.insert_triplet
+                      ((!) this.tracker_backend).insert_triplet
                           (affl_2,
                           "a", Trf.OntologyDefs.NCO_AFFILIATION);
 
-                      this._tracker_backend.insert_triplet
+                      ((!) this.tracker_backend).insert_triplet
                           (affl_2,
                           Trf.OntologyDefs.NCO_HAS_EMAIL, urn_email_2);
 
-                      this._tracker_backend.insert_triplet
+                      ((!) this.tracker_backend).insert_triplet
                           (this._contact_urn_1,
                           Trf.OntologyDefs.NCO_HAS_AFFILIATION, affl_2);
                     }

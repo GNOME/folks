@@ -23,10 +23,9 @@ using TrackerTest;
 using Folks;
 using Gee;
 
-public class SetPostalAddressesTests : Folks.TestCase
+public class SetPostalAddressesTests : TrackerTest.TestCase
 {
   private GLib.MainLoop _main_loop;
-  private TrackerTest.Backend _tracker_backend;
   private IndividualAggregator _aggregator;
   private string _persona_fullname;
   private bool _postal_address_found;
@@ -36,18 +35,8 @@ public class SetPostalAddressesTests : Folks.TestCase
     {
       base ("SetPostalAddressesTests");
 
-      this._tracker_backend = new TrackerTest.Backend ();
-
       this.add_test ("test setting postal addresses ",
           this.test_set_postal_addresses);
-    }
-
-  public override void set_up ()
-    {
-    }
-
-  public override void tear_down ()
-    {
     }
 
   public void test_set_postal_addresses ()
@@ -57,7 +46,7 @@ public class SetPostalAddressesTests : Folks.TestCase
       this._persona_fullname = "persona #1";
 
       c1.set (Trf.OntologyDefs.NCO_FULLNAME, this._persona_fullname);
-      this._tracker_backend.add_contact (c1);
+      ((!) this.tracker_backend).add_contact (c1);
 
       var pa = new PostalAddress (null, null, null, null, null,
           null, null, null, null);
@@ -70,7 +59,7 @@ public class SetPostalAddressesTests : Folks.TestCase
       pa.region = "some region";
       this._postal_address_fd = new PostalAddressFieldDetails (pa);
 
-      this._tracker_backend.set_up ();
+      ((!) this.tracker_backend).set_up ();
 
       this._postal_address_found = false;
 
@@ -85,8 +74,6 @@ public class SetPostalAddressesTests : Folks.TestCase
       this._main_loop.run ();
 
       assert (this._postal_address_found);
-
-     this._tracker_backend.tear_down ();
     }
 
   private async void _test_set_postal_addresses_async ()

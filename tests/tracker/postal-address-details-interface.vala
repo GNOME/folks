@@ -23,11 +23,10 @@ using TrackerTest;
 using Folks;
 using Gee;
 
-public class PostalAddressDetailsInterfaceTests : Folks.TestCase
+public class PostalAddressDetailsInterfaceTests : TrackerTest.TestCase
 {
   private GLib.MainLoop _main_loop;
   private IndividualAggregator _aggregator;
-  private TrackerTest.Backend _tracker_backend;
   private string _pobox = "12345";
   private string _district = "example district";
   private string _county = "example country";
@@ -46,18 +45,8 @@ public class PostalAddressDetailsInterfaceTests : Folks.TestCase
     {
       base ("PostalAddressDetailsInterfaceTests");
 
-      this._tracker_backend = new TrackerTest.Backend ();
-
       this.add_test ("test postal address details interface",
           this.test_postal_address_details_interface);
-    }
-
-  public override void set_up ()
-    {
-    }
-
-  public override void tear_down ()
-    {
     }
 
   public void test_postal_address_details_interface ()
@@ -93,8 +82,8 @@ public class PostalAddressDetailsInterfaceTests : Folks.TestCase
       postal_info += this._region;
 
       c1.set (Trf.OntologyDefs.NCO_POSTAL_ADDRESS, postal_info);
-      this._tracker_backend.add_contact (c1);
-      this._tracker_backend.set_up ();
+      ((!) this.tracker_backend).add_contact (c1);
+      ((!) this.tracker_backend).set_up ();
 
       this._found_postal_address = false;
 
@@ -109,8 +98,6 @@ public class PostalAddressDetailsInterfaceTests : Folks.TestCase
       this._main_loop.run ();
 
       assert (this._found_postal_address == true);
-
-      this._tracker_backend.tear_down ();
     }
 
   private async void _test_postal_address_details_interface_async ()

@@ -23,9 +23,8 @@ using TrackerTest;
 using Folks;
 using Gee;
 
-public class FamilyNameUpdatesTests : Folks.TestCase
+public class FamilyNameUpdatesTests : TrackerTest.TestCase
 {
-  private TrackerTest.Backend _tracker_backend;
   private IndividualAggregator _aggregator;
   private GLib.MainLoop _main_loop;
   private bool _initial_family_name_found;
@@ -41,18 +40,9 @@ public class FamilyNameUpdatesTests : Folks.TestCase
     {
       base ("FamilyNameUpdates");
 
-      this._tracker_backend = new TrackerTest.Backend ();
-      this._tracker_backend.debug = false;
+      ((!) this.tracker_backend).debug = false;
 
       this.add_test ("family name updates", this.test_family_name_updates);
-    }
-
-  public override void set_up ()
-    {
-    }
-
-  public override void tear_down ()
-    {
     }
 
   public void test_family_name_updates ()
@@ -67,9 +57,9 @@ public class FamilyNameUpdatesTests : Folks.TestCase
       c1.set (TrackerTest.Backend.URN, this._contact_urn);
       c1.set (Trf.OntologyDefs.NCO_FULLNAME, this._initial_fullname);
       c1.set (Trf.OntologyDefs.NCO_FAMILY, this._initial_family_name);
-      this._tracker_backend.add_contact (c1);
+      ((!) this.tracker_backend).add_contact (c1);
 
-      this._tracker_backend.set_up ();
+      ((!) this.tracker_backend).set_up ();
 
       this._initial_family_name_found = false;
       this._updated_family_name_found = false;
@@ -87,8 +77,6 @@ public class FamilyNameUpdatesTests : Folks.TestCase
 
       assert (this._initial_family_name_found == true);
       assert (this._updated_family_name_found == true);
-
-      this._tracker_backend.tear_down ();
     }
 
   private async void _test_family_name_updates_async ()
@@ -127,7 +115,7 @@ public class FamilyNameUpdatesTests : Folks.TestCase
                 {
                   this._individual_id = i.id;
                   this._initial_family_name_found = true;
-                  this._tracker_backend.update_contact (this._contact_urn,
+                  ((!) this.tracker_backend).update_contact (this._contact_urn,
                       Trf.OntologyDefs.NCO_FAMILY, this._updated_family_name);
                 }
             }

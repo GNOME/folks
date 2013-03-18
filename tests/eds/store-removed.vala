@@ -23,9 +23,8 @@ using E;
 using Folks;
 using Gee;
 
-public class StoreRemovedTests : Folks.TestCase
+public class StoreRemovedTests : EdsTest.TestCase
 {
-  private EdsTest.Backend _eds_backend;
   private GLib.MainLoop _main_loop;
   private IndividualAggregator _aggregator;
 
@@ -36,26 +35,11 @@ public class StoreRemovedTests : Folks.TestCase
       this.add_test ("single store", this.test_single_store);
     }
 
-  public override void set_up ()
-    {
-      this._eds_backend = new EdsTest.Backend ();
-      this._eds_backend.set_up ();
-
-      /* We configure eds as the primary store */
-      var config_val = "eds:%s".printf (this._eds_backend.address_book_uid);
-      Environment.set_variable ("FOLKS_PRIMARY_STORE", config_val, true);
-    }
-
-  public override void tear_down ()
-    {
-      this._eds_backend.tear_down ();
-    }
-
   public void test_single_store ()
     {
       this._main_loop = new GLib.MainLoop (null, false);
 
-      this._eds_backend.reset ();
+      this.eds_backend.reset ();
 
       /* Create a contact in the address book. */
       var c1 = new Gee.HashMap<string, Value?> ();
@@ -68,7 +52,7 @@ public class StoreRemovedTests : Folks.TestCase
       v.set_string ("brian@example.com");
       c1.set (Edsf.Persona.email_fields[0], (owned) v);
 
-      this._eds_backend.add_contact (c1);
+      this.eds_backend.add_contact (c1);
 
       /* Schedule the test to start with the main loop. */
       this._test_single_store_part1_async.begin ();
@@ -105,7 +89,7 @@ public class StoreRemovedTests : Folks.TestCase
 
   private async void _test_single_store_part1_async ()
     {
-      yield this._eds_backend.commit_contacts_to_addressbook ();
+      yield this.eds_backend.commit_contacts_to_addressbook ();
 
       var store = BackendStore.dup ();
       yield store.prepare ();
@@ -182,7 +166,8 @@ public class StoreRemovedTests : Folks.TestCase
 
       /* Tear down the backend. This should remove all individuals. We check
        * for this above. */
-      this._eds_backend.tear_down ();
+      this.eds_backend.tear_down ();
+      this.eds_backend = null;
     }
 }
 

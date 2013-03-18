@@ -23,9 +23,8 @@ using TrackerTest;
 using Folks;
 using Gee;
 
-public class AdditionalNamesUpdatesTests : Folks.TestCase
+public class AdditionalNamesUpdatesTests : TrackerTest.TestCase
 {
-  private TrackerTest.Backend _tracker_backend;
   private IndividualAggregator _aggregator;
   private bool _updated_additional_names_found;
   private string _updated_additional_names;
@@ -40,19 +39,10 @@ public class AdditionalNamesUpdatesTests : Folks.TestCase
     {
       base ("AdditionalNamesUpdates");
 
-      this._tracker_backend = new TrackerTest.Backend ();
-      this._tracker_backend.debug = false;
+      ((!) this.tracker_backend).debug = false;
 
       this.add_test ("additional names updates",
           this.test_additional_names_updates);
-    }
-
-  public override void set_up ()
-    {
-    }
-
-  public override void tear_down ()
-    {
     }
 
   public void test_additional_names_updates ()
@@ -68,9 +58,9 @@ public class AdditionalNamesUpdatesTests : Folks.TestCase
       c1.set (Trf.OntologyDefs.NCO_FULLNAME, this._initial_fullname);
       c1.set (Trf.OntologyDefs.NCO_ADDITIONAL,
           this._initial_additional_names);
-      this._tracker_backend.add_contact (c1);
+      ((!) this.tracker_backend).add_contact (c1);
 
-      this._tracker_backend.set_up ();
+      ((!) this.tracker_backend).set_up ();
 
       this._initial_additional_names_found = false;
       this._updated_additional_names_found = false;
@@ -89,8 +79,6 @@ public class AdditionalNamesUpdatesTests : Folks.TestCase
 
       assert (this._initial_additional_names_found == true);
       assert (this._updated_additional_names_found == true);
-
-      this._tracker_backend.tear_down ();
     }
 
   private async void _test_additional_names_updates_async (BackendStore store)
@@ -128,7 +116,7 @@ public class AdditionalNamesUpdatesTests : Folks.TestCase
                     (this._notify_additional_names_cb);
                   this._individual_id = i.id;
                   this._initial_additional_names_found = true;
-                  this._tracker_backend.update_contact (this._contact_urn,
+                  ((!) this.tracker_backend).update_contact (this._contact_urn,
                       Trf.OntologyDefs.NCO_ADDITIONAL,
                       this._updated_additional_names);
                 }

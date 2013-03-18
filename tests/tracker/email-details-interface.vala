@@ -23,9 +23,8 @@ using TrackerTest;
 using Folks;
 using Gee;
 
-public class EmailDetailsInterfaceTests : Folks.TestCase
+public class EmailDetailsInterfaceTests : TrackerTest.TestCase
 {
-  private TrackerTest.Backend _tracker_backend;
   private GLib.MainLoop _main_loop;
   private IndividualAggregator _aggregator;
   private int _num_emails;
@@ -36,18 +35,8 @@ public class EmailDetailsInterfaceTests : Folks.TestCase
     {
       base ("EmailDetailsInterfaceTests");
 
-      this._tracker_backend = new TrackerTest.Backend ();
-
       this.add_test ("test email details interface",
           this.test_email_details_interface);
-    }
-
-  public override void set_up ()
-    {
-    }
-
-  public override void tear_down ()
-    {
     }
 
   public void test_email_details_interface ()
@@ -58,9 +47,9 @@ public class EmailDetailsInterfaceTests : Folks.TestCase
       c1.set (Trf.OntologyDefs.NCO_FULLNAME, "persona #1");
       c1.set (Trf.OntologyDefs.NCO_EMAIL_PROP,
           "test1@example.org,test2@example.org");
-      this._tracker_backend.add_contact (c1);
+      ((!) this.tracker_backend).add_contact (c1);
 
-      this._tracker_backend.set_up ();
+      ((!) this.tracker_backend).set_up ();
 
       this._num_emails = 0;
       this._found_email_1 = false;
@@ -79,8 +68,6 @@ public class EmailDetailsInterfaceTests : Folks.TestCase
       assert (this._num_emails == 2);
       assert (this._found_email_1 == true);
       assert (this._found_email_2 == true);
-
-      this._tracker_backend.tear_down ();
     }
 
   private async void _test_email_details_interface_async ()

@@ -94,12 +94,14 @@ public class ObjectCacheTests : Folks.TestCase
 
   public override void set_up ()
     {
+      base.set_up ();
       this._delete_cache_directory ();
     }
 
   public override void tear_down ()
     {
       this._delete_cache_directory ();
+      base.tear_down ();
     }
 
   protected void _delete_directory (File dir) throws GLib.Error

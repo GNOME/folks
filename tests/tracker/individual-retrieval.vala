@@ -23,11 +23,10 @@ using TrackerTest;
 using Folks;
 using Gee;
 
-public class IndividualRetrievalTests : Folks.TestCase
+public class IndividualRetrievalTests : TrackerTest.TestCase
 {
   private GLib.MainLoop _main_loop;
   private IndividualAggregator _aggregator;
-  private TrackerTest.Backend _tracker_backend;
   private Gee.HashMap<string, string> _c1;
   private Gee.HashMap<string, string> _c2;
 
@@ -35,17 +34,7 @@ public class IndividualRetrievalTests : Folks.TestCase
     {
       base ("IndividualRetrieval");
 
-      this._tracker_backend = new TrackerTest.Backend ();
-
       this.add_test ("singleton individuals", this.test_singleton_individuals);
-    }
-
-  public override void set_up ()
-    {
-    }
-
-  public override void tear_down ()
-    {
     }
 
   public void test_singleton_individuals ()
@@ -55,10 +44,10 @@ public class IndividualRetrievalTests : Folks.TestCase
       this._c2 = new Gee.HashMap<string, string> ();
 
       this._c1.set (Trf.OntologyDefs.NCO_FULLNAME, "persona #1");
-      this._tracker_backend.add_contact (this._c1);
+      ((!) this.tracker_backend).add_contact (this._c1);
       this._c2.set (Trf.OntologyDefs.NCO_FULLNAME, "persona #2");
-      this._tracker_backend.add_contact (this._c2);
-      this._tracker_backend.set_up ();
+      ((!) this.tracker_backend).add_contact (this._c2);
+      ((!) this.tracker_backend).set_up ();
 
       this._test_singleton_individuals_async.begin ();
 
@@ -72,8 +61,6 @@ public class IndividualRetrievalTests : Folks.TestCase
 
       assert (this._c1.size == 0);
       assert (this._c2.size == 0);
-
-      this._tracker_backend.tear_down ();
     }
 
   private async void _test_singleton_individuals_async ()

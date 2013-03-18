@@ -23,10 +23,9 @@ using TrackerTest;
 using Folks;
 using Gee;
 
-public class SetRolesTests : Folks.TestCase
+public class SetRolesTests : TrackerTest.TestCase
 {
   private GLib.MainLoop _main_loop;
-  private TrackerTest.Backend _tracker_backend;
   private IndividualAggregator _aggregator;
   private string _persona_fullname;
   private bool _role_found;
@@ -36,18 +35,8 @@ public class SetRolesTests : Folks.TestCase
     {
       base ("SetRolesTests");
 
-      this._tracker_backend = new TrackerTest.Backend ();
-
       this.add_test ("test setting roles ",
           this.test_set_roles);
-    }
-
-  public override void set_up ()
-    {
-    }
-
-  public override void tear_down ()
-    {
     }
 
   public void test_set_roles ()
@@ -57,13 +46,13 @@ public class SetRolesTests : Folks.TestCase
       this._persona_fullname = "persona #1";
 
       c1.set (Trf.OntologyDefs.NCO_FULLNAME, this._persona_fullname);
-      this._tracker_backend.add_contact (c1);
+      ((!) this.tracker_backend).add_contact (c1);
 
       var role = new Role ("some title", "some organisation");
       role.role = "some role";
       this._role_fd = new RoleFieldDetails (role);
 
-      this._tracker_backend.set_up ();
+      ((!) this.tracker_backend).set_up ();
 
       this._role_found = false;
 
@@ -78,8 +67,6 @@ public class SetRolesTests : Folks.TestCase
       this._main_loop.run ();
 
       assert (this._role_found);
-
-     this._tracker_backend.tear_down ();
     }
 
   private async void _test_set_roles_async ()

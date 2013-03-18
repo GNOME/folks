@@ -23,9 +23,8 @@ using TrackerTest;
 using Folks;
 using Gee;
 
-public class DefaultContactTests : Folks.TestCase
+public class DefaultContactTests : TrackerTest.TestCase
 {
-  private TrackerTest.Backend _tracker_backend;
   private bool _found_default_user;
   private bool _found_not_user;
   private bool _found_unknown_user;
@@ -36,17 +35,7 @@ public class DefaultContactTests : Folks.TestCase
     {
       base ("DefaultContactTests");
 
-      this._tracker_backend = new TrackerTest.Backend ();
-
       this.add_test ("test default contact", this.test_default_contact);
-    }
-
-  public override void set_up ()
-    {
-    }
-
-  public override void tear_down ()
-    {
     }
 
   public void test_default_contact ()
@@ -56,9 +45,9 @@ public class DefaultContactTests : Folks.TestCase
       this._fullname_persona = "persona #1";
 
       c1.set (Trf.OntologyDefs.NCO_FULLNAME, this._fullname_persona);
-      this._tracker_backend.add_contact (c1);
+      ((!) this.tracker_backend).add_contact (c1);
 
-      this._tracker_backend.set_up ();
+      ((!) this.tracker_backend).set_up ();
 
       this._found_default_user = false;
       this._found_not_user = false;
@@ -77,8 +66,6 @@ public class DefaultContactTests : Folks.TestCase
       assert (this._found_default_user == true);
       assert (this._found_not_user == true);
       assert (this._found_unknown_user == false);
-
-      this._tracker_backend.tear_down ();
     }
 
   private async void _test_default_contact_async ()

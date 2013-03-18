@@ -23,10 +23,9 @@ using TrackerTest;
 using Folks;
 using Gee;
 
-public class MatchAllTests : Folks.TestCase
+public class MatchAllTests : TrackerTest.TestCase
 {
   private GLib.MainLoop _main_loop;
-  private TrackerTest.Backend _tracker_backend;
   private IndividualAggregator _aggregator = null;
   private string _persona_fullname_1 = "Bernie Innocenti";
   private string _persona_fullname_2 = "Bernardo H. Innocenti";
@@ -45,19 +44,8 @@ public class MatchAllTests : Folks.TestCase
     {
       base ("MatchAllTests");
 
-      this._tracker_backend = new TrackerTest.Backend ();
-
       this.add_test ("test potential match all ",
           this.test_match_all);
-    }
-
-  public override void set_up ()
-    {
-    }
-
-  public override void tear_down ()
-    {
-      this._tracker_backend.tear_down ();
     }
 
   public void test_match_all ()

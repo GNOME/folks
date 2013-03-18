@@ -23,10 +23,9 @@ using TrackerTest;
 using Folks;
 using Gee;
 
-public class PhonesUpdatesTests : Folks.TestCase
+public class PhonesUpdatesTests : TrackerTest.TestCase
 {
   private GLib.MainLoop _main_loop;
-  private TrackerTest.Backend _tracker_backend;
   private IndividualAggregator _aggregator;
   private string _initial_fullname_1;
   private string _contact_urn_1;
@@ -41,18 +40,9 @@ public class PhonesUpdatesTests : Folks.TestCase
     {
       base ("PhonesUpdates");
 
-      this._tracker_backend = new TrackerTest.Backend ();
-      this._tracker_backend.debug = false;
+      ((!) this.tracker_backend).debug = false;
 
       this.add_test ("phones updates", this.test_phones_updates);
-    }
-
-  public override void set_up ()
-    {
-    }
-
-  public override void tear_down ()
-    {
     }
 
   public void test_phones_updates ()
@@ -67,9 +57,9 @@ public class PhonesUpdatesTests : Folks.TestCase
       c1.set (TrackerTest.Backend.URN, this._contact_urn_1);
       c1.set (Trf.OntologyDefs.NCO_FULLNAME, this._initial_fullname_1);
       c1.set (Trf.OntologyDefs.NCO_PHONE_PROP, this._phone_1);
-      this._tracker_backend.add_contact (c1);
+      ((!) this.tracker_backend).add_contact (c1);
 
-      this._tracker_backend.set_up ();
+      ((!) this.tracker_backend).set_up ();
 
       this._individual_id = "";
       this._initial_phone_found = false;
@@ -89,8 +79,6 @@ public class PhonesUpdatesTests : Folks.TestCase
       assert (this._initial_phone_found == true);
       assert (this._initial_phone_found_again == false);
       assert (this._updated_phone_found == true);
-
-      this._tracker_backend.tear_down ();
     }
 
   private async void _test_phones_updates_async ()
@@ -167,24 +155,24 @@ public class PhonesUpdatesTests : Folks.TestCase
   private void _update_phone ()
     {
       var urn_phone_1 = "<" + this._phone_1 + ">";
-      this._tracker_backend.remove_triplet (this._contact_urn_1,
+      ((!) this.tracker_backend).remove_triplet (this._contact_urn_1,
           Trf.OntologyDefs.NCO_HAS_AFFILIATION, urn_phone_1);
 
       var urn_phone_2 = "<phone:" + this._phone_2 + ">";
-      this._tracker_backend.insert_triplet (urn_phone_2,
+      ((!) this.tracker_backend).insert_triplet (urn_phone_2,
           "a", Trf.OntologyDefs.NCO_PHONE,
           Trf.OntologyDefs.NCO_PHONE_PROP,
           this._phone_2);
 
       var affl_2 = "<" + this._phone_2 + ">";
-      this._tracker_backend.insert_triplet
+      ((!) this.tracker_backend).insert_triplet
           (affl_2,
           "a", Trf.OntologyDefs.NCO_AFFILIATION);
-      this._tracker_backend.insert_triplet
+      ((!) this.tracker_backend).insert_triplet
           (affl_2,
           Trf.OntologyDefs.NCO_HAS_PHONE, urn_phone_2);
 
-      this._tracker_backend.insert_triplet
+      ((!) this.tracker_backend).insert_triplet
           (this._contact_urn_1,
           Trf.OntologyDefs.NCO_HAS_AFFILIATION, affl_2);
     }

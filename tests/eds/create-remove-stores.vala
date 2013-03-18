@@ -21,10 +21,9 @@
 using Folks;
 using Gee;
 
-public class CreateRemoveStoresTests : Folks.TestCase
+public class CreateRemoveStoresTests : EdsTest.TestCase
 {
   private GLib.MainLoop _main_loop;
-  private EdsTest.Backend? _eds_backend;
   private IndividualAggregator _aggregator;
   private HashMap<string, bool> _store_removed;
   private HashMap<string, bool> _store_added;
@@ -40,28 +39,21 @@ public class CreateRemoveStoresTests : Folks.TestCase
 
   public override void set_up ()
     {
-      this._eds_backend = new EdsTest.Backend ();
+      base.set_up ();
+
       this._store_removed = new HashMap<string, bool> ();
       this._store_added = new HashMap<string, bool> ();
       this._backend_store = BackendStore.dup();
 
-      this._eds_backend.set_up ();
-
-      /* We configure eds as the primary store */
-      var config_val = "eds:%s".printf (this._eds_backend.address_book_uid);
-      Environment.set_variable ("FOLKS_PRIMARY_STORE", config_val, true);
       Environment.set_variable ("FOLKS_BACKEND_EDS_USE_ADDRESS_BOOKS",
                                 "test:other:test1:test2", true);
     }
 
   public override void tear_down ()
     {
-      this._eds_backend.tear_down ();
-
-      Environment.unset_variable ("FOLKS_PRIMARY_STORE");
       Environment.unset_variable ("FOLKS_BACKEND_EDS_USE_ADDRESS_BOOKS");
 
-      this._eds_backend = null;
+      base.tear_down ();
     }
 
   public void test_creating_removing_stores ()

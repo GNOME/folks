@@ -23,10 +23,9 @@ using TrackerTest;
 using Folks;
 using Gee;
 
-public class LinkPersonasViaLocalIDsTests : Folks.TestCase
+public class LinkPersonasViaLocalIDsTests : TrackerTest.TestCase
 {
   private GLib.MainLoop _main_loop;
-  private TrackerTest.Backend _tracker_backend;
   private IndividualAggregator _aggregator;
   private string _persona_fullname_1;
   private string _persona_fullname_2;
@@ -43,28 +42,27 @@ public class LinkPersonasViaLocalIDsTests : Folks.TestCase
     {
       base ("LinkPersonasViaLocalIDsTests");
 
-      this._tracker_backend = new TrackerTest.Backend ();
-
       this.add_test ("test linking personas",
           this.test_linking_personas_via_local_ids);
     }
 
   public override void set_up ()
     {
+      base.set_up ();
+
       Environment.set_variable ("FOLKS_PRIMARY_STORE", "tracker", true);
 
       /* FIXME: this set_up method takes care both of setting
        * the connection with Tracker and adding the contacts
        * needed for the tests. We might need to trigger those
        * actions at separate points so we should decouple them. */
-      this._tracker_backend.set_up ();
+      ((!) this.tracker_backend).set_up ();
     }
 
   public override void tear_down ()
     {
-      this._tracker_backend.tear_down ();
-
       Environment.unset_variable ("FOLKS_PRIMARY_STORE");
+      base.tear_down ();
     }
 
   public void test_linking_personas_via_local_ids ()

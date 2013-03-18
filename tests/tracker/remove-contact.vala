@@ -23,10 +23,9 @@ using TrackerTest;
 using Folks;
 using Gee;
 
-public class RemoveContactTests : Folks.TestCase
+public class RemoveContactTests : TrackerTest.TestCase
 {
   private GLib.MainLoop _main_loop;
-  private TrackerTest.Backend _tracker_backend;
   private IndividualAggregator _aggregator;
   private bool _contact_added;
   private bool _contact_removed;
@@ -37,17 +36,7 @@ public class RemoveContactTests : Folks.TestCase
     {
       base ("RemoveContactTests");
 
-      this._tracker_backend = new TrackerTest.Backend ();
-
       this.add_test ("test removing contacts ", this.test_remove_contact);
-    }
-
-  public override void set_up ()
-    {
-    }
-
-  public override void tear_down ()
-    {
     }
 
   public void test_remove_contact ()
@@ -57,8 +46,8 @@ public class RemoveContactTests : Folks.TestCase
       Gee.HashMap<string, string> c1 = new Gee.HashMap<string, string> ();
 
       c1.set (Trf.OntologyDefs.NCO_FULLNAME, this._persona_fullname);
-      this._tracker_backend.add_contact (c1);
-      this._tracker_backend.set_up ();
+      ((!) this.tracker_backend).add_contact (c1);
+      ((!) this.tracker_backend).set_up ();
 
       this._contact_added = false;
       this._contact_removed = false;
@@ -76,8 +65,6 @@ public class RemoveContactTests : Folks.TestCase
 
       assert (this._contact_added == true);
       assert (this._contact_removed == true);
-
-      this._tracker_backend.tear_down ();
     }
 
   private async void _test_remove_contact_async ()
@@ -118,7 +105,7 @@ public class RemoveContactTests : Folks.TestCase
               foreach (var persona in i.personas)
                 {
                   var contact_id = persona.iid.split (":")[1];
-                  this._tracker_backend.remove_contact (contact_id);
+                  ((!) this.tracker_backend).remove_contact (contact_id);
                 }
             }
         }

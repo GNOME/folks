@@ -23,10 +23,9 @@ using TrackerTest;
 using Folks;
 using Gee;
 
-public class SetIMAddressesTests : Folks.TestCase
+public class SetIMAddressesTests : TrackerTest.TestCase
 {
   private GLib.MainLoop _main_loop;
-  private TrackerTest.Backend _tracker_backend;
   private IndividualAggregator _aggregator;
   private string _persona_fullname;
   private GLib.List<string> _addresses =
@@ -37,17 +36,7 @@ public class SetIMAddressesTests : Folks.TestCase
     {
       base ("SetIMAddressesTests");
 
-      this._tracker_backend = new TrackerTest.Backend ();
-
       this.add_test ("test setting im_addresses ", this.test_set_im_addresses);
-    }
-
-  public override void set_up ()
-    {
-    }
-
-  public override void tear_down ()
-    {
     }
 
   public void test_set_im_addresses ()
@@ -59,14 +48,14 @@ public class SetIMAddressesTests : Folks.TestCase
       this._persona_fullname = "persona #1";
 
       c1.set (Trf.OntologyDefs.NCO_FULLNAME, this._persona_fullname);
-      this._tracker_backend.add_contact (c1);
+      ((!) this.tracker_backend).add_contact (c1);
 
       this._addresses.prepend ("one@example.org");
       this._addresses.prepend ("two@example.org");
       this._addresses.prepend ("three@example.org");
       this._addresses.prepend ("four@example.org");
 
-      this._tracker_backend.set_up ();
+      ((!) this.tracker_backend).set_up ();
 
       this._test_set_im_addresses_async.begin ();
 
@@ -80,8 +69,6 @@ public class SetIMAddressesTests : Folks.TestCase
 
       assert (this._initial_individual_found);
       assert (this._addresses.length () == 0);
-
-      this._tracker_backend.tear_down ();
     }
 
   private async void _test_set_im_addresses_async ()

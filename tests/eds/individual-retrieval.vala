@@ -22,9 +22,8 @@ using EdsTest;
 using Folks;
 using Gee;
 
-public class IndividualRetrievalTests : Folks.TestCase
+public class IndividualRetrievalTests : EdsTest.TestCase
 {
-  private EdsTest.Backend _eds_backend;
   private GLib.MainLoop _main_loop;
   private IndividualAggregator _aggregator;
   private HashSet<string> _found_individuals;
@@ -36,21 +35,6 @@ public class IndividualRetrievalTests : Folks.TestCase
       this.add_test ("singleton individuals", this.test_singleton_individuals);
     }
 
-  public override void set_up ()
-    {
-      this._eds_backend = new EdsTest.Backend ();
-      this._eds_backend.set_up ();
-
-      /* We configure eds as the primary store */
-      var config_val = "eds:%s".printf (this._eds_backend.address_book_uid);
-      Environment.set_variable ("FOLKS_PRIMARY_STORE", config_val, true);
-    }
-
-  public override void tear_down ()
-    {
-      this._eds_backend.tear_down ();
-    }
-
   public void test_singleton_individuals ()
     {
       Gee.HashMap<string, Value?> c1 = new Gee.HashMap<string, Value?> ();
@@ -59,7 +43,7 @@ public class IndividualRetrievalTests : Folks.TestCase
       this._main_loop = new GLib.MainLoop (null, false);
       Value? v;
 
-      this._eds_backend.reset();
+      this.eds_backend.reset ();
 
       v = Value (typeof (string));
       v.set_string ("bernie h. innocenti");
@@ -67,7 +51,7 @@ public class IndividualRetrievalTests : Folks.TestCase
       v = Value (typeof (string));
       v.set_string ("bernie@example.org");
       c1.set(Edsf.Persona.email_fields[0], (owned) v);
-      this._eds_backend.add_contact (c1);
+      this.eds_backend.add_contact (c1);
 
       v = Value (typeof (string));
       v.set_string ("richard m. stallman");
@@ -75,7 +59,7 @@ public class IndividualRetrievalTests : Folks.TestCase
       v = Value (typeof (string));
       v.set_string ("rms@example.org");
       c2.set(Edsf.Persona.email_fields[0], (owned) v);
-      this._eds_backend.add_contact (c2);
+      this.eds_backend.add_contact (c2);
 
       this._test_singleton_individuals_async.begin ();
 
@@ -93,7 +77,7 @@ public class IndividualRetrievalTests : Folks.TestCase
   private async void _test_singleton_individuals_async ()
     {
 
-      yield this._eds_backend.commit_contacts_to_addressbook ();
+      yield this.eds_backend.commit_contacts_to_addressbook ();
 
       var store = BackendStore.dup ();
       yield store.prepare ();

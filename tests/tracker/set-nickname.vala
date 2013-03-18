@@ -23,10 +23,9 @@ using TrackerTest;
 using Folks;
 using Gee;
 
-public class SetNicknameTests : Folks.TestCase
+public class SetNicknameTests : TrackerTest.TestCase
 {
   private GLib.MainLoop _main_loop;
-  private TrackerTest.Backend _tracker_backend;
   private IndividualAggregator _aggregator;
   private string _persona_fullname;
   private string _initial_nickname;
@@ -38,17 +37,7 @@ public class SetNicknameTests : Folks.TestCase
     {
       base ("SetNicknameTests");
 
-      this._tracker_backend = new TrackerTest.Backend ();
-
       this.add_test ("test setting nickname ", this.test_set_nickname);
-    }
-
-  public override void set_up ()
-    {
-    }
-
-  public override void tear_down ()
-    {
     }
 
   public void test_set_nickname ()
@@ -61,9 +50,9 @@ public class SetNicknameTests : Folks.TestCase
 
       c1.set (Trf.OntologyDefs.NCO_FULLNAME, this._persona_fullname);
       c1.set (Trf.OntologyDefs.NCO_NICKNAME, this._initial_nickname);
-      this._tracker_backend.add_contact (c1);
+      ((!) this.tracker_backend).add_contact (c1);
 
-      this._tracker_backend.set_up ();
+      ((!) this.tracker_backend).set_up ();
 
       this._initial_nickname_found = false;
       this._modified_nickname_found = false;
@@ -80,8 +69,6 @@ public class SetNicknameTests : Folks.TestCase
 
       assert (this._initial_nickname_found == true);
       assert (this._modified_nickname_found == true);
-
-      this._tracker_backend.tear_down ();
     }
 
   private async void _test_set_nickname_async ()

@@ -4,6 +4,8 @@ AM_VALAFLAGS += \
 	--header=libsocialweb-test.h \
 	--vapidir=$(top_srcdir)/folks \
 	--vapidir=$(top_srcdir)/backends/libsocialweb/lib \
+	--vapidir=$(abs_top_srcdir)/tests/lib \
+	--vapidir=$(abs_top_builddir)/tests/lib \
 	--vapidir=. \
 	--pkg gobject-2.0 \
 	--pkg gio-2.0 \
@@ -11,6 +13,7 @@ AM_VALAFLAGS += \
 	--pkg folks \
 	--pkg libsocialweb-client \
 	--pkg folks-libsocialweb \
+	--pkg folks-test \
 	-g \
 	$(NULL)
 
@@ -18,13 +21,16 @@ noinst_LTLIBRARIES = libsocialweb-test.la
 
 libsocialweb_test_la_SOURCES = \
 	backend.vala \
+	test-case.vala \
 	$(NULL)
 
 libsocialweb_test_la_CFLAGS = \
 	$(GLIB_CFLAGS) \
 	$(GIO_CFLAGS) \
 	$(GEE_CFLAGS) \
+	-I$(top_srcdir) \
 	-I$(top_srcdir)/backends/libsocialweb/lib \
+	-I$(top_srcdir)/tests/lib \
 	$(NULL)
 
 libsocialweb_test_la_LIBADD = \
@@ -33,6 +39,7 @@ libsocialweb_test_la_LIBADD = \
 	$(GEE_LIBS) \
 	$(top_builddir)/folks/libfolks.la \
 	$(top_builddir)/backends/libsocialweb/lib/libfolks-libsocialweb.la \
+	$(top_builddir)/tests/lib/libfolks-test.la \
 	$(NULL)
 
 MAINTAINERCLEANFILES = \

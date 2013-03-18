@@ -22,13 +22,10 @@ public class AsyncLockingTests : Folks.TestCase
 
   public override void set_up ()
     {
+      base.set_up ();
       this._counter = 0;
       this._calls_pending = 0;
       this._counter_increment_pending = false;
-    }
-
-  public override void tear_down ()
-    {
     }
 
   public void test_many_concurrent_funcs ()

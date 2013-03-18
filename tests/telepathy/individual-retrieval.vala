@@ -24,18 +24,14 @@ using Tpf;
 using Folks;
 using Gee;
 
-public class IndividualRetrievalTests : Folks.TestCase
+public class IndividualRetrievalTests : TpfTest.TestCase
 {
-  private TpTests.Backend tp_backend;
-  private void* _account_handle;
   private HashSet<string> default_individuals;
   private int _test_timeout = 3;
 
   public IndividualRetrievalTests ()
     {
       base ("IndividualRetrieval");
-
-      this.tp_backend = new TpTests.Backend ();
 
       /* IDs of the individuals we expect to see.
        * These are externally opaque, but internally are SHA-1 hashes of the
@@ -70,19 +66,6 @@ public class IndividualRetrievalTests : Folks.TestCase
 
       if (Environment.get_variable ("FOLKS_TEST_VALGRIND") != null)
           this._test_timeout = 10;
-    }
-
-  public override void set_up ()
-    {
-      this.tp_backend.set_up ();
-      this._account_handle = this.tp_backend.add_account ("protocol",
-          "me@example.com", "cm", "account");
-    }
-
-  public override void tear_down ()
-    {
-      this.tp_backend.remove_account (this._account_handle);
-      this.tp_backend.tear_down ();
     }
 
   public void test_aggregator ()

@@ -21,10 +21,9 @@
 using Folks;
 using Gee;
 
-public class AddPersonaTests : Folks.TestCase
+public class AddPersonaTests : EdsTest.TestCase
 {
   private GLib.MainLoop _main_loop;
-  private EdsTest.Backend _eds_backend;
   private IndividualAggregator _aggregator;
   private string _persona_fullname;
   private string _persona_nickname;
@@ -57,21 +56,6 @@ public class AddPersonaTests : Folks.TestCase
       base ("AddPersonaTests");
 
       this.add_test ("test adding a persona to e-d-s ", this.test_add_persona);
-    }
-
-  public override void set_up ()
-    {
-      this._eds_backend = new EdsTest.Backend ();
-      this._eds_backend.set_up ();
-
-      /* We configure eds as the primary store */
-      var config_val = "eds:%s".printf (this._eds_backend.address_book_uid);
-      Environment.set_variable ("FOLKS_PRIMARY_STORE", config_val, true);
-    }
-
-  public override void tear_down ()
-    {
-      this._eds_backend.tear_down ();
     }
 
   public void test_add_persona ()
@@ -146,7 +130,7 @@ public class AddPersonaTests : Folks.TestCase
             {
               this._pstore =
                 (Edsf.PersonaStore) backend.persona_stores.get (
-                    this._eds_backend.address_book_uid);
+                    this.eds_backend.address_book_uid);
               if (this._pstore != null)
                 break;
             }

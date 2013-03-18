@@ -22,9 +22,8 @@ using EdsTest;
 using Folks;
 using Gee;
 
-public class AntiLinkingTests : Folks.TestCase
+public class AntiLinkingTests : EdsTest.TestCase
 {
-  private EdsTest.Backend _eds_backend;
   private IndividualAggregator _aggregator;
   private GLib.MainLoop _main_loop;
   private bool _found_before_update;
@@ -47,31 +46,29 @@ public class AntiLinkingTests : Folks.TestCase
 
   public override void set_up ()
     {
+      base.set_up ();
+
       this._found_before_update = false;
       this._found_after_update = false;
       this._found_after_final_update = false;
-      this._eds_backend = new EdsTest.Backend ();
+    }
 
+  public override void create_backend ()
+    {
       /* Create a new backend (by name) each set up to guarantee we don't
        * inherit state from the last test.
        * FIXME: bgo#690830 */
       this._test_num++;
-      this._eds_backend.set_up (false, @"test$_test_num");
-
-      /* We configure eds as the primary store */
-      var config_val = "eds:%s".printf (this._eds_backend.address_book_uid);
-      Environment.set_variable ("FOLKS_PRIMARY_STORE", config_val, true);
+      this.eds_backend = new EdsTest.Backend ();
+      this.eds_backend.set_up (false, @"test$_test_num");
     }
 
   public override void tear_down ()
     {
-      this._eds_backend.tear_down ();
-
-      Environment.unset_variable ("FOLKS_PRIMARY_STORE");
-
       /* necessary to clean out some stale state */
-      this._eds_backend = null;
       this._aggregator = null;
+
+      base.tear_down ();
     }
 
   /* Confirm that basic anti-linking works for two Personas who have a common
@@ -96,7 +93,7 @@ public class AntiLinkingTests : Folks.TestCase
       v = Value (typeof (string));
       v.set_string (_email_1);
       c.set ("email_1", (owned) v);
-      this._eds_backend.add_contact (c);
+      this.eds_backend.add_contact (c);
 
       c = new Gee.HashMap<string, Value?> ();
       v = Value (typeof (string));
@@ -106,7 +103,7 @@ public class AntiLinkingTests : Folks.TestCase
       /* Intentionally set the same email address so these will be linked */
       v.set_string (_email_1);
       c.set ("email_1", (owned) v);
-      this._eds_backend.add_contact (c);
+      this.eds_backend.add_contact (c);
 
       this._test_anti_linking_basic_async.begin ();
 
@@ -125,7 +122,7 @@ public class AntiLinkingTests : Folks.TestCase
 
   private async void _test_anti_linking_basic_async ()
     {
-      yield this._eds_backend.commit_contacts_to_addressbook ();
+      yield this.eds_backend.commit_contacts_to_addressbook ();
 
       var store = BackendStore.dup ();
       yield store.prepare ();
@@ -223,7 +220,7 @@ public class AntiLinkingTests : Folks.TestCase
       v = Value (typeof (string));
       v.set_string (_email_1);
       c.set ("email_1", (owned) v);
-      this._eds_backend.add_contact (c);
+      this.eds_backend.add_contact (c);
 
       c = new Gee.HashMap<string, Value?> ();
       v = Value (typeof (string));
@@ -233,7 +230,7 @@ public class AntiLinkingTests : Folks.TestCase
       /* Intentionally set the same email address so these will be linked */
       v.set_string (_email_1);
       c.set ("email_1", (owned) v);
-      this._eds_backend.add_contact (c);
+      this.eds_backend.add_contact (c);
 
       this._test_anti_linking_removal_async.begin ();
 
@@ -253,7 +250,7 @@ public class AntiLinkingTests : Folks.TestCase
 
   private async void _test_anti_linking_removal_async ()
     {
-      yield this._eds_backend.commit_contacts_to_addressbook ();
+      yield this.eds_backend.commit_contacts_to_addressbook ();
 
       var store = BackendStore.dup ();
       yield store.prepare ();

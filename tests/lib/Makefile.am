@@ -1,4 +1,6 @@
+# Build . first so that backends' test libraries can link to libfolks-test.la
 SUBDIRS = \
+	. \
 	key-file \
 	$(NULL)
 
@@ -54,7 +56,8 @@ libfolks_test_la_LIBADD = \
 libfolks_test_la_VALAFLAGS = \
 	$(ERROR_VALAFLAGS) \
 	$(AM_VALAFLAGS) \
-	--vapidir=$(top_srcdir)/folks \
+	--vapidir=$(abs_top_srcdir)/folks \
+	--vapidir=$(abs_top_builddir)/folks \
 	--pkg gobject-2.0 \
 	--pkg gio-2.0 \
 	--pkg gee-0.8 \
@@ -72,6 +75,7 @@ MAINTAINERCLEANFILES = \
 	$(NULL)
 
 EXTRA_DIST = \
+	folks-test.deps \
 	$(MAINTAINERCLEANFILES) \
 	$(NULL)
 

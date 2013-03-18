@@ -23,10 +23,9 @@ using TrackerTest;
 using Folks;
 using Gee;
 
-public class FavouriteUpdatesTests : Folks.TestCase
+public class FavouriteUpdatesTests : TrackerTest.TestCase
 {
   private GLib.MainLoop _main_loop;
-  private TrackerTest.Backend _tracker_backend;
   private IndividualAggregator _aggregator;
   private bool _is_favourite_1;
   private string _individual_id_1;
@@ -41,18 +40,9 @@ public class FavouriteUpdatesTests : Folks.TestCase
     {
       base ("FavouriteUpdates");
 
-      this._tracker_backend = new TrackerTest.Backend ();
-      this._tracker_backend.debug = false;
+      ((!) this.tracker_backend).debug = false;
 
       this.add_test ("favourite update", this.test_favourite_update);
-    }
-
-  public override void set_up ()
-    {
-    }
-
-  public override void tear_down ()
-    {
     }
 
   public void test_favourite_update ()
@@ -67,14 +57,14 @@ public class FavouriteUpdatesTests : Folks.TestCase
 
       c1.set (TrackerTest.Backend.URN, this._contact_urn_1);
       c1.set (Trf.OntologyDefs.NCO_FULLNAME, this._initial_fullname_1);
-      this._tracker_backend.add_contact (c1);
+      ((!) this.tracker_backend).add_contact (c1);
 
       c2.set (TrackerTest.Backend.URN, this._contact_urn_2);
       c2.set (Trf.OntologyDefs.NCO_FULLNAME, this._initial_fullname_2);
       c2.set (Trf.OntologyDefs.NAO_TAG, "");
-      this._tracker_backend.add_contact (c2);
+      ((!) this.tracker_backend).add_contact (c2);
 
-      this._tracker_backend.set_up ();
+      ((!) this.tracker_backend).set_up ();
 
       this._is_favourite_1 = false;
       this._individual_id_1 = "";
@@ -95,8 +85,6 @@ public class FavouriteUpdatesTests : Folks.TestCase
 
       assert (this._is_favourite_1 == true);
       assert (this._is_favourite_2 == false);
-
-      this._tracker_backend.tear_down ();
     }
 
   private async void _test_favourite_update_async ()
@@ -131,7 +119,7 @@ public class FavouriteUpdatesTests : Folks.TestCase
               i.notify["is-favourite"].connect
                   (this._notify_favourite_cb);
               this._individual_id_1 = i.id;
-              this._tracker_backend.update_favourite (this._contact_urn_1,
+              ((!) this.tracker_backend).update_favourite (this._contact_urn_1,
                   true);
             }
           else if (i.full_name == this._initial_fullname_2)
@@ -142,7 +130,7 @@ public class FavouriteUpdatesTests : Folks.TestCase
               // HACK: we need to make sure the INSERT event was delivered
               Timeout.add_seconds (1, () =>
                   {
-                    this._tracker_backend.update_favourite
+                    ((!) this.tracker_backend).update_favourite
                         (this._contact_urn_2, false);
                     return false;
                   });

@@ -24,44 +24,21 @@ using Gee;
 using GLib;
 using SocialWebClient;
 
-public class DummyLswTests : Folks.TestCase
+public class DummyLswTests : LibsocialwebTest.TestCase
 {
-  private LibsocialwebTest.Backend _lsw_backend;
-
   public DummyLswTests ()
     {
       base ("DummyLsw");
 
-      this._lsw_backend = new LibsocialwebTest.Backend ();
-
       this.add_test ("dummy libsocialweb", this.test_dummy_libsocialweb);
-    }
-
-  public override void set_up ()
-    {
-    }
-
-  public override void tear_down ()
-    {
     }
 
   public void test_dummy_libsocialweb ()
     {
       var main_loop = new GLib.MainLoop (null, false);
 
-      this._lsw_backend.ready.connect(() =>
-        {
-          main_loop.quit ();
-        });
-      uint timer_id = Timeout.add_seconds (5, () =>
-        {
-          assert_not_reached ();
-        });
-      this._lsw_backend.set_up ();
-      main_loop.run ();
-      Source.remove (timer_id);
-
-      var mysocialnetwork = this._lsw_backend.add_service ("mysocialnetwork");
+      var lsw_backend = (!) this.lsw_backend;
+      var mysocialnetwork = lsw_backend.add_service ("mysocialnetwork");
       var p = new GLib.HashTable<string,string> (null, null);
 
       try
@@ -89,8 +66,7 @@ public class DummyLswTests : Folks.TestCase
           assert_not_reached ();
         }
 
-
-      timer_id = Timeout.add_seconds (5, () =>
+      uint timer_id = Timeout.add_seconds (5, () =>
         {
           assert_not_reached ();
         });
@@ -299,8 +275,6 @@ public class DummyLswTests : Folks.TestCase
       main_loop.run ();
       Source.remove (timer_id);
       aggregator.disconnect (handler_id);
-
-      this._lsw_backend.tear_down ();
     }
 }
 

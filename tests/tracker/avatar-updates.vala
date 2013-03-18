@@ -23,9 +23,8 @@ using TrackerTest;
 using Folks;
 using Gee;
 
-public class AvatarUpdatesTests : Folks.TestCase
+public class AvatarUpdatesTests : TrackerTest.TestCase
 {
-  private TrackerTest.Backend _tracker_backend;
   private IndividualAggregator _aggregator;
   private bool _updated_avatar_found;
   private string _updated_avatar_uri;
@@ -42,18 +41,9 @@ public class AvatarUpdatesTests : Folks.TestCase
     {
       base ("AvatarUpdates");
 
-      this._tracker_backend = new TrackerTest.Backend ();
-      this._tracker_backend.debug = false;
+      ((!) this.tracker_backend).debug = false;
 
       this.add_test ("avatar updates", this.test_avatar_updates);
-    }
-
-  public override void set_up ()
-    {
-    }
-
-  public override void tear_down ()
-    {
     }
 
   public void test_avatar_updates ()
@@ -71,9 +61,9 @@ public class AvatarUpdatesTests : Folks.TestCase
       c1.set (TrackerTest.Backend.URN, this._contact_urn);
       c1.set (Trf.OntologyDefs.NCO_FULLNAME, this._initial_fullname);
       c1.set (Trf.OntologyDefs.NCO_PHOTO, this._initial_avatar_uri);
-      this._tracker_backend.add_contact (c1);
+      ((!) this.tracker_backend).add_contact (c1);
 
-      this._tracker_backend.set_up ();
+      ((!) this.tracker_backend).set_up ();
 
       this._initial_avatar_found = false;
       this._updated_avatar_found = false;
@@ -91,8 +81,6 @@ public class AvatarUpdatesTests : Folks.TestCase
 
       assert (this._initial_avatar_found == true);
       assert (this._updated_avatar_found == true);
-
-      this._tracker_backend.tear_down ();
     }
 
   private async void test_avatar_updates_async ()
@@ -134,17 +122,17 @@ public class AvatarUpdatesTests : Folks.TestCase
                 {
                   this._initial_avatar_found = true;
 
-                  this._tracker_backend.remove_triplet (this._contact_urn,
+                  ((!) this.tracker_backend).remove_triplet (this._contact_urn,
                       Trf.OntologyDefs.NCO_PHOTO, this._photo_urn);
 
                   string photo_urn_2 = "<" + this._updated_avatar_uri;
                   photo_urn_2 += ">";
-                  this._tracker_backend.insert_triplet (photo_urn_2,
+                  ((!) this.tracker_backend).insert_triplet (photo_urn_2,
                       "a", "nfo:Image, nie:DataObject",
                       Trf.OntologyDefs.NIE_URL,
                       this._updated_avatar_uri);
 
-                  this._tracker_backend.insert_triplet
+                  ((!) this.tracker_backend).insert_triplet
                       (this._contact_urn,
                       Trf.OntologyDefs.NCO_PHOTO, photo_urn_2);
 

@@ -20,29 +20,16 @@
 using Gee;
 using Folks;
 
-public class InitTests : Folks.TestCase
+public class InitTests : TpfTest.TestCase
 {
-  private TpTests.Backend _tp_backend;
   private int _test_timeout = 5;
 
   public InitTests ()
     {
       base ("Init");
 
-      this._tp_backend = new TpTests.Backend ();
-
       /* Set up the tests */
       this.add_test ("quiescence", this.test_quiescence);
-    }
-
-  public override void set_up ()
-    {
-      this._tp_backend.set_up ();
-    }
-
-  public override void tear_down ()
-    {
-      this._tp_backend.tear_down ();
     }
 
   /* Prepare an aggregator and wait for quiescence, then quit. Error if reaching
@@ -50,9 +37,6 @@ public class InitTests : Folks.TestCase
   public void test_quiescence ()
     {
       var main_loop = new GLib.MainLoop (null, false);
-
-      void* account_handle = this._tp_backend.add_account ("protocol",
-          "me@example.com", "cm", "account");
 
       /* Main test code. */
       var aggregator = new IndividualAggregator ();
@@ -90,9 +74,6 @@ public class InitTests : Folks.TestCase
       /* Check results. */
       assert (aggregator.is_quiescent == true);
       assert (aggregator.individuals.size > 0);
-
-      /* Clean up for the next test */
-      this._tp_backend.remove_account (account_handle);
     }
 }
 

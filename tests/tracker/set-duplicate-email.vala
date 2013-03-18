@@ -23,10 +23,9 @@ using TrackerTest;
 using Folks;
 using Gee;
 
-public class SetDuplicateEmailTests : Folks.TestCase
+public class SetDuplicateEmailTests : TrackerTest.TestCase
 {
   private GLib.MainLoop _main_loop;
-  private TrackerTest.Backend _tracker_backend;
   private IndividualAggregator _aggregator;
   private string _persona_fullname_1 = "persona #1";
   private string _email_1 = "some-address@example.org";
@@ -38,19 +37,8 @@ public class SetDuplicateEmailTests : Folks.TestCase
     {
       base ("SetDuplicateEmailTests");
 
-      this._tracker_backend = new TrackerTest.Backend ();
-
       this.add_test ("test re-setting an existing e-mail address",
           this.test_set_duplicate_email);
-    }
-
-  public override void set_up ()
-    {
-    }
-
-  public override void tear_down ()
-    {
-      this._tracker_backend.tear_down ();
     }
 
   public void test_set_duplicate_email ()

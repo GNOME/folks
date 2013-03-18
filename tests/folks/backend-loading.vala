@@ -20,18 +20,14 @@
 using Gee;
 using Folks;
 
-public class BackendLoadingTests : Folks.TestCase
+public class BackendLoadingTests : TpfTest.MixedTestCase
 {
-  private TpTests.Backend _tp_backend;
-  private void* _account_handle;
   private MainLoop main_loop;
   private static const string STORE_FILE_PATH = "folks-test-backend-store.ini";
 
   public BackendLoadingTests ()
     {
       base ("BackendLoading");
-
-      this._tp_backend = new TpTests.Backend ();
 
       this.add_test ("load and prep", this.test_load_and_prep);
       this.add_test ("disabling", this.test_disabling);
@@ -40,9 +36,7 @@ public class BackendLoadingTests : Folks.TestCase
 
   public override void set_up ()
     {
-      this._tp_backend.set_up ();
-      this._account_handle = this._tp_backend.add_account ("protocol",
-          "me@example.com", "cm", "account");
+      base.set_up ();
 
       /* Use a temporary key file for the BackendStore */
       var kf_path = Path.build_filename (Environment.get_tmp_dir (),
@@ -78,8 +72,7 @@ public class BackendLoadingTests : Folks.TestCase
       FileUtils.remove (Path.build_filename (Environment.get_tmp_dir (),
           this.STORE_FILE_PATH, null));
 
-      this._tp_backend.remove_account (this._account_handle);
-      this._tp_backend.tear_down ();
+      base.tear_down ();
     }
 
   public void test_load_and_prep ()

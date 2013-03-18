@@ -21,9 +21,8 @@
 using Folks;
 using Gee;
 
-public class ImDetailsTests : Folks.TestCase
+public class ImDetailsTests : EdsTest.TestCase
 {
-  private EdsTest.Backend _eds_backend;
   private GLib.MainLoop _main_loop;
   private IndividualAggregator _aggregator;
   private int _num_addrs;
@@ -40,21 +39,6 @@ public class ImDetailsTests : Folks.TestCase
           this.test_im_details_interface);
     }
 
-  public override void set_up ()
-    {
-      this._eds_backend = new EdsTest.Backend ();
-      this._eds_backend.set_up ();
-
-      /* We configure eds as the primary store */
-      var config_val = "eds:%s".printf (this._eds_backend.address_book_uid);
-      Environment.set_variable ("FOLKS_PRIMARY_STORE", config_val, true);
-    }
-
-  public override void tear_down ()
-    {
-      this._eds_backend.tear_down ();
-    }
-
   public void test_im_details_interface ()
     {
       this._main_loop = new GLib.MainLoop (null, false);
@@ -64,7 +48,7 @@ public class ImDetailsTests : Folks.TestCase
       this._im_addrs += ",im_yahoo_home_1#test2@example.org";
       Value? v;
 
-      this._eds_backend.reset();
+      this.eds_backend.reset ();
 
       v = Value (typeof (string));
       v.set_string (this._fullname);
@@ -73,7 +57,7 @@ public class ImDetailsTests : Folks.TestCase
       v.set_string (this._im_addrs);
       c1.set ("im_addresses", (owned) v);
 
-      this._eds_backend.add_contact (c1);
+      this.eds_backend.add_contact (c1);
 
       this._num_addrs = 0;
       this._found_addr_1 = false;
@@ -97,7 +81,7 @@ public class ImDetailsTests : Folks.TestCase
   private async void _test_im_details_interface_async ()
     {
 
-      yield this._eds_backend.commit_contacts_to_addressbook ();
+      yield this.eds_backend.commit_contacts_to_addressbook ();
 
       var store = BackendStore.dup ();
       yield store.prepare ();

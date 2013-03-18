@@ -357,6 +357,12 @@ tp_tests_backend_tear_down (TpTestsBackend *self)
   TpTestsBackendPrivate *priv = self->priv;
   GError *error = NULL;
 
+  if (priv->daemon == NULL)
+    {
+      /* already torn down */
+      return;
+    }
+
   /* Make sure all dbus trafic with AM is done */
   tp_tests_proxy_run_until_dbus_queue_processed (priv->client_am);
   g_clear_object (&priv->client_am);

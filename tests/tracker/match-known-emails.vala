@@ -23,10 +23,9 @@ using TrackerTest;
 using Folks;
 using Gee;
 
-public class MatchKnownEmailsTests : Folks.TestCase
+public class MatchKnownEmailsTests : TrackerTest.TestCase
 {
   private GLib.MainLoop _main_loop;
-  private TrackerTest.Backend _tracker_backend;
   private IndividualAggregator _aggregator;
 
   /* Make sure the names are completely different so
@@ -45,19 +44,8 @@ public class MatchKnownEmailsTests : Folks.TestCase
     {
       base ("MatchKnownEmailsTests");
 
-      this._tracker_backend = new TrackerTest.Backend ();
-
       this.add_test ("test potential match with same email addresses ",
           this.test_match_email_addresses);
-    }
-
-  public override void set_up ()
-    {
-    }
-
-  public override void tear_down ()
-    {
-      this._tracker_backend.tear_down ();
     }
 
   public void test_match_email_addresses ()

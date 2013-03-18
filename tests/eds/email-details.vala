@@ -22,9 +22,8 @@ using EdsTest;
 using Folks;
 using Gee;
 
-public class EmailDetailsTests : Folks.TestCase
+public class EmailDetailsTests : EdsTest.TestCase
 {
-  private EdsTest.Backend _eds_backend;
   private GLib.MainLoop _main_loop;
   private IndividualAggregator _aggregator;
   private int _email_count;
@@ -40,21 +39,6 @@ public class EmailDetailsTests : Folks.TestCase
       this.add_test ("email details interface", this.test_email_details);
     }
 
-  public override void set_up ()
-    {
-      this._eds_backend = new EdsTest.Backend ();
-      this._eds_backend.set_up ();
-
-      /* We configure eds as the primary store */
-      var config_val = "eds:%s".printf (this._eds_backend.address_book_uid);
-      Environment.set_variable ("FOLKS_PRIMARY_STORE", config_val, true);
-    }
-
-  public override void tear_down ()
-    {
-      this._eds_backend.tear_down ();
-    }
-
   public void test_email_details ()
     {
       this._email_count = 0;
@@ -65,7 +49,7 @@ public class EmailDetailsTests : Folks.TestCase
       this._main_loop = new GLib.MainLoop (null, false);
       Value? v;
 
-      this._eds_backend.reset ();
+      this.eds_backend.reset ();
 
       v = Value (typeof (string));
       v.set_string ("bernie h. innocenti");
@@ -76,7 +60,7 @@ public class EmailDetailsTests : Folks.TestCase
       v = Value (typeof (string));
       v.set_string ("bernie.innocenti@example.org");
       this._c1.set (Edsf.Persona.email_fields[1], (owned) v);
-      this._eds_backend.add_contact (this._c1);
+      this.eds_backend.add_contact (this._c1);
 
       v = Value (typeof (string));
       v.set_string ("richard m. stallman");
@@ -87,7 +71,7 @@ public class EmailDetailsTests : Folks.TestCase
       v = Value (typeof (string));
       v.set_string ("rms.1@example.org");
       this._c2.set (Edsf.Persona.email_fields[1], (owned) v);
-      this._eds_backend.add_contact (this._c2);
+      this.eds_backend.add_contact (this._c2);
 
       v = Value (typeof (string));
       v.set_string ("foo bar");
@@ -98,7 +82,7 @@ public class EmailDetailsTests : Folks.TestCase
       v = Value (typeof (string));
       v.set_string ("foo.bar@example.org");
       this._c3.set (Edsf.Persona.email_fields[1], (owned) v);
-      this._eds_backend.add_contact (this._c3);
+      this.eds_backend.add_contact (this._c3);
 
       this._test_email_details_async.begin ();
 
@@ -125,7 +109,7 @@ public class EmailDetailsTests : Folks.TestCase
   private async void _test_email_details_async ()
     {
 
-      yield this._eds_backend.commit_contacts_to_addressbook ();
+      yield this.eds_backend.commit_contacts_to_addressbook ();
 
       var store = BackendStore.dup ();
       yield store.prepare ();

@@ -6,6 +6,7 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir)/folks \
 	-I$(top_srcdir)/tests/lib \
 	-I$(top_srcdir)/tests/lib/key-file \
+	-I$(top_srcdir)/tests/lib/telepathy \
 	-I$(top_srcdir)/tests/lib/telepathy/contactlist \
 	-include $(CONFIG_HEADER) \
 	$(NULL)
@@ -13,6 +14,7 @@ AM_CPPFLAGS = \
 LDADD = \
 	$(top_builddir)/tests/lib/libfolks-test.la \
 	$(top_builddir)/tests/lib/key-file/libkf-test.la \
+	$(top_builddir)/tests/lib/telepathy/libtpf-test.la \
 	$(top_builddir)/tests/lib/telepathy/contactlist/libtp-test-contactlist.la \
 	$(top_builddir)/folks/libfolks.la \
 	$(GLIB_LIBS) \
@@ -36,6 +38,8 @@ AM_VALAFLAGS += \
 	--vapidir=$(abs_top_builddir)/tests/lib \
 	--vapidir=$(abs_top_srcdir)/tests/lib/key-file \
 	--vapidir=$(abs_top_builddir)/tests/lib/key-file \
+	--vapidir=$(abs_top_srcdir)/tests/lib/telepathy \
+	--vapidir=$(abs_top_builddir)/tests/lib/telepathy \
 	--vapidir=$(abs_top_srcdir)/tests/lib/telepathy/contactlist/ \
 	--vapidir=$(abs_top_builddir)/tests/lib/telepathy/contactlist/ \
 	--pkg gobject-2.0 \
@@ -44,6 +48,7 @@ AM_VALAFLAGS += \
 	--pkg folks \
 	--pkg folks-test \
 	--pkg kf-test \
+	--pkg tpf-test \
 	--pkg tp-test-contactlist \
 	-g \
 	$(NULL)

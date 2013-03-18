@@ -23,10 +23,9 @@ using TrackerTest;
 using Folks;
 using Gee;
 
-public class AddPersonaTests : Folks.TestCase
+public class AddPersonaTests : TrackerTest.TestCase
 {
   private GLib.MainLoop _main_loop;
-  private TrackerTest.Backend _tracker_backend;
   private IndividualAggregator _aggregator;
   private string _persona_fullname;
   private string _persona_nickname;
@@ -64,17 +63,7 @@ public class AddPersonaTests : Folks.TestCase
     {
       base ("AddPersonaTests");
 
-      this._tracker_backend = new TrackerTest.Backend ();
-
       this.add_test ("test adding personas to Tracker ", this.test_add_persona);
-    }
-
-  public override void set_up ()
-    {
-    }
-
-  public override void tear_down ()
-    {
     }
 
   public void test_add_persona ()
@@ -143,8 +132,6 @@ public class AddPersonaTests : Folks.TestCase
         {
           assert (k);
         }
-
-      this._tracker_backend.tear_down ();
     }
 
   private async void _test_add_persona_async ()

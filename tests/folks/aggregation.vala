@@ -21,19 +21,14 @@ using Gee;
 using Folks;
 using TpTests;
 
-public class AggregationTests : Folks.TestCase
+public class AggregationTests : TpfTest.MixedTestCase
 {
-  private KfTest.Backend _kf_backend;
-  private TpTests.Backend _tp_backend;
   private HashSet<string> _default_personas;
   private int _test_timeout = 3;
 
   public AggregationTests ()
     {
       base ("Aggregation");
-
-      this._kf_backend = new KfTest.Backend ();
-      this._tp_backend = new TpTests.Backend ();
 
       /* Create a set of the individuals we expect to see */
       this._default_personas = new HashSet<string> ();
@@ -67,14 +62,15 @@ public class AggregationTests : Folks.TestCase
           this._test_timeout = 10;
     }
 
-  public override void set_up ()
+  public override void set_up_tp ()
     {
-      this._tp_backend.set_up ();
+      /* don't create accounts - we do that per-test */
+      ((!) this.tp_backend).set_up ();
     }
 
-  public override void tear_down ()
+  public override void set_up_kf ()
     {
-      this._tp_backend.tear_down ();
+      /* don't set up - we do it per-test */
     }
 
   /* Test that personas are aggregated if their IIDs match (e.g. with the
@@ -88,11 +84,12 @@ public class AggregationTests : Folks.TestCase
     {
       var main_loop = new GLib.MainLoop (null, false);
 
-      this._kf_backend.set_up ("");
+      var tp_backend = (!) this.tp_backend;
+      ((!) this.kf_backend).set_up ("");
 
-      void* account1_handle = this._tp_backend.add_account ("protocol",
+      void* account1_handle = tp_backend.add_account ("protocol",
           "me@example.com", "cm", "account");
-      void* account2_handle = this._tp_backend.add_account ("protocol",
+      void* account2_handle = tp_backend.add_account ("protocol",
           "me2@example.com", "cm", "account2");
 
       /* IDs of the individuals we expect to see.
@@ -186,9 +183,8 @@ public class AggregationTests : Folks.TestCase
       assert (expected_individuals_detailed.size == 0);
 
       /* Clean up for the next test */
-      this._tp_backend.remove_account (account2_handle);
-      this._tp_backend.remove_account (account1_handle);
-      this._kf_backend.tear_down ();
+      tp_backend.remove_account (account2_handle);
+      tp_backend.remove_account (account1_handle);
       aggregator = null;
     }
 
@@ -257,14 +253,14 @@ public class AggregationTests : Folks.TestCase
     {
       var main_loop = new GLib.MainLoop (null, false);
 
-      this._kf_backend.set_up ("[0]\n" +
+      ((!) this.kf_backend).set_up ("[0]\n" +
           "protocol=travis@example.com;olivier@example.com;" +
               "guillaume@example.com;sjoerd@example.com\n" +
           "[1]\n" +
           "protocol=christian@example.com;wim@example.com;" +
               "helen@example.com;geraldine@example.com");
 
-      void* account_handle = this._tp_backend.add_account ("protocol",
+      this.account_handle = ((!) this.tp_backend).add_account ("protocol",
           "me@example.com", "cm", "account");
 
       /* We expect two non-user individuals (each containing four Telepathy
@@ -416,8 +412,7 @@ public class AggregationTests : Folks.TestCase
       assert (set_in_use.size == 0);
 
       /* Clean up for the next test */
-      this._tp_backend.remove_account (account_handle);
-      this._kf_backend.tear_down ();
+      ((!) this.tp_backend).remove_account ((!) this.account_handle);
       aggregator = null;
     }
 
@@ -432,7 +427,7 @@ public class AggregationTests : Folks.TestCase
     {
       var main_loop = new GLib.MainLoop (null, false);
 
-      this._kf_backend.set_up ("[0]\n" +
+      ((!) this.kf_backend).set_up ("[0]\n" +
           "protocol=travis@example.com;olivier@example.com;" +
               "guillaume@example.com;sjoerd@example.com\n" +
           "protocol2=christian@example.com;wim@example.com;" +
@@ -443,9 +438,10 @@ public class AggregationTests : Folks.TestCase
           "protocol2=travis@example.com;olivier@example.com;" +
               "guillaume@example.com;sjoerd@example.com");
 
-      void* account1_handle = this._tp_backend.add_account ("protocol",
+      var tp_backend = (!) this.tp_backend;
+      void* account1_handle = tp_backend.add_account ("protocol",
           "me@example.com", "cm", "account");
-      void* account2_handle = this._tp_backend.add_account ("protocol2",
+      void* account2_handle = tp_backend.add_account ("protocol2",
           "me@example.com", "cm", "account2");
 
       /* We expect two non-user individuals (each containing four Telepathy
@@ -556,9 +552,8 @@ public class AggregationTests : Folks.TestCase
       assert (expected_personas2_detailed.size == 0);
 
       /* Clean up for the next test */
-      this._tp_backend.remove_account (account2_handle);
-      this._tp_backend.remove_account (account1_handle);
-      this._kf_backend.tear_down ();
+      tp_backend.remove_account (account2_handle);
+      tp_backend.remove_account (account1_handle);
       aggregator = null;
     }
 
@@ -628,11 +623,12 @@ public class AggregationTests : Folks.TestCase
     {
       var main_loop = new GLib.MainLoop (null, false);
 
-      this._kf_backend.set_up ("");
+      ((!) this.kf_backend).set_up ("");
 
-      void* account1_handle = this._tp_backend.add_account ("protocol",
+      var tp_backend = (!) this.tp_backend;
+      void* account1_handle = tp_backend.add_account ("protocol",
           "me@example.com", "cm", "account");
-      void* account2_handle = this._tp_backend.add_account ("protocol",
+      void* account2_handle = tp_backend.add_account ("protocol",
           "me2@example.com", "cm", "account2");
 
       Individual user_individual = null;
@@ -717,9 +713,8 @@ public class AggregationTests : Folks.TestCase
       aggregator.disconnect (individuals_changed_detailed_id);
 
       /* Clean up for the next test */
-      this._tp_backend.remove_account (account2_handle);
-      this._tp_backend.remove_account (account1_handle);
-      this._kf_backend.tear_down ();
+      tp_backend.remove_account (account2_handle);
+      tp_backend.remove_account (account1_handle);
       aggregator = null;
     }
 
@@ -766,11 +761,12 @@ public class AggregationTests : Folks.TestCase
     {
       var main_loop = new GLib.MainLoop (null, false);
 
-      this._kf_backend.set_up ("");
+      ((!) this.kf_backend).set_up ("");
 
-      void* account1_handle = this._tp_backend.add_account ("irc",
+      var tp_backend = (!) this.tp_backend;
+      void* account1_handle = tp_backend.add_account ("irc",
           "me@example.com", "cm", "account");
-      void* account2_handle = this._tp_backend.add_account ("irc",
+      void* account2_handle = tp_backend.add_account ("irc",
           "me2@example.com", "cm", "account2");
 
       /* Set up the aggregator */
@@ -824,9 +820,8 @@ public class AggregationTests : Folks.TestCase
       aggregator.disconnect (individuals_changed_detailed_id);
 
       /* Clean up for the next test */
-      this._tp_backend.remove_account (account2_handle);
-      this._tp_backend.remove_account (account1_handle);
-      this._kf_backend.tear_down ();
+      tp_backend.remove_account (account2_handle);
+      tp_backend.remove_account (account1_handle);
       aggregator = null;
     }
 
@@ -876,14 +871,14 @@ public class AggregationTests : Folks.TestCase
     {
       var main_loop = new GLib.MainLoop (null, false);
 
-      this._kf_backend.set_up ("[0]\n" +
+      ((!) this.kf_backend).set_up ("[0]\n" +
           "protocol=travis@example.com;olivier@example.com;" +
               "guillaume@example.com;sjoerd@example.com\n" +
           "[1]\n" +
           "protocol=christian@example.com;wim@example.com;" +
               "helen@example.com;geraldine@example.com");
 
-      void* account_handle = this._tp_backend.add_account ("protocol",
+      this.account_handle = ((!) this.tp_backend).add_account ("protocol",
           "me@example.com", "cm", "account");
 
       /* Weakly track all the individuals we see, and assert that they're
@@ -985,8 +980,8 @@ public class AggregationTests : Folks.TestCase
         }
 
       /* Remove all the individuals (hopefully) */
-      this._tp_backend.remove_account (account_handle);
-      this._kf_backend.tear_down ();
+      ((!) this.tp_backend).remove_account ((!) account_handle);
+      ((!) this.kf_backend).tear_down ();
       aggregator_is_finalising = true;
       aggregator = null;
 
@@ -1019,7 +1014,7 @@ public class AggregationTests : Folks.TestCase
     {
       var main_loop = new GLib.MainLoop (null, false);
 
-      this._kf_backend.set_up ("[0]\n" +
+      ((!) this.kf_backend).set_up ("[0]\n" +
           "protocol=travis@example.com\n");
 
       Individual? individual = null;
@@ -1125,7 +1120,6 @@ public class AggregationTests : Folks.TestCase
       assert (writeable_persona == persona);
 
       /* Clean up for the next test */
-      this._kf_backend.tear_down ();
       aggregator = null;
     }
 
@@ -1143,8 +1137,8 @@ public class AggregationTests : Folks.TestCase
     {
       var main_loop = new GLib.MainLoop (null, false);
 
-      this._kf_backend.set_up ("");
-      void* account_handle = this._tp_backend.add_account ("protocol",
+      ((!) this.kf_backend).set_up ("");
+      this.account_handle = ((!) this.tp_backend).add_account ("protocol",
           "me@example.com", "cm", "account");
 
       Individual? individual = null;
@@ -1311,8 +1305,6 @@ public class AggregationTests : Folks.TestCase
       assert (writeable_persona != persona);
 
       /* Clean up for the next test */
-      this._tp_backend.remove_account (account_handle);
-      this._kf_backend.tear_down ();
       individual = null;
       persona = null;
       writeable_persona = null;
@@ -1332,7 +1324,7 @@ public class AggregationTests : Folks.TestCase
     {
       var main_loop = new GLib.MainLoop (null, false);
 
-      this._kf_backend.set_up ("[0]\n" +
+      ((!) this.kf_backend).set_up ("[0]\n" +
           "protocol=travis@example.com\n");
 
       Individual? individual = null;
@@ -1441,7 +1433,6 @@ public class AggregationTests : Folks.TestCase
       assert (writeable_persona == null);
 
       /* Clean up for the next test */
-      this._kf_backend.tear_down ();
       aggregator = null;
     }
 }

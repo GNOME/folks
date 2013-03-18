@@ -28,14 +28,6 @@ public class UtilsTests : Folks.TestCase
       this.add_test ("MultiMap equality", this.test_multi_map_equality);
     }
 
-  public override void set_up ()
-    {
-    }
-
-  public override void tear_down ()
-    {
-    }
-
   public void test_multi_map_equality ()
     {
       var a_1 = new HashMultiMap<string, string> ();

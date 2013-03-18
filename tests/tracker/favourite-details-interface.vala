@@ -23,9 +23,8 @@ using TrackerTest;
 using Folks;
 using Gee;
 
-public class FavouriteDetailsInterfaceTests : Folks.TestCase
+public class FavouriteDetailsInterfaceTests : TrackerTest.TestCase
 {
-  private TrackerTest.Backend _tracker_backend;
   private GLib.MainLoop _main_loop;
   private string _fullname_p1;
   private string _fullname_p2;
@@ -39,18 +38,8 @@ public class FavouriteDetailsInterfaceTests : Folks.TestCase
     {
       base ("FavouriteDetailsInterfaceTests");
 
-      this._tracker_backend = new TrackerTest.Backend ();
-
       this.add_test ("test favourite details interface",
           this.test_favourite_details_interface);
-    }
-
-  public override void set_up ()
-    {
-    }
-
-  public override void tear_down ()
-    {
     }
 
   public void test_favourite_details_interface ()
@@ -65,16 +54,16 @@ public class FavouriteDetailsInterfaceTests : Folks.TestCase
 
       c1.set (Trf.OntologyDefs.NCO_FULLNAME, this._fullname_p1);
       c1.set (Trf.OntologyDefs.NAO_TAG, "");
-      this._tracker_backend.add_contact (c1);
+      ((!) this.tracker_backend).add_contact (c1);
 
       c2.set (Trf.OntologyDefs.NCO_FULLNAME, this._fullname_p2);
       c2.set (Trf.OntologyDefs.NAO_TAG, "");
-      this._tracker_backend.add_contact (c2);
+      ((!) this.tracker_backend).add_contact (c2);
 
       c3.set (Trf.OntologyDefs.NCO_FULLNAME, this._fullname_p3);
-      this._tracker_backend.add_contact (c3);
+      ((!) this.tracker_backend).add_contact (c3);
 
-      this._tracker_backend.set_up ();
+      ((!) this.tracker_backend).set_up ();
 
       this._found_p1 = false;
       this._found_p2 = false;
@@ -93,8 +82,6 @@ public class FavouriteDetailsInterfaceTests : Folks.TestCase
       assert (this._found_p1 == true);
       assert (this._found_p2 == true);
       assert (this._found_p3 == true);
-
-      this._tracker_backend.tear_down ();
     }
 
   private async void _test_favourite_details_interface_async ()

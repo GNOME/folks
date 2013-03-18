@@ -23,9 +23,8 @@ using TrackerTest;
 using Folks;
 using Gee;
 
-public class NameDetailsInterfaceTests : Folks.TestCase
+public class NameDetailsInterfaceTests : TrackerTest.TestCase
 {
-  private TrackerTest.Backend _tracker_backend;
   private IndividualAggregator _aggregator;
   private GLib.MainLoop _main_loop;
   private Gee.HashMap<string, string> _c1;
@@ -35,18 +34,8 @@ public class NameDetailsInterfaceTests : Folks.TestCase
     {
       base ("NameDetailsInterfaceTests");
 
-      this._tracker_backend = new TrackerTest.Backend ();
-
       this.add_test ("test name details interface",
           this.test_name_details_interface);
-    }
-
-  public override void set_up ()
-    {
-    }
-
-  public override void tear_down ()
-    {
     }
 
   public void test_name_details_interface ()
@@ -61,12 +50,12 @@ public class NameDetailsInterfaceTests : Folks.TestCase
       this._c1.set (Trf.OntologyDefs.NCO_ADDITIONAL, "p #1 Additional");
       this._c1.set (Trf.OntologyDefs.NCO_PREFIX, "Mr");
       this._c1.set (Trf.OntologyDefs.NCO_SUFFIX, "Jr");
-      this._tracker_backend.add_contact (this._c1);
+      ((!) this.tracker_backend).add_contact (this._c1);
 
       this._c2.set (Trf.OntologyDefs.NCO_FULLNAME, "persona #2");
-      this._tracker_backend.add_contact (this._c2);
+      ((!) this.tracker_backend).add_contact (this._c2);
 
-      this._tracker_backend.set_up ();
+      ((!) this.tracker_backend).set_up ();
 
       this._test_name_details_interface_async.begin ();
 
@@ -80,8 +69,6 @@ public class NameDetailsInterfaceTests : Folks.TestCase
 
       assert (this._c1.size == 0);
       assert (this._c2.size == 0);
-
-      this._tracker_backend.tear_down ();
     }
 
   private async void _test_name_details_interface_async ()

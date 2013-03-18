@@ -23,9 +23,8 @@ using TrackerTest;
 using Folks;
 using Gee;
 
-public class NicknameUpdatesTests : Folks.TestCase
+public class NicknameUpdatesTests : TrackerTest.TestCase
 {
-  private TrackerTest.Backend _tracker_backend;
   private IndividualAggregator _aggregator;
   private bool _updated_nickname_found;
   private string _updated_nickname;
@@ -38,18 +37,9 @@ public class NicknameUpdatesTests : Folks.TestCase
     {
       base ("NicknameUpdates");
 
-      this._tracker_backend = new TrackerTest.Backend ();
-      this._tracker_backend.debug = false;
+      ((!) this.tracker_backend).debug = false;
 
       this.add_test ("nickname updates", this.test_nickname_updates);
-    }
-
-  public override void set_up ()
-    {
-    }
-
-  public override void tear_down ()
-    {
     }
 
   public void test_nickname_updates ()
@@ -62,9 +52,9 @@ public class NicknameUpdatesTests : Folks.TestCase
 
       c1.set (TrackerTest.Backend.URN, this._contact_urn);
       c1.set (Trf.OntologyDefs.NCO_FULLNAME, this._initial_fullname);
-      this._tracker_backend.add_contact (c1);
+      ((!) this.tracker_backend).add_contact (c1);
 
-      this._tracker_backend.set_up ();
+      ((!) this.tracker_backend).set_up ();
 
       this._updated_nickname_found = false;
       this._individual_id = "";
@@ -80,8 +70,6 @@ public class NicknameUpdatesTests : Folks.TestCase
       this._main_loop.run ();
 
       assert (this._updated_nickname_found == true);
-
-      this._tracker_backend.tear_down ();
     }
 
   private async void _test_nickname_updates_async ()
@@ -117,18 +105,18 @@ public class NicknameUpdatesTests : Folks.TestCase
               this._individual_id = i.id;
 
               var im_addr = "<urn:im-address>";
-              this._tracker_backend.insert_triplet (im_addr,
+              ((!) this.tracker_backend).insert_triplet (im_addr,
                   "a", Trf.OntologyDefs.NCO_IMADDRESS,
                   Trf.OntologyDefs.NCO_IM_NICKNAME, this._updated_nickname);
 
               var affl = "<urn:im-affl>";
-              this._tracker_backend.insert_triplet (affl,
+              ((!) this.tracker_backend).insert_triplet (affl,
                   "a", Trf.OntologyDefs.NCO_AFFILIATION);
 
-               this._tracker_backend.insert_triplet (affl,
+               ((!) this.tracker_backend).insert_triplet (affl,
                  Trf.OntologyDefs.NCO_HAS_IMADDRESS, im_addr);
 
-              this._tracker_backend.insert_triplet (this._contact_urn,
+              ((!) this.tracker_backend).insert_triplet (this._contact_urn,
                   Trf.OntologyDefs.NCO_HAS_AFFILIATION, affl);
             }
         }

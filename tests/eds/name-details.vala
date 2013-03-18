@@ -22,9 +22,8 @@ using EdsTest;
 using Folks;
 using Gee;
 
-public class NameDetailsTests : Folks.TestCase
+public class NameDetailsTests : EdsTest.TestCase
 {
-  private EdsTest.Backend _eds_backend;
   private GLib.MainLoop _main_loop;
   private IndividualAggregator _aggregator;
   private int _names_count;
@@ -38,21 +37,6 @@ public class NameDetailsTests : Folks.TestCase
       this.add_test ("name details interface", this.test_names);
     }
 
-  public override void set_up ()
-    {
-      this._eds_backend = new EdsTest.Backend ();
-      this._eds_backend.set_up ();
-
-      /* We configure eds as the primary store */
-      var config_val = "eds:%s".printf (this._eds_backend.address_book_uid);
-      Environment.set_variable ("FOLKS_PRIMARY_STORE", config_val, true);
-    }
-
-  public override void tear_down ()
-    {
-      this._eds_backend.tear_down ();
-    }
-
   public void test_names ()
     {
       this._c1 = new Gee.HashMap<string, Value?> ();
@@ -61,7 +45,7 @@ public class NameDetailsTests : Folks.TestCase
       this._main_loop = new GLib.MainLoop (null, false);
       Value? v;
 
-      this._eds_backend.reset ();
+      this.eds_backend.reset ();
 
       /* FIXME: passing the EContactName would be better */
       v = Value (typeof (string));
@@ -85,7 +69,7 @@ public class NameDetailsTests : Folks.TestCase
       v = Value (typeof (string));
       v.set_string ("(sysadmin FSF)");
       this._c1.set ("contact_name_suffixes", (owned) v);
-      this._eds_backend.add_contact (this._c1);
+      this.eds_backend.add_contact (this._c1);
 
       v = Value (typeof (string));
       v.set_string ("richard m. stallman");
@@ -96,7 +80,7 @@ public class NameDetailsTests : Folks.TestCase
       v = Value (typeof (string));
       v.set_string ("Richard M.");
       this._c2.set ("contact_name_given", (owned) v);
-      this._eds_backend.add_contact (this._c2);
+      this.eds_backend.add_contact (this._c2);
 
       this._test_names_async.begin ();
 
@@ -116,7 +100,7 @@ public class NameDetailsTests : Folks.TestCase
   private async void _test_names_async ()
     {
 
-      yield this._eds_backend.commit_contacts_to_addressbook ();
+      yield this.eds_backend.commit_contacts_to_addressbook ();
 
       var store = BackendStore.dup ();
       yield store.prepare ();

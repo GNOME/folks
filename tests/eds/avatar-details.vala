@@ -22,9 +22,8 @@ using EdsTest;
 using Folks;
 using Gee;
 
-public class AvatarDetailsTests : Folks.TestCase
+public class AvatarDetailsTests : EdsTest.TestCase
 {
-  private EdsTest.Backend _eds_backend;
   private GLib.MainLoop _main_loop;
   private IndividualAggregator _aggregator;
   private Gee.HashMap<string, Value?> _c1;
@@ -38,21 +37,6 @@ public class AvatarDetailsTests : Folks.TestCase
       this.add_test ("avatar details interface", this.test_avatar);
     }
 
-  public override void set_up ()
-    {
-      this._eds_backend = new EdsTest.Backend ();
-      this._eds_backend.set_up ();
-
-      /* We configure eds as the primary store */
-      var config_val = "eds:%s".printf (this._eds_backend.address_book_uid);
-      Environment.set_variable ("FOLKS_PRIMARY_STORE", config_val, true);
-    }
-
-  public override void tear_down ()
-    {
-      this._eds_backend.tear_down ();
-    }
-
   public void test_avatar ()
     {
       this._c1 = new Gee.HashMap<string, Value?> ();
@@ -61,7 +45,7 @@ public class AvatarDetailsTests : Folks.TestCase
       this._avatars_are_equal = false;
       Value? v;
 
-      this._eds_backend.reset();
+      this.eds_backend.reset ();
 
       v = Value (typeof (string));
       v.set_string ("bernie h. innocenti");
@@ -69,7 +53,7 @@ public class AvatarDetailsTests : Folks.TestCase
       v = Value (typeof (string));
       v.set_string (this._avatar_path);
       this._c1.set ("avatar",(owned) v);
-      this._eds_backend.add_contact (this._c1);
+      this.eds_backend.add_contact (this._c1);
 
       this._test_avatar_async.begin ();
 
@@ -87,7 +71,7 @@ public class AvatarDetailsTests : Folks.TestCase
   private async void _test_avatar_async ()
     {
 
-      yield this._eds_backend.commit_contacts_to_addressbook ();
+      yield this.eds_backend.commit_contacts_to_addressbook ();
 
       var store = BackendStore.dup ();
       yield store.prepare ();

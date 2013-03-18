@@ -21,11 +21,10 @@
 using Folks;
 using Gee;
 
-public class PostalAddressDetailsTests : Folks.TestCase
+public class PostalAddressDetailsTests : EdsTest.TestCase
 {
   private GLib.MainLoop _main_loop;
   private IndividualAggregator _aggregator;
-  private EdsTest.Backend _eds_backend;
   private string _pobox = "12345";
   private string _locality = "example locality";
   private string _postalcode = "example postalcode";
@@ -43,21 +42,6 @@ public class PostalAddressDetailsTests : Folks.TestCase
 
       this.add_test ("test postal address details interface",
           this.test_postal_address_details_interface);
-    }
-
-  public override void set_up ()
-    {
-      this._eds_backend = new EdsTest.Backend ();
-      this._eds_backend.set_up ();
-
-      /* We configure eds as the primary store */
-      var config_val = "eds:%s".printf (this._eds_backend.address_book_uid);
-      Environment.set_variable ("FOLKS_PRIMARY_STORE", config_val, true);
-    }
-
-  public override void tear_down ()
-    {
-      this._eds_backend.tear_down ();
     }
 
   public void test_postal_address_details_interface ()
@@ -100,7 +84,7 @@ public class PostalAddressDetailsTests : Folks.TestCase
       /* corresponds to address of type "home" */
       c1.set (Edsf.Persona.address_fields[0], (owned) v);
 
-      this._eds_backend.add_contact (c1);
+      this.eds_backend.add_contact (c1);
 
       this._found_postal_address = false;
 
@@ -120,7 +104,7 @@ public class PostalAddressDetailsTests : Folks.TestCase
   private async void _test_postal_address_details_interface_async ()
     {
 
-      yield this._eds_backend.commit_contacts_to_addressbook ();
+      yield this.eds_backend.commit_contacts_to_addressbook ();
 
       var store = BackendStore.dup ();
       yield store.prepare ();

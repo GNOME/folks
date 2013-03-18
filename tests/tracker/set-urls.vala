@@ -23,10 +23,9 @@ using TrackerTest;
 using Folks;
 using Gee;
 
-public class SetURLsTests : Folks.TestCase
+public class SetURLsTests : TrackerTest.TestCase
 {
   private GLib.MainLoop _main_loop;
-  private TrackerTest.Backend _tracker_backend;
   private IndividualAggregator _aggregator;
   private string _persona_fullname;
   Gee.HashMap<string, string> _urls;
@@ -35,17 +34,7 @@ public class SetURLsTests : Folks.TestCase
     {
       base ("SetURLsTests");
 
-      this._tracker_backend = new TrackerTest.Backend ();
-
       this.add_test ("test setting urls ", this.test_set_urls);
-    }
-
-  public override void set_up ()
-    {
-    }
-
-  public override void tear_down ()
-    {
     }
 
   public void test_set_urls ()
@@ -62,9 +51,9 @@ public class SetURLsTests : Folks.TestCase
           "http://three.example.org");
 
       c1.set (Trf.OntologyDefs.NCO_FULLNAME, this._persona_fullname);
-      this._tracker_backend.add_contact (c1);
+      ((!) this.tracker_backend).add_contact (c1);
 
-      this._tracker_backend.set_up ();
+      ((!) this.tracker_backend).set_up ();
 
       this._test_set_urls_async.begin ();
 
@@ -77,8 +66,6 @@ public class SetURLsTests : Folks.TestCase
       this._main_loop.run ();
 
       assert (this._urls.size == 0);
-
-     this._tracker_backend.tear_down ();
     }
 
   private async void _test_set_urls_async ()

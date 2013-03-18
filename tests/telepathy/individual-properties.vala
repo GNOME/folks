@@ -24,18 +24,14 @@ using Tpf;
 using Folks;
 using Gee;
 
-public class IndividualPropertiesTests : Folks.TestCase
+public class IndividualPropertiesTests : TpfTest.TestCase
 {
-  private TpTests.Backend tp_backend;
-  private void* _account_handle;
   private int _test_timeout = 3;
   private HashSet<string> _changes_pending;
 
   public IndividualPropertiesTests ()
     {
       base ("IndividualProperties");
-
-      this.tp_backend = new TpTests.Backend ();
 
       this.add_test ("individual properties",
           this.test_individual_properties);
@@ -52,16 +48,9 @@ public class IndividualPropertiesTests : Folks.TestCase
 
   public override void set_up ()
     {
-      this.tp_backend.set_up ();
-      this._account_handle = this.tp_backend.add_account ("protocol",
-          "me@example.com", "cm", "account");
-      this._changes_pending = new HashSet<string> ();
-    }
+      base.set_up ();
 
-  public override void tear_down ()
-    {
-      this.tp_backend.remove_account (this._account_handle);
-      this.tp_backend.tear_down ();
+      this._changes_pending = new HashSet<string> ();
     }
 
   public void test_individual_properties ()
@@ -328,7 +317,7 @@ public class IndividualPropertiesTests : Folks.TestCase
               /* set the alias through Telepathy and wait for it to hit our
                * alias notification callback above */
               var handle = (Handle) ((Tpf.Persona) persona).contact.handle;
-              var conn = this.tp_backend.get_connection_for_handle (this._account_handle);
+              var conn = this.tp_backend.get_connection_for_handle (this.account_handle);
               conn.change_aliases ({handle}, {new_alias});
             }
 

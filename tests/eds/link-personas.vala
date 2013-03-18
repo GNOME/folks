@@ -30,10 +30,9 @@ enum LinkingMethod
 }
 
 
-public class LinkPersonasTests : Folks.TestCase
+public class LinkPersonasTests : EdsTest.TestCase
 {
   private GLib.MainLoop _main_loop;
-  private EdsTest.Backend? _eds_backend;
   private IndividualAggregator _aggregator;
   private string _persona_fullname_1;
   private string _persona_fullname_2;
@@ -64,28 +63,14 @@ public class LinkPersonasTests : Folks.TestCase
           this.test_linking_via_email_as_im_address);
     }
 
-  public override void set_up ()
+  public override void create_backend ()
     {
-      this._eds_backend = new EdsTest.Backend ();
-
       /* Create a new backend (by name) each set up to guarantee we don't
        * inherit state from the last test.
        * FIXME: bgo#690830 */
       this._test_num++;
-      this._eds_backend.set_up (false, @"test$_test_num");
-
-      /* We configure eds as the primary store */
-      var config_val = "eds:%s".printf (this._eds_backend.address_book_uid);
-      Environment.set_variable ("FOLKS_PRIMARY_STORE", config_val, true);
-    }
-
-  public override void tear_down ()
-    {
-      this._eds_backend.tear_down ();
-
-      Environment.unset_variable ("FOLKS_PRIMARY_STORE");
-
-      this._eds_backend = null;
+      this.eds_backend = new EdsTest.Backend ();
+      this.eds_backend.set_up (false, @"test$_test_num");
     }
 
   public void test_linking_personas_via_im_addresses ()
@@ -169,7 +154,7 @@ public class LinkPersonasTests : Folks.TestCase
           yield this._aggregator.prepare ();
 
           var pstore = this._get_store (store,
-              this._eds_backend.address_book_uid);
+              this.eds_backend.address_book_uid);
           assert (pstore != null);
 
           pstore.notify["is-prepared"].connect (this._notify_pstore_cb);

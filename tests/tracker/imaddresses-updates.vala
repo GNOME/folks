@@ -23,9 +23,8 @@ using TrackerTest;
 using Folks;
 using Gee;
 
-public class IMAddressesUpdatesTests : Folks.TestCase
+public class IMAddressesUpdatesTests : TrackerTest.TestCase
 {
-  private TrackerTest.Backend _tracker_backend;
   private IndividualAggregator _aggregator;
   private GLib.MainLoop _main_loop;
   private string _initial_fullname_1;
@@ -42,18 +41,9 @@ public class IMAddressesUpdatesTests : Folks.TestCase
     {
       base ("IMAddressesUpdates");
 
-      this._tracker_backend = new TrackerTest.Backend ();
-      this._tracker_backend.debug = false;
+      ((!) this.tracker_backend).debug = false;
 
       this.add_test ("im addresses updates", this.test_imaddresses_updates);
-    }
-
-  public override void set_up ()
-    {
-    }
-
-  public override void tear_down ()
-    {
     }
 
   public void test_imaddresses_updates ()
@@ -70,8 +60,8 @@ public class IMAddressesUpdatesTests : Folks.TestCase
       c1.set (TrackerTest.Backend.URN, this._contact_urn_1);
       c1.set (Trf.OntologyDefs.NCO_FULLNAME, this._initial_fullname_1);
       c1.set (Trf.OntologyDefs.NCO_IMADDRESS, this._imaddress_proto_1);
-      this._tracker_backend.add_contact (c1);
-      this._tracker_backend.set_up ();
+      ((!) this.tracker_backend).add_contact (c1);
+      ((!) this.tracker_backend).set_up ();
 
       this._individual_id = "";
       this._initial_imaddress_found = false;
@@ -89,8 +79,6 @@ public class IMAddressesUpdatesTests : Folks.TestCase
 
       assert (this._initial_imaddress_found == true);
       assert (this._updated_imaddr_found == true);
-
-      this._tracker_backend.tear_down ();
     }
 
   private async void _test_imaddresses_updates_async ()
@@ -174,11 +162,11 @@ public class IMAddressesUpdatesTests : Folks.TestCase
   private void _do_im_addr_update ()
     {
       var urn_affil_1 = "<" + this._imaddress_1 + "myaffiliation>";
-      this._tracker_backend.remove_triplet (this._contact_urn_1,
+      ((!) this.tracker_backend).remove_triplet (this._contact_urn_1,
           Trf.OntologyDefs.NCO_HAS_AFFILIATION, urn_affil_1);
 
       var urn_imaddr_2 = "<" + this._imaddress_2 + ">";
-      this._tracker_backend.insert_triplet
+      ((!) this.tracker_backend).insert_triplet
           (urn_imaddr_2,
            "a", Trf.OntologyDefs.NCO_IMADDRESS,
            Trf.OntologyDefs.NCO_IMPROTOCOL, this._proto_2,
@@ -186,15 +174,15 @@ public class IMAddressesUpdatesTests : Folks.TestCase
 
       var urn_affil_2 = "<" + this._imaddress_2;
       urn_affil_2 += "myaffiliation>";
-      this._tracker_backend.insert_triplet
+      ((!) this.tracker_backend).insert_triplet
           (urn_affil_2,
           "a", Trf.OntologyDefs.NCO_AFFILIATION);
 
-     this._tracker_backend.insert_triplet
+     ((!) this.tracker_backend).insert_triplet
          (urn_affil_2,
          Trf.OntologyDefs.NCO_HAS_IMADDRESS, urn_imaddr_2);
 
-     this._tracker_backend.insert_triplet
+     ((!) this.tracker_backend).insert_triplet
          (this._contact_urn_1,
           Trf.OntologyDefs.NCO_HAS_AFFILIATION, urn_affil_2);
     }

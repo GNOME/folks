@@ -23,9 +23,8 @@ using TrackerTest;
 using Folks;
 using Gee;
 
-public class BirthdayDetailsInterfaceTests : Folks.TestCase
+public class BirthdayDetailsInterfaceTests : TrackerTest.TestCase
 {
-  private TrackerTest.Backend _tracker_backend;
   private bool _found_birthday;
   private DateTime _dobj;
   private GLib.MainLoop _main_loop;
@@ -36,19 +35,10 @@ public class BirthdayDetailsInterfaceTests : Folks.TestCase
     {
       base ("BirthdayDetailsInterfaceTests");
 
-      this._tracker_backend = new TrackerTest.Backend ();
-      this._tracker_backend.debug = false;
+      ((!) this.tracker_backend).debug = false;
 
       this.add_test ("test birthday details interface",
           this.test_birthay_details_interface);
-    }
-
-  public override void set_up ()
-    {
-    }
-
-  public override void tear_down ()
-    {
     }
 
   public void test_birthay_details_interface ()
@@ -63,8 +53,8 @@ public class BirthdayDetailsInterfaceTests : Folks.TestCase
 
       c1.set (Trf.OntologyDefs.NCO_FULLNAME, this._fullname);
       c1.set (Trf.OntologyDefs.NCO_BIRTHDAY, birthday);
-      this._tracker_backend.add_contact (c1);
-      this._tracker_backend.set_up ();
+      ((!) this.tracker_backend).add_contact (c1);
+      ((!) this.tracker_backend).set_up ();
 
       this._found_birthday = false;
 
@@ -79,8 +69,6 @@ public class BirthdayDetailsInterfaceTests : Folks.TestCase
       this._main_loop.run ();
 
       assert (this._found_birthday == true);
-
-      this._tracker_backend.tear_down ();
     }
 
   private async void _test_birthay_details_interface ()

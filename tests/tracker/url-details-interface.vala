@@ -23,11 +23,10 @@ using TrackerTest;
 using Folks;
 using Gee;
 
-public class UrlDetailsInterfaceTests : Folks.TestCase
+public class UrlDetailsInterfaceTests : TrackerTest.TestCase
 {
   private GLib.MainLoop _main_loop;
   private IndividualAggregator _aggregator;
-  private TrackerTest.Backend _tracker_backend;
   private string _blog_url;
   private string _website_url;
   private string _urls;
@@ -38,19 +37,10 @@ public class UrlDetailsInterfaceTests : Folks.TestCase
     {
       base ("UrlDetailsInterfaceTests");
 
-      this._tracker_backend = new TrackerTest.Backend ();
-      this._tracker_backend.debug = false;
+      ((!) this.tracker_backend).debug = false;
 
       this.add_test ("test url details interface",
           this.test_url_details_interface);
-    }
-
-  public override void set_up ()
-    {
-    }
-
-  public override void tear_down ()
-    {
     }
 
   public void test_url_details_interface ()
@@ -63,9 +53,9 @@ public class UrlDetailsInterfaceTests : Folks.TestCase
 
       c1.set (Trf.OntologyDefs.NCO_FULLNAME, "persona #1");
       c1.set (TrackerTest.Backend.URLS, this._urls);
-      this._tracker_backend.add_contact (c1);
+      ((!) this.tracker_backend).add_contact (c1);
 
-      this._tracker_backend.set_up ();
+      ((!) this.tracker_backend).set_up ();
 
       this._found_blog = false;
       this._found_website = false;
@@ -82,8 +72,6 @@ public class UrlDetailsInterfaceTests : Folks.TestCase
 
       assert (this._found_blog == true);
       assert (this._found_website == true);
-
-      this._tracker_backend.tear_down ();
     }
 
   private async void _test_url_details_interface_async ()

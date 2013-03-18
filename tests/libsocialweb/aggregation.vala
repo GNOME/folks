@@ -23,9 +23,8 @@ using Folks;
 using Gee;
 using GLib;
 
-public class AggregationTests : Folks.TestCase
+public class AggregationTests : LibsocialwebTest.TestCase
 {
-  private LibsocialwebTest.Backend _lsw_backend;
   private static const string STORE_FILE_PATH =
       "folks-test-libsocialweb-aggregation-store.ini";
   private static const string KF_RELATIONSHIPS_FILE_PATH =
@@ -34,8 +33,6 @@ public class AggregationTests : Folks.TestCase
   public AggregationTests ()
     {
       base ("Aggregation");
-
-      this._lsw_backend = new LibsocialwebTest.Backend ();
 
       this.add_test ("libsocialweb aggregation", this.test_aggregation_libsocialweb);
     }
@@ -90,30 +87,17 @@ public class AggregationTests : Folks.TestCase
 
       Environment.set_variable ("FOLKS_BACKEND_STORE_KEY_FILE_PATH",
           kf_path, true);
-    }
 
-  public override void tear_down ()
-    {
+      /* Chain up to set up the LSW backend */
+      base.set_up ();
     }
 
   public void test_aggregation_libsocialweb ()
     {
       var main_loop = new GLib.MainLoop (null, false);
-
-      this._lsw_backend.ready.connect(() =>
-        {
-          main_loop.quit ();
-        });
-      uint timer_id = Timeout.add_seconds (5, () =>
-        {
-          assert_not_reached ();
-        });
-      this._lsw_backend.set_up ();
-      main_loop.run ();
-      Source.remove (timer_id);
-
-      var mysocialnetwork1 = this._lsw_backend.add_service ("mysocialnetwork1");
-      var mysocialnetwork2 = this._lsw_backend.add_service ("mysocialnetwork2");
+      var lsw_backend = (!) this.lsw_backend;
+      var mysocialnetwork1 = lsw_backend.add_service ("mysocialnetwork1");
+      var mysocialnetwork2 = lsw_backend.add_service ("mysocialnetwork2");
 
       /* Populate mysocialnetwork1 */
       mysocialnetwork1.OpenViewCalled.connect((query, p, path) =>
@@ -197,7 +181,7 @@ public class AggregationTests : Folks.TestCase
         });
       aggregator.prepare.begin ();
 
-      timer_id = Timeout.add_seconds (5, () =>
+      uint timer_id = Timeout.add_seconds (5, () =>
         {
           assert_not_reached ();
         });
@@ -278,8 +262,6 @@ public class AggregationTests : Folks.TestCase
         });
       main_loop.run ();
       Source.remove (timer_id);
-
-      this._lsw_backend.tear_down ();
     }
 }
 

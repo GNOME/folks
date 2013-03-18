@@ -21,10 +21,9 @@
 using Folks;
 using Gee;
 
-public class LinkPersonasDiffStoresTests : Folks.TestCase
+public class LinkPersonasDiffStoresTests : EdsTest.TestCase
 {
   private GLib.MainLoop _main_loop;
-  private EdsTest.Backend? _eds_backend;
   private EdsTest.Backend? _eds_backend_other;
   private IndividualAggregator _aggregator;
   private string _persona_fullname_1;
@@ -45,28 +44,19 @@ public class LinkPersonasDiffStoresTests : Folks.TestCase
 
   public override void set_up ()
     {
-      this._eds_backend = new EdsTest.Backend ();
+      base.set_up ();
       this._eds_backend_other = new EdsTest.Backend ();
-
-      this._eds_backend.set_up ();
       this._eds_backend_other.set_up (false, "other");
 
-      /* We configure eds as the primary store */
-      var config_val = "eds:%s".printf (this._eds_backend.address_book_uid);
-      Environment.set_variable ("FOLKS_PRIMARY_STORE", config_val, true);
       Environment.set_variable ("FOLKS_BACKEND_EDS_USE_ADDRESS_BOOKS",
                                 "test:other", true);
     }
 
   public override void tear_down ()
     {
-      this._eds_backend.tear_down ();
       this._eds_backend_other.tear_down ();
-
-      Environment.unset_variable ("FOLKS_PRIMARY_STORE");
-
-      this._eds_backend = null;
       this._eds_backend_other = null;
+      base.tear_down ();
     }
 
   public void test_linking_via_local_ids_diff_stores ()
@@ -114,7 +104,7 @@ public class LinkPersonasDiffStoresTests : Folks.TestCase
           this._aggregator.notify["is-quiescent"].connect ((obj, pspec) =>
             {
               var pstore = this._get_store (store,
-                  this._eds_backend.address_book_uid);
+                  this.eds_backend.address_book_uid);
               assert (pstore != null);
               assert (pstore.is_prepared == true);
 

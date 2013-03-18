@@ -23,10 +23,9 @@ using TrackerTest;
 using Folks;
 using Gee;
 
-public class SetFavouriteTests : Folks.TestCase
+public class SetFavouriteTests : TrackerTest.TestCase
 {
   private GLib.MainLoop _main_loop;
-  private TrackerTest.Backend _tracker_backend;
   private IndividualAggregator _aggregator;
   private string _initial_fullname_1 = "persona #1";
   private string _initial_fullname_2 = "persona #2";
@@ -39,17 +38,7 @@ public class SetFavouriteTests : Folks.TestCase
     {
       base ("SetFavouriteTests");
 
-      this._tracker_backend = new TrackerTest.Backend ();
-
       this.add_test ("test setting favourite ", this.test_set_alias);
-    }
-
-  public override void set_up ()
-    {
-    }
-
-  public override void tear_down ()
-    {
     }
 
   public void test_set_alias ()
@@ -61,13 +50,13 @@ public class SetFavouriteTests : Folks.TestCase
       this._initial_fullname_2 = "persona #2";
 
       c1.set (Trf.OntologyDefs.NCO_FULLNAME, this._initial_fullname_1);
-      this._tracker_backend.add_contact (c1);
+      ((!) this.tracker_backend).add_contact (c1);
 
       c2.set (Trf.OntologyDefs.NCO_FULLNAME, this._initial_fullname_2);
       c2.set (Trf.OntologyDefs.NAO_TAG, "");
-      this._tracker_backend.add_contact (c2);
+      ((!) this.tracker_backend).add_contact (c2);
 
-      this._tracker_backend.set_up ();
+      ((!) this.tracker_backend).set_up ();
 
       this._c1_initially_not_favourite = false;
       this._c1_finally_favourite = false;
@@ -93,8 +82,6 @@ public class SetFavouriteTests : Folks.TestCase
       assert (this._c1_finally_favourite);
       assert (this._c2_initially_favourite);
       assert (this._c2_finally_not_favourite);
-
-      this._tracker_backend.tear_down ();
     }
 
   private async void _test_set_alias_async ()

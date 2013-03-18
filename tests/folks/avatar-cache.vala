@@ -53,6 +53,7 @@ public class AvatarCacheTests : Folks.TestCase
 
   public override void set_up ()
     {
+      base.set_up ();
       this._delete_cache_directory ();
 
       this._cache = AvatarCache.dup ();
@@ -69,6 +70,7 @@ public class AvatarCacheTests : Folks.TestCase
       this._avatar = null;
       this._cache = null;
       this._delete_cache_directory ();
+      base.tear_down ();
     }
 
   protected void _delete_directory (File dir) throws GLib.Error

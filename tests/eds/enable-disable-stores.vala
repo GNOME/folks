@@ -21,10 +21,9 @@
 using Folks;
 using Gee;
 
-public class EnableDisableStoresTests : Folks.TestCase
+public class EnableDisableStoresTests : EdsTest.TestCase
 {
   private GLib.MainLoop _main_loop;
-  private EdsTest.Backend? _eds_backend;
   private EdsTest.Backend? _eds_backend_other;
   private IndividualAggregator _aggregator;
   private HashMap<PersonaStore, bool> _store_removed;
@@ -41,31 +40,26 @@ public class EnableDisableStoresTests : Folks.TestCase
 
   public override void set_up ()
     {
-      this._eds_backend = new EdsTest.Backend ();
-      this._eds_backend_other = new EdsTest.Backend ();
+      base.set_up ();
+
       this._store_removed = new HashMap<PersonaStore, bool> ();
       this._store_added = new HashMap<PersonaStore, bool> ();
       this._backend_store = BackendStore.dup();
 
-      this._eds_backend.set_up ();
+      this._eds_backend_other = new EdsTest.Backend ();
       this._eds_backend_other.set_up (false, "other");
 
       /* We configure eds as the primary store */
-      var config_val = "eds:%s".printf (this._eds_backend.address_book_uid);
-      Environment.set_variable ("FOLKS_PRIMARY_STORE", config_val, true);
       Environment.set_variable ("FOLKS_BACKEND_EDS_USE_ADDRESS_BOOKS",
                                 "test:other", true);
     }
 
   public override void tear_down ()
     {
-      this._eds_backend.tear_down ();
       this._eds_backend_other.tear_down ();
-
-      Environment.unset_variable ("FOLKS_PRIMARY_STORE");
-
-      this._eds_backend = null;
       this._eds_backend_other = null;
+
+      base.tear_down ();
     }
 
   public void test_disabling_stores ()
@@ -110,7 +104,7 @@ public class EnableDisableStoresTests : Folks.TestCase
           backend.persona_store_added.connect (this._store_added_cb);
           
           var pstore = this._get_store (this._backend_store,
-              this._eds_backend.address_book_uid);
+              this.eds_backend.address_book_uid);
           assert (pstore != null);
           this._store_removed[pstore] = false;
           this._store_added[pstore] = false;

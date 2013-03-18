@@ -23,10 +23,9 @@ using TrackerTest;
 using Folks;
 using Gee;
 
-public class SetBirthdayTests : Folks.TestCase
+public class SetBirthdayTests : TrackerTest.TestCase
 {
   private GLib.MainLoop _main_loop;
-  private TrackerTest.Backend _tracker_backend;
   private IndividualAggregator _aggregator;
   private string _persona_fullname;
   private bool _bday_found;
@@ -37,18 +36,8 @@ public class SetBirthdayTests : Folks.TestCase
     {
       base ("SetBirthdayTests");
 
-      this._tracker_backend = new TrackerTest.Backend ();
-
       this.add_test ("test setting bithday ",
           this.test_set_bday);
-    }
-
-  public override void set_up ()
-    {
-    }
-
-  public override void tear_down ()
-    {
     }
 
   public void test_set_bday ()
@@ -58,14 +47,14 @@ public class SetBirthdayTests : Folks.TestCase
       this._persona_fullname = "persona #1";
 
       c1.set (Trf.OntologyDefs.NCO_FULLNAME, this._persona_fullname);
-      this._tracker_backend.add_contact (c1);
+      ((!) this.tracker_backend).add_contact (c1);
 
       this._birthday = "2001-10-26T20:32:52Z";
       TimeVal t = TimeVal ();
       t.from_iso8601 (this._birthday);
       this._bday = new  DateTime.from_timeval_utc (t);
 
-      this._tracker_backend.set_up ();
+      ((!) this.tracker_backend).set_up ();
 
       this._bday_found = false;
 
@@ -80,8 +69,6 @@ public class SetBirthdayTests : Folks.TestCase
       this._main_loop.run ();
 
       assert (this._bday_found);
-
-     this._tracker_backend.tear_down ();
     }
 
   private async void _test_set_bday_async ()

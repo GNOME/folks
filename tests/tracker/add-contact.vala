@@ -23,9 +23,8 @@ using TrackerTest;
 using Folks;
 using Gee;
 
-public class AddContactTests : Folks.TestCase
+public class AddContactTests : TrackerTest.TestCase
 {
-  private TrackerTest.Backend _tracker_backend;
   private bool _contact_added;
   private IndividualAggregator _aggregator;
   private string _persona_fullname;
@@ -35,17 +34,7 @@ public class AddContactTests : Folks.TestCase
     {
       base ("AddContactTests");
 
-      this._tracker_backend = new TrackerTest.Backend ();
-
       this.add_test ("test adding contacts ", this.test_add_contact);
-    }
-
-  public override void set_up ()
-    {
-    }
-
-  public override void tear_down ()
-    {
     }
 
   public void test_add_contact ()
@@ -56,8 +45,9 @@ public class AddContactTests : Folks.TestCase
 
       Gee.HashMap<string, string> c1 = new Gee.HashMap<string, string> ();
       c1.set (Trf.OntologyDefs.NCO_FULLNAME, this._persona_fullname);
-      this._tracker_backend.add_contact (c1);
-      this._tracker_backend.set_up ();
+      var tracker_backend = (!) this.tracker_backend;
+      tracker_backend.add_contact (c1);
+      tracker_backend.set_up ();
 
       this._test_add_contact_async.begin ();
 
@@ -69,7 +59,6 @@ public class AddContactTests : Folks.TestCase
 
       this._main_loop.run ();
       assert (this._contact_added == true);
-      this._tracker_backend.tear_down ();
     }
 
   private async void _test_add_contact_async ()

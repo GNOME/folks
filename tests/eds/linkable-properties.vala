@@ -23,9 +23,8 @@ using EdsTest;
 using Folks;
 using Gee;
 
-public class LinkablePropertiesTests : Folks.TestCase
+public class LinkablePropertiesTests : EdsTest.TestCase
 {
-  private EdsTest.Backend _eds_backend;
   private IndividualAggregator _aggregator;
   private GLib.MainLoop _main_loop;
   private bool _found_before_update;
@@ -54,19 +53,10 @@ public class LinkablePropertiesTests : Folks.TestCase
 
   public override void set_up ()
     {
+      base.set_up ();
+
       this._found_before_update = false;
       this._found_after_update = false;
-      this._eds_backend = new EdsTest.Backend ();
-      this._eds_backend.set_up ();
-
-      /* We configure eds as the primary store */
-      var config_val = "eds:%s".printf (this._eds_backend.address_book_uid);
-      Environment.set_variable ("FOLKS_PRIMARY_STORE", config_val, true);
-    }
-
-  public override void tear_down ()
-    {
-      this._eds_backend.tear_down ();
     }
 
   /* Check that two unaggregated Personas get aggregated after one changes its
@@ -84,7 +74,7 @@ public class LinkablePropertiesTests : Folks.TestCase
       this._found_before_update = false;
       this._found_after_update = false;
 
-      this._eds_backend.reset ();
+      this.eds_backend.reset ();
 
       c = new Gee.HashMap<string, Value?> ();
       v = Value (typeof (string));
@@ -96,7 +86,7 @@ public class LinkablePropertiesTests : Folks.TestCase
       v = Value (typeof (string));
       v.set_string (_phone_1);
       c.set ("home_phone", (owned) v);
-      this._eds_backend.add_contact (c);
+      this.eds_backend.add_contact (c);
 
       c = new Gee.HashMap<string, Value?> ();
       v = Value (typeof (string));
@@ -108,7 +98,7 @@ public class LinkablePropertiesTests : Folks.TestCase
       v = Value (typeof (string));
       v.set_string (_phone_2);
       c.set ("mobile_phone", (owned) v);
-      this._eds_backend.add_contact (c);
+      this.eds_backend.add_contact (c);
 
       this._test_linkable_properties_aggregate_after_change_async.begin ();
 
@@ -128,7 +118,7 @@ public class LinkablePropertiesTests : Folks.TestCase
 
   private async void _test_linkable_properties_aggregate_after_change_async ()
     {
-      yield this._eds_backend.commit_contacts_to_addressbook ();
+      yield this.eds_backend.commit_contacts_to_addressbook ();
 
       var store = BackendStore.dup ();
       yield store.prepare ();

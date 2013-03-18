@@ -21,32 +21,28 @@
 using Gee;
 using Folks;
 
-public class InitTests : Folks.TestCase
+public class InitTests : TpfTest.MixedTestCase
 {
-  private KfTest.Backend _kf_backend;
-  private TpTests.Backend _tp_backend;
   private int _test_timeout = 5;
 
   public InitTests ()
     {
       base ("Init");
 
-      this._kf_backend = new KfTest.Backend ();
-      this._tp_backend = new TpTests.Backend ();
-
       /* Set up the tests */
       this.add_test ("looped", this.test_looped);
       this.add_test ("individual-count", this.test_individual_count);
     }
 
-  public override void set_up ()
+  public override void set_up_kf ()
     {
-      this._tp_backend.set_up ();
+      /* we do this in the individual tests */
     }
 
-  public override void tear_down ()
+  public override void set_up_tp ()
     {
-      this._tp_backend.tear_down ();
+      /* we do the account creation in the individual tests */
+      ((!) this.tp_backend).set_up ();
     }
 
   /* Prepare a load of aggregators in a tight loop, without waiting for any of
@@ -57,11 +53,12 @@ public class InitTests : Folks.TestCase
     {
       var main_loop = new GLib.MainLoop (null, false);
 
-      this._kf_backend.set_up ("");
+      ((!) this.kf_backend).set_up ("");
 
-      void* account1_handle = this._tp_backend.add_account ("protocol",
+      var tp_backend = (!) this.tp_backend;
+      void* account1_handle = tp_backend.add_account ("protocol",
           "me@example.com", "cm", "account");
-      void* account2_handle = this._tp_backend.add_account ("protocol",
+      void* account2_handle = tp_backend.add_account ("protocol",
           "me2@example.com", "cm", "account2");
 
       /* Wreak havoc. */
@@ -82,9 +79,8 @@ public class InitTests : Folks.TestCase
       main_loop.run ();
 
       /* Clean up for the next test */
-      this._tp_backend.remove_account (account2_handle);
-      this._tp_backend.remove_account (account1_handle);
-      this._kf_backend.tear_down ();
+      tp_backend.remove_account (account2_handle);
+      tp_backend.remove_account (account1_handle);
     }
 
   /* Prepare an aggregator and wait for quiescence, then count how many
@@ -99,16 +95,17 @@ public class InitTests : Folks.TestCase
     {
       var main_loop = new GLib.MainLoop (null, false);
 
-      this._kf_backend.set_up (
+      ((!) this.kf_backend).set_up (
           "[0]\n" +
           "msn=foo@hotmail.com\n" +
           "[1]\n" +
           "__alias=Bar McBadgerson\n" +
           "jabber=bar@jabber.org\n");
 
-      void* account1_handle = this._tp_backend.add_account ("protocol",
+      var tp_backend = (!) this.tp_backend;
+      void* account1_handle = tp_backend.add_account ("protocol",
           "me@example.com", "cm", "account");
-      void* account2_handle = this._tp_backend.add_account ("protocol",
+      void* account2_handle = tp_backend.add_account ("protocol",
           "me2@example.com", "cm", "account2");
 
       /* Run the test loop. */
@@ -126,10 +123,8 @@ public class InitTests : Folks.TestCase
       main_loop.run ();
 
       /* Clean up for the next test */
-      this._tp_backend.remove_account (account2_handle);
-      this._tp_backend.remove_account (account1_handle);
-
-      this._kf_backend.tear_down ();
+      tp_backend.remove_account (account2_handle);
+      tp_backend.remove_account (account1_handle);
     }
 
   private async void _test_individual_count_loop ()

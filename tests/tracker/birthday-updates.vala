@@ -23,9 +23,8 @@ using TrackerTest;
 using Folks;
 using Gee;
 
-public class BirthdayUpdatesTests : Folks.TestCase
+public class BirthdayUpdatesTests : TrackerTest.TestCase
 {
-  private TrackerTest.Backend _tracker_backend;
   private IndividualAggregator _aggregator;
   private string _initial_birthday;
   private string _updated_birthday;
@@ -42,18 +41,9 @@ public class BirthdayUpdatesTests : Folks.TestCase
     {
       base ("BirthdayUpdates");
 
-      this._tracker_backend = new TrackerTest.Backend ();
-      this._tracker_backend.debug = false;
+      ((!) this.tracker_backend).debug = false;
 
       this.add_test ("birthday updates", this.test_birthday_updates);
-    }
-
-  public override void set_up ()
-    {
-    }
-
-  public override void tear_down ()
-    {
     }
 
   public void test_birthday_updates ()
@@ -76,9 +66,9 @@ public class BirthdayUpdatesTests : Folks.TestCase
       c1.set (TrackerTest.Backend.URN, this._contact_urn);
       c1.set (Trf.OntologyDefs.NCO_FULLNAME, this._initial_fullname);
       c1.set (Trf.OntologyDefs.NCO_BIRTHDAY, this._initial_birthday);
-      this._tracker_backend.add_contact (c1);
+      ((!) this.tracker_backend).add_contact (c1);
 
-      this._tracker_backend.set_up ();
+      ((!) this.tracker_backend).set_up ();
 
       this._initial_birthday_found = false;
       this._updated_birthday_found = false;
@@ -97,8 +87,6 @@ public class BirthdayUpdatesTests : Folks.TestCase
 
       assert (this._initial_birthday_found == true);
       assert (this._updated_birthday_found == true);
-
-      this._tracker_backend.tear_down ();
     }
 
   private async void test_birthday_updates_async ()
@@ -137,7 +125,7 @@ public class BirthdayUpdatesTests : Folks.TestCase
                 {
                   this._individual_id = i.id;
                   this._initial_birthday_found = true;
-                  this._tracker_backend.update_contact (this._contact_urn,
+                  ((!) this.tracker_backend).update_contact (this._contact_urn,
                       Trf.OntologyDefs.NCO_BIRTHDAY, this._updated_birthday);
                 }
             }
@@ -164,7 +152,7 @@ public class BirthdayUpdatesTests : Folks.TestCase
         {
           this._individual_id = i.id;
           this._initial_birthday_found = true;
-          this._tracker_backend.update_contact (this._contact_urn,
+          ((!) this.tracker_backend).update_contact (this._contact_urn,
               Trf.OntologyDefs.NCO_BIRTHDAY, this._updated_birthday);
         }
       else if (i.birthday.compare (this._updated_bday_obj) == 0)

@@ -23,11 +23,10 @@ using TrackerTest;
 using Folks;
 using Gee;
 
-public class PhoneDetailsInterfaceTests : Folks.TestCase
+public class PhoneDetailsInterfaceTests : TrackerTest.TestCase
 {
   private GLib.MainLoop _main_loop;
   private IndividualAggregator _aggregator;
-  private TrackerTest.Backend _tracker_backend;
   private int _num_phones = 0;
   private bool _found_phone_1 = false;
   private bool _found_phone_2 = false;
@@ -36,18 +35,8 @@ public class PhoneDetailsInterfaceTests : Folks.TestCase
     {
       base ("PhoneDetailsInterfaceTests");
 
-      this._tracker_backend = new TrackerTest.Backend ();
-
       this.add_test ("test phone details interface",
           this.test_phone_details_interface);
-    }
-
-  public override void set_up ()
-    {
-    }
-
-  public override void tear_down ()
-    {
     }
 
   public void test_phone_details_interface ()
@@ -57,9 +46,9 @@ public class PhoneDetailsInterfaceTests : Folks.TestCase
 
       c1.set (Trf.OntologyDefs.NCO_FULLNAME, "persona #1");
       c1.set (Trf.OntologyDefs.NCO_PHONE_PROP, "12345,54321");
-      this._tracker_backend.add_contact (c1);
+      ((!) this.tracker_backend).add_contact (c1);
 
-      this._tracker_backend.set_up ();
+      ((!) this.tracker_backend).set_up ();
 
       this._num_phones = 0;
       this._found_phone_1 = false;
@@ -78,8 +67,6 @@ public class PhoneDetailsInterfaceTests : Folks.TestCase
       assert (this._num_phones == 2);
       assert (this._found_phone_1 == true);
       assert (this._found_phone_2 == true);
-
-      this._tracker_backend.tear_down ();
     }
 
   private async void _test_phone_details_interface_async ()

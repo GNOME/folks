@@ -8,12 +8,16 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir)/backends/telepathy/lib \
 	-I$(top_srcdir)/backends/telepathy/lib/folks \
 	-I$(top_srcdir)/tests/lib \
+	-I$(top_srcdir)/tests/lib/key-file \
+	-I$(top_srcdir)/tests/lib/telepathy \
 	-I$(top_srcdir)/tests/lib/telepathy/contactlist \
 	-include $(CONFIG_HEADER) \
 	$(NULL)
 
 LDADD = \
 	$(top_builddir)/tests/lib/libfolks-test.la \
+	$(top_builddir)/tests/lib/key-file/libkf-test.la \
+	$(top_builddir)/tests/lib/telepathy/libtpf-test.la \
 	$(top_builddir)/tests/lib/telepathy/contactlist/libtp-test-contactlist.la \
 	$(top_builddir)/backends/telepathy/lib/libfolks-telepathy.la \
 	$(top_builddir)/folks/libfolks.la \
@@ -30,6 +34,10 @@ AM_VALAFLAGS += \
 	$(ERROR_VALAFLAGS) \
 	--vapidir=$(abs_top_srcdir)/tests/lib/telepathy/contactlist/ \
 	--vapidir=$(abs_top_builddir)/tests/lib/telepathy/contactlist/ \
+	--vapidir=$(abs_top_srcdir)/tests/lib/telepathy \
+	--vapidir=$(abs_top_builddir)/tests/lib/telepathy \
+	--vapidir=$(abs_top_srcdir)/tests/lib/key-file \
+	--vapidir=$(abs_top_builddir)/tests/lib/key-file \
 	--vapidir=$(abs_top_srcdir)/tests/lib/ \
 	--vapidir=$(abs_top_builddir)/tests/lib/ \
 	--vapidir=$(abs_srcdir) \
@@ -46,6 +54,8 @@ AM_VALAFLAGS += \
 	--pkg folks \
 	--pkg folks-telepathy \
 	--pkg folks-test \
+	--pkg kf-test \
+	--pkg tpf-test \
 	--pkg tp-test-contactlist \
 	-g \
 	$(NULL)

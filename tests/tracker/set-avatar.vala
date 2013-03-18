@@ -23,10 +23,9 @@ using TrackerTest;
 using Folks;
 using Gee;
 
-public class SetAvatarTests : Folks.TestCase
+public class SetAvatarTests : TrackerTest.TestCase
 {
   private GLib.MainLoop _main_loop;
-  private TrackerTest.Backend _tracker_backend;
   private IndividualAggregator _aggregator;
   private string _persona_fullname;
   private LoadableIcon _avatar;
@@ -36,17 +35,7 @@ public class SetAvatarTests : Folks.TestCase
     {
       base ("SetAvatarTests");
 
-      this._tracker_backend = new TrackerTest.Backend ();
-
       this.add_test ("test setting avatar ", this.test_set_avatar);
-    }
-
-  public override void set_up ()
-    {
-    }
-
-  public override void tear_down ()
-    {
     }
 
   public void test_set_avatar ()
@@ -58,9 +47,9 @@ public class SetAvatarTests : Folks.TestCase
       this._avatar = new FileIcon (File.new_for_path (_avatar_path));
 
       c1.set (Trf.OntologyDefs.NCO_FULLNAME, this._persona_fullname);
-      this._tracker_backend.add_contact (c1);
+      ((!) this.tracker_backend).add_contact (c1);
 
-      this._tracker_backend.set_up ();
+      ((!) this.tracker_backend).set_up ();
 
       this._avatar_found = false;
 
@@ -75,8 +64,6 @@ public class SetAvatarTests : Folks.TestCase
       this._main_loop.run ();
 
       assert (this._avatar_found);
-
-     this._tracker_backend.tear_down ();
     }
 
   private async void _test_set_avatar_async ()

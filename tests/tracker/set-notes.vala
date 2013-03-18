@@ -23,10 +23,9 @@ using TrackerTest;
 using Folks;
 using Gee;
 
-public class SetNotesTests : Folks.TestCase
+public class SetNotesTests : TrackerTest.TestCase
 {
   private GLib.MainLoop _main_loop;
-  private TrackerTest.Backend _tracker_backend;
   private IndividualAggregator _aggregator;
   private string _persona_fullname;
   private bool _note_found;
@@ -36,18 +35,8 @@ public class SetNotesTests : Folks.TestCase
     {
       base ("SetNotesTests");
 
-      this._tracker_backend = new TrackerTest.Backend ();
-
       this.add_test ("test setting notes ",
           this.test_set_notes);
-    }
-
-  public override void set_up ()
-    {
-    }
-
-  public override void tear_down ()
-    {
     }
 
   public void test_set_notes ()
@@ -57,11 +46,11 @@ public class SetNotesTests : Folks.TestCase
       this._persona_fullname = "persona #1";
 
       c1.set (Trf.OntologyDefs.NCO_FULLNAME, this._persona_fullname);
-      this._tracker_backend.add_contact (c1);
+      ((!) this.tracker_backend).add_contact (c1);
 
       this._note = new NoteFieldDetails ("some note");
 
-      this._tracker_backend.set_up ();
+      ((!) this.tracker_backend).set_up ();
 
       this._note_found = false;
 
@@ -76,8 +65,6 @@ public class SetNotesTests : Folks.TestCase
       this._main_loop.run ();
 
       assert (this._note_found);
-
-     this._tracker_backend.tear_down ();
     }
 
   private async void _test_set_notes_async ()

@@ -22,9 +22,8 @@ using EdsTest;
 using Folks;
 using Gee;
 
-public class SetNamesTests : Folks.TestCase
+public class SetNamesTests : EdsTest.TestCase
 {
-  private EdsTest.Backend _eds_backend;
   private IndividualAggregator _aggregator;
   private GLib.MainLoop _main_loop;
   private bool _full_name_found_before_update;
@@ -40,21 +39,6 @@ public class SetNamesTests : Folks.TestCase
           this.test_set_names);
     }
 
-  public override void set_up ()
-    {
-      this._eds_backend = new EdsTest.Backend ();
-      this._eds_backend.set_up ();
-
-      /* We configure eds as the primary store */
-      var config_val = "eds:%s".printf (this._eds_backend.address_book_uid);
-      Environment.set_variable ("FOLKS_PRIMARY_STORE", config_val, true);
-    }
-
-  public override void tear_down ()
-    {
-      this._eds_backend.tear_down ();
-    }
-
   void test_set_names ()
     {
       Gee.HashMap<string, Value?> c1 = new Gee.HashMap<string, Value?> ();
@@ -66,7 +50,7 @@ public class SetNamesTests : Folks.TestCase
       this._nickname_found_before_update = false;
       this._nickname_found_after_update = false;
 
-      this._eds_backend.reset ();
+      this.eds_backend.reset ();
 
       v = Value (typeof (string));
       v.set_string ("bernie h. innocenti");
@@ -74,7 +58,7 @@ public class SetNamesTests : Folks.TestCase
       v = Value (typeof (string));
       v.set_string ("foo bar");
       c1.set ("nickname", (owned) v);
-      this._eds_backend.add_contact (c1);
+      this.eds_backend.add_contact (c1);
 
       this._test_set_names_async.begin ();
 
@@ -93,7 +77,7 @@ public class SetNamesTests : Folks.TestCase
 
   private async void _test_set_names_async ()
     {
-      yield this._eds_backend.commit_contacts_to_addressbook ();
+      yield this.eds_backend.commit_contacts_to_addressbook ();
 
       var store = BackendStore.dup ();
       yield store.prepare ();

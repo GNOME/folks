@@ -23,9 +23,8 @@ using TrackerTest;
 using Folks;
 using Gee;
 
-public class AvatarDetailsInterfaceTests : Folks.TestCase
+public class AvatarDetailsInterfaceTests : TrackerTest.TestCase
 {
-  private TrackerTest.Backend _tracker_backend;
   private string _avatar_uri;
   private bool _avatars_are_equal;
   private GLib.MainLoop _main_loop;
@@ -35,18 +34,8 @@ public class AvatarDetailsInterfaceTests : Folks.TestCase
     {
       base ("AvatarDetailsInterfaceTests");
 
-      this._tracker_backend = new TrackerTest.Backend ();
-
       this.add_test ("test avatar details interface",
           this.test_avatar_details_interface);
-    }
-
-  public override void set_up ()
-    {
-    }
-
-  public override void tear_down ()
-    {
     }
 
   public void test_avatar_details_interface ()
@@ -61,8 +50,8 @@ public class AvatarDetailsInterfaceTests : Folks.TestCase
 
       c1.set (Trf.OntologyDefs.NCO_FULLNAME, "persona #1");
       c1.set (Trf.OntologyDefs.NCO_PHOTO, this._avatar_uri);
-      this._tracker_backend.add_contact (c1);
-      this._tracker_backend.set_up ();
+      ((!) this.tracker_backend).add_contact (c1);
+      ((!) this.tracker_backend).set_up ();
 
       test_avatar_details_interface_async.begin ();
 
@@ -74,7 +63,6 @@ public class AvatarDetailsInterfaceTests : Folks.TestCase
 
       this._main_loop.run ();
       assert (this._avatars_are_equal);
-      this._tracker_backend.tear_down ();
     }
 
   private async void test_avatar_details_interface_async ()

@@ -23,11 +23,10 @@ using TrackerTest;
 using Folks;
 using Gee;
 
-public class RoleDetailsInterfaceTests : Folks.TestCase
+public class RoleDetailsInterfaceTests : TrackerTest.TestCase
 {
   private GLib.MainLoop _main_loop;
   private IndividualAggregator _aggregator;
-  private TrackerTest.Backend _tracker_backend;
   private bool _found_role;
   private string _fullname;
   private string _affiliaton;
@@ -36,19 +35,10 @@ public class RoleDetailsInterfaceTests : Folks.TestCase
     {
       base ("RoleDetailsInterfaceTests");
 
-      this._tracker_backend = new TrackerTest.Backend ();
-      this._tracker_backend.debug = false;
+      ((!) this.tracker_backend).debug = false;
 
       this.add_test ("test role details interface",
           this.test_role_details_interface);
-    }
-
-  public override void set_up ()
-    {
-    }
-
-  public override void tear_down ()
-    {
     }
 
   public void test_role_details_interface ()
@@ -60,9 +50,9 @@ public class RoleDetailsInterfaceTests : Folks.TestCase
 
       c1.set (Trf.OntologyDefs.NCO_FULLNAME, this._fullname);
       c1.set (Trf.OntologyDefs.NCO_HAS_AFFILIATION, this._affiliaton);
-      this._tracker_backend.add_contact (c1);
+      ((!) this.tracker_backend).add_contact (c1);
 
-      this._tracker_backend.set_up ();
+      ((!) this.tracker_backend).set_up ();
 
       this._found_role = false;
 
@@ -77,8 +67,6 @@ public class RoleDetailsInterfaceTests : Folks.TestCase
       this._main_loop.run ();
 
       assert (this._found_role == true);
-
-      this._tracker_backend.tear_down ();
     }
 
   private async void _test_role_details_interface_async ()

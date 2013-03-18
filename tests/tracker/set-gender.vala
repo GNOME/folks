@@ -23,10 +23,9 @@ using TrackerTest;
 using Folks;
 using Gee;
 
-public class SetGenderTests : Folks.TestCase
+public class SetGenderTests : TrackerTest.TestCase
 {
   private GLib.MainLoop _main_loop;
-  private TrackerTest.Backend _tracker_backend;
   private IndividualAggregator _aggregator;
   private string _persona_fullname;
   private bool _gender_found;
@@ -35,18 +34,8 @@ public class SetGenderTests : Folks.TestCase
     {
       base ("SetGenderTests");
 
-      this._tracker_backend = new TrackerTest.Backend ();
-
       this.add_test ("test setting gender ",
           this.test_set_gender);
-    }
-
-  public override void set_up ()
-    {
-    }
-
-  public override void tear_down ()
-    {
     }
 
   public void test_set_gender ()
@@ -56,9 +45,9 @@ public class SetGenderTests : Folks.TestCase
       this._persona_fullname = "persona #1";
 
       c1.set (Trf.OntologyDefs.NCO_FULLNAME, this._persona_fullname);
-      this._tracker_backend.add_contact (c1);
+      ((!) this.tracker_backend).add_contact (c1);
 
-      this._tracker_backend.set_up ();
+      ((!) this.tracker_backend).set_up ();
 
       this._gender_found = false;
 
@@ -73,8 +62,6 @@ public class SetGenderTests : Folks.TestCase
       this._main_loop.run ();
 
       assert (this._gender_found);
-
-     this._tracker_backend.tear_down ();
     }
 
   private async void _test_set_gender_async ()
