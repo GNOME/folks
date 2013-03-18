@@ -134,10 +134,10 @@ public int main (string[] args)
 {
   Test.init (ref args);
 
-  TestSuite root = TestSuite.get_root ();
-  root.add_suite (new EmailDetailsInterfaceTests ().get_suite ());
-
+  var tests = new EmailDetailsInterfaceTests ();
+  tests.register ();
   Test.run ();
+  tests.final_tear_down ();
 
   return 0;
 }

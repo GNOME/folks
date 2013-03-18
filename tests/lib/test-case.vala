@@ -47,6 +47,11 @@ public abstract class Folks.TestCase : Object
       Environment.set_variable ("FOLKS_BACKENDS_ALLOWED", "", true);
     }
 
+  public void register ()
+    {
+      TestSuite.get_root ().add_suite (this.get_suite ());
+    }
+
   public void add_test (string name, TestMethod test)
     {
       var adaptor = new Adaptor (name, test, this);
@@ -98,7 +103,7 @@ public abstract class Folks.TestCase : Object
       this.final_tear_down ();
     }
 
-  public GLib.TestSuite get_suite ()
+  private GLib.TestSuite get_suite ()
     {
       return this._suite;
     }

@@ -278,10 +278,10 @@ public int main (string[] args)
 {
   Test.init (ref args);
 
-  TestSuite root = TestSuite.get_root ();
-  root.add_suite (new LinkPersonasDiffStoresTests ().get_suite ());
-
+  var tests = new LinkPersonasDiffStoresTests ();
+  tests.register ();
   Test.run ();
+  tests.final_tear_down ();
 
   return 0;
 }
