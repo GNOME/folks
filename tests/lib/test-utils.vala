@@ -140,4 +140,43 @@ public class Folks.TestUtils
           assert (aggregator.is_quiescent == true);
         }
     }
+
+  /**
+   * Run a helper executable.
+   *
+   * @param argv Arguments for the executable. The first is the path of
+   *  the executable itself, relative to ${builddir}/tests.
+   * @param capture_stdout If non-null, the executable's standard output is
+   *  placed here. If null, the executable's standard output goes to the
+   *  same place as the test's standard output.
+   */
+  public static void run_test_helper_sync (string[] argv,
+      out string capture_stdout = null) throws GLib.Error
+    {
+      string execdir;
+
+      if (Environment.get_variable ("FOLKS_TESTS_INSTALLED") != null)
+        {
+          execdir = BuildConf.PKGLIBEXECDIR + "/tests";
+        }
+      else
+        {
+          execdir = BuildConf.ABS_TOP_BUILDDIR + "/tests";
+        }
+
+      var argv_ = argv[0:argv.length];
+      argv_[0] = execdir + "/" + argv_[0];
+
+      int exit_status = -1;
+      Process.spawn_sync (null /* cwd */,
+          argv_,
+          null /* envp */,
+          0 /* flags */,
+          null /* child setup */,
+          out capture_stdout,
+          null /* do not capture stderr */,
+          out exit_status);
+
+      Process.check_exit_status (exit_status);
+    }
 }

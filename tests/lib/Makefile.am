@@ -49,6 +49,9 @@ libfolks_test_la_CPPFLAGS = \
 	$(AM_CPPFLAGS) \
 	-I$(top_srcdir) \
 	-I$(top_srcdir)/folks \
+	-DABS_TOP_SRCDIR=\"${abs_top_srcdir}\" \
+	-DABS_TOP_BUILDDIR=\"${abs_top_builddir}\" \
+	-DPKGLIBEXECDIR=\"${pkglibexecdir}\" \
 	$(NULL)
 
 libfolks_test_la_LIBADD = \
@@ -70,6 +73,7 @@ libfolks_test_la_VALAFLAGS = \
 	--pkg gee-0.8 \
 	--pkg dbus-glib-1 \
 	--pkg folks \
+	--pkg build-conf \
 	--library folks-test \
 	-H folks-test.h \
 	-g \

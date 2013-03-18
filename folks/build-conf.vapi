@@ -53,4 +53,13 @@ public class Folks.BuildConf
 
   [CCode (cname = "HAVE_TRACKER")]
   public static bool HAVE_TRACKER;
+
+  [CCode (cname = "ABS_TOP_BUILDDIR")]
+  public static const string ABS_TOP_BUILDDIR;
+
+  [CCode (cname = "ABS_TOP_SRCDIR")]
+  public static const string ABS_TOP_SRCDIR;
+
+  [CCode (cname = "PKGLIBEXECDIR")]
+  public static const string PKGLIBEXECDIR;
 }
