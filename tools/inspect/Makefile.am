@@ -51,7 +51,7 @@ folks_inspect_CFLAGS = \
 
 GITIGNOREFILES = \
 	folks_inspect_vala.stamp \
-	$(folks_inspect_SOURCES:.vala=.c) \
+	$(patsubst %.vala,%.c,$(filter %.vala,$(folks_inspect_SOURCES))) \
 	$(NULL)
 
 -include $(top_srcdir)/git.mk

@@ -70,7 +70,7 @@ libsocialweb_la_LDFLAGS = \
 
 GITIGNOREFILES = \
 	folks-backend-libsocialweb.vapi \
-	$(libsocialweb_la_SOURCES:.vala=.c) \
+	$(patsubst %.vala,%.c,$(filter %.vala,$(libsocialweb_la_SOURCES))) \
 	libsocialweb_la_vala.stamp \
 	$(NULL)
 

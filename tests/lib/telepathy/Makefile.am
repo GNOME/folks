@@ -63,7 +63,7 @@ BUILT_SOURCES = \
 	$(NULL)
 
 GITIGNOREFILES = \
-	$(libtpf_test_la_SOURCES:.vala=.c) \
+	$(patsubst %.vala,%.c,$(filter %.vala,$(libtpf_test_la_SOURCES))) \
 	libtpf_test_la_vala.stamp \
 	$(NULL)
 

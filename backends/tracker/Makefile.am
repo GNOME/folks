@@ -71,7 +71,7 @@ tracker_la_LDFLAGS = \
 
 GITIGNOREFILES = \
 	folks-backend-tracker.vapi \
-	$(tracker_la_SOURCES:.vala=.c) \
+	$(patsubst %.vala,%.c,$(filter %.vala,$(tracker_la_SOURCES))) \
 	tracker_la_vala.stamp \
 	$(NULL)
 

@@ -73,7 +73,7 @@ telepathy_la_LDFLAGS = \
 
 GITIGNOREFILES = \
 	folks-backend-telepathy.vapi \
-	$(telepathy_la_SOURCES:.vala=.c) \
+	$(patsubst %.vala,%.c,$(filter %.vala,$(telepathy_la_SOURCES))) \
 	telepathy_la_vala.stamp \
 	$(NULL)
 

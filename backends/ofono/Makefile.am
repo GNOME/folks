@@ -67,7 +67,7 @@ ofono_la_LDFLAGS = \
 	$(NULL)
 
 GITIGNOREFILES = \
-	$(ofono_la_SOURCES:.vala=.c) \
+	$(patsubst %.vala,%.c,$(filter %.vala,$(ofono_la_SOURCES))) \
 	ofono_la_vala.stamp \
 	$(NULL)
 

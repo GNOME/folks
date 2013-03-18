@@ -63,7 +63,7 @@ EXTRA_DIST = \
 	$(NULL)
 
 GITIGNOREFILES = \
-	$(libtracker_test_la_SOURCES:.vala=.c) \
+	$(patsubst %.vala,%.c,$(filter %.vala,$(libtracker_test_la_SOURCES))) \
 	libtracker_test_la_vala.stamp \
 	$(NULL)
 

@@ -76,7 +76,7 @@ BUILT_SOURCES = \
 	$(NULL)
 
 MAINTAINERCLEANFILES = \
-	$(libfolks_test_la_SOURCES:.vala=.c) \
+	$(patsubst %.vala,%.c,$(filter %.vala,$(libfolks_test_la_SOURCES))) \
 	libfolks_test_la_vala.stamp \
 	folks-test.h \
 	folks-test.vapi \

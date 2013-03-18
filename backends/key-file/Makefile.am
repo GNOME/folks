@@ -59,7 +59,7 @@ key_file_la_LDFLAGS = \
 
 GITIGNOREFILES = \
 	folks-backend-key-file.vapi \
-	$(key_file_la_SOURCES:.vala=.c) \
+	$(patsubst %.vala,%.c,$(filter %.vala,$(key_file_la_SOURCES))) \
 	key_file_la_vala.stamp \
 	$(NULL)
 

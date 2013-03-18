@@ -174,9 +174,9 @@ BUILT_SOURCES = \
 	$(NULL)
 
 GITIGNOREFILES = \
-	$(libfolks_la_SOURCES:.vala=.c) \
+	$(patsubst %.vala,%.c,$(filter %.vala,$(libfolks_la_SOURCES))) \
+	$(patsubst %.vala,%.c,$(filter %.vala,$(libfolks_internal_la_SOURCES))) \
 	libfolks_la_vala.stamp \
-	$(libfolks_internal_la_SOURCES:.vala=.c) \
 	libfolks_internal_la_vala.stamp \
 	$(NULL)
 

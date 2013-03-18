@@ -47,7 +47,7 @@ folks_import_LDADD = \
 
 GITIGNOREFILES = \
 	folks_import_vala.stamp \
-	$(folks_import_SOURCES:.vala=.c) \
+	$(patsubst %.vala,%.c,$(filter %.vala,$(folks_import_SOURCES))) \
 	$(NULL)
 
 -include $(top_srcdir)/git.mk

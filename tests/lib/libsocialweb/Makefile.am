@@ -58,7 +58,7 @@ EXTRA_DIST = \
 	$(NULL)
 
 GITIGNOREFILES = \
-	$(libsocialweb_test_la_SOURCES:.vala=.c) \
+	$(patsubst %.vala,%.c,$(filter %.vala,$(libsocialweb_test_la_SOURCES))) \
 	libsocialweb_test_la_vala.stamp \
 	$(NULL)
 

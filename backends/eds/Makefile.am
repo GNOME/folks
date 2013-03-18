@@ -76,7 +76,7 @@ eds_la_LDFLAGS = \
 
 GITIGNOREFILES = \
 	folks-backend-eds.vapi \
-	$(eds_la_SOURCES:.vala=.c) \
+	$(patsubst %.vala,%.c,$(filter %.vala,$(eds_la_SOURCES))) \
 	eds_la_vala.stamp \
 	$(NULL)
 

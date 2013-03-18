@@ -44,7 +44,7 @@ EXTRA_DIST = \
 	$(NULL)
 
 GITIGNOREFILES = \
-	$(libkf_test_la_SOURCES:.vala=.c) \
+	$(patsubst %.vala,%.c,$(filter %.vala,$(libkf_test_la_SOURCES))) \
 	libkf_test_la_vala.stamp \
 	$(NULL)
 
