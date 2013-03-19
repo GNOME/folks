@@ -25,9 +25,6 @@
 /**
  * A test case for the libsocialweb backend. Folks is configured
  * to use that backend and no others, with no primary store.
- *
- * FIXME: for now, this relies on being run under with-session-bus.sh
- * with no activatable services.
  */
 public class LibsocialwebTest.TestCase : Folks.TestCase
 {
@@ -42,23 +39,21 @@ public class LibsocialwebTest.TestCase : Folks.TestCase
 
   public TestCase (string name)
     {
-      /* This variable is set in the same place as the various variables we
-       * care about for sandboxing purposes, like XDG_CONFIG_HOME and
-       * DBUS_SESSION_BUS_ADDRESS. */
-      if (Environment.get_variable ("FOLKS_TESTS_SANDBOXED_DBUS")
-          != "no-services")
-        error ("libsocialweb tests must be run in a private D-Bus session");
-
       base (name);
 
       Environment.set_variable ("FOLKS_BACKENDS_ALLOWED", "libsocialweb", true);
       Environment.set_variable ("FOLKS_PRIMARY_STORE", "", true);
     }
 
-  public override void private_bus_up ()
+  /**
+   * This test does use libdbus, via libsocialweb.
+   */
+  public override bool uses_dbus_1
     {
-      /* Don't do anything. We're currently relying on
-       * being wrapped in with-session-bus.sh. */
+      get
+        {
+          return true;
+        }
     }
 
   /**

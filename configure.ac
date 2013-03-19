@@ -654,7 +654,6 @@ AC_CONFIG_FILES([
     tests/lib/eds/Makefile
     tests/lib/key-file/Makefile
     tests/lib/libsocialweb/Makefile
-    tests/lib/libsocialweb/session.conf
     tests/lib/telepathy/Makefile
     tests/lib/tracker/Makefile
     tests/lib/telepathy/contactlist/Makefile

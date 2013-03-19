@@ -47,14 +47,9 @@ MAINTAINERCLEANFILES = \
 	libsocialweb-test.h \
 	$(NULL)
 
-DISTCLEANFILES = \
-	session.conf \
-	$(NULL)
-
 EXTRA_DIST = \
 	libsocialweb-test.vapi \
 	libsocialweb-test.h \
-	session.conf.in \
 	$(NULL)
 
 GITIGNOREFILES = \

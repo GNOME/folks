@@ -24,8 +24,6 @@ LDADD = \
 	-L$(top_srcdir)/backends/libsocialweb/lib \
 	$(NULL)
 
-RUN_WITH_PRIVATE_BUS = $(top_srcdir)/tests/tools/with-session-bus.sh
-
 AM_VALAFLAGS += \
 	$(ERROR_VALAFLAGS) \
 	--vapidir=. \
@@ -50,12 +48,11 @@ noinst_PROGRAMS = \
 	aggregation \
 	$(NULL)
 
-SESSION_CONF = $(top_builddir)/tests/lib/libsocialweb/session.conf
 TESTS_ENVIRONMENT = \
 	FOLKS_BACKEND_PATH=$(BACKEND_UNINST_PATH) \
-	$(RUN_WITH_PRIVATE_BUS) \
-	--config-file=$(SESSION_CONF) \
-	--
+	$(top_srcdir)/tests/tools/execute-test.sh \
+	$(NULL)
+
 TESTS = $(noinst_PROGRAMS)
 
 dummy_lsw_SOURCES = \
