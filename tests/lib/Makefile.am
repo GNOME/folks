@@ -31,6 +31,7 @@ DIST_SUBDIRS = \
 noinst_LTLIBRARIES = libfolks-test.la
 
 libfolks_test_la_SOURCES = \
+	haze-remove-directory.c \
 	test-case.vala \
 	test-case-helper.c \
 	test-utils.vala \

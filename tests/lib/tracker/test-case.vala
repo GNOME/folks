@@ -63,6 +63,13 @@ public class TrackerTest.TestCase : Folks.TestCase
       this.tracker_backend = new TrackerTest.Backend ();
     }
 
+  public override string? create_transient_dir ()
+    {
+      /* Don't do anything. We're currently relying on
+       * being wrapped in with-session-bus-tracker.sh. */
+      return null;
+    }
+
   public override void private_bus_up ()
     {
       /* Don't do anything. We're currently relying on

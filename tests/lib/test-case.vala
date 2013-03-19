@@ -42,10 +42,105 @@ public abstract class Folks.TestCase : Object
       LogAdaptor.set_up ();
       this._suite = new GLib.TestSuite (name);
 
+      this._transient_dir = this.create_transient_dir ();
       this.private_bus_up ();
 
       /* By default, no backend is allowed. Subclasses must override. */
       Environment.set_variable ("FOLKS_BACKENDS_ALLOWED", "", true);
+    }
+
+  private string? _transient_dir = null;
+  /**
+   * A transient directory normally created in the constructor and deleted
+   * in final_tear_down(). This can be used for temporary storage.
+   * The environment variables ``XDG_CONFIG_HOME``, ``XDG_DATA_HOME``,
+   * ``XDG_CACHE_HOME``, etc. point into it.
+   */
+  public string transient_dir
+    {
+      get
+        {
+          assert (this._transient_dir != null);
+          return (!) this._transient_dir;
+        }
+    }
+
+  /**
+   * Create and return a transient directory suitable for use as
+   * //transient_dir//. Set environment variables to point into it.
+   *
+   * This is only called once per process, so that it can be used in
+   * environment variables that are cached or otherwise considered to
+   * be process-global. As such, all tests in a TestCase share it.
+   *
+   * Subclasses may override this method to do additional setup
+   * (create more subdirectories or set more environment variables).
+   *
+   * FIXME: Subclasses relying on being called by with-session-bus-*.sh
+   * may override this method to return null, although we should really
+   * stop doing that.
+   */
+  public virtual string? create_transient_dir ()
+    {
+      unowned string tmp = Environment.get_tmp_dir ();
+      string transient = "%s/folks-test.XXXXXX".printf (tmp);
+
+      if (GLib.DirUtils.mkdtemp (transient) == null)
+        error ("unable to create temporary directory in '%s': %s",
+            tmp, GLib.strerror (GLib.errno));
+
+      debug ("setting up in transient directory %s", transient);
+
+      /* GLib >= 2.36, and various non-GNOME things, obey this. */
+      Environment.set_variable ("HOME", transient, true);
+      /* GLib < 2.36 in Debian obeyed this (although upstream GLib < 2.36
+       * used the home directory from passwd), so set it too.
+       * FIXME: remove this when we depend on 2.36. */
+      Environment.set_variable ("G_HOME", transient, true);
+
+      var cache = "%s/.cache".printf (transient);
+      Environment.set_variable ("XDG_CACHE_HOME", cache, true);
+
+      if (GLib.DirUtils.create_with_parents (cache, 0700) != 0)
+        error ("unable to create '%s': %s",
+            cache, GLib.strerror (GLib.errno));
+
+      var config = "%s/.config".printf (transient);
+      Environment.set_variable ("XDG_CONFIG_HOME", config, true);
+
+      if (GLib.DirUtils.create_with_parents (config, 0700) != 0)
+        error ("unable to create '%s': %s",
+            config, GLib.strerror (GLib.errno));
+
+      var local = "%s/.local/share".printf (transient);
+      Environment.set_variable ("XDG_DATA_HOME", local, true);
+
+      if (GLib.DirUtils.create_with_parents (local, 0700) != 0)
+        error ("unable to create '%s': %s",
+            local, GLib.strerror (GLib.errno));
+
+      /* Under systemd user sessions this is meant to define the
+       * lifetime of a logged-in-user - the regression tests don't
+       * want to be part of this. */
+      var runtime = "%s/XDG_RUNTIME_DIR".printf (transient);
+      Environment.set_variable ("XDG_RUNTIME_DIR", runtime, true);
+
+      if (GLib.DirUtils.create_with_parents (runtime, 0700) != 0)
+        error ("unable to create '%s': %s",
+            runtime, GLib.strerror (GLib.errno));
+
+      /* Unset some things we don't want to inherit. In particular,
+       * Tracker might try to index XDG_*_DIR, which we don't want. */
+      Environment.unset_variable ("XDG_DESKTOP_DIR");
+      Environment.unset_variable ("XDG_DOCUMENTS_DIR");
+      Environment.unset_variable ("XDG_DOWNLOAD_DIR");
+      Environment.unset_variable ("XDG_MUSIC_DIR");
+      Environment.unset_variable ("XDG_PICTURES_DIR");
+      Environment.unset_variable ("XDG_PUBLICSHARE_DIR");
+      Environment.unset_variable ("XDG_TEMPLATES_DIR");
+      Environment.unset_variable ("XDG_VIDEOS_DIR");
+
+      return transient;
     }
 
   /**
@@ -150,6 +245,12 @@ public abstract class Folks.TestCase : Object
         {
           ((!) this.test_dbus).down ();
           this.test_dbus = null;
+        }
+
+      if (this._transient_dir != null)
+        {
+          unowned string dir = (!) this._transient_dir;
+          Folks.TestUtils.remove_directory_recursively (dir);
         }
     }
 

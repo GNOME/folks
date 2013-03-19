@@ -57,6 +57,13 @@ public class EdsTest.TestCase : Folks.TestCase
           true);
     }
 
+  public override string? create_transient_dir ()
+    {
+      /* Don't do anything. We're currently relying on
+       * being wrapped in with-session-bus-eds.sh. */
+      return null;
+    }
+
   public override void private_bus_up ()
     {
       /* Don't do anything. We're currently relying on

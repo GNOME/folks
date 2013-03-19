@@ -25,6 +25,11 @@ using GLib;
 
 public class Folks.TestUtils
 {
+  /* Implemented in C */
+  [CCode (cname = "haze_remove_directory",
+          cheader_filename = "haze-remove-directory.h")]
+  public extern static bool remove_directory_recursively (string path);
+
   /**
    * Compare the content of two {@link LoadableIcon}s for equality.
    *
