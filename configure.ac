@@ -657,7 +657,6 @@ AC_CONFIG_FILES([
     tests/lib/telepathy/Makefile
     tests/lib/tracker/Makefile
     tests/lib/telepathy/contactlist/Makefile
-    tests/lib/telepathy/contactlist/session.conf
     tests/tools/Makefile
     tools/Makefile
     tools/inspect/Makefile

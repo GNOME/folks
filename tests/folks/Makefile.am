@@ -23,8 +23,6 @@ LDADD = \
 	$(TP_GLIB_LIBS) \
 	$(NULL)
 
-RUN_WITH_PRIVATE_BUS = $(top_srcdir)/tests/tools/with-session-bus.sh
-
 # --disable-warnings is necessary so that we can test deprecated API such as
 # the IndividualAggregator.individuals_changed signal.
 AM_VALAFLAGS += \
@@ -65,14 +63,12 @@ noinst_PROGRAMS = \
 	init \
 	$(NULL)
 
-SESSION_CONF = $(top_builddir)/tests/lib/telepathy/contactlist/session.conf
 avatar_file=@abs_top_srcdir@/tests/data/avatar-01.jpg
 TESTS_ENVIRONMENT = \
 	FOLKS_BACKEND_PATH=$(BACKEND_UNINST_PATH) \
 	AVATAR_FILE_PATH=$(avatar_file) \
-	$(RUN_WITH_PRIVATE_BUS) \
-	--config-file=$(SESSION_CONF) \
-	--
+	$(top_srcdir)/tests/tools/execute-test.sh \
+	$(NULL)
 
 TESTS = $(noinst_PROGRAMS)
 

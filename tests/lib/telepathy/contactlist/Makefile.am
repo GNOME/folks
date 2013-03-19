@@ -98,9 +98,7 @@ MAINTAINERCLEANFILES = \
 	$(introspection_files) \
 	$(NULL)
 
-DISTCLEANFILES = \
-	session.conf \
-	$(NULL)
+DISTCLEANFILES =
 
 if NOT_RELEASE
 DISTCLEANFILES += $(dist_noinst_DATA)
@@ -108,7 +106,6 @@ endif
 
 EXTRA_DIST = \
 	manager-file.py \
-	session.conf.in \
 	tp-test-contactlist.h \
 	$(NULL)
 

@@ -29,9 +29,6 @@
  *
  * Folks is configured to use the Telepathy backend, with no primary store,
  * unless //use_keyfile_too// is set.
- *
- * FIXME: for now, this relies on being run under with-session-bus.sh
- * with no activatable services.
  */
 public class TpfTest.TestCase : Folks.TestCase
 {
@@ -90,12 +87,6 @@ public class TpfTest.TestCase : Folks.TestCase
    */
   public TestCase (string name)
     {
-      /* This variable is set in the same place as the various variables we
-       * care about for sandboxing purposes, like XDG_CONFIG_HOME and
-       * DBUS_SESSION_BUS_ADDRESS. */
-      if (Environment.get_variable ("FOLKS_TESTS_SANDBOXED_DBUS")
-          != "no-services")
-        error ("Telepathy tests must be run in a private D-Bus session");
 
       base (name);
 
@@ -116,10 +107,15 @@ public class TpfTest.TestCase : Folks.TestCase
       this.create_tp_backend ();
     }
 
-  public override void private_bus_up ()
+  /**
+   * This test does use libdbus, via telepathy-glib.
+   */
+  public override bool uses_dbus_1
     {
-      /* Don't do anything. We're currently relying on
-       * being wrapped in with-session-bus.sh. */
+      get
+        {
+          return true;
+        }
     }
 
   /**

@@ -28,8 +28,6 @@ LDADD = \
 	-L$(top_srcdir)/backends/telepathy/lib \
 	$(NULL)
 
-RUN_WITH_PRIVATE_BUS = $(top_srcdir)/tests/tools/with-session-bus.sh
-
 AM_VALAFLAGS += \
 	$(ERROR_VALAFLAGS) \
 	--vapidir=$(abs_top_srcdir)/tests/lib/telepathy/contactlist/ \
@@ -60,13 +58,12 @@ AM_VALAFLAGS += \
 	-g \
 	$(NULL)
 
-SESSION_CONF = $(top_builddir)/tests/lib/telepathy/contactlist/session.conf
 TESTS_ENVIRONMENT = \
 	FOLKS_BACKEND_PATH=$(BACKEND_UNINST_PATH) \
 	FOLKS_BACKEND_KEY_FILE_PATH=$(srcdir)/data/relationships-empty.ini \
-	$(RUN_WITH_PRIVATE_BUS) \
-	--config-file=$(SESSION_CONF) \
-	--
+	$(top_srcdir)/tests/tools/execute-test.sh \
+	$(NULL)
+
 TESTS = \
 	persona-store-capabilities \
 	individual-retrieval \
