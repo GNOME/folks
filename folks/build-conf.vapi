@@ -24,9 +24,6 @@
 [CCode (cheader_filename = "config.h")]
 public class Folks.BuildConf
 {
-  [CCode (cname = "DATA_DIR")]
-  public static const string DATA_DIR;
-
   [CCode (cname = "BACKEND_DIR")]
   public static const string BACKEND_DIR;
 
@@ -38,6 +35,9 @@ public class Folks.BuildConf
 
   [CCode (cname = "PACKAGE_STRING")]
   public static const string PACKAGE_STRING;
+
+  [CCode (cname = "PACKAGE_DATADIR")]
+  public static const string PACKAGE_DATADIR;
 
   [CCode (cname = "GETTEXT_PACKAGE")]
   public static const string GETTEXT_PACKAGE;
