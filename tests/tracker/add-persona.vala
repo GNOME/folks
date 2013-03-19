@@ -74,7 +74,8 @@ public class AddPersonaTests : TrackerTest.TestCase
       this._family_name = "family";
       this._given_name = "given";
       this._persona_iid = "";
-      var _avatar_path = Environment.get_variable ("AVATAR_FILE_PATH");
+      var _avatar_path = Folks.TestUtils.get_source_test_data (
+          "data/avatar-01.jpg");
       this._avatar = new FileIcon (File.new_for_path (_avatar_path));
       this._birthday = "2001-10-26T20:32:52Z";
       this._email_1 = "someone-1@example.org";

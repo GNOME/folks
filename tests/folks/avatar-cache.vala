@@ -59,7 +59,7 @@ public class AvatarCacheTests : Folks.TestCase
       this._cache = AvatarCache.dup ();
       this._avatar =
           new FileIcon (File.new_for_path (
-              Environment.get_variable ("AVATAR_FILE_PATH")));
+              Folks.TestUtils.get_source_test_data ("data/avatar-01.jpg")));
 
       this._main_loop = new GLib.MainLoop (null, false);
     }

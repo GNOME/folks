@@ -43,7 +43,8 @@ public class SetAvatarTests : EdsTest.TestCase
     {
       Gee.HashMap<string, Value?> c1 = new Gee.HashMap<string, Value?> ();
       this._main_loop = new GLib.MainLoop (null, false);
-      var avatar_path = Environment.get_variable ("AVATAR_FILE_PATH");
+      var avatar_path = Folks.TestUtils.get_source_test_data (
+          "data/avatar-01.jpg");
       this._avatar = new FileIcon (File.new_for_path (avatar_path));
       Value? v;
 
@@ -152,7 +153,8 @@ public class SetAvatarTests : EdsTest.TestCase
     {
       var c1 = new Gee.HashMap<string, Value?> ();
       this._main_loop = new GLib.MainLoop (null, false);
-      var avatar_path = Environment.get_variable ("AVATAR_FILE_PATH");
+      var avatar_path = Folks.TestUtils.get_source_test_data (
+          "data/avatar-01.jpg");
       this._avatar = new FileIcon (File.new_for_path (avatar_path));
       Value? v;
 

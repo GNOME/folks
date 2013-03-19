@@ -64,7 +64,8 @@ public class AddPersonaTests : EdsTest.TestCase
       this._persona_fullname = "persona #1";
       this._persona_nickname = "Jo";
       this._email_1 = "someone-1@example.org";
-      this._avatar_path = Environment.get_variable ("AVATAR_FILE_PATH");
+      this._avatar_path = Folks.TestUtils.get_source_test_data (
+          "data/avatar-01.jpg");
       this._im_addr_1 = "someone-1@jabber.example.org";
       this._im_addr_2 = "someone-2@jabber.example.org";
       this._phone_1 = "12345";

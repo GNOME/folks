@@ -179,4 +179,42 @@ public class Folks.TestUtils
 
       Process.check_exit_status (exit_status);
     }
+
+  /**
+   * Return the path to a test file that is distributed in the source tarball
+   * and, if installed, is installed into ${pkgdatadir}/tests.
+   *
+   * @param filename A filename relative to ${top_srcdir}/tests
+   *  or ${pkgdatadir}/tests (or equivalently, ${datadir}/folks/tests).
+   */
+  public static string get_source_test_data (string filename)
+    {
+      if (Environment.get_variable ("FOLKS_TESTS_INSTALLED") != null)
+        {
+          return BuildConf.PACKAGE_DATADIR + "/tests/" + filename;
+        }
+      else
+        {
+          return BuildConf.ABS_TOP_SRCDIR + "/tests/" + filename;
+        }
+    }
+
+  /**
+   * Return the path to a test file that is distributed in the source tarball
+   * and, if installed, is installed into ${pkgdatadir}/tests.
+   *
+   * @param filename A filename relative to ${top_builddir}/tests
+   *  or ${pkgdatadir}/tests (or equivalently, ${datadir}/folks/tests).
+   */
+  public static string get_built_test_data (string filename)
+    {
+      if (Environment.get_variable ("FOLKS_TESTS_INSTALLED") != null)
+        {
+          return BuildConf.PACKAGE_DATADIR + "/tests/" + filename;
+        }
+      else
+        {
+          return BuildConf.ABS_TOP_BUILDDIR + "/tests/" + filename;
+        }
+    }
 }

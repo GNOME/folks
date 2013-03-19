@@ -41,7 +41,8 @@ public class AvatarDetailsTests : EdsTest.TestCase
     {
       this._c1 = new Gee.HashMap<string, Value?> ();
       this._main_loop = new GLib.MainLoop (null, false);
-      this._avatar_path = Environment.get_variable ("AVATAR_FILE_PATH");
+      this._avatar_path = Folks.TestUtils.get_source_test_data (
+          "data/avatar-01.jpg");
       this._avatars_are_equal = false;
       Value? v;
 

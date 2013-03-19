@@ -27,7 +27,7 @@
  * and no other backends.
  *
  * FIXME: For now, this relies on running under with-session-bus-tracker.sh
- * with AVATAR_FILE_PATH and FOLKS_BACKEND_PATH set.
+ * with FOLKS_BACKEND_PATH set.
  */
 public class TrackerTest.TestCase : Folks.TestCase
 {

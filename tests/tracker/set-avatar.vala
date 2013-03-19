@@ -43,7 +43,8 @@ public class SetAvatarTests : TrackerTest.TestCase
       this._main_loop = new GLib.MainLoop (null, false);
       Gee.HashMap<string, string> c1 = new Gee.HashMap<string, string> ();
       this._persona_fullname = "persona #1";
-      var _avatar_path = Environment.get_variable ("AVATAR_FILE_PATH");
+      var _avatar_path = Folks.TestUtils.get_source_test_data (
+          "data/avatar-01.jpg");
       this._avatar = new FileIcon (File.new_for_path (_avatar_path));
 
       c1.set (Trf.OntologyDefs.NCO_FULLNAME, this._persona_fullname);

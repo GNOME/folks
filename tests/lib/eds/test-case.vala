@@ -27,7 +27,7 @@
  * for an Evolution address-book.
  *
  * FIXME: For now, this relies on running under with-session-bus-eds.sh
- * with AVATAR_FILE_PATH and FOLKS_BACKEND_PATH set.
+ * with FOLKS_BACKEND_PATH set.
  */
 public class EdsTest.TestCase : Folks.TestCase
 {

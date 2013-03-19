@@ -52,6 +52,7 @@ libfolks_test_la_CPPFLAGS = \
 	-DABS_TOP_SRCDIR=\"${abs_top_srcdir}\" \
 	-DABS_TOP_BUILDDIR=\"${abs_top_builddir}\" \
 	-DPKGLIBEXECDIR=\"${pkglibexecdir}\" \
+	-DPACKAGE_DATADIR=\"${pkgdatadir}\" \
 	$(NULL)
 
 libfolks_test_la_LIBADD = \

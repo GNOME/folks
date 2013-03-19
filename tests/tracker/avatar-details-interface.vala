@@ -42,7 +42,8 @@ public class AvatarDetailsInterfaceTests : TrackerTest.TestCase
     {
       this._main_loop = new GLib.MainLoop (null, false);
       Gee.HashMap<string, string> c1 = new Gee.HashMap<string, string> ();
-      string avatar_path = Environment.get_variable ("AVATAR_FILE_PATH");
+      var avatar_path = Folks.TestUtils.get_source_test_data (
+          "data/avatar-01.jpg");
       var temp_file = GLib.File.new_for_path (avatar_path);
       var full_avatar_path = temp_file.get_path ();
       this._avatar_uri = "file://" + full_avatar_path;
