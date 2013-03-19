@@ -41,7 +41,7 @@ public class EdsTest.Backend
   private E.BookClient? _addressbook = null;
   private GLib.List<string> _e_contacts;
   private GLib.List<Gee.HashMap<string, Value?>> _contacts;
-  E.SourceRegistry _source_registry;
+  E.SourceRegistry? _source_registry = null;
   E.Source? _source = null;
   File? _source_file = null;
 
@@ -162,8 +162,9 @@ public class EdsTest.Backend
           "BackendName=local\n").printf (this._addressbook_name);
 
       /* Build a SourceRegistry to manage the sources. */
-      this._source_registry = yield create_source_registry (null);
-      var signal_id = this._source_registry.source_added.connect ((r, s) =>
+      var source_registry = yield create_source_registry (null);
+      this._source_registry = source_registry;
+      var signal_id = source_registry.source_added.connect ((r, s) =>
         {
           this._source = s;
           this._prepare_source_async.callback ();
@@ -172,7 +173,7 @@ public class EdsTest.Backend
       /* Perform the write and then wait for the SourceRegistry to notify. */
       yield source_file.replace_contents_async (source_file_content.data, null,
           false, FileCreateFlags.NONE, null, null);
-      this._source = this._source_registry.ref_source (this._addressbook_name);
+      this._source = source_registry.ref_source (this._addressbook_name);
       if (this._source == null)
         {
           yield;
@@ -180,7 +181,7 @@ public class EdsTest.Backend
 
       /* Sanity check then tidy up. */
       assert (this._source != null);
-      this._source_registry.disconnect (signal_id);
+      source_registry.disconnect (signal_id);
 
       this._source_file = source_file;
 
@@ -343,6 +344,7 @@ public class EdsTest.Backend
           this._source_file = null;
           this._source = null;
           this._addressbook = null;
+          this._source_registry = null;
         }
     }
 
