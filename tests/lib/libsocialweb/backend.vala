@@ -214,6 +214,8 @@ public class LibsocialwebTest.LibsocialwebServiceTest : Object,
           LibsocialwebTest.LibsocialwebContactViewTest>();
     }
 
+  public signal void registered_child (uint id);
+
   public ObjectPath OpenView (string query, HashTable<string, string> p)
     {
       string path = LibsocialwebTest.Backend.LIBSOCIALWEB_PATH + "/View"
@@ -223,7 +225,7 @@ public class LibsocialwebTest.LibsocialwebServiceTest : Object,
           var conn = Bus.get_sync (BusType.SESSION);
           LibsocialwebContactViewTest contact_view = new LibsocialwebContactViewTest
               (query, p, path);
-          conn.register_object (path, contact_view);
+          this.registered_child (conn.register_object (path, contact_view));
           contact_views[path] = contact_view;
           LibsocialwebTest.LibsocialwebServiceTest.view_count++;
         }
@@ -252,10 +254,29 @@ public class LibsocialwebTest.LibsocialwebServiceTest : Object,
 public class LibsocialwebTest.LibsocialwebServerTest : Object
 {
   private string[] services;
+  /* Our GDBus connection, used during teardown to break circular refs */
+  private DBusConnection _conn;
+  /* Object registrations for use with DBusConnection.unregister_object() */
+  private uint[] _registrations;
+  /* Signal connection IDs for connections to registered_child() */
+  private HashTable<LibsocialwebServiceTest, ulong> _register_child_signals;
 
   public LibsocialwebServerTest ()
     {
       services = new string[0];
+      this._registrations = new uint[0];
+      this._register_child_signals =
+          new HashTable<LibsocialwebServiceTest, ulong> (direct_hash,
+              direct_equal);
+
+      try
+        {
+          this._conn = Bus.get_sync (BusType.SESSION);
+        }
+      catch (Error e)
+        {
+          error ("%s", e.message);
+        }
     }
 
   [DBus (name = "IsOnline")]
@@ -275,24 +296,64 @@ public class LibsocialwebTest.LibsocialwebServerTest : Object
     {
       LibsocialwebServiceTest service
           = new LibsocialwebServiceTest (service_name);
+
+      this._register_child_signals[service] =
+          service.registered_child.connect ((id) =>
+            {
+              this._registrations += id;
+            });
+
       try
         {
-          var conn = Bus.get_sync (BusType.SESSION);
-          conn.register_object
+          this._registrations += this._conn.register_object
               <LibsocialwebTest.LibsocialwebServiceCapabilitiesTest>
               (LibsocialwebTest.Backend.LIBSOCIALWEB_PATH + "/Service/"
                   + service_name, service);
-          conn.register_object
+          this._registrations += this._conn.register_object
               <LibsocialwebTest.LibsocialwebServiceQueryTest>
               (LibsocialwebTest.Backend.LIBSOCIALWEB_PATH + "/Service/"
                   + service_name, service);
         }
-      catch (GLib.IOError e)
+      catch (Error e)
         {
-          assert_not_reached ();
+          error ("%s", e.message);
         }
       this.services += service_name;
       return service;
+    }
+
+  [DBus (visible = false)]
+  public void register ()
+    {
+      try
+        {
+          this._registrations += this._conn.register_object (
+              LibsocialwebTest.Backend.LIBSOCIALWEB_PATH, this);
+        }
+      catch (Error e)
+        {
+          error ("%s", e.message);
+        }
+    }
+
+  [DBus (visible = false)]
+  public void unregister ()
+    {
+      foreach (var reg in this._registrations)
+        {
+          this._conn.unregister_object (reg);
+        }
+
+      var iter = HashTableIter<LibsocialwebServiceTest, ulong>
+          (this._register_child_signals);
+      LibsocialwebServiceTest instance;
+      ulong sig;
+
+      while (iter.next (out instance, out sig))
+        {
+          instance.disconnect (sig);
+          iter.remove ();
+        }
     }
 }
 
@@ -303,7 +364,7 @@ public class LibsocialwebTest.Backend
   public static const string LIBSOCIALWEB_BUS_NAME = "org.gnome.libsocialweb";
 
   public bool debug { get; set; }
-  private LibsocialwebServerTest lsw_server;
+  private LibsocialwebServerTest? _lsw_server;
   private uint _name_id = 0;
 
   public signal void ready ();
@@ -315,16 +376,8 @@ public class LibsocialwebTest.Backend
 
   public void set_up ()
     {
-      lsw_server = new LibsocialwebServerTest ();
-      try
-        {
-          var conn = Bus.get_sync (BusType.SESSION);
-          conn.register_object (LIBSOCIALWEB_PATH, lsw_server);
-        }
-      catch (GLib.IOError e)
-        {
-          assert_not_reached ();
-        }
+      this._lsw_server = new LibsocialwebServerTest ();
+      ((!) this._lsw_server).register ();
 
       this._name_id = Bus.own_name (
         BusType.SESSION, LIBSOCIALWEB_BUS_NAME,
@@ -348,11 +401,16 @@ public class LibsocialwebTest.Backend
   public LibsocialwebTest.LibsocialwebServiceTest add_service
       (string service_name)
     {
-      return lsw_server.add_service (service_name);
+      return ((!) this._lsw_server).add_service (service_name);
     }
 
   public void tear_down ()
     {
+      if (this._lsw_server != null)
+        ((!) this._lsw_server).unregister ();
+
+      this._lsw_server = null;
+
       if (this._name_id != 0)
         {
           Bus.unown_name (this._name_id);
