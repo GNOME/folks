@@ -5,6 +5,12 @@ Dependencies:
 
 Major changes:
 
+• folks-import and folks-inspect now look for translated strings in
+  ${localedir}, typically /usr/share/locale, which is also where the
+  translations are installed. They previously looked in ${pkgdatadir}/locale,
+  which is typically /usr/share/folks/locale and does not usually exist or
+  contain anything.
+
 Bugs fixed:
 • Bug 693333 - eds: creating a contact with specific groups and
   fix "favourite" group setting for Android
