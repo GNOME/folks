@@ -318,7 +318,7 @@ public class Folks.TestUtils
     }
 
   /**
-   * Return the path to a test file that is distributed in the source tarball
+   * Return the path to a test file that is built by "make"
    * and, if installed, is installed into ${pkgdatadir}/tests.
    *
    * @param filename A filename relative to ${top_builddir}/tests
