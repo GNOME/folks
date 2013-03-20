@@ -160,6 +160,9 @@ To run a single test with debugging output:
 If a test needs to be run through Valgrind for memory debugging, use:
         make -C tests/<dir> check TESTS=<test name> FOLKS_TEST_VALGRIND=1
 
+If a test needs to be run through Callgrind for performance profiling, use:
+        make -C tests/<dir> check TESTS=<test name> FOLKS_TEST_CALLGRIND=1
+
 Profiling folks
 ===============
 
