@@ -51,6 +51,7 @@ public class Folks.Inspect.Client : Object
 
   public static int main (string[] args)
     {
+      Intl.setlocale (LocaleCategory.ALL, "");
       Intl.bindtextdomain (BuildConf.GETTEXT_PACKAGE, BuildConf.LOCALE_DIR);
       Intl.textdomain (BuildConf.GETTEXT_PACKAGE);
 
