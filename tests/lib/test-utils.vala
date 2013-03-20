@@ -178,6 +178,47 @@ public class Folks.TestUtils
     }
 
   /**
+   * Prepare a backend and wait for it to reach quiescence.
+   *
+   * This will prepare the given {@link Backend} then yield until it reaches
+   * quiescence. No timeout is used, so if the backend never reaches quiescence,
+   * this function will never return; callers must add their own timeout to
+   * avoid this if necessary.
+   *
+   * When this returns, the backend is guaranteed to be quiescent.
+   *
+   * @param backend the backend to prepare
+   */
+  public static async void backend_prepare_and_wait_for_quiescence (
+      Backend backend) throws GLib.Error
+    {
+      var has_yielded = false;
+      var signal_id = backend.notify["is-quiescent"].connect ((obj, pspec) =>
+        {
+          if (has_yielded == true)
+            {
+              TestUtils.backend_prepare_and_wait_for_quiescence.callback ();
+            }
+        });
+
+      try
+        {
+          yield backend.prepare ();
+
+          if (backend.is_quiescent == false)
+            {
+              has_yielded = true;
+              yield;
+            }
+        }
+      finally
+        {
+          backend.disconnect (signal_id);
+          assert (backend.is_quiescent == true);
+        }
+    }
+
+  /**
    * Prepare an aggregator and wait for it to reach quiescence.
    *
    * This will prepare the given {@link IndividualAggregator} then yield until

@@ -29,6 +29,7 @@ AM_VALAFLAGS += \
 	--vapidir=$(top_srcdir)/backends/eds/lib \
 	--vapidir=$(top_srcdir)/tests/lib \
 	--vapidir=$(top_srcdir)/tests/lib/eds \
+	--pkg posix \
 	--pkg gobject-2.0 \
 	--pkg gio-2.0 \
 	--pkg gee-0.8 \
@@ -43,7 +44,7 @@ AM_VALAFLAGS += \
 	$(NULL)
 
 # in order from least to most complex
-noinst_PROGRAMS = \
+TESTS = \
 	persona-store-tests \
 	individual-retrieval \
 	phone-details \
@@ -87,7 +88,12 @@ TESTS_ENVIRONMENT = \
 	--session \
 	--
 
-TESTS = $(noinst_PROGRAMS)
+noinst_PROGRAMS = \
+	$(TESTS) \
+	helper-create-many-contacts \
+	helper-delete-contacts \
+	helper-prepare-aggregator \
+	$(NULL)
 
 anti_linking_SOURCES = \
 	anti-linking.vala \
@@ -219,6 +225,18 @@ set_is_favourite_SOURCES = \
 
 store_removed_SOURCES = \
 	store-removed.vala \
+	$(NULL)
+
+helper_create_many_contacts_SOURCES = \
+	helper-create-many-contacts.vala \
+	$(NULL)
+
+helper_delete_contacts_SOURCES = \
+	helper-delete-contacts.vala \
+	$(NULL)
+
+helper_prepare_aggregator_SOURCES = \
+	helper-prepare-aggregator.vala \
 	$(NULL)
 
 CLEANFILES = \
