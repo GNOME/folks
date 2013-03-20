@@ -39,6 +39,8 @@ public abstract class Folks.TestCase : Object
 
   public TestCase (string name)
     {
+      Intl.setlocale (LocaleCategory.ALL, "");
+
       LogAdaptor.set_up ();
       this._suite = new GLib.TestSuite (name);
 
