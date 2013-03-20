@@ -130,6 +130,8 @@ public class Main
 
   public static int main (string[] args)
     {
+      Intl.setlocale (LocaleCategory.ALL, "");
+
       if (Environment.get_variable ("FOLKS_TESTS_SANDBOXED_DBUS") != "eds")
         error ("e-d-s helpers must be run in a private D-Bus session with " +
             "e-d-s services");

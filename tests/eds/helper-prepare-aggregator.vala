@@ -60,6 +60,8 @@ public class Main
 
   public static int main (string[] args)
     {
+      Intl.setlocale (LocaleCategory.ALL, "");
+
       if (Environment.get_variable ("FOLKS_TESTS_SANDBOXED_DBUS") != "eds" ||
           Environment.get_variable ("FOLKS_BACKENDS_ALLOWED") != "eds" ||
           Environment.get_variable ("FOLKS_PRIMARY_STORE") == null)
