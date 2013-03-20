@@ -20,6 +20,7 @@ Bugs fixed:
 • Bug 695719 - lsw dummy test intermittently segfaults
 • Bug 695381 - add FOLKS_BACKENDS_ALLOWED, FOLKS_BACKENDS_DISABLED environment
   variables (see HACKING)
+• Bug 696179 - folks-inspect, folks-import do not attempt to use translations
 • Bug 682903 (partially) - Use gee's MultiMap iterators
 
 API changes:
