@@ -93,13 +93,7 @@ public class PersonaStoreTests : EdsTest.TestCase
 
       backend_store.load_backends.begin ();
 
-      Timeout.add_seconds (3, () =>
-        {
-          main_loop.quit ();
-          return false;
-        });
-
-      main_loop.run ();
+      TestUtils.loop_run_with_non_fatal_timeout (main_loop);
 
       assert (this._capabilities_received.contains ("can-add-personas"));
       assert (this._capabilities_received.contains ("can-remove-personas"));

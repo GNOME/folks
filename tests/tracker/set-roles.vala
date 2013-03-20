@@ -58,13 +58,7 @@ public class SetRolesTests : TrackerTest.TestCase
 
       this._test_set_roles_async.begin ();
 
-      Timeout.add_seconds (5, () =>
-        {
-          this._main_loop.quit ();
-          assert_not_reached ();
-        });
-
-      this._main_loop.run ();
+      TestUtils.loop_run_with_timeout (this._main_loop);
 
       assert (this._role_found);
     }

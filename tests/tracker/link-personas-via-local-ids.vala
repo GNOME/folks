@@ -83,13 +83,7 @@ public class LinkPersonasViaLocalIDsTests : TrackerTest.TestCase
       /* Kill the main loop after 8 seconds: if the linked individual hasn't
        * show up at this point then we've either seen an error or we've been
        * too slow (which we can consider to be failure). */
-      Timeout.add_seconds (8, () =>
-        {
-          this._main_loop.quit ();
-          assert_not_reached ();
-        });
-
-      this._main_loop.run ();
+      TestUtils.loop_run_with_timeout (this._main_loop, 8);
 
       /* Check we get the new individual (containing the linked
        * personas) and that the previous ones were removed. */

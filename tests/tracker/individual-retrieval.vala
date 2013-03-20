@@ -51,13 +51,7 @@ public class IndividualRetrievalTests : TrackerTest.TestCase
 
       this._test_singleton_individuals_async.begin ();
 
-      Timeout.add_seconds (5, () =>
-        {
-          this._main_loop.quit ();
-          assert_not_reached ();
-        });
-
-      this._main_loop.run ();
+      TestUtils.loop_run_with_timeout (this._main_loop);
 
       assert (this._c1.size == 0);
       assert (this._c2.size == 0);

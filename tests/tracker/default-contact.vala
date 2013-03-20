@@ -55,13 +55,7 @@ public class DefaultContactTests : TrackerTest.TestCase
 
       _test_default_contact_async.begin ();
 
-      Timeout.add_seconds (5, () =>
-        {
-          this._main_loop.quit ();
-          assert_not_reached ();
-        });
-
-      this._main_loop.run ();
+      TestUtils.loop_run_with_timeout (this._main_loop);
 
       assert (this._found_default_user == true);
       assert (this._found_not_user == true);

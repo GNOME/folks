@@ -57,34 +57,18 @@ public class StoreRemovedTests : EdsTest.TestCase
       /* Schedule the test to start with the main loop. */
       this._test_single_store_part1_async.begin ();
 
-      var timeout_id = Timeout.add_seconds (5, () =>
-        {
-          critical ("Timeout reached.");
-          return false;
-        });
-
-      this._main_loop.run ();
+      TestUtils.loop_run_with_timeout (this._main_loop, 5);
 
       /* We should have a single individual by now. */
       assert (this._aggregator.individuals.size == 1);
 
-      GLib.Source.remove (timeout_id);
-
       /* Part 2, where we remove the address book. */
       this._test_single_store_part2_async.begin ();
 
-      timeout_id = Timeout.add_seconds (5, () =>
-        {
-          critical ("Timeout reached.");
-          return false;
-        });
-
-      this._main_loop.run ();
+      TestUtils.loop_run_with_timeout (this._main_loop, 5);
 
       /* The individual should be gone. */
       assert (this._aggregator.individuals.size == 0);
-
-      GLib.Source.remove (timeout_id);
     }
 
   private async void _test_single_store_part1_async ()

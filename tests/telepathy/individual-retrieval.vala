@@ -27,7 +27,6 @@ using Gee;
 public class IndividualRetrievalTests : TpfTest.TestCase
 {
   private HashSet<string> default_individuals;
-  private int _test_timeout = 3;
 
   public IndividualRetrievalTests ()
     {
@@ -63,9 +62,6 @@ public class IndividualRetrievalTests : TpfTest.TestCase
 
       this.add_test ("aggregator", this.test_aggregator);
       this.add_test ("aggregator:add", this.test_aggregator_add);
-
-      if (Environment.get_variable ("FOLKS_TEST_VALGRIND") != null)
-          this._test_timeout = 10;
     }
 
   public void test_aggregator ()
@@ -101,11 +97,6 @@ public class IndividualRetrievalTests : TpfTest.TestCase
       /* Kill the main loop after a few seconds. If there are still individuals
        * in the set of expected individuals, the aggregator has either failed or
        * been too slow (which we can consider to be failure). */
-      Timeout.add_seconds (this._test_timeout, () =>
-        {
-          main_loop.quit ();
-          return false;
-        });
 
       Idle.add (() =>
         {
@@ -126,7 +117,7 @@ public class IndividualRetrievalTests : TpfTest.TestCase
           return false;
         });
 
-      main_loop.run ();
+      TestUtils.loop_run_with_non_fatal_timeout (main_loop);
 
       /* We should have enumerated exactly the individuals in the set */
       assert (expected_individuals.size == 0);
@@ -181,11 +172,6 @@ public class IndividualRetrievalTests : TpfTest.TestCase
       /* Kill the main loop after a few seconds. If there are still individuals
        * in the set of expected individuals, the aggregator has either failed or
        * been too slow (which we can consider to be failure). */
-      Timeout.add_seconds (this._test_timeout, () =>
-        {
-          main_loop.quit ();
-          return false;
-        });
 
       Idle.add (() =>
         {
@@ -239,7 +225,7 @@ public class IndividualRetrievalTests : TpfTest.TestCase
           return false;
         });
 
-      main_loop.run ();
+      TestUtils.loop_run_with_non_fatal_timeout (main_loop);
 
       /* We should have received (and removed) the individuals in the set */
       assert (added_individuals.size == 0);

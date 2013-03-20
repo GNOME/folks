@@ -58,13 +58,7 @@ public class SetPhonesTests : TrackerTest.TestCase
 
       this._test_set_phones_async.begin ();
 
-      Timeout.add_seconds (5, () =>
-        {
-          this._main_loop.quit ();
-          assert_not_reached ();
-        });
-
-      this._main_loop.run ();
+      TestUtils.loop_run_with_timeout (this._main_loop);
 
       assert (this._phone_1_found);
       assert (this._phone_2_found);

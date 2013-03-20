@@ -183,12 +183,7 @@ public class AggregationTests : LibsocialwebTest.TestCase
         });
       aggregator.prepare.begin ();
 
-      uint timer_id = Timeout.add_seconds (5, () =>
-        {
-          assert_not_reached ();
-        });
-      main_loop.run ();
-      Source.remove (timer_id);
+      TestUtils.loop_run_with_timeout (main_loop, 5);
       aggregator.disconnect (handler_id);
 
       /* Check the aggregator got the correct data */
@@ -258,12 +253,7 @@ public class AggregationTests : LibsocialwebTest.TestCase
           return false;
         });
 
-      timer_id = Timeout.add_seconds (5, () =>
-        {
-          assert_not_reached ();
-        });
-      main_loop.run ();
-      Source.remove (timer_id);
+      TestUtils.loop_run_with_timeout (main_loop, 5);
     }
 }
 

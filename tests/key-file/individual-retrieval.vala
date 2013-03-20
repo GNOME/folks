@@ -23,17 +23,12 @@ using KfTest;
 
 public class IndividualRetrievalTests : KfTest.TestCase
 {
-  private int _test_timeout = 3;
-
   public IndividualRetrievalTests ()
     {
       base ("IndividualRetrieval");
 
       this.add_test ("singleton individuals", this.test_singleton_individuals);
       this.add_test ("aliases", this.test_aliases);
-
-      if (Environment.get_variable ("FOLKS_TEST_VALGRIND") != null)
-          this._test_timeout = 10;
     }
 
   public void test_singleton_individuals ()
@@ -85,13 +80,7 @@ public class IndividualRetrievalTests : KfTest.TestCase
       /* Kill the main loop after a few seconds. If there are still individuals
        * in the set of expected individuals, the aggregator has either failed
        * or been too slow (which we can consider to be failure). */
-      Timeout.add_seconds (this._test_timeout, () =>
-        {
-          main_loop.quit ();
-          return false;
-        });
-
-      main_loop.run ();
+      TestUtils.loop_run_with_non_fatal_timeout (main_loop, 3);
 
       /* We should have enumerated exactly the individuals in the set */
       assert (expected_individuals.size == 0);
@@ -136,13 +125,7 @@ public class IndividualRetrievalTests : KfTest.TestCase
       /* Kill the main loop after a few seconds. If there are still individuals
        * in the set of expected individuals, the aggregator has either failed
        * or been too slow (which we can consider to be failure). */
-      Timeout.add_seconds (this._test_timeout, () =>
-        {
-          main_loop.quit ();
-          return false;
-        });
-
-      main_loop.run ();
+      TestUtils.loop_run_with_non_fatal_timeout (main_loop, 3);
 
       /* We should have enumerated exactly one individual */
       assert (individuals_changed_count == 1);

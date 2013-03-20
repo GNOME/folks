@@ -31,6 +31,83 @@ public class Folks.TestUtils
   public extern static bool remove_directory_recursively (string path);
 
   /**
+   * Apply an arbitrary fudge factor to the timeout, which might be
+   * appropriate for any debuggers or other slow wrappers we're using.
+   *
+   * @param timeout A timeout in any units
+   * @return A revised timeout in the same units
+   */
+  public static int multiply_timeout (int timeout)
+    {
+      int result = timeout;
+
+      if (Environment.get_variable ("FOLKS_TEST_VALGRIND") != null)
+        {
+          result *= 10;
+        }
+
+      if (Environment.get_variable ("FOLKS_TEST_CALLGRIND") != null)
+        {
+          result *= 10;
+        }
+
+      return result;
+    }
+
+  /**
+   * Run //loop// with a timeout. Something should call ``loop.quit()``
+   * before the timeout is reached. If not, a fatal error occurs.
+   *
+   * @param loop A main loop.
+   * @param timeout A timeout, initially in seconds, defaulting to long
+   *    enough to do something "reasonably fast". It will be adjusted with
+   *    multiply_timeout() before use.
+   */
+  public static void loop_run_with_timeout (MainLoop loop, int timeout = 5)
+    {
+      var source = new TimeoutSource.seconds (
+          TestUtils.multiply_timeout (timeout));
+      source.set_callback (() => { error ("Timed out"); });
+      source.attach (loop.get_context ());
+
+      loop.run ();
+
+      source.destroy ();
+    }
+
+  /**
+   * Run //loop// with a timeout. Something should call ``loop.quit()``
+   * before the timeout is reached. If not, the timeout callback will do so.
+   *
+   * This function is a bad idea: we don't want things to run for an arbitrary
+   * time. Use loop_run_with_timeout() instead.
+   *
+   * FIXME: Remove this when it has no more callers.
+   *
+   * @param loop A main loop.
+   * @param timeout A timeout, initially in seconds, defaulting to long
+   *    enough to do something "reasonably fast". It will be adjusted with
+   *    multiply_timeout() before use.
+   */
+  [Deprecated (replacement = "loop_run_with_timeout")]
+  public static void loop_run_with_non_fatal_timeout (MainLoop loop,
+      int timeout = 3)
+    {
+      var source = new TimeoutSource.seconds (
+          TestUtils.multiply_timeout (timeout));
+      source.set_callback (() =>
+        {
+          loop.quit ();
+          return false;
+        });
+      source.attach (loop.get_context ());
+
+      loop.run ();
+
+      source.destroy ();
+    }
+
+  /**
    * Compare the content of two {@link LoadableIcon}s for equality.
    *
    * This is in contrast to {@link Icon.equal}, which returns ``false`` for

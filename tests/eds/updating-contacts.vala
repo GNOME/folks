@@ -54,12 +54,7 @@ public class UpdatingContactsTests : EdsTest.TestCase
 
       this._test_updates_async.begin ();
 
-      Timeout.add_seconds (5, () => {
-            this._main_loop.quit ();
-            assert_not_reached ();
-          });
-
-      this._main_loop.run ();
+      TestUtils.loop_run_with_timeout (this._main_loop, 5);
 
       assert (this._found_before_update);
       assert (this._found_after_update);

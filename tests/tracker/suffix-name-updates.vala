@@ -68,13 +68,7 @@ public class SuffixNameUpdatesTests : TrackerTest.TestCase
 
       this._test_suffix_name_updates_async.begin ();
 
-      Timeout.add_seconds (5, () =>
-        {
-          this._main_loop.quit ();
-          assert_not_reached ();
-        });
-
-      this._main_loop.run ();
+      TestUtils.loop_run_with_timeout (this._main_loop);
 
       assert (this._initial_suffix_name_found == true);
       assert (this._updated_suffix_name_found == true);

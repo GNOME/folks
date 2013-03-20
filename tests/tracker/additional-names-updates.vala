@@ -69,13 +69,7 @@ public class AdditionalNamesUpdatesTests : TrackerTest.TestCase
       var store = BackendStore.dup ();
       _test_additional_names_updates_async.begin (store);
 
-      Timeout.add_seconds (5, () =>
-        {
-          this._main_loop.quit ();
-          assert_not_reached ();
-        });
-
-      this._main_loop.run ();
+      TestUtils.loop_run_with_timeout (this._main_loop);
 
       assert (this._initial_additional_names_found == true);
       assert (this._updated_additional_names_found == true);

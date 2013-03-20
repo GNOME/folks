@@ -55,13 +55,7 @@ public class SetIsFavouriteTests : EdsTest.TestCase
 
       this._test_set_is_favourite_async.begin ();
 
-      Timeout.add_seconds (5, () =>
-        {
-          this._main_loop.quit ();
-          assert_not_reached ();
-        });
-
-      this._main_loop.run ();
+      TestUtils.loop_run_with_timeout (this._main_loop);
 
       assert (!this._is_favourite_before_update);
       assert (this._is_favourite_after_update);

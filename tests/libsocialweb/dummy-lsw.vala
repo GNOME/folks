@@ -66,12 +66,7 @@ public class DummyLswTests : LibsocialwebTest.TestCase
           assert_not_reached ();
         }
 
-      uint timer_id = Timeout.add_seconds (5, () =>
-        {
-          assert_not_reached ();
-        });
-      main_loop.run ();
-      Source.remove (timer_id);
+      TestUtils.loop_run_with_timeout (main_loop, 5);
 
       /* Test adding two contacts */
 
@@ -141,12 +136,7 @@ public class DummyLswTests : LibsocialwebTest.TestCase
         });
       aggregator.prepare.begin ();
 
-      timer_id = Timeout.add_seconds (5, () =>
-        {
-          assert_not_reached ();
-        });
-      main_loop.run ();
-      Source.remove (timer_id);
+      TestUtils.loop_run_with_timeout (main_loop, 5);
       aggregator.disconnect (handler_id);
       assert (i1 != null);
       assert (i2 != null);
@@ -211,12 +201,7 @@ public class DummyLswTests : LibsocialwebTest.TestCase
           main_loop.quit ();
         });
 
-      timer_id = Timeout.add_seconds (5, () =>
-        {
-          assert_not_reached ();
-        });
-      main_loop.run ();
-      Source.remove (timer_id);
+      TestUtils.loop_run_with_timeout (main_loop, 5);
       i1.disconnect (handler_id);
 
       /* Test deleting two contacts */
@@ -268,12 +253,7 @@ public class DummyLswTests : LibsocialwebTest.TestCase
           main_loop.quit ();
         });
 
-      timer_id = Timeout.add_seconds (5, () =>
-        {
-          assert_not_reached ();
-        });
-      main_loop.run ();
-      Source.remove (timer_id);
+      TestUtils.loop_run_with_timeout (main_loop, 5);
       aggregator.disconnect (handler_id);
     }
 }

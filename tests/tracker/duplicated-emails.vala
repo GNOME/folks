@@ -49,13 +49,7 @@ public class DuplicatedEmailsTests : TrackerTest.TestCase
 
       this._test_duplicated_emails_async.begin ();
 
-      Timeout.add_seconds (5, () =>
-        {
-          this._main_loop.quit ();
-          assert_not_reached ();
-        });
-
-      this._main_loop.run ();
+      TestUtils.loop_run_with_timeout (this._main_loop);
       assert (this._individual_id_1 != "");
       assert (this._individual_id_2 != "");
     }

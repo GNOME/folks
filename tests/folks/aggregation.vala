@@ -24,7 +24,6 @@ using TpTests;
 public class AggregationTests : TpfTest.MixedTestCase
 {
   private HashSet<string> _default_personas;
-  private int _test_timeout = 3;
 
   public AggregationTests ()
     {
@@ -57,9 +56,6 @@ public class AggregationTests : TpfTest.MixedTestCase
           this.test_ensure_individual_property_writeable_add_persona);
       this.add_test ("ensure individual property writeable:failure",
           this.test_ensure_individual_property_writeable_failure);
-
-      if (Environment.get_variable ("FOLKS_TEST_VALGRIND") != null)
-          this._test_timeout = 10;
     }
 
   public override void set_up_tp ()
@@ -151,11 +147,6 @@ public class AggregationTests : TpfTest.MixedTestCase
       /* Kill the main loop after a few seconds. If there are still individuals
        * in the set of expected individuals, the aggregator has either failed or
        * been too slow (which we can consider to be failure). */
-      Timeout.add_seconds (this._test_timeout, () =>
-        {
-          main_loop.quit ();
-          return false;
-        });
 
       Idle.add (() =>
         {
@@ -176,7 +167,7 @@ public class AggregationTests : TpfTest.MixedTestCase
           return false;
         });
 
-      main_loop.run ();
+      TestUtils.loop_run_with_non_fatal_timeout (main_loop, 3);
 
       /* We should have enumerated exactly the individuals in the set */
       assert (expected_individuals.size == 0);
@@ -289,11 +280,6 @@ public class AggregationTests : TpfTest.MixedTestCase
       /* Kill the main loop after a few seconds. If there are still individuals
        * in the set of expected individuals, the aggregator has either failed or
        * been too slow (which we can consider to be failure). */
-      Timeout.add_seconds (this._test_timeout, () =>
-        {
-          main_loop.quit ();
-          return false;
-        });
 
       Idle.add (() =>
         {
@@ -314,7 +300,7 @@ public class AggregationTests : TpfTest.MixedTestCase
           return false;
         });
 
-      main_loop.run ();
+      TestUtils.loop_run_with_non_fatal_timeout (main_loop, 3);
 
       /* Verify the two individuals we should have */
       assert (individual1 != null);
@@ -470,11 +456,6 @@ public class AggregationTests : TpfTest.MixedTestCase
       /* Kill the main loop after a few seconds. If there are still individuals
        * in the set of expected individuals, the aggregator has either failed or
        * been too slow (which we can consider to be failure). */
-      Timeout.add_seconds (this._test_timeout, () =>
-        {
-          main_loop.quit ();
-          return false;
-        });
 
       Idle.add (() =>
         {
@@ -495,7 +476,7 @@ public class AggregationTests : TpfTest.MixedTestCase
           return false;
         });
 
-      main_loop.run ();
+      TestUtils.loop_run_with_non_fatal_timeout (main_loop, 3);
 
       /* Verify the two individuals we should have */
       assert (individual1 != null);
@@ -655,11 +636,6 @@ public class AggregationTests : TpfTest.MixedTestCase
       /* Kill the main loop after a few seconds. If there are still individuals
        * in the set of expected individuals, the aggregator has either failed or
        * been too slow (which we can consider to be failure). */
-      Timeout.add_seconds (this._test_timeout, () =>
-        {
-          main_loop.quit ();
-          return false;
-        });
 
       Idle.add (() =>
         {
@@ -680,7 +656,7 @@ public class AggregationTests : TpfTest.MixedTestCase
           return false;
         });
 
-      main_loop.run ();
+      TestUtils.loop_run_with_non_fatal_timeout (main_loop, 3);
 
       /* The user exported by the aggregator should be the same as the one
        * we've kept track of */
@@ -789,11 +765,6 @@ public class AggregationTests : TpfTest.MixedTestCase
       /* Kill the main loop after a few seconds. If there are still individuals
        * in the set of expected individuals, the aggregator has either failed or
        * been too slow (which we can consider to be failure). */
-      Timeout.add_seconds (this._test_timeout, () =>
-        {
-          main_loop.quit ();
-          return false;
-        });
 
       Idle.add (() =>
         {
@@ -814,7 +785,7 @@ public class AggregationTests : TpfTest.MixedTestCase
           return false;
         });
 
-      main_loop.run ();
+      TestUtils.loop_run_with_non_fatal_timeout (main_loop, 3);
 
       aggregator.disconnect (individuals_changed_id);
       aggregator.disconnect (individuals_changed_detailed_id);
@@ -942,11 +913,6 @@ public class AggregationTests : TpfTest.MixedTestCase
 
       /* Kill the main loop after a few seconds. We can assume that we've
        * reached a quiescent state by this point. */
-      Timeout.add_seconds (this._test_timeout, () =>
-        {
-          main_loop.quit ();
-          return false;
-        });
 
       Idle.add (() =>
         {
@@ -967,7 +933,7 @@ public class AggregationTests : TpfTest.MixedTestCase
           return false;
         });
 
-      main_loop.run ();
+      TestUtils.loop_run_with_non_fatal_timeout (main_loop, 3);
 
       /* Check that all Individuals are either ADDED or FINALISED. There should
        * be no Individuals which are REMOVED (but not yet finalised). */
@@ -987,13 +953,8 @@ public class AggregationTests : TpfTest.MixedTestCase
 
       /* Kill the main loop after a few seconds. We can assume that we've
        * reached another quiescent state by this point. */
-      Timeout.add_seconds (this._test_timeout, () =>
-        {
-          main_loop.quit ();
-          return false;
-        });
 
-      main_loop.run ();
+      TestUtils.loop_run_with_non_fatal_timeout (main_loop, 3);
 
       /* Now that the backends have been finalised, all the Individuals should
        * have been finalised too. */
@@ -1041,11 +1002,6 @@ public class AggregationTests : TpfTest.MixedTestCase
         });
 
       /* Kill the main loop after a few seconds. */
-      Timeout.add_seconds (this._test_timeout, () =>
-        {
-          main_loop.quit ();
-          return false;
-        });
 
       Idle.add (() =>
         {
@@ -1066,7 +1022,7 @@ public class AggregationTests : TpfTest.MixedTestCase
           return false;
         });
 
-      main_loop.run ();
+      TestUtils.loop_run_with_non_fatal_timeout (main_loop, 3);
 
       /* Check we've got the individual we want */
       assert (individual != null);
@@ -1085,11 +1041,6 @@ public class AggregationTests : TpfTest.MixedTestCase
       Persona? writeable_persona = null;
 
       /* Kill the main loop after a few seconds. */
-      Timeout.add_seconds (this._test_timeout, () =>
-        {
-          main_loop.quit ();
-          return false;
-        });
 
       Idle.add (() =>
         {
@@ -1114,7 +1065,7 @@ public class AggregationTests : TpfTest.MixedTestCase
           return false;
         });
 
-      main_loop.run ();
+      TestUtils.loop_run_with_non_fatal_timeout (main_loop, 3);
 
       assert (writeable_persona != null);
       assert (writeable_persona == persona);
@@ -1173,11 +1124,6 @@ public class AggregationTests : TpfTest.MixedTestCase
         });
 
       /* Kill the main loop after a few seconds. */
-      var timeout_id = Timeout.add_seconds (this._test_timeout, () =>
-        {
-          main_loop.quit ();
-          return false;
-        });
 
       Idle.add (() =>
         {
@@ -1198,7 +1144,7 @@ public class AggregationTests : TpfTest.MixedTestCase
           return false;
         });
 
-      main_loop.run ();
+      TestUtils.loop_run_with_non_fatal_timeout (main_loop, 3);
 
       /* Check we've got the individual we want */
       assert (individual != null);
@@ -1218,7 +1164,6 @@ public class AggregationTests : TpfTest.MixedTestCase
 
       /* Remove the signal handler */
       aggregator.disconnect (individuals_changed_id);
-      Source.remove (timeout_id);
       aggregator.individuals_changed_detailed.connect ((changes) =>
         {
           var added = changes.get_values ();
@@ -1270,11 +1215,6 @@ public class AggregationTests : TpfTest.MixedTestCase
         });
 
       /* Kill the main loop after a few seconds. */
-      Timeout.add_seconds (this._test_timeout, () =>
-        {
-          main_loop.quit ();
-          return false;
-        });
 
       Idle.add (() =>
         {
@@ -1299,7 +1239,7 @@ public class AggregationTests : TpfTest.MixedTestCase
           return false;
         });
 
-      main_loop.run ();
+      TestUtils.loop_run_with_non_fatal_timeout (main_loop, 3);
 
       assert (writeable_persona != null);
       assert (writeable_persona != persona);
@@ -1351,11 +1291,6 @@ public class AggregationTests : TpfTest.MixedTestCase
         });
 
       /* Kill the main loop after a few seconds. */
-      Timeout.add_seconds (this._test_timeout, () =>
-        {
-          main_loop.quit ();
-          return false;
-        });
 
       Idle.add (() =>
         {
@@ -1376,7 +1311,7 @@ public class AggregationTests : TpfTest.MixedTestCase
           return false;
         });
 
-      main_loop.run ();
+      TestUtils.loop_run_with_non_fatal_timeout (main_loop, 3);
 
       /* Check we've got the individual we want */
       assert (individual != null);
@@ -1395,11 +1330,6 @@ public class AggregationTests : TpfTest.MixedTestCase
       Persona? writeable_persona = null;
 
       /* Kill the main loop after a few seconds. */
-      Timeout.add_seconds (this._test_timeout, () =>
-        {
-          main_loop.quit ();
-          return false;
-        });
 
       Idle.add (() =>
         {
@@ -1428,7 +1358,7 @@ public class AggregationTests : TpfTest.MixedTestCase
           return false;
         });
 
-      main_loop.run ();
+      TestUtils.loop_run_with_non_fatal_timeout (main_loop, 3);
 
       assert (writeable_persona == null);
 

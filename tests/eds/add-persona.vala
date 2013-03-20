@@ -101,13 +101,7 @@ public class AddPersonaTests : EdsTest.TestCase
 
       this._test_add_persona_async.begin ();
 
-      Timeout.add_seconds (5, () =>
-        {
-          this._main_loop.quit ();
-          assert_not_reached ();
-        });
-
-      this._main_loop.run ();
+      TestUtils.loop_run_with_timeout (this._main_loop);
 
       foreach (var k in this._properties_found.get_values ())
         {

@@ -79,13 +79,7 @@ public class PhoneDetailsTests : EdsTest.TestCase
 
       this._test_phone_numbers_async.begin ();
 
-      Timeout.add_seconds (5, () =>
-        {
-          this._main_loop.quit ();
-          return false;
-        });
-
-      this._main_loop.run ();
+      TestUtils.loop_run_with_non_fatal_timeout (this._main_loop, 5);
 
       assert (this._phones_count == 6);
       assert (this._phone_types.size == 3);

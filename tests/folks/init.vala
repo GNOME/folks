@@ -23,8 +23,6 @@ using Folks;
 
 public class InitTests : TpfTest.MixedTestCase
 {
-  private int _test_timeout = 5;
-
   public InitTests ()
     {
       base ("Init");
@@ -69,14 +67,7 @@ public class InitTests : TpfTest.MixedTestCase
           aggregator = null;
         }
 
-      /* Kill the main loop after a few seconds. */
-      Timeout.add_seconds (this._test_timeout, () =>
-        {
-          main_loop.quit ();
-          return false;
-        });
-
-      main_loop.run ();
+      TestUtils.loop_run_with_non_fatal_timeout (main_loop, 5);
 
       /* Clean up for the next test */
       tp_backend.remove_account (account2_handle);

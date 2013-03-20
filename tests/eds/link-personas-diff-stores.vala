@@ -74,17 +74,10 @@ public class LinkPersonasDiffStoresTests : EdsTest.TestCase
 
       this._test_linking_personas_async.begin ();
 
-      var timer_id = Timeout.add_seconds (8, () =>
-        {
-          this._main_loop.quit ();
-          assert_not_reached ();
-        });
-
-      this._main_loop.run ();
+      TestUtils.loop_run_with_timeout (this._main_loop, 8);
 
       assert (this._linked_individual_found == true);
 
-      GLib.Source.remove (timer_id);
       this._aggregator = null;
       this._main_loop = null;
     }

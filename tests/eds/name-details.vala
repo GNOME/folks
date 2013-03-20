@@ -84,13 +84,7 @@ public class NameDetailsTests : EdsTest.TestCase
 
       this._test_names_async.begin ();
 
-      Timeout.add_seconds (5, () =>
-          {
-            this._main_loop.quit ();
-            return false;
-          });
-
-      this._main_loop.run ();
+      TestUtils.loop_run_with_non_fatal_timeout (this._main_loop, 5);
 
       assert (this._names_count == 2);
       assert (this._c1.size == 0);

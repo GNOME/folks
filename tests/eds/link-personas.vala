@@ -124,20 +124,8 @@ public class LinkPersonasTests : EdsTest.TestCase
 
       this._test_linking_personas_async.begin ();
 
-      var timer_id = Timeout.add_seconds (8, () =>
-        {
-          // Let the main loop run out of events before we quit (yes, this is a HACK)
-          Timeout.add_seconds (5, () =>
-            {
-              this._main_loop.quit ();
-              return false;
-            });
-          assert_not_reached ();
-        });
+      TestUtils.loop_run_with_timeout (this._main_loop, 8);
 
-      this._main_loop.run ();
-
-      GLib.Source.remove (timer_id);
       this._aggregator = null;
       this._main_loop = null;
     }
@@ -424,6 +412,7 @@ public class LinkPersonasTests : EdsTest.TestCase
 
           if (this._linking_props.size == 0)
             {
+              /* FIXME: if the timeout is reached, should this just fail? */
               Timeout.add_seconds (5, () =>
                 {
                   this._main_loop.quit ();

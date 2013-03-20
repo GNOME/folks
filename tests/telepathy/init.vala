@@ -22,8 +22,6 @@ using Folks;
 
 public class InitTests : TpfTest.TestCase
 {
-  private int _test_timeout = 5;
-
   public InitTests ()
     {
       base ("Init");
@@ -63,13 +61,7 @@ public class InitTests : TpfTest.TestCase
         });
 
       /* Add a timeout for failure. */
-      Timeout.add_seconds (this._test_timeout, () =>
-        {
-          main_loop.quit ();
-          return false;
-        });
-
-      main_loop.run ();
+      TestUtils.loop_run_with_non_fatal_timeout (this._main_loop, 5);
 
       /* Check results. */
       assert (aggregator.is_quiescent == true);

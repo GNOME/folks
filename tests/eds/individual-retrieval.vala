@@ -63,13 +63,7 @@ public class IndividualRetrievalTests : EdsTest.TestCase
 
       this._test_singleton_individuals_async.begin ();
 
-      Timeout.add_seconds (5, () =>
-        {
-          this._main_loop.quit ();
-          return false;
-        });
-
-      this._main_loop.run ();
+      TestUtils.loop_run_with_non_fatal_timeout (this._main_loop, 5);
 
       assert (this._found_individuals.size == 2);
     }

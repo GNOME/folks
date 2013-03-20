@@ -26,7 +26,6 @@ using Gee;
 
 public class IndividualPropertiesTests : TpfTest.TestCase
 {
-  private int _test_timeout = 3;
   private HashSet<string>? _changes_pending = null;
 
   public IndividualPropertiesTests ()
@@ -41,9 +40,6 @@ public class IndividualPropertiesTests : TpfTest.TestCase
           this.test_individual_properties_change_alias_through_test_cm);
       this.add_test ("individual properties:change contact info",
           this.test_individual_properties_change_contact_info);
-
-      if (Environment.get_variable ("FOLKS_TEST_VALGRIND") != null)
-          this._test_timeout = 10;
     }
 
   public override void set_up ()
@@ -183,13 +179,7 @@ public class IndividualPropertiesTests : TpfTest.TestCase
       /* Kill the main loop after a few seconds. If there are still individuals
        * in the set of expected individuals, the aggregator has either failed
        * or been too slow (which we can consider to be failure). */
-      Timeout.add_seconds (this._test_timeout, () =>
-        {
-          main_loop.quit ();
-          return false;
-        });
-
-      main_loop.run ();
+      TestUtils.loop_run_with_non_fatal_timeout (main_loop);
 
       /* necessary to reset the aggregator for the next test */
       aggregator = null;
@@ -260,13 +250,7 @@ public class IndividualPropertiesTests : TpfTest.TestCase
       /* Kill the main loop after a few seconds. If the alias hasn't been
        * notified, something along the way failed or been too slow (which we can
        * consider to be failure). */
-      Timeout.add_seconds (this._test_timeout, () =>
-        {
-          main_loop.quit ();
-          return false;
-        });
-
-      main_loop.run ();
+      TestUtils.loop_run_with_non_fatal_timeout (main_loop);
 
       assert (alias_notified);
 
@@ -340,13 +324,7 @@ public class IndividualPropertiesTests : TpfTest.TestCase
       /* Kill the main loop after a few seconds. If the alias hasn't been
        * notified, something along the way failed or been too slow (which we can
        * consider to be failure). */
-      Timeout.add_seconds (this._test_timeout, () =>
-        {
-          main_loop.quit ();
-          return false;
-        });
-
-      main_loop.run ();
+      TestUtils.loop_run_with_non_fatal_timeout (main_loop);
 
       assert (alias_notified);
 
@@ -375,13 +353,7 @@ public class IndividualPropertiesTests : TpfTest.TestCase
       /* Kill the main loop after a few seconds. If the alias hasn't been
        * notified, something along the way failed or been too slow (which we can
        * consider to be failure). */
-      Timeout.add_seconds (this._test_timeout, () =>
-        {
-          main_loop.quit ();
-          return false;
-        });
-
-      main_loop.run ();
+      TestUtils.loop_run_with_non_fatal_timeout (main_loop);
 
       assert (this._changes_pending.size == 0);
 

@@ -54,12 +54,7 @@ public class RemovingContactsTests : EdsTest.TestCase
 
       this._test_removal_async.begin ();
 
-      Timeout.add_seconds (5, () => {
-            this._main_loop.quit ();
-            return false;
-          });
-
-      this._main_loop.run ();
+      TestUtils.loop_run_with_non_fatal_timeout (this._main_loop, 5);
 
       assert (this._added == true);
       assert (this._removed == true);

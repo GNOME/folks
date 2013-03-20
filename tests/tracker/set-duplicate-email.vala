@@ -48,13 +48,7 @@ public class SetDuplicateEmailTests : TrackerTest.TestCase
       this._email_found = false;
       this._test_set_duplicate_email_async.begin ();
 
-      Timeout.add_seconds (5, () =>
-        {
-          this._main_loop.quit ();
-          assert_not_reached ();
-        });
-
-      this._main_loop.run ();
+      TestUtils.loop_run_with_timeout (this._main_loop);
       /* we should see the e-mail address twice:
        * 1) when we create the Persona
        * 2) when we re-set the address */

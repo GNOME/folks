@@ -65,13 +65,7 @@ public class SetFavouriteTests : TrackerTest.TestCase
 
       this._test_set_alias_async.begin ();
 
-      Timeout.add_seconds (5, () =>
-        {
-          this._main_loop.quit ();
-          assert_not_reached ();
-        });
-
-      this._main_loop.run ();
+      TestUtils.loop_run_with_timeout (this._main_loop);
 
       /* Note:
        *  the is-favourite property is notified as a

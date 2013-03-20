@@ -65,13 +65,7 @@ public class ImDetailsTests : EdsTest.TestCase
 
       this._test_im_details_interface_async.begin ();
 
-      Timeout.add_seconds (5, () =>
-        {
-          this._main_loop.quit ();
-          assert_not_reached ();
-        });
-
-      this._main_loop.run ();
+      TestUtils.loop_run_with_timeout (this._main_loop);
 
       assert (this._num_addrs == 2);
       assert (this._found_addr_1 == true);

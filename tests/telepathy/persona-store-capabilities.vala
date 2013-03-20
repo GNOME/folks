@@ -27,7 +27,6 @@ using Gee;
 public class PersonaStoreCapabilitiesTests : TpfTest.TestCase
 {
   private HashSet<string>? _capabilities_received = null;
-  private int _test_timeout = 3;
 
   public PersonaStoreCapabilitiesTests ()
     {
@@ -35,9 +34,6 @@ public class PersonaStoreCapabilitiesTests : TpfTest.TestCase
 
       this.add_test ("persona store capabilities",
           this.test_persona_store_capabilities);
-
-      if (Environment.get_variable ("FOLKS_TEST_VALGRIND") != null)
-          this._test_timeout = 10;
     }
 
   public override void set_up ()
@@ -79,13 +75,7 @@ public class PersonaStoreCapabilitiesTests : TpfTest.TestCase
 
       backend_store.load_backends.begin ();
 
-      Timeout.add_seconds (this._test_timeout, () =>
-        {
-          main_loop.quit ();
-          return false;
-        });
-
-      main_loop.run ();
+      TestUtils.loop_run_with_non_fatal_timeout (main_loop);
 
       assert (this._capabilities_received.contains ("can-add-personas"));
       assert (this._capabilities_received.contains ("can-remove-personas"));

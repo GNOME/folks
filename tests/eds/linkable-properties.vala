@@ -102,15 +102,7 @@ public class LinkablePropertiesTests : EdsTest.TestCase
 
       this._test_linkable_properties_aggregate_after_change_async.begin ();
 
-      Timeout.add_seconds (5, () =>
-        {
-          this._main_loop.quit ();
-          stderr.printf ("Personas failed to be aggregated after being given " +
-            "the same linkable properties\n");
-          assert_not_reached ();
-        });
-
-      this._main_loop.run ();
+      TestUtils.loop_run_with_timeout (this._main_loop);
 
       assert (this._found_before_update);
       assert (this._found_after_update);

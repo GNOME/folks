@@ -64,21 +64,14 @@ public class CreateRemoveStoresTests : EdsTest.TestCase
 
       this._test_creating_removing_stores_async.begin ();
 
-      var timer_id = Timeout.add_seconds (20, () =>
-        {
-          this._main_loop.quit ();
-          assert_not_reached ();
-        });
-
-      this._main_loop.run ();
+      TestUtils.loop_run_with_timeout (this._main_loop, 20);
 
       assert (this._store_removed.size > 0);
       foreach (bool removed in this._store_removed.values)
         {
           assert (removed == true);
         }
-        
-      GLib.Source.remove (timer_id);
+
       this._aggregator = null;
       this._main_loop = null;
     }

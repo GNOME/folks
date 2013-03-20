@@ -62,12 +62,7 @@ public class SetNamesTests : EdsTest.TestCase
 
       this._test_set_names_async.begin ();
 
-      Timeout.add_seconds (5, () => {
-            this._main_loop.quit ();
-            assert_not_reached ();
-          });
-
-      this._main_loop.run ();
+      TestUtils.loop_run_with_timeout (this._main_loop);
 
       assert (this._full_name_found_before_update);
       assert (this._full_name_found_after_update);

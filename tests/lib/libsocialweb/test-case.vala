@@ -73,14 +73,9 @@ public class LibsocialwebTest.TestCase : Folks.TestCase
         {
           main_loop.quit ();
         });
-      uint timer_id = Timeout.add_seconds (5, () =>
-        {
-          assert_not_reached ();
-        });
 
       lsw_backend.set_up ();
-      main_loop.run ();
-      Source.remove (timer_id);
+      Folks.TestUtils.loop_run_with_timeout (main_loop, 5);
     }
 
   public override void tear_down ()

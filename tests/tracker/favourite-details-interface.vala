@@ -71,13 +71,7 @@ public class FavouriteDetailsInterfaceTests : TrackerTest.TestCase
 
       this._test_favourite_details_interface_async.begin ();
 
-      Timeout.add_seconds (5, () =>
-        {
-          this._main_loop.quit ();
-          return false;
-        });
-
-      this._main_loop.run ();
+      TestUtils.loop_run_with_timeout (this._main_loop);
 
       assert (this._found_p1 == true);
       assert (this._found_p2 == true);

@@ -71,13 +71,7 @@ public class AvatarUpdatesTests : TrackerTest.TestCase
 
       test_avatar_updates_async.begin ();
 
-      Timeout.add_seconds (5, () =>
-        {
-          this._main_loop.quit ();
-          assert_not_reached ();
-        });
-
-      this._main_loop.run ();
+      TestUtils.loop_run_with_timeout (this._main_loop);
 
       assert (this._initial_avatar_found == true);
       assert (this._updated_avatar_found == true);
