@@ -24,6 +24,7 @@
 
 #include <glib.h>
 #include <glib-object.h>
+#include <dbus/dbus.h>
 
 typedef struct {
     gpointer self;
@@ -88,4 +89,16 @@ folks_test_case_add_test_helper (FolksTestCase *self,
       folks_test_case_weak_method_setup,
       folks_test_case_weak_method_test,
       folks_test_case_weak_method_teardown);
+}
+
+void
+_folks_test_case_dbus_1_set_no_exit_on_disconnect (void)
+{
+  DBusConnection *conn = dbus_bus_get (DBUS_BUS_SESSION, NULL);
+
+  if (conn != NULL)
+    {
+      dbus_connection_set_exit_on_disconnect (conn, FALSE);
+      dbus_connection_unref (conn);
+    }
 }

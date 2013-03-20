@@ -55,6 +55,12 @@ public class LibsocialwebTest.TestCase : Folks.TestCase
       Environment.set_variable ("FOLKS_PRIMARY_STORE", "", true);
     }
 
+  public override void private_bus_up ()
+    {
+      /* Don't do anything. We're currently relying on
+       * being wrapped in with-session-bus.sh. */
+    }
+
   /**
    * Set up the libsocialweb test backend and wait for it to become ready.
    */

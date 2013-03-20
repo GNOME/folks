@@ -57,6 +57,12 @@ public class EdsTest.TestCase : Folks.TestCase
           true);
     }
 
+  public override void private_bus_up ()
+    {
+      /* Don't do anything. We're currently relying on
+       * being wrapped in with-session-bus-eds.sh. */
+    }
+
   public override void set_up ()
     {
       base.set_up ();

@@ -63,6 +63,12 @@ public class TrackerTest.TestCase : Folks.TestCase
       this.tracker_backend = new TrackerTest.Backend ();
     }
 
+  public override void private_bus_up ()
+    {
+      /* Don't do anything. We're currently relying on
+       * being wrapped in with-session-bus-tracker.sh. */
+    }
+
   public override void tear_down ()
     {
       if (this.tracker_backend != null)

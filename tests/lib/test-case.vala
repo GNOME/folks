@@ -42,8 +42,55 @@ public abstract class Folks.TestCase : Object
       LogAdaptor.set_up ();
       this._suite = new GLib.TestSuite (name);
 
+      this.private_bus_up ();
+
       /* By default, no backend is allowed. Subclasses must override. */
       Environment.set_variable ("FOLKS_BACKENDS_ALLOWED", "", true);
+    }
+
+  /**
+   * A private D-Bus session, normally created by private_bus_up()
+   * from the constructor.
+   *
+   * This is per-process, not per-test, because the session bus's
+   * address is frequently treated as process-global (for instance,
+   * libdbus will cache a single session bus connection indefinitely).
+   */
+  public GLib.TestDBus? test_dbus = null;
+
+  /**
+   * If true, libraries involved in this test use dbus-1 (or dbus-glib-1)
+   * so we need to turn off its exit-on-disconnect feature.
+   *
+   * FIXME: when our dependencies stop needing this, this whole feature
+   * can be removed (GNOME#696177).
+   */
+  public virtual bool uses_dbus_1
+    {
+      get
+        {
+          return false;
+        }
+    }
+
+  /**
+   * Start the temporary D-Bus session.
+   *
+   * This is per-process, not per-test, for the reasons mentioned for
+   * //test_dbus//.
+   */
+  public virtual void private_bus_up ()
+    {
+      this.test_dbus = new GLib.TestDBus (GLib.TestDBusFlags.NONE);
+      var test_dbus = (!) this.test_dbus;
+
+      test_dbus.up ();
+
+      /* Tell subprocesses that we're running in a private D-Bus
+       * session, so certain operations that would otherwise be dangerous
+       * are OK. */
+      Environment.set_variable ("FOLKS_TESTS_SANDBOXED_DBUS", "no-services",
+          true);
     }
 
   public void register ()
@@ -81,6 +128,8 @@ public abstract class Folks.TestCase : Object
     {
     }
 
+  internal extern static void _dbus_1_set_no_exit_on_disconnect ();
+
   /**
    * Clean up after all tests. If you have more than one test case, this
    * will be called once, the last time only. It should undo the
@@ -94,6 +143,14 @@ public abstract class Folks.TestCase : Object
    */
   public virtual void final_tear_down ()
     {
+      if (this.uses_dbus_1)
+        TestCase._dbus_1_set_no_exit_on_disconnect ();
+
+      if (this.test_dbus != null)
+        {
+          ((!) this.test_dbus).down ();
+          this.test_dbus = null;
+        }
     }
 
   ~TestCase ()

@@ -116,6 +116,12 @@ public class TpfTest.TestCase : Folks.TestCase
       this.create_tp_backend ();
     }
 
+  public override void private_bus_up ()
+    {
+      /* Don't do anything. We're currently relying on
+       * being wrapped in with-session-bus.sh. */
+    }
+
   /**
    * Virtual method to create the keyfile backend. Currently called by
    * the constructor (once per process), but might move into set_up() later.

@@ -189,7 +189,8 @@ PKG_CHECK_MODULES([GLIB],
                    gobject-2.0 >= $GLIB_REQUIRED])
 PKG_CHECK_MODULES([GMODULE], [gmodule-no-export-2.0])
 PKG_CHECK_MODULES([GIO], [gio-2.0 >= $GLIB_REQUIRED])
-PKG_CHECK_MODULES([DBUS_GLIB], [dbus-glib-1])
+# FIXME: get rid of this when our dependencies stop using dbus-1 (GNOME#696177)
+PKG_CHECK_MODULES([DBUS_GLIB], [dbus-glib-1 dbus-1])
 
 PKG_CHECK_MODULES([GEE], [gee-0.8 >= $GEE_REQUIRED])
 
