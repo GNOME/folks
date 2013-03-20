@@ -5,7 +5,13 @@ SUBDIRS = \
 	$(NULL)
 
 if ENABLE_TELEPATHY
-SUBDIRS += telepathy
+# Build the contactlist first because autotools fails to recognize the
+# dependencies implicitly. There may be a better way to fix this, but then I'd
+# have to spend more time working with autotools.
+SUBDIRS += \
+	telepathy/contactlist \
+	telepathy \
+	$(NULL)
 endif
 
 if ENABLE_LIBSOCIALWEB
