@@ -104,7 +104,6 @@ noinst_PROGRAMS = \
 	set-null-avatar \
 	$(NULL)
 
-avatar_file=@abs_top_srcdir@/tests/data/avatar-01.jpg
 TESTS_ENVIRONMENT = \
 	$(RUN_WITH_PRIVATE_BUS) \
 	--session \
