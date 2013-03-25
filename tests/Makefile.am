@@ -5,11 +5,10 @@ SUBDIRS = \
 	lib \
 	key-file \
 	tools \
-	folks \
 	$(NULL)
 
 if ENABLE_TELEPATHY
-SUBDIRS += telepathy
+SUBDIRS += folks telepathy
 endif
 
 if ENABLE_LIBSOCIALWEB

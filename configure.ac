@@ -370,7 +370,10 @@ if test x$enable_ofono_backend = xyes; then
 fi
 
 # All of the backend libraries in our tree; to be used by the tests
-BACKEND_UNINST_PATH='$(BACKEND_KF):$(BACKEND_TP)'
+BACKEND_UNINST_PATH='$(BACKEND_KF)'
+AS_IF([test "x$enable_telepathy_backend" = "xyes"], [
+  BACKEND_UNINST_PATH="$BACKEND_UNINST_PATH:$(BACKEND_TP)"
+])
 AS_IF([test x$have_libsocialweb_backend = xyes], [
   LIBSOCIALWEB_BACKEND_UNINST_PATH='$(BACKEND_LIBSOCIALWEB)'
   BACKEND_UNINST_PATH="$BACKEND_UNINST_PATH:$LIBSOCIALWEB_BACKEND_UNINST_PATH"
@@ -438,8 +441,6 @@ AM_CONDITIONAL([ENABLE_INSPECT_TOOL], [test "$with_inspect_tool" = "yes"])
 AC_ARG_ENABLE([tests],
               AS_HELP_STRING([--enable-tests],[Enable building of tests]),
               [enable_tests=$enableval], [enable_tests=yes])
-AS_IF([test "$enable_tests" = "yes" -a "$enable_telepathy_backend" = "no"],
-      [AC_MSG_ERROR([The Telepathy backend must be enabled to build tests])])
 AM_CONDITIONAL([ENABLE_TESTS], [test x$enable_tests = xyes])
 
 # -----------------------------------------------------------
