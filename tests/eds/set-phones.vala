@@ -27,7 +27,7 @@ public class SetPhonesTests : EdsTest.TestCase
   private IndividualAggregator _aggregator;
   private GLib.MainLoop _main_loop;
   private bool _found_before_update;
-  private bool _found_after_update;
+  private Collection<string>? _found_phone_type_after_update;
 
   public SetPhonesTests ()
     {
@@ -43,7 +43,7 @@ public class SetPhonesTests : EdsTest.TestCase
       Value? v;
 
       this._found_before_update = false;
-      this._found_after_update = false;
+      this._found_phone_type_after_update = null;
 
       this.eds_backend.reset ();
 
@@ -57,7 +57,9 @@ public class SetPhonesTests : EdsTest.TestCase
       TestUtils.loop_run_with_timeout (this._main_loop);
 
       assert (this._found_before_update);
-      assert (this._found_after_update);
+      assert (this._found_phone_type_after_update != null);
+      assert (this._found_phone_type_after_update.size == 1);
+      assert (this._found_phone_type_after_update.contains (AbstractFieldDetails.PARAM_TYPE_HOME));
     }
 
   private async void _test_set_phones_async ()
@@ -123,12 +125,25 @@ public class SetPhonesTests : EdsTest.TestCase
       Folks.Individual i = (Folks.Individual) individual_obj;
       foreach (var phone_fd in i.phone_numbers)
         {
-          var phone_1 = new PhoneFieldDetails ("1234");
-          phone_1.set_parameter (AbstractFieldDetails.PARAM_TYPE,
-              AbstractFieldDetails.PARAM_TYPE_HOME);
-          if (phone_fd.equal (phone_1))
+          /*
+           * If EDS is compiled with libphonenumber support, it will
+           * add an X-EVOLUTION-E164 parameter with the normalized
+           * phone number. We do not know how EDS is compiled and besides,
+           * the normalized value also depends on the current locale
+           * (the 1 in 1234 is a dialing prefix in the US and gets removed
+           * there, but not elsewhere).
+           *
+           * Therefore we cannot do a full comparison against a
+           * PhoneNumberDetails instance with the expected result,
+           * because we do not know what that is.
+           *
+           * Instead just wait for the phone number to show up,
+           * then remember the actual type and check that against the expected
+           * type after returning from the event loop.
+           */
+          if (phone_fd.value == "1234")
             {
-              this._found_after_update = true;
+              this._found_phone_type_after_update = phone_fd.get_parameter_values (AbstractFieldDetails.PARAM_TYPE);
               this._main_loop.quit ();
             }
         }
