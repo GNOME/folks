@@ -632,6 +632,7 @@ public class Folks.BackendStore : Object {
 
       var modules_final = new HashMap<string, File> ();
 
+      string? _path = Environment.get_variable ("FOLKS_BACKEND_PATH");
       foreach (var info in infos)
         {
           var file = dir.get_child (info.get_name ());
@@ -668,8 +669,12 @@ public class Folks.BackendStore : Object {
                   "The content type of '%s' could not be determined. Have you installed shared-mime-info?",
                   file.get_path ());
             }
-          /* We should have only .la .so and sub-directories */
-          else if (mime != "application/x-sharedlib" &&
+          /*
+           * We should have only .la .so and sub-directories, except if FOLKS_BACKEND_PATH is set.
+           * Then we will run into all kinds of files.
+           */
+          else if (_path == null &&
+                   mime != "application/x-sharedlib" &&
                    mime != "application/x-shared-library-la" &&
                    mime != "inode/directory")
             {
