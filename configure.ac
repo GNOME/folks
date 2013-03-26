@@ -344,54 +344,6 @@ AC_DEFINE([MODULE_VERSION], "folks_module_version", [Module interface version])
 BACKEND_DIR='$(libdir)/folks/$(FOLKS_MODULE_VERSION)/backends'
 AC_SUBST([BACKEND_DIR])
 
-BACKEND_KF='$(top_builddir)/backends/key-file/.libs/key-file.so'
-AC_SUBST([BACKEND_KF])
-BACKEND_TP='$(top_builddir)/backends/telepathy/.libs/telepathy.so'
-AC_SUBST([BACKEND_TP])
-
-AS_IF([test x$have_libsocialweb_backend = xyes], [
-  BACKEND_LIBSOCIALWEB='$(top_builddir)/backends/libsocialweb/.libs/libsocialweb.so'
-  AC_SUBST([BACKEND_LIBSOCIALWEB])
-])
-
-AS_IF([test x$enable_tracker_backend = xyes], [
-  BACKEND_TRACKER='$(top_builddir)/backends/tracker/.libs/tracker.so'
-  AC_SUBST([BACKEND_TRACKER])
-])
-
-AS_IF([test x$enable_eds_backend = xyes], [
-  BACKEND_EDS='$(top_builddir)/backends/eds/.libs/eds.so'
-  AC_SUBST([BACKEND_EDS])
-])
-
-if test x$enable_ofono_backend = xyes; then
-  BACKEND_OFONO='$(top_builddir)/backends/ofono/.libs/ofono.so'
-  AC_SUBST([BACKEND_OFONO])
-fi
-
-# All of the backend libraries in our tree; to be used by the tests
-BACKEND_UNINST_PATH='$(BACKEND_KF)'
-AS_IF([test "x$enable_telepathy_backend" = "xyes"], [
-  BACKEND_UNINST_PATH="$BACKEND_UNINST_PATH:$(BACKEND_TP)"
-])
-AS_IF([test x$have_libsocialweb_backend = xyes], [
-  LIBSOCIALWEB_BACKEND_UNINST_PATH='$(BACKEND_LIBSOCIALWEB)'
-  BACKEND_UNINST_PATH="$BACKEND_UNINST_PATH:$LIBSOCIALWEB_BACKEND_UNINST_PATH"
-])
-AS_IF([test x$enable_tracker_backend = xyes], [
-  TRACKER_BACKEND_UNINST_PATH='$(BACKEND_TRACKER)'
-  BACKEND_UNINST_PATH="$BACKEND_UNINST_PATH:$TRACKER_BACKEND_UNINST_PATH"
-])
-AS_IF([test x$enable_eds_backend = xyes], [
-  EDS_BACKEND_UNINST_PATH='$(BACKEND_EDS)'
-  BACKEND_UNINST_PATH="$BACKEND_UNINST_PATH:$EDS_BACKEND_UNINST_PATH"
-])
-AS_IF([test x$enable_ofono_backend = xyes], [
-  OFONO_BACKEND_UNINST_PATH='$(BACKEND_OFONO)'
-  BACKEND_UNINST_PATH="$BACKEND_UNINST_PATH:$OFONO_BACKEND_UNINST_PATH"
-])
-AC_SUBST([BACKEND_UNINST_PATH])
-
 # -----------------------------------------------------------
 # Tools
 # -----------------------------------------------------------

@@ -106,7 +106,6 @@ noinst_PROGRAMS = \
 
 avatar_file=@abs_top_srcdir@/tests/data/avatar-01.jpg
 TESTS_ENVIRONMENT = \
-	FOLKS_BACKEND_PATH=$(BACKEND_UNINST_PATH) \
 	$(RUN_WITH_PRIVATE_BUS) \
 	--session \
 	--

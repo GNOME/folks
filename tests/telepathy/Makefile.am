@@ -59,7 +59,6 @@ AM_VALAFLAGS += \
 	$(NULL)
 
 TESTS_ENVIRONMENT = \
-	FOLKS_BACKEND_PATH=$(BACKEND_UNINST_PATH) \
 	FOLKS_BACKEND_KEY_FILE_PATH=$(srcdir)/data/relationships-empty.ini \
 	$(top_srcdir)/tests/tools/execute-test.sh \
 	$(NULL)

@@ -47,6 +47,31 @@ public abstract class Folks.TestCase : Object
       this._transient_dir = this.create_transient_dir ();
       this.private_bus_up ();
 
+      if (Environment.get_variable ("FOLKS_TESTS_INSTALLED") == null)
+        {
+          string[] locations = {
+              Folks.BuildConf.ABS_TOP_BUILDDIR + "/backends/key-file/.libs/key-file.so",
+          };
+
+          if (Folks.BuildConf.HAVE_EDS)
+            locations += Folks.BuildConf.ABS_TOP_BUILDDIR + "/backends/eds/.libs/eds.so";
+
+          if (Folks.BuildConf.HAVE_LIBSOCIALWEB)
+            locations += Folks.BuildConf.ABS_TOP_BUILDDIR + "/backends/libsocialweb/.libs/libsocialweb.so";
+
+          if (Folks.BuildConf.HAVE_OFONO)
+            locations += Folks.BuildConf.ABS_TOP_BUILDDIR + "/backends/ofono/.libs/ofono.so";
+
+          if (Folks.BuildConf.HAVE_TELEPATHY)
+            locations += Folks.BuildConf.ABS_TOP_BUILDDIR + "/backends/telepathy/.libs/telepathy.so";
+
+          if (Folks.BuildConf.HAVE_TRACKER)
+            locations += Folks.BuildConf.ABS_TOP_BUILDDIR + "/backends/tracker/.libs/tracker.so";
+
+          Environment.set_variable ("FOLKS_BACKEND_PATH",
+              string.joinv (":", locations), true);
+        }
+
       /* By default, no backend is allowed. Subclasses must override. */
       Environment.set_variable ("FOLKS_BACKENDS_ALLOWED", "", true);
     }

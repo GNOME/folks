@@ -36,10 +36,6 @@ noinst_PROGRAMS = \
 	individual-retrieval \
 	$(NULL)
 
-TESTS_ENVIRONMENT = \
-	FOLKS_BACKEND_PATH=$(BACKEND_UNINST_PATH) \
-        $(NULL)
-
 TESTS = $(noinst_PROGRAMS)
 
 individual_retrieval_SOURCES = \

@@ -64,7 +64,6 @@ noinst_PROGRAMS = \
 	$(NULL)
 
 TESTS_ENVIRONMENT = \
-	FOLKS_BACKEND_PATH=$(BACKEND_UNINST_PATH) \
 	$(top_srcdir)/tests/tools/execute-test.sh \
 	$(NULL)
 

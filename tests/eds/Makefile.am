@@ -84,7 +84,6 @@ TESTS = \
 RUN_WITH_PRIVATE_BUS = $(top_srcdir)/tests/tools/with-session-bus-eds.sh
 
 TESTS_ENVIRONMENT = \
-	FOLKS_BACKEND_PATH=$(BACKEND_UNINST_PATH) \
 	$(RUN_WITH_PRIVATE_BUS) \
 	--session \
 	--

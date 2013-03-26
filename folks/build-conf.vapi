@@ -51,6 +51,12 @@ public class Folks.BuildConf
   [CCode (cname = "HAVE_LIBSOCIALWEB")]
   public static bool HAVE_LIBSOCIALWEB;
 
+  [CCode (cname = "HAVE_OFONO")]
+  public static bool HAVE_OFONO;
+
+  [CCode (cname = "HAVE_TELEPATHY")]
+  public static bool HAVE_TELEPATHY;
+
   [CCode (cname = "HAVE_TRACKER")]
   public static bool HAVE_TRACKER;
 
