@@ -2502,6 +2502,13 @@ public class Edsf.PersonaStore : Folks.PersonaStore
       Internal.profiling_point ("initial query complete in " +
           "Edsf.PersonaStore (ID: %s)", this.id);
 
+      /* Do the rest in an idle, so we don't signal that we are quiescent
+       * before we actually have everyone. */
+      this._idle_queue (() => { return this._contacts_complete_idle_cb (err); });
+    }
+
+  private bool _contacts_complete_idle_cb (Error err)
+    {
       /* The initial query is complete, so signal that we've reached
        * quiescence (even if there was an error). */
       if (this._is_quiescent == false)
@@ -2512,7 +2519,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
               warning ("Error is considered unrecoverable. " +
                   "Removing persona store.");
               this.removed ();
-              return;
+              return false;
             }
 
           /* Emit a notification about all the personas which were found in the
@@ -2531,6 +2538,8 @@ public class Edsf.PersonaStore : Folks.PersonaStore
           this._is_quiescent = true;
           this.notify_property ("is-quiescent");
         }
+
+      return false;
     }
 
   /* Convert an EClientError or EBookClientError to a Folks.PropertyError for
