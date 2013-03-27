@@ -120,7 +120,16 @@ public class Folks.IndividualAggregator : Object
   private HashMap<string, PersonaStore> _stores;
   private unowned PersonaStore? _primary_store = null;
   private HashSet<Backend> _backends;
-  private HashMultiMap<string, Individual> _link_map;
+
+  /* This is conceptually a MultiMap<string, Individual> but it's sufficiently
+   * heavily-used that avoiding GObject overhead in favour of inlinable
+   * GenericArray access is a significant performance win.
+   *
+   * key: iid or value of some linkable property (email/IM address etc.)
+   * value: owned non-empty set of owned Individual refs
+   */
+  private HashTable<string, GenericArray<Individual>> _link_map;
+
   private bool _linking_enabled = true;
   private bool _is_prepared = false;
   private bool _prepare_pending = false;
@@ -348,7 +357,8 @@ public class Folks.IndividualAggregator : Object
       this._stores = new HashMap<string, PersonaStore> ();
       this._individuals = new HashMap<string, Individual> ();
       this._individuals_ro = this._individuals.read_only_view;
-      this._link_map = new HashMultiMap<string, Individual> ();
+      this._link_map = new HashTable<string, GenericArray<Individual>> (
+          str_hash, str_equal);
 
       this._backends = new HashSet<Backend> ();
       this._debug = Debug.dup ();
@@ -513,34 +523,27 @@ public class Folks.IndividualAggregator : Object
 
       debug.unindent ();
 
-      debug.print_line (domain, level, "%u entries in the link map:",
-          this._link_map.size);
+      debug.print_line (domain, level, "%u keys in the link map:",
+          this._link_map.size ());
       debug.indent ();
 
-      string? last_key = null;
-      var iter = this._link_map.map_iterator ();
+      var iter = HashTableIter<string, GenericArray<Individual>> (
+          this._link_map);
+      unowned string link_key;
+      unowned GenericArray<Individual> individuals;
 
-      while (iter.next ())
+      while (iter.next (out link_key, out individuals))
         {
-          var link_key = iter.get_key ();
+          debug.print_line (domain, level, "%s → {", link_key);
+          debug.indent ();
 
-          if (last_key == null || link_key != (!) last_key)
+          for (uint i = 0; i < individuals.length; i++)
             {
-              if (last_key != null)
-                {
-                  debug.unindent ();
-                  debug.print_line (domain, level, "}");
-                }
+              unowned Individual ind = individuals[i];
 
-              debug.print_line (domain, level, "%s → {", link_key);
-              debug.indent ();
+              debug.print_line (domain, level, "%p", ind);
             }
 
-          debug.print_line (domain, level, "%p", iter.get_value ());
-        }
-
-      if (last_key != null)
-        {
           debug.unindent ();
           debug.print_line (domain, level, "}");
         }
@@ -1120,11 +1123,15 @@ public class Folks.IndividualAggregator : Object
            * Persona to any existing Individual */
           if (trust_level != PersonaStoreTrust.NONE)
             {
-              var candidate_ind_set = this._link_map.get (persona.iid);
-              if (candidate_ind_set != null)
+              unowned GenericArray<Individual>? candidates =
+                  this._link_map.get (persona.iid);
+              if (candidates != null)
                 {
-                  foreach (var candidate_ind in candidate_ind_set)
+                  for (uint i = 0; i < candidates.length; i++)
                     {
+                      /* FIXME: can this really be null? */
+                      unowned Individual? candidate_ind = candidates[i];
+
                       if (candidate_ind != null &&
                           ((!) candidate_ind).trust_level != TrustLevel.NONE &&
                           ((!) candidate_ind).has_anti_link_with_persona (
@@ -1163,13 +1170,16 @@ public class Folks.IndividualAggregator : Object
                   persona.linkable_property_to_links (prop_name, (l) =>
                     {
                       unowned string prop_linking_value = l;
-                      var candidate_ind_set =
+                      unowned GenericArray<Individual>? candidates =
                           this._link_map.get (prop_linking_value);
 
-                      if (candidate_ind_set != null)
+                      if (candidates != null)
                         {
-                          foreach (var candidate_ind in candidate_ind_set)
+                          for (uint i = 0; i < candidates.length; i++)
                             {
+                              /* FIXME: can this really be null? */
+                              unowned Individual? candidate_ind = candidates[i];
+
                               if (candidate_ind != null &&
                                   ((!) candidate_ind).trust_level !=
                                       TrustLevel.NONE &&
@@ -1354,6 +1364,32 @@ public class Folks.IndividualAggregator : Object
         }
     }
 
+  /*
+   * Ensure that ``_link_map[key]`` contains ``individual``.
+   *
+   * Equivalent to MultiMap.set().
+   */
+  private void _link_map_set (string key, Individual individual)
+    {
+      GenericArray<Individual>? inds = this._link_map[key];
+
+      if (inds == null)
+        {
+          inds = new GenericArray<Individual> ();
+          this._link_map.insert (key, inds);
+        }
+      else
+        {
+          for (uint i = 0; i < ((!) inds).length; i++)
+            {
+              if (((!) inds)[i] == individual)
+                return;
+            }
+        }
+
+      ((!) inds).add (individual);
+    }
+
   private void _add_persona_to_link_map (Persona persona, Individual individual)
     {
       debug ("Connecting to Persona: %s (is user: %s, IID: %s)", persona.uid,
@@ -1363,7 +1399,7 @@ public class Folks.IndividualAggregator : Object
       /* Add the Persona to the link map. Its trust level will be reflected in
        * final_individual.trust_level, so other Personas won't be linked against
        * it in error if the trust level is NONE. */
-      this._link_map.set (persona.iid, individual);
+      this._link_map_set (persona.iid, individual);
 
       /* Only allow linking on non-IID properties of the Persona if we fully
        * trust the PersonaStore it came from. */
@@ -1393,7 +1429,7 @@ public class Folks.IndividualAggregator : Object
                   unowned string prop_linking_value = l;
 
                   debug ("            %s", prop_linking_value);
-                  this._link_map.set (prop_linking_value, individual);
+                  this._link_map_set (prop_linking_value, individual);
                 });
             }
         }
@@ -1409,30 +1445,30 @@ public class Folks.IndividualAggregator : Object
     {
       debug ("Removing Individual '%s' from the link map.", individual.id);
 
-      /* We have to list the keys to remove and then remove them later, since
-       * we can't modify the link map while we're iterating through it, and
-       * there's no iterator object. FIXME: bgo#675067 */
-      var remove_keys = new string[0];
+      var iter =
+          HashTableIter<string, GenericArray<Individual>> (this._link_map);
+      unowned string link_key;
+      unowned GenericArray<Individual> inds;
 
-      var iter = this._link_map.map_iterator ();
-
-      while (iter.next ())
+      while (iter.next (out link_key, out inds))
         {
-          if (iter.get_value () == individual)
+          for (uint i = 0; i < inds.length; i++)
             {
-              var link_key = iter.get_key ();
+              if (inds[i] == individual)
+                {
+                  debug ("    %s → %s (%p)",
+                      link_key, individual.id, individual);
 
-              debug ("    %s → %s (%p)",
-                  link_key, individual.id, individual);
+                  inds.remove_index_fast (i);
 
-              remove_keys += link_key;
+                  if (inds.length == 0)
+                    iter.remove ();
+
+                  /* stop looking at inds - it might be invalid now, and in
+                   * any case, we've already removed @individual */
+                  break;
+                }
             }
-        }
-
-      /* Actually remove the keys. */
-      foreach (var link_key in remove_keys)
-        {
-          this._link_map.remove (link_key, individual);
         }
     }
 
@@ -1620,24 +1656,38 @@ public class Folks.IndividualAggregator : Object
       /* Validate the link map. */
       if (this._debug.debug_output_enabled == true)
         {
-          var link_map_iter = this._link_map.map_iterator ();
+          var link_map_iter =
+              HashTableIter<string, GenericArray<Individual>> (this._link_map);
+          unowned string link_key;
+          unowned GenericArray<Individual> inds;
 
-          while (link_map_iter.next ())
+          while (link_map_iter.next (out link_key, out inds))
             {
-              var individual = link_map_iter.get_value ();
-
-              if (this._individuals.get (individual.id) != individual)
+              for (uint i = 0; i < inds.length; i++)
                 {
-                  var link_key = link_map_iter.get_key ();
+                  var individual = inds[i];
 
-                  warning ("Link map contains invalid mapping:\n" +
-                      "    %s → %s (%p)",
-                          link_key, individual.id, individual);
-                  warning ("Individual %s (%p) personas:", individual.id,
-                      individual);
-                  foreach (var p in individual.personas)
+                  if (this._individuals.get (individual.id) != individual)
                     {
-                      warning ("    %s (%p)", p.uid, p);
+                      warning ("Link map contains invalid mapping:\n" +
+                          "    %s → %s (%p)",
+                              link_key, individual.id, individual);
+                      warning ("Individual %s (%p) personas:", individual.id,
+                          individual);
+                      foreach (var p in individual.personas)
+                        {
+                          warning ("    %s (%p)", p.uid, p);
+                        }
+                    }
+
+                  for (uint j = i + 1; j < inds.length; j++)
+                    {
+                      if (inds[i] == inds[j])
+                        {
+                          warning ("Link map contains non-unique " +
+                              "Individual: %s → %s (%p) twice",
+                              link_key, individual.id, individual);
+                        }
                     }
                 }
             }
