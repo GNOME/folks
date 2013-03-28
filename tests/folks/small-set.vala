@@ -68,6 +68,7 @@ public class SmallSetTests : Folks.TestCase
       this.add_test ("direct", () => this.test_direct (false));
       this.add_test ("string_hash", () => this.test_strings (true));
       this.add_test ("string", () => this.test_strings (false));
+      this.add_test ("cheating", this.test_cheating);
     }
 
   public void test_objects (bool use_hash)
@@ -405,6 +406,42 @@ public class SmallSetTests : Folks.TestCase
       strings.add ("cheese");
       strings.add ("ham");
       assert (strings.size == 2);
+    }
+
+  public void test_cheating ()
+    {
+      var small = new SmallSet<UInt> (UInt.hash_static, UInt.equals_static);
+      var set_ = (!) (small as Set<UInt>);
+
+      small.add (new UInt (1));
+      small.add (new UInt (10));
+      small.add (new UInt (100));
+      small.add (new UInt (1000));
+      small.add (new UInt (10000));
+
+      int i = 0;
+      set_.iterator ().foreach ((obj) =>
+        {
+          /* Fast-path: get() provides indexed access */
+          assert (small[i] == obj);
+          i++;
+          return true;
+        });
+      assert (i == 5);
+
+      /* Slow iteration: we don't know, syntactically, that set_ is a
+       * SmallSet, so we'll use the iterator */
+      uint sum = 0;
+      foreach (var obj in set_)
+        sum += obj.u;
+      assert (sum == 11111);
+
+      /* Fast iteration: we do know, syntactically, that small is a
+       * SmallSet, so we'll use indexed access */
+      sum = 0;
+      foreach (unowned UInt obj in small)
+        sum += obj.u;
+      assert (sum == 11111);
     }
 }
 

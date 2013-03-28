@@ -295,6 +295,8 @@ AS_IF([test "x$enable_vala" = "xyes"], [
         # require GLib >= 2.24 so GLib.Array, etc. reffing is handled
         # automatically
         AM_VALAFLAGS="--target-glib=2.24"
+        # within the libfolks tree, select inline code paths
+        AM_VALAFLAGS="$AM_VALAFLAGS -D FOLKS_COMPILATION"
         AC_SUBST([AM_VALAFLAGS])
         AC_SUBST([VAPIGENFLAGS])
         AC_SUBST([VAPIDIR])

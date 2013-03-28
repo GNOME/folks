@@ -39,6 +39,11 @@ namespace Folks
     internal static SmallSet<G> copy (Gee.Iterable<G> iterable,
         owned Gee.HashDataFunc<G>? item_hash = null,
         owned Gee.EqualDataFunc<G>? item_equals = null);
+
+#if FOLKS_COMPILATION
+    [CCode (cheader_filename = "folks/small-set-internal.h")]
+    public unowned G @get (int i);
+#endif
   }
 }
 

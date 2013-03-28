@@ -74,6 +74,19 @@ struct _FolksSmallSet {
     FolksSmallSet *rw_version;
 };
 
+/* Syntactic sugar for iteration. The type must match the type
+ * of the size property, which is signed, because Vala. */
+static inline gconstpointer
+folks_small_set_get (FolksSmallSet *self,
+    gint i)
+{
+  g_return_val_if_fail (self != NULL, NULL);
+  g_return_val_if_fail (i >= 0, NULL);
+  g_return_val_if_fail ((guint) i < self->items->len, NULL);
+
+  return g_ptr_array_index (self->items, i);
+}
+
 FolksSmallSet *
 _folks_small_set_new_take_array (GPtrArray *arr,
     GType item_type,
