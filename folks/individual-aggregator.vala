@@ -1127,19 +1127,17 @@ public class Folks.IndividualAggregator : Object
                   this._link_map.get (persona.iid);
               if (candidates != null)
                 {
-                  for (uint i = 0; i < candidates.length; i++)
+                  for (uint i = 0; i < ((!) candidates).length; i++)
                     {
-                      /* FIXME: can this really be null? */
-                      unowned Individual? candidate_ind = candidates[i];
+                      var candidate_ind = ((!) candidates)[i];
 
-                      if (candidate_ind != null &&
-                          ((!) candidate_ind).trust_level != TrustLevel.NONE &&
-                          ((!) candidate_ind).has_anti_link_with_persona (
+                      if (candidate_ind.trust_level != TrustLevel.NONE &&
+                          candidate_ind.has_anti_link_with_persona (
                               persona) == false &&
-                          candidate_inds.add ((!) candidate_ind))
+                          candidate_inds.add (candidate_ind))
                         {
                           debug ("    Found candidate individual '%s' by " +
-                              "IID '%s'.", ((!) candidate_ind).id, persona.iid);
+                              "IID '%s'.", candidate_ind.id, persona.iid);
                         }
                     }
                 }
@@ -1175,22 +1173,20 @@ public class Folks.IndividualAggregator : Object
 
                       if (candidates != null)
                         {
-                          for (uint i = 0; i < candidates.length; i++)
+                          for (uint i = 0; i < ((!) candidates).length; i++)
                             {
-                              /* FIXME: can this really be null? */
-                              unowned Individual? candidate_ind = candidates[i];
+                              var candidate_ind = ((!) candidates)[i];
 
-                              if (candidate_ind != null &&
-                                  ((!) candidate_ind).trust_level !=
+                              if (candidate_ind.trust_level !=
                                       TrustLevel.NONE &&
-                                  ((!) candidate_ind).
+                                  candidate_ind.
                                       has_anti_link_with_persona (
                                           persona) == false &&
-                                  candidate_inds.add ((!) candidate_ind))
+                                  candidate_inds.add (candidate_ind))
                                 {
                                   debug ("    Found candidate individual '%s'" +
                                       " by linkable property '%s' = '%s'.",
-                                      ((!) candidate_ind).id, prop_name,
+                                      candidate_ind.id, prop_name,
                                       prop_linking_value);
                                 }
                             }
@@ -1376,7 +1372,7 @@ public class Folks.IndividualAggregator : Object
       if (inds == null)
         {
           inds = new GenericArray<Individual> ();
-          this._link_map.insert (key, inds);
+          this._link_map.insert (key, (!) inds);
         }
       else
         {
@@ -1666,6 +1662,7 @@ public class Folks.IndividualAggregator : Object
               for (uint i = 0; i < inds.length; i++)
                 {
                   var individual = inds[i];
+                  assert (individual != null);
 
                   if (this._individuals.get (individual.id) != individual)
                     {
