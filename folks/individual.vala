@@ -996,29 +996,29 @@ public class Folks.Individual : Object,
   public signal void personas_changed (Set<Persona> added,
       Set<Persona> removed);
 
-  private void _notify_alias_cb (Object obj, ParamSpec ps)
+  private static void _notify_alias_cb (Individual self, Persona p, ParamSpec ps)
     {
-      this._update_alias ();
+      self._update_alias ();
     }
 
-  private void _notify_avatar_cb (Object obj, ParamSpec ps)
+  private static void _notify_avatar_cb (Individual self, Persona p, ParamSpec ps)
     {
-      this._update_avatar ();
+      self._update_avatar ();
     }
 
-  private void _notify_full_name_cb ()
+  private static void _notify_full_name_cb (Individual self, Persona p, ParamSpec ps)
     {
-      this._update_full_name ();
+      self._update_full_name ();
     }
 
-  private void _notify_structured_name_cb ()
+  private static void _notify_structured_name_cb (Individual self, Persona p, ParamSpec ps)
     {
-      this._update_structured_name ();
+      self._update_structured_name ();
     }
 
-  private void _notify_nickname_cb ()
+  private static void _notify_nickname_cb (Individual self, Persona p, ParamSpec ps)
     {
-      this._update_nickname ();
+      self._update_nickname ();
     }
 
   private void _persona_group_changed_cb (string group, bool is_member)
@@ -1026,54 +1026,54 @@ public class Folks.Individual : Object,
       this._update_groups (false);
     }
 
-  private void _notify_gender_cb ()
+  private static void _notify_gender_cb (Individual self, Persona p, ParamSpec ps)
     {
-      this._update_gender ();
+      self._update_gender ();
     }
 
-  private void _notify_urls_cb ()
+  private static void _notify_urls_cb (Individual self, Persona p, ParamSpec ps)
     {
-      this._update_urls (false);
+      self._update_urls (false);
     }
 
-  private void _notify_phone_numbers_cb ()
+  private static void _notify_phone_numbers_cb (Individual self, Persona p, ParamSpec ps)
     {
-      this._update_phone_numbers (false);
+      self._update_phone_numbers (false);
     }
 
-  private void _notify_postal_addresses_cb ()
+  private static void _notify_postal_addresses_cb (Individual self, Persona p, ParamSpec ps)
     {
-      this._update_postal_addresses (false);
+      self._update_postal_addresses (false);
     }
 
-  private void _notify_email_addresses_cb ()
+  private static void _notify_email_addresses_cb (Individual self, Persona p, ParamSpec ps)
     {
-      this._update_email_addresses (false);
+      self._update_email_addresses (false);
     }
 
-  private void _notify_roles_cb ()
+  private static void _notify_roles_cb (Individual self, Persona p, ParamSpec ps)
     {
-      this._update_roles (false);
+      self._update_roles (false);
     }
 
-  private void _notify_birthday_cb ()
+  private static void _notify_birthday_cb (Individual self, Persona p, ParamSpec ps)
     {
-      this._update_birthday ();
+      self._update_birthday ();
     }
 
-  private void _notify_notes_cb ()
+  private static void _notify_notes_cb (Individual self, Persona p, ParamSpec ps)
     {
-      this._update_notes (false);
+      self._update_notes (false);
     }
 
-  private void _notify_local_ids_cb ()
+  private static void _notify_local_ids_cb (Individual self, Persona p, ParamSpec ps)
     {
-      this._update_local_ids (false);
+      self._update_local_ids (false);
     }
 
-  private void _notify_location_cb ()
+  private static void _notify_location_cb (Individual self, Persona p, ParamSpec ps)
     {
-      this._update_location ();
+      self._update_location ();
     }
 
   /**
@@ -1101,62 +1101,121 @@ public class Folks.Individual : Object,
        * yet; react to that directly */
     }
 
-  private void _notify_presence_cb (Object obj, ParamSpec ps)
+  private static void _notify_presence_cb (Individual self, Persona p, ParamSpec ps)
     {
-      this._update_presence ();
+      self._update_presence ();
     }
 
-  private void _notify_im_addresses_cb (Object obj, ParamSpec ps)
+  private static void _notify_im_addresses_cb (Individual self, Persona p, ParamSpec ps)
     {
-      this._update_im_addresses (false);
+      self._update_im_addresses (false);
     }
 
-  private void _notify_web_service_addresses_cb (Object obj, ParamSpec ps)
+  private static void _notify_web_service_addresses_cb (Individual self, Persona p, ParamSpec ps)
     {
-      this._update_web_service_addresses (false);
+      self._update_web_service_addresses (false);
     }
 
-  private void _notify_is_favourite_cb (Object obj, ParamSpec ps)
+  private static void _notify_is_favourite_cb (Individual self, Persona p, ParamSpec ps)
     {
-      this._update_is_favourite ();
+      self._update_is_favourite ();
     }
 
-  private void _notify_im_interaction_count_cb (Object obj, ParamSpec ps)
+  private static void _notify_im_interaction_count_cb (Individual self, Persona p, ParamSpec ps)
     {
       /**
        * The property is pull rather than push. This function is called in
        * response to personas emitting a similar notification.
        */
-      this.notify_property ("im-interaction-count");
+      self.notify_property ("im-interaction-count");
     }
 
-  private void _notify_call_interaction_count_cb (Object obj, ParamSpec ps)
+  private static void _notify_call_interaction_count_cb (Individual self, Persona p, ParamSpec ps)
     {
       /**
        * The property is pull rather than push. This function is called in
        * response to personas emitting a similar notification.
        */
-      this.notify_property ("call-interaction-count");
+      self.notify_property ("call-interaction-count");
     }
 
-  private void _notify_last_im_interaction_datetime_cb (Object obj, ParamSpec ps)
+  private static void _notify_last_im_interaction_datetime_cb (Individual self, Persona p, ParamSpec ps)
     {
       /**
        * The property is pull rather than push. This function is called in
        * response to personas emitting a similar notification.
        */
-      this._last_im_interaction_datetime = null;
-      this.notify_property ("last-im-interaction-datetime");
+      self._last_im_interaction_datetime = null;
+      self.notify_property ("last-im-interaction-datetime");
     }
 
-  private void _notify_last_call_interaction_datetime_cb (Object obj, ParamSpec ps)
+  private static void _notify_last_call_interaction_datetime_cb (Individual self, Persona p, ParamSpec ps)
     {
       /**
        * The property is pull rather than push. This function is called in
        * response to personas emitting a similar notification.
        */
-      this._last_call_interaction_datetime = null;
-      this.notify_property ("last-call-interaction-datetime");
+      self._last_call_interaction_datetime = null;
+      self.notify_property ("last-call-interaction-datetime");
+    }
+
+  [CCode (has_target = false)]
+  private delegate void _UnboundNotifier (Individual self,
+      Persona persona, ParamSpec ps);
+
+  private struct _Notifier
+    {
+      unowned string property;
+      _UnboundNotifier notify;
+    }
+
+  /* This contains static methods that take "this" as an explicit parameter,
+   * so that we can have one big lookup table at the class level without
+   * having to mess about with delegates.
+   *
+   * All keys in this array must be unique. */
+  private static const _Notifier _notifiers[] =
+    {
+      { "alias", Individual._notify_alias_cb },
+      { "avatar", Individual._notify_avatar_cb },
+      { "presence-message", Individual._notify_presence_cb },
+      { "client-types", Individual._notify_presence_cb },
+      { "presence-type", Individual._notify_presence_cb },
+      { "im-addresses", Individual._notify_im_addresses_cb },
+      { "web-service-addresses", Individual._notify_web_service_addresses_cb },
+      { "is-favourite", Individual._notify_is_favourite_cb },
+      { "structured-name", Individual._notify_structured_name_cb },
+      { "full-name", Individual._notify_full_name_cb },
+      { "nickname", Individual._notify_nickname_cb },
+      { "gender", Individual._notify_gender_cb },
+      { "urls", Individual._notify_urls_cb },
+      { "phone-numbers", Individual._notify_phone_numbers_cb },
+      { "email-addresses", Individual._notify_email_addresses_cb },
+      { "roles", Individual._notify_roles_cb },
+      { "birthday", Individual._notify_birthday_cb },
+      { "notes", Individual._notify_notes_cb },
+      { "postal-addresses", Individual._notify_postal_addresses_cb },
+      { "local-ids", Individual._notify_local_ids_cb },
+      { "location", Individual._notify_location_cb },
+      { "im-interaction-count", Individual._notify_im_interaction_count_cb },
+      { "call-interaction-count", Individual._notify_call_interaction_count_cb },
+      { "last-im-interaction-datetime", Individual._notify_last_im_interaction_datetime_cb },
+      { "last-call-interaction-datetime", Individual._notify_last_call_interaction_datetime_cb },
+    };
+
+  private void _persona_notify_cb (Object obj, ParamSpec ps)
+    {
+      assert (obj is Persona);
+      assert (ps.name == "individual" || (obj as Persona).individual == this);
+
+      foreach (var notifier in Individual._notifiers)
+        {
+          if (ps.name == notifier.property)
+            {
+              notifier.notify (this, (!) (obj as Persona), ps);
+              break;  /* assume all entries in notifiers are unique */
+            }
+        }
     }
 
   /**
@@ -1831,46 +1890,15 @@ public class Folks.Individual : Object,
     {
       persona.individual = this;
 
-      persona.notify["alias"].connect (this._notify_alias_cb);
-      persona.notify["avatar"].connect (this._notify_avatar_cb);
-      persona.notify["presence-message"].connect (this._notify_presence_cb);
-      persona.notify["client-types"].connect (this._notify_presence_cb);
-      persona.notify["presence-type"].connect (this._notify_presence_cb);
-      persona.notify["im-addresses"].connect (this._notify_im_addresses_cb);
-      persona.notify["web-service-addresses"].connect
-              (this._notify_web_service_addresses_cb);
-      persona.notify["is-favourite"].connect (this._notify_is_favourite_cb);
-      persona.notify["structured-name"].connect (
-          this._notify_structured_name_cb);
-      persona.notify["full-name"].connect (this._notify_full_name_cb);
-      persona.notify["nickname"].connect (this._notify_nickname_cb);
-      persona.notify["gender"].connect (this._notify_gender_cb);
-      persona.notify["urls"].connect (this._notify_urls_cb);
-      persona.notify["phone-numbers"].connect (this._notify_phone_numbers_cb);
-      persona.notify["email-addresses"].connect (
-          this._notify_email_addresses_cb);
-      persona.notify["roles"].connect (this._notify_roles_cb);
-      persona.notify["birthday"].connect (this._notify_birthday_cb);
-      persona.notify["notes"].connect (this._notify_notes_cb);
-      persona.notify["postal-addresses"].connect
-          (this._notify_postal_addresses_cb);
-      persona.notify["local-ids"].connect
-          (this._notify_local_ids_cb);
-      persona.notify["location"].connect (this._notify_location_cb);
+      /* We're interested in most, if not all, signals from a persona,
+       * so avoid a significant amount of GObject signal overhead by
+       * connecting to the entire signal and demultiplexing it ourselves. */
+      persona.notify.connect (this._persona_notify_cb);
 
       if (persona is GroupDetails)
         {
           ((GroupDetails) persona).group_changed.connect (
               this._persona_group_changed_cb);
-        }
-      /* Subscribe to the interactions signal for the persona */
-      var p_interaction_details = persona as InteractionDetails;
-      if (p_interaction_details != null)
-        {
-          persona.notify["im-interaction-count"].connect (this._notify_im_interaction_count_cb);
-          persona.notify["call-interaction-count"].connect (this._notify_call_interaction_count_cb);
-          persona.notify["last-im-interaction-datetime"].connect (this._notify_last_im_interaction_datetime_cb);
-          persona.notify["last-call-interaction-datetime"].connect (this._notify_last_call_interaction_datetime_cb);
         }
     }
 
@@ -1969,50 +1997,12 @@ public class Folks.Individual : Object,
   private void _disconnect_from_persona (Persona persona,
       Individual? replacement_individual)
     {
-      persona.notify["alias"].disconnect (this._notify_alias_cb);
-      persona.notify["avatar"].disconnect (this._notify_avatar_cb);
-      persona.notify["presence-message"].disconnect (
-          this._notify_presence_cb);
-      persona.notify["client-types"].connect (this._notify_presence_cb);
-      persona.notify["presence-type"].disconnect (this._notify_presence_cb);
-      persona.notify["im-addresses"].disconnect (
-          this._notify_im_addresses_cb);
-      persona.notify["web-service-addresses"].disconnect (
-          this._notify_web_service_addresses_cb);
-      persona.notify["is-favourite"].disconnect (
-          this._notify_is_favourite_cb);
-      persona.notify["structured-name"].disconnect (
-          this._notify_structured_name_cb);
-      persona.notify["full-name"].disconnect (this._notify_full_name_cb);
-      persona.notify["nickname"].disconnect (this._notify_nickname_cb);
-      persona.notify["gender"].disconnect (this._notify_gender_cb);
-      persona.notify["urls"].disconnect (this._notify_urls_cb);
-      persona.notify["phone-numbers"].disconnect (
-          this._notify_phone_numbers_cb);
-      persona.notify["email-addresses"].disconnect (
-          this._notify_email_addresses_cb);
-      persona.notify["roles"].disconnect (this._notify_roles_cb);
-      persona.notify["birthday"].disconnect (this._notify_birthday_cb);
-      persona.notify["notes"].disconnect (this._notify_notes_cb);
-      persona.notify["postal-addresses"].disconnect
-          (this._notify_postal_addresses_cb);
-      persona.notify["local-ids"].disconnect (this._notify_local_ids_cb);
-      persona.notify["location"].disconnect (this._notify_location_cb);
+      persona.notify.disconnect (this._persona_notify_cb);
 
       if (persona is GroupDetails)
         {
           ((GroupDetails) persona).group_changed.disconnect (
               this._persona_group_changed_cb);
-        }
-
-      /* Unsubscribe from the interactions signal for the persona */
-      var p_interaction_details = persona as InteractionDetails;
-      if (p_interaction_details != null)
-        {
-          persona.notify["im-interaction-count"].disconnect (this._notify_im_interaction_count_cb);
-          persona.notify["call-interaction-count"].disconnect (this._notify_call_interaction_count_cb);
-          persona.notify["last-im-interaction-datetime"].disconnect (this._notify_last_im_interaction_datetime_cb);
-          persona.notify["last-call-interaction-datetime"].disconnect (this._notify_last_call_interaction_datetime_cb);
         }
 
       /* Don't update the individual if the persona's been added to the new one
