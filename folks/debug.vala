@@ -89,7 +89,7 @@ public class Folks.Debug : Object
         }
     }
 
-  private bool _debug_output_enabled = true;
+  private bool _debug_output_enabled = false;
 
   /**
    * Whether debug output is enabled. This is orthogonal to the set of enabled
@@ -254,6 +254,7 @@ public class Folks.Debug : Object
             }
         }
 
+      retval.debug_output_enabled = (retval._all || !retval._domains.is_empty);
       retval.colour_enabled = colour_enabled;
 
       return retval;
