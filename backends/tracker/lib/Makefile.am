@@ -67,7 +67,6 @@ libfolks_tracker_la_LIBADD = \
 	$(GLIB_LIBS) \
 	$(GEE_LIBS) \
 	$(top_builddir)/folks/libfolks.la \
-	$(top_builddir)/folks/libfolks-internal.la \
 	$(TRACKER_SPARQL_LIBS) \
 	$(NULL)
 

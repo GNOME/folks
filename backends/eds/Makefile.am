@@ -56,7 +56,6 @@ eds_la_LIBADD = \
 	$(AM_LIBADD) \
 	$(top_builddir)/backends/eds/lib/libfolks-eds.la \
 	$(top_builddir)/folks/libfolks.la \
-	$(top_builddir)/folks/libfolks-internal.la \
 	$(GIO_LIBS) \
 	$(GLIB_LIBS) \
 	$(GEE_LIBS) \

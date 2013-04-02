@@ -54,7 +54,6 @@ libsocialweb_la_LIBADD = \
 	$(GLIB_LIBS) \
 	$(GEE_LIBS) \
 	$(top_builddir)/folks/libfolks.la \
-	$(top_builddir)/folks/libfolks-internal.la \
 	$(SW_CLIENT_LIBS) \
 	lib/libfolks-libsocialweb.la \
 	$(NULL)

@@ -74,7 +74,6 @@ libfolks_eds_la_CFLAGS = \
 libfolks_eds_la_LIBADD = \
 	$(AM_LIBADD) \
 	$(top_builddir)/folks/libfolks.la \
-	$(top_builddir)/folks/libfolks-internal.la \
 	$(EBOOK_LIBS) \
 	$(EDATASERVER_LIBS) \
 	$(GIO_LIBS) \

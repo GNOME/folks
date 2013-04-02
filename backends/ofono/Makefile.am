@@ -54,7 +54,6 @@ ofono_la_LIBADD = \
 	$(GEE_LIBS) \
 	$(EBOOK_LIBS) \
 	$(top_builddir)/folks/libfolks.la \
-	$(top_builddir)/folks/libfolks-internal.la \
 	$(NULL)
 
 ofono_la_LDFLAGS = \

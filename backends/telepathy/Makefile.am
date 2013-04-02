@@ -57,7 +57,6 @@ telepathy_la_LIBADD = \
 	$(GLIB_LIBS) \
 	$(GEE_LIBS) \
 	$(top_builddir)/folks/libfolks.la \
-	$(top_builddir)/folks/libfolks-internal.la \
 	$(TP_GLIB_LIBS) \
 	lib/libfolks-telepathy.la \
 	$(NULL)
