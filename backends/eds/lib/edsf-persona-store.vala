@@ -520,7 +520,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
             }
           else if (k == Folks.PersonaStore.detail_key (PersonaDetail.NOTES))
             {
-              var notes = (Gee.HashSet<NoteFieldDetails>) v.get_object ();
+              var notes = (Gee.Set<NoteFieldDetails>) v.get_object ();
               this._set_contact_notes (contact, notes);
             }
           else if (k == Folks.PersonaStore.detail_key (PersonaDetail.GENDER))

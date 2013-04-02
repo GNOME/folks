@@ -587,7 +587,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
             }
           else if (k == Folks.PersonaStore.detail_key (PersonaDetail.NOTES))
             {
-              var notes = (Gee.HashSet<NoteFieldDetails>) v.get_object ();
+              var notes = (Gee.Set<NoteFieldDetails>) v.get_object ();
               foreach (var n in notes)
                 {
                   builder.subject ("_:p");
@@ -605,7 +605,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
             }
           else if (k == Folks.PersonaStore.detail_key (PersonaDetail.ROLES))
             {
-              var roles = (Gee.HashSet<RoleFieldDetails>) v.get_object ();
+              var roles = (Gee.Set<RoleFieldDetails>) v.get_object ();
 
               int roles_cnt = 0;
               foreach (var role_fd in roles)
@@ -697,7 +697,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
             }
           else if (k == Folks.PersonaStore.detail_key (PersonaDetail.LOCAL_IDS))
             {
-              var local_ids = (Gee.HashSet<string>) v.get_object ();
+              var local_ids = (Gee.Set<string>) v.get_object ();
               string ids = Trf.PersonaStore.serialize_local_ids (local_ids);
 
               builder.subject ("_:folks_ids");
