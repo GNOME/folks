@@ -614,11 +614,7 @@ public class Edsf.Persona : Folks.Persona,
         }
 
       /* Replace the current set of groups with a modified one. */
-      var new_groups = new SmallSet<string> ();
-      foreach (var category_name in this.groups)
-        {
-          new_groups.add (category_name);
-        }
+      var new_groups = SmallSet<string>.copy (this.groups);
 
       if (is_member == false)
         {
@@ -697,20 +693,15 @@ public class Edsf.Persona : Folks.Persona,
           return;
         }
 
-      var new_system_groups = new SmallSet<string> ();
-      foreach (var sg in this._system_groups)
-        {
-          if (sg == GOOGLE_PERSONAL_GROUP_NAME && !in_personal)
-            {
-              continue;
-            }
-
-          new_system_groups.add (sg);
-        }
+      var new_system_groups = SmallSet<string>.copy (this._system_groups);
 
       if (in_personal)
         {
           new_system_groups.add (GOOGLE_PERSONAL_GROUP_NAME);
+        }
+      else
+        {
+          new_system_groups.remove (GOOGLE_PERSONAL_GROUP_NAME);
         }
 
       yield ((Edsf.PersonaStore) this.store)._set_system_groups (this, new_system_groups);

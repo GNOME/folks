@@ -1943,13 +1943,7 @@ public class Folks.IndividualAggregator : Object
     {
       /* Removing personas changes the persona set so we need to make a copy
        * first */
-      var personas = new SmallSet<Persona> ();
-      /* FIXME: this is O(n**2) but if we know that individual.personas
-       * is a SmallSet, we can do it in O(n) */
-      foreach (var p in individual.personas)
-        {
-          personas.add (p);
-        }
+      var personas = SmallSet<Persona>.copy (individual.personas);
 
       foreach (var persona in personas)
         {
@@ -2180,8 +2174,8 @@ public class Folks.IndividualAggregator : Object
        * In the worst case, this will double the number of personas, since if
        * none of the personas have anti-links writeable, each will have to be
        * linked with a new writeable persona. */
-      var individual_personas = new SmallSet<Persona> (); /* as we modify it */
-      individual_personas.add_all (individual.personas);
+      /* Copy it, since we modify it */
+      var individual_personas = SmallSet<Persona>.copy (individual.personas);
 
       debug ("    Inserting anti-links:");
       foreach (var pers in individual_personas)
@@ -2199,8 +2193,7 @@ public class Folks.IndividualAggregator : Object
                   writeable_persona.uid, writeable_persona);
 
               /* Make sure not to anti-link the new persona to pers. */
-              var anti_link_personas = new SmallSet<Persona> ();
-              anti_link_personas.add_all (individual_personas);
+              var anti_link_personas = SmallSet<Persona>.copy (individual_personas);
               anti_link_personas.remove (pers);
 
               var al = writeable_persona as AntiLinkable;
