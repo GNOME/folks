@@ -72,7 +72,11 @@ tp_test_contactlist_gir_NAMESPACE = TpTests
 INTROSPECTION_GIRS += tp-test-contactlist.gir
 
 if HAVE_VALA
-tp-test-contactlist.vapi: tp-test-contactlist.gir
+# The .vapi is output in the $(builddir), and valac looks for .deps
+# in the same directory as the .vapi rather than going through the search
+# path again, so we need to copy the .deps to the $(builddir) too.
+tp-test-contactlist.vapi: tp-test-contactlist.gir tp-test-contactlist.deps
+	@test x$(srcdir) = x. || cp $(srcdir)/tp-test-contactlist.deps .
 	$(MAKE) $(AM_MAKEFLAGS) tp-test-contactlist.gir
 	$(AM_V_GEN)$(VAPIGEN) $(VAPIGENFLAGS) --library tp-test-contactlist \
 		tp-test-contactlist.gir
@@ -111,5 +115,6 @@ EXTRA_DIST = \
 
 clean-local:
 	rm -rf _gen
+	test x$(srcdir) = x. || rm -f tp-test-contactlist.deps
 
 -include $(top_srcdir)/git.mk
