@@ -95,7 +95,7 @@ pkgconfig_in = folks-telepathy.pc.in
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = $(pkgconfig_in:.in=)
 
-libfolks_telepathy_la_vala.stamp: tp-lowlevel.vapi
+$(srcdir)/libfolks_telepathy_la_vala.stamp: tp-lowlevel.vapi
 
 dist_noinst_DATA = \
 	tp-lowlevel.gir \
