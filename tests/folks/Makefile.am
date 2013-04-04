@@ -44,6 +44,7 @@ AM_VALAFLAGS += \
 	--pkg gio-2.0 \
 	--pkg gee-0.8 \
 	--pkg folks \
+	--pkg folks-generics \
 	--pkg folks-test \
 	--pkg kf-test \
 	--pkg tpf-test \
@@ -53,6 +54,7 @@ AM_VALAFLAGS += \
 
 # in order from least to most complex
 noinst_PROGRAMS = \
+	small-set \
 	abstract-field-details \
 	async-locking \
 	utils \
@@ -101,6 +103,10 @@ init_SOURCES = \
 	init.vala \
 	$(NULL)
 
+small_set_SOURCES = \
+	small-set.vala \
+	$(NULL)
+
 CLEANFILES = \
         *.pid \
         *.address \
@@ -117,6 +123,7 @@ MAINTAINERCLEANFILES = \
         avatar_cache_vala.stamp \
         object_cache_vala.stamp \
         init_vala.stamp \
+        small_set_vala.stamp \
         $(NULL)
 
 EXTRA_DIST = \

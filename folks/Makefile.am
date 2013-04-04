@@ -1,4 +1,5 @@
 AM_CPPFLAGS = \
+	-I${top_srcdir} \
 	-include $(CONFIG_HEADER) \
 	-DPACKAGE_DATADIR=\"$(pkgdatadir)\" \
 	-DBACKEND_DIR=\"$(BACKEND_DIR)\" \
@@ -11,8 +12,13 @@ lib_LTLIBRARIES = libfolks.la
 ##################################################
 # Internal library
 ##################################################
+
 libfolks_internal_la_SOURCES = \
+	folks-generics.vapi \
 	internal.vala \
+	small-set.c \
+	small-set.h \
+	small-set-internal.h \
 	$(NULL)
 
 libfolks_internal_la_VALAFLAGS = \
