@@ -41,6 +41,10 @@ public abstract class Folks.TestCase : Object
     {
       Intl.setlocale (LocaleCategory.ALL, "");
 
+      /* Turn off use of gvfs. If using GTestDBus it's unavailable,
+       * and if not it's pointless: all we need is the local filesystem. */
+      Environment.set_variable ("GIO_USE_VFS", "local", true);
+
       LogAdaptor.set_up ();
       this._suite = new GLib.TestSuite (name);
 
