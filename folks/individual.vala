@@ -103,8 +103,7 @@ public class Folks.Individual : Object,
     WebServiceDetails
 {
   /* Stores the Personas contained in this Individual. */
-  private HashSet<Persona> _persona_set =
-      new HashSet<Persona> ();
+  private SmallSet<Persona> _persona_set = new SmallSet<Persona> ();
   /* Read-only view of the above set */
   private Set<Persona> _persona_set_ro;
   /* Mapping from PersonaStore -> number of Personas from that store contained
@@ -495,7 +494,7 @@ public class Folks.Individual : Object,
       set { this.change_gender.begin (value); } /* not writeable */
     }
 
-  private HashSet<UrlFieldDetails>? _urls = null;
+  private SmallSet<UrlFieldDetails>? _urls = null;
   private Set<UrlFieldDetails>? _urls_ro = null;
 
   /**
@@ -512,7 +511,7 @@ public class Folks.Individual : Object,
       set { this.change_urls.begin (value); } /* not writeable */
     }
 
-  private HashSet<PhoneFieldDetails>? _phone_numbers = null;
+  private SmallSet<PhoneFieldDetails>? _phone_numbers = null;
   private Set<PhoneFieldDetails>? _phone_numbers_ro = null;
 
   /**
@@ -529,7 +528,7 @@ public class Folks.Individual : Object,
       set { this.change_phone_numbers.begin (value); } /* not writeable */
     }
 
-  private HashSet<EmailFieldDetails>? _email_addresses = null;
+  private SmallSet<EmailFieldDetails>? _email_addresses = null;
   private Set<EmailFieldDetails>? _email_addresses_ro = null;
 
   /**
@@ -546,7 +545,7 @@ public class Folks.Individual : Object,
       set { this.change_email_addresses.begin (value); } /* not writeable */
     }
 
-  private HashSet<RoleFieldDetails>? _roles = null;
+  private SmallSet<RoleFieldDetails>? _roles = null;
   private Set<RoleFieldDetails>? _roles_ro = null;
 
   /**
@@ -563,7 +562,7 @@ public class Folks.Individual : Object,
       set { this.change_roles.begin (value); } /* not writeable */
     }
 
-  private HashSet<string>? _local_ids = null;
+  private SmallSet<string>? _local_ids = null;
   private Set<string>? _local_ids_ro = null;
 
   /**
@@ -615,7 +614,7 @@ public class Folks.Individual : Object,
       set { this.change_calendar_event_id.begin (value); } /* not writeable */
     }
 
-  private HashSet<NoteFieldDetails>? _notes = null;
+  private SmallSet<NoteFieldDetails>? _notes = null;
   private Set<NoteFieldDetails>? _notes_ro = null;
 
   /**
@@ -632,7 +631,7 @@ public class Folks.Individual : Object,
       set { this.change_notes.begin (value); } /* not writeable */
     }
 
-  private HashSet<PostalAddressFieldDetails>? _postal_addresses = null;
+  private SmallSet<PostalAddressFieldDetails>? _postal_addresses = null;
   private Set<PostalAddressFieldDetails>? _postal_addresses_ro = null;
 
   /**
@@ -735,7 +734,7 @@ public class Folks.Individual : Object,
         }
     }
 
-  private HashSet<string>? _groups = null;
+  private SmallSet<string>? _groups = null;
   private Set<string>? _groups_ro = null;
 
   /**
@@ -1201,11 +1200,11 @@ public class Folks.Individual : Object,
         }
       else if (added == null)
         {
-          _added = new HashSet<Persona> ();
+          _added = SmallSet.empty<Persona> ();
         }
       else if (removed == null)
         {
-          _removed = new HashSet<Persona> ();
+          _removed = SmallSet.empty<Persona> ();
         }
 
       // We've now guaranteed that both _added and _removed are non-null.
@@ -1215,7 +1214,7 @@ public class Folks.Individual : Object,
 
   private void _store_removed_cb (PersonaStore store)
     {
-      var remaining_personas = new HashSet<Persona> ();
+      var remaining_personas = new SmallSet<Persona> ();
 
       /* Build a set of the remaining personas (those which weren't in the
        * removed store. */
@@ -1237,7 +1236,7 @@ public class Folks.Individual : Object,
       Persona? actor,
       GroupDetails.ChangeReason reason)
     {
-      var remaining_personas = new HashSet<Persona> ();
+      var remaining_personas = new SmallSet<Persona> ();
 
       /* Build a set of the remaining personas (those which aren't in the
        * set of removed personas). */
@@ -1512,7 +1511,7 @@ public class Folks.Individual : Object,
       /* Lazily instantiate the set of groups. */
       else if (this._groups == null)
         {
-          this._groups = new HashSet<string> ();
+          this._groups = new SmallSet<string> ();
           this._groups_ro = this._groups.read_only_view;
           created = true;
         }
@@ -1521,7 +1520,7 @@ public class Folks.Individual : Object,
       if (!created && !force_update)
          return;
 
-      var new_groups = new HashSet<string> ();
+      var new_groups = new SmallSet<string> ();
 
       /* FIXME: this should partition the personas by store (maybe we should
        * keep that mapping in general in this class), and execute
@@ -2063,14 +2062,14 @@ public class Folks.Individual : Object,
           () => { return this._urls == null; },
           () =>
             {
-              this._urls = new HashSet<UrlFieldDetails> (
+              this._urls = new SmallSet<UrlFieldDetails> (
                   AbstractFieldDetails<string>.hash_static,
                   AbstractFieldDetails<string>.equal_static);
               this._urls_ro = this._urls.read_only_view;
             },
           () =>
             {
-              var new_urls = new HashSet<UrlFieldDetails> (
+              var new_urls = new SmallSet<UrlFieldDetails> (
                   AbstractFieldDetails<string>.hash_static,
                   AbstractFieldDetails<string>.equal_static);
               var urls_set = new HashMap<unowned string,
@@ -2121,14 +2120,14 @@ public class Folks.Individual : Object,
           () => { return this._phone_numbers == null; },
           () =>
             {
-              this._phone_numbers = new HashSet<PhoneFieldDetails> (
+              this._phone_numbers = new SmallSet<PhoneFieldDetails> (
                   AbstractFieldDetails<string>.hash_static,
                   AbstractFieldDetails<string>.equal_static);
               this._phone_numbers_ro = this._phone_numbers.read_only_view;
             },
           () =>
             {
-              var new_phone_numbers = new HashSet<PhoneFieldDetails> (
+              var new_phone_numbers = new SmallSet<PhoneFieldDetails> (
                   AbstractFieldDetails<string>.hash_static,
                   AbstractFieldDetails<string>.equal_static);
               var phone_numbers_set = new HashMap<string, PhoneFieldDetails> (
@@ -2178,14 +2177,14 @@ public class Folks.Individual : Object,
           create_if_not_exist, () => { return this._email_addresses == null; },
           () =>
             {
-              this._email_addresses = new HashSet<EmailFieldDetails> (
+              this._email_addresses = new SmallSet<EmailFieldDetails> (
                   AbstractFieldDetails<string>.hash_static,
                   AbstractFieldDetails<string>.equal_static);
               this._email_addresses_ro = this._email_addresses.read_only_view;
             },
           () =>
             {
-              var new_email_addresses = new HashSet<EmailFieldDetails> (
+              var new_email_addresses = new SmallSet<EmailFieldDetails> (
                   AbstractFieldDetails<string>.hash_static,
                   AbstractFieldDetails<string>.equal_static);
               var emails_set = new HashMap<string, EmailFieldDetails> (
@@ -2236,14 +2235,14 @@ public class Folks.Individual : Object,
           () => { return this._roles == null; },
           () =>
             {
-              this._roles = new HashSet<RoleFieldDetails> (
+              this._roles = new SmallSet<RoleFieldDetails> (
                   AbstractFieldDetails<Role>.hash_static,
                   AbstractFieldDetails<Role>.equal_static);
               this._roles_ro = this._roles.read_only_view;
             },
           () =>
             {
-              var new_roles = new HashSet<RoleFieldDetails> (
+              var new_roles = new SmallSet<RoleFieldDetails> (
                   AbstractFieldDetails<Role>.hash_static,
                   AbstractFieldDetails<Role>.equal_static);
 
@@ -2276,12 +2275,12 @@ public class Folks.Individual : Object,
           () => { return this._local_ids == null; },
           () =>
             {
-              this._local_ids = new HashSet<string> ();
+              this._local_ids = new SmallSet<string> ();
               this._local_ids_ro = this._local_ids.read_only_view;
             },
           () =>
             {
-              var new_local_ids = new HashSet<string> ();
+              var new_local_ids = new SmallSet<string> ();
 
               foreach (var persona in this._persona_set)
                 {
@@ -2341,7 +2340,7 @@ public class Folks.Individual : Object,
           create_if_not_exist, () => { return this._postal_addresses == null; },
           () =>
             {
-              this._postal_addresses = new HashSet<PostalAddressFieldDetails> (
+              this._postal_addresses = new SmallSet<PostalAddressFieldDetails> (
                   AbstractFieldDetails<PostalAddress>.hash_static,
                   AbstractFieldDetails<PostalAddress>.equal_static);
               this._postal_addresses_ro = this._postal_addresses.read_only_view;
@@ -2349,7 +2348,7 @@ public class Folks.Individual : Object,
           () =>
             {
               var new_postal_addresses =
-                  new HashSet<PostalAddressFieldDetails> (
+                  new SmallSet<PostalAddressFieldDetails> (
                       AbstractFieldDetails<PostalAddress>.hash_static,
                       AbstractFieldDetails<PostalAddress>.equal_static);
 
@@ -2437,14 +2436,14 @@ public class Folks.Individual : Object,
           () => { return this._notes == null; },
           () =>
             {
-              this._notes = new HashSet<NoteFieldDetails> (
+              this._notes = new SmallSet<NoteFieldDetails> (
                   AbstractFieldDetails<string>.hash_static,
                   AbstractFieldDetails<string>.equal_static);
               this._notes_ro = this._notes.read_only_view;
             },
           () =>
             {
-              var new_notes = new HashSet<NoteFieldDetails> (
+              var new_notes = new SmallSet<NoteFieldDetails> (
                   AbstractFieldDetails<string>.hash_static,
                   AbstractFieldDetails<string>.equal_static);
 
@@ -2476,8 +2475,8 @@ public class Folks.Individual : Object,
     {
       assert (replacement_individual == null || replacement_individual != this);
 
-      var added = new HashSet<Persona> ();
-      var removed = new HashSet<Persona> ();
+      var added = new SmallSet<Persona> ();
+      var removed = new SmallSet<Persona> ();
 
       /* Determine which Personas have been added. If personas == null, we
        * assume it's an empty set. */

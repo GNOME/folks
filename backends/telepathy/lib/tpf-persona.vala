@@ -354,7 +354,7 @@ public class Tpf.Persona : Folks.Persona,
       ((Tpf.PersonaStore) this.store)._set_cache_needs_update ();
     }
 
-  private HashSet<EmailFieldDetails>? _email_addresses = null;
+  private SmallSet<EmailFieldDetails>? _email_addresses = null;
   private Set<EmailFieldDetails>? _email_addresses_ro = null;
 
   /**
@@ -462,7 +462,7 @@ public class Tpf.Persona : Folks.Persona,
       get { return this._last_call_interaction_datetime; }
     }
 
-  private HashSet<string> _groups = new HashSet<string> ();
+  private SmallSet<string> _groups = new SmallSet<string> ();
   private Set<string> _groups_ro;
 
   /**
@@ -650,7 +650,7 @@ public class Tpf.Persona : Folks.Persona,
         }
     }
 
-  private HashSet<PhoneFieldDetails>? _phone_numbers = null;
+  private SmallSet<PhoneFieldDetails>? _phone_numbers = null;
   private Set<PhoneFieldDetails>? _phone_numbers_ro = null;
 
   /**
@@ -681,7 +681,7 @@ public class Tpf.Persona : Folks.Persona,
           this._phone_numbers, "tel");
     }
 
-  private HashSet<UrlFieldDetails>? _urls = null;
+  private SmallSet<UrlFieldDetails>? _urls = null;
   private Set<UrlFieldDetails>? _urls_ro = null;
 
   /**
@@ -938,17 +938,17 @@ public class Tpf.Persona : Folks.Persona,
         }
       else if (this._urls == null)
         {
-          this._urls = new HashSet<UrlFieldDetails> (
+          this._urls = new SmallSet<UrlFieldDetails> (
               AbstractFieldDetails<string>.hash_static,
               AbstractFieldDetails<string>.equal_static);
           this._urls_ro = this._urls.read_only_view;
 
-          this._email_addresses = new HashSet<EmailFieldDetails> (
+          this._email_addresses = new SmallSet<EmailFieldDetails> (
               AbstractFieldDetails<string>.hash_static,
               AbstractFieldDetails<string>.equal_static);
           this._email_addresses_ro = this._email_addresses.read_only_view;
 
-          this._phone_numbers = new HashSet<PhoneFieldDetails> (
+          this._phone_numbers = new SmallSet<PhoneFieldDetails> (
               AbstractFieldDetails<string>.hash_static,
               AbstractFieldDetails<string>.equal_static);
           this._phone_numbers_ro = this._phone_numbers.read_only_view;
@@ -964,13 +964,13 @@ public class Tpf.Persona : Folks.Persona,
       var changed = false;
       var new_birthday_str = "";
       var new_full_name = "";
-      var new_email_addresses = new HashSet<EmailFieldDetails> (
+      var new_email_addresses = new SmallSet<EmailFieldDetails> (
           AbstractFieldDetails<string>.hash_static,
           AbstractFieldDetails<string>.equal_static);
-      var new_phone_numbers = new HashSet<PhoneFieldDetails> (
+      var new_phone_numbers = new SmallSet<PhoneFieldDetails> (
            AbstractFieldDetails<string>.hash_static,
            AbstractFieldDetails<string>.equal_static);
-      var new_urls = new HashSet<UrlFieldDetails> (
+      var new_urls = new SmallSet<UrlFieldDetails> (
            AbstractFieldDetails<string>.hash_static,
            AbstractFieldDetails<string>.equal_static);
 
@@ -1163,11 +1163,11 @@ public class Tpf.Persona : Folks.Persona,
    * @since 0.6.0
    */
   internal Persona.from_cache (PersonaStore store, string uid, string iid,
-      string im_address, string protocol, HashSet<string> groups,
+      string im_address, string protocol, SmallSet<string> groups,
       bool is_favourite, string alias, bool is_in_contact_list, bool is_user,
       LoadableIcon? avatar, DateTime? birthday, string full_name,
-      HashSet<EmailFieldDetails> email_addresses,
-      HashSet<PhoneFieldDetails> phone_numbers, HashSet<UrlFieldDetails> urls)
+      SmallSet<EmailFieldDetails> email_addresses,
+      SmallSet<PhoneFieldDetails> phone_numbers, SmallSet<UrlFieldDetails> urls)
     {
       Object (contact: null,
               display_id: im_address,

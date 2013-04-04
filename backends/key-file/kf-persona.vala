@@ -151,7 +151,7 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
       foreach (var protocol2 in im_addresses.get_keys ())
         {
           var addresses = im_addresses.get (protocol2);
-          var normalised_addresses = new HashSet<string> ();
+          var normalised_addresses = new SmallSet<string> ();
 
           foreach (var im_fd in addresses)
             {
@@ -256,7 +256,7 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
       this.notify_property ("web-service-addresses");
     }
 
-  private HashSet<string> _anti_links;
+  private SmallSet<string> _anti_links;
   private Set<string> _anti_links_ro;
 
   /**
@@ -331,7 +331,7 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
         new HashMultiMap<string, WebServiceFieldDetails> (
           null, null, AbstractFieldDetails<string>.hash_static,
           AbstractFieldDetails<string>.equal_static);
-      this._anti_links = new HashSet<string> ();
+      this._anti_links = new SmallSet<string> ();
       this._anti_links_ro = this._anti_links.read_only_view;
 
       /* Load the IM addresses from the key file */

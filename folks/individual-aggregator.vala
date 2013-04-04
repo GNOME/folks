@@ -119,7 +119,7 @@ public class Folks.IndividualAggregator : Object
   private BackendStore _backend_store;
   private HashMap<string, PersonaStore> _stores;
   private unowned PersonaStore? _primary_store = null;
-  private HashSet<Backend> _backends;
+  private SmallSet<Backend> _backends;
 
   /* This is conceptually a MultiMap<string, Individual> but it's sufficiently
    * heavily-used that avoiding GObject overhead in favour of inlinable
@@ -360,7 +360,7 @@ public class Folks.IndividualAggregator : Object
       this._link_map = new HashTable<string, GenericArray<Individual>> (
           str_hash, str_equal);
 
-      this._backends = new HashSet<Backend> ();
+      this._backends = new SmallSet<Backend> ();
       this._debug = Debug.dup ();
       this._debug.print_status.connect (this._debug_print_status);
 
@@ -919,7 +919,7 @@ public class Folks.IndividualAggregator : Object
             }
 
           this._personas_changed_cb (store, persona_set,
-              new HashSet<Persona> (), null, null,
+              SmallSet.empty<Persona> (), null, null,
               GroupDetails.ChangeReason.NONE);
         }
 
@@ -976,8 +976,8 @@ public class Folks.IndividualAggregator : Object
         {
           removed_personas.add (iter.get_value ());
         }
-      this._personas_changed_cb (store, new HashSet<Persona> (), removed_personas,
-          null, null, GroupDetails.ChangeReason.NONE);
+      this._personas_changed_cb (store, SmallSet.empty<Persona> (),
+          removed_personas, null, null, GroupDetails.ChangeReason.NONE);
 
       if (this._primary_store == store)
         {
@@ -1019,8 +1019,8 @@ public class Folks.IndividualAggregator : Object
       Internal.profiling_point ("emitting " +
           "IndividualAggregator::individuals-changed");
 
-      _added = (added != null) ? (!) added : new HashSet<Individual> ();
-      _removed = (removed != null) ? (!) removed : new HashSet<Individual> ();
+      _added = (added != null) ? (!) added : SmallSet.empty<Individual> ();
+      _removed = (removed != null) ? (!) removed : SmallSet.empty<Individual> ();
 
       if (changes != null)
         {
@@ -1304,7 +1304,7 @@ public class Folks.IndividualAggregator : Object
           "(is user: %s, IID: %s).", pspec.name, persona.uid,
           persona.is_user ? "yes" : "no", persona.iid);
 
-      var persona_set = new HashSet<Persona> ();
+      var persona_set = new SmallSet<Persona> ();
       persona_set.add (persona);
 
       this._personas_changed_cb (persona.store, persona_set, persona_set,
@@ -1322,7 +1322,7 @@ public class Folks.IndividualAggregator : Object
       debug ("Anti-links changed for persona '%s' (is user: %s, IID: %s).",
           persona.uid, persona.is_user ? "yes" : "no", persona.iid);
 
-      var persona_set = new HashSet<Persona> ();
+      var persona_set = new SmallSet<Persona> ();
       persona_set.add (persona);
 
       this._personas_changed_cb (persona.store, persona_set, persona_set,
@@ -1833,7 +1833,7 @@ public class Folks.IndividualAggregator : Object
       if (i.personas.size > 0)
         {
           var changes = new HashMultiMap<Individual?, Individual?> ();
-          var individuals = new HashSet<Individual> ();
+          var individuals = new SmallSet<Individual> ();
 
           individuals.add (i);
           changes.set (i, replacement);
@@ -1943,7 +1943,9 @@ public class Folks.IndividualAggregator : Object
     {
       /* Removing personas changes the persona set so we need to make a copy
        * first */
-      var personas = new HashSet<Persona> ();
+      var personas = new SmallSet<Persona> ();
+      /* FIXME: this is O(n**2) but if we know that individual.personas
+       * is a SmallSet, we can do it in O(n) */
       foreach (var p in individual.personas)
         {
           personas.add (p);
@@ -2065,7 +2067,7 @@ public class Folks.IndividualAggregator : Object
             AbstractFieldDetails<string>.equal_static);
 
       /* List of local_ids */
-      var local_ids = new Gee.HashSet<string> ();
+      var local_ids = new SmallSet<string> ();
 
       foreach (var persona in personas)
         {
@@ -2178,7 +2180,7 @@ public class Folks.IndividualAggregator : Object
        * In the worst case, this will double the number of personas, since if
        * none of the personas have anti-links writeable, each will have to be
        * linked with a new writeable persona. */
-      var individual_personas = new HashSet<Persona> (); /* as we modify it */
+      var individual_personas = new SmallSet<Persona> (); /* as we modify it */
       individual_personas.add_all (individual.personas);
 
       debug ("    Inserting anti-links:");
@@ -2186,7 +2188,7 @@ public class Folks.IndividualAggregator : Object
         {
           try
             {
-              var personas = new HashSet<Persona> ();
+              var personas = new SmallSet<Persona> ();
               personas.add (pers);
               debug ("        Anti-linking persona '%s' (%p)", pers.uid, pers);
 
@@ -2197,7 +2199,7 @@ public class Folks.IndividualAggregator : Object
                   writeable_persona.uid, writeable_persona);
 
               /* Make sure not to anti-link the new persona to pers. */
-              var anti_link_personas = new HashSet<Persona> ();
+              var anti_link_personas = new SmallSet<Persona> ();
               anti_link_personas.add_all (individual_personas);
               anti_link_personas.remove (pers);
 

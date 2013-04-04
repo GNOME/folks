@@ -127,6 +127,7 @@ libfolks_telepathy_la_VALAFLAGS = \
 	--vapidir=$(abs_top_srcdir)/folks \
 	--vapidir=$(abs_top_builddir)/folks \
 	--pkg folks \
+	--pkg folks-generics \
 	--pkg folks-internal \
 	--pkg tp-lowlevel \
 	--pkg gobject-2.0 \

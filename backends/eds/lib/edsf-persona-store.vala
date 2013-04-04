@@ -417,7 +417,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
       unowned string k;
       unowned Value? _v;
       bool is_fav = false; // Remember this for _set_contact_groups.
-      Set<string> groups = new HashSet<string> (); // For _set_is_favourite
+      Set<string> groups = new SmallSet<string> (); // For _set_is_favourite
 
       while (iter.next (out k, out _v) == true)
         {
@@ -585,7 +585,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
                       contact.set (E.Contact.field_id ("id"), added_uid);
                       persona = new Persona (this, contact);
                       this._personas.set (persona.iid, persona);
-                      var added_personas = new HashSet<Persona> ();
+                      var added_personas = new SmallSet<Persona> ();
                       added_personas.add (persona);
                       this._emit_personas_changed (added_personas, null);
 
@@ -853,7 +853,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
               Internal.profiling_point ("got supported fields in " +
                   "Edsf.PersonaStore (ID: %s)", this.id);
 
-              var prop_set = new HashSet<string> ();
+              var prop_set = new SmallSet<string> ();
 
               /* We get a comma-separated list of fields back. */
               if (supported_fields != null)

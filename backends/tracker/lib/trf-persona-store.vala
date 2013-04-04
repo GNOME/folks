@@ -842,7 +842,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
     }
 
  /**
-   * Transform HashSet<string> to "id1,id2,.."
+   * Transform Set<string> to "id1,id2,.."
    *
    * @since 0.5.1
    */
@@ -869,6 +869,9 @@ public class Trf.PersonaStore : Folks.PersonaStore
    */
   public static Set<string> unserialize_local_ids (string local_ids)
     {
+      /* The documentation explicitly says this is a HashSet, so we shouldn't
+       * switch it to SmallSet. Add a parallel API and update callers if
+       * this turns out to be a hot path. */
       var ids = new HashSet<string> ();
 
       if (local_ids != "")
@@ -992,7 +995,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
    */
   private async void _remove_attributes (string urn, char remove_flag)
     {
-      Gee.HashSet<string> affiliations =
+      SmallSet<string> affiliations =
        yield this._affiliations_from_persona (urn);
 
      foreach (var affl in affiliations)
@@ -1003,7 +1006,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
              _REMOVE_ALL_ATTRIBS ||
              (remove_flag & _REMOVE_PHONES) == _REMOVE_PHONES)
            {
-             Gee.HashSet<string> phones =
+             SmallSet<string> phones =
                yield this._phones_from_affiliation (affl);
 
              foreach (var phone in phones)
@@ -1017,7 +1020,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
              _REMOVE_ALL_ATTRIBS ||
              (remove_flag & _REMOVE_POSTALS) == _REMOVE_POSTALS)
            {
-             Gee.HashSet<string> postals =
+             SmallSet<string> postals =
                yield this._postals_from_affiliation (affl);
              foreach (var postal in postals)
                {
@@ -1030,7 +1033,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
              _REMOVE_ALL_ATTRIBS ||
              (remove_flag & _REMOVE_IM_ADDRS) == _REMOVE_IM_ADDRS)
            {
-             Gee.HashSet<string> im_addrs =
+             SmallSet<string> im_addrs =
                yield this._imaddrs_from_affiliation (affl);
              foreach (var im_addr in im_addrs)
                {
@@ -1043,7 +1046,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
              _REMOVE_ALL_ATTRIBS ||
              (remove_flag & _REMOVE_EMAILS) == _REMOVE_EMAILS)
            {
-             Gee.HashSet<string> emails =
+             SmallSet<string> emails =
                yield this._emails_from_affiliation (affl);
                foreach (var email in emails)
                  {
@@ -1914,7 +1917,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
   /* This method is safe to call multiple times concurrently. */
   private async string _single_value_query (string query)
     {
-      Gee.HashSet<string> rows = yield this._multi_value_query (query);
+      SmallSet<string> rows = yield this._multi_value_query (query);
       foreach (var r in rows)
         {
           return r;
@@ -1923,9 +1926,9 @@ public class Trf.PersonaStore : Folks.PersonaStore
     }
 
   /* This method is safe to call multiple times concurrently. */
-  private async Gee.HashSet<string> _multi_value_query (string query)
+  private async SmallSet<string> _multi_value_query (string query)
     {
-      Gee.HashSet<string> ret = new Gee.HashSet<string> ();
+      SmallSet<string> ret = new SmallSet<string> ();
 
       debug ("[_multi_value_query] %s", query);
 
@@ -2131,7 +2134,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
   internal async void _set_im_addresses (Folks.Persona persona,
       MultiMap<string, ImFieldDetails> im_addresses)
     {
-      var ims = new HashSet<ImFieldDetails> ();
+      var ims = new SmallSet<ImFieldDetails> ();
       foreach (var proto in im_addresses.get_keys ())
         {
           var addrs = im_addresses.get (proto);
@@ -2618,14 +2621,14 @@ public class Trf.PersonaStore : Folks.PersonaStore
     }
 
   /* This method is safe to call multiple times concurrently. */
-  private async Gee.HashSet<string> _affiliations_from_persona (string urn)
+  private async SmallSet<string> _affiliations_from_persona (string urn)
     {
       return yield this._linked_resources (urn, Trf.OntologyDefs.NCO_PERSON,
           Trf.OntologyDefs.NCO_HAS_AFFILIATION);
     }
 
   /* This method is safe to call multiple times concurrently. */
-  private async Gee.HashSet<string> _phones_from_affiliation (string affl)
+  private async SmallSet<string> _phones_from_affiliation (string affl)
     {
       return yield this._linked_resources (affl,
           Trf.OntologyDefs.NCO_AFFILIATION,
@@ -2633,7 +2636,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
     }
 
   /* This method is safe to call multiple times concurrently. */
-  private async Gee.HashSet<string>  _postals_from_affiliation (string affl)
+  private async SmallSet<string>  _postals_from_affiliation (string affl)
     {
       return yield this._linked_resources (affl,
           Trf.OntologyDefs.NCO_AFFILIATION,
@@ -2641,7 +2644,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
     }
 
   /* This method is safe to call multiple times concurrently. */
-  private async Gee.HashSet<string> _imaddrs_from_affiliation  (string affl)
+  private async SmallSet<string> _imaddrs_from_affiliation  (string affl)
     {
       return yield this._linked_resources (affl,
           Trf.OntologyDefs.NCO_AFFILIATION,
@@ -2649,7 +2652,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
     }
 
   /* This method is safe to call multiple times concurrently. */
-  private async Gee.HashSet<string> _emails_from_affiliation (string affl)
+  private async SmallSet<string> _emails_from_affiliation (string affl)
     {
       return yield this._linked_resources (affl,
           Trf.OntologyDefs.NCO_AFFILIATION,
@@ -2729,7 +2732,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
    * @param linking_predicate i.e.: nco:hasAffiliation
    * @return a list of linked resources (in <urn> format)
    */
-  private async Gee.HashSet<string> _linked_resources (string urn,
+  private async SmallSet<string> _linked_resources (string urn,
       string subject_type, string linking_predicate)
     {
       string query_t = "SELECT " +

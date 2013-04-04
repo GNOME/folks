@@ -136,7 +136,7 @@ public class Swf.Persona : Folks.Persona,
       set { this.change_gender.begin (value); } /* not writeable */
     }
 
-  private HashSet<UrlFieldDetails> _urls;
+  private SmallSet<UrlFieldDetails> _urls;
   private Set<UrlFieldDetails> _urls_ro;
 
   /**
@@ -384,7 +384,7 @@ public class Swf.Persona : Folks.Persona,
           this.notify_property ("full-name");
         }
 
-      var urls = new HashSet<UrlFieldDetails> (
+      var urls = new SmallSet<UrlFieldDetails> (
           AbstractFieldDetails<string>.hash_static,
           AbstractFieldDetails<string>.equal_static);
 

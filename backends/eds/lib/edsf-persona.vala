@@ -195,7 +195,7 @@ public class Edsf.Persona : Folks.Persona,
 
   /* NOTE: Other properties support lazy initialisation, but local-ids doesn't
    * as it's a linkable property, so always has to be loaded anyway. */
-  private HashSet<string> _local_ids = new HashSet<string> ();
+  private SmallSet<string> _local_ids = new SmallSet<string> ();
   private Set<string> _local_ids_ro;
 
   /**
@@ -249,7 +249,7 @@ public class Edsf.Persona : Folks.Persona,
       yield ((Edsf.PersonaStore) this.store)._set_location (this, location);
     }
 
-  private HashSet<PostalAddressFieldDetails>? _postal_addresses = null;
+  private SmallSet<PostalAddressFieldDetails>? _postal_addresses = null;
   private Set<PostalAddressFieldDetails>? _postal_addresses_ro = null;
 
   /**
@@ -282,7 +282,7 @@ public class Edsf.Persona : Folks.Persona,
           postal_addresses);
     }
 
-  private HashSet<PhoneFieldDetails>? _phone_numbers = null;
+  private SmallSet<PhoneFieldDetails>? _phone_numbers = null;
   private Set<PhoneFieldDetails>? _phone_numbers_ro = null;
 
   /**
@@ -312,8 +312,8 @@ public class Edsf.Persona : Folks.Persona,
       yield ((Edsf.PersonaStore) this.store)._set_phones (this, phone_numbers);
     }
 
-  private HashSet<EmailFieldDetails>? _email_addresses =
-          new HashSet<EmailFieldDetails> (
+  private SmallSet<EmailFieldDetails>? _email_addresses =
+          new SmallSet<EmailFieldDetails> (
                   AbstractFieldDetails<string>.hash_static,
                   AbstractFieldDetails<string>.equal_static);
   private Set<EmailFieldDetails> _email_addresses_ro;
@@ -342,7 +342,7 @@ public class Edsf.Persona : Folks.Persona,
           email_addresses);
     }
 
-  private HashSet<NoteFieldDetails>? _notes = null;
+  private SmallSet<NoteFieldDetails>? _notes = null;
   private Set<NoteFieldDetails>? _notes_ro = null;
 
   /**
@@ -518,7 +518,7 @@ public class Edsf.Persona : Folks.Persona,
       yield ((Edsf.PersonaStore) this.store)._set_gender (this, gender);
     }
 
-  private HashSet<UrlFieldDetails>? _urls = null;
+  private SmallSet<UrlFieldDetails>? _urls = null;
   private Set<UrlFieldDetails>? _urls_ro = null;
   /**
    * {@inheritDoc}
@@ -576,7 +576,7 @@ public class Edsf.Persona : Folks.Persona,
       yield ((Edsf.PersonaStore) this.store)._set_im_fds (this, im_addresses);
     }
 
-  private HashSet<string>? _groups = null;
+  private SmallSet<string>? _groups = null;
   private Set<string>? _groups_ro = null;
 
   /**
@@ -614,7 +614,7 @@ public class Edsf.Persona : Folks.Persona,
         }
 
       /* Replace the current set of groups with a modified one. */
-      var new_groups = new HashSet<string> ();
+      var new_groups = new SmallSet<string> ();
       foreach (var category_name in this.groups)
         {
           new_groups.add (category_name);
@@ -697,7 +697,7 @@ public class Edsf.Persona : Folks.Persona,
           return;
         }
 
-      HashSet<string> new_system_groups = new HashSet<string> ();
+      var new_system_groups = new SmallSet<string> ();
       foreach (var sg in this._system_groups)
         {
           if (sg == GOOGLE_PERSONAL_GROUP_NAME && !in_personal)
@@ -759,7 +759,7 @@ public class Edsf.Persona : Folks.Persona,
           bday);
     }
 
-  private HashSet<RoleFieldDetails>? _roles = null;
+  private SmallSet<RoleFieldDetails>? _roles = null;
   private Set<RoleFieldDetails>? _roles_ro = null;
 
   /**
@@ -823,7 +823,7 @@ public class Edsf.Persona : Folks.Persona,
           is_favourite);
     }
 
-  private HashSet<string> _anti_links;
+  private SmallSet<string> _anti_links;
   private Set<string> _anti_links_ro;
 
   /**
@@ -849,7 +849,7 @@ public class Edsf.Persona : Folks.Persona,
       yield ((Edsf.PersonaStore) this.store)._set_anti_links (this, anti_links);
     }
 
-  private HashSet<string>? _system_groups = null;
+  private SmallSet<string>? _system_groups = null;
   private Set<string>? _system_groups_ro = null;
   private bool _in_google_personal_group;
 
@@ -960,27 +960,27 @@ public class Edsf.Persona : Folks.Persona,
       debug ("Creating new Edsf.Persona with IID '%s'", this.iid);
 
       this._gender = Gender.UNSPECIFIED;
-      this._phone_numbers = new HashSet<PhoneFieldDetails> (
+      this._phone_numbers = new SmallSet<PhoneFieldDetails> (
            AbstractFieldDetails<string>.hash_static,
            AbstractFieldDetails<string>.equal_static);
       this._phone_numbers_ro = this._phone_numbers.read_only_view;
-      this._email_addresses = new HashSet<EmailFieldDetails> (
+      this._email_addresses = new SmallSet<EmailFieldDetails> (
            AbstractFieldDetails<string>.hash_static,
            AbstractFieldDetails<string>.equal_static);
       this._email_addresses_ro = this._email_addresses.read_only_view;
-      this._notes = new HashSet<NoteFieldDetails> (
+      this._notes = new SmallSet<NoteFieldDetails> (
            AbstractFieldDetails<string>.hash_static,
            AbstractFieldDetails<string>.equal_static);
       this._notes_ro = this._notes.read_only_view;
-      this._urls = new HashSet<UrlFieldDetails> (
+      this._urls = new SmallSet<UrlFieldDetails> (
            AbstractFieldDetails<string>.hash_static,
            AbstractFieldDetails<string>.equal_static);
       this._urls_ro = this._urls.read_only_view;
-      this._postal_addresses = new HashSet<PostalAddressFieldDetails> (
+      this._postal_addresses = new SmallSet<PostalAddressFieldDetails> (
            AbstractFieldDetails<PostalAddress>.hash_static,
            AbstractFieldDetails<PostalAddress>.equal_static);
       this._postal_addresses_ro = this._postal_addresses.read_only_view;
-      this._local_ids = new HashSet<string> ();
+      this._local_ids = new SmallSet<string> ();
       this._local_ids_ro = this._local_ids.read_only_view;
       this._location = null;
       this._web_service_addresses =
@@ -988,13 +988,13 @@ public class Edsf.Persona : Folks.Persona,
           null, null, AbstractFieldDetails<string>.hash_static,
           AbstractFieldDetails<string>.equal_static);
       this._email_addresses_ro = this._email_addresses.read_only_view;
-      this._groups = new HashSet<string> ();
+      this._groups = new SmallSet<string> ();
       this._groups_ro = this._groups.read_only_view;
-      this._roles = new HashSet<RoleFieldDetails> (
+      this._roles = new SmallSet<RoleFieldDetails> (
            AbstractFieldDetails<Role>.hash_static,
            AbstractFieldDetails<Role>.equal_static);
       this._roles_ro = this._roles.read_only_view;
-      this._anti_links = new HashSet<string> ();
+      this._anti_links = new SmallSet<string> ();
       this._anti_links_ro = this._anti_links.read_only_view;
 
       this._update (this._contact);
@@ -1189,13 +1189,13 @@ public class Edsf.Persona : Folks.Persona,
         }
       else if (this._roles == null)
         {
-          this._roles = new HashSet<RoleFieldDetails> (
+          this._roles = new SmallSet<RoleFieldDetails> (
               AbstractFieldDetails<Role>.hash_static,
               AbstractFieldDetails<Role>.equal_static);
           this._roles_ro = this._roles.read_only_view;
         }
 
-      var new_roles = new HashSet<RoleFieldDetails> (
+      var new_roles = new SmallSet<RoleFieldDetails> (
           AbstractFieldDetails<Role>.hash_static,
           AbstractFieldDetails<Role>.equal_static);
 
@@ -1351,7 +1351,7 @@ public class Edsf.Persona : Folks.Persona,
 
   private void _update_emails (bool emit_notification = true)
     {
-      var new_email_addresses = new HashSet<EmailFieldDetails> (
+      var new_email_addresses = new SmallSet<EmailFieldDetails> (
           AbstractFieldDetails<string>.hash_static,
           AbstractFieldDetails<string>.equal_static);
 
@@ -1395,13 +1395,13 @@ public class Edsf.Persona : Folks.Persona,
         }
       else if (this._notes == null)
         {
-          this._notes = new HashSet<NoteFieldDetails> (
+          this._notes = new SmallSet<NoteFieldDetails> (
               AbstractFieldDetails<string>.hash_static,
               AbstractFieldDetails<string>.equal_static);
           this._notes_ro = this._notes.read_only_view;
         }
 
-      var new_notes = new HashSet<NoteFieldDetails> (
+      var new_notes = new SmallSet<NoteFieldDetails> (
           AbstractFieldDetails<string>.hash_static,
           AbstractFieldDetails<string>.equal_static);
 
@@ -1578,13 +1578,13 @@ public class Edsf.Persona : Folks.Persona,
         }
       else if (this._urls == null)
         {
-          this._urls = new HashSet<UrlFieldDetails> (
+          this._urls = new SmallSet<UrlFieldDetails> (
               AbstractFieldDetails<string>.hash_static,
               AbstractFieldDetails<string>.equal_static);
           this._urls_ro = this._urls.read_only_view;
         }
 
-      var new_urls = new HashSet<UrlFieldDetails> (
+      var new_urls = new SmallSet<UrlFieldDetails> (
           AbstractFieldDetails<string>.hash_static,
           AbstractFieldDetails<string>.equal_static);
 
@@ -1747,7 +1747,7 @@ public class Edsf.Persona : Folks.Persona,
 
       var category_names =
           this._contact.get<GLib.List<string>> (E.ContactField.CATEGORY_LIST);
-      var new_categories = new HashSet<string> ();
+      var new_categories = new SmallSet<string> ();
       bool any_added_categories = false;
 
       foreach (var category_name in category_names)
@@ -1807,7 +1807,7 @@ public class Edsf.Persona : Folks.Persona,
           if (attr != null)
             {
               unowned GLib.List<string> system_group_ids = attr.get_values();
-              var new_sysgroups = new HashSet<string> ();
+              var new_sysgroups = new SmallSet<string> ();
               bool any_added_sysgroups = false;
 
               foreach (var system_group_id in system_group_ids)
@@ -1851,7 +1851,7 @@ public class Edsf.Persona : Folks.Persona,
             }
           else
             {
-              this._system_groups = new HashSet<string>();
+              this._system_groups = new SmallSet<string>();
               this._system_groups_ro = this._system_groups.read_only_view;
             }
         }
@@ -1947,13 +1947,13 @@ public class Edsf.Persona : Folks.Persona,
         }
       else if (this._phone_numbers == null)
         {
-          this._phone_numbers = new HashSet<PhoneFieldDetails> (
+          this._phone_numbers = new SmallSet<PhoneFieldDetails> (
               AbstractFieldDetails<string>.hash_static,
               AbstractFieldDetails<string>.equal_static);
           this._phone_numbers_ro = this._phone_numbers.read_only_view;
         }
 
-      var new_phone_numbers = new HashSet<PhoneFieldDetails> (
+      var new_phone_numbers = new SmallSet<PhoneFieldDetails> (
           AbstractFieldDetails<string>.hash_static,
           AbstractFieldDetails<string>.equal_static);
 
@@ -2057,13 +2057,13 @@ public class Edsf.Persona : Folks.Persona,
         }
       else if (this._postal_addresses == null)
         {
-          this._postal_addresses = new HashSet<PostalAddressFieldDetails> (
+          this._postal_addresses = new SmallSet<PostalAddressFieldDetails> (
               AbstractFieldDetails<PostalAddress>.hash_static,
               AbstractFieldDetails<PostalAddress>.equal_static);
           this._postal_addresses_ro = this._postal_addresses.read_only_view;
         }
 
-      var new_postal_addresses = new HashSet<PostalAddressFieldDetails> (
+      var new_postal_addresses = new SmallSet<PostalAddressFieldDetails> (
           AbstractFieldDetails<PostalAddress>.hash_static,
           AbstractFieldDetails<PostalAddress>.equal_static);
 
@@ -2096,7 +2096,7 @@ public class Edsf.Persona : Folks.Persona,
 
   private void _update_local_ids ()
     {
-      var new_local_ids = new HashSet<string> ();
+      var new_local_ids = new SmallSet<string> ();
 
       var ids = this.contact.get_attribute ("X-FOLKS-CONTACTS-IDS");
       if (ids != null)
@@ -2181,7 +2181,7 @@ public class Edsf.Persona : Folks.Persona,
 
   private void _update_anti_links ()
     {
-      var new_anti_links = new HashSet<string> ();
+      var new_anti_links = new SmallSet<string> ();
 
       var vcard = (E.VCard) this.contact;
       foreach (unowned E.VCardAttribute attr in vcard.get_attributes ())

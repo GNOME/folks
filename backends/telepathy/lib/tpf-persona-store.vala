@@ -58,7 +58,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
 
   /* TpContact IDs. Note that this should *not* be cleared in _reset().
    * See bgo#630822. */
-  private HashSet<string> _favourite_ids = new HashSet<string> ();
+  private SmallSet<string> _favourite_ids = new SmallSet<string> ();
 
   /* Mapping from Persona IIDs to their avatars. This allows avatars to persist
    * between the cached (offline) personas and the online personas. Note that
@@ -95,7 +95,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
   private bool _cache_needs_update = false;
 
   /* marshalled from ContactInfo.SupportedFields */
-  internal HashSet<string> _supported_fields;
+  internal SmallSet<string> _supported_fields;
   internal Set<string> _supported_fields_ro;
 
   private Account _account;
@@ -433,7 +433,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
 
       this._contact_persona_map = new HashMap<unowned Contact, Persona> ();
 
-      this._supported_fields = new HashSet<string> ();
+      this._supported_fields = new SmallSet<string> ();
       this._supported_fields_ro = this._supported_fields.read_only_view;
       this._self_persona = null;
     }
@@ -1113,7 +1113,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
            * self and roster TpContacts, so they should have been removed
            * already. But deal with it just in case... */
           warning ("A TpContact part of the ContactList is disposed");
-          var personas = new HashSet<Persona> ();
+          var personas = new SmallSet<Persona> ();
           personas.add (persona);
           this._emit_personas_changed (null, personas);
         }
@@ -1146,8 +1146,8 @@ public class Tpf.PersonaStore : Folks.PersonaStore
     {
       var contact = this._conn.self_contact;
 
-      var personas_added = new HashSet<Persona> ();
-      var personas_removed = new HashSet<Persona> ();
+      var personas_added = new SmallSet<Persona> ();
+      var personas_removed = new SmallSet<Persona> ();
 
       /* Remove old self persona if not also part of roster. Keep a reference
        * to the persona so _remove_persona() doesn't unset it early. */
@@ -1444,7 +1444,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       else
         birthday_str = birthday.to_string ();
 
-      var info_set = new HashSet<ContactInfoField> ();
+      var info_set = new SmallSet<ContactInfoField> ();
       string[] values = { birthday_str };
       string[] parameters = { null };
 
@@ -1463,7 +1463,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
           full_name = "";
         }
 
-      var info_set = new HashSet<ContactInfoField> ();
+      var info_set = new SmallSet<ContactInfoField> ();
       string[] values = { full_name };
       string[] parameters = { null };
 
@@ -1478,7 +1478,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       string field_name)
         throws PersonaStoreError
     {
-      var info_set = new HashSet<ContactInfoField> ();
+      var info_set = new SmallSet<ContactInfoField> ();
 
       foreach (var afd in details)
         {
@@ -1506,7 +1506,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
     }
 
   private async void _change_user_contact_info (Tpf.Persona persona,
-      HashSet<ContactInfoField> info_set) throws PersonaStoreError
+      SmallSet<ContactInfoField> info_set) throws PersonaStoreError
     {
       if (!persona.is_user)
         {
@@ -1545,7 +1545,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
     }
 
   private static GLib.List<ContactInfoField> _contact_info_set_to_list (
-      HashSet<ContactInfoField> info_set)
+      SmallSet<ContactInfoField> info_set)
     {
       var info_list = new GLib.List<ContactInfoField> ();
       foreach (var info_field in info_set)

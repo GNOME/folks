@@ -44,9 +44,9 @@ public class Folks.BackendStore : Object {
   /* this contains all backends, regardless of enabled or prepared state */
   private HashMap<string,Backend> _backend_hash;
   /* if null, all backends are allowed */
-  private HashSet<string>? _backends_allowed;
+  private SmallSet<string>? _backends_allowed;
   /* if null, no backends are disabled */
-  private HashSet<string>? _backends_disabled;
+  private SmallSet<string>? _backends_disabled;
   private HashMap<string, Backend> _prepared_backends;
   private Map<string, Backend> _prepared_backends_ro;
   private File _config_file;
@@ -794,7 +794,7 @@ public class Folks.BackendStore : Object {
            * g_parse_debug_string(). */
           var tokens = envvar.split_set (" ,:");
 
-          this._backends_allowed = new HashSet<string> ();
+          this._backends_allowed = new SmallSet<string> ();
 
           foreach (unowned string s in tokens)
             {
@@ -827,7 +827,7 @@ public class Folks.BackendStore : Object {
         {
           var tokens = envvar.split_set (" ,:");
 
-          this._backends_disabled = new HashSet<string> ();
+          this._backends_disabled = new SmallSet<string> ();
 
           foreach (unowned string s in tokens)
             {

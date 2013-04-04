@@ -49,9 +49,9 @@ public class Trf.Persona : Folks.Persona,
   private bool _is_favourite;
   private const string[] _linkable_properties =
       {"im-addresses", "local-ids", "web-service-addresses"};
-  private HashSet<PhoneFieldDetails> _phone_numbers;
+  private SmallSet<PhoneFieldDetails> _phone_numbers;
   private Set<PhoneFieldDetails> _phone_numbers_ro;
-  private HashSet<EmailFieldDetails> _email_addresses;
+  private SmallSet<EmailFieldDetails> _email_addresses;
   private Set<EmailFieldDetails> _email_addresses_ro;
   private weak Sparql.Cursor _cursor;
   private string _tracker_id;
@@ -277,7 +277,7 @@ public class Trf.Persona : Folks.Persona,
       set { this.change_calendar_event_id.begin (value); } /* not writeable */
     }
 
-  private HashSet<RoleFieldDetails> _roles;
+  private SmallSet<RoleFieldDetails> _roles;
   private Set<RoleFieldDetails> _roles_ro;
 
   /**
@@ -301,7 +301,7 @@ public class Trf.Persona : Folks.Persona,
       yield ((Trf.PersonaStore) this.store)._set_roles (this, roles);
     }
 
-  private HashSet<NoteFieldDetails> _notes;
+  private SmallSet<NoteFieldDetails> _notes;
   private Set<NoteFieldDetails> _notes_ro;
 
   /**
@@ -325,7 +325,7 @@ public class Trf.Persona : Folks.Persona,
       yield ((Trf.PersonaStore) this.store)._set_notes (this, notes);
     }
 
-  private HashSet<UrlFieldDetails> _urls;
+  private SmallSet<UrlFieldDetails> _urls;
   private Set<UrlFieldDetails> _urls_ro;
 
   /**
@@ -348,7 +348,7 @@ public class Trf.Persona : Folks.Persona,
       yield ((Trf.PersonaStore) this.store)._set_urls (this, urls);
     }
 
-  private HashSet<PostalAddressFieldDetails> _postal_addresses;
+  private SmallSet<PostalAddressFieldDetails> _postal_addresses;
   private Set<PostalAddressFieldDetails> _postal_addresses_ro;
 
   /**
@@ -556,27 +556,27 @@ public class Trf.Persona : Folks.Persona,
       this._gender = Gender.UNSPECIFIED;
       this._full_name = "";
       this._structured_name = null;
-      this._phone_numbers = new HashSet<PhoneFieldDetails> (
+      this._phone_numbers = new SmallSet<PhoneFieldDetails> (
           AbstractFieldDetails<string>.hash_static,
           AbstractFieldDetails<string>.equal_static);
       this._phone_numbers_ro = this._phone_numbers.read_only_view;
-      this._email_addresses = new HashSet<EmailFieldDetails> (
+      this._email_addresses = new SmallSet<EmailFieldDetails> (
           AbstractFieldDetails<string>.hash_static,
           AbstractFieldDetails<string>.equal_static);
       this._email_addresses_ro = this._email_addresses.read_only_view;
-      this._roles = new HashSet<RoleFieldDetails> (
+      this._roles = new SmallSet<RoleFieldDetails> (
           AbstractFieldDetails<Role>.hash_static,
           AbstractFieldDetails<Role>.equal_static);
       this._roles_ro = this._roles.read_only_view;
-      this._notes = new HashSet<NoteFieldDetails> (
+      this._notes = new SmallSet<NoteFieldDetails> (
           AbstractFieldDetails<string>.hash_static,
           AbstractFieldDetails<string>.equal_static);
       this._notes_ro = this._notes.read_only_view;
-      this._urls = new HashSet<UrlFieldDetails> (
+      this._urls = new SmallSet<UrlFieldDetails> (
           AbstractFieldDetails<string>.hash_static,
           AbstractFieldDetails<string>.equal_static);
       this._urls_ro = this._urls.read_only_view;
-      this._postal_addresses = new HashSet<PostalAddressFieldDetails> (
+      this._postal_addresses = new SmallSet<PostalAddressFieldDetails> (
           AbstractFieldDetails<PostalAddress>.hash_static,
           AbstractFieldDetails<PostalAddress>.equal_static);
       this._postal_addresses_ro = this._postal_addresses.read_only_view;
@@ -802,7 +802,7 @@ public class Trf.Persona : Folks.Persona,
           return;
         }
 
-      var postal_addresses = new HashSet<PostalAddressFieldDetails> (
+      var postal_addresses = new SmallSet<PostalAddressFieldDetails> (
           AbstractFieldDetails<PostalAddress>.hash_static,
           AbstractFieldDetails<PostalAddress>.equal_static);
 
@@ -982,7 +982,7 @@ public class Trf.Persona : Folks.Persona,
           return;
         }
 
-      HashSet<RoleFieldDetails> role_fds = new HashSet<RoleFieldDetails> (
+      SmallSet<RoleFieldDetails> role_fds = new SmallSet<RoleFieldDetails> (
           AbstractFieldDetails<Role>.hash_static,
           AbstractFieldDetails<Role>.equal_static);
 
@@ -1219,7 +1219,7 @@ public class Trf.Persona : Folks.Persona,
           return;
         }
 
-      var phones = new HashSet<PhoneFieldDetails> (
+      var phones = new SmallSet<PhoneFieldDetails> (
           AbstractFieldDetails<string>.hash_static,
           AbstractFieldDetails<string>.equal_static);
       string[] phones_a = phones_field.split ("\n");
@@ -1345,7 +1345,7 @@ public class Trf.Persona : Folks.Persona,
           return;
         }
 
-      var email_addresses = new HashSet<EmailFieldDetails> (
+      var email_addresses = new SmallSet<EmailFieldDetails> (
           AbstractFieldDetails<string>.hash_static,
           AbstractFieldDetails<string>.equal_static);
       string[] emails_a = emails_field.split (",");
@@ -1370,7 +1370,7 @@ public class Trf.Persona : Folks.Persona,
 
   private void _update_urls ()
     {
-      var url_fds = new HashSet<UrlFieldDetails> (
+      var url_fds = new SmallSet<UrlFieldDetails> (
           AbstractFieldDetails<string>.hash_static,
           AbstractFieldDetails<string>.equal_static);
       var _urls_field = this._cursor.get_string (Trf.Fields.URLS).dup ();

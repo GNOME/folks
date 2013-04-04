@@ -25,6 +25,7 @@ libfolks_tracker_la_VALAFLAGS = \
 	--vapidir=. \
 	--vapidir=$(top_srcdir)/folks \
 	--pkg folks \
+	--pkg folks-generics \
 	--pkg folks-internal \
 	--pkg gobject-2.0 \
 	--pkg gio-2.0 \

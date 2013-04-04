@@ -47,6 +47,7 @@ libfolks_eds_la_VALAFLAGS = \
 	--vapidir=. \
 	--vapidir=$(top_srcdir)/folks \
 	--pkg folks \
+	--pkg folks-generics \
 	--pkg folks-internal \
 	--pkg gee-0.8 \
 	--pkg gio-2.0 \

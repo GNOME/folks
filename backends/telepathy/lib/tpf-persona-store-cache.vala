@@ -287,7 +287,7 @@ internal class Tpf.PersonaStoreCache : Folks.ObjectCache<Tpf.Persona>
       var avatar_variant = variant.get_child_value (9).get_maybe ();
 
       // Deserialise the groups
-      var group_set = new HashSet<string> ();
+      var group_set = new SmallSet<string> ();
       for (uint i = 0; i < groups.n_children (); i++)
         {
           group_set.add (groups.get_child_value (i).get_string ());
@@ -316,13 +316,13 @@ internal class Tpf.PersonaStoreCache : Folks.ObjectCache<Tpf.Persona>
           full_name = variant.get_child_value (11).get_string();
         }
 
-      var email_address_set = new HashSet<EmailFieldDetails> (
+      var email_address_set = new SmallSet<EmailFieldDetails> (
           AbstractFieldDetails<string>.hash_static,
           AbstractFieldDetails<string>.equal_static);
-      var phone_number_set = new HashSet<PhoneFieldDetails> (
+      var phone_number_set = new SmallSet<PhoneFieldDetails> (
           AbstractFieldDetails<string>.hash_static,
           AbstractFieldDetails<string>.equal_static);
-      var url_set = new HashSet<UrlFieldDetails> (
+      var url_set = new SmallSet<UrlFieldDetails> (
           AbstractFieldDetails<string>.hash_static,
           AbstractFieldDetails<string>.equal_static);
 

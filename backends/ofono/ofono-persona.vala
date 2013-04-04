@@ -39,9 +39,9 @@ public class Folks.Backends.Ofono.Persona : Folks.Persona,
   private StructuredName? _structured_name = null;
   private string _full_name = "";
   private string _nickname = "";
-  private HashSet<PhoneFieldDetails> _phone_numbers;
+  private SmallSet<PhoneFieldDetails> _phone_numbers;
   private Set<PhoneFieldDetails> _phone_numbers_ro;
-  private HashSet<EmailFieldDetails> _email_addresses;
+  private SmallSet<EmailFieldDetails> _email_addresses;
   private Set<EmailFieldDetails> _email_addresses_ro;
   
   private const string[] _linkable_properties =
@@ -145,10 +145,10 @@ public class Folks.Backends.Ofono.Persona : Folks.Persona,
       debug ("Adding Ofono Persona '%s' (IID '%s', group '%s')", this.uid,
           this.iid, this.display_id);
       
-      this._phone_numbers = new HashSet<PhoneFieldDetails> ();
+      this._phone_numbers = new SmallSet<PhoneFieldDetails> ();
       this._phone_numbers_ro = this._phone_numbers.read_only_view;
 
-      this._email_addresses = new HashSet<EmailFieldDetails> ();
+      this._email_addresses = new SmallSet<EmailFieldDetails> ();
       this._email_addresses_ro = this._email_addresses.read_only_view;
     }
 

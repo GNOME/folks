@@ -346,7 +346,7 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
           yield this.save_key_file ();
 
           /* Signal the removal of the Persona */
-          var personas = new HashSet<Folks.Persona> ();
+          var personas = new SmallSet<Folks.Persona> ();
           personas.add (persona);
 
           this._emit_personas_changed (null, personas);
@@ -423,7 +423,7 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
         }
 
       /* FIXME: GroupDetails.ChangeReason is not the right enum to use here */
-      var personas = new HashSet<Persona> ();
+      var personas = new SmallSet<Persona> ();
       personas.add (persona);
 
       this._emit_personas_changed (personas, null);
