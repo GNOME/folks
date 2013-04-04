@@ -16,8 +16,11 @@ VAPIGENFLAGS += \
 
 noinst_LTLIBRARIES = libtp-test-contactlist.la
 
-libtp_test_contactlist_la_SOURCES = \
+nodist_libtp_test_contactlist_la_SOURCES = \
         _gen/param-spec-struct.h \
+	$(NULL)
+
+libtp_test_contactlist_la_SOURCES = \
         backend.c \
         backend.h \
         contact-list-manager.c \
