@@ -24,7 +24,7 @@ tracker_cleanup () {
 }
 
 tracker_start () {
-    tracker-control -rs > /dev/null 2>&1
+    tracker-control -r > /dev/null 2>&1
 }
 
 tracker_stop () {
