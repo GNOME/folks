@@ -24,6 +24,11 @@ dbus_config_file=""
 # verbose: 0 for off and 1 for on
 #
 dbus_init () {
+    unset DBUS_SESSION_BUS_ADDRESS
+    unset DBUS_SESSION_BUS_PID
+    unset DBUS_STARTER_ADDRESS
+    unset DBUS_STARTER_BUS_TYPE
+
     exec 5> $dbus_me-$$.address
     exec 6> $dbus_me-$$.pid
     dbus_verbose=$1

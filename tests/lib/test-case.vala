@@ -45,6 +45,12 @@ public abstract class Folks.TestCase : Object
        * and if not it's pointless: all we need is the local filesystem. */
       Environment.set_variable ("GIO_USE_VFS", "local", true);
 
+      /* If run from gnome-terminal 3.8 or a similar activatable service,
+       * forget the "starter bus" in favour of DBUS_SESSION_BUS_ADDRESS.
+       * FIXME: GTestDBus should do this for us (GNOME #697348). */
+      Environment.unset_variable ("DBUS_STARTER_ADDRESS");
+      Environment.unset_variable ("DBUS_STARTER_BUS_TYPE");
+
       LogAdaptor.set_up ();
       this._suite = new GLib.TestSuite (name);
 
@@ -207,10 +213,15 @@ public abstract class Folks.TestCase : Object
    */
   public virtual void private_bus_up ()
     {
+      Environment.unset_variable ("DBUS_SESSION_BUS_ADDRESS");
+      Environment.unset_variable ("DBUS_SESSION_BUS_PID");
+
       this.test_dbus = new GLib.TestDBus (GLib.TestDBusFlags.NONE);
       var test_dbus = (!) this.test_dbus;
 
       test_dbus.up ();
+
+      assert (Environment.get_variable ("DBUS_SESSION_BUS_ADDRESS") != null);
 
       /* Tell subprocesses that we're running in a private D-Bus
        * session, so certain operations that would otherwise be dangerous
