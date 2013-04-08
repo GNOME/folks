@@ -40,7 +40,7 @@ libtp_test_contactlist_la_SOURCES = \
 	$(NULL)
 
 libtp_test_contactlist_la_CFLAGS = \
-	$(ERROR_CFLAGS) \
+	$(C_ERROR_CFLAGS) \
 	$(TP_GLIB_CFLAGS) \
 	$(DBUS_GLIB_CFLAGS) \
 	$(NULL)

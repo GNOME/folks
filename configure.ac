@@ -436,7 +436,12 @@ IT_PROG_INTLTOOL([0.50.0])
 # but we need it for dbus-glib. Porting to GDBus will solve this (#653198)
 AC_DEFINE(GLIB_DISABLE_DEPRECATION_WARNINGS, 1, [Build with GLib deprecated])
 
-AS_COMPILER_FLAG([-Wall], [ERROR_CFLAGS="-Wall"], [ERROR_CFLAGS=""])
+# C_ERROR_CFLAGS are only used for C code from telepathy-glib for now,
+# while ERROR_CFLAGS are used for everything.
+
+ERROR_CFLAGS=
+
+AS_COMPILER_FLAG([-Wall], [C_ERROR_CFLAGS="-Wall"], [C_ERROR_CFLAGS=""])
 AS_COMPILER_FLAG([-Werror], [werror=yes], [werror=no])
 
 AC_ARG_ENABLE([debug],
@@ -484,7 +489,7 @@ m4_if(folks_released, [1], [],
             -a x$winit_self = xyes -a x$wformat = xyes -a \
             x$wmissing_include_dirs = xyes -a x$waggregate_return = xyes -a \
             x$wdeclaration_after_statement = xyes; then
-            ERROR_CFLAGS="$ERROR_CFLAGS -Wextra \
+            C_ERROR_CFLAGS="$C_ERROR_CFLAGS -Wextra \
                 -Wno-missing-field-initializers \
                 -Wno-unused-parameter ${flag}strict-prototypes \
                 ${flag}missing-prototypes ${flag}implicit-function-declaration \
@@ -494,17 +499,18 @@ m4_if(folks_released, [1], [],
         fi
     ])
 
-AS_COMPILER_FLAG([-D_POSIX_SOURCE], [ERROR_CFLAGS="$ERROR_CFLAGS -D_POSIX_SOURCE"])
-AS_COMPILER_FLAG([-std=c99], [ERROR_CFLAGS="$ERROR_CFLAGS -std=c99"])
-AS_COMPILER_FLAG([-Wshadow], [ERROR_CFLAGS="$ERROR_CFLAGS -Wshadow"])
-AS_COMPILER_FLAG([-Wmissing-prototypes], [ERROR_CFLAGS="$ERROR_CFLAGS \
+AS_COMPILER_FLAG([-D_POSIX_SOURCE], [C_ERROR_CFLAGS="$C_ERROR_CFLAGS -D_POSIX_SOURCE"])
+AS_COMPILER_FLAG([-std=c99], [C_ERROR_CFLAGS="$C_ERROR_CFLAGS -std=c99"])
+AS_COMPILER_FLAG([-Wshadow], [C_ERROR_CFLAGS="$C_ERROR_CFLAGS -Wshadow"])
+AS_COMPILER_FLAG([-Wmissing-prototypes], [C_ERROR_CFLAGS="$C_ERROR_CFLAGS \
                                           -Wmissing-prototypes"])
-AS_COMPILER_FLAG([-Wmissing-declarations], [ERROR_CFLAGS="$ERROR_CFLAGS \
+AS_COMPILER_FLAG([-Wmissing-declarations], [C_ERROR_CFLAGS="$C_ERROR_CFLAGS \
                                             -Wmissing-declarations"])
-AS_COMPILER_FLAG([-Wstrict-prototypes], [ERROR_CFLAGS="$ERROR_CFLAGS \
+AS_COMPILER_FLAG([-Wstrict-prototypes], [C_ERROR_CFLAGS="$C_ERROR_CFLAGS \
                                          -Wstrict-prototypes"])
 
 AC_SUBST([ERROR_CFLAGS])
+AC_SUBST([C_ERROR_CFLAGS])
 
 # -----------------------------------------------------------
 # Code coverage flags
