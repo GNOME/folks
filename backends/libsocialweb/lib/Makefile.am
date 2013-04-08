@@ -61,6 +61,8 @@ folks_backend_libsocialweb_deps = \
 	$(NULL)
 
 libfolks_libsocialweb_la_CFLAGS = \
+	$(AM_CFLAGS) \
+	$(ERROR_CFLAGS) \
 	$(GIO_CFLAGS) \
 	$(CODE_COVERAGE_CFLAGS) \
 	$(GLIB_CFLAGS) \

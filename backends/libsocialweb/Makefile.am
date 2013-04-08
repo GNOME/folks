@@ -41,6 +41,7 @@ libsocialweb_la_CPPFLAGS = \
 
 libsocialweb_la_CFLAGS = \
 	$(AM_CFLAGS) \
+	$(ERROR_CFLAGS) \
 	$(CODE_COVERAGE_CFLAGS) \
 	$(GIO_CFLAGS) \
 	$(GLIB_CFLAGS) \

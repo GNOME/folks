@@ -32,6 +32,7 @@ tp_lowlevel_headers = tp-lowlevel.h
 
 libtp_lowlevel_la_CFLAGS = \
 	$(AM_CFLAGS) \
+	$(ERROR_CFLAGS) \
 	$(CODE_COVERAGE_CFLAGS) \
 	$(C_ERROR_CFLAGS) \
 	$(GIO_CFLAGS) \

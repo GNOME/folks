@@ -22,6 +22,8 @@ libkf_test_la_SOURCES = \
 libkf_test_la_CFLAGS = \
 	-I$(top_srcdir) \
 	-I$(top_srcdir)/tests/lib \
+	$(AM_CFLAGS) \
+	$(ERROR_CFLAGS) \
 	$(GLIB_CFLAGS) \
 	$(GEE_CFLAGS) \
 	$(NULL)

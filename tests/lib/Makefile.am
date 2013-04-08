@@ -45,6 +45,7 @@ libfolks_test_la_SOURCES = \
 
 libfolks_test_la_CFLAGS = \
 	$(AM_CFLAGS) \
+	$(ERROR_CFLAGS) \
 	$(GLIB_CFLAGS) \
 	$(GIO_CFLAGS) \
 	$(GEE_CFLAGS) \

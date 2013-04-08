@@ -44,6 +44,7 @@ telepathy_la_CPPFLAGS = \
 
 telepathy_la_CFLAGS = \
 	$(AM_CFLAGS) \
+	$(ERROR_CFLAGS) \
 	$(CODE_COVERAGE_CFLAGS) \
 	$(GIO_CFLAGS) \
 	$(GLIB_CFLAGS) \

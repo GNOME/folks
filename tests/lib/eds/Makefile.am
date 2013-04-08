@@ -28,6 +28,8 @@ libeds_test_la_SOURCES = \
 	$(NULL)
 
 libeds_test_la_CFLAGS = \
+	$(AM_CFLAGS) \
+	$(ERROR_CFLAGS) \
 	$(GLIB_CFLAGS) \
 	$(GEE_CFLAGS) \
 	$(EBOOK_CFLAGS) \

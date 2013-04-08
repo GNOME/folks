@@ -55,6 +55,7 @@ libfolks_tracker_la_CPPFLAGS = \
 
 libfolks_tracker_la_CFLAGS = \
 	$(AM_CFLAGS) \
+	$(ERROR_CFLAGS) \
 	$(CODE_COVERAGE_CFLAGS) \
 	$(GIO_CFLAGS) \
 	$(GLIB_CFLAGS) \

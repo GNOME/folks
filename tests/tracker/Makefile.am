@@ -1,3 +1,7 @@
+AM_CFLAGS = \
+	$(ERROR_CFLAGS) \
+	$(NULL)
+
 AM_CPPFLAGS = \
 	$(GLIB_CFLAGS) \
 	$(GEE_CFLAGS) \

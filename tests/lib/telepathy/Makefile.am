@@ -29,6 +29,8 @@ libtpf_test_la_SOURCES = \
 	$(NULL)
 
 libtpf_test_la_CFLAGS = \
+	$(AM_CFLAGS) \
+	$(ERROR_CFLAGS) \
 	-I$(top_srcdir) \
 	-I$(top_srcdir)/tests/lib \
 	-I$(top_srcdir)/tests/lib/key-file \

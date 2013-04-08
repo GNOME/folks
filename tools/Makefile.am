@@ -31,6 +31,7 @@ folks_import_CPPFLAGS = \
 	$(NULL)
 folks_import_CFLAGS = \
 	$(AM_CFLAGS) \
+	$(ERROR_CFLAGS) \
 	$(GIO_CFLAGS) \
 	$(GLIB_CFLAGS) \
 	$(GEE_CFLAGS) \

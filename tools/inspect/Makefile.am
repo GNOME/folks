@@ -44,6 +44,7 @@ folks_inspect_CPPFLAGS = \
 	$(NULL)
 folks_inspect_CFLAGS = \
 	$(AM_CFLAGS) \
+	$(ERROR_CFLAGS) \
 	$(GIO_CFLAGS) \
 	$(GLIB_CFLAGS) \
 	$(GEE_CFLAGS) \

@@ -25,6 +25,8 @@ libsocialweb_test_la_SOURCES = \
 	$(NULL)
 
 libsocialweb_test_la_CFLAGS = \
+	$(AM_CFLAGS) \
+	$(ERROR_CFLAGS) \
 	$(GLIB_CFLAGS) \
 	$(GIO_CFLAGS) \
 	$(GEE_CFLAGS) \

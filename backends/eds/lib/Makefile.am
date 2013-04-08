@@ -63,6 +63,7 @@ libfolks_eds_la_VALAFLAGS = \
 
 libfolks_eds_la_CFLAGS = \
 	$(AM_CFLAGS) \
+	$(ERROR_CFLAGS) \
 	$(CODE_COVERAGE_CFLAGS) \
 	$(GIO_CFLAGS) \
 	$(GLIB_CFLAGS) \

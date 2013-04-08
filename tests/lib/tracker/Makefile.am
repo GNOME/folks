@@ -25,6 +25,8 @@ libtracker_test_la_SOURCES = \
 	$(NULL)
 
 libtracker_test_la_CFLAGS = \
+	$(AM_CFLAGS) \
+	$(ERROR_CFLAGS) \
 	$(GLIB_CFLAGS) \
 	$(GEE_CFLAGS) \
 	$(TRACKER_SPARQL_CFLAGS) \
