@@ -441,6 +441,32 @@ AC_DEFINE(GLIB_DISABLE_DEPRECATION_WARNINGS, 1, [Build with GLib deprecated])
 
 ERROR_CFLAGS=
 
+AC_ARG_ENABLE([fatal-warnings],
+              AS_HELP_STRING([--disable-fatal-warnings],
+                             [Make various warnings non-fatal]),
+              [enable_fatal_warnings=$enableval], [enable_fatal_warnings=yes])
+
+AC_DEFUN([FOLKS_ADD_WARNING],
+  [
+    AS_COMPILER_FLAG([-Werror=$2],
+      [
+        AS_IF([test "x$enable_fatal_warnings" = xyes],
+          [$1="[$]$1 -Werror=$2"],
+	  [$1="[$]$1 -W$2"])
+      ])
+  ])
+
+# It isn't 1970 any more. Require that we write proper ISO C with declarations,
+# avoiding hard-to-trace bugs on platforms where sizeof(int) != sizeof(void *).
+FOLKS_ADD_WARNING([ERROR_CFLAGS], [implicit])
+FOLKS_ADD_WARNING([ERROR_CFLAGS], [missing-declarations])
+FOLKS_ADD_WARNING([ERROR_CFLAGS], [missing-parameter-type])
+FOLKS_ADD_WARNING([ERROR_CFLAGS], [missing-prototypes])
+FOLKS_ADD_WARNING([ERROR_CFLAGS], [nested-externs])
+FOLKS_ADD_WARNING([ERROR_CFLAGS], [old-style-declaration])
+FOLKS_ADD_WARNING([ERROR_CFLAGS], [old-style-definition])
+FOLKS_ADD_WARNING([ERROR_CFLAGS], [strict-prototypes])
+
 AS_COMPILER_FLAG([-Wall], [C_ERROR_CFLAGS="-Wall"], [C_ERROR_CFLAGS=""])
 AS_COMPILER_FLAG([-Werror], [werror=yes], [werror=no])
 
@@ -536,10 +562,6 @@ AC_SUBST([CODE_COVERAGE_CFLAGS])
 AC_SUBST([CODE_COVERAGE_LDFLAGS])
 
 # Vala-related flags
-AC_ARG_ENABLE([fatal-warnings],
-              AS_HELP_STRING([--disable-fatal-warnings],
-                             [Make warnings from valac and g-ir-scanner non-fatal]),
-              [enable_fatal_warnings=$enableval], [enable_fatal_warnings=yes])
 AS_IF([test "x$enable_vala" = "xyes" && test "x$enable_fatal_warnings" = "xyes"],
       [ERROR_INTROSPECTION_SCANNER_ARGS="\
                         $ERROR_INTROSPECTION_SCANNER_ARGS --warn-error"
