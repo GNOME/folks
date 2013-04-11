@@ -95,8 +95,8 @@ public class Tpf.PersonaStore : Folks.PersonaStore
   private bool _cache_needs_update = false;
 
   /* marshalled from ContactInfo.SupportedFields */
-  internal SmallSet<string> _supported_fields;
-  internal Set<string> _supported_fields_ro;
+  private SmallSet<string> _supported_fields;
+  private Set<string> _supported_fields_ro;
 
   private Account _account;
 
