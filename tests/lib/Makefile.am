@@ -85,6 +85,7 @@ libfolks_test_la_VALAFLAGS = \
 	--pkg build-conf \
 	--library folks-test \
 	-H folks-test.h \
+	-h folks-test-internal.h \
 	-g \
 	$(NULL)
 

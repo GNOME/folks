@@ -8,7 +8,7 @@
  * notice and this notice are preserved.
  */
 
-#include "folks-test.h"
+#include "folks-test-internal.h"
 
 #include <glib/gstdio.h>
 

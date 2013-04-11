@@ -20,7 +20,7 @@
  *     Simon McVittie <simon.mcvittie@collabora.co.uk>
  */
 
-#include "folks-test.h"
+#include "folks-test-internal.h"
 
 #include <glib.h>
 #include <glib-object.h>

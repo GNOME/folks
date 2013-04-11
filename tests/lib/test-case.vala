@@ -241,7 +241,7 @@ public abstract class Folks.TestCase : Object
     }
 
   /* implemented in test-case-helper.c */
-  private extern GLib.TestCase add_test_helper (string name, TestMethod test);
+  internal extern GLib.TestCase add_test_helper (string name, TestMethod test);
 
   /**
    * Set up for one test. If you have more than one test, this will
