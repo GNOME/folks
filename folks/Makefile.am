@@ -169,6 +169,7 @@ pkgconfig_DATA = $(pkgconfig_in:.in=)
 EXTRA_DIST = \
 	$(pkgconfig_in) \
 	build-conf.vapi \
+	redeclare-internal-api.h \
 	$(NULL)
 
 BUILT_SOURCES = \

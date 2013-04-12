@@ -758,6 +758,10 @@ public abstract class Folks.PersonaStore : Object
    */
   public bool is_primary_store { get; internal set; default = false; }
 
+  /* The setter folks_persona_store_set_is_user_set_default() is redeclared
+   * in folks/redeclare-internal-api.h so that libfolks-eds can use it.
+   * If you alter this property, check the generated C and update that
+   * header if necessary. https://bugzilla.gnome.org/show_bug.cgi?id=697354 */
   /**
    * Whether this {@link PersonaStore} has been marked as the default
    * store (in its backend) by the user. I.e.: a PersonaStore for the e-d-s
