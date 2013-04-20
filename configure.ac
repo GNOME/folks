@@ -128,6 +128,12 @@ AS_IF([test "x$enable_telepathy_backend" = "xyes"], [
 
 AM_CONDITIONAL([ENABLE_TELEPATHY], [test "x$enable_telepathy_backend" = "xyes"])
 
+AC_ARG_ENABLE(zeitgeist,
+        AC_HELP_STRING([--enable-zeitgeist],
+                       [ build Zeitgeist support in the Telepathy backend]),
+        enable_zeitgeist=$enableval,
+        enable_zeitgeist=auto)
+
 # Automatically check the dependencies for the libsocialweb backend
 SW_CLIENT_REQUIRED=0.25.20
 AC_ARG_ENABLE(libsocialweb-backend,
@@ -195,10 +201,29 @@ PKG_CHECK_MODULES([DBUS_GLIB], [dbus-glib-1 dbus-1])
 PKG_CHECK_MODULES([GEE], [gee-0.8 >= $GEE_REQUIRED])
 
 TP_GLIB_REQUIRED=0.19.0
+
 AS_IF([test x$enable_telepathy_backend = xyes], [
-        PKG_CHECK_MODULES([TP_GLIB], [telepathy-glib >= $TP_GLIB_REQUIRED])
-        PKG_CHECK_MODULES([ZEITGEIST], [zeitgeist-1.0 >= $ZEITGEIST_REQUIRED],
-	                   have_zeitgeist="yes",have_zeitgeist="no")])
+        PKG_CHECK_MODULES([TP_GLIB], [telepathy-glib >= $TP_GLIB_REQUIRED])])
+case "x$enable_zeitgeist" in
+  xyes)
+    AS_IF([test x$enable_telepathy_backend = xyes],
+          [PKG_CHECK_MODULES([ZEITGEIST], [zeitgeist-1.0 >= $ZEITGEIST_REQUIRED])]
+          [AC_MSG_ERROR([Zeitgeist backend requires telepathy])])
+    have_zeitgeist=yes
+    ;;
+  xauto)
+    AS_IF([test x$enable_telepathy_backend = xyes],
+          [PKG_CHECK_MODULES([ZEITGEIST], [zeitgeist-1.0 >= $ZEITGEIST_REQUIRED],
+                             have_zeitgeist="yes",have_zeitgeist="no")],
+          [have_zeitgeist=no])
+    ;;
+  xno)
+    have_zeitgeist=no
+    ;;
+  x*)
+    AC_MSG_ERROR([Unknown --enable-zeitgeist argument: $enable_zeitgeist])
+esac
+
 AS_IF([test "x$have_zeitgeist" == "xyes"], [
    ZEITGEIST_VALAFLAGS="-D HAVE_ZEITGEIST"
    AC_SUBST([ZEITGEIST_VALAFLAGS])
