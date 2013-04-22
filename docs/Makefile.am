@@ -93,6 +93,7 @@ folks_doc_deps = \
 	gio-2.0 \
 	gee-0.8 \
 	folks-internal \
+	folks-generics \
 	build-conf \
 	$(NULL)
 valadoc_flags_folks = \
@@ -133,6 +134,7 @@ folks_telepathy_doc_deps = \
 	build-conf \
 	folks \
 	folks-internal \
+	folks-generics \
 	$(NULL)
 valadoc_flags_folks_telepathy = \
 	$(valadoc_flags) \
@@ -196,6 +198,7 @@ folks_eds_doc_deps = \
 	build-conf \
 	folks \
 	folks-internal \
+	folks-generics \
 	$(NULL)
 valadoc_flags_folks_eds = \
 	$(valadoc_flags) \
@@ -266,6 +269,7 @@ folks_libsocialweb_doc_deps = \
 	build-conf \
 	folks \
 	folks-internal \
+	folks-generics \
 	$(NULL)
 valadoc_flags_folks_libsocialweb = \
 	$(valadoc_flags) \
