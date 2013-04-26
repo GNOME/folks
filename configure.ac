@@ -207,8 +207,9 @@ AS_IF([test x$enable_telepathy_backend = xyes], [
 case "x$enable_zeitgeist" in
   xyes)
     AS_IF([test x$enable_telepathy_backend = xyes],
-          [PKG_CHECK_MODULES([ZEITGEIST], [zeitgeist-1.0 >= $ZEITGEIST_REQUIRED])]
-          [AC_MSG_ERROR([Zeitgeist support requires Zeitgeist development package])])
+          [PKG_CHECK_MODULES([ZEITGEIST], [zeitgeist-1.0 >= $ZEITGEIST_REQUIRED], 
+           ,
+           [AC_MSG_ERROR([Zeitgeist support requires Zeitgeist development package])])])
     have_zeitgeist=yes
     ;;
   xauto)
