@@ -251,6 +251,15 @@ public class Tpf.Persona : Folks.Persona,
   public string presence_message { get; set; }
 
   /**
+   * The Persona's client types.
+   *
+   * See {@link Folks.PresenceDetails.client_types}.
+   *
+   * @since UNRELEASED
+   */
+  public string[] client_types { get; set; }
+
+  /**
    * The names of the Persona's linkable properties.
    *
    * See {@link Folks.Persona.linkable_properties}.
@@ -849,9 +858,15 @@ public class Tpf.Persona : Folks.Persona,
         {
           this._contact_notify_presence_status ();
         });
+      contact.notify["client-types"].connect ((s, p) =>
+        {
+          this._contact_notify_client_types ();
+        });
+
       this._contact_notify_presence_message ();
       this._contact_notify_presence_type ();
       this._contact_notify_presence_status ();
+      this._contact_notify_client_types ();
 
       contact.notify["contact-info"].connect ((s, p) =>
         {
@@ -1227,6 +1242,7 @@ public class Tpf.Persona : Folks.Persona,
       this.presence_type = PresenceType.OFFLINE;
       this.presence_message = "";
       this.presence_status = "offline";
+      this.client_types = {};
 
       this._writeable_properties = {};
     }
@@ -1255,6 +1271,13 @@ public class Tpf.Persona : Folks.Persona,
       assert (contact != null); /* should never be called while cached */
       this.presence_type = Tpf.Persona._folks_presence_type_from_tp (
           contact.get_presence_type ());
+    }
+
+  private void _contact_notify_client_types ()
+    {
+      var contact = (Contact?) this._contact.get ();
+      assert (contact != null); /* should never be called while cached */
+      this.client_types = contact.get_client_types ();
     }
 
   private void _contact_notify_presence_status ()

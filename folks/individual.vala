@@ -239,6 +239,13 @@ public class Folks.Individual : Object,
   public string presence_message { get; set; }
 
   /**
+   * {@inheritDoc}
+   *
+   * @since UNRELEASED
+   */
+  public string[] client_types { get; set; }
+
+  /**
    * Whether the Individual is the user.
    *
    * Iff the Individual represents the user – the person who owns the
@@ -1582,6 +1589,7 @@ public class Folks.Individual : Object,
         {
           var presence_message = ""; /* must not be null */
           var presence_status = ""; /* must not be null */
+          string[] client_types = {};
           var presence_type = Folks.PresenceType.UNSET;
 
           if (p != null)
@@ -1589,17 +1597,20 @@ public class Folks.Individual : Object,
               presence_type = ((PresenceDetails) p).presence_type;
               presence_message = ((PresenceDetails) p).presence_message;
               presence_status = ((PresenceDetails) p).presence_status;
+              client_types = ((PresenceDetails) p).client_types;
             }
 
           /* Only notify if any of the values have changed. */
           if (this.presence_type != presence_type ||
               this.presence_message != presence_message ||
-              this.presence_status != presence_status)
+              this.presence_status != presence_status ||
+              this.client_types != client_types)
             {
               this.freeze_notify ();
               this.presence_message = presence_message;
               this.presence_type = presence_type;
               this.presence_status = presence_status;
+              this.client_types = client_types;
               this.thaw_notify ();
             }
         });
@@ -1823,6 +1834,7 @@ public class Folks.Individual : Object,
       persona.notify["alias"].connect (this._notify_alias_cb);
       persona.notify["avatar"].connect (this._notify_avatar_cb);
       persona.notify["presence-message"].connect (this._notify_presence_cb);
+      persona.notify["client-types"].connect (this._notify_presence_cb);
       persona.notify["presence-type"].connect (this._notify_presence_cb);
       persona.notify["im-addresses"].connect (this._notify_im_addresses_cb);
       persona.notify["web-service-addresses"].connect
@@ -1961,6 +1973,7 @@ public class Folks.Individual : Object,
       persona.notify["avatar"].disconnect (this._notify_avatar_cb);
       persona.notify["presence-message"].disconnect (
           this._notify_presence_cb);
+      persona.notify["client-types"].connect (this._notify_presence_cb);
       persona.notify["presence-type"].disconnect (this._notify_presence_cb);
       persona.notify["im-addresses"].disconnect (
           this._notify_im_addresses_cb);

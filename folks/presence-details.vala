@@ -101,6 +101,19 @@ public interface Folks.PresenceDetails : Object
   public abstract string presence_message { get; set; default = ""; }
 
   /**
+   * The contact's client types.
+   *
+   * One can connect to instant messaging networks on a huge variety of devices,
+   * from PCs, to phones to consoles.
+   * The client types are represented in strings, using the values
+   * [[http://xmpp.org/registrar/disco-categories.html#client|documented by the
+   * XMPP registrar]]
+   *
+   * @since UNRELEASED
+   */
+  public abstract string[] client_types { get; set; }
+
+  /**
    * The contact's detailed presence status.
    *
    * This is a more detailed representation of the contact's presence than
