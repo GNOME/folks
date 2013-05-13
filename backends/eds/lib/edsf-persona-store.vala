@@ -757,7 +757,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
                   this._source_registry_changed_cb);
 
               /* Connect to the address book. */
-              this._addressbook = new E.BookClient (this.source);
+              this._addressbook = yield E.BookClient.connect (this.source, null);
 
               ((!) this._addressbook).notify["readonly"].connect (
                   this._address_book_notify_read_only_cb);

@@ -23,7 +23,7 @@ Bugs fixed:
 • Bug 696179 - folks-inspect, folks-import do not attempt to use translations
 • Bug 682903 (partially) - Use gee's MultiMap iterators
 • Bug 694385 - eds: non-blocking change processing
-
+• Bug 700253 - EDS backend initialization blocks
 
 API changes:
 
