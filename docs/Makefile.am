@@ -1,21 +1,16 @@
 distclean_dirs = \
 	folks \
-	folks-telepathy \
 	gtk-doc \
 	$(NULL)
 
 docs = \
 	folks-doc \
 	folks-gtk-doc \
-	folks-telepathy-doc \
-	folks-telepathy-gtk-doc \
 	$(NULL)
 
 upload_docs = \
 	upload-docs-c-folks \
 	upload-docs-vala-folks \
-	upload-docs-c-folks-telepathy \
-	upload-docs-vala-folks-telepathy \
 	$(NULL)
 
 folks_wiki_pages = \
@@ -28,11 +23,8 @@ EXTRA_DIST = $(folks_wiki_files)
 
 folksdocdir=$(datadir)/devhelp/references/folks
 folksimgdir=$(datadir)/devhelp/references/folks/img
-folkstelepathydocdir=$(datadir)/devhelp/references/folks-telepathy
-folkstelepathyimgdir=$(datadir)/devhelp/references/folks-telepathy/img
 
 folksgtkdocdir=$(datadir)/gtk-doc/html/folks
-folkstelepathygtkdocdir=$(datadir)/gtk-doc/html/folks-telepathy
 
 common_doc_files = \
 	*.css \
@@ -46,25 +38,15 @@ folksdoc_DATA = \
 	folks/folks/folks.devhelp2 \
 	$(addprefix folks/folks/,$(common_doc_files)) \
 	$(NULL)
-folkstelepathydoc_DATA = \
-	folks-telepathy/folks-telepathy/folks-telepathy.devhelp2 \
-	$(addprefix folks-telepathy/folks-telepathy/,$(common_doc_files)) \
-	$(NULL)
 
 folksgtkdoc_DATA = gtk-doc/folks/html/*
-folkstelepathygtkdoc_DATA = gtk-doc/folks-telepathy/html/*
 
 folksimg_DATA = \
 	folks/folks/img/*.png \
 	$(NULL)
-folkstelepathyimg_DATA = \
-	folks-telepathy/folks-telepathy/img/*.png \
-	$(NULL)
 
 $(folksdoc_DATA) $(folksimg_DATA): folks-doc.stamp
-$(folkstelepathydoc_DATA) $(folkstelepathyimg_DATA): folks-telepathy-doc.stamp
 $(folksgtkdoc_DATA): folks-gtk-doc.stamp
-$(folkstelepathygtkdoc_DATA): folks-telepathy-gtk-doc.stamp
 
 valadoc_flags = \
 	--force \
@@ -123,7 +105,29 @@ folks-gtk-doc.stamp: $(folks_doc_files) $(folks_wiki_files)
 		$(NULL)
 	@touch $@
 
-# folks-telepathy documentation
+#####################
+# Telepathy docs #
+#####################
+folkstelepathydocdir=$(datadir)/devhelp/references/folks-telepathy
+folkstelepathyimgdir=$(datadir)/devhelp/references/folks-telepathy/img
+folkstelepathygtkdocdir=$(datadir)/gtk-doc/html/folks-telepathy
+
+folkstelepathydoc_DATA = \
+	folks-telepathy/folks-telepathy/folks-telepathy.devhelp2 \
+	$(addprefix folks-telepathy/folks-telepathy/,$(common_doc_files))\
+	$(NULL)
+
+folkstelepathygtkdoc_DATA = gtk-doc/folks-telepathy/html/*
+
+folkstelepathyimg_DATA = \
+	folks-telepathy/folks-telepathy/img/*.png \
+	$(NULL)
+
+$(folkstelepathydoc_DATA) $(folkstelepathyimg_DATA): \
+	folks-telepathy-doc.stamp \
+	$(NULL)
+$(folkstelepathygtkdoc_DATA): folks-telepathy-gtk-doc.stamp
+
 folks_telepathy_doc_files = $(top_srcdir)/backends/telepathy/lib/*.vala
 folks_telepathy_doc_deps = \
 	gmodule-2.0 \
@@ -164,6 +168,13 @@ folks-telepathy-gtk-doc.stamp: $(folks_telepathy_doc_files)
 		$(valadoc_flags_folks_telepathy) \
 		$(NULL)
 	@touch $@
+
+distclean_dirs += folks-telepathy
+docs += \
+	folks-telepathy-doc \
+	folks-telepathy-gtk-doc \
+	$(NULL)
+upload_docs += upload-docs-c-folks-telepathy upload-docs-vala-folks-telepathy
 
 #####################
 # EDS docs #
