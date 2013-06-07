@@ -245,7 +245,7 @@ public class Folks.Backends.Ofono.Backend : Folks.Backend
    * Utility function to extract a modem's alias from its properties.
    *
    * @param properties, the properties of the modem.
-   * @returns the alias to use for this modem.
+   * @return the alias to use for this modem.
    */
   private string _modem_alias (HashTable<string, Variant> properties)
     {
