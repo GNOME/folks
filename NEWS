@@ -5,7 +5,6 @@ Dependencies:
 • libebook-1.2 ≥ 3.8.1
 • libebook-contacts-1.2 ≥ 3.8.1
 
-
 Major changes:
 
 • folks-import and folks-inspect now look for translated strings in
