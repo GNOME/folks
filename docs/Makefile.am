@@ -108,73 +108,74 @@ folks-gtk-doc.stamp: $(folks_doc_files) $(folks_wiki_files)
 #####################
 # Telepathy docs #
 #####################
-folkstelepathydocdir=$(datadir)/devhelp/references/folks-telepathy
-folkstelepathyimgdir=$(datadir)/devhelp/references/folks-telepathy/img
-folkstelepathygtkdocdir=$(datadir)/gtk-doc/html/folks-telepathy
-
-folkstelepathydoc_DATA = \
-	folks-telepathy/folks-telepathy/folks-telepathy.devhelp2 \
-	$(addprefix folks-telepathy/folks-telepathy/,$(common_doc_files))\
-	$(NULL)
-
-folkstelepathygtkdoc_DATA = gtk-doc/folks-telepathy/html/*
-
-folkstelepathyimg_DATA = \
-	folks-telepathy/folks-telepathy/img/*.png \
-	$(NULL)
-
-$(folkstelepathydoc_DATA) $(folkstelepathyimg_DATA): \
-	folks-telepathy-doc.stamp \
-	$(NULL)
-$(folkstelepathygtkdoc_DATA): folks-telepathy-gtk-doc.stamp
-
-folks_telepathy_doc_files = $(top_srcdir)/backends/telepathy/lib/*.vala
-folks_telepathy_doc_deps = \
-	gmodule-2.0 \
-	gio-2.0 \
-	gee-0.8 \
-	telepathy-glib \
-	zeitgeist-1.0 \
-	tp-lowlevel \
-	build-conf \
-	folks \
-	folks-internal \
-	folks-generics \
-	$(NULL)
-valadoc_flags_folks_telepathy = \
-	$(valadoc_flags) \
-	-X $(top_srcdir)/backends/telepathy/lib/folks/folks-telepathy.h \
-	$(addprefix --pkg=,$(folks_telepathy_doc_deps)) \
-	--vapidir=$(top_srcdir)/folks \
-	--vapidir=$(top_srcdir)/backends/telepathy/lib \
-	$(folks_telepathy_doc_files) \
-	$(NULL)
-
-folks-telepathy-doc.stamp: $(folks_telepathy_doc_files)
-	$(AM_V_GEN)$(VALADOC) \
-		-o folks-telepathy/ \
-		--doclet=devhelp \
-		$(valadoc_flags_folks_telepathy) \
-		$(NULL)
-	@touch $@
-
-folks-telepathy-gtk-doc.stamp: $(folks_telepathy_doc_files)
-	$(AM_V_GEN)$(VALADOC) \
-		-X -l -X $(top_builddir)/folks/.libs/libfolks.so \
-		-X -l -X $(top_builddir)/backends/telepathy/lib/.libs/libfolks-telepathy.so \
-		-X --ignore-headers -X $(top_srcdir)/backends/telepathy/lib/tp-lowlevel.h \
-		-o gtk-doc/folks-telepathy \
-		--doclet=gtkdoc \
-		$(valadoc_flags_folks_telepathy) \
-		$(NULL)
-	@touch $@
-
-distclean_dirs += folks-telepathy
-docs += \
-	folks-telepathy-doc \
-	folks-telepathy-gtk-doc \
-	$(NULL)
-upload_docs += upload-docs-c-folks-telepathy upload-docs-vala-folks-telepathy
+# FIXME: temporarily disabled because valadoc crashes here on some systems
+#folkstelepathydocdir=$(datadir)/devhelp/references/folks-telepathy
+#folkstelepathyimgdir=$(datadir)/devhelp/references/folks-telepathy/img
+#folkstelepathygtkdocdir=$(datadir)/gtk-doc/html/folks-telepathy
+#
+#folkstelepathydoc_DATA = \
+#	folks-telepathy/folks-telepathy/folks-telepathy.devhelp2 \
+#	$(addprefix folks-telepathy/folks-telepathy/,$(common_doc_files))\
+#	$(NULL)
+#
+#folkstelepathygtkdoc_DATA = gtk-doc/folks-telepathy/html/*
+#
+#folkstelepathyimg_DATA = \
+#	folks-telepathy/folks-telepathy/img/*.png \
+#	$(NULL)
+#
+#$(folkstelepathydoc_DATA) $(folkstelepathyimg_DATA): \
+#	folks-telepathy-doc.stamp \
+#	$(NULL)
+#$(folkstelepathygtkdoc_DATA): folks-telepathy-gtk-doc.stamp
+#
+#folks_telepathy_doc_files = $(top_srcdir)/backends/telepathy/lib/*.vala
+#folks_telepathy_doc_deps = \
+#	gmodule-2.0 \
+#	gio-2.0 \
+#	gee-0.8 \
+#	telepathy-glib \
+#	zeitgeist-1.0 \
+#	tp-lowlevel \
+#	build-conf \
+#	folks \
+#	folks-internal \
+#	folks-generics \
+#	$(NULL)
+#valadoc_flags_folks_telepathy = \
+#	$(valadoc_flags) \
+#	-X $(top_srcdir)/backends/telepathy/lib/folks/folks-telepathy.h \
+#	$(addprefix --pkg=,$(folks_telepathy_doc_deps)) \
+#	--vapidir=$(top_srcdir)/folks \
+#	--vapidir=$(top_srcdir)/backends/telepathy/lib \
+#	$(folks_telepathy_doc_files) \
+#	$(NULL)
+#
+#folks-telepathy-doc.stamp: $(folks_telepathy_doc_files)
+#	$(AM_V_GEN)$(VALADOC) \
+#		-o folks-telepathy/ \
+#		--doclet=devhelp \
+#		$(valadoc_flags_folks_telepathy) \
+#		$(NULL)
+#	@touch $@
+#
+#folks-telepathy-gtk-doc.stamp: $(folks_telepathy_doc_files)
+#	$(AM_V_GEN)$(VALADOC) \
+#		-X -l -X $(top_builddir)/folks/.libs/libfolks.so \
+#		-X -l -X $(top_builddir)/backends/telepathy/lib/.libs/libfolks-telepathy.so \
+#		-X --ignore-headers -X $(top_srcdir)/backends/telepathy/lib/tp-lowlevel.h \
+#		-o gtk-doc/folks-telepathy \
+#		--doclet=gtkdoc \
+#		$(valadoc_flags_folks_telepathy) \
+#		$(NULL)
+#	@touch $@
+#
+#distclean_dirs += folks-telepathy
+#docs += \
+#	folks-telepathy-doc \
+#	folks-telepathy-gtk-doc \
+#	$(NULL)
+#upload_docs += upload-docs-c-folks-telepathy upload-docs-vala-folks-telepathy
 
 #####################
 # EDS docs #
