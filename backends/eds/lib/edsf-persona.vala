@@ -230,7 +230,7 @@ public class Edsf.Persona : Folks.Persona,
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.9.2
    */
   [CCode (notify = false)]
   public Location? location
@@ -242,7 +242,7 @@ public class Edsf.Persona : Folks.Persona,
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.9.2
    */
   public async void change_location (Location? location) throws PropertyError
     {

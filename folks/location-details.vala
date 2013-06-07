@@ -26,20 +26,20 @@ using GLib;
  * way of verifying that and just has to assume
  * that.
  *
- * @since UNRELEASED
+ * @since 0.9.2
  */
 public class Folks.Location : Object
 {
   /**
    * The latitude.
    *
-   * @since UNRELEASED
+   * @since 0.9.2
    */
  public double latitude;
   /**
    * The longitude.
    *
-   * @since UNRELEASED
+   * @since 0.9.2
    */
  public double longitude;
 
@@ -47,7 +47,7 @@ public class Folks.Location : Object
    * Constructs a new instance with the given coordinates.
    * @param latitude latitude of the new instance
    * @param longitude longitude of the new instance
-   * @since UNRELEASED
+   * @since 0.9.2
    */
  public Location (double latitude, double longitude)
  {
@@ -60,7 +60,7 @@ public class Folks.Location : Object
    *
    * @param other the instance to compare against
    * @return true iff the coordinates are exactly the same
-   * @since UNRELEASED
+   * @since 0.9.2
    */
  public bool equal (Location other)
  {
@@ -75,7 +75,7 @@ public class Folks.Location : Object
    * @param latitude latitude of the other position
    * @param longitude longitude of the other position
    * @return true iff the coordinates are exactly the same
-   * @since UNRELEASED
+   * @since 0.9.2
    */
   public bool equal_coordinates (double latitude, double longitude)
   {
@@ -101,7 +101,7 @@ public class Folks.Location : Object
  * The folks itself then will apply all changes coming
  * from backends, without further filtering.
  *
- * @since UNRELEASED
+ * @since 0.9.2
  */
 public interface Folks.LocationDetails : Object
 {

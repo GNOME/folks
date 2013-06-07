@@ -208,7 +208,7 @@ public enum Folks.PersonaDetail
   /**
    * Field for {@link LocationDetails.location}.
    *
-   * @since UNRELEASED
+   * @since 0.9.2
    */
   LOCATION,
 
