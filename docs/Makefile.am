@@ -179,75 +179,74 @@ upload_docs += upload-docs-c-folks-telepathy upload-docs-vala-folks-telepathy
 #####################
 # EDS docs #
 #####################
-# FIXME: temporarily disabled because valadoc crashes here on some systems
-#if ENABLE_EDS
-#folksedsdocdir=$(datadir)/devhelp/references/folks-eds
-#folksedsimgdir=$(datadir)/devhelp/references/folks-eds/img
-#folksedsgtkdocdir=$(datadir)/gtk-doc/html/folks-eds
-#
-#folksedsdoc_DATA = \
-#	folks-eds/folks-eds/folks-eds.devhelp2 \
-#	$(addprefix folks-eds/folks-eds/,$(common_doc_files))\
-#	$(NULL)
-#
-#folksedsgtkdoc_DATA = gtk-doc/folks-eds/html/*
-#
-#folksedsimg_DATA = \
-#	folks-eds/folks-eds/img/*.png \
-#	$(NULL)
-#
-#$(folksedsdoc_DATA) $(folksedsimg_DATA): \
-#	folks-eds-doc.stamp \
-#	$(NULL)
-#$(folksedsgtkdoc_DATA): folks-eds-gtk-doc.stamp
-#
-#folks_eds_doc_files = $(top_srcdir)/backends/eds/lib/*.vala
-#folks_eds_doc_deps = \
-#	gmodule-2.0 \
-#	gio-2.0 \
-#	gee-0.8 \
-#	libebook-1.2 \
-#	libedataserver-1.2 \
-#	build-conf \
-#	folks \
-#	folks-internal \
-#	folks-generics \
-#	$(NULL)
-#valadoc_flags_folks_eds = \
-#	$(valadoc_flags) \
-#	-X $(top_srcdir)/backends/eds/lib/folks/folks-eds.h \
-#	$(addprefix --pkg=,$(folks_eds_doc_deps)) \
-#	--vapidir=$(top_srcdir)/folks \
-#	--vapidir=$(top_srcdir)/backends/eds/lib \
-#	$(folks_eds_doc_files) \
-#	$(NULL)
-#
-#folks-eds-doc.stamp: $(folks_eds_doc_files)
-#	$(AM_V_GEN)$(VALADOC) \
-#		-o folks-eds/ \
-#		--doclet=devhelp \
-#		$(valadoc_flags_folks_eds) \
-#		$(NULL)
-#	@touch $@
-#
-#folks-eds-gtk-doc.stamp: $(folks_eds_doc_files)
-#	$(AM_V_GEN)$(VALADOC) \
-#		-X -l -X $(top_builddir)/folks/.libs/libfolks.so \
-#		-X -l -X $(top_builddir)/backends/eds/lib/.libs/libfolks-eds.so \
-#		-o gtk-doc/folks-eds \
-#		--doclet=gtkdoc \
-#		$(valadoc_flags_folks_eds) \
-#		$(NULL)
-#	@touch $@
-#
-#distclean_dirs += folks-eds
-#docs += \
-#	folks-eds-doc \
-#	folks-eds-gtk-doc \
-#	$(NULL)
-#upload_docs += upload-docs-c-folks-eds upload-docs-vala-folks-eds
-#
-#endif # ENABLE_EDS
+if ENABLE_EDS
+folksedsdocdir=$(datadir)/devhelp/references/folks-eds
+folksedsimgdir=$(datadir)/devhelp/references/folks-eds/img
+folksedsgtkdocdir=$(datadir)/gtk-doc/html/folks-eds
+
+folksedsdoc_DATA = \
+	folks-eds/folks-eds/folks-eds.devhelp2 \
+	$(addprefix folks-eds/folks-eds/,$(common_doc_files))\
+	$(NULL)
+
+folksedsgtkdoc_DATA = gtk-doc/folks-eds/html/*
+
+folksedsimg_DATA = \
+	folks-eds/folks-eds/img/*.png \
+	$(NULL)
+
+$(folksedsdoc_DATA) $(folksedsimg_DATA): \
+	folks-eds-doc.stamp \
+	$(NULL)
+$(folksedsgtkdoc_DATA): folks-eds-gtk-doc.stamp
+
+folks_eds_doc_files = $(top_srcdir)/backends/eds/lib/*.vala
+folks_eds_doc_deps = \
+	gmodule-2.0 \
+	gio-2.0 \
+	gee-0.8 \
+	libebook-1.2 \
+	libedataserver-1.2 \
+	build-conf \
+	folks \
+	folks-internal \
+	folks-generics \
+	$(NULL)
+valadoc_flags_folks_eds = \
+	$(valadoc_flags) \
+	-X $(top_srcdir)/backends/eds/lib/folks/folks-eds.h \
+	$(addprefix --pkg=,$(folks_eds_doc_deps)) \
+	--vapidir=$(top_srcdir)/folks \
+	--vapidir=$(top_srcdir)/backends/eds/lib \
+	$(folks_eds_doc_files) \
+	$(NULL)
+
+folks-eds-doc.stamp: $(folks_eds_doc_files)
+	$(AM_V_GEN)$(VALADOC) \
+		-o folks-eds/ \
+		--doclet=devhelp \
+		$(valadoc_flags_folks_eds) \
+		$(NULL)
+	@touch $@
+
+folks-eds-gtk-doc.stamp: $(folks_eds_doc_files)
+	$(AM_V_GEN)$(VALADOC) \
+		-X -l -X $(top_builddir)/folks/.libs/libfolks.so \
+		-X -l -X $(top_builddir)/backends/eds/lib/.libs/libfolks-eds.so \
+		-o gtk-doc/folks-eds \
+		--doclet=gtkdoc \
+		$(valadoc_flags_folks_eds) \
+		$(NULL)
+	@touch $@
+
+distclean_dirs += folks-eds
+docs += \
+	folks-eds-doc \
+	folks-eds-gtk-doc \
+	$(NULL)
+upload_docs += upload-docs-c-folks-eds upload-docs-vala-folks-eds
+
+endif # ENABLE_EDS
 
 #####################
 # libsocialweb docs #
