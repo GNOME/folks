@@ -72,6 +72,7 @@ libfolks_la_SOURCES = \
 	birthday-details.vala \
 	email-details.vala \
 	favourite-details.vala \
+	folks-namespace.vala \
 	gender-details.vala \
 	group-details.vala \
 	web-service-details.vala \

@@ -9,6 +9,7 @@ Major changes:
 Bugs fixed:
 • Bug 683873 - Leak in Zeitgeist code
 • Bug 686715 - Telepathy init test often fails during clean-up
+• Bug 698890 - warning: Folks doesn't set GIR namespace or version annotation
 
 API changes:
 
