@@ -20,6 +20,8 @@ noinst_LTLIBRARIES = libtp-lowlevel.la
 folks_telepathydir = $(libdir)
 folks_telepathy_LTLIBRARIES = libfolks-telepathy.la
 
+dist_noinst_DATA =
+
 ##################################################################
 # Telepathy Lowlevel library
 ##################################################################
@@ -55,41 +57,18 @@ libtp_lowlevel_la_LDFLAGS = \
 	$(TP_GLIB_LIBS) \
 	$(NULL)
 
-DISTCHECK_CONFIGURE_FLAGS = --enable-introspection
-
--include $(INTROSPECTION_MAKEFILE)
-INTROSPECTION_GIRS =
-INTROSPECTION_SCANNER_ARGS = \
-	$(ERROR_INTROSPECTION_SCANNER_ARGS) \
-	--add-include-path=$(srcdir) \
-	--warn-all \
-	$(NULL)
-
-INTROSPECTION_COMPILER_ARGS = --includedir=$(srcdir)
-
-TpLowlevel-0.6.gir: libtp-lowlevel.la
-TpLowlevel_0_6_gir_INCLUDES = GObject-2.0 TelepathyGLib-0.12
-TpLowlevel_0_6_gir_CFLAGS = $(TP_GLIB_CFLAGS)
-TpLowlevel_0_6_gir_LIBS = libtp-lowlevel.la
-TpLowlevel_0_6_gir_FILES = $(libtp_lowlevel_la_SOURCES) $(tp_lowlevel_headers)
-TpLowlevel_0_6_gir_NAMESPACE = TpLowlevel
-TpLowlevel_0_6_gir_SCANNERFLAGS = \
-	--identifier-prefix=FolksTpLowlevel \
-	--c-include="tp-lowlevel.h" \
-	$(NULL)
-TpLowlevel_0_6_gir_VERSION = 0.6
-INTROSPECTION_GIRS += TpLowlevel-0.6.gir
-
 if HAVE_VALA
-tp-lowlevel.vapi: TpLowlevel-0.6.gir
-	$(MAKE) $(AM_MAKEFLAGS) TpLowlevel-0.6.gir
+tp-lowlevel.vapi: TpLowlevel-$(API_VERSION_DOT).gir
+	$(MAKE) $(AM_MAKEFLAGS) TpLowlevel-$(API_VERSION_DOT).gir
 	$(AM_V_GEN)$(VAPIGEN) $(VAPIGENFLAGS) \
 		--library tp-lowlevel \
 		--pkg gio-2.0 \
 		--pkg telepathy-glib \
-		TpLowlevel-0.6.gir
+		TpLowlevel-$(API_VERSION_DOT).gir
 	touch $@
 endif
+
+dist_noinst_DATA += tp-lowlevel.vapi
 
 ##################################################################
 # Support library
@@ -100,15 +79,6 @@ pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = $(pkgconfig_in:.in=)
 
 $(srcdir)/libfolks_telepathy_la_vala.stamp: tp-lowlevel.vapi
-
-dist_noinst_DATA = \
-	TpLowlevel-0.6.gir \
-	tp-lowlevel.vapi \
-	$(NULL)
-
-if NOT_RELEASE
-DISTCLEANFILES = $(dist_noinst_DATA)
-endif
 
 folks_telepathy_valasources = \
 	tpf-persona.vala \
@@ -126,6 +96,7 @@ libfolks_telepathy_la_VALAFLAGS = \
 	$(AM_VALAFLAGS) \
 	$(ERROR_VALAFLAGS) \
 	$(ZEITGEIST_VALAFLAGS) \
+	--library=folks-telepathy \
 	--vapidir=$(abs_srcdir) \
 	--vapidir=$(abs_builddir) \
 	--vapidir=$(abs_top_srcdir)/folks \
@@ -189,6 +160,11 @@ dist_vapi_DATA = \
 # General
 ##################################################################
 
+if NOT_RELEASE
+DISTCLEANFILES = $(dist_noinst_DATA)
+endif
+
+CLEANFILES =
 MAINTAINERCLEANFILES = \
 	$(folks_telepathy_valasources:.vala=.c) \
 	libfolks_telepathy_la_vala.stamp \
@@ -207,5 +183,86 @@ EXTRA_DIST = \
 # this file as Vala-based, so it will try (and fail) to compile the header into
 # a Vala library during distcheck otherwise
 noinst_HEADERS = $(tp_lowlevel_headers)
+
+##################################################################
+# Introspection
+##################################################################
+
+-include $(INTROSPECTION_MAKEFILE)
+INTROSPECTION_GIRS =
+INTROSPECTION_SCANNER_ARGS = \
+        $(ERROR_INTROSPECTION_SCANNER_ARGS) \
+        --add-include-path=$(srcdir) \
+        --add-include-path=$(abs_top_builddir)/folks \
+        --warn-all \
+        $(NULL)
+
+DISTCHECK_CONFIGURE_FLAGS = --enable-introspection
+
+INTROSPECTION_COMPILER_ARGS = \
+        --includedir=$(srcdir) \
+        --includedir=$(abs_top_builddir)/folks \
+        $(NULL)
+
+#------------------------------------
+# TpLowlevel
+#------------------------------------
+TpLowlevel_@API_VERSION_MAJOR@_@API_VERSION_MINOR@_gir_INCLUDES = GObject-2.0 TelepathyGLib-0.12
+TpLowlevel_@API_VERSION_MAJOR@_@API_VERSION_MINOR@_gir_CFLAGS = $(TP_GLIB_CFLAGS)
+TpLowlevel_@API_VERSION_MAJOR@_@API_VERSION_MINOR@_gir_LIBS = libtp-lowlevel.la
+TpLowlevel_@API_VERSION_MAJOR@_@API_VERSION_MINOR@_gir_FILES = $(libtp_lowlevel_la_SOURCES) $(tp_lowlevel_headers)
+TpLowlevel_@API_VERSION_MAJOR@_@API_VERSION_MINOR@_gir_NAMESPACE = TpLowlevel
+TpLowlevel_@API_VERSION_MAJOR@_@API_VERSION_MINOR@_gir_SCANNERFLAGS = \
+        --identifier-prefix=FolksTpLowlevel \
+        --c-include="tp-lowlevel.h" \
+        $(NULL)
+TpLowlevel_@API_VERSION_MAJOR@_@API_VERSION_MINOR@_gir_VERSION = $(API_VERSION_DOT)
+INTROSPECTION_GIRS += TpLowlevel-$(API_VERSION_DOT).gir
+dist_noinst_DATA += TpLowlevel-$(API_VERSION_DOT).gir
+
+#------------------------------------
+# Folks Telepathy
+#------------------------------------
+TPF_GIR = FolksTelepathy-$(API_VERSION_DOT).gir
+$(TPF_GIR): libfolks-telepathy.la
+
+FolksTelepathy_@API_VERSION_MAJOR@_@API_VERSION_MINOR@_gir_CFLAGS = $(TP_GLIB_CFLAGS)
+# Note that we don't actually include TpLowlevel*.gir because we don't want to
+# make it a public dependency
+FolksTelepathy_@API_VERSION_MAJOR@_@API_VERSION_MINOR@_gir_INCLUDES = \
+        Gee-0.8 \
+        Gio-2.0 \
+        Folks-$(API_VERSION_DOT) \
+        TelepathyGLib-0.12 \
+        $(NULL)
+FolksTelepathy_@API_VERSION_MAJOR@_@API_VERSION_MINOR@_gir_LIBS = libfolks-telepathy.la
+FolksTelepathy_@API_VERSION_MAJOR@_@API_VERSION_MINOR@_gir_FILES = \
+        $(libfolks_telepathy_la_SOURCES) \
+        folks/folks-telepathy.h \
+        $(NULL)
+FolksTelepathy_@API_VERSION_MAJOR@_@API_VERSION_MINOR@_gir_NAMESPACE = FolksTelepathy
+FolksTelepathy_@API_VERSION_MAJOR@_@API_VERSION_MINOR@_gir_SCANNERFLAGS = --identifier-prefix=Tpf
+INTROSPECTION_GIRS += $(TPF_GIR)
+
+libfolks_telepathy_la_VALAFLAGS += \
+        --gir=$(TPF_GIR) \
+        --girdir=$(abs_builddir) \
+        $(NULL)
+
+#------------------------------------
+# General
+#------------------------------------
+girdir = $(datadir)/gir-1.0
+dist_gir_DATA = $(INTROSPECTION_GIRS)
+
+typelibdir = $(libdir)/girepository-1.0
+nodist_typelib_DATA = $(dist_gir_DATA:.gir=.typelib)
+
+CLEANFILES += $(nodist_typelib_DATA)
+MAINTAINERCLEANFILES += $(dist_gir_DATA)
+
+##################################################################
+# Common
+##################################################################
 
 -include $(top_srcdir)/git.mk
