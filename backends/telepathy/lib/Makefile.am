@@ -67,24 +67,27 @@ INTROSPECTION_SCANNER_ARGS = \
 
 INTROSPECTION_COMPILER_ARGS = --includedir=$(srcdir)
 
-tp-lowlevel.gir: $(libtp_lowlevel_la_SOURCES) $(tp_lowlevel_headers) \
-	libtp-lowlevel.la
-tp_lowlevel_gir_INCLUDES = GObject-2.0 TelepathyGLib-0.12
-tp_lowlevel_gir_CFLAGS = $(TP_GLIB_CFLAGS)
-tp_lowlevel_gir_LIBS = libtp-lowlevel.la
-tp_lowlevel_gir_FILES = $(libtp_lowlevel_la_SOURCES) $(tp_lowlevel_headers)
-tp_lowlevel_gir_NAMESPACE = TpLowlevel
-tp_lowlevel_gir_SCANNERFLAGS = --identifier-prefix=FolksTpLowlevel
-INTROSPECTION_GIRS += tp-lowlevel.gir
+TpLowlevel-0.6.gir: libtp-lowlevel.la
+TpLowlevel_0_6_gir_INCLUDES = GObject-2.0 TelepathyGLib-0.12
+TpLowlevel_0_6_gir_CFLAGS = $(TP_GLIB_CFLAGS)
+TpLowlevel_0_6_gir_LIBS = libtp-lowlevel.la
+TpLowlevel_0_6_gir_FILES = $(libtp_lowlevel_la_SOURCES) $(tp_lowlevel_headers)
+TpLowlevel_0_6_gir_NAMESPACE = TpLowlevel
+TpLowlevel_0_6_gir_SCANNERFLAGS = \
+	--identifier-prefix=FolksTpLowlevel \
+	--c-include="tp-lowlevel.h" \
+	$(NULL)
+TpLowlevel_0_6_gir_VERSION = 0.6
+INTROSPECTION_GIRS += TpLowlevel-0.6.gir
 
 if HAVE_VALA
-tp-lowlevel.vapi: tp-lowlevel.gir
-	$(MAKE) $(AM_MAKEFLAGS) tp-lowlevel.gir
+tp-lowlevel.vapi: TpLowlevel-0.6.gir
+	$(MAKE) $(AM_MAKEFLAGS) TpLowlevel-0.6.gir
 	$(AM_V_GEN)$(VAPIGEN) $(VAPIGENFLAGS) \
 		--library tp-lowlevel \
 		--pkg gio-2.0 \
 		--pkg telepathy-glib \
-		tp-lowlevel.gir
+		TpLowlevel-0.6.gir
 	touch $@
 endif
 
@@ -99,7 +102,7 @@ pkgconfig_DATA = $(pkgconfig_in:.in=)
 $(srcdir)/libfolks_telepathy_la_vala.stamp: tp-lowlevel.vapi
 
 dist_noinst_DATA = \
-	tp-lowlevel.gir \
+	TpLowlevel-0.6.gir \
 	tp-lowlevel.vapi \
 	$(NULL)
 
