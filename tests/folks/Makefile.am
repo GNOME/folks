@@ -66,6 +66,7 @@ noinst_PROGRAMS = \
 	aggregation \
 	avatar-cache \
 	object-cache \
+	phone-field-details \
 	init \
 	$(NULL)
 
@@ -101,6 +102,10 @@ avatar_cache_SOURCES = \
 
 object_cache_SOURCES = \
 	object-cache.vala \
+	$(NULL)
+
+phone_field_details_SOURCES = \
+	phone-field-details.vala \
 	$(NULL)
 
 init_SOURCES = \

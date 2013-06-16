@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2011 Collabora Ltd.
- * Copyright (C) 2011 Philip Withnall
+ * Copyright (C) 2011, 2013 Philip Withnall
  *
  * This library is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -146,7 +146,8 @@ public class Folks.PhoneFieldDetails : AbstractFieldDetails<string>
           var digit = this.value.slice (i, i + 1);
 
           if (digit in PhoneFieldDetails._extension_chars ||
-              digit in PhoneFieldDetails._valid_digits)
+              digit in PhoneFieldDetails._valid_digits ||
+              (i == 0 && digit == "+"))
             {
               /* lets keep valid digits */
               normalised_number += digit;

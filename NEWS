@@ -20,6 +20,8 @@ Bugs fixed:
 • Bug 704922 — key-file: do not use deprecated loop_run_with_non_fatal_timeout()
 • Bug 705196 — Linking a favorite TP contact with a EDS one unfavorite it
 • Bug 703516 — Build failing with EDS backend
+• Bug 701850 — folks-DEBUG: phone-details.vala:160:
+  [PhoneDetails.get_normalised] unknown digit: +
 
 API changes:
 • Add PresenceDetails.client_types
