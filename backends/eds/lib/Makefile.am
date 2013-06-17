@@ -110,6 +110,7 @@ dist_vapi_DATA = \
 # General
 ##################################################################
 
+CLEANFILES =
 MAINTAINERCLEANFILES = \
 	$(folks_eds_valasources:.vala=.c) \
 	libfolks_eds_la_vala.stamp \
@@ -121,6 +122,65 @@ EXTRA_DIST = \
 	$(pkgconfig_in) \
 	$(MAINTAINERCLEANFILES) \
 	$(NULL)
+
+##################################################################
+# Introspection
+##################################################################
+
+-include $(INTROSPECTION_MAKEFILE)
+INTROSPECTION_SCANNER_ARGS = \
+        $(ERROR_INTROSPECTION_SCANNER_ARGS) \
+        --add-include-path=$(srcdir) \
+        --add-include-path=$(abs_top_builddir)/folks \
+        --warn-all \
+        $(NULL)
+
+INTROSPECTION_COMPILER_ARGS = \
+        --includedir=$(srcdir) \
+        --includedir=$(abs_top_builddir)/folks \
+        $(NULL)
+
+EDSF_GIR = FolksEds-$(API_VERSION_DOT).gir
+$(EDSF_GIR): libfolks-eds.la
+
+FolksEds_@API_VERSION_MAJOR@_@API_VERSION_MINOR@_gir_CFLAGS = \
+        $(EBOOK_CFLAGS) \
+        $(EDATASERVER_CFLAGS) \
+        $(NULL)
+FolksEds_@API_VERSION_MAJOR@_@API_VERSION_MINOR@_gir_INCLUDES = \
+        Gee-0.8 \
+        Gio-2.0 \
+        Folks-$(API_VERSION_DOT) \
+        EBook-1.2 \
+        EBookContacts-1.2 \
+        EDataServer-1.2 \
+        $(NULL)
+FolksEds_@API_VERSION_MAJOR@_@API_VERSION_MINOR@_gir_LIBS = libfolks-eds.la
+FolksEds_@API_VERSION_MAJOR@_@API_VERSION_MINOR@_gir_FILES = \
+$(libfolks_eds_la_SOURCES) \
+        folks/folks-eds.h \
+        $(NULL)
+FolksEds_@API_VERSION_MAJOR@_@API_VERSION_MINOR@_gir_NAMESPACE = FolksEds
+FolksEds_@API_VERSION_MAJOR@_@API_VERSION_MINOR@_gir_SCANNERFLAGS = --identifier-prefix=Edsf
+INTROSPECTION_GIRS = $(EDSF_GIR)
+
+libfolks_eds_la_VALAFLAGS += \
+        --gir $(EDSF_GIR) \
+        --girdir=$(abs_builddir) \
+        $(NULL)
+
+girdir = $(datadir)/gir-1.0
+dist_gir_DATA = $(INTROSPECTION_GIRS)
+
+typelibdir = $(libdir)/girepository-1.0
+nodist_typelib_DATA = $(dist_gir_DATA:.gir=.typelib)
+
+CLEANFILES += $(nodist_typelib_DATA)
+MAINTAINERCLEANFILES += $(dist_gir_DATA)
+
+##################################################################
+# Common
+##################################################################
 
 -include ../backend.mk
 -include $(top_srcdir)/git.mk
