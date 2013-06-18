@@ -97,16 +97,73 @@ dist_vapi_DATA = \
 # General
 ##################################################################
 
+CLEANFILES =
 MAINTAINERCLEANFILES = \
 	$(folks_tracker_valasources:.vala=.c) \
 	libfolks_tracker_la_vala.stamp \
 	folks/folks-tracker.h \
 	folks-tracker.vapi \
+	$(dist_noinst_DATA) \
 	$(NULL)
 
 EXTRA_DIST = \
 	$(pkgconfig_in) \
 	$(MAINTAINERCLEANFILES) \
 	$(NULL)
+
+##################################################################
+# Introspection
+##################################################################
+-include $(INTROSPECTION_MAKEFILE)
+INTROSPECTION_SCANNER_ARGS = \
+        $(ERROR_INTROSPECTION_SCANNER_ARGS) \
+        --add-include-path=$(srcdir) \
+        --add-include-path=$(abs_top_builddir)/folks \
+        --warn-all \
+        $(NULL)
+
+INTROSPECTION_COMPILER_ARGS = \
+        --includedir=$(srcdir) \
+        --includedir=$(abs_top_builddir)/folks \
+        $(NULL)
+
+TRF_GIR = FolksTracker-$(API_VERSION_DOT).gir
+$(TRF_GIR): libfolks-tracker.la
+
+FolksTracker_@API_VERSION_MAJOR@_@API_VERSION_MINOR@_gir_CFLAGS = \
+        $(SW_CLIENT_CFLAGS) \
+        $(NULL)
+FolksTracker_@API_VERSION_MAJOR@_@API_VERSION_MINOR@_gir_INCLUDES = \
+        Gee-0.8 \
+        Gio-2.0 \
+        Folks-$(API_VERSION_DOT) \
+        Tracker-$(TRACKER_SPARQL_MAJOR) \
+        $(NULL)
+FolksTracker_@API_VERSION_MAJOR@_@API_VERSION_MINOR@_gir_LIBS = libfolks-tracker.la
+FolksTracker_@API_VERSION_MAJOR@_@API_VERSION_MINOR@_gir_FILES = \
+$(libfolks_tracker_la_SOURCES) \
+        folks/folks-tracker.h \
+        $(NULL)
+FolksTracker_@API_VERSION_MAJOR@_@API_VERSION_MINOR@_gir_NAMESPACE = FolksTracker
+FolksTracker_@API_VERSION_MAJOR@_@API_VERSION_MINOR@_gir_SCANNERFLAGS = --identifier-prefix=Trf
+INTROSPECTION_GIRS = $(TRF_GIR)
+
+libfolks_tracker_la_VALAFLAGS += \
+        --gir $(TRF_GIR) \
+        --girdir=$(abs_builddir) \
+        $(NULL)
+
+girdir = $(datadir)/gir-1.0
+dist_gir_DATA = $(INTROSPECTION_GIRS)
+
+typelibdir = $(libdir)/girepository-1.0
+nodist_typelib_DATA = $(dist_gir_DATA:.gir=.typelib)
+
+CLEANFILES += $(nodist_typelib_DATA)
+MAINTAINERCLEANFILES += $(dist_gir_DATA)
+
+##################################################################
+# Common
+##################################################################
 
 -include $(top_srcdir)/git.mk
