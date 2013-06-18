@@ -100,16 +100,73 @@ dist_vapi_DATA = \
 # General
 ##################################################################
 
+CLEANFILES =
 MAINTAINERCLEANFILES = \
 	$(folks_libsocialweb_valasources:.vala=.c) \
 	libfolks_libsocialweb_la_vala.stamp \
 	folks/folks-libsocialweb.h \
 	folks-libsocialweb.vapi \
+	$(dist_noinst_DATA) \
 	$(NULL)
 
 EXTRA_DIST = \
 	$(pkgconfig_in) \
 	$(MAINTAINERCLEANFILES) \
 	$(NULL)
+
+##################################################################
+# Introspection
+##################################################################
+-include $(INTROSPECTION_MAKEFILE)
+INTROSPECTION_SCANNER_ARGS = \
+        $(ERROR_INTROSPECTION_SCANNER_ARGS) \
+        --add-include-path=$(srcdir) \
+        --add-include-path=$(abs_top_builddir)/folks \
+        --warn-all \
+        $(NULL)
+
+INTROSPECTION_COMPILER_ARGS = \
+        --includedir=$(srcdir) \
+        --includedir=$(abs_top_builddir)/folks \
+        $(NULL)
+
+SWF_GIR = FolksLibsocialweb-$(API_VERSION_DOT).gir
+$(SWF_GIR): libfolks-libsocialweb.la
+
+FolksLibsocialweb_@API_VERSION_MAJOR@_@API_VERSION_MINOR@_gir_CFLAGS = \
+        $(SW_CLIENT_CFLAGS) \
+        $(NULL)
+FolksLibsocialweb_@API_VERSION_MAJOR@_@API_VERSION_MINOR@_gir_INCLUDES = \
+        Gee-0.8 \
+        Gio-2.0 \
+        Folks-$(API_VERSION_DOT) \
+        SocialWebClient-0.25 \
+        $(NULL)
+FolksLibsocialweb_@API_VERSION_MAJOR@_@API_VERSION_MINOR@_gir_LIBS = libfolks-libsocialweb.la
+FolksLibsocialweb_@API_VERSION_MAJOR@_@API_VERSION_MINOR@_gir_FILES = \
+$(libfolks_libsocialweb_la_SOURCES) \
+        folks/folks-libsocialweb.h \
+        $(NULL)
+FolksLibsocialweb_@API_VERSION_MAJOR@_@API_VERSION_MINOR@_gir_NAMESPACE = FolksLibsocialweb
+FolksLibsocialweb_@API_VERSION_MAJOR@_@API_VERSION_MINOR@_gir_SCANNERFLAGS = --identifier-prefix=Swf
+INTROSPECTION_GIRS = $(SWF_GIR)
+
+libfolks_libsocialweb_la_VALAFLAGS += \
+        --gir $(SWF_GIR) \
+        --girdir=$(abs_builddir) \
+        $(NULL)
+
+girdir = $(datadir)/gir-1.0
+dist_gir_DATA = $(INTROSPECTION_GIRS)
+
+typelibdir = $(libdir)/girepository-1.0
+nodist_typelib_DATA = $(dist_gir_DATA:.gir=.typelib)
+
+CLEANFILES += $(nodist_typelib_DATA)
+MAINTAINERCLEANFILES += $(dist_gir_DATA)
+
+##################################################################
+# Common
+##################################################################
 
 -include $(top_srcdir)/git.mk
