@@ -84,13 +84,18 @@ libfolks_test_la_VALAFLAGS = \
 	--pkg folks \
 	--pkg build-conf \
 	--library folks-test \
+	--vapi folks-test.vapi \
 	-H folks-test.h \
 	-h folks-test-internal.h \
 	-g \
 	$(NULL)
 
+# According to the following document, this is the best way to ensure that this header
+# gets built when compiling the Vala sources to C but before we try to compile
+# all the C files (in case of parallel builds):
+#     http://www.lug.or.kr/docs/automake/Dependency-Tracking-Evolution.html
 BUILT_SOURCES = \
-	libfolks_test_la_vala.stamp \
+	folks-test-internal.h \
 	$(NULL)
 
 MAINTAINERCLEANFILES = \

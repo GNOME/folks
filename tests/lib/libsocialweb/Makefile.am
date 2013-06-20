@@ -1,7 +1,11 @@
-AM_VALAFLAGS += \
+noinst_LTLIBRARIES = libsocialweb-test.la
+
+libsocialweb_test_la_VALAFLAGS = \
 	$(ERROR_VALAFLAGS) \
-	--library=libsocialweb-test \
-	--header=libsocialweb-test.h \
+	$(AM_VALAFLAGS) \
+	--library libsocialweb-test \
+	--vapi libsocialweb-test.vapi \
+	--header libsocialweb-test.h \
 	--vapidir=$(top_srcdir)/folks \
 	--vapidir=$(top_srcdir)/backends/libsocialweb/lib \
 	--vapidir=$(abs_top_srcdir)/tests/lib \
@@ -16,8 +20,6 @@ AM_VALAFLAGS += \
 	--pkg folks-test \
 	-g \
 	$(NULL)
-
-noinst_LTLIBRARIES = libsocialweb-test.la
 
 libsocialweb_test_la_SOURCES = \
 	backend.vala \

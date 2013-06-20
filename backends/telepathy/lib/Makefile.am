@@ -112,6 +112,7 @@ libfolks_telepathy_la_VALAFLAGS = \
 	--pkg telepathy-glib \
 	$(ZEITGEIST_PKG) \
 	--includedir folks \
+	--library folks-telepathy \
 	--vapi folks-telepathy.vapi \
 	-H folks/folks-telepathy.h \
 	$(NULL)

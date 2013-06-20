@@ -2,7 +2,8 @@ SUBDIRS = lib
 
 BACKEND_NAME = "telepathy"
 
-AM_VALAFLAGS += \
+telepathy_la_VALAFLAGS = \
+	$(AM_VALAFLAGS) \
 	$(ERROR_VALAFLAGS) \
 	--vapidir=$(abs_srcdir) \
 	--vapidir=$(abs_builddir) \
@@ -10,7 +11,13 @@ AM_VALAFLAGS += \
 	--vapidir=$(abs_top_builddir)/backends/telepathy/lib \
 	--vapidir=$(abs_top_srcdir)/folks \
 	--vapidir=$(abs_top_builddir)/folks \
-	$(addprefix --pkg ,$(telepathy_deps)) \
+	--pkg folks \
+	--pkg folks-internal \
+	--pkg folks-telepathy \
+	--pkg gee-0.8 \
+	--pkg gio-2.0 \
+	--pkg gobject-2.0 \
+	--pkg telepathy-glib \
 	$(NULL)
 
 backenddir = $(BACKEND_DIR)/telepathy
@@ -19,16 +26,6 @@ backend_LTLIBRARIES = telepathy.la
 telepathy_la_SOURCES = \
 	tp-backend.vala \
 	tp-backend-factory.vala \
-	$(NULL)
-
-telepathy_deps = \
-	folks \
-	folks-internal \
-	folks-telepathy \
-	gee-0.8 \
-	gio-2.0 \
-	gobject-2.0 \
-	telepathy-glib \
 	$(NULL)
 
 telepathy_la_CPPFLAGS = \

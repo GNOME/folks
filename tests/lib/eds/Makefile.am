@@ -1,7 +1,11 @@
-AM_VALAFLAGS += \
+noinst_LTLIBRARIES = libeds-test.la
+
+libeds_test_la_VALAFLAGS = \
 	$(ERROR_VALAFLAGS) \
-	--library=eds-test \
-	--header=eds-test.h \
+	$(AM_VALAFLAGS) \
+	--library eds-test \
+	--vapi eds-test.vapi \
+	--header eds-test.h \
 	--vapidir=$(top_srcdir)/folks \
 	--vapidir=$(top_srcdir)/backends/eds/lib \
 	--vapidir=$(top_srcdir)/backends/eds/vapi \
@@ -19,8 +23,6 @@ AM_VALAFLAGS += \
 	--pkg folks-test \
 	-g \
 	$(NULL)
-
-noinst_LTLIBRARIES = libeds-test.la
 
 libeds_test_la_SOURCES = \
 	backend.vala \

@@ -25,8 +25,6 @@ pkgconfig_in = folks-libsocialweb.pc.in
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = $(pkgconfig_in:.in=)
 
-libfolks_libsocialweb_la_vala.stamp:
-
 folks_libsocialweb_valasources = \
 	swf-namespace.vala \
 	swf-persona.vala \
@@ -38,27 +36,21 @@ libfolks_libsocialweb_la_SOURCES = \
 	$(NULL)
 
 libfolks_libsocialweb_la_VALAFLAGS = \
+	$(AM_VALAFLAGS) \
 	$(ERROR_VALAFLAGS) \
-        --vapidir=. \
-        --vapidir=$(top_srcdir)/folks \
-        --pkg folks \
-        --pkg folks-internal \
-        --pkg folks-generics \
-        --pkg gobject-2.0 \
-        --pkg gio-2.0 \
-        --pkg gee-0.8 \
-        --pkg libsocialweb-client \
-        --includedir folks \
-        --vapi folks-libsocialweb.vapi \
-        -H folks/folks-libsocialweb.h \
-        $(NULL)
-
-folks_backend_libsocialweb_deps = \
-	folks \
-	gee-0.8 \
-	gio-2.0 \
-	gobject-2.0 \
-	libsocialweb-client \
+	--vapidir=. \
+	--vapidir=$(top_srcdir)/folks \
+	--pkg folks \
+	--pkg folks-internal \
+	--pkg folks-generics \
+	--pkg gobject-2.0 \
+	--pkg gio-2.0 \
+	--pkg gee-0.8 \
+	--pkg libsocialweb-client \
+	--includedir folks \
+	--library folks-libsocialweb \
+	--vapi folks-libsocialweb.vapi \
+	-H folks/folks-libsocialweb.h \
 	$(NULL)
 
 libfolks_libsocialweb_la_CFLAGS = \

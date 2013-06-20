@@ -2,12 +2,19 @@ SUBDIRS = lib
 
 BACKEND_NAME = "libsocialweb"
 
-AM_VALAFLAGS += \
+libsocialweb_la_VALAFLAGS = \
+	$(AM_VALAFLAGS) \
 	$(ERROR_VALAFLAGS) \
 	--vapidir=. \
 	--vapidir=$(top_builddir)/backends/libsocialweb/lib \
 	--vapidir=$(top_srcdir)/folks \
-	$(addprefix --pkg ,$(libsocialweb_deps)) \
+	--pkg folks \
+	--pkg folks-internal \
+	--pkg folks-libsocialweb \
+	--pkg gee-0.8 \
+	--pkg gio-2.0 \
+	--pkg gobject-2.0 \
+	--pkg libsocialweb-client \
 	$(NULL)
 
 backenddir = $(BACKEND_DIR)/libsocialweb
@@ -16,16 +23,6 @@ backend_LTLIBRARIES = libsocialweb.la
 libsocialweb_la_SOURCES = \
 	sw-backend.vala \
 	sw-backend-factory.vala \
-	$(NULL)
-
-libsocialweb_deps = \
-	folks \
-	folks-internal \
-	folks-libsocialweb \
-	gee-0.8 \
-	gio-2.0 \
-	gobject-2.0 \
-	libsocialweb-client \
 	$(NULL)
 
 libsocialweb_la_CPPFLAGS = \

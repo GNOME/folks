@@ -1,7 +1,11 @@
-AM_VALAFLAGS += \
+noinst_LTLIBRARIES = libkf-test.la
+
+libkf_test_la_VALAFLAGS = \
 	$(ERROR_VALAFLAGS) \
-	--library=kf-test \
-	--header=kf-test.h \
+	$(AM_VALAFLAGS) \
+	--library kf-test \
+	--vapi kf-test.vapi \
+	--header kf-test.h \
 	--vapidir=$(abs_srcdir) \
 	--vapidir=$(abs_builddir) \
 	--vapidir=$(abs_top_srcdir)/folks \
@@ -11,8 +15,6 @@ AM_VALAFLAGS += \
 	--pkg folks-test \
 	-g \
 	$(NULL)
-
-noinst_LTLIBRARIES = libkf-test.la
 
 libkf_test_la_SOURCES = \
 	backend.vala \

@@ -2,32 +2,30 @@ SUBDIRS = lib
 
 BACKEND_NAME = "eds"
 
-AM_VALAFLAGS += \
+backenddir = $(BACKEND_DIR)/eds
+backend_LTLIBRARIES = eds.la
+
+eds_la_VALAFLAGS = \
+	$(AM_VALAFLAGS) \
 	$(ERROR_VALAFLAGS) \
 	--vapidir=. \
 	--vapidir=$(top_builddir)/backends/eds/lib \
 	--vapidir=$(top_srcdir)/folks \
-	$(addprefix --pkg ,$(eds_deps)) \
+	--vapidir=$(top_builddir)/folks \
+	--pkg folks \
+	--pkg folks-internal \
+	--pkg folks-eds \
+	--pkg gee-0.8 \
+	--pkg gio-2.0 \
+	--pkg gobject-2.0 \
+	--pkg libebook-1.2 \
+	--pkg libedataserver-1.2 \
+	--pkg libxml-2.0 \
 	$(NULL)
-
-backenddir = $(BACKEND_DIR)/eds
-backend_LTLIBRARIES = eds.la
 
 eds_la_SOURCES = \
 	eds-backend.vala \
 	eds-backend-factory.vala \
-	$(NULL)
-
-eds_deps = \
-	folks \
-	folks-internal \
-	folks-eds \
-	gee-0.8 \
-	gio-2.0 \
-	gobject-2.0 \
-	libebook-1.2 \
-	libedataserver-1.2 \
-	libxml-2.0 \
 	$(NULL)
 
 eds_la_CPPFLAGS = \

@@ -2,31 +2,28 @@ SUBDIRS = lib
 
 BACKEND_NAME = "tracker"
 
-AM_VALAFLAGS += \
+backenddir = $(BACKEND_DIR)/tracker
+backend_LTLIBRARIES = tracker.la
+
+tracker_la_VALAFLAGS = \
+	$(AM_VALAFLAGS) \
 	$(ERROR_VALAFLAGS) \
 	--vapidir=. \
 	--vapidir=vapi \
 	--vapidir=$(top_builddir)/backends/tracker/lib \
 	--vapidir=$(top_srcdir)/folks \
-	$(addprefix --pkg ,$(tracker_deps)) \
+	--pkg folks \
+	--pkg folks-internal \
+	--pkg folks-tracker \
+	--pkg gee-0.8 \
+	--pkg gio-2.0 \
+	--pkg gobject-2.0 \
+	--pkg tracker-sparql-$(TRACKER_SPARQL_MAJOR) \
 	$(NULL)
-
-backenddir = $(BACKEND_DIR)/tracker
-backend_LTLIBRARIES = tracker.la
 
 tracker_la_SOURCES = \
 	tr-backend.vala \
 	tr-backend-factory.vala \
-	$(NULL)
-
-tracker_deps = \
-	folks \
-	folks-internal \
-	folks-tracker \
-	gee-0.8 \
-	gio-2.0 \
-	gobject-2.0 \
-	tracker-sparql-$(TRACKER_SPARQL_MAJOR) \
 	$(NULL)
 
 tracker_la_CPPFLAGS = \

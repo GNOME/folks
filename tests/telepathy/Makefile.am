@@ -104,15 +104,6 @@ persona_store_capabilities_SOURCES = \
 	persona-store-capabilities.vala \
 	$(NULL)
 
-BUILT_SOURCES = \
-	fake_tp_backend_vala.stamp \
-	individual_properties_vala.stamp \
-	individual_retrieval_vala.stamp \
-	individual_zeitgeist_vala.stamp \
-	init_vala.stamp \
-	persona_store_capabilities_vala.stamp \
-	$(NULL)
-
 CLEANFILES = \
 	*.pid \
 	*.address \

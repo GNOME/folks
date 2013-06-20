@@ -173,13 +173,6 @@ EXTRA_DIST = \
 	redeclare-internal-api.h \
 	$(NULL)
 
-BUILT_SOURCES = \
-	folks-internal.h \
-	folks-internal.vapi \
-	folks.h \
-	folks.vapi \
-	$(NULL)
-
 CLEANFILES =
 MAINTAINERCLEANFILES =
 
@@ -207,10 +200,6 @@ nodist_typelib_DATA = $(GIRS:.gir=.typelib)
 
 CLEANFILES += $(nodist_typelib_DATA)
 endif
-
-MAINTAINERCLEANFILES += \
-	$(BUILT_SOURCES) \
-	$(NULL)
 
 ##################################################
 # GSettings
