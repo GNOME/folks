@@ -16,11 +16,11 @@ SUBDIRS += docs
 endif
 
 DIST_SUBDIRS = \
-	backends \
-	docs \
 	folks \
-	tests \
+	backends \
 	tools \
+	tests \
+	docs \
 	po \
 	$(NULL)
 
