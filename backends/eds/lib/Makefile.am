@@ -50,7 +50,7 @@ libfolks_eds_la_VALAFLAGS = \
 	--pkg libxml-2.0 \
 	--includedir folks \
 	--vapi folks-eds.vapi \
-	-H folks/folks-eds.h \
+	-H folks-eds.h \
 	$(NULL)
 
 libfolks_eds_la_CFLAGS = \
@@ -88,7 +88,7 @@ libfolks_eds_la_LDFLAGS = \
 
 folks_eds_includedir = $(includedir)/folks
 folks_eds_include_HEADERS = \
-	folks/folks-eds.h \
+	folks-eds.h \
 	$(NULL)
 
 vapidir = $(datadir)/vala/vapi
@@ -146,7 +146,7 @@ FolksEds_@API_VERSION_MAJOR@_@API_VERSION_MINOR@_gir_LIBS = \
 	$(NULL)
 FolksEds_@API_VERSION_MAJOR@_@API_VERSION_MINOR@_gir_FILES = \
 $(libfolks_eds_la_SOURCES) \
-        folks/folks-eds.h \
+        folks-eds.h \
         $(NULL)
 FolksEds_@API_VERSION_MAJOR@_@API_VERSION_MINOR@_gir_NAMESPACE = FolksEds
 FolksEds_@API_VERSION_MAJOR@_@API_VERSION_MINOR@_gir_SCANNERFLAGS = --identifier-prefix=Edsf

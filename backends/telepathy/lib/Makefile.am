@@ -110,7 +110,7 @@ libfolks_telepathy_la_VALAFLAGS = \
 	--includedir folks \
 	--library folks-telepathy \
 	--vapi folks-telepathy.vapi \
-	-H folks/folks-telepathy.h \
+	-H folks-telepathy.h \
 	$(NULL)
 
 libfolks_telepathy_la_CFLAGS = \
@@ -145,7 +145,7 @@ libfolks_telepathy_la_LDFLAGS = \
 
 folks_telepathy_includedir = $(includedir)/folks
 folks_telepathy_include_HEADERS = \
-	folks/folks-telepathy.h \
+	folks-telepathy.h \
 	$(NULL)
 
 vapidir = $(datadir)/vala/vapi
@@ -235,7 +235,7 @@ FolksTelepathy_@API_VERSION_MAJOR@_@API_VERSION_MINOR@_gir_LIBS = \
         $(NULL)
 FolksTelepathy_@API_VERSION_MAJOR@_@API_VERSION_MINOR@_gir_FILES = \
         $(libfolks_telepathy_la_SOURCES) \
-        folks/folks-telepathy.h \
+        folks-telepathy.h \
         $(NULL)
 FolksTelepathy_@API_VERSION_MAJOR@_@API_VERSION_MINOR@_gir_NAMESPACE = FolksTelepathy
 FolksTelepathy_@API_VERSION_MAJOR@_@API_VERSION_MINOR@_gir_SCANNERFLAGS = --identifier-prefix=Tpf
