@@ -7,15 +7,11 @@ pkgconfig_in = folks-tracker.pc.in
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = $(pkgconfig_in:.in=)
 
-folks_tracker_valasources = \
+libfolks_tracker_la_SOURCES = \
 	trf-namespace.vala \
 	trf-persona.vala \
 	trf-persona-store.vala \
 	trf-util.vala \
-	$(NULL)
-
-libfolks_tracker_la_SOURCES = \
-	$(folks_tracker_valasources) \
 	$(NULL)
 
 libfolks_tracker_la_VALAFLAGS = \
@@ -90,14 +86,7 @@ dist_vapi_DATA = \
 ##################################################################
 
 CLEANFILES =
-MAINTAINERCLEANFILES = \
-	$(folks_tracker_valasources:.vala=.c) \
-	libfolks_tracker_la_vala.stamp \
-	folks/folks-tracker.h \
-	folks-tracker.vapi \
-	$(dist_noinst_DATA) \
-	$(NULL)
-
+MAINTAINERCLEANFILES =
 EXTRA_DIST = \
 	$(pkgconfig_in) \
 	$(MAINTAINERCLEANFILES) \

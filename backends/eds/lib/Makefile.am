@@ -26,15 +26,11 @@ pkgconfig_in = folks-eds.pc.in
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = $(pkgconfig_in:.in=)
 
-folks_eds_valasources = \
+libfolks_eds_la_SOURCES = \
 	edsf-namespace.vala \
 	edsf-persona.vala \
 	edsf-persona-store.vala \
 	memory-icon.vala \
-	$(NULL)
-
-libfolks_eds_la_SOURCES = \
-	$(folks_eds_valasources) \
 	$(NULL)
 
 libfolks_eds_la_VALAFLAGS = \
@@ -106,13 +102,7 @@ dist_vapi_DATA = \
 ##################################################################
 
 CLEANFILES =
-MAINTAINERCLEANFILES = \
-	$(folks_eds_valasources:.vala=.c) \
-	libfolks_eds_la_vala.stamp \
-	folks/folks-eds.h \
-	folks-eds.vapi \
-	$(NULL)
-
+MAINTAINERCLEANFILES =
 EXTRA_DIST = \
 	$(pkgconfig_in) \
 	$(MAINTAINERCLEANFILES) \

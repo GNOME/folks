@@ -53,11 +53,6 @@ libeds_test_la_LIBADD = \
 	$(GEE_LIBS) \
 	$(NULL)
 
-MAINTAINERCLEANFILES = \
-	eds-test.vapi \
-	eds-test.h \
-	$(NULL)
-
 EXTRA_DIST = \
 	eds-test.vapi \
 	eds-test.h \

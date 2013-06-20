@@ -46,11 +46,6 @@ libsocialweb_test_la_LIBADD = \
 	$(top_builddir)/tests/lib/libfolks-test.la \
 	$(NULL)
 
-MAINTAINERCLEANFILES = \
-	libsocialweb-test.vapi \
-	libsocialweb-test.h \
-	$(NULL)
-
 EXTRA_DIST = \
 	libsocialweb-test.vapi \
 	libsocialweb-test.h \

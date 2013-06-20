@@ -111,29 +111,6 @@ small_set_SOURCES = \
 	small-set.vala \
 	$(NULL)
 
-CLEANFILES = \
-	*.pid \
-	*.address \
-	$(TESTS) \
-	$(NULL)
-
-MAINTAINERCLEANFILES = \
-	$(addsuffix .c,$(noinst_PROGRAMS)) \
-	backend_loading_vala.stamp \
-	aggregation_vala.stamp \
-	abstract_field_details_vala.stamp \
-	async_locking_vala.stamp \
-	utils_vala.stamp \
-	avatar_cache_vala.stamp \
-	object_cache_vala.stamp \
-	init_vala.stamp \
-	small_set_vala.stamp \
-	$(NULL)
-
-EXTRA_DIST = \
-	$(MAINTAINERCLEANFILES) \
-	$(NULL)
-
 -include $(top_srcdir)/git.mk
 -include $(top_srcdir)/valgrind.mk
 -include $(top_srcdir)/check.mk

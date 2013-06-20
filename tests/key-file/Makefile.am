@@ -46,21 +46,6 @@ individual_retrieval_SOURCES = \
 	individual-retrieval.vala \
 	$(NULL)
 
-CLEANFILES = \
-        *.pid \
-        *.address \
-        $(TESTS) \
-        $(NULL)
-
-MAINTAINERCLEANFILES = \
-        $(addsuffix .c,$(noinst_PROGRAMS)) \
-        individual_retrieval_vala.stamp \
-        $(NULL)
-
-EXTRA_DIST = \
-	$(MAINTAINERCLEANFILES) \
-	$(NULL)
-
 -include $(top_srcdir)/git.mk
 -include $(top_srcdir)/valgrind.mk
 -include $(top_srcdir)/check.mk

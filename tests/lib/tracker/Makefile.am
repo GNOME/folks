@@ -52,11 +52,6 @@ dist_noinst_DATA = \
 	tracker-test.vapi \
 	$(NULL)
 
-MAINTAINERCLEANFILES = \
-	tracker-test.vapi \
-	tracker-test.h \
-	$(NULL)
-
 EXTRA_DIST = \
 	tracker-test.vapi \
 	tracker-test.h \

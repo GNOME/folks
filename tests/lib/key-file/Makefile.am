@@ -36,11 +36,6 @@ libkf_test_la_LIBADD = \
 	$(GEE_LIBS) \
 	$(NULL)
 
-MAINTAINERCLEANFILES = \
-	kf-test.vapi \
-	kf-test.h \
-	$(NULL)
-
 EXTRA_DIST = \
 	kf-test.deps \
 	kf-test.vapi \

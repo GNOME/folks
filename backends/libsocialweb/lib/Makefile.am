@@ -25,14 +25,10 @@ pkgconfig_in = folks-libsocialweb.pc.in
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = $(pkgconfig_in:.in=)
 
-folks_libsocialweb_valasources = \
+libfolks_libsocialweb_la_SOURCES = \
 	swf-namespace.vala \
 	swf-persona.vala \
 	swf-persona-store.vala \
-	$(NULL)
-
-libfolks_libsocialweb_la_SOURCES = \
-	$(folks_libsocialweb_valasources) \
 	$(NULL)
 
 libfolks_libsocialweb_la_VALAFLAGS = \
@@ -94,14 +90,7 @@ dist_vapi_DATA = \
 ##################################################################
 
 CLEANFILES =
-MAINTAINERCLEANFILES = \
-	$(folks_libsocialweb_valasources:.vala=.c) \
-	libfolks_libsocialweb_la_vala.stamp \
-	folks/folks-libsocialweb.h \
-	folks-libsocialweb.vapi \
-	$(dist_noinst_DATA) \
-	$(NULL)
-
+MAINTAINERCLEANFILES =
 EXTRA_DIST = \
 	$(pkgconfig_in) \
 	$(MAINTAINERCLEANFILES) \

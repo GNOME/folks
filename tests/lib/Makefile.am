@@ -98,17 +98,10 @@ BUILT_SOURCES = \
 	folks-test-internal.h \
 	$(NULL)
 
-MAINTAINERCLEANFILES = \
-	$(patsubst %.vala,%.c,$(filter %.vala,$(libfolks_test_la_SOURCES))) \
-	libfolks_test_la_vala.stamp \
-	folks-test.h \
-	folks-test.vapi \
-	$(NULL)
-
 # Too hard to add support for this in git.mk.
 GITIGNOREFILES = \
 	folks-test-internal.h \
- 	$(NULL)
+	$(NULL)
 
 EXTRA_DIST = \
 	folks-test.deps \

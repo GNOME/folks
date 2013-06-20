@@ -347,72 +347,9 @@ set_null_avatar_SOURCES = \
 	$(NULL)
 
 CLEANFILES = \
-        *.pid \
-        *.address \
-        $(TESTS) \
-        $(NULL)
-
-MAINTAINERCLEANFILES = \
-        $(addsuffix .c,$(noinst_PROGRAMS)) \
-        individual_retrieval_vala.stamp \
-        name_details_interface_vala.stamp \
-        avatar_details_interface_vala.stamp \
-        im_details_interface_vala.stamp \
-        phone_details_interface_vala.stamp \
-        email_details_interface_vala.stamp \
-        url_details_interface_vala.stamp \
-        favourite_details_interface_vala.stamp \
-        fullname_updates_vala.stamp \
-        add_contact_vala.stamp \
-        default_contact_vala.stamp \
-        remove_contact_vala.stamp \
-        nickname_updates_vala.stamp \
-        family_name_updates_vala.stamp \
-        given_name_updates_vala.stamp \
-        additional_names_updates_vala.stamp \
-        prefix_name_updates_vala.stamp \
-        suffix_name_updates_vala.stamp \
-        website_updates_vala.stamp \
-        favourite_updates_vala.stamp \
-        emails_updates_vala.stamp \
-        phones_updates_vala.stamp \
-        imaddresses_updates_vala.stamp \
-        role_details_interface_vala.stamp \
-        birthday_details_interface_vala.stamp \
-        birthday_updates_vala.stamp \
-        note_details_interface_vala.stamp \
-        gender_details_interface_vala.stamp \
-        postal_address_details_interface_vala.stamp \
-        avatar_updates_vala.stamp \
-        add_persona_vala.stamp \
-        remove_persona_vala.stamp \
-        set_nickname_vala.stamp \
-        set_favourite_vala.stamp \
-        set_phones_vala.stamp \
-        set_emails_vala.stamp \
-        set_avatar_vala.stamp \
-        set_structured_name_vala.stamp \
-        set_full_name_vala.stamp \
-        set_urls_vala.stamp \
-        set_im_addresses_vala.stamp \
-        set_postal_addresses_vala.stamp \
-        set_roles_vala.stamp \
-        set_notes_vala.stamp \
-        set_birthday_vala.stamp \
-        set_gender_vala.stamp \
-        link_personas_vala.stamp \
-        duplicated_emails_vala.stamp \
-        duplicated_phones_vala.stamp \
-        link_personas_via_local_ids_vala.stamp \
-        match_im_addresses_vala.stamp \
-        match_email_addresses_vala.stamp \
-        match_known_emails_vala.stamp \
-        match_phone_number_vala.stamp \
-        match_name_vala.stamp \
-        match_all_vala.stamp \
-        set_duplicate_email_vala.stamp \
-        set_null_avatar_vala.stamp \
-        $(NULL)
+	*.pid \
+	*.address \
+	$(NULL)
 
 EXTRA_DIST = \
 	$(MAINTAINERCLEANFILES) \

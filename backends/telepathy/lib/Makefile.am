@@ -80,16 +80,12 @@ pkgconfig_DATA = $(pkgconfig_in:.in=)
 
 $(srcdir)/libfolks_telepathy_la_vala.stamp: tp-lowlevel.vapi
 
-folks_telepathy_valasources = \
+libfolks_telepathy_la_SOURCES = \
 	tpf-namespace.vala \
 	tpf-persona.vala \
 	tpf-persona-store.vala \
 	tpf-logger.vala \
 	tpf-persona-store-cache.vala \
-	$(NULL)
-
-libfolks_telepathy_la_SOURCES = \
-	$(folks_telepathy_valasources) \
 	tp-lowlevel.c \
 	$(NULL)
 
@@ -167,14 +163,7 @@ DISTCLEANFILES = $(dist_noinst_DATA)
 endif
 
 CLEANFILES =
-MAINTAINERCLEANFILES = \
-	$(folks_telepathy_valasources:.vala=.c) \
-	libfolks_telepathy_la_vala.stamp \
-	folks/folks-telepathy.h \
-	folks-telepathy.vapi \
-	$(dist_noinst_DATA) \
-	$(NULL)
-
+MAINTAINERCLEANFILES =
 EXTRA_DIST = \
 	$(libtp_lowlevel_la_SOURCES) \
 	$(pkgconfig_in) \

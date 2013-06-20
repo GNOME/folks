@@ -104,17 +104,6 @@ persona_store_capabilities_SOURCES = \
 	persona-store-capabilities.vala \
 	$(NULL)
 
-CLEANFILES = \
-	*.pid \
-	*.address \
-	$(TESTS) \
-	$(NULL)
-
-MAINTAINERCLEANFILES = \
-	$(BUILT_SOURCES) \
-	$(addsuffix .c,$(noinst_PROGRAMS)) \
-	$(NULL)
-
 EXTRA_DIST = \
 	$(MAINTAINERCLEANFILES) \
 	$(srcdir)/data/relationships-empty.ini \

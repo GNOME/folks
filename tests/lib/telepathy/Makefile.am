@@ -51,17 +51,6 @@ libtpf_test_la_LIBADD = \
 	$(TP_GLIB_LIBS) \
 	$(NULL)
 
-MAINTAINERCLEANFILES = \
-	tpf-test.vapi \
-	tpf-test.h \
-	$(NULL)
-
-EXTRA_DIST = \
-	tpf-test.deps \
-	tpf-test.vapi \
-	tpf-test.h \
-	$(NULL)
-
 BUILT_SOURCES = \
 	libtpf_test_la_vala.stamp \
 	$(NULL)
