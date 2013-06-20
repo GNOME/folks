@@ -64,9 +64,4 @@ EXTRA_DIST = \
 	tracker-test.h \
 	$(NULL)
 
-GITIGNOREFILES = \
-	$(patsubst %.vala,%.c,$(filter %.vala,$(libtracker_test_la_SOURCES))) \
-	libtracker_test_la_vala.stamp \
-	$(NULL)
-
 -include $(top_srcdir)/git.mk

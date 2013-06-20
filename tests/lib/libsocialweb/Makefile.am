@@ -54,9 +54,4 @@ EXTRA_DIST = \
 	libsocialweb-test.h \
 	$(NULL)
 
-GITIGNOREFILES = \
-	$(patsubst %.vala,%.c,$(filter %.vala,$(libsocialweb_test_la_SOURCES))) \
-	libsocialweb_test_la_vala.stamp \
-	$(NULL)
-
 -include $(top_srcdir)/git.mk

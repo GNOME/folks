@@ -45,9 +45,4 @@ EXTRA_DIST = \
 	kf-test.h \
 	$(NULL)
 
-GITIGNOREFILES = \
-	$(patsubst %.vala,%.c,$(filter %.vala,$(libkf_test_la_SOURCES))) \
-	libkf_test_la_vala.stamp \
-	$(NULL)
-
 -include $(top_srcdir)/git.mk

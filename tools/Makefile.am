@@ -46,9 +46,4 @@ folks_import_LDADD = \
 	$(top_builddir)/folks/libfolks.la \
 	$(NULL)
 
-GITIGNOREFILES = \
-	folks_import_vala.stamp \
-	$(patsubst %.vala,%.c,$(filter %.vala,$(folks_import_SOURCES))) \
-	$(NULL)
-
 -include $(top_srcdir)/git.mk

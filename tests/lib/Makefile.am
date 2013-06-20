@@ -100,6 +100,11 @@ MAINTAINERCLEANFILES = \
 	folks-test.vapi \
 	$(NULL)
 
+# Too hard to add support for this in git.mk.
+GITIGNOREFILES = \
+	folks-test-internal.h \
+ 	$(NULL)
+
 EXTRA_DIST = \
 	folks-test.deps \
 	$(MAINTAINERCLEANFILES) \

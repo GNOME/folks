@@ -61,9 +61,4 @@ EXTRA_DIST = \
 	eds-test.h \
 	$(NULL)
 
-GITIGNOREFILES = \
-	$(patsubst %.vala,%.c,$(filter %.vala,$(libeds_test_la_SOURCES))) \
-	libeds_test_la_vala.stamp \
-	$(NULL)
-
 -include $(top_srcdir)/git.mk

@@ -67,9 +67,4 @@ ofono_la_LDFLAGS = \
 	-avoid-version \
 	$(NULL)
 
-GITIGNOREFILES = \
-	$(patsubst %.vala,%.c,$(filter %.vala,$(ofono_la_SOURCES))) \
-	ofono_la_vala.stamp \
-	$(NULL)
-
 -include $(top_srcdir)/git.mk

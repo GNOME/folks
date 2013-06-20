@@ -74,11 +74,5 @@ eds_la_LDFLAGS = \
 	-avoid-version \
 	$(NULL)
 
-GITIGNOREFILES = \
-	folks-backend-eds.vapi \
-	$(patsubst %.vala,%.c,$(filter %.vala,$(eds_la_SOURCES))) \
-	eds_la_vala.stamp \
-	$(NULL)
-
 -include backend.mk
 -include $(top_srcdir)/git.mk

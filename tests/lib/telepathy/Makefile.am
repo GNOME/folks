@@ -64,9 +64,5 @@ BUILT_SOURCES = \
 	libtpf_test_la_vala.stamp \
 	$(NULL)
 
-GITIGNOREFILES = \
-	$(patsubst %.vala,%.c,$(filter %.vala,$(libtpf_test_la_SOURCES))) \
-	libtpf_test_la_vala.stamp \
-	$(NULL)
 
 -include $(top_srcdir)/git.mk

@@ -180,13 +180,6 @@ BUILT_SOURCES = \
 	folks.vapi \
 	$(NULL)
 
-GITIGNOREFILES = \
-	$(patsubst %.vala,%.c,$(filter %.vala,$(libfolks_la_SOURCES))) \
-	$(patsubst %.vala,%.c,$(filter %.vala,$(libfolks_internal_la_SOURCES))) \
-	libfolks_la_vala.stamp \
-	libfolks_internal_la_vala.stamp \
-	$(NULL)
-
 CLEANFILES =
 MAINTAINERCLEANFILES =
 
@@ -233,6 +226,6 @@ convert_DATA = folks.convert
 
 EXTRA_DIST += $(convert_DATA)
 CLEANFILES += $(gsettings_SCHEMAS)
-GITIGNOREFILES += org.freedesktop.folks.gschema.valid
+GITIGNOREFILES = org.freedesktop.folks.gschema.valid
 
 -include $(top_srcdir)/git.mk

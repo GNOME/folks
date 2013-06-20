@@ -68,10 +68,4 @@ libsocialweb_la_LDFLAGS = \
 	-avoid-version \
 	$(NULL)
 
-GITIGNOREFILES = \
-	folks-backend-libsocialweb.vapi \
-	$(patsubst %.vala,%.c,$(filter %.vala,$(libsocialweb_la_SOURCES))) \
-	libsocialweb_la_vala.stamp \
-	$(NULL)
-
 -include $(top_srcdir)/git.mk

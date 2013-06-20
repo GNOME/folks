@@ -58,10 +58,4 @@ key_file_la_LDFLAGS = \
 	-avoid-version \
 	$(NULL)
 
-GITIGNOREFILES = \
-	folks-backend-key-file.vapi \
-	$(patsubst %.vala,%.c,$(filter %.vala,$(key_file_la_SOURCES))) \
-	key_file_la_vala.stamp \
-	$(NULL)
-
 -include $(top_srcdir)/git.mk

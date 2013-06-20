@@ -71,10 +71,4 @@ telepathy_la_LDFLAGS = \
 	-avoid-version \
 	$(NULL)
 
-GITIGNOREFILES = \
-	folks-backend-telepathy.vapi \
-	$(patsubst %.vala,%.c,$(filter %.vala,$(telepathy_la_SOURCES))) \
-	telepathy_la_vala.stamp \
-	$(NULL)
-
 -include $(top_srcdir)/git.mk
