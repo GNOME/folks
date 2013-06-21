@@ -172,6 +172,8 @@ public class Edsf.Persona : Folks.Persona,
 
   /**
    * {@inheritDoc}
+   *
+   * This is stored in the X-FOLKS-WEB-SERVICES-IDS vCard field in EDS.
    */
   [CCode (notify = false)]
   public MultiMap<string, WebServiceFieldDetails> web_service_addresses
@@ -200,6 +202,8 @@ public class Edsf.Persona : Folks.Persona,
 
   /**
    * IDs used to link {@link Edsf.Persona}s.
+   *
+   * This is stored in the X-FOLKS-CONTACTS-IDS vCard field in EDS.
    */
   [CCode (notify = false)]
   public Set<string> local_ids
@@ -499,6 +503,9 @@ public class Edsf.Persona : Folks.Persona,
   /**
    * {@inheritDoc}
    *
+   * This is stored in the {@link Edsf.Persona.gender_attribute_name} vCard
+   * field in EDS.
+   *
    * @since 0.6.0
    */
   [CCode (notify = false)]
@@ -522,6 +529,8 @@ public class Edsf.Persona : Folks.Persona,
   private Set<UrlFieldDetails>? _urls_ro = null;
   /**
    * {@inheritDoc}
+   *
+   * This is stored in the X-URIS vCard field in EDS.
    *
    * @since 0.6.0
    */
@@ -756,6 +765,8 @@ public class Edsf.Persona : Folks.Persona,
   /**
    * {@inheritDoc}
    *
+   * This is stored in the X-ROLES vCard field in EDS.
+   *
    * @since 0.6.2
    */
   [CCode (notify = false)]
@@ -784,6 +795,8 @@ public class Edsf.Persona : Folks.Persona,
 
   /**
    * Whether this contact is a user-defined favourite.
+   *
+   * This is stored in the X-FOLKS-FAVOURITE vCard field in EDS.
    *
    * @since 0.6.5
    */
@@ -847,6 +860,8 @@ public class Edsf.Persona : Folks.Persona,
   /**
    * The complete set of system group identifiers the contact belongs to.
    * See {@link Persona.change_system_groups} for details.
+   *
+   * This is stored in the X-GOOGLE-SYSTEM-GROUP-IDS vCard field in EDS.
    *
    * @since 0.9.0
    */
