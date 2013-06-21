@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2010 Collabora Ltd.
+ * Copyright (C) 2013 Philip Withnall
  *
  * This library is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -16,6 +17,7 @@
  *
  * Authors:
  *       Travis Reitter <travis.reitter@collabora.co.uk>
+ *       Philip Withnall <philip@tecnocode.co.uk>
  */
 
 using GLib;
@@ -68,6 +70,13 @@ public errordomain Folks.PropertyError
  *
  * All the personas belonging to one physical person are aggregated to form a
  * single {@link Individual} representing that person.
+ *
+ * Properties of a persona are provided by implementing "details" interfaces,
+ * such as {@link NameDetails} or {@link EmailDetails}. They must be accessed
+ * through these interfaces. Different backends' subclasses of {@link Persona}
+ * may implement different sets of interfaces. The set of interfaces implemented
+ * by a given persona is guaranteed not to change over the lifetime of that
+ * persona.
  */
 public abstract class Folks.Persona : Object
 {
