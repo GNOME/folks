@@ -185,7 +185,7 @@ TRACKER_SPARQL_MAJOR=0.16
 TRACKER_SPARQL_REQUIRED=0.15.2
 EBOOK_REQUIRED=3.8.1
 EDATASERVER_REQUIRED=3.5.3.1
-ZEITGEIST_REQUIRED=0.3.14
+ZEITGEIST_REQUIRED=0.9.14
 GEE_REQUIRED=0.8.4
 
 AC_SUBST([TRACKER_SPARQL_MAJOR])
@@ -207,14 +207,14 @@ AS_IF([test x$enable_telepathy_backend = xyes], [
 case "x$enable_zeitgeist" in
   xyes)
     AS_IF([test x$enable_telepathy_backend = xyes],
-          [PKG_CHECK_MODULES([ZEITGEIST], [zeitgeist-1.0 >= $ZEITGEIST_REQUIRED], 
+          [PKG_CHECK_MODULES([ZEITGEIST], [zeitgeist-2.0 >= $ZEITGEIST_REQUIRED],
            ,
            [AC_MSG_ERROR([Zeitgeist support requires Zeitgeist development package])])])
     have_zeitgeist=yes
     ;;
   xauto)
     AS_IF([test x$enable_telepathy_backend = xyes],
-          [PKG_CHECK_MODULES([ZEITGEIST], [zeitgeist-1.0 >= $ZEITGEIST_REQUIRED],
+          [PKG_CHECK_MODULES([ZEITGEIST], [zeitgeist-2.0 >= $ZEITGEIST_REQUIRED],
                              have_zeitgeist="yes",have_zeitgeist="no")],
           [have_zeitgeist=no])
     ;;
@@ -228,7 +228,7 @@ esac
 AS_IF([test "x$have_zeitgeist" == "xyes"], [
    ZEITGEIST_VALAFLAGS="-D HAVE_ZEITGEIST"
    AC_SUBST([ZEITGEIST_VALAFLAGS])
-   ZEITGEIST_PKG="--pkg zeitgeist-1.0"
+   ZEITGEIST_PKG="--pkg zeitgeist-2.0"
    AC_SUBST([ZEITGEIST_PKG])
 ])
 
@@ -333,7 +333,7 @@ AS_IF([test "x$enable_vala" = "xyes"], [
         AS_IF([test x$enable_telepathy_backend = xyes], [
           VALA_CHECK_PACKAGES([telepathy-glib])
 	  AS_IF([test "x$have_zeitgeist" == "xyes"], [
-	      VALA_CHECK_PACKAGES([zeitgeist-1.0])
+	      VALA_CHECK_PACKAGES([zeitgeist-2.0])
 	  ])
         ])
 

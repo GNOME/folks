@@ -101,7 +101,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
   private Account _account;
 
 #if HAVE_ZEITGEIST
-  private Zeitgeist.Log? _log= null;
+  private Zeitgeist.Log? _log = null;
   private Zeitgeist.Monitor? _monitor = null;
 #endif
 
@@ -296,6 +296,13 @@ public class Tpf.PersonaStore : Folks.PersonaStore
               this._account_manager_invalidated_cb);
           this._account_manager = null;
         }
+#if HAVE_ZEITGEIST
+      if (this._monitor != null)
+        {
+          this._log.remove_monitor (this._monitor);
+          this._monitor = null;
+        }
+#endif
     }
 
   private string _format_maybe_bool (MaybeBool input)
@@ -1738,14 +1745,14 @@ public class Tpf.PersonaStore : Folks.PersonaStore
         {
           for (var i = 1; i < e.num_subjects (); i++)
             {
-              var id = this._get_iid_from_event_metadata (e.get_subject (i).get_uri ());
-              var interaction_type = e.get_subject (0).get_interpretation ();
+              var id = this._get_iid_from_event_metadata (e.get_subject (i).uri);
+              var interaction_type = e.get_subject (0).interpretation;
               this._increase_persona_counter (id, interaction_type, e);
             }
         }
     }
 
-  private PtrArray _get_zeitgeist_event_templates ()
+  private GLib.GenericArray<Zeitgeist.Event> _get_zeitgeist_event_templates ()
     {
       /* To fetch events from Zeitgeist about the interaction with contacts we
        * create templates reflecting how the telepathy-logger stores events in
@@ -1753,9 +1760,9 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       var origin = this.id.replace (TelepathyGLib.ACCOUNT_OBJECT_PATH_BASE,
                                     "x-telepathy-account-path:");
       Event ev1 = new Event.full ("", "", "dbus://org.freedesktop.Telepathy.Logger.service");
-      ev1.set_origin (origin);
-      var templates = new PtrArray ();
-      templates.add (ev1.ref ());
+      ev1.origin = origin;
+      var templates = new GLib.GenericArray<Zeitgeist.Event> ();
+      templates.add (ev1);
       return templates;
     }
 
@@ -1776,10 +1783,10 @@ public class Tpf.PersonaStore : Folks.PersonaStore
           /* We want events from the last 30 days only, A day has 86400 seconds.
            * start_timestamp = end_timestamp - 30 days in seconds*/
           int64 start_timestamp = end_timestamp - (86400 * 30);
-          PtrArray events = this._get_zeitgeist_event_templates ();
+          GLib.GenericArray<Zeitgeist.Event> events = this._get_zeitgeist_event_templates ();
           var results = yield this._log.find_events (
               new TimeRange (start_timestamp * 1000, end_timestamp * 1000),
-              (owned) events, StorageState.ANY, 0, ResultType.MOST_RECENT_EVENTS,
+              events, StorageState.ANY, 0, ResultType.MOST_RECENT_EVENTS,
               null);
           foreach (var persona in this._personas.values)
             {
@@ -1788,10 +1795,10 @@ public class Tpf.PersonaStore : Folks.PersonaStore
             }
           foreach (var e in results)
             {
-              var interaction_type = e.get_subject (0).get_interpretation ();
+              var interaction_type = e.get_subject (0).interpretation;
               for (var i = 1; i < e.num_subjects (); i++)
                 {
-                  var id = this._get_iid_from_event_metadata (e.get_subject (i).get_uri ());
+                  var id = this._get_iid_from_event_metadata (e.get_subject (i).uri);
                   this._increase_persona_counter (id, interaction_type, e);
                 }
             }
@@ -1809,11 +1816,19 @@ public class Tpf.PersonaStore : Folks.PersonaStore
        * counters upon interaction changes.*/
       if (this._monitor == null)
         {
-          PtrArray monitor_events = this._get_zeitgeist_event_templates ();
+          GLib.GenericArray<Zeitgeist.Event> monitor_events = this._get_zeitgeist_event_templates ();
           this._monitor = new Zeitgeist.Monitor (new Zeitgeist.TimeRange.from_now (),
-              (owned) monitor_events);
+              monitor_events);
           this._monitor.events_inserted.connect (this._handle_new_interaction);
-          this._log.install_monitor (this._monitor);
+          try
+            {
+              this._log.install_monitor (this._monitor);
+            }
+          catch
+            {
+              warning ("Failed to install monitor for Zeitgeist");
+              this._monitor = null;
+            }
         }
 
       this._notify_if_is_quiescent ();

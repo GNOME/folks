@@ -1379,14 +1379,14 @@ public class Tpf.Persona : Folks.Persona,
 #if HAVE_ZEITGEIST
   internal void _increase_counter (string id, string interaction_type, Event event)
     {
-      var timestamp = (uint) (event.get_timestamp () / 1000);
+      var timestamp = (uint) (event.timestamp / 1000);
       var converted_datetime = new DateTime.from_unix_utc (timestamp);
-      var interpretation = event.get_interpretation ();
+      var interpretation = event.interpretation;
 
       /* Only count send/receive for IM interactions */
-      if (interaction_type == Zeitgeist.NMO_IMMESSAGE &&
-          (interpretation == Zeitgeist.ZG_SEND_EVENT ||
-           interpretation == Zeitgeist.ZG_RECEIVE_EVENT))
+      if (interaction_type == Zeitgeist.NMO.IMMESSAGE &&
+          (interpretation == Zeitgeist.ZG.SEND_EVENT ||
+           interpretation == Zeitgeist.ZG.RECEIVE_EVENT))
         {
           this._im_interaction_count++;
           this.notify_property ("im-interaction-count");
@@ -1400,8 +1400,8 @@ public class Tpf.Persona : Folks.Persona,
               id, this._im_interaction_count, this._last_im_interaction_datetime.format ("%H %M %S - %d %m %y"));
         }
       /* Only count successful call for call interactions */
-      else if (interaction_type == Zeitgeist.NFO_AUDIO &&
-                interpretation == Zeitgeist.ZG_LEAVE_EVENT)
+      else if (interaction_type == Zeitgeist.NFO.AUDIO &&
+                interpretation == Zeitgeist.ZG.LEAVE_EVENT)
         {
           this._call_interaction_count++;
           this.notify_property ("call-interaction-count");
