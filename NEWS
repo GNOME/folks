@@ -2,10 +2,13 @@ Overview of changes from libfolks 0.9.2 to libfolks 0.9.3
 =========================================================
 
 Dependencies:
+• zeitgeist-2.0 ≥ 0.9.14
 
 Major changes:
 
 Bugs fixed:
+• Bug 683873 - Leak in Zeitgeist code
+• Bug 686715 - Telepathy init test often fails during clean-up
 
 API changes:
 
@@ -17,7 +20,6 @@ Dependencies:
 • libebook-contacts-1.2 ≥ 3.8.1
 
 Major changes:
-
 • folks-import and folks-inspect now look for translated strings in
   ${localedir}, typically /usr/share/locale, which is also where the
   translations are installed. They previously looked in ${pkgdatadir}/locale,
