@@ -53,6 +53,11 @@ LT_INIT
 PKG_PROG_PKG_CONFIG([0.21])
 GLIB_GSETTINGS
 
+# Always look for .pc files in /folks so backend support libraries can be
+# introspected properly
+PKG_CONFIG_PATH=$(pwd)/folks:$PKG_CONFIG_PATH
+AC_SUBST([PKG_CONFIG_PATH])
+
 AC_SUBST([CFLAGS])
 AC_SUBST([CPPFLAGS])
 AC_SUBST([LDFLAGS])
