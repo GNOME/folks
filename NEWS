@@ -4,16 +4,12 @@ Overview of changes from libfolks 0.9.2 to libfolks 0.9.3
 Dependencies:
 • zeitgeist-2.0 ≥ 0.9.14
 
-Major changes:
-
 Bugs fixed:
 • Bug 683873 - Leak in Zeitgeist code
 • Bug 686715 - Telepathy init test often fails during clean-up
 • Bug 698890 - warning: Folks doesn't set GIR namespace or version annotation
 • Bug 702490 - Backend support libraries don't have their own
   gobject-introspection bindings
-
-API changes:
 
 Overview of changes from libfolks 0.9.1 to libfolks 0.9.2
 =========================================================
