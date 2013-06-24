@@ -107,7 +107,7 @@ endif
 libfolks_la_VALAFLAGS = \
 	$(AM_VALAFLAGS) \
 	$(ERROR_VALAFLAGS) \
-	--gir=Folks-$(API_VERSION).gir \
+	--gir=Folks-$(API_VERSION_DOT).gir \
 	--library=folks \
 	--vapidir=$(abs_srcdir) \
 	--vapidir=$(abs_builddir) \
@@ -201,8 +201,8 @@ INTROSPECTION_SCANNER_ARGS =
 INTROSPECTION_COMPILER_ARGS = -l $(libfolks_dlname)
 
 if HAVE_INTROSPECTION
-Folks-$(API_VERSION).gir: libfolks.la
-GIRS = Folks-$(API_VERSION).gir
+Folks-$(API_VERSION_DOT).gir: libfolks.la
+GIRS = Folks-$(API_VERSION_DOT).gir
 
 girdir = $(datadir)/gir-1.0
 dist_gir_DATA = $(GIRS)
