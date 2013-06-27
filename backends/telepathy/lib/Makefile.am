@@ -81,6 +81,7 @@ pkgconfig_DATA = $(pkgconfig_in:.in=)
 $(srcdir)/libfolks_telepathy_la_vala.stamp: tp-lowlevel.vapi
 
 folks_telepathy_valasources = \
+	tpf-namespace.vala \
 	tpf-persona.vala \
 	tpf-persona-store.vala \
 	tpf-logger.vala \
