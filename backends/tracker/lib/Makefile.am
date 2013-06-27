@@ -10,6 +10,7 @@ pkgconfig_DATA = $(pkgconfig_in:.in=)
 libfolks_tracker_la_vala.stamp:
 
 folks_tracker_valasources = \
+	trf-namespace.vala \
 	trf-persona.vala \
 	trf-persona-store.vala \
 	trf-util.vala \

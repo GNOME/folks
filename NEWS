@@ -7,6 +7,7 @@ Major changes:
 
 Bugs fixed:
 • Bug 699865 — Folks needs to expose chat/VoIP service client types
+• Bug 703402 — Backend support libraries don't set the GIR version and namespace
 
 API changes:
 • Add PresenceDetails.client_types
