@@ -28,6 +28,7 @@ pkgconfig_DATA = $(pkgconfig_in:.in=)
 libfolks_libsocialweb_la_vala.stamp:
 
 folks_libsocialweb_valasources = \
+	swf-namespace.vala \
 	swf-persona.vala \
 	swf-persona-store.vala \
 	$(NULL)
