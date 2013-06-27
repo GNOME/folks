@@ -29,6 +29,7 @@ pkgconfig_DATA = $(pkgconfig_in:.in=)
 libfolks_eds_la_vala.stamp:
 
 folks_eds_valasources = \
+	edsf-namespace.vala \
 	edsf-persona.vala \
 	edsf-persona-store.vala \
 	memory-icon.vala \
