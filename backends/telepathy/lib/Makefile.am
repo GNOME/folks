@@ -219,7 +219,10 @@ TpLowlevel_@API_VERSION_MAJOR@_@API_VERSION_MINOR@_gir_SCANNERFLAGS = \
         $(NULL)
 TpLowlevel_@API_VERSION_MAJOR@_@API_VERSION_MINOR@_gir_VERSION = $(API_VERSION_DOT)
 INTROSPECTION_GIRS += TpLowlevel-$(API_VERSION_DOT).gir
-dist_noinst_DATA += TpLowlevel-$(API_VERSION_DOT).gir
+dist_noinst_DATA += \
+	TpLowlevel-$(API_VERSION_DOT).gir \
+	TpLowlevel-$(API_VERSION_DOT).typelib \
+	$(NULL)
 
 #------------------------------------
 # Folks Telepathy
@@ -257,13 +260,20 @@ libfolks_telepathy_la_VALAFLAGS += \
 # General
 #------------------------------------
 girdir = $(datadir)/gir-1.0
-dist_gir_DATA = $(INTROSPECTION_GIRS)
+dist_noinst_DATA += \
+	TpLowlevel-$(API_VERSION_DOT).gir \
+	TpLowlevel-$(API_VERSION_DOT).typelib \
+	$(NULL)
+dist_gir_DATA = $(filter-out TpLowlevel-$(API_VERSION_DOT).gir,$(INTROSPECTION_GIRS))
 
 typelibdir = $(libdir)/girepository-1.0
 nodist_typelib_DATA = $(dist_gir_DATA:.gir=.typelib)
 
 CLEANFILES += $(nodist_typelib_DATA)
-MAINTAINERCLEANFILES += $(dist_gir_DATA)
+MAINTAINERCLEANFILES += \
+	$(dist_gir_DATA) \
+	$(gir_dist_noinst_DATA) \
+	$(NULL)
 
 ##################################################################
 # Common
