@@ -156,7 +156,10 @@ FolksEds_@API_VERSION_MAJOR@_@API_VERSION_MINOR@_gir_INCLUDES = \
         EBookContacts-1.2 \
         EDataServer-1.2 \
         $(NULL)
-FolksEds_@API_VERSION_MAJOR@_@API_VERSION_MINOR@_gir_LIBS = libfolks-eds.la
+FolksEds_@API_VERSION_MAJOR@_@API_VERSION_MINOR@_gir_LIBS = \
+	libfolks-eds.la \
+	$(top_builddir)/folks/libfolks.la \
+	$(NULL)
 FolksEds_@API_VERSION_MAJOR@_@API_VERSION_MINOR@_gir_FILES = \
 $(libfolks_eds_la_SOURCES) \
         folks/folks-eds.h \

@@ -143,7 +143,10 @@ FolksLibsocialweb_@API_VERSION_MAJOR@_@API_VERSION_MINOR@_gir_INCLUDES = \
         Folks-$(API_VERSION_DOT) \
         SocialWebClient-0.25 \
         $(NULL)
-FolksLibsocialweb_@API_VERSION_MAJOR@_@API_VERSION_MINOR@_gir_LIBS = libfolks-libsocialweb.la
+FolksLibsocialweb_@API_VERSION_MAJOR@_@API_VERSION_MINOR@_gir_LIBS = \
+	libfolks-libsocialweb.la \
+	$(top_builddir)/folks/libfolks.la \
+	$(NULL)
 FolksLibsocialweb_@API_VERSION_MAJOR@_@API_VERSION_MINOR@_gir_FILES = \
 $(libfolks_libsocialweb_la_SOURCES) \
         folks/folks-libsocialweb.h \

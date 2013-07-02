@@ -140,7 +140,10 @@ FolksTracker_@API_VERSION_MAJOR@_@API_VERSION_MINOR@_gir_INCLUDES = \
         Folks-$(API_VERSION_DOT) \
         Tracker-$(TRACKER_SPARQL_MAJOR) \
         $(NULL)
-FolksTracker_@API_VERSION_MAJOR@_@API_VERSION_MINOR@_gir_LIBS = libfolks-tracker.la
+FolksTracker_@API_VERSION_MAJOR@_@API_VERSION_MINOR@_gir_LIBS = \
+	libfolks-tracker.la \
+        $(top_builddir)/folks/libfolks.la \
+        $(NULL)
 FolksTracker_@API_VERSION_MAJOR@_@API_VERSION_MINOR@_gir_FILES = \
 $(libfolks_tracker_la_SOURCES) \
         folks/folks-tracker.h \
