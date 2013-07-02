@@ -236,7 +236,8 @@ FolksTelepathy_@API_VERSION_MAJOR@_@API_VERSION_MINOR@_gir_INCLUDES = \
         Folks-$(API_VERSION_DOT) \
         TelepathyGLib-0.12 \
         $(NULL)
-FolksTelepathy_@API_VERSION_MAJOR@_@API_VERSION_MINOR@_gir_LIBS = libfolks-telepathy.la \
+FolksTelepathy_@API_VERSION_MAJOR@_@API_VERSION_MINOR@_gir_LIBS = \
+	libfolks-telepathy.la \
         $(top_builddir)/folks/libfolks.la \
         $(NULL)
 FolksTelepathy_@API_VERSION_MAJOR@_@API_VERSION_MINOR@_gir_FILES = \
