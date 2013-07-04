@@ -33,6 +33,7 @@ DISTCHECK_CONFIGURE_FLAGS = \
 	--enable-tracker-backend \
 	--enable-zeitgeist \
 	--disable-vala \
+	--disable-fatal-warnings \
 	$(NULL)
 
 EXTRA_DIST = \

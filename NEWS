@@ -4,11 +4,13 @@ Overview of changes from libfolks 0.9.3 to libfolks 0.9.4
 Dependencies:
 
 Major changes:
+• Fatal warnings are now turned off when distchecking
 
 Bugs fixed:
 • Bug 699865 — Folks needs to expose chat/VoIP service client types
 • Bug 703402 — Backend support libraries don't set the GIR version and namespace
 • Bug 703450 — Telepathy backend gir fails to link
+• Bug 703514 — Can't build FolksTelepathy-0.6.gir
 
 API changes:
 • Add PresenceDetails.client_types
