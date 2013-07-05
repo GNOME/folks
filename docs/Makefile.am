@@ -52,7 +52,7 @@ valadoc_flags = \
 	--force \
 	--package-version $(PACKAGE_VERSION) \
 	--no-protected \
-	--driver "$(shell valac --version)" \
+	--driver "$(shell valac --api-version)" \
 	$(NULL)
 
 # folks documentation
