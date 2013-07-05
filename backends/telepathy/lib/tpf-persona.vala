@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2010 Collabora Ltd.
+ * Copyright (C) 2013 Philip Withnall
  *
  * This library is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -16,15 +17,13 @@
  *
  * Authors:
  *       Travis Reitter <travis.reitter@collabora.co.uk>
+ *       Philip Withnall <philip@tecnocode.co.uk>
  */
 
 using Gee;
 using GLib;
 using TelepathyGLib;
 using Folks;
-#if HAVE_ZEITGEIST
-using Zeitgeist;
-#endif
 
 /**
  * A persona subclass which represents a single instant messaging contact from
@@ -1399,44 +1398,38 @@ public class Tpf.Persona : Folks.Persona,
       return store._ensure_persona_for_contact (contact);
     }
 
-#if HAVE_ZEITGEIST
-  internal void _increase_counter (string id, string interaction_type, Event event)
+  internal void _increase_im_interaction_counter (string id,
+      DateTime converted_datetime)
     {
-      var timestamp = (uint) (event.timestamp / 1000);
-      var converted_datetime = new DateTime.from_unix_utc (timestamp);
-      var interpretation = event.interpretation;
+      this._im_interaction_count++;
+      this.notify_property ("im-interaction-count");
+      if (this._last_im_interaction_datetime == null ||
+          this._last_im_interaction_datetime.compare (converted_datetime) == -1)
+        {
+          this._last_im_interaction_datetime = converted_datetime;
+          this.notify_property ("last-im-interaction-datetime");
+        }
+      debug ("Persona %s IM interaction details changed:\n" +
+          " - count: %u \n - timestamp: %lld",
+          id, this._im_interaction_count,
+          this._last_im_interaction_datetime.format ("%H %M %S - %d %m %y"));
+    }
 
-      /* Only count send/receive for IM interactions */
-      if (interaction_type == Zeitgeist.NMO.IMMESSAGE &&
-          (interpretation == Zeitgeist.ZG.SEND_EVENT ||
-           interpretation == Zeitgeist.ZG.RECEIVE_EVENT))
+  internal void _increase_last_call_interaction_counter (string id,
+      DateTime converted_datetime)
+    {
+      this._call_interaction_count++;
+      this.notify_property ("call-interaction-count");
+      if (this._last_call_interaction_datetime == null ||
+          this._last_call_interaction_datetime.compare (converted_datetime) == -1)
         {
-          this._im_interaction_count++;
-          this.notify_property ("im-interaction-count");
-          if (this._last_im_interaction_datetime == null ||
-              this._last_im_interaction_datetime.compare (converted_datetime) == -1)
-            {
-              this._last_im_interaction_datetime = converted_datetime;
-              this.notify_property ("last-im-interaction-datetime");
-            }
-          debug ("Persona %s IM interaction details changed:\n - count: %u \n - timestamp: %lld\n",
-              id, this._im_interaction_count, this._last_im_interaction_datetime.format ("%H %M %S - %d %m %y"));
+          this._last_call_interaction_datetime = converted_datetime;
+          this.notify_property ("last-call-interaction-datetime");
         }
-      /* Only count successful call for call interactions */
-      else if (interaction_type == Zeitgeist.NFO.AUDIO &&
-                interpretation == Zeitgeist.ZG.LEAVE_EVENT)
-        {
-          this._call_interaction_count++;
-          this.notify_property ("call-interaction-count");
-          if (this._last_call_interaction_datetime == null ||
-              this._last_call_interaction_datetime.compare (converted_datetime) == -1)
-            {
-              this._last_call_interaction_datetime = converted_datetime;
-              this.notify_property ("last-call-interaction-datetime");
-            }
-          debug ("Persona %s Call interaction details changed:\n - count: %u \n - timestamp: %lld\n",
-             id, this._call_interaction_count, this._last_call_interaction_datetime.format ("%H %M %S - %d %m %y"));
-        }
+      debug ("Persona %s Call interaction details changed:\n" +
+          " - count: %u \n - timestamp: %lld",
+          id, this._call_interaction_count,
+          this._last_call_interaction_datetime.format ("%H %M %S - %d %m %y"));
     }
 
   internal void _reset_interaction ()
@@ -1446,5 +1439,4 @@ public class Tpf.Persona : Folks.Persona,
       this._last_call_interaction_datetime = null;
       this._last_im_interaction_datetime = null;
     }
-#endif
 }

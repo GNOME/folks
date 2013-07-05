@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2010 Collabora Ltd.
+ * Copyright (C) 2013 Philip Withnall
  *
  * This library is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -1735,7 +1736,24 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       if (id != null && this._personas.has_key (id) && interaction_type != null)
         {
           var persona = this._personas.get (id);
-          persona._increase_counter (id, interaction_type, event);
+          var timestamp = (uint) (event.timestamp / 1000);
+          var converted_datetime = new DateTime.from_unix_utc (timestamp);
+          var interpretation = event.interpretation;
+
+          /* Only count send/receive for IM interactions */
+          if (interaction_type == Zeitgeist.NMO.IMMESSAGE &&
+              (interpretation == Zeitgeist.ZG.SEND_EVENT ||
+               interpretation == Zeitgeist.ZG.RECEIVE_EVENT))
+            {
+              persona._increase_im_interaction_counter (id, converted_datetime);
+            }
+          /* Only count successful call for call interactions */
+          else if (interaction_type == Zeitgeist.NFO.AUDIO &&
+                    interpretation == Zeitgeist.ZG.LEAVE_EVENT)
+            {
+              persona._increase_last_call_interaction_counter (id,
+                  converted_datetime);
+            }
         }
     }
 
