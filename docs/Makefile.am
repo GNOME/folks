@@ -128,7 +128,19 @@ $(folkstelepathydoc_DATA) $(folkstelepathyimg_DATA): \
 	$(NULL)
 $(folkstelepathygtkdoc_DATA): folks-telepathy-gtk-doc.stamp
 
-folks_telepathy_doc_files = $(top_srcdir)/backends/telepathy/lib/*.vala
+# ensure we only have one set of tp-zeitgeist interfaces defined
+folks_telepathy_doc_files_blacklist = \
+	$(top_srcdir)/backends/telepathy/lib/tp-zeitgeist.vala \
+	$(NULL)
+# this expands the list of files, so we can filter out elements
+folks_telepathy_doc_files_all = \
+	$(wildcard $(top_srcdir)/backends/telepathy/lib/*.vala) \
+	$(NULL)
+# FIXME: sort the files manually to work around the native doclet portion of
+# bgo#662784
+folks_telepathy_doc_files = \
+	$(sort \
+	$(filter-out $(folks_telepathy_doc_files_blacklist),$(folks_telepathy_doc_files_all)))
 folks_telepathy_doc_deps = \
 	gmodule-2.0 \
 	gio-2.0 \
