@@ -106,8 +106,7 @@ public interface Folks.PresenceDetails : Object
    * One can connect to instant messaging networks on a huge variety of devices,
    * from PCs, to phones to consoles.
    * The client types are represented in strings, using the values
-   * [[http://xmpp.org/registrar/disco-categories.html#client|documented by the
-   * XMPP registrar]]
+   * [[http://xmpp.org/registrar/disco-categories.html#client|documented by the XMPP registrar]]
    *
    * @since UNRELEASED
    */
