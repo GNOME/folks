@@ -105,7 +105,6 @@ GITIGNOREFILES = \
 
 EXTRA_DIST = \
 	folks-test.deps \
-	$(MAINTAINERCLEANFILES) \
 	$(NULL)
 
 -include $(top_srcdir)/git.mk
