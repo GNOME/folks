@@ -25,9 +25,6 @@ using GLib;
 using Gee;
 using TelepathyGLib;
 using Folks;
-#if HAVE_ZEITGEIST
-using Zeitgeist;
-#endif
 
 extern const string G_LOG_DOMAIN;
 extern const string BACKEND_NAME;
@@ -101,10 +98,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
 
   private Account _account;
 
-#if HAVE_ZEITGEIST
-  private Zeitgeist.Log? _log = null;
-  private Zeitgeist.Monitor? _monitor = null;
-#endif
+  private FolksTpZeitgeist.Controller _zg_controller;
 
   /**
    * The Telepathy account this store is based upon.
@@ -297,13 +291,8 @@ public class Tpf.PersonaStore : Folks.PersonaStore
               this._account_manager_invalidated_cb);
           this._account_manager = null;
         }
-#if HAVE_ZEITGEIST
-      if (this._monitor != null)
-        {
-          this._log.remove_monitor (this._monitor);
-          this._monitor = null;
-        }
-#endif
+
+      this._zg_controller = null;
     }
 
   private string _format_maybe_bool (MaybeBool input)
@@ -1196,9 +1185,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
           new GLib.GenericArray<TelepathyGLib.Contact> ());
 
       this._got_initial_members = true;
-#if HAVE_ZEITGEIST
       this._populate_counters.begin ();
-#endif
       this._notify_if_is_quiescent ();
     }
 
@@ -1714,142 +1701,23 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       return store;
     }
 
-#if HAVE_ZEITGEIST
-  private string? _get_iid_from_event_metadata (string? uri)
-    {
-      /* Format a proper id represting a persona in the store.
-       * Zeitgeist uses x-telepathy-identifier as a prefix for telepathy, which
-       * is stored as the uri of a subject of an event. */
-      if (uri == null)
-        {
-          return null;
-        }
-      var new_uri = uri.replace ("x-telepathy-identifier:", "");
-      return this.account.protocol + ":" + new_uri;
-    }
-
-  private void _increase_persona_counter (string? id, string? interaction_type, Event event)
-    {
-      /* Check if the persona id and interaction is valid. If so increase the
-       * appropriate interacton counter, to signify that an
-       * interaction was successfully counted. */
-      if (id != null && this._personas.has_key (id) && interaction_type != null)
-        {
-          var persona = this._personas.get (id);
-          var timestamp = (uint) (event.timestamp / 1000);
-          var converted_datetime = new DateTime.from_unix_utc (timestamp);
-          var interpretation = event.interpretation;
-
-          /* Only count send/receive for IM interactions */
-          if (interaction_type == Zeitgeist.NMO.IMMESSAGE &&
-              (interpretation == Zeitgeist.ZG.SEND_EVENT ||
-               interpretation == Zeitgeist.ZG.RECEIVE_EVENT))
-            {
-              persona._increase_im_interaction_counter (id, converted_datetime);
-            }
-          /* Only count successful call for call interactions */
-          else if (interaction_type == Zeitgeist.NFO.AUDIO &&
-                    interpretation == Zeitgeist.ZG.LEAVE_EVENT)
-            {
-              persona._increase_last_call_interaction_counter (id,
-                  converted_datetime);
-            }
-        }
-    }
-
-  private void _handle_new_interaction (TimeRange timerange, ResultSet events)
-    {
-      foreach (var e in events)
-        {
-          for (var i = 1; i < e.num_subjects (); i++)
-            {
-              var id = this._get_iid_from_event_metadata (e.get_subject (i).uri);
-              var interaction_type = e.get_subject (0).interpretation;
-              this._increase_persona_counter (id, interaction_type, e);
-            }
-        }
-    }
-
-  private GLib.GenericArray<Zeitgeist.Event> _get_zeitgeist_event_templates ()
-    {
-      /* To fetch events from Zeitgeist about the interaction with contacts we
-       * create templates reflecting how the telepathy-logger stores events in
-       * Zeitgeist */
-      var origin = this.id.replace (TelepathyGLib.ACCOUNT_OBJECT_PATH_BASE,
-                                    "x-telepathy-account-path:");
-      Event ev1 = new Event.full ("", "", "dbus://org.freedesktop.Telepathy.Logger.service");
-      ev1.origin = origin;
-      var templates = new GLib.GenericArray<Zeitgeist.Event> ();
-      templates.add (ev1);
-      return templates;
-    }
-
   /* This method is safe to call multiple times concurrently. */
   private async void _populate_counters ()
     {
-      if (this._log == null)
+      this._zg_controller = new FolksTpZeitgeist.Controller (this,
+          this.account.protocol, (p, dt) =>
         {
-          this._log = new Zeitgeist.Log ();
-        }
-
-      /* Get all events for this account from Zeitgeist and increase the
-       * the counters of the personas */
-      try
+          var persona = p as Tpf.Persona;
+          assert (persona != null);
+          persona._increase_im_interaction_counter (dt);
+        },
+          (p, dt) =>
         {
-          TimeVal tm = TimeVal ();
-          int64 end_timestamp = tm.tv_sec;
-          /* We want events from the last 30 days only, A day has 86400 seconds.
-           * start_timestamp = end_timestamp - 30 days in seconds*/
-          int64 start_timestamp = end_timestamp - (86400 * 30);
-          GLib.GenericArray<Zeitgeist.Event> events = this._get_zeitgeist_event_templates ();
-          var results = yield this._log.find_events (
-              new TimeRange (start_timestamp * 1000, end_timestamp * 1000),
-              events, StorageState.ANY, 0, ResultType.MOST_RECENT_EVENTS,
-              null);
-          foreach (var persona in this._personas.values)
-            {
-              persona.freeze_notify ();
-              persona._reset_interaction ();
-            }
-          foreach (var e in results)
-            {
-              var interaction_type = e.get_subject (0).interpretation;
-              for (var i = 1; i < e.num_subjects (); i++)
-                {
-                  var id = this._get_iid_from_event_metadata (e.get_subject (i).uri);
-                  this._increase_persona_counter (id, interaction_type, e);
-                }
-            }
-          foreach (var persona in this.personas.values)
-            {
-              persona.thaw_notify ();
-            }
-        }
-      catch
-        {
-          debug ("Failed to fetch events from Zeitgeist");
-        }
-
-      /* Prepare a monitor and install for this account to populate persona
-       * counters upon interaction changes.*/
-      if (this._monitor == null)
-        {
-          GLib.GenericArray<Zeitgeist.Event> monitor_events = this._get_zeitgeist_event_templates ();
-          this._monitor = new Zeitgeist.Monitor (new Zeitgeist.TimeRange.from_now (),
-              monitor_events);
-          this._monitor.events_inserted.connect (this._handle_new_interaction);
-          try
-            {
-              this._log.install_monitor (this._monitor);
-            }
-          catch
-            {
-              warning ("Failed to install monitor for Zeitgeist");
-              this._monitor = null;
-            }
-        }
-
+          var persona = p as Tpf.Persona;
+          assert (persona != null);
+          persona._increase_last_call_interaction_counter (dt);
+        });
+      yield this._zg_controller.populate_counters ();
       this._notify_if_is_quiescent ();
     }
-#endif
 }

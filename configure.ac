@@ -240,6 +240,7 @@ AS_IF([test "x$have_zeitgeist" == "xyes"], [
    ZEITGEIST_PKG="--pkg zeitgeist-2.0"
    AC_SUBST([ZEITGEIST_PKG])
 ])
+AM_CONDITIONAL([ENABLE_ZEITGEIST], [test "x$have_zeitgeist" = "xyes"])
 
 # Ignore post 0.20 deprecations
 TP_GLIB_CFLAGS="$TP_GLIB_CFLAGS -DTP_VERSION_MIN_REQUIRED=TP_VERSION_0_20"

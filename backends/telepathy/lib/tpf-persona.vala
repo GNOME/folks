@@ -1398,8 +1398,7 @@ public class Tpf.Persona : Folks.Persona,
       return store._ensure_persona_for_contact (contact);
     }
 
-  internal void _increase_im_interaction_counter (string id,
-      DateTime converted_datetime)
+  internal void _increase_im_interaction_counter (DateTime converted_datetime)
     {
       this._im_interaction_count++;
       this.notify_property ("im-interaction-count");
@@ -1411,12 +1410,11 @@ public class Tpf.Persona : Folks.Persona,
         }
       debug ("Persona %s IM interaction details changed:\n" +
           " - count: %u \n - timestamp: %lld",
-          id, this._im_interaction_count,
+          this.iid, this._im_interaction_count,
           this._last_im_interaction_datetime.format ("%H %M %S - %d %m %y"));
     }
 
-  internal void _increase_last_call_interaction_counter (string id,
-      DateTime converted_datetime)
+  internal void _increase_last_call_interaction_counter (DateTime converted_datetime)
     {
       this._call_interaction_count++;
       this.notify_property ("call-interaction-count");
@@ -1428,15 +1426,7 @@ public class Tpf.Persona : Folks.Persona,
         }
       debug ("Persona %s Call interaction details changed:\n" +
           " - count: %u \n - timestamp: %lld",
-          id, this._call_interaction_count,
+          this.iid, this._call_interaction_count,
           this._last_call_interaction_datetime.format ("%H %M %S - %d %m %y"));
-    }
-
-  internal void _reset_interaction ()
-    {
-      this._call_interaction_count = 0;
-      this._im_interaction_count = 0;
-      this._last_call_interaction_datetime = null;
-      this._last_im_interaction_datetime = null;
     }
 }
