@@ -143,7 +143,7 @@ folks_telepathy_doc_deps = \
 	$(NULL)
 valadoc_flags_folks_telepathy = \
 	$(valadoc_flags) \
-	-X $(top_srcdir)/backends/telepathy/lib/folks/folks-telepathy.h \
+	-X $(top_srcdir)/backends/telepathy/lib/folks-telepathy.h \
 	$(addprefix --pkg=,$(folks_telepathy_doc_deps)) \
 	--vapidir=$(top_srcdir)/folks \
 	--vapidir=$(top_srcdir)/backends/telepathy/lib \
@@ -214,7 +214,7 @@ folks_eds_doc_deps = \
 	$(NULL)
 valadoc_flags_folks_eds = \
 	$(valadoc_flags) \
-	-X $(top_srcdir)/backends/eds/lib/folks/folks-eds.h \
+	-X $(top_srcdir)/backends/eds/lib/folks-eds.h \
 	$(addprefix --pkg=,$(folks_eds_doc_deps)) \
 	--vapidir=$(top_srcdir)/folks \
 	--vapidir=$(top_srcdir)/backends/eds/lib \
@@ -285,7 +285,7 @@ folks_libsocialweb_doc_deps = \
 	$(NULL)
 valadoc_flags_folks_libsocialweb = \
 	$(valadoc_flags) \
-	-X $(top_srcdir)/backends/libsocialweb/lib/folks/folks-libsocialweb.h \
+	-X $(top_srcdir)/backends/libsocialweb/lib/folks-libsocialweb.h \
 	$(addprefix --pkg=,$(folks_libsocialweb_doc_deps)) \
 	--vapidir=$(top_srcdir)/folks \
 	--vapidir=$(top_srcdir)/backends/libsocialweb/lib \
