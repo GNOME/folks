@@ -30,7 +30,7 @@ using Zeitgeist;
  * tpf-persona-store.vala so that it can be conditionally compiled out.
  *
  * See the note in Makefile.am, and
- * https://bugzilla.gnome.org/show_bug.cgi?id=701099.
+ * [[https://bugzilla.gnome.org/show_bug.cgi?id=701099]].
  */
 public class FolksTpZeitgeist.Controller : Object
 {

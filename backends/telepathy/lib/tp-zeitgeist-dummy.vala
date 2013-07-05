@@ -28,7 +28,7 @@ using GLib;
  * linking to Zeitgeist.
  *
  * See the note in Makefile.am, and
- * https://bugzilla.gnome.org/show_bug.cgi?id=701099.
+ * [[https://bugzilla.gnome.org/show_bug.cgi?id=701099]].
  */
 public class FolksTpZeitgeist.Controller : Object
 {
