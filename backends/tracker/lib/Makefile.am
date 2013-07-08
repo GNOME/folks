@@ -29,7 +29,7 @@ libfolks_tracker_la_VALAFLAGS = \
 	--includedir folks \
 	--library folks-tracker \
 	--vapi folks-tracker.vapi \
-	-H folks-tracker.h \
+	-H folks/folks-tracker.h \
 	$(NULL)
 
 libfolks_tracker_la_CPPFLAGS = \
@@ -72,7 +72,7 @@ libfolks_tracker_la_LDFLAGS = \
 
 folks_tracker_includedir = $(includedir)/folks
 folks_tracker_include_HEADERS = \
-	folks-tracker.h \
+	folks/folks-tracker.h \
 	$(NULL)
 
 vapidir = $(datadir)/vala/vapi
@@ -126,7 +126,7 @@ FolksTracker_@API_VERSION_MAJOR@_@API_VERSION_MINOR@_gir_LIBS = \
         $(NULL)
 FolksTracker_@API_VERSION_MAJOR@_@API_VERSION_MINOR@_gir_FILES = \
 $(libfolks_tracker_la_SOURCES) \
-        folks-tracker.h \
+        folks/folks-tracker.h \
         $(NULL)
 FolksTracker_@API_VERSION_MAJOR@_@API_VERSION_MINOR@_gir_NAMESPACE = FolksTracker
 FolksTracker_@API_VERSION_MAJOR@_@API_VERSION_MINOR@_gir_SCANNERFLAGS = --identifier-prefix=Trf

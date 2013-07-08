@@ -221,7 +221,7 @@ libfolks_telepathy_la_VALAFLAGS = \
 	--includedir folks \
 	--library folks-telepathy \
 	--vapi folks-telepathy.vapi \
-	-H folks-telepathy.h \
+	-H folks/folks-telepathy.h \
 	$(NULL)
 
 if ENABLE_ZEITGEIST
@@ -266,7 +266,7 @@ libfolks_telepathy_la_LDFLAGS = \
 
 folks_telepathy_includedir = $(includedir)/folks
 folks_telepathy_include_HEADERS = \
-	folks-telepathy.h \
+	folks/folks-telepathy.h \
 	$(NULL)
 
 vapidir = $(datadir)/vala/vapi
@@ -357,7 +357,7 @@ FolksTelepathy_@API_VERSION_MAJOR@_@API_VERSION_MINOR@_gir_LIBS = \
         $(NULL)
 FolksTelepathy_@API_VERSION_MAJOR@_@API_VERSION_MINOR@_gir_FILES = \
         $(libfolks_telepathy_la_SOURCES) \
-        folks-telepathy.h \
+        folks/folks-telepathy.h \
         $(NULL)
 FolksTelepathy_@API_VERSION_MAJOR@_@API_VERSION_MINOR@_gir_NAMESPACE = FolksTelepathy
 FolksTelepathy_@API_VERSION_MAJOR@_@API_VERSION_MINOR@_gir_SCANNERFLAGS = --identifier-prefix=Tpf

@@ -46,7 +46,7 @@ libfolks_libsocialweb_la_VALAFLAGS = \
 	--includedir folks \
 	--library folks-libsocialweb \
 	--vapi folks-libsocialweb.vapi \
-	-H folks-libsocialweb.h \
+	-H folks/folks-libsocialweb.h \
 	$(NULL)
 
 libfolks_libsocialweb_la_CFLAGS = \
@@ -76,7 +76,7 @@ libfolks_libsocialweb_la_LDFLAGS = \
 
 folks_libsocialweb_includedir = $(includedir)/folks
 folks_libsocialweb_include_HEADERS = \
-	folks-libsocialweb.h \
+	folks/folks-libsocialweb.h \
 	$(NULL)
 
 vapidir = $(datadir)/vala/vapi
@@ -130,7 +130,7 @@ FolksLibsocialweb_@API_VERSION_MAJOR@_@API_VERSION_MINOR@_gir_LIBS = \
 	$(NULL)
 FolksLibsocialweb_@API_VERSION_MAJOR@_@API_VERSION_MINOR@_gir_FILES = \
 $(libfolks_libsocialweb_la_SOURCES) \
-        folks-libsocialweb.h \
+        folks/folks-libsocialweb.h \
         $(NULL)
 FolksLibsocialweb_@API_VERSION_MAJOR@_@API_VERSION_MINOR@_gir_NAMESPACE = FolksLibsocialweb
 FolksLibsocialweb_@API_VERSION_MAJOR@_@API_VERSION_MINOR@_gir_SCANNERFLAGS = --identifier-prefix=Swf
