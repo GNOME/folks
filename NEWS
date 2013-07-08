@@ -11,6 +11,7 @@ Bugs fixed:
 • Bug 703402 — Backend support libraries don't set the GIR version and namespace
 • Bug 703450 — Telepathy backend gir fails to link
 • Bug 703514 — Can't build FolksTelepathy-0.6.gir
+• Bug 703709 — can't compile folks. fails at GISCAN TpLowlevel-0.6.gir
 
 API changes:
 • Add PresenceDetails.client_types
