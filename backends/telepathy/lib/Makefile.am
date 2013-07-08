@@ -178,10 +178,12 @@ libtp_zeitgeist_dummy_la_VALAFLAGS = \
 	-g \
 	$(NULL)
 
-dist_noinst_DATA += \
-	tp-zeitgeist.vapi \
-	tp-zeitgeist-dummy.vapi \
-	$(NULL)
+
+if ENABLE_ZEITGEIST
+dist_noinst_DATA += tp-zeitgeist.vapi
+else
+dist_noinst_DATA += tp-zeitgeist-dummy.vapi
+endif
 
 ##################################################################
 # Support library
@@ -191,7 +193,13 @@ pkgconfig_in = folks-telepathy.pc.in
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = $(pkgconfig_in:.in=)
 
-$(srcdir)/libfolks_telepathy_la_vala.stamp: tp-lowlevel.vapi tp-zeitgeist.vapi tp-zeitgeist-dummy.vapi
+FOLKS_TP_VALA_DEPS = tp-lowlevel.vapi
+if ENABLE_ZEITGEIST
+FOLKS_TP_VALA_DEPS += tp-zeitgeist.vapi
+else
+FOLKS_TP_VALA_DEPS += tp-zeitgeist-dummy.vapi
+endif
+$(srcdir)/libfolks_telepathy_la_vala.stamp: $(FOLKS_TP_VALA_DEPS)
 
 libfolks_telepathy_la_SOURCES = \
 	tpf-namespace.vala \
