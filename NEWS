@@ -12,6 +12,8 @@ Bugs fixed:
 • Bug 703450 — Telepathy backend gir fails to link
 • Bug 703514 — Can't build FolksTelepathy-0.6.gir
 • Bug 703709 — can't compile folks. fails at GISCAN TpLowlevel-0.6.gir
+• Bug 703830 — build: distcheck fails trying to delete
+  libfolks_telepathy_la_vala.stamp
 
 API changes:
 • Add PresenceDetails.client_types

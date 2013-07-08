@@ -199,7 +199,7 @@ FOLKS_TP_VALA_DEPS += tp-zeitgeist.vapi
 else
 FOLKS_TP_VALA_DEPS += tp-zeitgeist-dummy.vapi
 endif
-$(srcdir)/libfolks_telepathy_la_vala.stamp: $(FOLKS_TP_VALA_DEPS)
+$(builddir)/libfolks_telepathy_la_vala.stamp: $(FOLKS_TP_VALA_DEPS)
 
 libfolks_telepathy_la_SOURCES = \
 	tpf-namespace.vala \
