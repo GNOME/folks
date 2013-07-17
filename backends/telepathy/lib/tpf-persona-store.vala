@@ -1095,6 +1095,8 @@ public class Tpf.PersonaStore : Folks.PersonaStore
           return;
         }
 
+      persona._contact_weak_notify();
+
       if (this._remove_persona (persona))
         {
           /* This should never happen because TpConnection keeps a ref on

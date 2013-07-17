@@ -488,7 +488,7 @@ public class Tpf.Persona : Folks.Persona,
     {
       /* Ensure we have a strong ref to the contact for the duration of the
        * operation. */
-      var contact = (Contact?) this._contact.get ();
+      var contact = (Contact?) this._contact;
 
       if (contact == null)
         {
@@ -561,7 +561,7 @@ public class Tpf.Persona : Folks.Persona,
    */
   public async void change_groups (Set<string> groups) throws PropertyError
     {
-      var contact = (Contact?) this._contact.get ();
+      var contact = (Contact?) this._contact;
 
       if (contact == null)
         {
@@ -587,23 +587,22 @@ public class Tpf.Persona : Folks.Persona,
       /* The change will be notified when we receive changes from the store. */
     }
 
-  /* This has to be weak since, in general, we can't force any TpContacts to
-   * remain alive if we want to solve bgo#665376.
-   * As per bgo#680335, we have to use a WeakRef rather than a
-   * ‘weak Contact?’ to avoid races when clearing the pointer. We still have
-   * to use a weak ref. notifier as well, though, in order to be able to emit
-   * a property change notification for ::contact.
+  /* We handle the weak ref ourself to be able to notify the "contact" property.
+   * It is TpfPersonaStore who weak_ref() the TpContact and calls
+   * _contact_weak_notify() on the persona.
    *
-   * FIXME: Once bgo#554344 is fixed, _contact could be changed back to
-   * being a 'weak Contact?', assuming Vala implements weak references using
-   * GWeakRef. */
-  private GLib.WeakRef _contact = GLib.WeakRef (null);
+   * This isn't as easy as it seems, see bgo#702165 */
+  private unowned Contact? _contact;
 
-  private void _contact_weak_notify_cb (Object obj)
+  internal void _contact_weak_notify ()
     {
+      if (this._contact == null)
+        return;
+
       debug ("TpContact %p destroyed; setting ._contact = null in Persona %p",
-          obj, this);
-      /* _contact is cleared automatically as it's a WeakRef. */
+          this._contact, this);
+
+      this._contact = null;
       this.notify_property ("contact");
     }
 
@@ -626,25 +625,12 @@ public class Tpf.Persona : Folks.Persona,
            * pointer which is returned might be invalidated before reaching the
            * caller. Probably not a problem in practice since folks won't be
            * run multi-threaded. */
-          Contact? contact = (Contact?) this._contact.get ();
-          if (contact == null)
-            {
-              return null;
-            }
-
-          /* FIXME: I'm so very, very sorry. This is to cause Vala to forget
-           * we have a strong ref on 'contact' and not transfer it out. */
-          return (Contact) ((void*) contact);
+          return this._contact;
         }
 
       construct
         {
-          if (value != null)
-            {
-              value.weak_ref (this._contact_weak_notify_cb);
-            }
-
-          this._contact.set (value);
+          this._contact = value;
         }
     }
 
@@ -784,7 +770,7 @@ public class Tpf.Persona : Folks.Persona,
 
       /* Contact can be null if we've been created from the cache. All the code
        * below this point is for non-cached personas. */
-      var contact = (Contact?) this._contact.get ();
+      var contact = (Contact?) this._contact;
 
       if (contact == null)
         {
@@ -796,7 +782,7 @@ public class Tpf.Persona : Folks.Persona,
 
       contact.notify["alias"].connect ((s, p) =>
           {
-            var c = (Contact?) this._contact.get ();
+            var c = (Contact?) this._contact;
             assert (c != null); /* should never be called while cached */
 
             /* Tp guarantees that aliases are always non-null. */
@@ -952,7 +938,7 @@ public class Tpf.Persona : Folks.Persona,
           this._phone_numbers_ro = this._phone_numbers.read_only_view;
         }
 
-      var contact = (Contact?) this._contact.get ();
+      var contact = (Contact?) this._contact;
       if (contact == null)
         {
           /* If operating from the cache, bail out early. */
@@ -1232,24 +1218,18 @@ public class Tpf.Persona : Folks.Persona,
   ~Persona ()
     {
       debug ("Destroying Tpf.Persona '%s': %p", this.uid, this);
-
-      var contact = (Contact?) this._contact.get ();
-      if (contact != null)
-        {
-          contact.weak_unref (this._contact_weak_notify_cb);
-        }
     }
 
   private void _contact_notify_presence_message ()
     {
-      var contact = (Contact?) this._contact.get ();
+      var contact = (Contact?) this._contact;
       assert (contact != null); /* should never be called while cached */
       this.presence_message = contact.get_presence_message ();
     }
 
   private void _contact_notify_presence_type ()
     {
-      var contact = (Contact?) this._contact.get ();
+      var contact = (Contact?) this._contact;
       assert (contact != null); /* should never be called while cached */
       this.presence_type = Tpf.Persona._folks_presence_type_from_tp (
           contact.get_presence_type ());
@@ -1257,7 +1237,7 @@ public class Tpf.Persona : Folks.Persona,
 
   private void _contact_notify_presence_status ()
     {
-      var contact = (Contact?) this._contact.get ();
+      var contact = (Contact?) this._contact;
       assert (contact != null); /* should never be called while cached */
       this.presence_status = contact.get_presence_status ();
     }
@@ -1292,7 +1272,7 @@ public class Tpf.Persona : Folks.Persona,
 
   private void _contact_notify_avatar ()
     {
-      var contact = (Contact?) this._contact.get ();
+      var contact = (Contact?) this._contact;
       assert (contact != null); /* should never be called while cached */
 
       var file = contact.avatar_file;
