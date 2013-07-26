@@ -14,6 +14,7 @@ Bugs fixed:
 • Bug 703709 — can't compile folks. fails at GISCAN TpLowlevel-0.6.gir
 • Bug 703830 — build: distcheck fails trying to delete
   libfolks_telepathy_la_vala.stamp
+• Bug 704922 — key-file: do not use deprecated loop_run_with_non_fatal_timeout()
 
 API changes:
 • Add PresenceDetails.client_types

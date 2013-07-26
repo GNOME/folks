@@ -1,5 +1,6 @@
 /*
- * Copyright (C) 2011 Collabora Ltd.
+ * Copyright (C) 2011, 2013 Collabora Ltd.
+ * Copyright (C) 2013 Philip Withnall
  *
  * This library is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -15,6 +16,7 @@
  * along with this library.  If not, see <http://www.gnu.org/licenses/>.
  *
  * Authors: Travis Reitter <travis.reitter@collabora.co.uk>
+ *          Philip Withnall <philip@tecnocode.co.uk>
  */
 
 using Gee;
@@ -74,13 +76,17 @@ public class IndividualRetrievalTests : KfTest.TestCase
             {
               assert (i == null);
             }
+
+          /* Finished? */
+          if (expected_individuals.size == 0)
+              main_loop.quit ();
         });
       aggregator.prepare.begin ();
 
       /* Kill the main loop after a few seconds. If there are still individuals
        * in the set of expected individuals, the aggregator has either failed
        * or been too slow (which we can consider to be failure). */
-      TestUtils.loop_run_with_non_fatal_timeout (main_loop, 3);
+      TestUtils.loop_run_with_timeout (main_loop, 3);
 
       /* We should have enumerated exactly the individuals in the set */
       assert (expected_individuals.size == 0);
@@ -119,13 +125,17 @@ public class IndividualRetrievalTests : KfTest.TestCase
             {
               assert (i == null);
             }
+
+          /* Finished? */
+          if (individuals_changed_count == 1)
+              main_loop.quit ();
         });
       aggregator.prepare.begin ();
 
       /* Kill the main loop after a few seconds. If there are still individuals
        * in the set of expected individuals, the aggregator has either failed
        * or been too slow (which we can consider to be failure). */
-      TestUtils.loop_run_with_non_fatal_timeout (main_loop, 3);
+      TestUtils.loop_run_with_timeout (main_loop, 3);
 
       /* We should have enumerated exactly one individual */
       assert (individuals_changed_count == 1);
