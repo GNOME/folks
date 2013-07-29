@@ -1104,7 +1104,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
           return;
         }
 
-      persona._contact_weak_notify();
+      persona._contact_weak_notify ();
 
       if (this._remove_persona (persona))
         {
