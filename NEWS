@@ -15,6 +15,7 @@ Bugs fixed:
 • Bug 703830 — build: distcheck fails trying to delete
   libfolks_telepathy_la_vala.stamp
 • Bug 704922 — key-file: do not use deprecated loop_run_with_non_fatal_timeout()
+• Bug 705196 — Linking a favorite TP contact with a EDS one unfavorite it
 
 API changes:
 • Add PresenceDetails.client_types
