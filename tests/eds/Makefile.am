@@ -69,6 +69,7 @@ TESTS = \
 	set-phones \
 	set-postal-addresses \
 	link-personas \
+	double-aggregator \
 	set-notes \
 	add-contacts-stress-test \
 	set-gender \
@@ -245,6 +246,10 @@ helper_delete_contacts_SOURCES = \
 
 helper_prepare_aggregator_SOURCES = \
 	helper-prepare-aggregator.vala \
+	$(NULL)
+
+double_aggregator_SOURCES = \
+	double-aggregator.vala \
 	$(NULL)
 
 CLEANFILES = \
