@@ -68,7 +68,10 @@ public class DoubleAggregatorTests : EdsTest.TestCase
     {
       this._prepare_test ();
 
-      this._unlink_individuals ();
+      this._unlink_individuals.begin ((o, r) =>
+        {
+          this._unlink_individuals.end (r);
+        });
       TestUtils.loop_run_with_timeout (this._main_loop);
     }
 
@@ -76,7 +79,10 @@ public class DoubleAggregatorTests : EdsTest.TestCase
     {
       this._prepare_test ();
 
-      this._remove_individual ();
+      this._remove_individual.begin ((o, r) =>
+        {
+          this._remove_individual.end (r);
+        });
       TestUtils.loop_run_with_timeout (this._main_loop);
     }
 
@@ -116,7 +122,7 @@ public class DoubleAggregatorTests : EdsTest.TestCase
       yield this.eds_backend.commit_contacts_to_addressbook ();
 
       this._aggregator.notify["is-quiescent"].connect (this._link_individuals);
-      this._prepare_aggregator (this._aggregator);
+      yield this._prepare_aggregator (this._aggregator);
     }
 
   private async void _link_individuals ()
@@ -144,7 +150,7 @@ public class DoubleAggregatorTests : EdsTest.TestCase
 
       this._aggregator2 = new IndividualAggregator ();
       this._aggregator2.notify["is-quiescent"].connect (this._aggregator2_is_quiescent);
-      this._prepare_aggregator (this._aggregator2);
+      yield this._prepare_aggregator (this._aggregator2);
     }
 
   private void _aggregator2_is_quiescent ()
