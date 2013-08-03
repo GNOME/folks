@@ -1516,7 +1516,8 @@ public class Edsf.Persona : Folks.Persona,
                 return null;
               }
 
-            return new Edsf.MemoryIcon ((!) mime_type, (!) data);
+            var bytes = new Bytes ((!) data);
+            return new BytesIcon (bytes);
           default:
             return null;
         }

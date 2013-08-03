@@ -30,7 +30,6 @@ libfolks_eds_la_SOURCES = \
 	edsf-namespace.vala \
 	edsf-persona.vala \
 	edsf-persona-store.vala \
-	memory-icon.vala \
 	$(NULL)
 
 libfolks_eds_la_VALAFLAGS = \

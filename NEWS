@@ -2,6 +2,7 @@ Overview of changes from libfolks 0.9.5 to libfolks 0.9.6
 =========================================================
 
 Dependencies:
+• GLib ≥ 2.37.6
 
 Major changes:
 
@@ -12,6 +13,7 @@ Bugs fixed:
 • Bug 705608 — FolksTelepathy: tpf_persona_get_contact: return value: Missing
   (transfer) annotation
 • Bug 697262 — uses deprecated e-d-s functions (Xavier)
+• Bug 705403 — Use GLib.BytesIcon instead of Edsf.MemoryIcon
 
 API changes:
 
