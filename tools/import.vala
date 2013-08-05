@@ -77,7 +77,7 @@ public class Folks.ImportTool : Object
       /* FIXME: We need to create this, even though we don't use it, to prevent
        * debug message spew, as its constructor initialises the log handling.
        * bgo#629096 */
-      IndividualAggregator aggregator = new IndividualAggregator ();
+      IndividualAggregator aggregator = IndividualAggregator.dup ();
       aggregator = null;
 
       /* Create a main loop and start importing */

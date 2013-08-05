@@ -78,7 +78,7 @@ public class StoreRemovedTests : EdsTest.TestCase
       var store = BackendStore.dup ();
       yield store.prepare ();
 
-      this._aggregator = new IndividualAggregator ();
+      this._aggregator = IndividualAggregator.dup ();
 
       ulong signal_id = 0;
       signal_id = this._aggregator.individuals_changed_detailed.connect (

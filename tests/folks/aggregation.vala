@@ -129,7 +129,7 @@ public class AggregationTests : TpfTest.MixedTestCase
         }
 
       /* Set up the aggregator */
-      var aggregator = new IndividualAggregator ();
+      var aggregator = IndividualAggregator.dup ();
       aggregator.individuals_changed_detailed.connect ((changes) =>
         {
           var removed = changes.get_keys ();
@@ -262,7 +262,7 @@ public class AggregationTests : TpfTest.MixedTestCase
       weak Individual individual2_detailed = null;
 
       /* Set up the aggregator */
-      var aggregator = new IndividualAggregator ();
+      var aggregator = IndividualAggregator.dup ();
       aggregator.individuals_changed_detailed.connect ((changes) =>
         {
           var removed = changes.get_keys ();
@@ -438,7 +438,7 @@ public class AggregationTests : TpfTest.MixedTestCase
       weak Individual individual2_detailed = null;
 
       /* Set up the aggregator */
-      var aggregator = new IndividualAggregator ();
+      var aggregator = IndividualAggregator.dup ();
       aggregator.individuals_changed_detailed.connect ((changes) =>
         {
           var removed = changes.get_keys ();
@@ -616,7 +616,7 @@ public class AggregationTests : TpfTest.MixedTestCase
       Individual user_individual_detailed = null;
 
       /* Set up the aggregator */
-      var aggregator = new IndividualAggregator ();
+      var aggregator = IndividualAggregator.dup ();
       var individuals_changed_detailed_id =
           aggregator.individuals_changed_detailed.connect ((changes) =>
         {
@@ -746,7 +746,7 @@ public class AggregationTests : TpfTest.MixedTestCase
           "me2@example.com", "cm", "account2");
 
       /* Set up the aggregator */
-      var aggregator = new IndividualAggregator ();
+      var aggregator = IndividualAggregator.dup ();
       var individuals_changed_detailed_id =
           aggregator.individuals_changed_detailed.connect ((changes) =>
         {
@@ -867,7 +867,7 @@ public class AggregationTests : TpfTest.MixedTestCase
       var individuals_map = new HashMap<string, IndividualState> ();
 
       /* Set up the aggregator */
-      var aggregator = new IndividualAggregator ();
+      var aggregator = IndividualAggregator.dup ();
       var aggregator_is_finalising = false;
 
       aggregator.individuals_changed.connect ((added, removed, m, a, r) =>
@@ -981,7 +981,7 @@ public class AggregationTests : TpfTest.MixedTestCase
       Individual? individual = null;
 
       /* Set up the aggregator */
-      var aggregator = new IndividualAggregator ();
+      var aggregator = IndividualAggregator.dup ();
       aggregator.individuals_changed_detailed.connect ((changes) =>
         {
           assert (changes.size == 1);
@@ -1095,7 +1095,7 @@ public class AggregationTests : TpfTest.MixedTestCase
       Individual? individual = null;
 
       /* Set up the aggregator */
-      var aggregator = new IndividualAggregator ();
+      var aggregator = IndividualAggregator.dup ();
       var individuals_changed_id =
           aggregator.individuals_changed_detailed.connect ((changes) =>
         {
@@ -1270,7 +1270,7 @@ public class AggregationTests : TpfTest.MixedTestCase
       Individual? individual = null;
 
       /* Set up the aggregator */
-      var aggregator = new IndividualAggregator ();
+      var aggregator = IndividualAggregator.dup ();
       aggregator.individuals_changed_detailed.connect ((changes) =>
         {
           assert (changes.size == 1);

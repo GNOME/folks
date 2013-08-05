@@ -135,7 +135,7 @@ public class Main
       yield TestUtils.backend_prepare_and_wait_for_quiescence ((!) eds);
 
       message ("%.6f Waiting for aggregator", Test.timer_elapsed ());
-      var aggregator = new IndividualAggregator ();
+      var aggregator = IndividualAggregator.dup ();
       yield TestUtils.aggregator_prepare_and_wait_for_quiescence (aggregator);
 
       var map = aggregator.individuals;

@@ -37,7 +37,7 @@ public class InitTests : TpfTest.TestCase
       var main_loop = new GLib.MainLoop (null, false);
 
       /* Main test code. */
-      var aggregator = new IndividualAggregator ();
+      var aggregator = IndividualAggregator.dup ();
 
       Idle.add (() =>
         {

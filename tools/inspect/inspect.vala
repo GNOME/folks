@@ -148,7 +148,7 @@ public class Folks.Inspect.Client : Object
       this.main_loop = new MainLoop ();
       this.signal_manager = new SignalManager ();
       this.backend_store = BackendStore.dup ();
-      this.aggregator = new IndividualAggregator ();
+      this.aggregator = IndividualAggregator.dup ();
     }
 
   public void quit ()

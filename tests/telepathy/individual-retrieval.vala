@@ -74,7 +74,7 @@ public class IndividualRetrievalTests : TpfTest.TestCase
         expected_individuals.add (id);
 
       /* Set up the aggregator */
-      var aggregator = new IndividualAggregator ();
+      var aggregator = IndividualAggregator.dup ();
       aggregator.individuals_changed_detailed.connect ((changes) =>
         {
           var added = changes.get_values ();
@@ -136,7 +136,7 @@ public class IndividualRetrievalTests : TpfTest.TestCase
       added_individuals.add ("carl-brutananadilewski@example.com");
 
       /* Set up the aggregator */
-      var aggregator = new IndividualAggregator ();
+      var aggregator = IndividualAggregator.dup ();
 
       aggregator.individuals_changed_detailed.connect ((changes) =>
         {

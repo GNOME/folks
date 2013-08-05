@@ -114,7 +114,7 @@ public class LinkablePropertiesTests : EdsTest.TestCase
 
       var store = BackendStore.dup ();
       yield store.prepare ();
-      this._aggregator = new IndividualAggregator ();
+      this._aggregator = IndividualAggregator.dup ();
       this._aggregator.individuals_changed_detailed.connect
           (this._individuals_changed_aggregate_after_change_cb);
       try

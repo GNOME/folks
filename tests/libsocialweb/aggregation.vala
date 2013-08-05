@@ -161,7 +161,7 @@ public class AggregationTests : LibsocialwebTest.TestCase
             });
         });
 
-      var aggregator = new IndividualAggregator ();
+      var aggregator = IndividualAggregator.dup ();
       Individual[] individual_gathered = new Individual[0];
       var handler_id =
           aggregator.individuals_changed_detailed.connect ((changes) =>

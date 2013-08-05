@@ -61,7 +61,7 @@ public class IndividualPropertiesTests : TpfTest.TestCase
       var main_loop = new GLib.MainLoop (null, false);
 
       /* Set up the aggregator */
-      var aggregator = new IndividualAggregator ();
+      var aggregator = IndividualAggregator.dup ();
       aggregator.individuals_changed_detailed.connect ((changes) =>
         {
           var added = changes.get_values ();
@@ -191,7 +191,7 @@ public class IndividualPropertiesTests : TpfTest.TestCase
       var alias_notified = false;
 
       /* Set up the aggregator */
-      var aggregator = new IndividualAggregator ();
+      var aggregator = IndividualAggregator.dup ();
       aggregator.individuals_changed_detailed.connect ((changes) =>
         {
           var added = changes.get_values ();
@@ -264,7 +264,7 @@ public class IndividualPropertiesTests : TpfTest.TestCase
       var alias_notified = false;
 
       /* Set up the aggregator */
-      var aggregator = new IndividualAggregator ();
+      var aggregator = IndividualAggregator.dup ();
       aggregator.individuals_changed_detailed.connect ((changes) =>
         {
           var added = changes.get_values ();
@@ -342,7 +342,7 @@ public class IndividualPropertiesTests : TpfTest.TestCase
       this._changes_pending.add ("urls");
 
       /* Set up the aggregator */
-      var aggregator = new IndividualAggregator ();
+      var aggregator = IndividualAggregator.dup ();
       aggregator.individuals_changed_detailed.connect ((changes) =>
         {
           this._change_contact_info_aggregator_individuals_added.begin (changes);

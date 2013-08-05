@@ -79,7 +79,7 @@ public class CreateRemoveStoresTests : EdsTest.TestCase
   private async void _test_creating_removing_stores_async ()
     {
       yield this._backend_store.prepare ();
-      this._aggregator = new IndividualAggregator ();
+      this._aggregator = IndividualAggregator.dup ();
       try
         {
           yield this._backend_store.load_backends ();

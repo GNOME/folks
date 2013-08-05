@@ -66,7 +66,7 @@ public class AvatarDetailsInterfaceTests : TrackerTest.TestCase
       yield store.prepare ();
 
       /* Set up the aggregator */
-      this._aggregator = new IndividualAggregator ();
+      this._aggregator = IndividualAggregator.dup ();
       this._aggregator.individuals_changed_detailed.connect
           (this._individuals_changed_cb);
       try

@@ -47,7 +47,7 @@ public int main (string[] args)
 {
   var main_loop = new GLib.MainLoop (null, false);
   /* Set up the aggregator */
-  var aggregator = new IndividualAggregator ();
+  var aggregator = IndividualAggregator.dup ();
 
   aggregator.notify["is-quiescent"].connect (() =>
     {

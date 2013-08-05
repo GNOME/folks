@@ -106,7 +106,7 @@ public class PerfTests : EdsTest.TestCase
       yield TestUtils.backend_prepare_and_wait_for_quiescence ((!) eds);
 
       message ("%.6f Preparing aggregator", Test.timer_elapsed ());
-      var aggregator = new IndividualAggregator ();
+      var aggregator = IndividualAggregator.dup ();
       yield aggregator.prepare ();
 
       message ("%.6f Waiting for aggregator", Test.timer_elapsed ());

@@ -106,7 +106,7 @@ public class DummyLswTests : LibsocialwebTest.TestCase
             });
         });
 
-      var aggregator = new IndividualAggregator ();
+      var aggregator = IndividualAggregator.dup ();
       Individual? i1 = null;
       Individual? i2 = null;
       var handler_id =

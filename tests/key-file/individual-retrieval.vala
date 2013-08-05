@@ -50,7 +50,7 @@ public class IndividualRetrievalTests : KfTest.TestCase
       expected_individuals.add ("1");
 
       /* Set up the aggregator */
-      var aggregator = new IndividualAggregator ();
+      var aggregator = IndividualAggregator.dup ();
       aggregator.individuals_changed_detailed.connect ((changes) =>
         {
           var added = changes.get_values ();
@@ -103,7 +103,7 @@ public class IndividualRetrievalTests : KfTest.TestCase
           "msn=foo@hotmail.com\n");
 
       /* Set up the aggregator */
-      var aggregator = new IndividualAggregator ();
+      var aggregator = IndividualAggregator.dup ();
       uint individuals_changed_count = 0;
       aggregator.individuals_changed_detailed.connect ((changes) =>
         {

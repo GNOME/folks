@@ -85,7 +85,7 @@ public class EnableDisableStoresTests : EdsTest.TestCase
   private async void _test_disabling_stores_async ()
     {
       yield this._backend_store.prepare ();
-      this._aggregator = new IndividualAggregator ();
+      this._aggregator = IndividualAggregator.dup ();
       try
         {
           yield this._backend_store.load_backends ();
