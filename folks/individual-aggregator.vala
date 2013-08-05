@@ -113,9 +113,17 @@ public errordomain Folks.IndividualAggregatorError
  * be linked together. There is no API to directly link the individuals
  * themselves, as conceptually folks links {@link Persona}s, not
  * {@link Individual}s.
+ *
+ * Folks does not support having more than one IndividualAggregator
+ * instantiated at the same time. Most clients should use
+ * {@link IndividualAggregator.dup} to retrieve the IndividualAggregator
+ * singleton.
+ *
  */
 public class Folks.IndividualAggregator : Object
 {
+  private static weak IndividualAggregator? _instance = null; /* needs to be locked */
+
   private BackendStore _backend_store;
   private HashMap<string, PersonaStore> _stores;
   private unowned PersonaStore? _primary_store = null;
@@ -312,7 +320,38 @@ public class Folks.IndividualAggregator : Object
   public signal void individuals_changed_detailed (
       MultiMap<Individual?, Individual?> changes);
 
-  /* FIXME: make this a singleton? */
+  /**
+   * Create or return the singleton {@link IndividualAggregator} class instance.
+   * If the instance doesn't exist already, it will be created with the
+   * default {@link BackendStore}.
+   *
+   * This function is thread-safe.
+   *
+   * @return Singleton {@link IndividualAggregator} instance
+   * @since UNRELEASED
+   */
+  public static IndividualAggregator dup ()
+    {
+      lock (IndividualAggregator._instance)
+        {
+          IndividualAggregator? _retval = IndividualAggregator._instance;
+          IndividualAggregator retval;
+
+          if (_retval == null)
+            {
+              /* use an intermediate variable to force a strong reference */
+              retval = new IndividualAggregator ();
+              IndividualAggregator._instance = retval;
+            }
+          else
+            {
+              retval = (!) _retval;
+            }
+
+          return retval;
+        }
+    }
+
   /**
    * Create a new IndividualAggregator.
    *
@@ -328,13 +367,61 @@ public class Folks.IndividualAggregator : Object
    *   agg.individuals_changed_detailed.connect (individuals_changed_cb);
    *   agg.prepare ();
    * }}}
+   *
+   * Folks does not support having more than one IndividualAggregator
+   * instantiated at the same time. So it's recommended to use
+   * {@link IndividualAggregator.dup} instead.
    */
+  [Deprecated (since = "UNRELEASED",
+      replacement = "IndividualAggregator.dup")]
   public IndividualAggregator ()
   {
     Object ();
     this._backend_store = BackendStore.dup ();
   }
-  
+
+  /**
+   * Create or return the singleton {@link IndividualAggregator} class instance
+   * with a custom {@link BackendStore}.
+   * If the instance doesn't exist already, it will be created with
+   * the given {@link BackendStore} rather than the default one.
+   * If the instance already exists but is using another {@link BackendStore}
+   * then a warning is raised and null is returned.
+   *
+   * This function is thread-safe.
+   *
+   * @param store the {@link BackendStore} to use instead of the default one.
+
+   * @return Singleton {@link IndividualAggregator} instance, or null
+   * @since UNRELEASED
+   */
+  public static IndividualAggregator? dup_with_backend_store (BackendStore store)
+    {
+      lock (IndividualAggregator._instance)
+        {
+          IndividualAggregator? _retval = IndividualAggregator._instance;
+          IndividualAggregator retval;
+
+          if (_retval == null)
+            {
+              /* use an intermediate variable to force a strong reference */
+              retval = new IndividualAggregator.with_backend_store (store);
+              IndividualAggregator._instance = retval;
+            }
+          else if (_retval._backend_store != store)
+            {
+              warning ("An aggregator already exists using another backend store");
+              return null;
+            }
+          else
+            {
+              retval = (!) _retval;
+            }
+
+          return retval;
+        }
+    }
+
   /**
    * Create a new IndividualAggregator with a custom {@link BackendStore}.
    *
@@ -346,6 +433,8 @@ public class Folks.IndividualAggregator : Object
    *
    * @since 0.9.0
    */
+  [Deprecated (since = "UNRELEASED",
+      replacement = "IndividualAggregator.dup_with_backend_store")]
   public IndividualAggregator.with_backend_store (BackendStore store)
   {
     Object ();
@@ -434,6 +523,12 @@ public class Folks.IndividualAggregator : Object
           this._backend_available_cb);
 
       this._debug.print_status.disconnect (this._debug_print_status);
+
+      /* Manually clear the singleton _instance */
+      lock (IndividualAggregator._instance)
+        {
+          IndividualAggregator._instance = null;
+        }
     }
 
   private void _configure_primary_store (string store_config_ids)

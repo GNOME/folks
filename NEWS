@@ -4,10 +4,17 @@ Overview of changes from libfolks 0.9.4 to libfolks 0.9.5
 Dependencies:
 
 Major changes:
+• Multiple IndividualAggregator instances are now not officially supported.
+Clients should use the new IndividualAggregator.dup constructor to retrieve
+the default aggregator singleton. The default IndividualAggregator constructor
+and IndividualAggregator.with_backend_store are now deprecated.
 
 Bugs fixed:
+• Bug 705289 — Crash when removing an individual with 2 aggregators instantiated
 
 API changes:
+• Add IndividualAggregator.dup constructor
+• Add IndividualAggregator.dup_with_backend_store constructor
 
 Overview of changes from libfolks 0.9.3 to libfolks 0.9.4
 =========================================================
