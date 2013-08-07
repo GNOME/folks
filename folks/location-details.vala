@@ -24,7 +24,7 @@ using GLib;
  * A location. Typically latitude and longitude will
  * be based on WGS84. However, folks often has no
  * way of verifying that and just has to assume
- * that.
+ * it's true.
  *
  * @since 0.9.2
  */
@@ -86,20 +86,23 @@ public class Folks.Location : Object
 
 /**
  * Location of a contact. folks tries to keep track of
- * the current location and thus favors live data (say,
+* the current location and thus favors live data (say,
  * as advertised by a chat service) over static data (from
- * an address book).
+ * an address book). Static addresses, such as a contact's home or work address,
+ * should be presented using the {@link PostalAddressDetails} interface.
+ * {@link LocationDetails} is purely for exposing the contact's current or
+ * recent location.
  *
  * Backends are expected to report only relevant changes
  * in a persona's location. For storage backends like EDS,
- * all changes must have been triggered by a person and thus
- * all are relevant.
+ * all changes must have been triggered by a person (e.g.
+ * editing the contact) and thus all are relevant.
  *
  * A backend pulling in live data, for example from a GPS,
  * is expected to filter the data to minimize noise.
  *
- * The folks itself then will apply all changes coming
- * from backends, without further filtering.
+ * folks itself will then apply all changes coming
+ * from backends without further filtering.
  *
  * @since 0.9.2
  */
@@ -108,6 +111,8 @@ public interface Folks.LocationDetails : Object
   /**
    * The current location of the contact. Null if the contact’s
    * current location isn’t known, or they’re keeping it private.
+   *
+   * @since 0.9.2
    */
   public abstract Location? location { get; set; }
 
@@ -121,6 +126,7 @@ public interface Folks.LocationDetails : Object
    *
    * @param location the contact's location, null to remove the information
    * @throws PropertyError if setting the location failed
+   * @since 0.9.2
    */
   public virtual async void change_location (Location? location) throws PropertyError
     {
