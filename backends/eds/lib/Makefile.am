@@ -49,6 +49,8 @@ libfolks_eds_la_VALAFLAGS = \
 	--pkg libedataserver-1.2 \
 	--pkg libxml-2.0 \
 	--includedir folks \
+	--gir FolksEds-$(API_VERSION_DOT).gir \
+	--library folks-eds \
 	--vapi folks-eds.vapi \
 	-H folks/folks-eds.h \
 	$(NULL)
@@ -125,46 +127,20 @@ INTROSPECTION_COMPILER_ARGS = \
         --includedir=$(abs_top_builddir)/folks \
         $(NULL)
 
-EDSF_GIR = FolksEds-$(API_VERSION_DOT).gir
-$(EDSF_GIR): libfolks-eds.la
-
-FolksEds_@API_VERSION_MAJOR@_@API_VERSION_MINOR@_gir_CFLAGS = \
-        $(EBOOK_CFLAGS) \
-        $(EDATASERVER_CFLAGS) \
-        $(NULL)
-FolksEds_@API_VERSION_MAJOR@_@API_VERSION_MINOR@_gir_INCLUDES = \
-        Gee-0.8 \
-        Gio-2.0 \
-        Folks-$(API_VERSION_DOT) \
-        EBook-1.2 \
-        EBookContacts-1.2 \
-        EDataServer-1.2 \
-        $(NULL)
-FolksEds_@API_VERSION_MAJOR@_@API_VERSION_MINOR@_gir_LIBS = \
-	libfolks-eds.la \
-	$(top_builddir)/folks/libfolks.la \
-	$(NULL)
-FolksEds_@API_VERSION_MAJOR@_@API_VERSION_MINOR@_gir_FILES = \
-$(libfolks_eds_la_SOURCES) \
-        folks/folks-eds.h \
-        $(NULL)
-FolksEds_@API_VERSION_MAJOR@_@API_VERSION_MINOR@_gir_NAMESPACE = FolksEds
-FolksEds_@API_VERSION_MAJOR@_@API_VERSION_MINOR@_gir_SCANNERFLAGS = --identifier-prefix=Edsf
-INTROSPECTION_GIRS = $(EDSF_GIR)
-
-libfolks_eds_la_VALAFLAGS += \
-        --gir $(EDSF_GIR) \
-        --girdir=$(abs_builddir) \
-        $(NULL)
+if HAVE_INTROSPECTION
+FolksEds-$(API_VERSION_DOT).gir: libfolks-eds.la
+GIRS = FolksEds-$(API_VERSION_DOT).gir
 
 girdir = $(datadir)/gir-1.0
-dist_gir_DATA = $(INTROSPECTION_GIRS)
+dist_gir_DATA = $(GIRS)
+
+MAINTAINERCLEANFILES += $(dist_gir_DATA)
 
 typelibdir = $(libdir)/girepository-1.0
-nodist_typelib_DATA = $(dist_gir_DATA:.gir=.typelib)
+nodist_typelib_DATA = $(GIRS:.gir=.typelib)
 
 CLEANFILES += $(nodist_typelib_DATA)
-MAINTAINERCLEANFILES += $(dist_gir_DATA)
+endif
 
 ##################################################################
 # Common

@@ -213,6 +213,7 @@ libfolks_telepathy_la_SOURCES = \
 libfolks_telepathy_la_VALAFLAGS = \
 	$(AM_VALAFLAGS) \
 	$(ERROR_VALAFLAGS) \
+	--gir=FolksTelepathy-$(API_VERSION_DOT).gir \
 	--library=folks-telepathy \
 	--vapidir=$(abs_srcdir) \
 	--vapidir=$(abs_builddir) \
@@ -347,59 +348,21 @@ TpLowlevel-$(API_VERSION_DOT).gir: libtp-lowlevel.la
 #------------------------------------
 # Folks Telepathy
 #------------------------------------
-TPF_GIR = FolksTelepathy-$(API_VERSION_DOT).gir
-$(TPF_GIR): libfolks-telepathy.la
 
-FolksTelepathy_@API_VERSION_MAJOR@_@API_VERSION_MINOR@_gir_CFLAGS = $(TP_GLIB_CFLAGS)
-# Note that we don't actually include TpLowlevel*.gir because we don't want to
-# make it a public dependency
-FolksTelepathy_@API_VERSION_MAJOR@_@API_VERSION_MINOR@_gir_INCLUDES = \
-        Gee-0.8 \
-        Gio-2.0 \
-        Folks-$(API_VERSION_DOT) \
-        TelepathyGLib-0.12 \
-        $(NULL)
-FolksTelepathy_@API_VERSION_MAJOR@_@API_VERSION_MINOR@_gir_LIBS = \
-	libfolks-telepathy.la \
-        $(top_builddir)/folks/libfolks.la \
-        $(NULL)
-FolksTelepathy_@API_VERSION_MAJOR@_@API_VERSION_MINOR@_gir_FILES = \
-        $(libfolks_telepathy_la_SOURCES) \
-        folks/folks-telepathy.h \
-        $(NULL)
-FolksTelepathy_@API_VERSION_MAJOR@_@API_VERSION_MINOR@_gir_NAMESPACE = FolksTelepathy
-FolksTelepathy_@API_VERSION_MAJOR@_@API_VERSION_MINOR@_gir_SCANNERFLAGS = --identifier-prefix=Tpf
-INTROSPECTION_GIRS += $(TPF_GIR)
+if HAVE_INTROSPECTION
+FolksTelepathy-$(API_VERSION_DOT).gir: libfolks-telepathy.la
+GIRS = FolksTelepathy-$(API_VERSION_DOT).gir
 
-if ENABLE_ZEITGEIST
-FolksTelepathy_@API_VERSION_MAJOR@_@API_VERSION_MINOR@_gir_LIBS += libtp-zeitgeist.la
-else
-FolksTelepathy_@API_VERSION_MAJOR@_@API_VERSION_MINOR@_gir_LIBS += libtp-zeitgeist-dummy.la
-endif
-
-libfolks_telepathy_la_VALAFLAGS += \
-        --gir=$(TPF_GIR) \
-        --girdir=$(abs_builddir) \
-        $(NULL)
-
-#------------------------------------
-# General
-#------------------------------------
 girdir = $(datadir)/gir-1.0
-dist_noinst_DATA += \
-	TpLowlevel-$(API_VERSION_DOT).gir \
-	TpLowlevel-$(API_VERSION_DOT).typelib \
-	$(NULL)
-dist_gir_DATA = $(filter-out TpLowlevel-$(API_VERSION_DOT).gir,$(INTROSPECTION_GIRS))
+dist_gir_DATA = $(GIRS)
+
+MAINTAINERCLEANFILES += $(dist_gir_DATA)
 
 typelibdir = $(libdir)/girepository-1.0
-nodist_typelib_DATA = $(dist_gir_DATA:.gir=.typelib)
+nodist_typelib_DATA = $(GIRS:.gir=.typelib)
 
 CLEANFILES += $(nodist_typelib_DATA)
-MAINTAINERCLEANFILES += \
-	$(dist_gir_DATA) \
-	$(gir_dist_noinst_DATA) \
-	$(NULL)
+endif
 
 ##################################################################
 # Common

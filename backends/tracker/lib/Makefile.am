@@ -27,6 +27,7 @@ libfolks_tracker_la_VALAFLAGS = \
 	--pkg gee-0.8 \
 	--pkg tracker-sparql-$(TRACKER_SPARQL_MAJOR) \
 	--includedir folks \
+	--gir FolksTracker-$(API_VERSION_DOT).gir \
 	--library folks-tracker \
 	--vapi folks-tracker.vapi \
 	-H folks/folks-tracker.h \
@@ -108,43 +109,20 @@ INTROSPECTION_COMPILER_ARGS = \
         --includedir=$(abs_top_builddir)/folks \
         $(NULL)
 
-TRF_GIR = FolksTracker-$(API_VERSION_DOT).gir
-$(TRF_GIR): libfolks-tracker.la
-
-FolksTracker_@API_VERSION_MAJOR@_@API_VERSION_MINOR@_gir_CFLAGS = \
-        $(SW_CLIENT_CFLAGS) \
-        $(NULL)
-FolksTracker_@API_VERSION_MAJOR@_@API_VERSION_MINOR@_gir_INCLUDES = \
-        Gee-0.8 \
-        Gio-2.0 \
-        Folks-$(API_VERSION_DOT) \
-        Tracker-$(TRACKER_SPARQL_MAJOR) \
-        $(NULL)
-FolksTracker_@API_VERSION_MAJOR@_@API_VERSION_MINOR@_gir_LIBS = \
-	libfolks-tracker.la \
-        $(top_builddir)/folks/libfolks.la \
-        $(NULL)
-FolksTracker_@API_VERSION_MAJOR@_@API_VERSION_MINOR@_gir_FILES = \
-$(libfolks_tracker_la_SOURCES) \
-        folks/folks-tracker.h \
-        $(NULL)
-FolksTracker_@API_VERSION_MAJOR@_@API_VERSION_MINOR@_gir_NAMESPACE = FolksTracker
-FolksTracker_@API_VERSION_MAJOR@_@API_VERSION_MINOR@_gir_SCANNERFLAGS = --identifier-prefix=Trf
-INTROSPECTION_GIRS = $(TRF_GIR)
-
-libfolks_tracker_la_VALAFLAGS += \
-        --gir $(TRF_GIR) \
-        --girdir=$(abs_builddir) \
-        $(NULL)
+if HAVE_INTROSPECTION
+FolksTracker-$(API_VERSION_DOT).gir: libfolks-tracker.la
+GIRS = FolksTracker-$(API_VERSION_DOT).gir
 
 girdir = $(datadir)/gir-1.0
-dist_gir_DATA = $(INTROSPECTION_GIRS)
+dist_gir_DATA = $(GIRS)
+
+MAINTAINERCLEANFILES += $(dist_gir_DATA)
 
 typelibdir = $(libdir)/girepository-1.0
-nodist_typelib_DATA = $(dist_gir_DATA:.gir=.typelib)
+nodist_typelib_DATA = $(GIRS:.gir=.typelib)
 
 CLEANFILES += $(nodist_typelib_DATA)
-MAINTAINERCLEANFILES += $(dist_gir_DATA)
+endif
 
 ##################################################################
 # Common

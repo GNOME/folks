@@ -44,6 +44,7 @@ libfolks_libsocialweb_la_VALAFLAGS = \
 	--pkg gee-0.8 \
 	--pkg libsocialweb-client \
 	--includedir folks \
+	--gir FolksLibsocialweb-$(API_VERSION_DOT).gir \
 	--library folks-libsocialweb \
 	--vapi folks-libsocialweb.vapi \
 	-H folks/folks-libsocialweb.h \
@@ -112,43 +113,20 @@ INTROSPECTION_COMPILER_ARGS = \
         --includedir=$(abs_top_builddir)/folks \
         $(NULL)
 
-SWF_GIR = FolksLibsocialweb-$(API_VERSION_DOT).gir
-$(SWF_GIR): libfolks-libsocialweb.la
-
-FolksLibsocialweb_@API_VERSION_MAJOR@_@API_VERSION_MINOR@_gir_CFLAGS = \
-        $(SW_CLIENT_CFLAGS) \
-        $(NULL)
-FolksLibsocialweb_@API_VERSION_MAJOR@_@API_VERSION_MINOR@_gir_INCLUDES = \
-        Gee-0.8 \
-        Gio-2.0 \
-        Folks-$(API_VERSION_DOT) \
-        SocialWebClient-0.25 \
-        $(NULL)
-FolksLibsocialweb_@API_VERSION_MAJOR@_@API_VERSION_MINOR@_gir_LIBS = \
-	libfolks-libsocialweb.la \
-	$(top_builddir)/folks/libfolks.la \
-	$(NULL)
-FolksLibsocialweb_@API_VERSION_MAJOR@_@API_VERSION_MINOR@_gir_FILES = \
-$(libfolks_libsocialweb_la_SOURCES) \
-        folks/folks-libsocialweb.h \
-        $(NULL)
-FolksLibsocialweb_@API_VERSION_MAJOR@_@API_VERSION_MINOR@_gir_NAMESPACE = FolksLibsocialweb
-FolksLibsocialweb_@API_VERSION_MAJOR@_@API_VERSION_MINOR@_gir_SCANNERFLAGS = --identifier-prefix=Swf
-INTROSPECTION_GIRS = $(SWF_GIR)
-
-libfolks_libsocialweb_la_VALAFLAGS += \
-        --gir $(SWF_GIR) \
-        --girdir=$(abs_builddir) \
-        $(NULL)
+if HAVE_INTROSPECTION
+FolksLibsocialweb-$(API_VERSION_DOT).gir: libfolks-libsocialweb.la
+GIRS = FolksLibsocialweb-$(API_VERSION_DOT).gir
 
 girdir = $(datadir)/gir-1.0
-dist_gir_DATA = $(INTROSPECTION_GIRS)
+dist_gir_DATA = $(GIRS)
+
+MAINTAINERCLEANFILES += $(dist_gir_DATA)
 
 typelibdir = $(libdir)/girepository-1.0
-nodist_typelib_DATA = $(dist_gir_DATA:.gir=.typelib)
+nodist_typelib_DATA = $(GIRS:.gir=.typelib)
 
 CLEANFILES += $(nodist_typelib_DATA)
-MAINTAINERCLEANFILES += $(dist_gir_DATA)
+endif
 
 ##################################################################
 # Common
