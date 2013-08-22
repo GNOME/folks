@@ -417,6 +417,7 @@ folks_small_set_copy (GeeIterable *iterable,
             }
         }
     }
+  return self;
 }
 
 enum {

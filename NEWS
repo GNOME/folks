@@ -11,6 +11,7 @@ and IndividualAggregator.with_backend_store are now deprecated.
 
 Bugs fixed:
 • Bug 705289 — Crash when removing an individual with 2 aggregators instantiated
+• Bug 706532 — folks_small_set_copy() does not always return value
 
 API changes:
 • Add IndividualAggregator.dup constructor
