@@ -31,8 +31,8 @@ public class PhoneFieldDetailsTests : Folks.TestCase
 
   private struct NormalisationPair
     {
-      string unnormalised;
-      string normalised;
+      unowned string unnormalised;
+      unowned string normalised;
     }
 
   public void test_normalisation ()
