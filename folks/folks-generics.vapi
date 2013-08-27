@@ -26,6 +26,7 @@
  * GIR to Vala loses the generic types. FIXME: GNOME #639908 would
  * make it possible to go via GIR like tests/lib/telepathy/contactlist does. */
 
+[CCode (gir_namespace = "Folks", gir_version = "0.6")]
 namespace Folks
 {
   [CCode (cheader_filename = "folks/small-set.h")]
