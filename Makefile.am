@@ -25,6 +25,7 @@ DIST_SUBDIRS = \
 	$(NULL)
 
 DISTCHECK_CONFIGURE_FLAGS = \
+	--enable-docs \
 	--enable-tests \
 	--enable-eds-backend \
 	--enable-telepathy-backend \
