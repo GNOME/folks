@@ -19,12 +19,6 @@ if ENABLE_EDS
 SUBDIRS += eds
 endif
 
-# XXX: keep Tracker at the end, since it's the most likely to fail (in ways we
-# can't easily control)
-if ENABLE_TRACKER
-SUBDIRS += tracker
-endif
-
 DIST_SUBDIRS = \
 	data \
 	lib \
