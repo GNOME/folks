@@ -241,7 +241,7 @@ public class Folks.Individual : Object,
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.9.5
    */
   public string[] client_types { get; set; }
 

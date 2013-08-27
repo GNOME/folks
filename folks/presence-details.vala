@@ -108,7 +108,7 @@ public interface Folks.PresenceDetails : Object
    * The client types are represented in strings, using the values
    * [[http://xmpp.org/registrar/disco-categories.html#client|documented by the XMPP registrar]]
    *
-   * @since UNRELEASED
+   * @since 0.9.5
    */
   public abstract string[] client_types { get; set; }
 

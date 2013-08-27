@@ -328,7 +328,7 @@ public class Folks.IndividualAggregator : Object
    * This function is thread-safe.
    *
    * @return Singleton {@link IndividualAggregator} instance
-   * @since UNRELEASED
+   * @since 0.9.5
    */
   public static IndividualAggregator dup ()
     {
@@ -372,7 +372,7 @@ public class Folks.IndividualAggregator : Object
    * instantiated at the same time. So it's recommended to use
    * {@link IndividualAggregator.dup} instead.
    */
-  [Deprecated (since = "UNRELEASED",
+  [Deprecated (since = "0.9.5",
       replacement = "IndividualAggregator.dup")]
   public IndividualAggregator ()
   {
@@ -393,7 +393,7 @@ public class Folks.IndividualAggregator : Object
    * @param store the {@link BackendStore} to use instead of the default one.
 
    * @return Singleton {@link IndividualAggregator} instance, or null
-   * @since UNRELEASED
+   * @since 0.9.5
    */
   public static IndividualAggregator? dup_with_backend_store (BackendStore store)
     {
@@ -433,7 +433,7 @@ public class Folks.IndividualAggregator : Object
    *
    * @since 0.9.0
    */
-  [Deprecated (since = "UNRELEASED",
+  [Deprecated (since = "0.9.5",
       replacement = "IndividualAggregator.dup_with_backend_store")]
   public IndividualAggregator.with_backend_store (BackendStore store)
   {

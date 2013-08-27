@@ -254,7 +254,7 @@ public class Tpf.Persona : Folks.Persona,
    *
    * See {@link Folks.PresenceDetails.client_types}.
    *
-   * @since UNRELEASED
+   * @since 0.9.5
    */
   public string[] client_types { get; set; }
 
