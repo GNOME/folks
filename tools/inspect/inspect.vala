@@ -143,6 +143,7 @@ public class Folks.Inspect.Client : Object
       this.commands.set ("set", new Commands.Set (this));
       this.commands.set ("signals", new Commands.Signals (this));
       this.commands.set ("debug", new Commands.Debug (this));
+      this.commands.set ("search", new Commands.Search (this));
 
       /* Create various bits of folks machinery. */
       this.main_loop = new MainLoop ();

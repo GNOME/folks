@@ -23,6 +23,7 @@ folks_inspect_SOURCES = \
 	command-persona-stores.vala \
 	command-personas.vala \
 	command-quit.vala \
+	command-search.vala \
 	command-set.vala \
 	command-signals.vala \
 	signal-manager.vala \
