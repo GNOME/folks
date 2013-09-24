@@ -43,7 +43,8 @@ AC_CONFIG_SRCDIR([Makefile.am])
 AC_CONFIG_HEADERS(config.h)
 AC_CONFIG_SRCDIR([configure.ac])
 AM_INIT_AUTOMAKE([1.11 dist-xz no-define
-                  no-dist-gzip tar-ustar -Wno-portability color-tests])
+                  no-dist-gzip tar-ustar -Wno-portability color-tests
+                  parallel-tests])
 AM_MAINTAINER_MODE([enable])
 
 AC_PROG_CC

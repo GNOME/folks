@@ -1,3 +1,9 @@
+# This forces serialization of the tests because they run into terrible race
+# conditions if run in parallel (ie, make -jN, n > 1)
+#
+# FIXME: https://bugzilla.gnome.org/show_bug.cgi?id=709120
+.NOTPARALLEL:
+
 AM_CFLAGS = \
 	$(ERROR_CFLAGS) \
 	$(NULL)
