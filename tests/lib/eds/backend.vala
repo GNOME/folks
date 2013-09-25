@@ -108,8 +108,7 @@ public class EdsTest.Backend
           this._addressbook_name = name;
 
           this._prepare_source (source_is_default);
-          this._addressbook = new BookClient (this._source);
-          this._addressbook.open_sync (false, null);
+          this._addressbook = BookClient.connect_sync (this._source, null);
           Environment.set_variable ("FOLKS_BACKEND_EDS_USE_ADDRESS_BOOKS",
                                     this._addressbook_name, true);
         }

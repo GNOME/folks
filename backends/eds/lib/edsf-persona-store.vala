@@ -756,13 +756,12 @@ public class Edsf.PersonaStore : Folks.PersonaStore
               ((!) this._source_registry).source_disabled.connect (
                   this._source_registry_changed_cb);
 
-              /* Connect to the address book. */
+              /* Connect and open the address book */
               this._addressbook = yield E.BookClient.connect (this.source, null);
 
               ((!) this._addressbook).notify["readonly"].connect (
                   this._address_book_notify_read_only_cb);
 
-              yield this._open_address_book ();
               debug ("Successfully finished opening address book %p for " +
                   "persona store ‘%s’ (%p).", this._addressbook, this.id, this);
 
@@ -1050,109 +1049,6 @@ public class Edsf.PersonaStore : Folks.PersonaStore
         }
 
       Internal.profiling_end ("preparing Edsf.PersonaStore");
-    }
-
-  /* Temporaries for _open_address_book(). See the complaint below. */
-  Error? _open_address_book_error = null;
-  SourceFunc? _open_address_book_callback = null; /* non-null iff yielded */
-
-  /* Guarantees that either the address book will be open once the method
-   * returns, or an error will be thrown.
-   *
-   * This method is not safe to run multiple times concurrently. */
-  private async void _open_address_book () throws GLib.Error
-    {
-      Error? err_out = null;
-
-      debug ("Opening address book %p for persona store ‘%s’ (%p)",
-          this._addressbook, this.id, this);
-
-      /* We have to connect to this weirdly because ‘opened’ is also a property
-       * name. This means we can’t use a lambda function, which in turn means
-       * that we need to build our own closure (or store some temporaries in
-       * the persona store’s private data struct). Yuck. Yuck. Yuck. */
-      var signal_id = Signal.connect_swapped ((!) this._addressbook, "opened",
-        (Callback) this._address_book_opened_cb, this);
-
-      try
-        {
-          this._open_address_book_error = null;
-
-          yield ((!) this._addressbook).open (false, null);
-
-          if (this._open_address_book_error != null)
-            {
-              throw this._open_address_book_error;
-            }
-        }
-      catch (GLib.Error e1)
-        {
-          if (e1.domain == Client.error_quark () &&
-              (ClientError) e1.code == ClientError.BUSY)
-            {
-              /* If we've received a BUSY error, it means that the address book
-               * is already in the process of being opened by a different client
-               * (most likely in a completely unrelated process). Since EDS is
-               * kind enough not to block the open() call in this case, we have
-               * to handle it ourselves by waiting for the ::opened signal,
-               * which will be emitted once the address book is opened (or once
-               * opening it fails).
-               *
-               * We yield until the ::opened callback is called, at which point
-               * we return. The callback is a no-op if it’s called during the
-               * open() call above. */
-              this._open_address_book_callback =
-                  this._open_address_book.callback;
-              this._open_address_book_error = null;
-
-              debug ("Yielding on opening address book %p for persona store " +
-                  "‘%s’ (%p)", this._addressbook, this.id, this);
-              yield;
-
-              /* Propagate error/success. */
-              err_out = this._open_address_book_error;
-            }
-          else
-            {
-              /* Error. */
-              err_out = e1;
-            }
-
-          if (err_out != null)
-            {
-              throw err_out;
-            }
-        }
-      finally
-        {
-          /* Disconnect the ::opened signal. */
-          ((!) this._addressbook).disconnect (signal_id);
-
-          /* We should really be able to expect that either the address book is
-           * now open, or we have an error set. Unfortunately, this sometimes
-           * isn't the case, probably due to misbehaving EDS backends (though
-           * I haven't investigated). Just throw an error to be on the safe
-           * side. */
-          if (((!) this._addressbook).is_opened () == false && err_out == null)
-            {
-              err_out = new Error (Client.error_quark (),
-                  ClientError.OTHER_ERROR, "Misbehaving EDS backend: %s.",
-                  this.id);
-            }
-        }
-    }
-
-  private void _address_book_opened_cb (Error? err, BookClient address_book)
-    {
-      debug ("_address_book_opened_cb for store ‘%s’ (%p), address book %p " +
-          "and error %p", this.id, this, address_book, (void*) err);
-
-      this._open_address_book_error = err;
-
-      if (this._open_address_book_callback != null)
-        {
-          this._open_address_book_callback ();
-        }
     }
 
   private PersonaDetail _eds_field_name_to_folks_persona_detail (
