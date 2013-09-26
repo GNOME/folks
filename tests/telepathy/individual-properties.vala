@@ -28,6 +28,11 @@ public class IndividualPropertiesTests : TpfTest.TestCase
 {
   private HashSet<string>? _changes_pending = null;
 
+  private static string iid_prefix =
+      "telepathy:/org/freedesktop/Telepathy/Account/cm/protocol/account:";
+  private string olivier_sha1 = Checksum.compute_for_string (ChecksumType.SHA1,
+      iid_prefix + "olivier@example.com");
+
   public IndividualPropertiesTests ()
     {
       base ("IndividualProperties");
@@ -117,7 +122,7 @@ public class IndividualPropertiesTests : TpfTest.TestCase
 
               /* Check the Individual containing just
                * Tpf.Persona(olivier@example.com) */
-              else if (i.id == "0e46c5e74f61908f49550d241f2a1651892a1695")
+              else if (i.id == olivier_sha1)
                 {
                   /* Check properties */
                   assert (i.alias == "Olivier");
@@ -205,7 +210,7 @@ public class IndividualPropertiesTests : TpfTest.TestCase
 
               /* We only check one (singleton Individual containing just
                * olivier@example.com) */
-              if (i.id != "0e46c5e74f61908f49550d241f2a1651892a1695")
+              if (i.id != olivier_sha1)
                 {
                   continue;
                 }
@@ -278,7 +283,7 @@ public class IndividualPropertiesTests : TpfTest.TestCase
 
               /* We only check one (singleton Individual containing just
                * olivier@example.com) */
-              if (i.id != "0e46c5e74f61908f49550d241f2a1651892a1695")
+              if (i.id != olivier_sha1)
                 {
                   continue;
                 }
