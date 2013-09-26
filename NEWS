@@ -11,6 +11,7 @@ Bugs fixed:
 • Made docs buildable again (work around bgo#706857)
 • Bug 705608 — FolksTelepathy: tpf_persona_get_contact: return value: Missing
   (transfer) annotation
+• Bug 697262 — uses deprecated e-d-s functions (Xavier)
 
 API changes:
 
