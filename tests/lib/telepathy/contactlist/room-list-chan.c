@@ -4,8 +4,7 @@
 #include "room-list-chan.h"
 
 #include <telepathy-glib/telepathy-glib.h>
-#include <telepathy-glib/channel-iface.h>
-#include <telepathy-glib/svc-channel.h>
+#include <telepathy-glib/telepathy-glib-dbus.h>
 
 static void room_list_iface_init (gpointer iface,
     gpointer data);

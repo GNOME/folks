@@ -17,7 +17,7 @@ telepathy_la_VALAFLAGS = \
 	--pkg gee-0.8 \
 	--pkg gio-2.0 \
 	--pkg gobject-2.0 \
-	--pkg telepathy-glib \
+	--pkg telepathy-glib-1 \
 	$(NULL)
 
 backenddir = $(BACKEND_DIR)/telepathy

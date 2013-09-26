@@ -52,7 +52,7 @@ AM_VALAFLAGS += \
 	--pkg gio-2.0 \
 	--pkg gee-0.8 \
 	--pkg gmodule-2.0 \
-	--pkg telepathy-glib \
+	--pkg telepathy-glib-1 \
 	--pkg folks \
 	--pkg folks-telepathy \
 	--pkg folks-test \

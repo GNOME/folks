@@ -13,12 +13,8 @@
 
 #include "simple-account-manager.h"
 
-#include <telepathy-glib/account.h>
-#include <telepathy-glib/gtypes.h>
-#include <telepathy-glib/interfaces.h>
-#include <telepathy-glib/svc-generic.h>
-#include <telepathy-glib/svc-account-manager.h>
-#include <telepathy-glib/util.h>
+#include <telepathy-glib/telepathy-glib.h>
+#include <telepathy-glib/telepathy-glib-dbus.h>
 
 static void account_manager_iface_init (gpointer, gpointer);
 
@@ -39,14 +35,14 @@ enum
 {
   PROP_0,
   PROP_INTERFACES,
-  PROP_VALID_ACCOUNTS,
-  PROP_INVALID_ACCOUNTS,
+  PROP_USABLE_ACCOUNTS,
+  PROP_UNUSABLE_ACCOUNTS,
 };
 
 struct _TpTestsSimpleAccountManagerPrivate
 {
-  GPtrArray *valid_accounts;
-  GPtrArray *invalid_accounts;
+  GPtrArray *usable_accounts;
+  GPtrArray *unusable_accounts;
 };
 
 static void
@@ -95,8 +91,8 @@ tp_tests_simple_account_manager_init (TpTestsSimpleAccountManager *self)
   self->priv = G_TYPE_INSTANCE_GET_PRIVATE (self,
       TP_TESTS_TYPE_SIMPLE_ACCOUNT_MANAGER, TpTestsSimpleAccountManagerPrivate);
 
-  self->priv->valid_accounts = g_ptr_array_new_with_free_func (g_free);
-  self->priv->invalid_accounts = g_ptr_array_new_with_free_func (g_free);
+  self->priv->usable_accounts = g_ptr_array_new_with_free_func (g_free);
+  self->priv->unusable_accounts = g_ptr_array_new_with_free_func (g_free);
 }
 
 static void
@@ -112,12 +108,12 @@ tp_tests_simple_account_manager_get_property (GObject *object,
       g_value_set_boxed (value, ACCOUNT_MANAGER_INTERFACES);
       break;
 
-    case PROP_VALID_ACCOUNTS:
-      g_value_set_boxed (value, self->priv->valid_accounts);
+    case PROP_USABLE_ACCOUNTS:
+      g_value_set_boxed (value, self->priv->usable_accounts);
       break;
 
-    case PROP_INVALID_ACCOUNTS:
-      g_value_set_boxed (value, self->priv->invalid_accounts);
+    case PROP_UNUSABLE_ACCOUNTS:
+      g_value_set_boxed (value, self->priv->unusable_accounts);
       break;
 
     default:
@@ -131,8 +127,8 @@ tp_tests_simple_account_manager_finalize (GObject *object)
 {
   TpTestsSimpleAccountManager *self = SIMPLE_ACCOUNT_MANAGER (object);
 
-  g_ptr_array_unref (self->priv->valid_accounts);
-  g_ptr_array_unref (self->priv->invalid_accounts);
+  g_ptr_array_unref (self->priv->usable_accounts);
+  g_ptr_array_unref (self->priv->unusable_accounts);
 
   tp_clear_pointer (&self->create_cm, g_free);
   tp_clear_pointer (&self->create_protocol, g_free);
@@ -160,8 +156,8 @@ tp_tests_simple_account_manager_class_init (
 
   static TpDBusPropertiesMixinPropImpl am_props[] = {
         { "Interfaces", "interfaces", NULL },
-        { "ValidAccounts", "valid-accounts", NULL },
-        { "InvalidAccounts", "invalid-accounts", NULL },
+        { "UsableAccounts", "usable-accounts", NULL },
+        { "UnusableAccounts", "unusable-accounts", NULL },
         /*
         { "SupportedAccountProperties", "supported-account-properties", NULL },
         */
@@ -186,16 +182,16 @@ tp_tests_simple_account_manager_class_init (
       G_TYPE_STRV,
       G_PARAM_READABLE | G_PARAM_STATIC_STRINGS);
   g_object_class_install_property (object_class, PROP_INTERFACES, param_spec);
-  param_spec = g_param_spec_boxed ("valid-accounts", "Valid accounts",
-      "The accounts which are valid on this account. This may be a lie.",
+  param_spec = g_param_spec_boxed ("usable-accounts", "Usable accounts",
+      "The accounts which are usable on this account manager. This may be a lie.",
       TP_ARRAY_TYPE_OBJECT_PATH_LIST,
       G_PARAM_READABLE);
-  g_object_class_install_property (object_class, PROP_VALID_ACCOUNTS, param_spec);
-  param_spec = g_param_spec_boxed ("invalid-accounts", "Invalid accounts",
-      "The accounts which are invalid on this account. This may be a lie.",
+  g_object_class_install_property (object_class, PROP_USABLE_ACCOUNTS, param_spec);
+  param_spec = g_param_spec_boxed ("unusable-accounts", "Unusable accounts",
+      "The accounts which are unusable on this account manager. This may be a lie.",
       TP_ARRAY_TYPE_OBJECT_PATH_LIST,
       G_PARAM_READABLE);
-  g_object_class_install_property (object_class, PROP_INVALID_ACCOUNTS, param_spec);
+  g_object_class_install_property (object_class, PROP_UNUSABLE_ACCOUNTS, param_spec);
 
   klass->dbus_props_class.interfaces = prop_interfaces;
   tp_dbus_properties_mixin_class_init (object_class,
@@ -219,17 +215,18 @@ void
 tp_tests_simple_account_manager_add_account (
     TpTestsSimpleAccountManager *self,
     const gchar *object_path,
-    gboolean valid)
+    gboolean usable)
 {
-  remove_from_array (self->priv->valid_accounts, object_path);
-  remove_from_array (self->priv->valid_accounts, object_path);
+  remove_from_array (self->priv->usable_accounts, object_path);
+  remove_from_array (self->priv->unusable_accounts, object_path);
 
-  if (valid)
-    g_ptr_array_add (self->priv->valid_accounts, g_strdup (object_path));
+  if (usable)
+    g_ptr_array_add (self->priv->usable_accounts, g_strdup (object_path));
   else
-    g_ptr_array_add (self->priv->invalid_accounts, g_strdup (object_path));
+    g_ptr_array_add (self->priv->unusable_accounts, g_strdup (object_path));
 
-  tp_svc_account_manager_emit_account_validity_changed (self, object_path, valid);
+  tp_svc_account_manager_emit_account_usability_changed (self, object_path,
+      usable);
 }
 
 void
@@ -237,8 +234,8 @@ tp_tests_simple_account_manager_remove_account (
     TpTestsSimpleAccountManager *self,
     const gchar *object_path)
 {
-  remove_from_array (self->priv->valid_accounts, object_path);
-  remove_from_array (self->priv->valid_accounts, object_path);
+  remove_from_array (self->priv->usable_accounts, object_path);
+  remove_from_array (self->priv->unusable_accounts, object_path);
 
   tp_svc_account_manager_emit_account_removed (self, object_path);
 }

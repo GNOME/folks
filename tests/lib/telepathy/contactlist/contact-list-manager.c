@@ -26,8 +26,7 @@ struct _TpTestsContactListManagerPrivate
   GHashTable *contact_details;
 
   TpHandleRepoIface *contact_repo;
-  TpHandleRepoIface *group_repo;
-  TpHandleSet *groups;
+  GHashTable *groups;
 };
 
 static void contact_groups_iface_init (TpContactGroupListInterface *iface);
@@ -49,7 +48,7 @@ typedef struct {
   TpSubscriptionState subscribe;
   TpSubscriptionState publish;
   gchar *publish_request;
-  TpHandleSet *groups;
+  GHashTable *groups;
 
   TpHandle handle;
   TpHandleRepoIface *contact_repo;
@@ -61,7 +60,7 @@ contact_detail_destroy (gpointer p)
   ContactDetails *d = p;
 
   g_free (d->publish_request);
-  tp_handle_set_destroy (d->groups);
+  g_hash_table_unref (d->groups);
 
   g_slice_free (ContactDetails, d);
 }
@@ -86,7 +85,7 @@ ensure_contact (TpTestsContactListManager *self,
       d->subscribe = TP_SUBSCRIPTION_STATE_NO;
       d->publish = TP_SUBSCRIPTION_STATE_NO;
       d->publish_request = NULL;
-      d->groups = tp_handle_set_new (self->priv->group_repo);
+      d->groups = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, NULL);
       d->handle = handle;
       d->contact_repo = self->priv->contact_repo;
 
@@ -117,7 +116,7 @@ close_all (TpTestsContactListManager *self)
       self->priv->status_changed_id = 0;
     }
   tp_clear_pointer (&self->priv->contact_details, g_hash_table_unref);
-  tp_clear_pointer (&self->priv->groups, tp_handle_set_destroy);
+  tp_clear_pointer (&self->priv->groups, g_hash_table_unref);
 }
 
 static void
@@ -197,16 +196,15 @@ contact_list_dup_groups (TpBaseContactList *base)
 
   if (self->priv->groups != NULL)
     {
-      TpIntsetFastIter iter;
-      TpHandle group;
+      GHashTableIter iter;
+      gpointer name;
 
-      ret = g_ptr_array_sized_new (tp_handle_set_size (self->priv->groups) + 1);
+      ret = g_ptr_array_sized_new (g_hash_table_size (self->priv->groups) + 1);
 
-      tp_intset_fast_iter_init (&iter, tp_handle_set_peek (self->priv->groups));
-      while (tp_intset_fast_iter_next (&iter, &group))
+      g_hash_table_iter_init (&iter, self->priv->groups);
+      while (g_hash_table_iter_next (&iter, &name, NULL))
         {
-          g_ptr_array_add (ret, g_strdup (tp_handle_inspect (
-              self->priv->group_repo, group)));
+          g_ptr_array_add (ret, g_strdup (name));
         }
     }
   else
@@ -229,16 +227,15 @@ contact_list_dup_contact_groups (TpBaseContactList *base,
 
   if (d != NULL && d->groups != NULL)
     {
-      TpIntsetFastIter iter;
-      TpHandle group;
+      GHashTableIter iter;
+      gpointer name;
 
-      ret = g_ptr_array_sized_new (tp_handle_set_size (d->groups) + 1);
+      ret = g_ptr_array_sized_new (g_hash_table_size (d->groups) + 1);
 
-      tp_intset_fast_iter_init (&iter, tp_handle_set_peek (d->groups));
-      while (tp_intset_fast_iter_next (&iter, &group))
+      g_hash_table_iter_init (&iter, d->groups);
+      while (g_hash_table_iter_next (&iter, &name, NULL))
         {
-          g_ptr_array_add (ret, g_strdup (tp_handle_inspect (
-              self->priv->group_repo, group)));
+          g_ptr_array_add (ret, g_strdup (name));
         }
     }
   else
@@ -256,14 +253,13 @@ contact_list_dup_group_members (TpBaseContactList *base,
     const gchar *group)
 {
   TpTestsContactListManager *self = TP_TESTS_CONTACT_LIST_MANAGER (base);
-  TpHandleSet *set;
-  TpHandle group_handle;
   GHashTableIter iter;
   gpointer k, v;
+  TpHandleSet *set;
 
   set = tp_handle_set_new (self->priv->contact_repo);
-  group_handle = tp_handle_lookup (self->priv->group_repo, group, NULL, NULL);
-  if (G_UNLIKELY (group_handle == 0))
+
+  if (G_UNLIKELY (g_hash_table_lookup (self->priv->groups, group) == NULL))
     {
       /* clearly it doesn't have members */
       return set;
@@ -275,8 +271,26 @@ contact_list_dup_group_members (TpBaseContactList *base,
       ContactDetails *d = v;
 
       if (d->groups != NULL &&
-          tp_handle_set_is_member (d->groups, group_handle))
+          g_hash_table_lookup (d->groups, group) != NULL)
         tp_handle_set_add (set, GPOINTER_TO_UINT (k));
+    }
+
+  return set;
+}
+
+static GPtrArray *
+group_difference (GHashTable *left,
+    GHashTable *right)
+{
+  GHashTableIter iter;
+  GPtrArray *set = g_ptr_array_sized_new (g_hash_table_size (left));
+  gpointer name;
+
+  g_hash_table_iter_init (&iter, left);
+  while (g_hash_table_iter_next (&iter, &name, NULL))
+    {
+      if (g_hash_table_lookup (right, name) == NULL)
+        g_ptr_array_add (set, name);
     }
 
   return set;
@@ -292,25 +306,24 @@ contact_list_set_contact_groups_async (TpBaseContactList *base,
 {
   TpTestsContactListManager *self = TP_TESTS_CONTACT_LIST_MANAGER (base);
   ContactDetails *d;
-  TpIntset *set, *added_set, *removed_set;
-  GPtrArray *added_names, *removed_names;
+  GHashTable *tmp;
+  GPtrArray *added, *removed;
   GPtrArray *new_groups;
-  TpIntsetFastIter iter;
-  TpHandle group_handle;
   guint i;
 
   d = ensure_contact (self, contact);
 
   new_groups = g_ptr_array_new ();
-  set = tp_intset_new ();
+  /* make a hash table so we only have one difference function */
+  tmp = g_hash_table_new (g_str_hash, g_str_equal);
   for (i = 0; i < n; i++)
     {
-      group_handle = tp_handle_ensure (self->priv->group_repo, names[i], NULL, NULL);
-      tp_intset_add (set, group_handle);
+      g_hash_table_insert (tmp, (gpointer) names[i], GUINT_TO_POINTER (1));
 
-      if (!tp_handle_set_is_member (self->priv->groups, group_handle))
+      if (g_hash_table_lookup (self->priv->groups, names[i]) == NULL)
         {
-          tp_handle_set_add (self->priv->groups, group_handle);
+          g_hash_table_insert (self->priv->groups, g_strdup (names[i]),
+              GUINT_TO_POINTER (1));
           g_ptr_array_add (new_groups, (gchar *) names[i]);
         }
     }
@@ -321,42 +334,30 @@ contact_list_set_contact_groups_async (TpBaseContactList *base,
           (const gchar * const *) new_groups->pdata, new_groups->len);
     }
 
-  added_set = tp_intset_difference (set, tp_handle_set_peek (d->groups));
-  added_names = g_ptr_array_sized_new (tp_intset_size (added_set));
-  tp_intset_fast_iter_init (&iter, added_set);
-  while (tp_intset_fast_iter_next (&iter, &group_handle))
-    {
-      g_ptr_array_add (added_names, (gchar *) tp_handle_inspect (
-          self->priv->group_repo, group_handle));
-    }
-  tp_intset_destroy (added_set);
+  /* see which groups were added and which were removed */
+  added = group_difference (tmp, d->groups);
+  removed = group_difference (d->groups, tmp);
 
-  removed_set = tp_intset_difference (tp_handle_set_peek (d->groups), set);
-  removed_names = g_ptr_array_sized_new (tp_intset_size (removed_set));
-  tp_intset_fast_iter_init (&iter, removed_set);
-  while (tp_intset_fast_iter_next (&iter, &group_handle))
-    {
-      g_ptr_array_add (removed_names, (gchar *) tp_handle_inspect (
-          self->priv->group_repo, group_handle));
-    }
-  tp_intset_destroy (removed_set);
+  g_hash_table_unref (tmp);
 
-  tp_handle_set_destroy (d->groups);
-  d->groups = tp_handle_set_new_from_intset (self->priv->group_repo, set);
-  tp_intset_destroy (set);
+  /* update the list of groups the contact thinks it has */
+  g_hash_table_remove_all (d->groups);
+  for (i = 0; i < n; i++)
+    g_hash_table_insert (d->groups, g_strdup (names[i]), GUINT_TO_POINTER (1));
 
-  if (added_names->len > 0 || removed_names->len > 0)
+  /* signal the change */
+  if (added->len > 0 || removed->len > 0)
     {
       tp_base_contact_list_one_contact_groups_changed (base, contact,
-          (const gchar * const *) added_names->pdata, added_names->len,
-          (const gchar * const *) removed_names->pdata, removed_names->len);
+          (const gchar * const *) added->pdata, added->len,
+          (const gchar * const *) removed->pdata, removed->len);
     }
 
   tp_simple_async_report_success_in_idle ((GObject *) self, callback,
       user_data, contact_list_set_contact_groups_async);
 
-  g_ptr_array_unref (added_names);
-  g_ptr_array_unref (removed_names);
+  g_ptr_array_unref (added);
+  g_ptr_array_unref (removed);
   g_ptr_array_unref (new_groups);
 }
 
@@ -551,9 +552,8 @@ constructed (GObject *object)
 
   self->priv->contact_repo = tp_base_connection_get_handles (self->priv->conn,
       TP_HANDLE_TYPE_CONTACT);
-  self->priv->group_repo = tp_base_connection_get_handles (self->priv->conn,
-      TP_HANDLE_TYPE_GROUP);
-  self->priv->groups = tp_handle_set_new (self->priv->group_repo);
+  self->priv->groups = g_hash_table_new_full (g_str_hash, g_str_equal,
+      g_free, NULL);
 }
 
 static void
@@ -606,19 +606,17 @@ tp_tests_contact_list_manager_add_to_group (TpTestsContactListManager *self,
 {
   TpBaseContactList *base = TP_BASE_CONTACT_LIST (self);
   ContactDetails *d = ensure_contact (self, member);
-  TpHandle group_handle;
 
-  group_handle = tp_handle_ensure (self->priv->group_repo,
-      group_name, NULL, NULL);
+  g_hash_table_insert (d->groups, g_strdup (group_name), GUINT_TO_POINTER (1));
 
-  if (!tp_handle_set_is_member (self->priv->groups, group_handle))
+  if (g_hash_table_lookup (self->priv->groups, group_name) == NULL)
     {
-      tp_handle_set_add (self->priv->groups, group_handle);
+      g_hash_table_insert (self->priv->groups, g_strdup (group_name),
+          GUINT_TO_POINTER (1));
       tp_base_contact_list_groups_created ((TpBaseContactList *) self,
           &group_name, 1);
     }
 
-  tp_handle_set_add (d->groups, group_handle);
   tp_base_contact_list_one_contact_groups_changed (base, member,
       &group_name, 1, NULL, 0);
 }
@@ -629,14 +627,12 @@ tp_tests_contact_list_manager_remove_from_group (TpTestsContactListManager *self
 {
   TpBaseContactList *base = TP_BASE_CONTACT_LIST (self);
   ContactDetails *d = lookup_contact (self, member);
-  TpHandle group_handle;
 
   if (d == NULL)
     return;
 
-  group_handle = tp_handle_ensure (self->priv->group_repo, group_name, NULL, NULL);
+  g_hash_table_remove (d->groups, group_name);
 
-  tp_handle_set_remove (d->groups, group_handle);
   tp_base_contact_list_one_contact_groups_changed (base, member,
       NULL, 0, &group_name, 1);
 }

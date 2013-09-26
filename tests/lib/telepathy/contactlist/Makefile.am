@@ -11,7 +11,7 @@ VAPIGENFLAGS += \
 	--pkg gee-0.8 \
 	--pkg gmodule-2.0 \
 	--pkg dbus-glib-1 \
-	--pkg telepathy-glib \
+	--pkg telepathy-glib-1 \
 	$(NULL)
 
 noinst_LTLIBRARIES = libtp-test-contactlist.la
@@ -36,8 +36,8 @@ libtp_test_contactlist_la_SOURCES = \
         simple-account-manager.h \
         simple-conn.c \
         simple-conn.h \
-        textchan-null.c \
-        textchan-null.h \
+        echo-chan.c \
+        echo-chan.h \
         util.c \
         util.h \
 	$(NULL)
@@ -84,7 +84,7 @@ tp-test-contactlist.vapi: tp-test-contactlist.gir tp-test-contactlist.deps
 	@test x$(srcdir) = x. || cp $(srcdir)/tp-test-contactlist.deps .
 	$(MAKE) $(AM_MAKEFLAGS) tp-test-contactlist.gir
 	$(AM_V_GEN)$(VAPIGEN) $(VAPIGENFLAGS) --library tp-test-contactlist \
-		tp-test-contactlist.gir
+		tp-test-contactlist.gir && sed -i "s/Tp\./TelepathyGLib\./g" $@
 	touch $@
 endif
 

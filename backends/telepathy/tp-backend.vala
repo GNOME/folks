@@ -84,8 +84,8 @@ public class Folks.Backends.Tp.Backend : Folks.Backend
       PersonaStore[] removed_stores = {};
 
       /* First handle adding any missing persona stores. */
-      GLib.List<unowned Account> accounts =
-        this._account_manager.get_valid_accounts ();
+      GLib.List<Account> accounts =
+          this._account_manager.dup_usable_accounts ();
       foreach (Account account in accounts)
         {
           string id = account.get_object_path ();
@@ -170,11 +170,11 @@ public class Folks.Backends.Tp.Backend : Folks.Backend
           yield this._account_manager.prepare_async (null);
           this._account_manager.account_enabled.connect (
               this._account_enabled_cb);
-          this._account_manager.account_validity_changed.connect (
-              this._account_validity_changed_cb);
+          this._account_manager.account_usability_changed.connect (
+              this._account_usability_changed_cb);
 
-          GLib.List<unowned Account> accounts =
-          this._account_manager.get_valid_accounts ();
+          GLib.List<Account> accounts =
+              this._account_manager.dup_usable_accounts ();
           foreach (Account account in accounts)
             {
               this._account_enabled_cb (account);
@@ -210,8 +210,8 @@ public class Folks.Backends.Tp.Backend : Folks.Backend
 
           this._account_manager.account_enabled.disconnect (
               this._account_enabled_cb);
-          this._account_manager.account_validity_changed.disconnect (
-              this._account_validity_changed_cb);
+          this._account_manager.account_usability_changed.disconnect (
+              this._account_usability_changed_cb);
           this._account_manager = null;
 
           this._is_quiescent = false;
@@ -226,7 +226,7 @@ public class Folks.Backends.Tp.Backend : Folks.Backend
         }
     }
 
-  private void _account_validity_changed_cb (Account account, bool valid)
+  private void _account_usability_changed_cb (Account account, bool valid)
     {
       if (valid)
         this._account_enabled_cb (account);

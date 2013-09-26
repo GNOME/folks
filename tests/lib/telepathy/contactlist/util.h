@@ -12,7 +12,6 @@
 #define __TP_TESTS_LIB_UTIL_H__
 
 #include <telepathy-glib/telepathy-glib.h>
-#include <telepathy-glib/base-connection.h>
 
 TpDBusDaemon *tp_tests_dbus_daemon_dup_or_die (void);
 
@@ -35,6 +34,12 @@ void _test_assert_empty_strv (const char *file, int line, gconstpointer strv);
 void _tp_tests_assert_strv_equals (const char *file, int line,
   const char *actual_desc, gconstpointer actual_strv,
   const char *expected_desc, gconstpointer expected_strv);
+
+#define tp_tests_assert_bytes_equals(actual, expected, expected_length) \
+  _tp_tests_assert_bytes_equal (__FILE__, __LINE__, \
+      actual, expected, expected_length)
+void _tp_tests_assert_bytes_equal (const gchar *file, int line,
+  GBytes *actual, gconstpointer expected_data, gsize expected_length);
 
 void tp_tests_create_conn (GType conn_type,
     const gchar *account,
@@ -63,6 +68,7 @@ GValue *_tp_create_local_socket (TpSocketAddressType address_type,
     TpSocketAccessControl access_control,
     GSocketService **service,
     gchar **unix_address,
+    gchar **unix_tmpdir,
     GError **error);
 
 void _tp_destroy_socket_control_list (gpointer data);
@@ -72,7 +78,33 @@ void tp_tests_connection_assert_disconnect_succeeds (TpConnection *connection);
 TpContact *tp_tests_connection_run_until_contact_by_id (
     TpConnection *connection,
     const gchar *id,
-    guint n_features,
-    const TpContactFeature *features);
+    const GQuark *features);
+
+void tp_tests_channel_assert_expect_members (TpChannel *channel,
+    TpIntset *expected_members);
+
+TpConnection *tp_tests_connection_new (TpDBusDaemon *dbus,
+    const gchar *bus_name,
+    const gchar *object_path,
+    GError **error);
+
+TpAccount *tp_tests_account_new (TpDBusDaemon *dbus,
+    const gchar *object_path,
+    GError **error);
+
+TpChannel *tp_tests_channel_new (TpConnection *conn,
+    const gchar *object_path,
+    const gchar *optional_channel_type,
+    TpHandleType optional_handle_type,
+    TpHandle optional_handle,
+    GError **error);
+
+TpChannel *tp_tests_channel_new_from_properties (TpConnection *conn,
+    const gchar *object_path,
+    const GHashTable *immutable_properties,
+    GError **error);
+
+void tp_tests_add_channel_to_ptr_array (GPtrArray *arr,
+    TpChannel *channel);
 
 #endif /* #ifndef __TP_TESTS_LIB_UTIL_H__ */

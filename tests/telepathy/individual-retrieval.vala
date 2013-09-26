@@ -29,7 +29,7 @@ public class IndividualRetrievalTests : TpfTest.TestCase
   private HashSet<string> default_individuals;
 
   private static string iid_prefix =
-      "telepathy:/org/freedesktop/Telepathy/Account/cm/protocol/account:";
+      "telepathy:/im/telepathy1/Account/cm/protocol/account:";
 
   public IndividualRetrievalTests ()
     {

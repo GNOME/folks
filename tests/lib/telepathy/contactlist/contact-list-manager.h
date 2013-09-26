@@ -12,7 +12,7 @@
 #ifndef __TP_TESTS_CONTACT_LIST_MANAGER_H__
 #define __TP_TESTS_CONTACT_LIST_MANAGER_H__
 
-#include <telepathy-glib/base-contact-list.h>
+#include <telepathy-glib/telepathy-glib.h>
 
 G_BEGIN_DECLS
 

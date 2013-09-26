@@ -20,9 +20,8 @@
 
 #include <config.h>
 #include <glib.h>
-#include <telepathy-glib/base-connection.h>
-#include <telepathy-glib/dbus.h>
-#include <telepathy-glib/svc-account.h>
+#include <telepathy-glib/telepathy-glib.h>
+#include <telepathy-glib/telepathy-glib-dbus.h>
 
 #include "simple-account.h"
 #include "simple-account-manager.h"
@@ -133,7 +132,7 @@ void
 tp_tests_backend_set_up (TpTestsBackend *self)
 {
   TpTestsBackendPrivate *priv = self->priv;
-  TpSimpleClientFactory *factory;
+  TpClientFactory *factory;
   GError *error = NULL;
 
   /* Override the handler set in the general Folks.TestCase class */
@@ -160,7 +159,7 @@ tp_tests_backend_set_up (TpTestsBackend *self)
 
   priv->client_am = tp_account_manager_dup ();
   factory = tp_proxy_get_factory (priv->client_am);
-  tp_simple_client_factory_add_contact_features_varargs (factory,
+  tp_client_factory_add_contact_features_varargs (factory,
       TP_CONTACT_FEATURE_ALIAS,
       TP_CONTACT_FEATURE_AVATAR_DATA,
       TP_CONTACT_FEATURE_AVATAR_TOKEN,
@@ -169,7 +168,7 @@ tp_tests_backend_set_up (TpTestsBackend *self)
       TP_CONTACT_FEATURE_PRESENCE,
       TP_CONTACT_FEATURE_CONTACT_INFO,
       TP_CONTACT_FEATURE_CONTACT_GROUPS,
-      TP_CONTACT_FEATURE_INVALID);
+      0);
 }
 
 static void
@@ -268,7 +267,7 @@ tp_tests_backend_add_account (TpTestsBackend *self,
     const gchar *account)
 {
   TpTestsBackendPrivate *priv = self->priv;
-  TpSimpleClientFactory *factory;
+  TpClientFactory *factory;
   AccountData *data;
   gchar *conn_path;
   GError *error = NULL;
@@ -286,7 +285,7 @@ tp_tests_backend_add_account (TpTestsBackend *self,
   g_assert_no_error (error);
 
   factory = tp_proxy_get_factory (priv->client_am);
-  data->client_conn = tp_simple_client_factory_ensure_connection (factory,
+  data->client_conn = tp_client_factory_ensure_connection (factory,
       conn_path, NULL, &error);
   g_assert_no_error (error);
 

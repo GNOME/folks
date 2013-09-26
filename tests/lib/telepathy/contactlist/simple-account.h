@@ -13,8 +13,7 @@
 
 #include <glib-object.h>
 
-#include <telepathy-glib/connection.h>
-#include <telepathy-glib/dbus-properties-mixin.h>
+#include <telepathy-glib/telepathy-glib.h>
 
 G_BEGIN_DECLS
 
@@ -63,6 +62,9 @@ void tp_tests_simple_account_set_connection (TpTestsSimpleAccount *self,
 void tp_tests_simple_account_removed (TpTestsSimpleAccount *self);
 void tp_tests_simple_account_set_enabled (TpTestsSimpleAccount *self,
     gboolean enabled);
+
+void tp_tests_simple_account_add_uri_scheme (TpTestsSimpleAccount *self,
+    const gchar * uri_scheme);
 
 G_END_DECLS
 

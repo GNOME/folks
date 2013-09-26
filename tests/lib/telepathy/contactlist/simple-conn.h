@@ -13,7 +13,7 @@
 #define __TP_TESTS_SIMPLE_CONN_H__
 
 #include <glib-object.h>
-#include <telepathy-glib/base-connection.h>
+#include <telepathy-glib/telepathy-glib.h>
 
 G_BEGIN_DECLS
 
@@ -65,12 +65,6 @@ gchar * tp_tests_simple_connection_ensure_text_chan (
     TpTestsSimpleConnection *self,
     const gchar *target_id,
     GHashTable **props);
-
-void tp_tests_simple_connection_set_get_self_handle_error (
-    TpTestsSimpleConnection *self,
-    GQuark domain,
-    gint code,
-    const gchar *message);
 
 gchar * tp_tests_simple_connection_ensure_room_list_chan (
     TpTestsSimpleConnection *self,

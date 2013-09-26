@@ -159,7 +159,7 @@ AS_IF([test "x$enable_libsocialweb_backend" != "xno"], [
       have_libsocialweb_backend="yes", have_libsocialweb_backend="no")
   AS_IF([test "x$have_libsocialweb_backend" = "xyes" -a \
           "x$enable_vala" = "xyes"], [
-    VALA_CHECK_PACKAGES([telepathy-glib
+    VALA_CHECK_PACKAGES([telepathy-glib-1
                          gio-2.0
                          gee-0.8
                          libsocialweb-client],
@@ -209,10 +209,13 @@ PKG_CHECK_MODULES([DBUS_GLIB], [dbus-glib-1 dbus-1])
 
 PKG_CHECK_MODULES([GEE], [gee-0.8 >= $GEE_REQUIRED])
 
-TP_GLIB_REQUIRED=0.19.0
+TP_GLIB_REQUIRED=0.99.1
 
 AS_IF([test x$enable_telepathy_backend = xyes], [
-        PKG_CHECK_MODULES([TP_GLIB], [telepathy-glib >= $TP_GLIB_REQUIRED])])
+        PKG_CHECK_MODULES([TP_GLIB], [
+            telepathy-glib-1 >= $TP_GLIB_REQUIRED
+            telepathy-glib-1-dbus >= $TP_GLIB_REQUIRED
+            ])])
 case "x$enable_zeitgeist" in
   xyes)
     AS_IF([test x$enable_telepathy_backend = xyes],
@@ -341,7 +344,7 @@ AS_IF([test "x$enable_vala" = "xyes"], [
                              gee-0.8])
 
         AS_IF([test x$enable_telepathy_backend = xyes], [
-          VALA_CHECK_PACKAGES([telepathy-glib])
+          VALA_CHECK_PACKAGES([telepathy-glib-1])
 	  AS_IF([test "x$have_zeitgeist" == "xyes"], [
 	      VALA_CHECK_PACKAGES([zeitgeist-2.0])
 	  ])

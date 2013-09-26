@@ -273,7 +273,7 @@ public class Folks.Importers.Pidgin : Folks.Importer
        * http://telepathy.freedesktop.org/spec/Connection_Manager.html#Protocol
        * and http://developer.pidgin.im/wiki/prpl_id. */
       if (tp_protocol == "bonjour")
-        tp_protocol = "local-xmpp";
+        tp_protocol = "local_xmpp";
       else if (tp_protocol == "novell")
         tp_protocol = "groupwise";
       else if (tp_protocol == "gg")

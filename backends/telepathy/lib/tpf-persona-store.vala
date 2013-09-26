@@ -395,8 +395,8 @@ public class Tpf.PersonaStore : Folks.PersonaStore
 
       /* We do not trust local-xmpp or IRC at all, since Persona UIDs can be
        * faked by just changing hostname/username or nickname. */
-      if (account.get_protocol () == "local-xmpp" ||
-          account.get_protocol () == "irc")
+      if (account.get_protocol_name () == "local_xmpp" ||
+          account.get_protocol_name () == "irc")
         this.trust_level = PersonaStoreTrust.NONE;
       else
         this.trust_level = PersonaStoreTrust.PARTIAL;
@@ -487,14 +487,14 @@ public class Tpf.PersonaStore : Folks.PersonaStore
            * contacts. */
           var factory = this._account_manager.get_factory ();
           factory.add_contact_features ({
-              ContactFeature.ALIAS,
-              ContactFeature.AVATAR_DATA,
-              ContactFeature.AVATAR_TOKEN,
-              ContactFeature.CAPABILITIES,
-              ContactFeature.CLIENT_TYPES,
-              ContactFeature.PRESENCE,
-              ContactFeature.CONTACT_INFO,
-              ContactFeature.CONTACT_GROUPS
+              Contact.get_feature_quark_alias (),
+              Contact.get_feature_quark_avatar_data (),
+              Contact.get_feature_quark_avatar_token (),
+              Contact.get_feature_quark_capabilities (),
+              Contact.get_feature_quark_client_types (),
+              Contact.get_feature_quark_presence (),
+              Contact.get_feature_quark_contact_info (),
+              Contact.get_feature_quark_contact_groups (),
           });
 
           this._account_manager.invalidated.connect (
@@ -511,7 +511,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
                   this._remove_store (this._persona_set);
                 }
             });
-          this._account_manager.account_validity_changed.connect (
+          this._account_manager.account_usability_changed.connect (
               (a, valid) =>
                 {
                   if (!valid && this.account == a)
@@ -762,11 +762,11 @@ public class Tpf.PersonaStore : Folks.PersonaStore
           0
       });
 
-      if (!this.account.connection.has_interface_by_id (
-          iface_quark_connection_interface_contact_list ()))
+      if (!this.account.connection.is_prepared (
+          TelepathyGLib.Connection.get_feature_quark_contact_list ()))
         {
           debug ("Connection does not implement ContactList iface; " +
-              "legacy CMs are not supported any more.");
+              "skipping store with no contact list.");
 
           this._remove_store (this._persona_set);
 
@@ -851,7 +851,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
           if ((ci_flags & ContactInfoFlags.CAN_SET) != 0)
             {
               var field_specs =
-                connection.get_contact_info_supported_fields ();
+                connection.dup_contact_info_supported_fields ();
               foreach (var field_spec in field_specs)
                 {
                   /* XXX: we ignore the maximum count for each type of
@@ -876,12 +876,12 @@ public class Tpf.PersonaStore : Folks.PersonaStore
   private async void _load_cache (HashSet<Persona>? old_personas)
     {
       /* Only load from the cache if the account is enabled and valid. */
-      if (this.account.enabled == false || this.account.valid == false)
+      if (this.account.enabled == false || this.account.usable == false)
         {
           debug ("Skipping loading cache for Tpf.PersonaStore %p ('%s'): " +
               "enabled: %s, valid: %s.", this, this.id,
               this.account.enabled ? "yes" : "no",
-              this.account.valid ? "yes" : "no");
+              this.account.usable ? "yes" : "no");
 
           return;
         }
@@ -973,7 +973,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       /* Only store/load the cache if the account is enabled and valid;
        * otherwise, the PersonaStore will get removed and the cache
        * deleted later anyway. */
-      if (!this.account.enabled || !this.account.valid)
+      if (!this.account.enabled || !this.account.usable)
         {
           debug ("Skipping storing cache for Tpf.PersonaStore %p (‘%s’) as " +
               "its TpAccount is disabled or invalid.", this, this.id);
@@ -1680,7 +1680,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
   private async void _populate_counters ()
     {
       this._zg_controller = new FolksTpZeitgeist.Controller (this,
-          this.account.protocol, (p, dt) =>
+          this.account.protocol_name, (p, dt) =>
         {
           var persona = p as Tpf.Persona;
           assert (persona != null);

@@ -135,7 +135,7 @@ folks_telepathy_doc_deps = \
 	gmodule-2.0 \
 	gio-2.0 \
 	gee-0.8 \
-	telepathy-glib \
+	telepathy-glib-1 \
 	zeitgeist-2.0 \
 	tp-lowlevel \
 	build-conf \

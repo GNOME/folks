@@ -78,8 +78,8 @@ tp-lowlevel.vapi: TpLowlevel-$(API_VERSION_DOT).gir
 	$(AM_V_GEN)$(VAPIGEN) $(VAPIGENFLAGS) \
 		--library tp-lowlevel \
 		--pkg gio-2.0 \
-		--pkg telepathy-glib \
-		TpLowlevel-$(API_VERSION_DOT).gir
+		--pkg telepathy-glib-1 \
+		TpLowlevel-$(API_VERSION_DOT).gir && sed -i "s/Tp\./TelepathyGLib\./g" $@
 	touch $@
 endif
 
@@ -156,7 +156,7 @@ libtp_zeitgeist_la_VALAFLAGS = \
 	--pkg gio-2.0 \
 	--pkg gee-0.8 \
 	--pkg zeitgeist-2.0 \
-	--pkg telepathy-glib \
+	--pkg telepathy-glib-1 \
 	--pkg folks \
 	--pkg build-conf \
 	--library tp-zeitgeist \
@@ -226,7 +226,7 @@ libfolks_telepathy_la_VALAFLAGS = \
 	--pkg gobject-2.0 \
 	--pkg gio-2.0 \
 	--pkg gee-0.8 \
-	--pkg telepathy-glib \
+	--pkg telepathy-glib-1 \
 	--includedir folks \
 	--library folks-telepathy \
 	--vapi folks-telepathy.vapi \

@@ -12,14 +12,8 @@
 
 #include "simple-account.h"
 
-#include <telepathy-glib/dbus.h>
-#include <telepathy-glib/defs.h>
-#include <telepathy-glib/enums.h>
-#include <telepathy-glib/gtypes.h>
-#include <telepathy-glib/interfaces.h>
-#include <telepathy-glib/util.h>
-#include <telepathy-glib/svc-generic.h>
-#include <telepathy-glib/svc-account.h>
+#include <telepathy-glib/telepathy-glib.h>
+#include <telepathy-glib/telepathy-glib-dbus.h>
 
 static void account_iface_init (gpointer, gpointer);
 
@@ -50,7 +44,7 @@ enum
   PROP_INTERFACES,
   PROP_DISPLAY_NAME,
   PROP_ICON,
-  PROP_VALID,
+  PROP_USABLE,
   PROP_ENABLED,
   PROP_NICKNAME,
   PROP_PARAMETERS,
@@ -80,6 +74,7 @@ struct _TpTestsSimpleAccountPrivate
   gchar *presence_msg;
   gchar *connection_path;
   gboolean enabled;
+  GPtrArray *uri_schemes;
 };
 
 static void
@@ -122,10 +117,14 @@ account_iface_init (gpointer klass,
 #undef IMPLEMENT
 }
 
+/* you may have noticed this is not entirely realistic */
+static const gchar * const uri_schemes[] = { "about", "telnet", NULL };
 
 static void
 tp_tests_simple_account_init (TpTestsSimpleAccount *self)
 {
+  guint i;
+
   self->priv = G_TYPE_INSTANCE_GET_PRIVATE (self, TP_TESTS_TYPE_SIMPLE_ACCOUNT,
       TpTestsSimpleAccountPrivate);
 
@@ -134,10 +133,11 @@ tp_tests_simple_account_init (TpTestsSimpleAccount *self)
   self->priv->presence_msg = g_strdup ("this is my CurrentPresence");
   self->priv->connection_path = g_strdup ("/");
   self->priv->enabled = TRUE;
-}
 
-/* you may have noticed this is not entirely realistic */
-static const gchar * const uri_schemes[] = { "about", "telnet", NULL };
+  self->priv->uri_schemes = g_ptr_array_new_with_free_func (g_free);
+  for (i = 0; uri_schemes[i] != NULL; i++)
+    g_ptr_array_add (self->priv->uri_schemes, g_strdup (uri_schemes[i]));
+}
 
 static void
 tp_tests_simple_account_get_property (GObject *object,
@@ -161,7 +161,7 @@ tp_tests_simple_account_get_property (GObject *object,
     case PROP_ICON:
       g_value_set_string (value, "");
       break;
-    case PROP_VALID:
+    case PROP_USABLE:
       g_value_set_boolean (value, TRUE);
       break;
     case PROP_ENABLED:
@@ -213,7 +213,7 @@ tp_tests_simple_account_get_property (GObject *object,
       g_value_set_boolean (value, TRUE);
       break;
     case PROP_STORAGE_PROVIDER:
-      g_value_set_string (value, "org.freedesktop.Telepathy.glib.test");
+      g_value_set_string (value, "im.telepathy1.glib.test");
       break;
     case PROP_STORAGE_IDENTIFIER:
       g_value_set_boxed (value, &identifier);
@@ -231,7 +231,19 @@ tp_tests_simple_account_get_property (GObject *object,
           TP_STORAGE_RESTRICTION_FLAG_CANNOT_SET_PARAMETERS);
       break;
     case PROP_URI_SCHEMES:
-      g_value_set_boxed (value, uri_schemes);
+        {
+          GPtrArray *arr;
+          guint i;
+
+          arr = g_ptr_array_sized_new (self->priv->uri_schemes->len + 1);
+          for (i = 0; i < self->priv->uri_schemes->len; i++)
+              g_ptr_array_add (arr,
+                  g_ptr_array_index (self->priv->uri_schemes, i));
+            g_ptr_array_add (arr, NULL);
+
+          g_value_set_boxed (value, arr->pdata);
+          g_ptr_array_unref (arr);
+        }
       break;
     case PROP_AVATAR:
         {
@@ -274,6 +286,8 @@ tp_tests_simple_account_finalize (GObject *object)
   g_free (self->priv->presence_msg);
   g_free (self->priv->connection_path);
 
+  g_ptr_array_unref (self->priv->uri_schemes);
+
   G_OBJECT_CLASS (tp_tests_simple_account_parent_class)->finalize (object);
 }
 
@@ -292,7 +306,7 @@ tp_tests_simple_account_class_init (TpTestsSimpleAccountClass *klass)
         { "Interfaces", "interfaces", NULL },
         { "DisplayName", "display-name", NULL },
         { "Icon", "icon", NULL },
-        { "Valid", "valid", NULL },
+        { "Usable", "usable", NULL },
         { "Enabled", "enabled", NULL },
         { "Nickname", "nickname", NULL },
         { "Parameters", "parameters", NULL },
@@ -375,11 +389,11 @@ tp_tests_simple_account_class_init (TpTestsSimpleAccountClass *klass)
       G_PARAM_READABLE | G_PARAM_STATIC_STRINGS);
   g_object_class_install_property (object_class, PROP_ICON, param_spec);
 
-  param_spec = g_param_spec_boolean ("valid", "valid",
-      "Valid property",
+  param_spec = g_param_spec_boolean ("usable", "usable",
+      "Usable property",
       FALSE,
       G_PARAM_READABLE | G_PARAM_STATIC_STRINGS);
-  g_object_class_install_property (object_class, PROP_VALID, param_spec);
+  g_object_class_install_property (object_class, PROP_USABLE, param_spec);
 
   param_spec = g_param_spec_boolean ("enabled", "enabled",
       "Enabled property",
@@ -401,7 +415,7 @@ tp_tests_simple_account_class_init (TpTestsSimpleAccountClass *klass)
 
   param_spec = g_param_spec_boxed ("automatic-presence", "automatic presence",
       "AutomaticPresence property",
-      TP_STRUCT_TYPE_SIMPLE_PRESENCE,
+      TP_STRUCT_TYPE_PRESENCE,
       G_PARAM_READABLE | G_PARAM_STATIC_STRINGS);
   g_object_class_install_property (object_class, PROP_AUTOMATIC_PRESENCE,
       param_spec);
@@ -435,14 +449,14 @@ tp_tests_simple_account_class_init (TpTestsSimpleAccountClass *klass)
 
   param_spec = g_param_spec_boxed ("current-presence", "current presence",
       "CurrentPresence property",
-      TP_STRUCT_TYPE_SIMPLE_PRESENCE,
+      TP_STRUCT_TYPE_PRESENCE,
       G_PARAM_READABLE | G_PARAM_STATIC_STRINGS);
   g_object_class_install_property (object_class, PROP_CURRENT_PRESENCE,
       param_spec);
 
   param_spec = g_param_spec_boxed ("requested-presence", "requested presence",
       "RequestedPresence property",
-      TP_STRUCT_TYPE_SIMPLE_PRESENCE,
+      TP_STRUCT_TYPE_PRESENCE,
       G_PARAM_READABLE | G_PARAM_STATIC_STRINGS);
   g_object_class_install_property (object_class, PROP_REQUESTED_PRESENCE,
       param_spec);
@@ -533,12 +547,12 @@ tp_tests_simple_account_set_presence (TpTestsSimpleAccount *self,
   g_object_get (self, "current-presence", &v, NULL);
 
   props = tp_asv_new (
-      "CurrentPresence", TP_STRUCT_TYPE_SIMPLE_PRESENCE, v,
+      "CurrentPresence", TP_STRUCT_TYPE_PRESENCE, v,
       NULL);
 
   tp_svc_account_emit_account_property_changed (self, props);
 
-  g_boxed_free (TP_STRUCT_TYPE_SIMPLE_PRESENCE, v);
+  g_boxed_free (TP_STRUCT_TYPE_PRESENCE, v);
 }
 
 void
@@ -577,4 +591,26 @@ tp_tests_simple_account_set_enabled (TpTestsSimpleAccount *self,
   tp_asv_set_boolean (change, "Enabled", enabled);
   tp_svc_account_emit_account_property_changed (self, change);
   g_hash_table_unref (change);
+}
+
+void
+tp_tests_simple_account_add_uri_scheme (TpTestsSimpleAccount *self,
+    const gchar *uri_scheme)
+{
+  GHashTable *changed;
+  GStrv schemes;
+
+  g_ptr_array_add (self->priv->uri_schemes, g_strdup (uri_scheme));
+
+  g_object_get (self, "uri-schemes", &schemes, NULL);
+
+  changed = tp_asv_new (
+      "URISchemes", G_TYPE_STRV, schemes,
+      NULL);
+
+  tp_svc_dbus_properties_emit_properties_changed (self,
+      TP_IFACE_ACCOUNT_INTERFACE_ADDRESSING, changed, NULL);
+
+  g_strfreev (schemes);
+  g_hash_table_unref (changed);
 }

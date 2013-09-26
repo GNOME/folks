@@ -3,7 +3,7 @@
 #define __TP_TESTS_ROOM_LIST_CHAN_H__
 
 #include <glib-object.h>
-#include <telepathy-glib/base-channel.h>
+#include <telepathy-glib/telepathy-glib.h>
 
 G_BEGIN_DECLS
 
