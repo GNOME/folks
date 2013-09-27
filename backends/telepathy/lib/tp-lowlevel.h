@@ -41,17 +41,6 @@ folks_tp_lowlevel_connection_set_contact_alias_finish (
     GAsyncResult *result,
     GError **error);
 
-void
-folks_tp_lowlevel_connection_get_alias_flags_async (
-    TpConnection *conn,
-    GAsyncReadyCallback callback,
-    gpointer user_data);
-
-TpConnectionAliasFlags
-folks_tp_lowlevel_connection_get_alias_flags_finish (
-    GAsyncResult *result,
-    GError **error);
-
 G_END_DECLS
 
 #endif /* FOLKS_TP_LOWLEVEL_H */

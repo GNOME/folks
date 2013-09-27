@@ -758,6 +758,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
           TelepathyGLib.Connection.get_feature_quark_contact_groups (),
           TelepathyGLib.Connection.get_feature_quark_contact_info (),
           TelepathyGLib.Connection.get_feature_quark_connected (),
+          TelepathyGLib.Connection.get_feature_quark_aliasing (),
           0
       });
 
@@ -783,34 +784,6 @@ public class Tpf.PersonaStore : Folks.PersonaStore
           this._self_contact_changed_cb);
       this._conn.notify["contact-list-state"].connect (
           this._contact_list_state_changed_cb);
-
-      /* FIXME: TpConnection still does not have high-level API for this.
-       * See fd.o#14540 */
-      /* We have to do this before emitting the self persona so that code which
-       * checks the self persona's writeable fields gets correct values. */
-      var flags = 0;
-
-      try
-        {
-          flags = yield FolksTpLowlevel.connection_get_alias_flags_async (
-              this._conn);
-
-          /* It's possible for the connection to have disconnected while in
-           * the async function call. (See bgo#683093.) If so, bail. */
-          if (this._conn == null)
-            {
-              return;
-            }
-        }
-      catch (GLib.Error e)
-        {
-          GLib.warning (
-              /* Translators: the first parameter is the display name for
-               * the Telepathy account, and the second is an error
-               * message. */
-              _("Failed to determine whether we can set aliases on Telepathy account '%s': %s"),
-              this.display_name, e.message);
-        }
 
       /* Emit all the notifications after the 'yield' just in case the
        * connection disappears during it. This makes cleaning up easier. */
@@ -846,7 +819,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
 
       var new_can_alias = MaybeBool.FALSE;
 
-      if ((flags & ConnectionAliasFlags.CONNECTION_ALIAS_FLAG_USER_SET) > 0)
+      if (this._conn.can_set_contact_alias ())
         {
           new_can_alias = MaybeBool.TRUE;
 
