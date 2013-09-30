@@ -44,32 +44,15 @@ EXTRA_DIST = \
 	$(NULL)
 
 MAINTAINERCLEANFILES = \
+	$(GITIGNORE_MAINTAINERCLEANFILES_M4_LIBTOOL) \
+	$(GITIGNORE_MAINTAINERCLEANFILES_MAKEFILE_IN) \
+	$(GITIGNORE_MAINTAINERCLEANFILES_TOPLEVEL) \
 	ABOUT-NLS \
 	$(top_builddir)/lcov.info \
 	$(srcdir)/INSTALL \
-	$(srcdir)/aclocal.m4 \
-	$(srcdir)/compile \
-	$(srcdir)/config.guess \
 	$(srcdir)/config.h.in \
 	$(srcdir)/config.rpath \
-	$(srcdir)/config.sub \
-	$(srcdir)/depcomp \
-	$(srcdir)/install-sh \
-	$(srcdir)/ltmain.sh \
-	$(srcdir)/missing \
-	$(srcdir)/mkinstalldirs \
 	$(srcdir)/ChangeLog \
-	`find "$(srcdir)" -type f -name Makefile.in -print` \
-	`find "m4" -type f -name "*.m4" ! -name "as-compiler-flag.m4" ! -name "introspection.m4" ! -name "vala.m4" -print` \
-	po/Makevars.template \
-	po/Rules-quot \
-	po/boldquot.sed \
-	po/en@boldquot.header \
-	po/en@quot.header \
-	po/insert-header.sin \
-	po/missing \
-	po/quot.sed \
-	po/remove-potcdate.sin \
 	$(NULL)
 
 maintainer-clean-local: maintainer-clean-local-lcov
