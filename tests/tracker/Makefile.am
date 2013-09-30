@@ -74,36 +74,36 @@ noinst_PROGRAMS = \
 	role-details-interface \
 	birthday-details-interface \
 	birthday-updates \
-	note-details-interface  \
-	gender-details-interface  \
-	postal-address-details-interface  \
-	avatar-updates  \
-	add-persona  \
-	remove-persona  \
-	set-nickname  \
-	set-favourite  \
-	set-phones  \
-	set-emails  \
-	set-avatar  \
-	set-structured-name  \
-	set-full-name  \
-	set-urls  \
-	set-im-addresses  \
-	set-postal-addresses  \
-	set-roles  \
-	set-notes  \
-	set-birthday  \
-	set-gender  \
-	link-personas  \
-	duplicated-emails  \
-	duplicated-phones  \
-	link-personas-via-local-ids  \
-	match-im-addresses  \
-	match-email-addresses  \
-	match-known-emails  \
-	match-phone-number  \
-	match-name  \
-	match-all  \
+	note-details-interface \
+	gender-details-interface \
+	postal-address-details-interface \
+	avatar-updates \
+	add-persona \
+	remove-persona \
+	set-nickname \
+	set-favourite \
+	set-phones \
+	set-emails \
+	set-avatar \
+	set-structured-name \
+	set-full-name \
+	set-urls \
+	set-im-addresses \
+	set-postal-addresses \
+	set-roles \
+	set-notes \
+	set-birthday \
+	set-gender \
+	link-personas \
+	duplicated-emails \
+	duplicated-phones \
+	link-personas-via-local-ids \
+	match-im-addresses \
+	match-email-addresses \
+	match-known-emails \
+	match-phone-number \
+	match-name \
+	match-all \
 	set-duplicate-email \
 	set-null-avatar \
 	$(NULL)
