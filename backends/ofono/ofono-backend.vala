@@ -273,8 +273,8 @@ public class Folks.Backends.Ofono.Backend : Folks.Backend
       if (features_variant != null)
         {
           string alias = this._modem_alias (properties);
-          string[] features = features_variant.get_strv ();
-          
+          var features = features_variant.get_strv ();
+
           foreach (string feature in features)
             {
               if (feature == "sim")
