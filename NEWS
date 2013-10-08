@@ -15,6 +15,7 @@ Bugs fixed:
 • Bug 697262 — uses deprecated e-d-s functions (Xavier)
 • Bug 705403 — Use GLib.BytesIcon instead of Edsf.MemoryIcon
 • Bug 679826 — Investigate using parallel-tests to speed up testing
+• Bug 709674 — Ignore non-phonebook-enabled modems in ofono backend
 
 API changes:
 

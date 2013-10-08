@@ -269,22 +269,51 @@ public class Folks.Backends.Ofono.Backend : Folks.Backend
   
   private void _modem_added (ObjectPath path, HashTable<string, Variant> properties)
     {
+      bool has_sim = false;
+      bool has_phonebook = false;
+
       Variant? features_variant = properties.get ("Features");
       if (features_variant != null)
         {
-          string alias = this._modem_alias (properties);
           var features = features_variant.get_strv ();
-
-          foreach (string feature in features)
+          /* FIXME: can't use the ‘in’ operator because of
+           * https://bugzilla.gnome.org/show_bug.cgi?id=709672 */
+          foreach (var feature in features)
             {
               if (feature == "sim")
                 {
-                  /* This modem has a sim card, so add a persona store for it */
-                  this._add_modem (path, alias);
+                  has_sim = true;
                   break;
                 }
             }
         }
+
+      /* If the modem doesn't have a SIM, don't go any further. */
+      if (has_sim == false)
+          return;
+
+      Variant? interfaces_variant = properties.get ("Interfaces");
+      if (interfaces_variant != null)
+        {
+          var interfaces = interfaces_variant.get_strv ();
+          /* FIXME: and here */
+          foreach (var interf in interfaces)
+            {
+              if (interf == "org.ofono.Phonebook")
+                {
+                  has_phonebook = true;
+                  break;
+                }
+            }
+        }
+
+      if (has_phonebook == false)
+          return;
+
+      /* The modem has both a SIM and a phonebook, so can be wrapped by a
+       * persona store. */
+      string alias = this._modem_alias (properties);
+      this._add_modem (path, alias);
     }
 
   /**
