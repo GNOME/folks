@@ -147,10 +147,14 @@ public class Edsf.Persona : Folks.Persona,
    */
   public static const string gender_female = "F";
 
-  private const string[] _linkable_properties = { "im-addresses",
-                                                  "email-addresses",
-                                                  "local-ids",
-                                                  "web-service-addresses" };
+  private const string[] _linkable_properties =
+    {
+      "im-addresses",
+      "email-addresses",
+      "local-ids",
+      "web-service-addresses",
+      null /* FIXME: https://bugzilla.gnome.org/show_bug.cgi?id=682698 */
+    };
 
   private static GLib.HashTable<string, E.ContactField>? _im_eds_map = null;
 

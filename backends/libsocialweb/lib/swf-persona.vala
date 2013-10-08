@@ -41,7 +41,8 @@ public class Swf.Persona : Folks.Persona,
   private const string[] _linkable_properties =
     {
       "im-addresses",
-      "web-service-addresses"
+      "web-service-addresses",
+      null /* FIXME: https://bugzilla.gnome.org/show_bug.cgi?id=682698 */
     };
 
   /* No writeable properties

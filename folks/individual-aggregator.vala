@@ -1244,6 +1244,10 @@ public class Folks.IndividualAggregator : Object
                * attempt to link based on its linkable properties. */
               foreach (unowned string foo in persona.linkable_properties)
                 {
+                  /* FIXME: https://bugzilla.gnome.org/show_bug.cgi?id=682698 */
+                  if (foo == null)
+                      continue;
+
                   /* FIXME: If we just use string prop_name directly in the
                    * foreach, Vala doesn't copy it into the closure data, and
                    * prop_name ends up as NULL. bgo#628336 */
@@ -1428,6 +1432,10 @@ public class Folks.IndividualAggregator : Object
     {
       foreach (var prop_name in persona.linkable_properties)
         {
+          /* FIXME: https://bugzilla.gnome.org/show_bug.cgi?id=682698 */
+          if (prop_name == null)
+              continue;
+
           persona.notify[prop_name].connect (
               this._persona_linkable_property_changed_cb);
         }
@@ -1450,6 +1458,10 @@ public class Folks.IndividualAggregator : Object
 
       foreach (var prop_name in persona.linkable_properties)
         {
+          /* FIXME: https://bugzilla.gnome.org/show_bug.cgi?id=682698 */
+          if (prop_name == null)
+              continue;
+
           persona.notify[prop_name].disconnect (
               this._persona_linkable_property_changed_cb);
         }
@@ -1502,6 +1514,10 @@ public class Folks.IndividualAggregator : Object
            * Individual. */
           foreach (unowned string prop_name in persona.linkable_properties)
             {
+              /* FIXME: https://bugzilla.gnome.org/show_bug.cgi?id=682698 */
+              if (prop_name == null)
+                  continue;
+
               debug ("        %s", prop_name);
 
               /* FIXME: can't be var because of bgo#638208 */

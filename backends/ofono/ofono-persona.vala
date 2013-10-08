@@ -47,7 +47,8 @@ public class Folks.Backends.Ofono.Persona : Folks.Persona,
   private const string[] _linkable_properties =
     {
       "phone-numbers",
-      "email-addresses"
+      "email-addresses",
+      null /* FIXME: https://bugzilla.gnome.org/show_bug.cgi?id=682698 */
     };
   private static string[] _writeable_properties = {};
 

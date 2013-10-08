@@ -48,7 +48,12 @@ public class Trf.Persona : Folks.Persona,
   private string _nickname; /* must never be null */
   private bool _is_favourite;
   private const string[] _linkable_properties =
-      {"im-addresses", "local-ids", "web-service-addresses"};
+    {
+      "im-addresses",
+      "local-ids",
+      "web-service-addresses",
+      null /* FIXME: https://bugzilla.gnome.org/show_bug.cgi?id=682698 */
+    };
   private SmallSet<PhoneFieldDetails> _phone_numbers;
   private Set<PhoneFieldDetails> _phone_numbers_ro;
   private SmallSet<EmailFieldDetails> _email_addresses;
@@ -70,7 +75,8 @@ public class Trf.Persona : Folks.Persona,
       "im-addresses",
       "is-favourite",
       "local-ids",
-      "web-service-addresses"
+      "web-service-addresses",
+      null /* FIXME: https://bugzilla.gnome.org/show_bug.cgi?id=682698 */
     };
 
   /**

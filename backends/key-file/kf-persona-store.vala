@@ -45,7 +45,8 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
       "alias",
       "im-addresses",
       "web-service-addresses",
-      "anti-links"
+      "anti-links",
+      null /* FIXME: https://bugzilla.gnome.org/show_bug.cgi?id=682698 */
     };
 
   internal static const string anti_links_key_name = "__anti-links";
