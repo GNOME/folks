@@ -170,6 +170,10 @@ public class Folks.Backends.Ofono.PersonaStore : Folks.PersonaStore
 
       foreach (string line in lines)
         {
+          /* Skip whitespace between vCards. */
+          if (vcard == "" && line.strip () == "")
+              continue;
+
           vcard += line;
           vcard += "\n";
 

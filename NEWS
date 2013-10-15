@@ -17,6 +17,7 @@ Bugs fixed:
 • Bug 679826 — Investigate using parallel-tests to speed up testing
 • Bug 709674 — Ignore non-phonebook-enabled modems in ofono backend
 • Bug 697209 — Individual: connect to Persona::notify less enthusiastically
+• Bug 710178 — Skip whitespace between oFono vCards
 
 API changes:
 
