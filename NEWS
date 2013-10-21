@@ -20,6 +20,9 @@ Bugs fixed:
 • Bug 710178 — Skip whitespace between oFono vCards
 • Bug 682698 — const string[] not NULL terminated; crashes in GBoxed property
   getter (workaround)
+• Avoid useless string copies when normalizing phone numbers, and make the
+  implementation respect the algorithm described in
+  http://blog.barisione.org/2010-06/handling-phone-numbers
 
 API changes:
 

@@ -35,11 +35,11 @@ using Gee;
  */
 public class Folks.PhoneFieldDetails : AbstractFieldDetails<string>
 {
-  private const string[] _extension_chars = { "p", "P", "w", "W", "x", "X" };
-  private const string[] _common_delimiters = { ",", ".", "(", ")", "-", " ",
-      "\t", "/" };
-  private const string[] _valid_digits = { "#", "*", "0", "1", "2", "3", "4",
-      "5", "6", "7", "8", "9" };
+  private const char[] _extension_chars = { 'p', 'P', 'w', 'W', 'x', 'X' };
+  private const char[] _common_delimiters = { ',', '.', '(', ')', '-', ' ',
+      '\t', '/' };
+  private const char[] _valid_digits = { '#', '*', '0', '1', '2', '3', '4',
+      '5', '6', '7', '8', '9' };
 
   private string _id;
   /**
@@ -108,7 +108,7 @@ public class Folks.PhoneFieldDetails : AbstractFieldDetails<string>
           debug ("[PhoneDetails.equal] Comparing %s with %s",
               n1_reduced, n2_reduced);
 
-          return  n1_reduced == n2_reduced;
+          return n1_reduced == n2_reduced;
         }
 
       return n1 == n2;
@@ -139,30 +139,53 @@ public class Folks.PhoneFieldDetails : AbstractFieldDetails<string>
    */
   public string get_normalised ()
     {
-      string normalised_number = "";
+      var builder = new StringBuilder ();
 
-      for (int i = 0; i < this.value.length; i++)
+      /* Based on http://blog.barisione.org/2010-06/handling-phone-numbers/ */
+      for (uint i = 0; i < this.value.length; i++)
         {
-          var digit = this.value.slice (i, i + 1);
+          var digit = this.value[i];
 
-          if (digit in PhoneFieldDetails._extension_chars ||
-              digit in PhoneFieldDetails._valid_digits ||
-              (i == 0 && digit == "+"))
+          if (digit in PhoneFieldDetails._extension_chars)
             {
-              /* lets keep valid digits */
-              normalised_number += digit;
+              /* Keep the extension characters P, W and X, but be sure they are
+               * upper case. */
+               digit = digit.toupper ();
+            }
+          else if (digit == '+')
+            {
+              /* "+" is valid only at the beginning of phone numbers or after
+               * the number suppression prefix. */
+              if (builder.str != "" &&
+                  builder.str != "*31#" &&
+                  builder.str != "#31#")
+                {
+                  /* Skip this "+". */
+                  debug ("[PhoneDetails.get_normalised] Wrong '+' in %s",
+                      this.value);
+                  continue;
+                }
             }
           else if (digit in PhoneFieldDetails._common_delimiters)
             {
+              /* Skip this delimiter. */
               continue;
+            }
+          else if (digit in PhoneFieldDetails._valid_digits)
+            {
+              /* Ok, let's keep it. */
             }
           else
             {
-              debug ("[PhoneDetails.get_normalised] unknown digit: %s", digit);
+              /* What is this? It doesn't seem valid but we just keep it */
+              debug ("[PhoneDetails.get_normalised] Unknown character '%c' in '%s'",
+                  digit, this.value);
             }
+
+         builder.append_c (digit);
        }
 
-      return normalised_number.up ();
+      return builder.str;
     }
 
   /**
@@ -176,15 +199,22 @@ public class Folks.PhoneFieldDetails : AbstractFieldDetails<string>
    */
   internal static string _drop_extension (string number)
     {
-      for (var i = 0; i < PhoneFieldDetails._extension_chars.length; i++)
+      /* Based on http://blog.barisione.org/2010-06/handling-phone-numbers/ */
+      var builder = new StringBuilder ();
+
+      for (uint i = 0; i < number.length; i++)
         {
-          if (number.index_of (PhoneFieldDetails._extension_chars[i]) >= 0)
+          var digit = number[i];
+          if (digit in PhoneFieldDetails._extension_chars)
             {
-              return number.split (PhoneFieldDetails._extension_chars[i])[0];
+              /* Extension character, drop this character and the rest of the
+               * string. */
+              break;
             }
+          builder.append_c (digit);
         }
 
-      return number;
+      return builder.str;
     }
 }
 
