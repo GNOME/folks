@@ -75,7 +75,7 @@ public class FavouriteUpdatesTests : TrackerTest.TestCase
 
       // this timer is slightly higher than usual because sleep
       // to ensure a (usually delayed) INSERT event has happened
-      TestUtils.loop_run_with_timeout (this._main_loop, 7);
+      TestUtils.loop_run_with_timeout (this._main_loop, 15);
 
       assert (this._is_favourite_1 == true);
       assert (this._is_favourite_2 == false);
