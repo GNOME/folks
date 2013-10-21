@@ -117,6 +117,7 @@ libtp_zeitgeist_dummy_la_CFLAGS = \
 	$(CODE_COVERAGE_CFLAGS) \
 	$(ERROR_CFLAGS) \
 	$(GLIB_CFLAGS) \
+	$(TP_GLIB_CFLAGS) \
 	$(GEE_CFLAGS) \
 	$(NULL)
 
@@ -145,6 +146,7 @@ libtp_zeitgeist_dummy_la_LIBADD = \
 	$(top_builddir)/folks/libfolks.la \
 	$(GLIB_LIBS) \
 	$(GEE_LIBS) \
+	$(TP_GLIB_LIBS) \
 	$(NULL)
 
 libtp_zeitgeist_la_VALAFLAGS = \
@@ -172,6 +174,7 @@ libtp_zeitgeist_dummy_la_VALAFLAGS = \
 	--pkg gobject-2.0 \
 	--pkg folks \
 	--pkg build-conf \
+	--pkg telepathy-glib \
 	--library tp-zeitgeist-dummy \
 	--vapi tp-zeitgeist-dummy.vapi \
 	-H tp-zeitgeist-dummy.h \
