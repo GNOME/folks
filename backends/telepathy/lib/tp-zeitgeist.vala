@@ -37,6 +37,7 @@ public class FolksTpZeitgeist.Controller : Object
   private Zeitgeist.Log? _log = null;
   private Zeitgeist.Monitor? _monitor = null;
   private string _protocol;
+  private TelepathyGLib.Account _account;
 
   /* This object is owned by the PersonaStore, so we don't want a cyclic
    * reference. */
@@ -49,12 +50,13 @@ public class FolksTpZeitgeist.Controller : Object
   private IncreasePersonaCounter _im_interaction_cb;
   private IncreasePersonaCounter _last_call_interaction_cb;
 
-  public Controller (PersonaStore store, string protocol,
+  public Controller (PersonaStore store, TelepathyGLib.Account account,
       IncreasePersonaCounter im_interaction_cb,
       IncreasePersonaCounter last_call_interaction_cb)
     {
       this._store = store;
-      this._protocol = protocol;
+      this._account = account;
+      this._protocol = account.protocol_name;
       this._im_interaction_cb = im_interaction_cb;
       this._last_call_interaction_cb = last_call_interaction_cb;
     }
@@ -218,9 +220,8 @@ public class FolksTpZeitgeist.Controller : Object
       /* To fetch events from Zeitgeist about the interaction with contacts we
        * create templates reflecting how the telepathy-logger stores events in
        * Zeitgeist */
-      var origin =
-          this._store.id.replace (TelepathyGLib.ACCOUNT_OBJECT_PATH_BASE,
-                                  "x-telepathy-account-path:");
+      var origin = "x-telepathy-account-path:" +
+          this._account.get_path_suffix ();
       Event ev1 = new Event.full ("", "",
           "dbus://org.freedesktop.Telepathy.Logger.service");
       ev1.origin = origin;
