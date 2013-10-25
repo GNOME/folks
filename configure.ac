@@ -504,6 +504,10 @@ FOLKS_ADD_WARNING([ERROR_CFLAGS], [old-style-declaration])
 FOLKS_ADD_WARNING([ERROR_CFLAGS], [old-style-definition])
 FOLKS_ADD_WARNING([ERROR_CFLAGS], [strict-prototypes])
 
+# Enable colourised compiler output.
+AS_COMPILER_FLAG([-fdiagnostics-color=auto],
+                 [ERROR_CFLAGS="$ERROR_CFLAGS -fdiagnostics-color=auto"])
+
 AS_COMPILER_FLAG([-Wall], [C_ERROR_CFLAGS="-Wall"], [C_ERROR_CFLAGS=""])
 AS_COMPILER_FLAG([-Werror], [werror=yes], [werror=no])
 
