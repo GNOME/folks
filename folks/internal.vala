@@ -40,6 +40,7 @@ namespace Folks.Internal
 
 #if ENABLE_PROFILING
   /* See: http://people.gnome.org/~federico/news-2006-03.html#timeline-tools */
+  [PrintfFormat]
   private static void profiling_markv (string format, va_list args)
     {
       var formatted = format.vprintf (args);
@@ -58,6 +59,7 @@ namespace Folks.Internal
    * @param ... message arguments
    * @since 0.7.2
    */
+  [PrintfFormat]
   public static void profiling_point (string format, ...)
     {
 #if ENABLE_PROFILING
