@@ -310,18 +310,18 @@ noinst_HEADERS = $(tp_lowlevel_headers)
 -include $(INTROSPECTION_MAKEFILE)
 INTROSPECTION_GIRS =
 INTROSPECTION_SCANNER_ARGS = \
-        $(ERROR_INTROSPECTION_SCANNER_ARGS) \
-        --add-include-path=$(srcdir) \
-        --add-include-path=$(abs_top_builddir)/folks \
-        --warn-all \
-        $(NULL)
+	$(ERROR_INTROSPECTION_SCANNER_ARGS) \
+	--add-include-path=$(srcdir) \
+	--add-include-path=$(abs_top_builddir)/folks \
+	--warn-all \
+	$(NULL)
 
 DISTCHECK_CONFIGURE_FLAGS = --enable-introspection
 
 INTROSPECTION_COMPILER_ARGS = \
-        --includedir=$(srcdir) \
-        --includedir=$(abs_top_builddir)/folks \
-        $(NULL)
+	--includedir=$(srcdir) \
+	--includedir=$(abs_top_builddir)/folks \
+	$(NULL)
 
 #------------------------------------
 # TpLowlevel
@@ -332,9 +332,9 @@ TpLowlevel_@API_VERSION_MAJOR@_@API_VERSION_MINOR@_gir_LIBS = libtp-lowlevel.la
 TpLowlevel_@API_VERSION_MAJOR@_@API_VERSION_MINOR@_gir_FILES = $(libtp_lowlevel_la_SOURCES) $(tp_lowlevel_headers)
 TpLowlevel_@API_VERSION_MAJOR@_@API_VERSION_MINOR@_gir_NAMESPACE = TpLowlevel
 TpLowlevel_@API_VERSION_MAJOR@_@API_VERSION_MINOR@_gir_SCANNERFLAGS = \
-        --identifier-prefix=FolksTpLowlevel \
-        --c-include="tp-lowlevel.h" \
-        $(NULL)
+	--identifier-prefix=FolksTpLowlevel \
+	--c-include="tp-lowlevel.h" \
+	$(NULL)
 TpLowlevel_@API_VERSION_MAJOR@_@API_VERSION_MINOR@_gir_VERSION = $(API_VERSION_DOT)
 INTROSPECTION_GIRS += TpLowlevel-$(API_VERSION_DOT).gir
 dist_noinst_DATA += \

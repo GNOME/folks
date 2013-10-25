@@ -102,16 +102,16 @@ EXTRA_DIST = \
 ##################################################################
 -include $(INTROSPECTION_MAKEFILE)
 INTROSPECTION_SCANNER_ARGS = \
-        $(ERROR_INTROSPECTION_SCANNER_ARGS) \
-        --add-include-path=$(srcdir) \
-        --add-include-path=$(abs_top_builddir)/folks \
-        --warn-all \
-        $(NULL)
+	$(ERROR_INTROSPECTION_SCANNER_ARGS) \
+	--add-include-path=$(srcdir) \
+	--add-include-path=$(abs_top_builddir)/folks \
+	--warn-all \
+	$(NULL)
 
 INTROSPECTION_COMPILER_ARGS = \
-        --includedir=$(srcdir) \
-        --includedir=$(abs_top_builddir)/folks \
-        $(NULL)
+	--includedir=$(srcdir) \
+	--includedir=$(abs_top_builddir)/folks \
+	$(NULL)
 
 if HAVE_INTROSPECTION
 FolksLibsocialweb-$(API_VERSION_DOT).gir: libfolks-libsocialweb.la
