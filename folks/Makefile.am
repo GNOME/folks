@@ -197,6 +197,10 @@ INTROSPECTION_GIRS =
 INTROSPECTION_SCANNER_ARGS =
 INTROSPECTION_COMPILER_ARGS = -l $(libfolks_dlname)
 
+# Set PKG_CONFIG_PATH so we can find the backend's uninstalled pkg-config file.
+INTROSPECTION_SCANNER_ENV = \
+	PKG_CONFIG_PATH=$(top_builddir)/folks:$${PKG_CONFIG_PATH}
+
 if HAVE_INTROSPECTION
 Folks-$(API_VERSION_DOT).gir: libfolks.la
 GIRS = Folks-$(API_VERSION_DOT).gir

@@ -67,6 +67,10 @@ INTROSPECTION_GIRS =
 INTROSPECTION_SCANNER_ARGS = --add-include-path=$(srcdir)
 INTROSPECTION_COMPILER_ARGS = --includedir=$(srcdir)
 
+# Set PKG_CONFIG_PATH so we can find the backend's uninstalled pkg-config file.
+INTROSPECTION_SCANNER_ENV = \
+	PKG_CONFIG_PATH=$(top_builddir)/folks:$${PKG_CONFIG_PATH}
+
 tp-test-contactlist.gir: $(libtp_test_contactlist_la_SOURCES) \
 	libtp-test-contactlist.la
 tp_test_contactlist_gir_INCLUDES = GObject-2.0 TelepathyGLib-0.12

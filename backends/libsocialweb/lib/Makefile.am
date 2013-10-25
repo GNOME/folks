@@ -113,6 +113,10 @@ INTROSPECTION_SCANNER_ARGS = \
 	--warn-all \
 	$(NULL)
 
+# Set PKG_CONFIG_PATH so we can find the backend's uninstalled pkg-config file.
+INTROSPECTION_SCANNER_ENV = \
+	PKG_CONFIG_PATH=$(top_builddir)/folks:$${PKG_CONFIG_PATH}
+
 INTROSPECTION_COMPILER_ARGS = \
 	--includedir=$(srcdir) \
 	--includedir=$(abs_top_builddir)/folks \
