@@ -25,6 +25,7 @@ folks_import_SOURCES = \
 folks_import_CPPFLAGS = \
 	$(AM_CPPFLAGS) \
 	-include $(CONFIG_HEADER) \
+	-include $(top_srcdir)/folks/warnings.h \
 	-DLOCALE_DIR=\"$(localedir)\" \
 	-I$(top_srcdir) \
 	-I$(top_srcdir)/folks \

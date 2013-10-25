@@ -26,6 +26,11 @@ libsocialweb_test_la_SOURCES = \
 	test-case.vala \
 	$(NULL)
 
+libsocialweb_test_la_CPPFLAGS = \
+	$(AM_CPPFLAGS) \
+	-include $(top_srcdir)/folks/warnings.h \
+	$(NULL)
+
 libsocialweb_test_la_CFLAGS = \
 	$(AM_CFLAGS) \
 	$(ERROR_CFLAGS) \

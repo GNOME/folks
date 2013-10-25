@@ -38,6 +38,11 @@ if ENABLE_PROFILING
 libfolks_internal_la_VALAFLAGS += --define=ENABLE_PROFILING
 endif
 
+libfolks_internal_la_CPPFLAGS = \
+	$(AM_CPPFLAGS) \
+	-include $(top_srcdir)/folks/warnings.h \
+	$(NULL)
+
 libfolks_internal_la_CFLAGS = \
 	$(AM_CFLAGS) \
 	$(ERROR_CFLAGS) \
@@ -124,6 +129,11 @@ libfolks_la_VALAFLAGS = \
 	$(EDS_FLAGS) \
 	$(NULL)
 
+libfolks_la_CPPFLAGS = \
+	$(AM_CPPFLAGS) \
+	-include $(top_srcdir)/folks/warnings.h \
+	$(NULL)
+
 libfolks_la_CFLAGS = \
 	$(AM_CFLAGS) \
 	$(CODE_COVERAGE_CFLAGS) \
@@ -171,6 +181,7 @@ EXTRA_DIST = \
 	$(pkgconfig_in) \
 	build-conf.vapi \
 	redeclare-internal-api.h \
+	warnings.h \
 	$(NULL)
 
 CLEANFILES =

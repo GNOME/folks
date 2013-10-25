@@ -50,6 +50,11 @@ libfolks_libsocialweb_la_VALAFLAGS = \
 	-H folks/folks-libsocialweb.h \
 	$(NULL)
 
+libfolks_libsocialweb_la_CPPFLAGS = \
+	$(AM_CPPFLAGS) \
+	-include $(top_srcdir)/folks/warnings.h \
+	$(NULL)
+
 libfolks_libsocialweb_la_CFLAGS = \
 	$(AM_CFLAGS) \
 	$(ERROR_CFLAGS) \

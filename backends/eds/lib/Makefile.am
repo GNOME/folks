@@ -54,6 +54,11 @@ libfolks_eds_la_VALAFLAGS = \
 	-H folks/folks-eds.h \
 	$(NULL)
 
+libfolks_eds_la_CPPFLAGS = \
+	$(AM_CPPFLAGS) \
+	-include $(top_srcdir)/folks/warnings.h \
+	$(NULL)
+
 libfolks_eds_la_CFLAGS = \
 	$(AM_CFLAGS) \
 	$(ERROR_CFLAGS) \

@@ -23,6 +23,7 @@ Bugs fixed:
 • Avoid useless string copies when normalizing phone numbers, and make the
   implementation respect the algorithm described in
   http://blog.barisione.org/2010-06/handling-phone-numbers
+• Bug 710869 — Disable some GCC warnings for generated C code
 
 API changes:
 

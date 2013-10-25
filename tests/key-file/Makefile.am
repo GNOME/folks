@@ -10,6 +10,7 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir)/tests/lib \
 	-I$(top_srcdir)/tests/lib/key-file \
 	-include $(CONFIG_HEADER) \
+	-include $(top_srcdir)/folks/warnings.h \
 	$(NULL)
 
 LDADD = \

@@ -123,6 +123,7 @@ libtp_zeitgeist_dummy_la_CFLAGS = \
 
 libtp_zeitgeist_la_CPPFLAGS = \
 	$(AM_CPPFLAGS) \
+	-include $(top_srcdir)/folks/warnings.h \
 	-DABS_TOP_SRCDIR=\"${abs_top_srcdir}\" \
 	-DABS_TOP_BUILDDIR=\"${abs_top_builddir}\" \
 	-DPKGLIBEXECDIR=\"${pkglibexecdir}\" \
@@ -237,6 +238,11 @@ libfolks_telepathy_la_VALAFLAGS += --pkg tp-zeitgeist
 else
 libfolks_telepathy_la_VALAFLAGS += --pkg tp-zeitgeist-dummy
 endif
+
+libfolks_telepathy_la_CPPFLAGS = \
+	$(AM_CPPFLAGS) \
+	-include $(top_srcdir)/folks/warnings.h \
+	$(NULL)
 
 libfolks_telepathy_la_CFLAGS = \
 	$(AM_CFLAGS) \

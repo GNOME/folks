@@ -21,6 +21,11 @@ libkf_test_la_SOURCES = \
 	test-case.vala \
 	$(NULL)
 
+libkf_test_la_CPPFLAGS = \
+	$(AM_CPPFLAGS) \
+	-include $(top_srcdir)/folks/warnings.h \
+	$(NULL)
+
 libkf_test_la_CFLAGS = \
 	-I$(top_srcdir) \
 	-I$(top_srcdir)/tests/lib \

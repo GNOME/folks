@@ -32,6 +32,7 @@ tracker_la_CPPFLAGS = \
 	-I$(top_srcdir)/backends/tracker/lib \
 	-I$(top_srcdir)/backends/tracker/lib/folks \
 	-include $(CONFIG_HEADER) \
+	-include $(top_srcdir)/folks/warnings.h \
 	-DPACKAGE_DATADIR=\"$(pkgdatadir)\" \
 	-DBACKEND_NAME=\"$(BACKEND_NAME)\" \
 	-DG_LOG_DOMAIN=\"$(BACKEND_NAME)\" \
