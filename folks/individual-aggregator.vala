@@ -1715,12 +1715,12 @@ public class Folks.IndividualAggregator : Object
           /* Extract the deprecated added and removed sets from
            * individuals_changes, to be used in the individuals_changed
            * signal. */
-          var iter = individuals_changes.map_iterator ();
+          var iter1 = individuals_changes.map_iterator ();
 
-          while (iter.next ())
+          while (iter1.next ())
             {
-              var old_ind = iter.get_key ();
-              var new_ind = iter.get_value ();
+              var old_ind = iter1.get_key ();
+              var new_ind = iter1.get_value ();
 
               assert (old_ind != null || new_ind != null);
 
@@ -1748,11 +1748,11 @@ public class Folks.IndividualAggregator : Object
       /* Signal the replacement of various Individuals as a consequence of
        * linking. */
       debug ("Replacing Individuals due to linking:");
-      var iter = replaced_individuals.map_iterator ();
-      while (iter.next () == true)
+      var iter2 = replaced_individuals.map_iterator ();
+      while (iter2.next () == true)
         {
-          var old_ind = iter.get_key ();
-          var new_ind = iter.get_value ();
+          var old_ind = iter2.get_key ();
+          var new_ind = iter2.get_value ();
 
           debug ("    %s (%p) → %s (%p)", old_ind.id, old_ind,
               new_ind.id, new_ind);
