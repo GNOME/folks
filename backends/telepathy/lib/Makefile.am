@@ -123,13 +123,9 @@ libtp_zeitgeist_dummy_la_CFLAGS = \
 
 libtp_zeitgeist_la_CPPFLAGS = \
 	$(AM_CPPFLAGS) \
-	-I$(top_srcdir) \
-	-I$(top_srcdir)/folks \
-	-include $(CONFIG_HEADER) \
 	-DABS_TOP_SRCDIR=\"${abs_top_srcdir}\" \
 	-DABS_TOP_BUILDDIR=\"${abs_top_builddir}\" \
 	-DPKGLIBEXECDIR=\"${pkglibexecdir}\" \
-	-DPACKAGE_DATADIR=\"${pkgdatadir}\" \
 	$(NULL)
 libtp_zeitgeist_dummy_la_CPPFLAGS = $(libtp_zeitgeist_la_CPPFLAGS)
 
