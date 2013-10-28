@@ -78,10 +78,70 @@ tp_tests_proxy_run_until_prepared_or_failed (gpointer proxy,
   return r;
 }
 
+static GTestDBus *test_dbus = NULL;
+
+static void
+start_dbus_session (void)
+{
+  g_assert (test_dbus == NULL);
+
+  g_type_init ();
+
+  /* Make sure we won't be using user's bus. This unsets more than
+   * g_test_dbus_unset() currently does (glib 2.36) */
+  g_unsetenv ("DISPLAY");
+  g_unsetenv ("DBUS_STARTER_ADDRESS");
+  g_unsetenv ("DBUS_STARTER_BUS_TYPE");
+  g_unsetenv ("DBUS_SESSION_BUS_ADDRESS");
+
+  test_dbus = g_test_dbus_new (G_TEST_DBUS_NONE);
+  g_test_dbus_add_service_dir (test_dbus, g_getenv ("TP_TESTS_SERVICES_DIR"));
+  g_test_dbus_up (test_dbus);
+}
+
+static void
+stop_dbus_session (void)
+{
+  g_assert (test_dbus != NULL);
+  g_test_dbus_down (test_dbus);
+  g_clear_object (&test_dbus);
+}
+
+gint
+tp_tests_run_with_bus (void)
+{
+  gint ret;
+
+  if (test_dbus != NULL)
+    return g_test_run ();
+
+  start_dbus_session ();
+  ret = g_test_run ();
+  stop_dbus_session ();
+
+  return ret;
+}
+
 TpDBusDaemon *
 tp_tests_dbus_daemon_dup_or_die (void)
 {
-  TpDBusDaemon *d = tp_dbus_daemon_dup (NULL);
+  TpDBusDaemon *d;
+
+  if (test_dbus == NULL)
+    {
+      /* HACK: Some tests are not yet ported to GTest and thus are not using
+       * tp_tests_run_with_bus(). In that case we make sure to start the dbus
+       * session before aquiring the TpDBusDaemon and we stop the session when
+       * the daemon is disposed. In a perfect world this should not be needed.
+       */
+      start_dbus_session ();
+      d = tp_dbus_daemon_dup (NULL);
+      g_object_weak_ref ((GObject *) d, (GWeakNotify) stop_dbus_session, NULL);
+    }
+  else
+    {
+       d = tp_dbus_daemon_dup (NULL);
+    }
 
   /* In a shared library, this would be very bad (see fd.o #18832), but in a
    * regression test that's going to be run under a temporary session bus,

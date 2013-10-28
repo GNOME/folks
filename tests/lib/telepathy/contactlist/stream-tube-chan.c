@@ -140,9 +140,9 @@ static void stream_tube_iface_init (gpointer iface, gpointer data);
 G_DEFINE_ABSTRACT_TYPE_WITH_CODE (TpTestsStreamTubeChannel,
     tp_tests_stream_tube_channel,
     TP_TYPE_BASE_CHANNEL,
-    G_IMPLEMENT_INTERFACE (TP_TYPE_SVC_CHANNEL_TYPE_STREAM_TUBE,
+    G_IMPLEMENT_INTERFACE (TP_TYPE_SVC_CHANNEL_TYPE_STREAM_TUBE1,
       stream_tube_iface_init);
-    G_IMPLEMENT_INTERFACE (TP_TYPE_SVC_CHANNEL_INTERFACE_TUBE,
+    G_IMPLEMENT_INTERFACE (TP_TYPE_SVC_CHANNEL_INTERFACE_TUBE1,
       NULL);
     )
 
@@ -156,7 +156,7 @@ tp_tests_stream_tube_channel_get_interfaces (TpBaseChannel *self)
   interfaces = TP_BASE_CHANNEL_CLASS (
       tp_tests_stream_tube_channel_parent_class)->get_interfaces (self);
 
-  g_ptr_array_add (interfaces, TP_IFACE_CHANNEL_INTERFACE_TUBE);
+  g_ptr_array_add (interfaces, TP_IFACE_CHANNEL_INTERFACE_TUBE1);
   return interfaces;
 };
 
@@ -236,8 +236,8 @@ fill_immutable_properties (TpBaseChannel *chan,
 
   tp_dbus_properties_mixin_fill_properties_hash (
       G_OBJECT (chan), properties,
-      TP_IFACE_CHANNEL_TYPE_STREAM_TUBE, "Service",
-      TP_IFACE_CHANNEL_TYPE_STREAM_TUBE, "SupportedSocketTypes",
+      TP_IFACE_CHANNEL_TYPE_STREAM_TUBE1, "Service",
+      TP_IFACE_CHANNEL_TYPE_STREAM_TUBE1, "SupportedSocketTypes",
       NULL);
 
   if (!tp_base_channel_is_requested (chan))
@@ -245,7 +245,7 @@ fill_immutable_properties (TpBaseChannel *chan,
       /* Parameters is immutable only for incoming tubes */
       tp_dbus_properties_mixin_fill_properties_hash (
           G_OBJECT (chan), properties,
-          TP_IFACE_CHANNEL_INTERFACE_TUBE, "Parameters",
+          TP_IFACE_CHANNEL_INTERFACE_TUBE1, "Parameters",
           NULL);
     }
 }
@@ -272,7 +272,7 @@ tp_tests_stream_tube_channel_class_init (TpTestsStreamTubeChannelClass *klass)
   object_class->set_property = tp_tests_stream_tube_channel_set_property;
   object_class->dispose = dispose;
 
-  base_class->channel_type = TP_IFACE_CHANNEL_TYPE_STREAM_TUBE;
+  base_class->channel_type = TP_IFACE_CHANNEL_TYPE_STREAM_TUBE1;
   base_class->get_interfaces = tp_tests_stream_tube_channel_get_interfaces;
   base_class->close = channel_close;
   base_class->fill_immutable_properties = fill_immutable_properties;
@@ -317,12 +317,12 @@ tp_tests_stream_tube_channel_class_init (TpTestsStreamTubeChannelClass *klass)
       1, G_TYPE_IO_STREAM);
 
   tp_dbus_properties_mixin_implement_interface (object_class,
-      TP_IFACE_QUARK_CHANNEL_TYPE_STREAM_TUBE,
+      TP_IFACE_QUARK_CHANNEL_TYPE_STREAM_TUBE1,
       tp_dbus_properties_mixin_getter_gobject_properties, NULL,
       stream_tube_props);
 
   tp_dbus_properties_mixin_implement_interface (object_class,
-      TP_IFACE_QUARK_CHANNEL_INTERFACE_TUBE,
+      TP_IFACE_QUARK_CHANNEL_INTERFACE_TUBE1,
       tp_dbus_properties_mixin_getter_gobject_properties, NULL,
       tube_props);
 
@@ -336,7 +336,7 @@ change_state (TpTestsStreamTubeChannel *self,
 {
   self->priv->state = state;
 
-  tp_svc_channel_interface_tube_emit_tube_channel_state_changed (self, state);
+  tp_svc_channel_interface_tube1_emit_tube_channel_state_changed (self, state);
 }
 
 /* Return the address of the socket which has been shared over the tube */
@@ -370,7 +370,7 @@ check_address_type (TpTestsStreamTubeChannel *self,
 }
 
 static void
-stream_tube_offer (TpSvcChannelTypeStreamTube *iface,
+stream_tube_offer (TpSvcChannelTypeStreamTube1 *iface,
     guint address_type,
     const GValue *address,
     guint access_control,
@@ -400,7 +400,7 @@ stream_tube_offer (TpSvcChannelTypeStreamTube *iface,
 
   change_state (self, TP_TUBE_CHANNEL_STATE_REMOTE_PENDING);
 
-  tp_svc_channel_type_stream_tube_return_from_offer (context);
+  tp_svc_channel_type_stream_tube1_return_from_offer (context);
   return;
 
 fail:
@@ -452,7 +452,7 @@ service_incoming_cb (GSocketService *service,
       g_object_unref (addr);
     }
 
-  tp_svc_channel_type_stream_tube_emit_new_local_connection (self,
+  tp_svc_channel_type_stream_tube1_emit_new_local_connection (self,
       self->priv->connection_id);
 
   self->priv->connection_id++;
@@ -461,7 +461,7 @@ service_incoming_cb (GSocketService *service,
 }
 
 static void
-stream_tube_accept (TpSvcChannelTypeStreamTube *iface,
+stream_tube_accept (TpSvcChannelTypeStreamTube1 *iface,
     TpSocketAddressType address_type,
     TpSocketAccessControl access_control,
     const GValue *access_control_param,
@@ -497,7 +497,7 @@ stream_tube_accept (TpSvcChannelTypeStreamTube *iface,
 
   change_state (self, TP_TUBE_CHANNEL_STATE_OPEN);
 
-  tp_svc_channel_type_stream_tube_return_from_accept (context, address);
+  tp_svc_channel_type_stream_tube1_return_from_accept (context, address);
 
   tp_g_value_slice_free (address);
   return;
@@ -511,9 +511,9 @@ static void
 stream_tube_iface_init (gpointer iface,
     gpointer data)
 {
-  TpSvcChannelTypeStreamTubeClass *klass = iface;
+  TpSvcChannelTypeStreamTube1Class *klass = iface;
 
-#define IMPLEMENT(x) tp_svc_channel_type_stream_tube_implement_##x (klass, stream_tube_##x)
+#define IMPLEMENT(x) tp_svc_channel_type_stream_tube1_implement_##x (klass, stream_tube_##x)
   IMPLEMENT(offer);
   IMPLEMENT(accept);
 #undef IMPLEMENT
@@ -589,7 +589,7 @@ tp_tests_stream_tube_channel_peer_connected (TpTestsStreamTubeChannel *self,
         g_assert_not_reached ();
     }
 
-  tp_svc_channel_type_stream_tube_emit_new_remote_connection (self, handle,
+  tp_svc_channel_type_stream_tube1_emit_new_remote_connection (self, handle,
       tp_handle_inspect (contact_repo, handle), connection_param,
       self->priv->connection_id);
 
@@ -603,7 +603,7 @@ tp_tests_stream_tube_channel_last_connection_disconnected (
     TpTestsStreamTubeChannel *self,
     const gchar *error)
 {
-  tp_svc_channel_type_stream_tube_emit_connection_closed (self,
+  tp_svc_channel_type_stream_tube1_emit_connection_closed (self,
       self->priv->connection_id - 1, error, "kaboum");
 }
 

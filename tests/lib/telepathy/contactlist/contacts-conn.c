@@ -29,24 +29,24 @@ static void conn_avatars_properties_getter (GObject *object, GQuark interface,
 G_DEFINE_TYPE_WITH_CODE (TpTestsContactsConnection,
     tp_tests_contacts_connection,
     TP_TESTS_TYPE_SIMPLE_CONNECTION,
-    G_IMPLEMENT_INTERFACE (TP_TYPE_SVC_CONNECTION_INTERFACE_ALIASING,
+    G_IMPLEMENT_INTERFACE (TP_TYPE_SVC_CONNECTION_INTERFACE_ALIASING1,
       init_aliasing);
-    G_IMPLEMENT_INTERFACE (TP_TYPE_SVC_CONNECTION_INTERFACE_AVATARS,
+    G_IMPLEMENT_INTERFACE (TP_TYPE_SVC_CONNECTION_INTERFACE_AVATARS1,
       init_avatars);
-    G_IMPLEMENT_INTERFACE (TP_TYPE_SVC_CONNECTION_INTERFACE_PRESENCE,
+    G_IMPLEMENT_INTERFACE (TP_TYPE_SVC_CONNECTION_INTERFACE_PRESENCE1,
       tp_presence_mixin_iface_init);
-    G_IMPLEMENT_INTERFACE (TP_TYPE_SVC_CONNECTION_INTERFACE_LOCATION, NULL)
+    G_IMPLEMENT_INTERFACE (TP_TYPE_SVC_CONNECTION_INTERFACE_LOCATION1, NULL)
     G_IMPLEMENT_INTERFACE (
-      TP_TYPE_SVC_CONNECTION_INTERFACE_CONTACT_CAPABILITIES, NULL)
-    G_IMPLEMENT_INTERFACE (TP_TYPE_SVC_CONNECTION_INTERFACE_CONTACT_INFO,
+      TP_TYPE_SVC_CONNECTION_INTERFACE_CONTACT_CAPABILITIES1, NULL)
+    G_IMPLEMENT_INTERFACE (TP_TYPE_SVC_CONNECTION_INTERFACE_CONTACT_INFO1,
       init_contact_info)
     G_IMPLEMENT_INTERFACE (TP_TYPE_SVC_CONNECTION_INTERFACE_CONTACTS,
       tp_contacts_mixin_iface_init);
-    G_IMPLEMENT_INTERFACE (TP_TYPE_SVC_CONNECTION_INTERFACE_CONTACT_LIST,
+    G_IMPLEMENT_INTERFACE (TP_TYPE_SVC_CONNECTION_INTERFACE_CONTACT_LIST1,
       tp_base_contact_list_mixin_list_iface_init);
-    G_IMPLEMENT_INTERFACE (TP_TYPE_SVC_CONNECTION_INTERFACE_CONTACT_GROUPS,
+    G_IMPLEMENT_INTERFACE (TP_TYPE_SVC_CONNECTION_INTERFACE_CONTACT_GROUPS1,
       tp_base_contact_list_mixin_groups_iface_init);
-    G_IMPLEMENT_INTERFACE (TP_TYPE_SVC_CONNECTION_INTERFACE_CLIENT_TYPES,
+    G_IMPLEMENT_INTERFACE (TP_TYPE_SVC_CONNECTION_INTERFACE_CLIENT_TYPES1,
       NULL);
     );
 
@@ -199,7 +199,7 @@ aliasing_fill_contact_attributes (GObject *object,
         }
 
       tp_contacts_mixin_set_contact_attribute (attributes, handle,
-          TP_IFACE_CONNECTION_INTERFACE_ALIASING "/alias",
+          TP_IFACE_CONNECTION_INTERFACE_ALIASING1 "/alias",
           tp_g_value_slice_new_string (alias));
     }
 }
@@ -221,7 +221,7 @@ avatars_fill_contact_attributes (GObject *object,
       if (a != NULL && a->token != NULL)
         {
           tp_contacts_mixin_set_contact_attribute (attributes, handle,
-              TP_IFACE_CONNECTION_INTERFACE_AVATARS "/token",
+              TP_IFACE_CONNECTION_INTERFACE_AVATARS1 "/token",
               tp_g_value_slice_new_string (a->token));
         }
     }
@@ -244,7 +244,7 @@ location_fill_contact_attributes (GObject *object,
       if (location != NULL)
         {
           tp_contacts_mixin_set_contact_attribute (attributes, handle,
-              TP_IFACE_CONNECTION_INTERFACE_LOCATION "/location",
+              TP_IFACE_CONNECTION_INTERFACE_LOCATION1 "/location",
               tp_g_value_slice_new_boxed (TP_HASH_TYPE_LOCATION, location));
         }
     }
@@ -267,7 +267,7 @@ contact_caps_fill_contact_attributes (GObject *object,
       if (caps != NULL)
         {
           tp_contacts_mixin_set_contact_attribute (attributes, handle,
-              TP_IFACE_CONNECTION_INTERFACE_CONTACT_CAPABILITIES "/capabilities",
+              TP_IFACE_CONNECTION_INTERFACE_CONTACT_CAPABILITIES1 "/capabilities",
               tp_g_value_slice_new_boxed (
                 TP_ARRAY_TYPE_REQUESTABLE_CHANNEL_CLASS_LIST, caps));
         }
@@ -291,7 +291,7 @@ contact_info_fill_contact_attributes (GObject *object,
       if (info != NULL)
         {
           tp_contacts_mixin_set_contact_attribute (attributes, handle,
-              TP_IFACE_CONNECTION_INTERFACE_CONTACT_INFO "/info",
+              TP_IFACE_CONNECTION_INTERFACE_CONTACT_INFO1 "/info",
               tp_g_value_slice_new_boxed (TP_ARRAY_TYPE_CONTACT_INFO_FIELD_LIST,
                   info));
         }
@@ -404,22 +404,22 @@ constructed (GObject *object)
           TP_BASE_CONTACT_LIST (self->priv->list_manager), base);
     }
   tp_contacts_mixin_add_contact_attributes_iface (object,
-      TP_IFACE_CONNECTION_INTERFACE_ALIASING,
+      TP_IFACE_CONNECTION_INTERFACE_ALIASING1,
       aliasing_fill_contact_attributes);
   tp_contacts_mixin_add_contact_attributes_iface (object,
-      TP_IFACE_CONNECTION_INTERFACE_AVATARS,
+      TP_IFACE_CONNECTION_INTERFACE_AVATARS1,
       avatars_fill_contact_attributes);
   tp_contacts_mixin_add_contact_attributes_iface (object,
-      TP_IFACE_CONNECTION_INTERFACE_LOCATION,
+      TP_IFACE_CONNECTION_INTERFACE_LOCATION1,
       location_fill_contact_attributes);
   tp_contacts_mixin_add_contact_attributes_iface (object,
-      TP_IFACE_CONNECTION_INTERFACE_CONTACT_CAPABILITIES,
+      TP_IFACE_CONNECTION_INTERFACE_CONTACT_CAPABILITIES1,
       contact_caps_fill_contact_attributes);
   tp_contacts_mixin_add_contact_attributes_iface (object,
-      TP_IFACE_CONNECTION_INTERFACE_CONTACT_INFO,
+      TP_IFACE_CONNECTION_INTERFACE_CONTACT_INFO1,
       contact_info_fill_contact_attributes);
   tp_contacts_mixin_add_contact_attributes_iface (object,
-      TP_IFACE_CONNECTION_INTERFACE_CLIENT_TYPES,
+      TP_IFACE_CONNECTION_INTERFACE_CLIENT_TYPES1,
       client_types_fill_contact_attributes);
 
   tp_presence_mixin_init (object,
@@ -532,16 +532,16 @@ tp_tests_contacts_get_interfaces_always_present (TpBaseConnection *base)
 {
   GPtrArray *interfaces;
   static const gchar *interfaces_always_present[] = {
-      TP_IFACE_CONNECTION_INTERFACE_ALIASING,
-      TP_IFACE_CONNECTION_INTERFACE_AVATARS,
+      TP_IFACE_CONNECTION_INTERFACE_ALIASING1,
+      TP_IFACE_CONNECTION_INTERFACE_AVATARS1,
       TP_IFACE_CONNECTION_INTERFACE_CONTACTS,
-      TP_IFACE_CONNECTION_INTERFACE_CONTACT_LIST,
-      TP_IFACE_CONNECTION_INTERFACE_CONTACT_GROUPS,
-      TP_IFACE_CONNECTION_INTERFACE_PRESENCE,
-      TP_IFACE_CONNECTION_INTERFACE_LOCATION,
-      TP_IFACE_CONNECTION_INTERFACE_CLIENT_TYPES,
-      TP_IFACE_CONNECTION_INTERFACE_CONTACT_CAPABILITIES,
-      TP_IFACE_CONNECTION_INTERFACE_CONTACT_INFO,
+      TP_IFACE_CONNECTION_INTERFACE_CONTACT_LIST1,
+      TP_IFACE_CONNECTION_INTERFACE_CONTACT_GROUPS1,
+      TP_IFACE_CONNECTION_INTERFACE_PRESENCE1,
+      TP_IFACE_CONNECTION_INTERFACE_LOCATION1,
+      TP_IFACE_CONNECTION_INTERFACE_CLIENT_TYPES1,
+      TP_IFACE_CONNECTION_INTERFACE_CONTACT_CAPABILITIES1,
+      TP_IFACE_CONNECTION_INTERFACE_CONTACT_INFO1,
       NULL };
   guint i;
 
@@ -589,17 +589,17 @@ tp_tests_contacts_connection_class_init (TpTestsContactsConnectionClass *klass)
     { NULL }
   };
   static TpDBusPropertiesMixinIfaceImpl prop_interfaces[] = {
-        { TP_IFACE_CONNECTION_INTERFACE_AVATARS,
+        { TP_IFACE_CONNECTION_INTERFACE_AVATARS1,
           conn_avatars_properties_getter,
           NULL,
           conn_avatars_properties,
         },
-        { TP_IFACE_CONNECTION_INTERFACE_CONTACT_INFO,
+        { TP_IFACE_CONNECTION_INTERFACE_CONTACT_INFO1,
           conn_contact_info_properties_getter,
           NULL,
           conn_contact_info_properties,
         },
-        { TP_IFACE_CONNECTION_INTERFACE_ALIASING,
+        { TP_IFACE_CONNECTION_INTERFACE_ALIASING1,
           aliasing_get_dbus_property,
           NULL,
           aliasing_props,
@@ -669,7 +669,7 @@ tp_tests_contacts_connection_change_aliases (TpTestsContactsConnection *self,
           GUINT_TO_POINTER (handles[i]), (gchar *) aliases[i]);
     }
 
-  tp_svc_connection_interface_aliasing_emit_aliases_changed (self, changes);
+  tp_svc_connection_interface_aliasing1_emit_aliases_changed (self, changes);
 
   g_hash_table_unref (changes);
 }
@@ -729,7 +729,7 @@ tp_tests_contacts_connection_change_avatar_tokens (TpTestsContactsConnection *se
       DEBUG ("contact#%u -> %s", handles[i], tokens[i]);
       g_hash_table_insert (self->priv->avatars,
           GUINT_TO_POINTER (handles[i]), avatar_data_new (NULL, NULL, tokens[i]));
-      tp_svc_connection_interface_avatars_emit_avatar_updated (self,
+      tp_svc_connection_interface_avatars1_emit_avatar_updated (self,
           handles[i], tokens[i]);
     }
 }
@@ -745,7 +745,7 @@ tp_tests_contacts_connection_change_avatar_data (
   g_hash_table_insert (self->priv->avatars,
       GUINT_TO_POINTER (handle), avatar_data_new (data, mime_type, token));
 
-  tp_svc_connection_interface_avatars_emit_avatar_updated (self,
+  tp_svc_connection_interface_avatars1_emit_avatar_updated (self,
       handle, token);
 }
 
@@ -764,7 +764,7 @@ tp_tests_contacts_connection_change_locations (TpTestsContactsConnection *self,
       g_hash_table_insert (self->priv->locations,
           GUINT_TO_POINTER (handles[i]), g_hash_table_ref (locations[i]));
 
-      tp_svc_connection_interface_location_emit_location_updated (self,
+      tp_svc_connection_interface_location1_emit_location_updated (self,
           handles[i], locations[i]);
     }
 }
@@ -786,7 +786,7 @@ tp_tests_contacts_connection_change_capabilities (
             caps));
     }
 
-  tp_svc_connection_interface_contact_capabilities_emit_contact_capabilities_changed (
+  tp_svc_connection_interface_contact_capabilities1_emit_contact_capabilities_changed (
       self, capabilities);
 }
 
@@ -799,7 +799,7 @@ tp_tests_contacts_connection_change_contact_info (
   g_hash_table_insert (self->priv->contact_info, GUINT_TO_POINTER (handle),
       g_ptr_array_ref (info));
 
-  tp_svc_connection_interface_contact_info_emit_contact_info_changed (self,
+  tp_svc_connection_interface_contact_info1_emit_contact_info_changed (self,
       handle, info);
 }
 
@@ -814,7 +814,7 @@ tp_tests_contacts_connection_set_default_contact_info (
 }
 
 static void
-my_request_aliases (TpSvcConnectionInterfaceAliasing *aliasing,
+my_request_aliases (TpSvcConnectionInterfaceAliasing1 *aliasing,
                     const GArray *contacts,
                     DBusGMethodInvocation *context)
 {
@@ -853,13 +853,13 @@ my_request_aliases (TpSvcConnectionInterfaceAliasing *aliasing,
 
   g_ptr_array_add (result, NULL);
   strings = (gchar **) g_ptr_array_free (result, FALSE);
-  tp_svc_connection_interface_aliasing_return_from_request_aliases (context,
+  tp_svc_connection_interface_aliasing1_return_from_request_aliases (context,
       (const gchar **) strings);
   g_free (strings);
 }
 
 static void
-my_set_aliases (TpSvcConnectionInterfaceAliasing *aliasing,
+my_set_aliases (TpSvcConnectionInterfaceAliasing1 *aliasing,
     GHashTable *table,
     DBusGMethodInvocation *context)
 {
@@ -902,7 +902,7 @@ my_set_aliases (TpSvcConnectionInterfaceAliasing *aliasing,
       (const TpHandle *) handles->data,
       (const gchar * const *) aliases->pdata);
 
-  tp_svc_connection_interface_aliasing_return_from_set_aliases (context);
+  tp_svc_connection_interface_aliasing1_return_from_set_aliases (context);
 
 out:
   g_array_unref (handles);
@@ -913,9 +913,9 @@ static void
 init_aliasing (gpointer g_iface,
                gpointer iface_data)
 {
-  TpSvcConnectionInterfaceAliasingClass *klass = g_iface;
+  TpSvcConnectionInterfaceAliasing1Class *klass = g_iface;
 
-#define IMPLEMENT(x) tp_svc_connection_interface_aliasing_implement_##x (\
+#define IMPLEMENT(x) tp_svc_connection_interface_aliasing1_implement_##x (\
     klass, my_##x)
   IMPLEMENT(request_aliases);
   IMPLEMENT(set_aliases);
@@ -923,7 +923,7 @@ init_aliasing (gpointer g_iface,
 }
 
 static void
-my_request_avatars (TpSvcConnectionInterfaceAvatars *avatars,
+my_request_avatars (TpSvcConnectionInterfaceAvatars1 *avatars,
     const GArray *contacts,
     DBusGMethodInvocation *context)
 {
@@ -950,11 +950,11 @@ my_request_avatars (TpSvcConnectionInterfaceAvatars *avatars,
           GUINT_TO_POINTER (handle));
 
       if (a != NULL)
-        tp_svc_connection_interface_avatars_emit_avatar_retrieved (self, handle,
+        tp_svc_connection_interface_avatars1_emit_avatar_retrieved (self, handle,
             a->token, a->data, a->mime_type);
     }
 
-  tp_svc_connection_interface_avatars_return_from_request_avatars (context);
+  tp_svc_connection_interface_avatars1_return_from_request_avatars (context);
 }
 
 static void
@@ -981,9 +981,9 @@ static void
 init_avatars (gpointer g_iface,
               gpointer iface_data)
 {
-  TpSvcConnectionInterfaceAvatarsClass *klass = g_iface;
+  TpSvcConnectionInterfaceAvatars1Class *klass = g_iface;
 
-#define IMPLEMENT(x) tp_svc_connection_interface_avatars_implement_##x (\
+#define IMPLEMENT(x) tp_svc_connection_interface_avatars1_implement_##x (\
     klass, my_##x)
   /* IMPLEMENT(get_avatar_requirements); */
   /* IMPLEMENT(request_avatar); */
@@ -1014,7 +1014,7 @@ lookup_contact_info (TpTestsContactsConnection *self,
 }
 
 static void
-my_refresh_contact_info (TpSvcConnectionInterfaceContactInfo *obj,
+my_refresh_contact_info (TpSvcConnectionInterfaceContactInfo1 *obj,
     const GArray *contacts,
     DBusGMethodInvocation *context)
 {
@@ -1039,17 +1039,17 @@ my_refresh_contact_info (TpSvcConnectionInterfaceContactInfo *obj,
       TpHandle handle = g_array_index (contacts, guint, i);
       GPtrArray *arr = lookup_contact_info (self, handle);
 
-      tp_svc_connection_interface_contact_info_emit_contact_info_changed (self,
+      tp_svc_connection_interface_contact_info1_emit_contact_info_changed (self,
           handle, arr);
       g_ptr_array_unref (arr);
     }
 
-  tp_svc_connection_interface_contact_info_return_from_refresh_contact_info (
+  tp_svc_connection_interface_contact_info1_return_from_refresh_contact_info (
       context);
 }
 
 static void
-my_request_contact_info (TpSvcConnectionInterfaceContactInfo *obj,
+my_request_contact_info (TpSvcConnectionInterfaceContactInfo1 *obj,
     guint handle,
     DBusGMethodInvocation *context)
 {
@@ -1071,14 +1071,14 @@ my_request_contact_info (TpSvcConnectionInterfaceContactInfo *obj,
 
   ret = lookup_contact_info (self, handle);
 
-  tp_svc_connection_interface_contact_info_return_from_request_contact_info (
+  tp_svc_connection_interface_contact_info1_return_from_request_contact_info (
       context, ret);
 
   g_ptr_array_unref (ret);
 }
 
 static void
-my_set_contact_info (TpSvcConnectionInterfaceContactInfo *obj,
+my_set_contact_info (TpSvcConnectionInterfaceContactInfo1 *obj,
     const GPtrArray *info,
     DBusGMethodInvocation *context)
 {
@@ -1091,15 +1091,17 @@ my_set_contact_info (TpSvcConnectionInterfaceContactInfo *obj,
   TP_BASE_CONNECTION_ERROR_IF_NOT_CONNECTED (base, context);
 
   /* Deep copy info */
+  G_GNUC_BEGIN_IGNORE_DEPRECATIONS
   copy = g_ptr_array_new_with_free_func ((GDestroyNotify) g_value_array_free);
   for (i = 0; i < info->len; i++)
     g_ptr_array_add (copy, g_value_array_copy (g_ptr_array_index (info, i)));
+  G_GNUC_END_IGNORE_DEPRECATIONS
 
   self_handle = tp_base_connection_get_self_handle (base);
   tp_tests_contacts_connection_change_contact_info (self, self_handle, copy);
   g_ptr_array_unref (copy);
 
-  tp_svc_connection_interface_contact_info_return_from_set_contact_info (
+  tp_svc_connection_interface_contact_info1_return_from_set_contact_info (
       context);
 }
 
@@ -1107,9 +1109,9 @@ static void
 init_contact_info (gpointer g_iface,
     gpointer iface_data)
 {
-  TpSvcConnectionInterfaceContactInfoClass *klass = g_iface;
+  TpSvcConnectionInterfaceContactInfo1Class *klass = g_iface;
 
-#define IMPLEMENT(x) tp_svc_connection_interface_contact_info_implement_##x (\
+#define IMPLEMENT(x) tp_svc_connection_interface_contact_info1_implement_##x (\
     klass, my_##x)
   IMPLEMENT (refresh_contact_info);
   IMPLEMENT (request_contact_info);

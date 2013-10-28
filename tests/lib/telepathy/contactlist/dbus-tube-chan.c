@@ -107,9 +107,9 @@ static void dbus_tube_iface_init (gpointer iface, gpointer data);
 G_DEFINE_ABSTRACT_TYPE_WITH_CODE (TpTestsDBusTubeChannel,
     tp_tests_dbus_tube_channel,
     TP_TYPE_BASE_CHANNEL,
-    G_IMPLEMENT_INTERFACE (TP_TYPE_SVC_CHANNEL_TYPE_DBUS_TUBE,
+    G_IMPLEMENT_INTERFACE (TP_TYPE_SVC_CHANNEL_TYPE_DBUS_TUBE1,
       dbus_tube_iface_init);
-    G_IMPLEMENT_INTERFACE (TP_TYPE_SVC_CHANNEL_INTERFACE_TUBE,
+    G_IMPLEMENT_INTERFACE (TP_TYPE_SVC_CHANNEL_INTERFACE_TUBE1,
       NULL);
     )
 
@@ -123,7 +123,7 @@ tp_tests_dbus_tube_channel_get_interfaces (TpBaseChannel *self)
   interfaces = TP_BASE_CHANNEL_CLASS (
       tp_tests_dbus_tube_channel_parent_class)->get_interfaces (self);
 
-  g_ptr_array_add (interfaces, TP_IFACE_CHANNEL_INTERFACE_TUBE);
+  g_ptr_array_add (interfaces, TP_IFACE_CHANNEL_INTERFACE_TUBE1);
   return interfaces;
 };
 
@@ -200,8 +200,8 @@ fill_immutable_properties (TpBaseChannel *chan,
 
   tp_dbus_properties_mixin_fill_properties_hash (
       G_OBJECT (chan), properties,
-      TP_IFACE_CHANNEL_TYPE_DBUS_TUBE, "ServiceName",
-      TP_IFACE_CHANNEL_TYPE_DBUS_TUBE, "SupportedAccessControls",
+      TP_IFACE_CHANNEL_TYPE_DBUS_TUBE1, "ServiceName",
+      TP_IFACE_CHANNEL_TYPE_DBUS_TUBE1, "SupportedAccessControls",
       NULL);
 
   if (!tp_base_channel_is_requested (chan))
@@ -209,7 +209,7 @@ fill_immutable_properties (TpBaseChannel *chan,
       /* Parameters is immutable only for incoming tubes */
       tp_dbus_properties_mixin_fill_properties_hash (
           G_OBJECT (chan), properties,
-          TP_IFACE_CHANNEL_INTERFACE_TUBE, "Parameters",
+          TP_IFACE_CHANNEL_INTERFACE_TUBE1, "Parameters",
           NULL);
     }
 }
@@ -236,7 +236,7 @@ tp_tests_dbus_tube_channel_class_init (TpTestsDBusTubeChannelClass *klass)
   object_class->get_property = tp_tests_dbus_tube_channel_get_property;
   object_class->dispose = dispose;
 
-  base_class->channel_type = TP_IFACE_CHANNEL_TYPE_DBUS_TUBE;
+  base_class->channel_type = TP_IFACE_CHANNEL_TYPE_DBUS_TUBE1;
   base_class->get_interfaces = tp_tests_dbus_tube_channel_get_interfaces;
   base_class->close = channel_close;
   base_class->fill_immutable_properties = fill_immutable_properties;
@@ -289,12 +289,12 @@ tp_tests_dbus_tube_channel_class_init (TpTestsDBusTubeChannelClass *klass)
       1, G_TYPE_DBUS_CONNECTION);
 
   tp_dbus_properties_mixin_implement_interface (object_class,
-      TP_IFACE_QUARK_CHANNEL_TYPE_DBUS_TUBE,
+      TP_IFACE_QUARK_CHANNEL_TYPE_DBUS_TUBE1,
       tp_dbus_properties_mixin_getter_gobject_properties, NULL,
       dbus_tube_props);
 
   tp_dbus_properties_mixin_implement_interface (object_class,
-      TP_IFACE_QUARK_CHANNEL_INTERFACE_TUBE,
+      TP_IFACE_QUARK_CHANNEL_INTERFACE_TUBE1,
       tp_dbus_properties_mixin_getter_gobject_properties, NULL,
       tube_props);
 
@@ -308,7 +308,7 @@ change_state (TpTestsDBusTubeChannel *self,
 {
   self->priv->state = state;
 
-  tp_svc_channel_interface_tube_emit_tube_channel_state_changed (self, state);
+  tp_svc_channel_interface_tube1_emit_tube_channel_state_changed (self, state);
 }
 
 static gboolean
@@ -350,7 +350,7 @@ really_open_tube (TpTestsDBusTubeChannel *self)
 }
 
 static void
-dbus_tube_offer (TpSvcChannelTypeDBusTube *chan,
+dbus_tube_offer (TpSvcChannelTypeDBusTube1 *chan,
     GHashTable *parameters,
     guint access_control,
     DBusGMethodInvocation *context)
@@ -362,7 +362,7 @@ dbus_tube_offer (TpSvcChannelTypeDBusTube *chan,
   if (self->priv->open_mode == TP_TESTS_DBUS_TUBE_CHANNEL_OPEN_FIRST)
     really_open_tube (self);
 
-  tp_svc_channel_type_dbus_tube_return_from_offer (context,
+  tp_svc_channel_type_dbus_tube1_return_from_offer (context,
       g_dbus_server_get_client_address (self->priv->dbus_server));
 
   if (self->priv->open_mode == TP_TESTS_DBUS_TUBE_CHANNEL_OPEN_SECOND)
@@ -372,7 +372,7 @@ dbus_tube_offer (TpSvcChannelTypeDBusTube *chan,
 }
 
 static void
-dbus_tube_accept (TpSvcChannelTypeDBusTube *chan,
+dbus_tube_accept (TpSvcChannelTypeDBusTube1 *chan,
     guint access_control,
     DBusGMethodInvocation *context)
 {
@@ -383,7 +383,7 @@ dbus_tube_accept (TpSvcChannelTypeDBusTube *chan,
   if (self->priv->open_mode == TP_TESTS_DBUS_TUBE_CHANNEL_OPEN_FIRST)
     really_open_tube (self);
 
-  tp_svc_channel_type_dbus_tube_return_from_accept (context,
+  tp_svc_channel_type_dbus_tube1_return_from_accept (context,
       g_dbus_server_get_client_address (self->priv->dbus_server));
 
   if (self->priv->open_mode == TP_TESTS_DBUS_TUBE_CHANNEL_OPEN_SECOND)
@@ -404,9 +404,9 @@ static void
 dbus_tube_iface_init (gpointer iface,
     gpointer data)
 {
-  TpSvcChannelTypeDBusTubeClass *klass = iface;
+  TpSvcChannelTypeDBusTube1Class *klass = iface;
 
-#define IMPLEMENT(x) tp_svc_channel_type_dbus_tube_implement_##x (klass, dbus_tube_##x)
+#define IMPLEMENT(x) tp_svc_channel_type_dbus_tube1_implement_##x (klass, dbus_tube_##x)
   IMPLEMENT (offer);
   IMPLEMENT (accept);
 #undef IMPLEMENT

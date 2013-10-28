@@ -25,7 +25,7 @@ G_DEFINE_TYPE_WITH_CODE (TpTestsEchoChannel,
     TP_TYPE_BASE_CHANNEL,
     G_IMPLEMENT_INTERFACE (TP_TYPE_SVC_CHANNEL_TYPE_TEXT,
       tp_message_mixin_iface_init);
-    G_IMPLEMENT_INTERFACE (TP_TYPE_SVC_CHANNEL_INTERFACE_DESTROYABLE,
+    G_IMPLEMENT_INTERFACE (TP_TYPE_SVC_CHANNEL_INTERFACE_DESTROYABLE1,
       destroyable_iface_init);
     )
 
@@ -39,7 +39,7 @@ tp_tests_echo_channel_get_interfaces (TpBaseChannel *self)
   interfaces = TP_BASE_CHANNEL_CLASS (tp_tests_echo_channel_parent_class)->
     get_interfaces (self);
 
-  g_ptr_array_add (interfaces, TP_IFACE_CHANNEL_INTERFACE_DESTROYABLE);
+  g_ptr_array_add (interfaces, TP_IFACE_CHANNEL_INTERFACE_DESTROYABLE1);
   return interfaces;
 };
 
@@ -199,7 +199,7 @@ text_send (GObject *object,
 }
 
 static void
-destroyable_destroy (TpSvcChannelInterfaceDestroyable *iface,
+destroyable_destroy (TpSvcChannelInterfaceDestroyable1 *iface,
                      DBusGMethodInvocation *context)
 {
   TpTestsEchoChannel *self = TP_TESTS_ECHO_CHANNEL (iface);
@@ -207,17 +207,17 @@ destroyable_destroy (TpSvcChannelInterfaceDestroyable *iface,
   tp_message_mixin_clear ((GObject *) self);
   tp_base_channel_destroyed (TP_BASE_CHANNEL (self));
 
-  tp_svc_channel_interface_destroyable_return_from_destroy (context);
+  tp_svc_channel_interface_destroyable1_return_from_destroy (context);
 }
 
 static void
 destroyable_iface_init (gpointer iface,
                         gpointer data)
 {
-  TpSvcChannelInterfaceDestroyableClass *klass = iface;
+  TpSvcChannelInterfaceDestroyable1Class *klass = iface;
 
 #define IMPLEMENT(x) \
-  tp_svc_channel_interface_destroyable_implement_##x (klass, destroyable_##x)
+  tp_svc_channel_interface_destroyable1_implement_##x (klass, destroyable_##x)
   IMPLEMENT (destroy);
 #undef IMPLEMENT
 }

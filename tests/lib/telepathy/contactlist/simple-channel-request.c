@@ -107,11 +107,11 @@ add_channel (TpTestsSimpleChannelRequest *self,
       chan_path = tp_tests_simple_connection_ensure_text_chan (self->priv->conn,
           target_id, &props);
     }
-  else if (!tp_strdiff (chan_type, TP_IFACE_CHANNEL_TYPE_ROOM_LIST))
+  else if (!tp_strdiff (chan_type, TP_IFACE_CHANNEL_TYPE_ROOM_LIST1))
     {
       chan_path = tp_tests_simple_connection_ensure_room_list_chan (
           self->priv->conn, tp_asv_get_string (request,
-            TP_PROP_CHANNEL_TYPE_ROOM_LIST_SERVER), &props);
+            TP_PROP_CHANNEL_TYPE_ROOM_LIST1_SERVER), &props);
     }
   else
     {

@@ -25,9 +25,9 @@ static void file_transfer_iface_init (gpointer iface, gpointer data);
 G_DEFINE_TYPE_WITH_CODE (TpTestsFileTransferChannel,
     tp_tests_file_transfer_channel,
     TP_TYPE_BASE_CHANNEL,
-    G_IMPLEMENT_INTERFACE (TP_TYPE_SVC_CHANNEL_TYPE_FILE_TRANSFER,
+    G_IMPLEMENT_INTERFACE (TP_TYPE_SVC_CHANNEL_TYPE_FILE_TRANSFER1,
       file_transfer_iface_init);
-    G_IMPLEMENT_INTERFACE (TP_TYPE_SVC_CHANNEL_INTERFACE_FILE_TRANSFER_METADATA,
+    G_IMPLEMENT_INTERFACE (TP_TYPE_SVC_CHANNEL_INTERFACE_FILE_TRANSFER_METADATA1,
       NULL);
     )
 
@@ -328,14 +328,14 @@ fill_immutable_properties (TpBaseChannel *self,
 
   tp_dbus_properties_mixin_fill_properties_hash (
       G_OBJECT (self), properties,
-      TP_IFACE_CHANNEL_TYPE_FILE_TRANSFER, "AvailableSocketTypes",
-      TP_IFACE_CHANNEL_TYPE_FILE_TRANSFER, "ContentType",
-      TP_IFACE_CHANNEL_TYPE_FILE_TRANSFER, "Filename",
-      TP_IFACE_CHANNEL_TYPE_FILE_TRANSFER, "Size",
-      TP_IFACE_CHANNEL_TYPE_FILE_TRANSFER, "Description",
-      TP_IFACE_CHANNEL_TYPE_FILE_TRANSFER, "Date",
-      TP_IFACE_CHANNEL_INTERFACE_FILE_TRANSFER_METADATA, "ServiceName",
-      TP_IFACE_CHANNEL_INTERFACE_FILE_TRANSFER_METADATA, "Metadata",
+      TP_IFACE_CHANNEL_TYPE_FILE_TRANSFER1, "AvailableSocketTypes",
+      TP_IFACE_CHANNEL_TYPE_FILE_TRANSFER1, "ContentType",
+      TP_IFACE_CHANNEL_TYPE_FILE_TRANSFER1, "Filename",
+      TP_IFACE_CHANNEL_TYPE_FILE_TRANSFER1, "Size",
+      TP_IFACE_CHANNEL_TYPE_FILE_TRANSFER1, "Description",
+      TP_IFACE_CHANNEL_TYPE_FILE_TRANSFER1, "Date",
+      TP_IFACE_CHANNEL_INTERFACE_FILE_TRANSFER_METADATA1, "ServiceName",
+      TP_IFACE_CHANNEL_INTERFACE_FILE_TRANSFER_METADATA1, "Metadata",
       NULL);
 
   /* URI is immutable only for outgoing transfers */
@@ -343,7 +343,7 @@ fill_immutable_properties (TpBaseChannel *self,
     {
       tp_dbus_properties_mixin_fill_properties_hash (G_OBJECT (self),
           properties,
-          TP_IFACE_CHANNEL_TYPE_FILE_TRANSFER, "URI", NULL);
+          TP_IFACE_CHANNEL_TYPE_FILE_TRANSFER1, "URI", NULL);
     }
 }
 
@@ -354,7 +354,7 @@ change_state (TpTestsFileTransferChannel *self,
 {
   self->priv->state = state;
 
-  tp_svc_channel_type_file_transfer_emit_file_transfer_state_changed (self,
+  tp_svc_channel_type_file_transfer1_emit_file_transfer_state_changed (self,
       state, reason);
 }
 
@@ -444,7 +444,7 @@ service_incoming_cb (GSocketService *service,
 }
 
 static void
-file_transfer_provide_file (TpSvcChannelTypeFileTransfer *iface,
+file_transfer_provide_file (TpSvcChannelTypeFileTransfer1 *iface,
     TpSocketAddressType address_type,
     TpSocketAccessControl access_control,
     const GValue *access_control_param,
@@ -506,7 +506,7 @@ file_transfer_provide_file (TpSvcChannelTypeFileTransfer *iface,
   // then close the socket
   // g_output_stream_write_async
 
-  tp_svc_channel_type_file_transfer_return_from_provide_file (context,
+  tp_svc_channel_type_file_transfer1_return_from_provide_file (context,
       self->priv->address);
 
   return;
@@ -517,7 +517,7 @@ fail:
 }
 
 static void
-file_transfer_accept_file (TpSvcChannelTypeFileTransfer *iface,
+file_transfer_accept_file (TpSvcChannelTypeFileTransfer1 *iface,
     TpSocketAddressType address_type,
     TpSocketAccessControl access_control,
     const GValue *access_control_param,
@@ -569,7 +569,7 @@ file_transfer_accept_file (TpSvcChannelTypeFileTransfer *iface,
   DEBUG ("Waiting 500ms and setting state to OPEN");
   self->priv->timer_id = g_timeout_add (500, start_file_transfer, self);
 
-  tp_svc_channel_type_file_transfer_return_from_accept_file (context,
+  tp_svc_channel_type_file_transfer1_return_from_accept_file (context,
       address);
 
   tp_clear_pointer (&address, tp_g_value_slice_free);
@@ -613,7 +613,7 @@ tp_tests_file_transfer_channel_class_init (
   object_class->set_property = set_property;
   object_class->dispose = dispose;
 
-  base_class->channel_type = TP_IFACE_CHANNEL_TYPE_FILE_TRANSFER;
+  base_class->channel_type = TP_IFACE_CHANNEL_TYPE_FILE_TRANSFER1;
   base_class->target_handle_type = TP_HANDLE_TYPE_CONTACT;
 
   base_class->close = channel_close;
@@ -716,12 +716,12 @@ tp_tests_file_transfer_channel_class_init (
       param_spec);
 
   tp_dbus_properties_mixin_implement_interface (object_class,
-      TP_IFACE_QUARK_CHANNEL_TYPE_FILE_TRANSFER,
+      TP_IFACE_QUARK_CHANNEL_TYPE_FILE_TRANSFER1,
       tp_dbus_properties_mixin_getter_gobject_properties, NULL,
       file_transfer_props);
 
   tp_dbus_properties_mixin_implement_interface (object_class,
-      TP_IFACE_QUARK_CHANNEL_INTERFACE_FILE_TRANSFER_METADATA,
+      TP_IFACE_QUARK_CHANNEL_INTERFACE_FILE_TRANSFER_METADATA1,
       tp_dbus_properties_mixin_getter_gobject_properties, NULL,
       metadata_props);
 
@@ -732,9 +732,9 @@ tp_tests_file_transfer_channel_class_init (
 static void
 file_transfer_iface_init (gpointer iface, gpointer data)
 {
-  TpSvcChannelTypeFileTransferClass *klass = iface;
+  TpSvcChannelTypeFileTransfer1Class *klass = iface;
 
-#define IMPLEMENT(x) tp_svc_channel_type_file_transfer_implement_##x (klass, \
+#define IMPLEMENT(x) tp_svc_channel_type_file_transfer1_implement_##x (klass, \
     file_transfer_##x)
   IMPLEMENT(accept_file);
   IMPLEMENT(provide_file);

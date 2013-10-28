@@ -13,6 +13,8 @@
 
 #include <telepathy-glib/telepathy-glib.h>
 
+gint tp_tests_run_with_bus (void);
+
 TpDBusDaemon *tp_tests_dbus_daemon_dup_or_die (void);
 
 void tp_tests_proxy_run_until_dbus_queue_processed (gpointer proxy);

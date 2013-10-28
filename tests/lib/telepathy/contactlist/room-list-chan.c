@@ -10,7 +10,7 @@ static void room_list_iface_init (gpointer iface,
     gpointer data);
 
 G_DEFINE_TYPE_WITH_CODE (TpTestsRoomListChan, tp_tests_room_list_chan, TP_TYPE_BASE_CHANNEL,
-    G_IMPLEMENT_INTERFACE (TP_TYPE_SVC_CHANNEL_TYPE_ROOM_LIST, room_list_iface_init))
+    G_IMPLEMENT_INTERFACE (TP_TYPE_SVC_CHANNEL_TYPE_ROOM_LIST1, room_list_iface_init))
 
 enum {
   PROP_SERVER = 1,
@@ -106,7 +106,7 @@ fill_immutable_properties (TpBaseChannel *chan,
 
   tp_dbus_properties_mixin_fill_properties_hash (
       G_OBJECT (chan), properties,
-      TP_IFACE_CHANNEL_TYPE_ROOM_LIST, "Server",
+      TP_IFACE_CHANNEL_TYPE_ROOM_LIST1, "Server",
       NULL);
 }
 
@@ -133,7 +133,7 @@ tp_tests_room_list_chan_class_init (
   oclass->constructed = tp_tests_room_list_chan_constructed;
   oclass->finalize = tp_tests_room_list_chan_finalize;
 
-  base_class->channel_type = TP_IFACE_CHANNEL_TYPE_ROOM_LIST;
+  base_class->channel_type = TP_IFACE_CHANNEL_TYPE_ROOM_LIST1;
   base_class->target_handle_type = TP_HANDLE_TYPE_NONE;
   base_class->fill_immutable_properties = fill_immutable_properties;
   base_class->close = room_list_chan_close;
@@ -145,7 +145,7 @@ tp_tests_room_list_chan_class_init (
   g_object_class_install_property (oclass, PROP_SERVER, spec);
 
   tp_dbus_properties_mixin_implement_interface (oclass,
-      TP_IFACE_QUARK_CHANNEL_TYPE_ROOM_LIST,
+      TP_IFACE_QUARK_CHANNEL_TYPE_ROOM_LIST1,
       tp_dbus_properties_mixin_getter_gobject_properties, NULL,
       room_list_props);
 
@@ -191,24 +191,24 @@ find_rooms (gpointer data)
   TpTestsRoomListChan *self = TP_TESTS_ROOM_LIST_CHAN (data);
   GPtrArray *rooms;
 
-  rooms = g_ptr_array_new_with_free_func ((GDestroyNotify) g_value_array_free);
+  rooms = g_ptr_array_new_with_free_func ((GDestroyNotify) tp_value_array_free);
 
   /* Find 2 rooms */
   add_room (rooms);
   add_room (rooms);
-  tp_svc_channel_type_room_list_emit_got_rooms (self, rooms);
+  tp_svc_channel_type_room_list1_emit_got_rooms (self, rooms);
   g_ptr_array_set_size (rooms, 0);
 
   /* Find 1 room */
   add_room (rooms);
-  tp_svc_channel_type_room_list_emit_got_rooms (self, rooms);
+  tp_svc_channel_type_room_list1_emit_got_rooms (self, rooms);
   g_ptr_array_unref (rooms);
 
   return FALSE;
 }
 
 static void
-room_list_list_rooms (TpSvcChannelTypeRoomList *chan,
+room_list_list_rooms (TpSvcChannelTypeRoomList1 *chan,
     DBusGMethodInvocation *context)
 {
   TpTestsRoomListChan *self = TP_TESTS_ROOM_LIST_CHAN (chan);
@@ -232,21 +232,21 @@ room_list_list_rooms (TpSvcChannelTypeRoomList *chan,
     }
 
   self->priv->listing = TRUE;
-  tp_svc_channel_type_room_list_emit_listing_rooms (self, TRUE);
+  tp_svc_channel_type_room_list1_emit_listing_rooms (self, TRUE);
 
   g_idle_add (find_rooms, self);
 
-  tp_svc_channel_type_room_list_return_from_list_rooms (context);
+  tp_svc_channel_type_room_list1_return_from_list_rooms (context);
 }
 
 static void
 room_list_iface_init (gpointer iface,
     gpointer data)
 {
-  TpSvcChannelTypeRoomListClass *klass = iface;
+  TpSvcChannelTypeRoomList1Class *klass = iface;
 
 #define IMPLEMENT(x) \
-  tp_svc_channel_type_room_list_implement_##x (klass, room_list_##x)
+  tp_svc_channel_type_room_list1_implement_##x (klass, room_list_##x)
   IMPLEMENT(list_rooms);
 #undef IMPLEMENT
 }

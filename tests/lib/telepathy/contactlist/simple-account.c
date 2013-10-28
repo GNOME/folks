@@ -22,11 +22,11 @@ G_DEFINE_TYPE_WITH_CODE (TpTestsSimpleAccount,
     G_TYPE_OBJECT,
     G_IMPLEMENT_INTERFACE (TP_TYPE_SVC_ACCOUNT,
         account_iface_init);
-    G_IMPLEMENT_INTERFACE (TP_TYPE_SVC_ACCOUNT_INTERFACE_AVATAR,
+    G_IMPLEMENT_INTERFACE (TP_TYPE_SVC_ACCOUNT_INTERFACE_AVATAR1,
         NULL);
-    G_IMPLEMENT_INTERFACE (TP_TYPE_SVC_ACCOUNT_INTERFACE_ADDRESSING,
+    G_IMPLEMENT_INTERFACE (TP_TYPE_SVC_ACCOUNT_INTERFACE_ADDRESSING1,
         NULL);
-    G_IMPLEMENT_INTERFACE (TP_TYPE_SVC_ACCOUNT_INTERFACE_STORAGE,
+    G_IMPLEMENT_INTERFACE (TP_TYPE_SVC_ACCOUNT_INTERFACE_STORAGE1,
         NULL);
     G_IMPLEMENT_INTERFACE (TP_TYPE_SVC_DBUS_PROPERTIES,
         tp_dbus_properties_mixin_iface_init)
@@ -34,8 +34,8 @@ G_DEFINE_TYPE_WITH_CODE (TpTestsSimpleAccount,
 
 /* TP_IFACE_ACCOUNT is implied */
 static const char *ACCOUNT_INTERFACES[] = {
-    TP_IFACE_ACCOUNT_INTERFACE_ADDRESSING,
-    TP_IFACE_ACCOUNT_INTERFACE_STORAGE,
+    TP_IFACE_ACCOUNT_INTERFACE_ADDRESSING1,
+    TP_IFACE_ACCOUNT_INTERFACE_STORAGE1,
     NULL };
 
 enum
@@ -75,6 +75,7 @@ struct _TpTestsSimpleAccountPrivate
   gchar *connection_path;
   gboolean enabled;
   GPtrArray *uri_schemes;
+  GHashTable *parameters;
 };
 
 static void
@@ -137,6 +138,8 @@ tp_tests_simple_account_init (TpTestsSimpleAccount *self)
   self->priv->uri_schemes = g_ptr_array_new_with_free_func (g_free);
   for (i = 0; uri_schemes[i] != NULL; i++)
     g_ptr_array_add (self->priv->uri_schemes, g_strdup (uri_schemes[i]));
+
+  self->priv->parameters = g_hash_table_new (NULL, NULL);
 }
 
 static void
@@ -171,7 +174,7 @@ tp_tests_simple_account_get_property (GObject *object,
       g_value_set_string (value, "badger");
       break;
     case PROP_PARAMETERS:
-      g_value_take_boxed (value, g_hash_table_new (NULL, NULL));
+      g_value_set_boxed (value, self->priv->parameters);
       break;
     case PROP_AUTOMATIC_PRESENCE:
       g_value_take_boxed (value, tp_value_array_build (3,
@@ -278,6 +281,26 @@ tp_tests_simple_account_get_property (GObject *object,
 }
 
 static void
+tp_tests_simple_account_set_property (GObject *object,
+    guint property_id,
+    const GValue *value,
+    GParamSpec *spec)
+{
+  TpTestsSimpleAccount *self = TP_TESTS_SIMPLE_ACCOUNT (object);
+
+  switch (property_id)
+    {
+      case PROP_PARAMETERS:
+        self->priv->parameters = g_value_dup_boxed (value);
+        /* In principle we should be emitting AccountPropertyChanged here */
+        break;
+      default:
+        G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, spec);
+        break;
+    }
+}
+
+static void
 tp_tests_simple_account_finalize (GObject *object)
 {
   TpTestsSimpleAccount *self = TP_TESTS_SIMPLE_ACCOUNT (object);
@@ -287,6 +310,7 @@ tp_tests_simple_account_finalize (GObject *object)
   g_free (self->priv->connection_path);
 
   g_ptr_array_unref (self->priv->uri_schemes);
+  g_hash_table_unref (self->priv->parameters);
 
   G_OBJECT_CLASS (tp_tests_simple_account_parent_class)->finalize (object);
 }
@@ -348,18 +372,18 @@ tp_tests_simple_account_class_init (TpTestsSimpleAccountClass *klass)
           a_props
         },
         {
-          TP_IFACE_ACCOUNT_INTERFACE_STORAGE,
+          TP_IFACE_ACCOUNT_INTERFACE_STORAGE1,
           tp_dbus_properties_mixin_getter_gobject_properties,
           NULL,
           ais_props
         },
         {
-          TP_IFACE_ACCOUNT_INTERFACE_ADDRESSING,
+          TP_IFACE_ACCOUNT_INTERFACE_ADDRESSING1,
           tp_dbus_properties_mixin_getter_gobject_properties,
           NULL,
           aia_props
         },
-        { TP_IFACE_ACCOUNT_INTERFACE_AVATAR,
+        { TP_IFACE_ACCOUNT_INTERFACE_AVATAR1,
           tp_dbus_properties_mixin_getter_gobject_properties,
           NULL,
           avatar_props
@@ -369,6 +393,7 @@ tp_tests_simple_account_class_init (TpTestsSimpleAccountClass *klass)
 
   g_type_class_add_private (klass, sizeof (TpTestsSimpleAccountPrivate));
   object_class->get_property = tp_tests_simple_account_get_property;
+  object_class->set_property = tp_tests_simple_account_set_property;
   object_class->finalize = tp_tests_simple_account_finalize;
 
   param_spec = g_param_spec_boxed ("interfaces", "Extra D-Bus interfaces",
@@ -410,7 +435,7 @@ tp_tests_simple_account_class_init (TpTestsSimpleAccountClass *klass)
   param_spec = g_param_spec_boxed ("parameters", "parameters",
       "Parameters property",
       TP_HASH_TYPE_STRING_VARIANT_MAP,
-      G_PARAM_READABLE | G_PARAM_STATIC_STRINGS);
+      G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS);
   g_object_class_install_property (object_class, PROP_PARAMETERS, param_spec);
 
   param_spec = g_param_spec_boxed ("automatic-presence", "automatic presence",
@@ -609,7 +634,7 @@ tp_tests_simple_account_add_uri_scheme (TpTestsSimpleAccount *self,
       NULL);
 
   tp_svc_dbus_properties_emit_properties_changed (self,
-      TP_IFACE_ACCOUNT_INTERFACE_ADDRESSING, changed, NULL);
+      TP_IFACE_ACCOUNT_INTERFACE_ADDRESSING1, changed, NULL);
 
   g_strfreev (schemes);
   g_hash_table_unref (changed);

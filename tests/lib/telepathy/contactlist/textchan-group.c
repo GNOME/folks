@@ -22,9 +22,9 @@ G_DEFINE_TYPE_WITH_CODE (TpTestsTextChannelGroup,
     tp_tests_text_channel_group, TP_TYPE_BASE_CHANNEL,
     G_IMPLEMENT_INTERFACE (TP_TYPE_SVC_CHANNEL_TYPE_TEXT,
         tp_message_mixin_iface_init);
-    G_IMPLEMENT_INTERFACE (TP_TYPE_SVC_CHANNEL_INTERFACE_GROUP,
+    G_IMPLEMENT_INTERFACE (TP_TYPE_SVC_CHANNEL_INTERFACE_GROUP1,
       tp_group_mixin_iface_init);
-    G_IMPLEMENT_INTERFACE (TP_TYPE_SVC_CHANNEL_INTERFACE_PASSWORD,
+    G_IMPLEMENT_INTERFACE (TP_TYPE_SVC_CHANNEL_INTERFACE_PASSWORD1,
       password_iface_init);
     G_IMPLEMENT_INTERFACE (TP_TYPE_SVC_DBUS_PROPERTIES,
       tp_dbus_properties_mixin_iface_init))
@@ -37,8 +37,8 @@ text_channel_group_get_interfaces (TpBaseChannel *self)
   interfaces = TP_BASE_CHANNEL_CLASS (
       tp_tests_text_channel_group_parent_class)->get_interfaces (self);
 
-  g_ptr_array_add (interfaces, TP_IFACE_CHANNEL_INTERFACE_GROUP);
-  g_ptr_array_add (interfaces, TP_IFACE_CHANNEL_INTERFACE_PASSWORD);
+  g_ptr_array_add (interfaces, TP_IFACE_CHANNEL_INTERFACE_GROUP1);
+  g_ptr_array_add (interfaces, TP_IFACE_CHANNEL_INTERFACE_PASSWORD1);
   return interfaces;
 };
 
@@ -285,15 +285,15 @@ tp_tests_text_channel_set_password (TpTestsTextChannelGroup *self,
     return;
 
   if (pass_needed)
-    tp_svc_channel_interface_password_emit_password_flags_changed (self,
+    tp_svc_channel_interface_password1_emit_password_flags_changed (self,
         TP_CHANNEL_PASSWORD_FLAG_PROVIDE, 0);
   else
-    tp_svc_channel_interface_password_emit_password_flags_changed (self,
+    tp_svc_channel_interface_password1_emit_password_flags_changed (self,
         0, TP_CHANNEL_PASSWORD_FLAG_PROVIDE);
 }
 
 static void
-password_get_password_flags (TpSvcChannelInterfacePassword *chan,
+password_get_password_flags (TpSvcChannelInterfacePassword1 *chan,
     DBusGMethodInvocation *context)
 {
   TpTestsTextChannelGroup *self = (TpTestsTextChannelGroup *) chan;
@@ -302,27 +302,27 @@ password_get_password_flags (TpSvcChannelInterfacePassword *chan,
   if (self->priv->password != NULL)
     flags |= TP_CHANNEL_PASSWORD_FLAG_PROVIDE;
 
-  tp_svc_channel_interface_password_return_from_get_password_flags (context,
+  tp_svc_channel_interface_password1_return_from_get_password_flags (context,
       flags);
 }
 
 static void
-password_provide_password (TpSvcChannelInterfacePassword *chan,
+password_provide_password (TpSvcChannelInterfacePassword1 *chan,
     const gchar *password,
     DBusGMethodInvocation *context)
 {
   TpTestsTextChannelGroup *self = (TpTestsTextChannelGroup *) chan;
 
-  tp_svc_channel_interface_password_return_from_provide_password (context,
+  tp_svc_channel_interface_password1_return_from_provide_password (context,
       !tp_strdiff (password, self->priv->password));
 }
 
 static void
 password_iface_init (gpointer iface, gpointer data)
 {
-  TpSvcChannelInterfacePasswordClass *klass = iface;
+  TpSvcChannelInterfacePassword1Class *klass = iface;
 
-#define IMPLEMENT(x) tp_svc_channel_interface_password_implement_##x (klass, password_##x)
+#define IMPLEMENT(x) tp_svc_channel_interface_password1_implement_##x (klass, password_##x)
   IMPLEMENT (get_password_flags);
   IMPLEMENT (provide_password);
 #undef IMPLEMENT
