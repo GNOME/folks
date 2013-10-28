@@ -26,7 +26,7 @@ AM_CPPFLAGS = \
 LDADD = \
 	$(top_builddir)/tests/lib/eds/libeds-test.la \
 	$(top_builddir)/tests/lib/libfolks-test.la \
-	$(top_builddir)/backends/eds/lib/libfolks-eds.la
+	$(top_builddir)/backends/eds/lib/libfolks-eds.la \
 	$(top_builddir)/folks/libfolks.la \
 	$(GLIB_LIBS) \
 	$(GEE_LIBS) \
