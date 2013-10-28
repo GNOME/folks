@@ -74,7 +74,7 @@ folks_tp_lowlevel_connection_set_contact_alias_async (
   result = g_simple_async_result_new (G_OBJECT (conn), callback, user_data,
       folks_tp_lowlevel_connection_set_contact_alias_finish);
 
-  tp_cli_connection_interface_aliasing_call_set_aliases (conn, -1,
+  tp_cli_connection_interface_aliasing1_call_set_aliases (conn, -1,
       ht, set_contact_alias_cb, g_object_ref (result), g_object_unref,
       G_OBJECT (conn));
 
