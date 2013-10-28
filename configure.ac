@@ -245,10 +245,10 @@ AS_IF([test "x$have_zeitgeist" == "xyes"], [
 ])
 AM_CONDITIONAL([ENABLE_ZEITGEIST], [test "x$have_zeitgeist" = "xyes"])
 
-# Ignore post 0.20 deprecations
-TP_GLIB_CFLAGS="$TP_GLIB_CFLAGS -DTP_VERSION_MIN_REQUIRED=TP_VERSION_0_20"
-# Prevent post 0.20 APIs
-TP_GLIB_CFLAGS="$TP_GLIB_CFLAGS -DTP_VERSION_MAX_ALLOWED=TP_VERSION_0_20"
+# Ignore post 1.0 deprecations
+TP_GLIB_CFLAGS="$TP_GLIB_CFLAGS -DTP_VERSION_MIN_REQUIRED=TP_VERSION_1_0"
+# Prevent post 1.0 APIs
+TP_GLIB_CFLAGS="$TP_GLIB_CFLAGS -DTP_VERSION_MAX_ALLOWED=TP_VERSION_1_0"
 
 AS_IF([test x$enable_tracker_backend = xyes], [
         PKG_CHECK_MODULES([TRACKER_SPARQL],
