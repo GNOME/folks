@@ -40,7 +40,7 @@ msgid ""
 "are installed."
 msgstr ""
 "Ocorreu erro ao conectar o daemon de transferência OBEX através de D-Bus. "
-"Certifique-se de que Blue-Z e obexd estão instalados."
+"Certifique-se de que BlueZ e obexd estão instalados."
 
 #. Translators: the parameter is an error message.
 #: ../backends/bluez/bluez-persona-store.vala:294
