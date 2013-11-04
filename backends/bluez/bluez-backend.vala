@@ -35,21 +35,6 @@ using org.bluez;
 extern const string BACKEND_NAME;
 
 /**
- * Errors from the BlueZ {@link Backend}.
- *
- * @since UNRELEASED
- */
-public errordomain Folks.Backends.BlueZ.BackendError
-{
-  /**
-   * A required D-Bus service couldn’t be connected to.
-   *
-   * @since UNRELEASED
-   */
-  NO_DBUS_SERVICE
-}
-
-/**
  * A backend which loads {@link Persona}s from paired Bluetooth
  * devices using the Phonebook Access Protocol (PBAP) and presents them
  * using one {@link PersonaStore} per device.
@@ -447,7 +432,7 @@ public class Folks.Backends.BlueZ.Backend : Folks.Backend
    *
    * @since UNRELEASED
    */
-  public override async void prepare () throws BackendError
+  public override async void prepare () throws DBusError
     {
       Internal.profiling_start ("preparing BlueZ.Backend");
 
@@ -510,7 +495,7 @@ public class Folks.Backends.BlueZ.Backend : Folks.Backend
             }
           catch (GLib.Error e1)
             {
-              throw new BackendError.NO_DBUS_SERVICE (
+              throw new DBusError.SERVICE_UNKNOWN (
                   _("No BlueZ 5 object manager running, so the BlueZ " +
                     "backend will be inactive. Either your BlueZ " +
                     "installation is too old (only version 5 is supported) " +
@@ -526,7 +511,7 @@ public class Folks.Backends.BlueZ.Backend : Folks.Backend
             }
           catch (GLib.Error e1)
             {
-              throw new BackendError.NO_DBUS_SERVICE (
+              throw new DBusError.SERVICE_UNKNOWN (
                   _("Error connecting to OBEX transfer daemon over D-Bus. " +
                     "Ensure BlueZ and obexd are installed."));
             }
