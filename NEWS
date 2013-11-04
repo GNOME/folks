@@ -30,6 +30,7 @@ Bugs fixed:
   directory
 • Bug 685848 — Add a folks backend for bluez phonebook access
 • Bug 711403 — Tidy up error handling in oFono backend
+• Bug 711406 — Don’t expose blocked BlueZ devices as persona stores
 
 API changes:
 

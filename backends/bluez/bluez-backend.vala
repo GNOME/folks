@@ -78,6 +78,10 @@ extern const string BACKEND_NAME;
  * will set the PersonaStore’s trust level appropriately, fully trusting devices
  * marked as trusted, and only partially trusting others.
  *
+ * Each device can also be advertised by BlueZ as being blocked or non-blocked.
+ * Blocked devices are not made available as persona stores, even if they are
+ * paired with the laptop.
+ *
  * @since UNRELEASED
  */
 public class Folks.Backends.BlueZ.Backend : Folks.Backend
@@ -226,15 +230,18 @@ public class Folks.Backends.BlueZ.Backend : Folks.Backend
 
       var device = (Device) iface_proxy;
 
-      /* UUIDs and Paired properties. Both affect whether we add or remove a
-       * device/persona store. */
+      /* UUIDs, Paired and Blocked properties. All affect whether we add or
+       * remove a device/persona store. */
       var uuids = changed.lookup_value ("UUIDs", null);
       var paired = changed.lookup_value ("Paired", VariantType.BOOLEAN);
-      if (uuids != null || paired != null)
+      var blocked = changed.lookup_value ("Blocked", VariantType.BOOLEAN);
+
+      if (uuids != null || paired != null || blocked != null)
         {
           /* Sometimes the UUIDs property only changes a second or two after
            * the device first appears, so try adding the device again. */
-          if (device.paired == true && this._device_supports_pbap_pse (device))
+          if (device.paired == true && device.blocked == false &&
+              this._device_supports_pbap_pse (device))
             {
               this._add_device.begin (obj_proxy, (o, r) =>
                 {
@@ -392,6 +399,12 @@ public class Folks.Backends.BlueZ.Backend : Folks.Backend
         {
           debug ("    Device isn’t paired. Ignoring. Manually pair the device" +
               " to start downloading contacts.");
+          return;
+        }
+
+      if (device.blocked == true)
+        {
+          debug ("    Device is blocked. Ignoring.");
           return;
         }
 
