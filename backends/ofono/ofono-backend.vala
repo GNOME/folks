@@ -162,7 +162,7 @@ public class Folks.Backends.Ofono.Backend : Folks.Backend
   /**
    * {@inheritDoc}
    */
-  public override async void prepare () throws GLib.Error
+  public override async void prepare () throws DBusError
     {
       Internal.profiling_start ("preparing Ofono.Backend");
 
@@ -176,13 +176,23 @@ public class Folks.Backends.Ofono.Backend : Folks.Backend
           this._prepare_pending = true;
 
           /* New modem devices can be caught in notifications */
-          Manager manager = yield Bus.get_proxy (BusType.SYSTEM,
-                                                       "org.ofono",
-                                                       "/");
-          manager.ModemAdded.connect (this._modem_added);
-          manager.ModemRemoved.connect (this._modem_removed);
-          
-          this._modems = manager.GetModems ();
+          Manager manager;
+
+          try
+            {
+              manager = yield Bus.get_proxy (BusType.SYSTEM, "org.ofono", "/");
+              manager.ModemAdded.connect (this._modem_added);
+              manager.ModemRemoved.connect (this._modem_removed);
+
+              this._modems = manager.GetModems ();
+            }
+          catch (GLib.Error e1)
+            {
+              throw new DBusError.SERVICE_UNKNOWN (
+                  _("No oFono object manager running, so the oFono " +
+                    "backend will be inactive. Either oFono isn’t installed " +
+                    "or the service can’t be started."));
+            }
 
           foreach (ModemProperties modem in this._modems)
             {
