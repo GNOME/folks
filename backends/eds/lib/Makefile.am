@@ -154,5 +154,4 @@ endif
 # Common
 ##################################################################
 
--include ../backend.mk
 -include $(top_srcdir)/git.mk
