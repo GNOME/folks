@@ -32,7 +32,7 @@ using Folks.Backends.BlueZ;
 /**
  * A persona subclass which represents a single persona from a simple key file.
  *
- * @since UNRELEASED
+ * @since 0.9.6
  */
 public class Folks.Backends.BlueZ.Persona : Folks.Persona,
     AvatarDetails,
@@ -62,7 +62,7 @@ public class Folks.Backends.BlueZ.Persona : Folks.Persona,
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.9.6
    */
   public override string[] linkable_properties
     {
@@ -72,7 +72,7 @@ public class Folks.Backends.BlueZ.Persona : Folks.Persona,
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.9.6
    */
   [CCode (notify = false)]
   public Set<UrlFieldDetails> urls
@@ -84,7 +84,7 @@ public class Folks.Backends.BlueZ.Persona : Folks.Persona,
   /**
   * {@inheritDoc}
   *
-  * @since UNRELEASED
+  * @since 0.9.6
   */
   [CCode (notify = false)]
   public LoadableIcon? avatar
@@ -96,7 +96,7 @@ public class Folks.Backends.BlueZ.Persona : Folks.Persona,
   /**
   * {@inheritDoc}
   *
-  * @since UNRELEASED
+  * @since 0.9.6
   */
   public override string[] writeable_properties
     {
@@ -106,7 +106,7 @@ public class Folks.Backends.BlueZ.Persona : Folks.Persona,
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.9.6
    */
   [CCode (notify = false)]
   public Set<PhoneFieldDetails> phone_numbers
@@ -118,7 +118,7 @@ public class Folks.Backends.BlueZ.Persona : Folks.Persona,
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.9.6
    */
   [CCode (notify = false)]
   public StructuredName? structured_name
@@ -130,7 +130,7 @@ public class Folks.Backends.BlueZ.Persona : Folks.Persona,
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.9.6
    */
   [CCode (notify = false)]
   public string full_name
@@ -142,7 +142,7 @@ public class Folks.Backends.BlueZ.Persona : Folks.Persona,
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.9.6
    */
   [CCode (notify = false)]
   public string nickname
@@ -154,7 +154,7 @@ public class Folks.Backends.BlueZ.Persona : Folks.Persona,
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.9.6
    */
   [CCode (notify = false)]
   public Set<EmailFieldDetails> email_addresses
@@ -175,7 +175,7 @@ public class Folks.Backends.BlueZ.Persona : Folks.Persona,
    * @param store the store to which the Persona belongs.
    * @param is_user whether the Persona is the user itself or not.
    *
-   * @since UNRELEASED
+   * @since 0.9.6
    */
   public Persona (string vcf, string name, string vcard,
                   Folks.PersonaStore store, bool is_user)
@@ -282,7 +282,7 @@ public class Folks.Backends.BlueZ.Persona : Folks.Persona,
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.9.6
    */
   public override void linkable_property_to_links (string prop_name,
       Folks.Persona.LinkablePropertyCallback callback)

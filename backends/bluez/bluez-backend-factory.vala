@@ -35,7 +35,7 @@ private BackendFactory _backend_factory = null;
  *
  * @param backend_store the {@link BackendStore} to use in this factory.
  *
- * @since UNRELEASED
+ * @since 0.9.6
  */
 public void module_init (BackendStore backend_store)
 {
@@ -47,7 +47,7 @@ public void module_init (BackendStore backend_store)
  *
  * @param backend_store the {@link BackendStore} to use in this factory.
  *
- * @since UNRELEASED
+ * @since 0.9.6
  */
 public void module_finalize (BackendStore backend_store)
 {
@@ -57,14 +57,14 @@ public void module_finalize (BackendStore backend_store)
 /**
  * A backend factory to create a single {@link Backend}.
  *
- * @since UNRELEASED
+ * @since 0.9.6
  */
 public class Folks.Backends.BlueZ.BackendFactory : Object
 {
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.9.6
    */
   public BackendFactory (BackendStore backend_store)
     {

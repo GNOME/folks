@@ -82,7 +82,7 @@ extern const string BACKEND_NAME;
  * Blocked devices are not made available as persona stores, even if they are
  * paired with the laptop.
  *
- * @since UNRELEASED
+ * @since 0.9.6
  */
 public class Folks.Backends.BlueZ.Backend : Folks.Backend
 {
@@ -105,7 +105,7 @@ public class Folks.Backends.BlueZ.Backend : Folks.Backend
    *
    * See {@link Folks.Backend.is_prepared}.
    *
-   * @since UNRELEASED
+   * @since 0.9.6
    */
   public override bool is_prepared
     {
@@ -117,7 +117,7 @@ public class Folks.Backends.BlueZ.Backend : Folks.Backend
    *
    * See {@link Folks.Backend.is_quiescent}.
    *
-   * @since UNRELEASED
+   * @since 0.9.6
    */
   public override bool is_quiescent
     {
@@ -127,14 +127,14 @@ public class Folks.Backends.BlueZ.Backend : Folks.Backend
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.9.6
    */
   public override string name { get { return BACKEND_NAME; } }
 
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.9.6
    */
   public override Map<string, PersonaStore> persona_stores
     {
@@ -149,7 +149,7 @@ public class Folks.Backends.BlueZ.Backend : Folks.Backend
    * be disabled if the corresponding device is unpaired by the
    * user.
    *
-   * @since UNRELEASED
+   * @since 0.9.6
    */
   public override void disable_persona_store (Folks.PersonaStore store)
     {
@@ -162,7 +162,7 @@ public class Folks.Backends.BlueZ.Backend : Folks.Backend
    * programmatically add a new persona store since it depends
    * on new paired devices.
    *
-   * @since UNRELEASED
+   * @since 0.9.6
    */
   public override void enable_persona_store (Folks.PersonaStore store)
     {
@@ -175,7 +175,7 @@ public class Folks.Backends.BlueZ.Backend : Folks.Backend
    * programmatically add or remove persona stores since it depends
    * on paired/unpaired devices.
    *
-   * @since UNRELEASED
+   * @since 0.9.6
    */
   public override void set_persona_stores (Set<string>? storeids)
     {
@@ -184,7 +184,7 @@ public class Folks.Backends.BlueZ.Backend : Folks.Backend
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.9.6
    */
   public Backend ()
     {
@@ -212,7 +212,7 @@ public class Folks.Backends.BlueZ.Backend : Folks.Backend
    * @param changed the list of properties that have changed
    * @param invalidated the list of properties that have been invalidated
    *
-   * @since UNRELEASED
+   * @since 0.9.6
    */
   private void _device_properties_changed_cb (DBusObjectProxy obj_proxy,
       DBusProxy iface_proxy, Variant changed, string[] invalidated)
@@ -311,7 +311,7 @@ public class Folks.Backends.BlueZ.Backend : Folks.Backend
    * @param device the D-Bus object for the Bluetooth device
    * @param path the path of the D-Bus device object.
    *
-   * @since UNRELEASED
+   * @since 0.9.6
    */
   private async void _add_persona_store (Device device, string path)
     {
@@ -347,7 +347,7 @@ public class Folks.Backends.BlueZ.Backend : Folks.Backend
    * @param device the D-Bus device object
    * @return ``true`` if the device supports PSE, ``false`` otherwise.
    *
-   * @since UNRELEASED
+   * @since 0.9.6
    */
   private bool _device_supports_pbap_pse (Device device)
     {
@@ -373,7 +373,7 @@ public class Folks.Backends.BlueZ.Backend : Folks.Backend
    *
    * @param _obj the device's D-Bus object
    *
-   * @since UNRELEASED
+   * @since 0.9.6
    */
   private async void _add_device (DBusObject obj)
     {
@@ -422,7 +422,7 @@ public class Folks.Backends.BlueZ.Backend : Folks.Backend
    *
    * @param obj the device's D-Bus object
    *
-   * @since UNRELEASED
+   * @since 0.9.6
    */
   private async void _remove_device (DBusObject obj)
     {
@@ -443,7 +443,7 @@ public class Folks.Backends.BlueZ.Backend : Folks.Backend
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.9.6
    */
   public override async void prepare () throws DBusError
     {
@@ -578,7 +578,7 @@ public class Folks.Backends.BlueZ.Backend : Folks.Backend
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.9.6
    */
   public override async void unprepare () throws GLib.Error
     {

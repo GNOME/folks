@@ -7,6 +7,8 @@ Dependencies:
 
 Major changes:
 • Add a BlueZ backend
+• Use Vala to generate GIR files, fixing a number of bugs
+• Various build system and testing improvements
 
 Bugs fixed:
 • Bug 706683 — fails to build with Vala 0.20
@@ -31,8 +33,6 @@ Bugs fixed:
 • Bug 685848 — Add a folks backend for bluez phonebook access
 • Bug 711403 — Tidy up error handling in oFono backend
 • Bug 711406 — Don’t expose blocked BlueZ devices as persona stores
-
-API changes:
 
 Overview of changes from libfolks 0.9.4 to libfolks 0.9.5
 =========================================================

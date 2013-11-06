@@ -38,7 +38,7 @@ using org.bluez;
  * one {@link PersonaStore} per device). It will create a {@link Persona} for
  * each contact on the device.
  *
- * @since UNRELEASED
+ * @since 0.9.6
  */
 public class Folks.Backends.BlueZ.PersonaStore : Folks.PersonaStore
 {
@@ -62,7 +62,7 @@ public class Folks.Backends.BlueZ.PersonaStore : Folks.PersonaStore
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.9.6
    */
   public override string type_id { get { return BACKEND_NAME; } }
 
@@ -71,7 +71,7 @@ public class Folks.Backends.BlueZ.PersonaStore : Folks.PersonaStore
    *
    * See {@link Folks.PersonaStore.can_add_personas}.
    *
-   * @since UNRELEASED
+   * @since 0.9.6
    */
   public override MaybeBool can_add_personas
     {
@@ -83,7 +83,7 @@ public class Folks.Backends.BlueZ.PersonaStore : Folks.PersonaStore
    *
    * See {@link Folks.PersonaStore.can_alias_personas}.
    *
-   * @since UNRELEASED
+   * @since 0.9.6
    */
   public override MaybeBool can_alias_personas
     {
@@ -95,7 +95,7 @@ public class Folks.Backends.BlueZ.PersonaStore : Folks.PersonaStore
    *
    * See {@link Folks.PersonaStore.can_group_personas}.
    *
-   * @since UNRELEASED
+   * @since 0.9.6
    */
   public override MaybeBool can_group_personas
     {
@@ -107,7 +107,7 @@ public class Folks.Backends.BlueZ.PersonaStore : Folks.PersonaStore
    *
    * See {@link Folks.PersonaStore.can_remove_personas}.
    *
-   * @since UNRELEASED
+   * @since 0.9.6
    */
   public override MaybeBool can_remove_personas
     {
@@ -119,7 +119,7 @@ public class Folks.Backends.BlueZ.PersonaStore : Folks.PersonaStore
    *
    * See {@link Folks.PersonaStore.is_prepared}.
    *
-   * @since UNRELEASED
+   * @since 0.9.6
    */
   public override bool is_prepared
     {
@@ -131,7 +131,7 @@ public class Folks.Backends.BlueZ.PersonaStore : Folks.PersonaStore
    *
    * See {@link Folks.PersonaStore.is_quiescent}.
    *
-   * @since UNRELEASED
+   * @since 0.9.6
    */
   public override bool is_quiescent
     {
@@ -141,7 +141,7 @@ public class Folks.Backends.BlueZ.PersonaStore : Folks.PersonaStore
   /**
    * {@inheritDoc}
    *
-   * @since unreleased
+   * @since 0.9.6
    */
   public override string[] always_writeable_properties
     {
@@ -151,7 +151,7 @@ public class Folks.Backends.BlueZ.PersonaStore : Folks.PersonaStore
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.9.6
    */
   public override Map<string, Persona> personas
     {
@@ -161,7 +161,7 @@ public class Folks.Backends.BlueZ.PersonaStore : Folks.PersonaStore
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.9.6
    */
   public new string display_name
     {
@@ -175,7 +175,7 @@ public class Folks.Backends.BlueZ.PersonaStore : Folks.PersonaStore
    * This is the path of the BlueZ device object on D-Bus which provides the
    * contacts in this store.
    *
-   * @since UNRELEASED
+   * @since 0.9.6
    */
   public string object_path
     {
@@ -193,7 +193,7 @@ public class Folks.Backends.BlueZ.PersonaStore : Folks.PersonaStore
    * @param object_path the D-Bus path of the object for the Bluetooth device
    * @param obex_client the D-Bus obex client object.
    *
-   * @since UNRELEASED
+   * @since 0.9.6
    */
   public PersonaStore (Device device, string object_path,
       org.bluez.obex.Client obex_client)
@@ -236,7 +236,7 @@ public class Folks.Backends.BlueZ.PersonaStore : Folks.PersonaStore
    * @throws DBusError if an error was returned over the bus
    * @throws Error if the given file couldn’t be read
    *
-   * @since UNRELEASED
+   * @since 0.9.6
    */
   private async void _update_contacts_from_file (File file,
       org.bluez.obex.PhonebookAccess obex_pbap)
@@ -311,7 +311,7 @@ public class Folks.Backends.BlueZ.PersonaStore : Folks.PersonaStore
    *
    * @param alias the device’s new alias
    *
-   * @since UNRELEASED
+   * @since 0.9.6
    */
   internal void set_alias (string alias)
     {
@@ -336,7 +336,7 @@ public class Folks.Backends.BlueZ.PersonaStore : Folks.PersonaStore
    *
    * @param trusted ``true`` if the user trusts the device, ``false`` otherwise
    *
-   * @since UNRELEASED
+   * @since 0.9.6
    */
   internal void set_is_trusted (bool trusted)
     {
@@ -363,7 +363,7 @@ public class Folks.Backends.BlueZ.PersonaStore : Folks.PersonaStore
    * @throws PersonaStoreError if the contacts couldn’t be updated
    * (see {@link _update_contacts})
    *
-   * @since UNRELEASED
+   * @since 0.9.6
    */
   internal async void set_connection_state (bool connected)
       throws IOError, PersonaStoreError
@@ -397,7 +397,7 @@ public class Folks.Backends.BlueZ.PersonaStore : Folks.PersonaStore
    * @throws IOError if it can't connect to D-Bus
    * @throws DBusError if it can't create a new OBEX session
    *
-   * @since UNRELEASED
+   * @since 0.9.6
    */
   private async dynamic ObjectPath _new_obex_session (
       out org.bluez.obex.PhonebookAccess obex_pbap)
@@ -428,7 +428,7 @@ public class Folks.Backends.BlueZ.PersonaStore : Folks.PersonaStore
    *
    * @param session_path the path of the OBEX session D-Bus object to remove
    *
-   * @since UNRELEASED
+   * @since 0.9.6
    */
   private async void _remove_obex_session (dynamic ObjectPath session_path)
     {
@@ -467,7 +467,7 @@ public class Folks.Backends.BlueZ.PersonaStore : Folks.PersonaStore
    * IOError internally here)
    * @throws PersonaStoreError if the transfer failed
    *
-   * @since UNRELEASED
+   * @since 0.9.6
    */
   private async void _perform_obex_transfer (string path,
       org.bluez.obex.PhonebookAccess obex_pbap,
@@ -623,7 +623,7 @@ public class Folks.Backends.BlueZ.PersonaStore : Folks.PersonaStore
    * @throws PersonaStoreError if the contacts couldn’t be downloaded from the
    * device
    *
-   * @since UNRELEASED
+   * @since 0.9.6
    */
   private async void _update_contacts () throws IOError, PersonaStoreError
     {
@@ -734,7 +734,7 @@ public class Folks.Backends.BlueZ.PersonaStore : Folks.PersonaStore
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.9.6
    */
   public override async void prepare () throws PersonaStoreError
     {
@@ -814,7 +814,7 @@ public class Folks.Backends.BlueZ.PersonaStore : Folks.PersonaStore
    * @throws Folks.PersonaStoreError.READ_ONLY every time since the
    * BlueZ backend is read-only.
    *
-   * @since UNRELEASED
+   * @since 0.9.6
    */
   public override async void remove_persona (Folks.Persona persona)
       throws Folks.PersonaStoreError
@@ -832,7 +832,7 @@ public class Folks.Backends.BlueZ.PersonaStore : Folks.PersonaStore
    * @throws Folks.PersonaStoreError.READ_ONLY every time since the
    * BlueZ backend is read-only.
    *
-   * @since UNRELEASED
+   * @since 0.9.6
    */
   public override async Folks.Persona? add_persona_from_details (
       HashTable<string, Value?> details) throws Folks.PersonaStoreError
