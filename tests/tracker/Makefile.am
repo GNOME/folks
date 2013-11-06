@@ -358,9 +358,5 @@ CLEANFILES = \
 	*.address \
 	$(NULL)
 
-EXTRA_DIST = \
-	$(MAINTAINERCLEANFILES) \
-	$(NULL)
-
 -include $(top_srcdir)/git.mk
 -include $(top_srcdir)/check.mk

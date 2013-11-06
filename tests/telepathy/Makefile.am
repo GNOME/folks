@@ -106,7 +106,6 @@ persona_store_capabilities_SOURCES = \
 	$(NULL)
 
 EXTRA_DIST = \
-	$(MAINTAINERCLEANFILES) \
 	$(srcdir)/data/relationships-empty.ini \
 	$(NULL)
 
