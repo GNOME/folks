@@ -69,3 +69,4 @@ aggregation_SOURCES = \
 
 -include $(top_srcdir)/git.mk
 -include $(top_srcdir)/check.mk
+-include $(top_srcdir)/valgrind.mk
