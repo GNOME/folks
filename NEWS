@@ -2,7 +2,7 @@ Overview of changes from libfolks 0.9.5 to libfolks 0.9.6
 =========================================================
 
 Dependencies:
-• GLib ≥ 2.39.0
+• GLib ≥ 2.38.2
 • Vala ≥ 0.22.0.28-9090
 
 Major changes:
