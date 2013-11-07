@@ -465,7 +465,8 @@ public abstract class Folks.PersonaStore : Object
    * This is the same for all PersonaStores provided by a given {@link Backend}.
    *
    * This is guaranteed to always be available; even before
-   * {@link PersonaStore.prepare} is called.
+   * {@link PersonaStore.prepare} is called. It is immutable over the life of
+   * the {@link PersonaStore}.
    */
   public abstract string type_id
     {
@@ -486,7 +487,7 @@ public abstract class Folks.PersonaStore : Object
    * select a specific IM account from which to initiate a chat.
    *
    * This is not guaranteed to be unique even within this PersonaStore's
-   * {@link Backend}.
+   * {@link Backend}. Its value may change throughout the life of the store.
    *
    * @since 0.1.13
    */
@@ -498,6 +499,8 @@ public abstract class Folks.PersonaStore : Object
    * Since each {@link Backend} can provide multiple different PersonaStores
    * for different accounts or servers (for example), they each need an ID
    * which is unique within the backend.
+   *
+   * It is immutable over the life of the {@link PersonaStore}.
    */
   public string id { get; construct; }
 
@@ -510,6 +513,8 @@ public abstract class Folks.PersonaStore : Object
 
   /**
    * Whether this {@link PersonaStore} can add {@link Persona}s.
+   *
+   * This value may change throughout the life of the {@link PersonaStore}.
    *
    * @since 0.3.1
    */
@@ -544,6 +549,8 @@ public abstract class Folks.PersonaStore : Object
   /**
    * Whether this {@link PersonaStore} can remove {@link Persona}s.
    *
+   * This value may change throughout the life of the {@link PersonaStore}.
+   *
    * @since 0.3.1
    */
   public abstract MaybeBool can_remove_personas
@@ -555,6 +562,9 @@ public abstract class Folks.PersonaStore : Object
   /**
    * Whether {@link PersonaStore.prepare} has successfully completed for this
    * store.
+   *
+   * It’s guaranteed that this will only ever change from ``false`` to ``true``
+   * in the lifetime of the {@link PersonaStore}.
    *
    * @since 0.3.0
    */
@@ -602,6 +612,8 @@ public abstract class Folks.PersonaStore : Object
    * Each {@link PersonaStore} is assigned a trust level by the
    * IndividualAggregator, designating whether to trust the properties of its
    * {@link Persona}s for linking to produce {@link Individual}s.
+   *
+   * This value may change throughout the life of the {@link PersonaStore}.
    *
    * @see PersonaStoreTrust
    * @since 0.1.13
@@ -751,8 +763,8 @@ public abstract class Folks.PersonaStore : Object
       throws Folks.PersonaStoreError;
 
   /**
-   * Whether this {@link PersonaStore} is the primary store which is
-   * to be used for linking {@link Persona}s and such.
+   * Whether this {@link PersonaStore} is the primary store to be used for
+   * linking {@link Persona}s.
    *
    * @since 0.6.3
    */
@@ -763,9 +775,11 @@ public abstract class Folks.PersonaStore : Object
    * If you alter this property, check the generated C and update that
    * header if necessary. https://bugzilla.gnome.org/show_bug.cgi?id=697354 */
   /**
-   * Whether this {@link PersonaStore} has been marked as the default
-   * store (in its backend) by the user. I.e.: a PersonaStore for the e-d-s
-   * backend would set this to true if it represents the default address book.
+   * Whether this {@link PersonaStore} is marked as the default in its backend
+   * by the user.
+   *
+   * i.e. A {@link PersonaStore} for the EDS backend would set this to ``true``
+   * if it represents the user’s default address book.
    *
    * @since 0.6.3
    */
