@@ -76,7 +76,7 @@ API_VERSION_DOT=$API_VERSION_MAJOR.$API_VERSION_MINOR
 AC_SUBST([API_VERSION_DOT])
 
 AC_ARG_ENABLE(tracker-backend,
-        AC_HELP_STRING([--enable-tracker-backend],
+        AS_HELP_STRING([--enable-tracker-backend],
                        [ build the Tracker backend]),
         enable_tracker_backend=$enableval,
         enable_tracker_backend=no )
@@ -92,8 +92,8 @@ AS_IF([test "x$enable_tracker_backend" = "xyes"], [
 ])
 
 AC_ARG_ENABLE(eds-backend,
-        AC_HELP_STRING([--enable-eds-backend],
-                       [ build the E-D-S backend]),
+        AS_HELP_STRING([--enable-eds-backend],
+                       [build the EDS backend]),
         enable_eds_backend=$enableval,
         enable_eds_backend=yes )
 
@@ -106,8 +106,8 @@ AS_IF([test "x$enable_eds_backend" = "xyes"], [
 AM_CONDITIONAL([ENABLE_EDS], [test "x$enable_eds_backend" = "xyes"])
 
 AC_ARG_ENABLE(ofono-backend,
-	AC_HELP_STRING([--enable-ofono-backend],
-		       [ build the ofono backend]),
+	AS_HELP_STRING([--enable-ofono-backend],
+	               [build the oFono backend]),
 	enable_ofono_backend=$enableval,
 	enable_ofono_backend=yes )
 
@@ -120,8 +120,8 @@ AS_IF([test "x$enable_ofono_backend" = "xyes"], [
 AM_CONDITIONAL([ENABLE_OFONO], [test "x$enable_ofono_backend" = "xyes"])
 
 AC_ARG_ENABLE(bluez-backend,
-	AC_HELP_STRING([--enable-bluez-backend],
-		       [ build the bluez backend]),
+	AS_HELP_STRING([--enable-bluez-backend],
+	               [build the BlueZ backend]),
 	enable_bluez_backend=$enableval,
 	enable_bluez_backend=yes )
 
@@ -134,8 +134,8 @@ AS_IF([test "x$enable_bluez_backend" = "xyes"], [
 AM_CONDITIONAL([ENABLE_BLUEZ], [test "x$enable_bluez_backend" = "xyes"])
 
 AC_ARG_ENABLE(telepathy-backend,
-        AC_HELP_STRING([--enable-telepathy-backend],
-                       [ build the Telepathy backend]),
+        AS_HELP_STRING([--enable-telepathy-backend],
+                       [build the Telepathy backend]),
         enable_telepathy_backend=$enableval,
         enable_telepathy_backend=yes )
 
@@ -148,7 +148,7 @@ AS_IF([test "x$enable_telepathy_backend" = "xyes"], [
 AM_CONDITIONAL([ENABLE_TELEPATHY], [test "x$enable_telepathy_backend" = "xyes"])
 
 AC_ARG_ENABLE(zeitgeist,
-        AC_HELP_STRING([--enable-zeitgeist],
+        AS_HELP_STRING([--enable-zeitgeist],
                        [ build Zeitgeist support in the Telepathy backend]),
         enable_zeitgeist=$enableval,
         enable_zeitgeist=auto)
@@ -156,7 +156,7 @@ AC_ARG_ENABLE(zeitgeist,
 # Automatically check the dependencies for the libsocialweb backend
 SW_CLIENT_REQUIRED=0.25.20
 AC_ARG_ENABLE(libsocialweb-backend,
-        AC_HELP_STRING([--enable-libsocialweb-backend=@<:@no/yes/auto@:>@],
+        AS_HELP_STRING([--enable-libsocialweb-backend=@<:@no/yes/auto@:>@],
                        [build the Libsocialweb backend (default: auto)]),
         enable_libsocialweb_backend=$enableval,
         enable_libsocialweb_backend=auto )
