@@ -30,8 +30,8 @@ m4_define([folks_version], folks_full_version[]folks_maybe_datestamp)
 m4_define([folks_major_minor_version], folks_major_version.folks_minor_version)
 m4_define([folks_module_version], folks_lt_current)
 
-AC_INIT([folks], folks_version,
-        [https://bugzilla.gnome.org/browse.cgi?product=folks], [folks],
+AC_INIT([folks],[folks_version],
+        [https://bugzilla.gnome.org/browse.cgi?product=folks],[folks],
         [http://telepathy.freedesktop.org/wiki/Folks])
 m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
 
@@ -49,8 +49,7 @@ AM_MAINTAINER_MODE([enable])
 
 AC_PROG_CC
 AM_PROG_CC_C_O
-AC_DISABLE_STATIC
-LT_INIT
+LT_INIT([disable-static])
 PKG_PROG_PKG_CONFIG([0.21])
 GLIB_GSETTINGS
 
