@@ -1,6 +1,7 @@
 # Build . first so that backends' test libraries can link to libfolks-test.la
 SUBDIRS = \
 	. \
+	dummy \
 	key-file \
 	$(NULL)
 
@@ -27,6 +28,7 @@ SUBDIRS += eds
 endif
 
 DIST_SUBDIRS = \
+	dummy \
 	key-file \
 	telepathy \
 	eds \

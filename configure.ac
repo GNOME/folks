@@ -49,6 +49,10 @@ m4_define([folks_tracker_lt_current], [41])
 m4_define([folks_tracker_lt_revision], [1])
 m4_define([folks_tracker_lt_age], [16])
 
+m4_define([folks_dummy_lt_current], [41])
+m4_define([folks_dummy_lt_revision], [1])
+m4_define([folks_dummy_lt_age], [16])
+
 # Display the nano_version only if it's not '0'
 m4_define([folks_base_version],
           folks_major_version.folks_minor_version.folks_micro_version)
@@ -111,6 +115,9 @@ AC_SUBST([FOLKS_TELEPATHY_LT_VERSION])
 FOLKS_TRACKER_LT_VERSION=folks_tracker_lt_current:folks_tracker_lt_revision:folks_tracker_lt_age
 AC_SUBST([FOLKS_TRACKER_LT_VERSION])
 
+FOLKS_DUMMY_LT_VERSION=folks_dummy_lt_current:folks_dummy_lt_revision:folks_dummy_lt_age
+AC_SUBST([FOLKS_DUMMY_LT_VERSION])
+
 # Core library API version (potentially used for parallel installation)
 # When updating this, don’t forget to update the backend library API versions
 # below.
@@ -126,6 +133,7 @@ AC_SUBST([FOLKS_EDS_API_VERSION], [0.6])
 AC_SUBST([FOLKS_LIBSOCIALWEB_API_VERSION], [0.6])
 AC_SUBST([FOLKS_TELEPATHY_API_VERSION], [0.6])
 AC_SUBST([FOLKS_TRACKER_API_VERSION], [0.6])
+AC_SUBST([FOLKS_DUMMY_API_VERSION], [0.6])
 
 # Backend configuration
 AC_ARG_ENABLE(tracker-backend,
@@ -358,6 +366,8 @@ AS_IF([test \
         ! -e ${sd}tests/folks/backend_loading_vala.stamp -o \
         ! -e ${sd}tests/key-file/individual_retrieval_vala.stamp -o \
         ! -e ${sd}tests/lib/folks-test.vapi -o \
+        ! -e ${sd}tests/lib/dummy/dummy-test.vapi -o \
+        ! -e ${sd}tests/lib/dummy/libdummy_test_la_vala.stamp -o \
         ! -e ${sd}tests/lib/key-file/kf-test.vapi -o \
         ! -e ${sd}tests/lib/key-file/libkf_test_la_vala.stamp -o \
         ! -e ${sd}tests/lib/telepathy/contactlist/tp-test-contactlist.gir -o \
@@ -367,6 +377,7 @@ AS_IF([test \
         ! -e ${sd}tests/telepathy/individual_retrieval_vala.stamp -o \
         ! -e ${sd}tests/telepathy/individual_properties_vala.stamp -o \
         ! -e ${sd}tests/folks/backend_loading_vala.stamp -o \
+        ! -e ${sd}backends/dummy/dummy_la_vala.stamp -o \
         ! -e ${sd}backends/key-file/key_file_la_vala.stamp -o \
         ! -e ${sd}backends/telepathy/telepathy_la_vala.stamp \
                 -o \
@@ -714,11 +725,15 @@ AC_CONFIG_FILES([
     backends/tracker/lib/folks-tracker-uninstalled.pc
     backends/eds/lib/folks-eds.pc
     backends/eds/lib/folks-eds-uninstalled.pc
+    backends/dummy/lib/folks-dummy.pc
+    backends/dummy/lib/folks-dummy-uninstalled.pc
     folks/folks.pc
     folks/folks-uninstalled.pc
     folks/org.freedesktop.folks.gschema.xml
     Makefile
     backends/Makefile
+    backends/dummy/Makefile
+    backends/dummy/lib/Makefile
     backends/key-file/Makefile
     backends/libsocialweb/Makefile
     backends/libsocialweb/lib/Makefile
@@ -739,6 +754,7 @@ AC_CONFIG_FILES([
     tests/data/Makefile
     tests/eds/Makefile
     tests/folks/Makefile
+    tests/dummy/Makefile
     tests/key-file/Makefile
     tests/libsocialweb/Makefile
     tests/telepathy/Makefile
@@ -746,6 +762,7 @@ AC_CONFIG_FILES([
     tests/lib/Makefile
     tests/lib/folks-test-uninstalled.pc
     tests/lib/eds/Makefile
+    tests/lib/dummy/Makefile
     tests/lib/key-file/Makefile
     tests/lib/libsocialweb/Makefile
     tests/lib/telepathy/Makefile

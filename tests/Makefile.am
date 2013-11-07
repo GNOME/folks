@@ -3,6 +3,7 @@
 SUBDIRS = \
 	data \
 	lib \
+	dummy \
 	key-file \
 	tools \
 	$(NULL)
@@ -30,6 +31,7 @@ DIST_SUBDIRS = \
 	lib \
 	tools \
 	folks \
+	dummy \
 	eds \
 	key-file \
 	telepathy \

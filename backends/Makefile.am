@@ -1,4 +1,5 @@
 SUBDIRS = \
+	dummy \
 	key-file \
 	$(NULL)
 
@@ -34,6 +35,7 @@ DIST_SUBDIRS = \
 	ofono \
 	telepathy \
 	tracker \
+	dummy \
 	$(NULL)
 
 EXTRA_DIST = \

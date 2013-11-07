@@ -61,6 +61,7 @@ public abstract class Folks.TestCase : Object
         {
           string[] locations = {
               Folks.BuildConf.ABS_TOP_BUILDDIR + "/backends/key-file/.libs/key-file.so",
+              Folks.BuildConf.ABS_TOP_BUILDDIR + "/backends/dummy/.libs/dummy.so",
           };
 
           if (Folks.BuildConf.HAVE_EDS)
