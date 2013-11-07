@@ -27,7 +27,6 @@ m4_define([folks_maybe_datestamp],
                 [], [m4_esyscmd([date +.%Y%m%d | tr -d '\n\r'])]))
 
 m4_define([folks_version], folks_full_version[]folks_maybe_datestamp)
-m4_define([folks_major_minor_version], folks_major_version.folks_minor_version)
 m4_define([folks_module_version], folks_lt_current)
 
 AC_INIT([folks],[folks_version],
@@ -64,8 +63,6 @@ AC_SUBST([LT_CURRENT])
 AC_SUBST([LT_REVISION])
 AC_SUBST([LT_AGE])
 
-FOLKS_MAJOR_MINOR_VERSION=folks_major_minor_version
-AC_SUBST([FOLKS_MAJOR_MINOR_VERSION])
 
 API_VERSION_MAJOR=0
 AC_SUBST([API_VERSION_MAJOR])
