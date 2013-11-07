@@ -69,7 +69,7 @@ libfolks_tracker_la_LIBADD = \
 libfolks_tracker_la_LDFLAGS = \
 	$(AM_LDFLAGS) \
 	$(CODE_COVERAGE_LDFLAGS) \
-	-version-info "$(LT_CURRENT)":"$(LT_REVISION)":"$(LT_AGE)" \
+	-version-info "$(FOLKS_TRACKER_LT_VERSION)" \
 	-export-symbols-regex "^(TRF|trf)_.*|" \
 	$(NULL)
 

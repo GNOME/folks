@@ -89,7 +89,7 @@ libfolks_eds_la_LIBADD = \
 libfolks_eds_la_LDFLAGS = \
 	$(AM_LDFLAGS) \
 	$(CODE_COVERAGE_LDFLAGS) \
-	-version-info "$(LT_CURRENT)":"$(LT_REVISION)":"$(LT_AGE)" \
+	-version-info "$(FOLKS_EDS_LT_VERSION)" \
 	-export-symbols-regex "^(EDSF|edsf)_.*|" \
 	$(NULL)
 

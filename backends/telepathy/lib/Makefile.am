@@ -277,7 +277,7 @@ endif
 libfolks_telepathy_la_LDFLAGS = \
 	$(AM_LDFLAGS) \
 	$(CODE_COVERAGE_LDFLAGS) \
-	-version-info "$(LT_CURRENT)":"$(LT_REVISION)":"$(LT_AGE)" \
+	-version-info "$(FOLKS_TELEPATHY_LT_VERSION)" \
 	-export-symbols-regex "^tpf_.*" \
 	$(NULL)
 

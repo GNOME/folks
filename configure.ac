@@ -6,14 +6,48 @@ m4_define([folks_minor_version], [9])
 m4_define([folks_micro_version], [7])
 m4_define([folks_nano_version], [0])
 
-# If library source has changed since last release, increment revision
-# If public symbols have been added, removed or changed since last release,
-#  increment current and set revision to 0
-# If public symbols have been added since last release, increment age
-# If public symbols have been removed since last release, set age to 0
+# Core library LT version. When updating this, don't forget to bump the backend
+# library LT versions too, below.
+#
+# To update the version, follow these instructions sequentially:
+#
+#  1. If the library source code has changed at all since the last update, then
+#     increment revision (‘c:r:a’ becomes ‘c:r+1:a’).
+#  2. If any interfaces have been added, removed, or changed since the last
+#     update, increment current, and set revision to 0.
+#  3. If any interfaces have been added since the last public release, then
+#     increment age.
+#  4. If any interfaces have been removed or changed since the last public
+#     release, then set age to 0.
+#
+# The LT current version number is additionally used as libfolks' module API
+# version number: a given libfolks.so will only load modules which were compiled
+# against a core with the same LT current number as itself. This allows the API
+# which is exposed to the modules to be changed.
 m4_define([folks_lt_current], [41])
 m4_define([folks_lt_revision], [1])
 m4_define([folks_lt_age], [16])
+
+# Each of the backend libraries (e.g. libfolks-eds.so; *not* the loadable
+# modules, eds.so) has its own LT version. These should be incremented when the
+# core folks_lt_* variables are incremented (as all the backend libraries are
+# binary-dependent on libfolks.so), but should also be incremented when
+# incompatible changes are made in the backend library APIs themselves.
+m4_define([folks_eds_lt_current], [41])
+m4_define([folks_eds_lt_revision], [1])
+m4_define([folks_eds_lt_age], [16])
+
+m4_define([folks_libsocialweb_lt_current], [41])
+m4_define([folks_libsocialweb_lt_revision], [1])
+m4_define([folks_libsocialweb_lt_age], [16])
+
+m4_define([folks_telepathy_lt_current], [41])
+m4_define([folks_telepathy_lt_revision], [1])
+m4_define([folks_telepathy_lt_age], [16])
+
+m4_define([folks_tracker_lt_current], [41])
+m4_define([folks_tracker_lt_revision], [1])
+m4_define([folks_tracker_lt_age], [16])
 
 # Display the nano_version only if it's not '0'
 m4_define([folks_base_version],
@@ -56,6 +90,7 @@ AC_SUBST([CFLAGS])
 AC_SUBST([CPPFLAGS])
 AC_SUBST([LDFLAGS])
 
+# Core library LT version
 LT_CURRENT=folks_lt_current
 LT_REVISION=folks_lt_revision
 LT_AGE=folks_lt_age
@@ -63,7 +98,20 @@ AC_SUBST([LT_CURRENT])
 AC_SUBST([LT_REVISION])
 AC_SUBST([LT_AGE])
 
+# Backend library LT versions
+FOLKS_EDS_LT_VERSION=folks_eds_lt_current:folks_eds_lt_revision:folks_eds_lt_age
+AC_SUBST([FOLKS_EDS_LT_VERSION])
 
+FOLKS_LIBSOCIALWEB_LT_VERSION=folks_libsocialweb_lt_current:folks_libsocialweb_lt_revision:folks_libsocialweb_lt_age
+AC_SUBST([FOLKS_LIBSOCIALWEB_LT_VERSION])
+
+FOLKS_TELEPATHY_LT_VERSION=folks_telepathy_lt_current:folks_telepathy_lt_revision:folks_telepathy_lt_age
+AC_SUBST([FOLKS_TELEPATHY_LT_VERSION])
+
+FOLKS_TRACKER_LT_VERSION=folks_tracker_lt_current:folks_tracker_lt_revision:folks_tracker_lt_age
+AC_SUBST([FOLKS_TRACKER_LT_VERSION])
+
+# Core library API version (potentially used for parallel installation)
 API_VERSION_MAJOR=0
 AC_SUBST([API_VERSION_MAJOR])
 API_VERSION_MINOR=6

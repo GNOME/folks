@@ -77,7 +77,7 @@ libfolks_libsocialweb_la_LIBADD = \
 
 libfolks_libsocialweb_la_LDFLAGS = \
 	$(CODE_COVERAGE_LDFLAGS) \
-	-version-info "$(LT_CURRENT)":"$(LT_REVISION)":"$(LT_AGE)" \
+	-version-info "$(FOLKS_LIBSOCIALWEB_LT_VERSION)" \
 	-export-symbols-regex "^swf_.*" \
 	$(NULL)
 
