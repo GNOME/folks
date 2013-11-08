@@ -74,6 +74,17 @@ public class Folks.Backends.BlueZ.Persona : Folks.Persona,
    *
    * @since 0.9.6
    */
+  public new string display_id
+    {
+      get { return this._full_name; }
+      construct { this._full_name = value; }
+    }
+
+  /**
+   * {@inheritDoc}
+   *
+   * @since 0.9.6
+   */
   [CCode (notify = false)]
   public Set<UrlFieldDetails> urls
     {
@@ -167,24 +178,20 @@ public class Folks.Backends.BlueZ.Persona : Folks.Persona,
    * Create a new persona.
    *
    * Create a new persona for the {@link PersonaStore} ``store``, representing
-   * the Persona given by the group ``uid`` in the key file ``key_file``.
+   * the Persona in the given ``vcard``.
    *
-   * @param vcf the VCard filename reference. For example: 0.vcf.
-   * @param name the Persona the contact name or alias.
    * @param vcard the Vcard stored as a string.
    * @param store the store to which the Persona belongs.
    * @param is_user whether the Persona is the user itself or not.
    *
    * @since 0.9.6
    */
-  public Persona (string vcf, string name, string vcard,
-                  Folks.PersonaStore store, bool is_user)
+  public Persona (string vcard, Folks.PersonaStore store, bool is_user)
     {
       var iid = Checksum.compute_for_string (ChecksumType.SHA1, vcard);
       var uid = Folks.Persona.build_uid ("bluez", store.id, iid);
 
-      Object (display_id: name,
-              iid: iid,
+      Object (iid: iid,
               uid: uid,
               store: store,
               is_user: is_user);
@@ -221,6 +228,7 @@ public class Folks.Backends.BlueZ.Persona : Folks.Persona,
       attribute = card.get_attribute ("FN");
       if (attribute != null)
         {
+          /* Also the display-id. */
           this._full_name = attribute.get_value_decoded ().str;
         }
 

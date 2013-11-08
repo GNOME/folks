@@ -54,7 +54,6 @@ public class Folks.Backends.BlueZ.PersonaStore : Folks.PersonaStore
   private static string[] _always_writeable_properties = {};
 
   private org.bluez.obex.Client _obex_client;
-  private HashTable<string, Variant> _phonebook_filter;
   private string _object_path;
   private Device _device;
   private string _display_name;
@@ -215,12 +214,6 @@ public class Folks.Backends.BlueZ.PersonaStore : Folks.PersonaStore
     {
       this._personas = new HashMap<string, Persona> ();
       this._personas_ro = this._personas.read_only_view;
-      this._phonebook_filter = new HashTable<string, Variant> (null , null);
-      this._phonebook_filter.insert ("Format", "Vcard30");
-      this._phonebook_filter.insert ("Fields",
-          new Variant.strv ({
-              "N", "FN", "NICKNAME", "TEL", "URL", "EMAIL", "PHOTO"
-          }));
     }
 
   /**
@@ -234,28 +227,14 @@ public class Folks.Backends.BlueZ.PersonaStore : Folks.PersonaStore
    * unchanged.
    *
    * @param file the file where the contacts are stored
-   * @param obex_pbap the current OBEX PBAP D-Bus proxy
    * @throws IOError if there was an error communicating with D-Bus
-   * @throws DBusError if an error was returned over the bus
    * @throws Error if the given file couldn’t be read
    *
    * @since 0.9.6
    */
-  private async void _update_contacts_from_file (File file,
-      org.bluez.obex.PhonebookAccess obex_pbap)
-      throws DBusError, IOError
+  private async void _update_contacts_from_file (File file) throws IOError
     {
       var added_personas = new HashSet<Persona> ();
-
-      /* Get the vCard listing data  where every entry
-       * consists of a pair of strings containing the vCard
-       * handle and the contact name. For example:
-       *   "0.vcf" : "Me"
-       *   "1.vcf" : "John"
-       *
-       * First entry corresponds to the user themselves.
-       */
-      var entries = obex_pbap.list (this._phonebook_filter);
 
       try
         {
@@ -275,13 +254,10 @@ public class Folks.Backends.BlueZ.PersonaStore : Folks.PersonaStore
               vcard.append_c ('\n');
               if (line.strip () == "END:VCARD")
                 {
-                  var entry = entries[i];
-
                   /* The first vCard is always the user themselves. */
                   var is_user = (i == 0);
 
-                  var persona = new Persona (entry.vcard, entry.name,
-                      vcard.str, this, is_user);
+                  var persona = new Persona (vcard.str, this, is_user);
                   added_personas.add (persona);
 
                   i++;
@@ -461,7 +437,6 @@ public class Folks.Backends.BlueZ.PersonaStore : Folks.PersonaStore
    * unchanged.
    *
    * @param path the D-Bus transfer object path to watch.
-   * @param obex_pbap an OBEX PBAP proxy object to access the address book from
    * @param cancellable an optional {@link Cancellable} object to cancel the
    * transfer
    *
@@ -473,7 +448,6 @@ public class Folks.Backends.BlueZ.PersonaStore : Folks.PersonaStore
    * @since 0.9.6
    */
   private async void _perform_obex_transfer (string path,
-      org.bluez.obex.PhonebookAccess obex_pbap,
       Cancellable? cancellable = null)
       throws IOError, PersonaStoreError
     {
@@ -557,7 +531,7 @@ public class Folks.Backends.BlueZ.PersonaStore : Folks.PersonaStore
               debug ("vCard’s filename for device ‘%s’ (%s): %s",
                   this._display_name, this.id, filename);
 
-              yield this._update_contacts_from_file (file, obex_pbap);
+              yield this._update_contacts_from_file (file);
             }
           else if (transfer_status == "error")
             {
@@ -576,15 +550,6 @@ public class Folks.Backends.BlueZ.PersonaStore : Folks.PersonaStore
             {
               assert_not_reached ();
             }
-        }
-      catch (DBusError e2)
-        {
-          throw new PersonaStoreError.STORE_OFFLINE (
-              /* Translators: the first parameter is the name of the
-               * failed transfer, the second is a Bluetooth device
-               * alias, and the third is an error message. */
-              _("Error during transfer of the address book ‘%s’ from Bluetooth device ‘%s’: %s"),
-              transfer.name, this._display_name, e2.message);
         }
       finally
         {
@@ -685,8 +650,15 @@ public class Folks.Backends.BlueZ.PersonaStore : Folks.PersonaStore
 
               /* Initiate a phone book transfer from the PSE server using a
                * plain string vCard format, transferring to a temporary file. */
-              obex_pbap.pull_all ("", this._phonebook_filter, out path,
-                  out props);
+              var phonebook_filter =
+                  new HashTable<string, Variant> (null , null);
+              phonebook_filter.insert ("Format", "Vcard30");
+              phonebook_filter.insert ("Fields",
+                  new Variant.strv ({
+                      "N", "FN", "NICKNAME", "TEL", "URL", "EMAIL", "PHOTO"
+                  }));
+
+              obex_pbap.pull_all ("", phonebook_filter, out path, out props);
             }
           catch (GLib.Error e2)
             {
@@ -699,7 +671,7 @@ public class Folks.Backends.BlueZ.PersonaStore : Folks.PersonaStore
 
           try
             {
-              yield this._perform_obex_transfer (path, obex_pbap,
+              yield this._perform_obex_transfer (path,
                   this._update_contacts_cancellable);
             }
           catch (IOError e3)
