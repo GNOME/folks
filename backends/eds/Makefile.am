@@ -1,5 +1,6 @@
 SUBDIRS = lib .
 
+include $(top_srcdir)/backends/backend.mk
 BACKEND_NAME = "eds"
 
 backenddir = $(BACKEND_DIR)/eds
@@ -46,5 +47,4 @@ eds_la_LDFLAGS = \
 	$(backend_ldflags) \
 	$(NULL)
 
--include $(top_srcdir)/backends/backend.mk
 -include $(top_srcdir)/git.mk

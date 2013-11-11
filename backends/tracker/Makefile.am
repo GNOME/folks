@@ -1,5 +1,6 @@
 SUBDIRS = lib .
 
+include $(top_srcdir)/backends/backend.mk
 BACKEND_NAME = "tracker"
 
 backenddir = $(BACKEND_DIR)/tracker
@@ -40,5 +41,4 @@ tracker_la_LDFLAGS = \
 	$(backend_ldflags) \
 	$(NULL)
 
--include $(top_srcdir)/backends/backend.mk
 -include $(top_srcdir)/git.mk

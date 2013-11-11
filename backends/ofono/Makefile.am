@@ -1,3 +1,4 @@
+include $(top_srcdir)/backends/backend.mk
 BACKEND_NAME = "ofono"
 
 backenddir = $(BACKEND_DIR)/ofono
@@ -41,5 +42,4 @@ ofono_la_LDFLAGS = \
 	$(backend_ldflags) \
 	$(NULL)
 
--include $(top_srcdir)/backends/backend.mk
 -include $(top_srcdir)/git.mk

@@ -1,5 +1,6 @@
 SUBDIRS = lib .
 
+include $(top_srcdir)/backends/backend.mk
 BACKEND_NAME = "telepathy"
 
 backenddir = $(BACKEND_DIR)/telepathy
@@ -41,5 +42,4 @@ telepathy_la_LDFLAGS = \
 	$(backend_ldflags) \
 	$(NULL)
 
--include $(top_srcdir)/backends/backend.mk
 -include $(top_srcdir)/git.mk

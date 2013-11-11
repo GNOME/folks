@@ -1,3 +1,4 @@
+include $(top_srcdir)/backends/backend.mk
 BACKEND_NAME = "key-file"
 
 backenddir = $(BACKEND_DIR)/key-file
@@ -33,5 +34,4 @@ key_file_la_LDFLAGS = \
 	$(backend_ldflags) \
 	$(NULL)
 
--include $(top_srcdir)/backends/backend.mk
 -include $(top_srcdir)/git.mk

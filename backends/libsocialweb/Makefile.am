@@ -1,5 +1,6 @@
 SUBDIRS = lib .
 
+include $(top_srcdir)/backends/backend.mk
 BACKEND_NAME = "libsocialweb"
 
 backenddir = $(BACKEND_DIR)/libsocialweb
@@ -40,5 +41,4 @@ libsocialweb_la_LDFLAGS = \
 	$(backend_ldflags) \
 	$(NULL)
 
--include $(top_srcdir)/backends/backend.mk
 -include $(top_srcdir)/git.mk

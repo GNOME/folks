@@ -1,3 +1,4 @@
+include $(top_srcdir)/backends/backend.mk
 BACKEND_NAME = "bluez"
 
 backenddir = $(BACKEND_DIR)/bluez
@@ -37,5 +38,4 @@ bluez_la_LDFLAGS = \
 	$(backend_ldflags) \
 	$(NULL)
 
--include $(top_srcdir)/backends/backend.mk
 -include $(top_srcdir)/git.mk
