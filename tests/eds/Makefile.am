@@ -1,57 +1,42 @@
+include $(top_srcdir)/tests/test.mk
+
 # This forces serialization of the tests because they run into terrible race
 # conditions if run in parallel (ie, make -jN, n > 1)
 #
 # FIXME: https://bugzilla.gnome.org/show_bug.cgi?id=709119
 .NOTPARALLEL:
 
-AM_CFLAGS = \
-	$(ERROR_CFLAGS) \
-	$(NULL)
-
-AM_CPPFLAGS = \
-	$(GLIB_CFLAGS) \
-	$(GEE_CFLAGS) \
-	$(EBOOK_CFLAGS) \
-	$(EDATASERVER_CFLAGS) \
-	-I$(top_srcdir) \
-	-I$(top_srcdir)/folks \
-	-I$(top_srcdir)/backends/eds/lib \
-	-I$(top_srcdir)/backends/eds/lib/folks \
-	-I$(top_srcdir)/tests/lib \
-	-I$(top_srcdir)/tests/lib/eds \
-	-include $(CONFIG_HEADER) \
-	-include $(top_srcdir)/folks/warnings.h \
-	$(NULL)
-
-LDADD = \
-	$(top_builddir)/tests/lib/eds/libeds-test.la \
-	$(top_builddir)/tests/lib/libfolks-test.la \
-	$(top_builddir)/backends/eds/lib/libfolks-eds.la \
-	$(top_builddir)/folks/libfolks.la \
-	$(GLIB_LIBS) \
-	$(GEE_LIBS) \
-	-L$(top_srcdir)/backends/eds/lib \
-	$(NULL)
-
-AM_VALAFLAGS += \
-	$(ERROR_VALAFLAGS) \
-	--vapidir=. \
-	--vapidir=$(top_srcdir)/folks \
+AM_VALAFLAGS = \
+	$(test_valaflags) \
 	--vapidir=$(top_srcdir)/backends/eds/lib \
-	--vapidir=$(top_srcdir)/tests/lib \
 	--vapidir=$(top_srcdir)/tests/lib/eds \
 	--pkg posix \
-	--pkg gobject-2.0 \
-	--pkg gio-2.0 \
-	--pkg gee-0.8 \
-	--pkg folks \
-	--pkg folks-test \
 	--pkg libebook-1.2 \
 	--pkg libedataserver-1.2 \
 	--pkg libxml-2.0 \
 	--pkg folks-eds \
 	--pkg eds-test \
-	-g \
+	$(NULL)
+
+AM_CPPFLAGS = \
+	$(test_cppflags) \
+	$(EBOOK_CFLAGS) \
+	$(EDATASERVER_CFLAGS) \
+	-I$(top_srcdir)/backends/eds/lib \
+	-I$(top_srcdir)/backends/eds/lib/folks \
+	-I$(top_srcdir)/tests/lib/eds \
+	$(NULL)
+
+AM_CFLAGS = \
+	$(test_cflags) \
+	$(NULL)
+
+LDADD = \
+	$(AM_LDADD) \
+	$(test_ldadd) \
+	$(top_builddir)/tests/lib/eds/libeds-test.la \
+	$(top_builddir)/backends/eds/lib/libfolks-eds.la \
+	-L$(top_srcdir)/backends/eds/lib \
 	$(NULL)
 
 # in order from least to most complex

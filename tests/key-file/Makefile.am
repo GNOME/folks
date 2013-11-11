@@ -1,39 +1,24 @@
-AM_CFLAGS = \
-	$(ERROR_CFLAGS) \
+include $(top_srcdir)/tests/test.mk
+
+AM_VALAFLAGS = \
+	$(test_valaflags) \
+	--vapidir=$(top_srcdir)/tests/lib/key-file \
+	--pkg kf-test \
 	$(NULL)
 
 AM_CPPFLAGS = \
-	$(GLIB_CFLAGS) \
-	$(GEE_CFLAGS) \
-	-I$(top_srcdir) \
-	-I$(top_srcdir)/folks \
-	-I$(top_srcdir)/tests/lib \
+	$(test_cppflags) \
 	-I$(top_srcdir)/tests/lib/key-file \
-	-include $(CONFIG_HEADER) \
-	-include $(top_srcdir)/folks/warnings.h \
+	$(NULL)
+
+AM_CFLAGS = \
+	$(test_cflags) \
 	$(NULL)
 
 LDADD = \
+	$(AM_LDADD) \
+	$(test_ldadd) \
 	$(top_builddir)/tests/lib/key-file/libkf-test.la \
-	$(top_builddir)/tests/lib/libfolks-test.la \
-	$(top_builddir)/folks/libfolks.la \
-	$(GLIB_LIBS) \
-	$(GEE_LIBS) \
-	$(NULL)
-
-AM_VALAFLAGS += \
-	$(ERROR_VALAFLAGS) \
-	--vapidir=. \
-	--vapidir=$(top_srcdir)/folks \
-	--vapidir=$(top_srcdir)/tests/lib \
-	--vapidir=$(top_srcdir)/tests/lib/key-file \
-	--pkg gobject-2.0 \
-	--pkg gio-2.0 \
-	--pkg gee-0.8 \
-	--pkg folks \
-	--pkg folks-test \
-	--pkg kf-test \
-	-g \
 	$(NULL)
 
 # in order from least to most complex

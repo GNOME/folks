@@ -37,4 +37,8 @@ DIST_SUBDIRS = \
 	tracker \
 	$(NULL)
 
+EXTRA_DIST = \
+	test.mk \
+	$(NULL)
+
 -include $(top_srcdir)/git.mk

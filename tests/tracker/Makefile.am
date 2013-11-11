@@ -1,57 +1,42 @@
+include $(top_srcdir)/tests/test.mk
+
 # This forces serialization of the tests because they run into terrible race
 # conditions if run in parallel (ie, make -jN, n > 1)
 #
 # FIXME: https://bugzilla.gnome.org/show_bug.cgi?id=709120
 .NOTPARALLEL:
 
-AM_CFLAGS = \
-	$(ERROR_CFLAGS) \
+AM_VALAFLAGS = \
+	$(test_valaflags) \
+	--vapidir=$(top_srcdir)/backends/tracker/lib \
+	--vapidir=$(top_srcdir)/tests/lib/tracker \
+	--pkg folks-tracker \
+	--pkg tracker-sparql-$(TRACKER_SPARQL_MAJOR) \
+	--pkg tracker-test \
 	$(NULL)
 
 AM_CPPFLAGS = \
-	$(GLIB_CFLAGS) \
-	$(GEE_CFLAGS) \
+	$(test_cppflags) \
 	$(TRACKER_SPARQL_CFLAGS) \
-	-I$(top_srcdir) \
-	-I$(top_srcdir)/folks \
 	-I$(top_srcdir)/backends/tracker/lib \
 	-I$(top_srcdir)/backends/tracker/lib/folks \
-	-I$(top_srcdir)/tests/lib \
 	-I$(top_srcdir)/tests/lib/tracker \
-	-include $(CONFIG_HEADER) \
-	-include $(top_srcdir)/folks/warnings.h \
+	$(NULL)
+
+AM_CFLAGS = \
+	$(test_cflags) \
 	$(NULL)
 
 LDADD = \
-	$(top_builddir)/tests/lib/libfolks-test.la \
+	$(AM_LDADD) \
+	$(test_ldadd) \
 	$(top_builddir)/tests/lib/tracker/libtracker-test.la \
 	$(top_builddir)/backends/tracker/lib/libfolks-tracker.la \
-	$(top_builddir)/folks/libfolks.la \
-	$(GLIB_LIBS) \
-	$(GEE_LIBS) \
 	$(TRACKER_SPARQL_LIBS) \
 	-L$(top_srcdir)/backends/tracker/lib \
 	$(NULL)
 
 RUN_WITH_PRIVATE_BUS = $(top_srcdir)/tests/tools/with-session-bus-tracker.sh
-
-AM_VALAFLAGS += \
-	$(ERROR_VALAFLAGS) \
-	--vapidir=. \
-	--vapidir=$(top_srcdir)/folks \
-	--vapidir=$(top_srcdir)/backends/tracker/lib \
-	--vapidir=$(top_srcdir)/tests/lib \
-	--vapidir=$(top_srcdir)/tests/lib/tracker \
-	--pkg gobject-2.0 \
-	--pkg gio-2.0 \
-	--pkg gee-0.8 \
-	--pkg folks \
-	--pkg folks-test \
-	--pkg folks-tracker \
-	--pkg tracker-sparql-$(TRACKER_SPARQL_MAJOR) \
-	--pkg tracker-test \
-	-g \
-	$(NULL)
 
 # in order from least to most complex
 noinst_PROGRAMS = \

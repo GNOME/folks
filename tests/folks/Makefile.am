@@ -1,60 +1,41 @@
-AM_CFLAGS = \
-	$(ERROR_CFLAGS) \
-	$(NULL)
-
-AM_CPPFLAGS = \
-	$(GLIB_CFLAGS) \
-	$(GEE_CFLAGS) \
-	$(TP_GLIB_CFLAGS) \
-	-I$(top_srcdir) \
-	-I$(top_srcdir)/folks \
-	-I$(top_srcdir)/tests/lib \
-	-I$(top_srcdir)/tests/lib/key-file \
-	-I$(top_srcdir)/tests/lib/telepathy \
-	-I$(top_srcdir)/tests/lib/telepathy/contactlist \
-	-include $(CONFIG_HEADER) \
-	-include $(top_srcdir)/folks/warnings.h \
-	$(NULL)
-
-LDADD = \
-	$(top_builddir)/tests/lib/libfolks-test.la \
-	$(top_builddir)/tests/lib/key-file/libkf-test.la \
-	$(top_builddir)/tests/lib/telepathy/libtpf-test.la \
-	$(top_builddir)/tests/lib/telepathy/contactlist/libtp-test-contactlist.la \
-	$(top_builddir)/folks/libfolks.la \
-	$(GLIB_LIBS) \
-	$(GEE_LIBS) \
-	$(GIO_LIBS) \
-	$(TP_GLIB_LIBS) \
-	$(NULL)
+include $(top_srcdir)/tests/test.mk
 
 # --disable-warnings is necessary so that we can test deprecated API such as
 # the IndividualAggregator.individuals_changed signal.
-AM_VALAFLAGS += \
-	$(ERROR_VALAFLAGS) \
+AM_VALAFLAGS = \
+	$(test_valaflags) \
 	--disable-warnings \
-	--vapidir=$(abs_srcdir) \
-	--vapidir=$(abs_builddir) \
-	--vapidir=$(abs_top_srcdir)/folks \
-	--vapidir=$(abs_top_builddir)/folks \
-	--vapidir=$(abs_top_srcdir)/tests/lib \
-	--vapidir=$(abs_top_builddir)/tests/lib \
 	--vapidir=$(abs_top_srcdir)/tests/lib/key-file \
 	--vapidir=$(abs_top_builddir)/tests/lib/key-file \
 	--vapidir=$(abs_top_srcdir)/tests/lib/telepathy \
 	--vapidir=$(abs_top_builddir)/tests/lib/telepathy \
 	--vapidir=$(abs_top_srcdir)/tests/lib/telepathy/contactlist/ \
 	--vapidir=$(abs_top_builddir)/tests/lib/telepathy/contactlist/ \
-	--pkg gobject-2.0 \
-	--pkg gio-2.0 \
-	--pkg gee-0.8 \
-	--pkg folks \
 	--pkg folks-generics \
-	--pkg folks-test \
 	--pkg kf-test \
 	--pkg tpf-test \
 	--pkg tp-test-contactlist \
-	-g \
+	$(NULL)
+
+AM_CPPFLAGS = \
+	$(test_cppflags) \
+	$(TP_GLIB_CFLAGS) \
+	-I$(top_srcdir)/tests/lib/key-file \
+	-I$(top_srcdir)/tests/lib/telepathy \
+	-I$(top_srcdir)/tests/lib/telepathy/contactlist \
+	$(NULL)
+
+AM_CFLAGS = \
+	$(test_cflags) \
+	$(NULL)
+
+LDADD = \
+	$(AM_LDADD) \
+	$(test_ldadd) \
+	$(top_builddir)/tests/lib/key-file/libkf-test.la \
+	$(top_builddir)/tests/lib/telepathy/libtpf-test.la \
+	$(top_builddir)/tests/lib/telepathy/contactlist/libtp-test-contactlist.la \
+	$(TP_GLIB_LIBS) \
 	$(NULL)
 
 # in order from least to most complex
