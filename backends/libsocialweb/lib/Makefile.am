@@ -33,6 +33,7 @@ libfolks_libsocialweb_la_SOURCES = \
 
 libfolks_libsocialweb_la_VALAFLAGS = \
 	$(AM_VALAFLAGS) \
+	$(TARGET_VALAFLAGS) \
 	$(ERROR_VALAFLAGS) \
 	--vapidir=. \
 	--vapidir=$(top_srcdir)/folks \

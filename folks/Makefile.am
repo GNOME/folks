@@ -23,6 +23,7 @@ libfolks_internal_la_SOURCES = \
 
 libfolks_internal_la_VALAFLAGS = \
 	$(AM_VALAFLAGS) \
+	$(TARGET_VALAFLAGS) \
 	$(ERROR_VALAFLAGS) \
 	--library=folks-internal \
 	--vapidir=$(abs_srcdir) \
@@ -111,6 +112,7 @@ endif
 
 libfolks_la_VALAFLAGS = \
 	$(AM_VALAFLAGS) \
+	$(TARGET_VALAFLAGS) \
 	$(ERROR_VALAFLAGS) \
 	--gir=Folks-$(API_VERSION_DOT).gir \
 	--library=folks \

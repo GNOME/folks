@@ -1,8 +1,9 @@
 noinst_LTLIBRARIES = libsocialweb-test.la
 
 libsocialweb_test_la_VALAFLAGS = \
-	$(ERROR_VALAFLAGS) \
 	$(AM_VALAFLAGS) \
+	$(TARGET_VALAFLAGS) \
+	$(ERROR_VALAFLAGS) \
 	--library libsocialweb-test \
 	--vapi libsocialweb-test.vapi \
 	--header libsocialweb-test.h \

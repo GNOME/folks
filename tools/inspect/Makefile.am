@@ -1,4 +1,6 @@
-AM_VALAFLAGS += \
+AM_VALAFLAGS = \
+	$(TARGET_VALAFLAGS) \
+	$(ERROR_VALAFLAGS) \
 	--vapidir=$(top_srcdir)/folks \
 	--pkg=posix \
 	--pkg=readline \

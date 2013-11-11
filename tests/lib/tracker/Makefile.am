@@ -1,8 +1,9 @@
 noinst_LTLIBRARIES = libtracker-test.la
 
 libtracker_test_la_VALAFLAGS = \
-	$(ERROR_VALAFLAGS) \
 	$(AM_VALAFLAGS) \
+	$(TARGET_VALAFLAGS) \
+	$(ERROR_VALAFLAGS) \
 	--library tracker-test \
 	--vapi tracker-test.vapi \
 	--header tracker-test.h \

@@ -31,6 +31,7 @@ backend_sources = \
 
 backend_valaflags = \
 	$(AM_VALAFLAGS) \
+	$(TARGET_VALAFLAGS) \
 	$(ERROR_VALAFLAGS) \
 	--vapidir=. \
 	--vapidir=$(top_srcdir)/folks \

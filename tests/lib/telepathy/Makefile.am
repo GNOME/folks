@@ -5,8 +5,9 @@ SUBDIRS = \
 noinst_LTLIBRARIES = libtpf-test.la
 
 libtpf_test_la_VALAFLAGS = \
-	$(ERROR_VALAFLAGS) \
 	$(AM_VALAFLAGS) \
+	$(TARGET_VALAFLAGS) \
+	$(ERROR_VALAFLAGS) \
 	--library tpf-test \
 	--vapi tpf-test.vapi \
 	--header tpf-test.h \

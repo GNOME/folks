@@ -74,8 +74,9 @@ libfolks_test_la_LIBADD = \
 	$(NULL)
 
 libfolks_test_la_VALAFLAGS = \
-	$(ERROR_VALAFLAGS) \
 	$(AM_VALAFLAGS) \
+	$(TARGET_VALAFLAGS) \
+	$(ERROR_VALAFLAGS) \
 	--vapidir=$(abs_top_srcdir)/folks \
 	--vapidir=$(abs_top_builddir)/folks \
 	--pkg gobject-2.0 \

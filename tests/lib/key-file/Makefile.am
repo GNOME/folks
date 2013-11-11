@@ -1,8 +1,9 @@
 noinst_LTLIBRARIES = libkf-test.la
 
 libkf_test_la_VALAFLAGS = \
-	$(ERROR_VALAFLAGS) \
 	$(AM_VALAFLAGS) \
+	$(TARGET_VALAFLAGS) \
+	$(ERROR_VALAFLAGS) \
 	--library kf-test \
 	--vapi kf-test.vapi \
 	--header kf-test.h \

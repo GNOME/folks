@@ -147,8 +147,9 @@ libtp_zeitgeist_dummy_la_LIBADD = \
 	$(NULL)
 
 libtp_zeitgeist_la_VALAFLAGS = \
-	$(ERROR_VALAFLAGS) \
 	$(AM_VALAFLAGS) \
+	$(TARGET_VALAFLAGS) \
+	$(ERROR_VALAFLAGS) \
 	--vapidir=$(abs_top_srcdir)/folks \
 	--vapidir=$(abs_top_builddir)/folks \
 	--pkg gobject-2.0 \
@@ -164,8 +165,9 @@ libtp_zeitgeist_la_VALAFLAGS = \
 	-g \
 	$(NULL)
 libtp_zeitgeist_dummy_la_VALAFLAGS = \
-	$(ERROR_VALAFLAGS) \
 	$(AM_VALAFLAGS) \
+	$(TARGET_VALAFLAGS) \
+	$(ERROR_VALAFLAGS) \
 	--vapidir=$(abs_top_srcdir)/folks \
 	--vapidir=$(abs_top_builddir)/folks \
 	--pkg gobject-2.0 \
@@ -212,6 +214,7 @@ libfolks_telepathy_la_SOURCES = \
 
 libfolks_telepathy_la_VALAFLAGS = \
 	$(AM_VALAFLAGS) \
+	$(TARGET_VALAFLAGS) \
 	$(ERROR_VALAFLAGS) \
 	--gir=FolksTelepathy-$(API_VERSION_DOT).gir \
 	--library=folks-telepathy \

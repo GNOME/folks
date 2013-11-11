@@ -1,8 +1,9 @@
 noinst_LTLIBRARIES = libeds-test.la
 
 libeds_test_la_VALAFLAGS = \
-	$(ERROR_VALAFLAGS) \
 	$(AM_VALAFLAGS) \
+	$(TARGET_VALAFLAGS) \
+	$(ERROR_VALAFLAGS) \
 	--library eds-test \
 	--vapi eds-test.vapi \
 	--header eds-test.h \
