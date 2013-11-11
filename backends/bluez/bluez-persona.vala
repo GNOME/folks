@@ -214,11 +214,14 @@ public class Folks.Backends.BlueZ.Persona : Folks.Persona,
    * emits property change notifications as appropriate.
    *
    * @param vcard pre-parsed vCard
+   * @return ``true`` if any properties were changed, ``false`` otherwise
    *
    * @since UNRELEASED
    */
-  internal void update_from_vcard (E.VCard card)
+  internal bool update_from_vcard (E.VCard card)
     {
+      var properties_changed = false;
+
       this.freeze_notify ();
 
       /* Phone numbers. */
@@ -239,6 +242,7 @@ public class Folks.Backends.BlueZ.Persona : Folks.Persona,
           this._phone_numbers = new_phone_numbers;
           this._phone_numbers_ro = new_phone_numbers.read_only_view;
           this.notify_property ("phone-numbers");
+          properties_changed = true;
         }
 
       /* Full name. */
@@ -252,6 +256,7 @@ public class Folks.Backends.BlueZ.Persona : Folks.Persona,
         {
           this._full_name = new_full_name;
           this.notify_property ("full-name");
+          properties_changed = true;
         }
 
       /* Nickname. */
@@ -265,6 +270,7 @@ public class Folks.Backends.BlueZ.Persona : Folks.Persona,
         {
           this._nickname = new_nickname;
           this.notify_property ("nickname");
+          properties_changed = true;
         }
 
       /* URIs. */
@@ -284,6 +290,7 @@ public class Folks.Backends.BlueZ.Persona : Folks.Persona,
           this._urls = new_uris;
           this._urls_ro = new_uris.read_only_view;
           this.notify_property ("urls");
+          properties_changed = true;
         }
 
       /* Structured name. */
@@ -321,6 +328,7 @@ public class Folks.Backends.BlueZ.Persona : Folks.Persona,
         {
           this._structured_name = new_structured_name;
           this.notify_property ("structured-name");
+          properties_changed = true;
         }
 
       /* E-mail addresses. */
@@ -341,6 +349,7 @@ public class Folks.Backends.BlueZ.Persona : Folks.Persona,
           this._email_addresses = new_email_addresses;
           this._email_addresses_ro = new_email_addresses.read_only_view;
           this.notify_property ("email-addresses");
+          properties_changed = true;
         }
 
       /* Photo. */
@@ -360,9 +369,12 @@ public class Folks.Backends.BlueZ.Persona : Folks.Persona,
         {
           this._avatar = new_avatar;
           this.notify_property ("avatar");
+          properties_changed = true;
         }
 
       this.thaw_notify ();
+
+      return properties_changed;
     }
 
   /**

@@ -41,6 +41,19 @@ using org.bluez;
  * one {@link PersonaStore} per device). It will create a {@link Persona} for
  * each contact on the device.
  *
+ * Since large contact lists can take a long time to download in full (on the
+ * order of 1s per 10 contacts), contacts are downloaded in two phases:
+ * # Phase 1 downloads all non-PHOTO data. This is very fast (on the order of
+ * 1s per 400 contacts)
+ * # Phase 2 downloads all PHOTO data for those contacts. This is slow, but
+ * happens later, in the background.
+ *
+ * Subsequent download attempts happen on an exponentially increasing interval,
+ * up to a limit (once this limit is reached, updates occur on a regular
+ * interval; the linear region). Download attempts repeat indefinitely unless a
+ * certain number of consecutive attempts end in failure. See the documentation
+ * for {@link _schedule_update_contacts} for details.
+ *
  * @since 0.9.6
  */
 public class Folks.Backends.BlueZ.PersonaStore : Folks.PersonaStore
@@ -60,6 +73,24 @@ public class Folks.Backends.BlueZ.PersonaStore : Folks.PersonaStore
 
   /* Non-null iff an _update_contacts() call is in progress. */
   private Cancellable? _update_contacts_cancellable = null;
+  /* Non-0 iff an _update_contacts() call is scheduled. */
+  private uint _update_contacts_id = 0;
+  private bool _photos_up_to_date = false;
+  /* Counter of the number of _update_contacts() calls which have been
+   * scheduled. */
+  private uint _update_contacts_n = 0;
+  /* Number of consecutive failures in _update_contacts(). */
+  private uint _update_contacts_failures = 0;
+
+  /* Parameters for calculating the timeout for repeated _update_contacts()
+   * calls. See the documentation for _schedule_update_contacts() for more. */
+  private const uint _TIMEOUT_MIN = 4 /* seconds */;
+  private const uint _TIMEOUT_BASE = 2 /* seconds */;
+  private const uint _TIMEOUT_MAX = 5 * 60 /* minutes */;
+
+  /* Number of consecutive failures in _update_contacts() before we give up
+   * completely and stop trying to update from the phone. */
+  private const uint _MAX_CONSECUTIVE_FAILURES = 3;
 
   /**
    * {@inheritDoc}
@@ -241,6 +272,7 @@ public class Folks.Backends.BlueZ.PersonaStore : Folks.PersonaStore
     {
       var added_personas = new HashSet<Persona> ();
       var removed_personas = new HashSet<Persona> ();
+      var photos_up_to_date = this._photos_up_to_date;
 
       /* Start with all personas being marked as removed, and then eliminate the
        * ones which are found in the vCard. */
@@ -301,6 +333,7 @@ public class Folks.Backends.BlueZ.PersonaStore : Folks.PersonaStore
                     {
                       persona =
                           new Persona (vcard.str, card, this, is_user, iid);
+                      photos_up_to_date = false;
                     }
                   else
                     {
@@ -312,7 +345,8 @@ public class Folks.Backends.BlueZ.PersonaStore : Folks.PersonaStore
                         {
                           /* Note: This updates persona’s state, which could be
                            * left updated if we later throw an error. */
-                          persona.update_from_vcard (card);
+                          if (persona.update_from_vcard (card) == true)
+                              photos_up_to_date = false;
                         }
                     }
 
@@ -339,6 +373,8 @@ public class Folks.Backends.BlueZ.PersonaStore : Folks.PersonaStore
           this._personas.set (p.iid, p);
       foreach (var p in removed_personas)
           this._personas.unset (p.iid);
+
+      this._photos_up_to_date = photos_up_to_date;
 
       if (added_personas.is_empty == false ||
           removed_personas.is_empty == false)
@@ -416,16 +452,21 @@ public class Folks.Backends.BlueZ.PersonaStore : Folks.PersonaStore
           debug ("Device ‘%s’ (%s) is connected.", this._device.alias,
               this._device.address);
 
-          yield this._update_contacts ();
+          yield this._update_contacts (false);
         }
       else
         {
           debug ("Device ‘%s’ (%s) is disconnected.", this._device.alias,
               this._device.address);
 
-          /* Cancel any ongoing transfers. */
+          /* Cancel any ongoing or scheduled transfers. */
           if (this._update_contacts_cancellable != null)
               this._update_contacts_cancellable.cancel ();
+          if (this._update_contacts_id != 0)
+            {
+              Source.remove (this._update_contacts_id);
+              this._update_contacts_id = 0;
+            }
         }
     }
 
@@ -647,35 +688,40 @@ public class Folks.Backends.BlueZ.PersonaStore : Folks.PersonaStore
    * progress, leave it running and return immediately.
    *
    * If this throws an error, it guarantees to leave the store’s internal state
-   * unchanged.
+   * unchanged, apart from scheduling a new update operation to happen in the
+   * future. This will always happen, regardless of success or failure.
    *
+   * @param download_photos whether to download photos
    * @throws IOError if the operation was cancelled
    * @throws PersonaStoreError if the contacts couldn’t be downloaded from the
    * device
    *
    * @since 0.9.6
    */
-  private async void _update_contacts () throws IOError, PersonaStoreError
+  private async void _update_contacts (bool download_photos)
+      throws IOError, PersonaStoreError
     {
       dynamic ObjectPath? session_path = null;
       org.bluez.obex.PhonebookAccess? obex_pbap = null;
-
-      if (this._update_contacts_cancellable != null)
-        {
-          /* There’s an ongoing _update_contacts() call. Since downloading the
-           * address book takes a long time (tens of seconds), we don’t want
-           * to cancel the ongoing operation. Just return immediately. */
-          debug ("Not updating contacts due to ongoing update operation.");
-          return;
-        }
-
-      Internal.profiling_start ("updating BlueZ.PersonaStore (ID: %s) contacts",
-          this.id);
-
-      debug ("Updating contacts.");
+      var success = true;
 
       try
         {
+          if (this._update_contacts_cancellable != null)
+            {
+              /* There’s an ongoing _update_contacts() call. Since downloading
+               * the address book takes a long time (tens of seconds), we don’t
+               * want to cancel the ongoing operation. Just return
+               * immediately. */
+              debug ("Not updating contacts due to ongoing update operation.");
+              return;
+            }
+
+          Internal.profiling_start ("updating BlueZ.PersonaStore (ID: %s) " +
+              "contacts", this.id);
+
+          debug ("Updating contacts.");
+
           string path;
           HashTable<string, Variant> props;
 
@@ -717,11 +763,20 @@ public class Folks.Backends.BlueZ.PersonaStore : Folks.PersonaStore
               var phonebook_filter =
                   new HashTable<string, Variant> (null , null);
               phonebook_filter.insert ("Format", "Vcard30");
-              phonebook_filter.insert ("Fields",
-                  new Variant.strv ({
-                      "UID", "N", "FN", "NICKNAME", "TEL", "URL", "EMAIL",
-                      "PHOTO"
-                  }));
+              if (download_photos == true)
+                {
+                  /* Download only the photo (and UID, if available). */
+                  phonebook_filter.insert ("Fields",
+                      new Variant.strv ({ "UID", "PHOTO" }));
+                }
+              else
+                {
+                  /* Download everything except the photo. */
+                  phonebook_filter.insert ("Fields",
+                      new Variant.strv ({
+                          "UID", "N", "FN", "NICKNAME", "TEL", "URL", "EMAIL"
+                      }));
+                }
 
               obex_pbap.pull_all ("", phonebook_filter, out path, out props);
             }
@@ -751,6 +806,18 @@ public class Folks.Backends.BlueZ.PersonaStore : Folks.PersonaStore
                   this._display_name, e3.message);
             }
         }
+      catch (IOError e4)
+        {
+          /* Used below. */
+          success = false;
+          throw e4;
+        }
+      catch (PersonaStoreError e5)
+        {
+          /* Used below. */
+          success = false;
+          throw e5;
+        }
       finally
         {
           /* Tear down again. */
@@ -760,9 +827,108 @@ public class Folks.Backends.BlueZ.PersonaStore : Folks.PersonaStore
 
           this._update_contacts_cancellable = null;
 
+          /* Track the number of consecutive failures. */
+          if (success == true)
+              this._update_contacts_failures = 0;
+          else
+              this._update_contacts_failures++;
+
+          /* Schedule the next update. See the documentation for
+           * _schedule_update_contacts() for details. */
+          var new_download_photos =
+              success == true && this._photos_up_to_date == false;
+          this._schedule_update_contacts (new_download_photos);
+
           Internal.profiling_end ("updating BlueZ.PersonaStore (ID: %s) " +
               "contacts", this.id);
         }
+    }
+
+  /**
+   * Schedule the next call to {@link _update_contacts}.
+   *
+   * This calculates a suitable timeout value and schedules the next timeout
+   * for updating the contacts.
+   *
+   * The update scheme is as follows:
+   *  1. Download the contacts (without photos) as soon as connected to the
+   *     phone.
+   *  2. Schedule a second download attempt for a few seconds after the first
+   *     one completes. If the first one completes successfully, this second
+   *     download will include photos; otherwise, it won’t.
+   *  3. Schedule subsequent download attempts for exponentially increasing
+   *     timeouts, up to a maximum timeout (at which point the timeouts enter a
+   *     linear region and repeat indefinitely). Subsequent download attempts
+   *     will include photos only if they have not been successfully downloaded
+   *     already, or if the previous download attempt caused other property
+   *     changes in a persona (indicating that the address book has been edited
+   *     on the phone).
+   *  4. If updates fail a certain number of consecutive times, give up
+   *     completely and leave the persona store in a prepared but empty
+   *     quiescent state. Update attempts will only restart if the phone is then
+   *     disconnected and reconnected.
+   *
+   * The rationale for this design is to:
+   *  A. Allow for the user accidentally denying the first connection request on
+   *     the phone, or not noticing it and it timing out. Attempting a second
+   *     download after a timeout gives them an opportunity to fix the problem.
+   *  B. If the user explicitly denies the connection request on the phone, the
+   *     phone should remember this and automatically deny all future connection
+   *     attempts until the consecutive failure limit is reached. The user
+   *     shouldn’t be pestered to accept again.
+   *  C. Watch for changes in the user’s address book and update the persona
+   *     store accordingly. Unfortunately this has to be done by polling, since
+   *     neither PBAP not OBEX itself support push notifications.
+   *
+   * @param download_photos whether to download photos
+   *
+   * @since UNRELEASED
+   */
+  private void _schedule_update_contacts (bool download_photos)
+    {
+      /* Bail if a call is already scheduled. */
+      if (this._update_contacts_id != 0)
+          return;
+
+      /* If there have been too many consecutive failures in _update_contacts(),
+       * give up. */
+      if (this._update_contacts_failures >=
+              PersonaStore._MAX_CONSECUTIVE_FAILURES)
+          return;
+
+      /* Calculate the timeout. */
+      var timeout =
+          uint.min (PersonaStore._TIMEOUT_MIN +
+              (uint) Math.pow (PersonaStore._TIMEOUT_BASE,
+                      this._update_contacts_n),
+              PersonaStore._TIMEOUT_MAX);
+      this._update_contacts_n++;
+
+      /* Schedule the update. */
+      this._update_contacts_id = Timeout.add_seconds (timeout, () =>
+        {
+          /* Acknowledge the source has fired. */
+          this._update_contacts_id = 0;
+
+          this._update_contacts.begin (download_photos, (o, r) =>
+            {
+              try
+                {
+                  this._update_contacts.end (r);
+                }
+              catch (GLib.Error e4)
+                {
+                  /* Ignore cancellation. */
+                  if (e4 is IOError.CANCELLED)
+                      return;
+
+                  warning ("Error updating persona store from BlueZ: %s",
+                      e4.message);
+                }
+            });
+
+          return false;
+        });
     }
 
   /**
@@ -789,7 +955,7 @@ public class Folks.Backends.BlueZ.PersonaStore : Folks.PersonaStore
            * force it to be connected. */
           try
             {
-              yield this._update_contacts ();
+              yield this._update_contacts (false);
             }
           catch (IOError e1)
             {
