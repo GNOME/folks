@@ -223,8 +223,13 @@ public class Folks.Backends.BlueZ.PersonaStore : Folks.PersonaStore
    * the persona store accordingly. Contacts are stored in the file as a
    * sequence of vCards, separated by blank lines.
    *
+   * If a contact already exists in the store, its properties will be updated
+   * from the vCard; otherwise it will be added as a new contact to the store.
+   * Contacts which are in the store and not in the vCard will be removed from
+   * the store.
+   *
    * If this throws an error, it guarantees to leave the store’s internal state
-   * unchanged.
+   * unchanged, but may change the state of {@link Persona}s in the store.
    *
    * @param file the file where the contacts are stored
    * @throws IOError if there was an error communicating with D-Bus
@@ -235,6 +240,11 @@ public class Folks.Backends.BlueZ.PersonaStore : Folks.PersonaStore
   private async void _update_contacts_from_file (File file) throws IOError
     {
       var added_personas = new HashSet<Persona> ();
+      var removed_personas = new HashSet<Persona> ();
+
+      /* Start with all personas being marked as removed, and then eliminate the
+       * ones which are found in the vCard. */
+      removed_personas.add_all (this._personas.values);
 
       try
         {
@@ -243,7 +253,7 @@ public class Folks.Backends.BlueZ.PersonaStore : Folks.PersonaStore
           string? line = null;
           StringBuilder vcard = new StringBuilder ();
 
-          /* For each vCard in the file create a new Persona */
+          /* For each vCard in the file create or update a Persona. */
           while ((line = yield dis.read_line_async ()) != null)
             {
               /* Ignore blank lines between vCards. */
@@ -254,11 +264,60 @@ public class Folks.Backends.BlueZ.PersonaStore : Folks.PersonaStore
               vcard.append_c ('\n');
               if (line.strip () == "END:VCARD")
                 {
+                  var card = new E.VCard.from_string (vcard.str);
+
                   /* The first vCard is always the user themselves. */
                   var is_user = (i == 0);
 
-                  var persona = new Persona (vcard.str, this, is_user);
-                  added_personas.add (persona);
+                  /* Construct the card’s IID. */
+                  var iid_is_checksum = false;
+                  string iid;
+
+                  /* This prefers the ‘UID’ attribute from the vCard, if it’s
+                   * available. However, it is not a required attribute, so many
+                   * phones do not implement it; in those cases, fall back to a
+                   * checksum of the vCard data itself. This means that whenever
+                   * a contact’s properties change in the vCard its IID will
+                   * change and hence the persona will be removed and re-added,
+                   * but without stable UIDs this is unavoidable. */
+                  var attribute = card.get_attribute ("UID");
+                  if (attribute != null)
+                    {
+                      /* Try the UID attribute. */
+                      iid = attribute.get_value_decoded ().str;
+                    }
+                  else
+                    {
+                      /* Fallback. */
+                      iid =
+                           Checksum.compute_for_string (ChecksumType.SHA1,
+                               vcard.str);
+                      iid_is_checksum = true;
+                    }
+
+                  /* Create or update the persona. */
+                  var persona = this._personas.get (iid);
+                  if (persona == null)
+                    {
+                      persona =
+                          new Persona (vcard.str, card, this, is_user, iid);
+                    }
+                  else
+                    {
+                      /* If the IID is a checksum and we found the persona in
+                       * the store, that means their properties havent’t
+                       * changed, so as an optimisation, don’t bother updating
+                       * the Persona from the vCard in that case. */
+                      if (iid_is_checksum == false)
+                        {
+                          /* Note: This updates persona’s state, which could be
+                           * left updated if we later throw an error. */
+                          persona.update_from_vcard (card);
+                        }
+                    }
+
+                  if (removed_personas.remove (persona) == false)
+                      added_personas.add (persona);
 
                   i++;
                   vcard.erase ();
@@ -278,9 +337,14 @@ public class Folks.Backends.BlueZ.PersonaStore : Folks.PersonaStore
        * the store’s internal state. */
       foreach (var p in added_personas)
           this._personas.set (p.iid, p);
+      foreach (var p in removed_personas)
+          this._personas.unset (p.iid);
 
-      if (added_personas.is_empty == false)
-          this._emit_personas_changed (added_personas, null);
+      if (added_personas.is_empty == false ||
+          removed_personas.is_empty == false)
+        {
+          this._emit_personas_changed (added_personas, removed_personas);
+        }
     }
 
   /**
@@ -655,7 +719,8 @@ public class Folks.Backends.BlueZ.PersonaStore : Folks.PersonaStore
               phonebook_filter.insert ("Format", "Vcard30");
               phonebook_filter.insert ("Fields",
                   new Variant.strv ({
-                      "N", "FN", "NICKNAME", "TEL", "URL", "EMAIL", "PHOTO"
+                      "UID", "N", "FN", "NICKNAME", "TEL", "URL", "EMAIL",
+                      "PHOTO"
                   }));
 
               obex_pbap.pull_all ("", phonebook_filter, out path, out props);
