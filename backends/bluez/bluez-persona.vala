@@ -74,17 +74,6 @@ public class Folks.Backends.BlueZ.Persona : Folks.Persona,
    *
    * @since 0.9.6
    */
-  public new string display_id
-    {
-      get { return this._full_name; }
-      construct { this._full_name = value; }
-    }
-
-  /**
-   * {@inheritDoc}
-   *
-   * @since 0.9.6
-   */
   [CCode (notify = false)]
   public Set<UrlFieldDetails> urls
     {
@@ -191,7 +180,10 @@ public class Folks.Backends.BlueZ.Persona : Folks.Persona,
       var iid = Checksum.compute_for_string (ChecksumType.SHA1, vcard);
       var uid = Folks.Persona.build_uid ("bluez", store.id, iid);
 
-      Object (iid: iid,
+      /* Have to use the IID as the display ID, since PBAP vCards provide no
+       * other useful human-readable and unique IDs. */
+      Object (display_id: iid,
+              iid: iid,
               uid: uid,
               store: store,
               is_user: is_user);
@@ -201,8 +193,7 @@ public class Folks.Backends.BlueZ.Persona : Folks.Persona,
 
   construct
     {
-      debug ("Adding BlueZ Persona '%s' (IID '%s', group '%s')", this.uid,
-          this.iid, this.display_id);
+      debug ("Adding BlueZ Persona '%s' (IID '%s')", this.uid, this.iid);
 
       this._phone_numbers = new HashSet<PhoneFieldDetails> ();
       this._phone_numbers_ro = this._phone_numbers.read_only_view;

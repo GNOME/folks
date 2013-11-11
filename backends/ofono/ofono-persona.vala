@@ -133,7 +133,9 @@ public class Folks.Backends.Ofono.Persona : Folks.Persona,
       var iid = Checksum.compute_for_string (ChecksumType.SHA1, vcard);
       var uid = Folks.Persona.build_uid ("ofono", store.id, iid);
 
-      Object (display_id: uid,
+      /* Use the IID as the display ID since no other suitable identifier is
+       * available which we can guarantee is unique within the store. */
+      Object (display_id: iid,
               iid: iid,
               uid: uid,
               store: store,

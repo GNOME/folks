@@ -525,16 +525,9 @@ public class Trf.Persona : Folks.Persona,
       string uid = Folks.Persona.build_uid (BACKEND_NAME, store.id, tracker_id);
       string iid = Trf.Persona.build_iid (store.id, tracker_id);
       bool is_user = false;
-      string fullname = "";
 
       if (cursor != null)
         {
-          fullname = cursor.get_string (Trf.Fields.FULL_NAME).dup ();
-          if (fullname == null)
-            {
-              fullname = "";
-            }
-
           var contact_urn = cursor.get_string (Trf.Fields.CONTACT_URN);
           if (contact_urn == Trf.OntologyDefs.DEFAULT_CONTACT_URN)
             {
@@ -542,7 +535,9 @@ public class Trf.Persona : Folks.Persona,
             }
         }
 
-      Object (display_id: fullname,
+      /* Use the IID as the display ID since no other suitable identifier is
+       * available which we can guarantee is unique within the store. */
+      Object (display_id: iid,
               uid: uid,
               iid: iid,
               store: store,

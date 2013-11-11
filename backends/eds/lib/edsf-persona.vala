@@ -956,7 +956,9 @@ public class Edsf.Persona : Folks.Persona,
               "full_name");
       var full_name = (!) (_full_name ?? "");
 
-      Object (display_id: full_name,
+      /* Use the IID as the display ID since no other suitable identifier is
+       * available which we can guarantee is unique within the store. */
+      Object (display_id: iid,
               uid: uid,
               iid: iid,
               store: store,

@@ -133,7 +133,9 @@ public abstract class Folks.Persona : Object
    * with.
    *
    * This is not guaranteed to be unique outside of the Persona's
-   * {@link PersonaStore}.
+   * {@link PersonaStore}, but is guaranteed to be unique within it. If a
+   * suitable human-readable ID isn’t available from the backend, the display ID
+   * will be equal to the {@link Persona.iid}.
    *
    * @since 0.1.13
    */
