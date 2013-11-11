@@ -951,10 +951,6 @@ public class Edsf.Persona : Folks.Persona,
       var uid = Folks.Persona.build_uid (BACKEND_NAME, store.id, contact_id);
       var iid = Edsf.Persona.build_iid (store.id, contact_id);
       var is_user = BookClient.is_self (contact);
-      var _full_name =
-          Edsf.Persona._get_property_from_contact<string> (contact,
-              "full_name");
-      var full_name = (!) (_full_name ?? "");
 
       /* Use the IID as the display ID since no other suitable identifier is
        * available which we can guarantee is unique within the store. */
