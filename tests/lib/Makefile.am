@@ -5,6 +5,12 @@ SUBDIRS = \
 	key-file \
 	$(NULL)
 
+if ENABLE_BLUEZ
+if HAVE_BLUEZ_TESTS
+SUBDIRS += bluez
+endif
+endif
+
 if ENABLE_TELEPATHY
 # Build the contactlist first because autotools fails to recognize the
 # dependencies implicitly. There may be a better way to fix this, but then I'd
@@ -30,6 +36,7 @@ endif
 DIST_SUBDIRS = \
 	dummy \
 	key-file \
+	bluez \
 	telepathy \
 	eds \
 	libsocialweb \

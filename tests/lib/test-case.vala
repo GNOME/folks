@@ -79,6 +79,9 @@ public abstract class Folks.TestCase : Object
           if (Folks.BuildConf.HAVE_TRACKER)
             locations += Folks.BuildConf.ABS_TOP_BUILDDIR + "/backends/tracker/.libs/tracker.so";
 
+          if (Folks.BuildConf.HAVE_BLUEZ)
+            locations += Folks.BuildConf.ABS_TOP_BUILDDIR + "/backends/bluez/.libs/bluez.so";
+
           Environment.set_variable ("FOLKS_BACKEND_PATH",
               string.joinv (":", locations), true);
         }

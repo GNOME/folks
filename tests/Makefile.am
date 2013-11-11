@@ -8,6 +8,12 @@ SUBDIRS = \
 	tools \
 	$(NULL)
 
+if ENABLE_BLUEZ
+if HAVE_BLUEZ_TESTS
+SUBDIRS += bluez
+endif
+endif
+
 if ENABLE_TELEPATHY
 SUBDIRS += folks telepathy
 endif
@@ -34,6 +40,7 @@ DIST_SUBDIRS = \
 	dummy \
 	eds \
 	key-file \
+	bluez \
 	telepathy \
 	libsocialweb \
 	tracker \

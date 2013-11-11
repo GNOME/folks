@@ -1,0 +1,127 @@
+/*
+ * Copyright © 2013 Collabora Ltd.
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
+ *
+ * Author:
+ *      Philip Withnall <philip.withnall@collabora.co.uk>
+ */
+
+/**
+ * A test case for the BlueZ backend, whose private D-Bus session contains the
+ * necessary python-dbusmock instance to mock up BlueZ.
+ *
+ * @since UNRELEASED
+ */
+public class BluezTest.TestCase : Folks.TestCase
+{
+  /**
+   * A BlueZ backend, normally non-null between set_up() and tear_down().
+   *
+   * If this is non-null, the subclass is expected to have called
+   * its set_up() method at some point before tear_down() is reached.
+   * This usually happens in create_backend().
+   */
+  public BluezTest.Backend? bluez_backend = null;
+
+  public TestCase (string name)
+    {
+      base (name);
+
+      this.bluez_backend = new BluezTest.Backend ();
+
+      Environment.set_variable ("FOLKS_BACKENDS_ALLOWED", "bluez", true);
+      Environment.set_variable ("FOLKS_PRIMARY_STORE", "bluez", true);
+      Environment.set_variable ("FOLKS_BLUEZ_TIMEOUT_DIVISOR", "100", true);
+    }
+
+  /**
+   * {@inheritDoc}
+   *
+   * @since UNRELEASED
+   */
+  public override void set_up ()
+    {
+      base.set_up ();
+      this.create_backend ();
+      this.configure_primary_store ();
+    }
+
+  /**
+   * {@inheritDoc}
+   *
+   * @since UNRELEASED
+   */
+  public override void private_bus_up ()
+    {
+      /* Set up service files for the python-dbusmock services. */
+      this.create_dbusmock_service (BusType.SYSTEM, "org.bluez", "bluez5");
+      this.create_dbusmock_service (BusType.SESSION, "org.bluez.obex",
+          "bluez5-obex");
+
+      base.private_bus_up ();
+    }
+
+  /**
+   * Virtual method to create and set up the BlueZ backend.
+   *
+   * Called from set_up(); may be overridden to not create the backend,
+   * or to create it but not set it up.
+   *
+   * Subclasses may chain up, but are not required to so.
+   *
+   * @since UNRELEASED
+   */
+  public virtual void create_backend ()
+    {
+      this.bluez_backend = new BluezTest.Backend ();
+      ((!) this.bluez_backend).set_up ();
+    }
+
+  /**
+   * Virtual method to configure ``FOLKS_PRIMARY_STORE`` to point to
+   * our //bluez_backend//.
+   *
+   * Subclasses may chain up, but are not required to so.
+   *
+   * @since UNRELEASED
+   */
+  public virtual void configure_primary_store ()
+    {
+      /* By default, configure BlueZ as the primary store. */
+      assert (this.bluez_backend != null);
+      var config_val =
+          "bluez:" + ((!) this.bluez_backend).primary_device_address;
+      Environment.set_variable ("FOLKS_PRIMARY_STORE", config_val, true);
+    }
+
+  /**
+   * {@inheritDoc}
+   *
+   * @since UNRELEASED
+   */
+  public override void tear_down ()
+    {
+      if (this.bluez_backend != null)
+        {
+          ((!) this.bluez_backend).tear_down ();
+          this.bluez_backend = null;
+        }
+
+      Environment.unset_variable ("FOLKS_PRIMARY_STORE");
+
+      base.tear_down ();
+    }
+}
