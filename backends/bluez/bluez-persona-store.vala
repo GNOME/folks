@@ -816,7 +816,7 @@ public class Folks.Backends.BlueZ.PersonaStore : Folks.PersonaStore
         {
           /* Tear down again. */
           if (session_path != null)
-              yield this._remove_obex_session (session_path);
+              this._remove_obex_session.begin (session_path);
           obex_pbap = null;
 
           this._update_contacts_cancellable = null;
