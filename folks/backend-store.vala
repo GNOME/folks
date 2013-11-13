@@ -158,6 +158,16 @@ public class Folks.BackendStore : Object {
 
   ~BackendStore ()
     {
+      /* Unprepare all existing backends. */
+      var iter = this._prepared_backends.map_iterator ();
+      while (iter.next () == true)
+        {
+          var backend = iter.get_value ();
+          backend.unprepare.begin ();
+        }
+
+      this._prepared_backends.clear ();
+
       /* Finalize all the loaded modules that have finalize functions */
       foreach (var module in this._modules.values)
         {
@@ -168,6 +178,8 @@ public class Folks.BackendStore : Object {
               module_finalize (this);
             }
         }
+
+      this._modules.clear ();
 
       /* Disconnect from the debug handler */
       this._debug.print_status.disconnect (this._debug_print_status);
