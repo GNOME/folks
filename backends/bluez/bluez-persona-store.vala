@@ -274,6 +274,8 @@ public class Folks.Backends.BlueZ.PersonaStore : Folks.PersonaStore
       var removed_personas = new HashSet<Persona> ();
       var photos_up_to_date = this._photos_up_to_date;
 
+      debug ("Parsing contacts from file ‘%s’.", file.get_path ());
+
       /* Start with all personas being marked as removed, and then eliminate the
        * ones which are found in the vCard. */
       removed_personas.add_all (this._personas.values);
@@ -369,6 +371,8 @@ public class Folks.Backends.BlueZ.PersonaStore : Folks.PersonaStore
 
       /* Now that all the I/O is done and no more errors can be thrown, update
        * the store’s internal state. */
+      debug ("Finished parsing personas; now updating store state.");
+
       foreach (var p in added_personas)
           this._personas.set (p.iid, p);
       foreach (var p in removed_personas)
