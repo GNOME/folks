@@ -460,13 +460,7 @@ public class Folks.Backends.BlueZ.PersonaStore : Folks.PersonaStore
               this._device.address);
 
           /* Cancel any ongoing or scheduled transfers. */
-          if (this._update_contacts_cancellable != null)
-              this._update_contacts_cancellable.cancel ();
-          if (this._update_contacts_id != 0)
-            {
-              Source.remove (this._update_contacts_id);
-              this._update_contacts_id = 0;
-            }
+          this.cancel_updates ();
         }
     }
 
@@ -929,6 +923,27 @@ public class Folks.Backends.BlueZ.PersonaStore : Folks.PersonaStore
 
           return false;
         });
+    }
+
+  /**
+   * Cancel ongoing and scheduled updates from the device.
+   *
+   * This doesn't remove the store, but does cancel all ongoing updates and
+   * future scheduled updates, in preparation for removing the store. This is
+   * necessary to avoid the store maintaining a reference to itself (through the
+   * closure for the next scheduled update) and thus never being finalised.
+   *
+   * @since UNRELEASED
+   */
+  internal void cancel_updates ()
+    {
+      if (this._update_contacts_cancellable != null)
+          this._update_contacts_cancellable.cancel ();
+      if (this._update_contacts_id != 0)
+        {
+          Source.remove (this._update_contacts_id);
+          this._update_contacts_id = 0;
+        }
     }
 
   /**

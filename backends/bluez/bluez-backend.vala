@@ -388,6 +388,10 @@ public class Folks.Backends.BlueZ.Backend : Folks.Backend
     {
       store.removed.disconnect (this._persona_store_removed_cb);
 
+      /* Cancel all ongoing activity in the store and, critically, eliminate
+       * the reflexive reference it holds. */
+      store.cancel_updates ();
+
       this.persona_store_removed (store);
 
       this._persona_stores.unset (store.id);
