@@ -628,11 +628,24 @@ public class Folks.Backends.BlueZ.PersonaStore : Folks.PersonaStore
           /* Process the results: either success or error. */
           if (transfer_status == "complete")
             {
-              string filename = transfer.filename;
-              var file = File.new_for_path (filename);
+              string? filename = transfer.filename;
+              if (filename == null)
+                {
+                  /* The Filename property is optional, so bail if it’s not
+                   * available for whatever reason. */
+                  throw new PersonaStoreError.STORE_OFFLINE (
+                      /* Translators: the first parameter is the name of the
+                       * failed transfer, and the second is a Bluetooth device
+                       * alias. */
+                      _("Error during transfer of the address book ‘%s’ from " +
+                        "Bluetooth device ‘%s’."),
+                      transfer.name, this._display_name);
+                }
+
+              var file = File.new_for_path ((!) filename);
 
               debug ("vCard’s filename for device ‘%s’ (%s): %s",
-                  this._display_name, this.id, filename);
+                  this._display_name, this.id, (!) filename);
 
               yield this._update_contacts_from_file (file);
             }
