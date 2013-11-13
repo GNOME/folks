@@ -933,8 +933,17 @@ public class Folks.Backends.BlueZ.PersonaStore : Folks.PersonaStore
                   if (e4 is IOError.CANCELLED)
                       return;
 
-                  warning ("Error updating persona store from BlueZ: %s",
-                      e4.message);
+                  /* Don't warn about offline stores. */
+                  if (e4 is PersonaStoreError.STORE_OFFLINE)
+                    {
+                      debug ("Not updating persona store from BlueZ due to " +
+                          "store being offline: %s", e4.message);
+                    }
+                  else
+                    {
+                      warning ("Error updating persona store from BlueZ: %s",
+                          e4.message);
+                    }
                 }
             });
 
