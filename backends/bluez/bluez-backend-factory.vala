@@ -26,48 +26,25 @@
  */
 
 using Folks;
-using Folks.Backends.BlueZ;
-
-private BackendFactory _backend_factory = null;
 
 /**
  * The backend module entry point.
  *
- * @param backend_store the {@link BackendStore} to use in this factory.
- *
+ * @backend_store a store to add the BlueZ backends to
  * @since 0.9.6
  */
 public void module_init (BackendStore backend_store)
 {
-  _backend_factory = new BackendFactory (backend_store);
+  backend_store.add_backend (new Folks.Backends.BlueZ.Backend ());
 }
 
 /**
  * The backend module exit point.
  *
- * @param backend_store the {@link BackendStore} to use in this factory.
- *
+ * @param backend_store the store to remove the backends from
  * @since 0.9.6
  */
 public void module_finalize (BackendStore backend_store)
 {
-  _backend_factory = null;
-}
-
-/**
- * A backend factory to create a single {@link Backend}.
- *
- * @since 0.9.6
- */
-public class Folks.Backends.BlueZ.BackendFactory : Object
-{
-  /**
-   * {@inheritDoc}
-   *
-   * @since 0.9.6
-   */
-  public BackendFactory (BackendStore backend_store)
-    {
-      backend_store.add_backend (new Backend ());
-    }
+  /* FIXME: No way to remove backends from the store. */
 }
