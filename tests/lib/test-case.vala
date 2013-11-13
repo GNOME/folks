@@ -167,6 +167,19 @@ public abstract class Folks.TestCase : Object
         error ("unable to create '%s': %s",
             runtime, GLib.strerror (GLib.errno));
 
+      /* Directories to contain D-Bus service files. */
+      var dbus_system = "%s/dbus-1/system-services".printf (transient);
+
+      if (GLib.DirUtils.create_with_parents (dbus_system, 0700) != 0)
+        error ("unable to create '%s': %s",
+            local, GLib.strerror (GLib.errno));
+
+      var dbus_session = "%s/dbus-1/services".printf (transient);
+
+      if (GLib.DirUtils.create_with_parents (dbus_session, 0700) != 0)
+        error ("unable to create '%s': %s",
+            local, GLib.strerror (GLib.errno));
+
       /* Unset some things we don't want to inherit. In particular,
        * Tracker might try to index XDG_*_DIR, which we don't want. */
       Environment.unset_variable ("XDG_DESKTOP_DIR");
@@ -192,6 +205,16 @@ public abstract class Folks.TestCase : Object
   public Folks.TestDBus? test_dbus = null;
 
   /**
+   * A private D-Bus system bus, normally created by private_bus_up() from the
+   * constructor.
+   *
+   * As with {@link TestCase.test_dbus} this is per-process.
+   *
+   * @since UNRELEASED
+   */
+  public Folks.TestDBus? test_system_dbus = null;
+
+  /**
    * If true, libraries involved in this test use dbus-1 (or dbus-glib-1)
    * so we need to turn off its exit-on-disconnect feature.
    *
@@ -214,15 +237,34 @@ public abstract class Folks.TestCase : Object
    */
   public virtual void private_bus_up ()
     {
-      Environment.unset_variable ("DBUS_SESSION_BUS_ADDRESS");
-      Environment.unset_variable ("DBUS_SESSION_BUS_PID");
+      /* Clear out existing bus variables. */
+      Folks.TestDBus.unset ();
 
+      /* Set up the system bus first, then shimmy its address sideways. */
+      this.test_system_dbus = new Folks.TestDBus (Folks.TestDBusFlags.SYSTEM_BUS);
+      var test_system_dbus = (!) this.test_system_dbus;
+      test_system_dbus.add_service_dir (
+          this.transient_dir + "/dbus-1/system-services");
+
+      test_system_dbus.up ();
+
+      var system_bus_address = test_system_dbus.get_bus_address ();
+
+      /* Now the session bus. */
       this.test_dbus = new Folks.TestDBus (Folks.TestDBusFlags.NONE);
       var test_dbus = (!) this.test_dbus;
+      test_dbus.add_service_dir (this.transient_dir + "/dbus-1/services");
 
       test_dbus.up ();
 
-      assert (Environment.get_variable ("DBUS_SESSION_BUS_ADDRESS") != null);
+      var session_bus_address = test_dbus.get_bus_address ();
+
+      /* Set the bus addresses. We have to do this manually to prevent GTestDBus
+       * from unsetting the first bus’ address when starting the second. */
+      Environment.set_variable ("DBUS_SYSTEM_BUS_ADDRESS", system_bus_address,
+          true);
+      Environment.set_variable ("DBUS_SESSION_BUS_ADDRESS", session_bus_address,
+          true);
 
       /* Tell subprocesses that we're running in a private D-Bus
        * session, so certain operations that would otherwise be dangerous
@@ -288,6 +330,12 @@ public abstract class Folks.TestCase : Object
         {
           ((!) this.test_dbus).down ();
           this.test_dbus = null;
+        }
+
+      if (this.test_system_dbus != null)
+        {
+          ((!) this.test_system_dbus).down ();
+          this.test_system_dbus = null;
         }
 
       if (this._transient_dir != null)
