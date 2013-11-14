@@ -22,6 +22,7 @@
 
 using Folks;
 using GLib;
+using Gee;
 
 public class Folks.TestUtils
 {
@@ -257,6 +258,165 @@ public class Folks.TestUtils
           aggregator.disconnect (signal_id);
           assert (aggregator.is_quiescent == true);
         }
+    }
+
+  /**
+   * Prepare an aggregator and wait for the given personas to be added to it.
+   *
+   * This will prepare the given {@link IndividualAggregator} then yield until
+   * all of the personas listed in ``expected_persona_names`` are added to it.
+   * Each of the personas must be added in its own {@link Individual} (i.e. no
+   * personas may be linked) and only additions can occur — no personas may be
+   * removed. Accordingly, this function is intended for testing the behaviour
+   * of a single {@link PersonaStore} without linking.
+   *
+   * No timeout is used, so if the aggregator never adds all the expected
+   * personas, this function will never return; callers must add their own
+   * timeout to avoid this if necessary. On return from this function, all of
+   * the given names are guaranteed to exist in the aggregator.
+   *
+   * The names in ``expected_persona_names`` must be those appearing in the
+   * {@link NameDetails.full_name} property of the personas (and hence of the
+   * individuals).
+   *
+   * When this returns, the aggregator is //not// guaranteed to be quiescent.
+   *
+   * @param aggregator the aggregator to prepare
+   * @param expected_persona_names set of full names of the expected personas
+   * @throws GLib.Error if preparing the aggregator failed
+   *
+   * @since UNRELEASED
+   */
+  public static async void aggregator_prepare_and_wait_for_individuals (
+      IndividualAggregator aggregator, string[] expected_persona_names)
+          throws GLib.Error
+    {
+      var expected = new HashSet<string> ();
+      var has_yielded = false;
+
+      foreach (var name in expected_persona_names)
+          expected.add (name);
+
+      /* Set up the aggregator */
+      var signal_id = aggregator.individuals_changed_detailed.connect (
+          (changes) =>
+        {
+          var added = changes.get_values ();
+          var removed = changes.get_keys ();
+
+          foreach (Individual i in added)
+            {
+              assert (i != null);
+              assert (i.personas.size == 1);
+
+              var name_details = i as NameDetails;
+              assert (name_details != null);
+              expected.remove (name_details.full_name);
+            }
+
+          assert (removed.size == 1);
+
+          foreach (var i in removed)
+              assert (i == null);
+
+          /* Finished? */
+          if (expected.size == 0 && has_yielded == true)
+              TestUtils.aggregator_prepare_and_wait_for_individuals.callback ();
+        });
+
+      try
+        {
+          yield aggregator.prepare ();
+
+          if (expected.size != 0)
+            {
+              has_yielded = true;
+              yield;
+            }
+        }
+      finally
+        {
+          aggregator.disconnect (signal_id);
+          assert (expected.size == 0);
+        }
+    }
+
+  /**
+   * Synchronously prepare an aggregator and wait for the given personas to be
+   * added to it.
+   *
+   * This is a wrapper around
+   * {@link TestUtils.aggregator_prepare_and_wait_for_individuals} and
+   * {@link TestUtils.loop_run_with_timeout} which creates a main loop and runs
+   * it until the given ``expected_persona_names`` are added to the
+   * ``aggregator``. If an error occurs, an error message will be printed and
+   * the program will abort.
+   *
+   * If ``timeout`` is specified, it will be passed to
+   * {@link TestUtils.loop_run_with_timeout} as the test run timeout.
+   *
+   * See the documentation for
+   * {@link TestUtils.aggregator_prepare_and_wait_for_individuals} for more
+   * information.
+   *
+   * @param aggregator the aggregator to prepare
+   * @param expected_persona_names set of full names of the expected personas
+   *
+   * @since UNRELEASED
+   */
+  public static void aggregator_prepare_and_wait_for_individuals_sync_with_timeout (
+      IndividualAggregator aggregator, string[] expected_persona_names,
+      int timeout = 5)
+    {
+      var main_loop = new GLib.MainLoop (null, false);
+
+      TestUtils.aggregator_prepare_and_wait_for_individuals.begin (aggregator,
+          expected_persona_names, (o, r) =>
+        {
+          try
+            {
+              TestUtils.aggregator_prepare_and_wait_for_individuals.end (r);
+            }
+          catch (GLib.Error e1)
+            {
+              error ("Error preparing aggregator: %s", e1.message);
+            }
+
+          main_loop.quit ();
+        });
+
+      TestUtils.loop_run_with_timeout (main_loop, timeout);
+    }
+
+  /**
+   * Get a named individual from an {@link IndividualAggregator}.
+   *
+   * This returns the {@link Individual} with {@link NameDetails.full_name}
+   * equal to ``full_name`` from the given ``aggregator``.
+   *
+   * If multiple individuals exist with the given name, the first one found is
+   * returned. It is expected that tests will be constructed so that full names
+   * are unique, however.
+   *
+   * If no individual is found with the given name, an assertion fails and the
+   * program aborts.
+   *
+   * @param aggregator aggregator to retrieve the value from
+   * @param full_name name of the individual to retrieve
+   * @return individual with the given name
+   *
+   * @since UNRELEASED
+   */
+  public static Individual get_individual_by_name (
+      IndividualAggregator aggregator, string full_name)
+    {
+      foreach (var v in aggregator.individuals.values)
+        {
+          if (v.full_name == full_name)
+              return v;
+        }
+
+      assert_not_reached ();
     }
 
   /**
