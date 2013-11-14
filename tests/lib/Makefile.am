@@ -46,6 +46,7 @@ libfolks_test_la_SOURCES = \
 	test-case.vala \
 	test-case-helper.c \
 	test-utils.vala \
+	org-freedesktop-dbus-mock.vala \
 	$(NULL)
 
 libfolks_test_la_CFLAGS = \

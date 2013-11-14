@@ -195,6 +195,87 @@ public abstract class Folks.TestCase : Object
     }
 
   /**
+   * Create a D-Bus service file for a python-dbusmock service.
+   *
+   * Create a service file to allow auto-launching a python-dbusmock service
+   * which uses the given ``dbusmock_template_name`` to mock up the service
+   * running at ``bus_name`` on the ``bus_type`` bus (which must either be
+   * {@link BusType.SYSTEM} or {@link BusType.SESSION}.
+   *
+   * This requires Python 3 to be installed and available to run as ``python3``
+   * somewhere in the system ``PATH``.
+   *
+   * It will create a temporary log file which python-dbusmock will log to if
+   * launched. The name of the log file will be printed to the test logs.
+   *
+   * The D-Bus service file itself will be created in a subdirectory of
+   * {@link TestCase.transient_dir}, which the {@link TestDBus} instance has
+   * already been configured to use as a service directory. This requires
+   * {@link TestCase.create_transient_dir} to have been called already.
+   *
+   * @param bus_type the bus the service should be auto-launchable from
+   * @param bus_name the well-known bus name used by the service
+   * @param dbusmock_template_name name of the python-dbusmock template to use
+   *
+   * @since UNRELEASED
+   */
+  public void create_dbusmock_service (BusType bus_type, string bus_name,
+      string dbusmock_template_name)
+    {
+      string service_dir;
+      switch (bus_type)
+        {
+          case BusType.SYSTEM:
+            service_dir = "system-services";
+            break;
+          case BusType.SESSION:
+            service_dir = "services";
+            break;
+          case BusType.STARTER:
+          case BusType.NONE:
+          default:
+            assert_not_reached ();
+        }
+
+      /* Find where the Python 3 executable is (service files require absolute
+       * paths). */
+      var python = Environment.find_program_in_path ("python3");
+      if (python == null)
+        {
+          error ("Couldn’t find `python3` in $PATH; can’t run " +
+              "python-dbusmock.");
+        }
+
+      /* Create a temporary log file for dbusmock to use. This doesn’t need to
+       * use mkstemp() because it’s already in a unique temporary directory. */
+      var log_file_name =
+          Path.build_filename (this.transient_dir,
+              "dbusmock-%s-%s-%s.log".printf (service_dir, bus_name,
+                  dbusmock_template_name));
+      Test.message ("python-dbusmock service ‘%s’ (template ‘%s’) will log " +
+          "to ‘%s’.", bus_name, dbusmock_template_name, log_file_name);
+
+      /* Write out the service file for the dbusmock service. */
+      var service_file_name =
+          Path.build_filename (this.transient_dir, "dbus-1", service_dir,
+              dbusmock_template_name + ".service");
+      var service_file = ("[D-BUS Service]\n" +
+          "Name=%s\n" +
+          "Exec=%s -m dbusmock --template %s -l %s\n").printf (bus_name, python,
+              dbusmock_template_name, log_file_name);
+
+      try
+        {
+          FileUtils.set_contents (service_file_name, service_file);
+        }
+      catch (FileError e2)
+        {
+          error ("Error creating D-Bus service file ‘%s’: %s",
+              service_file_name, e2.message);
+        }
+    }
+
+  /**
    * A private D-Bus session, normally created by private_bus_up()
    * from the constructor.
    *
@@ -234,6 +315,9 @@ public abstract class Folks.TestCase : Object
    *
    * This is per-process, not per-test, for the reasons mentioned for
    * //test_dbus//.
+   *
+   * By calling {@link TestCase.create_dbusmock_service} in an overridden
+   * version of this method, python-dbusmock services may be set up.
    */
   public virtual void private_bus_up ()
     {
