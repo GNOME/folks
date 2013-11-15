@@ -286,6 +286,7 @@ public class Folks.Backends.BlueZ.PersonaStore : Folks.PersonaStore
           uint i = 0;
           string? line = null;
           StringBuilder vcard = new StringBuilder ();
+          var vcard_without_photo = new StringBuilder ();
 
           /* For each vCard in the file create or update a Persona. */
           while ((line = yield dis.read_line_async ()) != null)
@@ -296,6 +297,13 @@ public class Folks.Backends.BlueZ.PersonaStore : Folks.PersonaStore
 
               vcard.append (line);
               vcard.append_c ('\n');
+
+              if (!line.has_prefix ("PHOTO:") && !line.has_prefix ("PHOTO;"))
+                {
+                  vcard_without_photo.append (line);
+                  vcard_without_photo.append_c ('\n');
+                }
+
               if (line.strip () == "END:VCARD")
                 {
                   var card = new E.VCard.from_string (vcard.str);
@@ -313,7 +321,12 @@ public class Folks.Backends.BlueZ.PersonaStore : Folks.PersonaStore
                    * checksum of the vCard data itself. This means that whenever
                    * a contact’s properties change in the vCard its IID will
                    * change and hence the persona will be removed and re-added,
-                   * but without stable UIDs this is unavoidable. */
+                   * but without stable UIDs this is unavoidable.
+                   *
+                   * Note that the checksum is always calculated from the vCard
+                   * data *without* the photo. This hopefully ensures that IIDs
+                   * from queries which do and do not include photos will
+                   * match. */
                   var attribute = card.get_attribute ("UID");
                   if (attribute != null)
                     {
@@ -325,7 +338,7 @@ public class Folks.Backends.BlueZ.PersonaStore : Folks.PersonaStore
                       /* Fallback. */
                       iid =
                            Checksum.compute_for_string (ChecksumType.SHA1,
-                               vcard.str);
+                               vcard_without_photo.str);
                       iid_is_checksum = true;
                     }
 
@@ -340,10 +353,11 @@ public class Folks.Backends.BlueZ.PersonaStore : Folks.PersonaStore
                   else
                     {
                       /* If the IID is a checksum and we found the persona in
-                       * the store, that means their properties havent’t
+                       * the store, that means their properties haven’t
                        * changed, so as an optimisation, don’t bother updating
                        * the Persona from the vCard in that case. */
-                      if (iid_is_checksum == false)
+                      if (iid_is_checksum == false ||
+                          vcard_without_photo.len != vcard.len)
                         {
                           /* Note: This updates persona’s state, which could be
                            * left updated if we later throw an error. */
@@ -357,6 +371,7 @@ public class Folks.Backends.BlueZ.PersonaStore : Folks.PersonaStore
 
                   i++;
                   vcard.erase ();
+                  vcard_without_photo.erase ();
                 }
             }
         }
@@ -371,7 +386,9 @@ public class Folks.Backends.BlueZ.PersonaStore : Folks.PersonaStore
 
       /* Now that all the I/O is done and no more errors can be thrown, update
        * the store’s internal state. */
-      debug ("Finished parsing personas; now updating store state.");
+      debug ("Finished parsing personas; now updating store state with %u " +
+          "added personas and %u removed personas.", added_personas.size,
+          removed_personas.size);
 
       foreach (var p in added_personas)
           this._personas.set (p.iid, p);
@@ -776,9 +793,12 @@ public class Folks.Backends.BlueZ.PersonaStore : Folks.PersonaStore
               phonebook_filter.insert ("Format", "Vcard30");
               if (download_photos == true)
                 {
-                  /* Download only the photo (and UID, if available). */
+                  /* Download everything including the photo. */
                   phonebook_filter.insert ("Fields",
-                      new Variant.strv ({ "UID", "PHOTO" }));
+                      new Variant.strv ({
+                          "UID", "N", "FN", "NICKNAME", "TEL", "URL", "EMAIL",
+                          "PHOTO"
+                      }));
                 }
               else
                 {
