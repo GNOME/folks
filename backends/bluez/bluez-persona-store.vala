@@ -935,7 +935,8 @@ public class Folks.Backends.BlueZ.PersonaStore : Folks.PersonaStore
               PersonaStore._MAX_CONSECUTIVE_FAILURES)
           return;
 
-      /* Calculate the timeout. */
+      /* Calculate the timeout (in milliseconds). If no divisor is applied, the
+       * timeout should always be a whole number of seconds. */
       var timeout =
           uint.min (PersonaStore._TIMEOUT_MIN +
               (uint) Math.pow (PersonaStore._TIMEOUT_BASE,
@@ -943,9 +944,23 @@ public class Folks.Backends.BlueZ.PersonaStore : Folks.PersonaStore
               PersonaStore._TIMEOUT_MAX);
       this._update_contacts_n++;
 
-      /* Schedule the update. */
-      this._update_contacts_id = Timeout.add_seconds (timeout, () =>
+      timeout *= 1000;  /* convert from seconds to milliseconds */
+
+      /* Allow the timeout to be tweaked for testing. */
+      var divisor_str =
+          Environment.get_variable ("FOLKS_BLUEZ_TIMEOUT_DIVISOR");
+      if (divisor_str != null)
         {
+          uint64 divisor;
+          if (uint64.try_parse (divisor_str, out divisor) == true)
+              timeout /= (uint) divisor;
+        }
+
+      /* Schedule the update. */
+      SourceFunc fn = () =>
+        {
+          debug ("Scheduled update firing for BlueZ store ‘%s’.", this.id);
+
           /* Acknowledge the source has fired. */
           this._update_contacts_id = 0;
 
@@ -976,7 +991,18 @@ public class Folks.Backends.BlueZ.PersonaStore : Folks.PersonaStore
             });
 
           return false;
-        });
+        };
+
+      if (timeout % 1000 == 0)
+        {
+          this._update_contacts_id =
+              Timeout.add_seconds (timeout / 1000, (owned) fn);
+        }
+      else
+        {
+          this._update_contacts_id =
+              Timeout.add (timeout, (owned) fn);
+        }
     }
 
   /**
