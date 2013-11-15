@@ -537,6 +537,10 @@ public class Folks.Backends.BlueZ.PersonaStore : Folks.PersonaStore
         }
       catch (IOError ie)
         {
+          /* Ignore errors from closing or cancelling. */
+          if (ie is IOError.CLOSED || ie is IOError.CANCELLED)
+              return;
+
           warning ("Couldn’t remove OBEX session ‘%s’: %s",
               session_path, ie.message);
         }
