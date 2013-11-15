@@ -593,6 +593,10 @@ public class Folks.Backends.BlueZ.PersonaStore : Folks.PersonaStore
           ulong signal_id;
           ulong cancellable_id = 0;
 
+          /* Find the initial status, if it’s already been set. Otherwise it’ll
+           * be null. */
+          transfer_status = transfer.status;
+
           /* Set up the cancellable. */
           if (cancellable != null)
             {
