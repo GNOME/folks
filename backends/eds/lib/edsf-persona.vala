@@ -1007,7 +1007,6 @@ public class Edsf.Persona : Folks.Persona,
         new HashMultiMap<string, WebServiceFieldDetails> (
           null, null, AbstractFieldDetails<string>.hash_static,
           AbstractFieldDetails<string>.equal_static);
-      this._email_addresses_ro = this._email_addresses.read_only_view;
       this._groups = new SmallSet<string> ();
       this._groups_ro = this._groups.read_only_view;
       this._roles = new SmallSet<RoleFieldDetails> (
