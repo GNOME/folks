@@ -40,7 +40,7 @@ FOLKS_TESTS_SANDBOXED_DBUS=tracker
 export FOLKS_TESTS_SANDBOXED_DBUS
 
 e=0
-$cur_dir"/execute-test.sh" "$@" || e=$?
+"$@" || e=$?
 
 trap - INT HUP TERM
 cleanup

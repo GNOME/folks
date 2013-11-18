@@ -155,8 +155,9 @@ Then use gdb as normal.
 To run a single test:
         make -C tests/<dir> check TESTS=<test name>
 
-To run a single test with debugging output:
-        make -C tests/<dir> check TESTS=<test name> CHECK_VERBOSE=1
+Thanks to automake’s parallel test harness, the output from all tests is logged
+automatically to <test name>.log, so no additional options need to be provided
+to force verbose output.
 
 If a test needs to be run through Valgrind for memory debugging, use:
         make -C tests/<dir> check TESTS=<test name> FOLKS_TEST_VALGRIND=1

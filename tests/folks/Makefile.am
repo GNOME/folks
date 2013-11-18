@@ -54,10 +54,6 @@ noinst_PROGRAMS = \
 	init \
 	$(NULL)
 
-TESTS_ENVIRONMENT = \
-	$(top_srcdir)/tests/tools/execute-test.sh \
-	$(NULL)
-
 TESTS = $(noinst_PROGRAMS)
 
 backend_loading_SOURCES = \

@@ -1,5 +1,4 @@
 EXTRA_DIST = \
-	execute-test.sh \
 	with-session-bus.sh \
 	dbus-session.sh \
 	manager-file.py \

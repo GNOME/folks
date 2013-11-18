@@ -34,7 +34,7 @@ dbus_start
 FOLKS_TESTS_SANDBOXED_DBUS=no-services
 export FOLKS_TESTS_SANDBOXED_DBUS
 
-$cur_dir"/execute-test.sh" "$@" || e=$?
+"$@" || e=$?
 
 trap - INT HUP TERM
 cleanup
