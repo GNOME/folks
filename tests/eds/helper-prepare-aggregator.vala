@@ -62,7 +62,7 @@ public class Main
     {
       Intl.setlocale (LocaleCategory.ALL, "");
 
-      if (Environment.get_variable ("FOLKS_TESTS_SANDBOXED_DBUS") != "eds" ||
+      if (Environment.get_variable ("FOLKS_TESTS_SANDBOXED_DBUS") != "no-services" ||
           Environment.get_variable ("FOLKS_BACKENDS_ALLOWED") != "eds" ||
           Environment.get_variable ("FOLKS_PRIMARY_STORE") == null)
         error ("e-d-s helpers must be run in a private D-Bus session with " +

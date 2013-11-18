@@ -131,7 +131,7 @@ public class Main
     {
       Intl.setlocale (LocaleCategory.ALL, "");
 
-      if (Environment.get_variable ("FOLKS_TESTS_SANDBOXED_DBUS") != "eds")
+      if (Environment.get_variable ("FOLKS_TESTS_SANDBOXED_DBUS") != "no-services")
         error ("e-d-s helpers must be run in a private D-Bus session with " +
             "e-d-s services");
 
