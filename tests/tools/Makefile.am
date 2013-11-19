@@ -1,9 +1,5 @@
 EXTRA_DIST = \
-	with-session-bus.sh \
-	dbus-session.sh \
 	manager-file.py \
-	with-session-bus-tracker.sh \
-	tracker.sh \
 	$(NULL)
 
 -include $(top_srcdir)/git.mk

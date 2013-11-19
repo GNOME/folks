@@ -21,6 +21,7 @@ libtpf_test_la_VALAFLAGS = \
 	--vapidir=$(abs_top_builddir)/tests/lib \
 	--vapidir=$(abs_top_srcdir)/tests/lib/key-file \
 	--vapidir=$(abs_top_builddir)/tests/lib/key-file \
+	--pkg build-conf \
 	--pkg folks-test \
 	--pkg kf-test \
 	--pkg tp-test-contactlist \
@@ -33,7 +34,14 @@ libtpf_test_la_SOURCES = \
 
 libtpf_test_la_CPPFLAGS = \
 	$(AM_CPPFLAGS) \
+	-I$(top_srcdir) \
+	-I$(top_srcdir)/folks \
+	-include $(CONFIG_HEADER) \
 	-include $(top_srcdir)/folks/warnings.h \
+	-DABS_TOP_SRCDIR=\"${abs_top_srcdir}\" \
+	-DABS_TOP_BUILDDIR=\"${abs_top_builddir}\" \
+	-DPKGLIBEXECDIR=\"${pkglibexecdir}\" \
+	-DPACKAGE_DATADIR=\"${pkgdatadir}\" \
 	$(NULL)
 
 libtpf_test_la_CFLAGS = \

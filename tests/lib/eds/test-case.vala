@@ -55,7 +55,7 @@ public class EdsTest.TestCase : Folks.TestCase
           true);
     }
 
-  public override string? create_transient_dir ()
+  public override string create_transient_dir ()
     {
       var transient = base.create_transient_dir ();
 

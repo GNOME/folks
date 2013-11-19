@@ -123,12 +123,8 @@ public abstract class Folks.TestCase : Object
    *
    * Subclasses may override this method to do additional setup
    * (create more subdirectories or set more environment variables).
-   *
-   * FIXME: Subclasses relying on being called by with-session-bus-*.sh
-   * may override this method to return null, although we should really
-   * stop doing that.
    */
-  public virtual string? create_transient_dir ()
+  public virtual string create_transient_dir ()
     {
       unowned string tmp = Environment.get_tmp_dir ();
       string transient = "%s/folks-test.XXXXXX".printf (tmp);
