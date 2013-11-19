@@ -1134,8 +1134,13 @@ public class Trf.PersonaStore : Folks.PersonaStore
             }
           catch (GLib.IOError e1)
             {
-              warning ("Could not connect to D-Bus service: %s",
-                       e1.message);
+              /* Ignore errors from the bus disappearing. */
+              if (!(e1 is IOError.CLOSED))
+                {
+                  warning ("Could not connect to D-Bus service: %s",
+                      e1.message);
+                }
+
               this.removed ();
               throw new PersonaStoreError.INVALID_ARGUMENT (e1.message);
             }
