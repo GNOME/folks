@@ -1230,6 +1230,10 @@ public class Folks.Individual : Object,
     {
       var persona = (Persona) obj;  /* will abort on failure */
 
+      /* It should not be possible for two Individuals to be simultaneously
+       * connected to the same Persona (as _connect_to_persona() will disconnect
+       * any previous Persona.individual), but warn (rather than asserting) just
+       * in case, since this is a critical code path. */
       if (ps.name != "individual" &&
           persona.individual != this &&
           persona.individual != null)
@@ -2122,6 +2126,13 @@ public class Folks.Individual : Object,
 
   private void _connect_to_persona (Persona persona)
     {
+      if (persona.individual != null)
+        {
+          /* Disconnect the previous Individual. This atomically avoids having
+           * two Individuals connected to the same Persona simultaneously. */
+          persona.individual._disconnect_from_persona (persona, this);
+        }
+
       persona.individual = this;
 
       /* We're interested in most, if not all, signals from a persona,
