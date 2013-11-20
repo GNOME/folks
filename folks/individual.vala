@@ -1228,14 +1228,23 @@ public class Folks.Individual : Object,
 
   private void _persona_notify_cb (Object obj, ParamSpec ps)
     {
-      assert (obj is Persona);
-      assert (ps.name == "individual" || (obj as Persona).individual == this);
+      var persona = (Persona) obj;  /* will abort on failure */
+
+      if (ps.name != "individual" &&
+          persona.individual != this &&
+          persona.individual != null)
+        {
+          warning ("Notification on property ‘%s’ of Persona %p (‘%s’) where " +
+              "Persona.individual is %p but was expected to be %p.",
+              ps.name, persona, persona.uid, persona.individual, this);
+          return;
+        }
 
       foreach (var notifier in Individual._notifiers)
         {
           if (ps.name == notifier.property)
             {
-              notifier.notify (this, (!) (obj as Persona), ps);
+              notifier.notify (this, persona, ps);
               break;  /* assume all entries in notifiers are unique */
             }
         }
