@@ -46,6 +46,7 @@ noinst_PROGRAMS = \
 	utils \
 	backend-loading \
 	aggregation \
+	standalone-individuals \
 	avatar-cache \
 	object-cache \
 	phone-field-details \
@@ -65,6 +66,10 @@ backend_loading_SOURCES = \
 
 aggregation_SOURCES = \
 	aggregation.vala \
+	$(NULL)
+
+standalone_individuals_SOURCES = \
+	standalone-individuals.vala \
 	$(NULL)
 
 abstract_field_details_SOURCES = \

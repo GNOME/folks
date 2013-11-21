@@ -27,8 +27,11 @@ test_valaflags = \
 	--vapidir=$(top_srcdir)/folks \
 	--vapidir=$(top_builddir)/folks \
 	--vapidir=$(top_srcdir)/tests/lib \
+	--vapidir=$(top_srcdir)/backends/dummy/lib \
+	--vapidir=$(top_builddir)/backends/dummy/lib \
 	--pkg folks \
 	--pkg folks-test \
+	--pkg folks-dummy \
 	--pkg gee-0.8 \
 	--pkg gio-2.0 \
 	--pkg gobject-2.0 \
@@ -39,6 +42,7 @@ test_cppflags = \
 	-I$(top_srcdir) \
 	-I$(top_srcdir)/folks \
 	-I$(top_srcdir)/tests/lib \
+	-I$(top_srcdir)/backends/dummy/lib \
 	-include $(CONFIG_HEADER) \
 	-include $(top_srcdir)/folks/warnings.h \
 	$(NULL)
@@ -53,6 +57,7 @@ test_cflags = \
 test_ldadd = \
 	$(top_builddir)/folks/libfolks.la \
 	$(top_builddir)/tests/lib/libfolks-test.la \
+	$(top_builddir)/backends/dummy/lib/libfolks-dummy.la \
 	$(GIO_LIBS) \
 	$(GLIB_LIBS) \
 	$(GEE_LIBS) \
