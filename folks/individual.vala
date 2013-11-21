@@ -231,12 +231,12 @@ public class Folks.Individual : Object,
    *
    * @since 0.6.0
    */
-  public string presence_status { get; set; }
+  public string presence_status { get; set; default = ""; }
 
   /**
    * {@inheritDoc}
    */
-  public string presence_message { get; set; }
+  public string presence_message { get; set; default = ""; }
 
   /**
    * {@inheritDoc}
