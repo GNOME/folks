@@ -286,8 +286,11 @@ public class Folks.Individual : Object,
    * instead. For example, if storing references to Individuals who are tagged
    * in a photo, it may be safer to store the UID of the Persona whose backend
    * provided the photo (e.g. Facebook).
+   *
+   * As a special case, the ID defaults to an empty string when the individual
+   * has no personas (i.e. if it’s just been constructed).
    */
-  public string id { get; private set; }
+  public string id { get; private set; default = ""; }
 
   /**
    * Emitted when the last of the Individual's {@link Persona}s has been
@@ -2898,6 +2901,11 @@ public class Folks.Individual : Object,
            * this._persona_set, which we've checked is non-empty. */
           this.id = Checksum.compute_for_string (ChecksumType.SHA1,
               ((!) chosen_persona).uid);
+        }
+      else
+        {
+          /* Default if we have no personas. */
+          this.id = "";
         }
 
       /* Update our aggregated fields and notify the changes */
