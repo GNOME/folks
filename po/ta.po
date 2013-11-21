@@ -7,10 +7,10 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: folks master\n"
-"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug."
-"cgi?product=folks&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2013-03-20 16:54+0000\n"
-"PO-Revision-Date: 2013-03-22 14:46+0530\n"
+"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
+"product=folks&keywords=I18N+L10N&component=general\n"
+"POT-Creation-Date: 2013-11-08 00:41+0000\n"
+"PO-Revision-Date: 2013-11-21 13:07+0630\n"
 "Last-Translator: Shantha kumar <shkumar@redhat.com>\n"
 "Language-Team: Tamil <>\n"
 "Language: ta\n"
@@ -18,7 +18,95 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 1.0\n"
+"X-Generator: Lokalize 1.5\n"
+
+#: ../backends/bluez/bluez-backend.vala:512
+msgid ""
+"No BlueZ 5 object manager running, so the BlueZ backend will be inactive. "
+"Either your BlueZ installation is too old (only version 5 is supported) or "
+"the service can’t be started."
+msgstr ""
+"BlueZ 5 பொருள் நிர்வாகி இயங்கவில்லை, ஆகவே BlueZ பின்புல முறைமை செயலின்றி "
+"இருக்கும். "
+"உங்கள் BlueZ நிறுவல் மிகப் பழையது (பதிப்பு 5 மட்டுமே ஆதரிக்கப்படும்) அல்லது "
+"சேவையைத் தொடங்க முடியவில்லை."
+
+#: ../backends/bluez/bluez-backend.vala:528
+msgid ""
+"Error connecting to OBEX transfer daemon over D-Bus. Ensure BlueZ and obexd "
+"are installed."
+msgstr ""
+"D-Bus மூலமாக OBEX பரிமாற்ற டெமானுக்கு இணைப்பதில் பிழை. BlueZ மற்றும் obexd "
+"ஆகியவை நிறுவப்பட்டுள்ளதா என உறுதிப்படுத்திக்கொள்ளவும்."
+
+#. Translators: the parameter is an error message.
+#: ../backends/bluez/bluez-persona-store.vala:294
+#, c-format
+msgid "Error reading the transferred address book file: %s"
+msgstr "பரிமாற்றம் செய்யப்பட்ட முகவரிப் புத்தகக் கோப்பைப் படிப்பதில் பிழை: %s"
+
+#. Translators: the first parameter is the name of the failed
+#. * transfer, and the second is a Bluetooth device alias.
+#: ../backends/bluez/bluez-persona-store.vala:569
+#, c-format
+msgid ""
+"Error during transfer of the address book ‘%s’ from Bluetooth device ‘%s’."
+msgstr ""
+"Bluetooth சாதனம் ‘%s’ இலிருந்து முகவரிப் புத்தகம் ‘%s’ ஐ பரிமாற்றம் செய்யும் "
+"போது பிழை."
+
+#. Translators: the first parameter is the name of the
+#. * failed transfer, the second is a Bluetooth device
+#. * alias, and the third is an error message.
+#: ../backends/bluez/bluez-persona-store.vala:584
+#, c-format
+msgid ""
+"Error during transfer of the address book ‘%s’ from Bluetooth device ‘%s’: %s"
+msgstr ""
+"Bluetooth சாதனம் ‘%s’ இலிருந்து முகவரிப் புத்தகம் ‘%s’ ஐ பரிமாற்றம் செய்யும் "
+"போது பிழை: %s"
+
+#: ../backends/bluez/bluez-persona-store.vala:668
+#, c-format
+msgid ""
+"Permission to access the address book on Bluetooth device ‘%s’ was denied by "
+"the user."
+msgstr ""
+"Bluetooth சாதனம் ‘%s’ இல் உள்ள முகவரிப்புத்தகத்தை அணுகுவதற்கான அனுமதியை பயனர் "
+"நிராகரித்தார்."
+
+#. Translators: the first parameter is a Bluetooth device
+#. * alias, and the second is an error message.
+#: ../backends/bluez/bluez-persona-store.vala:676
+#, c-format
+msgid "An OBEX address book transfer from device ‘%s’ could not be started: %s"
+msgstr ""
+"சாதனம் ‘%s’ இலிருந்து ஒரு OBEX முகவரிப் புத்தக பரிமாற்றத்தைத் தொடங்க "
+"முடியவில்லை: %s"
+
+#. Translators: the first parameter is a Bluetooth device
+#. * alias, and the second is an error message.
+#: ../backends/bluez/bluez-persona-store.vala:697
+#, c-format
+msgid "The OBEX address book transfer from device ‘%s’ failed: %s"
+msgstr ""
+"சாதனம் ‘%s’ இலிருந்து ஒரு OBEX முகவரிப் புத்தக பரிமாற்றம் தோல்வியடைந்தது: %s"
+
+#. Translators: the first parameter is a Bluetooth device
+#. * alias, and the second is an error message.
+#: ../backends/bluez/bluez-persona-store.vala:715
+#, c-format
+msgid ""
+"Error during transfer of the address book from Bluetooth device ‘%s’: %s"
+msgstr ""
+"Bluetooth சாதனம் ‘%s’ இலிருந்து முகவரிப் புத்தகத்தைப் பரிமாற்றம் செய்யும் "
+"போது பிழை: %s"
+
+#: ../backends/bluez/bluez-persona-store.vala:767
+#, c-format
+msgid "Bluetooth device ‘%s’ disappeared during address book transfer."
+msgstr ""
+"முகவரிப் புத்தகப் பரிமாற்றத்தின் போது Bluetooth சாதனம் ‘%s’ காணாமல் போனது."
 
 #. The timeout after which we consider a property change to have failed if we
 #. * haven't received a property change notification for it.
@@ -34,25 +122,26 @@ msgstr "Android இல் நட்சத்திரமிட்டது"
 
 #. Translators: the first parameter is an address book
 #. * URI and the second is a persona UID.
-#: ../backends/eds/lib/edsf-persona-store.vala:671
+#: ../backends/eds/lib/edsf-persona-store.vala:672
 #, c-format
 msgid "Address book ‘%s’ is offline, so contact ‘%s’ cannot be removed."
-msgstr "முகவரிப் புத்தகம் ‘%s’ ஆஃப்லைனில் உள்ளதால் ‘%s’ என்ற தொடர்பை நீக்க முடியாது."
+msgstr ""
+"முகவரிப் புத்தகம் ‘%s’ ஆஃப்லைனில் உள்ளதால் ‘%s’ என்ற தொடர்பை நீக்க முடியாது."
 
 #. Translators: the first parameter is an address book
 #. * URI and the second is an error message.
-#: ../backends/eds/lib/edsf-persona-store.vala:677
+#: ../backends/eds/lib/edsf-persona-store.vala:678
 #, c-format
 msgid "Permission denied to remove contact ‘%s’: %s"
 msgstr "‘%s’ என்ற தொடர்பை நீக்குவதற்கு அனுமதி மறுக்கப்பட்டது: %s"
 
 #. Translators: the parameter is an error message.
-#: ../backends/eds/lib/edsf-persona-store.vala:682
+#: ../backends/eds/lib/edsf-persona-store.vala:683
 #, c-format
 msgid "Removing contacts isn't supported by this persona store: %s"
 msgstr "இந்த பெர்சனா ஸ்டோரில் தொடர்புகளை நீக்கும் வசதியில்லை: %s"
 
-#: ../backends/eds/lib/edsf-persona-store.vala:711
+#: ../backends/eds/lib/edsf-persona-store.vala:712
 #, c-format
 msgid "Can't remove contact ‘%s’: %s"
 msgstr "‘%s’ என்ற தொடர்பை நீக்க முடியாது: %s"
@@ -103,120 +192,120 @@ msgstr "முகவரிப் புத்தகம் ‘%s’ க்கா�
 #. Translators: the parameter is the name of a property on a
 #. * contact, formatted in the normal GObject style (e.g.
 #. * lowercase with hyphens to separate words).
-#: ../backends/eds/lib/edsf-persona-store.vala:1390
+#: ../backends/eds/lib/edsf-persona-store.vala:1287
 #, c-format
 msgid "Changing the ‘%s’ property failed due to reaching the timeout."
-msgstr "நேரம் கடந்துபோகும் வரம்பை அடைந்ததால் ‘%s’ பண்பை மாற்றுவது தோல்வியடைந்தது."
+msgstr ""
+"நேரம் கடந்துபோகும் வரம்பை அடைந்ததால் ‘%s’ பண்பை மாற்றுவது தோல்வியடைந்தது."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1428
+#: ../backends/eds/lib/edsf-persona-store.vala:1325
 #: ../folks/avatar-details.vala:63
 msgid "Avatar is not writeable on this contact."
 msgstr "இந்தத் தொடர்பில் அவதாரை எழுத முடியாது."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1449
+#: ../backends/eds/lib/edsf-persona-store.vala:1346
 #: ../folks/web-service-details.vala:123
 msgid "Web service addresses are not writeable on this contact."
 msgstr "இந்தத் தொடர்பில் வலை சேவை முகவரிகளை எழுத முடியாது."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1485
+#: ../backends/eds/lib/edsf-persona-store.vala:1382
 #: ../folks/url-details.vala:152
 msgid "URLs are not writeable on this contact."
 msgstr "இந்தத் தொடர்பில் URLகளை எழுத முடியாது."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1566
+#: ../backends/eds/lib/edsf-persona-store.vala:1463
 #: ../folks/local-id-details.vala:64
 msgid "Local IDs are not writeable on this contact."
 msgstr "இந்தத் தொடர்பில் லோகல் ஐடி-களை  எழுத முடியாது."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1595
+#: ../backends/eds/lib/edsf-persona-store.vala:1492
 msgid "The contact cannot be marked as favourite."
 msgstr "இந்தத் தொடர்பை பிடித்ததாகக் குறிக்க முடியாது."
 
 #. Translators: the parameter is an error message.
-#: ../backends/eds/lib/edsf-persona-store.vala:1667
+#: ../backends/eds/lib/edsf-persona-store.vala:1564
 #, c-format
 msgid "Can't update avatar: %s"
 msgstr "அவதாரைப் புதுப்பிக்க முடியாது: %s"
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1678
+#: ../backends/eds/lib/edsf-persona-store.vala:1575
 #: ../folks/email-details.vala:120
 msgid "E-mail addresses are not writeable on this contact."
 msgstr "இந்தத் தொடர்பில் மின்னஞ்சல் முகவரிகளை எழுத முடியாது."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1696
-#: ../folks/phone-details.vala:224
+#: ../backends/eds/lib/edsf-persona-store.vala:1593
+#: ../folks/phone-details.vala:255
 msgid "Phone numbers are not writeable on this contact."
 msgstr "இந்தத் தொடர்பில் தொலைபேசி எண்களை எழுத முடியாது."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1714
+#: ../backends/eds/lib/edsf-persona-store.vala:1611
 #: ../folks/postal-address-details.vala:361
 msgid "Postal addresses are not writeable on this contact."
 msgstr "இந்தத் தொடர்பில் அஞ்சல் முகவரிகளை எழுத முடியாது."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1785
-#: ../folks/name-details.vala:283
+#: ../backends/eds/lib/edsf-persona-store.vala:1682
+#: ../folks/name-details.vala:454
 msgid "Full name is not writeable on this contact."
 msgstr "இந்தத் தொடர்பில் முழுப் பெயரை எழுத முடியாது."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1807
-#: ../folks/name-details.vala:321
+#: ../backends/eds/lib/edsf-persona-store.vala:1704
+#: ../folks/name-details.vala:492
 msgid "Nickname is not writeable on this contact."
 msgstr "இந்தத் தொடர்பில் புனைப் பெயரை எழுத முடியாது."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1829
+#: ../backends/eds/lib/edsf-persona-store.vala:1726
 #: ../folks/note-details.vala:138
 msgid "Notes are not writeable on this contact."
 msgstr "இந்தத் தொடர்பில் குறிப்புகளை எழுத முடியாது."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1861
+#: ../backends/eds/lib/edsf-persona-store.vala:1758
 #: ../folks/birthday-details.vala:62
 msgid "Birthday is not writeable on this contact."
 msgstr "இந்தத் தொடர்பில் பிறந்தநாளை எழுத முடியாது."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1905
+#: ../backends/eds/lib/edsf-persona-store.vala:1802
 #: ../folks/role-details.vala:279
 msgid "Roles are not writeable on this contact."
 msgstr "இந்தத் தொடர்பில் பதவிகளை எழுத முடியாது."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:2006
-#: ../folks/name-details.vala:246
+#: ../backends/eds/lib/edsf-persona-store.vala:1903
+#: ../folks/name-details.vala:417
 msgid "Structured name is not writeable on this contact."
 msgstr "இந்தத் தொடர்பில் கட்டமைக்கப்பட்ட பெயரை எழுத முடியாது."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:2045
+#: ../backends/eds/lib/edsf-persona-store.vala:1942
 #: ../folks/im-details.vala:136
 msgid "IM addresses are not writeable on this contact."
 msgstr "இந்தத் தொடர்பில் உடனடிச் செய்தி முகவரிகளை எழுத முடியாது."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:2095
+#: ../backends/eds/lib/edsf-persona-store.vala:1992
 #: ../folks/group-details.vala:174
 msgid "Groups are not writeable on this contact."
 msgstr "இந்தத் தொடர்பில் குழுக்களை எழுத முடியாது."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:2110
+#: ../backends/eds/lib/edsf-persona-store.vala:2007
 msgid "My Contacts is only available for Google Contacts"
 msgstr "Google  தொடர்புகளில் மட்டுமே 'எனது தொடர்புகள்' கிடைக்கும்."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:2181
+#: ../backends/eds/lib/edsf-persona-store.vala:2078
 #: ../folks/gender-details.vala:79
 msgid "Gender is not writeable on this contact."
 msgstr "இந்தத் தொடர்பில் பாலினத்தை எழுத முடியாது."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:2219
+#: ../backends/eds/lib/edsf-persona-store.vala:2116
 #: ../folks/anti-linkable.vala:81
 msgid "Anti-links are not writeable on this contact."
 msgstr "இந்தத் தொடர்பில் எதிர்-இணைப்புகளை எழுத முடியாது."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:2262
-#: ../folks/location-details.vala:129
-#| msgid "Avatar is not writeable on this contact."
+#: ../backends/eds/lib/edsf-persona-store.vala:2159
+#: ../folks/location-details.vala:135
 msgid "Location is not writeable on this contact."
 msgstr "இந்தத் தொடர்பில் இருப்பிடத்தை எழுத முடியாது."
 
 #. Translators: the first parameter is a non-human-readable
 #. * property name and the second parameter is an error
 #. * message.
-#: ../backends/eds/lib/edsf-persona-store.vala:2439
+#: ../backends/eds/lib/edsf-persona-store.vala:2472
 #, c-format
 msgid "Property ‘%s’ is not writeable: %s"
 msgstr "‘%s’ என்ற பண்பை எழுத முடியாது: %s"
@@ -224,42 +313,43 @@ msgstr "‘%s’ என்ற பண்பை எழுத முடியாத
 #. Translators: the first parameter is a non-human-readable
 #. * property name and the second parameter is an error
 #. * message.
-#: ../backends/eds/lib/edsf-persona-store.vala:2448
+#: ../backends/eds/lib/edsf-persona-store.vala:2481
 #, c-format
 msgid "Invalid value for property ‘%s’: %s"
 msgstr "‘%s’ என்ற பண்புக்கு அளித்துள்ள மதிப்பு தவறானது: %s"
 
 #. Translators: the first parameter is a non-human-readable
 #. * property name and the second parameter is an error message.
-#: ../backends/eds/lib/edsf-persona-store.vala:2474
+#: ../backends/eds/lib/edsf-persona-store.vala:2507
 #, c-format
 msgid "Unknown error setting property ‘%s’: %s"
 msgstr "‘%s’ என்ற பண்பை அமைப்பதில் ஏதோ பிழை ஏற்பட்டது: %s"
 
 #. Translators: the first parameter is a filename, and
 #. * the second is an error message.
-#: ../backends/key-file/kf-persona-store.vala:233
+#: ../backends/key-file/kf-persona-store.vala:234
 #, c-format
 msgid "The relationship key file '%s' could not be loaded: %s"
 msgstr "'%s' என்ற தொடர்புத் திறப்புக் கோப்பை ஏற்ற முடியவில்லை: %s"
 
 #. Translators: the first parameter is a path, and the
 #. * second is an error message.
-#: ../backends/key-file/kf-persona-store.vala:255
+#: ../backends/key-file/kf-persona-store.vala:256
 #, c-format
 msgid "The relationship key file directory '%s' could not be created: %s"
-msgstr "'%s' என்ற தொடர்புத் திறப்புக் கோப்பு கோப்புறையை உருவாக்க முடியவில்லை: %s"
+msgstr ""
+"'%s' என்ற தொடர்புத் திறப்புக் கோப்பு கோப்புறையை உருவாக்க முடியவில்லை: %s"
 
 #. Translators: the first parameter is a filename, and
 #. * the second is an error message.
-#: ../backends/key-file/kf-persona-store.vala:279
+#: ../backends/key-file/kf-persona-store.vala:280
 #, c-format
 msgid "The relationship key file '%s' could not be created: %s"
 msgstr "'%s' என்ற தொடர்புத் திறப்புக் கோப்பை உருவாக்க முடியவில்லை: %s"
 
 #. Translators: the first parameter is a filename, the second is
 #. * an error message.
-#: ../backends/key-file/kf-persona-store.vala:470
+#: ../backends/key-file/kf-persona-store.vala:471
 #, c-format
 msgid "Could not write updated key file '%s': %s"
 msgstr "'%s' என்ற புதுப்பிக்காப்பட்ட திறப்புக் கோப்பை எழுத முடியவில்லை: %s"
@@ -269,14 +359,15 @@ msgstr "'%s' என்ற புதுப்பிக்காப்பட்ட
 #. * an IM address (e.g. “foo@jabber.org”), the second is
 #. * the name of a protocol (e.g. “jabber”) and the third is
 #. * an error message.
-#: ../backends/key-file/kf-persona.vala:172
+#: ../backends/key-file/kf-persona.vala:174
 #, c-format
 msgid "Invalid IM address ‘%s’ for protocol ‘%s’: %s"
 msgstr ""
-"வழங்கப்பட்ட உடனடிச் செய்தி முகவரி ‘%s’ ஆனது ‘%s’ என்ற நெறிமுறைக்குத் தவறானதாகும்: %s"
+"வழங்கப்பட்ட உடனடிச் செய்தி முகவரி ‘%s’ ஆனது ‘%s’ என்ற நெறிமுறைக்குத் "
+"தவறானதாகும்: %s"
 
 #. Translators: the parameter is an error message.
-#: ../backends/key-file/kf-persona.vala:430
+#: ../backends/key-file/kf-persona.vala:432
 #, c-format
 msgid "Couldn't load data from key file: %s"
 msgstr "திறப்புக் கோப்பிலிருந்து தரவை ஏற்ற முடியவில்லை: %s"
@@ -301,28 +392,27 @@ msgstr "தொடர்புகள் திறப்பாடு இல்ல�
 msgid "Error opening contacts view."
 msgstr "தொடர்புகள் காட்சியைத் திறப்பதில் பிழை."
 
-#. Translators: the first parameter is the display name for
-#. * the Telepathy account, and the second is an error
-#. * message.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:814
-#, c-format
-msgid "Failed to determine whether we can set aliases on Telepathy account '%s': %s"
+#: ../backends/ofono/ofono-backend.vala:192
+msgid ""
+"No oFono object manager running, so the oFono backend will be inactive. "
+"Either oFono isn’t installed or the service can’t be started."
 msgstr ""
-"'%s' என்ற டெலிபதி கணக்கில் மாற்றுப் பெயரை அமைக்க முடியுமா எனத் தீர்மானிப்பது "
-"தோல்வியடைந்தது: %s"
+"oFono பொருள் நிர்வாகி இயங்கவில்லை, ஆகவே oFono பின்புல முறைமை செயலின்றி "
+"இருக்கும். "
+"oFono நிறுவப்படவில்லை அல்லது சேவையைத் தொடங்க முடியவில்லை."
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1278
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1248
 msgid "Telepathy contacts representing the local user may not be removed."
 msgstr "லோக்கல் பயனரைக் குறிக்கும் டெலிபதி தொடர்புகளை நீக்க முடியாது."
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1289
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1259
 #, c-format
 msgid "Failed to remove a persona from store: %s"
 msgstr "ஸ்டோரிலிருந்து பெர்சனாவை நீக்குவது தோல்வியடைந்தது: %s"
 
 #. Translators: the first two parameters are store identifiers and
 #. * the third is a contact identifier.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1324
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1294
 #, c-format
 msgid ""
 "Persona store (%s, %s) requires the following details:\n"
@@ -331,73 +421,81 @@ msgstr ""
 "பெர்சனா ஸ்டோருக்கு (%s, %s) பின்வரும் விவரங்கள் தேவைப்படுகிறது:\n"
 "    தொடர்பு (வழங்கப்பட்டது: '%s')\n"
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1339
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1309
 msgid "Cannot create a new Telepathy contact while offline."
 msgstr "ஆஃப்லைனில் இருக்கும் போது புதிய டெலிபதி தொடர்பை உருவாக்க முடியாது."
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1357
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1327
 #, c-format
 msgid "Failed to add a persona from details: %s"
 msgstr "விவரங்களிலிருந்து பெர்சனாவைச் சேர்ப்பதில் தோல்வியடைந்தது: %s"
 
 #. Translators: "telepathy-logger" is the name of an application,
 #. * and should not be translated.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1377
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1347
 msgid ""
 "Failed to change favorite without a connection to the telepathy-logger "
 "service."
-msgstr "டெலிபதி-லாகர் சேவைக்கான இணைப்பு இல்லாததால், பிடித்ததை மாற்றுவது தோல்வியடைந்தது."
+msgstr ""
+"டெலிபதி-லாகர் சேவைக்கான இணைப்பு இல்லாததால், பிடித்ததை மாற்றுவது "
+"தோல்வியடைந்தது."
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1383
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1353
 msgid ""
 "Failed to change favorite status of Telepathy Persona because it has no "
 "attached TpContact."
 msgstr ""
-"டெலிபதி பெர்சனாவுடன் TpContact இணைந்தில்லாததால், அதன் பிடித்தவை தொடர்பான நிலையை "
+"டெலிபதி பெர்சனாவுடன் TpContact இணைந்தில்லாததால், அதன் பிடித்தவை தொடர்பான "
+"நிலையை "
 "மாற்றுவது தோல்வியடைந்தது."
 
 #. Translators: the parameter is a contact identifier.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1401
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1371
 #, c-format
 msgid "Failed to change favorite status for Telepathy contact ‘%s’."
-msgstr "‘%s’ என்ற டெலிபதி தொடர்பின் பிடித்தவை தொடர்பான நிலையை மாற்றுவது தோல்வியடைந்தது."
+msgstr ""
+"‘%s’ என்ற டெலிபதி தொடர்பின் பிடித்தவை தொடர்பான நிலையை மாற்றுவது "
+"தோல்வியடைந்தது."
 
 #. Translators: the parameter is an error message.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1433
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1403
 #, c-format
 msgid "Failed to change contact's alias: %s"
 msgstr "தொடர்பின் மாற்றுப் பெயரை மாற்றுவது தோல்வியடைந்தது: %s"
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1514
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1484
 msgid "Extended information may only be set on the user's Telepathy contact."
 msgstr "பயனரின் டெலிபதி தொடர்பில் மட்டுமே விரிவான தகவலை அமைக்க முடியும்."
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1543
-msgid "Extended information cannot be written because the store is disconnected."
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1513
+msgid ""
+"Extended information cannot be written because the store is disconnected."
 msgstr "ஸ்டோர் இணைப்பின்றி இருப்பதால் விரிவான தகவலை எழுத முடியாது."
 
-#: ../backends/telepathy/lib/tpf-persona.vala:499
-#: ../backends/telepathy/lib/tpf-persona.vala:520
-#: ../backends/telepathy/lib/tpf-persona.vala:572
-#: ../backends/telepathy/lib/tpf-persona.vala:586
+#: ../backends/telepathy/lib/tpf-persona.vala:511
+#: ../backends/telepathy/lib/tpf-persona.vala:532
+#: ../backends/telepathy/lib/tpf-persona.vala:584
+#: ../backends/telepathy/lib/tpf-persona.vala:598
 #, c-format
 msgid "Failed to change group membership: %s"
 msgstr "குழு உறுப்பினர் தகுதியை மாற்றுவது தோல்வியடைந்தது: %s"
 
 #. Translators: "account" refers to an instant messaging
 #. * account.
-#: ../backends/telepathy/lib/tpf-persona.vala:502
-#: ../backends/telepathy/lib/tpf-persona.vala:575
+#: ../backends/telepathy/lib/tpf-persona.vala:514
+#: ../backends/telepathy/lib/tpf-persona.vala:587
 msgid "Account is offline."
 msgstr "கணக்கு இணைப்பில் இல்லை."
 
 #. Translators: the first parameter is the unknown key that
 #. * was received with the details params, and the second
 #. * identifies the persona store.
-#: ../backends/tracker/lib/trf-persona-store.vala:742
+#: ../backends/tracker/lib/trf-persona-store.vala:743
 #, c-format
 msgid "Unrecognized parameter '%s' passed to persona store '%s'."
-msgstr "'%s' என்ற பெர்சனா ஸ்டோருக்கு '%s' எனும் அடையாளம் காணப்படாத அளவுரு செலுத்தப்பட்டது."
+msgstr ""
+"'%s' என்ற பெர்சனா ஸ்டோருக்கு '%s' எனும் அடையாளம் காணப்படாத அளவுரு "
+"செலுத்தப்பட்டது."
 
 #: ../folks/alias-details.vala:61
 msgid "Alias is not writeable on this contact."
@@ -411,13 +509,13 @@ msgid "Error listing contents of folder '%s': %s"
 msgstr "'%s' என்ற கோப்புறையின் உள்ளடக்கத்தைப் பட்டியலிடுவதில் பிழை: %s"
 
 #. Translators: the parameter is a filename.
-#: ../folks/backend-store.vala:757
+#: ../folks/backend-store.vala:762
 #, c-format
 msgid "File or directory '%s' does not exist."
 msgstr "'%s' என்ற கோப்போ கோப்புறையோ இல்லை."
 
 #. Translators: the parameter is a filename.
-#: ../folks/backend-store.vala:763
+#: ../folks/backend-store.vala:768
 #, c-format
 msgid "Failed to get content type for '%s'."
 msgstr "'%s' க்கான உள்ளடக்க வகையைப் பெறுவது தோல்வியடைந்தது."
@@ -439,69 +537,123 @@ msgstr "'%s' என்ற உடனடி செய்தி முகவரி�
 
 #. Translators: the first parameter is a persona store identifier
 #. * and the second is an error message.
-#: ../folks/individual-aggregator.vala:935
+#: ../folks/individual-aggregator.vala:1033
 #, c-format
 msgid "Error preparing persona store '%s': %s"
 msgstr "'%s' என்ற பெர்சனா ஸ்டோரை தயார்ப்படுத்துவதில் பிழை: %s"
 
 #. Translators: the parameter is a property name.
-#: ../folks/individual-aggregator.vala:1158
-#: ../folks/individual-aggregator.vala:1386
+#: ../folks/individual-aggregator.vala:1262
+#: ../folks/individual-aggregator.vala:1529
 #, c-format
 msgid "Unknown property '%s' in linkable property list."
-msgstr "இணைப்பு செய்யக்கூடிய பண்புகள் பட்டியலில் '%s' என்ற தெரியாத பண்பு உள்ளது."
+msgstr ""
+"இணைப்பு செய்யக்கூடிய பண்புகள் பட்டியலில் '%s' என்ற தெரியாத பண்பு உள்ளது."
 
 #. Translators: the first parameter is a store identifier
 #. * and the second parameter is an error message.
-#: ../folks/individual-aggregator.vala:1857
+#: ../folks/individual-aggregator.vala:2015
 #, c-format
 msgid "Failed to add contact for persona store ID '%s': %s"
 msgstr "'%s' என்ற பெர்சனா ஐடிக்கு தொடர்பைச் சேர்ப்பது தோல்வியடைந்தது : %s"
 
-#: ../folks/individual-aggregator.vala:1958
+#: ../folks/individual-aggregator.vala:2112
 msgid "Can’t link personas with no primary store."
 msgstr "பிரதான ஸ்டோர் இல்லாமல் பெர்சனாக்களை இணைப்பு செய்ய முடியாது."
 
-#: ../folks/individual-aggregator.vala:1959
-#: ../folks/individual-aggregator.vala:2291
+#: ../folks/individual-aggregator.vala:2113
+#: ../folks/individual-aggregator.vala:2444
 #, c-format
 msgid ""
 "Persona store ‘%s:%s’ is configured as primary, but could not be found or "
 "failed to load."
 msgstr ""
-"‘%s:%s’ என்ற பெர்சனா ஸ்டோர் பிரதான ஸ்டோராக அமைவாக்கம் செய்யப்பட்டுள்ளது, ஆனால் அதைக் "
+"‘%s:%s’ என்ற பெர்சனா ஸ்டோர் பிரதான ஸ்டோராக அமைவாக்கம் செய்யப்பட்டுள்ளது, "
+"ஆனால் அதைக் "
 "கண்டறிய முடியவில்லை அல்லது ஏற்றுவது தோல்வியடைந்தது."
 
-#: ../folks/individual-aggregator.vala:1960
-#: ../folks/individual-aggregator.vala:2292
+#: ../folks/individual-aggregator.vala:2114
+#: ../folks/individual-aggregator.vala:2445
 #, c-format
 msgid ""
 "Check the relevant service is running, or change the default store in that "
 "service or using the “%s” GSettings key."
 msgstr ""
-"இதனுடன் தொடர்புடைய சேவை இயங்குகிறதா எனப் பார்க்கவும், அல்லது அந்த சேவையில்ல் அல்லது “%s” "
+"இதனுடன் தொடர்புடைய சேவை இயங்குகிறதா எனப் பார்க்கவும், அல்லது அந்த சேவையில்ல் "
+"அல்லது “%s” "
 "ஜி-செட்டிங் திறப்பைப் பயன்படுத்தி முன்னிருப்பு ஸ்டோரை மாற்றவும்."
 
-#: ../folks/individual-aggregator.vala:1992
+#: ../folks/individual-aggregator.vala:2146
 msgid "Anti-links can't be removed between personas being linked."
 msgstr ""
-"இணைப்பு செய்யப்படும் இரு பெர்சனாக்களுக்கு இடையே உள்ள எதிர்-இணைப்புகளை நீக்க முடியாது."
+"இணைப்பு செய்யப்படும் இரு பெர்சனாக்களுக்கு இடையே உள்ள எதிர்-இணைப்புகளை நீக்க "
+"முடியாது."
 
-#: ../folks/individual-aggregator.vala:2290
+#: ../folks/individual-aggregator.vala:2443
 msgid "Can’t add personas with no primary store."
 msgstr "பிரதான ஸ்டோர் இல்லாமல் பெர்சனாக்களை சேர்க்க முடியாது."
 
-#: ../folks/individual-aggregator.vala:2301
+#: ../folks/individual-aggregator.vala:2454
 #, c-format
 msgid "Can't write to requested property (“%s”) of the writeable store."
 msgstr "எழுதத்தக்க ஸ்டோரின் கோரப்பட்ட பண்பில் (“%s”) எழுத முடியாது."
 
-#: ../folks/individual.vala:217 ../folks/individual.vala:370
-#: ../folks/individual.vala:479 ../folks/individual.vala:730
-#: ../folks/individual.vala:808
+#: ../folks/individual.vala:216 ../folks/individual.vala:399
+#: ../folks/individual.vala:508 ../folks/individual.vala:759
+#: ../folks/individual.vala:837
 #, c-format
 msgid "Failed to change property ‘%s’: No suitable personas were found."
 msgstr "property '%s' ஐ மாற்றுவதில் தோல்வி: பொருத்தமான நபர்கள் இல்லை."
+
+#. Translators: This is the default name for an Individual
+#. * when displayed in the UI if no personal details are available
+#. * for them.
+#: ../folks/individual.vala:1921
+msgid "Unnamed Person"
+msgstr "பெயரில்லா நபர்"
+
+#. FIXME: Ideally we’d use a format string translated to the locale of the
+#. * persona whose name is being formatted, but no backend provides
+#. * information about personas’ locales, so we have to settle for the
+#. * current user’s locale.
+#. *
+#. * We thought about using nl_langinfo(_NL_NAME_NAME_FMT) here, but
+#. * decided against it because:
+#. *  1. It’s not the best documented API in the world, and its stability
+#. *     is in question.
+#. *  2. An attempt to improve the interface in glibc met with a wall of
+#. *     complaints: https://sourceware.org/bugzilla/show_bug.cgi?id=14641.
+#. *
+#. * However, we do re-use the string format placeholders from
+#. * _NL_NAME_NAME_FMT (as documented here:
+#. * http://lh.2xlibre.net/values/name_fmt/) because there’s a chance glibc
+#. * might eventually grow a useful interface for this.
+#. *
+#. * It does mean we have to implement our own parser for the name_fmt
+#. * format though, since glibc doesn’t provide a formatting function.
+#. Translators: This is a format string used to convert structured names
+#. * to a single string. It should be translated to the predominant
+#. * semi-formal name format for your locale, using the placeholders
+#. * documented here: http://lh.2xlibre.net/values/name_fmt/. You may be
+#. * able to re-use the existing glibc format string for your locale on that
+#. * page if it’s suitable.
+#. *
+#. * More explicitly: the supported placeholders are %f, %F, %g, %G, %m, %M,
+#. * %t. The romanisation modifier (e.g. %Rf) is recognized but ignored.
+#. * %s, %S and %d are all replaced by the same thing (the ‘Honorific
+#. * Prefixes’ from vCard) so please avoid using more than one.
+#. *
+#. * For example, the format string ‘%g%t%m%t%f’ expands to ‘John Andrew
+#. * Lees’ when used for a persona with first name ‘John’, additional names
+#. * ‘Andrew’ and family names ‘Lees’.
+#. *
+#. * If you need additional placeholders with other information or
+#. * punctuation, please file a bug against libfolks:
+#. *   https://bugzilla.gnome.org/enter_bug.cgi?product=folks
+#.
+#: ../folks/name-details.vala:268
+msgid "%g%t%m%t%f"
+msgstr "%g%t%m%t%f"
 
 #: ../folks/org.freedesktop.folks.gschema.xml.in.h:1
 msgid "Primary store ID"
@@ -513,8 +665,10 @@ msgid ""
 "linking data in). The type ID of the store may optionally be prepended, "
 "separated by a colon. For example: “eds:system-address-book” or “key-file”."
 msgstr ""
-"பிரதான ஸ்டோராகப் (அதாவது தரவை இணைக்கும் ஸ்டோர்) பயன்படுத்த வேண்டிய பெர்சனா ஸ்டோரின் ஐடி. "
-"விரும்பினால் ஸ்டோரின் ஐடிக்கு முன்பு ஒரு முக்காற்புள்ளியால் பிரித்து வகை ஐடியையும் "
+"பிரதான ஸ்டோராகப் (அதாவது தரவை இணைக்கும் ஸ்டோர்) பயன்படுத்த வேண்டிய பெர்சனா "
+"ஸ்டோரின் ஐடி. "
+"விரும்பினால் ஸ்டோரின் ஐடிக்கு முன்பு ஒரு முக்காற்புள்ளியால் பிரித்து வகை "
+"ஐடியையும் "
 "இணைக்கலாம். எடுத்துக்காட்டு: “eds:system-address-book” அல்லது “key-file”."
 
 #: ../folks/postal-address-details.vala:231
@@ -522,35 +676,35 @@ msgstr ""
 msgid "%s, %s, %s, %s, %s, %s, %s"
 msgstr "%s, %s, %s, %s, %s, %s, %s"
 
-#: ../folks/presence-details.vala:159
+#: ../folks/presence-details.vala:171
 msgid "Unknown status"
 msgstr "நிலை தெரியவில்லை"
 
-#: ../folks/presence-details.vala:161
+#: ../folks/presence-details.vala:173
 msgid "Offline"
 msgstr "ஆஃப்லைன்"
 
-#: ../folks/presence-details.vala:165
+#: ../folks/presence-details.vala:177
 msgid "Error"
 msgstr "பிழை"
 
-#: ../folks/presence-details.vala:167
+#: ../folks/presence-details.vala:179
 msgid "Available"
 msgstr "பேசலாம்"
 
-#: ../folks/presence-details.vala:169
+#: ../folks/presence-details.vala:181
 msgid "Away"
 msgstr "அருகிலில்லை"
 
-#: ../folks/presence-details.vala:171
+#: ../folks/presence-details.vala:183
 msgid "Extended away"
 msgstr "நீண்ட நேரம் அருகிலில்லை"
 
-#: ../folks/presence-details.vala:173
+#: ../folks/presence-details.vala:185
 msgid "Busy"
 msgstr "வேலையில்"
 
-#: ../folks/presence-details.vala:175
+#: ../folks/presence-details.vala:187
 msgid "Hidden"
 msgstr "மறைந்து"
 
@@ -591,7 +745,8 @@ msgid ""
 "The Pidgin buddy list file ‘%s’ could not be loaded: the root element could "
 "not be found or was not recognized."
 msgstr ""
-"‘%s’ என்ற பிட்கின் படி லிஸ்ட் கோப்பை ஏற்ற முடியவில்லை: மூல உறுப்பைக் கண்டறிய முடியவில்லை "
+"‘%s’ என்ற பிட்கின் படி லிஸ்ட் கோப்பை ஏற்ற முடியவில்லை: மூல உறுப்பைக் கண்டறிய "
+"முடியவில்லை "
 "அல்லது அங்கீகரிக்கப்படவில்லை."
 
 #. Translators: the first parameter is the number of buddies which
@@ -628,7 +783,8 @@ msgid ""
 "%s\n"
 "Error: %s\n"
 msgstr ""
-"‘%s’ என்ற மாற்றுப் பெயரும் பின்வரும் உடனடி செய்தி முகவரிகளும் கொண்ட நண்பருக்கு ஒரு "
+"‘%s’ என்ற மாற்றுப் பெயரும் பின்வரும் உடனடி செய்தி முகவரிகளும் கொண்ட "
+"நண்பருக்கு ஒரு "
 "புதிய தொடர்பை உருவாக்குவது தோல்வியடைந்தது:\n"
 "%s\n"
 "Error: %s\n"
@@ -642,7 +798,8 @@ msgid ""
 "Created contact ‘%s’ for buddy with alias ‘%s’ and IM addresses:\n"
 "%s"
 msgstr ""
-"‘%s’ என்ற மாற்றுப் பெயரும் பின்வரும் உடனடி செய்தி முகவரிகளும் கொண்ட நண்பருக்கு ‘%s’ என்ற "
+"‘%s’ என்ற மாற்றுப் பெயரும் பின்வரும் உடனடி செய்தி முகவரிகளும் கொண்ட "
+"நண்பருக்கு ‘%s’ என்ற "
 "தொடர்பு உருவாக்கப்பட்டது:\n"
 "%s"
 
@@ -707,6 +864,13 @@ msgid ""
 "Unrecognized source backend name ‘%s’. ‘%s’ is currently the only supported "
 "source backend."
 msgstr ""
-"அறியப்படாத மூல பின்னமைப்புப் பெயர் ‘%s’. ‘%s’ மட்டுமே தற்போது ஆதரிக்கப்படும் மூல "
+"அறியப்படாத மூல பின்னமைப்புப் பெயர் ‘%s’. ‘%s’ மட்டுமே தற்போது ஆதரிக்கப்படும் "
+"மூல "
 "பின்னமைப்பாகும்."
 
+#~ msgid ""
+#~ "Failed to determine whether we can set aliases on Telepathy account '%s': "
+#~ "%s"
+#~ msgstr ""
+#~ "'%s' என்ற டெலிபதி கணக்கில் மாற்றுப் பெயரை அமைக்க முடியுமா எனத் தீர்மானிப்பது "
+#~ "தோல்வியடைந்தது: %s"
