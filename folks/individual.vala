@@ -1243,6 +1243,20 @@ public class Folks.Individual : Object,
               ps.name, persona, persona.uid, persona.individual, this);
           return;
         }
+      else if (ps.name == "individual")
+        {
+          if (persona.individual != this)
+            {
+              /* Remove the notified persona from our set of personas. */
+              var remaining_personas = new SmallSet<Persona> ();
+              remaining_personas.add_all (this._persona_set);
+              remaining_personas.remove (persona);
+
+              this._set_personas (remaining_personas, null);
+            }
+
+          return;
+        }
 
       foreach (var notifier in Individual._notifiers)
         {
@@ -2124,9 +2138,11 @@ public class Folks.Individual : Object,
             }, emit_notification, force_update);
     }
 
+  /* Note: This causes the Persona to be stolen away from its current
+   * Individual. */
   private void _connect_to_persona (Persona persona)
     {
-      if (persona.individual != null)
+      if (persona.individual != null && persona.individual != this)
         {
           /* Disconnect the previous Individual. This atomically avoids having
            * two Individuals connected to the same Persona simultaneously. */
