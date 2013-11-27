@@ -376,6 +376,10 @@ public class Folks.Backends.BlueZ.Backend : Folks.Backend
       PersonaStore store =
           new BlueZ.PersonaStore (device, path, this._obex_client);
 
+      /* Set the initial properties. */
+      store.set_is_trusted (device.trusted);
+      store.set_alias (device.alias);
+
       this._watched_devices[path] = store;
       this._persona_stores.set (store.id, store);
 

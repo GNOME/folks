@@ -198,6 +198,8 @@ public class Folks.Backends.BlueZ.PersonaStore : Folks.PersonaStore
    */
   public new string display_name
     {
+      /* FIXME: Folks.display_name should be abstract, and this should be
+       * override. */
       get { return this._display_name; }
       construct { this._display_name = value; }
     }
