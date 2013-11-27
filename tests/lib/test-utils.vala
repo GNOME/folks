@@ -342,6 +342,98 @@ public class Folks.TestUtils
     }
 
   /**
+   * Wait for the given personas to be added to or removed from an aggregator.
+   *
+   * This will yield until all of the personas listed in
+   * ``expected_added_persona_names`` are added to the aggregator; or until all
+   * of the personas listed in ``expected_removed_persona_names`` are removed
+   * from it. Only one of the two arrays may be non-empty; this method does not
+   * currently implement checking of complex individual change notifications.
+   *
+   * No timeout is used, so if the aggregator never adds or removes all the
+   * expected personas, this function will never return; callers must add their
+   * own timeout to avoid this if necessary. On return from this function, all
+   * of the given names are guaranteed to exist in the aggregator.
+   *
+   * The names in ``expected_added_persona_names`` and
+   * ``expected_removed_persona_names`` must be those appearing in the
+   * {@link NameDetails.full_name} property of the personas (and hence of the
+   * individuals).
+   *
+   * @param aggregator the aggregator to check
+   * @param expected_added_persona_names set of full names of the expected
+   * personas to be added
+   * @param expected_removed_persona_names set of full names of the expected
+   * personas to be removed
+   *
+   * @since UNRELEASED
+   */
+  public static async void aggregator_wait_for_individuals (
+      IndividualAggregator aggregator, string[] expected_added_persona_names,
+      string[] expected_removed_persona_names)
+    {
+      /* Currently only support waiting for all additions or all removals. */
+      assert (expected_added_persona_names.length == 0 ||
+              expected_removed_persona_names.length == 0);
+
+      var expected_added = new HashSet<string> ();
+      var expected_removed = new HashSet<string> ();
+
+      foreach (var name in expected_added_persona_names)
+          expected_added.add (name);
+      foreach (var name in expected_removed_persona_names)
+          expected_removed.add (name);
+
+      /* Set up the aggregator */
+      var signal_id = aggregator.individuals_changed_detailed.connect (
+          (changes) =>
+        {
+          var added = changes.get_values ();
+          var removed = changes.get_keys ();
+
+          foreach (Individual i in added)
+            {
+              if (expected_added.size == 0)
+                {
+                  assert (i == null);
+                  break;
+                }
+
+              assert (i != null);
+
+              var name_details = i as NameDetails;
+              assert (name_details != null);
+              expected_added.remove (name_details.full_name);
+            }
+
+          foreach (var i in removed)
+            {
+              if (expected_removed.size == 0)
+                {
+                  assert (i == null);
+                  break;
+                }
+
+              assert (i != null);
+
+              var name_details = i as NameDetails;
+              assert (name_details != null);
+              expected_removed.remove (name_details.full_name);
+            }
+
+
+          /* Finished? */
+          if (expected_added.size == 0 && expected_removed.size == 0)
+              TestUtils.aggregator_wait_for_individuals.callback ();
+        });
+
+      yield;
+
+      aggregator.disconnect (signal_id);
+      assert (expected_added.size == 0 && expected_removed.size == 0);
+    }
+
+  /**
    * Synchronously prepare an aggregator and wait for the given personas to be
    * added to it.
    *
