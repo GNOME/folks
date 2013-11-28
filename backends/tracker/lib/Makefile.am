@@ -1,7 +1,6 @@
 BACKEND_NAME = "tracker"
 
-folks_trackerdir = $(libdir)
-folks_tracker_LTLIBRARIES = libfolks-tracker.la
+lib_LTLIBRARIES = libfolks-tracker.la
 
 pkgconfig_in = folks-tracker.pc.in
 pkgconfigdir = $(libdir)/pkgconfig

@@ -14,8 +14,7 @@ VAPIGENFLAGS += \
 	--vapidir=$(top_srcdir)/folks \
 	$(NULL)
 
-folks_libsocialwebdir = $(libdir)
-folks_libsocialweb_LTLIBRARIES = libfolks-libsocialweb.la
+lib_LTLIBRARIES = libfolks-libsocialweb.la
 
 ##################################################################
 # Support library

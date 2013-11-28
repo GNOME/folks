@@ -15,8 +15,7 @@ VAPIGENFLAGS += \
 	--vapidir=$(top_srcdir)/folks \
 	$(NULL)
 
-folks_edsdir = $(libdir)
-folks_eds_LTLIBRARIES = libfolks-eds.la
+lib_LTLIBRARIES = libfolks-eds.la
 
 ##################################################################
 # Support library

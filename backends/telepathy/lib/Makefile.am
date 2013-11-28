@@ -19,8 +19,7 @@ VAPIGENFLAGS += \
 noinst_LTLIBRARIES = \
 	libtp-lowlevel.la \
 	$(NULL)
-folks_telepathydir = $(libdir)
-folks_telepathy_LTLIBRARIES = libfolks-telepathy.la
+lib_LTLIBRARIES = libfolks-telepathy.la
 
 if ENABLE_ZEITGEIST
 noinst_LTLIBRARIES += libtp-zeitgeist.la
