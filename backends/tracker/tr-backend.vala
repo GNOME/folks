@@ -147,6 +147,7 @@ public class Folks.Backends.Tr.Backend : Folks.Backend
       try
         {
           this._prepare_pending = true;
+          this.freeze_notify ();
 
           this._add_default_persona_store ();
 
@@ -158,6 +159,7 @@ public class Folks.Backends.Tr.Backend : Folks.Backend
         }
       finally
         {
+          this.thaw_notify ();
           this._prepare_pending = false;
         }
 
@@ -177,6 +179,7 @@ public class Folks.Backends.Tr.Backend : Folks.Backend
       try
         {
           this._prepare_pending = true;
+          this.freeze_notify ();
 
           foreach (var persona_store in this._persona_stores.values)
             {
@@ -194,6 +197,7 @@ public class Folks.Backends.Tr.Backend : Folks.Backend
         }
       finally
         {
+          this.thaw_notify ();
           this._prepare_pending = false;
         }
     }

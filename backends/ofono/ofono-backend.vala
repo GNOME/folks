@@ -174,6 +174,7 @@ public class Folks.Backends.Ofono.Backend : Folks.Backend
       try
         {
           this._prepare_pending = true;
+          this.freeze_notify ();
 
           /* New modem devices can be caught in notifications */
           Manager manager;
@@ -199,16 +200,15 @@ public class Folks.Backends.Ofono.Backend : Folks.Backend
               this._modem_added (modem.path, modem.properties);
             }
 
-          this.freeze_notify ();
           this._is_prepared = true;
           this.notify_property ("is-prepared");
 
           this._is_quiescent = true;
           this.notify_property ("is-quiescent");
-          this.thaw_notify ();
         }
       finally
         {
+          this.thaw_notify ();
           this._prepare_pending = false;
         }
 
@@ -228,13 +228,13 @@ public class Folks.Backends.Ofono.Backend : Folks.Backend
       try
         {
           this._prepare_pending = true;
+          this.freeze_notify ();
 
           foreach (var persona_store in this._persona_stores.values)
             {
               this.persona_store_removed (persona_store);
             }
 
-          this.freeze_notify ();
           this._persona_stores.clear ();
           this.notify_property ("persona-stores");
 
@@ -243,10 +243,10 @@ public class Folks.Backends.Ofono.Backend : Folks.Backend
 
           this._is_prepared = false;
           this.notify_property ("is-prepared");
-          this.thaw_notify ();
         }
       finally
         {
+          this.thaw_notify ();
           this._prepare_pending = false;
         }
     }

@@ -183,6 +183,8 @@ public class Folks.Backends.Sw.Backend : Folks.Backend
         {
           try
             {
+              this.freeze_notify ();
+
               foreach (var service_name in services)
                 this.add_service (service_name);
 
@@ -196,6 +198,7 @@ public class Folks.Backends.Sw.Backend : Folks.Backend
             }
           finally
             {
+              this.thaw_notify ();
               this._prepare_pending = false;
             }
         });
@@ -216,6 +219,7 @@ public class Folks.Backends.Sw.Backend : Folks.Backend
       try
         {
           this._prepare_pending = true;
+          this.freeze_notify ();
 
           foreach (var store in this._persona_stores.values)
             {
@@ -236,6 +240,7 @@ public class Folks.Backends.Sw.Backend : Folks.Backend
         }
       finally
         {
+          this.thaw_notify ();
           this._prepare_pending = false;
         }
     }

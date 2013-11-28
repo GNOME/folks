@@ -206,6 +206,7 @@ public class Folks.Backends.Eds.Backend : Folks.Backend
       try
         {
           this._prepare_pending = true;
+          this.freeze_notify ();
 
           this._create_avatars_cache_dir ();
 
@@ -226,6 +227,7 @@ public class Folks.Backends.Eds.Backend : Folks.Backend
         }
       finally
         {
+          this.thaw_notify ();
           this._prepare_pending = false;
         }
 
@@ -245,6 +247,7 @@ public class Folks.Backends.Eds.Backend : Folks.Backend
       try
         {
           this._prepare_pending = true;
+          this.freeze_notify ();
 
           var iter = this._persona_stores.values.iterator ();
 
@@ -263,6 +266,7 @@ public class Folks.Backends.Eds.Backend : Folks.Backend
         }
       finally
         {
+          this.thaw_notify ();
           this._prepare_pending = false;
         }
     }

@@ -466,6 +466,7 @@ public class Folks.Backends.BlueZ.Backend : Folks.Backend
       try
         {
           this._prepare_pending = true;
+          this.freeze_notify ();
 
           try
             {
@@ -569,6 +570,7 @@ public class Folks.Backends.BlueZ.Backend : Folks.Backend
         }
       finally
         {
+          this.thaw_notify ();
           this._prepare_pending = false;
         }
 
