@@ -4,7 +4,7 @@
 # copy-and-modify (moving it to a better namespace), or make changes in the
 # copy in telepathy-glib first.
 
-VAPIGENFLAGS += \
+VAPIGENFLAGS = \
 	--vapidir=. \
 	--pkg gobject-2.0 \
 	--pkg gio-2.0 \

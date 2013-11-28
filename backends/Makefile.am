@@ -36,6 +36,9 @@ DIST_SUBDIRS = \
 	tracker \
 	$(NULL)
 
-EXTRA_DIST = backend.mk
+EXTRA_DIST = \
+	backend.mk \
+	backend-library.mk \
+	$(NULL)
 
 -include $(top_srcdir)/git.mk

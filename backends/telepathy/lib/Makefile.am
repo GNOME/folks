@@ -1,24 +1,22 @@
-BACKEND_NAME = "telepathy"
+CLEANFILES =
+MAINTAINERCLEANFILES =
+EXTRA_DIST =
 
-AM_CPPFLAGS = \
-	-I$(top_srcdir) \
-	-I$(top_srcdir)/folks \
-	-include $(CONFIG_HEADER) \
-	-DPACKAGE_DATADIR=\"$(pkgdatadir)\" \
-	-DBACKEND_NAME=\"$(BACKEND_NAME)\" \
-	-DG_LOG_DOMAIN=\"$(BACKEND_NAME)\" \
-	$(NULL)
+include $(top_srcdir)/backends/backend-library.mk
 
-VAPIGENFLAGS += \
+BACKEND_NAME = telepathy
+BACKEND_NAME_C = Telepathy
+BACKEND_LT_VERSION = $(FOLKS_TELEPATHY_LT_VERSION)
+BACKEND_SYMBOLS_REGEX = "^tpf_.*"
+
+VAPIGENFLAGS = \
 	--vapidir=$(abs_builddir) \
 	--vapidir=$(abs_srcdir) \
 	--vapidir=$(abs_top_builddir)/folks \
 	--vapidir=$(abs_top_srcdir)/folks \
 	$(NULL)
 
-noinst_LTLIBRARIES = \
-	libtp-lowlevel.la \
-	$(NULL)
+noinst_LTLIBRARIES = libtp-lowlevel.la
 lib_LTLIBRARIES = libfolks-telepathy.la
 
 if ENABLE_ZEITGEIST
@@ -28,13 +26,12 @@ noinst_LTLIBRARIES += libtp-zeitgeist-dummy.la
 endif
 
 # Necessary because they're only conditionally listed in noinst_LTLIBRARIES.
-CLEANFILES = \
+CLEANFILES += \
 	libtp-zeitgeist.la \
 	libtp-zeitgeist-dummy.la \
 	$(NULL)
 
 dist_noinst_DATA =
-EXTRA_DIST =
 
 ##################################################################
 # Telepathy Lowlevel library
@@ -47,13 +44,8 @@ libtp_lowlevel_la_SOURCES = \
 tp_lowlevel_headers = tp-lowlevel.h
 
 libtp_lowlevel_la_CFLAGS = \
-	$(AM_CFLAGS) \
-	$(ERROR_CFLAGS) \
-	$(CODE_COVERAGE_CFLAGS) \
+	$(backend_library_cflags_generic) \
 	$(C_ERROR_CFLAGS) \
-	$(GIO_CFLAGS) \
-	$(GLIB_CFLAGS) \
-	$(GEE_CFLAGS) \
 	$(TP_GLIB_CFLAGS) \
 	$(NULL)
 
@@ -61,8 +53,7 @@ libtp_lowlevel_la_CFLAGS = \
 # despite not being installed (it needs to be a shared library for
 # vala-gen-introspect)
 libtp_lowlevel_la_LDFLAGS = \
-	$(AM_LDFLAGS) \
-	$(CODE_COVERAGE_LDFLAGS) \
+	$(backend_library_ldflags_generic) \
 	-shared \
 	-rpath $(libdir) \
 	-avoid-version \
@@ -103,26 +94,19 @@ libtp_zeitgeist_la_SOURCES = tp-zeitgeist.vala
 libtp_zeitgeist_dummy_la_SOURCES = tp-zeitgeist-dummy.vala
 
 libtp_zeitgeist_la_CFLAGS = \
-	$(AM_CFLAGS) \
-	$(CODE_COVERAGE_CFLAGS) \
-	$(ERROR_CFLAGS) \
-	$(GLIB_CFLAGS) \
-	$(GEE_CFLAGS) \
+	$(backend_library_cflags_generic) \
 	$(TP_GLIB_CFLAGS) \
 	$(ZEITGEIST_CFLAGS) \
 	$(NULL)
 libtp_zeitgeist_dummy_la_CFLAGS = \
-	$(AM_CFLAGS) \
-	$(CODE_COVERAGE_CFLAGS) \
-	$(ERROR_CFLAGS) \
-	$(GLIB_CFLAGS) \
+	$(backend_library_cflags_generic) \
 	$(TP_GLIB_CFLAGS) \
-	$(GEE_CFLAGS) \
 	$(NULL)
 
 libtp_zeitgeist_la_CPPFLAGS = \
-	$(AM_CPPFLAGS) \
-	-include $(top_srcdir)/folks/warnings.h \
+	$(backend_library_cppflags_generic) \
+	-DBACKEND_NAME=\"$(BACKEND_NAME)\" \
+	-DG_LOG_DOMAIN=\"$(BACKEND_NAME)\" \
 	-DABS_TOP_SRCDIR=\"${abs_top_srcdir}\" \
 	-DABS_TOP_BUILDDIR=\"${abs_top_builddir}\" \
 	-DPKGLIBEXECDIR=\"${pkglibexecdir}\" \
@@ -130,53 +114,29 @@ libtp_zeitgeist_la_CPPFLAGS = \
 libtp_zeitgeist_dummy_la_CPPFLAGS = $(libtp_zeitgeist_la_CPPFLAGS)
 
 libtp_zeitgeist_la_LIBADD = \
-	$(AM_LIBADD) \
-	$(top_builddir)/folks/libfolks.la \
-	$(GLIB_LIBS) \
-	$(GEE_LIBS) \
+	$(backend_library_libadd_generic) \
 	$(TP_GLIB_LIBS) \
 	$(ZEITGEIST_LIBS) \
 	$(NULL)
 libtp_zeitgeist_dummy_la_LIBADD = \
-	$(AM_LIBADD) \
-	$(top_builddir)/folks/libfolks.la \
-	$(GLIB_LIBS) \
-	$(GEE_LIBS) \
+	$(backend_library_libadd_generic) \
 	$(TP_GLIB_LIBS) \
 	$(NULL)
 
 libtp_zeitgeist_la_VALAFLAGS = \
-	$(AM_VALAFLAGS) \
-	$(TARGET_VALAFLAGS) \
-	$(ERROR_VALAFLAGS) \
-	--vapidir=$(abs_top_srcdir)/folks \
-	--vapidir=$(abs_top_builddir)/folks \
-	--pkg gobject-2.0 \
-	--pkg gio-2.0 \
-	--pkg gee-0.8 \
+	$(backend_library_valaflags_generic) \
 	--pkg zeitgeist-2.0 \
 	--pkg telepathy-glib \
-	--pkg folks \
-	--pkg build-conf \
 	--library tp-zeitgeist \
 	--vapi tp-zeitgeist.vapi \
 	-H tp-zeitgeist.h \
-	-g \
 	$(NULL)
 libtp_zeitgeist_dummy_la_VALAFLAGS = \
-	$(AM_VALAFLAGS) \
-	$(TARGET_VALAFLAGS) \
-	$(ERROR_VALAFLAGS) \
-	--vapidir=$(abs_top_srcdir)/folks \
-	--vapidir=$(abs_top_builddir)/folks \
-	--pkg gobject-2.0 \
-	--pkg folks \
-	--pkg build-conf \
+	$(backend_library_valaflags_generic) \
 	--pkg telepathy-glib \
 	--library tp-zeitgeist-dummy \
 	--vapi tp-zeitgeist-dummy.vapi \
 	-H tp-zeitgeist-dummy.h \
-	-g \
 	$(NULL)
 
 
@@ -189,10 +149,6 @@ endif
 ##################################################################
 # Support library
 ##################################################################
-
-pkgconfig_in = folks-telepathy.pc.in
-pkgconfigdir = $(libdir)/pkgconfig
-pkgconfig_DATA = $(pkgconfig_in:.in=)
 
 FOLKS_TP_VALA_DEPS = tp-lowlevel.vapi
 if ENABLE_ZEITGEIST
@@ -212,27 +168,9 @@ libfolks_telepathy_la_SOURCES = \
 	$(NULL)
 
 libfolks_telepathy_la_VALAFLAGS = \
-	$(AM_VALAFLAGS) \
-	$(TARGET_VALAFLAGS) \
-	$(ERROR_VALAFLAGS) \
-	--gir=FolksTelepathy-$(API_VERSION_DOT).gir \
-	--library=folks-telepathy \
-	--vapidir=$(abs_srcdir) \
-	--vapidir=$(abs_builddir) \
-	--vapidir=$(abs_top_srcdir)/folks \
-	--vapidir=$(abs_top_builddir)/folks \
-	--pkg folks \
-	--pkg folks-generics \
-	--pkg folks-internal \
+	$(backend_library_valaflags) \
 	--pkg tp-lowlevel \
-	--pkg gobject-2.0 \
-	--pkg gio-2.0 \
-	--pkg gee-0.8 \
 	--pkg telepathy-glib \
-	--includedir folks \
-	--library folks-telepathy \
-	--vapi folks-telepathy.vapi \
-	-H folks/folks-telepathy.h \
 	$(NULL)
 
 if ENABLE_ZEITGEIST
@@ -242,26 +180,17 @@ libfolks_telepathy_la_VALAFLAGS += --pkg tp-zeitgeist-dummy
 endif
 
 libfolks_telepathy_la_CPPFLAGS = \
-	$(AM_CPPFLAGS) \
-	-include $(top_srcdir)/folks/warnings.h \
+	$(backend_library_cppflags) \
 	$(NULL)
 
 libfolks_telepathy_la_CFLAGS = \
-	$(AM_CFLAGS) \
-	$(CODE_COVERAGE_CFLAGS) \
-	$(GIO_CFLAGS) \
-	$(GLIB_CFLAGS) \
-	$(GEE_CFLAGS) \
+	$(backend_library_cflags) \
 	$(TP_GLIB_CFLAGS) \
 	$(NULL)
 
 libfolks_telepathy_la_LIBADD = \
-	$(AM_LIBADD) \
-	$(GIO_LIBS) \
-	$(GLIB_LIBS) \
-	$(GEE_LIBS) \
+	$(backend_library_libadd) \
 	$(TP_GLIB_LIBS) \
-	$(top_builddir)/folks/libfolks.la \
 	$(NULL)
 
 if ENABLE_ZEITGEIST
@@ -270,25 +199,8 @@ else
 libfolks_telepathy_la_LIBADD += libtp-zeitgeist-dummy.la
 endif
 
-# The quoting here is unnecessary but harmless, and has the useful side-effect
-# that vim quickfix mode (:make) doesn't interpret the libtool --mode=link
-# command as an error message in a bizarrely named file
 libfolks_telepathy_la_LDFLAGS = \
-	$(AM_LDFLAGS) \
-	$(CODE_COVERAGE_LDFLAGS) \
-	-version-info "$(FOLKS_TELEPATHY_LT_VERSION)" \
-	-export-symbols-regex "^tpf_.*" \
-	$(NULL)
-
-folks_telepathy_includedir = $(includedir)/folks
-folks_telepathy_include_HEADERS = \
-	folks/folks-telepathy.h \
-	$(NULL)
-
-vapidir = $(datadir)/vala/vapi
-dist_vapi_DATA = \
-	folks-telepathy.vapi \
-	folks-telepathy.deps \
+	$(backend_library_ldflags) \
 	$(NULL)
 
 ##################################################################
@@ -299,11 +211,8 @@ if NOT_RELEASE
 DISTCLEANFILES = $(dist_noinst_DATA)
 endif
 
-MAINTAINERCLEANFILES =
 EXTRA_DIST += \
 	$(libtp_lowlevel_la_SOURCES) \
-	$(pkgconfig_in) \
-	$(MAINTAINERCLEANFILES) \
 	$(NULL)
 
 # XXX: headers separated because automake erroneously treats all libraries in
@@ -315,25 +224,8 @@ noinst_HEADERS = $(tp_lowlevel_headers)
 # Introspection
 ##################################################################
 
--include $(INTROSPECTION_MAKEFILE)
 INTROSPECTION_GIRS =
-INTROSPECTION_SCANNER_ARGS = \
-	$(ERROR_INTROSPECTION_SCANNER_ARGS) \
-	--add-include-path=$(srcdir) \
-	--add-include-path=$(abs_top_builddir)/folks \
-	--warn-all \
-	$(NULL)
-
-# Set PKG_CONFIG_PATH so we can find the backend's uninstalled pkg-config file.
-INTROSPECTION_SCANNER_ENV = \
-	PKG_CONFIG_PATH=$(top_builddir)/folks:$${PKG_CONFIG_PATH}
-
 DISTCHECK_CONFIGURE_FLAGS = --enable-introspection
-
-INTROSPECTION_COMPILER_ARGS = \
-	--includedir=$(srcdir) \
-	--includedir=$(abs_top_builddir)/folks \
-	$(NULL)
 
 #------------------------------------
 # TpLowlevel
@@ -355,25 +247,6 @@ dist_noinst_DATA += \
 	$(NULL)
 
 TpLowlevel-$(API_VERSION_DOT).gir: libtp-lowlevel.la
-
-#------------------------------------
-# Folks Telepathy
-#------------------------------------
-
-if HAVE_INTROSPECTION
-FolksTelepathy-$(API_VERSION_DOT).gir: libfolks-telepathy.la
-GIRS = FolksTelepathy-$(API_VERSION_DOT).gir
-
-girdir = $(datadir)/gir-1.0
-dist_gir_DATA = $(GIRS)
-
-MAINTAINERCLEANFILES += $(dist_gir_DATA)
-
-typelibdir = $(libdir)/girepository-1.0
-nodist_typelib_DATA = $(GIRS:.gir=.typelib)
-
-CLEANFILES += $(nodist_typelib_DATA)
-endif
 
 ##################################################################
 # Common

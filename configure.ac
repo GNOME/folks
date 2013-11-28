@@ -392,7 +392,6 @@ AS_IF([test "x$enable_vala" = "xyes"], [
         # within the libfolks tree, select inline code paths
         TARGET_VALAFLAGS="$TARGET_VALAFLAGS -D FOLKS_COMPILATION"
         AC_SUBST([TARGET_VALAFLAGS])
-        AC_SUBST([VAPIGENFLAGS])
         AC_SUBST([VAPIDIR])
 
         VALA_CHECK_PACKAGES([gio-2.0
