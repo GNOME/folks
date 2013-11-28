@@ -250,6 +250,9 @@ dist_noinst_DATA += \
 
 TpLowlevel-$(API_VERSION_DOT).gir: libtp-lowlevel.la
 
+MAINTAINERCLEANFILES += TpLowlevel-$(API_VERSION_DOT).gir
+CLEANFILES += TpLowlevel-$(API_VERSION_DOT).typelib
+
 ##################################################################
 # Common
 ##################################################################
