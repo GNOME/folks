@@ -7,12 +7,14 @@ include $(top_srcdir)/backends/backend-library.mk
 BACKEND_NAME = tracker
 BACKEND_NAME_C = Tracker
 BACKEND_LT_VERSION = $(FOLKS_TRACKER_LT_VERSION)
+BACKEND_API_VERSION = $(FOLKS_TRACKER_API_VERSION)
 BACKEND_SYMBOLS_REGEX = "^(TRF|trf)_.*|"
+BACKEND_NAMESPACE = Trf
 
 lib_LTLIBRARIES = libfolks-tracker.la
 
 libfolks_tracker_la_SOURCES = \
-	trf-namespace.vala \
+	$(backend_library_sources) \
 	trf-persona.vala \
 	trf-persona-store.vala \
 	trf-util.vala \

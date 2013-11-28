@@ -7,12 +7,14 @@ include $(top_srcdir)/backends/backend-library.mk
 BACKEND_NAME = libsocialweb
 BACKEND_NAME_C = Libsocialweb
 BACKEND_LT_VERSION = $(FOLKS_LIBSOCIALWEB_LT_VERSION)
+BACKEND_API_VERSION = $(FOLKS_LIBSOCIALWEB_API_VERSION)
 BACKEND_SYMBOLS_REGEX = "^swf_.*"
+BACKEND_NAMESPACE = Swf
 
 lib_LTLIBRARIES = libfolks-libsocialweb.la
 
 libfolks_libsocialweb_la_SOURCES = \
-	swf-namespace.vala \
+	$(backend_library_sources) \
 	swf-persona.vala \
 	swf-persona-store.vala \
 	$(NULL)

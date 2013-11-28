@@ -6,14 +6,17 @@
 #    (this must be the same as the source directory and the backend's type ID)
 #  - BACKEND_NAME_C = NameOfBackend
 #    (BACKEND_NAME in CamelCase for the GIR filename)
+#  - BACKEND_API_VERSION = $(FOLKS_something_API_VERSION)
 #  - BACKEND_LT_VERSION = $(FOLKS_something_LT_VERSION)
 #    (from configure.ac)
 #  - BACKEND_SYMBOLS_REGEX = something
 #    (regex to pass to -export-symbols-regex to determine the backend’s public
 #     symbols)
+#  - BACKEND_NAMESPACE = Something
+#    (Vala namespace used in the backend code)
 # Required targets:
 #  - libfolks-$(BACKEND_NAME).la
-# Defined helper variables (these may be overridden for weird backends):
+# Derived helper variables (these may be overridden for weird backends):
 #  - BACKEND_LIBRARY_NAME
 #  - BACKEND_LA_FILE
 #  - BACKEND_PC_FILE
@@ -48,7 +51,7 @@
 BACKEND_LIBRARY_NAME = folks-$(BACKEND_NAME)
 BACKEND_LA_FILE = lib$(BACKEND_LIBRARY_NAME).la
 BACKEND_PC_FILE = $(BACKEND_LIBRARY_NAME).pc.in
-BACKEND_GIR_FILE = Folks$(BACKEND_NAME_C)-$(API_VERSION_DOT).gir
+BACKEND_GIR_FILE = Folks$(BACKEND_NAME_C)-$(BACKEND_API_VERSION).gir
 BACKEND_VAPI_FILE = $(BACKEND_LIBRARY_NAME).vapi
 BACKEND_DEPS_FILE = $(BACKEND_LIBRARY_NAME).deps
 BACKEND_HEADER_FILE = folks/$(BACKEND_LIBRARY_NAME).h
@@ -56,6 +59,7 @@ BACKEND_HEADER_FILE = folks/$(BACKEND_LIBRARY_NAME).h
 
 # Added in case it's needed in the future.
 backend_library_sources = \
+	namespace.vala \
 	$(NULL)
 
 backend_library_cppflags_generic = \
@@ -125,6 +129,17 @@ backend_library_ldflags = \
 	-export-symbols-regex $(BACKEND_SYMBOLS_REGEX) \
 	$(NULL)
 
+
+# Namespace Vala file
+#
+# FIXME: This can be removed once the backend namespaces have been sanitised.
+# https://bugzilla.gnome.org/show_bug.cgi?id=711544
+#
+# This file sets namespace and version attributes for GIR.
+namespace.vala:
+	$(AM_V_GEN)echo -e "[CCode (gir_namespace = \"Folks$(BACKEND_NAME_C)\", gir_version = \"$(BACKEND_API_VERSION)\")]\nnamespace $(BACKEND_NAMESPACE) {}" > $@
+
+MAINTAINERCLEANFILES += namespace.vala
 
 # Installed headers
 folks_includedir = $(includedir)/folks

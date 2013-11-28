@@ -7,12 +7,14 @@ include $(top_srcdir)/backends/backend-library.mk
 BACKEND_NAME = eds
 BACKEND_NAME_C = Eds
 BACKEND_LT_VERSION = $(FOLKS_EDS_LT_VERSION)
+BACKEND_API_VERSION = $(FOLKS_EDS_API_VERSION)
 BACKEND_SYMBOLS_REGEX = "^(EDSF|edsf)_.*|"
+BACKEND_NAMESPACE = Edsf
 
 lib_LTLIBRARIES = libfolks-eds.la
 
 libfolks_eds_la_SOURCES = \
-	edsf-namespace.vala \
+	$(backend_library_sources) \
 	edsf-persona.vala \
 	edsf-persona-store.vala \
 	$(NULL)

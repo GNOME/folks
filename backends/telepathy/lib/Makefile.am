@@ -7,7 +7,9 @@ include $(top_srcdir)/backends/backend-library.mk
 BACKEND_NAME = telepathy
 BACKEND_NAME_C = Telepathy
 BACKEND_LT_VERSION = $(FOLKS_TELEPATHY_LT_VERSION)
+BACKEND_API_VERSION = $(FOLKS_TELEPATHY_API_VERSION)
 BACKEND_SYMBOLS_REGEX = "^tpf_.*"
+BACKEND_NAMESPACE = Tpf
 
 VAPIGENFLAGS = \
 	--vapidir=$(abs_builddir) \
@@ -159,7 +161,7 @@ endif
 $(builddir)/libfolks_telepathy_la_vala.stamp: $(FOLKS_TP_VALA_DEPS)
 
 libfolks_telepathy_la_SOURCES = \
-	tpf-namespace.vala \
+	$(backend_library_sources) \
 	tpf-persona.vala \
 	tpf-persona-store.vala \
 	tpf-logger.vala \

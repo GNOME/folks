@@ -112,6 +112,8 @@ FOLKS_TRACKER_LT_VERSION=folks_tracker_lt_current:folks_tracker_lt_revision:folk
 AC_SUBST([FOLKS_TRACKER_LT_VERSION])
 
 # Core library API version (potentially used for parallel installation)
+# When updating this, don’t forget to update the backend library API versions
+# below.
 API_VERSION_MAJOR=0
 AC_SUBST([API_VERSION_MAJOR])
 API_VERSION_MINOR=6
@@ -119,6 +121,13 @@ AC_SUBST([API_VERSION_MINOR])
 API_VERSION_DOT=$API_VERSION_MAJOR.$API_VERSION_MINOR
 AC_SUBST([API_VERSION_DOT])
 
+# Backend library API versions
+AC_SUBST([FOLKS_EDS_API_VERSION], [0.6])
+AC_SUBST([FOLKS_LIBSOCIALWEB_API_VERSION], [0.6])
+AC_SUBST([FOLKS_TELEPATHY_API_VERSION], [0.6])
+AC_SUBST([FOLKS_TRACKER_API_VERSION], [0.6])
+
+# Backend configuration
 AC_ARG_ENABLE(tracker-backend,
         AS_HELP_STRING([--enable-tracker-backend],
                        [ build the Tracker backend]),
