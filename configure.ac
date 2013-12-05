@@ -31,7 +31,7 @@ m4_define([folks_module_version], folks_lt_current)
 
 AC_INIT([folks],[folks_version],
         [https://bugzilla.gnome.org/browse.cgi?product=folks],[folks],
-        [http://telepathy.freedesktop.org/wiki/Folks])
+        [https://wiki.gnome.org/Projects/Folks])
 m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
 
 AC_PREREQ([2.65])
