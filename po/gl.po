@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: folks master\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-12-18 23:31+0100\n"
-"PO-Revision-Date: 2013-12-18 23:32+0200\n"
+"POT-Creation-Date: 2013-12-19 18:06+0100\n"
+"PO-Revision-Date: 2013-12-19 18:06+0200\n"
 "Last-Translator: Fran Dieguez <frandieguez@gnome.org>\n"
 "Language-Team: gnome-l10n-gl@gnome.org\n"
 "Language: gl\n"
@@ -29,8 +29,7 @@ msgstr "Non hai ningún xestor de obxectos BlueZ 5, polo que usarase BlueZ"
 #: ../backends/bluez/bluez-backend.vala:529
 msgid "Error connecting to OBEX transfer daemon over D-Bus. "
 msgstr ""
-"Produciuse un erro ao conectarse ao daemon de transferencia OBEX sobre "
-"D-Bus."
+"Produciuse un erro ao conectarse ao daemon de transferencia OBEX sobre D-Bus."
 
 #. Translators: the parameter is an error message.
 #: ../backends/bluez/bluez-persona-store.vala:294
@@ -60,21 +59,23 @@ msgstr "Permiso para acceder á axenda de enderezos en Bluetooth"
 #, c-format
 msgid "An OBEX address book transfer from device ‘%s’ could "
 msgstr ""
-"Unha transferencia de axenda de enderezos OBEX desde o dispositivo «%s» "
-"poden"
+"Unha transferencia de axenda de enderezos OBEX desde o dispositivo «%s» poden"
 
 #. Translators: the first parameter is a Bluetooth device
 #. * alias, and the second is an error message.
 #: ../backends/bluez/bluez-persona-store.vala:697
 #, c-format
 msgid "The OBEX address book transfer from device ‘%s’ "
-msgstr "Unha transferencia de axenda de enderezos OBEX desde o dispositivo «%s»"
+msgstr ""
+"Unha transferencia de axenda de enderezos OBEX desde o dispositivo «%s»"
 
 #. Translators: the first parameter is a Bluetooth device
 #. * alias, and the second is an error message.
 #: ../backends/bluez/bluez-persona-store.vala:715
 msgid "Error during transfer of the address book from "
-msgstr "Produciuse un erro ao transferir a axenda de enderezos desde"
+msgstr ""
+"Produciuse un erro ao transferir a axenda de enderezos desde o dispositivo "
+"Bluetooth %s"
 
 #: ../backends/bluez/bluez-persona-store.vala:767
 #, c-format
