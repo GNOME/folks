@@ -46,11 +46,18 @@ extern const string BACKEND_NAME;
  *  - Paired and connected
  *
  * The default state for a device is unpaired. The user must explicitly pair
- * their device before folks will begin to use it — folks ignores unpaired
- * devices. Once a device is paired, folks will attempt to do an OBEX PBAP
- * transfer to copy the device’s address book; this will automatically connect
- * the device. After the transfer is complete, the device will go back to being
- * paired and unconnected.
+ * their device and enable it using {@link Backend.enable_persona_store} or
+ * {@link Backend.set_persona_stores} before folks will begin to use it — folks
+ * ignores unpaired devices. Once a device is paired and enabled, folks will
+ * attempt to do an OBEX PBAP transfer to copy the device’s address book; this
+ * will automatically connect the device. After the transfer is complete, the
+ * device will go back to being paired and unconnected.
+ *
+ * Note that by requiring that devices are explicitly enabled by calling
+ * {@link Backend.set_persona_stores}, the BlueZ backend is empty by default
+ * every time libfolks is loaded, until the client explicitly enables a device.
+ * This may change in future, and the state of enabled devices may be retained
+ * between runs.
  *
  * Every time the user explicitly connects to the device, folks will re-download
  * its address book. Currently, folks will not otherwise re-download it (i.e.
@@ -99,6 +106,9 @@ public class Folks.Backends.BlueZ.Backend : Folks.Backend
   /* Map from device D-Bus object path to PersonaStore. */
   private HashMap<string, PersonaStore> _watched_devices;
   private org.bluez.obex.Client? _obex_client = null;
+  /* Set of Bluetooth device addresses for the enabled devices. If a device
+   * isn’t listed here, a PersonaStore will not be created for it. */
+  private SmallSet<string> _enabled_devices;
 
   /**
    * Whether this Backend has been prepared.
@@ -144,41 +154,89 @@ public class Folks.Backends.BlueZ.Backend : Folks.Backend
   /**
    * {@inheritDoc}
    *
-   * This method actually does nothing because the backend can't
-   * programmatically disable a persona store since it can only
-   * be disabled if the corresponding device is unpaired by the
-   * user.
-   *
    * @since 0.9.6
    */
   public override void disable_persona_store (Folks.PersonaStore store)
     {
+      var _store = store as BlueZ.PersonaStore;
+      if (_store == null)
+        return;
+
+      debug ("Disabling persona store ‘%s’.", store.id);
+
+      var device_address = store.id;  /* implicit assumption */
+      this._enabled_devices.remove (device_address);
+
+      if (!this._persona_stores.has_key (store.id))
+        return;
+
+      this._remove_persona_store ((!) _store);
     }
 
   /**
    * {@inheritDoc}
-   *
-   * This method actually does nothing because the backend can't
-   * programmatically add a new persona store since it depends
-   * on new paired devices.
    *
    * @since 0.9.6
    */
   public override void enable_persona_store (Folks.PersonaStore store)
     {
+      var _store = store as BlueZ.PersonaStore;
+      if (_store == null)
+        return;
+
+      debug ("Enabling persona store ‘%s’.", store.id);
+
+      var device_address = store.id;  /* implicit assumption */
+      this._enabled_devices.add (device_address);
+
+      /* See if any existing device objects correspond to the store. */
+      this._refresh_devices.begin ((o, r) =>
+        {
+          this._refresh_devices.end (r);
+        });
     }
 
   /**
    * {@inheritDoc}
    *
-   * This method actually does nothing because the backend can't
-   * programmatically add or remove persona stores since it depends
-   * on paired/unpaired devices.
-   *
    * @since 0.9.6
    */
   public override void set_persona_stores (Set<string>? storeids)
     {
+      if (storeids == null)
+        {
+          /* Use all available devices. */
+          var objs = this._manager.get_objects ();
+
+          foreach (var obj in objs)
+            {
+              var device = obj.get_interface ("org.bluez.Device1") as Device;
+              if (device == null)
+                  continue;
+
+              this._enabled_devices.add (device.address);
+              this._add_device.begin (obj, (o, r) =>
+                {
+                  this._add_device.end (r);
+                });
+            }
+
+          return;
+        }
+
+      /* Clear the set of enabled persona stores and re-populate it with only
+       * the addresses from storeids. */
+      this._enabled_devices.clear ();
+      foreach (var store_id in storeids)
+        {
+          var device_address = store_id;  /* implicit assumption */
+          this._enabled_devices.add (device_address);
+        }
+
+      this._refresh_devices.begin ((o, r) =>
+        {
+          this._refresh_devices.end (r);
+        });
     }
 
   /**
@@ -369,6 +427,24 @@ public class Folks.Backends.BlueZ.Backend : Folks.Backend
     }
 
   /**
+   * Refresh the list of devices from D-Bus.
+   *
+   * Add any new devices which are on D-Bus but aren’t in the BlueZ backend.
+   * This does not currently remove devices which have disappeared from D-Bus.
+   *
+   * @since UNRELEASED
+   */
+  private async void _refresh_devices ()
+    {
+      var objs = this._manager.get_objects ();
+
+      foreach (var obj in objs)
+        {
+          yield this._add_device (obj);
+        }
+    }
+
+  /**
    * Add a device to the backend.
    *
    * @param _obj the device's D-Bus object
@@ -551,12 +627,7 @@ public class Folks.Backends.BlueZ.Backend : Folks.Backend
                   this._device_properties_changed_cb);
 
           /* Add all the existing device objects. */
-          var objs = this._manager.get_objects ();
-
-          foreach (var obj in objs)
-            {
-              yield this._add_device (obj);
-            }
+          yield this._refresh_devices ();
 
           this._is_prepared = true;
           this.notify_property ("is-prepared");
