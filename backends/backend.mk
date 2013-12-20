@@ -38,6 +38,7 @@ backend_valaflags = \
 	--vapidir=$(top_builddir)/folks \
 	--pkg folks \
 	--pkg folks-internal \
+	--pkg folks-generics \
 	--pkg gee-0.8 \
 	--pkg gio-2.0 \
 	--pkg gobject-2.0 \

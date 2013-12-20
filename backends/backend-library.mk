@@ -113,6 +113,7 @@ backend_library_cflags = $(backend_library_cflags_generic)
 backend_library_libadd_generic = \
 	$(AM_LIBADD) \
 	$(top_builddir)/folks/libfolks.la \
+	$(top_builddir)/folks/libfolks-internal.la \
 	$(GIO_LIBS) \
 	$(GLIB_LIBS) \
 	$(GEE_LIBS) \
