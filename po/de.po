@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: folks master\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-12-20 00:21+0100\n"
-"PO-Revision-Date: 2013-12-20 00:27+0100\n"
+"POT-Creation-Date: 2013-12-20 08:34+0100\n"
+"PO-Revision-Date: 2013-12-20 08:35+0100\n"
 "Last-Translator: Christian Kirbach <christian.kirbach@gmail.com>\n"
 "Language-Team: Deutsch <gnome-de@gnome.org>\n"
 "Language: de_DE\n"
@@ -364,7 +364,7 @@ msgstr "Fehler beim Öffnen der Kontakte-Ansicht."
 
 #: ../backends/ofono/ofono-backend.vala:193
 msgid "No oFono object manager running, so the oFono "
-msgstr ""
+msgstr "Es läuft keine oFono Objektverwaltung, so dass oFono "
 
 #: ../backends/telepathy/lib/tpf-persona-store.vala:1248
 msgid "Telepathy contacts representing the local user may not be removed."
@@ -626,7 +626,7 @@ msgstr "Unbenannte Person"
 #.
 #: ../folks/name-details.vala:268
 msgid "%g%t%m%t%f"
-msgstr ""
+msgstr "%g%t%m%t%f"
 
 #: ../folks/org.freedesktop.folks.gschema.xml.in.h:1
 msgid "Primary store ID"
