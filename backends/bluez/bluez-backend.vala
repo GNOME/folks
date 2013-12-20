@@ -510,10 +510,7 @@ public class Folks.Backends.BlueZ.Backend : Folks.Backend
           catch (GLib.Error e1)
             {
               throw new DBusError.SERVICE_UNKNOWN (
-                  _("No BlueZ 5 object manager running, so the BlueZ " +
-                    "backend will be inactive. Either your BlueZ " +
-                    "installation is too old (only version 5 is supported) " +
-                    "or the service can’t be started."));
+                  _("No BlueZ 5 object manager running, so the BlueZ backend will be inactive. Either your BlueZ installation is too old (only version 5 is supported) or the service can’t be started."));
             }
 
           /* Set up the OBEX client which will be used for all transfers. */
@@ -526,8 +523,7 @@ public class Folks.Backends.BlueZ.Backend : Folks.Backend
           catch (GLib.Error e1)
             {
               throw new DBusError.SERVICE_UNKNOWN (
-                  _("Error connecting to OBEX transfer daemon over D-Bus. " +
-                    "Ensure BlueZ and obexd are installed."));
+                  _("Error connecting to OBEX transfer daemon over D-Bus. Ensure BlueZ and obexd are installed."));
             }
 
           /* Successfully connected to both D-Bus services. Now connect up some

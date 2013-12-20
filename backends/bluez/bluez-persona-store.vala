@@ -33,6 +33,9 @@ using Folks;
 using Folks.Backends.BlueZ;
 using org.bluez;
 
+/* FIXME: Once we depend on gettext 0.18.3, translatable strings can once more
+ * be split over multiple lines without breaking the .po file. */
+
 /**
  * A persona store which is associated with a single BlueZ PBAP server (i.e.
  * one {@link PersonaStore} per device). It will create a {@link Persona} for
@@ -566,8 +569,7 @@ public class Folks.Backends.BlueZ.PersonaStore : Folks.PersonaStore
               throw new PersonaStoreError.STORE_OFFLINE (
                   /* Translators: the first parameter is the name of the failed
                    * transfer, and the second is a Bluetooth device alias. */
-                  _("Error during transfer of the address book ‘%s’ from " +
-                    "Bluetooth device ‘%s’."),
+                  _("Error during transfer of the address book ‘%s’ from Bluetooth device ‘%s’."),
                   transfer.name, this._display_name);
             }
           else
@@ -581,8 +583,7 @@ public class Folks.Backends.BlueZ.PersonaStore : Folks.PersonaStore
               /* Translators: the first parameter is the name of the
                * failed transfer, the second is a Bluetooth device
                * alias, and the third is an error message. */
-              _("Error during transfer of the address book ‘%s’ from " +
-                "Bluetooth device ‘%s’: %s"),
+              _("Error during transfer of the address book ‘%s’ from Bluetooth device ‘%s’: %s"),
               transfer.name, this._display_name, e2.message);
         }
       finally
@@ -665,16 +666,14 @@ public class Folks.Backends.BlueZ.PersonaStore : Folks.PersonaStore
                    * to the phone’s address book over Bluetooth, after accepting
                    * the pairing request. */
                   throw new PersonaStoreError.PERMISSION_DENIED (
-                      _("Permission to access the address book on Bluetooth " +
-                        "device ‘%s’ was denied by the user."),
+                      _("Permission to access the address book on Bluetooth device ‘%s’ was denied by the user."),
                       this._device.alias);
                 }
 
               throw new PersonaStoreError.STORE_OFFLINE (
                   /* Translators: the first parameter is a Bluetooth device
                    * alias, and the second is an error message. */
-                  _("An OBEX address book transfer from device ‘%s’ could " +
-                    "not be started: %s"),
+                  _("An OBEX address book transfer from device ‘%s’ could not be started: %s"),
                   this._device.alias, e1.message);
             }
 
@@ -694,8 +693,7 @@ public class Folks.Backends.BlueZ.PersonaStore : Folks.PersonaStore
               throw new PersonaStoreError.STORE_OFFLINE (
                   /* Translators: the first parameter is a Bluetooth device
                    * alias, and the second is an error message. */
-                  _("The OBEX address book transfer from device ‘%s’ " +
-                    "failed: %s"),
+                  _("The OBEX address book transfer from device ‘%s’ failed: %s"),
                   this._device.alias, e2.message);
             }
 
@@ -712,8 +710,7 @@ public class Folks.Backends.BlueZ.PersonaStore : Folks.PersonaStore
               throw new PersonaStoreError.STORE_OFFLINE (
                   /* Translators: the first parameter is a Bluetooth device
                    * alias, and the second is an error message. */
-                  _("Error during transfer of the address book from " +
-                    "Bluetooth device ‘%s’: %s"),
+                  _("Error during transfer of the address book from Bluetooth device ‘%s’: %s"),
                   this._display_name, e3.message);
             }
         }
@@ -764,8 +761,8 @@ public class Folks.Backends.BlueZ.PersonaStore : Folks.PersonaStore
                * Act as if the store has gone offline and mark preparation as
                * complete. */
               throw new PersonaStoreError.STORE_OFFLINE (
-                  _("Bluetooth device ‘%s’ disappeared during address book " +
-                    "transfer."), this._device.alias);
+                  _("Bluetooth device ‘%s’ disappeared during address book transfer."),
+                  this._device.alias);
             }
           finally
             {
