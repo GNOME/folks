@@ -29,6 +29,9 @@ using org.ofono;
 
 extern const string BACKEND_NAME;
 
+/* FIXME: Once we depend on gettext 0.18.3, translatable strings can once more
+ * be split over multiple lines without breaking the .po file. */
+
 /**
  * A backend which loads {@link Persona}s from Modem
  * devices using the Ofono Phonebook D-Bus API and presents them
@@ -190,9 +193,7 @@ public class Folks.Backends.Ofono.Backend : Folks.Backend
           catch (GLib.Error e1)
             {
               throw new DBusError.SERVICE_UNKNOWN (
-                  _("No oFono object manager running, so the oFono " +
-                    "backend will be inactive. Either oFono isn’t installed " +
-                    "or the service can’t be started."));
+                  _("No oFono object manager running, so the oFono backend will be inactive. Either oFono isn’t installed or the service can’t be started."));
             }
 
           foreach (ModemProperties modem in this._modems)
