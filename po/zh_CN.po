@@ -2,25 +2,106 @@
 # Copyright (C) 2011 folks's COPYRIGHT HOLDER
 # This file is distributed under the same license as the folks package.
 # Wylmer Wang <wantinghard@gmail.com>, 2011, 2012.
+# 甘露(Gan Lu) <rhythm.gan@gmail.com>，2013
 #
-#      注：Persona store 疑为用于存储联系人的数据结构，如何翻译待讨论
+#      注：Persona 是对应一条 Telepathy 联系人记录的对象
+#          store 为用于存储某帐号所有 persona 的数据结构，如何翻译待讨论
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: folks master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=folks&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2013-08-02 08:03+0000\n"
-"PO-Revision-Date: 2013-07-07 22:43+0800\n"
-"Last-Translator: 甘露(Gan  Lu) <rhythm.gan@gmail.com>\n"
+"POT-Creation-Date: 2013-12-20 17:14+0000\n"
+"PO-Revision-Date: 2013-12-22 16:23+0800\n"
+"Last-Translator: 甘露(Gan Lu) <rhythm.gan@gmail.com>\n"
 "Language-Team: Chinese (China) <i18n-zh@googlegroups.com>\n"
-"Language: \n"
+"Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-DamnedLies-Scope: partial\n"
-"X-Generator: Poedit 1.5.5\n"
+"X-Generator: Poedit 1.5.7\n"
+
+#: ../backends/bluez/bluez-backend.vala:589
+msgid ""
+"No BlueZ 5 object manager running, so the BlueZ backend will be inactive. "
+"Either your BlueZ installation is too old (only version 5 is supported) or "
+"the service can’t be started."
+msgstr "没有运行 BlueZ 5 对象管理器，因此 BlueZ 后端将停止活动。原因可能是您"
+"安装的 BlueZ 太旧(只支持版本 5)或服务无法启动。"
+
+#: ../backends/bluez/bluez-backend.vala:602
+#| msgid "Error connecting to OBEX transfer daemon over D-Bus. "
+msgid ""
+"Error connecting to OBEX transfer daemon over D-Bus. Ensure BlueZ and obexd "
+"are installed."
+msgstr "通过 D-Bus 连接至 OBEX 传送守护进程时出错。请确认安装了 BlueZ 和 obexd。"
+
+#. Translators: the parameter is an error message.
+#: ../backends/bluez/bluez-persona-store.vala:297
+#, c-format
+msgid "Error reading the transferred address book file: %s"
+msgstr "读取传送来的地址簿文件时出错：%s"
+
+#. Translators: the first parameter is the name of the failed
+#. * transfer, and the second is a Bluetooth device alias.
+#: ../backends/bluez/bluez-persona-store.vala:572
+#, c-format
+#| msgid "Error during transfer of the address book ‘%s’ from "
+msgid ""
+"Error during transfer of the address book ‘%s’ from Bluetooth device ‘%s’."
+msgstr "传送地址簿 “%s” 期间出错，该地址簿来自蓝牙设置“%s”。"
+
+#. Translators: the first parameter is the name of the
+#. * failed transfer, the second is a Bluetooth device
+#. * alias, and the third is an error message.
+#: ../backends/bluez/bluez-persona-store.vala:586
+#, c-format
+#| msgid "Error during transfer of the address book ‘%s’ from "
+msgid ""
+"Error during transfer of the address book ‘%s’ from Bluetooth device ‘%s’: %s"
+msgstr "传送地址簿 “%s” 期间出错，该地址簿来自蓝牙设备“%s”：%s"
+
+#: ../backends/bluez/bluez-persona-store.vala:669
+#, c-format
+#| msgid "Permission to access the address book on Bluetooth "
+msgid ""
+"Permission to access the address book on Bluetooth device ‘%s’ was denied by "
+"the user."
+msgstr "用户拒绝了您访问蓝牙设备“%s”地址簿的请求。"
+
+#. Translators: the first parameter is a Bluetooth device
+#. * alias, and the second is an error message.
+#: ../backends/bluez/bluez-persona-store.vala:676
+#, c-format
+#| msgid "An OBEX address book transfer from device ‘%s’ could "
+msgid "An OBEX address book transfer from device ‘%s’ could not be started: %s"
+msgstr "从设备“%s”传送 OBEX 地址簿无法启动：%s"
+
+#. Translators: the first parameter is a Bluetooth device
+#. * alias, and the second is an error message.
+#: ../backends/bluez/bluez-persona-store.vala:696
+#, c-format
+#| msgid "The OBEX address book transfer from device ‘%s’ "
+msgid "The OBEX address book transfer from device ‘%s’ failed: %s"
+msgstr "从设备“%s”传送 OBEX 地址簿失败：%s"
+
+#. Translators: the first parameter is a Bluetooth device
+#. * alias, and the second is an error message.
+#: ../backends/bluez/bluez-persona-store.vala:713
+#, c-format
+#| msgid "Error during transfer of the address book ‘%s’ from "
+msgid ""
+"Error during transfer of the address book from Bluetooth device ‘%s’: %s"
+msgstr "传送地址簿 “%s” 期间出错，该地址簿来自蓝牙设备“%s”：%s"
+
+#: ../backends/bluez/bluez-persona-store.vala:764
+#, c-format
+#| msgid "Bluetooth device ‘%s’ disappeared during address book "
+msgid "Bluetooth device ‘%s’ disappeared during address book transfer."
+msgstr "在地址簿传送期间蓝牙设备“%s”消失。"
 
 #. The timeout after which we consider a property change to have failed if we
 #. * haven't received a property change notification for it.
@@ -36,25 +117,25 @@ msgstr "在 Android 中加星"
 
 #. Translators: the first parameter is an address book
 #. * URI and the second is a persona UID.
-#: ../backends/eds/lib/edsf-persona-store.vala:671
+#: ../backends/eds/lib/edsf-persona-store.vala:672
 #, c-format
 msgid "Address book ‘%s’ is offline, so contact ‘%s’ cannot be removed."
 msgstr "地址簿“%s”为离线，因此不能移除联系人“%s”。"
 
 #. Translators: the first parameter is an address book
 #. * URI and the second is an error message.
-#: ../backends/eds/lib/edsf-persona-store.vala:677
+#: ../backends/eds/lib/edsf-persona-store.vala:678
 #, c-format
 msgid "Permission denied to remove contact ‘%s’: %s"
 msgstr "移除联系人“%s”的权限不足：%s"
 
 #. Translators: the parameter is an error message.
-#: ../backends/eds/lib/edsf-persona-store.vala:682
+#: ../backends/eds/lib/edsf-persona-store.vala:683
 #, c-format
 msgid "Removing contacts isn't supported by this persona store: %s"
 msgstr "此 persona 仓库不支持移除联系人：%s"
 
-#: ../backends/eds/lib/edsf-persona-store.vala:711
+#: ../backends/eds/lib/edsf-persona-store.vala:712
 #, c-format
 msgid "Can't remove contact ‘%s’: %s"
 msgstr "无法移除联系人“%s”：%s"
@@ -105,119 +186,119 @@ msgstr "无法获取地址簿“%s”的视图：%s"
 #. Translators: the parameter is the name of a property on a
 #. * contact, formatted in the normal GObject style (e.g.
 #. * lowercase with hyphens to separate words).
-#: ../backends/eds/lib/edsf-persona-store.vala:1390
+#: ../backends/eds/lib/edsf-persona-store.vala:1287
 #, c-format
 msgid "Changing the ‘%s’ property failed due to reaching the timeout."
 msgstr "由于超时，更改“%s”属性失败。"
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1428
+#: ../backends/eds/lib/edsf-persona-store.vala:1325
 #: ../folks/avatar-details.vala:63
 msgid "Avatar is not writeable on this contact."
 msgstr "此联系人的头像不可写。"
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1449
+#: ../backends/eds/lib/edsf-persona-store.vala:1346
 #: ../folks/web-service-details.vala:123
 msgid "Web service addresses are not writeable on this contact."
 msgstr "此联系人的网络服务地址不可写。"
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1485
+#: ../backends/eds/lib/edsf-persona-store.vala:1382
 #: ../folks/url-details.vala:152
 msgid "URLs are not writeable on this contact."
 msgstr "此联系人的 URL 不可写。"
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1566
+#: ../backends/eds/lib/edsf-persona-store.vala:1463
 #: ../folks/local-id-details.vala:64
 msgid "Local IDs are not writeable on this contact."
 msgstr "此联系人的本地 ID 不可写。"
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1595
+#: ../backends/eds/lib/edsf-persona-store.vala:1492
 msgid "The contact cannot be marked as favourite."
 msgstr "不能将此联系人标记为常用(favourite)。"
 
 #. Translators: the parameter is an error message.
-#: ../backends/eds/lib/edsf-persona-store.vala:1667
+#: ../backends/eds/lib/edsf-persona-store.vala:1564
 #, c-format
 msgid "Can't update avatar: %s"
 msgstr "无法更新头像：%s"
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1678
+#: ../backends/eds/lib/edsf-persona-store.vala:1575
 #: ../folks/email-details.vala:120
 msgid "E-mail addresses are not writeable on this contact."
 msgstr "此联系人的电子邮箱地址不可写。"
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1696
-#: ../folks/phone-details.vala:225
+#: ../backends/eds/lib/edsf-persona-store.vala:1593
+#: ../folks/phone-details.vala:255
 msgid "Phone numbers are not writeable on this contact."
 msgstr "此联系人的电话号码不可写。"
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1714
+#: ../backends/eds/lib/edsf-persona-store.vala:1611
 #: ../folks/postal-address-details.vala:361
 msgid "Postal addresses are not writeable on this contact."
 msgstr "此联系人的邮政地址不可写。"
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1785
-#: ../folks/name-details.vala:283
+#: ../backends/eds/lib/edsf-persona-store.vala:1682
+#: ../folks/name-details.vala:454
 msgid "Full name is not writeable on this contact."
 msgstr "此联系人的全名不可写。"
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1807
-#: ../folks/name-details.vala:321
+#: ../backends/eds/lib/edsf-persona-store.vala:1704
+#: ../folks/name-details.vala:492
 msgid "Nickname is not writeable on this contact."
 msgstr "此联系人的昵称不可写。"
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1829
+#: ../backends/eds/lib/edsf-persona-store.vala:1726
 #: ../folks/note-details.vala:138
 msgid "Notes are not writeable on this contact."
 msgstr "此联系人的备注不可写。"
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1861
+#: ../backends/eds/lib/edsf-persona-store.vala:1758
 #: ../folks/birthday-details.vala:62
 msgid "Birthday is not writeable on this contact."
 msgstr "此联系人的生日不可写。"
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1905
+#: ../backends/eds/lib/edsf-persona-store.vala:1802
 #: ../folks/role-details.vala:279
 msgid "Roles are not writeable on this contact."
 msgstr "此联系人的身份不可写。"
 
-#: ../backends/eds/lib/edsf-persona-store.vala:2006
-#: ../folks/name-details.vala:246
+#: ../backends/eds/lib/edsf-persona-store.vala:1903
+#: ../folks/name-details.vala:417
 msgid "Structured name is not writeable on this contact."
 msgstr "此联系人的姓名不可写。"
 
-#: ../backends/eds/lib/edsf-persona-store.vala:2045
+#: ../backends/eds/lib/edsf-persona-store.vala:1942
 #: ../folks/im-details.vala:136
 msgid "IM addresses are not writeable on this contact."
 msgstr "此联系人的聊天账户地址不可写。"
 
-#: ../backends/eds/lib/edsf-persona-store.vala:2095
+#: ../backends/eds/lib/edsf-persona-store.vala:1992
 #: ../folks/group-details.vala:174
 msgid "Groups are not writeable on this contact."
 msgstr "此联系人的组不可写。"
 
-#: ../backends/eds/lib/edsf-persona-store.vala:2110
+#: ../backends/eds/lib/edsf-persona-store.vala:2007
 msgid "My Contacts is only available for Google Contacts"
 msgstr "我的联系人 只用于 Google 联系人"
 
-#: ../backends/eds/lib/edsf-persona-store.vala:2181
+#: ../backends/eds/lib/edsf-persona-store.vala:2078
 #: ../folks/gender-details.vala:79
 msgid "Gender is not writeable on this contact."
 msgstr "此联系人的性别不可写。"
 
-#: ../backends/eds/lib/edsf-persona-store.vala:2219
+#: ../backends/eds/lib/edsf-persona-store.vala:2116
 #: ../folks/anti-linkable.vala:81
 msgid "Anti-links are not writeable on this contact."
 msgstr "此联系人的 Anti-links 不可写。"
 
-#: ../backends/eds/lib/edsf-persona-store.vala:2262
-#: ../folks/location-details.vala:129
+#: ../backends/eds/lib/edsf-persona-store.vala:2159
+#: ../folks/location-details.vala:135
 msgid "Location is not writeable on this contact."
 msgstr "此联系人的位置不可写。"
 
 #. Translators: the first parameter is a non-human-readable
 #. * property name and the second parameter is an error
 #. * message.
-#: ../backends/eds/lib/edsf-persona-store.vala:2575
+#: ../backends/eds/lib/edsf-persona-store.vala:2472
 #, c-format
 msgid "Property ‘%s’ is not writeable: %s"
 msgstr "属性“%s”不可写：%s"
@@ -225,42 +306,42 @@ msgstr "属性“%s”不可写：%s"
 #. Translators: the first parameter is a non-human-readable
 #. * property name and the second parameter is an error
 #. * message.
-#: ../backends/eds/lib/edsf-persona-store.vala:2584
+#: ../backends/eds/lib/edsf-persona-store.vala:2481
 #, c-format
 msgid "Invalid value for property ‘%s’: %s"
 msgstr "属性“%s”的值无效：%s"
 
 #. Translators: the first parameter is a non-human-readable
 #. * property name and the second parameter is an error message.
-#: ../backends/eds/lib/edsf-persona-store.vala:2610
+#: ../backends/eds/lib/edsf-persona-store.vala:2507
 #, c-format
 msgid "Unknown error setting property ‘%s’: %s"
 msgstr "设置属性“%s”时出现未知错误：%s"
 
 #. Translators: the first parameter is a filename, and
 #. * the second is an error message.
-#: ../backends/key-file/kf-persona-store.vala:233
+#: ../backends/key-file/kf-persona-store.vala:234
 #, c-format
 msgid "The relationship key file '%s' could not be loaded: %s"
 msgstr "无法加载关系键文件“%s”：%s"
 
 #. Translators: the first parameter is a path, and the
 #. * second is an error message.
-#: ../backends/key-file/kf-persona-store.vala:255
+#: ../backends/key-file/kf-persona-store.vala:256
 #, c-format
 msgid "The relationship key file directory '%s' could not be created: %s"
 msgstr "无法创建关系键文件目录“%s”：%s"
 
 #. Translators: the first parameter is a filename, and
 #. * the second is an error message.
-#: ../backends/key-file/kf-persona-store.vala:279
+#: ../backends/key-file/kf-persona-store.vala:280
 #, c-format
 msgid "The relationship key file '%s' could not be created: %s"
 msgstr "无法创建关系键文件“%s”：%s"
 
 #. Translators: the first parameter is a filename, the second is
 #. * an error message.
-#: ../backends/key-file/kf-persona-store.vala:470
+#: ../backends/key-file/kf-persona-store.vala:471
 #, c-format
 msgid "Could not write updated key file '%s': %s"
 msgstr "无法写入更新的键文件“%s”：%s"
@@ -270,13 +351,13 @@ msgstr "无法写入更新的键文件“%s”：%s"
 #. * an IM address (e.g. “foo@jabber.org”), the second is
 #. * the name of a protocol (e.g. “jabber”) and the third is
 #. * an error message.
-#: ../backends/key-file/kf-persona.vala:172
+#: ../backends/key-file/kf-persona.vala:174
 #, c-format
 msgid "Invalid IM address ‘%s’ for protocol ‘%s’: %s"
 msgstr "对应协议“%2$s”的聊天地址“%1$s”无效：%3$s"
 
 #. Translators: the parameter is an error message.
-#: ../backends/key-file/kf-persona.vala:430
+#: ../backends/key-file/kf-persona.vala:432
 #, c-format
 msgid "Couldn't load data from key file: %s"
 msgstr "无法从键文件中加载数据：%s"
@@ -301,27 +382,25 @@ msgstr "查不到联系人容量。"
 msgid "Error opening contacts view."
 msgstr "打开联系人视图出错。"
 
-#. Translators: the first parameter is the display name for
-#. * the Telepathy account, and the second is an error
-#. * message.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:811
-#, c-format
+#: ../backends/ofono/ofono-backend.vala:196
 msgid ""
-"Failed to determine whether we can set aliases on Telepathy account '%s': %s"
-msgstr "无法确定是否能对 Telepathy 账户“%s”设定别名：%s"
+"No oFono object manager running, so the oFono backend will be inactive. "
+"Either oFono isn’t installed or the service can’t be started."
+msgstr "没有运行 oFono 对象管理器，因此 oFono 后端将停止活动。原因可能是您"
+"没有安装 oFono 或服务无法启动。"
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1275
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1248
 msgid "Telepathy contacts representing the local user may not be removed."
 msgstr "不能移除代表本地用户的 Telepathy 联系人。"
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1286
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1259
 #, c-format
 msgid "Failed to remove a persona from store: %s"
-msgstr "无法从仓库中移除一条 persona：%s"
+msgstr "无法从仓库中移除一条联系人：%s"
 
 #. Translators: the first two parameters are store identifiers and
 #. * the third is a contact identifier.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1321
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1294
 #, c-format
 msgid ""
 "Persona store (%s, %s) requires the following details:\n"
@@ -330,72 +409,72 @@ msgstr ""
 "Persona 仓库(%s，%s)要求提供以下细节：\n"
 "    联系人(提供：“%s”)\n"
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1336
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1309
 msgid "Cannot create a new Telepathy contact while offline."
 msgstr "离线时无法创建新的 Telepathy 联系人。"
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1354
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1327
 #, c-format
 msgid "Failed to add a persona from details: %s"
-msgstr "由详情添加一条 persona 失败：%s"
+msgstr "由详情添加一条联系人失败：%s"
 
 #. Translators: "telepathy-logger" is the name of an application,
 #. * and should not be translated.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1374
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1347
 msgid ""
 "Failed to change favorite without a connection to the telepathy-logger "
 "service."
 msgstr "没有与 telepathy-logger 服务连接，更改关注失败。"
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1380
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1353
 msgid ""
 "Failed to change favorite status of Telepathy Persona because it has no "
 "attached TpContact."
-msgstr "更改 Telepathy Persona 收藏状态失败，因为它没有附加的 TpContact。"
+msgstr "更改 Telepathy 联系人收藏状态失败，因为它没有附加的 TpContact。"
 
 #. Translators: the parameter is a contact identifier.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1398
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1371
 #, c-format
 msgid "Failed to change favorite status for Telepathy contact ‘%s’."
 msgstr "更改 Telepathy 联系人“%s”的关注状态失败。"
 
 #. Translators: the parameter is an error message.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1430
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1403
 #, c-format
 msgid "Failed to change contact's alias: %s"
 msgstr "更改联系人的别名失败：%s"
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1511
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1484
 msgid "Extended information may only be set on the user's Telepathy contact."
 msgstr "扩展信息只能在用户的 Telepathy 联系人上设置。"
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1540
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1513
 msgid ""
 "Extended information cannot be written because the store is disconnected."
 msgstr "无法写入扩展信息，因为仓库已断开。"
 
-#: ../backends/telepathy/lib/tpf-persona.vala:507
-#: ../backends/telepathy/lib/tpf-persona.vala:528
-#: ../backends/telepathy/lib/tpf-persona.vala:580
-#: ../backends/telepathy/lib/tpf-persona.vala:594
+#: ../backends/telepathy/lib/tpf-persona.vala:511
+#: ../backends/telepathy/lib/tpf-persona.vala:532
+#: ../backends/telepathy/lib/tpf-persona.vala:584
+#: ../backends/telepathy/lib/tpf-persona.vala:598
 #, c-format
 msgid "Failed to change group membership: %s"
 msgstr "更改组成员资格失败：%s"
 
 #. Translators: "account" refers to an instant messaging
 #. * account.
-#: ../backends/telepathy/lib/tpf-persona.vala:510
-#: ../backends/telepathy/lib/tpf-persona.vala:583
+#: ../backends/telepathy/lib/tpf-persona.vala:514
+#: ../backends/telepathy/lib/tpf-persona.vala:587
 msgid "Account is offline."
 msgstr "帐户为离线。"
 
 #. Translators: the first parameter is the unknown key that
 #. * was received with the details params, and the second
 #. * identifies the persona store.
-#: ../backends/tracker/lib/trf-persona-store.vala:742
+#: ../backends/tracker/lib/trf-persona-store.vala:743
 #, c-format
 msgid "Unrecognized parameter '%s' passed to persona store '%s'."
-msgstr "将不识别的参数“%s”传给了 persona 仓库“%s”。"
+msgstr "将不识别的参数“%s”传给了联系人仓库“%s”。"
 
 #: ../folks/alias-details.vala:61
 msgid "Alias is not writeable on this contact."
@@ -437,39 +516,39 @@ msgstr "聊天地址“%s”无法解析。"
 
 #. Translators: the first parameter is a persona store identifier
 #. * and the second is an error message.
-#: ../folks/individual-aggregator.vala:938
+#: ../folks/individual-aggregator.vala:1033
 #, c-format
 msgid "Error preparing persona store '%s': %s"
-msgstr "准备 persona 仓库“%s”出错：%s"
+msgstr "准备联系人仓库“%s”出错：%s"
 
 #. Translators: the parameter is a property name.
-#: ../folks/individual-aggregator.vala:1163
-#: ../folks/individual-aggregator.vala:1418
+#: ../folks/individual-aggregator.vala:1262
+#: ../folks/individual-aggregator.vala:1529
 #, c-format
 msgid "Unknown property '%s' in linkable property list."
 msgstr "可链接属性列表中的属性“%s”未知。"
 
 #. Translators: the first parameter is a store identifier
 #. * and the second parameter is an error message.
-#: ../folks/individual-aggregator.vala:1904
+#: ../folks/individual-aggregator.vala:2015
 #, c-format
 msgid "Failed to add contact for persona store ID '%s': %s"
-msgstr "向 persona 仓库 ID “%s”添加联系人失败：%s"
+msgstr "向联系人仓库 ID “%s”添加联系人失败：%s"
 
-#: ../folks/individual-aggregator.vala:2001
+#: ../folks/individual-aggregator.vala:2112
 msgid "Can’t link personas with no primary store."
 msgstr "没有主仓库，不能链接 personas。"
 
-#: ../folks/individual-aggregator.vala:2002
-#: ../folks/individual-aggregator.vala:2333
+#: ../folks/individual-aggregator.vala:2113
+#: ../folks/individual-aggregator.vala:2444
 #, c-format
 msgid ""
 "Persona store ‘%s:%s’ is configured as primary, but could not be found or "
 "failed to load."
 msgstr "Persona 仓库“%s:%s”被配置为主仓库，但它无法找到或加载失败。"
 
-#: ../folks/individual-aggregator.vala:2003
-#: ../folks/individual-aggregator.vala:2334
+#: ../folks/individual-aggregator.vala:2114
+#: ../folks/individual-aggregator.vala:2445
 #, c-format
 msgid ""
 "Check the relevant service is running, or change the default store in that "
@@ -477,25 +556,75 @@ msgid ""
 msgstr ""
 "请检查相关的服务是否运行，或在该服务中更改默认仓库，或使用“%s” GSettings 键。"
 
-#: ../folks/individual-aggregator.vala:2035
+#: ../folks/individual-aggregator.vala:2146
 msgid "Anti-links can't be removed between personas being linked."
-msgstr "不能在已链接的 personas 中删除 Anti-links。"
+msgstr "不能在已链接的联系人之间删除反链接(Anti-links)。"
 
-#: ../folks/individual-aggregator.vala:2332
+#: ../folks/individual-aggregator.vala:2443
 msgid "Can’t add personas with no primary store."
 msgstr "没有主仓库，不能添加 personas。"
 
-#: ../folks/individual-aggregator.vala:2343
+#: ../folks/individual-aggregator.vala:2454
 #, c-format
 msgid "Can't write to requested property (“%s”) of the writeable store."
 msgstr "不能写入可写仓库中请求的属性(“%s”)。"
 
-#: ../folks/individual.vala:216 ../folks/individual.vala:376
-#: ../folks/individual.vala:485 ../folks/individual.vala:736
-#: ../folks/individual.vala:814
+#: ../folks/individual.vala:216 ../folks/individual.vala:402
+#: ../folks/individual.vala:511 ../folks/individual.vala:762
+#: ../folks/individual.vala:840
 #, c-format
 msgid "Failed to change property ‘%s’: No suitable personas were found."
 msgstr "无法更改“%s”属性：没有找到合适的 personas。"
+
+#. Translators: This is the default name for an Individual
+#. * when displayed in the UI if no personal details are available
+#. * for them.
+#: ../folks/individual.vala:1951
+msgid "Unnamed Person"
+msgstr "匿名人士"
+
+#. FIXME: Ideally we’d use a format string translated to the locale of the
+#. * persona whose name is being formatted, but no backend provides
+#. * information about personas’ locales, so we have to settle for the
+#. * current user’s locale.
+#. *
+#. * We thought about using nl_langinfo(_NL_NAME_NAME_FMT) here, but
+#. * decided against it because:
+#. *  1. It’s not the best documented API in the world, and its stability
+#. *     is in question.
+#. *  2. An attempt to improve the interface in glibc met with a wall of
+#. *     complaints: https://sourceware.org/bugzilla/show_bug.cgi?id=14641.
+#. *
+#. * However, we do re-use the string format placeholders from
+#. * _NL_NAME_NAME_FMT (as documented here:
+#. * http://lh.2xlibre.net/values/name_fmt/) because there’s a chance glibc
+#. * might eventually grow a useful interface for this.
+#. *
+#. * It does mean we have to implement our own parser for the name_fmt
+#. * format though, since glibc doesn’t provide a formatting function.
+#. Translators: This is a format string used to convert structured names
+#. * to a single string. It should be translated to the predominant
+#. * semi-formal name format for your locale, using the placeholders
+#. * documented here: http://lh.2xlibre.net/values/name_fmt/. You may be
+#. * able to re-use the existing glibc format string for your locale on that
+#. * page if it’s suitable.
+#. *
+#. * More explicitly: the supported placeholders are %f, %F, %g, %G, %m, %M,
+#. * %t. The romanisation modifier (e.g. %Rf) is recognized but ignored.
+#. * %s, %S and %d are all replaced by the same thing (the ‘Honorific
+#. * Prefixes’ from vCard) so please avoid using more than one.
+#. *
+#. * For example, the format string ‘%g%t%m%t%f’ expands to ‘John Andrew
+#. * Lees’ when used for a persona with first name ‘John’, additional names
+#. * ‘Andrew’ and family names ‘Lees’.
+#. *
+#. * If you need additional placeholders with other information or
+#. * punctuation, please file a bug against libfolks:
+#. *   https://bugzilla.gnome.org/enter_bug.cgi?product=folks
+#.
+#: ../folks/name-details.vala:268
+msgid "%g%t%m%t%f"
+msgstr "%g%t%m%t%f"
 
 #: ../folks/org.freedesktop.folks.gschema.xml.in.h:1
 msgid "Primary store ID"
@@ -679,7 +808,7 @@ msgstr "无法加载“%s”后端的 persona 仓库。"
 #: ../tools/import.vala:167
 #, c-format
 msgid "Couldn't prepare the ‘%s’ backend's persona store: %s"
-msgstr "无法准备“%s”后端的 persona 仓库：%s"
+msgstr "无法准备“%s”后端的联系人仓库：%s"
 
 #. Translators: the parameter is an error message.
 #: ../tools/import.vala:185
@@ -694,3 +823,17 @@ msgid ""
 "Unrecognized source backend name ‘%s’. ‘%s’ is currently the only supported "
 "source backend."
 msgstr "无法识别的源后端名称“%s”。“%s”是目前唯一支持的源后端。"
+
+#~ msgid "No BlueZ 5 object manager running, so the BlueZ "
+#~ msgstr "无蓝牙 5 对象管理器在运行中，由此 蓝牙"
+
+#~ msgid "Error during transfer of the address book from "
+#~ msgstr "传送地址簿期间出错，该地址簿来自"
+
+#~ msgid "No oFono object manager running, so the oFono "
+#~ msgstr "无 oFono 对象管理器在运行中，由此 oFono "
+
+#~ msgid ""
+#~ "Failed to determine whether we can set aliases on Telepathy account '%s': "
+#~ "%s"
+#~ msgstr "无法确定是否能对 Telepathy 账户“%s”设定别名：%s"
