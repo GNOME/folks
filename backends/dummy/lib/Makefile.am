@@ -36,7 +36,6 @@ libfolks_dummy_la_CFLAGS = \
 
 libfolks_dummy_la_LIBADD = \
 	$(backend_library_libadd) \
-	$(top_builddir)/folks/libfolks-internal.la \
 	$(NULL)
 
 libfolks_dummy_la_LDFLAGS = \
