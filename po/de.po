@@ -8,71 +8,99 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: folks master\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-12-20 08:34+0100\n"
-"PO-Revision-Date: 2013-12-20 08:35+0100\n"
-"Last-Translator: Christian Kirbach <christian.kirbach@gmail.com>\n"
+"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
+"product=folks&keywords=I18N+L10N&component=general\n"
+"POT-Creation-Date: 2013-12-23 20:03+0000\n"
+"PO-Revision-Date: 2013-12-28 12:15+0100\n"
+"Last-Translator: Benjamin Steinwender <b@stbe.at>\n"
 "Language-Team: Deutsch <gnome-de@gnome.org>\n"
 "Language: de_DE\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 1.5.4\n"
+"X-Generator: Poedit 1.6.3\n"
 
-#: ../backends/bluez/bluez-backend.vala:513
-msgid "No BlueZ 5 object manager running, so the BlueZ "
-msgstr "Es läuft keine BlueZ 5 Objektverwaltung, so ist BlueZ "
+#: ../backends/bluez/bluez-backend.vala:589
+msgid ""
+"No BlueZ 5 object manager running, so the BlueZ backend will be inactive. "
+"Either your BlueZ installation is too old (only version 5 is supported) or "
+"the service can’t be started."
+msgstr ""
+"Das »BlueZ«-Backend wird deaktiviert, da die »BlueZ 5«-Objektverwaltung "
+"nicht läuft. Entweder ist Ihre »BlueZ«-Installation zu alt (es wird nur "
+"Version 5 unterstützt) oder der Dienst kann nicht gestartet werden."
 
-#: ../backends/bluez/bluez-backend.vala:529
-msgid "Error connecting to OBEX transfer daemon over D-Bus. "
-msgstr "Fehler beim Verbinden mit dem OBEX Transferdienst über D-Bus."
+#: ../backends/bluez/bluez-backend.vala:602
+msgid ""
+"Error connecting to OBEX transfer daemon over D-Bus. Ensure BlueZ and obexd "
+"are installed."
+msgstr ""
+"Fehler beim Verbinden mit dem OBEX Transferdienst über D-Bus. Stellen Sie "
+"sicher, dass »BlueZ« und »obexd« installiert sind."
 
 #. Translators: the parameter is an error message.
-#: ../backends/bluez/bluez-persona-store.vala:294
+#: ../backends/bluez/bluez-persona-store.vala:297
 #, c-format
 msgid "Error reading the transferred address book file: %s"
 msgstr "Fehler beim Lesen der übertragenen Adressbuch-Datei: %s«"
 
 #. Translators: the first parameter is the name of the failed
 #. * transfer, and the second is a Bluetooth device alias.
+#: ../backends/bluez/bluez-persona-store.vala:572
+#, c-format
+msgid ""
+"Error during transfer of the address book ‘%s’ from Bluetooth device ‘%s’."
+msgstr "Fehler beim Übertragen des Adressbuchs »%s« vom Bluetooth-Gerät »%s«."
+
 #. Translators: the first parameter is the name of the
 #. * failed transfer, the second is a Bluetooth device
 #. * alias, and the third is an error message.
-#: ../backends/bluez/bluez-persona-store.vala:569
-#: ../backends/bluez/bluez-persona-store.vala:584
+#: ../backends/bluez/bluez-persona-store.vala:586
 #, c-format
-msgid "Error during transfer of the address book ‘%s’ from "
-msgstr "Fehler beim Übertragen des Adressbuchs »%s« von "
+msgid ""
+"Error during transfer of the address book ‘%s’ from Bluetooth device ‘%s’: %s"
+msgstr ""
+"Fehler beim Übertragen des Adressbuchs »%s« vom Bluetooth-Gerät »%s«: %s"
 
-#: ../backends/bluez/bluez-persona-store.vala:668
-msgid "Permission to access the address book on Bluetooth "
-msgstr "Erlaubnis zum Zugriff auf das Adressbuch über Bluetooth"
+#: ../backends/bluez/bluez-persona-store.vala:669
+#, c-format
+msgid ""
+"Permission to access the address book on Bluetooth device ‘%s’ was denied by "
+"the user."
+msgstr ""
+"Zugriff auf das Adressbuch des Bluetooth-Gerätes »%s« wurde durch den "
+"Benutzer verweigert."
 
 #. Translators: the first parameter is a Bluetooth device
 #. * alias, and the second is an error message.
 #: ../backends/bluez/bluez-persona-store.vala:676
 #, c-format
-msgid "An OBEX address book transfer from device ‘%s’ could "
-msgstr "Eine OBEX-Übertragung des Adressbuchs von Gerät »%s« konnte "
+msgid "An OBEX address book transfer from device ‘%s’ could not be started: %s"
+msgstr ""
+"Eine OBEX-Übertragung des Adressbuchs von Gerät »%s« konnte nicht gestartet "
+"werden: %s"
 
 #. Translators: the first parameter is a Bluetooth device
 #. * alias, and the second is an error message.
-#: ../backends/bluez/bluez-persona-store.vala:697
+#: ../backends/bluez/bluez-persona-store.vala:696
 #, c-format
-msgid "The OBEX address book transfer from device ‘%s’ "
-msgstr "Die OBEX-Übertragung des Adressbuchs von Gerät »%s«"
+msgid "The OBEX address book transfer from device ‘%s’ failed: %s"
+msgstr ""
+"Die OBEX-Übertragung des Adressbuchs von Gerät »%s« ist fehlgeschlagen: %s"
 
 #. Translators: the first parameter is a Bluetooth device
 #. * alias, and the second is an error message.
-#: ../backends/bluez/bluez-persona-store.vala:715
-msgid "Error during transfer of the address book from "
-msgstr "Fehler beim Übertragen des Adressbuchs von "
-
-#: ../backends/bluez/bluez-persona-store.vala:767
+#: ../backends/bluez/bluez-persona-store.vala:713
 #, c-format
-msgid "Bluetooth device ‘%s’ disappeared during address book "
-msgstr "Bluetooth-Gerät »%s« verschwand während Adressbuch "
+msgid ""
+"Error during transfer of the address book from Bluetooth device ‘%s’: %s"
+msgstr "Fehler beim Übertragen des Adressbuchs vom Bluetooth-Gerät »%s«: %s"
+
+#: ../backends/bluez/bluez-persona-store.vala:764
+#, c-format
+msgid "Bluetooth device ‘%s’ disappeared during address book transfer."
+msgstr "Bluetooth-Gerät »%s« verschwand während der Adressbuchübertragung."
 
 # Starred in AndroidTranslators: This should be translated to the name of the “Starred in
 # * Android” group in Google Contacts for your language. If Google have not
@@ -362,9 +390,14 @@ msgstr "Es wurde keine Kontakte-Fähigkeit gefunden."
 msgid "Error opening contacts view."
 msgstr "Fehler beim Öffnen der Kontakte-Ansicht."
 
-#: ../backends/ofono/ofono-backend.vala:193
-msgid "No oFono object manager running, so the oFono "
-msgstr "Es läuft keine oFono Objektverwaltung, so dass oFono "
+#: ../backends/ofono/ofono-backend.vala:196
+msgid ""
+"No oFono object manager running, so the oFono backend will be inactive. "
+"Either oFono isn’t installed or the service can’t be started."
+msgstr ""
+"Das »oFono«-Backend wird deaktiviert, da die »oFono«-Objektverwaltung nicht "
+"läuft. Entweder ist »oFono« nicht installiert oder der Dienst kann nicht "
+"gestartet werden."
 
 #: ../backends/telepathy/lib/tpf-persona-store.vala:1248
 msgid "Telepathy contacts representing the local user may not be removed."
@@ -838,6 +871,15 @@ msgid ""
 msgstr ""
 "Unbekannter Name »%s« des Quellen-Backends. »%s« ist derzeit das einzige "
 "unterstützte Quellen-Backend."
+
+#~ msgid "No BlueZ 5 object manager running, so the BlueZ "
+#~ msgstr "Es läuft keine BlueZ 5 Objektverwaltung, so ist BlueZ "
+
+#~ msgid "Error during transfer of the address book from "
+#~ msgstr "Fehler beim Übertragen des Adressbuchs von "
+
+#~ msgid "No oFono object manager running, so the oFono "
+#~ msgstr "Es läuft keine oFono Objektverwaltung, so dass oFono "
 
 #~ msgid ""
 #~ "Failed to determine whether we can set aliases on Telepathy account '%s': "
