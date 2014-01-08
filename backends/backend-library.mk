@@ -119,7 +119,6 @@ backend_library_libadd_generic = \
 	$(NULL)
 backend_library_libadd = \
 	$(backend_library_libadd_generic) \
-	$(top_builddir)/folks/libfolks-internal.la \
 	$(NULL)
 
 backend_library_ldflags_generic = \
