@@ -143,7 +143,7 @@ internal class Logger : GLib.Object
         });
     }
 
-  private void _logger_vanished (DBusConnection conn, string name)
+  private void _logger_vanished (DBusConnection? conn, string name)
     {
       /* The logger has vanished on the bus, so it and we are no longer valid */
       Logger._logger = null;
