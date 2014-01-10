@@ -179,6 +179,31 @@ http://people.gnome.org/~federico/news-2006-03.html#timeline-tools. The Python
 script itself can be downloaded from
 http://gitorious.org/projects/performance-scripts.
 
+Running folks from JHBuild master
+=================================
+
+When running folks from JHBuild master, problems may be caused by running it on
+an inappropriate D-Bus session bus, typically resulting in the following error:
+
+    folks-WARNING **: Failed to find primary PersonaStore with type ID 'eds' and
+        ID 'system-address-book'.
+
+This is caused by compiling folks against git master of evolution-data-server,
+but then running it against an older version with a different API. EDS exposes
+its API version in its D-Bus interface, so if the wrong version of EDS is
+running, folks can’t find it on the bus, which cripples folks’ EDS backend.
+The same principle applies to other D-Bus services which folks relies on, such
+as Telepathy and Tracker.
+
+There are two ways to fix this:
+ • If you wish to use your desktop’s session bus, re-compile folks against the
+   system versions of EDS and other dependencies, rather than the JHBuild
+   versions.
+ • If you wish to use the latest version of EDS, run folks in a custom session
+   bus, and ensure that the D-Bus configuration for that bus can see the
+   .service file for the latest version of EDS. This is discussed here:
+   http://www.murrayc.com/permalink/2008/07/16/d-bus-in-jhbuild-confusion-and-hacks/
+
 Environment variables
 =====================
 
