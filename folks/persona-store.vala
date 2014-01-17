@@ -25,6 +25,9 @@ using Gee;
  * Trust level for a {@link PersonaStore}'s {@link Persona}s for linking
  * purposes.
  *
+ * Trust levels are set internally by the backends, and must not be modified by
+ * clients.
+ *
  * @since 0.1.13
  */
 public enum Folks.PersonaStoreTrust
@@ -615,6 +618,9 @@ public abstract class Folks.PersonaStore : Object
    *
    * This value may change throughout the life of the {@link PersonaStore}.
    *
+   * The trust level may be queried by clients, but must not be set by them. The
+   * setter for this property is for libfolks internal use only.
+   *
    * @see PersonaStoreTrust
    * @since 0.1.13
    */
@@ -625,6 +631,12 @@ public abstract class Folks.PersonaStore : Object
           return this._trust_level;
         }
 
+      /* FIXME: At the next API break, make this an abstract property and have
+       * implemented by the backends, to avoid exposing the setter in the C
+       * API. The IndividualAggregator can always disregard the backend’s
+       * suggested trust level.
+       *
+       * https://bugzilla.gnome.org/show_bug.cgi?id=722421 */
       set
         {
           if (value > trust_level)
