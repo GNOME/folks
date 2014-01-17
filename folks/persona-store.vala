@@ -621,11 +621,11 @@ public abstract class Folks.PersonaStore : Object
   public PersonaStoreTrust trust_level
     {
       get
-        { 
-          return this._trust_level; 
+        {
+          return this._trust_level;
         }
-      
-      set 
+
+      set
         {
           if (value > trust_level)
             {
