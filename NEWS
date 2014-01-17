@@ -10,6 +10,7 @@ Bugs fixed:
  • Bug 651672 — Individual should have a display-name property
  • Bug 648811 — Add a dummy backend
  • Bug 720707 — New strings partly not translatable
+ • Bug 722335 — non-void function should return a value
 
 API changes:
  • Add Individual.display_name
