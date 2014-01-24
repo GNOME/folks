@@ -24,6 +24,7 @@ LDADD = \
 TESTS = \
 	individual-retrieval \
 	add-persona \
+	linkable-properties \
 	$(NULL)
 
 noinst_PROGRAMS = $(TESTS)
@@ -34,6 +35,10 @@ individual_retrieval_SOURCES = \
 
 add_persona_SOURCES = \
 	add-persona.vala \
+	$(NULL)
+
+linkable_properties_SOURCES = \
+	linkable-properties.vala \
 	$(NULL)
 
 -include $(top_srcdir)/git.mk

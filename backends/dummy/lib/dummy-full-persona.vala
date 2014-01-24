@@ -72,6 +72,16 @@ public class FolksDummy.FullPersona : FolksDummy.Persona,
     PostalAddressDetails,
     WebServiceDetails
 {
+  private const string[] _default_linkable_properties =
+    {
+      "im-addresses",
+      "email-addresses",
+      "local-ids",
+      "web-service-addresses",
+      null /* FIXME: https://bugzilla.gnome.org/show_bug.cgi?id=682698 */
+    };
+
+
   /**
    * Create a new ‘full’ persona.
    *
@@ -88,7 +98,8 @@ public class FolksDummy.FullPersona : FolksDummy.Persona,
    * @since UNRELEASED
    */
   public FullPersona (PersonaStore store, string contact_id,
-      bool is_user = false, string[] linkable_properties = {})
+      bool is_user = false,
+      string[] linkable_properties = {})
     {
       base (store, contact_id, is_user, linkable_properties);
     }
@@ -104,6 +115,8 @@ public class FolksDummy.FullPersona : FolksDummy.Persona,
       this._groups_ro = this._groups.read_only_view;
       this._roles_ro = this._roles.read_only_view;
       this._anti_links_ro = this._anti_links.read_only_view;
+      this.update_linkable_properties (
+          FullPersona._default_linkable_properties);
     }
 
   private HashMultiMap<string, WebServiceFieldDetails> _web_service_addresses =
