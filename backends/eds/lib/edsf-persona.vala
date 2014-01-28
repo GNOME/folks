@@ -112,6 +112,18 @@ public class Edsf.Persona : Folks.Persona,
     };
 
   /**
+   * Name of folks’ custom parameter indicating automatic fields
+   *
+   * Folks can create extra fields to improve linking between personas.
+   * These fields have a boolean-typed parameter added with this name,
+   * and the value ‘TRUE’. This allows clients to detect such fields
+   * and (for example) ignore them in the UI.
+   *
+   * Since: UNRELEASED
+   */
+  public static const string folks_field_attribute_name = "X-FOLKS-FIELD";
+
+  /**
    * The vCard attribute used to specify a Contact's gender
    *
    * Based on:
@@ -1683,13 +1695,16 @@ public class Edsf.Persona : Folks.Persona,
         }
 
       /* We consider some e-mail addresses to be IM IDs too. This
-       * is pretty much a hack to make sure e-d-s contacts are
+       * is pretty much a hack to make sure EDS contacts are
        * automatically linked with their corresponding Telepathy
        * Persona. As an undesired side effect we might end up having
        * IM addresses that aren't actually used as such (i.e.: people
-       * who don't actually use GMail or MSN addresses for IM).
+       * who don't actually use GMail or MSN addresses for IM): this can be
+       * detected by clients by looking for the
+       * {@link Edsf.Persona.folks_field_attribute_name} parameter existing and
+       * being set to `TRUE` on the {@link ImFieldDetails}.
        *
-       * See bgo#657142
+       * See: bgo#657142, bgo#723187
        */
       foreach (var email in this._email_addresses)
         {
@@ -1722,6 +1737,9 @@ public class Edsf.Persona : Folks.Persona,
                   string normalised_addr =
                     ImDetails.normalise_im_address (email.value, proto);
                   var im_fd = new ImFieldDetails (normalised_addr);
+
+                  im_fd.add_parameter (
+                      Edsf.Persona.folks_field_attribute_name, "TRUE");
                   new_im_addresses.set (proto, im_fd);
                 }
               catch (Folks.ImDetailsError e)
