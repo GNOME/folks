@@ -1663,7 +1663,7 @@ public class Edsf.Persona : Folks.Persona,
                     }
 
                   string normalised_addr =
-                    (owned) ImDetails.normalise_im_address ((!) addr, im_proto);
+                    ImDetails.normalise_im_address ((!) addr, im_proto);
 
                   if (normalised_addr == "")
                     {
@@ -1720,7 +1720,7 @@ public class Edsf.Persona : Folks.Persona,
               try
                 {
                   string normalised_addr =
-                    (owned) ImDetails.normalise_im_address (email.value, proto);
+                    ImDetails.normalise_im_address (email.value, proto);
                   var im_fd = new ImFieldDetails (normalised_addr);
                   new_im_addresses.set (proto, im_fd);
                 }

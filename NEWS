@@ -11,6 +11,8 @@ Bugs fixed:
  • Bug 648811 — Add a dummy backend
  • Bug 720707 — New strings partly not translatable
  • Bug 722335 — non-void function should return a value
+ • Bug 723054 - edsf-persona.vala:1666.21-1666.79: error: Reference transfer
+   not supported for this expression
 
 API changes:
  • Add Individual.display_name

@@ -1153,9 +1153,8 @@ public class Trf.Persona : Folks.Persona,
     {
       try
         {
-          var account_id_copy = account_id.dup ();
-          var normalised_addr = (owned) normalise_im_address
-              ((owned) account_id_copy, im_proto);
+          var normalised_addr = ImDetails.normalise_im_address
+              (account_id, im_proto);
           var im_fd = new ImFieldDetails (normalised_addr);
 
           this._im_addresses.set (im_proto, im_fd);
