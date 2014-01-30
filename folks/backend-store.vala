@@ -406,8 +406,20 @@ public class Folks.BackendStore : Object {
                 }
               catch (GLib.Error e)
                 {
-                  warning ("Error preparing Backend '%s': %s",
-                      backend.name, e.message);
+                  if (e is DBusError.SERVICE_UNKNOWN)
+                    {
+                      /* Don’t warn if a D-Bus service is unknown; it probably
+                       * means the backend is deliberately not running and the
+                       * user is running folks from git, so hasn’t appropriately
+                       * enabled/disabled backends from building. */
+                      debug ("Error preparing Backend '%s': %s",
+                          backend.name, e.message);
+                    }
+                  else
+                    {
+                      warning ("Error preparing Backend '%s': %s",
+                          backend.name, e.message);
+                    }
                 }
             }
         }
