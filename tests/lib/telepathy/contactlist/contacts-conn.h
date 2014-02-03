@@ -28,17 +28,13 @@ struct _TpTestsContactsConnectionClass {
     TpTestsSimpleConnectionClass parent_class;
 
     TpPresenceMixinClass presence_mixin;
-    TpContactsMixinClass contacts_mixin;
     TpDBusPropertiesMixinClass properties_class;
-
-    TpContactsMixinFillContactAttributesFunc fill_client_types;
 };
 
 struct _TpTestsContactsConnection {
     TpTestsSimpleConnection parent;
 
     TpPresenceMixin presence_mixin;
-    TpContactsMixin contacts_mixin;
 
     TpTestsContactsConnectionPrivate *priv;
 };

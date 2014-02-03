@@ -40,8 +40,6 @@ G_DEFINE_TYPE_WITH_CODE (TpTestsContactsConnection,
       TP_TYPE_SVC_CONNECTION_INTERFACE_CONTACT_CAPABILITIES1, NULL)
     G_IMPLEMENT_INTERFACE (TP_TYPE_SVC_CONNECTION_INTERFACE_CONTACT_INFO1,
       init_contact_info)
-    G_IMPLEMENT_INTERFACE (TP_TYPE_SVC_CONNECTION_INTERFACE_CONTACTS,
-      tp_contacts_mixin_iface_init);
     G_IMPLEMENT_INTERFACE (TP_TYPE_SVC_CONNECTION_INTERFACE_CONTACT_LIST1,
       tp_base_contact_list_mixin_list_iface_init);
     G_IMPLEMENT_INTERFACE (TP_TYPE_SVC_CONNECTION_INTERFACE_CONTACT_GROUPS1,
@@ -161,7 +159,6 @@ finalize (GObject *object)
 {
   TpTestsContactsConnection *self = TP_TESTS_CONTACTS_CONNECTION (object);
 
-  tp_contacts_mixin_finalize (object);
   g_hash_table_unref (self->priv->aliases);
   g_hash_table_unref (self->priv->avatars);
   g_hash_table_unref (self->priv->presence_statuses);
@@ -177,125 +174,110 @@ finalize (GObject *object)
 }
 
 static void
-aliasing_fill_contact_attributes (GObject *object,
-                                  const GArray *contacts,
-                                  GHashTable *attributes)
+tp_tests_contacts_connection_fill_contact_attributes (TpBaseConnection *base,
+    const gchar *dbus_interface,
+    TpHandle contact,
+    TpContactAttributeMap *attributes)
 {
-  guint i;
-  TpTestsContactsConnection *self = TP_TESTS_CONTACTS_CONNECTION (object);
-  TpBaseConnection *base = TP_BASE_CONNECTION (object);
+  TpTestsContactsConnection *self = TP_TESTS_CONTACTS_CONNECTION (base);
   TpHandleRepoIface *contact_repo = tp_base_connection_get_handles (base,
       TP_HANDLE_TYPE_CONTACT);
 
-  for (i = 0; i < contacts->len; i++)
+  if (!tp_strdiff (dbus_interface,
+        TP_IFACE_CONNECTION_INTERFACE_ALIASING1))
     {
-      TpHandle handle = g_array_index (contacts, guint, i);
       const gchar *alias = g_hash_table_lookup (self->priv->aliases,
-          GUINT_TO_POINTER (handle));
+          GUINT_TO_POINTER (contact));
 
       if (alias == NULL)
         {
-          alias = tp_handle_inspect (contact_repo, handle);
+          alias = tp_handle_inspect (contact_repo, contact);
         }
 
-      tp_contacts_mixin_set_contact_attribute (attributes, handle,
+      tp_contact_attribute_map_take_sliced_gvalue (attributes, contact,
           TP_IFACE_CONNECTION_INTERFACE_ALIASING1 "/alias",
           tp_g_value_slice_new_string (alias));
+
+      return;
     }
-}
 
-static void
-avatars_fill_contact_attributes (GObject *object,
-                                 const GArray *contacts,
-                                 GHashTable *attributes)
-{
-  guint i;
-  TpTestsContactsConnection *self = TP_TESTS_CONTACTS_CONNECTION (object);
-
-  for (i = 0; i < contacts->len; i++)
+  if (!tp_strdiff (dbus_interface,
+        TP_IFACE_CONNECTION_INTERFACE_AVATARS1))
     {
-      TpHandle handle = g_array_index (contacts, guint, i);
       AvatarData *a = g_hash_table_lookup (self->priv->avatars,
-          GUINT_TO_POINTER (handle));
+          GUINT_TO_POINTER (contact));
 
       if (a != NULL && a->token != NULL)
         {
-          tp_contacts_mixin_set_contact_attribute (attributes, handle,
+          tp_contact_attribute_map_take_sliced_gvalue (attributes, contact,
               TP_IFACE_CONNECTION_INTERFACE_AVATARS1 "/token",
               tp_g_value_slice_new_string (a->token));
         }
+
+      return;
     }
-}
 
-static void
-location_fill_contact_attributes (GObject *object,
-    const GArray *contacts,
-    GHashTable *attributes)
-{
-  guint i;
-  TpTestsContactsConnection *self = TP_TESTS_CONTACTS_CONNECTION (object);
-
-  for (i = 0; i < contacts->len; i++)
+  if (!tp_strdiff (dbus_interface,
+        TP_IFACE_CONNECTION_INTERFACE_LOCATION1))
     {
-      TpHandle handle = g_array_index (contacts, guint, i);
       GHashTable *location = g_hash_table_lookup (self->priv->locations,
-          GUINT_TO_POINTER (handle));
+          GUINT_TO_POINTER (contact));
 
       if (location != NULL)
         {
-          tp_contacts_mixin_set_contact_attribute (attributes, handle,
+          tp_contact_attribute_map_take_sliced_gvalue (attributes, contact,
               TP_IFACE_CONNECTION_INTERFACE_LOCATION1 "/location",
               tp_g_value_slice_new_boxed (TP_HASH_TYPE_LOCATION, location));
         }
+
+      return;
     }
-}
 
-static void
-contact_caps_fill_contact_attributes (GObject *object,
-    const GArray *contacts,
-    GHashTable *attributes)
-{
-  guint i;
-  TpTestsContactsConnection *self = TP_TESTS_CONTACTS_CONNECTION (object);
-
-  for (i = 0; i < contacts->len; i++)
+  if (!tp_strdiff (dbus_interface,
+        TP_IFACE_CONNECTION_INTERFACE_CONTACT_CAPABILITIES1))
     {
-      TpHandle handle = g_array_index (contacts, guint, i);
       GPtrArray *caps = g_hash_table_lookup (self->priv->capabilities,
-          GUINT_TO_POINTER (handle));
+          GUINT_TO_POINTER (contact));
 
       if (caps != NULL)
         {
-          tp_contacts_mixin_set_contact_attribute (attributes, handle,
+          tp_contact_attribute_map_take_sliced_gvalue (attributes, contact,
               TP_IFACE_CONNECTION_INTERFACE_CONTACT_CAPABILITIES1 "/capabilities",
               tp_g_value_slice_new_boxed (
                 TP_ARRAY_TYPE_REQUESTABLE_CHANNEL_CLASS_LIST, caps));
         }
+
+      return;
     }
-}
 
-static void
-contact_info_fill_contact_attributes (GObject *object,
-    const GArray *contacts,
-    GHashTable *attributes)
-{
-  guint i;
-  TpTestsContactsConnection *self = TP_TESTS_CONTACTS_CONNECTION (object);
-
-  for (i = 0; i < contacts->len; i++)
+  if (!tp_strdiff (dbus_interface,
+        TP_IFACE_CONNECTION_INTERFACE_CONTACT_INFO1))
     {
-      TpHandle handle = g_array_index (contacts, guint, i);
       GPtrArray *info = g_hash_table_lookup (self->priv->contact_info,
-          GUINT_TO_POINTER (handle));
+          GUINT_TO_POINTER (contact));
 
       if (info != NULL)
         {
-          tp_contacts_mixin_set_contact_attribute (attributes, handle,
+          tp_contact_attribute_map_take_sliced_gvalue (attributes, contact,
               TP_IFACE_CONNECTION_INTERFACE_CONTACT_INFO1 "/info",
               tp_g_value_slice_new_boxed (TP_ARRAY_TYPE_CONTACT_INFO_FIELD_LIST,
                   info));
         }
+
+      return;
     }
+
+  if (tp_base_contact_list_fill_contact_attributes (
+        TP_BASE_CONTACT_LIST (self->priv->list_manager),
+        dbus_interface, contact, attributes))
+    return;
+
+  if (tp_presence_mixin_fill_contact_attributes (G_OBJECT (self),
+        dbus_interface, contact, attributes))
+    return;
+
+  ((TpBaseConnectionClass *) tp_tests_contacts_connection_parent_class)->
+    fill_contact_attributes (base, dbus_interface, contact, attributes);
 }
 
 static TpDBusPropertiesMixinPropImpl conn_contact_info_properties[] = {
@@ -365,27 +347,9 @@ conn_contact_info_properties_getter (GObject *object,
 }
 
 static void
-client_types_fill_contact_attributes (
-    GObject *object,
-    const GArray *contacts,
-    GHashTable *attributes)
-{
-  TpTestsContactsConnectionClass *klass =
-      TP_TESTS_CONTACTS_CONNECTION_GET_CLASS (object);
-
-  if (klass->fill_client_types != NULL)
-    klass->fill_client_types (object, contacts, attributes);
-  /* …else do nothing: a no-op implementation is valid, relatively speaking.
-   * The spec sez the /client-types attribute should be “omitted from the
-   * result if the contact's client types are not known.”
-   */
-}
-
-static void
 constructed (GObject *object)
 {
   TpTestsContactsConnection *self = TP_TESTS_CONTACTS_CONNECTION (object);
-  TpBaseConnection *base = TP_BASE_CONNECTION (object);
   void (*parent_impl) (GObject *) =
     G_OBJECT_CLASS (tp_tests_contacts_connection_parent_class)->constructed;
 
@@ -395,36 +359,8 @@ constructed (GObject *object)
   self->priv->list_manager = g_object_new (TP_TESTS_TYPE_CONTACT_LIST_MANAGER,
       "connection", self, NULL);
 
-  tp_contacts_mixin_init (object,
-      G_STRUCT_OFFSET (TpTestsContactsConnection, contacts_mixin));
-  tp_base_connection_register_with_contacts_mixin (base);
-  if (self->priv->list_manager)
-    {
-      tp_base_contact_list_mixin_register_with_contacts_mixin (
-          TP_BASE_CONTACT_LIST (self->priv->list_manager), base);
-    }
-  tp_contacts_mixin_add_contact_attributes_iface (object,
-      TP_IFACE_CONNECTION_INTERFACE_ALIASING1,
-      aliasing_fill_contact_attributes);
-  tp_contacts_mixin_add_contact_attributes_iface (object,
-      TP_IFACE_CONNECTION_INTERFACE_AVATARS1,
-      avatars_fill_contact_attributes);
-  tp_contacts_mixin_add_contact_attributes_iface (object,
-      TP_IFACE_CONNECTION_INTERFACE_LOCATION1,
-      location_fill_contact_attributes);
-  tp_contacts_mixin_add_contact_attributes_iface (object,
-      TP_IFACE_CONNECTION_INTERFACE_CONTACT_CAPABILITIES1,
-      contact_caps_fill_contact_attributes);
-  tp_contacts_mixin_add_contact_attributes_iface (object,
-      TP_IFACE_CONNECTION_INTERFACE_CONTACT_INFO1,
-      contact_info_fill_contact_attributes);
-  tp_contacts_mixin_add_contact_attributes_iface (object,
-      TP_IFACE_CONNECTION_INTERFACE_CLIENT_TYPES1,
-      client_types_fill_contact_attributes);
-
   tp_presence_mixin_init (object,
       G_STRUCT_OFFSET (TpTestsContactsConnection, presence_mixin));
-  tp_presence_mixin_register_with_contacts_mixin (object);
 }
 
 static const TpPresenceStatusOptionalArgumentSpec can_have_message[] = {
@@ -453,39 +389,31 @@ my_status_available (GObject *object,
   return tp_base_connection_check_connected (base, NULL);
 }
 
-static GHashTable *
-my_get_contact_statuses (GObject *object,
-                         const GArray *contacts)
+static TpPresenceStatus *
+my_get_contact_status (GObject *object,
+    TpHandle contact)
 {
   TpTestsContactsConnection *self = TP_TESTS_CONTACTS_CONNECTION (object);
-  GHashTable *result = g_hash_table_new_full (g_direct_hash, g_direct_equal,
-      NULL, (GDestroyNotify) tp_presence_status_free);
-  guint i;
+  TpPresenceStatus *result;
+  gpointer key = GUINT_TO_POINTER (contact);
+  TpTestsContactsConnectionPresenceStatusIndex index;
+  const gchar *presence_message;
+  GHashTable *parameters;
 
-  for (i = 0; i < contacts->len; i++)
-    {
-      TpHandle handle = g_array_index (contacts, TpHandle, i);
-      gpointer key = GUINT_TO_POINTER (handle);
-      TpTestsContactsConnectionPresenceStatusIndex index;
-      const gchar *presence_message;
-      GHashTable *parameters;
+  index = GPOINTER_TO_UINT (g_hash_table_lookup (
+        self->priv->presence_statuses, key));
+  presence_message = g_hash_table_lookup (
+      self->priv->presence_messages, key);
 
-      index = GPOINTER_TO_UINT (g_hash_table_lookup (
-            self->priv->presence_statuses, key));
-      presence_message = g_hash_table_lookup (
-          self->priv->presence_messages, key);
+  parameters = g_hash_table_new_full (g_str_hash,
+      g_str_equal, NULL, (GDestroyNotify) tp_g_value_slice_free);
 
-      parameters = g_hash_table_new_full (g_str_hash,
-          g_str_equal, NULL, (GDestroyNotify) tp_g_value_slice_free);
+  if (presence_message != NULL)
+    g_hash_table_insert (parameters, (gpointer) "message",
+        tp_g_value_slice_new_string (presence_message));
 
-      if (presence_message != NULL)
-        g_hash_table_insert (parameters, (gpointer) "message",
-            tp_g_value_slice_new_string (presence_message));
-
-      g_hash_table_insert (result, key,
-          tp_presence_status_new (index, parameters));
-      g_hash_table_unref (parameters);
-    }
+  result = tp_presence_status_new (index, parameters);
+  g_hash_table_unref (parameters);
 
   return result;
 }
@@ -534,7 +462,6 @@ tp_tests_contacts_get_interfaces_always_present (TpBaseConnection *base)
   static const gchar *interfaces_always_present[] = {
       TP_IFACE_CONNECTION_INTERFACE_ALIASING1,
       TP_IFACE_CONNECTION_INTERFACE_AVATARS1,
-      TP_IFACE_CONNECTION_INTERFACE_CONTACTS,
       TP_IFACE_CONNECTION_INTERFACE_CONTACT_LIST1,
       TP_IFACE_CONNECTION_INTERFACE_CONTACT_GROUPS1,
       TP_IFACE_CONNECTION_INTERFACE_PRESENCE1,
@@ -613,13 +540,12 @@ tp_tests_contacts_connection_class_init (TpTestsContactsConnectionClass *klass)
 
   base_class->get_interfaces_always_present = tp_tests_contacts_get_interfaces_always_present;
   base_class->create_channel_managers = create_channel_managers;
-
-  tp_contacts_mixin_class_init (object_class,
-      G_STRUCT_OFFSET (TpTestsContactsConnectionClass, contacts_mixin));
+  base_class->fill_contact_attributes =
+    tp_tests_contacts_connection_fill_contact_attributes;
 
   tp_presence_mixin_class_init (object_class,
       G_STRUCT_OFFSET (TpTestsContactsConnectionClass, presence_mixin),
-      my_status_available, my_get_contact_statuses,
+      my_status_available, my_get_contact_status,
       my_set_own_status, my_statuses);
   mixin_class = TP_PRESENCE_MIXIN_CLASS(klass);
   mixin_class->get_maximum_status_message_length =
