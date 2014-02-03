@@ -1,6 +1,7 @@
 # Build . first so that backends' test libraries can link to libfolks-test.la
 SUBDIRS = \
 	. \
+	dummy \
 	key-file \
 	$(NULL)
 
@@ -27,6 +28,7 @@ SUBDIRS += eds
 endif
 
 DIST_SUBDIRS = \
+	dummy \
 	key-file \
 	telepathy \
 	eds \
@@ -37,6 +39,7 @@ DIST_SUBDIRS = \
 noinst_LTLIBRARIES = libfolks-test.la
 
 libfolks_test_la_SOURCES = \
+	disconnection-queue.vala \
 	haze-remove-directory.c \
 	test-case.vala \
 	test-case-helper.c \
@@ -73,8 +76,9 @@ libfolks_test_la_LIBADD = \
 	$(NULL)
 
 libfolks_test_la_VALAFLAGS = \
-	$(ERROR_VALAFLAGS) \
 	$(AM_VALAFLAGS) \
+	$(TARGET_VALAFLAGS) \
+	$(ERROR_VALAFLAGS) \
 	--vapidir=$(abs_top_srcdir)/folks \
 	--vapidir=$(abs_top_builddir)/folks \
 	--pkg gobject-2.0 \

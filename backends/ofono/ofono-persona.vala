@@ -47,7 +47,8 @@ public class Folks.Backends.Ofono.Persona : Folks.Persona,
   private const string[] _linkable_properties =
     {
       "phone-numbers",
-      "email-addresses"
+      "email-addresses",
+      null /* FIXME: https://bugzilla.gnome.org/show_bug.cgi?id=682698 */
     };
   private static string[] _writeable_properties = {};
 
@@ -132,7 +133,9 @@ public class Folks.Backends.Ofono.Persona : Folks.Persona,
       var iid = Checksum.compute_for_string (ChecksumType.SHA1, vcard);
       var uid = Folks.Persona.build_uid ("ofono", store.id, iid);
 
-      Object (display_id: uid,
+      /* Use the IID as the display ID since no other suitable identifier is
+       * available which we can guarantee is unique within the store. */
+      Object (display_id: iid,
               iid: iid,
               uid: uid,
               store: store,

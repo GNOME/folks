@@ -1,4 +1,6 @@
-AM_VALAFLAGS += \
+AM_VALAFLAGS = \
+	$(TARGET_VALAFLAGS) \
+	$(ERROR_VALAFLAGS) \
 	--vapidir=$(top_srcdir)/folks \
 	--pkg=posix \
 	--pkg=readline \
@@ -38,6 +40,7 @@ folks_inspect_LDADD = \
 folks_inspect_CPPFLAGS = \
 	$(AM_CPPFLAGS) \
 	-include $(CONFIG_HEADER) \
+	-include $(top_srcdir)/folks/warnings.h \
 	-DLOCALE_DIR=\"$(localedir)\" \
 	-I$(top_srcdir) \
 	-I$(top_srcdir)/folks \

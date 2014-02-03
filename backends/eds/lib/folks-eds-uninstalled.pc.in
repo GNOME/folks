@@ -8,5 +8,5 @@ Name: Folks e-d-s support library (uninstalled copy)
 Description: Evolution Data Server support library for the Folks meta-contacts library
 Version: @VERSION@
 Requires: folks glib-2.0 gobject-2.0 gee-0.8 libebook-1.2 libedataserver-1.2
-Libs: ${abs_top_builddir}/backends/telepathy/libfolks-eds.la
+Libs: ${abs_top_builddir}/backends/eds/libfolks-eds.la
 Cflags: -I${abs_top_srcdir} -I${abs_top_srcdir}/backends/eds -I${abs_top_builddir}

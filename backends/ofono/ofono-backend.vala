@@ -29,6 +29,9 @@ using org.ofono;
 
 extern const string BACKEND_NAME;
 
+/* FIXME: Once we depend on gettext 0.18.3, translatable strings can once more
+ * be split over multiple lines without breaking the .po file. */
+
 /**
  * A backend which loads {@link Persona}s from Modem
  * devices using the Ofono Phonebook D-Bus API and presents them
@@ -162,7 +165,7 @@ public class Folks.Backends.Ofono.Backend : Folks.Backend
   /**
    * {@inheritDoc}
    */
-  public override async void prepare () throws GLib.Error
+  public override async void prepare () throws DBusError
     {
       Internal.profiling_start ("preparing Ofono.Backend");
 
@@ -174,31 +177,39 @@ public class Folks.Backends.Ofono.Backend : Folks.Backend
       try
         {
           this._prepare_pending = true;
+          this.freeze_notify ();
 
           /* New modem devices can be caught in notifications */
-          Manager manager = yield Bus.get_proxy (BusType.SYSTEM,
-                                                       "org.ofono",
-                                                       "/");
-          manager.ModemAdded.connect (this._modem_added);
-          manager.ModemRemoved.connect (this._modem_removed);
-          
-          this._modems = manager.GetModems ();
+          Manager manager;
+
+          try
+            {
+              manager = yield Bus.get_proxy (BusType.SYSTEM, "org.ofono", "/");
+              manager.ModemAdded.connect (this._modem_added);
+              manager.ModemRemoved.connect (this._modem_removed);
+
+              this._modems = manager.GetModems ();
+            }
+          catch (GLib.Error e1)
+            {
+              throw new DBusError.SERVICE_UNKNOWN (
+                  _("No oFono object manager running, so the oFono backend will be inactive. Either oFono isn’t installed or the service can’t be started."));
+            }
 
           foreach (ModemProperties modem in this._modems)
             {
               this._modem_added (modem.path, modem.properties);
             }
 
-          this.freeze_notify ();
           this._is_prepared = true;
           this.notify_property ("is-prepared");
 
           this._is_quiescent = true;
           this.notify_property ("is-quiescent");
-          this.thaw_notify ();
         }
       finally
         {
+          this.thaw_notify ();
           this._prepare_pending = false;
         }
 
@@ -218,13 +229,13 @@ public class Folks.Backends.Ofono.Backend : Folks.Backend
       try
         {
           this._prepare_pending = true;
+          this.freeze_notify ();
 
           foreach (var persona_store in this._persona_stores.values)
             {
               this.persona_store_removed (persona_store);
             }
 
-          this.freeze_notify ();
           this._persona_stores.clear ();
           this.notify_property ("persona-stores");
 
@@ -233,10 +244,10 @@ public class Folks.Backends.Ofono.Backend : Folks.Backend
 
           this._is_prepared = false;
           this.notify_property ("is-prepared");
-          this.thaw_notify ();
         }
       finally
         {
+          this.thaw_notify ();
           this._prepare_pending = false;
         }
     }
@@ -269,22 +280,51 @@ public class Folks.Backends.Ofono.Backend : Folks.Backend
   
   private void _modem_added (ObjectPath path, HashTable<string, Variant> properties)
     {
+      bool has_sim = false;
+      bool has_phonebook = false;
+
       Variant? features_variant = properties.get ("Features");
       if (features_variant != null)
         {
-          string alias = this._modem_alias (properties);
-          string[] features = features_variant.get_strv ();
-          
-          foreach (string feature in features)
+          var features = features_variant.get_strv ();
+          /* FIXME: can't use the ‘in’ operator because of
+           * https://bugzilla.gnome.org/show_bug.cgi?id=709672 */
+          foreach (var feature in features)
             {
               if (feature == "sim")
                 {
-                  /* This modem has a sim card, so add a persona store for it */
-                  this._add_modem (path, alias);
+                  has_sim = true;
                   break;
                 }
             }
         }
+
+      /* If the modem doesn't have a SIM, don't go any further. */
+      if (has_sim == false)
+          return;
+
+      Variant? interfaces_variant = properties.get ("Interfaces");
+      if (interfaces_variant != null)
+        {
+          var interfaces = interfaces_variant.get_strv ();
+          /* FIXME: and here */
+          foreach (var interf in interfaces)
+            {
+              if (interf == "org.ofono.Phonebook")
+                {
+                  has_phonebook = true;
+                  break;
+                }
+            }
+        }
+
+      if (has_phonebook == false)
+          return;
+
+      /* The modem has both a SIM and a phonebook, so can be wrapped by a
+       * persona store. */
+      string alias = this._modem_alias (properties);
+      this._add_modem (path, alias);
     }
 
   /**

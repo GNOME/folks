@@ -166,6 +166,8 @@ public class Folks.Backends.Tp.Backend : Folks.Backend
       try
         {
           this._prepare_pending = true;
+          this.freeze_notify ();
+
           this._account_manager = AccountManager.dup ();
           yield this._account_manager.prepare_async (null);
           this._account_manager.account_enabled.connect (
@@ -188,6 +190,7 @@ public class Folks.Backends.Tp.Backend : Folks.Backend
         }
       finally
         {
+          this.thaw_notify ();
           this._prepare_pending = false;
         }
 
@@ -207,6 +210,7 @@ public class Folks.Backends.Tp.Backend : Folks.Backend
       try
         {
           this._prepare_pending = true;
+          this.freeze_notify ();
 
           this._account_manager.account_enabled.disconnect (
               this._account_enabled_cb);
@@ -222,6 +226,7 @@ public class Folks.Backends.Tp.Backend : Folks.Backend
         }
       finally
         {
+          this.thaw_notify ();
           this._prepare_pending = false;
         }
     }

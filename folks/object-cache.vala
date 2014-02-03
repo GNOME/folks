@@ -255,8 +255,7 @@ public abstract class Folks.ObjectCache<T> : Object
         {
           warning ("Cache file '%s' was version %u of the object file " +
               "format, which is not supported. The file was deleted.",
-              this._cache_file_path, object_version,
-              ObjectCache._FILE_FORMAT_VERSION);
+              this._cache_file_path, object_version);
           yield this.clear_cache ();
 
           return null;

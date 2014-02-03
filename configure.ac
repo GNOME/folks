@@ -3,17 +3,55 @@ m4_define([folks_released], [0])
 
 m4_define([folks_major_version], [0])
 m4_define([folks_minor_version], [9])
-m4_define([folks_micro_version], [5])
-m4_define([folks_nano_version], [1])
+m4_define([folks_micro_version], [7])
+m4_define([folks_nano_version], [0])
 
-# If library source has changed since last release, increment revision
-# If public symbols have been added, removed or changed since last release,
-#  increment current and set revision to 0
-# If public symbols have been added since last release, increment age
-# If public symbols have been removed since last release, set age to 0
+# Core library LT version. When updating this, don't forget to bump the backend
+# library LT versions too, below.
+#
+# To update the version, follow these instructions sequentially:
+#
+#  1. If the library source code has changed at all since the last update, then
+#     increment revision (‘c:r:a’ becomes ‘c:r+1:a’).
+#  2. If any interfaces have been added, removed, or changed since the last
+#     update, increment current, and set revision to 0.
+#  3. If any interfaces have been added since the last public release, then
+#     increment age.
+#  4. If any interfaces have been removed or changed since the last public
+#     release, then set age to 0.
+#
+# The LT current version number is additionally used as libfolks' module API
+# version number: a given libfolks.so will only load modules which were compiled
+# against a core with the same LT current number as itself. This allows the API
+# which is exposed to the modules to be changed.
 m4_define([folks_lt_current], [41])
-m4_define([folks_lt_revision], [0])
+m4_define([folks_lt_revision], [1])
 m4_define([folks_lt_age], [16])
+
+# Each of the backend libraries (e.g. libfolks-eds.so; *not* the loadable
+# modules, eds.so) has its own LT version. These should be incremented when the
+# core folks_lt_* variables are incremented (as all the backend libraries are
+# binary-dependent on libfolks.so), but should also be incremented when
+# incompatible changes are made in the backend library APIs themselves.
+m4_define([folks_eds_lt_current], [41])
+m4_define([folks_eds_lt_revision], [1])
+m4_define([folks_eds_lt_age], [16])
+
+m4_define([folks_libsocialweb_lt_current], [41])
+m4_define([folks_libsocialweb_lt_revision], [1])
+m4_define([folks_libsocialweb_lt_age], [16])
+
+m4_define([folks_telepathy_lt_current], [41])
+m4_define([folks_telepathy_lt_revision], [1])
+m4_define([folks_telepathy_lt_age], [16])
+
+m4_define([folks_tracker_lt_current], [41])
+m4_define([folks_tracker_lt_revision], [1])
+m4_define([folks_tracker_lt_age], [16])
+
+m4_define([folks_dummy_lt_current], [41])
+m4_define([folks_dummy_lt_revision], [1])
+m4_define([folks_dummy_lt_age], [16])
 
 # Display the nano_version only if it's not '0'
 m4_define([folks_base_version],
@@ -27,12 +65,11 @@ m4_define([folks_maybe_datestamp],
                 [], [m4_esyscmd([date +.%Y%m%d | tr -d '\n\r'])]))
 
 m4_define([folks_version], folks_full_version[]folks_maybe_datestamp)
-m4_define([folks_major_minor_version], folks_major_version.folks_minor_version)
 m4_define([folks_module_version], folks_lt_current)
 
-AC_INIT([folks], folks_version,
-        [https://bugzilla.gnome.org/browse.cgi?product=folks], [folks],
-        [http://telepathy.freedesktop.org/wiki/Folks])
+AC_INIT([folks],[folks_version],
+        [https://bugzilla.gnome.org/browse.cgi?product=folks],[folks],
+        [https://wiki.gnome.org/Projects/Folks])
 m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
 
 AC_PREREQ([2.65])
@@ -43,25 +80,21 @@ AC_CONFIG_SRCDIR([Makefile.am])
 AC_CONFIG_HEADERS(config.h)
 AC_CONFIG_SRCDIR([configure.ac])
 AM_INIT_AUTOMAKE([1.11 dist-xz no-define
-                  no-dist-gzip tar-ustar -Wno-portability color-tests])
+                  no-dist-gzip tar-ustar -Wno-portability color-tests
+                  parallel-tests])
 AM_MAINTAINER_MODE([enable])
 
 AC_PROG_CC
 AM_PROG_CC_C_O
-AC_DISABLE_STATIC
-LT_INIT
+LT_INIT([disable-static])
 PKG_PROG_PKG_CONFIG([0.21])
 GLIB_GSETTINGS
-
-# Always look for .pc files in /folks so backend support libraries can be
-# introspected properly
-PKG_CONFIG_PATH=$(pwd)/folks:$PKG_CONFIG_PATH
-AC_SUBST([PKG_CONFIG_PATH])
 
 AC_SUBST([CFLAGS])
 AC_SUBST([CPPFLAGS])
 AC_SUBST([LDFLAGS])
 
+# Core library LT version
 LT_CURRENT=folks_lt_current
 LT_REVISION=folks_lt_revision
 LT_AGE=folks_lt_age
@@ -69,9 +102,25 @@ AC_SUBST([LT_CURRENT])
 AC_SUBST([LT_REVISION])
 AC_SUBST([LT_AGE])
 
-FOLKS_MAJOR_MINOR_VERSION=folks_major_minor_version
-AC_SUBST([FOLKS_MAJOR_MINOR_VERSION])
+# Backend library LT versions
+FOLKS_EDS_LT_VERSION=folks_eds_lt_current:folks_eds_lt_revision:folks_eds_lt_age
+AC_SUBST([FOLKS_EDS_LT_VERSION])
 
+FOLKS_LIBSOCIALWEB_LT_VERSION=folks_libsocialweb_lt_current:folks_libsocialweb_lt_revision:folks_libsocialweb_lt_age
+AC_SUBST([FOLKS_LIBSOCIALWEB_LT_VERSION])
+
+FOLKS_TELEPATHY_LT_VERSION=folks_telepathy_lt_current:folks_telepathy_lt_revision:folks_telepathy_lt_age
+AC_SUBST([FOLKS_TELEPATHY_LT_VERSION])
+
+FOLKS_TRACKER_LT_VERSION=folks_tracker_lt_current:folks_tracker_lt_revision:folks_tracker_lt_age
+AC_SUBST([FOLKS_TRACKER_LT_VERSION])
+
+FOLKS_DUMMY_LT_VERSION=folks_dummy_lt_current:folks_dummy_lt_revision:folks_dummy_lt_age
+AC_SUBST([FOLKS_DUMMY_LT_VERSION])
+
+# Core library API version (potentially used for parallel installation)
+# When updating this, don’t forget to update the backend library API versions
+# below.
 API_VERSION_MAJOR=0
 AC_SUBST([API_VERSION_MAJOR])
 API_VERSION_MINOR=6
@@ -79,8 +128,16 @@ AC_SUBST([API_VERSION_MINOR])
 API_VERSION_DOT=$API_VERSION_MAJOR.$API_VERSION_MINOR
 AC_SUBST([API_VERSION_DOT])
 
+# Backend library API versions
+AC_SUBST([FOLKS_EDS_API_VERSION], [0.6])
+AC_SUBST([FOLKS_LIBSOCIALWEB_API_VERSION], [0.6])
+AC_SUBST([FOLKS_TELEPATHY_API_VERSION], [0.6])
+AC_SUBST([FOLKS_TRACKER_API_VERSION], [0.6])
+AC_SUBST([FOLKS_DUMMY_API_VERSION], [0.6])
+
+# Backend configuration
 AC_ARG_ENABLE(tracker-backend,
-        AC_HELP_STRING([--enable-tracker-backend],
+        AS_HELP_STRING([--enable-tracker-backend],
                        [ build the Tracker backend]),
         enable_tracker_backend=$enableval,
         enable_tracker_backend=no )
@@ -96,8 +153,8 @@ AS_IF([test "x$enable_tracker_backend" = "xyes"], [
 ])
 
 AC_ARG_ENABLE(eds-backend,
-        AC_HELP_STRING([--enable-eds-backend],
-                       [ build the E-D-S backend]),
+        AS_HELP_STRING([--enable-eds-backend],
+                       [build the EDS backend]),
         enable_eds_backend=$enableval,
         enable_eds_backend=yes )
 
@@ -110,8 +167,8 @@ AS_IF([test "x$enable_eds_backend" = "xyes"], [
 AM_CONDITIONAL([ENABLE_EDS], [test "x$enable_eds_backend" = "xyes"])
 
 AC_ARG_ENABLE(ofono-backend,
-	AC_HELP_STRING([--enable-ofono-backend],
-		       [ build the ofono backend]),
+	AS_HELP_STRING([--enable-ofono-backend],
+	               [build the oFono backend]),
 	enable_ofono_backend=$enableval,
 	enable_ofono_backend=yes )
 
@@ -123,9 +180,23 @@ AS_IF([test "x$enable_ofono_backend" = "xyes"], [
 
 AM_CONDITIONAL([ENABLE_OFONO], [test "x$enable_ofono_backend" = "xyes"])
 
+AC_ARG_ENABLE(bluez-backend,
+	AS_HELP_STRING([--enable-bluez-backend],
+	               [build the BlueZ backend]),
+	enable_bluez_backend=$enableval,
+	enable_bluez_backend=yes )
+
+AS_IF([test "x$enable_bluez_backend" = "xyes"], [
+        AC_DEFINE(HAVE_BLUEZ, [1], [Define as 1 if you have the BlueZ backend])
+], [
+        AC_DEFINE(HAVE_BLUEZ, [0], [Define as 1 if you have the BlueZ backend])
+])
+
+AM_CONDITIONAL([ENABLE_BLUEZ], [test "x$enable_bluez_backend" = "xyes"])
+
 AC_ARG_ENABLE(telepathy-backend,
-        AC_HELP_STRING([--enable-telepathy-backend],
-                       [ build the Telepathy backend]),
+        AS_HELP_STRING([--enable-telepathy-backend],
+                       [build the Telepathy backend]),
         enable_telepathy_backend=$enableval,
         enable_telepathy_backend=yes )
 
@@ -138,7 +209,7 @@ AS_IF([test "x$enable_telepathy_backend" = "xyes"], [
 AM_CONDITIONAL([ENABLE_TELEPATHY], [test "x$enable_telepathy_backend" = "xyes"])
 
 AC_ARG_ENABLE(zeitgeist,
-        AC_HELP_STRING([--enable-zeitgeist],
+        AS_HELP_STRING([--enable-zeitgeist],
                        [ build Zeitgeist support in the Telepathy backend]),
         enable_zeitgeist=$enableval,
         enable_zeitgeist=auto)
@@ -146,7 +217,7 @@ AC_ARG_ENABLE(zeitgeist,
 # Automatically check the dependencies for the libsocialweb backend
 SW_CLIENT_REQUIRED=0.25.20
 AC_ARG_ENABLE(libsocialweb-backend,
-        AC_HELP_STRING([--enable-libsocialweb-backend=@<:@no/yes/auto@:>@],
+        AS_HELP_STRING([--enable-libsocialweb-backend=@<:@no/yes/auto@:>@],
                        [build the Libsocialweb backend (default: auto)]),
         enable_libsocialweb_backend=$enableval,
         enable_libsocialweb_backend=auto )
@@ -187,8 +258,8 @@ AM_CONDITIONAL([ENABLE_LIBSOCIALWEB],
 # Dependencies
 # -----------------------------------------------------------
 
-GLIB_REQUIRED=2.37.6
-VALA_REQUIRED=0.17.6
+GLIB_REQUIRED=2.38.2
+VALA_REQUIRED=0.22.0.28-9090
 VALADOC_REQUIRED=0.3.1
 TRACKER_SPARQL_MAJOR=0.16
 TRACKER_SPARQL_REQUIRED=0.15.2
@@ -266,6 +337,10 @@ AS_IF([test x$enable_ofono_backend = xyes], [
         PKG_CHECK_MODULES([EBOOK], [libebook-1.2 >= $EBOOK_REQUIRED])
 ])
 
+AS_IF([test x$enable_bluez_backend = xyes], [
+        PKG_CHECK_MODULES([EBOOK], [libebook-1.2 >= $EBOOK_REQUIRED])
+])
+
 #
 # Vala building options -- allows tarball builds without installing Vala
 #
@@ -294,6 +369,8 @@ AS_IF([test \
         ! -e ${sd}tests/folks/backend_loading_vala.stamp -o \
         ! -e ${sd}tests/key-file/individual_retrieval_vala.stamp -o \
         ! -e ${sd}tests/lib/folks-test.vapi -o \
+        ! -e ${sd}tests/lib/dummy/dummy-test.vapi -o \
+        ! -e ${sd}tests/lib/dummy/libdummy_test_la_vala.stamp -o \
         ! -e ${sd}tests/lib/key-file/kf-test.vapi -o \
         ! -e ${sd}tests/lib/key-file/libkf_test_la_vala.stamp -o \
         ! -e ${sd}tests/lib/telepathy/contactlist/tp-test-contactlist.gir -o \
@@ -303,6 +380,7 @@ AS_IF([test \
         ! -e ${sd}tests/telepathy/individual_retrieval_vala.stamp -o \
         ! -e ${sd}tests/telepathy/individual_properties_vala.stamp -o \
         ! -e ${sd}tests/folks/backend_loading_vala.stamp -o \
+        ! -e ${sd}backends/dummy/dummy_la_vala.stamp -o \
         ! -e ${sd}backends/key-file/key_file_la_vala.stamp -o \
         ! -e ${sd}backends/telepathy/telepathy_la_vala.stamp \
                 -o \
@@ -333,11 +411,10 @@ AS_IF([test "x$enable_vala" = "xyes"], [
 
         # require GLib >= 2.24 so GLib.Array, etc. reffing is handled
         # automatically
-        AM_VALAFLAGS="--target-glib=2.24"
+        TARGET_VALAFLAGS="--target-glib=2.24"
         # within the libfolks tree, select inline code paths
-        AM_VALAFLAGS="$AM_VALAFLAGS -D FOLKS_COMPILATION"
-        AC_SUBST([AM_VALAFLAGS])
-        AC_SUBST([VAPIGENFLAGS])
+        TARGET_VALAFLAGS="$TARGET_VALAFLAGS -D FOLKS_COMPILATION"
+        AC_SUBST([TARGET_VALAFLAGS])
         AC_SUBST([VAPIDIR])
 
         VALA_CHECK_PACKAGES([gio-2.0
@@ -359,6 +436,10 @@ AS_IF([test "x$enable_vala" = "xyes"], [
         ])
 
         AS_IF([test x$enable_ofono_backend = xyes], [
+          VALA_CHECK_PACKAGES([libebook-1.2])
+        ])
+
+        AS_IF([test x$enable_bluez_backend = xyes], [
           VALA_CHECK_PACKAGES([libebook-1.2])
         ])
 ])
@@ -506,6 +587,10 @@ FOLKS_ADD_WARNING([ERROR_CFLAGS], [old-style-declaration])
 FOLKS_ADD_WARNING([ERROR_CFLAGS], [old-style-definition])
 FOLKS_ADD_WARNING([ERROR_CFLAGS], [strict-prototypes])
 
+# Enable colourised compiler output.
+AS_COMPILER_FLAG([-fdiagnostics-color=auto],
+                 [ERROR_CFLAGS="$ERROR_CFLAGS -fdiagnostics-color=auto"])
+
 AS_COMPILER_FLAG([-Wall], [C_ERROR_CFLAGS="-Wall"], [C_ERROR_CFLAGS=""])
 AS_COMPILER_FLAG([-Werror], [werror=yes], [werror=no])
 
@@ -643,11 +728,15 @@ AC_CONFIG_FILES([
     backends/tracker/lib/folks-tracker-uninstalled.pc
     backends/eds/lib/folks-eds.pc
     backends/eds/lib/folks-eds-uninstalled.pc
+    backends/dummy/lib/folks-dummy.pc
+    backends/dummy/lib/folks-dummy-uninstalled.pc
     folks/folks.pc
     folks/folks-uninstalled.pc
     folks/org.freedesktop.folks.gschema.xml
     Makefile
     backends/Makefile
+    backends/dummy/Makefile
+    backends/dummy/lib/Makefile
     backends/key-file/Makefile
     backends/libsocialweb/Makefile
     backends/libsocialweb/lib/Makefile
@@ -660,6 +749,7 @@ AC_CONFIG_FILES([
     backends/eds/Makefile
     backends/eds/lib/Makefile
     backends/ofono/Makefile
+    backends/bluez/Makefile
     folks/Makefile
     docs/Makefile
     po/Makefile.in
@@ -667,6 +757,7 @@ AC_CONFIG_FILES([
     tests/data/Makefile
     tests/eds/Makefile
     tests/folks/Makefile
+    tests/dummy/Makefile
     tests/key-file/Makefile
     tests/libsocialweb/Makefile
     tests/telepathy/Makefile
@@ -674,6 +765,7 @@ AC_CONFIG_FILES([
     tests/lib/Makefile
     tests/lib/folks-test-uninstalled.pc
     tests/lib/eds/Makefile
+    tests/lib/dummy/Makefile
     tests/lib/key-file/Makefile
     tests/lib/libsocialweb/Makefile
     tests/lib/telepathy/Makefile
@@ -703,6 +795,7 @@ Configure summary:
         Libsocialweb backend........:  ${have_libsocialweb_backend}
         E-D-S backend...............:  ${enable_eds_backend}
         Ofono backend...............:  ${enable_ofono_backend}
+        BlueZ backend...............:  ${enable_bluez_backend}
         Zeitgeist support...........:  ${have_zeitgeist}
         Build tests.................:  ${enable_tests}
 "

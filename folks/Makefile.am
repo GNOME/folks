@@ -23,6 +23,7 @@ libfolks_internal_la_SOURCES = \
 
 libfolks_internal_la_VALAFLAGS = \
 	$(AM_VALAFLAGS) \
+	$(TARGET_VALAFLAGS) \
 	$(ERROR_VALAFLAGS) \
 	--library=folks-internal \
 	--vapidir=$(abs_srcdir) \
@@ -37,6 +38,11 @@ libfolks_internal_la_VALAFLAGS = \
 if ENABLE_PROFILING
 libfolks_internal_la_VALAFLAGS += --define=ENABLE_PROFILING
 endif
+
+libfolks_internal_la_CPPFLAGS = \
+	$(AM_CPPFLAGS) \
+	-include $(top_srcdir)/folks/warnings.h \
+	$(NULL)
 
 libfolks_internal_la_CFLAGS = \
 	$(AM_CFLAGS) \
@@ -106,6 +112,7 @@ endif
 
 libfolks_la_VALAFLAGS = \
 	$(AM_VALAFLAGS) \
+	$(TARGET_VALAFLAGS) \
 	$(ERROR_VALAFLAGS) \
 	--gir=Folks-$(API_VERSION_DOT).gir \
 	--library=folks \
@@ -122,6 +129,11 @@ libfolks_la_VALAFLAGS = \
 	--vapi folks.vapi \
 	-H folks.h \
 	$(EDS_FLAGS) \
+	$(NULL)
+
+libfolks_la_CPPFLAGS = \
+	$(AM_CPPFLAGS) \
+	-include $(top_srcdir)/folks/warnings.h \
 	$(NULL)
 
 libfolks_la_CFLAGS = \
@@ -171,6 +183,7 @@ EXTRA_DIST = \
 	$(pkgconfig_in) \
 	build-conf.vapi \
 	redeclare-internal-api.h \
+	warnings.h \
 	$(NULL)
 
 CLEANFILES =
@@ -185,6 +198,10 @@ libfolks_dlname = \
 INTROSPECTION_GIRS =
 INTROSPECTION_SCANNER_ARGS =
 INTROSPECTION_COMPILER_ARGS = -l $(libfolks_dlname)
+
+# Set PKG_CONFIG_PATH so we can find the backend's uninstalled pkg-config file.
+INTROSPECTION_SCANNER_ENV = \
+	PKG_CONFIG_PATH=$(top_builddir)/folks:$${PKG_CONFIG_PATH}
 
 if HAVE_INTROSPECTION
 Folks-$(API_VERSION_DOT).gir: libfolks.la

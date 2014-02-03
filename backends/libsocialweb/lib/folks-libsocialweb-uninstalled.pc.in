@@ -8,5 +8,5 @@ Name: Folks Libsocialweb support library (uninstalled copy)
 Description: Libsocialweb support library for the Folks meta-contacts library
 Version: @VERSION@
 Requires: folks glib-2.0 gobject-2.0 gee-0.8 libsocialweb-client
-Libs: ${abs_top_builddir}/backends/telepathy/libfolks-libsocialweb.la
+Libs: ${abs_top_builddir}/backends/libsocialweb/libfolks-libsocialweb.la
 Cflags: -I${abs_top_srcdir} -I${abs_top_srcdir}/backends/libsocialweb -I${abs_top_builddir}

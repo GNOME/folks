@@ -183,6 +183,7 @@ public class Folks.Backends.Kf.Backend : Folks.Backend
       try
         {
           this._prepare_pending = true;
+          this.freeze_notify ();
 
           File file;
           unowned string path = Environment.get_variable (
@@ -216,6 +217,7 @@ public class Folks.Backends.Kf.Backend : Folks.Backend
         }
       finally
         {
+          this.thaw_notify ();
           this._prepare_pending = false;
         }
 
@@ -270,6 +272,7 @@ public class Folks.Backends.Kf.Backend : Folks.Backend
       try
         {
           this._prepare_pending = true;
+          this.freeze_notify ();
 
           foreach (var persona_store in this._persona_stores.values)
             {
@@ -287,6 +290,7 @@ public class Folks.Backends.Kf.Backend : Folks.Backend
         }
       finally
         {
+          this.thaw_notify ();
           this._prepare_pending = false;
         }
     }

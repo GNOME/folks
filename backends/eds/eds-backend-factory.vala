@@ -25,40 +25,25 @@
  */
 
 using Folks;
-using Folks.Backends.Eds;
-
-private BackendFactory _backend_factory = null;
 
 /**
- * The eds backend module entry point.
+ * The EDS backend module entry point.
  *
+ * @backend_store a store to add the EDS backends to
  * @since 0.6.0
  */
 public void module_init (BackendStore backend_store)
 {
-  _backend_factory = new BackendFactory (backend_store);
+  backend_store.add_backend (new Folks.Backends.Eds.Backend ());
 }
 
 /**
- * The eds backend module exit point.
+ * The EDS backend module exit point.
  *
+ * @param backend_store the store to remove the backends from
  * @since 0.6.0
  */
 public void module_finalize (BackendStore backend_store)
 {
-  _backend_factory = null;
-}
-
-/**
- * A backend factory to create a single {@link Backend}.
- */
-public class Folks.Backends.Eds.BackendFactory : Object
-{
-  /**
-   * {@inheritDoc}
-   */
-  public BackendFactory (BackendStore backend_store)
-    {
-      backend_store.add_backend (new Backend ());
-    }
+  /* FIXME: No way to remove backends from the store. */
 }

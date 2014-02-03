@@ -305,7 +305,8 @@ public class Trf.PersonaStore : Folks.PersonaStore
       "im-addresses",
       "is-favourite",
       "local-ids",
-      "web-service-addresses"
+      "web-service-addresses",
+      null /* FIXME: https://bugzilla.gnome.org/show_bug.cgi?id=682698 */
     };
 
   /**

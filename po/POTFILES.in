@@ -1,9 +1,12 @@
 [encoding: UTF-8]
+backends/bluez/bluez-backend.vala
+backends/bluez/bluez-persona-store.vala
 backends/eds/lib/edsf-persona-store.vala
 backends/key-file/kf-backend-factory.vala
 backends/key-file/kf-persona-store.vala
 backends/key-file/kf-persona.vala
 backends/libsocialweb/lib/swf-persona-store.vala
+backends/ofono/ofono-backend.vala
 backends/telepathy/lib/tp-lowlevel.c
 backends/telepathy/lib/tpf-persona-store.vala
 backends/telepathy/lib/tpf-persona.vala

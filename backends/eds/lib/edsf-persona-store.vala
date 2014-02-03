@@ -80,8 +80,9 @@ public class Edsf.PersonaStore : Folks.PersonaStore
    *
    * A new Address Book will be created with the given ID and the EDS
    * SourceRegistry will notice the new Address Book source and will emit
-   * source_added with the new {@link E.Source} object which {@link Eds.Backend}
-   * will then create a new {@link Edsf.PersonaStore} from.
+   * source_added with the new {@link E.Source} object which
+   * {@link Folks.Backends.Eds.Backend} will then create a new
+   * {@link Edsf.PersonaStore} from.
    *
    * @param id the name and id for the new address book
    * @throws GLib.Error if an error occurred while creating or committing to
@@ -284,7 +285,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
    * @since 0.6.0
    */
   [Deprecated (since = "0.7.2",
-      replacement = "Edsf.PersonaStore.with_source_registry()")]
+      replacement = "Edsf.PersonaStore.with_source_registry")]
   public PersonaStore (E.Source s)
     {
       string eds_uid = s.get_uid ();

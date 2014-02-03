@@ -1,8 +1,9 @@
 noinst_LTLIBRARIES = libtracker-test.la
 
 libtracker_test_la_VALAFLAGS = \
-	$(ERROR_VALAFLAGS) \
 	$(AM_VALAFLAGS) \
+	$(TARGET_VALAFLAGS) \
+	$(ERROR_VALAFLAGS) \
 	--library tracker-test \
 	--vapi tracker-test.vapi \
 	--header tracker-test.h \
@@ -24,6 +25,11 @@ libtracker_test_la_VALAFLAGS = \
 libtracker_test_la_SOURCES = \
 	backend.vala \
 	test-case.vala \
+	$(NULL)
+
+libtracker_test_la_CPPFLAGS = \
+	$(AM_CPPFLAGS) \
+	-include $(top_srcdir)/folks/warnings.h \
 	$(NULL)
 
 libtracker_test_la_CFLAGS = \

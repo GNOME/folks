@@ -133,25 +133,19 @@ public class Folks.Backends.Eds.Backend : Folks.Backend
             }
         }
 
-      /* Keep persona stores to remove in a separate array so we don't
-       * invalidate the list we are iterating over. */
-      PersonaStore[] stores_to_remove = {};
-      
-      foreach (PersonaStore store in this._persona_stores.values)
+      var iter = this._persona_stores.values.iterator ();
+
+      while (iter.next ())
         {
+          var store = iter.get ();
+
           if (!storeids.contains (store.id))
             {
-              stores_to_remove += store;
+              this._remove_address_book (store, false, iter);
               stores_changed = true;
             }
         }
-        
-      for (int i = 0; i < stores_to_remove.length; ++i)
-        {
-          this._remove_address_book (stores_to_remove[i], false);
-        }
-        
-      /* Finally, if anything changed, emit the persona-stores notification. */
+
       if (stores_changed)
         {
           this.notify_property ("persona-stores");
@@ -212,6 +206,7 @@ public class Folks.Backends.Eds.Backend : Folks.Backend
       try
         {
           this._prepare_pending = true;
+          this.freeze_notify ();
 
           this._create_avatars_cache_dir ();
 
@@ -232,6 +227,7 @@ public class Folks.Backends.Eds.Backend : Folks.Backend
         }
       finally
         {
+          this.thaw_notify ();
           this._prepare_pending = false;
         }
 
@@ -251,11 +247,12 @@ public class Folks.Backends.Eds.Backend : Folks.Backend
       try
         {
           this._prepare_pending = true;
+          this.freeze_notify ();
 
-          foreach (var persona_store in this._persona_stores.values)
-            {
-              this._remove_address_book (persona_store);
-            }
+          var iter = this._persona_stores.values.iterator ();
+
+          while (iter.next ())
+            this._remove_address_book (iter.get (), true, iter);
 
           this._ab_sources.source_added.disconnect (this._ab_source_list_changed_cb);
           this._ab_sources.source_enabled.disconnect (this._ab_source_list_changed_cb);
@@ -269,6 +266,7 @@ public class Folks.Backends.Eds.Backend : Folks.Backend
         }
       finally
         {
+          this.thaw_notify ();
           this._prepare_pending = false;
         }
     }
@@ -345,11 +343,21 @@ public class Folks.Backends.Eds.Backend : Folks.Backend
       this.enable_persona_store (store);
     }
 
-  private void _remove_address_book (Folks.PersonaStore store, bool notify = true)
+  private void _remove_address_book (Folks.PersonaStore store,
+      bool notify = true,
+      Iterator<Folks.PersonaStore>? iter = null)
     {
       debug ("Removing address book '%s'.", store.id);
 
-      this._persona_stores.unset (store.id);
+      if (iter != null)
+        {
+          assert (store == iter.get ());
+          iter.remove ();
+        }
+      else
+        {
+          this._persona_stores.unset (store.id);
+        }
 
       this.persona_store_removed (store);
 

@@ -179,6 +179,8 @@ public abstract class Folks.Backend : Object
    * @since 0.1.11
    * @throws GLib.Error if preparing the backend-specific services failed — this
    * will be a backend-specific error
+   * @throws GLib.DBusError.SERVICE_UNKNOWN if a required D-Bus service was not
+   * installed or could not be started
    */
   public abstract async void prepare () throws GLib.Error;
 

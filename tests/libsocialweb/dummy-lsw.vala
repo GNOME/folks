@@ -40,6 +40,7 @@ public class DummyLswTests : LibsocialwebTest.TestCase
       var lsw_backend = (!) this.lsw_backend;
       var mysocialnetwork = lsw_backend.add_service ("mysocialnetwork");
       var p = new GLib.HashTable<string,string> (null, null);
+      var signals = new DisconnectionQueue ();
 
       try
         {
@@ -71,11 +72,14 @@ public class DummyLswTests : LibsocialwebTest.TestCase
       /* Test adding two contacts */
 
       string view_path = "";
-      mysocialnetwork.OpenViewCalled.connect((query, p, path) =>
+      signals.push (mysocialnetwork,
+          mysocialnetwork.OpenViewCalled.connect((query, p, path) =>
         {
           debug ("mysocialnetwork.OpenViewCalled.connect");
           view_path = path;
-          mysocialnetwork.contact_views[path].StartCalled.connect ( (path) =>
+          var view = mysocialnetwork.contact_views[path];
+
+          signals.push (view, view.StartCalled.connect ( (path) =>
             {
               debug ("OpenViewCalled.connect");
               Idle.add (() =>
@@ -103,8 +107,8 @@ public class DummyLswTests : LibsocialwebTest.TestCase
                     }
                   return false;
                 });
-            });
-        });
+            }));
+        }));
 
       var aggregator = IndividualAggregator.dup ();
       Individual? i1 = null;

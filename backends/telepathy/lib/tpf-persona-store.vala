@@ -1680,7 +1680,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
   private async void _populate_counters ()
     {
       this._zg_controller = new FolksTpZeitgeist.Controller (this,
-          this.account.protocol_name, (p, dt) =>
+          this.account, (p, dt) =>
         {
           var persona = p as Tpf.Persona;
           assert (persona != null);

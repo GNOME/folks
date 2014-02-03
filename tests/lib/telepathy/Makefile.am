@@ -5,8 +5,9 @@ SUBDIRS = \
 noinst_LTLIBRARIES = libtpf-test.la
 
 libtpf_test_la_VALAFLAGS = \
-	$(ERROR_VALAFLAGS) \
 	$(AM_VALAFLAGS) \
+	$(TARGET_VALAFLAGS) \
+	$(ERROR_VALAFLAGS) \
 	--library tpf-test \
 	--vapi tpf-test.vapi \
 	--header tpf-test.h \
@@ -28,6 +29,11 @@ libtpf_test_la_VALAFLAGS = \
 
 libtpf_test_la_SOURCES = \
 	test-case.vala \
+	$(NULL)
+
+libtpf_test_la_CPPFLAGS = \
+	$(AM_CPPFLAGS) \
+	-include $(top_srcdir)/folks/warnings.h \
 	$(NULL)
 
 libtpf_test_la_CFLAGS = \

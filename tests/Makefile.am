@@ -3,6 +3,7 @@
 SUBDIRS = \
 	data \
 	lib \
+	dummy \
 	key-file \
 	tools \
 	$(NULL)
@@ -30,11 +31,16 @@ DIST_SUBDIRS = \
 	lib \
 	tools \
 	folks \
+	dummy \
 	eds \
 	key-file \
 	telepathy \
 	libsocialweb \
 	tracker \
+	$(NULL)
+
+EXTRA_DIST = \
+	test.mk \
 	$(NULL)
 
 -include $(top_srcdir)/git.mk

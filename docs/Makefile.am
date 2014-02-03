@@ -101,6 +101,67 @@ folks-gtk-doc.stamp: $(folks_doc_files) $(folks_wiki_files)
 	@touch $@
 
 #####################
+# Dummy docs #
+#####################
+
+folksdummydocdir=$(datadir)/devhelp/references/folks-dummy
+folksdummygtkdocdir=$(datadir)/gtk-doc/html/folks-dummy
+
+folksdummydoc_DATA = \
+	folks-dummy/folks-dummy/folks-dummy.devhelp2 \
+	$(addprefix folks-dummy/folks-dummy/,$(common_doc_files))\
+	$(NULL)
+
+folksdummygtkdoc_DATA = gtk-doc/folks-dummy/html/*
+
+$(folksdummydoc_DATA): \
+	folks-dummy-doc.stamp \
+	$(NULL)
+$(folksdummygtkdoc_DATA): folks-dummy-gtk-doc.stamp
+
+folks_dummy_doc_files = $(top_srcdir)/backends/dummy/lib/*.vala
+folks_dummy_doc_deps = \
+	gobject-2.0 \
+	gio-2.0 \
+	gee-0.8 \
+	folks \
+	folks-internal \
+	$(NULL)
+valadoc_flags_folks_dummy = \
+	$(valadoc_flags) \
+	-X $(top_srcdir)/backends/dummy/lib/folks/folks-dummy.h \
+	$(addprefix --pkg=,$(folks_dummy_doc_deps)) \
+	--vapidir=$(top_srcdir)/folks \
+	--vapidir=$(top_srcdir)/backends/dummy/lib \
+	$(folks_dummy_doc_files) \
+	$(NULL)
+
+folks-dummy-doc.stamp: $(folks_dummy_doc_files)
+	$(AM_V_GEN)$(VALADOC) \
+		-o folks-dummy/ \
+		--doclet=devhelp \
+		$(valadoc_flags_folks_dummy) \
+		$(NULL)
+	@touch $@
+
+folks-dummy-gtk-doc.stamp: $(folks_dummy_doc_files)
+	$(AM_V_GEN)$(VALADOC) \
+		-X -l -X $(top_builddir)/folks/.libs/libfolks.so \
+		-X -l -X $(top_builddir)/backends/dummy/lib/.libs/libfolks-dummy.so \
+		-o gtk-doc/folks-dummy \
+		--doclet=gtkdoc \
+		$(valadoc_flags_folks_dummy) \
+		$(NULL)
+	@touch $@
+
+distclean_dirs += folks-dummy
+docs += \
+	folks-dummy-doc \
+	folks-dummy-gtk-doc \
+	$(NULL)
+upload_docs += upload-docs-c-folks-dummy upload-docs-vala-folks-dummy
+
+#####################
 # Telepathy docs #
 #####################
 folkstelepathydocdir=$(datadir)/devhelp/references/folks-telepathy

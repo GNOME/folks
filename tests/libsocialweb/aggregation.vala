@@ -100,11 +100,14 @@ public class AggregationTests : LibsocialwebTest.TestCase
       var lsw_backend = (!) this.lsw_backend;
       var mysocialnetwork1 = lsw_backend.add_service ("mysocialnetwork1");
       var mysocialnetwork2 = lsw_backend.add_service ("mysocialnetwork2");
+      var signals = new DisconnectionQueue ();
 
       /* Populate mysocialnetwork1 */
-      mysocialnetwork1.OpenViewCalled.connect((query, p, path) =>
+      signals.push (mysocialnetwork1,
+          mysocialnetwork1.OpenViewCalled.connect((query, p, path) =>
         {
-          mysocialnetwork1.contact_views[path].StartCalled.connect ( (path) =>
+          var view = mysocialnetwork1.contact_views[path];
+          signals.push (view, view.StartCalled.connect ( (path) =>
             {
               Idle.add (() =>
                 {
@@ -128,13 +131,15 @@ public class AggregationTests : LibsocialwebTest.TestCase
                     }
                   return false;
                 });
-            });
-        });
+            }));
+        }));
 
       /* Populate mysocialnetwork2 */
-      mysocialnetwork2.OpenViewCalled.connect((query, p, path) =>
+      signals.push (mysocialnetwork2,
+          mysocialnetwork2.OpenViewCalled.connect((query, p, path) =>
         {
-          mysocialnetwork2.contact_views[path].StartCalled.connect ( (path) =>
+          var view = mysocialnetwork2.contact_views[path];
+          signals.push (view, view.StartCalled.connect ( (path) =>
             {
               Idle.add (() =>
                 {
@@ -158,8 +163,8 @@ public class AggregationTests : LibsocialwebTest.TestCase
                     }
                   return false;
                 });
-            });
-        });
+            }));
+        }));
 
       var aggregator = IndividualAggregator.dup ();
       Individual[] individual_gathered = new Individual[0];
@@ -196,7 +201,8 @@ public class AggregationTests : LibsocialwebTest.TestCase
            && ((Folks.NameDetails) individual_gathered[1]).nickname == "Gargantua"));
 
       /* Check the result of link_personas */
-      aggregator.individuals_changed_detailed.connect ((changes) =>
+      signals.push (aggregator,
+          aggregator.individuals_changed_detailed.connect ((changes) =>
         {
           var added = changes.get_values ();
           var removed = changes.get_keys ();
@@ -226,7 +232,7 @@ public class AggregationTests : LibsocialwebTest.TestCase
             }
 
           main_loop.quit ();
-        });
+        }));
 
       /* Link personas */
       var personas = new HashSet<Persona> ();
@@ -254,6 +260,8 @@ public class AggregationTests : LibsocialwebTest.TestCase
         });
 
       TestUtils.loop_run_with_timeout (main_loop, 5);
+
+      signals.drain ();
     }
 }
 

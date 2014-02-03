@@ -1,8 +1,9 @@
 noinst_LTLIBRARIES = libsocialweb-test.la
 
 libsocialweb_test_la_VALAFLAGS = \
-	$(ERROR_VALAFLAGS) \
 	$(AM_VALAFLAGS) \
+	$(TARGET_VALAFLAGS) \
+	$(ERROR_VALAFLAGS) \
 	--library libsocialweb-test \
 	--vapi libsocialweb-test.vapi \
 	--header libsocialweb-test.h \
@@ -24,6 +25,11 @@ libsocialweb_test_la_VALAFLAGS = \
 libsocialweb_test_la_SOURCES = \
 	backend.vala \
 	test-case.vala \
+	$(NULL)
+
+libsocialweb_test_la_CPPFLAGS = \
+	$(AM_CPPFLAGS) \
+	-include $(top_srcdir)/folks/warnings.h \
 	$(NULL)
 
 libsocialweb_test_la_CFLAGS = \

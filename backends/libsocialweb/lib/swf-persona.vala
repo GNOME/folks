@@ -41,7 +41,8 @@ public class Swf.Persona : Folks.Persona,
   private const string[] _linkable_properties =
     {
       "im-addresses",
-      "web-service-addresses"
+      "web-service-addresses",
+      null /* FIXME: https://bugzilla.gnome.org/show_bug.cgi?id=682698 */
     };
 
   /* No writeable properties
@@ -278,9 +279,8 @@ public class Swf.Persona : Folks.Persona,
         {
           try
             {
-              var facebook_jid_copy = facebook_jid.dup();
-              var normalised_addr = (owned) normalise_im_address
-                  ((owned) facebook_jid_copy, "jabber");
+              var normalised_addr = ImDetails.normalise_im_address
+                  (facebook_jid, "jabber");
               string im_proto = "jabber";
               var im_fd = new ImFieldDetails (normalised_addr);
 

@@ -21,6 +21,7 @@
 
 using Folks;
 using GLib;
+using TelepathyGLib;
 
 /**
  * Dummy interface for the Zeitgeist code for libfolks-telepathy.la. This must
@@ -36,7 +37,7 @@ public class FolksTpZeitgeist.Controller : Object
   public delegate void IncreasePersonaCounter (Persona p,
       DateTime converted_datetime);
 
-  public Controller (PersonaStore store, string protocol,
+  public Controller (PersonaStore store, TelepathyGLib.Account account,
       IncreasePersonaCounter im_interaction_cb,
       IncreasePersonaCounter last_call_interaction_cb)
     {

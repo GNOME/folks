@@ -8,5 +8,5 @@ Name: Folks Tracker support library (uninstalled copy)
 Description: Tracker support library for the Folks meta-contacts library
 Version: @VERSION@
 Requires: folks glib-2.0 gobject-2.0 gee-0.8 tracker-sparql-@TRACKER_SPARQL_MAJOR@
-Libs: ${abs_top_builddir}/backends/telepathy/libfolks-tracker.la
+Libs: ${abs_top_builddir}/backends/tracker/libfolks-tracker.la
 Cflags: -I${abs_top_srcdir} -I${abs_top_srcdir}/backends/tracker -I${abs_top_builddir}

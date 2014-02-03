@@ -1,8 +1,11 @@
+backends/bluez/bluez-backend.c
+backends/bluez/bluez-persona-store.c
 backends/eds/lib/edsf-persona-store.c
 backends/key-file/kf-backend-factory.c
 backends/key-file/kf-persona-store.c
 backends/key-file/kf-persona.c
 backends/libsocialweb/lib/swf-persona-store.c
+backends/ofono/ofono-backend.c
 backends/telepathy/lib/tpf-persona-store.c
 backends/telepathy/lib/tpf-persona.c
 backends/tracker/lib/trf-persona-store.c

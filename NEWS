@@ -1,10 +1,35 @@
+Overview of changes from libfolks 0.9.6 to libfolks 0.9.7
+=========================================================
+
+Dependencies:
+
+Major changes:
+ • Add a dummy backend
+
+Bugs fixed:
+ • Bug 651672 — Individual should have a display-name property
+ • Bug 648811 — Add a dummy backend
+ • Bug 720707 — New strings partly not translatable
+ • Bug 722335 — non-void function should return a value
+ • Bug 723054 - edsf-persona.vala:1666.21-1666.79: error: Reference transfer
+   not supported for this expression
+
+API changes:
+ • Add Individual.display_name
+ • Add StructuredName.to_string_with_format()
+ • Add libfolks-dummy.la and all its symbols
+
 Overview of changes from libfolks 0.9.5 to libfolks 0.9.6
 =========================================================
 
 Dependencies:
-• GLib ≥ 2.37.6
+• GLib ≥ 2.38.2
+• Vala ≥ 0.22.0.28-9090
 
 Major changes:
+• Add a BlueZ backend
+• Use Vala to generate GIR files, fixing a number of bugs
+• Various build system and testing improvements
 
 Bugs fixed:
 • Bug 706683 — fails to build with Vala 0.20
@@ -14,8 +39,21 @@ Bugs fixed:
   (transfer) annotation
 • Bug 697262 — uses deprecated e-d-s functions (Xavier)
 • Bug 705403 — Use GLib.BytesIcon instead of Edsf.MemoryIcon
-
-API changes:
+• Bug 679826 — Investigate using parallel-tests to speed up testing
+• Bug 709674 — Ignore non-phonebook-enabled modems in ofono backend
+• Bug 697209 — Individual: connect to Persona::notify less enthusiastically
+• Bug 710178 — Skip whitespace between oFono vCards
+• Bug 682698 — const string[] not NULL terminated; crashes in GBoxed property
+  getter (workaround)
+• Avoid useless string copies when normalizing phone numbers, and make the
+  implementation respect the algorithm described in
+  http://blog.barisione.org/2010-06/handling-phone-numbers
+• Bug 710869 — Disable some GCC warnings for generated C code
+• Bug 708059 — build failure: fatal error: folks/folks.h: No such file or
+  directory
+• Bug 685848 — Add a folks backend for bluez phonebook access
+• Bug 711403 — Tidy up error handling in oFono backend
+• Bug 711406 — Don’t expose blocked BlueZ devices as persona stores
 
 Overview of changes from libfolks 0.9.4 to libfolks 0.9.5
 =========================================================

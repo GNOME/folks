@@ -49,7 +49,11 @@ public class Tpf.Persona : Folks.Persona,
     PresenceDetails,
     UrlDetails
 {
-  private const string[] _linkable_properties = { "im-addresses" };
+  private const string[] _linkable_properties =
+    {
+      "im-addresses",
+      null /* FIXME: https://bugzilla.gnome.org/show_bug.cgi?id=682698 */
+    };
   private string[] _writeable_properties = null;
 
   /* Whether we've finished being constructed; this is used to prevent

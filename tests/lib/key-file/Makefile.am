@@ -1,8 +1,9 @@
 noinst_LTLIBRARIES = libkf-test.la
 
 libkf_test_la_VALAFLAGS = \
-	$(ERROR_VALAFLAGS) \
 	$(AM_VALAFLAGS) \
+	$(TARGET_VALAFLAGS) \
+	$(ERROR_VALAFLAGS) \
 	--library kf-test \
 	--vapi kf-test.vapi \
 	--header kf-test.h \
@@ -19,6 +20,11 @@ libkf_test_la_VALAFLAGS = \
 libkf_test_la_SOURCES = \
 	backend.vala \
 	test-case.vala \
+	$(NULL)
+
+libkf_test_la_CPPFLAGS = \
+	$(AM_CPPFLAGS) \
+	-include $(top_srcdir)/folks/warnings.h \
 	$(NULL)
 
 libkf_test_la_CFLAGS = \
