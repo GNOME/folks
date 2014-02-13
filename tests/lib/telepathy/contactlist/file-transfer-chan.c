@@ -614,7 +614,7 @@ tp_tests_file_transfer_channel_class_init (
   object_class->dispose = dispose;
 
   base_class->channel_type = TP_IFACE_CHANNEL_TYPE_FILE_TRANSFER1;
-  base_class->target_handle_type = TP_HANDLE_TYPE_CONTACT;
+  base_class->target_entity_type = TP_ENTITY_TYPE_CONTACT;
 
   base_class->close = channel_close;
   base_class->fill_immutable_properties = fill_immutable_properties;

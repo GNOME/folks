@@ -551,7 +551,7 @@ constructed (GObject *object)
       "status-changed", G_CALLBACK (status_changed_cb), self);
 
   self->priv->contact_repo = tp_base_connection_get_handles (self->priv->conn,
-      TP_HANDLE_TYPE_CONTACT);
+      TP_ENTITY_TYPE_CONTACT);
   self->priv->groups = g_hash_table_new_full (g_str_hash, g_str_equal,
       g_free, NULL);
 }

@@ -97,7 +97,7 @@ TpAccount *tp_tests_account_new (TpDBusDaemon *dbus,
 TpChannel *tp_tests_channel_new (TpConnection *conn,
     const gchar *object_path,
     const gchar *optional_channel_type,
-    TpHandleType optional_handle_type,
+    TpEntityType optional_handle_type,
     TpHandle optional_handle,
     GError **error);
 

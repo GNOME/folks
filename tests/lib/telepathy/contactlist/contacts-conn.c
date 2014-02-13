@@ -181,7 +181,7 @@ tp_tests_contacts_connection_fill_contact_attributes (TpBaseConnection *base,
 {
   TpTestsContactsConnection *self = TP_TESTS_CONTACTS_CONNECTION (base);
   TpHandleRepoIface *contact_repo = tp_base_connection_get_handles (base,
-      TP_HANDLE_TYPE_CONTACT);
+      TP_ENTITY_TYPE_CONTACT);
 
   if (!tp_strdiff (dbus_interface,
         TP_IFACE_CONNECTION_INTERFACE_ALIASING1))
@@ -747,7 +747,7 @@ my_request_aliases (TpSvcConnectionInterfaceAliasing1 *aliasing,
   TpTestsContactsConnection *self = TP_TESTS_CONTACTS_CONNECTION (aliasing);
   TpBaseConnection *base = TP_BASE_CONNECTION (aliasing);
   TpHandleRepoIface *contact_repo = tp_base_connection_get_handles (base,
-      TP_HANDLE_TYPE_CONTACT);
+      TP_ENTITY_TYPE_CONTACT);
   GPtrArray *result;
   gchar **strings;
   GError *error = NULL;
@@ -792,7 +792,7 @@ my_set_aliases (TpSvcConnectionInterfaceAliasing1 *aliasing,
   TpTestsContactsConnection *self = TP_TESTS_CONTACTS_CONNECTION (aliasing);
   TpBaseConnection *base = TP_BASE_CONNECTION (aliasing);
   TpHandleRepoIface *contact_repo = tp_base_connection_get_handles (base,
-      TP_HANDLE_TYPE_CONTACT);
+      TP_ENTITY_TYPE_CONTACT);
   guint n;
   GArray *handles;
   GPtrArray *aliases;
@@ -856,7 +856,7 @@ my_request_avatars (TpSvcConnectionInterfaceAvatars1 *avatars,
   TpTestsContactsConnection *self = TP_TESTS_CONTACTS_CONNECTION (avatars);
   TpBaseConnection *base = TP_BASE_CONNECTION (avatars);
   TpHandleRepoIface *contact_repo = tp_base_connection_get_handles (base,
-      TP_HANDLE_TYPE_CONTACT);
+      TP_ENTITY_TYPE_CONTACT);
   GError *error = NULL;
   guint i;
 
@@ -947,7 +947,7 @@ my_refresh_contact_info (TpSvcConnectionInterfaceContactInfo1 *obj,
   TpTestsContactsConnection *self = TP_TESTS_CONTACTS_CONNECTION (obj);
   TpBaseConnection *base = TP_BASE_CONNECTION (obj);
   TpHandleRepoIface *contact_repo = tp_base_connection_get_handles (base,
-      TP_HANDLE_TYPE_CONTACT);
+      TP_ENTITY_TYPE_CONTACT);
   GError *error = NULL;
   guint i;
 
@@ -982,7 +982,7 @@ my_request_contact_info (TpSvcConnectionInterfaceContactInfo1 *obj,
   TpTestsContactsConnection *self = TP_TESTS_CONTACTS_CONNECTION (obj);
   TpBaseConnection *base = TP_BASE_CONNECTION (obj);
   TpHandleRepoIface *contact_repo = tp_base_connection_get_handles (base,
-      TP_HANDLE_TYPE_CONTACT);
+      TP_ENTITY_TYPE_CONTACT);
   GError *error = NULL;
   GPtrArray *ret;
 

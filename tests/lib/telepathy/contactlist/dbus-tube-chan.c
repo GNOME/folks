@@ -241,7 +241,7 @@ tp_tests_dbus_tube_channel_class_init (TpTestsDBusTubeChannelClass *klass)
   base_class->close = channel_close;
   base_class->fill_immutable_properties = fill_immutable_properties;
 
-  /* base_class->target_handle_type is defined in subclasses */
+  /* base_class->target_entity_type is defined in subclasses */
 
   param_spec = g_param_spec_string ("service-name", "Service Name",
       "the service name associated with this tube object.",
@@ -430,7 +430,7 @@ tp_tests_contact_dbus_tube_channel_class_init (
 {
   TpBaseChannelClass *base_class = TP_BASE_CHANNEL_CLASS (klass);
 
-  base_class->target_handle_type = TP_HANDLE_TYPE_CONTACT;
+  base_class->target_entity_type = TP_ENTITY_TYPE_CONTACT;
 }
 
 /* Room DBus Tube */
@@ -451,5 +451,5 @@ tp_tests_room_dbus_tube_channel_class_init (
 {
   TpBaseChannelClass *base_class = TP_BASE_CHANNEL_CLASS (klass);
 
-  base_class->target_handle_type = TP_HANDLE_TYPE_ROOM;
+  base_class->target_entity_type = TP_ENTITY_TYPE_ROOM;
 }

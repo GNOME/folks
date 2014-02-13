@@ -636,7 +636,7 @@ TpChannel *
 tp_tests_channel_new (TpConnection *conn,
     const gchar *object_path,
     const gchar *optional_channel_type,
-    TpHandleType optional_handle_type,
+    TpEntityType optional_handle_type,
     TpHandle optional_handle,
     GError **error)
 {
@@ -650,10 +650,10 @@ tp_tests_channel_new (TpConnection *conn,
       tp_asv_set_string (asv,
           TP_PROP_CHANNEL_CHANNEL_TYPE, optional_channel_type);
     }
-  if (optional_handle_type != TP_HANDLE_TYPE_NONE)
+  if (optional_handle_type != TP_ENTITY_TYPE_NONE)
     {
       tp_asv_set_uint32 (asv,
-          TP_PROP_CHANNEL_TARGET_HANDLE_TYPE, optional_handle_type);
+          TP_PROP_CHANNEL_TARGET_ENTITY_TYPE, optional_handle_type);
     }
   if (optional_handle != 0)
     {

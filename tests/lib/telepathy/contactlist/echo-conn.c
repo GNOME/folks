@@ -73,16 +73,16 @@ tp_tests_echo_normalize_contact (TpHandleRepoIface *repo,
 
 static void
 create_handle_repos (TpBaseConnection *conn,
-                     TpHandleRepoIface *repos[TP_NUM_HANDLE_TYPES])
+                     TpHandleRepoIface *repos[TP_NUM_ENTITY_TYPES])
 {
   ((TpBaseConnectionClass *)
       tp_tests_echo_connection_parent_class)->create_handle_repos (conn, repos);
 
   /* Replace the contacts handle repo with our own, for special normalization */
-  g_assert (repos[TP_HANDLE_TYPE_CONTACT] != NULL);
-  g_object_unref (repos[TP_HANDLE_TYPE_CONTACT]);
-  repos[TP_HANDLE_TYPE_CONTACT] = tp_dynamic_handle_repo_new
-      (TP_HANDLE_TYPE_CONTACT, tp_tests_echo_normalize_contact, NULL);
+  g_assert (repos[TP_ENTITY_TYPE_CONTACT] != NULL);
+  g_object_unref (repos[TP_ENTITY_TYPE_CONTACT]);
+  repos[TP_ENTITY_TYPE_CONTACT] = tp_dynamic_handle_repo_new
+      (TP_ENTITY_TYPE_CONTACT, tp_tests_echo_normalize_contact, NULL);
 }
 
 static GPtrArray *

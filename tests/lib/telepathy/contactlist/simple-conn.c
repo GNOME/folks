@@ -174,12 +174,12 @@ tp_tests_simple_normalize_contact (TpHandleRepoIface *repo,
 
 static void
 create_handle_repos (TpBaseConnection *conn,
-                     TpHandleRepoIface *repos[TP_NUM_HANDLE_TYPES])
+                     TpHandleRepoIface *repos[TP_NUM_ENTITY_TYPES])
 {
-  repos[TP_HANDLE_TYPE_CONTACT] = tp_dynamic_handle_repo_new
-      (TP_HANDLE_TYPE_CONTACT, tp_tests_simple_normalize_contact, NULL);
-  repos[TP_HANDLE_TYPE_ROOM] = tp_dynamic_handle_repo_new
-      (TP_HANDLE_TYPE_ROOM, NULL, NULL);
+  repos[TP_ENTITY_TYPE_CONTACT] = tp_dynamic_handle_repo_new
+      (TP_ENTITY_TYPE_CONTACT, tp_tests_simple_normalize_contact, NULL);
+  repos[TP_ENTITY_TYPE_ROOM] = tp_dynamic_handle_repo_new
+      (TP_ENTITY_TYPE_ROOM, NULL, NULL);
 }
 
 static GPtrArray *
@@ -202,7 +202,7 @@ pretend_connected (gpointer data)
   TpTestsSimpleConnection *self = TP_TESTS_SIMPLE_CONNECTION (data);
   TpBaseConnection *conn = (TpBaseConnection *) self;
   TpHandleRepoIface *contact_repo = tp_base_connection_get_handles (conn,
-      TP_HANDLE_TYPE_CONTACT);
+      TP_ENTITY_TYPE_CONTACT);
   TpHandle self_handle;
 
   self_handle = tp_handle_ensure (contact_repo, self->priv->account,
@@ -326,7 +326,7 @@ tp_tests_simple_connection_set_identifier (TpTestsSimpleConnection *self,
 {
   TpBaseConnection *conn = (TpBaseConnection *) self;
   TpHandleRepoIface *contact_repo = tp_base_connection_get_handles (conn,
-      TP_HANDLE_TYPE_CONTACT);
+      TP_ENTITY_TYPE_CONTACT);
   TpHandle handle = tp_handle_ensure (contact_repo, identifier, NULL, NULL);
 
   /* if this fails then the identifier was bad - caller error */
@@ -359,7 +359,7 @@ tp_tests_simple_connection_ensure_text_chan (TpTestsSimpleConnection *self,
 
   /* Get contact handle */
   contact_repo = tp_base_connection_get_handles (base_conn,
-      TP_HANDLE_TYPE_CONTACT);
+      TP_ENTITY_TYPE_CONTACT);
   g_assert (contact_repo != NULL);
 
   handle = tp_handle_ensure (contact_repo, target_id, NULL, NULL);

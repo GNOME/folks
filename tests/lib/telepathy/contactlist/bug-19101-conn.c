@@ -48,7 +48,7 @@ tp_tests_bug19101_connection_get_contact_by_id (
 {
   TpBaseConnection *base_conn = TP_BASE_CONNECTION (iface);
   TpHandleRepoIface *contact_repo = tp_base_connection_get_handles (
-      base_conn, TP_HANDLE_TYPE_CONTACT);
+      base_conn, TP_ENTITY_TYPE_CONTACT);
   TpHandle handle;
   GHashTable *table;
 

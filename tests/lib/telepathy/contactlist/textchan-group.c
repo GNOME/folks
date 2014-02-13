@@ -146,7 +146,7 @@ constructed (GObject *object)
   self->conn = tp_base_channel_get_connection (base);
 
   contact_repo = tp_base_connection_get_handles (self->conn,
-      TP_HANDLE_TYPE_CONTACT);
+      TP_ENTITY_TYPE_CONTACT);
 
   tp_base_channel_register (base);
 
@@ -223,7 +223,7 @@ tp_tests_text_channel_group_class_init (TpTestsTextChannelGroupClass *klass)
   object_class->finalize = finalize;
 
   base_class->channel_type = TP_IFACE_CHANNEL_TYPE_TEXT;
-  base_class->target_handle_type = TP_HANDLE_TYPE_NONE;
+  base_class->target_entity_type = TP_ENTITY_TYPE_NONE;
   base_class->get_interfaces = text_channel_group_get_interfaces;
   base_class->close = channel_close;
 

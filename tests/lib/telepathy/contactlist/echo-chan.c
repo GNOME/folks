@@ -132,7 +132,7 @@ tp_tests_echo_channel_class_init (TpTestsEchoChannelClass *klass)
   object_class->finalize = finalize;
 
   base_class->channel_type = TP_IFACE_CHANNEL_TYPE_TEXT;
-  base_class->target_handle_type = TP_HANDLE_TYPE_CONTACT;
+  base_class->target_entity_type = TP_ENTITY_TYPE_CONTACT;
   base_class->get_interfaces = tp_tests_echo_channel_get_interfaces;
   base_class->close = channel_close;
 

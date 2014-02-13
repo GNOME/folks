@@ -185,7 +185,7 @@ fill_default_roster (AccountData *data)
   GQuark conn_features[] = { TP_CONNECTION_FEATURE_CONNECTED, 0 };
 
   repo = tp_base_connection_get_handles (data->base_connection,
-      TP_HANDLE_TYPE_CONTACT);
+      TP_ENTITY_TYPE_CONTACT);
   manager = tp_tests_contacts_connection_get_contact_list_manager (conn);
 
   /* Create some contacts and fill some info */
