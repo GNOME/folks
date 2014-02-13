@@ -10,6 +10,8 @@
 
 #include "config.h"
 
+#include <string.h>
+
 #include "simple-account.h"
 
 #include <telepathy-glib/telepathy-glib.h>
@@ -36,6 +38,7 @@ G_DEFINE_TYPE_WITH_CODE (TpTestsSimpleAccount,
 static const char *ACCOUNT_INTERFACES[] = {
     TP_IFACE_ACCOUNT_INTERFACE_ADDRESSING1,
     TP_IFACE_ACCOUNT_INTERFACE_STORAGE1,
+    TP_IFACE_ACCOUNT_INTERFACE_AVATAR1,
     NULL };
 
 enum
@@ -53,6 +56,8 @@ enum
   PROP_CONNECTION,
   PROP_CONNECTION_STATUS,
   PROP_CONNECTION_STATUS_REASON,
+  PROP_CONNECTION_ERROR,
+  PROP_CONNECTION_ERROR_DETAILS,
   PROP_CURRENT_PRESENCE,
   PROP_REQUESTED_PRESENCE,
   PROP_NORMALIZED_NAME,
@@ -73,9 +78,14 @@ struct _TpTestsSimpleAccountPrivate
   gchar *presence_status;
   gchar *presence_msg;
   gchar *connection_path;
+  TpConnectionStatus connection_status;
+  TpConnectionStatusReason connection_status_reason;
+  gchar *connection_error;
+  GHashTable *connection_error_details;
   gboolean enabled;
   GPtrArray *uri_schemes;
   GHashTable *parameters;
+  GArray *avatar;
 };
 
 static void
@@ -133,6 +143,10 @@ tp_tests_simple_account_init (TpTestsSimpleAccount *self)
   self->priv->presence_status = g_strdup ("currently-away");
   self->priv->presence_msg = g_strdup ("this is my CurrentPresence");
   self->priv->connection_path = g_strdup ("/");
+  self->priv->connection_status = TP_CONNECTION_STATUS_CONNECTED;
+  self->priv->connection_status_reason = TP_CONNECTION_STATUS_REASON_REQUESTED;
+  self->priv->connection_error = g_strdup ("");
+  self->priv->connection_error_details = tp_asv_new (NULL, NULL);
   self->priv->enabled = TRUE;
 
   self->priv->uri_schemes = g_ptr_array_new_with_free_func (g_free);
@@ -140,6 +154,10 @@ tp_tests_simple_account_init (TpTestsSimpleAccount *self)
     g_ptr_array_add (self->priv->uri_schemes, g_strdup (uri_schemes[i]));
 
   self->priv->parameters = g_hash_table_new (NULL, NULL);
+
+  self->priv->avatar = g_array_new (FALSE, FALSE, sizeof (char));
+
+  tp_tests_simple_account_set_avatar (self, ":-)");
 }
 
 static void
@@ -190,10 +208,16 @@ tp_tests_simple_account_get_property (GObject *object,
       g_value_set_boxed (value, self->priv->connection_path);
       break;
     case PROP_CONNECTION_STATUS:
-      g_value_set_uint (value, TP_CONNECTION_STATUS_CONNECTED);
+      g_value_set_uint (value, self->priv->connection_status);
       break;
     case PROP_CONNECTION_STATUS_REASON:
-      g_value_set_uint (value, TP_CONNECTION_STATUS_REASON_REQUESTED);
+      g_value_set_uint (value, self->priv->connection_status_reason);
+      break;
+    case PROP_CONNECTION_ERROR:
+      g_value_set_string (value, self->priv->connection_error);
+      break;
+    case PROP_CONNECTION_ERROR_DETAILS:
+      g_value_set_boxed (value, self->priv->connection_error_details);
       break;
     case PROP_CURRENT_PRESENCE:
       g_value_take_boxed (value, tp_value_array_build (3,
@@ -216,7 +240,7 @@ tp_tests_simple_account_get_property (GObject *object,
       g_value_set_boolean (value, TRUE);
       break;
     case PROP_STORAGE_PROVIDER:
-      g_value_set_string (value, "im.telepathy1.glib.test");
+      g_value_set_string (value, "im.telepathy.v1.glib.test");
       break;
     case PROP_STORAGE_IDENTIFIER:
       g_value_set_boxed (value, &identifier);
@@ -250,17 +274,11 @@ tp_tests_simple_account_get_property (GObject *object,
       break;
     case PROP_AVATAR:
         {
-          GArray *arr = g_array_new (FALSE, FALSE, sizeof (char));
-
-          /* includes NUL for simplicity */
-          g_array_append_vals (arr, ":-)", 4);
-
           g_value_take_boxed (value,
               tp_value_array_build (2,
-                TP_TYPE_UCHAR_ARRAY, arr,
+                TP_TYPE_UCHAR_ARRAY, self->priv->avatar,
                 G_TYPE_STRING, "text/plain",
                 G_TYPE_INVALID));
-          g_array_unref (arr);
         }
       break;
     case PROP_SUPERSEDES:
@@ -308,9 +326,12 @@ tp_tests_simple_account_finalize (GObject *object)
   g_free (self->priv->presence_status);
   g_free (self->priv->presence_msg);
   g_free (self->priv->connection_path);
+  g_free (self->priv->connection_error);
+  g_hash_table_unref (self->priv->connection_error_details);
 
   g_ptr_array_unref (self->priv->uri_schemes);
   g_hash_table_unref (self->priv->parameters);
+  g_array_unref (self->priv->avatar);
 
   G_OBJECT_CLASS (tp_tests_simple_account_parent_class)->finalize (object);
 }
@@ -339,6 +360,8 @@ tp_tests_simple_account_class_init (TpTestsSimpleAccountClass *klass)
         { "Connection", "connection", NULL },
         { "ConnectionStatus", "connection-status", NULL },
         { "ConnectionStatusReason", "connection-status-reason", NULL },
+        { "ConnectionError", "connection-error", NULL },
+        { "ConnectionErrorDetails", "connection-error-details", NULL },
         { "CurrentPresence", "current-presence", NULL },
         { "RequestedPresence", "requested-presence", NULL },
         { "NormalizedName", "normalized-name", NULL },
@@ -472,6 +495,20 @@ tp_tests_simple_account_class_init (TpTestsSimpleAccountClass *klass)
   g_object_class_install_property (object_class, PROP_CONNECTION_STATUS_REASON,
       param_spec);
 
+  param_spec = g_param_spec_string ("connection-error",
+      "connection error", "ConnectionError property",
+      NULL,
+      G_PARAM_READABLE | G_PARAM_STATIC_STRINGS);
+  g_object_class_install_property (object_class, PROP_CONNECTION_ERROR,
+      param_spec);
+
+  param_spec = g_param_spec_boxed ("connection-error-details",
+      "connection error details", "ConnectionErrorDetails property",
+      TP_HASH_TYPE_STRING_VARIANT_MAP,
+      G_PARAM_READABLE | G_PARAM_STATIC_STRINGS);
+  g_object_class_install_property (object_class, PROP_CONNECTION_ERROR_DETAILS,
+      param_spec);
+
   param_spec = g_param_spec_boxed ("current-presence", "current presence",
       "CurrentPresence property",
       TP_STRUCT_TYPE_PRESENCE,
@@ -559,9 +596,6 @@ tp_tests_simple_account_set_presence (TpTestsSimpleAccount *self,
     const gchar *status,
     const gchar *message)
 {
-  GHashTable *props;
-  GValueArray *v;
-
   g_free (self->priv->presence_status);
   g_free (self->priv->presence_msg);
 
@@ -569,33 +603,85 @@ tp_tests_simple_account_set_presence (TpTestsSimpleAccount *self,
   self->priv->presence_status = g_strdup (status);
   self->priv->presence_msg = g_strdup (message);
 
-  g_object_get (self, "current-presence", &v, NULL);
-
-  props = tp_asv_new (
-      "CurrentPresence", TP_STRUCT_TYPE_PRESENCE, v,
-      NULL);
-
-  tp_svc_account_emit_account_property_changed (self, props);
-
-  g_boxed_free (TP_STRUCT_TYPE_PRESENCE, v);
+  tp_dbus_properties_mixin_emit_properties_changed_varargs (G_OBJECT (self),
+      TP_IFACE_ACCOUNT, "CurrentPresence", NULL);
 }
 
 void
 tp_tests_simple_account_set_connection (TpTestsSimpleAccount *self,
     const gchar *object_path)
 {
-  GHashTable *change;
-
   if (object_path == NULL)
     object_path = "/";
 
   g_free (self->priv->connection_path);
   self->priv->connection_path = g_strdup (object_path);
 
-  change = tp_asv_new (NULL, NULL);
-  tp_asv_set_string (change, "Connection", object_path);
-  tp_svc_account_emit_account_property_changed (self, change);
-  g_hash_table_unref (change);
+  tp_dbus_properties_mixin_emit_properties_changed_varargs (G_OBJECT (self),
+      TP_IFACE_ACCOUNT, "Connection", NULL);
+}
+
+void
+tp_tests_simple_account_set_connection_with_status (TpTestsSimpleAccount *self,
+    const gchar *object_path,
+    TpConnectionStatus status,
+    TpConnectionStatusReason reason)
+{
+  if (object_path == NULL)
+    object_path = "/";
+
+  g_free (self->priv->connection_path);
+  self->priv->connection_path = g_strdup (object_path);
+
+  self->priv->connection_status = status;
+  self->priv->connection_status_reason = reason;
+
+  tp_dbus_properties_mixin_emit_properties_changed_varargs (G_OBJECT (self),
+      TP_IFACE_ACCOUNT,
+      "Connection",
+      "ConnectionStatus",
+      "ConnectionStatusReason",
+      NULL);
+}
+
+void
+tp_tests_simple_account_set_connection_with_status_and_details (
+    TpTestsSimpleAccount *self,
+    const gchar *object_path,
+    TpConnectionStatus status,
+    TpConnectionStatusReason reason,
+    const gchar *connection_error,
+    GHashTable *details)
+{
+  if (object_path == NULL)
+    object_path = "/";
+
+  g_free (self->priv->connection_path);
+  self->priv->connection_path = g_strdup (object_path);
+
+  self->priv->connection_status = status;
+  self->priv->connection_status_reason = reason;
+
+  if (connection_error == NULL)
+    connection_error = "";
+
+  g_free (self->priv->connection_error);
+  self->priv->connection_error = g_strdup (connection_error);
+
+  g_hash_table_unref (self->priv->connection_error_details);
+  if (details != NULL)
+    self->priv->connection_error_details = g_hash_table_ref (details);
+  else
+    self->priv->connection_error_details = tp_asv_new (NULL, NULL);
+
+  tp_dbus_properties_mixin_emit_properties_changed_varargs (G_OBJECT (self),
+      TP_IFACE_ACCOUNT,
+      "Connection",
+      "ConnectionStatus",
+      "ConnectionStatusReason",
+      "ConnectionError",
+      "ConnectionErrorDetails",
+      NULL);
 }
 
 void
@@ -608,14 +694,10 @@ void
 tp_tests_simple_account_set_enabled (TpTestsSimpleAccount *self,
     gboolean enabled)
 {
-  GHashTable *change;
-
   self->priv->enabled = enabled;
 
-  change = tp_asv_new (NULL, NULL);
-  tp_asv_set_boolean (change, "Enabled", enabled);
-  tp_svc_account_emit_account_property_changed (self, change);
-  g_hash_table_unref (change);
+  tp_dbus_properties_mixin_emit_properties_changed_varargs (G_OBJECT (self),
+      TP_IFACE_ACCOUNT, "Enabled", NULL);
 }
 
 void
@@ -638,4 +720,17 @@ tp_tests_simple_account_add_uri_scheme (TpTestsSimpleAccount *self,
 
   g_strfreev (schemes);
   g_hash_table_unref (changed);
+}
+
+void
+tp_tests_simple_account_set_avatar (TpTestsSimpleAccount *self,
+    const gchar *avatar)
+{
+  g_return_if_fail (avatar != NULL);
+
+  g_array_set_size (self->priv->avatar, 0);
+  /* includes NULL for simplicity */
+  g_array_append_vals (self->priv->avatar, avatar, strlen (avatar) +1);
+
+  tp_svc_account_interface_avatar1_emit_avatar_changed (self);
 }
