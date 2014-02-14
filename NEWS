@@ -14,6 +14,7 @@ Bugs fixed:
  • Bug 723054 - edsf-persona.vala:1666.21-1666.79: error: Reference transfer
    not supported for this expression
  • Bug 723540 — standalone-individuals test failing with master
+ • Bug 724339 — vala.m4: don't keep generated files in git
 
 API changes:
  • Add Individual.display_name
