@@ -50,6 +50,7 @@ folks_test_dbus_flags_get_type (void)
     {
       static const GFlagsValue values[] = {
         { FOLKS_TEST_DBUS_NONE, "FOLKS_TEST_DBUS_NONE", "none" },
+        { FOLKS_TEST_DBUS_SESSION_BUS, "FOLKS_TEST_DBUS_SESSION_BUS", "session-bus" },
         { FOLKS_TEST_DBUS_SYSTEM_BUS, "FOLKS_TEST_DBUS_SYSTEM_BUS", "system-bus" },
         { 0, NULL, NULL }
       };
@@ -378,6 +379,10 @@ _folks_test_watcher_remove_pid (GPid pid)
  * An example of a test fixture for D-Bus services can be found
  * here:
  * [gdbus-test-fixture.c](https://git.gnome.org/browse/glib/tree/gio/tests/gdbus-test-fixture.c)
+ *
+ * The default behaviour is to create a session bus. The
+ * %FOLKS_TEST_DBUS_SESSION_BUS flag may be specified to clarify this, but it
+ * isn’t required.
  *
  * If your service needs to run on the system bus, rather than the session
  * bus, pass the %FOLKS_TEST_DBUS_SYSTEM_BUS flag to folks_test_dbus_new(). This

@@ -30,6 +30,7 @@ G_BEGIN_DECLS
 /**
  * FolksTestDBusFlags:
  * @FOLKS_TEST_DBUS_NONE: No flags.
+ * @FOLKS_TEST_DBUS_SESSION_BUS: Create a session bus (the default).
  * @FOLKS_TEST_DBUS_SYSTEM_BUS: Create a system bus instead of a session bus.
  *
  * Flags to define #FolksTestDBus behaviour.
@@ -38,7 +39,8 @@ G_BEGIN_DECLS
  */
 typedef enum /*< flags >*/ {
   FOLKS_TEST_DBUS_NONE = 0,
-  FOLKS_TEST_DBUS_SYSTEM_BUS,
+  FOLKS_TEST_DBUS_SESSION_BUS = 0,  /* default; same as NONE */
+  FOLKS_TEST_DBUS_SYSTEM_BUS = 1 << 0,
 } FolksTestDBusFlags;
 
 #define FOLKS_TYPE_TEST_DBUS_FLAGS (folks_test_dbus_flags_get_type ())
