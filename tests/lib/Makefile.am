@@ -43,7 +43,6 @@ libfolks_test_la_SOURCES = \
 	haze-remove-directory.c \
 	gtestdbus.c \
 	gtestdbus.h \
-	gioenums.h \
 	test-case.vala \
 	test-case-helper.c \
 	test-utils.vala \
@@ -84,12 +83,14 @@ libfolks_test_la_VALAFLAGS = \
 	$(ERROR_VALAFLAGS) \
 	--vapidir=$(abs_top_srcdir)/folks \
 	--vapidir=$(abs_top_builddir)/folks \
+	--vapidir=$(abs_top_srcdir)/tests/lib \
 	--pkg gobject-2.0 \
 	--pkg gio-2.0 \
 	--pkg gee-0.8 \
 	--pkg dbus-glib-1 \
 	--pkg folks \
 	--pkg build-conf \
+	--pkg folks-test-dbus \
 	--library folks-test \
 	--vapi folks-test.vapi \
 	-H folks-test.h \

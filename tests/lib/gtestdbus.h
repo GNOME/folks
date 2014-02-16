@@ -20,53 +20,67 @@
  *          Xavier Claessens <xavier.claessens@collabora.co.uk>
  */
 
-#ifndef __G_TEST_DBUS_H__
-#define __G_TEST_DBUS_H__
+#ifndef __FOLKS_TEST_DBUS_H__
+#define __FOLKS_TEST_DBUS_H__
 
-#if !defined (__GIO_GIO_H_INSIDE__) && !defined (GIO_COMPILATION)
-#error "Only <gio/gio.h> can be included directly."
-#endif
-
-#include <gio/giotypes.h>
+#include <gio/gio.h>
 
 G_BEGIN_DECLS
 
-#define G_TYPE_TEST_DBUS \
-    (g_test_dbus_get_type ())
-#define G_TEST_DBUS(obj) \
-    (G_TYPE_CHECK_INSTANCE_CAST ((obj), G_TYPE_TEST_DBUS, \
-        GTestDBus))
-#define G_IS_TEST_DBUS(obj) \
-    (G_TYPE_CHECK_INSTANCE_TYPE ((obj), G_TYPE_TEST_DBUS))
+/**
+ * FolksTestDBusFlags:
+ * @FOLKS_TEST_DBUS_NONE: No flags.
+ *
+ * Flags to define future #FolksTestDBus behaviour.
+ *
+ * Since: 2.34
+ */
+typedef enum /*< flags >*/ {
+  FOLKS_TEST_DBUS_NONE = 0
+} FolksTestDBusFlags;
+
+#define FOLKS_TYPE_TEST_DBUS_FLAGS (folks_test_dbus_flags_get_type ())
+GType folks_test_dbus_flags_get_type (void) G_GNUC_CONST;
+
+typedef struct _FolksTestDBus FolksTestDBus;
+
+
+#define FOLKS_TYPE_TEST_DBUS \
+    (folks_test_dbus_get_type ())
+#define FOLKS_TEST_DBUS(obj) \
+    (G_TYPE_CHECK_INSTANCE_CAST ((obj), FOLKS_TYPE_TEST_DBUS, \
+        FolksTestDBus))
+#define FOLKS_IS_TEST_DBUS(obj) \
+    (G_TYPE_CHECK_INSTANCE_TYPE ((obj), FOLKS_TYPE_TEST_DBUS))
 
 GLIB_AVAILABLE_IN_2_34
-GType          g_test_dbus_get_type        (void) G_GNUC_CONST;
+GType          folks_test_dbus_get_type        (void) G_GNUC_CONST;
 
 GLIB_AVAILABLE_IN_2_34
-GTestDBus *    g_test_dbus_new             (GTestDBusFlags flags);
+FolksTestDBus *    folks_test_dbus_new             (FolksTestDBusFlags flags);
 
 GLIB_AVAILABLE_IN_2_34
-GTestDBusFlags g_test_dbus_get_flags       (GTestDBus     *self);
+FolksTestDBusFlags folks_test_dbus_get_flags       (FolksTestDBus     *self);
 
 GLIB_AVAILABLE_IN_2_34
-const gchar *  g_test_dbus_get_bus_address (GTestDBus     *self);
+const gchar *  folks_test_dbus_get_bus_address (FolksTestDBus     *self);
 
 GLIB_AVAILABLE_IN_2_34
-void           g_test_dbus_add_service_dir (GTestDBus     *self,
+void           folks_test_dbus_add_service_dir (FolksTestDBus     *self,
                                             const gchar   *path);
 
 GLIB_AVAILABLE_IN_2_34
-void           g_test_dbus_up              (GTestDBus     *self);
+void           folks_test_dbus_up              (FolksTestDBus     *self);
 
 GLIB_AVAILABLE_IN_2_34
-void           g_test_dbus_stop            (GTestDBus     *self);
+void           folks_test_dbus_stop            (FolksTestDBus     *self);
 
 GLIB_AVAILABLE_IN_2_34
-void           g_test_dbus_down            (GTestDBus     *self);
+void           folks_test_dbus_down            (FolksTestDBus     *self);
 
 GLIB_AVAILABLE_IN_2_34
-void           g_test_dbus_unset           (void);
+void           folks_test_dbus_unset           (void);
 
 G_END_DECLS
 
-#endif /* __G_TEST_DBUS_H__ */
+#endif /* __FOLKS_TEST_DBUS_H__ */
