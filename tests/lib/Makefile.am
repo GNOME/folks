@@ -41,6 +41,9 @@ noinst_LTLIBRARIES = libfolks-test.la
 libfolks_test_la_SOURCES = \
 	disconnection-queue.vala \
 	haze-remove-directory.c \
+	gtestdbus.c \
+	gtestdbus.h \
+	gioenums.h \
 	test-case.vala \
 	test-case-helper.c \
 	test-utils.vala \
