@@ -702,6 +702,8 @@ common_envar_unset (void)
   /* Always want to unset the starter address since we don't support simulating
    * auto-launched buses */
   g_unsetenv ("DISPLAY");
+  g_unsetenv ("DBUS_SESSION_BUS_PID");
+  g_unsetenv ("DBUS_SESSION_BUS_WINDOWID");
   g_unsetenv ("DBUS_STARTER_ADDRESS");
   g_unsetenv ("DBUS_STARTER_BUS_TYPE");
 }
@@ -907,9 +909,17 @@ folks_test_dbus_down (FolksTestDBus *self)
 /**
  * folks_test_dbus_unset:
  *
- * Unset the <envar>DISPLAY</envar>, <envar>DBUS_SESSION_BUS_ADDRESS</envar>
- * and <envar>DBUS_SYSTEM_BUS_ADDRESS</envar> environment variables to ensure the
- * test won't use the user's session (or system) bus.
+ * Unset various D-Bus environment variables to ensure the test won't use the
+ * user's session (or system) bus:
+ * <itemizedlist>
+ * <listitem><para>DISPLAY</para></listitem>
+ * <listitem><para>DBUS_SESSION_BUS_ADDRESS</para></listitem>
+ * <listitem><para>DBUS_SESSION_BUS_PID</para></listitem>
+ * <listitem><para>DBUS_SESSION_BUS_WINDOWID</para></listitem>
+ * <listitem><para>DBUS_SYSTEM_BUS_ADDRESS</para></listitem>
+ * <listitem><para>DBUS_STARTER_ADDRESS</para></listitem>
+ * <listitem><para>DBUS_STARTER_BUS_TYPE</para></listitem>
+ * </itemizedlist>
  *
  * This is useful for unit tests that want to verify behaviour when no session
  * (or system) bus is running. It is not necessary to call this if the unit test
