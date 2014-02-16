@@ -189,7 +189,7 @@ public abstract class Folks.TestCase : Object
    * address is frequently treated as process-global (for instance,
    * libdbus will cache a single session bus connection indefinitely).
    */
-  public GLib.TestDBus? test_dbus = null;
+  public Folks.TestDBus? test_dbus = null;
 
   /**
    * If true, libraries involved in this test use dbus-1 (or dbus-glib-1)
@@ -217,7 +217,7 @@ public abstract class Folks.TestCase : Object
       Environment.unset_variable ("DBUS_SESSION_BUS_ADDRESS");
       Environment.unset_variable ("DBUS_SESSION_BUS_PID");
 
-      this.test_dbus = new GLib.TestDBus (GLib.TestDBusFlags.NONE);
+      this.test_dbus = new Folks.TestDBus (Folks.TestDBusFlags.NONE);
       var test_dbus = (!) this.test_dbus;
 
       test_dbus.up ();
