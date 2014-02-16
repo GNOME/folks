@@ -696,6 +696,36 @@ stop_daemon (FolksTestDBus *self)
   self->priv->bus_address = NULL;
 }
 
+static void
+common_envar_unset (void)
+{
+  /* Always want to unset the starter address since we don't support simulating
+   * auto-launched buses */
+  g_unsetenv ("DISPLAY");
+  g_unsetenv ("DBUS_STARTER_ADDRESS");
+  g_unsetenv ("DBUS_STARTER_BUS_TYPE");
+}
+
+static void
+partial_envar_unset (GBusType bus_type)
+{
+  common_envar_unset ();
+
+  switch (bus_type)
+    {
+      case G_BUS_TYPE_SESSION:
+        g_unsetenv ("DBUS_SESSION_BUS_ADDRESS");
+        break;
+      case G_BUS_TYPE_SYSTEM:
+        g_unsetenv ("DBUS_SYSTEM_BUS_ADDRESS");
+        break;
+      case G_BUS_TYPE_STARTER:
+      case G_BUS_TYPE_NONE:
+      default:
+        break;
+    }
+}
+
 /**
  * folks_test_dbus_new:
  * @flags: a #FolksTestDBusFlags
@@ -773,16 +803,23 @@ folks_test_dbus_add_service_dir (FolksTestDBus *self,
  * flag was passed to folks_test_dbus_new()). After this call, it is safe for
  * unit tests to start sending messages on the session (or system) bus.
  *
- * If this function is called from setup callback of g_test_add(),
+ * If this function is called from the setup callback of g_test_add(),
  * folks_test_dbus_down() must be called in its teardown callback.
  *
  * If this function is called from unit test's main(), then folks_test_dbus_down()
  * must be called after g_test_run().
+ *
+ * As a side-effect, this function unsets the <envar>DISPLAY</envar>,
+ * <envar>DBUS_STARTER_BUS_ADDRESS</envar> and
+ * <envar>DBUS_STARTER_BUS_TYPE</envar> environment variables. It does not unset
+ * <envar>DBUS_SESSION_BUS_ADDRESS</envar> if a system bus is being spawned,
+ * and similarly for <envar>BUS_SYSTEM_BUS_ADDRESS</envar> with a session bus.
  */
 void
 folks_test_dbus_up (FolksTestDBus *self)
 {
   const gchar *envar;
+  GBusType bus_type;
 
   g_return_if_fail (FOLKS_IS_TEST_DBUS (self));
   g_return_if_fail (self->priv->bus_address == NULL);
@@ -790,7 +827,10 @@ folks_test_dbus_up (FolksTestDBus *self)
 
   start_daemon (self);
 
-  folks_test_dbus_unset ();
+  bus_type = (self->priv->flags & FOLKS_TEST_DBUS_SYSTEM_BUS) ?
+      G_BUS_TYPE_SYSTEM :
+      G_BUS_TYPE_SESSION;
+  partial_envar_unset (bus_type);
 
   envar = (self->priv->flags & FOLKS_TEST_DBUS_SYSTEM_BUS) ?
       "DBUS_SYSTEM_BUS_ADDRESS" :
@@ -830,6 +870,12 @@ folks_test_dbus_stop (FolksTestDBus *self)
  * This will wait for the singleton returned by g_bus_get() or g_bus_get_sync()
  * is destroyed. This is done to ensure that the next unit test won't get a
  * leaked singleton from this test.
+ *
+ * As a side-effect, this function unsets the <envar>DISPLAY</envar>,
+ * <envar>DBUS_STARTER_BUS_ADDRESS</envar> and
+ * <envar>DBUS_STARTER_BUS_TYPE</envar> environment variables. It does not unset
+ * <envar>DBUS_SESSION_BUS_ADDRESS</envar> if a system bus is being shut down,
+ * and similarly for <envar>BUS_SYSTEM_BUS_ADDRESS</envar> with a session bus.
  */
 void
 folks_test_dbus_down (FolksTestDBus *self)
@@ -854,7 +900,7 @@ folks_test_dbus_down (FolksTestDBus *self)
   if (connection != NULL)
     _g_object_dispose_and_wait_weak_notify (connection);
 
-  folks_test_dbus_unset ();
+  partial_envar_unset (bus_type);
   self->priv->up = FALSE;
 }
 
@@ -872,9 +918,9 @@ folks_test_dbus_down (FolksTestDBus *self)
 void
 folks_test_dbus_unset (void)
 {
-  g_unsetenv ("DISPLAY");
+  /* See also: partial_envar_unset(). */
+  common_envar_unset ();
+
   g_unsetenv ("DBUS_SESSION_BUS_ADDRESS");
   g_unsetenv ("DBUS_SYSTEM_BUS_ADDRESS");
-  g_unsetenv ("DBUS_STARTER_ADDRESS");
-  g_unsetenv ("DBUS_STARTER_BUS_TYPE");
 }
