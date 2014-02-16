@@ -1227,6 +1227,16 @@ public class Edsf.PersonaStore : Folks.PersonaStore
        * if _addressbook is null. */
       assert (this._addressbook != null);
 
+      var debug_obj = Debug.dup ();
+      if (debug_obj.debug_output_enabled == true)
+        {
+          debug ("Committing modified property ‘%s’ to persona %p (UID: %s).",
+              property_name, persona, persona.uid);
+
+          debug ("Modified vCard: %s",
+              persona.contact.to_string (E.VCardFormat.@30));
+        }
+
       var contact = persona.contact;
 
       ulong signal_id = 0;
@@ -1272,9 +1282,14 @@ public class Edsf.PersonaStore : Folks.PersonaStore
            * they can only be modified from the main loop. */
           if (received_notification == false)
             {
+              debug ("Yielding.");
               has_yielded = true;
               yield;
             }
+
+          debug ("Finished: received_notification = %s, has_yielded = %s",
+              received_notification ? "yes" : "no",
+              has_yielded ? "yes" : "no");
 
           /* If we hit the timeout instead of the property notification, throw
            * an error. */
