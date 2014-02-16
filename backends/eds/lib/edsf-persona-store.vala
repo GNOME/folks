@@ -366,7 +366,8 @@ public class Edsf.PersonaStore : Folks.PersonaStore
         }
       catch (GLib.Error e)
         {
-          GLib.warning ("~PersonaStore: %s\n", e.message);
+          if (!(e is IOError.CLOSED))
+              GLib.warning ("~PersonaStore: %s\n", e.message);
         }
     }
 
