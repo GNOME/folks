@@ -50,6 +50,7 @@ folks_test_dbus_flags_get_type (void)
     {
       static const GFlagsValue values[] = {
         { FOLKS_TEST_DBUS_NONE, "FOLKS_TEST_DBUS_NONE", "none" },
+        { FOLKS_TEST_DBUS_SYSTEM_BUS, "FOLKS_TEST_DBUS_SYSTEM_BUS", "system-bus" },
         { 0, NULL, NULL }
       };
       GType g_define_type_id =
@@ -127,7 +128,7 @@ _g_object_dispose_and_wait_weak_notify (gpointer object)
 
 /* This could be interesting to expose in public API */
 static void
-_g_test_watcher_add_pid (GPid pid)
+_folks_test_watcher_add_pid (GPid pid)
 {
   static gsize started = 0;
   HANDLE job;
@@ -333,7 +334,7 @@ _folks_test_watcher_remove_pid (GPid pid)
  * @include: gio/gio.h
  *
  * A helper class for testing code which uses D-Bus without touching the user's
- * session bus.
+ * system or session bus.
  *
  * Note that #FolksTestDBus modifies the user’s environment, calling setenv().
  * This is not thread-safe, so all #FolksTestDBus calls should be completed before
@@ -377,6 +378,12 @@ _folks_test_watcher_remove_pid (GPid pid)
  * An example of a test fixture for D-Bus services can be found
  * here:
  * [gdbus-test-fixture.c](https://git.gnome.org/browse/glib/tree/gio/tests/gdbus-test-fixture.c)
+ *
+ * If your service needs to run on the system bus, rather than the session
+ * bus, pass the %FOLKS_TEST_DBUS_SYSTEM_BUS flag to folks_test_dbus_new(). This
+ * will create an isolated system bus. Using two #GTestDBus instances, one
+ * with this flag set and one without, a unit test can use isolated services
+ * on both the system and session buses.
  *
  * Note that these examples only deal with isolating the D-Bus aspect of your
  * service. To successfully run isolated unit tests on your service you may need
@@ -553,13 +560,23 @@ write_config_file (FolksTestDBus *self)
   contents = g_string_new (NULL);
   g_string_append (contents,
       "<busconfig>\n"
-      "  <type>session</type>\n"
 #ifdef G_OS_WIN32
       "  <listen>nonce-tcp:</listen>\n"
 #else
       "  <listen>unix:tmpdir=/tmp</listen>\n"
 #endif
 		   );
+
+  if (self->priv->flags & FOLKS_TEST_DBUS_SYSTEM_BUS)
+    {
+      g_string_append (contents,
+          "  <type>system</type>\n");
+    }
+  else
+    {
+      g_string_append (contents,
+          "  <type>session</type>\n");
+    }
 
   for (i = 0; i < self->priv->service_dirs->len; i++)
     {
@@ -751,8 +768,10 @@ folks_test_dbus_add_service_dir (FolksTestDBus *self,
  * folks_test_dbus_up:
  * @self: a #FolksTestDBus
  *
- * Start a dbus-daemon instance and set DBUS_SESSION_BUS_ADDRESS. After this
- * call, it is safe for unit tests to start sending messages on the session bus.
+ * Start a dbus-daemon instance and set <envar>DBUS_SESSION_BUS_ADDRESS</envar>
+ * or <envar>DBUS_SYSTEM_BUS_ADDRESS</envar> (if the %FOLKS_TEST_DBUS_SYSTEM_BUS
+ * flag was passed to folks_test_dbus_new()). After this call, it is safe for
+ * unit tests to start sending messages on the session (or system) bus.
  *
  * If this function is called from setup callback of g_test_add(),
  * folks_test_dbus_down() must be called in its teardown callback.
@@ -763,6 +782,8 @@ folks_test_dbus_add_service_dir (FolksTestDBus *self,
 void
 folks_test_dbus_up (FolksTestDBus *self)
 {
+  const gchar *envar;
+
   g_return_if_fail (FOLKS_IS_TEST_DBUS (self));
   g_return_if_fail (self->priv->bus_address == NULL);
   g_return_if_fail (!self->priv->up);
@@ -770,7 +791,12 @@ folks_test_dbus_up (FolksTestDBus *self)
   start_daemon (self);
 
   folks_test_dbus_unset ();
-  g_setenv ("DBUS_SESSION_BUS_ADDRESS", self->priv->bus_address, TRUE);
+
+  envar = (self->priv->flags & FOLKS_TEST_DBUS_SYSTEM_BUS) ?
+      "DBUS_SYSTEM_BUS_ADDRESS" :
+      "DBUS_SESSION_BUS_ADDRESS";
+  g_setenv (envar, self->priv->bus_address, TRUE);
+
   self->priv->up = TRUE;
 }
 
@@ -779,11 +805,11 @@ folks_test_dbus_up (FolksTestDBus *self)
  * folks_test_dbus_stop:
  * @self: a #FolksTestDBus
  *
- * Stop the session bus started by folks_test_dbus_up().
+ * Stop the session (or system) bus started by folks_test_dbus_up().
  *
  * Unlike folks_test_dbus_down(), this won't verify the #GDBusConnection
  * singleton returned by g_bus_get() or g_bus_get_sync() is destroyed. Unit
- * tests wanting to verify behaviour after the session bus has been stopped
+ * tests wanting to verify behaviour after the bus has been stopped
  * can use this function but should still call folks_test_dbus_down() when done.
  */
 void
@@ -799,7 +825,7 @@ folks_test_dbus_stop (FolksTestDBus *self)
  * folks_test_dbus_down:
  * @self: a #FolksTestDBus
  *
- * Stop the session bus started by folks_test_dbus_up().
+ * Stop the session (or system) bus started by folks_test_dbus_up().
  *
  * This will wait for the singleton returned by g_bus_get() or g_bus_get_sync()
  * is destroyed. This is done to ensure that the next unit test won't get a
@@ -808,12 +834,17 @@ folks_test_dbus_stop (FolksTestDBus *self)
 void
 folks_test_dbus_down (FolksTestDBus *self)
 {
+  GBusType bus_type;
   GDBusConnection *connection;
 
   g_return_if_fail (FOLKS_IS_TEST_DBUS (self));
   g_return_if_fail (self->priv->up);
 
-  connection = g_bus_get_sync (G_BUS_TYPE_SESSION, NULL, NULL);
+  bus_type = (self->priv->flags & FOLKS_TEST_DBUS_SYSTEM_BUS) ?
+      G_BUS_TYPE_SYSTEM :
+      G_BUS_TYPE_SESSION;
+
+  connection = g_bus_get_sync (bus_type, NULL, NULL);
   if (connection != NULL)
     g_dbus_connection_set_exit_on_close (connection, FALSE);
 
@@ -830,18 +861,20 @@ folks_test_dbus_down (FolksTestDBus *self)
 /**
  * folks_test_dbus_unset:
  *
- * Unset DISPLAY and DBUS_SESSION_BUS_ADDRESS env variables to ensure the test
- * won't use user's session bus.
+ * Unset the <envar>DISPLAY</envar>, <envar>DBUS_SESSION_BUS_ADDRESS</envar>
+ * and <envar>DBUS_SYSTEM_BUS_ADDRESS</envar> environment variables to ensure the
+ * test won't use the user's session (or system) bus.
  *
  * This is useful for unit tests that want to verify behaviour when no session
- * bus is running. It is not necessary to call this if unit test already calls
- * folks_test_dbus_up() before acquiring the session bus.
+ * (or system) bus is running. It is not necessary to call this if the unit test
+ * already calls folks_test_dbus_up() before acquiring the bus.
  */
 void
 folks_test_dbus_unset (void)
 {
   g_unsetenv ("DISPLAY");
   g_unsetenv ("DBUS_SESSION_BUS_ADDRESS");
+  g_unsetenv ("DBUS_SYSTEM_BUS_ADDRESS");
   g_unsetenv ("DBUS_STARTER_ADDRESS");
   g_unsetenv ("DBUS_STARTER_BUS_TYPE");
 }
