@@ -23,6 +23,7 @@ libtpf_test_la_VALAFLAGS = \
 	--vapidir=$(abs_top_builddir)/tests/lib/key-file \
 	--pkg build-conf \
 	--pkg folks-test \
+	--pkg folks-test-dbus \
 	--pkg kf-test \
 	--pkg tp-test-contactlist \
 	-g \

@@ -14,6 +14,7 @@ libkf_test_la_VALAFLAGS = \
 	--vapidir=$(abs_top_srcdir)/tests/lib \
 	--vapidir=$(abs_top_builddir)/tests/lib \
 	--pkg folks-test \
+	--pkg folks-test-dbus \
 	-g \
 	$(NULL)
 

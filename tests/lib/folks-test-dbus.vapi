@@ -28,7 +28,9 @@ namespace Folks
   [CCode (cheader_filename = "gtestdbus.h", cprefix = "FOLKS_TEST_DBUS_")]
   [Flags]
   public enum TestDBusFlags {
-    NONE
+    NONE,
+    SESSION_BUS,
+    SYSTEM_BUS
   }
 
   [CCode (cheader_filename = "gtestdbus.h")]

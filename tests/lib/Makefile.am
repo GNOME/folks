@@ -50,6 +50,7 @@ libfolks_test_la_SOURCES = \
 	haze-remove-directory.c \
 	gtestdbus.c \
 	gtestdbus.h \
+	folks-test-dbus.vapi \
 	test-case.vala \
 	test-case-helper.c \
 	test-utils.vala \
@@ -98,7 +99,6 @@ libfolks_test_la_VALAFLAGS = \
 	--pkg dbus-glib-1 \
 	--pkg folks \
 	--pkg build-conf \
-	--pkg folks-test-dbus \
 	--library folks-test \
 	--vapi folks-test.vapi \
 	-H folks-test.h \
