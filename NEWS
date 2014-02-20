@@ -15,6 +15,7 @@ Bugs fixed:
    not supported for this expression
  • Bug 723540 — standalone-individuals test failing with master
  • Bug 724339 — vala.m4: don't keep generated files in git
+ • Bug 724809 — Fail to unset contact favorite
 
 API changes:
  • Add Individual.display_name
