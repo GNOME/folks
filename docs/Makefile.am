@@ -126,6 +126,7 @@ folks_dummy_doc_deps = \
 	gee-0.8 \
 	folks \
 	folks-internal \
+	folks-generics \
 	$(NULL)
 valadoc_flags_folks_dummy = \
 	$(valadoc_flags) \
