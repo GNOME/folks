@@ -151,7 +151,7 @@ text_send (GObject *object,
   TpHandle target = tp_base_channel_get_target_handle (TP_BASE_CHANNEL (self));
   gchar *echo;
   gint64 now = time (NULL);
-  const GHashTable *part;
+  GVariant *part;
   const gchar *text;
   TpMessage *msg;
 
@@ -159,8 +159,9 @@ text_send (GObject *object,
    * call tp_text_mixin_receive or tp_text_mixin_receive_with_flags
    * in response to network events */
 
-  part = tp_message_peek (message, 1);
-  text = tp_asv_get_string (part, "content");
+  part = tp_message_dup_part (message, 1);
+
+  g_variant_lookup (part, "content", "&s", &text);
 
   switch (type)
     {
@@ -178,6 +179,7 @@ text_send (GObject *object,
           type, text);
       echo_type = TP_CHANNEL_TEXT_MESSAGE_TYPE_NORMAL;
     }
+  g_variant_unref (part);
 
   tp_message_mixin_sent (object, message, 0, "", NULL);
 
