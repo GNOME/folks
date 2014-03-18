@@ -681,7 +681,7 @@ tp_tests_channel_new_from_properties (TpConnection *conn,
 
   factory = tp_proxy_get_factory (conn);
   return tp_client_factory_ensure_channel (factory, conn,
-      object_path, immutable_properties, error);
+      object_path, tp_asv_to_vardict (immutable_properties), error);
 }
 
 void
