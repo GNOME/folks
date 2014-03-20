@@ -313,8 +313,9 @@ public class Edsf.PersonaStore : Folks.PersonaStore
   public PersonaStore.with_source_registry (E.SourceRegistry r, E.Source s)
     {
       string eds_uid = s.get_uid ();
+      string eds_name = s.get_display_name ();
       Object (id: eds_uid,
-              display_name: eds_uid,
+              display_name: eds_name,
               source: s);
 
       this._source_registry = r;
