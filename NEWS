@@ -17,6 +17,7 @@ Bugs fixed:
  • Bug 724339 — vala.m4: don't keep generated files in git
  • Bug 724809 — Fail to unset contact favorite
  • Bug 722892 — Linking personas on Dummy backend does not work
+ • Bug 726980 — dependency on e-d-s 3.9 is often unnecessary
 
 API changes:
  • Add Individual.display_name
