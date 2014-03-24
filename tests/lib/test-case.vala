@@ -137,6 +137,9 @@ public abstract class Folks.TestCase : Object
 
       debug ("setting up in transient directory %s", transient);
 
+      /* Don't try to use dconf */
+      Environment.set_variable ("GSETTINGS_BACKEND", "memory", true);
+
       /* GLib >= 2.36, and various non-GNOME things, obey this. */
       Environment.set_variable ("HOME", transient, true);
       /* GLib < 2.36 in Debian obeyed this (although upstream GLib < 2.36
