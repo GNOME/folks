@@ -29,7 +29,7 @@ public class IndividualRetrievalTests : TpfTest.TestCase
   private HashSet<string> default_individuals;
 
   private static string iid_prefix =
-      "telepathy:/im/telepathy1/Account/cm/protocol/account:";
+      "telepathy:/im/telepathy/v1/Account/cm/protocol/account:";
 
   public IndividualRetrievalTests ()
     {
@@ -68,7 +68,10 @@ public class IndividualRetrievalTests : TpfTest.TestCase
       /* work on a copy so we can mangle it */
       HashSet<string> expected_individuals = new HashSet<string> ();
       foreach (var id in this.default_individuals)
-        expected_individuals.add (id);
+        {
+          GLib.debug ("expecting individual iid: %s", id);
+          expected_individuals.add (id);
+        }
 
       /* Set up the aggregator */
       var aggregator = IndividualAggregator.dup ();
@@ -80,6 +83,7 @@ public class IndividualRetrievalTests : TpfTest.TestCase
           foreach (Individual i in added)
             {
               assert (i != null);
+              GLib.debug ("added individual iid: %s", i.id);
               expected_individuals.remove (i.id);
             }
 

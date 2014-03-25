@@ -26,7 +26,7 @@ public class AggregationTests : TpfTest.MixedTestCase
   private HashSet<string> _default_personas;
 
   private static string iid_prefix =
-      "telepathy:/im/telepathy1/Account/cm/protocol/account:";
+      "telepathy:/im/telepathy/v1/Account/cm/protocol/account:";
   private string olivier_sha1 = Checksum.compute_for_string (ChecksumType.SHA1,
       iid_prefix + "olivier@example.com");
 
