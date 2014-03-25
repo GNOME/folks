@@ -52,7 +52,7 @@ tp_tests_simple_account_manager_create_account (TpSvcAccountManager *svc,
     const gchar *in_Display_Name,
     GHashTable *in_Parameters,
     GHashTable *in_Properties,
-    DBusGMethodInvocation *context)
+    GDBusMethodInvocation *context)
 {
   TpTestsSimpleAccountManager *self = (TpTestsSimpleAccountManager *) svc;
   const gchar *out = TP_ACCOUNT_OBJECT_PATH_BASE "gabble/jabber/lospolloshermanos";

@@ -435,7 +435,7 @@ tp_tests_simple_connection_ensure_room_list_chan (TpTestsSimpleConnection *self,
 static void
 get_all (TpSvcDBusProperties *iface,
     const gchar *interface_name,
-    DBusGMethodInvocation *context)
+    GDBusMethodInvocation *context)
 {
   GHashTable *values = tp_dbus_properties_mixin_dup_all (G_OBJECT (iface),
       interface_name);

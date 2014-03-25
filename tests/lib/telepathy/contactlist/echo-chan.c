@@ -202,7 +202,7 @@ text_send (GObject *object,
 
 static void
 destroyable_destroy (TpSvcChannelInterfaceDestroyable1 *iface,
-                     DBusGMethodInvocation *context)
+                     GDBusMethodInvocation *context)
 {
   TpTestsEchoChannel *self = TP_TESTS_ECHO_CHANNEL (iface);
 

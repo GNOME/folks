@@ -209,7 +209,7 @@ find_rooms (gpointer data)
 
 static void
 room_list_list_rooms (TpSvcChannelTypeRoomList1 *chan,
-    DBusGMethodInvocation *context)
+    GDBusMethodInvocation *context)
 {
   TpTestsRoomListChan *self = TP_TESTS_ROOM_LIST_CHAN (chan);
 

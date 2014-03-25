@@ -742,7 +742,7 @@ tp_tests_contacts_connection_set_default_contact_info (
 static void
 my_request_aliases (TpSvcConnectionInterfaceAliasing1 *aliasing,
                     const GArray *contacts,
-                    DBusGMethodInvocation *context)
+                    GDBusMethodInvocation *context)
 {
   TpTestsContactsConnection *self = TP_TESTS_CONTACTS_CONNECTION (aliasing);
   TpBaseConnection *base = TP_BASE_CONNECTION (aliasing);
@@ -787,7 +787,7 @@ my_request_aliases (TpSvcConnectionInterfaceAliasing1 *aliasing,
 static void
 my_set_aliases (TpSvcConnectionInterfaceAliasing1 *aliasing,
     GHashTable *table,
-    DBusGMethodInvocation *context)
+    GDBusMethodInvocation *context)
 {
   TpTestsContactsConnection *self = TP_TESTS_CONTACTS_CONNECTION (aliasing);
   TpBaseConnection *base = TP_BASE_CONNECTION (aliasing);
@@ -851,7 +851,7 @@ init_aliasing (gpointer g_iface,
 static void
 my_request_avatars (TpSvcConnectionInterfaceAvatars1 *avatars,
     const GArray *contacts,
-    DBusGMethodInvocation *context)
+    GDBusMethodInvocation *context)
 {
   TpTestsContactsConnection *self = TP_TESTS_CONTACTS_CONNECTION (avatars);
   TpBaseConnection *base = TP_BASE_CONNECTION (avatars);
@@ -942,7 +942,7 @@ lookup_contact_info (TpTestsContactsConnection *self,
 static void
 my_refresh_contact_info (TpSvcConnectionInterfaceContactInfo1 *obj,
     const GArray *contacts,
-    DBusGMethodInvocation *context)
+    GDBusMethodInvocation *context)
 {
   TpTestsContactsConnection *self = TP_TESTS_CONTACTS_CONNECTION (obj);
   TpBaseConnection *base = TP_BASE_CONNECTION (obj);
@@ -977,7 +977,7 @@ my_refresh_contact_info (TpSvcConnectionInterfaceContactInfo1 *obj,
 static void
 my_request_contact_info (TpSvcConnectionInterfaceContactInfo1 *obj,
     guint handle,
-    DBusGMethodInvocation *context)
+    GDBusMethodInvocation *context)
 {
   TpTestsContactsConnection *self = TP_TESTS_CONTACTS_CONNECTION (obj);
   TpBaseConnection *base = TP_BASE_CONNECTION (obj);
@@ -1006,7 +1006,7 @@ my_request_contact_info (TpSvcConnectionInterfaceContactInfo1 *obj,
 static void
 my_set_contact_info (TpSvcConnectionInterfaceContactInfo1 *obj,
     const GPtrArray *info,
-    DBusGMethodInvocation *context)
+    GDBusMethodInvocation *context)
 {
   TpTestsContactsConnection *self = TP_TESTS_CONTACTS_CONNECTION (obj);
   TpBaseConnection *base = TP_BASE_CONNECTION (obj);

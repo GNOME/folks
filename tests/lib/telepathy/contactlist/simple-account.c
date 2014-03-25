@@ -92,7 +92,7 @@ static void
 tp_tests_simple_account_update_parameters (TpSvcAccount *svc,
     GHashTable *parameters,
     const gchar **unset_parameters,
-    DBusGMethodInvocation *context)
+    GDBusMethodInvocation *context)
 {
   GPtrArray *reconnect_required = g_ptr_array_new ();
   GHashTableIter iter;
