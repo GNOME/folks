@@ -41,9 +41,9 @@ m4_define([folks_libsocialweb_lt_current], [41])
 m4_define([folks_libsocialweb_lt_revision], [1])
 m4_define([folks_libsocialweb_lt_age], [16])
 
-m4_define([folks_telepathy_lt_current], [41])
-m4_define([folks_telepathy_lt_revision], [1])
-m4_define([folks_telepathy_lt_age], [16])
+m4_define([folks_telepathy_lt_current], [42])
+m4_define([folks_telepathy_lt_revision], [0])
+m4_define([folks_telepathy_lt_age], [0])
 
 m4_define([folks_tracker_lt_current], [41])
 m4_define([folks_tracker_lt_revision], [1])
