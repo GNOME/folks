@@ -757,7 +757,7 @@ my_request_aliases (TpSvcConnectionInterfaceAliasing1 *aliasing,
 
   if (!tp_handles_are_valid (contact_repo, contacts, FALSE, &error))
     {
-      dbus_g_method_return_error (context, error);
+      g_dbus_method_invocation_return_gerror (context, error);
       g_error_free (error);
       return;
     }
@@ -818,7 +818,7 @@ my_set_aliases (TpSvcConnectionInterfaceAliasing1 *aliasing,
   /* Verify all handles are valid */
   if (!tp_handles_are_valid (contact_repo, handles, FALSE, &error))
     {
-      dbus_g_method_return_error (context, error);
+      g_dbus_method_invocation_return_gerror (context, error);
       g_clear_error (&error);
       goto out;
     }
@@ -864,7 +864,7 @@ my_request_avatars (TpSvcConnectionInterfaceAvatars1 *avatars,
 
   if (!tp_handles_are_valid (contact_repo, contacts, FALSE, &error))
     {
-      dbus_g_method_return_error (context, error);
+      g_dbus_method_invocation_return_gerror (context, error);
       g_error_free (error);
       return;
     }
@@ -955,7 +955,7 @@ my_refresh_contact_info (TpSvcConnectionInterfaceContactInfo1 *obj,
 
   if (!tp_handles_are_valid (contact_repo, contacts, FALSE, &error))
     {
-      dbus_g_method_return_error (context, error);
+      g_dbus_method_invocation_return_gerror (context, error);
       g_error_free (error);
       return;
     }
@@ -990,7 +990,7 @@ my_request_contact_info (TpSvcConnectionInterfaceContactInfo1 *obj,
 
   if (!tp_handle_is_valid (contact_repo, handle, &error))
     {
-      dbus_g_method_return_error (context, error);
+      g_dbus_method_invocation_return_gerror (context, error);
       g_error_free (error);
       return;
     }
