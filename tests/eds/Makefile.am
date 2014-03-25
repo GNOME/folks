@@ -77,13 +77,6 @@ TESTS = \
 	perf \
 	$(NULL)
 
-RUN_WITH_PRIVATE_BUS = $(top_srcdir)/tests/tools/with-session-bus-eds.sh
-
-TESTS_ENVIRONMENT = \
-	$(RUN_WITH_PRIVATE_BUS) \
-	--session \
-	--
-
 noinst_PROGRAMS = \
 	$(TESTS) \
 	helper-create-many-contacts \
@@ -237,11 +230,6 @@ helper_delete_contacts_SOURCES = \
 
 helper_prepare_aggregator_SOURCES = \
 	helper-prepare-aggregator.vala \
-	$(NULL)
-
-CLEANFILES = \
-	*.pid \
-	*.address \
 	$(NULL)
 
 -include $(top_srcdir)/git.mk

@@ -96,8 +96,8 @@ public class FolksDummy.Persona : Folks.Persona
    *
    * @since UNRELEASED
    */
-  public Persona (PersonaStore store, string contact_id, bool is_user = false,
-      string[] linkable_properties = {})
+  public Persona (PersonaStore store, string contact_id,
+      bool is_user = false, string[] linkable_properties = {})
     {
       var uid = Folks.Persona.build_uid (BACKEND_NAME, store.id, contact_id);
       var iid = store.id + ":" + contact_id;
@@ -230,6 +230,32 @@ public class FolksDummy.Persona : Folks.Persona
         {
           this._writeable_properties = new_writeable_properties.to_array ();
           this.notify_property ("writeable-properties");
+        }
+    }
+
+  /**
+   * Update the persona’s set of linkable properties.
+   *
+   * Update the {@link Folks.Persona.linkable_properties} property to contain
+   * the given ``linkable_properties``.
+   *
+   * @param linkable_properties new set of linkable property names, in lower
+   * case, hyphenated form
+   * @since UNRELEASED
+   */
+  public void update_linkable_properties (string[] linkable_properties)
+    {
+      var new_linkable_properties = new SmallSet<string> ();
+      new_linkable_properties.add_all_array (linkable_properties);
+
+      var old_linkable_properties = new SmallSet<string> ();
+      old_linkable_properties.add_all_array (this._linkable_properties);
+
+      if (!Folks.Internal.equal_sets<string> (old_linkable_properties,
+              new_linkable_properties))
+        {
+          this._linkable_properties = linkable_properties;
+          this.notify_property ("linkable-properties");
         }
     }
 

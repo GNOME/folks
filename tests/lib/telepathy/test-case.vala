@@ -129,6 +129,11 @@ public class TpfTest.TestCase : Folks.TestCase
    */
   public virtual void create_kf_backend ()
     {
+      /* Default key-file backend file to load. */
+      Environment.set_variable ("FOLKS_BACKEND_KEY_FILE_PATH",
+          Folks.BuildConf.ABS_TOP_SRCDIR + "/data/relationships-empty.ini",
+          true);
+
       if (use_keyfile_too)
         this.kf_backend = new KfTest.Backend ();
     }

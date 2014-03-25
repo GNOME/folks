@@ -22,6 +22,7 @@ libeds_test_la_VALAFLAGS = \
 	--pkg libxml-2.0 \
 	--pkg folks-eds \
 	--pkg folks-test \
+	--pkg folks-test-dbus \
 	-g \
 	$(NULL)
 

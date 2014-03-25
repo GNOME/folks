@@ -36,10 +36,6 @@ noinst_PROGRAMS = \
 	aggregation \
 	$(NULL)
 
-TESTS_ENVIRONMENT = \
-	$(top_srcdir)/tests/tools/execute-test.sh \
-	$(NULL)
-
 TESTS = $(noinst_PROGRAMS)
 
 dummy_lsw_SOURCES = \

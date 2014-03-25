@@ -7,6 +7,7 @@ backend_LTLIBRARIES = bluez.la
 bluez_la_VALAFLAGS = \
 	$(backend_valaflags) \
 	--pkg libebook-1.2 \
+	--pkg folks-generics \
 	$(NULL)
 
 bluez_la_SOURCES = \

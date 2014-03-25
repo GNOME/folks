@@ -31,6 +31,7 @@ test_valaflags = \
 	--vapidir=$(top_builddir)/backends/dummy/lib \
 	--pkg folks \
 	--pkg folks-test \
+	--pkg folks-test-dbus \
 	--pkg folks-dummy \
 	--pkg gee-0.8 \
 	--pkg gio-2.0 \

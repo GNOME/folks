@@ -217,6 +217,17 @@ public class Folks.IndividualAggregator : Object
       get { return this._primary_store; }
     }
 
+  /**
+   * The backend store providing the persona stores for this aggregator.
+   *
+   * @since UNRELEASED
+   */
+  public BackendStore backend_store
+    {
+      get { return this._backend_store; }
+      construct { this._backend_store = value; }
+    }
+
   private Map<string, Individual> _individuals;
   private Map<string, Individual> _individuals_ro;
 
@@ -376,8 +387,7 @@ public class Folks.IndividualAggregator : Object
       replacement = "IndividualAggregator.dup")]
   public IndividualAggregator ()
   {
-    Object ();
-    this._backend_store = BackendStore.dup ();
+    Object (backend_store: BackendStore.dup ());
   }
 
   /**
@@ -437,8 +447,7 @@ public class Folks.IndividualAggregator : Object
       replacement = "IndividualAggregator.dup_with_backend_store")]
   public IndividualAggregator.with_backend_store (BackendStore store)
   {
-    Object ();
-    this._backend_store = store;
+    Object (backend_store: store);
   }
   
   construct
@@ -503,8 +512,6 @@ public class Folks.IndividualAggregator : Object
         disable_linking = ((!) disable_linking).strip ().down ();
       this._linking_enabled = (disable_linking == null ||
           disable_linking == "no" || disable_linking == "0");
-
-      this._backend_store = BackendStore.dup ();
 
       debug ("Constructing IndividualAggregator %p", this);
     }

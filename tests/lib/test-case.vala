@@ -41,6 +41,13 @@ public abstract class Folks.TestCase : Object
     {
       Intl.setlocale (LocaleCategory.ALL, "");
 
+      /* Enable all debug output from libfolks. This is OK, as automake-1.12’s
+       * parallel test harness will only save the debug output from failed
+       * tests. If the user’s already set those variables, though, don’t
+       * overwrite them. */
+      Environment.set_variable ("G_MESSAGES_DEBUG", "all", false);
+      Environment.set_variable ("FOLKS_DEBUG", "all", false);
+
       /* Turn off use of gvfs. If using GTestDBus it's unavailable,
        * and if not it's pointless: all we need is the local filesystem. */
       Environment.set_variable ("GIO_USE_VFS", "local", true);
@@ -79,6 +86,9 @@ public abstract class Folks.TestCase : Object
           if (Folks.BuildConf.HAVE_TRACKER)
             locations += Folks.BuildConf.ABS_TOP_BUILDDIR + "/backends/tracker/.libs/tracker.so";
 
+          if (Folks.BuildConf.HAVE_BLUEZ)
+            locations += Folks.BuildConf.ABS_TOP_BUILDDIR + "/backends/bluez/.libs/bluez.so";
+
           Environment.set_variable ("FOLKS_BACKEND_PATH",
               string.joinv (":", locations), true);
         }
@@ -113,12 +123,8 @@ public abstract class Folks.TestCase : Object
    *
    * Subclasses may override this method to do additional setup
    * (create more subdirectories or set more environment variables).
-   *
-   * FIXME: Subclasses relying on being called by with-session-bus-*.sh
-   * may override this method to return null, although we should really
-   * stop doing that.
    */
-  public virtual string? create_transient_dir ()
+  public virtual string create_transient_dir ()
     {
       unowned string tmp = Environment.get_tmp_dir ();
       string transient = "%s/folks-test.XXXXXX".printf (tmp);
@@ -167,6 +173,19 @@ public abstract class Folks.TestCase : Object
         error ("unable to create '%s': %s",
             runtime, GLib.strerror (GLib.errno));
 
+      /* Directories to contain D-Bus service files. */
+      var dbus_system = "%s/dbus-1/system-services".printf (transient);
+
+      if (GLib.DirUtils.create_with_parents (dbus_system, 0700) != 0)
+        error ("unable to create '%s': %s",
+            local, GLib.strerror (GLib.errno));
+
+      var dbus_session = "%s/dbus-1/services".printf (transient);
+
+      if (GLib.DirUtils.create_with_parents (dbus_session, 0700) != 0)
+        error ("unable to create '%s': %s",
+            local, GLib.strerror (GLib.errno));
+
       /* Unset some things we don't want to inherit. In particular,
        * Tracker might try to index XDG_*_DIR, which we don't want. */
       Environment.unset_variable ("XDG_DESKTOP_DIR");
@@ -182,6 +201,87 @@ public abstract class Folks.TestCase : Object
     }
 
   /**
+   * Create a D-Bus service file for a python-dbusmock service.
+   *
+   * Create a service file to allow auto-launching a python-dbusmock service
+   * which uses the given ``dbusmock_template_name`` to mock up the service
+   * running at ``bus_name`` on the ``bus_type`` bus (which must either be
+   * {@link BusType.SYSTEM} or {@link BusType.SESSION}.
+   *
+   * This requires Python 3 to be installed and available to run as ``python3``
+   * somewhere in the system ``PATH``.
+   *
+   * It will create a temporary log file which python-dbusmock will log to if
+   * launched. The name of the log file will be printed to the test logs.
+   *
+   * The D-Bus service file itself will be created in a subdirectory of
+   * {@link TestCase.transient_dir}, which the {@link TestDBus} instance has
+   * already been configured to use as a service directory. This requires
+   * {@link TestCase.create_transient_dir} to have been called already.
+   *
+   * @param bus_type the bus the service should be auto-launchable from
+   * @param bus_name the well-known bus name used by the service
+   * @param dbusmock_template_name name of the python-dbusmock template to use
+   *
+   * @since UNRELEASED
+   */
+  public void create_dbusmock_service (BusType bus_type, string bus_name,
+      string dbusmock_template_name)
+    {
+      string service_dir;
+      switch (bus_type)
+        {
+          case BusType.SYSTEM:
+            service_dir = "system-services";
+            break;
+          case BusType.SESSION:
+            service_dir = "services";
+            break;
+          case BusType.STARTER:
+          case BusType.NONE:
+          default:
+            assert_not_reached ();
+        }
+
+      /* Find where the Python 3 executable is (service files require absolute
+       * paths). */
+      var python = Environment.find_program_in_path ("python3");
+      if (python == null)
+        {
+          error ("Couldn’t find `python3` in $PATH; can’t run " +
+              "python-dbusmock.");
+        }
+
+      /* Create a temporary log file for dbusmock to use. This doesn’t need to
+       * use mkstemp() because it’s already in a unique temporary directory. */
+      var log_file_name =
+          Path.build_filename (this.transient_dir,
+              "dbusmock-%s-%s-%s.log".printf (service_dir, bus_name,
+                  dbusmock_template_name));
+      Test.message ("python-dbusmock service ‘%s’ (template ‘%s’) will log " +
+          "to ‘%s’.", bus_name, dbusmock_template_name, log_file_name);
+
+      /* Write out the service file for the dbusmock service. */
+      var service_file_name =
+          Path.build_filename (this.transient_dir, "dbus-1", service_dir,
+              dbusmock_template_name + ".service");
+      var service_file = ("[D-BUS Service]\n" +
+          "Name=%s\n" +
+          "Exec=%s -m dbusmock --template %s -l %s\n").printf (bus_name, python,
+              dbusmock_template_name, log_file_name);
+
+      try
+        {
+          FileUtils.set_contents (service_file_name, service_file);
+        }
+      catch (FileError e2)
+        {
+          error ("Error creating D-Bus service file ‘%s’: %s",
+              service_file_name, e2.message);
+        }
+    }
+
+  /**
    * A private D-Bus session, normally created by private_bus_up()
    * from the constructor.
    *
@@ -189,7 +289,17 @@ public abstract class Folks.TestCase : Object
    * address is frequently treated as process-global (for instance,
    * libdbus will cache a single session bus connection indefinitely).
    */
-  public GLib.TestDBus? test_dbus = null;
+  public Folks.TestDBus? test_dbus = null;
+
+  /**
+   * A private D-Bus system bus, normally created by private_bus_up() from the
+   * constructor.
+   *
+   * As with {@link TestCase.test_dbus} this is per-process.
+   *
+   * @since UNRELEASED
+   */
+  public Folks.TestDBus? test_system_dbus = null;
 
   /**
    * If true, libraries involved in this test use dbus-1 (or dbus-glib-1)
@@ -211,18 +321,40 @@ public abstract class Folks.TestCase : Object
    *
    * This is per-process, not per-test, for the reasons mentioned for
    * //test_dbus//.
+   *
+   * By calling {@link TestCase.create_dbusmock_service} in an overridden
+   * version of this method, python-dbusmock services may be set up.
    */
   public virtual void private_bus_up ()
     {
-      Environment.unset_variable ("DBUS_SESSION_BUS_ADDRESS");
-      Environment.unset_variable ("DBUS_SESSION_BUS_PID");
+      /* Clear out existing bus variables. */
+      Folks.TestDBus.unset ();
 
-      this.test_dbus = new GLib.TestDBus (GLib.TestDBusFlags.NONE);
+      /* Set up the system bus first, then shimmy its address sideways. */
+      this.test_system_dbus = new Folks.TestDBus (Folks.TestDBusFlags.SYSTEM_BUS);
+      var test_system_dbus = (!) this.test_system_dbus;
+      test_system_dbus.add_service_dir (
+          this.transient_dir + "/dbus-1/system-services");
+
+      test_system_dbus.up ();
+
+      var system_bus_address = test_system_dbus.get_bus_address ();
+
+      /* Now the session bus. */
+      this.test_dbus = new Folks.TestDBus (Folks.TestDBusFlags.NONE);
       var test_dbus = (!) this.test_dbus;
+      test_dbus.add_service_dir (this.transient_dir + "/dbus-1/services");
 
       test_dbus.up ();
 
-      assert (Environment.get_variable ("DBUS_SESSION_BUS_ADDRESS") != null);
+      var session_bus_address = test_dbus.get_bus_address ();
+
+      /* Set the bus addresses. We have to do this manually to prevent GTestDBus
+       * from unsetting the first bus’ address when starting the second. */
+      Environment.set_variable ("DBUS_SYSTEM_BUS_ADDRESS", system_bus_address,
+          true);
+      Environment.set_variable ("DBUS_SESSION_BUS_ADDRESS", session_bus_address,
+          true);
 
       /* Tell subprocesses that we're running in a private D-Bus
        * session, so certain operations that would otherwise be dangerous
@@ -288,6 +420,12 @@ public abstract class Folks.TestCase : Object
         {
           ((!) this.test_dbus).down ();
           this.test_dbus = null;
+        }
+
+      if (this.test_system_dbus != null)
+        {
+          ((!) this.test_system_dbus).down ();
+          this.test_system_dbus = null;
         }
 
       if (this._transient_dir != null)

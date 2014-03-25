@@ -1,7 +1,7 @@
 # Korean translation for folks.
 # Copyright (C) 2012, 2013 Seong-ho Cho et al.
 # This file is distributed under the same license as the folks package.
-# Seong-ho Cho <darkcircle.0426@gmail.com>, 2012, 2013.
+# Seong-ho Cho <darkcircle.0426@gmail.com>, 2012, 2013, 2014.
 #
 #
 # 참고 :
@@ -12,8 +12,8 @@ msgstr ""
 "Project-Id-Version: folks master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=folks&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2013-03-19 21:58+0000\n"
-"PO-Revision-Date: 2013-03-21 00:01+0900\n"
+"POT-Creation-Date: 2014-03-12 05:54+0000\n"
+"PO-Revision-Date: 2014-03-12 14:59+0900\n"
 "Last-Translator: Seong-ho Cho <darkcircle.0426@gmail.com>\n"
 "Language-Team: Korean <gnome-kr@googlegroups.com>\n"
 "Language: ko\n"
@@ -22,6 +22,77 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Poedit 1.5.5\n"
+
+#: ../backends/bluez/bluez-backend.vala:600
+msgid ""
+"No BlueZ 5 object manager running, so the BlueZ backend will be inactive. "
+"Either your BlueZ installation is too old (only version 5 is supported) or "
+"the service can’t be started."
+msgstr ""
+"BlueZ 5 객체 관리자가 실행중이 아니어서 BlueZ 백엔드를 비활성화합니다. BlueZ "
+"설치가 오래되지 않았는지(버전 5만 지원함), 서비스를 시작할 수 없는지 확인하십"
+"시오."
+
+#: ../backends/bluez/bluez-backend.vala:613
+msgid ""
+"Error connecting to OBEX transfer daemon over D-Bus. Ensure BlueZ and obexd "
+"are installed."
+msgstr ""
+"D-Bus를 통해 OBEX 전송 데몬에 연결하는데 오류가 발생했습니다. BlueZ와 obexd"
+"를 설치했는지 확인하십시오."
+
+#. Translators: the parameter is an error message.
+#: ../backends/bluez/bluez-persona-store.vala:385
+#, c-format
+msgid "Error reading the transferred address book file: %s"
+msgstr "전송한 주소록 파일을 읽는 도중 오류가 발생했습니다: %s"
+
+#. Translators: the first parameter is the name of the
+#. * failed transfer, and the second is a Bluetooth device
+#. * alias.
+#. Translators: the first parameter is the name of the failed
+#. * transfer, and the second is a Bluetooth device alias.
+#: ../backends/bluez/bluez-persona-store.vala:667
+#: ../backends/bluez/bluez-persona-store.vala:689
+#, c-format
+msgid ""
+"Error during transfer of the address book ‘%s’ from Bluetooth device ‘%s’."
+msgstr ""
+"‘%2$s’ 블루투스 장치에서 ‘%1$s’ 주소록을 전송하는 도중 오류가 발생했습니다."
+
+#: ../backends/bluez/bluez-persona-store.vala:782
+#, c-format
+msgid ""
+"Permission to access the address book on Bluetooth device ‘%s’ was denied by "
+"the user."
+msgstr "‘%s’ 블루투스 장치의 주소록 접근 권한을 사용자가 거부했습니다."
+
+#. Translators: the first parameter is a Bluetooth device
+#. * alias, and the second is an error message.
+#: ../backends/bluez/bluez-persona-store.vala:789
+#, c-format
+msgid "An OBEX address book transfer from device ‘%s’ could not be started: %s"
+msgstr "‘%s’ 장치에서 OBEX 주소록 전송을 시작할 수 없습니다: %s"
+
+#. Translators: the first parameter is a Bluetooth device
+#. * alias, and the second is an error message.
+#: ../backends/bluez/bluez-persona-store.vala:829
+#, c-format
+msgid "The OBEX address book transfer from device ‘%s’ failed: %s"
+msgstr "‘%s’ 장치에서 OBEX 주소록 전송에 실패했습니다: %s"
+
+#. Translators: the first parameter is a Bluetooth device
+#. * alias, and the second is an error message.
+#: ../backends/bluez/bluez-persona-store.vala:846
+#, c-format
+msgid ""
+"Error during transfer of the address book from Bluetooth device ‘%s’: %s"
+msgstr "‘%s’ 블루투스 장치에서 주소록을 전송하는 도중 오류가 발생했습니다: %s"
+
+#: ../backends/bluez/bluez-persona-store.vala:1064
+#, c-format
+msgid "Bluetooth device ‘%s’ disappeared during address book transfer."
+msgstr "주소록을 전송하는 도중 ‘%s’ 블루투스 장치가 사라졌습니다."
 
 #. The timeout after which we consider a property change to have failed if we
 #. * haven't received a property change notification for it.
@@ -37,68 +108,68 @@ msgstr "안드로이드의 즐겨찾기"
 
 #. Translators: the first parameter is an address book
 #. * URI and the second is a persona UID.
-#: ../backends/eds/lib/edsf-persona-store.vala:671
+#: ../backends/eds/lib/edsf-persona-store.vala:673
 #, c-format
 msgid "Address book ‘%s’ is offline, so contact ‘%s’ cannot be removed."
 msgstr "‘%s’ 주소록이 오프라인입니다. 따라서 ‘%s’ 연락처를 제거할 수 없습니다."
 
 #. Translators: the first parameter is an address book
 #. * URI and the second is an error message.
-#: ../backends/eds/lib/edsf-persona-store.vala:677
+#: ../backends/eds/lib/edsf-persona-store.vala:679
 #, c-format
 msgid "Permission denied to remove contact ‘%s’: %s"
 msgstr "‘%s’ 연락처를 제거할 권한이 거부되었습니다: %s"
 
 #. Translators: the parameter is an error message.
-#: ../backends/eds/lib/edsf-persona-store.vala:682
+#: ../backends/eds/lib/edsf-persona-store.vala:684
 #, c-format
 msgid "Removing contacts isn't supported by this persona store: %s"
 msgstr "이 페르소나 저장소에서 연락처 제거를 지원하지 않습니다: %s"
 
-#: ../backends/eds/lib/edsf-persona-store.vala:711
+#: ../backends/eds/lib/edsf-persona-store.vala:713
 #, c-format
 msgid "Can't remove contact ‘%s’: %s"
 msgstr "‘%s’ 연락처를 제거할 수 없습니다: %s"
 
 #. Translators: the parameter is an address book
 #. * URI.
-#: ../backends/eds/lib/edsf-persona-store.vala:801
-#: ../backends/eds/lib/edsf-persona-store.vala:992
+#: ../backends/eds/lib/edsf-persona-store.vala:802
+#: ../backends/eds/lib/edsf-persona-store.vala:993
 #, c-format
 msgid "Address book ‘%s’ is offline."
 msgstr "‘%s’ 주소록이 오프라인입니다."
 
 #. Translators: the first parameter is an address
 #. * book URI and the second is an error message.
-#: ../backends/eds/lib/edsf-persona-store.vala:806
-#: ../backends/eds/lib/edsf-persona-store.vala:997
+#: ../backends/eds/lib/edsf-persona-store.vala:807
+#: ../backends/eds/lib/edsf-persona-store.vala:998
 #, c-format
 msgid "Permission denied to open address book ‘%s’: %s"
 msgstr "‘%s’ 주소록을 열 권한이 거부되었습니다: %s"
 
 #. Translators: the first parameter is an address book URI
 #. * and the second is an error message.
-#: ../backends/eds/lib/edsf-persona-store.vala:839
+#: ../backends/eds/lib/edsf-persona-store.vala:840
 #, c-format
 msgid "Couldn't open address book ‘%s’: %s"
 msgstr "‘%s’ 주소록을 열 수 없습니다: %s"
 
 #. Translators: the parameteter is an error message.
-#: ../backends/eds/lib/edsf-persona-store.vala:905
-#: ../backends/eds/lib/edsf-persona-store.vala:935
+#: ../backends/eds/lib/edsf-persona-store.vala:906
+#: ../backends/eds/lib/edsf-persona-store.vala:936
 #, c-format
 msgid "Couldn't get address book capabilities: %s"
 msgstr "주소록 사용 가능 여부를 가져올 수 없습니다: %s"
 
 #. Translators: the parameter is an address book URI.
-#: ../backends/eds/lib/edsf-persona-store.vala:951
+#: ../backends/eds/lib/edsf-persona-store.vala:952
 #, c-format
 msgid "Couldn't get view for address book ‘%s’."
 msgstr "‘%s’ 주소록 보기를 가져올 수 없습니다."
 
 #. Translators: the first parameter is an address book URI
 #. * and the second is an error message.
-#: ../backends/eds/lib/edsf-persona-store.vala:1030
+#: ../backends/eds/lib/edsf-persona-store.vala:1031
 #, c-format
 msgid "Couldn't get view for address book ‘%s’: %s"
 msgstr "‘%s’ 주소록 보기를 가져올 수 없습니다: %s"
@@ -106,162 +177,162 @@ msgstr "‘%s’ 주소록 보기를 가져올 수 없습니다: %s"
 #. Translators: the parameter is the name of a property on a
 #. * contact, formatted in the normal GObject style (e.g.
 #. * lowercase with hyphens to separate words).
-#: ../backends/eds/lib/edsf-persona-store.vala:1390
+#: ../backends/eds/lib/edsf-persona-store.vala:1303
 #, c-format
 msgid "Changing the ‘%s’ property failed due to reaching the timeout."
-msgstr "제한 시간에 도달하여 ‘%s’ 속성을 변경하는데 실패했습니다."
+msgstr "제한 시간에 도달하여 ‘%s’ 속성 값을 바꾸는데 실패했습니다."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1428
+#: ../backends/eds/lib/edsf-persona-store.vala:1337
 #: ../folks/avatar-details.vala:63
 msgid "Avatar is not writeable on this contact."
 msgstr "이 연락처에 아바타를 기록할 수 없습니다."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1449
+#: ../backends/eds/lib/edsf-persona-store.vala:1358
 #: ../folks/web-service-details.vala:123
 msgid "Web service addresses are not writeable on this contact."
 msgstr "이 연락처에 웹 서비스 주소를 기록할 수 없습니다."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1485
+#: ../backends/eds/lib/edsf-persona-store.vala:1394
 #: ../folks/url-details.vala:152
 msgid "URLs are not writeable on this contact."
 msgstr "이 연락처에 URL을 기록할 수 없습니다."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1566
+#: ../backends/eds/lib/edsf-persona-store.vala:1475
 #: ../folks/local-id-details.vala:64
 msgid "Local IDs are not writeable on this contact."
 msgstr "이 연락처에 로컬 ID를 기록할 수 없습니다."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1595
+#: ../backends/eds/lib/edsf-persona-store.vala:1504
 msgid "The contact cannot be marked as favourite."
 msgstr "이 연락처를 즐겨찾기로 표시할 수 없습니다."
 
 #. Translators: the parameter is an error message.
-#: ../backends/eds/lib/edsf-persona-store.vala:1667
+#: ../backends/eds/lib/edsf-persona-store.vala:1576
 #, c-format
 msgid "Can't update avatar: %s"
-msgstr "아바타를 업데이트 할 수 없습니다: %s"
+msgstr "아바타를 업데이트할 수 없습니다: %s"
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1678
+#: ../backends/eds/lib/edsf-persona-store.vala:1587
 #: ../folks/email-details.vala:120
 msgid "E-mail addresses are not writeable on this contact."
 msgstr "이 연락처에 전자메일 주소를 쓸 수 없습니다."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1696
-#: ../folks/phone-details.vala:224
+#: ../backends/eds/lib/edsf-persona-store.vala:1605
+#: ../folks/phone-details.vala:255
 msgid "Phone numbers are not writeable on this contact."
 msgstr "이 연락처에 전화번호를 쓸 수 없습니다."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1714
+#: ../backends/eds/lib/edsf-persona-store.vala:1623
 #: ../folks/postal-address-details.vala:361
 msgid "Postal addresses are not writeable on this contact."
 msgstr "이 연락처에 우편 주소를 쓸 수 없습니다."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1785
-#: ../folks/name-details.vala:283
+#: ../backends/eds/lib/edsf-persona-store.vala:1694
+#: ../folks/name-details.vala:454
 msgid "Full name is not writeable on this contact."
 msgstr "이 연락처에 전체 이름을 쓸 수 없습니다."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1807
-#: ../folks/name-details.vala:321
+#: ../backends/eds/lib/edsf-persona-store.vala:1716
+#: ../folks/name-details.vala:492
 msgid "Nickname is not writeable on this contact."
 msgstr "이 연락처에 닉네임을 쓸 수 없습니다."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1829
+#: ../backends/eds/lib/edsf-persona-store.vala:1738
 #: ../folks/note-details.vala:138
 msgid "Notes are not writeable on this contact."
 msgstr "이 연락처에 참고 사항을 쓸 수 없습니다."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1861
+#: ../backends/eds/lib/edsf-persona-store.vala:1770
 #: ../folks/birthday-details.vala:62
 msgid "Birthday is not writeable on this contact."
 msgstr "이 연락처에 생일을 쓸 수 없습니다."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1905
+#: ../backends/eds/lib/edsf-persona-store.vala:1814
 #: ../folks/role-details.vala:279
 msgid "Roles are not writeable on this contact."
 msgstr "이 연락처에 역할을 쓸 수 없습니다."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:2006
-#: ../folks/name-details.vala:246
+#: ../backends/eds/lib/edsf-persona-store.vala:1915
+#: ../folks/name-details.vala:417
 msgid "Structured name is not writeable on this contact."
 msgstr "이 연락처에 구조화된 이름을 쓸 수 없습니다."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:2045
+#: ../backends/eds/lib/edsf-persona-store.vala:1954
 #: ../folks/im-details.vala:136
 msgid "IM addresses are not writeable on this contact."
 msgstr "이 연락처에 메신저 주소를 쓸 수 없습니다."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:2095
+#: ../backends/eds/lib/edsf-persona-store.vala:2004
 #: ../folks/group-details.vala:174
 msgid "Groups are not writeable on this contact."
 msgstr "이 연락처에 그룹을 쓸 수 없습니다."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:2110
+#: ../backends/eds/lib/edsf-persona-store.vala:2019
 msgid "My Contacts is only available for Google Contacts"
 msgstr "내 연락처는 구글 연락처에서만 사용할 수 있습니다"
 
-#: ../backends/eds/lib/edsf-persona-store.vala:2181
+#: ../backends/eds/lib/edsf-persona-store.vala:2090
 #: ../folks/gender-details.vala:79
 msgid "Gender is not writeable on this contact."
 msgstr "이 연락처에 성별을 쓸 수 없습니다."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:2219
-#: ../folks/anti-linkable.vala:81
+#: ../backends/eds/lib/edsf-persona-store.vala:2128
+#: ../folks/anti-linkable.vala:84
 msgid "Anti-links are not writeable on this contact."
 msgstr "이 연락처에 연결 방지를 쓸 수 없습니다."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:2262
-#: ../folks/location-details.vala:129
+#: ../backends/eds/lib/edsf-persona-store.vala:2171
+#: ../folks/location-details.vala:135
 msgid "Location is not writeable on this contact."
 msgstr "이 연락처에 위치를 기록할 수 없습니다."
 
 #. Translators: the first parameter is a non-human-readable
 #. * property name and the second parameter is an error
 #. * message.
-#: ../backends/eds/lib/edsf-persona-store.vala:2439
+#: ../backends/eds/lib/edsf-persona-store.vala:2484
 #, c-format
 msgid "Property ‘%s’ is not writeable: %s"
-msgstr "‘%s’ 속성을 쓸 수 없습니다: %s"
+msgstr "‘%s’ 속성 값을 쓸 수 없습니다: %s"
 
 #. Translators: the first parameter is a non-human-readable
 #. * property name and the second parameter is an error
 #. * message.
-#: ../backends/eds/lib/edsf-persona-store.vala:2448
+#: ../backends/eds/lib/edsf-persona-store.vala:2493
 #, c-format
 msgid "Invalid value for property ‘%s’: %s"
-msgstr "‘%s’ 속성에 대한 값이 잘못되었습니다: %s"
+msgstr "‘%s’ 속성 값이 잘못되었습니다: %s"
 
 #. Translators: the first parameter is a non-human-readable
 #. * property name and the second parameter is an error message.
-#: ../backends/eds/lib/edsf-persona-store.vala:2474
+#: ../backends/eds/lib/edsf-persona-store.vala:2519
 #, c-format
 msgid "Unknown error setting property ‘%s’: %s"
-msgstr "‘%s’ 속성을 설정하는 중 알 수 없는 오류가 발생했습니다: %s"
+msgstr "‘%s’ 속성 값 설정 도중 알 수 없는 오류가 발생했습니다: %s"
 
 #. Translators: the first parameter is a filename, and
 #. * the second is an error message.
-#: ../backends/key-file/kf-persona-store.vala:233
+#: ../backends/key-file/kf-persona-store.vala:234
 #, c-format
 msgid "The relationship key file '%s' could not be loaded: %s"
 msgstr "'%s' 관계 키 파일을 불러올 수 없습니다: %s"
 
 #. Translators: the first parameter is a path, and the
 #. * second is an error message.
-#: ../backends/key-file/kf-persona-store.vala:255
+#: ../backends/key-file/kf-persona-store.vala:256
 #, c-format
 msgid "The relationship key file directory '%s' could not be created: %s"
 msgstr "'%s' 관계 키 파일 디렉터리를 만들 수 없습니다: %s"
 
 #. Translators: the first parameter is a filename, and
 #. * the second is an error message.
-#: ../backends/key-file/kf-persona-store.vala:279
+#: ../backends/key-file/kf-persona-store.vala:280
 #, c-format
 msgid "The relationship key file '%s' could not be created: %s"
 msgstr "'%s' 관계 키 파일을 만들 수 없습니다: %s"
 
 #. Translators: the first parameter is a filename, the second is
 #. * an error message.
-#: ../backends/key-file/kf-persona-store.vala:470
+#: ../backends/key-file/kf-persona-store.vala:471
 #, c-format
 msgid "Could not write updated key file '%s': %s"
 msgstr "업데이트한 '%s' 키 파일에 쓸 수 없습니다: %s"
@@ -271,13 +342,13 @@ msgstr "업데이트한 '%s' 키 파일에 쓸 수 없습니다: %s"
 #. * an IM address (e.g. “foo@jabber.org”), the second is
 #. * the name of a protocol (e.g. “jabber”) and the third is
 #. * an error message.
-#: ../backends/key-file/kf-persona.vala:172
+#: ../backends/key-file/kf-persona.vala:174
 #, c-format
 msgid "Invalid IM address ‘%s’ for protocol ‘%s’: %s"
-msgstr "‘%2$s’ 프로토콜에 대해 메신저의 ‘%1$s’ 주소가 잘못되었습니다: %3$s"
+msgstr "‘%2$s’ 프로토콜에 대해 ‘%1$s’ 메신저 주소가 잘못되었습니다: %3$s"
 
 #. Translators: the parameter is an error message.
-#: ../backends/key-file/kf-persona.vala:430
+#: ../backends/key-file/kf-persona.vala:432
 #, c-format
 msgid "Couldn't load data from key file: %s"
 msgstr "키 파일로부터 데이터를 불러올 수 없습니다: %s"
@@ -302,27 +373,26 @@ msgstr "사용 가능한 연락처를 찾을 수 없습니다."
 msgid "Error opening contacts view."
 msgstr "연락처 보기를 여는 중 오류가 발생했습니다."
 
-#. Translators: the first parameter is the display name for
-#. * the Telepathy account, and the second is an error
-#. * message.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:814
-#, c-format
+#: ../backends/ofono/ofono-backend.vala:196
 msgid ""
-"Failed to determine whether we can set aliases on Telepathy account '%s': %s"
-msgstr "'%s' 텔레파시 계정의 별명을 설정할 지 결정하는데 실패했습니다: %s"
+"No oFono object manager running, so the oFono backend will be inactive. "
+"Either oFono isn’t installed or the service can’t be started."
+msgstr ""
+"oFono 객체 관리자가 실행중이 아니어서 oFono 백엔드를 비활성화합니다. oFono를 "
+"설치하지 않았는지, 서비스를 시작할 수 없는지 확인하십시오."
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1278
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1248
 msgid "Telepathy contacts representing the local user may not be removed."
-msgstr "로컬 사용자를 표현하는 텔레파시 연락처는 지워지지 않습니다."
+msgstr "로컬 사용자를 나타내는 텔레파시 연락처는 지워지지 않습니다."
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1289
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1259
 #, c-format
 msgid "Failed to remove a persona from store: %s"
 msgstr "저장소에서 페르소나를 제거하는데 실패했습니다: %s"
 
 #. Translators: the first two parameters are store identifiers and
 #. * the third is a contact identifier.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1324
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1294
 #, c-format
 msgid ""
 "Persona store (%s, %s) requires the following details:\n"
@@ -331,18 +401,18 @@ msgstr ""
 "페르소나 저장소(%s, %s)에 다음 세부 요소가 필요합니다:\n"
 "    연락처(제공: '%s')\n"
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1339
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1309
 msgid "Cannot create a new Telepathy contact while offline."
 msgstr "오프라인일 때 새 텔레파시 연락처를 만들 수 없습니다."
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1357
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1327
 #, c-format
 msgid "Failed to add a persona from details: %s"
 msgstr "세부 요소로부터 페르소나를 추가하는데 실패했습니다: %s"
 
 #. Translators: "telepathy-logger" is the name of an application,
 #. * and should not be translated.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1377
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1347
 msgid ""
 "Failed to change favorite without a connection to the telepathy-logger "
 "service."
@@ -350,7 +420,7 @@ msgstr ""
 "텔레파시 로거 서비스에 연결하지 않은 상태에서 즐겨찾기를 바꾸는데 실패했습니"
 "다."
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1383
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1353
 msgid ""
 "Failed to change favorite status of Telepathy Persona because it has no "
 "attached TpContact."
@@ -359,45 +429,45 @@ msgstr ""
 "패했습니다."
 
 #. Translators: the parameter is a contact identifier.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1401
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1371
 #, c-format
 msgid "Failed to change favorite status for Telepathy contact ‘%s’."
 msgstr "‘%s’ 텔레파시 연락처에서 즐겨찾기 상태를 바꾸는데 실패했습니다."
 
 #. Translators: the parameter is an error message.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1433
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1403
 #, c-format
 msgid "Failed to change contact's alias: %s"
 msgstr "연락처 별명을 바꾸는데 실패했습니다: %s"
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1514
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1484
 msgid "Extended information may only be set on the user's Telepathy contact."
 msgstr "확장 정보는 사용자의 텔레파시 연락처에만 설정할 수 있습니다."
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1543
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1513
 msgid ""
 "Extended information cannot be written because the store is disconnected."
 msgstr "저장소의 연결이 끊겨서 확장 정보를 쓸 수 없습니다."
 
-#: ../backends/telepathy/lib/tpf-persona.vala:499
-#: ../backends/telepathy/lib/tpf-persona.vala:520
-#: ../backends/telepathy/lib/tpf-persona.vala:572
-#: ../backends/telepathy/lib/tpf-persona.vala:586
+#: ../backends/telepathy/lib/tpf-persona.vala:511
+#: ../backends/telepathy/lib/tpf-persona.vala:532
+#: ../backends/telepathy/lib/tpf-persona.vala:584
+#: ../backends/telepathy/lib/tpf-persona.vala:598
 #, c-format
 msgid "Failed to change group membership: %s"
 msgstr "그룹 구성원 관계를 바꾸는데 실패했습니다: %s"
 
 #. Translators: "account" refers to an instant messaging
 #. * account.
-#: ../backends/telepathy/lib/tpf-persona.vala:502
-#: ../backends/telepathy/lib/tpf-persona.vala:575
+#: ../backends/telepathy/lib/tpf-persona.vala:514
+#: ../backends/telepathy/lib/tpf-persona.vala:587
 msgid "Account is offline."
 msgstr "계정이 오프라인입니다."
 
 #. Translators: the first parameter is the unknown key that
 #. * was received with the details params, and the second
 #. * identifies the persona store.
-#: ../backends/tracker/lib/trf-persona-store.vala:742
+#: ../backends/tracker/lib/trf-persona-store.vala:743
 #, c-format
 msgid "Unrecognized parameter '%s' passed to persona store '%s'."
 msgstr "인식할 수 없는 '%s'  매개변수를 페르소나 저장소 '%s'에 전달했습니다."
@@ -408,19 +478,19 @@ msgstr "이 연락처에 별명을 기록할 수 없습니다."
 
 #. Translators: the first parameter is a folder path and the second
 #. * is an error message.
-#: ../folks/backend-store.vala:627
+#: ../folks/backend-store.vala:651
 #, c-format
 msgid "Error listing contents of folder '%s': %s"
 msgstr "'%s' 폴더의 내용을 나열하는 중 오류가 발생했습니다: %s"
 
 #. Translators: the parameter is a filename.
-#: ../folks/backend-store.vala:757
+#: ../folks/backend-store.vala:786
 #, c-format
 msgid "File or directory '%s' does not exist."
-msgstr "'%s' 파일 또는 디렉터리가 존재하지 않습니다."
+msgstr "'%s' 파일 또는 디렉터리가 없습니다."
 
 #. Translators: the parameter is a filename.
-#: ../folks/backend-store.vala:763
+#: ../folks/backend-store.vala:792
 #, c-format
 msgid "Failed to get content type for '%s'."
 msgstr "'%s'에 대한 내용 형식을 가져오는데 실패했습니다."
@@ -442,31 +512,31 @@ msgstr "'%s' 메신저 주소를 인지할 수 없습니다."
 
 #. Translators: the first parameter is a persona store identifier
 #. * and the second is an error message.
-#: ../folks/individual-aggregator.vala:935
+#: ../folks/individual-aggregator.vala:1040
 #, c-format
 msgid "Error preparing persona store '%s': %s"
 msgstr "'%s' 페르소나 저장소를 준비하는 중 오류가 발생했습니다: %s"
 
 #. Translators: the parameter is a property name.
-#: ../folks/individual-aggregator.vala:1158
-#: ../folks/individual-aggregator.vala:1386
+#: ../folks/individual-aggregator.vala:1269
+#: ../folks/individual-aggregator.vala:1536
 #, c-format
 msgid "Unknown property '%s' in linkable property list."
 msgstr "연결할 수 있는 속성 목록에서 '%s' 속성을 알 수 없습니다."
 
 #. Translators: the first parameter is a store identifier
 #. * and the second parameter is an error message.
-#: ../folks/individual-aggregator.vala:1857
+#: ../folks/individual-aggregator.vala:2022
 #, c-format
 msgid "Failed to add contact for persona store ID '%s': %s"
 msgstr "'%s' 페르소나 저장소 ID에 대한 연락처를 추가하는데 실패했습니다: %s"
 
-#: ../folks/individual-aggregator.vala:1958
+#: ../folks/individual-aggregator.vala:2119
 msgid "Can’t link personas with no primary store."
 msgstr "주 저장소 없이는 페르소나에 연결할 수 없습니다."
 
-#: ../folks/individual-aggregator.vala:1959
-#: ../folks/individual-aggregator.vala:2291
+#: ../folks/individual-aggregator.vala:2120
+#: ../folks/individual-aggregator.vala:2451
 #, c-format
 msgid ""
 "Persona store ‘%s:%s’ is configured as primary, but could not be found or "
@@ -475,8 +545,8 @@ msgstr ""
 "‘%s:%s’ 페르소나 저장소를 주 저장소로 설정했지만, 찾을 수 없거나 불러오는데 "
 "실패했습니다."
 
-#: ../folks/individual-aggregator.vala:1960
-#: ../folks/individual-aggregator.vala:2292
+#: ../folks/individual-aggregator.vala:2121
+#: ../folks/individual-aggregator.vala:2452
 #, c-format
 msgid ""
 "Check the relevant service is running, or change the default store in that "
@@ -485,25 +555,77 @@ msgstr ""
 "관련 서비스가 실행중인지 확인하거나 서비스의 기본 저장소를 바꾸거나 “%s” "
 "GSettings 키를 사용하십시오."
 
-#: ../folks/individual-aggregator.vala:1992
+#: ../folks/individual-aggregator.vala:2153
 msgid "Anti-links can't be removed between personas being linked."
 msgstr "연결된 페르소나 사이에서 링크 방지를 제거할 수 없습니다."
 
-#: ../folks/individual-aggregator.vala:2290
+#: ../folks/individual-aggregator.vala:2450
 msgid "Can’t add personas with no primary store."
 msgstr "주 저장소에 페르소나를 추가할 수 없습니다."
 
-#: ../folks/individual-aggregator.vala:2301
+#: ../folks/individual-aggregator.vala:2461
 #, c-format
 msgid "Can't write to requested property (“%s”) of the writeable store."
 msgstr "쓰기 가능한 요청한 속성(“%s”)에 쓸 수 없습니다."
 
-#: ../folks/individual.vala:217 ../folks/individual.vala:370
-#: ../folks/individual.vala:479 ../folks/individual.vala:730
-#: ../folks/individual.vala:808
+#: ../folks/individual.vala:216 ../folks/individual.vala:402
+#: ../folks/individual.vala:511 ../folks/individual.vala:762
+#: ../folks/individual.vala:840
 #, c-format
 msgid "Failed to change property ‘%s’: No suitable personas were found."
 msgstr "‘%s’ 속성을 바꾸는데 실패했습니다: 적당한 페르소나를 찾지 못했습니다."
+
+#. Translators: This is the default name for an Individual
+#. * when displayed in the UI if no personal details are available
+#. * for them.
+#: ../folks/individual.vala:1951
+msgid "Unnamed Person"
+msgstr "이름 없는 사용자"
+
+# Note: 한국은 성 이름 중간이름 순으로 가므로 %t를 고려하지 않고
+# %f %g %m 순으로 갑니다. (FIXME 참고)
+#. FIXME: Ideally we’d use a format string translated to the locale of the
+#. * persona whose name is being formatted, but no backend provides
+#. * information about personas’ locales, so we have to settle for the
+#. * current user’s locale.
+#. *
+#. * We thought about using nl_langinfo(_NL_NAME_NAME_FMT) here, but
+#. * decided against it because:
+#. *  1. It’s not the best documented API in the world, and its stability
+#. *     is in question.
+#. *  2. An attempt to improve the interface in glibc met with a wall of
+#. *     complaints: https://sourceware.org/bugzilla/show_bug.cgi?id=14641.
+#. *
+#. * However, we do re-use the string format placeholders from
+#. * _NL_NAME_NAME_FMT (as documented here:
+#. * http://lh.2xlibre.net/values/name_fmt/) because there’s a chance glibc
+#. * might eventually grow a useful interface for this.
+#. *
+#. * It does mean we have to implement our own parser for the name_fmt
+#. * format though, since glibc doesn’t provide a formatting function.
+#. Translators: This is a format string used to convert structured names
+#. * to a single string. It should be translated to the predominant
+#. * semi-formal name format for your locale, using the placeholders
+#. * documented here: http://lh.2xlibre.net/values/name_fmt/. You may be
+#. * able to re-use the existing glibc format string for your locale on that
+#. * page if it’s suitable.
+#. *
+#. * More explicitly: the supported placeholders are %f, %F, %g, %G, %m, %M,
+#. * %t. The romanisation modifier (e.g. %Rf) is recognized but ignored.
+#. * %s, %S and %d are all replaced by the same thing (the ‘Honorific
+#. * Prefixes’ from vCard) so please avoid using more than one.
+#. *
+#. * For example, the format string ‘%g%t%m%t%f’ expands to ‘John Andrew
+#. * Lees’ when used for a persona with first name ‘John’, additional names
+#. * ‘Andrew’ and family names ‘Lees’.
+#. *
+#. * If you need additional placeholders with other information or
+#. * punctuation, please file a bug against libfolks:
+#. *   https://bugzilla.gnome.org/enter_bug.cgi?product=folks
+#.
+#: ../folks/name-details.vala:268
+msgid "%g%t%m%t%f"
+msgstr "%f%t%g%t%m"
 
 #: ../folks/org.freedesktop.folks.gschema.xml.in.h:1
 msgid "Primary store ID"
@@ -524,35 +646,35 @@ msgstr ""
 msgid "%s, %s, %s, %s, %s, %s, %s"
 msgstr "%s, %s, %s, %s, %s, %s, %s"
 
-#: ../folks/presence-details.vala:159
+#: ../folks/presence-details.vala:171
 msgid "Unknown status"
 msgstr "알 수 없는 상태"
 
-#: ../folks/presence-details.vala:161
+#: ../folks/presence-details.vala:173
 msgid "Offline"
 msgstr "오프라인"
 
-#: ../folks/presence-details.vala:165
+#: ../folks/presence-details.vala:177
 msgid "Error"
 msgstr "오류"
 
-#: ../folks/presence-details.vala:167
+#: ../folks/presence-details.vala:179
 msgid "Available"
 msgstr "자리에 있음"
 
-#: ../folks/presence-details.vala:169
+#: ../folks/presence-details.vala:181
 msgid "Away"
 msgstr "자리 비움"
 
-#: ../folks/presence-details.vala:171
+#: ../folks/presence-details.vala:183
 msgid "Extended away"
 msgstr "오래 자리 비움"
 
-#: ../folks/presence-details.vala:173
+#: ../folks/presence-details.vala:185
 msgid "Busy"
 msgstr "바쁨"
 
-#: ../folks/presence-details.vala:175
+#: ../folks/presence-details.vala:187
 msgid "Hidden"
 msgstr "숨김"
 
@@ -565,7 +687,7 @@ msgstr "직함: %s, 조직: %s, 역할: %s"
 #: ../tools/import-pidgin.vala:49
 #, c-format
 msgid "File %s does not exist."
-msgstr "%s 파일이 존재하지 않습니다."
+msgstr "%s 파일이 없습니다."
 
 #. Translators: the first parameter is a filename, and the second
 #. * is an error message.
@@ -652,58 +774,58 @@ msgstr "원본 백엔드 이름(기본값: 'pidgin')"
 msgid "Source filename (default: specific to source backend)"
 msgstr "원본 파일 이름(기본값: 원본 백엔드로 지정)"
 
-#: ../tools/import.vala:57
+#: ../tools/import.vala:58
 msgid "— import meta-contact information to libfolks"
 msgstr "— 메타 연락처 정보를 libforks로 가져옵니다"
 
 #. Translators: the parameter is an error message.
-#: ../tools/import.vala:67
+#: ../tools/import.vala:68
 #, c-format
 msgid "Couldn't parse command line options: %s"
 msgstr "명령줄 옵션을 해석할 수 없습니다: %s"
 
 #. Translators: the parameter is an error message.
-#: ../tools/import.vala:108
+#: ../tools/import.vala:109
 #, c-format
 msgid "Couldn't load the backends: %s"
 msgstr "백엔드를 불러올 수 없습니다: %s"
 
 #. Translators: the parameter is a backend identifier.
-#: ../tools/import.vala:119
+#: ../tools/import.vala:120
 #, c-format
 msgid "Couldn't load the ‘%s’ backend."
 msgstr "‘%s’ 백엔드를 불러올 수 없습니다."
 
 #. Translators: the first parameter is a backend identifier and the
 #. * second parameter is an error message.
-#: ../tools/import.vala:132
+#: ../tools/import.vala:133
 #, c-format
 msgid "Couldn't prepare the ‘%s’ backend: %s"
 msgstr "‘%s’ 백엔드를 준비할 수 없습니다: %s"
 
 #. Translators: the parameter is a backend identifier.
-#: ../tools/import.vala:145
+#: ../tools/import.vala:146
 #, c-format
 msgid "Couldn't load the ‘%s’ backend's persona store."
 msgstr "‘%s’ 백엔드의 페르소나 저장소를 불러올 수 없습니다."
 
-#: ../tools/import.vala:166
+#: ../tools/import.vala:167
 #, c-format
 msgid "Couldn't prepare the ‘%s’ backend's persona store: %s"
 msgstr "‘%s’ 백엔드의 페르소나 저장소를 준비할 수 없습니다: %s"
 
 #. Translators: the parameter is an error message.
-#: ../tools/import.vala:184
+#: ../tools/import.vala:185
 #, c-format
 msgid "Error importing contacts: %s"
 msgstr "연락처를 가져오는 중 오류가 발생했습니다: %s"
 
 #. Translators: both parameters are identifiers for backends.
-#: ../tools/import.vala:198
+#: ../tools/import.vala:199
 #, c-format
 msgid ""
 "Unrecognized source backend name ‘%s’. ‘%s’ is currently the only supported "
 "source backend."
 msgstr ""
-"‘%s’  백엔드 이름을 인식할 수 없습니다. ‘%s’은(는) 현재 원본 백엔드만 지원합"
-"니다."
+"‘%s’ 원본 백엔드 이름을 인식할 수 없습니다. ‘%s’은(는) 현재 원본 백엔드만 지"
+"원합니다."

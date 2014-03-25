@@ -19,6 +19,7 @@ libtracker_test_la_VALAFLAGS = \
 	--pkg tracker-sparql-$(TRACKER_SPARQL_MAJOR) \
 	--pkg folks-tracker \
 	--pkg folks-test \
+	--pkg folks-test-dbus \
 	-g \
 	$(NULL)
 

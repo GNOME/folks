@@ -45,6 +45,9 @@ public interface Folks.AntiLinkable : Folks.Persona
    * {@link Persona} instance) are permitted, as personas may appear and
    * disappear over time.
    *
+   * The special UID ``*`` is used as a wildcard to mark the persona as globally
+   * anti-linked. See {@link AntiLinkable.has_global_anti_link}.
+   *
    * It is expected, but not guaranteed, that anti-links made between personas
    * will be reciprocal. That is, if persona A lists persona B's UID in its
    * {@link AntiLinkable.anti_links} set, persona B will typically also list
@@ -93,7 +96,8 @@ public interface Folks.AntiLinkable : Folks.Persona
    */
   public bool has_anti_link_with_persona (Persona other_persona)
     {
-      return (other_persona.uid in this.anti_links);
+      return (this.has_global_anti_link ()) ||
+             (other_persona.uid in this.anti_links);
     }
 
   /**
@@ -137,6 +141,9 @@ public interface Folks.AntiLinkable : Folks.Persona
    * The UIDs of all personas in ``other_personas`` will be removed from this
    * persona's anti-links set and the changes propagated to backends.
    *
+   * If the global anti-link is set, this will not have any effect until the 
+   * global anti-link is removed.
+   *
    * This method is safe to call multiple times concurrently (e.g. begin one
    * asynchronous call, then begin another before the first has finished).
    *
@@ -155,6 +162,67 @@ public interface Folks.AntiLinkable : Folks.Persona
         }
 
       yield this.change_anti_links (new_anti_links);
+    }
+
+  /**
+   * Prevent persona from being linked with any other personas
+   *
+   * This function will add a wildcard ``*`` to the set of anti-links, which will
+   * prevent the persona from being linked with any other personas.
+   *
+   * To make the persona linkable again you need to remove the global anti-link
+   *
+   * This method is safe to call multiple times concurrently (e.g. begin one
+   * asynchronous call, then begin another before the first has finished).
+   *
+   * @throws PropertyError if setting the anti-links failed
+   * @since UNRELEASED
+   */
+  public async void add_global_anti_link()
+      throws PropertyError
+    {
+       if (!this.has_global_anti_link())
+         {
+           var new_anti_links = SmallSet.copy (this.anti_links);
+           new_anti_links.add ("*");
+           yield this.change_anti_links (new_anti_links);
+         }
+    }
+
+  /**
+   * Allow persona to be linked with other personas
+   *
+   * This function removes the wildcard ``*`` from the set of anti-links, allowing
+   * the persona to be linked again.
+   *
+   * This method is safe to call multiple times concurrently (e.g. begin one
+   * asynchronous call, then begin another before the first has finished).
+   *
+   * @throws PropertyError if setting the anti-links failed
+   * @since UNRELEASED
+   */
+  public async void remove_global_anti_link()
+      throws PropertyError
+    {
+       if (this.has_global_anti_link())
+         {
+           var new_anti_links = SmallSet.copy (this.anti_links);
+           new_anti_links.remove ("*");
+           yield this.change_anti_links (new_anti_links);
+         }
+    }
+
+  /**
+   * Check if the persona has a global anti link.
+   *
+   * If the persona has global anti link this means that the persona can not be
+   * linked with any other persona.
+   *
+   * @since UNRELEASED
+   */
+  public bool has_global_anti_link()
+    {
+       return (this.anti_links.contains ("*"));
     }
 }
 

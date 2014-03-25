@@ -43,11 +43,6 @@ LDADD = \
 	-L$(top_srcdir)/backends/telepathy/lib \
 	$(NULL)
 
-TESTS_ENVIRONMENT = \
-	FOLKS_BACKEND_KEY_FILE_PATH=$(srcdir)/data/relationships-empty.ini \
-	$(top_srcdir)/tests/tools/execute-test.sh \
-	$(NULL)
-
 TESTS = \
 	persona-store-capabilities \
 	individual-retrieval \

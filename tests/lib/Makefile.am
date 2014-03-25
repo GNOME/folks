@@ -5,6 +5,12 @@ SUBDIRS = \
 	key-file \
 	$(NULL)
 
+if ENABLE_BLUEZ
+if HAVE_BLUEZ_TESTS
+SUBDIRS += bluez
+endif
+endif
+
 if ENABLE_TELEPATHY
 # Build the contactlist first because autotools fails to recognize the
 # dependencies implicitly. There may be a better way to fix this, but then I'd
@@ -30,6 +36,7 @@ endif
 DIST_SUBDIRS = \
 	dummy \
 	key-file \
+	bluez \
 	telepathy \
 	eds \
 	libsocialweb \
@@ -41,9 +48,13 @@ noinst_LTLIBRARIES = libfolks-test.la
 libfolks_test_la_SOURCES = \
 	disconnection-queue.vala \
 	haze-remove-directory.c \
+	gtestdbus.c \
+	gtestdbus.h \
+	folks-test-dbus.vapi \
 	test-case.vala \
 	test-case-helper.c \
 	test-utils.vala \
+	org-freedesktop-dbus-mock.vala \
 	$(NULL)
 
 libfolks_test_la_CFLAGS = \
@@ -81,6 +92,7 @@ libfolks_test_la_VALAFLAGS = \
 	$(ERROR_VALAFLAGS) \
 	--vapidir=$(abs_top_srcdir)/folks \
 	--vapidir=$(abs_top_builddir)/folks \
+	--vapidir=$(abs_top_srcdir)/tests/lib \
 	--pkg gobject-2.0 \
 	--pkg gio-2.0 \
 	--pkg gee-0.8 \

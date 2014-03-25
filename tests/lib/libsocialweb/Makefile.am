@@ -19,6 +19,7 @@ libsocialweb_test_la_VALAFLAGS = \
 	--pkg libsocialweb-client \
 	--pkg folks-libsocialweb \
 	--pkg folks-test \
+	--pkg folks-test-dbus \
 	-g \
 	$(NULL)
 

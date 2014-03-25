@@ -313,8 +313,9 @@ public class Edsf.PersonaStore : Folks.PersonaStore
   public PersonaStore.with_source_registry (E.SourceRegistry r, E.Source s)
     {
       string eds_uid = s.get_uid ();
+      string eds_name = s.get_display_name ();
       Object (id: eds_uid,
-              display_name: eds_uid,
+              display_name: eds_name,
               source: s);
 
       this._source_registry = r;
@@ -366,7 +367,8 @@ public class Edsf.PersonaStore : Folks.PersonaStore
         }
       catch (GLib.Error e)
         {
-          GLib.warning ("~PersonaStore: %s\n", e.message);
+          if (!(e is IOError.CLOSED))
+              GLib.warning ("~PersonaStore: %s\n", e.message);
         }
     }
 
@@ -1227,6 +1229,16 @@ public class Edsf.PersonaStore : Folks.PersonaStore
        * if _addressbook is null. */
       assert (this._addressbook != null);
 
+      var debug_obj = Debug.dup ();
+      if (debug_obj.debug_output_enabled == true)
+        {
+          debug ("Committing modified property ‘%s’ to persona %p (UID: %s).",
+              property_name, persona, persona.uid);
+
+          debug ("Modified vCard: %s",
+              persona.contact.to_string (E.VCardFormat.@30));
+        }
+
       var contact = persona.contact;
 
       ulong signal_id = 0;
@@ -1272,9 +1284,14 @@ public class Edsf.PersonaStore : Folks.PersonaStore
            * they can only be modified from the main loop. */
           if (received_notification == false)
             {
+              debug ("Yielding.");
               has_yielded = true;
               yield;
             }
+
+          debug ("Finished: received_notification = %s, has_yielded = %s",
+              received_notification ? "yes" : "no",
+              has_yielded ? "yes" : "no");
 
           /* If we hit the timeout instead of the property notification, throw
            * an error. */
@@ -1309,11 +1326,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
 
   private void _remove_attribute (E.Contact contact, string attr_name)
     {
-      unowned VCardAttribute? attr = contact.get_attribute (attr_name);
-      if (attr != null)
-        {
-          contact.remove_attribute ((!) attr);
-        }
+      contact.remove_attributes (null, attr_name);
     }
 
   internal async void _set_avatar (Edsf.Persona persona, LoadableIcon? avatar)
@@ -2048,14 +2061,14 @@ public class Edsf.PersonaStore : Folks.PersonaStore
 
   private void _set_contact_system_groups (E.Contact contact, Set<string> system_groups)
     {
+      var group_ids_str = "X-GOOGLE-SYSTEM-GROUP-IDS";
       var vcard = (E.VCard) contact;
-      unowned E.VCardAttribute? prev_attr =
-          vcard.get_attribute ("X-GOOGLE-SYSTEM-GROUP-IDS");
+      unowned E.VCardAttribute? prev_attr = vcard.get_attribute (group_ids_str);
 
       if (prev_attr != null)
-        contact.remove_attribute (prev_attr);
+        contact.remove_attributes (null, group_ids_str);
 
-      E.VCardAttribute new_attr = new E.VCardAttribute ("", "X-GOOGLE-SYSTEM-GROUP-IDS");
+      E.VCardAttribute new_attr = new E.VCardAttribute ("", group_ids_str);
       foreach (var group in system_groups)
         {
           if (group == null || group == "")

@@ -170,7 +170,7 @@ public class Folks.Backends.BlueZ.Backend : Folks.Backend
       if (!this._persona_stores.has_key (store.id))
         return;
 
-      this._remove_persona_store ((!) _store);
+      this._remove_persona_store ((!) _store, true, true);
     }
 
   /**
@@ -376,6 +376,10 @@ public class Folks.Backends.BlueZ.Backend : Folks.Backend
       PersonaStore store =
           new BlueZ.PersonaStore (device, path, this._obex_client);
 
+      /* Set the initial properties. */
+      store.set_is_trusted (device.trusted);
+      store.set_alias (device.alias);
+
       this._watched_devices[path] = store;
       this._persona_stores.set (store.id, store);
 
@@ -384,7 +388,8 @@ public class Folks.Backends.BlueZ.Backend : Folks.Backend
       this.notify_property ("persona-stores");
     }
 
-  private void _remove_persona_store (PersonaStore store)
+  private void _remove_persona_store (PersonaStore store,
+      bool remove_from_persona_stores, bool remove_from_watched_devices)
     {
       store.removed.disconnect (this._persona_store_removed_cb);
 
@@ -394,8 +399,10 @@ public class Folks.Backends.BlueZ.Backend : Folks.Backend
 
       this.persona_store_removed (store);
 
-      this._persona_stores.unset (store.id);
-      this._watched_devices.unset (store.object_path);
+      if (remove_from_persona_stores == true)
+          this._persona_stores.unset (store.id);
+      if (remove_from_watched_devices == true)
+          this._watched_devices.unset (store.object_path);
 
       this.notify_property ("persona-stores");
     }
@@ -514,7 +521,7 @@ public class Folks.Backends.BlueZ.Backend : Folks.Backend
       if (this._watched_devices.unset (path, out store) == true)
         {
           debug ("Device ‘%s’ removed", path);
-          this._remove_persona_store (store);
+          this._remove_persona_store (store, true, false);
         }
     }
 
@@ -679,11 +686,13 @@ public class Folks.Backends.BlueZ.Backend : Folks.Backend
 
           this.freeze_notify ();
 
-          foreach (var persona_store in this._persona_stores.values)
-              this._remove_persona_store (persona_store);
+          var iter = this._persona_stores.map_iterator ();
+          while (iter.next () == true)
+            {
+              this._remove_persona_store (iter.get_value (), false, true);
+              iter.unset ();
+            }
 
-          this._watched_devices.clear ();
-          this._persona_stores.clear ();
           this.notify_property ("persona-stores");
 
           this._is_quiescent = false;
@@ -702,6 +711,6 @@ public class Folks.Backends.BlueZ.Backend : Folks.Backend
 
   private void _persona_store_removed_cb (Folks.PersonaStore store)
     {
-      this._remove_persona_store ((BlueZ.PersonaStore) store);
+      this._remove_persona_store ((BlueZ.PersonaStore) store, true, true);
     }
 }

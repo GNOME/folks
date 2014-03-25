@@ -36,8 +36,6 @@ LDADD = \
 	-L$(top_srcdir)/backends/tracker/lib \
 	$(NULL)
 
-RUN_WITH_PRIVATE_BUS = $(top_srcdir)/tests/tools/with-session-bus-tracker.sh
-
 # in order from least to most complex
 noinst_PROGRAMS = \
 	individual-retrieval \
@@ -100,10 +98,6 @@ noinst_PROGRAMS = \
 	set-null-avatar \
 	$(NULL)
 
-TESTS_ENVIRONMENT = \
-	$(RUN_WITH_PRIVATE_BUS) \
-	--session \
-	--
 TESTS = $(noinst_PROGRAMS)
 
 individual_retrieval_SOURCES = \
@@ -336,11 +330,6 @@ set_duplicate_email_SOURCES = \
 
 set_null_avatar_SOURCES = \
 	set-null-avatar.vala \
-	$(NULL)
-
-CLEANFILES = \
-	*.pid \
-	*.address \
 	$(NULL)
 
 -include $(top_srcdir)/git.mk

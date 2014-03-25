@@ -133,11 +133,11 @@ public class Folks.Backends.Eds.Backend : Folks.Backend
             }
         }
 
-      var iter = this._persona_stores.values.iterator ();
+      var iter = this._persona_stores.map_iterator ();
 
       while (iter.next ())
         {
-          var store = iter.get ();
+          var store = iter.get_value ();
 
           if (!storeids.contains (store.id))
             {
@@ -249,10 +249,10 @@ public class Folks.Backends.Eds.Backend : Folks.Backend
           this._prepare_pending = true;
           this.freeze_notify ();
 
-          var iter = this._persona_stores.values.iterator ();
+          var iter = this._persona_stores.map_iterator ();
 
           while (iter.next ())
-            this._remove_address_book (iter.get (), true, iter);
+            this._remove_address_book (iter.get_value (), true, iter);
 
           this._ab_sources.source_added.disconnect (this._ab_source_list_changed_cb);
           this._ab_sources.source_enabled.disconnect (this._ab_source_list_changed_cb);
@@ -345,14 +345,14 @@ public class Folks.Backends.Eds.Backend : Folks.Backend
 
   private void _remove_address_book (Folks.PersonaStore store,
       bool notify = true,
-      Iterator<Folks.PersonaStore>? iter = null)
+      MapIterator<string, Folks.PersonaStore>? iter = null)
     {
       debug ("Removing address book '%s'.", store.id);
 
       if (iter != null)
         {
-          assert (store == iter.get ());
-          iter.remove ();
+          assert (store == iter.get_value ());
+          iter.unset ();
         }
       else
         {

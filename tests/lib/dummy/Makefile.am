@@ -18,6 +18,7 @@ libdummy_test_la_VALAFLAGS = \
 	--pkg folks \
 	--pkg folks-dummy \
 	--pkg folks-test \
+	--pkg folks-test-dbus \
 	-g \
 	$(NULL)
 

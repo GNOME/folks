@@ -119,7 +119,7 @@ public class Edsf.Persona : Folks.Persona,
    * and the value ‘TRUE’. This allows clients to detect such fields
    * and (for example) ignore them in the UI.
    *
-   * Since: UNRELEASED
+   * @since UNRELEASED
    */
   public static const string folks_field_attribute_name = "X-FOLKS-FIELD";
 
@@ -1007,7 +1007,6 @@ public class Edsf.Persona : Folks.Persona,
         new HashMultiMap<string, WebServiceFieldDetails> (
           null, null, AbstractFieldDetails<string>.hash_static,
           AbstractFieldDetails<string>.equal_static);
-      this._email_addresses_ro = this._email_addresses.read_only_view;
       this._groups = new SmallSet<string> ();
       this._groups_ro = this._groups.read_only_view;
       this._roles = new SmallSet<RoleFieldDetails> (

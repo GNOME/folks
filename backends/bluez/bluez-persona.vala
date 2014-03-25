@@ -41,17 +41,6 @@ public class Folks.Backends.BlueZ.Persona : Folks.Persona,
     PhoneDetails,
     UrlDetails
 {
-  private StructuredName? _structured_name = null;
-  private string _full_name = "";
-  private string _nickname = "";
-  private Set<UrlFieldDetails>? _urls = null;
-  private Set<UrlFieldDetails>? _urls_ro = null;
-  private LoadableIcon? _avatar = null;
-  private HashSet<PhoneFieldDetails> _phone_numbers;
-  private Set<PhoneFieldDetails> _phone_numbers_ro;
-  private HashSet<EmailFieldDetails> _email_addresses;
-  private Set<EmailFieldDetails> _email_addresses_ro;
-
   private const string[] _linkable_properties =
     {
       "phone-numbers",
@@ -69,6 +58,9 @@ public class Folks.Backends.BlueZ.Persona : Folks.Persona,
       get { return BlueZ.Persona._linkable_properties; }
     }
 
+  private SmallSet<UrlFieldDetails>? _urls = null;
+  private Set<UrlFieldDetails> _urls_ro;
+
   /**
    * {@inheritDoc}
    *
@@ -80,6 +72,8 @@ public class Folks.Backends.BlueZ.Persona : Folks.Persona,
       get { return this._urls_ro; }
       set { this.change_urls.begin (value); } /* not writeable */
     }
+
+  private LoadableIcon? _avatar = null;
 
   /**
   * {@inheritDoc}
@@ -103,6 +97,9 @@ public class Folks.Backends.BlueZ.Persona : Folks.Persona,
       get { return BlueZ.Persona._writeable_properties; }
     }
 
+  private SmallSet<PhoneFieldDetails>? _phone_numbers = null;
+  private Set<PhoneFieldDetails> _phone_numbers_ro;
+
   /**
    * {@inheritDoc}
    *
@@ -114,6 +111,8 @@ public class Folks.Backends.BlueZ.Persona : Folks.Persona,
       get { return this._phone_numbers_ro; }
       set { this.change_phone_numbers.begin (value); } /* not writeable */
     }
+
+  private StructuredName? _structured_name = null;
 
   /**
    * {@inheritDoc}
@@ -127,6 +126,8 @@ public class Folks.Backends.BlueZ.Persona : Folks.Persona,
       set { this.change_structured_name.begin (value); } /* not writeable */
     }
 
+  private string _full_name = "";
+
   /**
    * {@inheritDoc}
    *
@@ -139,6 +140,8 @@ public class Folks.Backends.BlueZ.Persona : Folks.Persona,
       set { this.change_full_name.begin (value); } /* not writeable */
     }
 
+  private string _nickname = "";
+
   /**
    * {@inheritDoc}
    *
@@ -150,6 +153,9 @@ public class Folks.Backends.BlueZ.Persona : Folks.Persona,
       get { return this._nickname; }
       set { this.change_nickname.begin (value); } /* not writeable */
     }
+
+  private SmallSet<EmailFieldDetails>? _email_addresses = null;
+  private Set<EmailFieldDetails> _email_addresses_ro;
 
   /**
    * {@inheritDoc}
@@ -197,14 +203,33 @@ public class Folks.Backends.BlueZ.Persona : Folks.Persona,
     {
       debug ("Adding BlueZ Persona '%s' (IID '%s')", this.uid, this.iid);
 
-      this._phone_numbers = new HashSet<PhoneFieldDetails> ();
+      this._phone_numbers = new SmallSet<PhoneFieldDetails> (
+           AbstractFieldDetails<string>.hash_static,
+           AbstractFieldDetails<string>.equal_static);
       this._phone_numbers_ro = this._phone_numbers.read_only_view;
-
-      this._email_addresses = new HashSet<EmailFieldDetails> ();
+      this._email_addresses = new SmallSet<EmailFieldDetails> (
+           AbstractFieldDetails<string>.hash_static,
+           AbstractFieldDetails<string>.equal_static);
       this._email_addresses_ro = this._email_addresses.read_only_view;
-
-      this._urls = new HashSet<UrlFieldDetails> ();
+      this._urls = new SmallSet<UrlFieldDetails> (
+           AbstractFieldDetails<string>.hash_static,
+           AbstractFieldDetails<string>.equal_static);
       this._urls_ro = this._urls.read_only_view;
+    }
+
+  private void _update_params (AbstractFieldDetails details,
+      E.VCardAttribute attr)
+    {
+      foreach (unowned E.VCardAttributeParam param in attr.get_params ())
+        {
+          /* EVCard handles parameter names and values entirely
+           * case-insensitively, so we’ll do the same. */
+          foreach (unowned string param_value in param.get_values ())
+            {
+              details.add_parameter (param.get_name ().down (),
+                  param_value.down ());
+            }
+        }
     }
 
   /**
@@ -222,20 +247,126 @@ public class Folks.Backends.BlueZ.Persona : Folks.Persona,
     {
       var properties_changed = false;
 
+      /* Somewhere to store the new property values. */
+      var new_phone_numbers = new SmallSet<PhoneFieldDetails> (
+          AbstractFieldDetails<string>.hash_static,
+          AbstractFieldDetails<string>.equal_static);
+      var new_uris = new SmallSet<UrlFieldDetails> (
+          AbstractFieldDetails<string>.hash_static,
+          AbstractFieldDetails<string>.equal_static);
+      var new_email_addresses = new SmallSet<EmailFieldDetails> (
+          AbstractFieldDetails<string>.hash_static,
+          AbstractFieldDetails<string>.equal_static);
+      BytesIcon? new_avatar = null;
+      var new_full_name = "";
+      var new_nickname = "";
+      StructuredName? new_structured_name = null;
+
+      /* Parse the attributes by iterating over the vCard’s attribute list once
+       * only. Convenience functions like E.VCard.get_attribute() cause multiple
+       * iterations over the list. */
+      unowned GLib.List<unowned E.VCardAttribute> attrs =
+          card.get_attributes ();
+
+      foreach (var attr in attrs)
+        {
+          unowned string attr_name = attr.get_name ();
+
+          if (attr_name == "TEL")
+            {
+              var val = attr.get_value ();
+              if (val == null || (!) val == "")
+                  continue;
+
+              var new_field_details = new PhoneFieldDetails ((!) val);
+              this._update_params (new_field_details, attr);
+              new_phone_numbers.add (new_field_details);
+            }
+          else if (attr_name == "URL")
+            {
+              var val = attr.get_value ();
+              if (val == null || (!) val == "")
+                  continue;
+
+              var new_field_details = new UrlFieldDetails ((!) val);
+              this._update_params (new_field_details, attr);
+              new_uris.add (new_field_details);
+            }
+          else if (attr_name == "EMAIL")
+            {
+              var val = attr.get_value ();
+              if (val == null || (!) val == "")
+                  continue;
+
+              var new_field_details = new EmailFieldDetails ((!) val);
+              this._update_params (new_field_details, attr);
+              new_email_addresses.add (new_field_details);
+            }
+          else if (attr_name == "PHOTO")
+            {
+              var encoded_data = (string) attr.get_value ().data;
+              var bytes = new Bytes (Base64.decode (encoded_data));
+              new_avatar = new BytesIcon (bytes);
+            }
+          else if (attr_name == "FN")
+              new_full_name = attr.get_value ();
+          else if (attr_name == "NICKNAME")
+              new_nickname = attr.get_value ();
+          else if (attr_name == "N")
+            {
+              unowned GLib.List<unowned string> values = attr.get_values ();
+              unowned string? family_name = null, given_name = null,
+                  additional_names = null, prefixes = null, suffixes = null;
+
+              if (values != null)
+                {
+                  family_name = values.data;
+                  values = values.next;
+                }
+              if (values != null)
+                {
+                  given_name = values.data;
+                  values = values.next;
+                }
+              if (values != null)
+                {
+                  additional_names = values.data;
+                  values = values.next;
+                }
+              if (values != null)
+                {
+                  prefixes = values.data;
+                  values = values.next;
+                }
+              if (values != null)
+                {
+                  suffixes = values.data;
+                  values = values.next;
+                }
+
+              if (suffixes == null || values != null)
+                {
+                  debug ("Expected 5 components in N attribute of vCard, " +
+                      "but got %s.", (suffixes == null) ? "fewer" : "more");
+                }
+
+              new_structured_name =
+                  new StructuredName (family_name, given_name, additional_names,
+                      prefixes, suffixes);
+            }
+          else if (attr_name != "VERSION" && attr_name != "UID")
+            {
+              /* Unknown attribute. */
+              warning ("Unknown attribute ‘%s’ in vCard for persona %s.",
+                  attr_name, this.uid);
+            }
+        }
+
+      /* Now test the new property values to see if they’ve changed; if so, emit
+       * property change notifications. */
       this.freeze_notify ();
 
       /* Phone numbers. */
-      var attribute = card.get_attribute ("TEL");
-      var new_phone_numbers = new HashSet<PhoneFieldDetails> ();
-
-      if (attribute != null)
-        {
-          unowned GLib.List<unowned StringBuilder> vals =
-              attribute.get_values_decoded ();
-          foreach (unowned StringBuilder v in vals)
-              new_phone_numbers.add (new PhoneFieldDetails (v.str));
-        }
-
       if (!Folks.Internal.equal_sets<PhoneFieldDetails> (this._phone_numbers,
               new_phone_numbers))
         {
@@ -245,46 +376,7 @@ public class Folks.Backends.BlueZ.Persona : Folks.Persona,
           properties_changed = true;
         }
 
-      /* Full name. */
-      attribute = card.get_attribute ("FN");
-      var new_full_name = "";
-
-      if (attribute != null)
-          new_full_name = attribute.get_value_decoded ().str;
-
-      if (this._full_name != new_full_name)
-        {
-          this._full_name = new_full_name;
-          this.notify_property ("full-name");
-          properties_changed = true;
-        }
-
-      /* Nickname. */
-      attribute = card.get_attribute ("NICKNAME");
-      var new_nickname = "";
-
-      if (attribute != null)
-          new_nickname = attribute.get_value_decoded ().str;
-
-      if (this._nickname != new_nickname)
-        {
-          this._nickname = new_nickname;
-          this.notify_property ("nickname");
-          properties_changed = true;
-        }
-
       /* URIs. */
-      attribute = card.get_attribute ("URL");
-      var new_uris = new HashSet<UrlFieldDetails> ();
-
-      if (attribute != null)
-        {
-          unowned GLib.List<unowned StringBuilder> vals =
-              attribute.get_values_decoded ();
-          foreach (unowned StringBuilder v in vals)
-              new_uris.add (new UrlFieldDetails (v.str));
-        }
-
       if (!Folks.Internal.equal_sets<UrlFieldDetails> (this._urls, new_uris))
         {
           this._urls = new_uris;
@@ -293,56 +385,7 @@ public class Folks.Backends.BlueZ.Persona : Folks.Persona,
           properties_changed = true;
         }
 
-      /* Structured name. */
-      attribute = card.get_attribute ("N");
-      StructuredName? new_structured_name = null;
-
-      if (attribute != null)
-        {
-          string[] components = { "", "", "", "", "" };
-          unowned GLib.List<unowned StringBuilder> values =
-              attribute.get_values_decoded ();
-
-          uint i = 0;
-          foreach (unowned StringBuilder b in values)
-            {
-              if (i >= components.length)
-                  break;
-
-              components[i++] = b.str;
-            }
-
-          this._structured_name = new StructuredName (components[0],
-              components[1], components[2], components[3], components[4]);
-
-          if (i != 5)
-            {
-              debug ("Expected 5 components in N value of vCard, but got %u.",
-                  i);
-            }
-        }
-
-      if ((new_structured_name == null) != (this._structured_name == null) ||
-          (new_structured_name != null && this._structured_name != null &&
-           !new_structured_name.equal (this._structured_name)))
-        {
-          this._structured_name = new_structured_name;
-          this.notify_property ("structured-name");
-          properties_changed = true;
-        }
-
       /* E-mail addresses. */
-      attribute = card.get_attribute ("EMAIL");
-      var new_email_addresses = new HashSet<EmailFieldDetails> ();
-
-      if (attribute != null)
-        {
-          unowned GLib.List<unowned StringBuilder> vals =
-              attribute.get_values_decoded ();
-          foreach (unowned StringBuilder v in vals)
-              new_email_addresses.add (new EmailFieldDetails (v.str));
-        }
-
       if (!Folks.Internal.equal_sets<EmailFieldDetails> (this._email_addresses,
               new_email_addresses))
         {
@@ -353,22 +396,38 @@ public class Folks.Backends.BlueZ.Persona : Folks.Persona,
         }
 
       /* Photo. */
-      attribute = card.get_attribute ("PHOTO");
-      BytesIcon? new_avatar = null;
-
-      if (attribute != null)
-        {
-          var encoded_data = (string) attribute.get_value ().data;
-          var bytes = new Bytes (Base64.decode (encoded_data));
-          new_avatar = new BytesIcon (bytes);
-        }
-
       if ((new_avatar == null) != (this._avatar == null) ||
           (new_avatar != null && this._avatar != null &&
            !new_avatar.equal (this._avatar)))
         {
           this._avatar = new_avatar;
           this.notify_property ("avatar");
+          properties_changed = true;
+        }
+
+      /* Full name. */
+      if (this._full_name != new_full_name)
+        {
+          this._full_name = new_full_name;
+          this.notify_property ("full-name");
+          properties_changed = true;
+        }
+
+      /* Nickname. */
+      if (this._nickname != new_nickname)
+        {
+          this._nickname = new_nickname;
+          this.notify_property ("nickname");
+          properties_changed = true;
+        }
+
+      /* Structured name. */
+      if ((new_structured_name == null) != (this._structured_name == null) ||
+          (new_structured_name != null && this._structured_name != null &&
+           !new_structured_name.equal (this._structured_name)))
+        {
+          this._structured_name = new_structured_name;
+          this.notify_property ("structured-name");
           properties_changed = true;
         }
 

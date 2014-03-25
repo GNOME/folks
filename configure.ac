@@ -79,7 +79,7 @@ AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_SRCDIR([Makefile.am])
 AC_CONFIG_HEADERS(config.h)
 AC_CONFIG_SRCDIR([configure.ac])
-AM_INIT_AUTOMAKE([1.11 dist-xz no-define
+AM_INIT_AUTOMAKE([1.12 dist-xz no-define
                   no-dist-gzip tar-ustar -Wno-portability color-tests
                   parallel-tests])
 AM_MAINTAINER_MODE([enable])
@@ -339,7 +339,28 @@ AS_IF([test x$enable_ofono_backend = xyes], [
 
 AS_IF([test x$enable_bluez_backend = xyes], [
         PKG_CHECK_MODULES([EBOOK], [libebook-1.2 >= $EBOOK_REQUIRED])
+
+        # Dependencies for the BlueZ tests
+        PKG_CHECK_MODULES([GLIB_2_39_2], [glib-2.0 >= 2.39.2],
+                          [have_glib_2_39_2=yes], [have_glib_2_39_2=no])
+        AM_PATH_PYTHON([3.0], [have_python=yes], [have_python=no])
+
+        AC_MSG_CHECKING([for python-dbusmock])
+        AS_IF([! $PYTHON -c 'import dbusmock' > /dev/null 2>&1],
+              [have_dbusmock=no], [have_dbusmock=yes])
+        AC_MSG_RESULT([$have_dbusmock])
+
+        AM_PROG_VALAC([0.22.0.45-383d-dirty],
+                      [have_valac_0_22_2=yes], [have_valac_0_22_2=no])
 ])
+
+# The BlueZ tests are conditional on several bleeding-edge dependencies.
+# FIXME: Remove this once things have stabilised a bit.
+AM_CONDITIONAL([HAVE_BLUEZ_TESTS],
+               [test "x$have_glib_2_39_2" = "xyes" -a \
+                     "x$have_python" = "xyes" -a \
+                     "x$have_dbusmock" = "xyes" -a \
+                     "x$have_valac_0_22_2" = "xyes"])
 
 #
 # Vala building options -- allows tarball builds without installing Vala
@@ -754,6 +775,7 @@ AC_CONFIG_FILES([
     docs/Makefile
     po/Makefile.in
     tests/Makefile
+    tests/bluez/Makefile
     tests/data/Makefile
     tests/eds/Makefile
     tests/folks/Makefile
@@ -764,6 +786,7 @@ AC_CONFIG_FILES([
     tests/tracker/Makefile
     tests/lib/Makefile
     tests/lib/folks-test-uninstalled.pc
+    tests/lib/bluez/Makefile
     tests/lib/eds/Makefile
     tests/lib/dummy/Makefile
     tests/lib/key-file/Makefile
