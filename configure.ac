@@ -280,7 +280,7 @@ PKG_CHECK_MODULES([DBUS_GLIB], [dbus-glib-1 dbus-1])
 
 PKG_CHECK_MODULES([GEE], [gee-0.8 >= $GEE_REQUIRED])
 
-TP_GLIB_REQUIRED=0.99.7
+TP_GLIB_REQUIRED=0.99.8
 
 AS_IF([test x$enable_telepathy_backend = xyes], [
         PKG_CHECK_MODULES([TP_GLIB], [telepathy-glib-1 >= $TP_GLIB_REQUIRED])
