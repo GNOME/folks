@@ -10,7 +10,7 @@ AM_VALAFLAGS = \
 	--vapidir=$(abs_top_builddir)/tests/lib/key-file \
 	--vapidir=$(abs_top_srcdir)/backends/telepathy/lib \
 	--vapidir=$(abs_top_builddir)/backends/telepathy/lib \
-	--pkg telepathy-glib \
+	--pkg telepathy-glib-1 \
 	--pkg folks-telepathy \
 	--pkg kf-test \
 	--pkg tpf-test \
