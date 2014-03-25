@@ -283,10 +283,10 @@ PKG_CHECK_MODULES([GEE], [gee-0.8 >= $GEE_REQUIRED])
 TP_GLIB_REQUIRED=0.99.7
 
 AS_IF([test x$enable_telepathy_backend = xyes], [
-        PKG_CHECK_MODULES([TP_GLIB], [
-            telepathy-glib-1 >= $TP_GLIB_REQUIRED
-            telepathy-glib-1-dbus >= $TP_GLIB_REQUIRED
-            ])])
+        PKG_CHECK_MODULES([TP_GLIB], [telepathy-glib-1 >= $TP_GLIB_REQUIRED])
+        PKG_CHECK_MODULES([TP_GLIB_DBUS],
+                          [telepathy-glib-1-dbus >= $TP_GLIB_REQUIRED])
+])
 case "x$enable_zeitgeist" in
   xyes)
     AS_IF([test x$enable_telepathy_backend = xyes],

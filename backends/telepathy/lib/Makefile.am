@@ -49,6 +49,7 @@ libtp_lowlevel_la_CFLAGS = \
 	$(backend_library_cflags_generic) \
 	$(C_ERROR_CFLAGS) \
 	$(TP_GLIB_CFLAGS) \
+	$(TP_GLIB_DBUS_CFLAGS) \
 	$(NULL)
 
 # the -shared and -rpath arguments are to force it to be compiled to a .so,
@@ -62,6 +63,7 @@ libtp_lowlevel_la_LDFLAGS = \
 	$(GIO_LIBS) \
 	$(GLIB_LIBS) \
 	$(TP_GLIB_LIBS) \
+	$(TP_GLIB_DBUS_LIBS) \
 	$(NULL)
 
 if HAVE_VALA
