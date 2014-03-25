@@ -29,7 +29,7 @@ private struct AccountFavourites
   string[] ids;
 }
 
-[DBus (name = "org.freedesktop.Telepathy.Logger.DRAFT")]
+[DBus (name = "im.telepathy.v1.Logger1")]
 private interface LoggerIface : Object
 {
   public abstract async AccountFavourites[] get_favourite_contacts ()
@@ -98,8 +98,8 @@ internal class Logger : GLib.Object
           /* Create a logger proxy for favourites support */
           var dbus_conn = yield Bus.get (BusType.SESSION);
           Logger._logger = yield dbus_conn.get_proxy<LoggerIface> (
-              "org.freedesktop.Telepathy.Logger",
-              "/org/freedesktop/Telepathy/Logger");
+              "im.telepathy.v1.Logger",
+              "/im/telepathy/v1/Logger");
 
           if (Logger._logger != null)
             {

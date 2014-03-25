@@ -94,7 +94,7 @@ _log_should_suppress (const char *domain,
 
   /* Ignore the error caused by not running the logger through dbus-glib */
   suppress |= g_str_has_suffix (message,
-      "The name org.freedesktop.Telepathy.Logger was not provided by any "
+      "The name im.telepathy.v1.Logger was not provided by any "
       ".service files");
 
   /* And again for GDBus */
