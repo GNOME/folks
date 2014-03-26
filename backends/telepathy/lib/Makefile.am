@@ -234,7 +234,7 @@ DISTCHECK_CONFIGURE_FLAGS = --enable-introspection
 #------------------------------------
 # TpLowlevel
 #------------------------------------
-TpLowlevel_@API_VERSION_MAJOR@_@API_VERSION_MINOR@_gir_INCLUDES = GObject-2.0 TelepathyGLib-0.12
+TpLowlevel_@API_VERSION_MAJOR@_@API_VERSION_MINOR@_gir_INCLUDES = GObject-2.0 TelepathyGLib-1
 TpLowlevel_@API_VERSION_MAJOR@_@API_VERSION_MINOR@_gir_CFLAGS = $(TP_GLIB_CFLAGS)
 TpLowlevel_@API_VERSION_MAJOR@_@API_VERSION_MINOR@_gir_LIBS = libtp-lowlevel.la
 TpLowlevel_@API_VERSION_MAJOR@_@API_VERSION_MINOR@_gir_FILES = $(libtp_lowlevel_la_SOURCES) $(tp_lowlevel_headers)

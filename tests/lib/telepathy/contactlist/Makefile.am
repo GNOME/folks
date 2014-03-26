@@ -75,7 +75,7 @@ INTROSPECTION_SCANNER_ENV = \
 
 tp-test-contactlist.gir: $(libtp_test_contactlist_la_SOURCES) \
 	libtp-test-contactlist.la
-tp_test_contactlist_gir_INCLUDES = GObject-2.0 TelepathyGLib-0.12
+tp_test_contactlist_gir_INCLUDES = GObject-2.0 TelepathyGLib-1
 tp_test_contactlist_gir_CFLAGS = $(TP_GLIB_CFLAGS) $(TP_GLIB_DBUS_CFLAGS)
 tp_test_contactlist_gir_LIBS = libtp-test-contactlist.la
 tp_test_contactlist_gir_FILES = $(libtp_test_contactlist_la_SOURCES)
