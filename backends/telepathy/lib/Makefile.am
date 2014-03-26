@@ -190,11 +190,13 @@ libfolks_telepathy_la_CPPFLAGS = \
 libfolks_telepathy_la_CFLAGS = \
 	$(backend_library_cflags) \
 	$(TP_GLIB_CFLAGS) \
+	$(TP_GLIB_DBUS_CFLAGS) \
 	$(NULL)
 
 libfolks_telepathy_la_LIBADD = \
 	$(backend_library_libadd) \
 	$(TP_GLIB_LIBS) \
+	$(TP_GLIB_DBUS_LIBS) \
 	$(NULL)
 
 if ENABLE_ZEITGEIST
