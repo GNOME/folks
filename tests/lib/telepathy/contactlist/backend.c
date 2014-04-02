@@ -32,7 +32,7 @@
 
 struct _TpTestsBackendPrivate
 {
-  TpDBusDaemon *daemon;
+  GDBusConnection *bus;
   TpTestsSimpleAccountManager *account_manager;
   TpAccountManager *client_am;
   GList *accounts;
@@ -139,12 +139,12 @@ tp_tests_backend_set_up (TpTestsBackend *self)
   g_log_set_default_handler (_log_default_handler, NULL);
   g_test_log_set_fatal_handler (_log_fatal_handler, NULL);
 
-  priv->daemon = tp_dbus_daemon_dup (&error);
+  priv->bus = g_bus_get_sync (G_BUS_TYPE_SESSION, NULL, &error);
   if (error != NULL)
-    g_error ("Couldn't get D-Bus daemon: %s", error->message);
+    g_error ("Couldn't get D-Bus connection: %s", error->message);
 
   /* Create an account manager */
-  tp_dbus_daemon_request_name (priv->daemon, TP_ACCOUNT_MANAGER_BUS_NAME, FALSE,
+  tp_dbus_connection_request_name (priv->bus, TP_ACCOUNT_MANAGER_BUS_NAME, FALSE,
       &error);
   if (error != NULL)
     {
@@ -154,7 +154,7 @@ tp_tests_backend_set_up (TpTestsBackend *self)
 
   priv->account_manager = tp_tests_object_new_static_class (
       TP_TESTS_TYPE_SIMPLE_ACCOUNT_MANAGER, NULL);
-  tp_dbus_daemon_register_object (priv->daemon, TP_ACCOUNT_MANAGER_OBJECT_PATH,
+  tp_dbus_connection_register_object (priv->bus, TP_ACCOUNT_MANAGER_OBJECT_PATH,
       priv->account_manager);
 
   priv->client_am = tp_account_manager_dup ();
@@ -294,7 +294,7 @@ tp_tests_backend_add_account (TpTestsBackend *self,
       TP_TESTS_TYPE_SIMPLE_ACCOUNT, NULL);
   data->object_path = g_strdup_printf ("%s%s/%s/%s", TP_ACCOUNT_OBJECT_PATH_BASE,
       cm_name, protocol, account);
-  tp_dbus_daemon_register_object (priv->daemon, data->object_path,
+  tp_dbus_connection_register_object (priv->bus, data->object_path,
       data->account);
 
   /* Set the connection on the account */
@@ -342,7 +342,7 @@ tp_tests_backend_remove_account (TpTestsBackend *self,
   tp_base_connection_change_status (data->base_connection,
       TP_CONNECTION_STATUS_DISCONNECTED, TP_CONNECTION_STATUS_REASON_REQUESTED);
 
-  tp_dbus_daemon_unregister_object (priv->daemon, data->account);
+  tp_dbus_connection_unregister_object (priv->bus, data->account);
 
   tp_clear_object (&data->account);
   tp_clear_object (&data->base_connection);
@@ -356,7 +356,7 @@ tp_tests_backend_tear_down (TpTestsBackend *self)
   TpTestsBackendPrivate *priv = self->priv;
   GError *error = NULL;
 
-  if (priv->daemon == NULL)
+  if (priv->bus == NULL)
     {
       /* already torn down */
       return;
@@ -366,10 +366,10 @@ tp_tests_backend_tear_down (TpTestsBackend *self)
   tp_tests_proxy_run_until_dbus_queue_processed (priv->client_am);
   g_clear_object (&priv->client_am);
 
-  tp_dbus_daemon_unregister_object (priv->daemon, priv->account_manager);
+  tp_dbus_connection_unregister_object (priv->bus, priv->account_manager);
   tp_clear_object (&priv->account_manager);
 
-  tp_dbus_daemon_release_name (priv->daemon, TP_ACCOUNT_MANAGER_BUS_NAME,
+  tp_dbus_connection_release_name (priv->bus, TP_ACCOUNT_MANAGER_BUS_NAME,
       &error);
   if (error != NULL)
     {
@@ -377,7 +377,7 @@ tp_tests_backend_tear_down (TpTestsBackend *self)
           TP_ACCOUNT_MANAGER_BUS_NAME, error->message);
     }
 
-  tp_clear_object (&priv->daemon);
+  g_clear_object (&priv->bus);
 }
 
 /**
