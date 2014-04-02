@@ -34,6 +34,8 @@
  */
 public abstract class Folks.TestCase : Object
 {
+  public static bool in_final_tear_down = false;
+
   private GLib.TestSuite _suite;
   public delegate void TestMethod ();
 
@@ -134,6 +136,9 @@ public abstract class Folks.TestCase : Object
             tmp, GLib.strerror (GLib.errno));
 
       debug ("setting up in transient directory %s", transient);
+
+      /* Don't try to use dconf */
+      Environment.set_variable ("GSETTINGS_BACKEND", "memory", true);
 
       /* GLib >= 2.36, and various non-GNOME things, obey this. */
       Environment.set_variable ("HOME", transient, true);
@@ -413,6 +418,8 @@ public abstract class Folks.TestCase : Object
    */
   public virtual void final_tear_down ()
     {
+      TestCase.in_final_tear_down = true;
+
       if (this.uses_dbus_1)
         TestCase._dbus_1_set_no_exit_on_disconnect ();
 
@@ -468,6 +475,12 @@ public abstract class Folks.TestCase : Object
           string message)
         {
           Log.default_handler (log_domain, log_levels, message);
+
+          /* hack: warnings are not fatal while doing final teardown,
+           * because lots of things cope poorly with the GTestDBus
+           * being forcibly disposed */
+          if (TestCase.in_final_tear_down)
+            return;
 
           /* Print a stack trace for any message at the warning level or above
            */

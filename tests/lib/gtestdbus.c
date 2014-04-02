@@ -899,7 +899,11 @@ folks_test_dbus_down (FolksTestDBus *self)
 
   connection = g_bus_get_sync (bus_type, NULL, NULL);
   if (connection != NULL)
-    g_dbus_connection_set_exit_on_close (connection, FALSE);
+    {
+      g_dbus_connection_set_exit_on_close (connection, FALSE);
+      g_dbus_connection_flush_sync (connection, NULL, NULL);
+      g_dbus_connection_close_sync (connection, NULL, NULL);
+    }
 
   if (self->priv->bus_address != NULL)
     stop_daemon (self);

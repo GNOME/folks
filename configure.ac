@@ -263,7 +263,8 @@ VALA_REQUIRED=0.22.0.28-9090
 VALADOC_REQUIRED=0.3.1
 TRACKER_SPARQL_MAJOR=0.16
 TRACKER_SPARQL_REQUIRED=0.15.2
-EBOOK_REQUIRED=3.9.1
+EBOOK_REQUIRED=3.8
+EBOOK_REQUIRED_FOR_BLUEZ=3.9.1
 EDATASERVER_REQUIRED=3.5.3.1
 ZEITGEIST_REQUIRED=0.9.14
 GEE_REQUIRED=0.8.4
@@ -326,6 +327,8 @@ AS_IF([test x$enable_tracker_backend = xyes], [
                           [tracker-sparql-$TRACKER_SPARQL_MAJOR >= \
                            $TRACKER_SPARQL_REQUIRED])
 ])
+
+AS_IF([test x$enable_bluez_backend = xyes], [EBOOK_REQUIRED=$EBOOK_REQUIRED_FOR_BLUEZ])
 
 AS_IF([test x$enable_eds_backend = xyes], [
         PKG_CHECK_MODULES([EBOOK], [libebook-1.2 >= $EBOOK_REQUIRED
