@@ -27,6 +27,8 @@
 #include <gio/gunixconnection.h>
 #endif
 
+#include "debug.h"
+
 void
 tp_tests_proxy_run_until_prepared (gpointer proxy,
     const GQuark *features)
@@ -78,88 +80,51 @@ tp_tests_proxy_run_until_prepared_or_failed (gpointer proxy,
   return r;
 }
 
-static GTestDBus *test_dbus = NULL;
-
-static void
-start_dbus_session (void)
-{
-  g_assert (test_dbus == NULL);
-
-  g_type_init ();
-
-  /* Make sure we won't be using user's bus. This unsets more than
-   * g_test_dbus_unset() currently does (glib 2.36) */
-  g_unsetenv ("DISPLAY");
-  g_unsetenv ("DBUS_STARTER_ADDRESS");
-  g_unsetenv ("DBUS_STARTER_BUS_TYPE");
-  g_unsetenv ("DBUS_SESSION_BUS_ADDRESS");
-
-  test_dbus = g_test_dbus_new (G_TEST_DBUS_NONE);
-  g_test_dbus_add_service_dir (test_dbus, g_getenv ("TP_TESTS_SERVICES_DIR"));
-  g_test_dbus_up (test_dbus);
-}
-
-static void
-stop_dbus_session (void)
-{
-  g_assert (test_dbus != NULL);
-  g_test_dbus_down (test_dbus);
-  g_clear_object (&test_dbus);
-}
-
 gint
 tp_tests_run_with_bus (void)
 {
+  GTestDBus *test_dbus = NULL;
   gint ret;
 
-  if (test_dbus != NULL)
-    return g_test_run ();
+  g_test_dbus_unset ();
+  test_dbus = g_test_dbus_new (G_TEST_DBUS_NONE);
+  g_test_dbus_add_service_dir (test_dbus, g_getenv ("TP_TESTS_SERVICES_DIR"));
+  g_test_dbus_up (test_dbus);
 
-  start_dbus_session ();
   ret = g_test_run ();
-  stop_dbus_session ();
+
+  g_test_dbus_down (test_dbus);
+  tp_tests_assert_last_unref (&test_dbus);
 
   return ret;
 }
 
-TpDBusDaemon *
-tp_tests_dbus_daemon_dup_or_die (void)
+GDBusConnection *
+tp_tests_dbus_dup_or_die (void)
 {
-  TpDBusDaemon *d;
+  GDBusConnection *d;
+  GError *error = NULL;
 
-  if (test_dbus == NULL)
-    {
-      /* HACK: Some tests are not yet ported to GTest and thus are not using
-       * tp_tests_run_with_bus(). In that case we make sure to start the dbus
-       * session before aquiring the TpDBusDaemon and we stop the session when
-       * the daemon is disposed. In a perfect world this should not be needed.
-       */
-      start_dbus_session ();
-      d = tp_dbus_daemon_dup (NULL);
-      g_object_weak_ref ((GObject *) d, (GWeakNotify) stop_dbus_session, NULL);
-    }
-  else
-    {
-       d = tp_dbus_daemon_dup (NULL);
-    }
-
-  /* In a shared library, this would be very bad (see fd.o #18832), but in a
-   * regression test that's going to be run under a temporary session bus,
-   * it's just what we want. */
-  if (d == NULL)
-    {
-      g_error ("Unable to connect to session bus");
-    }
+  d = g_bus_get_sync (G_BUS_TYPE_SESSION, NULL, &error);
+  g_assert_no_error (error);
 
   return d;
 }
 
 static void
-introspect_cb (TpProxy *proxy G_GNUC_UNUSED,
-    const gchar *xml G_GNUC_UNUSED,
+queue_get_all_cb (TpProxy *proxy G_GNUC_UNUSED,
+    GHashTable *out G_GNUC_UNUSED,
     const GError *error G_GNUC_UNUSED,
     gpointer user_data,
     GObject *weak_object G_GNUC_UNUSED)
+{
+  g_main_loop_quit (user_data);
+}
+
+static void
+queue_gdbus_call_cb (GObject *object,
+    GAsyncResult *result,
+    gpointer user_data)
 {
   g_main_loop_quit (user_data);
 }
@@ -169,8 +134,69 @@ tp_tests_proxy_run_until_dbus_queue_processed (gpointer proxy)
 {
   GMainLoop *loop = g_main_loop_new (NULL, FALSE);
 
-  tp_cli_dbus_introspectable_call_introspect (proxy, -1, introspect_cb,
-      loop, NULL, NULL);
+  if (!G_IS_DBUS_CONNECTION (proxy))
+    {
+      g_assert (TP_IS_PROXY (proxy));
+      g_assert (tp_proxy_get_invalidated (proxy) == NULL);
+    }
+
+  /* We used to use Introspect() on @proxy here, but because GDBus implements
+   * them internally without using a GDBusMethodInvocation, the replies to
+   * Introspectable, Peer and Properties can "jump the queue" and be
+   * sent back before things that were already queued for sending.
+   * There is no other interface that all objects are expected to have,
+   * so we have to cheat.
+   *
+   * I'm relying here on the fact that Properties calls on an interface
+   * that the object *does* implement don't jump the queue.
+   *
+   * https://bugzilla.gnome.org/show_bug.cgi?id=726259 */
+  if (G_IS_DBUS_CONNECTION (proxy))
+    {
+      g_dbus_connection_call (proxy,
+          "org.freedesktop.DBus", "/", "org.freedesktop.DBus", "GetId",
+          g_variant_new ("()"),
+          G_VARIANT_TYPE ("(s)"),
+          G_DBUS_CALL_FLAGS_NONE,
+          -1, NULL, queue_gdbus_call_cb, loop);
+    }
+  else if (TP_IS_ACCOUNT (proxy))
+    tp_cli_dbus_properties_call_get_all (proxy, -1, TP_IFACE_ACCOUNT,
+        queue_get_all_cb, loop, NULL, NULL);
+  else if (TP_IS_ACCOUNT_MANAGER (proxy))
+    tp_cli_dbus_properties_call_get_all (proxy, -1, TP_IFACE_ACCOUNT_MANAGER,
+        queue_get_all_cb, loop, NULL, NULL);
+  else if (TP_IS_CHANNEL (proxy))
+    tp_cli_dbus_properties_call_get_all (proxy, -1, TP_IFACE_CHANNEL,
+        queue_get_all_cb, loop, NULL, NULL);
+  else if (TP_IS_CHANNEL_DISPATCHER (proxy))
+    tp_cli_dbus_properties_call_get_all (proxy, -1,
+        TP_IFACE_CHANNEL_DISPATCHER,
+        queue_get_all_cb, loop, NULL, NULL);
+  else if (TP_IS_CHANNEL_DISPATCH_OPERATION (proxy))
+    tp_cli_dbus_properties_call_get_all (proxy, -1,
+        TP_IFACE_CHANNEL_DISPATCH_OPERATION,
+        queue_get_all_cb, loop, NULL, NULL);
+  else if (TP_IS_CHANNEL_REQUEST (proxy))
+    tp_cli_dbus_properties_call_get_all (proxy, -1, TP_IFACE_CHANNEL_REQUEST,
+        queue_get_all_cb, loop, NULL, NULL);
+  else if (TP_IS_CLIENT (proxy))
+    tp_cli_dbus_properties_call_get_all (proxy, -1, TP_IFACE_CLIENT,
+        queue_get_all_cb, loop, NULL, NULL);
+  else if (TP_IS_CONNECTION (proxy))
+    tp_cli_dbus_properties_call_get_all (proxy, -1, TP_IFACE_CONNECTION,
+        queue_get_all_cb, loop, NULL, NULL);
+  else if (TP_IS_CONNECTION_MANAGER (proxy))
+    tp_cli_dbus_properties_call_get_all (proxy, -1,
+        TP_IFACE_CONNECTION_MANAGER,
+        queue_get_all_cb, loop, NULL, NULL);
+  else if (TP_IS_PROTOCOL (proxy))
+    tp_cli_dbus_properties_call_get_all (proxy, -1, TP_IFACE_PROTOCOL,
+        queue_get_all_cb, loop, NULL, NULL);
+  else
+    g_error ("Don't know how to sync GDBus queue for %s",
+        G_OBJECT_TYPE_NAME (proxy));
+
   g_main_loop_run (loop);
   g_main_loop_unref (loop);
 }
@@ -263,15 +289,16 @@ tp_tests_create_conn (GType conn_type,
     TpBaseConnection **service_conn,
     TpConnection **client_conn)
 {
-  TpDBusDaemon *dbus;
+  GDBusConnection *dbus;
   gchar *name;
   gchar *conn_path;
   GError *error = NULL;
+  gboolean ok;
 
   g_assert (service_conn != NULL);
   g_assert (client_conn != NULL);
 
-  dbus = tp_tests_dbus_daemon_dup_or_die ();
+  dbus = tp_tests_dbus_dup_or_die ();
 
   *service_conn = tp_tests_object_new_static_class (
         conn_type,
@@ -280,9 +307,10 @@ tp_tests_create_conn (GType conn_type,
         NULL);
   g_assert (*service_conn != NULL);
 
-  g_assert (tp_base_connection_register (*service_conn, "simple",
-        &name, &conn_path, &error));
+  ok = tp_base_connection_register (*service_conn, "simple",
+        &name, &conn_path, &error);
   g_assert_no_error (error);
+  g_assert (ok);
 
   *client_conn = tp_tests_connection_new (dbus, NULL, conn_path, &error);
   g_assert (*client_conn != NULL);
@@ -376,8 +404,7 @@ void
 tp_tests_init (int *argc,
     char ***argv)
 {
-  g_type_init ();
-  tp_tests_abort_after (10);
+  tp_tests_abort_after (30);
   tp_debug_set_flags ("all");
 
   g_test_init (argc, argv, NULL);
@@ -580,7 +607,7 @@ tp_tests_channel_assert_expect_members (TpChannel *channel,
 }
 
 TpConnection *
-tp_tests_connection_new (TpDBusDaemon *dbus,
+tp_tests_connection_new (GDBusConnection *dbus,
     const gchar *bus_name,
     const gchar *object_path,
     GError **error)
@@ -589,7 +616,7 @@ tp_tests_connection_new (TpDBusDaemon *dbus,
   gchar *dup_path = NULL;
   TpConnection *ret = NULL;
 
-  g_return_val_if_fail (TP_IS_DBUS_DAEMON (dbus), NULL);
+  g_return_val_if_fail (G_IS_DBUS_CONNECTION (dbus), NULL);
   g_return_val_if_fail (object_path != NULL ||
                         (bus_name != NULL && bus_name[0] != ':'), NULL);
 
@@ -614,7 +641,7 @@ finally:
 }
 
 TpAccount *
-tp_tests_account_new (TpDBusDaemon *dbus,
+tp_tests_account_new (GDBusConnection *dbus,
     const gchar *object_path,
     GError **error)
 {
@@ -684,29 +711,109 @@ tp_tests_channel_new_from_properties (TpConnection *conn,
       object_path, tp_asv_to_vardict (immutable_properties), error);
 }
 
-void
-tp_tests_add_channel_to_ptr_array (GPtrArray *arr,
-    TpChannel *channel)
+GHashTable *
+tp_tests_dup_channel_props_asv (TpChannel *channel)
 {
-  GValueArray *tmp;
   GVariant *variant;
-  GValue v = G_VALUE_INIT;
   GHashTable *asv;
+  GValue v = G_VALUE_INIT;
 
-  g_assert (arr != NULL);
   g_assert (channel != NULL);
 
   variant = tp_channel_dup_immutable_properties (channel);
   dbus_g_value_parse_g_variant (variant, &v);
-  asv = g_value_get_boxed (&v);
+  asv = g_value_dup_boxed (&v);
 
-  tmp = tp_value_array_build (2,
-      DBUS_TYPE_G_OBJECT_PATH, tp_proxy_get_object_path (channel),
-      TP_HASH_TYPE_STRING_VARIANT_MAP, asv,
-      G_TYPE_INVALID);
-
-  g_ptr_array_add (arr, tmp);
   g_variant_unref (variant);
   g_value_unset (&v);
+
+  return asv;
 }
 
+void
+_tp_tests_assert_last_unref (gpointer obj,
+    const gchar *file,
+    int line)
+{
+  GWeakRef weak;
+
+  g_weak_ref_init (&weak, obj);
+  g_object_unref (obj);
+  obj = g_weak_ref_get (&weak);
+
+  if (obj != NULL)
+    g_error ("%s:%d: %s %p should not have had any more references",
+        file, line, G_OBJECT_TYPE_NAME (obj), obj);
+}
+
+/*
+ * tp_tests_await_last_unref:
+ * @op: a pointer to a #GObject
+ *
+ * Set @op to point to %NULL, release one reference to the object to which
+ * it previously pointed, and wait for that object to be freed by iterating
+ * the default (NULL) main-context.
+ *
+ * For instance, suppose you have this code, and you want to adapt it to
+ * assert that @obj is not leaked:
+ *
+ * |[
+ * obj = my_object_new ();
+ * my_object_do_thing_async (obj, NULL, NULL);
+ * g_clear_object (&obj);
+ * ]|
+ *
+ * Because #GAsyncResult async calls take a ref to the
+ * source object for the duration of the async call, this will cause
+ * an assertion failure:
+ *
+ * |[
+ * obj = my_object_new ();
+ * my_object_do_thing_async (obj, NULL, NULL);
+ * tp_tests_assert_last_unref (&obj);
+ * ]|
+ *
+ * but this is OK, and will wait for the `do_thing_async` call to finish:
+ *
+ * |[
+ * obj = my_object_new ();
+ * my_object_do_thing_async (obj, NULL, NULL);
+ * tp_tests_await_last_unref (&obj);
+ * ]|
+ */
+/* Really a macro, this is its implementation. @obj is the original `*op` */
+void
+_tp_tests_await_last_unref (gpointer obj,
+    const gchar *file,
+    int line)
+{
+  GWeakRef weak;
+
+  g_weak_ref_init (&weak, obj);
+  g_object_unref (obj);
+  obj = g_weak_ref_get (&weak);
+
+  while (obj != NULL)
+    {
+      DEBUG ("%s %p still has references, waiting...",
+          G_OBJECT_TYPE_NAME (obj), obj);
+      g_object_unref (obj);
+      g_main_context_iteration (NULL, TRUE);
+      obj = g_weak_ref_get (&weak);
+    }
+}
+
+GDBusConnection *
+tp_tests_get_private_bus (void)
+{
+  GDBusConnection *ret;
+  GError *error = NULL;
+
+  ret = g_dbus_connection_new_for_address_sync (
+      g_getenv ("DBUS_SESSION_BUS_ADDRESS"),
+      G_DBUS_CONNECTION_FLAGS_AUTHENTICATION_CLIENT |
+      G_DBUS_CONNECTION_FLAGS_MESSAGE_BUS_CONNECTION,
+      NULL, NULL, &error);
+  g_assert_no_error (error);
+  return ret;
+}

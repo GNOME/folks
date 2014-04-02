@@ -15,7 +15,7 @@
 
 gint tp_tests_run_with_bus (void);
 
-TpDBusDaemon *tp_tests_dbus_daemon_dup_or_die (void);
+GDBusConnection *tp_tests_dbus_dup_or_die (void);
 
 void tp_tests_proxy_run_until_dbus_queue_processed (gpointer proxy);
 
@@ -85,12 +85,12 @@ TpContact *tp_tests_connection_run_until_contact_by_id (
 void tp_tests_channel_assert_expect_members (TpChannel *channel,
     TpIntset *expected_members);
 
-TpConnection *tp_tests_connection_new (TpDBusDaemon *dbus,
+TpConnection *tp_tests_connection_new (GDBusConnection *dbus,
     const gchar *bus_name,
     const gchar *object_path,
     GError **error);
 
-TpAccount *tp_tests_account_new (TpDBusDaemon *dbus,
+TpAccount *tp_tests_account_new (GDBusConnection *dbus,
     const gchar *object_path,
     GError **error);
 
@@ -106,7 +106,38 @@ TpChannel *tp_tests_channel_new_from_properties (TpConnection *conn,
     const GHashTable *immutable_properties,
     GError **error);
 
-void tp_tests_add_channel_to_ptr_array (GPtrArray *arr,
-    TpChannel *channel);
+GHashTable * tp_tests_dup_channel_props_asv (TpChannel *channel);
+
+#define tp_tests_await_last_unref(op) \
+  G_STMT_START \
+    { \
+      gpointer _tmp; \
+      \
+      _tmp = *(op); \
+      *(op) = NULL; \
+      \
+      _tp_tests_await_last_unref (_tmp, __FILE__, __LINE__); \
+    } \
+  G_STMT_END
+void _tp_tests_await_last_unref (gpointer obj,
+    const gchar *file,
+    int line);
+
+#define tp_tests_assert_last_unref(op) \
+  G_STMT_START \
+    { \
+      gpointer _tmp; \
+      \
+      _tmp = *(op); \
+      *(op) = NULL; \
+      \
+      _tp_tests_assert_last_unref (_tmp, __FILE__, __LINE__); \
+    } \
+  G_STMT_END
+void _tp_tests_assert_last_unref (gpointer obj,
+    const gchar *file,
+    int line);
+
+GDBusConnection *tp_tests_get_private_bus (void);
 
 #endif /* #ifndef __TP_TESTS_LIB_UTIL_H__ */
