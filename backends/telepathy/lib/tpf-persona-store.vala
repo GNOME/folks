@@ -1269,6 +1269,25 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       return this._ensure_persona_for_contact (contact);
     }
 
+  private static string? details_get_string (HashTable<string, Value?> details,
+      string key)
+    {
+      unowned Value? v = details.lookup (key);
+
+      if (v != null && v.holds (typeof (string)))
+        {
+          return v.get_string ();
+        }
+      else
+        {
+          /* FIXME: is it considered to be programmer error to pass
+           * { "contact": not_a_string } to add_persona_from_details?
+           * For now I'm preserving the existing behaviour of
+           * tp_asv_get_string() */
+          return null;
+        }
+    }
+
   /**
    * Add a new {@link Persona} to the PersonaStore.
    *
@@ -1285,7 +1304,8 @@ public class Tpf.PersonaStore : Folks.PersonaStore
   public override async Folks.Persona? add_persona_from_details (
       HashTable<string, Value?> details) throws Folks.PersonaStoreError
     {
-      var contact_id = TelepathyGLib.asv_get_string (details, "contact");
+      var contact_id = details_get_string (details, "contact");
+
       if (contact_id == null)
         {
           throw new PersonaStoreError.INVALID_ARGUMENT (
@@ -1296,7 +1316,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
         }
 
       // Optional message to pass to the new persona
-      var add_message = TelepathyGLib.asv_get_string (details, "message");
+      var add_message = details_get_string (details, "message");
       if (add_message == "")
         add_message = null;
 
