@@ -587,4 +587,20 @@ public class Folks.TestUtils
           return BuildConf.ABS_TOP_BUILDDIR + "/tests/" + filename;
         }
     }
+
+  /**
+   * Check that there are no pending events on the given ``context``, and return
+   * ``true`` if there are none.
+   *
+   * @param context A main context, or ``null`` to use the default main context.
+   * @returns Whether there are no events pending on the context.
+   * @since UNRELEASED
+   */
+  public static bool main_context_is_empty (MainContext? context = null)
+    {
+      if (context == null)
+          context = MainContext.default ();
+
+      return !context.pending ();
+    }
 }
