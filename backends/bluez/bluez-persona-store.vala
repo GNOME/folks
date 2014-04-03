@@ -539,9 +539,18 @@ public class Folks.Backends.BlueZ.PersonaStore : Folks.PersonaStore
         }
       catch (IOError ie)
         {
-          /* Ignore errors from closing or cancelling. */
+          /* Ignore errors from closing or cancelling, or if the session has
+           * disappeared already. */
           if (ie is IOError.CLOSED || ie is IOError.CANCELLED)
               return;
+          if (ie is IOError.DBUS_ERROR &&
+              ie.message.has_prefix ("GDBus.Error:org.freedesktop.DBus." +
+                                     "Python.dbus.exceptions.DBusException: " +
+                                     "('org.freedesktop.DBus.Mock.NameError'"))
+            {
+              /* Only used in unit tests. */
+              return;
+            }
 
           warning ("Couldn’t remove OBEX session ‘%s’: %s",
               session_path, ie.message);
