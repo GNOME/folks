@@ -47,4 +47,19 @@ public class KfTest.TestCase : Folks.TestCase
       Environment.set_variable ("FOLKS_BACKENDS_ALLOWED", "key-file", true);
       Environment.set_variable ("FOLKS_PRIMARY_STORE", "key-file", true);
     }
+
+  public override void tear_down ()
+    {
+      /* Ensure that all pending key file operations (e.g. saving the key file)
+       * are complete.
+       *
+       * FIXME: This should be eliminated and unprepare() should guarantee there
+       * are no more pending Backend/PersonaStore events.
+       *
+       * https://bugzilla.gnome.org/show_bug.cgi?id=727700 */
+      var context = MainContext.default ();
+      while (context.iteration (false));
+
+      base.tear_down ();
+    }
 }
