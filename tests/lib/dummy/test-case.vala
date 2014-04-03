@@ -133,6 +133,10 @@ public class DummyTest.TestCase : Folks.TestCase
    */
   public override void tear_down ()
     {
+      var persona_stores = new HashSet<PersonaStore> ();
+      persona_stores.add (this.dummy_persona_store);
+      this.dummy_backend.unregister_persona_stores (persona_stores);
+
       this.dummy_persona_store = null;
       this.dummy_backend = null;
       this._backend_store = null;
