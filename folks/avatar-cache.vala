@@ -35,12 +35,22 @@ using GLib;
  * same namespace, so callers must ensure that the IDs they use for avatars are
  * globally unique (e.g. by using the corresponding {@link Folks.Persona.uid}).
  *
+ * Ongoing store operations ({@link Folks.AvatarCache.store_avatar}) are rate
+ * limited to try and prevent file descriptor exhaustion. Load operations
+ * ({@link Folks.AvatarCache.load_avatar}) must be rate limited by the client,
+ * as the file I/O occurs when calling {@link LoadableIcon.load} rather than
+ * when retrieving the {@link LoadableIcon} from the cache.
+ *
  * @since 0.6.0
  */
 public class Folks.AvatarCache : Object
 {
   private static weak AvatarCache? _instance = null; /* needs to be locked */
   private File _cache_directory;
+  private uint _n_ongoing_stores = 0;
+  private Queue<DelegateWrapper> _pending_stores =
+      new Queue<DelegateWrapper> ();
+  private const uint _max_n_ongoing_stores = 10;
 
   /**
    * Private constructor for an instance of the avatar cache. The singleton
@@ -104,6 +114,9 @@ public class Folks.AvatarCache : Object
   /**
    * Fetch an avatar from the cache by its globally unique ID.
    *
+   * It is up to the caller to ensure that file I/O is rate-limited when loading
+   * many avatars in parallel, by limiting calls to {@link LoadableIcon.load}.
+   *
    * @param id the globally unique ID for the avatar
    * @return Avatar from the cache, or ``null`` if it doesn't exist in the cache
    * @throws GLib.Error if checking for existence of the cache file failed
@@ -134,6 +147,9 @@ public class Folks.AvatarCache : Object
    * ID (e.g. an asynchronous call may be made, and a subsequent asynchronous
    * call may begin before the first has finished).
    *
+   * Concurrent file I/O may be rate limited within each {@link AvatarCache}
+   * instance to avoid file descriptor exhaustion.
+   *
    * @param id the globally unique ID for the avatar
    * @param avatar the avatar data to cache
    * @return a URI for the file storing the cached avatar
@@ -142,6 +158,41 @@ public class Folks.AvatarCache : Object
    * @since 0.6.0
    */
   public async string store_avatar (string id, LoadableIcon avatar)
+      throws GLib.Error
+    {
+      string avatar_uri = "";
+
+      if (this._n_ongoing_stores > AvatarCache._max_n_ongoing_stores)
+        {
+          /* Add to the pending queue. */
+          var wrapper = new DelegateWrapper ();
+          wrapper.cb = store_avatar.callback;
+          this._pending_stores.push_tail ((owned) wrapper);
+          yield;
+        }
+
+      /* Do the actual store operation. */
+      try
+        {
+          this._n_ongoing_stores++;
+          avatar_uri = yield this._store_avatar_unlimited (id, avatar);
+        }
+      finally
+        {
+          this._n_ongoing_stores--;
+
+          /* If there is a store operation pending, resume it, FIFO-style. */
+          var wrapper = this._pending_stores.pop_head ();
+          if (wrapper != null)
+            {
+              wrapper.cb ();
+            }
+        }
+
+      return avatar_uri;
+    }
+
+  private async string _store_avatar_unlimited (string id, LoadableIcon avatar)
       throws GLib.Error
     {
       var dest_avatar_file = this._get_avatar_file (id);
@@ -263,4 +314,11 @@ public class Folks.AvatarCache : Object
             }
         }
     }
+}
+
+/* See: https://mail.gnome.org/archives/vala-list/2011-June/msg00005.html */
+[Compact]
+private class DelegateWrapper
+{
+  public SourceFunc cb;
 }

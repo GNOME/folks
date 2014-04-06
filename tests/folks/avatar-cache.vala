@@ -43,6 +43,7 @@ public class AvatarCacheTests : Folks.TestCase
       this.add_test ("store-and-load-avatar", this.test_store_and_load_avatar);
       this.add_test ("store-avatar-overwrite",
           this.test_store_avatar_overwrite);
+      this.add_test ("store-many-avatars", this.test_store_many_avatars);
       this.add_test ("load-avatar-non-existent",
           this.test_load_avatar_non_existent);
       this.add_test ("remove-avatar", this.test_remove_avatar);
@@ -214,6 +215,56 @@ public class AvatarCacheTests : Folks.TestCase
       assert (avatar != null);
       assert (avatar is LoadableIcon);
       this._assert_avatars_equal (this._avatar, avatar);
+    }
+
+  public void test_store_many_avatars ()
+    {
+      /* Test storing hundreds of avatars in parallel. This should *not* cause
+       * the process to run out of FDs. */
+      const uint n_avatars = 1000;
+      uint n_remaining = n_avatars;
+
+      for (uint i = 0; i < n_avatars; i++)
+        {
+          var id = "test-store-many-avatars-%u".printf (i);
+
+          this._cache.store_avatar.begin (id, this._avatar, (obj, res) =>
+            {
+              try
+                {
+                  this._cache.store_avatar.end (res);
+                  n_remaining--;
+                }
+              catch (GLib.Error e)
+                {
+                  error ("Error storing avatar %u: %s", i, e.message);
+                }
+            });
+        }
+
+      /* Wait for all the operations to finish. The idle callback should always
+       * be queued behind all the I/O operations. */
+      while (n_remaining > 0)
+        {
+          Idle.add (() =>
+            {
+              this._main_loop.quit ();
+              return false;
+            });
+
+          this._main_loop.run ();
+        }
+
+      /* Load the avatars again and check they're all OK. */
+      for (uint i = 0; i < n_avatars; i++)
+        {
+          var id = "test-store-many-avatars-%u".printf (i);
+          var avatar = this._assert_load_avatar (id);
+
+          assert (avatar != null);
+          assert (avatar is LoadableIcon);
+          this._assert_avatars_equal (this._avatar, avatar);
+        }
     }
 
   public void test_load_avatar_non_existent ()

@@ -21,6 +21,7 @@ Bugs fixed:
  • Bug 727405 — setting FOLKS_DISABLE_LINKING to on does not work
  • Bug 722579 — Contacts are displayed for Google accounts where contact
    management is disabled in GOA
+ • Bug 705742 — Implement rate limiting in AvatarCache.store_avatar()
 
 API changes:
  • Add Individual.display_name
