@@ -26,8 +26,9 @@ public class EnableDisableStoresTests : EdsTest.TestCase
   private GLib.MainLoop _main_loop;
   private EdsTest.Backend? _eds_backend_other;
   private IndividualAggregator _aggregator;
-  private HashMap<PersonaStore, bool> _store_removed;
-  private HashMap<PersonaStore, bool> _store_added;
+  private uint _n_stores_removed;
+  private uint _n_stores_added;
+  private uint _n_stores_prepared;
   private BackendStore? _backend_store;
 
   public EnableDisableStoresTests ()
@@ -42,8 +43,9 @@ public class EnableDisableStoresTests : EdsTest.TestCase
     {
       base.set_up ();
 
-      this._store_removed = new HashMap<PersonaStore, bool> ();
-      this._store_added = new HashMap<PersonaStore, bool> ();
+      this._n_stores_removed = 0;
+      this._n_stores_added = 0;
+      this._n_stores_prepared = 0;
       this._backend_store = BackendStore.dup();
 
       this._eds_backend_other = new EdsTest.Backend ();
@@ -72,11 +74,9 @@ public class EnableDisableStoresTests : EdsTest.TestCase
 
       TestUtils.loop_run_with_timeout (this._main_loop);
 
-      assert (this._store_removed.size > 0);
-      foreach (bool removed in this._store_removed.values)
-        {
-          assert (removed == true);
-        }
+      assert (this._n_stores_removed == 2);
+      assert (this._n_stores_added == 2);
+      assert (this._n_stores_prepared == 2);
 
       this._aggregator = null;
       this._main_loop = null;
@@ -93,23 +93,20 @@ public class EnableDisableStoresTests : EdsTest.TestCase
           var backend = this._backend_store.enabled_backends.get ("eds");
           assert (backend != null);
 
-          yield this._aggregator.prepare ();
-          assert (this._aggregator.is_prepared);
           backend.persona_store_removed.connect (this._store_removed_cb);
           backend.persona_store_added.connect (this._store_added_cb);
-          
+
+          yield this._aggregator.prepare ();
+          assert (this._aggregator.is_prepared);
+
           var pstore = this._get_store (this._backend_store,
               this.eds_backend.address_book_uid);
           assert (pstore != null);
-          this._store_removed[pstore] = false;
-          this._store_added[pstore] = false;
 
           var pstore2 = this._get_store (this._backend_store,
               this._eds_backend_other.address_book_uid);
           assert (pstore2 != null);
-          this._store_removed[pstore2] = false;
-          this._store_added[pstore2] = false;
-          
+
           backend.disable_persona_store (pstore);
           backend.disable_persona_store (pstore2);
         }
@@ -136,7 +133,7 @@ public class EnableDisableStoresTests : EdsTest.TestCase
     {
       assert (store != null);
       debug ("store removed %s", store.id);
-      this._store_removed[store] = true;
+      this._n_stores_removed++;
       
       var backend = this._backend_store.enabled_backends.get ("eds");
       assert (backend != null);
@@ -148,22 +145,27 @@ public class EnableDisableStoresTests : EdsTest.TestCase
   private void _store_added_cb (PersonaStore store)
     {
       debug ("store added %s", store.id);
-      this._store_added[store] = true;
-      
-      int added_count = 0;
-      
-      foreach (bool added in this._store_added.values)
-      {
-        if (added)
+      this._n_stores_added++;
+
+      store.notify["is-prepared"].connect (this._store_prepared_cb);
+
+      if (this._n_stores_added == 2 && this._n_stores_prepared == 2)
         {
-          ++added_count;
+          this._main_loop.quit ();
         }
-      }
-      
-      if (added_count == this._store_added.size)
-      {
-        this._main_loop.quit ();
-      }
+    }
+
+  private void _store_prepared_cb (Object _store, ParamSpec pspec)
+    {
+      PersonaStore store = (PersonaStore) _store;
+
+      debug ("store prepared %s", store.id);
+      this._n_stores_prepared++;
+
+      if (this._n_stores_added == 2 && this._n_stores_prepared == 2)
+        {
+          this._main_loop.quit ();
+        }
     }
 }
 
