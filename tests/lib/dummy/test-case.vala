@@ -140,6 +140,14 @@ public class DummyTest.TestCase : Folks.TestCase
       this.dummy_persona_store = null;
       this.dummy_backend = null;
       this._backend_store = null;
+
+      /* Ensure that all pending operations are complete.
+       *
+       * FIXME: This should be eliminated and unprepare() should guarantee there
+       * are no more pending Backend/PersonaStore events. */
+      var context = MainContext.default ();
+      while (context.iteration (false));
+
       base.tear_down ();
     }
 }
