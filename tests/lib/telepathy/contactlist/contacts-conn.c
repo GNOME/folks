@@ -155,6 +155,16 @@ tp_tests_contacts_connection_init (TpTestsContactsConnection *self)
 }
 
 static void
+dispose (GObject *object)
+{
+  TpTestsContactsConnection *self = TP_TESTS_CONTACTS_CONNECTION (object);
+
+  g_clear_object (&self->priv->list_manager);
+
+  G_OBJECT_CLASS (tp_tests_contacts_connection_parent_class)->dispose (object);
+}
+
+static void
 finalize (GObject *object)
 {
   TpTestsContactsConnection *self = TP_TESTS_CONTACTS_CONNECTION (object);
@@ -535,6 +545,7 @@ tp_tests_contacts_connection_class_init (TpTestsContactsConnectionClass *klass)
   };
 
   object_class->constructed = constructed;
+  object_class->dispose = dispose;
   object_class->finalize = finalize;
   g_type_class_add_private (klass, sizeof (TpTestsContactsConnectionPrivate));
 
