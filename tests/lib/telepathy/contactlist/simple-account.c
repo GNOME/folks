@@ -30,8 +30,6 @@ G_DEFINE_TYPE_WITH_CODE (TpTestsSimpleAccount,
         NULL);
     G_IMPLEMENT_INTERFACE (TP_TYPE_SVC_ACCOUNT_INTERFACE_STORAGE1,
         NULL);
-    G_IMPLEMENT_INTERFACE (TP_TYPE_SVC_DBUS_PROPERTIES,
-        tp_dbus_properties_mixin_iface_init)
     )
 
 /* TP_IFACE_ACCOUNT is implied */
@@ -704,22 +702,10 @@ void
 tp_tests_simple_account_add_uri_scheme (TpTestsSimpleAccount *self,
     const gchar *uri_scheme)
 {
-  GHashTable *changed;
-  GStrv schemes;
-
   g_ptr_array_add (self->priv->uri_schemes, g_strdup (uri_scheme));
 
-  g_object_get (self, "uri-schemes", &schemes, NULL);
-
-  changed = tp_asv_new (
-      "URISchemes", G_TYPE_STRV, schemes,
-      NULL);
-
-  tp_svc_dbus_properties_emit_properties_changed (self,
-      TP_IFACE_ACCOUNT_INTERFACE_ADDRESSING1, changed, NULL);
-
-  g_strfreev (schemes);
-  g_hash_table_unref (changed);
+  tp_dbus_properties_mixin_emit_properties_changed_varargs (G_OBJECT (self),
+      TP_IFACE_ACCOUNT_INTERFACE_ADDRESSING1, "URISchemes", NULL);
 }
 
 void
