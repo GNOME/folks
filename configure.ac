@@ -324,6 +324,7 @@ AS_IF([test x$enable_tracker_backend = xyes], [
                           [tracker-sparql-$TRACKER_SPARQL_MAJOR >= \
                            $TRACKER_SPARQL_REQUIRED])
 ])
+AC_DEFINE_UNQUOTED(TRACKER_SPARQL_MAJOR, ["$TRACKER_SPARQL_MAJOR"], [Tracker major version])
 
 AS_IF([test x$enable_bluez_backend = xyes], [EBOOK_REQUIRED=$EBOOK_REQUIRED_FOR_BLUEZ])
 

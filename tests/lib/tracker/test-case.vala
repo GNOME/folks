@@ -66,7 +66,8 @@ public class TrackerTest.TestCase : Folks.TestCase
       try
         {
           Process.spawn_sync (null /* cwd */,
-              { "pkg-config", "--variable=prefix", "tracker-miner-1.0" },
+              { "pkg-config", "--variable=prefix",
+              "tracker-miner-%s".printf(Folks.BuildConf.TRACKER_SPARQL_MAJOR)},
               null /* envp */,
               SpawnFlags.SEARCH_PATH /* flags */,
               null /* child setup */,
