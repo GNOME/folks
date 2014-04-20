@@ -1036,9 +1036,13 @@ public class Tpf.Persona : Folks.Persona,
           if (timeval.from_iso8601 (new_birthday_str))
             {
               var d = new DateTime.from_timeval_utc (timeval);
-              if (this._birthday == null ||
-                  (this._birthday != null &&
-                    !this._birthday.equal (d.to_utc ())))
+
+              /* d might be null if their birthday in Telepathy is something
+               * that doesn't make sense, like 31st February. If so, ignore
+               * it. */
+              if (d != null && (this._birthday == null ||
+                   (this._birthday != null &&
+                     !this._birthday.equal (d.to_utc ()))))
                 {
                   this._birthday = d.to_utc ();
                   if (emit_notification)

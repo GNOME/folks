@@ -179,6 +179,10 @@ public class FolksTpZeitgeist.Controller : Object
       var converted_datetime = new DateTime.from_unix_utc (timestamp);
       var interpretation = event.interpretation;
 
+      /* Invalid timestamp? Ignore it. */
+      if (converted_datetime == null)
+          return;
+
       /* Only count send/receive for IM interactions */
       if (interaction_type == Zeitgeist.NMO.IMMESSAGE &&
           (interpretation == Zeitgeist.ZG.SEND_EVENT ||
