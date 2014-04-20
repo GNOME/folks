@@ -1176,9 +1176,12 @@ public class Edsf.Persona : Folks.Persona,
            * /etc/localtime, which means lots of syscalls. */
           var d = new DateTime (Persona._local_time_zone,
               (int) bday.year, (int) bday.month, (int) bday.day, 0, 0, 0.0);
-          if (this._birthday == null ||
+
+          /* d might be null if their birthday in e-d-s is something that
+           * doesn't make sense, like 31st February. If so, ignore it. */
+          if (d != null && (this._birthday == null ||
               (this._birthday != null &&
-                  !((!) this._birthday).equal (d.to_utc ())))
+                  !((!) this._birthday).equal (d.to_utc ()))))
             {
               this._birthday = d.to_utc ();
               this.notify_property ("birthday");

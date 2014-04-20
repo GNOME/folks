@@ -22,6 +22,8 @@ Bugs fixed:
  • Bug 722579 — Contacts are displayed for Google accounts where contact
    management is disabled in GOA
  • Bug 705742 — Implement rate limiting in AvatarCache.store_avatar()
+ • Bug 727944 — crash during Empathy startup: segfault in g_date_time_to_utc
+   from _edsf_persona_update
 
 API changes:
  • Add Individual.display_name
