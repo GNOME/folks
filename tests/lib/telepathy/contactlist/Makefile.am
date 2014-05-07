@@ -28,6 +28,8 @@ libtp_test_contactlist_la_SOURCES = \
         contacts-conn.c \
         contacts-conn.h \
         debug.h \
+        my-conn-proxy.c \
+        my-conn-proxy.h \
         room-list-chan.c \
         room-list-chan.h \
         simple-account.c \

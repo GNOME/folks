@@ -20,6 +20,7 @@ AM_VALAFLAGS = \
 AM_CPPFLAGS = \
 	$(test_cppflags) \
 	$(TP_GLIB_CFLAGS) \
+	$(TP_GLIB_DBUS_CFLAGS) \
 	-I$(top_srcdir)/backends/telepathy \
 	-I$(top_srcdir)/backends/telepathy/lib \
 	-I$(top_srcdir)/backends/telepathy/lib/folks \

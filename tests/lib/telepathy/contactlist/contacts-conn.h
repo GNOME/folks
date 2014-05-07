@@ -14,6 +14,7 @@
 
 #include <glib-object.h>
 #include <telepathy-glib/telepathy-glib.h>
+#include <telepathy-glib/telepathy-glib-dbus.h>
 
 #include "simple-conn.h"
 #include "contact-list-manager.h"
@@ -27,14 +28,11 @@ typedef struct _TpTestsContactsConnectionPrivate TpTestsContactsConnectionPrivat
 struct _TpTestsContactsConnectionClass {
     TpTestsSimpleConnectionClass parent_class;
 
-    TpPresenceMixinClass presence_mixin;
     TpDBusPropertiesMixinClass properties_class;
 };
 
 struct _TpTestsContactsConnection {
     TpTestsSimpleConnection parent;
-
-    TpPresenceMixin presence_mixin;
 
     TpTestsContactsConnectionPrivate *priv;
 };

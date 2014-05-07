@@ -24,16 +24,14 @@
 #include "room-list-chan.h"
 #include "util.h"
 
-G_DEFINE_TYPE_WITH_CODE (TpTestsSimpleConnection, tp_tests_simple_connection,
-    TP_TYPE_BASE_CONNECTION,
-    G_IMPLEMENT_INTERFACE (TP_TYPE_SVC_CONNECTION, NULL))
+G_DEFINE_TYPE (TpTestsSimpleConnection, tp_tests_simple_connection,
+    TP_TYPE_BASE_CONNECTION)
 
 /* type definition stuff */
 
 enum
 {
   PROP_ACCOUNT = 1,
-  PROP_DBUS_STATUS,
   N_PROPS
 };
 
@@ -70,12 +68,7 @@ get_property (GObject *object,
     case PROP_ACCOUNT:
       g_value_set_string (value, self->priv->account);
       break;
-    case PROP_DBUS_STATUS:
-        {
-          g_value_set_uint (value,
-              tp_base_connection_get_status (TP_BASE_CONNECTION (self)));
-        }
-      break;
+
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, spec);
   }
@@ -277,14 +270,6 @@ tp_tests_simple_connection_class_init (TpTestsSimpleConnectionClass *klass)
       "The username of this user", NULL,
       G_PARAM_CONSTRUCT_ONLY | G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS);
   g_object_class_install_property (object_class, PROP_ACCOUNT, param_spec);
-
-  param_spec = g_param_spec_uint ("dbus-status",
-      "Connection.Status",
-      "The connection status as visible on D-Bus (overridden so can break it)",
-      TP_CONNECTION_STATUS_CONNECTED, G_MAXUINT,
-      TP_CONNECTION_STATUS_DISCONNECTED,
-      G_PARAM_READABLE | G_PARAM_STATIC_STRINGS);
-  g_object_class_install_property (object_class, PROP_DBUS_STATUS, param_spec);
 }
 
 void
@@ -349,7 +334,15 @@ tp_tests_simple_connection_ensure_text_chan (TpTestsSimpleConnection *self,
   g_object_get (chan, "object-path", &chan_path, NULL);
 
   if (props != NULL)
-    g_object_get (chan, "channel-properties", props, NULL);
+    {
+      GVariant *tmp;
+
+      g_object_get (chan,
+          "channel-properties", &tmp,
+          NULL);
+      *props = tp_asv_from_vardict (tmp);
+      g_variant_unref (tmp);
+    }
 
   return chan_path;
 }
@@ -393,8 +386,15 @@ tp_tests_simple_connection_ensure_room_list_chan (TpTestsSimpleConnection *self,
     }
 
   if (props != NULL)
-    g_object_get (self->priv->room_list_chan,
-        "channel-properties", props, NULL);
+    {
+      GVariant *tmp;
+
+      g_object_get (self->priv->room_list_chan,
+          "channel-properties", &tmp,
+          NULL);
+      *props = tp_asv_from_vardict (tmp);
+      g_variant_unref (tmp);
+    }
 
   return chan_path;
 }

@@ -55,6 +55,7 @@ libtpf_test_la_CFLAGS = \
 	$(GLIB_CFLAGS) \
 	$(GEE_CFLAGS) \
 	$(TP_GLIB_CFLAGS) \
+	$(TP_GLIB_DBUS_CFLAGS) \
 	$(NULL)
 
 libtpf_test_la_LIBADD = \
@@ -64,6 +65,7 @@ libtpf_test_la_LIBADD = \
 	$(GLIB_LIBS) \
 	$(GEE_LIBS) \
 	$(TP_GLIB_LIBS) \
+	$(TP_GLIB_DBUS_LIBS) \
 	$(NULL)
 
 BUILT_SOURCES = \
