@@ -375,6 +375,7 @@ public class IndividualPropertiesTests : TpfTest.TestCase
       var timeval = TimeVal ();
       timeval.from_iso8601 ("1929-01-11T00:00:00Z");
       var new_birthday = new DateTime.from_timeval_utc (timeval);
+      assert (new_birthday != null);
       var new_email_fd = new EmailFieldDetails ("cave@aperturescience.com");
       new_email_fd.set_parameter (AbstractFieldDetails.PARAM_TYPE,
           AbstractFieldDetails.PARAM_TYPE_WORK);

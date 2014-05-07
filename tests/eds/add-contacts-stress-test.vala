@@ -52,12 +52,14 @@ public class AddContactsStressTestTests : EdsTest.TestCase
         }
 
       this._start_time = new DateTime.now_utc ();
+      assert (this._start_time != null);
 
       this._test_add_persona_async.begin ();
 
       this._main_loop.run ();
 
       var now = new DateTime.now_utc ();
+      assert (now != null);
       var difference = now.difference (this._start_time);
 
       var diff = difference / TimeSpan.SECOND;

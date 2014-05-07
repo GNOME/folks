@@ -401,6 +401,8 @@ public abstract class Folks.TestCase : Object
    */
   public virtual void tear_down ()
     {
+      /* Assert there are no events left on the main context. */
+      assert (TestUtils.main_context_is_empty ());
     }
 
   internal extern static void _dbus_1_set_no_exit_on_disconnect ();

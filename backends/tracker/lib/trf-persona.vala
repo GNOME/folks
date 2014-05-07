@@ -959,9 +959,13 @@ public class Trf.Persona : Folks.Persona,
       if (birthday != null && birthday != "")
         {
           TimeVal t = TimeVal ();
-          t.from_iso8601 (birthday);
-          this._birthday = new DateTime.from_timeval_utc (t);
-          this.notify_property ("birthday");
+          if (t.from_iso8601 (birthday))
+            {
+              /* Note: This could return null if the timeval is invalid
+               * (e.g. out of range). That's OK. */
+              this._birthday = new DateTime.from_timeval_utc (t);
+              this.notify_property ("birthday");
+            }
         }
       else
         {

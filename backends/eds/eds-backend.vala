@@ -286,7 +286,7 @@ public class Folks.Backends.Eds.Backend : Folks.Backend
     {
       string[] use_addressbooks = this._get_addressbooks_from_env ();
       GLib.List<E.Source> books =
-          this._ab_sources.list_sources (SOURCE_EXTENSION_ADDRESS_BOOK);
+          this._ab_sources.list_enabled (SOURCE_EXTENSION_ADDRESS_BOOK);
 
       debug ("Address book source list changed.");
 

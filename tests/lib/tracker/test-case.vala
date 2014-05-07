@@ -66,7 +66,8 @@ public class TrackerTest.TestCase : Folks.TestCase
       try
         {
           Process.spawn_sync (null /* cwd */,
-              { "pkg-config", "--variable=prefix", "tracker-miner-1.0" },
+              { "pkg-config", "--variable=prefix",
+              "tracker-miner-%s".printf(Folks.BuildConf.TRACKER_SPARQL_MAJOR)},
               null /* envp */,
               SpawnFlags.SEARCH_PATH /* flags */,
               null /* child setup */,
@@ -110,6 +111,15 @@ public class TrackerTest.TestCase : Folks.TestCase
         {
           ((!) this.tracker_backend).tear_down ();
         }
+
+      /* Ensure that all pending BlueZ operations are complete.
+       *
+       * FIXME: This should be eliminated and unprepare() should guarantee there
+       * are no more pending Backend/PersonaStore events.
+       *
+       * https://bugzilla.gnome.org/show_bug.cgi?id=727700 */
+      var context = MainContext.default ();
+      while (context.iteration (false));
 
       base.tear_down ();
     }

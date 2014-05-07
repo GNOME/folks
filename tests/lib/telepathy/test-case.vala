@@ -207,6 +207,15 @@ public class TpfTest.TestCase : Folks.TestCase
           ((!) this.kf_backend).tear_down ();
         }
 
+      /* Ensure that all pending operations are complete.
+       *
+       * FIXME: This should be eliminated and unprepare() should guarantee there
+       * are no more pending Backend/PersonaStore events.
+       *
+       * https://bugzilla.gnome.org/show_bug.cgi?id=727700 */
+      var context = MainContext.default ();
+      while (context.iteration (false));
+
       base.tear_down ();
     }
 }

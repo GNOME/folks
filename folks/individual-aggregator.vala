@@ -1213,7 +1213,8 @@ public class Folks.IndividualAggregator : Object
 
           /* If the Persona is the user, we *always* want to link it to the
            * existing this.user. */
-          if (persona.is_user == true && user != null &&
+          if (this._linking_enabled == true &&
+              persona.is_user == true && user != null &&
               ((!) user).has_anti_link_with_persona (persona) == false)
             {
               debug ("    Found candidate individual '%s' as user.",
@@ -1223,7 +1224,8 @@ public class Folks.IndividualAggregator : Object
 
           /* If we don't trust the PersonaStore at all, we can't link the
            * Persona to any existing Individual */
-          if (trust_level != PersonaStoreTrust.NONE)
+          if (this._linking_enabled == true &&
+              trust_level != PersonaStoreTrust.NONE)
             {
               unowned GenericArray<Individual>? candidates =
                   this._link_map.get (persona.iid);
@@ -1245,7 +1247,8 @@ public class Folks.IndividualAggregator : Object
                 }
             }
 
-          if (persona.store.trust_level == PersonaStoreTrust.FULL)
+          if (this._linking_enabled == true &&
+              persona.store.trust_level == PersonaStoreTrust.FULL)
             {
               /* If we trust the PersonaStore the Persona came from, we can
                * attempt to link based on its linkable properties. */
@@ -1304,6 +1307,7 @@ public class Folks.IndividualAggregator : Object
           /* Ensure the original persona makes it into the final individual */
           final_personas.add (persona);
 
+          assert (this._linking_enabled == true || candidate_inds.size == 0);
           if (candidate_inds.size > 0 && this._linking_enabled == true)
             {
               /* The Persona's IID or linkable properties match one or more
@@ -1316,7 +1320,7 @@ public class Folks.IndividualAggregator : Object
                   final_personas.add_all (individual.personas);
                 }
             }
-          else if (candidate_inds.size > 0)
+          else if (!this._linking_enabled)
             {
               debug ("    Linking disabled.");
             }
@@ -1400,6 +1404,12 @@ public class Folks.IndividualAggregator : Object
   private void _persona_linkable_property_changed_cb (Object obj,
       ParamSpec pspec)
     {
+      /* Ignore it if the link is disabled */
+      if (this._linking_enabled == false)
+        {
+          return;
+        }
+
       /* The value of one of the linkable properties of one the personas has
        * changed, so that persona might require re-linking. We do this in a
        * simplistic and hacky way (which should work) by simply treating the

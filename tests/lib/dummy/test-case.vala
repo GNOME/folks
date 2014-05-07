@@ -133,9 +133,23 @@ public class DummyTest.TestCase : Folks.TestCase
    */
   public override void tear_down ()
     {
+      var persona_stores = new HashSet<PersonaStore> ();
+      persona_stores.add (this.dummy_persona_store);
+      this.dummy_backend.unregister_persona_stores (persona_stores);
+
       this.dummy_persona_store = null;
       this.dummy_backend = null;
       this._backend_store = null;
+
+      /* Ensure that all pending operations are complete.
+       *
+       * FIXME: This should be eliminated and unprepare() should guarantee there
+       * are no more pending Backend/PersonaStore events.
+       *
+       * https://bugzilla.gnome.org/show_bug.cgi?id=727700 */
+      var context = MainContext.default ();
+      while (context.iteration (false));
+
       base.tear_down ();
     }
 }

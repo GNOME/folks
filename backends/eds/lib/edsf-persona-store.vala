@@ -2555,7 +2555,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
       if (needle != null && needle.has_extension (SOURCE_EXTENSION_ADDRESS_BOOK))
         {
           /* We've found ourself. */
-          return true;
+          return ((!) this._source_registry).check_enabled (needle);
         }
 
       return false;

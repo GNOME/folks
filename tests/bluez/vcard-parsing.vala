@@ -147,7 +147,16 @@ public class VcardParsingTests : BluezTest.TestCase
           "VERSION:3.0\n" +
           "FN:Alex Lawson\n" +
           "N:Lawson;Alex\n" +
-          "END:VCARD\n");
+          "END:VCARD\n" +
+          "\n" +
+          /* Empty FN attribute: treat it as unset. */
+          "BEGIN:VCARD\n" +
+          "VERSION:3.0\n" +
+          "N:W;Alice;;;\n" +
+          "FN:\n" +
+          "TEL;TYPE=CELL:5145152\n" +
+          "TEL;TYPE=VOICE:545\n" +
+          "END:VCARD");
 
       /* Set up the aggregator and wait until either the expected persona are
        * seen, or the test times out and fails. */
@@ -160,7 +169,8 @@ public class VcardParsingTests : BluezTest.TestCase
             "Franco Dianno",
             "Amelia Smith",
             "Sadie Jones",
-            "Alex Lawson"
+            "Alex Lawson",
+            ""  /* Alice W */
           });
 
       /* Check the properties of our individuals. */
@@ -191,6 +201,11 @@ public class VcardParsingTests : BluezTest.TestCase
       ind = TestUtils.get_individual_by_name (aggregator, "Alex Lawson");
       expected_name = new StructuredName ("Lawson", "Alex", null, null, null);
       assert (ind.structured_name.equal (expected_name));
+
+      ind = TestUtils.get_individual_by_name (aggregator, "");
+      expected_name = new StructuredName ("W", "Alice", null, null, null);
+      assert (ind.structured_name.equal (expected_name));
+      assert (ind.full_name == "");
     }
 
   /* Test that vCards with weird encodings are parsed correctly. */

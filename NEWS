@@ -11,13 +11,19 @@ Bugs fixed:
  • Bug 648811 — Add a dummy backend
  • Bug 720707 — New strings partly not translatable
  • Bug 722335 — non-void function should return a value
- • Bug 723054 - edsf-persona.vala:1666.21-1666.79: error: Reference transfer
+ • Bug 723054 — edsf-persona.vala:1666.21-1666.79: error: Reference transfer
    not supported for this expression
  • Bug 723540 — standalone-individuals test failing with master
  • Bug 724339 — vala.m4: don't keep generated files in git
  • Bug 724809 — Fail to unset contact favorite
  • Bug 722892 — Linking personas on Dummy backend does not work
  • Bug 726980 — dependency on e-d-s 3.9 is often unnecessary
+ • Bug 727405 — setting FOLKS_DISABLE_LINKING to on does not work
+ • Bug 722579 — Contacts are displayed for Google accounts where contact
+   management is disabled in GOA
+ • Bug 705742 — Implement rate limiting in AvatarCache.store_avatar()
+ • Bug 727944 — crash during Empathy startup: segfault in g_date_time_to_utc
+   from _edsf_persona_update
 
 API changes:
  • Add Individual.display_name

@@ -305,6 +305,8 @@ internal class Tpf.PersonaStoreCache : Folks.ObjectCache<Tpf.Persona>
           var birthday_variant = variant.get_child_value (10).get_maybe ();
           if (birthday_variant != null)
             {
+              /* Note: This may return a null value if the stored value is
+               * invalid (e.g. out of range). */
               birthday =
                   new DateTime.from_unix_utc (birthday_variant.get_int64 ());
             }

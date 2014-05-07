@@ -63,6 +63,9 @@ public class Folks.BuildConf
   [CCode (cname = "HAVE_TRACKER")]
   public static bool HAVE_TRACKER;
 
+  [CCode (cname = "TRACKER_SPARQL_MAJOR")]
+  public static const string TRACKER_SPARQL_MAJOR;
+
   [CCode (cname = "ABS_TOP_BUILDDIR")]
   public static const string ABS_TOP_BUILDDIR;
 

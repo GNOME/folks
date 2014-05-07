@@ -115,7 +115,7 @@ public class IndividualRetrievalTests : DummyTest.TestCase
 
       /* Set up the aggregator */
       var aggregator = IndividualAggregator.dup ();
-      aggregator.individuals_changed_detailed.connect ((changes) =>
+      ulong handler_id = aggregator.individuals_changed_detailed.connect ((changes) =>
         {
           var added = changes.get_values ();
           var removed = changes.get_keys ();
@@ -160,6 +160,8 @@ public class IndividualRetrievalTests : DummyTest.TestCase
 
       /* We should have enumerated exactly the individuals in the set */
       assert (expected_individuals.size == 0);
+      aggregator.disconnect(handler_id);
+      aggregator = null;
     }
 }
 
