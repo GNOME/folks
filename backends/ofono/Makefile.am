@@ -9,6 +9,7 @@ backend_LTLIBRARIES = ofono.la
 # in libebook-1.2.deps.
 ofono_la_VALAFLAGS = \
 	$(backend_valaflags) \
+	--pkg folks-generics \
 	--pkg libebook-1.2 \
 	--pkg libedataserver-1.2 \
 	$(NULL)
