@@ -67,7 +67,6 @@ backend_cflags = \
 backend_libadd = \
 	$(AM_LIBADD) \
 	$(top_builddir)/folks/libfolks.la \
-	$(top_builddir)/folks/libfolks-internal.la \
 	$(GIO_LIBS) \
 	$(GLIB_LIBS) \
 	$(GEE_LIBS) \
