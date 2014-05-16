@@ -557,7 +557,6 @@ tp_tests_simple_account_class_init (TpTestsSimpleAccountClass *klass)
   g_object_class_install_property (object_class,
       PROP_SUPERSEDES, param_spec);
 
-  tp_dbus_properties_mixin_class_init (object_class, 0);
   tp_dbus_properties_mixin_implement_interface (object_class,
         TP_IFACE_QUARK_ACCOUNT,
         tp_dbus_properties_mixin_getter_gobject_properties, NULL, a_props);
