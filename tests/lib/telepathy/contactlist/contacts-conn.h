@@ -27,8 +27,6 @@ typedef struct _TpTestsContactsConnectionPrivate TpTestsContactsConnectionPrivat
 
 struct _TpTestsContactsConnectionClass {
     TpTestsSimpleConnectionClass parent_class;
-
-    TpDBusPropertiesMixinClass properties_class;
 };
 
 struct _TpTestsContactsConnection {

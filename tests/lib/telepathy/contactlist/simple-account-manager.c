@@ -162,15 +162,6 @@ tp_tests_simple_account_manager_class_init (
         { NULL }
   };
 
-  static TpDBusPropertiesMixinIfaceImpl prop_interfaces[] = {
-        { TP_IFACE_ACCOUNT_MANAGER,
-          tp_dbus_properties_mixin_getter_gobject_properties,
-          NULL,
-          am_props
-        },
-        { NULL },
-  };
-
   g_type_class_add_private (klass, sizeof (TpTestsSimpleAccountManagerPrivate));
   object_class->finalize = tp_tests_simple_account_manager_finalize;
   object_class->get_property = tp_tests_simple_account_manager_get_property;
@@ -191,9 +182,10 @@ tp_tests_simple_account_manager_class_init (
       G_PARAM_READABLE);
   g_object_class_install_property (object_class, PROP_UNUSABLE_ACCOUNTS, param_spec);
 
-  klass->dbus_props_class.interfaces = prop_interfaces;
-  tp_dbus_properties_mixin_class_init (object_class,
-      G_STRUCT_OFFSET (TpTestsSimpleAccountManagerClass, dbus_props_class));
+  tp_dbus_properties_mixin_class_init (object_class, 0);
+  tp_dbus_properties_mixin_implement_interface (object_class,
+        TP_IFACE_QUARK_ACCOUNT_MANAGER,
+        tp_dbus_properties_mixin_getter_gobject_properties, NULL, am_props);
 }
 
 static void

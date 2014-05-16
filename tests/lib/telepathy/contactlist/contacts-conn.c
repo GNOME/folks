@@ -532,24 +532,6 @@ tp_tests_contacts_connection_class_init (TpTestsContactsConnectionClass *klass)
     { "AliasFlags", GUINT_TO_POINTER (ALIASING_DP_ALIAS_FLAGS), NULL },
     { NULL }
   };
-  static TpDBusPropertiesMixinIfaceImpl prop_interfaces[] = {
-        { TP_IFACE_CONNECTION_INTERFACE_AVATARS1,
-          conn_avatars_properties_getter,
-          NULL,
-          conn_avatars_properties,
-        },
-        { TP_IFACE_CONNECTION_INTERFACE_CONTACT_INFO1,
-          conn_contact_info_properties_getter,
-          NULL,
-          conn_contact_info_properties,
-        },
-        { TP_IFACE_CONNECTION_INTERFACE_ALIASING1,
-          aliasing_get_dbus_property,
-          NULL,
-          aliasing_props,
-        },
-        { NULL }
-  };
 
   object_class->constructed = constructed;
   object_class->dispose = dispose;
@@ -560,9 +542,17 @@ tp_tests_contacts_connection_class_init (TpTestsContactsConnectionClass *klass)
   base_class->fill_contact_attributes =
     tp_tests_contacts_connection_fill_contact_attributes;
 
-  klass->properties_class.interfaces = prop_interfaces;
-  tp_dbus_properties_mixin_class_init (object_class,
-      G_STRUCT_OFFSET (TpTestsContactsConnectionClass, properties_class));
+  tp_dbus_properties_mixin_class_init (object_class, 0);
+  tp_dbus_properties_mixin_implement_interface (object_class,
+        TP_IFACE_QUARK_CONNECTION_INTERFACE_AVATARS1,
+        conn_avatars_properties_getter, NULL, conn_avatars_properties);
+  tp_dbus_properties_mixin_implement_interface (object_class,
+        TP_IFACE_QUARK_CONNECTION_INTERFACE_CONTACT_INFO1,
+        conn_contact_info_properties_getter, NULL,
+        conn_contact_info_properties);
+  tp_dbus_properties_mixin_implement_interface (object_class,
+        TP_IFACE_QUARK_CONNECTION_INTERFACE_ALIASING1,
+        aliasing_get_dbus_property, NULL, aliasing_props);
 }
 
 TpTestsContactListManager *

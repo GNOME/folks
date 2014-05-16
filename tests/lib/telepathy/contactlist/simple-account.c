@@ -386,32 +386,6 @@ tp_tests_simple_account_class_init (TpTestsSimpleAccountClass *klass)
         { NULL },
   };
 
-  static TpDBusPropertiesMixinIfaceImpl prop_interfaces[] = {
-        { TP_IFACE_ACCOUNT,
-          tp_dbus_properties_mixin_getter_gobject_properties,
-          NULL,
-          a_props
-        },
-        {
-          TP_IFACE_ACCOUNT_INTERFACE_STORAGE1,
-          tp_dbus_properties_mixin_getter_gobject_properties,
-          NULL,
-          ais_props
-        },
-        {
-          TP_IFACE_ACCOUNT_INTERFACE_ADDRESSING1,
-          tp_dbus_properties_mixin_getter_gobject_properties,
-          NULL,
-          aia_props
-        },
-        { TP_IFACE_ACCOUNT_INTERFACE_AVATAR1,
-          tp_dbus_properties_mixin_getter_gobject_properties,
-          NULL,
-          avatar_props
-        },
-        { NULL },
-  };
-
   g_type_class_add_private (klass, sizeof (TpTestsSimpleAccountPrivate));
   object_class->get_property = tp_tests_simple_account_get_property;
   object_class->set_property = tp_tests_simple_account_set_property;
@@ -583,9 +557,19 @@ tp_tests_simple_account_class_init (TpTestsSimpleAccountClass *klass)
   g_object_class_install_property (object_class,
       PROP_SUPERSEDES, param_spec);
 
-  klass->dbus_props_class.interfaces = prop_interfaces;
-  tp_dbus_properties_mixin_class_init (object_class,
-      G_STRUCT_OFFSET (TpTestsSimpleAccountClass, dbus_props_class));
+  tp_dbus_properties_mixin_class_init (object_class, 0);
+  tp_dbus_properties_mixin_implement_interface (object_class,
+        TP_IFACE_QUARK_ACCOUNT,
+        tp_dbus_properties_mixin_getter_gobject_properties, NULL, a_props);
+  tp_dbus_properties_mixin_implement_interface (object_class,
+        TP_IFACE_QUARK_ACCOUNT_INTERFACE_STORAGE1,
+        tp_dbus_properties_mixin_getter_gobject_properties, NULL, ais_props);
+  tp_dbus_properties_mixin_implement_interface (object_class,
+        TP_IFACE_QUARK_ACCOUNT_INTERFACE_ADDRESSING1,
+        tp_dbus_properties_mixin_getter_gobject_properties, NULL, aia_props);
+  tp_dbus_properties_mixin_implement_interface (object_class,
+        TP_IFACE_QUARK_ACCOUNT_INTERFACE_AVATAR1,
+        tp_dbus_properties_mixin_getter_gobject_properties, NULL, avatar_props);
 }
 
 void

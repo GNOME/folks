@@ -427,13 +427,18 @@ contact_list_request_subscription_async (TpBaseContactList *self,
     GAsyncReadyCallback callback,
     gpointer user_data)
 {
-  GArray *handles;
+  GVariant *handles;
+  gconstpointer arr;
+  gsize len;
 
-  handles = tp_handle_set_to_array (contacts);
+  handles = tp_handle_set_to_variant (contacts);
+  g_variant_ref_sink (handles);
+  arr = g_variant_get_fixed_array (handles, &len, sizeof (TpHandle));
+
   tp_tests_contact_list_manager_request_subscription (
       (TpTestsContactListManager *) self,
-      handles->len, (TpHandle *) handles->data, message);
-  g_array_unref (handles);
+      len, (TpHandle *) arr, message);
+  g_variant_unref (handles);
 
   tp_simple_async_report_success_in_idle ((GObject *) self, callback,
       user_data, contact_list_request_subscription_async);
@@ -445,13 +450,16 @@ contact_list_authorize_publication_async (TpBaseContactList *self,
     GAsyncReadyCallback callback,
     gpointer user_data)
 {
-  GArray *handles;
+  GVariant *handles;
+  gconstpointer arr;
+  gsize len;
 
-  handles = tp_handle_set_to_array (contacts);
+  handles = tp_handle_set_to_variant (contacts);
+  arr = g_variant_get_fixed_array (handles, &len, sizeof (TpHandle));
+
   tp_tests_contact_list_manager_authorize_publication (
-      (TpTestsContactListManager *) self,
-      handles->len, (TpHandle *) handles->data);
-  g_array_unref (handles);
+      (TpTestsContactListManager *) self, len, (TpHandle *) arr);
+  g_variant_unref (handles);
 
   tp_simple_async_report_success_in_idle ((GObject *) self, callback,
       user_data, contact_list_authorize_publication_async);
@@ -463,13 +471,16 @@ contact_list_remove_contacts_async (TpBaseContactList *self,
     GAsyncReadyCallback callback,
     gpointer user_data)
 {
-  GArray *handles;
+  GVariant *handles;
+  gconstpointer arr;
+  gsize len;
 
-  handles = tp_handle_set_to_array (contacts);
+  handles = tp_handle_set_to_variant (contacts);
+  arr = g_variant_get_fixed_array (handles, &len, sizeof (TpHandle));
+
   tp_tests_contact_list_manager_remove (
-      (TpTestsContactListManager *) self,
-      handles->len, (TpHandle *) handles->data);
-  g_array_unref (handles);
+      (TpTestsContactListManager *) self, len, (TpHandle *) arr);
+  g_variant_unref (handles);
 
   tp_simple_async_report_success_in_idle ((GObject *) self, callback,
       user_data, contact_list_remove_contacts_async);
@@ -481,13 +492,15 @@ contact_list_unsubscribe_async (TpBaseContactList *self,
     GAsyncReadyCallback callback,
     gpointer user_data)
 {
-  GArray *handles;
+  GVariant *handles;
+  gconstpointer arr;
+  gsize len;
 
-  handles = tp_handle_set_to_array (contacts);
+  handles = tp_handle_set_to_variant (contacts);
+  arr = g_variant_get_fixed_array (handles, &len, sizeof (TpHandle));
   tp_tests_contact_list_manager_unsubscribe (
-      (TpTestsContactListManager *) self,
-      handles->len, (TpHandle *) handles->data);
-  g_array_unref (handles);
+      (TpTestsContactListManager *) self, len, (TpHandle *) arr);
+  g_variant_unref (handles);
 
   tp_simple_async_report_success_in_idle ((GObject *) self, callback,
       user_data, contact_list_unsubscribe_async);
@@ -499,13 +512,15 @@ contact_list_unpublish_async (TpBaseContactList *self,
     GAsyncReadyCallback callback,
     gpointer user_data)
 {
-  GArray *handles;
+  GVariant *handles;
+  gconstpointer arr;
+  gsize len;
 
-  handles = tp_handle_set_to_array (contacts);
+  handles = tp_handle_set_to_variant (contacts);
+  arr = g_variant_get_fixed_array (handles, &len, sizeof (TpHandle));
   tp_tests_contact_list_manager_unpublish (
-      (TpTestsContactListManager *) self,
-      handles->len, (TpHandle *) handles->data);
-  g_array_unref (handles);
+      (TpTestsContactListManager *) self, len, (TpHandle *) arr);
+  g_variant_unref (handles);
 
   tp_simple_async_report_success_in_idle ((GObject *) self, callback,
       user_data, contact_list_unpublish_async);
@@ -668,14 +683,16 @@ static gboolean
 receive_authorized (gpointer p)
 {
   SelfAndContact *s = p;
-  GArray *handles_array;
-  guint i;
+  GVariant *handles;
+  GVariantIter iter;
+  TpHandle handle;
 
-  handles_array = tp_handle_set_to_array (s->handles);
-  for (i = 0; i < handles_array->len; i++)
+  handles = tp_handle_set_to_variant (s->handles);
+
+  g_variant_iter_init (&iter, handles);
+  while (g_variant_iter_loop (&iter, "u", &handle))
     {
-      ContactDetails *d = lookup_contact (s->self,
-          g_array_index (handles_array, TpHandle, i));
+      ContactDetails *d = lookup_contact (s->self, handle);
 
       if (d == NULL)
         continue;
@@ -690,7 +707,7 @@ receive_authorized (gpointer p)
           d->publish_request = g_strdup ("automatic publish request");
         }
     }
-  g_array_unref (handles_array);
+  g_variant_unref (handles);
 
   tp_base_contact_list_contacts_changed (TP_BASE_CONTACT_LIST (s->self),
       s->handles, NULL);
@@ -702,21 +719,23 @@ static gboolean
 receive_unauthorized (gpointer p)
 {
   SelfAndContact *s = p;
-  GArray *handles_array;
-  guint i;
+  GVariant *handles;
+  GVariantIter iter;
+  TpHandle handle;
 
-  handles_array = tp_handle_set_to_array (s->handles);
-  for (i = 0; i < handles_array->len; i++)
+  handles = tp_handle_set_to_variant (s->handles);
+
+  g_variant_iter_init (&iter, handles);
+  while (g_variant_iter_loop (&iter, "u", &handle))
     {
-      ContactDetails *d = lookup_contact (s->self,
-          g_array_index (handles_array, TpHandle, i));
+      ContactDetails *d = lookup_contact (s->self, handle);
 
       if (d == NULL)
         continue;
 
       d->subscribe = TP_SUBSCRIPTION_STATE_REMOVED_REMOTELY;
     }
-  g_array_unref (handles_array);
+  g_variant_unref (handles);
 
   tp_base_contact_list_contacts_changed (TP_BASE_CONTACT_LIST (s->self),
       s->handles, NULL);

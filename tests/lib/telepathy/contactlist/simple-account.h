@@ -24,7 +24,6 @@ typedef struct _TpTestsSimpleAccountPrivate TpTestsSimpleAccountPrivate;
 
 struct _TpTestsSimpleAccountClass {
     GObjectClass parent_class;
-    TpDBusPropertiesMixinClass dbus_props_class;
 };
 
 struct _TpTestsSimpleAccount {
