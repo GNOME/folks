@@ -158,7 +158,7 @@ FOLKS_TP_VALA_DEPS += tp-zeitgeist.vapi
 else
 FOLKS_TP_VALA_DEPS += tp-zeitgeist-dummy.vapi
 endif
-$(builddir)/libfolks_telepathy_la_vala.stamp: $(FOLKS_TP_VALA_DEPS)
+$(srcdir)/libfolks_telepathy_la_vala.stamp: $(FOLKS_TP_VALA_DEPS)
 
 libfolks_telepathy_la_SOURCES = \
 	$(backend_library_sources) \
@@ -171,6 +171,7 @@ libfolks_telepathy_la_SOURCES = \
 
 libfolks_telepathy_la_VALAFLAGS = \
 	$(backend_library_valaflags) \
+	--vapidir=$(abs_builddir) \
 	--pkg tp-lowlevel \
 	--pkg telepathy-glib \
 	$(NULL)

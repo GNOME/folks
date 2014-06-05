@@ -24,6 +24,7 @@ Bugs fixed:
  • Bug 705742 — Implement rate limiting in AvatarCache.store_avatar()
  • Bug 727944 — crash during Empathy startup: segfault in g_date_time_to_utc
    from _edsf_persona_update
+ • Bug 731325 — Fails to build with srcdir != builddir
 
 API changes:
  • Add Individual.display_name

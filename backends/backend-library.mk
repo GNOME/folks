@@ -139,7 +139,7 @@ backend_library_ldflags = \
 #
 # This file sets namespace and version attributes for GIR.
 namespace.vala:
-	$(AM_V_GEN)echo -e "[CCode (gir_namespace = \"Folks$(BACKEND_NAME_C)\", gir_version = \"$(BACKEND_API_VERSION)\")]\nnamespace $(BACKEND_NAMESPACE) {}" > $@
+	$(AM_V_GEN)echo -e "[CCode (gir_namespace = \"Folks$(BACKEND_NAME_C)\", gir_version = \"$(BACKEND_API_VERSION)\")]\nnamespace $(BACKEND_NAMESPACE) {}" > $(srcdir)/$@
 
 MAINTAINERCLEANFILES += namespace.vala
 
@@ -166,6 +166,8 @@ EXTRA_DIST += $(pkgconfig_in)
 INTROSPECTION_SCANNER_ARGS = \
 	$(ERROR_INTROSPECTION_SCANNER_ARGS) \
 	--add-include-path=$(srcdir) \
+	--add-include-path=$(builddir) \
+	--add-include-path=$(abs_top_srcdir)/folks \
 	--add-include-path=$(abs_top_builddir)/folks \
 	--warn-all \
 	$(NULL)
@@ -176,6 +178,8 @@ INTROSPECTION_SCANNER_ENV = \
 
 INTROSPECTION_COMPILER_ARGS = \
 	--includedir=$(srcdir) \
+	--includedir=$(builddir) \
+	--includedir=$(abs_top_srcdir)/folks \
 	--includedir=$(abs_top_builddir)/folks \
 	$(NULL)
 
