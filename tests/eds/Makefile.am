@@ -47,6 +47,7 @@ TESTS = \
 	email-details \
 	name-details \
 	removing-contacts \
+	updating-phones \
 	updating-contacts \
 	avatar-details \
 	add-persona \
@@ -98,6 +99,10 @@ individual_retrieval_SOURCES = \
 
 removing_contacts_SOURCES = \
 	removing-contacts.vala \
+	$(NULL)
+
+updating_phones_SOURCES = \
+	updating-phones.vala \
 	$(NULL)
 
 updating_contacts_SOURCES = \
