@@ -217,4 +217,59 @@ public class Folks.Utils : Object
 
       return true;
     }
+
+  /**
+   * Check whether a set of AbstractFieldDetails with string values are equal.
+   *
+   * This performs a deep check for equality, checking whether both sets are of
+   * the same size, and that each set has the same values using string compation
+   * instead of AbstractFieldDetails equal function
+   *
+   * @param a a set to compare
+   * @param b another set to compare
+   * @return ``true`` if the sets are equal, ``false`` otherwise
+   *
+   * @since UNRELEASED
+   */
+  public static bool set_string_afd_equal (
+      Set<AbstractFieldDetails<string> > a,
+      Set<AbstractFieldDetails<string> > b)
+    {
+      if (a == b)
+        return true;
+
+      var a_size = a.size;
+      var b_size = b.size;
+
+      if (a_size == 0 && b_size == 0)
+        {
+          /* fast path: avoid creating the iterator, which is a GObject */
+          return true;
+        }
+      else if (a_size == b_size)
+        {
+          foreach (var a_val in a)
+            {
+              bool found = false;
+              foreach (var b_val in b)
+                {
+                  if (a_val.parameters_equal (b_val) &&
+                      str_equal(a_val.value, b_val.value))
+                    {
+                      found = true;
+                    }
+                }
+              if (!found)
+                {
+                  return false;
+                }
+            }
+        }
+      else
+        {
+          return false;
+        }
+
+      return true;
+    }
 }

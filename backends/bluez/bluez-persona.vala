@@ -367,7 +367,7 @@ public class Folks.Backends.BlueZ.Persona : Folks.Persona,
       this.freeze_notify ();
 
       /* Phone numbers. */
-      if (!Folks.Internal.equal_sets<PhoneFieldDetails> (this._phone_numbers,
+      if (!Utils.set_string_afd_equal (this._phone_numbers,
               new_phone_numbers))
         {
           this._phone_numbers = new_phone_numbers;

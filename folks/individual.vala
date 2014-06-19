@@ -2433,7 +2433,7 @@ public class Folks.Individual : Object,
                     }
                 }
 
-              if (!Utils.set_afd_equal (new_phone_numbers, this._phone_numbers))
+              if (!Utils.set_string_afd_equal (new_phone_numbers, this._phone_numbers))
                 {
                   this._phone_numbers = new_phone_numbers;
                   this._phone_numbers_ro = new_phone_numbers.read_only_view;

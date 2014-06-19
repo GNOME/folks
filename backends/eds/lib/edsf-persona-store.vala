@@ -1606,7 +1606,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
               _("Phone numbers are not writeable on this contact."));
         }
 
-      if (Folks.Internal.equal_sets<PhoneFieldDetails> (phones,
+      if (Utils.set_string_afd_equal (phones,
           persona.phone_numbers))
         return;
 

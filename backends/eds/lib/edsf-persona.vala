@@ -2000,8 +2000,10 @@ public class Edsf.Persona : Folks.Persona,
           new_phone_numbers.add (phone_fd);
         }
 
-      if (!Folks.Internal.equal_sets<PhoneFieldDetails>  (new_phone_numbers,
-              this._phone_numbers))
+      // Does not use phone comparation because this will try to match only
+      // numbers and will remove the prefix, and that could cause a wrong result
+      // since the the phone number is stored as string
+      if (!Utils.set_string_afd_equal (this._phone_numbers, new_phone_numbers))
         {
           this._phone_numbers = new_phone_numbers;
           this._phone_numbers_ro = new_phone_numbers.read_only_view;

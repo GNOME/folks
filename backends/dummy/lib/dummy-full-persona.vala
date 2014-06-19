@@ -1052,7 +1052,7 @@ public class FolksDummy.FullPersona : FolksDummy.Persona,
    */
   public void update_phone_numbers (Set<PhoneFieldDetails> phone_numbers)
     {
-      if (!Folks.Internal.equal_sets<PhoneFieldDetails> (phone_numbers,
+      if (!Utils.set_string_afd_equal (phone_numbers,
               this._phone_numbers))
         {
           this._phone_numbers =

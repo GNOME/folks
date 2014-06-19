@@ -1090,7 +1090,7 @@ public class Tpf.Persona : Folks.Persona,
           changed = true;
         }
 
-      if (!Folks.Internal.equal_sets<PhoneFieldDetails> (new_phone_numbers,
+      if (!Utils.set_string_afd_equal (new_phone_numbers,
               this._phone_numbers))
         {
           this._phone_numbers = new_phone_numbers;

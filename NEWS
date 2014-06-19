@@ -26,12 +26,14 @@ Bugs fixed:
    from _edsf_persona_update
  • Bug 731325 — Fails to build with srcdir != builddir
  • Bug 731464 — Fail to run EDS tests
+ • Bug 731175 — Modifying contact phone number get a timeout
 
 API changes:
  • Add Individual.display_name
  • Add StructuredName.to_string_with_format()
  • Add libfolks-dummy.la and all its symbols
  • Add IndividualAggregator.backend_store
+ • Add Utils.set_string_afd_equal
 
 Overview of changes from libfolks 0.9.5 to libfolks 0.9.6
 =========================================================
