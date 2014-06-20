@@ -99,6 +99,7 @@ libfolks_test_la_VALAFLAGS = \
 	--pkg dbus-glib-1 \
 	--pkg folks \
 	--pkg build-conf \
+	--pkg posix \
 	--library folks-test \
 	--vapi folks-test.vapi \
 	-H folks-test.h \

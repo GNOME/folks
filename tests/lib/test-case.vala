@@ -425,6 +425,25 @@ public abstract class Folks.TestCase : Object
       if (this.uses_dbus_1)
         TestCase._dbus_1_set_no_exit_on_disconnect ();
 
+      /* FIXME: The EDS tests randomly fail due to race conditions in tearing
+       * down the GTestDBus. So avoid that completely, because I’m sick of not
+       * being able to release while waiting for a solution to be hammered out
+       * for the GTestDBus/weak-ref problem.
+       *
+       * See:
+       *  • https://bugzilla.gnome.org/show_bug.cgi?id=726973
+       *  • https://bugzilla.gnome.org/show_bug.cgi?id=729150
+       *  • https://bugzilla.gnome.org/show_bug.cgi?id=711807
+       *  • https://bugzilla.gnome.org/show_bug.cgi?id=729152
+       */
+      if (this._transient_dir != null)
+        {
+          unowned string dir = (!) this._transient_dir;
+          Folks.TestUtils.remove_directory_recursively (dir);
+        }
+
+      Posix.exit (0);
+
       if (this.test_dbus != null)
         {
           ((!) this.test_dbus).down ();
@@ -435,12 +454,6 @@ public abstract class Folks.TestCase : Object
         {
           ((!) this.test_system_dbus).down ();
           this.test_system_dbus = null;
-        }
-
-      if (this._transient_dir != null)
-        {
-          unowned string dir = (!) this._transient_dir;
-          Folks.TestUtils.remove_directory_recursively (dir);
         }
     }
 
