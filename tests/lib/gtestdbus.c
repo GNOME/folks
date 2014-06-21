@@ -444,6 +444,7 @@ struct _FolksTestDBusPrivate
   FolksTestDBusFlags flags;
   GPtrArray *service_dirs;
   GPid bus_pid;
+  gint bus_stdout_fd;
   gchar *bus_address;
   gboolean up;
 };
@@ -618,7 +619,6 @@ start_daemon (FolksTestDBus *self)
   const gchar *argv[] = {"dbus-daemon", "--print-address", "--config-file=foo", NULL};
   gchar *config_path;
   gchar *config_arg;
-  gint stdout_fd;
   GIOChannel *channel;
   gsize termpos;
   GError *error = NULL;
@@ -644,15 +644,18 @@ start_daemon (FolksTestDBus *self)
                             NULL,
                             &self->priv->bus_pid,
                             NULL,
-                            &stdout_fd,
+                            &self->priv->bus_stdout_fd,
                             NULL,
                             &error);
   g_assert_no_error (error);
 
   _folks_test_watcher_add_pid (self->priv->bus_pid);
 
-  /* Read bus address from daemon' stdout */
-  channel = g_io_channel_unix_new (stdout_fd);
+  /* Read bus address from daemon' stdout. We have to be careful to avoid
+   * closing the FD, as it is passed to any D-Bus service activated processes,
+   * and if we close it, they will get a SIGPIPE and die when they try to write
+   * to their stdout. */
+  channel = g_io_channel_unix_new (dup (self->priv->bus_stdout_fd));
   g_io_channel_read_line (channel, &self->priv->bus_address, NULL,
       &termpos, &error);
   g_assert_no_error (error);
@@ -696,6 +699,8 @@ stop_daemon (FolksTestDBus *self)
   _folks_test_watcher_remove_pid (self->priv->bus_pid);
   g_spawn_close_pid (self->priv->bus_pid);
   self->priv->bus_pid = 0;
+  close (self->priv->bus_stdout_fd);
+  self->priv->bus_stdout_fd = -1;
 
   g_free (self->priv->bus_address);
   self->priv->bus_address = NULL;
