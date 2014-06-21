@@ -32,7 +32,7 @@ public class TrackerTest.Backend
   public static const string URLS = "nco:urls";
   public bool debug { get; set; }
   private GLib.List<Gee.HashMap<string, string>> _contacts;
-  private Tracker.Sparql.Connection _connection;
+  private Tracker.Sparql.Connection? _connection;
 
 
   public Backend ()
@@ -50,7 +50,8 @@ public class TrackerTest.Backend
   /* Remove contacts */
   public void tear_down ()
     {
-
+      this.reset ();
+      this._connection = null;
     }
 
   public void reset ()
