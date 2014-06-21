@@ -176,7 +176,7 @@ public interface Folks.AntiLinkable : Folks.Persona
    * asynchronous call, then begin another before the first has finished).
    *
    * @throws PropertyError if setting the anti-links failed
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public async void add_global_anti_link()
       throws PropertyError
@@ -199,7 +199,7 @@ public interface Folks.AntiLinkable : Folks.Persona
    * asynchronous call, then begin another before the first has finished).
    *
    * @throws PropertyError if setting the anti-links failed
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public async void remove_global_anti_link()
       throws PropertyError
@@ -218,7 +218,7 @@ public interface Folks.AntiLinkable : Folks.Persona
    * If the persona has global anti link this means that the persona can not be
    * linked with any other persona.
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public bool has_global_anti_link()
     {

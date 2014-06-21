@@ -50,7 +50,7 @@ extern const string BACKEND_NAME;
  * The API in {@link FolksDummy} is unstable and may change wildly. It is
  * designed mostly for use by libfolks unit tests.
  *
- * @since UNRELEASED
+ * @since 0.9.7
  */
 public class FolksDummy.Backend : Folks.Backend
 {
@@ -65,7 +65,7 @@ public class FolksDummy.Backend : Folks.Backend
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public Backend ()
     {
@@ -85,7 +85,7 @@ public class FolksDummy.Backend : Folks.Backend
    *
    * See {@link Folks.Backend.is_prepared}.
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public override bool is_prepared
     {
@@ -97,7 +97,7 @@ public class FolksDummy.Backend : Folks.Backend
    *
    * See {@link Folks.Backend.is_quiescent}.
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public override bool is_quiescent
     {
@@ -107,14 +107,14 @@ public class FolksDummy.Backend : Folks.Backend
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public override string name { get { return BACKEND_NAME; } }
 
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public override Map<string, PersonaStore> persona_stores
     {
@@ -124,7 +124,7 @@ public class FolksDummy.Backend : Folks.Backend
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public override void disable_persona_store (Folks.PersonaStore store)
     {
@@ -134,7 +134,7 @@ public class FolksDummy.Backend : Folks.Backend
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public override void enable_persona_store (Folks.PersonaStore store)
     {
@@ -144,7 +144,7 @@ public class FolksDummy.Backend : Folks.Backend
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public override void set_persona_stores (Set<string>? store_ids)
     {
@@ -234,7 +234,7 @@ public class FolksDummy.Backend : Folks.Backend
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public override async void prepare () throws GLib.Error
     {
@@ -268,7 +268,7 @@ public class FolksDummy.Backend : Folks.Backend
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public override async void unprepare () throws GLib.Error
     {
@@ -329,7 +329,7 @@ public class FolksDummy.Backend : Folks.Backend
    *
    * @param stores set of persona stores to register
    * @param enable_stores whether to automatically enable the stores
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public void register_persona_stores (Set<PersonaStore> stores,
       bool enable_stores = true)
@@ -370,7 +370,7 @@ public class FolksDummy.Backend : Folks.Backend
    * {@link Folks.Backend.persona_stores} will be emitted (but only if at least
    * one removal signal is emitted).
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public void unregister_persona_stores (Set<PersonaStore> stores)
     {

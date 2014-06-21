@@ -229,7 +229,7 @@ public class Folks.Utils : Object
    * @param b another set to compare
    * @return ``true`` if the sets are equal, ``false`` otherwise
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public static bool set_string_afd_equal (
       Set<AbstractFieldDetails<string> > a,

@@ -26,7 +26,7 @@ using GLib;
  * This is exposed by python-dbusmock as the primary means of controlling a
  * mocked up D-Bus service.
  *
- * @since UNRELEASED
+ * @since 0.9.7
  */
 
 /* Reference:

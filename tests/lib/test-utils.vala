@@ -285,7 +285,7 @@ public class Folks.TestUtils
    * @param expected_persona_names set of full names of the expected personas
    * @throws GLib.Error if preparing the aggregator failed
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public static async void aggregator_prepare_and_wait_for_individuals (
       IndividualAggregator aggregator, string[] expected_persona_names)
@@ -366,7 +366,7 @@ public class Folks.TestUtils
    * @param expected_removed_persona_names set of full names of the expected
    * personas to be removed
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public static async void aggregator_wait_for_individuals (
       IndividualAggregator aggregator, string[] expected_added_persona_names,
@@ -454,7 +454,7 @@ public class Folks.TestUtils
    * @param aggregator the aggregator to prepare
    * @param expected_persona_names set of full names of the expected personas
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public static void aggregator_prepare_and_wait_for_individuals_sync_with_timeout (
       IndividualAggregator aggregator, string[] expected_persona_names,
@@ -497,7 +497,7 @@ public class Folks.TestUtils
    * @param full_name name of the individual to retrieve
    * @return individual with the given name
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public static Individual get_individual_by_name (
       IndividualAggregator aggregator, string full_name)
@@ -594,7 +594,7 @@ public class Folks.TestUtils
    *
    * @param context A main context, or ``null`` to use the default main context.
    * @returns Whether there are no events pending on the context.
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public static bool main_context_is_empty (MainContext? context = null)
     {

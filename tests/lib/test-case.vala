@@ -228,7 +228,7 @@ public abstract class Folks.TestCase : Object
    * @param bus_name the well-known bus name used by the service
    * @param dbusmock_template_name name of the python-dbusmock template to use
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public void create_dbusmock_service (BusType bus_type, string bus_name,
       string dbusmock_template_name)
@@ -302,7 +302,7 @@ public abstract class Folks.TestCase : Object
    *
    * As with {@link TestCase.test_dbus} this is per-process.
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public Folks.TestDBus? test_system_dbus = null;
 

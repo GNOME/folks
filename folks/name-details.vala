@@ -281,7 +281,7 @@ public class Folks.StructuredName : Object
    *
    * @param name_fmt format string for the name
    * @return name formatted according to the given format
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public string to_string_with_format (string name_fmt)
     {

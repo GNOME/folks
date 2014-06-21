@@ -30,7 +30,7 @@ using Folks;
  * The dummy backend module entry point.
  *
  * @backend_store a store to add the dummy backends to
- * @since UNRELEASED
+ * @since 0.9.7
  */
 public void module_init (BackendStore backend_store)
 {
@@ -41,7 +41,7 @@ public void module_init (BackendStore backend_store)
  * The dummy backend module exit point.
  *
  * @param backend_store the store to remove the backends from
- * @since UNRELEASED
+ * @since 0.9.7
  */
 public void module_finalize (BackendStore backend_store)
 {

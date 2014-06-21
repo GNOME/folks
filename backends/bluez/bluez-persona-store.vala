@@ -932,7 +932,7 @@ public class Folks.Backends.BlueZ.PersonaStore : Folks.PersonaStore
    *
    * @param download_photos whether to download photos
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   private void _schedule_update_contacts (bool download_photos)
     {
@@ -1024,7 +1024,7 @@ public class Folks.Backends.BlueZ.PersonaStore : Folks.PersonaStore
    * necessary to avoid the store maintaining a reference to itself (through the
    * closure for the next scheduled update) and thus never being finalised.
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   internal void cancel_updates ()
     {

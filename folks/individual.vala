@@ -321,7 +321,7 @@ public class Folks.Individual : Object,
    * # Postal address
    * # _("Unnamed Person")
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   [CCode (notify = false)]
   public string display_name

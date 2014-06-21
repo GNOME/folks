@@ -52,7 +52,7 @@ using GLib;
  * The API in {@link FolksDummy} is unstable and may change wildly. It is
  * designed mostly for use by libfolks unit tests.
  *
- * @since UNRELEASED
+ * @since 0.9.7
  */
 public class FolksDummy.FullPersona : FolksDummy.Persona,
     AntiLinkable,
@@ -95,7 +95,7 @@ public class FolksDummy.FullPersona : FolksDummy.Persona,
    * @param linkable_properties an array of names of the properties which should
    * be used for linking this persona to others
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public FullPersona (PersonaStore store, string contact_id,
       bool is_user = false,
@@ -128,7 +128,7 @@ public class FolksDummy.FullPersona : FolksDummy.Persona,
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   [CCode (notify = false)]
   public MultiMap<string, WebServiceFieldDetails> web_service_addresses
@@ -140,7 +140,7 @@ public class FolksDummy.FullPersona : FolksDummy.Persona,
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public async void change_web_service_addresses (
       MultiMap<string, WebServiceFieldDetails> web_service_addresses)
@@ -158,7 +158,7 @@ public class FolksDummy.FullPersona : FolksDummy.Persona,
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   [CCode (notify = false)]
   public Set<string> local_ids
@@ -177,7 +177,7 @@ public class FolksDummy.FullPersona : FolksDummy.Persona,
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public async void change_local_ids (Set<string> local_ids)
       throws PropertyError
@@ -195,7 +195,7 @@ public class FolksDummy.FullPersona : FolksDummy.Persona,
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   [CCode (notify = false)]
   public Set<PostalAddressFieldDetails> postal_addresses
@@ -207,7 +207,7 @@ public class FolksDummy.FullPersona : FolksDummy.Persona,
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public async void change_postal_addresses (
       Set<PostalAddressFieldDetails> postal_addresses) throws PropertyError
@@ -225,7 +225,7 @@ public class FolksDummy.FullPersona : FolksDummy.Persona,
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   [CCode (notify = false)]
   public Set<PhoneFieldDetails> phone_numbers
@@ -237,7 +237,7 @@ public class FolksDummy.FullPersona : FolksDummy.Persona,
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public async void change_phone_numbers (
       Set<PhoneFieldDetails> phone_numbers) throws PropertyError
@@ -257,7 +257,7 @@ public class FolksDummy.FullPersona : FolksDummy.Persona,
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   [CCode (notify = false)]
   public Set<EmailFieldDetails> email_addresses
@@ -269,7 +269,7 @@ public class FolksDummy.FullPersona : FolksDummy.Persona,
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public async void change_email_addresses (
       Set<EmailFieldDetails> email_addresses) throws PropertyError
@@ -286,7 +286,7 @@ public class FolksDummy.FullPersona : FolksDummy.Persona,
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   [CCode (notify = false)]
   public Set<NoteFieldDetails> notes
@@ -298,7 +298,7 @@ public class FolksDummy.FullPersona : FolksDummy.Persona,
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public async void change_notes (Set<NoteFieldDetails> notes)
       throws PropertyError
@@ -314,7 +314,7 @@ public class FolksDummy.FullPersona : FolksDummy.Persona,
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   [CCode (notify = false)]
   public LoadableIcon? avatar
@@ -326,7 +326,7 @@ public class FolksDummy.FullPersona : FolksDummy.Persona,
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public async void change_avatar (LoadableIcon? avatar) throws PropertyError
     {
@@ -341,7 +341,7 @@ public class FolksDummy.FullPersona : FolksDummy.Persona,
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   [CCode (notify = false)]
   public StructuredName? structured_name
@@ -353,7 +353,7 @@ public class FolksDummy.FullPersona : FolksDummy.Persona,
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public async void change_structured_name (StructuredName? structured_name)
       throws PropertyError
@@ -369,7 +369,7 @@ public class FolksDummy.FullPersona : FolksDummy.Persona,
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   [CCode (notify = false)]
   public string full_name
@@ -381,7 +381,7 @@ public class FolksDummy.FullPersona : FolksDummy.Persona,
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public async void change_full_name (string full_name) throws PropertyError
     {
@@ -396,7 +396,7 @@ public class FolksDummy.FullPersona : FolksDummy.Persona,
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   [CCode (notify = false)]
   public string nickname
@@ -408,7 +408,7 @@ public class FolksDummy.FullPersona : FolksDummy.Persona,
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public async void change_nickname (string nickname) throws PropertyError
     {
@@ -423,7 +423,7 @@ public class FolksDummy.FullPersona : FolksDummy.Persona,
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   [CCode (notify = false)]
   public Gender gender
@@ -435,7 +435,7 @@ public class FolksDummy.FullPersona : FolksDummy.Persona,
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public async void change_gender (Gender gender) throws PropertyError
     {
@@ -450,7 +450,7 @@ public class FolksDummy.FullPersona : FolksDummy.Persona,
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   [CCode (notify = false)]
   public Set<UrlFieldDetails> urls
@@ -462,7 +462,7 @@ public class FolksDummy.FullPersona : FolksDummy.Persona,
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public async void change_urls (Set<UrlFieldDetails> urls) throws PropertyError
     {
@@ -480,7 +480,7 @@ public class FolksDummy.FullPersona : FolksDummy.Persona,
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   [CCode (notify = false)]
   public MultiMap<string, ImFieldDetails> im_addresses
@@ -492,7 +492,7 @@ public class FolksDummy.FullPersona : FolksDummy.Persona,
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public async void change_im_addresses (
       MultiMap<string, ImFieldDetails> im_addresses) throws PropertyError
@@ -509,7 +509,7 @@ public class FolksDummy.FullPersona : FolksDummy.Persona,
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   [CCode (notify = false)]
   public Set<string> groups
@@ -521,7 +521,7 @@ public class FolksDummy.FullPersona : FolksDummy.Persona,
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public async void change_group (string group, bool is_member)
       throws GLib.Error
@@ -555,7 +555,7 @@ public class FolksDummy.FullPersona : FolksDummy.Persona,
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public async void change_groups (Set<string> groups) throws PropertyError
     {
@@ -570,7 +570,7 @@ public class FolksDummy.FullPersona : FolksDummy.Persona,
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   [CCode (notify = false)]
   public string? calendar_event_id
@@ -582,7 +582,7 @@ public class FolksDummy.FullPersona : FolksDummy.Persona,
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public async void change_calendar_event_id (string? calendar_event_id)
       throws PropertyError
@@ -598,7 +598,7 @@ public class FolksDummy.FullPersona : FolksDummy.Persona,
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   [CCode (notify = false)]
   public DateTime? birthday
@@ -610,7 +610,7 @@ public class FolksDummy.FullPersona : FolksDummy.Persona,
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public async void change_birthday (DateTime? bday)
       throws PropertyError
@@ -627,7 +627,7 @@ public class FolksDummy.FullPersona : FolksDummy.Persona,
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   [CCode (notify = false)]
   public Set<RoleFieldDetails> roles
@@ -639,7 +639,7 @@ public class FolksDummy.FullPersona : FolksDummy.Persona,
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public async void change_roles (Set<RoleFieldDetails> roles)
       throws PropertyError
@@ -655,7 +655,7 @@ public class FolksDummy.FullPersona : FolksDummy.Persona,
   /**
    * Whether this contact is a user-defined favourite.
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   [CCode (notify = false)]
   public bool is_favourite
@@ -667,7 +667,7 @@ public class FolksDummy.FullPersona : FolksDummy.Persona,
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public async void change_is_favourite (bool is_favourite) throws PropertyError
     {
@@ -683,7 +683,7 @@ public class FolksDummy.FullPersona : FolksDummy.Persona,
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   [CCode (notify = false)]
   public Set<string> anti_links
@@ -695,7 +695,7 @@ public class FolksDummy.FullPersona : FolksDummy.Persona,
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public async void change_anti_links (Set<string> anti_links)
       throws PropertyError
@@ -742,7 +742,7 @@ public class FolksDummy.FullPersona : FolksDummy.Persona,
    * this results in a property change notification on the persona.
    *
    * @param gender persona's new gender
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public void update_gender (Gender gender)
     {
@@ -763,7 +763,7 @@ public class FolksDummy.FullPersona : FolksDummy.Persona,
    * persona.
    *
    * @param calendar_event_id persona's new birthday calendar event ID
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public void update_calendar_event_id (string? calendar_event_id)
     {
@@ -783,7 +783,7 @@ public class FolksDummy.FullPersona : FolksDummy.Persona,
    * changes, this results in a property change notification on the persona.
    *
    * @param birthday persona's new birthday
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public void update_birthday (DateTime? birthday)
     {
@@ -805,7 +805,7 @@ public class FolksDummy.FullPersona : FolksDummy.Persona,
    * this results in a property change notification on the persona.
    *
    * @param roles persona's new roles
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public void update_roles (Set<RoleFieldDetails> roles)
     {
@@ -826,7 +826,7 @@ public class FolksDummy.FullPersona : FolksDummy.Persona,
    * this results in a property change notification on the persona.
    *
    * @param groups persona's new groups
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public void update_groups (Set<string> groups)
     {
@@ -848,7 +848,7 @@ public class FolksDummy.FullPersona : FolksDummy.Persona,
    * the persona.
    *
    * @param web_service_addresses persona's new web service addresses
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public void update_web_service_addresses (
       MultiMap<string, WebServiceFieldDetails> web_service_addresses)
@@ -872,7 +872,7 @@ public class FolksDummy.FullPersona : FolksDummy.Persona,
    * changes, this results in a property change notification on the persona.
    *
    * @param email_addresses persona's new e-mail addresses
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public void update_email_addresses (Set<EmailFieldDetails> email_addresses)
     {
@@ -895,7 +895,7 @@ public class FolksDummy.FullPersona : FolksDummy.Persona,
    * this results in a property change notification on the persona.
    *
    * @param notes persona's new notes
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public void update_notes (Set<NoteFieldDetails> notes)
     {
@@ -916,7 +916,7 @@ public class FolksDummy.FullPersona : FolksDummy.Persona,
    * this results in a property change notification on the persona.
    *
    * @param full_name persona's new full name
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public void update_full_name (string full_name)
     {
@@ -936,7 +936,7 @@ public class FolksDummy.FullPersona : FolksDummy.Persona,
    * this results in a property change notification on the persona.
    *
    * @param nickname persona's new nickname
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public void update_nickname (string nickname)
     {
@@ -956,7 +956,7 @@ public class FolksDummy.FullPersona : FolksDummy.Persona,
    * changes, this results in a property change notification on the persona.
    *
    * @param structured_name persona's new structured name
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public void update_structured_name (StructuredName? structured_name)
     {
@@ -981,7 +981,7 @@ public class FolksDummy.FullPersona : FolksDummy.Persona,
    * this results in a property change notification on the persona.
    *
    * @param avatar persona's new avatar
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public void update_avatar (LoadableIcon? avatar)
     {
@@ -1003,7 +1003,7 @@ public class FolksDummy.FullPersona : FolksDummy.Persona,
    * this results in a property change notification on the persona.
    *
    * @param urls persona's new URIs
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public void update_urls (Set<UrlFieldDetails> urls)
     {
@@ -1024,7 +1024,7 @@ public class FolksDummy.FullPersona : FolksDummy.Persona,
    * changes, this results in a property change notification on the persona.
    *
    * @param im_addresses persona's new IM addresses
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public void update_im_addresses (
       MultiMap<string, ImFieldDetails> im_addresses)
@@ -1048,7 +1048,7 @@ public class FolksDummy.FullPersona : FolksDummy.Persona,
    * changes, this results in a property change notification on the persona.
    *
    * @param phone_numbers persona's new phone numbers
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public void update_phone_numbers (Set<PhoneFieldDetails> phone_numbers)
     {
@@ -1072,7 +1072,7 @@ public class FolksDummy.FullPersona : FolksDummy.Persona,
    * the persona.
    *
    * @param postal_addresses persona's new postal addresses
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public void update_postal_addresses (
       Set<PostalAddressFieldDetails> postal_addresses)
@@ -1097,7 +1097,7 @@ public class FolksDummy.FullPersona : FolksDummy.Persona,
    * changes, this results in a property change notification on the persona.
    *
    * @param local_ids persona's new local IDs
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public void update_local_ids (Set<string> local_ids)
     {
@@ -1118,7 +1118,7 @@ public class FolksDummy.FullPersona : FolksDummy.Persona,
    * changes, this results in a property change notification on the persona.
    *
    * @param is_favourite persona's new status as a favourite
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public void update_is_favourite (bool is_favourite)
     {
@@ -1138,7 +1138,7 @@ public class FolksDummy.FullPersona : FolksDummy.Persona,
    * changes, this results in a property change notification on the persona.
    *
    * @param anti_links persona's new anti-links
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public void update_anti_links (Set<string> anti_links)
     {

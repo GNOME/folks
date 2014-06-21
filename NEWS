@@ -2,9 +2,23 @@ Overview of changes from libfolks 0.9.6 to libfolks 0.9.7
 =========================================================
 
 Dependencies:
+ • automake ≥ 1.12
+ • If BlueZ backend is enabled:
+  - GLib ≥ 2.39.2
+  - Python 3.0
+  - python-dbusmock
+  - Vala ≥ 0.22.0.45-383d-dirty
+  - evolution-data-server ≥ 3.9.1
 
 Major changes:
  • Add a dummy backend
+ • Vast numbers of fixes to the unit tests
+ • Improvements to how Personas are transferred between Individuals
+ • Many build system cleanups
+ • New website (https://wiki.gnome.org/Projects/Folks)
+ • Allow backend libraries to have separate LT versions from the core library
+ • Performance improvements in the BlueZ backend
+ • Test suite for the BlueZ backend using python-dbusmock
 
 Bugs fixed:
  • Bug 651672 — Individual should have a display-name property
@@ -27,6 +41,16 @@ Bugs fixed:
  • Bug 731325 — Fails to build with srcdir != builddir
  • Bug 731464 — Fail to run EDS tests
  • Bug 731175 — Modifying contact phone number get a timeout
+ • Bug 712274 — Add test suite for the BlueZ backend
+ • Bug 711544 — Rename backend library namespaces to be of the form
+   ‘FolksSomething’
+ • Bug 711827 — Implement period refreshes of the persona store from the phone
+ • Bug 723187 — there is no way to detect automatic created im fields
+ • Bug 724591 — Tracker test fails
+ • Bug 724058 — Add support to avoid folks auto link
+ • Bug 726787 — Persona store uses the same value for id and display name
+ • Bug 726973 — most e-d-s tests fail
+ • Bug 730201 — some over-linking in the oFono backend
 
 API changes:
  • Add Individual.display_name
@@ -34,6 +58,7 @@ API changes:
  • Add libfolks-dummy.la and all its symbols
  • Add IndividualAggregator.backend_store
  • Add Utils.set_string_afd_equal
+ • Add Folks.Dummy* API
 
 Overview of changes from libfolks 0.9.5 to libfolks 0.9.6
 =========================================================

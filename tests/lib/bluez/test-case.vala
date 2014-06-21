@@ -23,7 +23,7 @@
  * A test case for the BlueZ backend, whose private D-Bus session contains the
  * necessary python-dbusmock instance to mock up BlueZ.
  *
- * @since UNRELEASED
+ * @since 0.9.7
  */
 public class BluezTest.TestCase : Folks.TestCase
 {
@@ -50,7 +50,7 @@ public class BluezTest.TestCase : Folks.TestCase
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public override void set_up ()
     {
@@ -62,7 +62,7 @@ public class BluezTest.TestCase : Folks.TestCase
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public override void private_bus_up ()
     {
@@ -82,7 +82,7 @@ public class BluezTest.TestCase : Folks.TestCase
    *
    * Subclasses may chain up, but are not required to so.
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public virtual void create_backend ()
     {
@@ -96,7 +96,7 @@ public class BluezTest.TestCase : Folks.TestCase
    *
    * Subclasses may chain up, but are not required to so.
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public virtual void configure_primary_store ()
     {
@@ -110,7 +110,7 @@ public class BluezTest.TestCase : Folks.TestCase
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public override void tear_down ()
     {

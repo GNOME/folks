@@ -83,7 +83,7 @@ namespace org
  * exposed as {@link Backend.mock_bluez}, {@link Backend.mock_bluez_base},
  * {@link Backend.mock_obex} and {@link Backend.mock_obex_base}.
  *
- * @since UNRELEASED
+ * @since 0.9.7
  */
 public class BluezTest.Backend
 {
@@ -95,7 +95,7 @@ public class BluezTest.Backend
   /**
    * D-Bus proxy for the BlueZ-specific mock interface on the org.bluez object.
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public org.bluez.Mock? mock_bluez
     {
@@ -105,7 +105,7 @@ public class BluezTest.Backend
   /**
    * D-Bus proxy for the dbusmock mock interface on the org.bluez object.
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public org.freedesktop.DBus.Mock? mock_bluez_base
     {
@@ -116,7 +116,7 @@ public class BluezTest.Backend
    * D-Bus proxy for the BlueZ-specific mock interface on the org.bluez.obex
    * object.
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public org.bluez.obex.Mock? mock_obex
     {
@@ -126,7 +126,7 @@ public class BluezTest.Backend
   /**
    * D-Bus proxy for the dbusmock mock interface on the org.bluez.obex object.
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public org.freedesktop.DBus.Mock? mock_obex_base
     {
@@ -139,7 +139,7 @@ public class BluezTest.Backend
    * This is the address used for the primary Bluetooth adapter (``hci0``)
    * unless otherwise specified.
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public string primary_device_address
     {
@@ -157,7 +157,7 @@ public class BluezTest.Backend
    * buses which are in use. This is done in
    * {@link TestCase.create_transient_dir}.
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public void set_up ()
     {
@@ -191,7 +191,7 @@ public class BluezTest.Backend
    * {@link Backend.set_up}, although the python-dbusmock processes are kept
    * around and reset, rather than being killed.
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public void tear_down ()
     {
@@ -233,7 +233,7 @@ public class BluezTest.Backend
    * @return ID of the signal returning the vCard, as per
    * {@link Backend.set_simple_device_vcard}
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public ulong create_simple_device_with_vcard (string vcard,
       out string? adapter_path = null, out string? device_path = null)
@@ -271,7 +271,7 @@ public class BluezTest.Backend
    * @param vcard series of vCards for the device’s address book
    * @return ID of the signal returning the vCard
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public ulong set_simple_device_vcard (string vcard)
     {

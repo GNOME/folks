@@ -28,7 +28,7 @@ using Gee;
  * A test case for the dummy backend, which is configured as the
  * primary store and as the only backend allowed.
  *
- * @since UNRELEASED
+ * @since 0.9.7
  */
 public class DummyTest.TestCase : Folks.TestCase
 {
@@ -37,14 +37,14 @@ public class DummyTest.TestCase : Folks.TestCase
   /**
    * The dummy test backend.
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public FolksDummy.Backend dummy_backend;
 
   /**
    * The default dummy persona store.
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public FolksDummy.PersonaStore dummy_persona_store;
 
@@ -53,7 +53,7 @@ public class DummyTest.TestCase : Folks.TestCase
    *
    * @param name test case name
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public TestCase (string name)
     {
@@ -66,7 +66,7 @@ public class DummyTest.TestCase : Folks.TestCase
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public override void set_up ()
     {
@@ -102,7 +102,7 @@ public class DummyTest.TestCase : Folks.TestCase
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public virtual void configure_primary_store ()
     {
@@ -129,7 +129,7 @@ public class DummyTest.TestCase : Folks.TestCase
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public override void tear_down ()
     {

@@ -241,7 +241,7 @@ public class Folks.Backends.BlueZ.Persona : Folks.Persona,
    * @param vcard pre-parsed vCard
    * @return ``true`` if any properties were changed, ``false`` otherwise
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   internal bool update_from_vcard (E.VCard card)
     {

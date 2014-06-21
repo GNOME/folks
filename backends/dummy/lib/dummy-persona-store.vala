@@ -57,7 +57,7 @@ using GLib;
  * The API in {@link FolksDummy} is unstable and may change wildly. It is
  * designed mostly for use by libfolks unit tests.
  *
- * @since UNRELEASED
+ * @since 0.9.7
  */
 public class FolksDummy.PersonaStore : Folks.PersonaStore
 {
@@ -72,7 +72,7 @@ public class FolksDummy.PersonaStore : Folks.PersonaStore
    *
    * See {@link Folks.PersonaStore.type_id}.
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public override string type_id { get { return BACKEND_NAME; } }
 
@@ -83,7 +83,7 @@ public class FolksDummy.PersonaStore : Folks.PersonaStore
    *
    * See {@link Folks.PersonaStore.can_add_personas}.
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public override MaybeBool can_add_personas
     {
@@ -105,7 +105,7 @@ public class FolksDummy.PersonaStore : Folks.PersonaStore
    *
    * See {@link Folks.PersonaStore.can_alias_personas}.
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public override MaybeBool can_alias_personas
     {
@@ -125,7 +125,7 @@ public class FolksDummy.PersonaStore : Folks.PersonaStore
    *
    * See {@link Folks.PersonaStore.can_group_personas}.
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public override MaybeBool can_group_personas
     {
@@ -143,7 +143,7 @@ public class FolksDummy.PersonaStore : Folks.PersonaStore
    *
    * See {@link Folks.PersonaStore.can_remove_personas}.
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public override MaybeBool can_remove_personas
     {
@@ -163,7 +163,7 @@ public class FolksDummy.PersonaStore : Folks.PersonaStore
    *
    * See {@link Folks.PersonaStore.is_prepared}.
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public override bool is_prepared
     {
@@ -176,7 +176,7 @@ public class FolksDummy.PersonaStore : Folks.PersonaStore
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public override string[] always_writeable_properties
     {
@@ -196,7 +196,7 @@ public class FolksDummy.PersonaStore : Folks.PersonaStore
    *
    * See {@link Folks.PersonaStore.is_quiescent}.
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public override bool is_quiescent
     {
@@ -223,7 +223,7 @@ public class FolksDummy.PersonaStore : Folks.PersonaStore
    *
    * See {@link Folks.PersonaStore.personas}.
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public override Map<string, Persona> personas
     {
@@ -242,7 +242,7 @@ public class FolksDummy.PersonaStore : Folks.PersonaStore
    * @param display_name The new store's display name.
    * @param always_writeable_properties The set of always writeable properties.
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public PersonaStore (string id, string display_name,
       string[] always_writeable_properties)
@@ -290,7 +290,7 @@ public class FolksDummy.PersonaStore : Folks.PersonaStore
    * @throws Folks.PersonaStoreError.CREATE_FAILED if creating the persona in
    * the dummy store failed
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public override async Folks.Persona? add_persona_from_details (
       HashTable<string, Value?> details) throws PersonaStoreError
@@ -520,7 +520,7 @@ public class FolksDummy.PersonaStore : Folks.PersonaStore
    * @throws Folks.PersonaStoreError.REMOVE_FAILED if any other errors happened
    * in the store
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public override async void remove_persona (Folks.Persona persona)
       throws PersonaStoreError
@@ -568,7 +568,7 @@ public class FolksDummy.PersonaStore : Folks.PersonaStore
    * @throws Folks.PersonaStoreError.INVALID_ARGUMENT if any other error
    * occurred in the store
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public override async void prepare () throws PersonaStoreError
     {
@@ -628,7 +628,7 @@ public class FolksDummy.PersonaStore : Folks.PersonaStore
    *
    * @param delay number of milliseconds to delay for
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   private async void _implement_mock_delay (int delay)
     {
@@ -675,7 +675,7 @@ public class FolksDummy.PersonaStore : Folks.PersonaStore
    * complete synchronously; zero delays complete in an idle callback; positive
    * delays complete after that many milliseconds)
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public delegate int AddPersonaFromDetailsMock (Persona persona)
       throws PersonaStoreError;
@@ -703,7 +703,7 @@ public class FolksDummy.PersonaStore : Folks.PersonaStore
    * This mock function may be changed at any time; changes will take effect for
    * the next call to {@link Folks.PersonaStore.add_persona_from_details}.
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public unowned AddPersonaFromDetailsMock? add_persona_from_details_mock
     {
@@ -722,7 +722,7 @@ public class FolksDummy.PersonaStore : Folks.PersonaStore
    * delays complete in an idle callback; positive
    * delays complete after that many milliseconds)
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public delegate int RemovePersonaMock (Persona persona)
       throws PersonaStoreError;
@@ -743,7 +743,7 @@ public class FolksDummy.PersonaStore : Folks.PersonaStore
    * This mock function may be changed at any time; changes will take effect for
    * the next call to {@link Folks.PersonaStore.remove_persona}.
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public unowned RemovePersonaMock? remove_persona_mock
     {
@@ -761,7 +761,7 @@ public class FolksDummy.PersonaStore : Folks.PersonaStore
    * complete in an idle callback; positive
    * delays complete after that many milliseconds)
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public delegate int PrepareMock () throws PersonaStoreError;
 
@@ -782,7 +782,7 @@ public class FolksDummy.PersonaStore : Folks.PersonaStore
    * This mock function may be changed at any time; changes will take effect for
    * the next call to {@link Folks.PersonaStore.prepare}.
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public unowned PrepareMock? prepare_mock
     {
@@ -802,7 +802,7 @@ public class FolksDummy.PersonaStore : Folks.PersonaStore
    * next call to {@link Folks.PersonaStore.add_persona_from_details} or
    * {@link FolksDummy.PersonaStore.register_personas}.
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public Type persona_type
     {
@@ -832,7 +832,7 @@ public class FolksDummy.PersonaStore : Folks.PersonaStore
    * user-specified persona aliases
    * @param can_remove_personas whether the store can handle removing personas
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public void update_capabilities (MaybeBool can_add_personas,
       MaybeBool can_alias_personas, MaybeBool can_remove_personas)
@@ -875,7 +875,7 @@ public class FolksDummy.PersonaStore : Folks.PersonaStore
    * {@link FolksDummy.PersonaStore.thaw_personas_changed}.
    *
    * @see PersonaStore.thaw_personas_changed
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public void freeze_personas_changed ()
     {
@@ -892,7 +892,7 @@ public class FolksDummy.PersonaStore : Folks.PersonaStore
    * pending changes are committed and made externally-visible.
    *
    * @see PersonaStore.freeze_personas_changed
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public void thaw_personas_changed ()
     {
@@ -926,7 +926,7 @@ public class FolksDummy.PersonaStore : Folks.PersonaStore
    *
    * @param personas set of personas to register
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public void register_personas (Set<Persona> personas)
     {
@@ -974,7 +974,7 @@ public class FolksDummy.PersonaStore : Folks.PersonaStore
    *
    * @param personas set of personas to unregister
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public void unregister_personas (Set<Persona> personas)
     {
@@ -1023,7 +1023,7 @@ public class FolksDummy.PersonaStore : Folks.PersonaStore
    *
    * This must be called before the store will reach quiescence.
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public void reach_quiescence ()
     {
@@ -1051,7 +1051,7 @@ public class FolksDummy.PersonaStore : Folks.PersonaStore
    *
    * @param is_user_set_default new value for the property
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public void update_is_user_set_default (bool is_user_set_default)
     {
@@ -1068,7 +1068,7 @@ public class FolksDummy.PersonaStore : Folks.PersonaStore
    *
    * @param trust_level new value for the property
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public void update_trust_level (PersonaStoreTrust trust_level)
     {

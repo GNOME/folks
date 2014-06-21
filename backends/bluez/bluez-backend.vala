@@ -443,7 +443,7 @@ public class Folks.Backends.BlueZ.Backend : Folks.Backend
    * Add any new devices which are on D-Bus but aren’t in the BlueZ backend.
    * This does not currently remove devices which have disappeared from D-Bus.
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   private async void _refresh_devices ()
     {

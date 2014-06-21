@@ -79,6 +79,7 @@ public errordomain Folks.IndividualAggregatorError
  * through the aggregator. Personas may be linked together to form individuals;
  * for example, the personas which form ``individual1`` and ``individual2`` may
  * be linked together with ``another_persona`` to give a new {@link Individual}:
+ *
  * {{{
  *   var personas = new HashSet<Persona> ();
  *   personas.add_all (individual1.personas);
@@ -86,6 +87,7 @@ public errordomain Folks.IndividualAggregatorError
  *   personas.add (another_persona);
  *   yield my_individual_aggregator.link_personas (personas);
  * }}}
+ *
  * The individuals which contained those personas will be removed when
  * {@link IndividualAggregator.link_personas} is called. Any personas in those
  * individuals which were not included in the linking call may end up implicitly
@@ -220,7 +222,7 @@ public class Folks.IndividualAggregator : Object
   /**
    * The backend store providing the persona stores for this aggregator.
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public BackendStore backend_store
     {

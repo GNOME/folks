@@ -48,7 +48,7 @@ using GLib;
  * The API in {@link FolksDummy} is unstable and may change wildly. It is
  * designed mostly for use by libfolks unit tests.
  *
- * @since UNRELEASED
+ * @since 0.9.7
  */
 public class FolksDummy.Persona : Folks.Persona
 {
@@ -57,7 +57,7 @@ public class FolksDummy.Persona : Folks.Persona
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public override string[] linkable_properties
     {
@@ -69,7 +69,7 @@ public class FolksDummy.Persona : Folks.Persona
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public override string[] writeable_properties
     {
@@ -94,7 +94,7 @@ public class FolksDummy.Persona : Folks.Persona
    * @param linkable_properties an array of names of the properties which should
    * be used for linking this persona to others
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public Persona (PersonaStore store, string contact_id,
       bool is_user = false, string[] linkable_properties = {})
@@ -115,7 +115,7 @@ public class FolksDummy.Persona : Folks.Persona
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public override void linkable_property_to_links (string prop_name,
       Folks.Persona.LinkablePropertyCallback callback)
@@ -196,7 +196,7 @@ public class FolksDummy.Persona : Folks.Persona
    * This should be used to simulate a change in the backing store for the
    * persona which affects the writeability of one or more of its properties.
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public void update_writeable_properties (string[] writeable_properties)
     {
@@ -241,7 +241,7 @@ public class FolksDummy.Persona : Folks.Persona
    *
    * @param linkable_properties new set of linkable property names, in lower
    * case, hyphenated form
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public void update_linkable_properties (string[] linkable_properties)
     {
@@ -274,7 +274,7 @@ public class FolksDummy.Persona : Folks.Persona
    * change notifications happen that many milliseconds after the change method
    * is called.
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   protected int property_change_delay { get; set; }
 
@@ -287,7 +287,7 @@ public class FolksDummy.Persona : Folks.Persona
    * calling an ‘update’ method such as
    * {@link FolksDummy.FullPersona.update_nickname}.
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   protected delegate void ChangePropertyCallback ();
 
@@ -300,7 +300,7 @@ public class FolksDummy.Persona : Folks.Persona
    *
    * @param property_name name of the property being changed
    * @param callback callback to call once the change delay has passed
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   protected async void change_property (string property_name,
       ChangePropertyCallback callback)

@@ -119,7 +119,7 @@ public class Edsf.Persona : Folks.Persona,
    * and the value ‘TRUE’. This allows clients to detect such fields
    * and (for example) ignore them in the UI.
    *
-   * @since UNRELEASED
+   * @since 0.9.7
    */
   public static const string folks_field_attribute_name = "X-FOLKS-FIELD";
 
