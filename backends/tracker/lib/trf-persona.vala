@@ -557,6 +557,8 @@ public class Trf.Persona : Folks.Persona,
       this._gender = Gender.UNSPECIFIED;
       this._full_name = "";
       this._structured_name = null;
+      this._nickname = "";
+      this._is_favourite = false;
       this._phone_numbers = new SmallSet<PhoneFieldDetails> (
           AbstractFieldDetails<string>.hash_static,
           AbstractFieldDetails<string>.equal_static);
