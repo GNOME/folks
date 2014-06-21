@@ -41,8 +41,6 @@ public class BirthdayUpdatesTests : TrackerTest.TestCase
     {
       base ("BirthdayUpdates");
 
-      ((!) this.tracker_backend).debug = false;
-
       this.add_test ("birthday updates", this.test_birthday_updates);
     }
 

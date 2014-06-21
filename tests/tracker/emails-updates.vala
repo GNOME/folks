@@ -39,8 +39,6 @@ public class EmailsUpdatesTests : TrackerTest.TestCase
     {
       base ("EmailsUpdates");
 
-      ((!) this.tracker_backend).debug = false;
-
       this.add_test ("emails updates", this.test_emails_updates);
     }
 

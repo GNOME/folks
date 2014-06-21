@@ -40,8 +40,6 @@ public class FavouriteUpdatesTests : TrackerTest.TestCase
     {
       base ("FavouriteUpdates");
 
-      ((!) this.tracker_backend).debug = false;
-
       this.add_test ("favourite update", this.test_favourite_update);
     }
 

@@ -35,8 +35,6 @@ public class RoleDetailsInterfaceTests : TrackerTest.TestCase
     {
       base ("RoleDetailsInterfaceTests");
 
-      ((!) this.tracker_backend).debug = false;
-
       this.add_test ("test role details interface",
           this.test_role_details_interface);
     }

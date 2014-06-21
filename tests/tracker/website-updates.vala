@@ -40,8 +40,6 @@ public class WebsiteUpdatesTests : TrackerTest.TestCase
     {
       base ("WebsiteUpdates");
 
-      ((!) this.tracker_backend).debug = false;
-
       this.add_test ("websites updates", this.test_website_updates);
     }
 

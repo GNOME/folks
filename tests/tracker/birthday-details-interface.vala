@@ -35,8 +35,6 @@ public class BirthdayDetailsInterfaceTests : TrackerTest.TestCase
     {
       base ("BirthdayDetailsInterfaceTests");
 
-      ((!) this.tracker_backend).debug = false;
-
       this.add_test ("test birthday details interface",
           this.test_birthay_details_interface);
     }

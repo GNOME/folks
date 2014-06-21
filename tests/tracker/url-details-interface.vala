@@ -37,8 +37,6 @@ public class UrlDetailsInterfaceTests : TrackerTest.TestCase
     {
       base ("UrlDetailsInterfaceTests");
 
-      ((!) this.tracker_backend).debug = false;
-
       this.add_test ("test url details interface",
           this.test_url_details_interface);
     }

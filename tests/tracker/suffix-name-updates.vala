@@ -40,8 +40,6 @@ public class SuffixNameUpdatesTests : TrackerTest.TestCase
     {
       base ("SuffixNameUpdates");
 
-      ((!) this.tracker_backend).debug = false;
-
       this.add_test ("suffix name updates", this.test_suffix_name_updates);
     }
 

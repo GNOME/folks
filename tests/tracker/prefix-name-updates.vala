@@ -39,8 +39,6 @@ public class PrefixNameUpdatesTests : TrackerTest.TestCase
     {
       base ("PrefixNameUpdates");
 
-      ((!) this.tracker_backend).debug = false;
-
       this.add_test ("prefix name updates", this.test_prefix_name_updates);
     }
 

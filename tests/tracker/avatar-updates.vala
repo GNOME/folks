@@ -41,8 +41,6 @@ public class AvatarUpdatesTests : TrackerTest.TestCase
     {
       base ("AvatarUpdates");
 
-      ((!) this.tracker_backend).debug = false;
-
       this.add_test ("avatar updates", this.test_avatar_updates);
     }
 

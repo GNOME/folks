@@ -51,8 +51,6 @@ public class TrackerTest.TestCase : Folks.TestCase
 
       Environment.set_variable ("FOLKS_BACKENDS_ALLOWED", "tracker", true);
       Environment.set_variable ("FOLKS_PRIMARY_STORE", "tracker", true);
-
-      this.tracker_backend = new TrackerTest.Backend ();
     }
 
   public override void private_bus_up ()
@@ -103,6 +101,25 @@ public class TrackerTest.TestCase : Folks.TestCase
           error ("Error creating D-Bus service file ‘%s’: %s",
               service_file_name, e2.message);
         }
+    }
+
+  public override void set_up ()
+    {
+      base.set_up ();
+      this.create_backend ();
+    }
+
+  /**
+   * Virtual method to create and set up the Tracker backend.
+   * Called from set_up(); may be overridden to not create the backend,
+   * or to create it but not set it up.
+   *
+   * Subclasses may chain up, but are not required to so.
+   */
+  public virtual void create_backend ()
+    {
+      this.tracker_backend = new TrackerTest.Backend ();
+      ((!) this.tracker_backend).set_up ();
     }
 
   public override void tear_down ()

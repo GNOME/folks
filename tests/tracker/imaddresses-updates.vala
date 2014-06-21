@@ -41,8 +41,6 @@ public class IMAddressesUpdatesTests : TrackerTest.TestCase
     {
       base ("IMAddressesUpdates");
 
-      ((!) this.tracker_backend).debug = false;
-
       this.add_test ("im addresses updates", this.test_imaddresses_updates);
     }
 

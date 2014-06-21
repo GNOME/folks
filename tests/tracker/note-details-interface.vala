@@ -35,8 +35,6 @@ public class NoteDetailsInterfaceTests : TrackerTest.TestCase
     {
       base ("NoteDetailsInterfaceTests");
 
-      ((!) this.tracker_backend).debug = false;
-
       this.add_test ("test note details interface",
           this.test_note_details_interface);
     }

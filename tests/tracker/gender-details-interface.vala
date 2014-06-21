@@ -35,8 +35,6 @@ public class GenderDetailsInterfaceTests : TrackerTest.TestCase
     {
       base ("GenderDetailsInterfaceTests");
 
-      ((!) this.tracker_backend).debug = false;
-
       this.add_test ("test gender details interface",
           this.test_gender_details_interface);
     }

@@ -39,8 +39,6 @@ public class AdditionalNamesUpdatesTests : TrackerTest.TestCase
     {
       base ("AdditionalNamesUpdates");
 
-      ((!) this.tracker_backend).debug = false;
-
       this.add_test ("additional names updates",
           this.test_additional_names_updates);
     }

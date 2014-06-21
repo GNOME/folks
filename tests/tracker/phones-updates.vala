@@ -40,8 +40,6 @@ public class PhonesUpdatesTests : TrackerTest.TestCase
     {
       base ("PhonesUpdates");
 
-      ((!) this.tracker_backend).debug = false;
-
       this.add_test ("phones updates", this.test_phones_updates);
     }
 

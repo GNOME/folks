@@ -40,8 +40,6 @@ public class FamilyNameUpdatesTests : TrackerTest.TestCase
     {
       base ("FamilyNameUpdates");
 
-      ((!) this.tracker_backend).debug = false;
-
       this.add_test ("family name updates", this.test_family_name_updates);
     }
 
