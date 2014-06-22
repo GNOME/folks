@@ -158,6 +158,7 @@ FOLKS_TP_VALA_DEPS += tp-zeitgeist.vapi
 else
 FOLKS_TP_VALA_DEPS += tp-zeitgeist-dummy.vapi
 endif
+BUILT_SOURCES = $(FOLKS_TP_VALA_DEPS)
 
 libfolks_telepathy_la_SOURCES = \
 	$(backend_library_sources) \
