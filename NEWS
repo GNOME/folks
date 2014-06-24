@@ -4,6 +4,8 @@ Overview of changes from libfolks 0.9.7.1 to libfolks 0.9.8
 Dependencies:
 
 Major changes:
+ • Fix loading backends on distributions which install software in loop mounted
+   file systems, such as Tinycorelinux
 
 Bugs fixed:
 

@@ -632,6 +632,7 @@ public class Folks.BackendStore : Object {
           FileAttribute.STANDARD_NAME + "," +
           FileAttribute.STANDARD_TYPE + "," +
           FileAttribute.STANDARD_IS_SYMLINK + "," +
+          FileAttribute.STANDARD_SYMLINK_TARGET + "," +
           FileAttribute.STANDARD_CONTENT_TYPE;
 
       GLib.List<FileInfo> infos;
@@ -660,11 +661,45 @@ public class Folks.BackendStore : Object {
       foreach (var info in infos)
         {
           var file = dir.get_child (info.get_name ());
+
+          /* Handle symlinks by derefencing them. If we look at two symlinks
+           * with the same target, we don’t end up loading that backend twice
+           * due to hashing the backend’s absolute path in @modules_final.
+           *
+           * We can’t just ignore symlinks due to the way Tinycorelinux installs
+           * software: /usr/local/lib/folks/41/backends/bluez/bluez.so is a
+           * symlink to
+           * /tmp/tcloop/folks/usr/local/lib/folks/41/backends/bluez/bluez.so,
+           * a loopback squashfs mount of the folks file system. Ignoring
+           * symlinks means we would never load backends in that environment. */
+          if (info.get_is_symlink ())
+            {
+              debug ("Handling symlink ‘%s’ to ‘%s’.",
+                  file.get_path (), info.get_symlink_target ());
+
+              var old_file = file;
+              file = dir.resolve_relative_path (info.get_symlink_target ());
+
+              try
+                {
+                  info =
+                      yield file.query_info_async (attributes,
+                          FileQueryInfoFlags.NONE);
+                }
+              catch (Error error)
+                {
+                  /* Translators: the first parameter is a folder path and the second
+                   * is an error message. */
+                  warning (_("Error querying info for target ‘%s’ of symlink ‘%s’: %s"),
+                      file.get_path (), old_file.get_path (), error.message);
+
+                  continue;
+                }
+            }
+
+          /* Handle proper files. */
           var file_type = info.get_file_type ();
           unowned string content_type = info.get_content_type ();
-          /* don't load the library multiple times for its various symlink
-           * aliases */
-          var is_symlink = info.get_is_symlink ();
 
           string? mime = ContentType.get_mime_type (content_type);
 
@@ -679,7 +714,7 @@ public class Folks.BackendStore : Object {
                     }
                 }
             }
-          else if (mime == "application/x-sharedlib" && !is_symlink)
+          else if (mime == "application/x-sharedlib")
             {
               var path = file.get_path ();
               if (path != null)
