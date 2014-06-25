@@ -282,7 +282,8 @@ public class FolksDummy.Backend : Folks.Backend
           this._prepare_pending = true;
           this.freeze_notify ();
 
-          foreach (var persona_store in this._enabled_persona_stores.values)
+          var enabled_stores = this._enabled_persona_stores.values.to_array ();
+          foreach (var persona_store in enabled_stores)
             {
               this._disable_persona_store (persona_store);
             }

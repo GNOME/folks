@@ -8,6 +8,7 @@ Major changes:
    file systems, such as Tinycorelinux
 
 Bugs fixed:
+ • Bug 732244 — Fail to unprepare stores
 
 API changes:
 
