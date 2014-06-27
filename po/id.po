@@ -2,16 +2,16 @@
 # Copyright (C) 2012 folks's COPYRIGHT HOLDER
 # This file is distributed under the same license as the folks package.
 #
-# Andika Triwidada <andika@gmail.com>, 2012, 2013.
+# Andika Triwidada <andika@gmail.com>, 2012, 2013, 2014.
 # Dirgita <dirgitadevina@yahoo.co.id>, 2012, 2014.
 msgid ""
 msgstr ""
 "Project-Id-Version: folks master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=folks&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2014-04-05 17:08+0000\n"
-"PO-Revision-Date: 2014-04-08 11:54+0700\n"
-"Last-Translator: Dirgita <dirgitadevina@yahoo.co.id>\n"
+"POT-Creation-Date: 2014-06-25 16:48+0000\n"
+"PO-Revision-Date: 2014-06-26 19:01+0700\n"
+"Last-Translator: Andika Triwidada <andika@gmail.com>\n"
 "Language-Team: Indonesian <gnome-l10n-id@googlegroups.com>\n"
 "Language: id\n"
 "MIME-Version: 1.0\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Poedit-SourceCharset: UTF-8\n"
-"X-Generator: Lokalize 1.5\n"
+"X-Generator: Poedit 1.6.5\n"
 
 #: ../backends/bluez/bluez-backend.vala:600
 msgid ""
@@ -50,14 +50,14 @@ msgstr "Galat saat membaca berkas buku alamat yang tertransfer: %s"
 #. * alias.
 #. Translators: the first parameter is the name of the failed
 #. * transfer, and the second is a Bluetooth device alias.
-#: ../backends/bluez/bluez-persona-store.vala:667
-#: ../backends/bluez/bluez-persona-store.vala:689
+#: ../backends/bluez/bluez-persona-store.vala:676
+#: ../backends/bluez/bluez-persona-store.vala:698
 #, c-format
 msgid ""
 "Error during transfer of the address book ‘%s’ from Bluetooth device ‘%s’."
 msgstr "Galat saat mentransfer buku alamat '%s' dari perangkat Bluetooth '%s'."
 
-#: ../backends/bluez/bluez-persona-store.vala:782
+#: ../backends/bluez/bluez-persona-store.vala:791
 #, c-format
 msgid ""
 "Permission to access the address book on Bluetooth device ‘%s’ was denied by "
@@ -68,7 +68,7 @@ msgstr ""
 
 #. Translators: the first parameter is a Bluetooth device
 #. * alias, and the second is an error message.
-#: ../backends/bluez/bluez-persona-store.vala:789
+#: ../backends/bluez/bluez-persona-store.vala:798
 #, c-format
 msgid "An OBEX address book transfer from device ‘%s’ could not be started: %s"
 msgstr ""
@@ -76,20 +76,20 @@ msgstr ""
 
 #. Translators: the first parameter is a Bluetooth device
 #. * alias, and the second is an error message.
-#: ../backends/bluez/bluez-persona-store.vala:829
+#: ../backends/bluez/bluez-persona-store.vala:838
 #, c-format
 msgid "The OBEX address book transfer from device ‘%s’ failed: %s"
 msgstr "Transfer buku alamat OBEX dari perangkat '%s' gagal: %s"
 
 #. Translators: the first parameter is a Bluetooth device
 #. * alias, and the second is an error message.
-#: ../backends/bluez/bluez-persona-store.vala:846
+#: ../backends/bluez/bluez-persona-store.vala:855
 #, c-format
 msgid ""
 "Error during transfer of the address book from Bluetooth device ‘%s’: %s"
 msgstr "Galat saat mentransfer buku alamat dari perangkat Bluetooth '%s': %s"
 
-#: ../backends/bluez/bluez-persona-store.vala:1064
+#: ../backends/bluez/bluez-persona-store.vala:1073
 #, c-format
 msgid "Bluetooth device ‘%s’ disappeared during address book transfer."
 msgstr "Perangkat Bluetooth '%s' menghilang saat transfer buku alamat."
@@ -477,19 +477,26 @@ msgstr "Alias tak dapat ditulisi pada kontak ini."
 
 #. Translators: the first parameter is a folder path and the second
 #. * is an error message.
-#: ../folks/backend-store.vala:651
+#: ../folks/backend-store.vala:652
 #, c-format
 msgid "Error listing contents of folder '%s': %s"
 msgstr "Galat menampilkan daftar dari isi folder '%s': %s"
 
+#. Translators: the first parameter is a folder path and the second
+#. * is an error message.
+#: ../folks/backend-store.vala:693
+#, c-format
+msgid "Error querying info for target ‘%s’ of symlink ‘%s’: %s"
+msgstr "Galat saat kuiri info bagi target '%s' dari symlink '%s': %s"
+
 #. Translators: the parameter is a filename.
-#: ../folks/backend-store.vala:786
+#: ../folks/backend-store.vala:821
 #, c-format
 msgid "File or directory '%s' does not exist."
 msgstr "Berkas atau direktori '%s' tak ada."
 
 #. Translators: the parameter is a filename.
-#: ../folks/backend-store.vala:792
+#: ../folks/backend-store.vala:827
 #, c-format
 msgid "Failed to get content type for '%s'."
 msgstr "Gagal mendapat tipe isi bagi '%s'."
@@ -511,31 +518,31 @@ msgstr "Alamat IM '%s' tak dapat dipahami."
 
 #. Translators: the first parameter is a persona store identifier
 #. * and the second is an error message.
-#: ../folks/individual-aggregator.vala:1040
+#: ../folks/individual-aggregator.vala:1042
 #, c-format
 msgid "Error preparing persona store '%s': %s"
 msgstr "Galat saat menyiapkan penyimpanan persona '%s': %s"
 
 #. Translators: the parameter is a property name.
-#: ../folks/individual-aggregator.vala:1269
-#: ../folks/individual-aggregator.vala:1536
+#: ../folks/individual-aggregator.vala:1274
+#: ../folks/individual-aggregator.vala:1548
 #, c-format
 msgid "Unknown property '%s' in linkable property list."
 msgstr "Properti '%s' tak dikenal dalam daftar properti yang dapat ditaut."
 
 #. Translators: the first parameter is a store identifier
 #. * and the second parameter is an error message.
-#: ../folks/individual-aggregator.vala:2022
+#: ../folks/individual-aggregator.vala:2034
 #, c-format
 msgid "Failed to add contact for persona store ID '%s': %s"
 msgstr "Gagal menambah kontak bagi ID penyimpanan persona '%s': %s"
 
-#: ../folks/individual-aggregator.vala:2119
+#: ../folks/individual-aggregator.vala:2131
 msgid "Can’t link personas with no primary store."
 msgstr "Tak bisa menaut persona tanpa penyimpanan primer."
 
-#: ../folks/individual-aggregator.vala:2120
-#: ../folks/individual-aggregator.vala:2451
+#: ../folks/individual-aggregator.vala:2132
+#: ../folks/individual-aggregator.vala:2463
 #, c-format
 msgid ""
 "Persona store ‘%s:%s’ is configured as primary, but could not be found or "
@@ -544,8 +551,8 @@ msgstr ""
 "Penyimpanan persona '%s:%s' ditata sebagai primer, tapi tak dapat ditemukan "
 "atau gagal dimuat."
 
-#: ../folks/individual-aggregator.vala:2121
-#: ../folks/individual-aggregator.vala:2452
+#: ../folks/individual-aggregator.vala:2133
+#: ../folks/individual-aggregator.vala:2464
 #, c-format
 msgid ""
 "Check the relevant service is running, or change the default store in that "
@@ -554,15 +561,15 @@ msgstr ""
 "Periksa bahwa layanan yang relevan berjalan, atau ubah penyimpanan baku "
 "dalam layanan itu, atau menggunakan kunci GSettings \"%s\"."
 
-#: ../folks/individual-aggregator.vala:2153
+#: ../folks/individual-aggregator.vala:2165
 msgid "Anti-links can't be removed between personas being linked."
 msgstr "Antitaut tidak dapat dihapus di antara persona yang saling berkaitan."
 
-#: ../folks/individual-aggregator.vala:2450
+#: ../folks/individual-aggregator.vala:2462
 msgid "Can’t add personas with no primary store."
 msgstr "Tak dapat menambah persona tanpa penyimpanan primer."
 
-#: ../folks/individual-aggregator.vala:2461
+#: ../folks/individual-aggregator.vala:2473
 #, c-format
 msgid "Can't write to requested property (“%s”) of the writeable store."
 msgstr ""
@@ -829,12 +836,3 @@ msgid ""
 msgstr ""
 "Nama backend sumber '%s' tak dikenal. '%s' kini satu-satunya backend sumber "
 "yang didukung."
-
-#~ msgid ""
-#~ "Error during transfer of the address book ‘%s’ from Bluetooth device "
-#~ "‘%s’: %s"
-#~ msgstr ""
-#~ "Galat saat mentransfer buku alamat '%s' dari perangkat Bluetooth '%s': %s"
-
-#~ msgid "No oFono object manager running, so the oFono "
-#~ msgstr "Tidak ada manajer objek oFono yang berjalan, maka oFono "
