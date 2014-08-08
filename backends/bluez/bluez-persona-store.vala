@@ -650,7 +650,7 @@ public class Folks.Backends.BlueZ.PersonaStore : Folks.PersonaStore
 
           /* Yield until the above signal handler is called with a ‘success’ or
            * ‘error’ status. */
-          if (transfer_status == null)
+          if (transfer_status != "complete" && transfer_status != "error")
             {
               has_yielded = true;
               yield;
