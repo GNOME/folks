@@ -9,8 +9,7 @@ Major changes:
 
 Bugs fixed:
  • Bug 732244 — Fail to unprepare stores
-
-API changes:
+ • Bug 733891 — empathy and gnome contacts crash when bt phone available
 
 Overview of changes from libfolks 0.9.7 to libfolks 0.9.7.1
 ===========================================================
