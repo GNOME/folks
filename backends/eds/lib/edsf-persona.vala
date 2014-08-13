@@ -1523,6 +1523,19 @@ public class Edsf.Persona : Folks.Persona,
                 return null;
               }
 
+            /* Ignore non-local files, or we could end up downloading huge
+             * pictures that we really don’t want. Non-local URI-based contact
+             * photos are rare anyway.
+             *
+             * See: https://bugzilla.gnome.org/show_bug.cgi?id=697695 */
+            var scheme = Uri.parse_scheme (uri);
+            if (scheme == null || scheme != "file")
+              {
+                warning ("Ignoring contact photo with URI ‘%s’ because it’s " +
+                    "not a local file.", uri);
+                return null;
+              }
+
             return new FileIcon (File.new_for_uri ((!) uri));
           case ContactPhotoType.INLINED:
             var data = p.get_inlined ();
