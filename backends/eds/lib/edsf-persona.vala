@@ -1556,47 +1556,20 @@ public class Edsf.Persona : Folks.Persona,
     {
       var p = this._get_property<E.ContactPhoto> ("photo");
 
-      var cache = AvatarCache.dup ();
-
       // Convert the ContactPhoto to a LoadableIcon and store or update it.
       var new_avatar = this._contact_photo_to_loadable_icon (p);
 
       if (this._avatar != null && new_avatar == null)
         {
-          // Remove the old cached avatar, ignoring errors.
-          cache.remove_avatar.begin (this.uid, (obj, res) =>
-            {
-              try
-                {
-                  cache.remove_avatar.end (res);
-                }
-              catch (GLib.Error e1) {}
-
-              this._avatar = null;
-              this.notify_property ("avatar");
-            });
+          this._avatar = null;
+          this.notify_property ("avatar");
         }
       else if ((this._avatar == null && new_avatar != null) ||
           (this._avatar != null && new_avatar != null &&
            ((!) this._avatar).equal (new_avatar) == false))
         {
-          /* Store the new avatar in the cache. new_avatar is guaranteed to be
-           * non-null. */
-          cache.store_avatar.begin (this.uid, (!) new_avatar, (obj, res) =>
-            {
-              try
-                {
-                  cache.store_avatar.end (res);
-                  this._avatar = new_avatar;
-                  this.notify_property ("avatar");
-                }
-              catch (GLib.Error e2)
-                {
-                  warning ("Couldn't cache avatar for Edsf.Persona '%s': %s",
-                      this.uid, e2.message);
-                  new_avatar = null; /* failure */
-                }
-            });
+          this._avatar = new_avatar;
+          this.notify_property ("avatar");
         }
     }
 
