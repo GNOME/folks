@@ -75,7 +75,7 @@ public class Folks.Backends.BlueZ.PersonaStore : Folks.PersonaStore
   private Cancellable? _update_contacts_cancellable = null;
   /* Non-0 iff an _update_contacts() call is scheduled. */
   private uint _update_contacts_id = 0;
-  private bool _photos_up_to_date = false;
+  private bool _photos_up_to_date = true;
   /* Counter of the number of _update_contacts() calls which have been
    * scheduled. */
   private uint _update_contacts_n = 0;
@@ -274,7 +274,7 @@ public class Folks.Backends.BlueZ.PersonaStore : Folks.PersonaStore
     {
       var added_personas = new HashSet<Persona> ();
       var removed_personas = new HashSet<Persona> ();
-      var photos_up_to_date = this._photos_up_to_date;
+      var photos_up_to_date = true;
 
       debug ("Parsing contacts from file ‘%s’.", file.get_path ());
 
