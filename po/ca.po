@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: folks\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=folks&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2014-04-06 08:59+0000\n"
-"PO-Revision-Date: 2014-02-21 23:44+0100\n"
+"POT-Creation-Date: 2014-08-13 16:50+0000\n"
+"PO-Revision-Date: 2014-08-14 01:07+0200\n"
 "Last-Translator: Gil Forcada <gilforcada@guifi.net>\n"
 "Language-Team: Catalan <tradgnome@softcatala.org>\n"
 "Language: ca\n"
@@ -507,19 +507,28 @@ msgstr "Aquest compte no permet canviar l'àlies."
 
 #. Translators: the first parameter is a folder path and the second
 #. * is an error message.
-#: ../folks/backend-store.vala:651
+#: ../folks/backend-store.vala:652
 #, c-format
 msgid "Error listing contents of folder '%s': %s"
 msgstr "S'ha produït un error en llistar el contingut del directori «%s»: %s"
 
+#. Translators: the first parameter is a folder path and the second
+#. * is an error message.
+#: ../folks/backend-store.vala:693
+#, c-format
+msgid "Error querying info for target ‘%s’ of symlink ‘%s’: %s"
+msgstr ""
+"S'ha produït un consultar la informació de l'objectiu «%s» de l'enllaç "
+"simbòlic «%s»: %s"
+
 #. Translators: the parameter is a filename.
-#: ../folks/backend-store.vala:786
+#: ../folks/backend-store.vala:821
 #, c-format
 msgid "File or directory '%s' does not exist."
 msgstr "No existeix el fitxer o directori «%s»."
 
 #. Translators: the parameter is a filename.
-#: ../folks/backend-store.vala:792
+#: ../folks/backend-store.vala:827
 #, c-format
 msgid "Failed to get content type for '%s'."
 msgstr "No s'ha pogut obtenir el tipus de contingut per «%s»."
@@ -542,33 +551,33 @@ msgstr "No s'ha pogut reconèixer l'adreça de missatgeria instantània «%s»."
 
 #. Translators: the first parameter is a persona store identifier
 #. * and the second is an error message.
-#: ../folks/individual-aggregator.vala:1040
+#: ../folks/individual-aggregator.vala:1042
 #, c-format
 msgid "Error preparing persona store '%s': %s"
 msgstr "S'ha produït un error en preparar el magatzem del contacte «%s»: %s"
 
 #. Translators: the parameter is a property name.
-#: ../folks/individual-aggregator.vala:1272
-#: ../folks/individual-aggregator.vala:1546
+#: ../folks/individual-aggregator.vala:1274
+#: ../folks/individual-aggregator.vala:1548
 #, c-format
 msgid "Unknown property '%s' in linkable property list."
 msgstr "Es desconeix la propietat «%s» de la llista de propietats enllaçades."
 
 #. Translators: the first parameter is a store identifier
 #. * and the second parameter is an error message.
-#: ../folks/individual-aggregator.vala:2032
+#: ../folks/individual-aggregator.vala:2034
 #, c-format
 msgid "Failed to add contact for persona store ID '%s': %s"
 msgstr ""
 "No s'ha pogut afegir el contacte a l'identificador de magatzem de contactes "
 "«%s»: %s"
 
-#: ../folks/individual-aggregator.vala:2129
+#: ../folks/individual-aggregator.vala:2131
 msgid "Can’t link personas with no primary store."
 msgstr "No es poden enllaçar contactes que no tinguin un magatzem primari."
 
-#: ../folks/individual-aggregator.vala:2130
-#: ../folks/individual-aggregator.vala:2461
+#: ../folks/individual-aggregator.vala:2132
+#: ../folks/individual-aggregator.vala:2463
 #, c-format
 msgid ""
 "Persona store ‘%s:%s’ is configured as primary, but could not be found or "
@@ -577,8 +586,8 @@ msgstr ""
 "El magatzem de contactes «%s:%s» està configurat com a primari, però no s'ha "
 "pogut trobar o carregar."
 
-#: ../folks/individual-aggregator.vala:2131
-#: ../folks/individual-aggregator.vala:2462
+#: ../folks/individual-aggregator.vala:2133
+#: ../folks/individual-aggregator.vala:2464
 #, c-format
 msgid ""
 "Check the relevant service is running, or change the default store in that "
@@ -587,16 +596,16 @@ msgstr ""
 "Comproveu que el servei estigui funcionant, canvieu el magatzem per defecte "
 "d'aquest servei o utilitzeu la clau del GSettings «%s»."
 
-#: ../folks/individual-aggregator.vala:2163
+#: ../folks/individual-aggregator.vala:2165
 msgid "Anti-links can't be removed between personas being linked."
 msgstr ""
 "No es poden suprimir els anti-links de contactes que s'estan enllaçant."
 
-#: ../folks/individual-aggregator.vala:2460
+#: ../folks/individual-aggregator.vala:2462
 msgid "Can’t add personas with no primary store."
 msgstr "No es poden afegir contactes que no tinguin magatzem primari."
 
-#: ../folks/individual-aggregator.vala:2471
+#: ../folks/individual-aggregator.vala:2473
 #, c-format
 msgid "Can't write to requested property (“%s”) of the writeable store."
 msgstr ""
@@ -875,10 +884,3 @@ msgid ""
 msgstr ""
 "No es reconeix el nom del rerefons font «%s». L'únic rerefons font que es "
 "pot utilitzar ara mateix és «%s»."
-
-#~ msgid ""
-#~ "Failed to determine whether we can set aliases on Telepathy account '%s': "
-#~ "%s"
-#~ msgstr ""
-#~ "No s'ha pogut determinar si es poden establir àlies al compte del "
-#~ "Telepathy «%s»: %s"
