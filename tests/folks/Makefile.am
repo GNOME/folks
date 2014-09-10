@@ -11,10 +11,12 @@ AM_VALAFLAGS = \
 	--vapidir=$(abs_top_builddir)/tests/lib/telepathy \
 	--vapidir=$(abs_top_srcdir)/tests/lib/telepathy/contactlist/ \
 	--vapidir=$(abs_top_builddir)/tests/lib/telepathy/contactlist/ \
+	--vapidir=$(abs_top_builddir)/tests/lib/dummy \
 	--pkg folks-generics \
 	--pkg kf-test \
 	--pkg tpf-test \
 	--pkg tp-test-contactlist \
+	--pkg dummy-test \
 	$(NULL)
 
 AM_CPPFLAGS = \
@@ -23,6 +25,7 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir)/tests/lib/key-file \
 	-I$(top_srcdir)/tests/lib/telepathy \
 	-I$(top_srcdir)/tests/lib/telepathy/contactlist \
+	-I$(top_srcdir)/tests/lib/dummy \
 	$(NULL)
 
 AM_CFLAGS = \
@@ -36,6 +39,7 @@ LDADD = \
 	$(top_builddir)/tests/lib/telepathy/libtpf-test.la \
 	$(top_builddir)/tests/lib/telepathy/contactlist/libtp-test-contactlist.la \
 	$(TP_GLIB_LIBS) \
+	$(top_builddir)/tests/lib/dummy/libdummy-test.la \
 	$(NULL)
 
 # in order from least to most complex
@@ -44,6 +48,7 @@ noinst_PROGRAMS = \
 	abstract-field-details \
 	async-locking \
 	utils \
+	primary-store-changes \
 	backend-loading \
 	aggregation \
 	standalone-individuals \
@@ -55,6 +60,10 @@ noinst_PROGRAMS = \
 	$(NULL)
 
 TESTS = $(noinst_PROGRAMS)
+
+primary_store_changes_SOURCES = \
+	primary-store-changes.vala \
+	$(NULL)
 
 backend_loading_SOURCES = \
 	backend-loading.vala \
