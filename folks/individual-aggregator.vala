@@ -131,6 +131,8 @@ public class Folks.IndividualAggregator : Object
   private unowned PersonaStore? _primary_store = null;
   private SmallSet<Backend> _backends;
 
+  private Settings? _primary_store_setting = null;
+
   /* This is conceptually a MultiMap<string, Individual> but it's sufficiently
    * heavily-used that avoiding GObject overhead in favour of inlinable
    * GenericArray access is a significant performance win.
@@ -496,13 +498,12 @@ public class Folks.IndividualAggregator : Object
               this._configured_primary_store_id = "";
             }
 
-          var settings = new Settings (IndividualAggregator._FOLKS_GSETTINGS_SCHEMA);
-          var val = settings.get_string (IndividualAggregator._PRIMARY_STORE_CONFIG_KEY);
-          if (val != null && val != "")
-            {
-              debug ("Setting primary store IDs from GSettings.");
-              this._configure_primary_store ((!) val);
-            }
+          _primary_store_setting = new Settings (
+              IndividualAggregator._FOLKS_GSETTINGS_SCHEMA);
+          _primary_store_setting.changed[IndividualAggregator._PRIMARY_STORE_CONFIG_KEY].connect (
+              this._primary_store_setting_changed_cb);
+		  this._primary_store_setting_changed_cb (_primary_store_setting,
+			  IndividualAggregator._PRIMARY_STORE_CONFIG_KEY);
         }
 
       debug ("Primary store IDs are '%s' and '%s'.",
@@ -537,6 +538,26 @@ public class Folks.IndividualAggregator : Object
       lock (IndividualAggregator._instance)
         {
           IndividualAggregator._instance = null;
+        }
+    }
+
+  private void _primary_store_setting_changed_cb (Settings settings,
+        string key)
+    {
+        var val = settings.get_string (key);
+        if (val != null && val != "")
+        {
+            debug ("Setting primary store IDs from GSettings.");
+            this._configure_primary_store ((!) val);
+
+            var store_full_id = this._get_store_full_id (
+                this._configured_primary_store_type_id,
+                this._configured_primary_store_id);
+            if (store_full_id in this._stores)
+              {
+                  var selected_store = this._stores.get (store_full_id);
+                  this._set_primary_store (selected_store);
+              }
         }
     }
 
