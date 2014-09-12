@@ -261,15 +261,12 @@ AM_CONDITIONAL([ENABLE_LIBSOCIALWEB],
 GLIB_REQUIRED=2.38.2
 VALA_REQUIRED=0.22.0.28-9090
 VALADOC_REQUIRED=0.3.1
-TRACKER_SPARQL_MAJOR=0.16
 TRACKER_SPARQL_REQUIRED=0.15.2
 EBOOK_REQUIRED=3.8
 EBOOK_REQUIRED_FOR_BLUEZ=3.9.1
 EDATASERVER_REQUIRED=3.5.3.1
 ZEITGEIST_REQUIRED=0.9.14
 GEE_REQUIRED=0.8.4
-
-AC_SUBST([TRACKER_SPARQL_MAJOR])
 
 PKG_CHECK_MODULES([GLIB],
                   [glib-2.0 >= $GLIB_REQUIRED
@@ -321,9 +318,19 @@ TP_GLIB_CFLAGS="$TP_GLIB_CFLAGS -DTP_VERSION_MAX_ALLOWED=TP_VERSION_0_20"
 
 AS_IF([test x$enable_tracker_backend = xyes], [
         PKG_CHECK_MODULES([TRACKER_SPARQL],
-                          [tracker-sparql-$TRACKER_SPARQL_MAJOR >= \
-                           $TRACKER_SPARQL_REQUIRED])
+                          [tracker-sparql-0.16 >= $TRACKER_SPARQL_REQUIRED],
+                          [TRACKER_SPARQL_MAJOR=0.16], [
+          PKG_CHECK_MODULES([TRACKER_SPARQL],
+                            [tracker-sparql-0.18 >= $TRACKER_SPARQL_REQUIRED],
+                            [TRACKER_SPARQL_MAJOR=0.18], [
+            PKG_CHECK_MODULES([TRACKER_SPARQL],
+                              [tracker-sparql-1.0 >= $TRACKER_SPARQL_REQUIRED],
+                              [TRACKER_SPARQL_MAJOR=1.0])
+          ])
+        ])
 ])
+
+AC_SUBST([TRACKER_SPARQL_MAJOR])
 AC_DEFINE_UNQUOTED(TRACKER_SPARQL_MAJOR, ["$TRACKER_SPARQL_MAJOR"], [Tracker major version])
 
 AS_IF([test x$enable_bluez_backend = xyes], [EBOOK_REQUIRED=$EBOOK_REQUIRED_FOR_BLUEZ])
