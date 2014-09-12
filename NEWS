@@ -1,13 +1,18 @@
-Overview of changes from libfolks 0.9.8 to libfolks 0.9.9
-=========================================================
+Overview of changes from libfolks 0.9.8 to libfolks 0.10.0
+==========================================================
 
 Dependencies:
+ • Folks can now be built against Tracker 0.18 and 1.0, rather than just 0.16
 
 Major changes:
+ • Remove useless use of the avatar cache in the EDS backend
+ • Listen for primary store changes from GSettings
 
 Bugs fixed:
-
-API changes:
+ • Bug 697695 — Avatar cache is not used
+ • Bug 731470 — IndividualAggregator doesn't listen on changes in primary-store
+   gsettings key
+ • Bug 728520 — folks cannot be build with tracker 1.0
 
 Overview of changes from libfolks 0.9.7.1 to libfolks 0.9.8
 ===========================================================
