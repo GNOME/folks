@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: folks 3.13.x\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-08-23 12:32+0200\n"
-"PO-Revision-Date: 2014-07-23 14:40+0200\n"
+"POT-Creation-Date: 2014-10-03 21:29+0200\n"
+"PO-Revision-Date: 2014-10-03 21:30+0200\n"
 "Last-Translator: Kjartan Maraas <kmaraas@gnome.org>\n"
 "Language-Team: Norwegian bokmål <i18n-nb@lister.ping.uio.no>\n"
 "Language: \n"
@@ -468,9 +468,9 @@ msgstr "Feil ved visning av innhold for mappe «%s»: %s"
 #. Translators: the first parameter is a folder path and the second
 #. * is an error message.
 #: ../folks/backend-store.vala:693
-#, fuzzy, c-format
+#, c-format
 msgid "Error querying info for target ‘%s’ of symlink ‘%s’: %s"
-msgstr "Feil under overføring av adressebok «%s» fra Bluetooth-enhet «%s»."
+msgstr "Feil under spørring etter info om mål «%s» for symbolsk lenke «%s»: %s"
 
 #. Translators: the parameter is a filename.
 #: ../folks/backend-store.vala:821
@@ -501,54 +501,54 @@ msgstr "IM-adresse «%s» kunne ikke forstås."
 
 #. Translators: the first parameter is a persona store identifier
 #. * and the second is an error message.
-#: ../folks/individual-aggregator.vala:1042
+#: ../folks/individual-aggregator.vala:1063
 #, c-format
 msgid "Error preparing persona store '%s': %s"
 msgstr "Feil ved klargjøring av persona-lager «%s»: %s"
 
 #. Translators: the parameter is a property name.
-#: ../folks/individual-aggregator.vala:1274
-#: ../folks/individual-aggregator.vala:1548
+#: ../folks/individual-aggregator.vala:1295
+#: ../folks/individual-aggregator.vala:1569
 #, c-format
 msgid "Unknown property '%s' in linkable property list."
 msgstr "Ukjent egenskap «%s» i lenkbar egenskapsliste."
 
 #. Translators: the first parameter is a store identifier
 #. * and the second parameter is an error message.
-#: ../folks/individual-aggregator.vala:2034
+#: ../folks/individual-aggregator.vala:2055
 #, c-format
 msgid "Failed to add contact for persona store ID '%s': %s"
 msgstr ""
 
-#: ../folks/individual-aggregator.vala:2131
+#: ../folks/individual-aggregator.vala:2152
 msgid "Can’t link personas with no primary store."
 msgstr "Kan ikke lenke personas uten primærlager."
 
-#: ../folks/individual-aggregator.vala:2132
-#: ../folks/individual-aggregator.vala:2463
+#: ../folks/individual-aggregator.vala:2153
+#: ../folks/individual-aggregator.vala:2484
 #, c-format
 msgid ""
 "Persona store ‘%s:%s’ is configured as primary, but could not be found or "
 "failed to load."
 msgstr ""
 
-#: ../folks/individual-aggregator.vala:2133
-#: ../folks/individual-aggregator.vala:2464
+#: ../folks/individual-aggregator.vala:2154
+#: ../folks/individual-aggregator.vala:2485
 #, c-format
 msgid ""
 "Check the relevant service is running, or change the default store in that "
 "service or using the “%s” GSettings key."
 msgstr ""
 
-#: ../folks/individual-aggregator.vala:2165
+#: ../folks/individual-aggregator.vala:2186
 msgid "Anti-links can't be removed between personas being linked."
 msgstr ""
 
-#: ../folks/individual-aggregator.vala:2462
+#: ../folks/individual-aggregator.vala:2483
 msgid "Can’t add personas with no primary store."
 msgstr "Kan ikke legge til personas uten primærlager."
 
-#: ../folks/individual-aggregator.vala:2473
+#: ../folks/individual-aggregator.vala:2494
 #, c-format
 msgid "Can't write to requested property (“%s”) of the writeable store."
 msgstr ""
