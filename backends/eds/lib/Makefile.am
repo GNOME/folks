@@ -29,6 +29,7 @@ libfolks_eds_la_VALAFLAGS = \
 
 libfolks_eds_la_CPPFLAGS = \
 	$(backend_library_cppflags) \
+	-include folks/redeclare-internal-api.h \
 	$(NULL)
 
 libfolks_eds_la_CFLAGS = \
