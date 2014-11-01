@@ -29,7 +29,7 @@ DISTCHECK_CONFIGURE_FLAGS = \
 	--enable-tests \
 	--enable-eds-backend \
 	--enable-telepathy-backend \
-	--enable-libsocialweb-backend \
+	--disable-libsocialweb-backend \
 	--enable-tracker-backend \
 	--enable-zeitgeist \
 	--disable-vala \
