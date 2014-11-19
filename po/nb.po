@@ -5,10 +5,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: folks 3.13.x\n"
+"Project-Id-Version: folks 3.15.x\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-10-03 21:29+0200\n"
-"PO-Revision-Date: 2014-10-03 21:30+0200\n"
+"POT-Creation-Date: 2014-11-19 18:51+0100\n"
+"PO-Revision-Date: 2014-11-19 18:53+0100\n"
 "Last-Translator: Kjartan Maraas <kmaraas@gnome.org>\n"
 "Language-Team: Norwegian bokmål <i18n-nb@lister.ping.uio.no>\n"
 "Language: \n"
@@ -53,7 +53,7 @@ msgstr "Feil under overføring av adressebok «%s» fra Bluetooth-enhet «%s»."
 msgid ""
 "Permission to access the address book on Bluetooth device ‘%s’ was denied by "
 "the user."
-msgstr ""
+msgstr "Bruker nektet tilgang til adressebok på Bluetooth-enhet «%s»."
 
 #. Translators: the first parameter is a Bluetooth device
 #. * alias, and the second is an error message.
@@ -369,7 +369,7 @@ msgstr ""
 
 #: ../backends/telepathy/lib/tpf-persona-store.vala:1248
 msgid "Telepathy contacts representing the local user may not be removed."
-msgstr ""
+msgstr "Telepathy-kontakter som representerer den lokale brukeren kan ikke fjernes."
 
 #: ../backends/telepathy/lib/tpf-persona-store.vala:1259
 #, c-format
