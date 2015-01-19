@@ -104,7 +104,15 @@ public class EdsTest.TestCase : Folks.TestCase
           "org.gnome.evolution.dataserver.Sources2",
           "org.gnome.evolution.dataserver.Sources1"
         };
+      const string address_book_services[] =
+        {
+          "org.gnome.evolution.dataserver.AddressBook8",
+          "org.gnome.evolution.dataserver.AddressBook7",
+          "org.gnome.evolution.dataserver.AddressBook6",
+          "org.gnome.evolution.dataserver.AddressBook5",
+        };
 
+      /* Source registry. */
       for (uint i = 0; i < sources_services.length; i++)
         {
           var service_file_name =
@@ -127,39 +135,25 @@ public class EdsTest.TestCase : Folks.TestCase
         }
 
       /* Address book factory. */
-      var service_file_name =
-          Path.build_filename (this.transient_dir, "dbus-1", "services",
-              "evolution-addressbook-factory.service");
-      var service_file = ("[D-BUS Service]\n" +
-          "Name=org.gnome.evolution.dataserver.AddressBook6\n" +
-          "Exec=%s/evolution-addressbook-factory\n").printf (libexec);
+      for (uint i = 0; i < address_book_services.length; i++)
+        {
+          var service_file_name =
+              Path.build_filename (this.transient_dir, "dbus-1", "services",
+                  "evolution-addressbook-factory-%u.service".printf (i));
+          var service_file = ("[D-BUS Service]\n" +
+              "Name=%s\n" +
+              "Exec=%s/evolution-addressbook-factory\n").printf (
+                  address_book_services[i], libexec);
 
-      try
-        {
-          FileUtils.set_contents (service_file_name, service_file);
-        }
-      catch (FileError e3)
-        {
-          error ("Error creating D-Bus service file ‘%s’: %s",
-              service_file_name, e3.message);
-        }
-
-      /* The same for Evolution 3.8. */
-      service_file_name =
-          Path.build_filename (this.transient_dir, "dbus-1", "services",
-              "evolution-addressbook-factory-3-8.service");
-      service_file = ("[D-BUS Service]\n" +
-          "Name=org.gnome.evolution.dataserver.AddressBook5\n" +
-          "Exec=%s/evolution-addressbook-factory\n").printf (libexec);
-
-      try
-        {
-          FileUtils.set_contents (service_file_name, service_file);
-        }
-      catch (FileError e3)
-        {
-          error ("Error creating D-Bus service file ‘%s’: %s",
-              service_file_name, e3.message);
+          try
+            {
+              FileUtils.set_contents (service_file_name, service_file);
+            }
+          catch (FileError e3)
+            {
+              error ("Error creating D-Bus service file ‘%s’: %s",
+                  service_file_name, e3.message);
+            }
         }
     }
 
