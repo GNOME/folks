@@ -74,7 +74,7 @@ Vala-specific rules
    C functions, but it's too late to change this (as it would make 'git blame'
    useless).
 
-5. Private and internal class data members should beging with a _ (public data
+5. Private and internal class data members should begin with a _ (public data
    members and local variables should not begin with a _). This is to make
    non-public data members instantly recognizable as such (which helps
    readability).
