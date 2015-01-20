@@ -76,6 +76,7 @@ TESTS = \
 	enable-disable-stores \
 	set-is-favourite \
 	perf \
+	extended-info \
 	$(NULL)
 
 noinst_PROGRAMS = \
@@ -223,6 +224,10 @@ store_removed_SOURCES = \
 
 perf_SOURCES = \
 	perf.vala \
+	$(NULL)
+
+extended_info_SOURCES = \
+	extended-info.vala
 	$(NULL)
 
 helper_create_many_contacts_SOURCES = \

@@ -875,6 +875,8 @@ public class Edsf.PersonaStore : Folks.PersonaStore
                       PersonaDetail.IS_FAVOURITE));
                   prop_set.add ((!) Folks.PersonaStore.detail_key (
                       PersonaDetail.ANTI_LINKS));
+                  prop_set.add ((!) Folks.PersonaStore.detail_key (
+                      PersonaDetail.EXTENDED_INFO));
 
                   foreach (unowned string field in fields)
                     {
@@ -1595,6 +1597,68 @@ public class Edsf.PersonaStore : Folks.PersonaStore
       this._set_contact_attributes_string (persona.contact, emails,
           "EMAIL", E.ContactField.EMAIL);
       yield this._commit_modified_property (persona, "email-addresses");
+    }
+
+  internal ExtendedFieldDetails? _get_extended_field (Edsf.Persona persona,
+      string name)
+    {
+      unowned VCardAttribute? attr = persona.contact.get_attribute (name);
+      if (attr == null)
+        {
+          return null;
+        }
+
+      var details = new ExtendedFieldDetails (attr.get_value (), null);
+
+      foreach (unowned E.VCardAttributeParam param in attr.get_params ())
+        {
+          unowned string param_name = param.get_name ();
+          foreach (unowned string param_value in param.get_values ())
+            {
+              details.add_parameter (param_name, param_value);
+            }
+        }
+
+      return details;
+    }
+
+  internal async void _change_extended_field (Edsf.Persona persona,
+      string name, ExtendedFieldDetails details) throws PropertyError
+    {
+      var vcard = (E.VCard) persona.contact;
+      unowned E.VCardAttribute? prev_attr = vcard.get_attribute (name);
+
+      if (prev_attr != null)
+          vcard.remove_attribute (prev_attr);
+
+      E.VCardAttribute new_attr = new E.VCardAttribute ("", name);
+      new_attr.add_value (details.value);
+
+      vcard.add_attribute (new_attr);
+
+      try
+        {
+          yield ((!) this._addressbook).modify_contact (persona.contact, null);
+        }
+      catch (GLib.Error e)
+        {
+          throw this.e_client_error_to_property_error (name, e);
+        }
+    }
+
+  internal async void _remove_extended_field (Edsf.Persona persona,
+      string name) throws PropertyError
+    {
+      persona.contact.remove_attributes ("", name);
+
+      try
+        {
+          yield ((!) this._addressbook).modify_contact (persona.contact, null);
+        }
+      catch (GLib.Error e)
+        {
+          throw this.e_client_error_to_property_error (name, e);
+        }
     }
 
   internal async void _set_phones (Edsf.Persona persona,

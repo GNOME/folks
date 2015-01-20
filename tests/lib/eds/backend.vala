@@ -317,8 +317,19 @@ public class EdsTest.Backend
            }
           else
             {
+              var field_id = E.Contact.field_id (k);
               var v = c.get (k).get_string ();
-              contact.set (E.Contact.field_id (k), v);
+
+              if (field_id != 0)
+                {
+                  contact.set (field_id, v);
+                }
+              else
+                {
+                  var vcard = (E.VCard) contact;
+                  var attr = new E.VCardAttribute (null, k);
+                  vcard.append_attribute_with_value (attr, v);
+                }
             }
         }
       if (added_contact_name)
