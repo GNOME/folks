@@ -124,6 +124,7 @@ backend_library_libadd = \
 backend_library_ldflags_generic = \
 	$(AM_LDFLAGS) \
 	$(CODE_COVERAGE_LDFLAGS) \
+	-no-undefined \
 	$(NULL)
 backend_library_ldflags = \
 	$(backend_library_ldflags_generic) \

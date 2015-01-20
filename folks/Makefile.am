@@ -55,6 +55,7 @@ libfolks_internal_la_CFLAGS = \
 libfolks_internal_la_LDFLAGS = \
 	$(AM_LDFLAGS) \
 	$(CODE_COVERAGE_LDFLAGS) \
+	-no-undefined \
 	$(NULL)
 
 libfolks_internal_la_LIBADD = \
@@ -160,7 +161,9 @@ libfolks_la_LIBADD = \
 libfolks_la_LDFLAGS = \
 	$(AM_LDFLAGS) \
 	$(CODE_COVERAGE_LDFLAGS) \
-	-version-info "$(LT_CURRENT)":"$(LT_REVISION)":"$(LT_AGE)"
+	-version-info "$(LT_CURRENT)":"$(LT_REVISION)":"$(LT_AGE)" \
+	-no-undefined \
+	$(NULL)
 
 folksdir = $(includedir)/folks
 folks_HEADERS = folks.h

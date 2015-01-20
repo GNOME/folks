@@ -79,4 +79,5 @@ backend_ldflags = \
 	-fPIC \
 	-module \
 	-avoid-version \
+	-no-undefined \
 	$(NULL)
