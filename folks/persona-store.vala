@@ -312,6 +312,13 @@ public enum Folks.PersonaDetail
    * @since 0.7.3
    */
   ANTI_LINKS,
+
+  /**
+   * Field for {@link ExtendedFieldDetails}.
+   *
+   * @since UNRELEASED
+   */
+  EXTENDED_INFO,
 }
 
 /**
@@ -372,7 +379,8 @@ public abstract class Folks.PersonaStore : Object
     "last-im-interaction-datetime",
     "call-interaction-count",
     "last-call-interaction-datetime",
-    "anti-links"
+    "anti-links",
+    "extended-info"
   };
 
   /**

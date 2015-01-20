@@ -16,6 +16,7 @@ folks/avatar-details.c
 folks/backend-store.c
 folks/birthday-details.c
 folks/email-details.c
+folks/extended-info.c
 folks/favourite-details.c
 folks/gender-details.c
 folks/group-details.c

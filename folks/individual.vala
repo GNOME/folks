@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 Collabora Ltd.
+ * Copyright (C) 2010, 2015 Collabora Ltd.
  * Copyright (C) 2011, 2013 Philip Withnall
  *
  * This library is free software: you can redistribute it and/or modify
@@ -86,6 +86,7 @@ public class Folks.Individual : Object,
     AvatarDetails,
     BirthdayDetails,
     EmailDetails,
+    ExtendedInfo,
     FavouriteDetails,
     GenderDetails,
     GroupDetails,
@@ -980,6 +981,122 @@ public class Folks.Individual : Object,
                 }
             }
           return this._last_call_interaction_datetime;
+        }
+    }
+
+  /**
+   * {@inheritDoc}
+   *
+   * @since UNRELEASED
+   */
+  public ExtendedFieldDetails? get_extended_field (string name)
+    {
+      debug ("Getting extended field '%s' on '%s'…", name, this.id);
+
+      /* Try to get it from the writeable Personas which have "extended-info"
+       * as a writeable property. */
+      foreach (var p in this._persona_set)
+        {
+          if ("extended-info" in p.writeable_properties)
+            {
+              var e = p as ExtendedInfo;
+              return e.get_extended_field (name);
+            }
+        }
+
+      return null;
+    }
+
+  /**
+   * {@inheritDoc}
+   *
+   * @since UNRELEASED
+   */
+  public async void change_extended_field (
+      string name, ExtendedFieldDetails value) throws PropertyError
+    {
+      debug ("Setting extended field '%s' on '%s'…", name, this.id);
+
+      PropertyError? persona_error = null;
+      var prop_changed = false;
+
+      /* Try to write it to only the writeable Personas which have "extended-info"
+       * as a writeable property. */
+      foreach (var p in this._persona_set)
+        {
+          if ("extended-info" in p.writeable_properties)
+            {
+              var e = p as ExtendedInfo;
+              try
+                {
+                  yield e.change_extended_field (name, value);
+                  debug ("    written to writeable persona '%s'", p.uid);
+                  prop_changed = true;
+                }
+              catch (PropertyError e)
+                {
+                  /* Store the first error so we can throw it if setting the
+                   * extended field fails on every other persona. */
+                  if (persona_error == null)
+                    {
+                      persona_error = e;
+                    }
+                }
+            }
+        }
+
+      /* Failure? Changing the property failed on every suitable persona found
+       * (and potentially zero suitable personas were found). */
+      if (prop_changed == false)
+        {
+          if (persona_error == null)
+            {
+              persona_error = new PropertyError.NOT_WRITEABLE (
+                  _("Failed to change property ‘%s’: No suitable personas were found."),
+                  "extended-info");
+            }
+
+          throw persona_error;
+        }
+    }
+
+  /**
+   * {@inheritDoc}
+   *
+   * @since UNRELEASED
+   */
+  public async void remove_extended_field (string name) throws PropertyError
+    {
+      debug ("Removing extended field '%s' on '%s'…", name, this.id);
+
+      PropertyError? persona_error = null;
+
+      /* Try to remove it from all writeable Personas. */
+      foreach (var p in this._persona_set)
+        {
+          if ("extended-info" in p.writeable_properties)
+            {
+              var e = p as ExtendedInfo;
+              try
+                {
+                  yield e.remove_extended_field (name);
+                  debug ("    removed from writeable persona '%s'", p.uid);
+                }
+              catch (PropertyError e)
+                {
+                  /* Store the first error so we can throw it later. */
+                  if (persona_error == null)
+                    {
+                      persona_error = e;
+                    }
+                }
+            }
+        }
+
+      /* Failure? */
+      if (persona_error != null)
+        {
+          throw persona_error;
         }
     }
 

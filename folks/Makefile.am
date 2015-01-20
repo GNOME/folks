@@ -78,6 +78,7 @@ libfolks_la_SOURCES = \
 	backend-store.vala \
 	birthday-details.vala \
 	email-details.vala \
+	extended-info.vala \
 	favourite-details.vala \
 	folks-namespace.vala \
 	gender-details.vala \

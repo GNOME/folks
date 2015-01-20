@@ -17,6 +17,7 @@ folks/avatar-details.vala
 folks/backend-store.vala
 folks/birthday-details.vala
 folks/email-details.vala
+folks/extended-info.vala
 folks/favourite-details.vala
 folks/gender-details.vala
 folks/group-details.vala
