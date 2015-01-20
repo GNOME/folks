@@ -34,7 +34,7 @@ libfolks_libsocialweb_la_CFLAGS = \
 	$(NULL)
 
 libfolks_libsocialweb_la_LIBADD = \
-	$(backend_library_LIBADD) \
+	$(backend_library_libadd) \
 	$(SW_CLIENT_LIBS) \
 	$(NULL)
 
