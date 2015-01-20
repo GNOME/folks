@@ -360,6 +360,8 @@ AS_IF([test x$enable_bluez_backend = xyes], [
 
         AM_PROG_VALAC([0.22.0.45-383d-dirty],
                       [have_valac_0_22_2=yes], [have_valac_0_22_2=no])
+
+        LT_LIB_M
 ])
 
 # The BlueZ tests are conditional on several bleeding-edge dependencies.

@@ -32,6 +32,7 @@ bluez_la_CFLAGS = \
 bluez_la_LIBADD = \
 	$(backend_libadd) \
 	$(EBOOK_LIBS) \
+	$(LIBM) \
 	$(NULL)
 
 bluez_la_LDFLAGS = \
