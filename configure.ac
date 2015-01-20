@@ -2,8 +2,8 @@
 m4_define([folks_released], [0])
 
 m4_define([folks_major_version], [0])
-m4_define([folks_minor_version], [10])
-m4_define([folks_micro_version], [2])
+m4_define([folks_minor_version], [11])
+m4_define([folks_micro_version], [0])
 m4_define([folks_nano_version], [0])
 
 # Core library LT version. When updating this, don't forget to bump the backend
