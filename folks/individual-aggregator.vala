@@ -498,12 +498,12 @@ public class Folks.IndividualAggregator : Object
               this._configured_primary_store_id = "";
             }
 
-          _primary_store_setting = new Settings (
+          this._primary_store_setting = new Settings (
               IndividualAggregator._FOLKS_GSETTINGS_SCHEMA);
-          _primary_store_setting.changed[IndividualAggregator._PRIMARY_STORE_CONFIG_KEY].connect (
+          this._primary_store_setting.changed[IndividualAggregator._PRIMARY_STORE_CONFIG_KEY].connect (
               this._primary_store_setting_changed_cb);
-		  this._primary_store_setting_changed_cb (_primary_store_setting,
-			  IndividualAggregator._PRIMARY_STORE_CONFIG_KEY);
+          this._primary_store_setting_changed_cb (_primary_store_setting,
+              IndividualAggregator._PRIMARY_STORE_CONFIG_KEY);
         }
 
       debug ("Primary store IDs are '%s' and '%s'.",
