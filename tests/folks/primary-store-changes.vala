@@ -23,7 +23,8 @@ using Folks;
 public class PrimaryStoreChangesTests : DummyTest.TestCase
 {
   private GLib.MainLoop _main_loop;
-  private Settings _settings;
+  /* null iff GSettings schema is not installed: */
+  private Settings? _settings = null;
 
   public FolksDummy.PersonaStore second_persona_store;
 
@@ -49,8 +50,10 @@ public class PrimaryStoreChangesTests : DummyTest.TestCase
   public override void tear_down ()
     {
       /* Release setting to avoid test failing on tear_down */
-      var key_changed = this._settings.set_string ("primary-store",
-          "dummy:dummy-store");
+      if (this._settings != null)
+        {
+          this._settings.set_string ("primary-store", "dummy:dummy-store");
+        }
 
       var persona_stores = new HashSet<PersonaStore> ();
       persona_stores.add (this.second_persona_store);
@@ -86,6 +89,14 @@ public class PrimaryStoreChangesTests : DummyTest.TestCase
 	 IndividualAgreggator instance gets notified */
   public void test_change_primary_store_setting ()
     {
+      /* Iff running uninstalled, the GSetting schema will not be available, and
+       * this test cannot be run. */
+      unowned string[] schemas = Settings.list_schemas ();
+      if (!("org.freedesktopp.folks" in schemas))
+        {
+          return;
+        }
+
       this._main_loop = new GLib.MainLoop (null, false);
       test_change_primary_store_setting_async.begin ();
       TestUtils.loop_run_with_timeout (this._main_loop);
