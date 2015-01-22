@@ -73,9 +73,6 @@ struct _FolksSmallSetIteratorClass {
     GObjectClass parent_class;
 };
 
-static void set_iface_init (GeeSetIface *iface);
-static void collection_iface_init (GeeCollectionIface *iface);
-static void iterable_iface_init (GeeIterableIface *iface);
 static void traversable_iface_init (GeeTraversableIface *iface);
 
 G_DEFINE_TYPE_WITH_CODE (FolksSmallSet, folks_small_set,
