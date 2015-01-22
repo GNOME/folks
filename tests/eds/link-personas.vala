@@ -47,7 +47,6 @@ public class LinkPersonasTests : EdsTest.TestCase
   private HashSet<Persona> _personas;
   private Gee.HashMap<string, string> _linking_props;
   private LinkingMethod _linking_method;
-  private int _test_num = -1;
 
   public LinkPersonasTests ()
     {
@@ -61,16 +60,6 @@ public class LinkPersonasTests : EdsTest.TestCase
           this.test_linking_personas_via_web_service_addresses);
       this.add_test ("test auto linking via e-mail address as IM address",
           this.test_linking_via_email_as_im_address);
-    }
-
-  public override void create_backend ()
-    {
-      /* Create a new backend (by name) each set up to guarantee we don't
-       * inherit state from the last test.
-       * FIXME: bgo#690830 */
-      this._test_num++;
-      this.eds_backend = new EdsTest.Backend ();
-      this.eds_backend.set_up (false, @"test$_test_num");
     }
 
   public void test_linking_personas_via_im_addresses ()

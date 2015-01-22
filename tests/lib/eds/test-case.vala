@@ -164,6 +164,8 @@ public class EdsTest.TestCase : Folks.TestCase
       this.configure_primary_store ();
     }
 
+  private uint _test_num = 0;
+
   /**
    * Virtual method to create and set up the EDS backend.
    * Called from set_up(); may be overridden to not create the backend,
@@ -173,8 +175,9 @@ public class EdsTest.TestCase : Folks.TestCase
    */
   public virtual void create_backend ()
     {
+      /* Use a unique EDS book for each test. */
       this.eds_backend = new EdsTest.Backend ();
-      ((!) this.eds_backend).set_up ();
+      ((!) this.eds_backend).set_up (true, "test%u".printf (this._test_num++));
     }
 
   /**

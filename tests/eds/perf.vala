@@ -78,15 +78,6 @@ public class PerfTests : EdsTest.TestCase
       this._add_500 ();
     }
 
-  private uint _test_num = 0;
-
-  public override void create_backend ()
-    {
-      /* Use a unique e-d-s book for each test. */
-      this.eds_backend = new EdsTest.Backend ();
-      ((!) this.eds_backend).set_up (true, "test%u".printf (this._test_num++));
-    }
-
   /* Prepare the individual aggregator and wait for it to quiesce. */
   private async IndividualAggregator _aggregate () throws Error
     {

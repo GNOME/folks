@@ -29,7 +29,6 @@ public class AntiLinkingTests : EdsTest.TestCase
   private bool _found_before_update;
   private bool _found_after_update;
   private bool _found_after_final_update;
-  private int _test_num = -1;
 
   /* NOTE: each full name should remain unique */
   private const string _full_name_1 = "bernie h. innocenti";
@@ -51,16 +50,6 @@ public class AntiLinkingTests : EdsTest.TestCase
       this._found_before_update = false;
       this._found_after_update = false;
       this._found_after_final_update = false;
-    }
-
-  public override void create_backend ()
-    {
-      /* Create a new backend (by name) each set up to guarantee we don't
-       * inherit state from the last test.
-       * FIXME: bgo#690830 */
-      this._test_num++;
-      this.eds_backend = new EdsTest.Backend ();
-      this.eds_backend.set_up (false, @"test$_test_num");
     }
 
   public override void tear_down ()
