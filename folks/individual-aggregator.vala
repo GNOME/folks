@@ -921,9 +921,9 @@ public class Folks.IndividualAggregator : Object
            */
           var stores = backend.persona_stores.values.to_array ();
           foreach (var persona_store in stores)
-              {
-                this._backend_persona_store_added_cb (backend, persona_store);
-              }
+            {
+              this._backend_persona_store_added_cb (backend, persona_store);
+            }
         }
     }
 
