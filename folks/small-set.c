@@ -634,6 +634,7 @@ folks_small_set_class_init (FolksSmallSetClass *cls)
   GeeAbstractSetClass *as_class = GEE_ABSTRACT_SET_CLASS (cls);
   GeeAbstractCollectionClass *ac_class = GEE_ABSTRACT_COLLECTION_CLASS (cls);
 
+  object_class->dispose = folks_small_set_dispose;
   object_class->finalize = folks_small_set_finalize;
 
   ac_class->contains = folks_small_set_contains;
