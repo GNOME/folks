@@ -276,7 +276,7 @@ public class FolksDummy.Persona : Folks.Persona
    *
    * @since 0.9.7
    */
-  protected int property_change_delay { get; set; }
+  protected int property_change_delay { get; set; default = 0; }
 
   /**
    * Callback to effect a property change in a backing store.
