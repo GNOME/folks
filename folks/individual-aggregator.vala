@@ -903,7 +903,7 @@ public class Folks.IndividualAggregator : Object
       return matches;
     }
 
-  private async void _add_backend (Backend backend)
+  private void _add_backend (Backend backend)
     {
       if (!this._backends.contains (backend))
         {
@@ -949,7 +949,7 @@ public class Folks.IndividualAggregator : Object
             }
         }
 
-      this._add_backend.begin (backend);
+      this._add_backend (backend);
     }
 
   private void _set_primary_store (PersonaStore store)
