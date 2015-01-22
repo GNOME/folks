@@ -553,7 +553,7 @@ public class Folks.IndividualAggregator : Object
             var store_full_id = this._get_store_full_id (
                 this._configured_primary_store_type_id,
                 this._configured_primary_store_id);
-            if (store_full_id in this._stores)
+            if (this._stores.has_key (store_full_id))
               {
                   var selected_store = this._stores.get (store_full_id);
                   this._set_primary_store (selected_store);
