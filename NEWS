@@ -4,22 +4,28 @@ Overview of changes from libfolks 0.10.1 to libfolks 0.11.0
 Dependencies:
  • telepathy-glib ≥ 0.19.9
  • evolution-data-server ≥ 3.13.90
+ • GLib ≥ 2.40.0
 
 Major changes:
  • The --enable-tests configure option has been renamed to
    --enable-modular-tests
  • Installed tests are now supported using --enable-installed-tests
+ • Add search-based retrieval of Individuals
 
 Bugs fixed:
  • Bug 641211 — Add arbitrary-field interface for applications to store trivial
    per-person data
  • Bug 743398 — Add support for installed-tests
  • Bug 743934 — FTBFS after EDS commit 884fb8d8
+ • Bug 646808 — Add search-based retrieval
 
 API changes:
  • Add ExtendedInfo interface
  • Add ExtendedFieldDetails class
  • Implement ExtendedInfo in Individual and Edsf.Persona
+ • Add Query as an abstract class for searches
+ • Add SimpleQuery implementation of Query
+ • Add SearchView as a view on Individuals which match a given Query
 
 Overview of changes from libfolks 0.10.0 to libfolks 0.10.1
 ===========================================================

@@ -25,6 +25,7 @@ all_test_programs = \
 	individual-retrieval \
 	add-persona \
 	linkable-properties \
+	search-view \
 	$(NULL)
 installed_tests_subdirectory = dummy
 
@@ -38,6 +39,10 @@ add_persona_SOURCES = \
 
 linkable_properties_SOURCES = \
 	linkable-properties.vala \
+	$(NULL)
+
+search_view_SOURCES = \
+	search-view.vala \
 	$(NULL)
 
 -include $(top_srcdir)/git.mk

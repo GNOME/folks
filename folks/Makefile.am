@@ -106,6 +106,9 @@ libfolks_la_SOURCES = \
 	avatar-cache.vala \
 	object-cache.vala \
 	anti-linkable.vala \
+	query.vala \
+	search-view.vala \
+	simple-query.vala \
 	$(NULL)
 
 if ENABLE_EDS
