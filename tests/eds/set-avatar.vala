@@ -39,15 +39,6 @@ public class SetAvatarTests : EdsTest.TestCase
           this.test_set_individual_avatar);
     }
 
-  private uint _test_num = 0;
-
-  public override void create_backend ()
-    {
-      /* Use a unique EDS book for each test. */
-      this.eds_backend = new EdsTest.Backend ();
-      ((!) this.eds_backend).set_up (true, "test%u".printf (this._test_num++));
-    }
-
   void test_set_avatar ()
     {
       Gee.HashMap<string, Value?> c1 = new Gee.HashMap<string, Value?> ();
