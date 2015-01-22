@@ -459,6 +459,30 @@ folks_small_set_finalize (GObject *obj)
   ((GObjectClass *) folks_small_set_parent_class)->finalize (obj);
 }
 
+static GType
+folks_small_set_get_g_type (GeeTraversable *traversable)
+{
+  FolksSmallSet *self = FOLKS_SMALL_SET (traversable);
+
+  return self->item_type;
+}
+
+static GBoxedCopyFunc
+folks_small_set_get_g_dup_func (GeeTraversable *traversable)
+{
+  FolksSmallSet *self = FOLKS_SMALL_SET (traversable);
+
+  return self->item_dup;
+}
+
+static GDestroyNotify
+folks_small_set_get_g_destroy_func (GeeTraversable *traversable)
+{
+  FolksSmallSet *self = FOLKS_SMALL_SET (traversable);
+
+  return self->item_free;
+}
+
 /*
  * Call @f for each element, until it returns %FALSE.
  *
@@ -492,6 +516,9 @@ folks_small_set_foreach (GeeTraversable *traversable,
 static void
 traversable_iface_init (GeeTraversableIface *iface)
 {
+  iface->get_g_type = folks_small_set_get_g_type;
+  iface->get_g_dup_func = folks_small_set_get_g_dup_func;
+  iface->get_g_destroy_func = folks_small_set_get_g_destroy_func;
   iface->foreach = folks_small_set_foreach;
 }
 
