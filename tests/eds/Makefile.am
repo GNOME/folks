@@ -227,7 +227,7 @@ perf_SOURCES = \
 	$(NULL)
 
 extended_info_SOURCES = \
-	extended-info.vala
+	extended-info.vala \
 	$(NULL)
 
 helper_create_many_contacts_SOURCES = \
