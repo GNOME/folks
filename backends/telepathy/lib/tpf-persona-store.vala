@@ -103,7 +103,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
   /**
    * The Telepathy account this store is based upon.
    */
-  [Property(nick = "basis account",
+  [Description(nick = "basis account",
       blurb = "Telepathy account this store is based upon")]
   public Account account
     {
