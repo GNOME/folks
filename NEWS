@@ -12,6 +12,7 @@ Major changes:
 Bugs fixed:
  • Bug 641211 — Add arbitrary-field interface for applications to store trivial
    per-person data
+ • Bug 743398 — Add support for installed-tests
 
 API changes:
  • Add ExtendedInfo interface
