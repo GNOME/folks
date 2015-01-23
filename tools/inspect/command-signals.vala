@@ -229,8 +229,9 @@ private class Folks.Inspect.Commands.Signals : Folks.Inspect.Command
       if (class_name_or_instance.length > 2 &&
           class_name_or_instance[0] == '0' && class_name_or_instance[1] == 'x')
         {
-          /* We have a class instance */
-          ulong address = class_name_or_instance.to_ulong (null, 16);
+          /* We have a class instance. The ‘0x’ prefix ensures it will be
+           * parsed in base 16. */
+          var address = uint64.parse (class_name_or_instance);
           class_instance = (Object) address;
           assert (class_instance.get_type ().is_object ());
         }
