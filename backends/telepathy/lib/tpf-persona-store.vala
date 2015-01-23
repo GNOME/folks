@@ -395,8 +395,8 @@ public class Tpf.PersonaStore : Folks.PersonaStore
 
       /* We do not trust local-xmpp or IRC at all, since Persona UIDs can be
        * faked by just changing hostname/username or nickname. */
-      if (account.get_protocol () == "local-xmpp" ||
-          account.get_protocol () == "irc")
+      if (account.protocol_name == "local-xmpp" ||
+          account.protocol_name == "irc")
         this.trust_level = PersonaStoreTrust.NONE;
       else
         this.trust_level = PersonaStoreTrust.PARTIAL;
@@ -851,7 +851,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
           if ((ci_flags & ContactInfoFlags.CAN_SET) != 0)
             {
               var field_specs =
-                connection.get_contact_info_supported_fields ();
+                connection.dup_contact_info_supported_fields ();
               foreach (var field_spec in field_specs)
                 {
                   /* XXX: we ignore the maximum count for each type of

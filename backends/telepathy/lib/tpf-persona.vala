@@ -762,6 +762,12 @@ public class Tpf.Persona : Folks.Persona,
       var connection = contact.connection;
       var account = connection.get_account ();
       var uid = Folks.Persona.build_uid (store.type_id, store.id, id);
+      var is_user = false;
+
+      if (connection.self_contact != null)
+        {
+          is_user = (contact.handle == connection.self_contact.handle);
+        }
 
       Object (contact: contact,
               display_id: id,
@@ -769,10 +775,10 @@ public class Tpf.Persona : Folks.Persona,
                * interface along with the code in
                * Kf.Persona.linkable_property_to_links(), but that depends on
                * bgo#624842 being fixed. */
-              iid: account.get_protocol () + ":" + id,
+              iid: account.protocol_name + ":" + id,
               uid: uid,
               store: store,
-              is_user: contact.handle == connection.self_handle);
+              is_user: is_user);
 
       debug ("Created new Tpf.Persona '%s' for service-specific UID '%s': %p",
           uid, id, this);
@@ -819,9 +825,9 @@ public class Tpf.Persona : Folks.Persona,
       try
         {
           var im_addr = ImDetails.normalise_im_address (this.display_id,
-              account.get_protocol ());
+              account.protocol_name);
           var im_fd = new ImFieldDetails (im_addr);
-          this._im_addresses.set (account.get_protocol (), im_fd);
+          this._im_addresses.set (account.protocol_name, im_fd);
         }
       catch (ImDetailsError e)
         {
@@ -978,7 +984,7 @@ public class Tpf.Persona : Folks.Persona,
            AbstractFieldDetails<string>.hash_static,
            AbstractFieldDetails<string>.equal_static);
 
-      var contact_info = contact.get_contact_info ();
+      var contact_info = contact.dup_contact_info ();
       foreach (var info in contact_info)
         {
           if (info.field_name == "") {}
