@@ -170,7 +170,7 @@ public class Folks.TestUtils
           catch (GLib.Error e1)
             {
               retval = false;
-              warning ("Failed to read loadable icon for comparison: %s",
+              error ("Failed to read loadable icon for comparison: %s",
                   e1.message);
             }
         }
