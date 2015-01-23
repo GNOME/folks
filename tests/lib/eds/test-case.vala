@@ -69,9 +69,16 @@ public class EdsTest.TestCase : Folks.TestCase
       return transient;
     }
 
-  public override void private_bus_up ()
+  private string _get_eds_libexecdir ()
     {
-      base.private_bus_up ();
+      /* Try the environment variable first, since when running installed
+       * tests we can’t depend on pkg-config being available. */
+      var env = Environment.get_variable ("FOLKS_TEST_EDS_LIBEXECDIR");
+
+      if (env != null && env != "")
+        {
+          return env;
+        }
 
       /* Find out the libexec directory to use. */
       int exit_status = -1;
@@ -95,7 +102,15 @@ public class EdsTest.TestCase : Folks.TestCase
           error ("Error getting libexecdir from pkg-config: %s", e1.message);
         }
 
-      var libexec = capture_stdout.strip ();
+      return capture_stdout.strip ();
+    }
+
+  public override void private_bus_up ()
+    {
+      base.private_bus_up ();
+
+      /* Find out the libexec directory to use. */
+      var libexec = this._get_eds_libexecdir ();
 
       /* Create service files for the Evolution binaries. */
       const string sources_services[] =

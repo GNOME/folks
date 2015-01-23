@@ -53,9 +53,16 @@ public class TrackerTest.TestCase : Folks.TestCase
       Environment.set_variable ("FOLKS_PRIMARY_STORE", "tracker", true);
     }
 
-  public override void private_bus_up ()
+  private string _get_tracker_libexecdir ()
     {
-      base.private_bus_up ();
+      /* Try the environment variable first, since when running installed
+       * tests we can’t depend on pkg-config being available. */
+      var env = Environment.get_variable ("FOLKS_TEST_TRACKER_LIBEXECDIR");
+
+      if (env != null && env != "")
+        {
+          return env;
+        }
 
       /* Find out the libexec directory to use. */
       int exit_status = -1;
@@ -82,7 +89,15 @@ public class TrackerTest.TestCase : Folks.TestCase
 
       /* FIXME: There really should be a libexec variable in the pkg-config
        * file. */
-      var libexec = capture_stdout.strip () + "/libexec";
+      return capture_stdout.strip () + "/libexec";
+    }
+
+  public override void private_bus_up ()
+    {
+      base.private_bus_up ();
+
+      /* Find out the libexec directory to use. */
+      var libexec = this._get_tracker_libexecdir ();
 
       /* Create service files for the Tracker binaries. */
       var service_file_name =
