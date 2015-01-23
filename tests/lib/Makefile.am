@@ -75,6 +75,8 @@ libfolks_test_la_CPPFLAGS = \
 	-DABS_TOP_BUILDDIR=\"${abs_top_builddir}\" \
 	-DPKGLIBEXECDIR=\"${pkglibexecdir}\" \
 	-DPACKAGE_DATADIR=\"${pkgdatadir}\" \
+	-DINSTALLED_TESTS_DIR=\"${libexecdir}/installed-tests/${PACKAGE_TARNAME}\" \
+	-DINSTALLED_TESTS_META_DIR=\"${datadir}/installed-tests/${PACKAGE_TARNAME}\" \
 	$(NULL)
 
 libfolks_test_la_LIBADD = \

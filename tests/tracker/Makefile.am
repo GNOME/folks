@@ -37,7 +37,7 @@ LDADD = \
 	$(NULL)
 
 # in order from least to most complex
-noinst_PROGRAMS = \
+all_test_programs = \
 	individual-retrieval \
 	name-details-interface \
 	avatar-details-interface \
@@ -97,8 +97,7 @@ noinst_PROGRAMS = \
 	set-duplicate-email \
 	set-null-avatar \
 	$(NULL)
-
-TESTS = $(noinst_PROGRAMS)
+installed_tests_subdirectory = tracker
 
 individual_retrieval_SOURCES = \
 	individual-retrieval.vala \

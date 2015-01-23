@@ -43,18 +43,17 @@ LDADD = \
 	-L$(top_srcdir)/backends/telepathy/lib \
 	$(NULL)
 
-TESTS = \
+all_test_programs = \
 	persona-store-capabilities \
 	individual-retrieval \
 	individual-properties \
 	init \
 	$(NULL)
-
-noinst_PROGRAMS = \
+all_test_helper_programs = \
 	fake-tp-backend \
 	individual-zeitgeist \
-	$(TESTS) \
 	$(NULL)
+installed_tests_subdirectory = telepathy
 
 fake_tp_backend_SOURCES = \
 	fake-tp-backend.vala \
@@ -80,7 +79,7 @@ persona_store_capabilities_SOURCES = \
 	persona-store-capabilities.vala \
 	$(NULL)
 
-EXTRA_DIST = \
+all_test_data = \
 	relationships-empty.ini \
 	$(NULL)
 

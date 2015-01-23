@@ -74,4 +74,10 @@ public class Folks.BuildConf
 
   [CCode (cname = "PKGLIBEXECDIR")]
   public static const string PKGLIBEXECDIR;
+
+  [CCode (cname = "INSTALLED_TESTS_DIR")]
+  public static const string INSTALLED_TESTS_DIR;
+
+  [CCode (cname = "INSTALLED_TESTS_META_DIR")]
+  public static const string INSTALLED_TESTS_META_DIR;
 }

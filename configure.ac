@@ -543,10 +543,25 @@ AM_CONDITIONAL([ENABLE_INSPECT_TOOL], [test "$with_inspect_tool" = "yes"])
 # Tests
 # -----------------------------------------------------------
 
-AC_ARG_ENABLE([tests],
-              AS_HELP_STRING([--enable-tests],[Enable building of tests]),
-              [enable_tests=$enableval], [enable_tests=yes])
-AM_CONDITIONAL([ENABLE_TESTS], [test x$enable_tests = xyes])
+AC_ARG_ENABLE([modular_tests],
+              AS_HELP_STRING([--disable-modular-tests],
+                             [Disable build of test programs (default: no)]),,
+              [enable_modular_tests=yes])
+AC_ARG_ENABLE([installed_tests],
+              AS_HELP_STRING([--enable-installed-tests],
+                             [Install test programs (default: no)]),,
+              [enable_installed_tests=no])
+
+AS_IF([test "$enable_modular_tests" = "yes" ||
+       test "$enable_installed_tests" = "yes"],
+      [enable_build_tests=yes],[enable_build_tests=no])
+AM_CONDITIONAL([ENABLE_BUILD_TESTS],
+               [test "$enable_build_tests" = "yes"])
+AC_SUBST([ENABLE_BUILD_TESTS],[$enable_build_tests])
+
+AM_CONDITIONAL([ENABLE_INSTALL_TESTS],
+               [test "$enable_installed_tests" = "yes"])
+AC_SUBST([ENABLE_INSTALL_TESTS],[$enable_installed_tests])
 
 # -----------------------------------------------------------
 # Documentation
@@ -830,5 +845,6 @@ Configure summary:
         Ofono backend...............:  ${enable_ofono_backend}
         BlueZ backend...............:  ${enable_bluez_backend}
         Zeitgeist support...........:  ${have_zeitgeist}
-        Build tests.................:  ${enable_tests}
+        Build tests.................:  ${enable_modular_tests}
+        Install tests...............:  ${enable_installed_tests}
 "

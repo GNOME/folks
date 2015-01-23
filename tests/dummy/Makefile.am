@@ -21,13 +21,12 @@ LDADD = \
 	$(NULL)
 
 # in order from least to most complex
-TESTS = \
+all_test_programs = \
 	individual-retrieval \
 	add-persona \
 	linkable-properties \
 	$(NULL)
-
-noinst_PROGRAMS = $(TESTS)
+installed_tests_subdirectory = dummy
 
 individual_retrieval_SOURCES = \
 	individual-retrieval.vala \

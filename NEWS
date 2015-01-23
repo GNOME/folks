@@ -4,6 +4,9 @@ Overview of changes from libfolks 0.10.1 to libfolks 0.11.0
 Dependencies:
 
 Major changes:
+ • The --enable-tests configure option has been renamed to
+   --enable-modular-tests
+ • Installed tests are now supported using --enable-installed-tests
 
 Bugs fixed:
  • Bug 641211 — Add arbitrary-field interface for applications to store trivial

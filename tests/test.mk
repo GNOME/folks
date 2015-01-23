@@ -63,3 +63,42 @@ test_ldadd = \
 	$(GLIB_LIBS) \
 	$(GEE_LIBS) \
 	$(NULL)
+
+# installed-tests support
+#
+# See: https://wiki.gnome.org/Initiatives/GnomeGoals/InstalledTests
+#
+# The including file needs to define:
+#  - all_test_programs, all_test_scripts, all_test_data,
+#    all_test_helper_programs, all_test_helper_scripts
+#    $(all_test_data) needs to be added to $(EXTRA_DIST) manually if needed.
+#  - installed_tests_subdirectory
+
+installed_tests_subdirectory ?=
+
+installed_tests_dir = $(libexecdir)/installed-tests/$(PACKAGE_TARNAME)/$(installed_tests_subdirectory)
+installed_tests_meta_dir = $(datadir)/installed-tests/$(PACKAGE_TARNAME)/$(installed_tests_subdirectory)
+
+# Build rules
+if ENABLE_BUILD_TESTS
+TESTS = $(all_test_programs) $(all_test_scripts)
+noinst_PROGRAMS = $(all_test_programs) $(all_test_helper_programs)
+noinst_SCRIPTS = $(all_test_scripts) $(all_test_helper_scripts)
+noinst_DATA = $(all_test_data)
+endif
+
+if ENABLE_INSTALL_TESTS
+insttestdir = $(installed_tests_dir)
+insttest_PROGRAMS = $(all_test_programs) $(all_test_helper_programs)
+insttest_SCRIPTS = $(all_test_scripts) $(all_test_helper_scripts)
+insttest_DATA = $(all_test_data)
+
+testmetadir = $(installed_tests_meta_dir)
+testmeta_DATA = $(all_test_programs:=.test) $(all_test_scripts:=.test)
+endif
+
+%.test: % Makefile
+	$(AM_V_GEN) (echo "[Test]" > $@.tmp; \
+	echo "Type=session" >> $@.tmp; \
+	echo "Exec=env G_ENABLE_DIAGNOSTIC=0 FOLKS_TESTS_INSTALLED=1 G_MESSAGES_DEBUG= FOLKS_TEST_EDS_LIBEXECDIR=$(libexecdir) FOLKS_TEST_TRACKER_LIBEXECDIR=$(libexecdir) $(insttestdir)/$<" >> $@.tmp; \
+	mv $@.tmp $@)

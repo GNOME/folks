@@ -43,7 +43,7 @@ LDADD = \
 	$(NULL)
 
 # in order from least to most complex
-noinst_PROGRAMS = \
+all_test_programs = \
 	small-set \
 	abstract-field-details \
 	async-locking \
@@ -58,8 +58,7 @@ noinst_PROGRAMS = \
 	name-details \
 	init \
 	$(NULL)
-
-TESTS = $(noinst_PROGRAMS)
+installed_tests_subdirectory = folks
 
 primary_store_changes_SOURCES = \
 	primary-store-changes.vala \

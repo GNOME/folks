@@ -23,13 +23,12 @@ LDADD = \
 	$(NULL)
 
 # in order from least to most complex
-noinst_PROGRAMS = \
+all_test_programs = \
 	device-properties \
 	individual-retrieval \
 	vcard-parsing \
 	$(NULL)
-
-TESTS = $(noinst_PROGRAMS)
+installed_tests_subdirectory = bluez
 
 device_properties_SOURCES = \
 	device-properties.vala \

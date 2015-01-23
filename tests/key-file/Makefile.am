@@ -22,11 +22,10 @@ LDADD = \
 	$(NULL)
 
 # in order from least to most complex
-noinst_PROGRAMS = \
+all_test_programs = \
 	individual-retrieval \
 	$(NULL)
-
-TESTS = $(noinst_PROGRAMS)
+installed_tests_subdirectory = key-file
 
 individual_retrieval_SOURCES = \
 	individual-retrieval.vala \

@@ -527,7 +527,7 @@ public class Folks.TestUtils
 
       if (Environment.get_variable ("FOLKS_TESTS_INSTALLED") != null)
         {
-          execdir = BuildConf.PKGLIBEXECDIR + "/tests";
+          execdir = BuildConf.INSTALLED_TESTS_DIR + "/";
         }
       else
         {
@@ -552,16 +552,16 @@ public class Folks.TestUtils
 
   /**
    * Return the path to a test file that is distributed in the source tarball
-   * and, if installed, is installed into ${pkgdatadir}/tests.
+   * and, if installed, is installed into ${installed_tests_dir}.
    *
    * @param filename A filename relative to ${top_srcdir}/tests
-   *  or ${pkgdatadir}/tests (or equivalently, ${datadir}/folks/tests).
+   *  or ${installed_tests_dir}.
    */
   public static string get_source_test_data (string filename)
     {
       if (Environment.get_variable ("FOLKS_TESTS_INSTALLED") != null)
         {
-          return BuildConf.PACKAGE_DATADIR + "/tests/" + filename;
+          return BuildConf.INSTALLED_TESTS_DIR + "/" + filename;
         }
       else
         {
@@ -571,16 +571,16 @@ public class Folks.TestUtils
 
   /**
    * Return the path to a test file that is built by "make"
-   * and, if installed, is installed into ${pkgdatadir}/tests.
+   * and, if installed, is installed into ${installed_tests_dir}.
    *
    * @param filename A filename relative to ${top_builddir}/tests
-   *  or ${pkgdatadir}/tests (or equivalently, ${datadir}/folks/tests).
+   *  or ${installed_tests_dir}.
    */
   public static string get_built_test_data (string filename)
     {
       if (Environment.get_variable ("FOLKS_TESTS_INSTALLED") != null)
         {
-          return BuildConf.PACKAGE_DATADIR + "/tests/" + filename;
+          return BuildConf.INSTALLED_TESTS_DIR + "/" + filename;
         }
       else
         {

@@ -40,7 +40,7 @@ LDADD = \
 	$(NULL)
 
 # in order from least to most complex
-TESTS = \
+all_test_programs = \
 	persona-store-tests \
 	individual-retrieval \
 	phone-details \
@@ -78,13 +78,12 @@ TESTS = \
 	perf \
 	extended-info \
 	$(NULL)
-
-noinst_PROGRAMS = \
-	$(TESTS) \
+all_test_helper_programs = \
 	helper-create-many-contacts \
 	helper-delete-contacts \
 	helper-prepare-aggregator \
 	$(NULL)
+installed_tests_subdirectory = eds
 
 anti_linking_SOURCES = \
 	anti-linking.vala \

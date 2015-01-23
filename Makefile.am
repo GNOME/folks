@@ -7,7 +7,7 @@ SUBDIRS = \
 	po \
 	$(NULL)
 
-if ENABLE_TESTS
+if ENABLE_BUILD_TESTS
 SUBDIRS += tests
 endif
 

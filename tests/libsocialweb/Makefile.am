@@ -31,12 +31,11 @@ LDADD = \
 	$(NULL)
 
 # in order from least to most complex
-noinst_PROGRAMS = \
+all_test_programs = \
 	dummy-lsw \
 	aggregation \
 	$(NULL)
-
-TESTS = $(noinst_PROGRAMS)
+installed_tests_subdirectory = libsocialweb
 
 dummy_lsw_SOURCES = \
 	dummy-lsw.vala \
