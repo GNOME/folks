@@ -131,7 +131,7 @@ public class TpfTest.TestCase : Folks.TestCase
     {
       /* Default key-file backend file to load. */
       Environment.set_variable ("FOLKS_BACKEND_KEY_FILE_PATH",
-          Folks.BuildConf.ABS_TOP_SRCDIR + "/data/relationships-empty.ini",
+          Folks.TestUtils.get_source_test_data ("telepathy/relationships-empty.ini"),
           true);
 
       if (use_keyfile_too)

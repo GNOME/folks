@@ -81,7 +81,7 @@ persona_store_capabilities_SOURCES = \
 	$(NULL)
 
 EXTRA_DIST = \
-	$(srcdir)/data/relationships-empty.ini \
+	relationships-empty.ini \
 	$(NULL)
 
 -include $(top_srcdir)/git.mk
