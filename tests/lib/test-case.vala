@@ -366,6 +366,10 @@ public abstract class Folks.TestCase : Object
        * are OK. */
       Environment.set_variable ("FOLKS_TESTS_SANDBOXED_DBUS", "no-services",
           true);
+
+      /* Disable the GVFS remote volume monitor so we don’t have to mock the
+       * org.gtk.vfs.Daemon D-Bus service. */
+      Environment.set_variable ("GVFS_REMOTE_VOLUME_MONITOR_IGNORE", "1", true);
     }
 
   public void register ()
