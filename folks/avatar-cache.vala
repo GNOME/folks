@@ -38,8 +38,8 @@ using GLib;
  * Ongoing store operations ({@link Folks.AvatarCache.store_avatar}) are rate
  * limited to try and prevent file descriptor exhaustion. Load operations
  * ({@link Folks.AvatarCache.load_avatar}) must be rate limited by the client,
- * as the file I/O occurs when calling {@link LoadableIcon.load} rather than
- * when retrieving the {@link LoadableIcon} from the cache.
+ * as the file I/O occurs when calling {@link GLib.LoadableIcon.load} rather
+ * than when retrieving the {@link GLib.LoadableIcon} from the cache.
  *
  * @since 0.6.0
  */
@@ -115,7 +115,8 @@ public class Folks.AvatarCache : Object
    * Fetch an avatar from the cache by its globally unique ID.
    *
    * It is up to the caller to ensure that file I/O is rate-limited when loading
-   * many avatars in parallel, by limiting calls to {@link LoadableIcon.load}.
+   * many avatars in parallel, by limiting calls to
+   * {@link GLib.LoadableIcon.load}.
    *
    * @param id the globally unique ID for the avatar
    * @return Avatar from the cache, or ``null`` if it doesn't exist in the cache
