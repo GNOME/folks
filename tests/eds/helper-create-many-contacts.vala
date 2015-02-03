@@ -46,7 +46,7 @@ public class Main
       var registry = new E.SourceRegistry.sync ();
       var source = registry.ref_source (uid);
       assert (source.uid == uid);
-      var book_client = E.BookClient.connect_sync (source);
+      var book_client = E.BookClient.connect_sync (source, 1);
       SList<E.Contact> contacts = null;
 
       var envvar = Environment.get_variable ("FOLKS_TESTS_REAL_VCARDS");
