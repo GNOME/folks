@@ -84,8 +84,7 @@ public class Folks.Backends.Tp.Backend : Folks.Backend
       PersonaStore[] removed_stores = {};
 
       /* First handle adding any missing persona stores. */
-      GLib.List<unowned Account> accounts =
-        this._account_manager.get_valid_accounts ();
+      var accounts = this._account_manager.dup_valid_accounts ();
       foreach (Account account in accounts)
         {
           string id = account.get_object_path ();
@@ -175,8 +174,7 @@ public class Folks.Backends.Tp.Backend : Folks.Backend
           this._account_manager.account_validity_changed.connect (
               this._account_validity_changed_cb);
 
-          GLib.List<unowned Account> accounts =
-          this._account_manager.get_valid_accounts ();
+          var accounts = this._account_manager.dup_valid_accounts ();
           foreach (Account account in accounts)
             {
               this._account_enabled_cb (account);
