@@ -1286,7 +1286,6 @@ public class Folks.IndividualAggregator : Object
                    * prop_name ends up as NULL. bgo#628336 */
                   unowned string prop_name = foo;
 
-                  /* FIXME: can't be var because of bgo#638208 */
                   unowned ObjectClass pclass = persona.get_class ();
                   if (pclass.find_property (prop_name) == null)
                     {
@@ -1560,7 +1559,6 @@ public class Folks.IndividualAggregator : Object
 
               debug ("        %s", prop_name);
 
-              /* FIXME: can't be var because of bgo#638208 */
               unowned ObjectClass pclass = persona.get_class ();
               if (pclass.find_property (prop_name) == null)
                 {
