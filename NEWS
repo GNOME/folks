@@ -10,6 +10,8 @@ Major changes:
  • The --enable-tests configure option has been renamed to
    --enable-modular-tests
  • Installed tests are now supported using --enable-installed-tests
+ • Add a vCard-like ExtendedInfo interface
+ • Upgrade to new EDS address book timeout API
  • Add search-based retrieval of Individuals
 
 Bugs fixed:
