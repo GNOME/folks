@@ -5,4 +5,6 @@ all_test_data = \
 	$(NULL)
 installed_tests_subdirectory = data
 
+EXTRA_DIST = $(all_test_data)
+
 -include $(top_srcdir)/git.mk

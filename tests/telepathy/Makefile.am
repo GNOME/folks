@@ -83,6 +83,8 @@ all_test_data = \
 	relationships-empty.ini \
 	$(NULL)
 
+EXTRA_DIST = $(all_test_data)
+
 -include $(top_srcdir)/git.mk
 -include $(top_srcdir)/valgrind.mk
 -include $(top_srcdir)/check.mk
