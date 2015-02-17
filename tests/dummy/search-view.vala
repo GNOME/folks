@@ -78,8 +78,8 @@ public class SearchViewTests : DummyTest.TestCase
           { "Ál", "persona3" },
           /* Test different Unicode normalisations and transliterations. */
           { "Pan", "persona3" },
-          { "Pa\xf1", "persona3" },
-          { "Pa\x6e\x303", "persona3" },
+          { "Pa\xc3\xb1", "persona3" },
+          { "Pa\x6e\xcc\x83", "persona3" },
           /* Sort stability. */
           { "A", "persona1,persona2,persona0,persona3" },
           { "Al", "persona1,persona3" },
