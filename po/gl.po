@@ -5,13 +5,13 @@
 # colaborar connosco, podes atopar máis información en http://www.trasno.net
 # Fran Diéguez <frandieguez@gnome.org>, 2011, 2012.
 # Leandro Regueiro <leandro.regueiro@gmail.com>, 2012.
-# Fran Dieguez <frandieguez@gnome.org>, 2012, 2013, 2014.
+# Fran Dieguez <frandieguez@gnome.org>, 2012, 2013, 2014, 2015.
 msgid ""
 msgstr ""
 "Project-Id-Version: folks master\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-07-01 18:04+0200\n"
-"PO-Revision-Date: 2014-07-01 18:05+0200\n"
+"POT-Creation-Date: 2015-02-19 10:49+0100\n"
+"PO-Revision-Date: 2015-02-19 10:49+0200\n"
 "Last-Translator: Fran Dieguez <frandieguez@gnome.org>\n"
 "Language-Team: gnome-l10n-gl@gnome.org\n"
 "Language: gl\n"
@@ -30,8 +30,8 @@ msgid ""
 msgstr ""
 "Non hai ningún xestor de obxectos de BlueZ 5 executándose, polo que a "
 "infraestrutura de BlueZ será desactivada. Poida ser que a súa instalación de "
-"BlueZ sexa demasiado antiga (só se admite a versión 5) ou o servizo non "
-"pode iniciarse."
+"BlueZ sexa demasiado antiga (só se admite a versión 5) ou o servizo non pode "
+"iniciarse."
 
 #: ../backends/bluez/bluez-backend.vala:613
 msgid ""
@@ -148,7 +148,7 @@ msgstr "Non é posíbel retirar o contacto «%s»: %s"
 #. Translators: the parameter is an address book
 #. * URI.
 #: ../backends/eds/lib/edsf-persona-store.vala:803
-#: ../backends/eds/lib/edsf-persona-store.vala:994
+#: ../backends/eds/lib/edsf-persona-store.vala:996
 #, c-format
 msgid "Address book ‘%s’ is offline."
 msgstr "A axenda de enderezos «%s» está fóra de liña."
@@ -156,7 +156,7 @@ msgstr "A axenda de enderezos «%s» está fóra de liña."
 #. Translators: the first parameter is an address
 #. * book URI and the second is an error message.
 #: ../backends/eds/lib/edsf-persona-store.vala:808
-#: ../backends/eds/lib/edsf-persona-store.vala:999
+#: ../backends/eds/lib/edsf-persona-store.vala:1001
 #, c-format
 msgid "Permission denied to open address book ‘%s’: %s"
 msgstr "Permiso denegado para abrir a axenda de enderezos «%s»: %s"
@@ -169,21 +169,21 @@ msgid "Couldn't open address book ‘%s’: %s"
 msgstr "Non foi posíbel abrir a axenda de enderezos «%s»: %s"
 
 #. Translators: the parameteter is an error message.
-#: ../backends/eds/lib/edsf-persona-store.vala:907
-#: ../backends/eds/lib/edsf-persona-store.vala:937
+#: ../backends/eds/lib/edsf-persona-store.vala:909
+#: ../backends/eds/lib/edsf-persona-store.vala:939
 #, c-format
 msgid "Couldn't get address book capabilities: %s"
 msgstr "Non foi posíbel obter as capacidades da axenda de enderezos: %s."
 
 #. Translators: the parameter is an address book URI.
-#: ../backends/eds/lib/edsf-persona-store.vala:953
+#: ../backends/eds/lib/edsf-persona-store.vala:955
 #, c-format
 msgid "Couldn't get view for address book ‘%s’."
 msgstr "Non foi posíbel obter a vista para a axenda de enderezos «%s»."
 
 #. Translators: the first parameter is an address book URI
 #. * and the second is an error message.
-#: ../backends/eds/lib/edsf-persona-store.vala:1032
+#: ../backends/eds/lib/edsf-persona-store.vala:1034
 #, c-format
 msgid "Couldn't get view for address book ‘%s’: %s"
 msgstr "Non foi posíbel obter a vista para a axenda de enderezos «%s»: %s"
@@ -191,113 +191,113 @@ msgstr "Non foi posíbel obter a vista para a axenda de enderezos «%s»: %s"
 #. Translators: the parameter is the name of a property on a
 #. * contact, formatted in the normal GObject style (e.g.
 #. * lowercase with hyphens to separate words).
-#: ../backends/eds/lib/edsf-persona-store.vala:1304
+#: ../backends/eds/lib/edsf-persona-store.vala:1306
 #, c-format
 msgid "Changing the ‘%s’ property failed due to reaching the timeout."
 msgstr ""
 "Produciuse un erro ao cambiar a propiedade «%s» porque expirou o tempo."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1338
+#: ../backends/eds/lib/edsf-persona-store.vala:1340
 #: ../folks/avatar-details.vala:63
 msgid "Avatar is not writeable on this contact."
 msgstr "Non é posíbel escribir o avatar neste contacto."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1359
+#: ../backends/eds/lib/edsf-persona-store.vala:1361
 #: ../folks/web-service-details.vala:123
 msgid "Web service addresses are not writeable on this contact."
 msgstr "Non é posíbel escribir os enderezos de servizos web neste contacto."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1395
+#: ../backends/eds/lib/edsf-persona-store.vala:1397
 #: ../folks/url-details.vala:152
 msgid "URLs are not writeable on this contact."
 msgstr "Non é posíbel escribir os URL neste contacto."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1476
+#: ../backends/eds/lib/edsf-persona-store.vala:1478
 #: ../folks/local-id-details.vala:64
 msgid "Local IDs are not writeable on this contact."
 msgstr "Os ID locais non son escribíbeis neste contacto."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1505
+#: ../backends/eds/lib/edsf-persona-store.vala:1507
 msgid "The contact cannot be marked as favourite."
 msgstr "Non é posíbel marcar o contacto como favorito."
 
 #. Translators: the parameter is an error message.
-#: ../backends/eds/lib/edsf-persona-store.vala:1577
+#: ../backends/eds/lib/edsf-persona-store.vala:1579
 #, c-format
 msgid "Can't update avatar: %s"
 msgstr "Non foi posíbel actualizar o avatar: %s"
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1588
+#: ../backends/eds/lib/edsf-persona-store.vala:1590
 #: ../folks/email-details.vala:120
 msgid "E-mail addresses are not writeable on this contact."
 msgstr ""
 "Non é posíbel escribir os enderezos de correo electrónico neste contacto."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1606
+#: ../backends/eds/lib/edsf-persona-store.vala:1670
 #: ../folks/phone-details.vala:255
 msgid "Phone numbers are not writeable on this contact."
 msgstr "Non é posíbel escribir os números de teléfono neste contacto."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1624
+#: ../backends/eds/lib/edsf-persona-store.vala:1688
 #: ../folks/postal-address-details.vala:361
 msgid "Postal addresses are not writeable on this contact."
 msgstr "Non é posíbel escribir o enderezo postal neste contacto"
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1695
+#: ../backends/eds/lib/edsf-persona-store.vala:1759
 #: ../folks/name-details.vala:454
 msgid "Full name is not writeable on this contact."
 msgstr "Non é posíbel escribir o nome completo neste contacto."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1717
+#: ../backends/eds/lib/edsf-persona-store.vala:1781
 #: ../folks/name-details.vala:492
 msgid "Nickname is not writeable on this contact."
 msgstr "Non é escribíbel o alcume neste contacto."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1739
+#: ../backends/eds/lib/edsf-persona-store.vala:1803
 #: ../folks/note-details.vala:138
 msgid "Notes are not writeable on this contact."
 msgstr "Non é posíbel escribir as notas neste contacto."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1771
+#: ../backends/eds/lib/edsf-persona-store.vala:1835
 #: ../folks/birthday-details.vala:62
 msgid "Birthday is not writeable on this contact."
 msgstr "Non é posíbel escribir o aniversario deste contacto."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1815
+#: ../backends/eds/lib/edsf-persona-store.vala:1879
 #: ../folks/role-details.vala:279
 msgid "Roles are not writeable on this contact."
 msgstr "Non é posíbel escribir os roles neste contacto."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1916
+#: ../backends/eds/lib/edsf-persona-store.vala:1980
 #: ../folks/name-details.vala:417
 msgid "Structured name is not writeable on this contact."
 msgstr "Non é posíbel escribir o nome estruturado neste contacto."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1955
+#: ../backends/eds/lib/edsf-persona-store.vala:2019
 #: ../folks/im-details.vala:136
 msgid "IM addresses are not writeable on this contact."
 msgstr "Non é posíbel escribir os enderezos IM neste contacto."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:2005
+#: ../backends/eds/lib/edsf-persona-store.vala:2069
 #: ../folks/group-details.vala:174
 msgid "Groups are not writeable on this contact."
 msgstr "Os grupos non son escribíbeis neste contacto."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:2020
+#: ../backends/eds/lib/edsf-persona-store.vala:2084
 msgid "My Contacts is only available for Google Contacts"
 msgstr "Os meus contactos só está dispoñíbel para Google Contacts"
 
-#: ../backends/eds/lib/edsf-persona-store.vala:2091
+#: ../backends/eds/lib/edsf-persona-store.vala:2155
 #: ../folks/gender-details.vala:79
 msgid "Gender is not writeable on this contact."
 msgstr "Non é posíbel escribir o xénero neste contacto."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:2129
+#: ../backends/eds/lib/edsf-persona-store.vala:2193
 #: ../folks/anti-linkable.vala:84
 msgid "Anti-links are not writeable on this contact."
 msgstr "Non é posíbel escribir as anti-ligazóns neste contacto."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:2172
+#: ../backends/eds/lib/edsf-persona-store.vala:2236
 #: ../folks/location-details.vala:135
 msgid "Location is not writeable on this contact."
 msgstr "Non é posíbel escribir a localización neste contacto."
@@ -305,7 +305,7 @@ msgstr "Non é posíbel escribir a localización neste contacto."
 #. Translators: the first parameter is a non-human-readable
 #. * property name and the second parameter is an error
 #. * message.
-#: ../backends/eds/lib/edsf-persona-store.vala:2485
+#: ../backends/eds/lib/edsf-persona-store.vala:2549
 #, c-format
 msgid "Property ‘%s’ is not writeable: %s"
 msgstr "Non é posíbel escribir na propiedade «%s»: %s"
@@ -313,14 +313,14 @@ msgstr "Non é posíbel escribir na propiedade «%s»: %s"
 #. Translators: the first parameter is a non-human-readable
 #. * property name and the second parameter is an error
 #. * message.
-#: ../backends/eds/lib/edsf-persona-store.vala:2494
+#: ../backends/eds/lib/edsf-persona-store.vala:2558
 #, c-format
 msgid "Invalid value for property ‘%s’: %s"
 msgstr "Valor non válido para a propiedade «%s»: %s"
 
 #. Translators: the first parameter is a non-human-readable
 #. * property name and the second parameter is an error message.
-#: ../backends/eds/lib/edsf-persona-store.vala:2520
+#: ../backends/eds/lib/edsf-persona-store.vala:2584
 #, c-format
 msgid "Unknown error setting property ‘%s’: %s"
 msgstr "Produciuse un erro descoñecido ao definir a propiedade «%s»: %s"
@@ -534,6 +534,10 @@ msgstr "Produciuse un erro ao obter o tipo de contido para «%s»."
 msgid "Birthday event ID is not writeable on this contact."
 msgstr "Non é posíbel escribir o ID do evento de aniversario deste contacto."
 
+#: ../folks/extended-info.vala:133 ../folks/extended-info.vala:149
+msgid "Extended fields are not writeable on this contact."
+msgstr "Non é posíbel escribir nos campos extendidos neste contacto."
+
 #: ../folks/favourite-details.vala:58
 msgid "Favorite status is not writeable on this contact."
 msgstr "Non é posíbel escribir o estado de favorito neste contacto."
@@ -547,33 +551,33 @@ msgstr "Non é posíbel entender o enderezo de IM «%s»."
 
 #. Translators: the first parameter is a persona store identifier
 #. * and the second is an error message.
-#: ../folks/individual-aggregator.vala:1042
+#: ../folks/individual-aggregator.vala:1063
 #, c-format
 msgid "Error preparing persona store '%s': %s"
 msgstr "Produciuse un erro ao preparar o almacén de contactos «%s»: %s"
 
 #. Translators: the parameter is a property name.
-#: ../folks/individual-aggregator.vala:1274
-#: ../folks/individual-aggregator.vala:1548
+#: ../folks/individual-aggregator.vala:1294
+#: ../folks/individual-aggregator.vala:1567
 #, c-format
 msgid "Unknown property '%s' in linkable property list."
 msgstr "Propiedade «%s» descoñecida na lista ligábel de propiedades."
 
 #. Translators: the first parameter is a store identifier
 #. * and the second parameter is an error message.
-#: ../folks/individual-aggregator.vala:2034
+#: ../folks/individual-aggregator.vala:2053
 #, c-format
 msgid "Failed to add contact for persona store ID '%s': %s"
 msgstr ""
 "Produciuse un erro ao engadir o contacto para o ID de almacenamento de "
 "contacto «%s»: %s"
 
-#: ../folks/individual-aggregator.vala:2131
+#: ../folks/individual-aggregator.vala:2150
 msgid "Can’t link personas with no primary store."
 msgstr "Non é posíbel ligar os contactos sen un almacén primario"
 
-#: ../folks/individual-aggregator.vala:2132
-#: ../folks/individual-aggregator.vala:2463
+#: ../folks/individual-aggregator.vala:2151
+#: ../folks/individual-aggregator.vala:2482
 #, c-format
 msgid ""
 "Persona store ‘%s:%s’ is configured as primary, but could not be found or "
@@ -582,8 +586,8 @@ msgstr ""
 "O almacén de contactos «%s:%s» está configurado como primario, pero non se "
 "atopou ou fallou ao cargar."
 
-#: ../folks/individual-aggregator.vala:2133
-#: ../folks/individual-aggregator.vala:2464
+#: ../folks/individual-aggregator.vala:2152
+#: ../folks/individual-aggregator.vala:2483
 #, c-format
 msgid ""
 "Check the relevant service is running, or change the default store in that "
@@ -592,24 +596,24 @@ msgstr ""
 "Comprobe que o servizo estea executándose, ou modifique o almacén "
 "predeterminado nese servizo usando a chave de GSettings «%s»."
 
-#: ../folks/individual-aggregator.vala:2165
+#: ../folks/individual-aggregator.vala:2184
 msgid "Anti-links can't be removed between personas being linked."
 msgstr "Non é posíbel retirar as anti-ligazóns entre persoas xa ligadas."
 
-#: ../folks/individual-aggregator.vala:2462
+#: ../folks/individual-aggregator.vala:2481
 msgid "Can’t add personas with no primary store."
 msgstr "Non é posíbel engadir contactos sen almacén primario."
 
-#: ../folks/individual-aggregator.vala:2473
+#: ../folks/individual-aggregator.vala:2492
 #, c-format
 msgid "Can't write to requested property (“%s”) of the writeable store."
 msgstr ""
 "Non é posíbel escribir a propiedade solicitada (\"%s\") do almacen "
 "escribíbel."
 
-#: ../folks/individual.vala:216 ../folks/individual.vala:402
-#: ../folks/individual.vala:511 ../folks/individual.vala:762
-#: ../folks/individual.vala:840
+#: ../folks/individual.vala:217 ../folks/individual.vala:403
+#: ../folks/individual.vala:512 ../folks/individual.vala:763
+#: ../folks/individual.vala:841 ../folks/individual.vala:1055
 #, c-format
 msgid "Failed to change property ‘%s’: No suitable personas were found."
 msgstr ""
@@ -619,7 +623,7 @@ msgstr ""
 #. Translators: This is the default name for an Individual
 #. * when displayed in the UI if no personal details are available
 #. * for them.
-#: ../folks/individual.vala:1951
+#: ../folks/individual.vala:2068
 msgid "Unnamed Person"
 msgstr "Persoa sen nome"
 
