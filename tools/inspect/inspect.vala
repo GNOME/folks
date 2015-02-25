@@ -369,9 +369,21 @@ public class Folks.Inspect.Client : Object
           command.run.begin (subcommand, (obj, res) =>
             {
               command.run.end (res);
-              /* Close the stream to the pager so it knows it's reached EOF. */
-              main_client._pager_channel = null;
-              Utils.output_filestream = GLib.stdout;
+
+              if (main_client._pager_channel != null)
+                {
+                  /* Close the stream to the pager so it knows it's
+                   * reached EOF. */
+                  main_client._pager_channel = null;
+                  Utils.output_filestream = GLib.stdout;
+                }
+              else
+                {
+                  /* Failed to start the pager in the first place. */
+                  Readline.reset_line_state ();
+                  Readline.replace_line ("", 0);
+                  Readline.redisplay ();
+                }
             });
 
         }
@@ -443,6 +455,10 @@ public class Folks.Inspect.Client : Object
       catch (SpawnError e2)
         {
           warning ("Error spawning pager: %s", e2.message);
+
+          /* Reinstall the readline handler and stdin handler. */
+          this._install_readline_and_stdin ();
+
           return;
         }
 
