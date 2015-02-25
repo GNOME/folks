@@ -38,7 +38,7 @@ private class Folks.Inspect.Commands.Set : Folks.Inspect.Command
     {
       get
         {
-          return "set an individual's attributes";
+          return "Set an individual's properties";
         }
     }
 
