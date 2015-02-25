@@ -24,6 +24,11 @@ using GLib;
 
 private class Folks.Inspect.Commands.Set : Folks.Inspect.Command
 {
+  private const string[] _valid_subcommands =
+    {
+      "alias",
+    };
+
   public override string name
     {
       get { return "set"; }
@@ -61,13 +66,9 @@ private class Folks.Inspect.Commands.Set : Folks.Inspect.Command
           parts = command_string.split (" ");
         }
 
-      if (parts.length < 1 ||
-          (parts[0] != "alias"))
-        {
-          Utils.print_line ("Unrecognised 'set' command '%s'.",
-            command_string);
+      if (!Utils.validate_subcommand (this.name, command_string, parts[0],
+              Set._valid_subcommands))
           return;
-        }
 
       if (parts[0] == "alias")
         {
@@ -158,8 +159,7 @@ private class Folks.Inspect.Commands.Set : Folks.Inspect.Command
             }
           else
             {
-              subcommand_completions =
-                  { "alias", null };
+              subcommand_completions = Set._valid_subcommands;
               prefix = "";
             }
 

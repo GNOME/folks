@@ -24,6 +24,13 @@ using GLib;
 
 private class Folks.Inspect.Commands.Linking : Folks.Inspect.Command
 {
+  private const string[] _valid_subcommands =
+    {
+      "link-personas",
+      "link-individuals",
+      "unlink-individual",
+    };
+
   public override string name
     {
       get { return "linking"; }
@@ -68,14 +75,9 @@ private class Folks.Inspect.Commands.Linking : Folks.Inspect.Command
           parts = command_string.split (" ");
         }
 
-      if (parts.length < 1 ||
-          (parts[0] != "link-personas" && parts[0] != "link-individuals" &&
-           parts[0] != "unlink-individual"))
-        {
-          Utils.print_line ("Unrecognised 'linking' command '%s'.",
-            command_string);
+      if (!Utils.validate_subcommand (this.name, command_string, parts[0],
+              Linking._valid_subcommands))
           return;
-        }
 
       if (parts[0] == "link-personas" || parts[0] == "link-individuals")
         {
@@ -301,9 +303,7 @@ private class Folks.Inspect.Commands.Linking : Folks.Inspect.Command
             }
           else
             {
-              subcommand_completions =
-                  { "link-personas", "link-individuals",
-                    "unlink-individual", null };
+              subcommand_completions = Linking._valid_subcommands;
               prefix = "";
             }
 

@@ -44,6 +44,12 @@ using GLib;
 
 private class Folks.Inspect.Commands.Signals : Folks.Inspect.Command
 {
+  private const string[] _valid_subcommands =
+    {
+      "connect",
+      "disconnect",
+    };
+
   public override string name
     {
       get { return "signals"; }
@@ -106,12 +112,9 @@ private class Folks.Inspect.Commands.Signals : Folks.Inspect.Command
           /* Parse subcommands */
           string[] parts = command_string.split (" ", 2);
 
-          if (parts.length < 1)
-            {
-              Utils.print_line ("Unrecognised 'signals' command '%s'.",
-                command_string);
+          if (!Utils.validate_subcommand (this.name, command_string, parts[0],
+                 Signals._valid_subcommands))
               return;
-            }
 
           Type class_type;
           Object class_instance;

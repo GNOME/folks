@@ -621,4 +621,25 @@ private class Folks.Inspect.Utils
       Utils.backend_name_iter = null;
       return null;
     }
+
+  /* Command validation code for commands which take a well-known set of
+   * subcommands. */
+  public static bool validate_subcommand (string command,
+      string? command_string, string? subcommand, string[] valid_subcommands)
+    {
+      if (subcommand != null && subcommand in valid_subcommands)
+          return true;
+
+      /* Print an error. */
+      Utils.print_line ("Unrecognised '%s' command '%s'.", command,
+          (command_string != null) ? command_string : "");
+
+      Utils.print_line ("Valid commands:");
+      Utils.indent ();
+      foreach (var c in valid_subcommands)
+          Utils.print_line ("%s", c);
+      Utils.unindent ();
+
+      return false;
+    }
 }
