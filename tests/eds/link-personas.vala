@@ -328,6 +328,7 @@ public class LinkPersonasTests : EdsTest.TestCase
             {
               var contact_id1 = ((Edsf.Persona) first_persona).iid;
               this._linking_props.set ("prop1", contact_id1);
+              debug ("Setting linking prop1 to %s", contact_id1);
             }
         }
       else if (i.full_name == this._persona_fullname_2 &&
@@ -339,6 +340,7 @@ public class LinkPersonasTests : EdsTest.TestCase
             {
               var contact_id2 = ((Edsf.Persona) first_persona).iid;
               this._linking_props.set ("prop2", contact_id2);
+              debug ("Setting linking prop2 to %s", contact_id2);
             }
         }
       else if (i.personas.size > 1)
@@ -354,10 +356,12 @@ public class LinkPersonasTests : EdsTest.TestCase
                       if (im_fd.value == this._linking_props.get ("prop1"))
                         {
                           this._linking_props.unset ("prop1");
+                          debug ("Unsetting linking prop1 due to IM address match");
                         }
                       else if (im_fd.value == this._linking_props.get ("prop2"))
                         {
                           this._linking_props.unset ("prop2");
+                          debug ("Unsetting linking prop2 due to IM address match");
                         }
                     }
                 }
@@ -366,13 +370,17 @@ public class LinkPersonasTests : EdsTest.TestCase
             {
               foreach (var local_id in i.local_ids)
                 {
+                  debug ("Trying local ID %s", local_id);
+
                   if (local_id == this._linking_props.get ("prop1"))
                     {
                       this._linking_props.unset ("prop1");
+                      debug ("Unsetting linking prop1 due to local ID match");
                     }
                   else if (local_id == this._linking_props.get ("prop2"))
                     {
                       this._linking_props.unset ("prop2");
+                      debug ("Unsetting linking prop2 due to local ID match");
                     }
                 }
             }
@@ -389,11 +397,13 @@ public class LinkPersonasTests : EdsTest.TestCase
                           ws_fd.equal (new WebServiceFieldDetails (prop1)))
                         {
                           this._linking_props.unset ("prop1");
+                          debug ("Unsetting linking prop1 due to web service match");
                         }
                       else if (prop2 != null &&
                           ws_fd.equal (new WebServiceFieldDetails (prop2)))
                         {
                           this._linking_props.unset ("prop2");
+                          debug ("Unsetting linking prop2 due to web service match");
                         }
                     }
                 }
@@ -401,6 +411,7 @@ public class LinkPersonasTests : EdsTest.TestCase
 
           if (this._linking_props.size == 0)
             {
+              debug ("Quitting main loop due to empty linking props set");
               this._main_loop.quit ();
             }
         }
@@ -443,6 +454,7 @@ public class LinkPersonasTests : EdsTest.TestCase
               if (email.value == this._auto_linkable_email)
                 {
                   this._linking_props.unset ("prop1");
+                  debug ("Unsetting linking prop1 due to e-mail address match");
                 }
             }
 
@@ -454,6 +466,7 @@ public class LinkPersonasTests : EdsTest.TestCase
                   if (im_fd1.value == this._auto_linkable_email)
                     {
                       this._linking_props.unset ("prop2");
+                      debug ("Unsetting linking prop2 due to e-mail address match");
                     }
                 }
             }
@@ -461,6 +474,7 @@ public class LinkPersonasTests : EdsTest.TestCase
 
       if (this._linking_props.size == 0)
         {
+          debug ("Quitting main loop due to empty linking props set");
           this._main_loop.quit ();
         }
     }
