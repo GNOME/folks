@@ -140,7 +140,7 @@ public class LinkPersonasTests : EdsTest.TestCase
         }
       catch (GLib.Error e)
         {
-          GLib.warning ("Error when calling prepare: %s\n", e.message);
+          GLib.error ("Error when calling prepare: %s\n", e.message);
         }
     }
 
@@ -263,7 +263,7 @@ public class LinkPersonasTests : EdsTest.TestCase
         }
       catch (Folks.IndividualAggregatorError e)
         {
-          GLib.warning ("[AddPersonaError] add_persona_from_details: %s\n",
+          GLib.error ("[AddPersonaError] add_persona_from_details: %s\n",
               e.message);
         }
     }
@@ -422,7 +422,7 @@ public class LinkPersonasTests : EdsTest.TestCase
             }
           catch (GLib.Error e)
             {
-              GLib.warning ("link_personas: %s\n", e.message);
+              GLib.error ("link_personas: %s\n", e.message);
             }
         }
     }
