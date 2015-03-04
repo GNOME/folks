@@ -401,12 +401,7 @@ public class LinkPersonasTests : EdsTest.TestCase
 
           if (this._linking_props.size == 0)
             {
-              /* FIXME: if the timeout is reached, should this just fail? */
-              Timeout.add_seconds (5, () =>
-                {
-                  this._main_loop.quit ();
-                  return false;
-                });
+              this._main_loop.quit ();
             }
         }
 
