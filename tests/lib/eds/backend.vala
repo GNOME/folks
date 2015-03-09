@@ -163,6 +163,9 @@ public class EdsTest.Backend
       this._source_registry = source_registry;
       var signal_id = source_registry.source_added.connect ((r, s) =>
         {
+          if (s.uid != this._addressbook_name)
+              return;
+
           this._source = s;
           this._prepare_source_async.callback ();
         });
