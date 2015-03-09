@@ -42,11 +42,12 @@ public class LinkPersonasDiffStoresTests : EdsTest.TestCase
           this.test_linking_via_local_ids_diff_stores);
     }
 
-  public override void set_up ()
+  public override void create_backend ()
     {
-      base.set_up ();
-      this._eds_backend_other = new EdsTest.Backend ();
-      this._eds_backend_other.set_up (false, "other");
+      base.create_backend ();
+
+      this._eds_backend_other = new EdsTest.Backend ("other");
+      this._eds_backend_other.set_up (false);
 
       Environment.set_variable ("FOLKS_BACKEND_EDS_USE_ADDRESS_BOOKS",
                                 (this.eds_backend.address_book_uid + ":" +

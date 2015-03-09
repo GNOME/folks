@@ -48,8 +48,8 @@ public class EnableDisableStoresTests : EdsTest.TestCase
       this._n_stores_prepared = 0;
       this._backend_store = BackendStore.dup();
 
-      this._eds_backend_other = new EdsTest.Backend ();
-      this._eds_backend_other.set_up (false, "other");
+      this._eds_backend_other = new EdsTest.Backend ("other");
+      this._eds_backend_other.set_up (false);
 
       /* We configure eds as the primary store */
       Environment.set_variable ("FOLKS_BACKEND_EDS_USE_ADDRESS_BOOKS",

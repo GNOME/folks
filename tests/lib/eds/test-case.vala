@@ -193,8 +193,9 @@ public class EdsTest.TestCase : Folks.TestCase
   public virtual void create_backend ()
     {
       /* Use a unique EDS book for each test. */
-      this.eds_backend = new EdsTest.Backend ();
-      ((!) this.eds_backend).set_up (true, "test%u".printf (this._test_num++));
+      this.eds_backend =
+          new EdsTest.Backend ("test%u".printf (this._test_num++));
+      ((!) this.eds_backend).set_up (true);
     }
 
   /**

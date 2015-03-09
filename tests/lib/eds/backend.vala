@@ -50,10 +50,11 @@ public class EdsTest.Backend
       get { return this._addressbook.get_source ().get_uid (); }
     }
 
-  public Backend ()
+  public Backend (string name = "test")
     {
       this._contacts = new GLib.List<Gee.HashMap<string, Value?>> ();
       this._e_contacts = new string[0];
+      this._addressbook_name = name;
     }
 
   public void add_contact (owned Gee.HashMap<string, Value?> c)
@@ -100,13 +101,10 @@ public class EdsTest.Backend
     }
 
   /* Create a temporary addressbook */
-  public void set_up (bool source_is_default = false, string name = "test")
+  public void set_up (bool source_is_default = false)
     {
       try
         {
-          /* _addressbook_name needs to be set before calling _prepare_source */
-          this._addressbook_name = name;
-
           this._prepare_source (source_is_default);
           this._addressbook = BookClient.connect_sync (this._source, 1, null);
           Environment.set_variable ("FOLKS_BACKEND_EDS_USE_ADDRESS_BOOKS",
