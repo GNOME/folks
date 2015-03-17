@@ -1000,7 +1000,11 @@ public class Folks.Individual : Object,
           if ("extended-info" in p.writeable_properties)
             {
               var e = p as ExtendedInfo;
-              return e.get_extended_field (name);
+              var details = e.get_extended_field (name);
+              if (details != null)
+                {
+                  return details;
+                }
             }
         }
 
