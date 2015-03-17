@@ -141,9 +141,11 @@ public class Folks.BackendStore : Object {
     {
       /* Treat this as a library init function */
       var debug_no_colour = Environment.get_variable ("FOLKS_DEBUG_NO_COLOUR");
+      var debug_no_color = Environment.get_variable ("FOLKS_DEBUG_NO_COLOR");
       this._debug =
           Debug.dup_with_flags (Environment.get_variable ("G_MESSAGES_DEBUG"),
-              (debug_no_colour == null || debug_no_colour == "0"));
+              (debug_no_colour == null || debug_no_colour == "0") &&
+              (debug_no_color == null || debug_no_color == "0"));
 
       /* register the core debug messages */
       this._debug._register_domain (G_LOG_DOMAIN);
