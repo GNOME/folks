@@ -164,8 +164,8 @@ public class Folks.Debug : Object
       Log.default_handler (log_domain, log_levels, message);
     }
 
-  /* turn off debug output for the given domain unless it was in the FOLKS_DEBUG
-   * environment variable (or 'all' was set) */
+  /* turn off debug output for the given domain unless it was in the
+   * G_MESSAGES_DEBUG environment variable (or 'all' was set) */
   internal void _register_domain (string domain)
     {
       lock (this._domains)

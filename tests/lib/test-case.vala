@@ -48,7 +48,6 @@ public abstract class Folks.TestCase : Object
        * tests. If the user’s already set those variables, though, don’t
        * overwrite them. */
       Environment.set_variable ("G_MESSAGES_DEBUG", "all", false);
-      Environment.set_variable ("FOLKS_DEBUG", "all", false);
 
       /* Turn off use of gvfs. If using GTestDBus it's unavailable,
        * and if not it's pointless: all we need is the local filesystem. */
