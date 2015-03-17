@@ -1221,9 +1221,13 @@ public class Edsf.PersonaStore : Folks.PersonaStore
 
   /* Commit modified properties to the address book. This assumes you've already
    * modified the persona's contact appropriately. It guarantees to only return
-   * once the modified property has been notified. */
+   * once the modified property has been notified.
+   *
+   * If @property_name is null, this yields until the persona as a whole is
+   * updated by EDS. This is intended _only_ for changes which are not tied to
+   * a specific Edsf.Persona property, such as change_extended_field(). */
   private async void _commit_modified_property (Edsf.Persona persona,
-      string property_name) throws PropertyError
+      string? property_name) throws PropertyError
     {
       /* We require _addressbook to be non-null. This should be the case
        * because we're only called from property setters, and they check whether
@@ -1251,16 +1255,48 @@ public class Edsf.PersonaStore : Folks.PersonaStore
           var received_notification = false;
           var has_yielded = false;
 
-          signal_id = persona.notify[property_name].connect ((obj, pspec) =>
+          if (property_name != null)
             {
-              /* Success! Return to _commit_modified_property(). */
-              received_notification = true;
-
-              if (has_yielded == true)
+              signal_id = persona.notify[property_name].connect ((obj, pspec) =>
                 {
-                  this._commit_modified_property.callback ();
-                }
-            });
+                  /* Success! Return to _commit_modified_property(). */
+                  received_notification = true;
+
+                  if (has_yielded == true)
+                    {
+                      this._commit_modified_property.callback ();
+                    }
+                });
+            }
+          else
+            {
+              signal_id = ((!) this._ebookview).objects_modified.connect (
+                  (_contacts) =>
+                {
+                  unowned GLib.List<E.Contact> contacts =
+                      (GLib.List<E.Contact>) _contacts;
+
+                  /* Ignore other personas. */
+                  foreach (E.Contact c in contacts)
+                    {
+                      var iid = Edsf.Persona.build_iid_from_contact (this.id, c);
+                      if (iid != persona.iid)
+                        {
+                          continue;
+                        }
+
+                      /* Success! Return to _commit_modified_property(). */
+                      received_notification = true;
+
+                      if (has_yielded == true)
+                        {
+                          this._commit_modified_property.callback ();
+                        }
+
+                      return;
+                    }
+                });
+            }
 
           /* Commit the modification. _addressbook is asserted as being non-null
            * above. */
@@ -1314,9 +1350,13 @@ public class Edsf.PersonaStore : Folks.PersonaStore
       finally
         {
           /* Remove the callbacks. */
-          if (signal_id != 0)
+          if (signal_id != 0 && property_name != null)
             {
               persona.disconnect (signal_id);
+            }
+          else if (signal_id != 0)
+            {
+              ((!) this._ebookview).disconnect (signal_id);
             }
 
           if (timeout_id != 0)
@@ -1636,29 +1676,14 @@ public class Edsf.PersonaStore : Folks.PersonaStore
 
       vcard.add_attribute (new_attr);
 
-      try
-        {
-          yield ((!) this._addressbook).modify_contact (persona.contact, null);
-        }
-      catch (GLib.Error e)
-        {
-          throw this.e_client_error_to_property_error (name, e);
-        }
+      yield this._commit_modified_property (persona, null);
     }
 
   internal async void _remove_extended_field (Edsf.Persona persona,
       string name) throws PropertyError
     {
       persona.contact.remove_attributes ("", name);
-
-      try
-        {
-          yield ((!) this._addressbook).modify_contact (persona.contact, null);
-        }
-      catch (GLib.Error e)
-        {
-          throw this.e_client_error_to_property_error (name, e);
-        }
+      yield this._commit_modified_property (persona, null);
     }
 
   internal async void _set_phones (Edsf.Persona persona,
