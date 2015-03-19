@@ -26,7 +26,7 @@ public class ExtendedInfoTests : EdsTest.TestCase
 {
   private GLib.MainLoop _main_loop;
   private IndividualAggregator _aggregator;
-  private string _full_name;
+  private const string _FULL_NAME = "persona #1";
   private bool _found_field_1;
   private bool _found_field_2;
 
@@ -40,14 +40,13 @@ public class ExtendedInfoTests : EdsTest.TestCase
   public void test_extended_info ()
     {
       this._main_loop = new GLib.MainLoop (null, false);
-      this._full_name = "persona #1";
       Gee.HashMap<string, Value?> c1 = new Gee.HashMap<string, Value?> ();
       Value? v;
 
       this.eds_backend.reset ();
 
       v = Value (typeof (string));
-      v.set_string (this._full_name);
+      v.set_string (ExtendedInfoTests._FULL_NAME);
       c1.set ("full_name", (owned) v);
       v = Value (typeof (string));
       v.set_string ("value1");
@@ -98,8 +97,7 @@ public class ExtendedInfoTests : EdsTest.TestCase
         {
           assert (i != null);
 
-          string full_name = i.full_name;
-          if (full_name == this._full_name)
+          if (i.full_name == ExtendedInfoTests._FULL_NAME)
             {
               if (i.get_extended_field ("X-FIELD-1") != null)
                   this._found_field_1 = true;
