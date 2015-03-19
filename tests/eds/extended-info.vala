@@ -66,6 +66,9 @@ public class ExtendedInfoTests : EdsTest.TestCase
 
       assert (this._found_field_1 == true);
       assert (this._found_field_2 == true);
+
+      this._aggregator = null;
+      this._main_loop = null;
     }
 
   private async void _test_extended_info_async ()
