@@ -84,7 +84,7 @@ public class ExtendedInfoTests : EdsTest.TestCase
         }
       catch (GLib.Error e)
         {
-          GLib.warning ("Error when calling prepare: %s\n", e.message);
+          GLib.error ("Error when calling prepare: %s", e.message);
         }
     }
 
