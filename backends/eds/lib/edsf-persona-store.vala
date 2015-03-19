@@ -1285,13 +1285,21 @@ public class Edsf.PersonaStore : Folks.PersonaStore
                           continue;
                         }
 
-                      /* Success! Return to _commit_modified_property(). */
-                      received_notification = true;
-
-                      if (has_yielded == true)
+                      /* Success! Return to _commit_modified_property(), but do
+                       * it via the idle queue so that the notification is
+                       * queued after the actual contact updates in
+                       * _contacts_changed_idle(). */
+                      this._idle_queue (() =>
                         {
-                          this._commit_modified_property.callback ();
-                        }
+                          received_notification = true;
+
+                          if (has_yielded == true)
+                            {
+                              this._commit_modified_property.callback ();
+                            }
+
+                          return false;
+                        });
 
                       return;
                     }
