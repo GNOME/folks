@@ -1,9 +1,9 @@
 # Danish translation for folks.
-# Copyright (C) 2012, 2014 The Free Software Foundation
+# Copyright (C) 2012, 2014, 2015 The Free Software Foundation
 # This file is distributed under the same license as the folks package.
 #
 # Kenneth Nielsen <k.nielsen81@gmail.com>, 2012.
-# Ask Hjorth Larsen <asklarsen@gmail.com>, 2014.
+# Ask Hjorth Larsen <asklarsen@gmail.com>, 2014, 2015.
 #
 # persona                 -> persona
 # store i "persona store" -> kilde
@@ -15,8 +15,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: folks master\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-09-16 20:47+0200\n"
-"PO-Revision-Date: 2014-09-16 20:39+0200\n"
+"POT-Creation-Date: 2015-03-21 16:27+0100\n"
+"PO-Revision-Date: 2015-03-14 17:37+0100\n"
 "Last-Translator: Ask Hjorth Larsen <asklarsen@gmail.com>\n"
 "Language-Team: Danish <dansk@dansk-gruppen.dk>\n"
 "Language: da\n"
@@ -141,7 +141,7 @@ msgstr "Kan ikke fjerne \"%s\": %s"
 #. Translators: the parameter is an address book
 #. * URI.
 #: ../backends/eds/lib/edsf-persona-store.vala:803
-#: ../backends/eds/lib/edsf-persona-store.vala:994
+#: ../backends/eds/lib/edsf-persona-store.vala:996
 #, c-format
 msgid "Address book ‘%s’ is offline."
 msgstr "Adressebogen \"%s\" er offline."
@@ -149,7 +149,7 @@ msgstr "Adressebogen \"%s\" er offline."
 #. Translators: the first parameter is an address
 #. * book URI and the second is an error message.
 #: ../backends/eds/lib/edsf-persona-store.vala:808
-#: ../backends/eds/lib/edsf-persona-store.vala:999
+#: ../backends/eds/lib/edsf-persona-store.vala:1001
 #, c-format
 msgid "Permission denied to open address book ‘%s’: %s"
 msgstr "Nægtet tilladelse til at åbne adressebogen \"%s\": %s"
@@ -162,21 +162,21 @@ msgid "Couldn't open address book ‘%s’: %s"
 msgstr "Kunne ikke åbne adressebogen \"%s\": %s"
 
 #. Translators: the parameteter is an error message.
-#: ../backends/eds/lib/edsf-persona-store.vala:907
-#: ../backends/eds/lib/edsf-persona-store.vala:937
+#: ../backends/eds/lib/edsf-persona-store.vala:909
+#: ../backends/eds/lib/edsf-persona-store.vala:939
 #, c-format
 msgid "Couldn't get address book capabilities: %s"
 msgstr "Kunne ikke hente adressebogsevner: %s"
 
 #. Translators: the parameter is an address book URI.
-#: ../backends/eds/lib/edsf-persona-store.vala:953
+#: ../backends/eds/lib/edsf-persona-store.vala:955
 #, c-format
 msgid "Couldn't get view for address book ‘%s’."
 msgstr "Kunne ikke hente visning for adressebogen \"%s\"."
 
 #. Translators: the first parameter is an address book URI
 #. * and the second is an error message.
-#: ../backends/eds/lib/edsf-persona-store.vala:1032
+#: ../backends/eds/lib/edsf-persona-store.vala:1034
 #, c-format
 msgid "Couldn't get view for address book ‘%s’: %s"
 msgstr "Kunne ikke hente visning for adressebogen \"%s\": %s"
@@ -184,111 +184,111 @@ msgstr "Kunne ikke hente visning for adressebogen \"%s\": %s"
 #. Translators: the parameter is the name of a property on a
 #. * contact, formatted in the normal GObject style (e.g.
 #. * lowercase with hyphens to separate words).
-#: ../backends/eds/lib/edsf-persona-store.vala:1304
+#: ../backends/eds/lib/edsf-persona-store.vala:1350
 #, c-format
 msgid "Changing the ‘%s’ property failed due to reaching the timeout."
 msgstr "Ændring af \"%s\"-egenskaben mislykkedes på grund af tidsudløb."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1338
+#: ../backends/eds/lib/edsf-persona-store.vala:1388
 #: ../folks/avatar-details.vala:63
 msgid "Avatar is not writeable on this contact."
 msgstr "Profilbillede kan ikke skrives til denne kontakt."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1359
+#: ../backends/eds/lib/edsf-persona-store.vala:1409
 #: ../folks/web-service-details.vala:123
 msgid "Web service addresses are not writeable on this contact."
 msgstr "Webtjenesteadresse kan ikke skrives til denne kontakt."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1395
+#: ../backends/eds/lib/edsf-persona-store.vala:1445
 #: ../folks/url-details.vala:152
 msgid "URLs are not writeable on this contact."
 msgstr "URL'er kan ikke skrives til denne kontakt."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1476
+#: ../backends/eds/lib/edsf-persona-store.vala:1526
 #: ../folks/local-id-details.vala:64
 msgid "Local IDs are not writeable on this contact."
 msgstr "Lokale id'er kan ikke skrives til denne kontakt."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1505
+#: ../backends/eds/lib/edsf-persona-store.vala:1555
 msgid "The contact cannot be marked as favourite."
 msgstr "Kontakten kan ikke markeres som favorit."
 
 #. Translators: the parameter is an error message.
-#: ../backends/eds/lib/edsf-persona-store.vala:1577
+#: ../backends/eds/lib/edsf-persona-store.vala:1627
 #, c-format
 msgid "Can't update avatar: %s"
 msgstr "Kan ikke opdatere profilbillede: %s"
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1588
+#: ../backends/eds/lib/edsf-persona-store.vala:1638
 #: ../folks/email-details.vala:120
 msgid "E-mail addresses are not writeable on this contact."
 msgstr "E-mail-adresse kan ikke skrives til denne kontakt."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1606
+#: ../backends/eds/lib/edsf-persona-store.vala:1703
 #: ../folks/phone-details.vala:255
 msgid "Phone numbers are not writeable on this contact."
 msgstr "Telefonnumre kan ikke skrives til denne kontakt."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1624
+#: ../backends/eds/lib/edsf-persona-store.vala:1721
 #: ../folks/postal-address-details.vala:361
 msgid "Postal addresses are not writeable on this contact."
 msgstr "Postadresser kan ikke skrives til denne kontakt."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1695
+#: ../backends/eds/lib/edsf-persona-store.vala:1792
 #: ../folks/name-details.vala:454
 msgid "Full name is not writeable on this contact."
 msgstr "Fulde navn kan ikke skrives til denne kontakt."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1717
+#: ../backends/eds/lib/edsf-persona-store.vala:1814
 #: ../folks/name-details.vala:492
 msgid "Nickname is not writeable on this contact."
 msgstr "Kaldenavn kan ikke skrives til denne kontakt."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1739
+#: ../backends/eds/lib/edsf-persona-store.vala:1836
 #: ../folks/note-details.vala:138
 msgid "Notes are not writeable on this contact."
 msgstr "Noter kan ikke skrives til denne kontakt."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1771
+#: ../backends/eds/lib/edsf-persona-store.vala:1868
 #: ../folks/birthday-details.vala:62
 msgid "Birthday is not writeable on this contact."
 msgstr "Fødselsdag kan ikke skrives til denne kontakt."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1815
+#: ../backends/eds/lib/edsf-persona-store.vala:1912
 #: ../folks/role-details.vala:279
 msgid "Roles are not writeable on this contact."
 msgstr "Roller kan ikke skrives til denne kontakt."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1916
+#: ../backends/eds/lib/edsf-persona-store.vala:2013
 #: ../folks/name-details.vala:417
 msgid "Structured name is not writeable on this contact."
 msgstr "Struktureret navn kan ikke skrives til denne kontakt."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1955
+#: ../backends/eds/lib/edsf-persona-store.vala:2052
 #: ../folks/im-details.vala:136
 msgid "IM addresses are not writeable on this contact."
 msgstr "IM-adresser kan ikke skrives til denne kontakt."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:2005
+#: ../backends/eds/lib/edsf-persona-store.vala:2102
 #: ../folks/group-details.vala:174
 msgid "Groups are not writeable on this contact."
 msgstr "Grupper kan ikke skrives til denne kontakt."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:2020
+#: ../backends/eds/lib/edsf-persona-store.vala:2117
 msgid "My Contacts is only available for Google Contacts"
 msgstr "Mine kontakter er kun tilgængelige for Google-kontakter"
 
-#: ../backends/eds/lib/edsf-persona-store.vala:2091
+#: ../backends/eds/lib/edsf-persona-store.vala:2188
 #: ../folks/gender-details.vala:79
 msgid "Gender is not writeable on this contact."
 msgstr "Køn kan ikke skrives til denne kontakt."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:2129
+#: ../backends/eds/lib/edsf-persona-store.vala:2226
 #: ../folks/anti-linkable.vala:84
 msgid "Anti-links are not writeable on this contact."
 msgstr "Anti-henvisninger kan ikke skrives til denne kontakt."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:2172
+#: ../backends/eds/lib/edsf-persona-store.vala:2269
 #: ../folks/location-details.vala:135
 msgid "Location is not writeable on this contact."
 msgstr "Placering er skrivebeskyttet for denne kontakt."
@@ -296,7 +296,7 @@ msgstr "Placering er skrivebeskyttet for denne kontakt."
 #. Translators: the first parameter is a non-human-readable
 #. * property name and the second parameter is an error
 #. * message.
-#: ../backends/eds/lib/edsf-persona-store.vala:2485
+#: ../backends/eds/lib/edsf-persona-store.vala:2582
 #, c-format
 msgid "Property ‘%s’ is not writeable: %s"
 msgstr "Egenskaben \"%s\" er ikke skrivbar: %s"
@@ -304,14 +304,14 @@ msgstr "Egenskaben \"%s\" er ikke skrivbar: %s"
 #. Translators: the first parameter is a non-human-readable
 #. * property name and the second parameter is an error
 #. * message.
-#: ../backends/eds/lib/edsf-persona-store.vala:2494
+#: ../backends/eds/lib/edsf-persona-store.vala:2591
 #, c-format
 msgid "Invalid value for property ‘%s’: %s"
 msgstr "Ugyldig værdi for egenskaben \"%s\": %s"
 
 #. Translators: the first parameter is a non-human-readable
 #. * property name and the second parameter is an error message.
-#: ../backends/eds/lib/edsf-persona-store.vala:2520
+#: ../backends/eds/lib/edsf-persona-store.vala:2617
 #, c-format
 msgid "Unknown error setting property ‘%s’: %s"
 msgstr "Ukendt fejl ved indstilling af egenskaben \"%s\": %s"
@@ -486,14 +486,14 @@ msgstr "Alias kan ikke skrives til denne kontakt."
 
 #. Translators: the first parameter is a folder path and the second
 #. * is an error message.
-#: ../folks/backend-store.vala:652
+#: ../folks/backend-store.vala:654
 #, c-format
 msgid "Error listing contents of folder '%s': %s"
 msgstr "Fejl ved visning af indhold i mappen \"%s\": %s"
 
 #. Translators: the first parameter is a folder path and the second
 #. * is an error message.
-#: ../folks/backend-store.vala:693
+#: ../folks/backend-store.vala:695
 #, c-format
 msgid "Error querying info for target ‘%s’ of symlink ‘%s’: %s"
 msgstr ""
@@ -501,13 +501,13 @@ msgstr ""
 "\"%s\": %s"
 
 #. Translators: the parameter is a filename.
-#: ../folks/backend-store.vala:821
+#: ../folks/backend-store.vala:823
 #, c-format
 msgid "File or directory '%s' does not exist."
 msgstr "Fil eller mappe \"%s\" eksisterer ikke."
 
 #. Translators: the parameter is a filename.
-#: ../folks/backend-store.vala:827
+#: ../folks/backend-store.vala:829
 #, c-format
 msgid "Failed to get content type for '%s'."
 msgstr "Kunne ikke hente indholdstype for \"%s\"."
@@ -515,6 +515,10 @@ msgstr "Kunne ikke hente indholdstype for \"%s\"."
 #: ../folks/birthday-details.vala:93
 msgid "Birthday event ID is not writeable on this contact."
 msgstr "Fødselsdagsbegivenheds-id kan ikke skrives for denne kontakt."
+
+#: ../folks/extended-info.vala:133 ../folks/extended-info.vala:149
+msgid "Extended fields are not writeable on this contact."
+msgstr "Der kan ikke skrives til udvidede felter på denne kontakt."
 
 #: ../folks/favourite-details.vala:58
 msgid "Favorite status is not writeable on this contact."
@@ -535,25 +539,25 @@ msgid "Error preparing persona store '%s': %s"
 msgstr "Fejl ved forberedelse af personakilde \"%s\": %s"
 
 #. Translators: the parameter is a property name.
-#: ../folks/individual-aggregator.vala:1295
-#: ../folks/individual-aggregator.vala:1569
+#: ../folks/individual-aggregator.vala:1294
+#: ../folks/individual-aggregator.vala:1567
 #, c-format
 msgid "Unknown property '%s' in linkable property list."
 msgstr "Ukendt egenskab \"%s\" i sammenkædelig egenskabsliste."
 
 #. Translators: the first parameter is a store identifier
 #. * and the second parameter is an error message.
-#: ../folks/individual-aggregator.vala:2055
+#: ../folks/individual-aggregator.vala:2053
 #, c-format
 msgid "Failed to add contact for persona store ID '%s': %s"
 msgstr "Kunne ikke tilføje kontakt til personakilde-id \"%s\": %s"
 
-#: ../folks/individual-aggregator.vala:2152
+#: ../folks/individual-aggregator.vala:2150
 msgid "Can’t link personas with no primary store."
 msgstr "Kan ikke sammenkæde personaer uden en primær kilde."
 
-#: ../folks/individual-aggregator.vala:2153
-#: ../folks/individual-aggregator.vala:2484
+#: ../folks/individual-aggregator.vala:2151
+#: ../folks/individual-aggregator.vala:2482
 #, c-format
 msgid ""
 "Persona store ‘%s:%s’ is configured as primary, but could not be found or "
@@ -562,8 +566,8 @@ msgstr ""
 "Personakilde \"%s:%s\" er konfigureret som den primære, men kunne ikke "
 "findes eller indlæses."
 
-#: ../folks/individual-aggregator.vala:2154
-#: ../folks/individual-aggregator.vala:2485
+#: ../folks/individual-aggregator.vala:2152
+#: ../folks/individual-aggregator.vala:2483
 #, c-format
 msgid ""
 "Check the relevant service is running, or change the default store in that "
@@ -572,25 +576,25 @@ msgstr ""
 "Tjek om den relevante tjeneste kører, eller ændr standardkilden i den "
 "tjeneste eller ved hjælp at GSettings-nøglen “%s”."
 
-#: ../folks/individual-aggregator.vala:2186
+#: ../folks/individual-aggregator.vala:2184
 msgid "Anti-links can't be removed between personas being linked."
 msgstr ""
 "Anti-henvisninger kan ikke fjernes mellem personaer som er ved at blive "
 "sammenkædet."
 
-#: ../folks/individual-aggregator.vala:2483
+#: ../folks/individual-aggregator.vala:2481
 msgid "Can’t add personas with no primary store."
 msgstr "Kan ikke tilføje personaer uden en primær kilde."
 
-#: ../folks/individual-aggregator.vala:2494
+#: ../folks/individual-aggregator.vala:2492
 #, c-format
 msgid "Can't write to requested property (“%s”) of the writeable store."
 msgstr ""
 "Kan ikke skrive til den anmodede egenskab (“%s”) i den skrivbare kilde."
 
-#: ../folks/individual.vala:216 ../folks/individual.vala:402
-#: ../folks/individual.vala:511 ../folks/individual.vala:762
-#: ../folks/individual.vala:840
+#: ../folks/individual.vala:217 ../folks/individual.vala:403
+#: ../folks/individual.vala:512 ../folks/individual.vala:763
+#: ../folks/individual.vala:841 ../folks/individual.vala:1059
 #, c-format
 msgid "Failed to change property ‘%s’: No suitable personas were found."
 msgstr "Kunne ikke ændre egenskaben \"%s\": Ingen passende personaer fundet."
@@ -598,7 +602,7 @@ msgstr "Kunne ikke ændre egenskaben \"%s\": Ingen passende personaer fundet."
 #. Translators: This is the default name for an Individual
 #. * when displayed in the UI if no personal details are available
 #. * for them.
-#: ../folks/individual.vala:1951
+#: ../folks/individual.vala:2072
 msgid "Unnamed Person"
 msgstr "Unavngivet person"
 
@@ -851,11 +855,6 @@ msgid ""
 msgstr ""
 "Ukendt navn \"%s\" for kildeprogram. \"%s\" er på nuværende tidspunkt det "
 "eneste understøttede kildeprogram."
-
-#, fuzzy
-#~ msgid "Error during transfer of the address book ‘%s’ from "
-#~ msgstr ""
-#~ "Fejl under overførsel af adressebogen \"%s\" fra Bluetooth-enheden \"%s\"."
 
 #~ msgid ""
 #~ "Failed to determine whether we can set aliases on Telepathy account '%s': "
