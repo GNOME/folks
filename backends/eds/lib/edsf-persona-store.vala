@@ -2508,7 +2508,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
 
   private bool _contacts_added_idle (Gee.List<E.Contact> contacts)
     {
-      HashSet<Persona> added_personas;
+      HashSet<Persona> added_personas, removed_personas;
 
       /* If the persona store hasn't yet reached quiescence, queue up the
        * personas and emit a notification about them later; see
@@ -2528,20 +2528,37 @@ public class Edsf.PersonaStore : Folks.PersonaStore
           added_personas = new HashSet<Persona> ();
         }
 
+      removed_personas = new HashSet<Persona> ();
+
       foreach (E.Contact c in contacts)
         {
           var iid = Edsf.Persona.build_iid_from_contact (this.id, c);
-          if (this._personas.has_key (iid) == false)
+          var old_persona = this._personas.get (iid);
+          var new_persona = new Persona (this, c);
+
+          if (old_persona != null)
             {
-              var persona = new Persona (this, c);
-              this._personas.set (persona.iid, persona);
-              added_personas.add (persona);
+              debug ("Removing old persona %p from contact %s.",
+                  old_persona, iid);
+              removed_personas.add (old_persona);
+
+              /* Handle the case where a contact is removed before the persona
+               * store has reached quiescence. */
+              if (this._pending_personas != null)
+                {
+                  this._pending_personas.remove (old_persona);
+                }
             }
+
+          debug ("Adding persona %p from contact %s.", new_persona, iid);
+
+          this._personas.set (new_persona.iid, new_persona);
+          added_personas.add (new_persona);
         }
 
       if (added_personas.size > 0 && this._is_quiescent == true)
         {
-          this._emit_personas_changed (added_personas, null);
+          this._emit_personas_changed (added_personas, removed_personas);
         }
 
       /* Done. */
