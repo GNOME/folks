@@ -57,6 +57,10 @@ public class Edsf.PersonaStore : Folks.PersonaStore
    * haven't received a property change notification for it. */
   private const uint _property_change_timeout = 30; /* seconds */
 
+  /* The timeout after which we consider a contact addition to have failed if we
+   * haven't received an object addition signal for it. */
+  private const uint _new_contact_timeout = 30;  /* seconds */
+
   /* Translators: This should be translated to the name of the “Starred in
    * Android” group in Google Contacts for your language. If Google have not
    * localised the group for your language, or Google Contacts isn't available
@@ -563,50 +567,14 @@ public class Edsf.PersonaStore : Folks.PersonaStore
             }
         }
 
-      Edsf.Persona? _persona = null;
+      /* _addressbook is guaranteed to be non-null before we ensure that
+       * prepare() has already been called. */
+      var added_uid = yield this._add_contact (contact);
 
-      try
-        {
-          /* _addressbook is guaranteed to be non-null before we ensure that
-           * prepare() has already been called. */
-          string added_uid;
-          var result = yield ((!) this._addressbook).add_contact (contact,
-              null,
-              out added_uid);
-
-          if (result)
-            {
-              debug ("Created contact with uid: %s\n", added_uid);
-              lock (this._personas)
-                {
-                  var iid = Edsf.Persona.build_iid (this.id, added_uid);
-                  _persona = this._personas.get (iid);
-                  if (_persona == null)
-                    {
-                      Edsf.Persona persona;
-
-                      contact.set (E.Contact.field_id ("id"), added_uid);
-                      persona = new Persona (this, contact);
-                      this._personas.set (persona.iid, persona);
-                      var added_personas = new SmallSet<Persona> ();
-                      added_personas.add (persona);
-                      this._emit_personas_changed (added_personas, null);
-
-                      _persona = persona;
-                    }
-                }
-            }
-          else
-            {
-              throw new PersonaStoreError.CREATE_FAILED
-                ("BookClient.add_contact () failed.");
-            }
-        }
-      catch (GLib.Error e)
-        {
-          GLib.warning ("add_persona_from_details: %s\n",
-              e.message);
-        }
+      debug ("Created contact with UID: %s", added_uid);
+      var iid = Edsf.Persona.build_iid (this.id, added_uid);
+      var _persona = this._personas.get (iid);
+      assert (_persona != null);
 
       return _persona;
     }
@@ -1216,6 +1184,146 @@ public class Edsf.PersonaStore : Folks.PersonaStore
           default:
             debug ("Unsupported/Unknown EDS field name '%s'.", eds_field_name);
             return PersonaDetail.INVALID;
+        }
+    }
+
+  /* Add a contact to the address book. It guarantees to only return once the
+   * contact addition has been notified. It returns the new contact's UID on
+   * success. */
+  private async string _add_contact (E.Contact contact) throws PersonaStoreError
+    {
+      /* We require _addressbook to be non-null. This should be the case
+       * because we're only called after _prepare(). */
+      assert (this._addressbook != null);
+
+      var debug_obj = Debug.dup ();
+      if (debug_obj.debug_output_enabled == true)
+        {
+          debug ("Adding new contact (UID: %s) to address book.", contact.id);
+          debug ("New vCard: %s", contact.to_string (E.VCardFormat.@30));
+        }
+
+      ulong signal_id = 0;
+      uint timeout_id = 0;
+
+      /* Track the @added_uid, which is returned by the add_contact() call, and
+       * the @added_uids, which are those emitted in the objects-added signal.
+       * The signal emission and add_contact() return for this @contact could
+       * occur in any order (signal emission before add_contact() returns, or
+       * after), so the overall contact addition operation is only complete once
+       * @added_uid is present in @added_uids. At this point, we are guaranteed
+       * to have an entry keyed with @added_uid in this._personas, as
+       * implemented by contacts_added_idle(). */
+      string added_uid = "";
+      var added_uids = new SmallSet<string> ();
+
+      try
+        {
+          var received_notification = false;
+          var has_yielded = false;
+
+          signal_id = ((!) this._ebookview).objects_added.connect (
+              (_contacts) =>
+            {
+              unowned GLib.List<E.Contact> contacts =
+                  (GLib.List<E.Contact>) _contacts;
+
+              /* All handlers for objects-added have to be pushed through the
+               * idle queue so they remain in order with respect to each other
+               * and implement in-order modifications to this._personas. */
+              foreach (E.Contact c in contacts)
+                {
+                  this._idle_queue (() =>
+                    {
+                      debug ("Received new contact %s from EDS.", c.id);
+                      added_uids.add (c.id);
+                      received_notification = (added_uid in added_uids);
+
+                      /* Success! Return to _add_contact(). */
+                      if (received_notification)
+                        {
+                          if (has_yielded == true)
+                            {
+                              has_yielded = false;
+                              this._add_contact.callback ();
+                            }
+                        }
+
+                      return false;
+                    });
+
+                  return;
+                }
+            });
+
+          /* Commit the new contact. _addressbook is asserted as being non-null
+           * above. */
+          yield ((!) this._addressbook).add_contact (contact, null,
+              out added_uid);
+
+          debug ("Finished sending new contact to EDS; received UID %s.",
+              added_uid);
+
+          timeout_id = Timeout.add_seconds (PersonaStore._new_contact_timeout,
+              () =>
+            {
+              /* Failure! Return to _add_contact() without setting
+               * received_notification. */
+              if (has_yielded == true)
+                {
+                  has_yielded = false;
+                  this._add_contact.callback ();
+                }
+
+              return false;
+            }, Priority.LOW);
+
+          /* Wait until we get a notification that the contact's been added. We
+           * basically hold off on completing the GAsyncResult until the
+           * objects-added signal handler (above). We only do this if we haven't
+           * already received an objects-added signal. We don't need locking
+           * around these variables because they can only be modified from the
+           * main loop. */
+          received_notification = (added_uid in added_uids);
+
+          if (received_notification == false)
+            {
+              debug ("Yielding.");
+              has_yielded = true;
+              yield;
+            }
+
+          debug ("Finished: received_notification = %s, has_yielded = %s",
+              received_notification ? "yes" : "no",
+              has_yielded ? "yes" : "no");
+
+          /* If we hit the timeout instead of the property notification, throw
+           * an error. */
+          if (received_notification == false)
+            {
+              throw new PropertyError.UNKNOWN_ERROR (
+                  _("Creating a new contact failed due to reaching the timeout."));
+            }
+
+          assert (added_uid != null && added_uid != "");
+          return added_uid;
+        }
+      catch (GLib.Error e)
+        {
+          throw this.e_client_error_to_persona_store_error (e);
+        }
+      finally
+        {
+          /* Remove the callbacks. */
+          if (signal_id != 0)
+            {
+              ((!) this._ebookview).disconnect (signal_id);
+            }
+
+          if (timeout_id != 0)
+            {
+              GLib.Source.remove (timeout_id);
+            }
         }
     }
 
@@ -2547,6 +2655,75 @@ public class Edsf.PersonaStore : Folks.PersonaStore
         }
 
       return false;
+    }
+
+  /* Convert an EClientError or EBookClientError to a Folks.PersonaStoreError
+   * for contact additions. */
+  private PersonaStoreError e_client_error_to_persona_store_error (
+      GLib.Error error_in)
+    {
+      if (error_in is BookClientError)
+        {
+          /* We don't expect to receive any of the error codes below: */
+          if (error_in is BookClientError.CONTACT_NOT_FOUND ||
+              error_in is BookClientError.NO_SUCH_BOOK ||
+              error_in is BookClientError.CONTACT_ID_ALREADY_EXISTS ||
+              error_in is BookClientError.NO_SUCH_SOURCE ||
+              error_in is BookClientError.NO_SPACE)
+            {
+                /* Fall out */
+            }
+        }
+      else if (error_in.domain == Client.error_quark ())
+        {
+          switch ((ClientError) error_in.code)
+            {
+              case ClientError.PERMISSION_DENIED:
+                return new PersonaStoreError.PERMISSION_DENIED (
+                    /* Translators: the first parameter is an error message. */
+                    _("Permission denied when creating new contact: %s"),
+                    error_in.message);
+              case ClientError.REPOSITORY_OFFLINE:
+                return new PersonaStoreError.STORE_OFFLINE (
+                    /* Translators: the first parameter is an error message. */
+                    _("Address book is offline and a new contact cannot be " +
+                      "created: %s"), error_in.message);
+              case ClientError.NOT_SUPPORTED:
+              case ClientError.AUTHENTICATION_REQUIRED:
+                /* TODO: Support authentication. bgo#653339 */
+                return new PersonaStoreError.CREATE_FAILED (
+                    /* Translators: the first parameter is a non-human-readable
+                     * property name and the second parameter is an error
+                     * message. */
+                    _("New contact is not writeable: %s"), error_in.message);
+              case ClientError.INVALID_ARG:
+                return new PersonaStoreError.INVALID_ARGUMENT (
+                    /* Translators: the first parameter is an error message. */
+                    _("Invalid value in contact: %s"), error_in.message);
+              case ClientError.BUSY:
+              case ClientError.DBUS_ERROR:
+              case ClientError.OTHER_ERROR:
+                /* Fall through. */
+              /* We don't expect to receive any of the error codes below: */
+              case ClientError.COULD_NOT_CANCEL:
+              case ClientError.AUTHENTICATION_FAILED:
+              case ClientError.TLS_NOT_AVAILABLE:
+              case ClientError.OFFLINE_UNAVAILABLE:
+              case ClientError.UNSUPPORTED_AUTHENTICATION_METHOD:
+              case ClientError.SEARCH_SIZE_LIMIT_EXCEEDED:
+              case ClientError.SEARCH_TIME_LIMIT_EXCEEDED:
+              case ClientError.INVALID_QUERY:
+              case ClientError.QUERY_REFUSED:
+              default:
+                /* Fall out */
+                break;
+            }
+        }
+
+      /* Fallback error. */
+      return new PersonaStoreError.CREATE_FAILED (
+          /* Translators: the first parameter is an error message. */
+          _("Unknown error adding contact: %s"), error_in.message);
     }
 
   /* Convert an EClientError or EBookClientError to a Folks.PropertyError for
