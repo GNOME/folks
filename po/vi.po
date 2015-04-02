@@ -1,403 +1,558 @@
 # Vietnamese translation for folks.
-# Copyright (C) 2012 folks's COPYRIGHT HOLDER
+# Bản dịch tiếng Việt dành cho folks.
+# Copyright © 2015 GNOME i18n Project for Vietnamese.
 # This file is distributed under the same license as the folks package.
 # Nguyễn Thái Ngọc Duy <pclouds@gmail.com>, 2012.
+# Trần Ngọc Quân <vnwildman@gmail.com>, 2015.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: folks master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=folks&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2012-07-07 16:28+0000\n"
-"PO-Revision-Date: 2012-08-25 17:17+0700\n"
-"Last-Translator: Nguyễn Thái Ngọc Duy <pclouds@gmail.com>\n"
-"Language-Team: Vietnamese <gnomevi-list@lists.sourceforge.net>\n"
+"POT-Creation-Date: 2015-04-01 16:55+0000\n"
+"PO-Revision-Date: 2015-04-02 08:04+0700\n"
+"Last-Translator: Trần Ngọc Quân <vnwildman@gmail.com>\n"
+"Language-Team: Vietnamese <gnome-vi-list@gnome.org>\n"
 "Language: vi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
+#: ../backends/bluez/bluez-backend.vala:600
+msgid ""
+"No BlueZ 5 object manager running, so the BlueZ backend will be inactive. "
+"Either your BlueZ installation is too old (only version 5 is supported) or "
+"the service can’t be started."
+msgstr ""
+"Không có đối tượng BlueZ 5 nào đang chạy, do vậy phần ứng dụng chạy phía sau "
+"BlueZ sẽ là không hoạt động. Hoặc là bản cài đặt BlueZ quá cũ (chỉ hỗ trợ "
+"phiên bản 5) hoặc dịch vụ chưa được khởi chạy."
+
+#: ../backends/bluez/bluez-backend.vala:613
+msgid ""
+"Error connecting to OBEX transfer daemon over D-Bus. Ensure BlueZ and obexd "
+"are installed."
+msgstr ""
+"Có lỗi xảy ra khi kết nối đến dịch vụ truyền OBEX thông qua. Hãy chắc chắn "
+"rằng BlueZ và obexd đã được cài đặt."
+
+#. Translators: the parameter is an error message.
+#: ../backends/bluez/bluez-persona-store.vala:385
+#, c-format
+msgid "Error reading the transferred address book file: %s"
+msgstr "Có lỗi khi đọc tập tin sổ địa chỉ được truyền đi: %s"
+
+#. Translators: the first parameter is the name of the
+#. * failed transfer, and the second is a Bluetooth device
+#. * alias.
+#. Translators: the first parameter is the name of the failed
+#. * transfer, and the second is a Bluetooth device alias.
+#: ../backends/bluez/bluez-persona-store.vala:676
+#: ../backends/bluez/bluez-persona-store.vala:698
+#, c-format
+msgid ""
+"Error during transfer of the address book ‘%s’ from Bluetooth device ‘%s’."
+msgstr "Có lỗi xảy ra khi truyền sổ địa chỉ “%s” từ thiết bị Bluetooth “%s”."
+
+#: ../backends/bluez/bluez-persona-store.vala:791
+#, c-format
+msgid ""
+"Permission to access the address book on Bluetooth device ‘%s’ was denied by "
+"the user."
+msgstr ""
+"Quyền truy cập sổ địa chỉ trên thiết bị  Bluetooth “%s” đã bị cấm bởi người "
+"dùng."
+
+#. Translators: the first parameter is a Bluetooth device
+#. * alias, and the second is an error message.
+#: ../backends/bluez/bluez-persona-store.vala:798
+#, c-format
+msgid "An OBEX address book transfer from device ‘%s’ could not be started: %s"
+msgstr "Sổ địa chỉ OBEX truyền từ thiết bị “%s” không thể khởi chạy: %s"
+
+#. Translators: the first parameter is a Bluetooth device
+#. * alias, and the second is an error message.
+#: ../backends/bluez/bluez-persona-store.vala:838
+#, c-format
+msgid "The OBEX address book transfer from device ‘%s’ failed: %s"
+msgstr "Có lỗi xảy ra khi sổ địa chỉ OBEX được truyền từ thiết bị “%s”: %s"
+
+#. Translators: the first parameter is a Bluetooth device
+#. * alias, and the second is an error message.
+#: ../backends/bluez/bluez-persona-store.vala:855
+#, c-format
+msgid ""
+"Error during transfer of the address book from Bluetooth device ‘%s’: %s"
+msgstr ""
+"Có lỗi xảy ra trong quá trình truyền sổ danh bạ từ thiết bị Bluetooth “%s”: "
+"%s"
+
+#: ../backends/bluez/bluez-persona-store.vala:1073
+#, c-format
+msgid "Bluetooth device ‘%s’ disappeared during address book transfer."
+msgstr ""
+"Thiết bị Bluetooth “%s” đã biến mất trong khi sổ địa chỉ đang truyền đi."
+
 #. The timeout after which we consider a property change to have failed if we
 #. * haven't received a property change notification for it.
+#. seconds
+#. The timeout after which we consider a contact addition to have failed if we
+#. * haven't received an object addition signal for it.
 #. seconds
 #. Translators: This should be translated to the name of the “Starred in
 #. * Android” group in Google Contacts for your language. If Google have not
 #. * localised the group for your language, or Google Contacts isn't available
-#. * in your language, please *do not* translate this string.
-#: ../backends/eds/lib/edsf-persona-store.vala:60
+#. * in your language, please *do not* translate this string (i.e. just copy
+#. * the msgid to the msgstr unchanged).
+#: ../backends/eds/lib/edsf-persona-store.vala:69
 msgid "Starred in Android"
 msgstr "Đánh sao trong Android"
 
 #. Translators: the first parameter is an address book
 #. * URI and the second is a persona UID.
-#: ../backends/eds/lib/edsf-persona-store.vala:586
+#: ../backends/eds/lib/edsf-persona-store.vala:642
 #, c-format
 msgid "Address book ‘%s’ is offline, so contact ‘%s’ cannot be removed."
-msgstr "Sổ địa chỉ ‘%s’ ngoại tuyến, không thể bỏ liên lạc ‘%s’."
+msgstr "Sổ địa chỉ “%s” ngoại tuyến, không thể bỏ liên lạc “%s”."
 
 #. Translators: the first parameter is an address book
 #. * URI and the second is an error message.
-#: ../backends/eds/lib/edsf-persona-store.vala:592
+#: ../backends/eds/lib/edsf-persona-store.vala:648
 #, c-format
 msgid "Permission denied to remove contact ‘%s’: %s"
-msgstr "Không đủ quyền để bỏ liên lạc ‘%s’: %s"
+msgstr "Không đủ thẩm quyền để có thể xóa bỏ liên lạc “%s”: %s"
 
 #. Translators: the parameter is an error message.
-#: ../backends/eds/lib/edsf-persona-store.vala:597
+#: ../backends/eds/lib/edsf-persona-store.vala:653
 #, c-format
 msgid "Removing contacts isn't supported by this persona store: %s"
 msgstr "Không hỗ trợ loại bỏ liên lạc từ kho này: %s"
 
-#: ../backends/eds/lib/edsf-persona-store.vala:626
+#: ../backends/eds/lib/edsf-persona-store.vala:682
 #, c-format
 msgid "Can't remove contact ‘%s’: %s"
-msgstr "Không thể bỏ liên lạc ‘%s’: %s"
+msgstr "Không thể bỏ liên lạc “%s”: %s"
 
 #. Translators: the parameter is an address book
 #. * URI.
-#: ../backends/eds/lib/edsf-persona-store.vala:720
-#: ../backends/eds/lib/edsf-persona-store.vala:926
+#: ../backends/eds/lib/edsf-persona-store.vala:771
+#: ../backends/eds/lib/edsf-persona-store.vala:964
 #, c-format
 msgid "Address book ‘%s’ is offline."
-msgstr "Sổ địa chỉ ‘%s’ ngoại tuyến."
+msgstr "Sổ địa chỉ “%s” ngoại tuyến."
 
 #. Translators: the first parameter is an address
 #. * book URI and the second is an error message.
-#: ../backends/eds/lib/edsf-persona-store.vala:725
-#: ../backends/eds/lib/edsf-persona-store.vala:931
+#: ../backends/eds/lib/edsf-persona-store.vala:776
+#: ../backends/eds/lib/edsf-persona-store.vala:969
 #, c-format
 msgid "Permission denied to open address book ‘%s’: %s"
-msgstr "Không đủ quyền để mở sổ địa chỉ ‘%s’: %s"
+msgstr "Không đủ quyền để mở sổ địa chỉ “%s”: %s"
 
 #. Translators: the first parameter is an address book URI
 #. * and the second is an error message.
-#: ../backends/eds/lib/edsf-persona-store.vala:758
+#: ../backends/eds/lib/edsf-persona-store.vala:809
 #, c-format
 msgid "Couldn't open address book ‘%s’: %s"
-msgstr "Không thể mở sổ địa chỉ ‘%s’: %s"
+msgstr "Không thể mở sổ địa chỉ “%s”: %s"
 
 #. Translators: the parameteter is an error message.
-#: ../backends/eds/lib/edsf-persona-store.vala:828
-#: ../backends/eds/lib/edsf-persona-store.vala:862
+#: ../backends/eds/lib/edsf-persona-store.vala:877
+#: ../backends/eds/lib/edsf-persona-store.vala:907
 #, c-format
 msgid "Couldn't get address book capabilities: %s"
 msgstr "Không thể đọc khả năng sổ địa chỉ: %s"
 
 #. Translators: the parameter is an address book URI.
-#: ../backends/eds/lib/edsf-persona-store.vala:882
+#: ../backends/eds/lib/edsf-persona-store.vala:923
 #, c-format
 msgid "Couldn't get view for address book ‘%s’."
-msgstr "Không thể lấy view cho sổ địa chỉ ‘%s’."
+msgstr "Không thể lấy phần trình bày cho sổ địa chỉ “%s”."
 
 #. Translators: the first parameter is an address book URI
 #. * and the second is an error message.
-#: ../backends/eds/lib/edsf-persona-store.vala:964
+#: ../backends/eds/lib/edsf-persona-store.vala:1002
 #, c-format
 msgid "Couldn't get view for address book ‘%s’: %s"
-msgstr "Không thể lấy view cho sổ địa chỉ ‘%s’: %s"
+msgstr "Không thể lấy phần trình bày cho sổ địa chỉ “%s”: %s"
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1318
+#: ../backends/eds/lib/edsf-persona-store.vala:1305
+msgid "Creating a new contact failed due to reaching the timeout."
+msgstr "Gặp lỗi khi tạo liên lạc mới bởi vì chờ lâu quá"
+
+#. Translators: the parameter is the name of a property on a
+#. * contact, formatted in the normal GObject style (e.g.
+#. * lowercase with hyphens to separate words).
+#: ../backends/eds/lib/edsf-persona-store.vala:1458
 #, c-format
 msgid "Changing the ‘%s’ property failed due to reaching the timeout."
-msgstr "Lỗi đổi thuộc tính ‘%s’ vì hết hạn."
+msgstr "Lỗi đổi thuộc tính “%s” vì hết hạn."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1356
-#: ../folks/avatar-details.vala:59
+#: ../backends/eds/lib/edsf-persona-store.vala:1496
+#: ../folks/avatar-details.vala:63
 msgid "Avatar is not writeable on this contact."
 msgstr "Ảnh biểu tượng không thể ghi cho liên lạc này."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1377
+#: ../backends/eds/lib/edsf-persona-store.vala:1517
 #: ../folks/web-service-details.vala:123
 msgid "Web service addresses are not writeable on this contact."
 msgstr "Địa chỉ dịch vụ Web không thể ghi cho liên lạc này."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1413
+#: ../backends/eds/lib/edsf-persona-store.vala:1553
 #: ../folks/url-details.vala:152
 msgid "URLs are not writeable on this contact."
 msgstr "URL không thể ghi cho liên lạc này."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1491
+#: ../backends/eds/lib/edsf-persona-store.vala:1634
 #: ../folks/local-id-details.vala:64
 msgid "Local IDs are not writeable on this contact."
 msgstr "ID cục bộ không thể ghi cho liên lạc này."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1518
+#: ../backends/eds/lib/edsf-persona-store.vala:1663
 msgid "The contact cannot be marked as favourite."
 msgstr "Liên lạc không thể được đánh dấu yêu thích."
 
 #. Translators: the parameter is an error message.
-#: ../backends/eds/lib/edsf-persona-store.vala:1602
+#: ../backends/eds/lib/edsf-persona-store.vala:1735
 #, c-format
 msgid "Can't update avatar: %s"
 msgstr "Không thể cập nhật ảnh biểu tượng: %s"
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1613
+#: ../backends/eds/lib/edsf-persona-store.vala:1746
 #: ../folks/email-details.vala:120
 msgid "E-mail addresses are not writeable on this contact."
-msgstr "Địa chỉ email không thể ghi cho liên lạc này."
+msgstr "Địa chỉ thư điện tử không thể ghi cho liên lạc này."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1627
-#: ../folks/phone-details.vala:229
+#: ../backends/eds/lib/edsf-persona-store.vala:1811
+#: ../folks/phone-details.vala:255
 msgid "Phone numbers are not writeable on this contact."
 msgstr "Số điện thoại không thể ghi cho liên lạc này."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1641
-#: ../folks/postal-address-details.vala:360
+#: ../backends/eds/lib/edsf-persona-store.vala:1829
+#: ../folks/postal-address-details.vala:361
 msgid "Postal addresses are not writeable on this contact."
 msgstr "Địa chỉ không thể ghi cho liên lạc này."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1708
-#: ../folks/name-details.vala:281
+#: ../backends/eds/lib/edsf-persona-store.vala:1900
+#: ../folks/name-details.vala:454
 msgid "Full name is not writeable on this contact."
 msgstr "Họ tên không thể ghi cho liên lạc này."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1730
-#: ../folks/name-details.vala:319
+#: ../backends/eds/lib/edsf-persona-store.vala:1922
+#: ../folks/name-details.vala:492
 msgid "Nickname is not writeable on this contact."
 msgstr "Tên hiệu không thể ghi cho liên lạc này."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1752
+#: ../backends/eds/lib/edsf-persona-store.vala:1944
 #: ../folks/note-details.vala:138
 msgid "Notes are not writeable on this contact."
 msgstr "Ghi chú không thể ghi cho liên lạc này."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1781
-#: ../folks/birthday-details.vala:60
+#: ../backends/eds/lib/edsf-persona-store.vala:1976
+#: ../folks/birthday-details.vala:62
 msgid "Birthday is not writeable on this contact."
 msgstr "Ngày sinh không thể ghi cho liên lạc này."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1825
-#: ../folks/role-details.vala:277
+#: ../backends/eds/lib/edsf-persona-store.vala:2020
+#: ../folks/role-details.vala:279
 msgid "Roles are not writeable on this contact."
 msgstr "Vai trò không thể ghi cho liên lạc này."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1926
-#: ../folks/name-details.vala:244
+#: ../backends/eds/lib/edsf-persona-store.vala:2121
+#: ../folks/name-details.vala:417
 msgid "Structured name is not writeable on this contact."
 msgstr "Tên có cấu trúc không thể ghi cho liên lạc này."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1966
+#: ../backends/eds/lib/edsf-persona-store.vala:2160
 #: ../folks/im-details.vala:136
 msgid "IM addresses are not writeable on this contact."
 msgstr "Địa chỉ IM không thể ghi cho liên lạc này."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:2016
-#: ../folks/group-details.vala:170
+#: ../backends/eds/lib/edsf-persona-store.vala:2210
+#: ../folks/group-details.vala:174
 msgid "Groups are not writeable on this contact."
 msgstr "Nhóm không thể ghi cho liên lạc này."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:2055
-#: ../folks/gender-details.vala:77
+#: ../backends/eds/lib/edsf-persona-store.vala:2225
+msgid "My Contacts is only available for Google Contacts"
+msgstr "Liên lạc của tôi củ sẵn sàng với “Google Contacts”"
+
+#: ../backends/eds/lib/edsf-persona-store.vala:2296
+#: ../folks/gender-details.vala:79
 msgid "Gender is not writeable on this contact."
 msgstr "Giới tính không thể ghi cho liên lạc này."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:2091
+#: ../backends/eds/lib/edsf-persona-store.vala:2334
+#: ../folks/anti-linkable.vala:84
 msgid "Anti-links are not writeable on this contact."
-msgstr "Anti-link không thể ghi cho liên lạc này."
+msgstr "Chống-liên-kết không thể ghi cho liên lạc này."
+
+#: ../backends/eds/lib/edsf-persona-store.vala:2377
+#: ../folks/location-details.vala:135
+msgid "Location is not writeable on this contact."
+msgstr "Vị trí này không ghi được trên liên lạc này."
+
+#. Translators: the first parameter is an error message.
+#: ../backends/eds/lib/edsf-persona-store.vala:2701
+#, c-format
+msgid "Permission denied when creating new contact: %s"
+msgstr "Không đủ quyền để tạo liên lạc mới: %s"
+
+#. Translators: the first parameter is an error message.
+#: ../backends/eds/lib/edsf-persona-store.vala:2706
+#, c-format
+msgid "Address book is offline and a new contact cannot be created: %s"
+msgstr "Sổ địa chỉ ngoại tuyến và không thể tạo liên lạc mới: %s"
 
 #. Translators: the first parameter is a non-human-readable
 #. * property name and the second parameter is an error
 #. * message.
-#: ../backends/eds/lib/edsf-persona-store.vala:2250
+#: ../backends/eds/lib/edsf-persona-store.vala:2715
+#, c-format
+msgid "New contact is not writeable: %s"
+msgstr "Liên lạc mới không ghi được: %s"
+
+#. Translators: the first parameter is an error message.
+#: ../backends/eds/lib/edsf-persona-store.vala:2719
+#, c-format
+msgid "Invalid value in contact: %s"
+msgstr "Giá trị không hợp lệ trong liên lạc: %s"
+
+#. Translators: the first parameter is an error message.
+#: ../backends/eds/lib/edsf-persona-store.vala:2743
+#, c-format
+msgid "Unknown error adding contact: %s"
+msgstr "Lỗi thêm liên lạc chưa biết: %s"
+
+#. Translators: the first parameter is a non-human-readable
+#. * property name and the second parameter is an error
+#. * message.
+#: ../backends/eds/lib/edsf-persona-store.vala:2776
 #, c-format
 msgid "Property ‘%s’ is not writeable: %s"
-msgstr "Thuộc tính ‘%s’ không thể ghi: %s"
+msgstr "Thuộc tính “%s” không thể ghi: %s"
 
 #. Translators: the first parameter is a non-human-readable
 #. * property name and the second parameter is an error
 #. * message.
-#: ../backends/eds/lib/edsf-persona-store.vala:2259
+#: ../backends/eds/lib/edsf-persona-store.vala:2785
 #, c-format
 msgid "Invalid value for property ‘%s’: %s"
-msgstr "Giá trị không hợp lệ cho thuộc tính ‘%s’: %s"
+msgstr "Giá trị không hợp lệ cho thuộc tính “%s”: %s"
 
 #. Translators: the first parameter is a non-human-readable
 #. * property name and the second parameter is an error message.
-#: ../backends/eds/lib/edsf-persona-store.vala:2285
+#: ../backends/eds/lib/edsf-persona-store.vala:2811
 #, c-format
 msgid "Unknown error setting property ‘%s’: %s"
-msgstr "Lỗi lạ khi thiết lập thuộc tính ‘%s’: %s"
+msgstr "Gặp lỗi lạ khi cài đặt thuộc tính “%s”: %s"
 
-#. Translators: the first parameter is a filename,
-#. * and the second is an error message.
-#: ../backends/key-file/kf-persona-store.vala:235
+#. Translators: the first parameter is a filename, and
+#. * the second is an error message.
+#: ../backends/key-file/kf-persona-store.vala:234
 #, c-format
 msgid "The relationship key file '%s' could not be loaded: %s"
-msgstr "Không thể nạp tập tin khoá quan hệ '%s': %s"
+msgstr "Không thể nạp tập tin khóa quan hệ “%s”: %s"
 
-#. Translators: the first parameter is a path, and
-#. * the second is an error message.
-#: ../backends/key-file/kf-persona-store.vala:257
+#. Translators: the first parameter is a path, and the
+#. * second is an error message.
+#: ../backends/key-file/kf-persona-store.vala:256
 #, c-format
 msgid "The relationship key file directory '%s' could not be created: %s"
-msgstr "Không thể tạo thư mục tập tin khoá quan hệ '%s': %s"
+msgstr "Không thể tạo thư mục tập tin khóa quan hệ “%s”: %s"
 
-#. Translators: the first parameter is a filename,
-#. * and the second is an error message.
-#: ../backends/key-file/kf-persona-store.vala:281
+#. Translators: the first parameter is a filename, and
+#. * the second is an error message.
+#: ../backends/key-file/kf-persona-store.vala:280
 #, c-format
 msgid "The relationship key file '%s' could not be created: %s"
-msgstr "Không thể tạo tập tin khoá quan hệ '%s': %s"
+msgstr "Không thể tạo tập tin khóa quan hệ “%s”: %s"
 
 #. Translators: the first parameter is a filename, the second is
 #. * an error message.
-#: ../backends/key-file/kf-persona-store.vala:472
+#: ../backends/key-file/kf-persona-store.vala:471
 #, c-format
 msgid "Could not write updated key file '%s': %s"
-msgstr "Không thể ghi tập tin khoá đã cập nhật '%s': %s"
+msgstr "Không thể ghi tập tin khóa đã cập nhật “%s”: %s"
 
 #. Translators: this is an error message for if the user
 #. * provides an invalid IM address. The first parameter is
 #. * an IM address (e.g. “foo@jabber.org”), the second is
 #. * the name of a protocol (e.g. “jabber”) and the third is
 #. * an error message.
-#: ../backends/key-file/kf-persona.vala:173
+#: ../backends/key-file/kf-persona.vala:174
 #, c-format
 msgid "Invalid IM address ‘%s’ for protocol ‘%s’: %s"
-msgstr "Địa chỉ IM không hợp lệ ‘%s’ cho giao thức ‘%s’: %s"
+msgstr "Địa chỉ IM không hợp lệ “%s” cho giao thức “%s”: %s"
 
 #. Translators: the parameter is an error message.
-#: ../backends/key-file/kf-persona.vala:433
+#: ../backends/key-file/kf-persona.vala:432
 #, c-format
 msgid "Couldn't load data from key file: %s"
-msgstr "Không thể nạp dữ liệu từ tập tin khoá: %s"
+msgstr "Không thể nạp dữ liệu từ tập tin khóa: %s"
 
 #. Translators: the parameter is an error message.
-#: ../backends/libsocialweb/lib/swf-persona-store.vala:341
-#: ../backends/libsocialweb/lib/swf-persona-store.vala:365
-#: ../backends/libsocialweb/lib/swf-persona-store.vala:387
+#: ../backends/libsocialweb/lib/swf-persona-store.vala:349
+#: ../backends/libsocialweb/lib/swf-persona-store.vala:371
+#: ../backends/libsocialweb/lib/swf-persona-store.vala:392
 #, c-format
 msgid "Couldn’t prepare libsocialweb service: %s"
 msgstr "Không thể chuẩn bị dịch vụ libsocialweb: %s"
 
-#: ../backends/libsocialweb/lib/swf-persona-store.vala:342
+#: ../backends/libsocialweb/lib/swf-persona-store.vala:350
 msgid "No capabilities were found."
 msgstr "Không tìm thấy khả năng."
 
-#: ../backends/libsocialweb/lib/swf-persona-store.vala:366
+#: ../backends/libsocialweb/lib/swf-persona-store.vala:372
 msgid "No contacts capability was found."
 msgstr "Không tìm thấy khả năng liên lạc."
 
-#: ../backends/libsocialweb/lib/swf-persona-store.vala:388
+#: ../backends/libsocialweb/lib/swf-persona-store.vala:393
 msgid "Error opening contacts view."
-msgstr "Lỗi mở view liên lạc."
+msgstr "Lỗi mở phần trình bày liên lạc."
 
-#. Translators: the first parameter is the display name for
-#. * the Telepathy account, and the second is an error
-#. * message.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:781
-#, c-format
+#: ../backends/ofono/ofono-backend.vala:196
 msgid ""
-"Failed to determine whether we can set aliases on Telepathy account '%s': %s"
-msgstr "Lỗi xác định có thể đặt bí danh cho tài khoản Telepathy '%s': %s"
+"No oFono object manager running, so the oFono backend will be inactive. "
+"Either oFono isn’t installed or the service can’t be started."
+msgstr ""
+"Chưa có bộ quản lý đối tượng oFono nào đang chạy, do vậy phần chạy sau oFono "
+"sẽ bị tắt. Hoặc là oFono chưa được cài đặt hoặc là dịch vu không thể khởi "
+"động."
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1140
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1248
 msgid "Telepathy contacts representing the local user may not be removed."
 msgstr "Liên lạc Telepathy đại diện người dùng cục bộ không thể bị loại bỏ."
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1151
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1259
 #, c-format
 msgid "Failed to remove a persona from store: %s"
-msgstr "Lỗi bỏ người khỏi kho: %s"
+msgstr "Gặp lỗi khi bỏ một cá nhân khỏi kho: %s"
 
 #. Translators: the first two parameters are store identifiers and
 #. * the third is a contact identifier.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1181
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1294
 #, c-format
 msgid ""
 "Persona store (%s, %s) requires the following details:\n"
 "    contact (provided: '%s')\n"
 msgstr ""
-"Kho Persona (%s, %s) cần chi tiết sau:\n"
-"    liên lạc (được cung cấp: '%s')\n"
+"Kho cá nhân (%s, %s) cần những chi tiết sau:\n"
+"    liên lạc (được cung cấp: “%s”)\n"
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1196
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1309
 msgid "Cannot create a new Telepathy contact while offline."
 msgstr "Không thể tạo liên lạc Telepathy mới khi ngoại tuyến."
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1214
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1327
 #, c-format
 msgid "Failed to add a persona from details: %s"
 msgstr "Lỗi thêm người từ chi tiết: %s"
 
 #. Translators: "telepathy-logger" is the name of an application,
 #. * and should not be translated.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1234
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1347
 msgid ""
 "Failed to change favorite without a connection to the telepathy-logger "
 "service."
 msgstr ""
 "Lỗi thay đổi yêu thích mà không có kết nối đến dịch vụ telepathy-logger."
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1240
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1353
 msgid ""
 "Failed to change favorite status of Telepathy Persona because it has no "
 "attached TpContact."
 msgstr ""
+"Gặp lỗi khi thay đổi trang thái ưa dùng của Telepathy Persona bởi vì nó "
+"không có TpContact nào được đính kèm."
 
 #. Translators: the parameter is a contact identifier.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1258
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1371
 #, c-format
 msgid "Failed to change favorite status for Telepathy contact ‘%s’."
 msgstr ""
+"Gặp lỗi khi thay đổi trạng thái của ưa dùng cho liên lạc Telepathy “%s”."
 
 #. Translators: the parameter is an error message.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1290
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1403
 #, c-format
 msgid "Failed to change contact's alias: %s"
-msgstr ""
+msgstr "Gặp lỗi khi thay đổi bí danh của liên lạc: %s"
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1370
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1484
 msgid "Extended information may only be set on the user's Telepathy contact."
 msgstr ""
+"Thông tin mở rộng chỉ có thể được đặt trên liên lạc Telepathy của người dùng."
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1399
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1513
 msgid ""
 "Extended information cannot be written because the store is disconnected."
-msgstr ""
+msgstr "Thông tin mở rộng không thể được ghi bởi vì kho đã ngắt kết nối."
 
-#: ../backends/telepathy/lib/tpf-persona.vala:503
+#: ../backends/telepathy/lib/tpf-persona.vala:511
+#: ../backends/telepathy/lib/tpf-persona.vala:532
+#: ../backends/telepathy/lib/tpf-persona.vala:584
+#: ../backends/telepathy/lib/tpf-persona.vala:598
 #, c-format
 msgid "Failed to change group membership: %s"
-msgstr ""
+msgstr "Gặp lỗi khi thay đổi tư cách hội viên nhóm: %s"
+
+#. Translators: "account" refers to an instant messaging
+#. * account.
+#: ../backends/telepathy/lib/tpf-persona.vala:514
+#: ../backends/telepathy/lib/tpf-persona.vala:587
+msgid "Account is offline."
+msgstr "Liên lạc ngoại tuyến."
 
 #. Translators: the first parameter is the unknown key that
 #. * was received with the details params, and the second
 #. * identifies the persona store.
-#: ../backends/tracker/lib/trf-persona-store.vala:742
+#: ../backends/tracker/lib/trf-persona-store.vala:743
 #, c-format
 msgid "Unrecognized parameter '%s' passed to persona store '%s'."
-msgstr ""
+msgstr "Không nhận ra tham số “%s” chuyển qua cho kho cá nhân “%s”."
 
-#: ../folks/alias-details.vala:57
+#: ../folks/alias-details.vala:61
 msgid "Alias is not writeable on this contact."
 msgstr "Không thể ghi bí danh cho liên lạc này."
 
 #. Translators: the first parameter is a folder path and the second
 #. * is an error message.
-#: ../folks/backend-store.vala:590
+#: ../folks/backend-store.vala:654
 #, c-format
 msgid "Error listing contents of folder '%s': %s"
-msgstr "Lỗi liệt kê nội dung thư mục '%s': %s"
+msgstr "Lỗi liệt kê nội dung thư mục “%s”: %s"
+
+#. Translators: the first parameter is a folder path and the second
+#. * is an error message.
+#: ../folks/backend-store.vala:695
+#, c-format
+msgid "Error querying info for target ‘%s’ of symlink ‘%s’: %s"
+msgstr "Gặp lỗi khi truy vấn thông tin cho đích “%s” của liên kết mềm “%s”: %s"
 
 #. Translators: the parameter is a filename.
-#: ../folks/backend-store.vala:719
+#: ../folks/backend-store.vala:823
 #, c-format
 msgid "File or directory '%s' does not exist."
-msgstr "Tập tin hoặc thư mục '%s' không tồn tại."
+msgstr "Tập tin hoặc thư mục “%s” không tồn tại."
 
 #. Translators: the parameter is a filename.
-#: ../folks/backend-store.vala:725
+#: ../folks/backend-store.vala:829
 #, c-format
 msgid "Failed to get content type for '%s'."
-msgstr "Lỗi lấy kiểu nội dung của '%s'."
+msgstr "Lỗi lấy kiểu nội dung của “%s”."
 
-#: ../folks/birthday-details.vala:89
+#: ../folks/birthday-details.vala:93
 msgid "Birthday event ID is not writeable on this contact."
 msgstr "Không thể ghi ID sự kiện sinh nhật cho liên lạc này."
 
-#: ../folks/favourite-details.vala:52
+#: ../folks/extended-info.vala:133 ../folks/extended-info.vala:149
+msgid "Extended fields are not writeable on this contact."
+msgstr "Trường mở rộng không thể ghi cho liên lạc này."
+
+#: ../folks/favourite-details.vala:58
 msgid "Favorite status is not writeable on this contact."
 msgstr "Không thể ghi trạng thái yêu thích cho liên lạc này."
 
@@ -406,65 +561,127 @@ msgstr "Không thể ghi trạng thái yêu thích cho liên lạc này."
 #: ../folks/im-details.vala:214 ../folks/im-details.vala:241
 #, c-format
 msgid "The IM address '%s' could not be understood."
-msgstr "Không thể hiểu địa chỉ IM '%s'"
+msgstr "Không thể hiểu địa chỉ IM “%s”"
 
 #. Translators: the first parameter is a persona store identifier
 #. * and the second is an error message.
-#: ../folks/individual-aggregator.vala:822
+#: ../folks/individual-aggregator.vala:1063
 #, c-format
 msgid "Error preparing persona store '%s': %s"
-msgstr "Lỗi chuẩn bị kho persona '%s': %s"
+msgstr "Lỗi chuẩn bị kho persona “%s”: %s"
 
 #. Translators: the parameter is a property name.
-#: ../folks/individual-aggregator.vala:1028
-#: ../folks/individual-aggregator.vala:1254
+#: ../folks/individual-aggregator.vala:1294
+#: ../folks/individual-aggregator.vala:1567
 #, c-format
 msgid "Unknown property '%s' in linkable property list."
-msgstr ""
+msgstr "Chưa biết thuộc tính “%s” trong danh sách thuộc tính liên kết được."
 
 #. Translators: the first parameter is a store identifier
 #. * and the second parameter is an error message.
-#: ../folks/individual-aggregator.vala:1716
+#: ../folks/individual-aggregator.vala:2053
 #, c-format
 msgid "Failed to add contact for persona store ID '%s': %s"
-msgstr ""
+msgstr "Gặp lỗi khi thêm liên lạc cho mã số kho cá nhân “%s”: %s"
 
-#: ../folks/individual-aggregator.vala:1809
+#: ../folks/individual-aggregator.vala:2150
 msgid "Can’t link personas with no primary store."
-msgstr ""
+msgstr "Không thể liên kết các cá nhân với kho không chính thức."
 
-#: ../folks/individual-aggregator.vala:1810
-#: ../folks/individual-aggregator.vala:2144
+#: ../folks/individual-aggregator.vala:2151
+#: ../folks/individual-aggregator.vala:2482
 #, c-format
 msgid ""
 "Persona store ‘%s:%s’ is configured as primary, but could not be found or "
 "failed to load."
 msgstr ""
+"Kho cá nhân “%s:%s” được cấu hình làm kho chính, nhưng không thể tìm thấy "
+"hoặc gặp lỗi khi tải."
 
-#: ../folks/individual-aggregator.vala:1811
-#: ../folks/individual-aggregator.vala:2145
+#: ../folks/individual-aggregator.vala:2152
+#: ../folks/individual-aggregator.vala:2483
 #, c-format
 msgid ""
 "Check the relevant service is running, or change the default store in that "
 "service or using the “%s” GSettings key."
 msgstr ""
+"Kiểm tra xem dịch vụ xác đáng đã chạy chưa, hoặc thay đổi kho mặc định trong "
+"dịch vụ đó hoặc sử dụng khóa GSettings “%s”."
 
-#: ../folks/individual-aggregator.vala:1843
+#: ../folks/individual-aggregator.vala:2184
 msgid "Anti-links can't be removed between personas being linked."
-msgstr ""
+msgstr "Bảo vệ liên kết không thể được gỡ bỏ giữa các cá thể được liên kết."
 
-#: ../folks/individual-aggregator.vala:2143
+#: ../folks/individual-aggregator.vala:2481
 msgid "Can’t add personas with no primary store."
-msgstr ""
+msgstr "Không thể thêm cá nhân với một kho không chính."
 
-#: ../folks/individual-aggregator.vala:2154
+#: ../folks/individual-aggregator.vala:2492
 #, c-format
 msgid "Can't write to requested property (“%s”) of the writeable store."
+msgstr "Không thể ghi thuộc tính đã yêu cầu (“%s”) của kho khi được."
+
+#: ../folks/individual.vala:217 ../folks/individual.vala:403
+#: ../folks/individual.vala:512 ../folks/individual.vala:763
+#: ../folks/individual.vala:841 ../folks/individual.vala:1059
+#, c-format
+msgid "Failed to change property ‘%s’: No suitable personas were found."
 msgstr ""
+"Gặp lỗi khi thay đổi thuộc tính “%s”: Không tìm thấy cá nhân nào thích hợp."
+
+#. Translators: This is the default name for an Individual
+#. * when displayed in the UI if no personal details are available
+#. * for them.
+#: ../folks/individual.vala:2072
+msgid "Unnamed Person"
+msgstr "Người chưa đặt tên"
+
+#. FIXME: Ideally we’d use a format string translated to the locale of the
+#. * persona whose name is being formatted, but no backend provides
+#. * information about personas’ locales, so we have to settle for the
+#. * current user’s locale.
+#. *
+#. * We thought about using nl_langinfo(_NL_NAME_NAME_FMT) here, but
+#. * decided against it because:
+#. *  1. It’s not the best documented API in the world, and its stability
+#. *     is in question.
+#. *  2. An attempt to improve the interface in glibc met with a wall of
+#. *     complaints: https://sourceware.org/bugzilla/show_bug.cgi?id=14641.
+#. *
+#. * However, we do re-use the string format placeholders from
+#. * _NL_NAME_NAME_FMT (as documented here:
+#. * http://lh.2xlibre.net/values/name_fmt/) because there’s a chance glibc
+#. * might eventually grow a useful interface for this.
+#. *
+#. * It does mean we have to implement our own parser for the name_fmt
+#. * format though, since glibc doesn’t provide a formatting function.
+#. Translators: This is a format string used to convert structured names
+#. * to a single string. It should be translated to the predominant
+#. * semi-formal name format for your locale, using the placeholders
+#. * documented here: http://lh.2xlibre.net/values/name_fmt/. You may be
+#. * able to re-use the existing glibc format string for your locale on that
+#. * page if it’s suitable.
+#. *
+#. * More explicitly: the supported placeholders are %f, %F, %g, %G, %m, %M,
+#. * %t. The romanisation modifier (e.g. %Rf) is recognized but ignored.
+#. * %s, %S and %d are all replaced by the same thing (the ‘Honorific
+#. * Prefixes’ from vCard) so please avoid using more than one.
+#. *
+#. * For example, the format string ‘%g%t%m%t%f’ expands to ‘John Andrew
+#. * Lees’ when used for a persona with first name ‘John’, additional names
+#. * ‘Andrew’ and family names ‘Lees’.
+#. *
+#. * If you need additional placeholders with other information or
+#. * punctuation, please file a bug against libfolks:
+#. *   https://bugzilla.gnome.org/enter_bug.cgi?product=folks
+#.
+#: ../folks/name-details.vala:268
+msgid "%g%t%m%t%f"
+msgstr "%f%t%m%t%g"
 
 #: ../folks/org.freedesktop.folks.gschema.xml.in.h:1
 msgid "Primary store ID"
-msgstr ""
+msgstr "Mã số kho chính"
 
 #: ../folks/org.freedesktop.folks.gschema.xml.in.h:2
 msgid ""
@@ -472,101 +689,105 @@ msgid ""
 "linking data in). The type ID of the store may optionally be prepended, "
 "separated by a colon. For example: “eds:system-address-book” or “key-file”."
 msgstr ""
+"Mã số của kho cá nhân cái mà folks nên dùng làm cái chính ( ví dụ như để "
+"liên kết dữ liệu vào). Mã số kiểu của kho tùy chọn được treo trước, ngăn "
+"cách nhau bằng dấu hai chấm. Ví dụ như: “eds:system-address-book” hay “key-"
+"file”."
 
-#: ../folks/postal-address-details.vala:230
+#: ../folks/postal-address-details.vala:231
 #, c-format
 msgid "%s, %s, %s, %s, %s, %s, %s"
 msgstr "%s, %s, %s, %s, %s, %s, %s"
 
-#: ../folks/presence-details.vala:159
+#: ../folks/presence-details.vala:171
 msgid "Unknown status"
 msgstr "Trạng thái không xác định"
 
-#: ../folks/presence-details.vala:161
+#: ../folks/presence-details.vala:173
 msgid "Offline"
 msgstr "Ngoại tuyến"
 
-#: ../folks/presence-details.vala:165
+#: ../folks/presence-details.vala:177
 msgid "Error"
 msgstr "Lỗi"
 
-#: ../folks/presence-details.vala:167
+#: ../folks/presence-details.vala:179
 msgid "Available"
 msgstr "Có mặt"
 
-#: ../folks/presence-details.vala:169
+#: ../folks/presence-details.vala:181
 msgid "Away"
 msgstr "Vắng"
 
-#: ../folks/presence-details.vala:171
+#: ../folks/presence-details.vala:183
 msgid "Extended away"
 msgstr "Vắng lâu"
 
-#: ../folks/presence-details.vala:173
+#: ../folks/presence-details.vala:185
 msgid "Busy"
 msgstr "Bận"
 
-#: ../folks/presence-details.vala:175
+#: ../folks/presence-details.vala:187
 msgid "Hidden"
 msgstr "Ẩn"
 
-#: ../folks/role-details.vala:148
+#: ../folks/role-details.vala:150
 #, c-format
 msgid "Title: %s, Organisation: %s, Role: %s"
 msgstr "Tiêu đề: %s, Tổ chức: %s, Vai trò: %s"
 
 #. Translators: the parameter is a filename.
-#: ../tools/import-pidgin.vala:48
+#: ../tools/import-pidgin.vala:49
 #, c-format
 msgid "File %s does not exist."
 msgstr "Tập tin %s không tồn tại."
 
 #. Translators: the first parameter is a filename, and the second
 #. * is an error message.
-#: ../tools/import-pidgin.vala:64
+#: ../tools/import-pidgin.vala:65
 #, c-format
 msgid "Failed to get information about file %s: %s"
 msgstr "Lỗi lấy thông tin về tập tin %s: %s"
 
 #. Translators: the parameter is a filename.
-#: ../tools/import-pidgin.vala:71
+#: ../tools/import-pidgin.vala:72
 #, c-format
 msgid "File %s is not readable."
 msgstr "Tập tin %s không đọc được."
 
 #. Translators: the parameter is a filename.
-#: ../tools/import-pidgin.vala:81
+#: ../tools/import-pidgin.vala:82
 #, c-format
 msgid "The Pidgin buddy list file '%s' could not be loaded."
-msgstr "Không thể nạp tập tin danh sách liên lạc Pidgin '%s'."
+msgstr "Không thể nạp tập tin danh sách liên lạc Pidgin “%s”."
 
 #. Translators: the parameter is a filename.
-#: ../tools/import-pidgin.vala:96
+#: ../tools/import-pidgin.vala:97
 #, c-format
 msgid ""
 "The Pidgin buddy list file ‘%s’ could not be loaded: the root element could "
 "not be found or was not recognized."
 msgstr ""
-"Không thể nạp tập tin danh sách liên lạc Pidgin '%s': không nhận dạng hoặc "
+"Không thể nạp tập tin danh sách liên lạc Pidgin “%s”: không nhận dạng hoặc "
 "không tìm thấy phần tử gốc."
 
 #. Translators: the first parameter is the number of buddies which
 #. * were successfully imported, and the second is a filename.
-#: ../tools/import-pidgin.vala:116
+#: ../tools/import-pidgin.vala:117
 #, c-format
 msgid "Imported %u buddy from '%s'."
 msgid_plural "Imported %u buddies from '%s'."
-msgstr[0] "Đã nhập %u liên lạc từ '%s'."
+msgstr[0] "Đã nhập %u liên lạc từ “%s”."
 
 #. Translators: the first parameter is a persona identifier,
 #. * and the second is an error message.
-#: ../tools/import-pidgin.vala:163
+#: ../tools/import-pidgin.vala:164
 #, c-format
 msgid "Error changing group of contact ‘%s’: %s"
-msgstr "Lỗi đổi nhóm liên lạc ‘%s’: %s"
+msgstr "Lỗi đổi nhóm liên lạc “%s”: %s"
 
 #. Translators: the parameter is the buddy's IM address.
-#: ../tools/import-pidgin.vala:220
+#: ../tools/import-pidgin.vala:221
 #, c-format
 msgid ""
 "Ignoring buddy with no alias and only one IM address:\n"
@@ -582,7 +803,7 @@ msgid ""
 "%s\n"
 "Error: %s\n"
 msgstr ""
-"Lỗi tạo liên lạc mới với bí danh ‘%s’ và địa chỉ IM:\n"
+"Lỗi tạo liên lạc mới với bí danh “%s” và địa chỉ IM:\n"
 "%s\n"
 "Lỗi: %s\n"
 
@@ -595,69 +816,74 @@ msgid ""
 "Created contact ‘%s’ for buddy with alias ‘%s’ and IM addresses:\n"
 "%s"
 msgstr ""
-"Đã tạo liên lạc ‘%s’ mới với bí danh ‘%s’ và địa chỉ IM:\n"
+"Đã tạo liên lạc “%s” mới với bí danh “%s” và địa chỉ IM:\n"
 "%s"
 
 #: ../tools/import.vala:44
 msgid "Source backend name (default: 'pidgin')"
-msgstr "Tên nguồn (mặc định: 'pidgin')"
+msgstr "Tên nguồn (mặc định: “pidgin”)"
 
 #: ../tools/import.vala:47
 msgid "Source filename (default: specific to source backend)"
-msgstr "Tên tập tin nguồn (mặc dịnh: tuỳ nguồn)"
+msgstr "Tên tập tin nguồn (mặc dịnh: tùy nguồn)"
 
-#: ../tools/import.vala:57
+#: ../tools/import.vala:58
 msgid "— import meta-contact information to libfolks"
 msgstr "- nhập thông tin liên lạc vào libfolks"
 
 #. Translators: the parameter is an error message.
-#: ../tools/import.vala:67
+#: ../tools/import.vala:68
 #, c-format
 msgid "Couldn't parse command line options: %s"
-msgstr "Không thể phân tích tuỳ chọn dòng lệnh: %s"
+msgstr "Không thể phân tích tùy chọn dòng lệnh: %s"
 
 #. Translators: the parameter is an error message.
-#: ../tools/import.vala:108
+#: ../tools/import.vala:109
 #, c-format
 msgid "Couldn't load the backends: %s"
-msgstr "Không thể nạp mặt sau: %s"
+msgstr "Không thể nạp ứng dụng chạy đằng sau: %s"
 
 #. Translators: the parameter is a backend identifier.
-#: ../tools/import.vala:119
+#: ../tools/import.vala:120
 #, c-format
 msgid "Couldn't load the ‘%s’ backend."
-msgstr "Không thể nạp mặt sau ‘%s’."
+msgstr "Không thể nạp ứng dụng chạy đằng sau “%s”."
 
 #. Translators: the first parameter is a backend identifier and the
 #. * second parameter is an error message.
-#: ../tools/import.vala:132
+#: ../tools/import.vala:133
 #, c-format
 msgid "Couldn't prepare the ‘%s’ backend: %s"
-msgstr "Không thể chuẩn bị mặt sau ‘%s’: %s"
+msgstr "Không thể chuẩn bị ứng dụng chạy đằng sau “%s”: %s"
 
 #. Translators: the parameter is a backend identifier.
-#: ../tools/import.vala:145
+#: ../tools/import.vala:146
 #, c-format
 msgid "Couldn't load the ‘%s’ backend's persona store."
-msgstr "Không thể nạp kho persona cho mặt sau ‘%s’."
+msgstr "Không thể nạp kho persona cho ứng dụng chạy đằng sau “%s”."
 
-#: ../tools/import.vala:166
+#: ../tools/import.vala:167
 #, c-format
 msgid "Couldn't prepare the ‘%s’ backend's persona store: %s"
-msgstr "Không thể chuẩn bị kho persona cho mặt sau ‘%s’: %s"
+msgstr "Không thể chuẩn bị kho cá nhân cho ứng dụng chạy đằng sau “%s”: %s"
 
 #. Translators: the parameter is an error message.
-#: ../tools/import.vala:184
+#: ../tools/import.vala:185
 #, c-format
 msgid "Error importing contacts: %s"
 msgstr "Lỗi nhập liên lạc: %s"
 
 #. Translators: both parameters are identifiers for backends.
-#: ../tools/import.vala:198
+#: ../tools/import.vala:199
 #, c-format
 msgid ""
 "Unrecognized source backend name ‘%s’. ‘%s’ is currently the only supported "
 "source backend."
 msgstr ""
-"Tên nguồn không nhận ra ‘%s’. ‘%s’ hiện là mặt sau nguồn duy nhất được hỗ "
-"trợ."
+"Tên nguồn không nhận ra “%s”. “%s” hiện là ứng dụng chạy đằng sau nguồn duy "
+"nhất được hỗ trợ."
+
+#~ msgid ""
+#~ "Failed to determine whether we can set aliases on Telepathy account '%s': "
+#~ "%s"
+#~ msgstr "Lỗi xác định có thể đặt bí danh cho tài khoản Telepathy “%s”: %s"
