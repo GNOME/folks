@@ -49,7 +49,7 @@ private class Folks.Inspect.Commands.Backends : Folks.Inspect.Command
       base (client);
     }
 
-  public override async void run (string? command_string)
+  public override async int run (string? command_string)
     {
       if (command_string == null)
         {
@@ -74,7 +74,7 @@ private class Folks.Inspect.Commands.Backends : Folks.Inspect.Command
             {
               Utils.print_line ("Unrecognised backend name '%s'.",
                   command_string);
-              return;
+              return 1;
             }
 
           Utils.print_line ("Backend '%s' with %u persona stores " +
@@ -90,6 +90,8 @@ private class Folks.Inspect.Commands.Backends : Folks.Inspect.Command
             }
           Utils.unindent ();
         }
+
+      return 0;
     }
 
   public override string[]? complete_subcommand (string subcommand)

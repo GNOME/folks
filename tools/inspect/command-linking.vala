@@ -65,7 +65,7 @@ private class Folks.Inspect.Commands.Linking : Folks.Inspect.Command
       base (client);
     }
 
-  public override async void run (string? command_string)
+  public override async int run (string? command_string)
     {
       string[] parts = {};
 
@@ -77,7 +77,7 @@ private class Folks.Inspect.Commands.Linking : Folks.Inspect.Command
 
       if (!Utils.validate_subcommand (this.name, command_string, parts[0],
               Linking._valid_subcommands))
-          return;
+          return 1;
 
       if (parts[0] == "link-personas" || parts[0] == "link-individuals")
         {
@@ -96,7 +96,7 @@ private class Folks.Inspect.Commands.Linking : Folks.Inspect.Command
                       "'link-individuals' subcommand.");
                 }
 
-              return;
+              return 1;
             }
 
           /* Link the personas in the given individuals. We must have at least
@@ -116,7 +116,7 @@ private class Folks.Inspect.Commands.Linking : Folks.Inspect.Command
                           parts[i]);
                     }
 
-                  return;
+                  return 1;
                 }
 
               var found = false;
@@ -148,7 +148,7 @@ private class Folks.Inspect.Commands.Linking : Folks.Inspect.Command
                     {
                       Utils.print_line ("Unrecognised persona UID '%s'.",
                           parts[i]);
-                      return;
+                      return 1;
                     }
                 }
               else
@@ -174,7 +174,7 @@ private class Folks.Inspect.Commands.Linking : Folks.Inspect.Command
                     {
                       Utils.print_line ("Unrecognised individual ID '%s'.",
                           parts[i]);
-                      return;
+                      return 1;
                     }
                 }
             }
@@ -189,6 +189,7 @@ private class Folks.Inspect.Commands.Linking : Folks.Inspect.Command
               Utils.print_line ("Error (domain: %u, code: %u) linking %u " +
                       "personas: %s",
                   e.domain, e.code, personas.size, e.message);
+              return 1;
             }
 
           /* We can't print out the individual which was produced, as
@@ -205,7 +206,7 @@ private class Folks.Inspect.Commands.Linking : Folks.Inspect.Command
             {
               Utils.print_line ("Must pass exactly one individual ID to an " +
                   "'unlink-individual' subcommand.");
-              return;
+              return 1;
             }
 
           var ind = this.client.aggregator.individuals.get (parts[1]);
@@ -213,7 +214,7 @@ private class Folks.Inspect.Commands.Linking : Folks.Inspect.Command
           if (ind == null)
             {
               Utils.print_line ("Unrecognised individual ID '%s'.", parts[1]);
-              return;
+              return 1;
             }
 
           /* Unlink the individual. */
@@ -226,6 +227,7 @@ private class Folks.Inspect.Commands.Linking : Folks.Inspect.Command
               Utils.print_line ("Error (domain: %u, code: %u) unlinking " +
                       "individual '%s': %s",
                   e.domain, e.code, ind.id, e.message);
+              return 1;
             }
 
           /* Success! */
@@ -236,6 +238,8 @@ private class Folks.Inspect.Commands.Linking : Folks.Inspect.Command
         {
           assert_not_reached ();
         }
+
+      return 0;
     }
 
   /* FIXME: These can't be in the subcommand_name_completion_cb() function

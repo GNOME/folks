@@ -51,6 +51,8 @@ public class Folks.Inspect.Client : Object
 
   public static int main (string[] args)
     {
+      int retval = 0;
+
       Intl.setlocale (LocaleCategory.ALL, "");
       Intl.bindtextdomain (BuildConf.GETTEXT_PACKAGE, BuildConf.LOCALE_DIR);
       Intl.textdomain (BuildConf.GETTEXT_PACKAGE);
@@ -95,6 +97,7 @@ public class Folks.Inspect.Client : Object
       if (args.length == 1)
         {
           main_client.run_interactive.begin ();
+          retval = 0;
         }
       else
         {
@@ -115,14 +118,14 @@ public class Folks.Inspect.Client : Object
 
           main_client.run_non_interactive.begin (command_line, (obj, res) =>
           {
-            main_client.run_non_interactive.end (res);
+            retval = main_client.run_non_interactive.end (res);
             main_client.quit ();
           });
         }
         
       main_client.main_loop.run ();
 
-      return 0;
+      return retval;
     }
 
   public Client ()
@@ -204,7 +207,7 @@ public class Folks.Inspect.Client : Object
         }
     }
 
-  public async void run_non_interactive (string command_line)
+  public async int run_non_interactive (string command_line)
     {
       /* Non-interactive mode: run a single command and output the results.
        * We do this all from the main thread, in a main loop, waiting for
@@ -219,7 +222,7 @@ public class Folks.Inspect.Client : Object
       if (command == null)
         {
           GLib.stdout.printf ("Unrecognised command ‘%s’.\n", command_name);
-          return;
+          return 1;
         }
 
       /* Wait until we reach quiescence, or the results will probably be
@@ -231,15 +234,17 @@ public class Folks.Inspect.Client : Object
       catch (GLib.Error e1)
         {
           GLib.stderr.printf ("Error preparing aggregator: %s\n", e1.message);
-          Process.exit (1);
+          return 1;
         }
 
       /* Run the command */
-      yield command.run (subcommand);
+      int retval = yield command.run (subcommand);
       this.quit ();
+
+      return retval;
     }
 
-  public async void run_interactive ()
+  public async int run_interactive ()
     {
       /* Interactive mode: have a little shell which allows the data from
        * libfolks to be browsed and edited in real time. We do this by watching
@@ -288,6 +293,8 @@ public class Folks.Inspect.Client : Object
 
       /* Run the aggregator and the main loop. */
       this.aggregator.prepare.begin ();
+
+      return 0;
     }
 
   private void _install_readline_and_stdin ()
@@ -591,7 +598,7 @@ public abstract class Folks.Inspect.Command
   public abstract string description { get; }
   public abstract string help { get; }
 
-  public abstract async void run (string? command_string);
+  public abstract async int run (string? command_string);
 
   public virtual string[]? complete_subcommand (string subcommand)
     {

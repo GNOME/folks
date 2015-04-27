@@ -50,7 +50,7 @@ private class Folks.Inspect.Commands.Help : Folks.Inspect.Command
       base (client);
     }
 
-  public override async void run (string? command_string)
+  public override async int run (string? command_string)
     {
       if (command_string == null)
         {
@@ -74,10 +74,17 @@ private class Folks.Inspect.Commands.Help : Folks.Inspect.Command
           /* Help for a given command */
           Command command = this.client.commands.get (command_string);
           if (command == null)
-            Utils.print_line ("Unrecognised command '%s'.", command_string);
+            {
+              Utils.print_line ("Unrecognised command '%s'.", command_string);
+              return 1;
+            }
           else
-            Utils.print_line ("%s", command.help);
+            {
+              Utils.print_line ("%s", command.help);
+            }
         }
+
+      return 0;
     }
 
   public override string[]? complete_subcommand (string subcommand)

@@ -53,7 +53,7 @@ private class Folks.Inspect.Commands.Individuals : Folks.Inspect.Command
       base (client);
     }
 
-  public override async void run (string? command_string)
+  public override async int run (string? command_string)
     {
       if (command_string == null)
         {
@@ -74,11 +74,13 @@ private class Folks.Inspect.Commands.Individuals : Folks.Inspect.Command
             {
               Utils.print_line ("Unrecognised individual ID '%s'.",
                   command_string);
-              return;
+              return 1;
             }
 
           Utils.print_individual (individual, true);
         }
+
+      return 0;
     }
 
   public override string[]? complete_subcommand (string subcommand)

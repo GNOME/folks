@@ -53,7 +53,7 @@ private class Folks.Inspect.Commands.PersonaStores : Folks.Inspect.Command
       base (client);
     }
 
-  public override async void run (string? command_string)
+  public override async int run (string? command_string)
     {
       if (command_string == null)
         {
@@ -91,11 +91,13 @@ private class Folks.Inspect.Commands.PersonaStores : Folks.Inspect.Command
             {
               Utils.print_line ("Unrecognised persona store ID '%s'.",
                   command_string);
-              return;
+              return 1;
             }
 
           Utils.print_persona_store (store, true);
         }
+
+      return 0;
     }
 
   public override string[]? complete_subcommand (string subcommand)

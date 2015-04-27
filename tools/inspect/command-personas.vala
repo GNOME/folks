@@ -52,8 +52,10 @@ private class Folks.Inspect.Commands.Personas : Folks.Inspect.Command
       base (client);
     }
 
-  public override async void run (string? command_string)
+  public override async int run (string? command_string)
     {
+      bool found_persona = false;
+
       foreach (var individual in this.client.aggregator.individuals.values)
         {
           foreach (Persona persona in individual.personas)
@@ -66,8 +68,19 @@ private class Folks.Inspect.Commands.Personas : Folks.Inspect.Command
 
               if (command_string == null)
                 Utils.print_line ("");
+              else
+                found_persona = true;
             }
         }
+
+      /* Return an error if the persona wasn’t found. */
+      if (!found_persona && command_string != null)
+        {
+          Utils.print_line ("Unrecognised persona UID '%s'.", command_string);
+          return 1;
+        }
+
+      return 0;
     }
 
   public override string[]? complete_subcommand (string subcommand)

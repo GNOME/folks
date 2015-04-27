@@ -51,7 +51,7 @@ private class Folks.Inspect.Commands.Search : Folks.Inspect.Command
       base (client);
     }
 
-  public override async void run (string? command_string)
+  public override async int run (string? command_string)
     {
       if (command_string == null)
         {
@@ -79,5 +79,7 @@ private class Folks.Inspect.Commands.Search : Folks.Inspect.Command
                   individual.display_name);
             }
         }
+
+      return 0;
     }
 }

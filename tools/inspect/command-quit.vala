@@ -50,7 +50,7 @@ private class Folks.Inspect.Commands.Quit : Folks.Inspect.Command
       base (client);
     }
 
-  public override async void run (string? command_string)
+  public override async int run (string? command_string)
     {
       Process.exit (0);
     }

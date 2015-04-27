@@ -100,7 +100,7 @@ private class Folks.Inspect.Commands.Signals : Folks.Inspect.Command
       base (client);
     }
 
-  public override async void run (string? command_string)
+  public override async int run (string? command_string)
     {
       if (command_string == null)
         {
@@ -114,7 +114,7 @@ private class Folks.Inspect.Commands.Signals : Folks.Inspect.Command
 
           if (!Utils.validate_subcommand (this.name, command_string, parts[0],
                  Signals._valid_subcommands))
-              return;
+              return 1;
 
           Type class_type;
           Object class_instance;
@@ -128,14 +128,14 @@ private class Folks.Inspect.Commands.Signals : Folks.Inspect.Command
                 {
                   Utils.print_line ("Unrecognised signal identifier '%s'.",
                       parts[1]);
-                  return;
+                  return 1;
                 }
 
               if (this.parse_signal_id (parts[1].strip (), out class_type,
                   out class_instance, out signal_name,
                   out detail_string) == false)
                 {
-                  return;
+                  return 1;
                 }
 
               /* FIXME: Handle "disconnect <signal ID>" */
@@ -164,7 +164,7 @@ private class Folks.Inspect.Commands.Signals : Folks.Inspect.Command
                   out class_instance, out signal_name,
                   out detail_string) == false)
                 {
-                  return;
+                  return 1;
                 }
 
               if (signal_name == null)
@@ -183,6 +183,8 @@ private class Folks.Inspect.Commands.Signals : Folks.Inspect.Command
                 }
             }
         }
+
+      return 0;
     }
 
   public override string[]? complete_subcommand (string subcommand)
