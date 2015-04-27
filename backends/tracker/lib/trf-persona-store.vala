@@ -2622,6 +2622,11 @@ public class Trf.PersonaStore : Folks.PersonaStore
           warning ("[%s] DBus error: %s",
               caller, e3.message);
         }
+      catch (GLib.Error e4)
+        {
+          warning ("[%s] GLib error: %s",
+              caller, e4.message);
+        }
 
       return ret;
     }
