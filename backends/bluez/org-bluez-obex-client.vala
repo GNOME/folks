@@ -75,23 +75,23 @@ namespace org
             [DBus (name = "org.bluez.obex.Transfer1")]
             public interface Transfer : Object
               {
-                [Dbus (name = "Cancel")]
+                [DBus (name = "Cancel")]
                 public abstract void cancel () throws DBusError;
-                [Dbus (name = "Status")]
+                [DBus (name = "Status")]
                 public abstract string status { owned get; }
-                [Dbus (name = "Session")]
+                [DBus (name = "Session")]
                 public abstract ObjectPath session { owned get; }
-                [Dbus (name = "Name")]
+                [DBus (name = "Name")]
                 public abstract string name { owned get; }
-                [Dbus (name = "Type")]
+                [DBus (name = "Type")]
                 public abstract string transfer_type { owned get; }
-                [Dbus (name = "Time")]
+                [DBus (name = "Time")]
                 public abstract int64 time { get; }
-                [Dbus (name = "Size")]
+                [DBus (name = "Size")]
                 public abstract uint64 size { get; }
-                [Dbus (name = "Transferred")]
+                [DBus (name = "Transferred")]
                 public abstract uint64 transferred { get; }
-                [Dbus (name = "Filename")]
+                [DBus (name = "Filename")]
                 public abstract string filename { owned get; }
               }
           }
