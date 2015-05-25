@@ -33,7 +33,7 @@ using GLib;
  * in phone numbers.
  *
  * @see SearchView
- * @since UNRELEASED
+ * @since 0.11.0
  */
 public class Folks.SimpleQuery : Folks.Query
 {
@@ -47,7 +47,7 @@ public class Folks.SimpleQuery : Folks.Query
    * de-bouncing to ensure re-evaluation only happens when (for example) the
    * user has stopped typing a new query.
    *
-   * @since UNRELEASED
+   * @since 0.11.0
    */
   public string query_string
     {
@@ -77,7 +77,7 @@ public class Folks.SimpleQuery : Folks.Query
    * locale will be used. To perform transliteration for no specific locale,
    * use `C`.
    *
-   * @since UNRELEASED
+   * @since 0.11.0
    */
   public string? query_locale
     {
@@ -124,7 +124,7 @@ public class Folks.SimpleQuery : Folks.Query
    * {@link PersonaDetail} and {@link PersonaStore.detail_key} for pre-defined
    * field names.
    *
-   * @since UNRELEASED
+   * @since 0.11.0
    */
   public SimpleQuery (
       string query_string,
@@ -147,7 +147,7 @@ public class Folks.SimpleQuery : Folks.Query
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.11.0
    */
   public override uint is_match (Individual individual)
     {

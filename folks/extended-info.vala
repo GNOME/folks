@@ -32,7 +32,7 @@ using Gee;
  * See {@link Folks.AbstractFieldDetails} for details on common parameter names
  * and values.
  *
- * @since UNRELEASED
+ * @since 0.11.0
  */
 public class Folks.ExtendedFieldDetails : AbstractFieldDetails<string>
 {
@@ -46,7 +46,7 @@ public class Folks.ExtendedFieldDetails : AbstractFieldDetails<string>
    *
    * @return a new ExtendedFieldDetails
    *
-   * @since UNRELEASED
+   * @since 0.11.0
    */
   public ExtendedFieldDetails (string value,
       MultiMap<string, string>? parameters = null)
@@ -59,7 +59,7 @@ public class Folks.ExtendedFieldDetails : AbstractFieldDetails<string>
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.11.0
    */
   public override bool equal (AbstractFieldDetails<string> that)
     {
@@ -69,7 +69,7 @@ public class Folks.ExtendedFieldDetails : AbstractFieldDetails<string>
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.11.0
    */
   public override uint hash ()
     {
@@ -102,7 +102,7 @@ public class Folks.ExtendedFieldDetails : AbstractFieldDetails<string>
  * contact’s anniversary. That should be added in a separate interface in
  * libfolks.
  *
- * @since UNRELEASED
+ * @since 0.11.0
  */
 public interface Folks.ExtendedInfo : Object
 {
@@ -112,7 +112,7 @@ public interface Folks.ExtendedInfo : Object
    * @return The value of the extended field, which may be empty, or `null` if
    *   the field is not set
    *
-   * @since UNRELEASED
+   * @since 0.11.0
    */
   public abstract ExtendedFieldDetails? get_extended_field (string name);
 
@@ -123,7 +123,7 @@ public interface Folks.ExtendedInfo : Object
    * @param value new value for the arbitrary field
    * @throws PropertyError if setting the value failed
    *
-   * @since UNRELEASED
+   * @since 0.11.0
    */
   public virtual async void change_extended_field (
       string name, ExtendedFieldDetails value) throws PropertyError
@@ -139,7 +139,7 @@ public interface Folks.ExtendedInfo : Object
    * @param name name of the arbitrary field to remove
    * @throws PropertyError if removing the property failed
    *
-   * @since UNRELEASED
+   * @since 0.11.0
    */
   public virtual async void remove_extended_field (string name)
       throws PropertyError

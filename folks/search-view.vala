@@ -40,7 +40,7 @@ using GLib;
  * For live results, continue listening to the
  * {@link SearchView.individuals_changed_detailed} signal.
  *
- * @since UNRELEASED
+ * @since 0.11.0
  */
 public class Folks.SearchView : Object
 {
@@ -50,7 +50,7 @@ public class Folks.SearchView : Object
   /**
    * The {@link IndividualAggregator} that this view is based upon.
    *
-   * @since UNRELEASED
+   * @since 0.11.0
    */
   public IndividualAggregator aggregator
     {
@@ -69,7 +69,7 @@ public class Folks.SearchView : Object
    * de-bouncing to ensure re-evaluation only happens when (for example) the
    * user has stopped typing a new query.
    *
-   * @since UNRELEASED
+   * @since 0.11.0
    */
   public Query query
     {
@@ -113,7 +113,7 @@ public class Folks.SearchView : Object
    * property is valid once {@link SearchView.prepare} is finished and this
    * {@link SearchView} may be unreferenced and ignored afterward.
    *
-   * @since UNRELEASED
+   * @since 0.11.0
    */
   public SortedSet<Individual> individuals
     {
@@ -125,7 +125,7 @@ public class Folks.SearchView : Object
    * Whether {@link IndividualAggregator.prepare} has successfully completed for
    * this view's aggregator.
    *
-   * @since UNRELEASED
+   * @since 0.11.0
    */
   public bool is_prepared
     {
@@ -140,7 +140,7 @@ public class Folks.SearchView : Object
    * It's guaranteed that this property's value will only ever change after
    * {@link SearchView.is_prepared} has changed to ``true``.
    *
-   * @since UNRELEASED
+   * @since 0.11.0
    */
   public bool is_quiescent
     {
@@ -173,7 +173,7 @@ public class Folks.SearchView : Object
    * @param removed a set of {@link Individual}s removed from the search view
    *
    * @see IndividualAggregator.individuals_changed_detailed
-   * @since UNRELEASED
+   * @since 0.11.0
    */
   public signal void individuals_changed_detailed (SortedSet<Individual> added,
       SortedSet<Individual> removed);
@@ -187,7 +187,7 @@ public class Folks.SearchView : Object
    * @param query query to match upon
    * @param aggregator the {@link IndividualAggregator} to match within
    *
-   * @since UNRELEASED
+   * @since 0.11.0
    */
   public SearchView (IndividualAggregator aggregator, Query query)
     {
@@ -227,7 +227,7 @@ public class Folks.SearchView : Object
    *
    * @throws GLib.Error if preparation failed
    *
-   * @since UNRELEASED
+   * @since 0.11.0
    */
   public async void prepare () throws GLib.Error
     {
@@ -274,7 +274,7 @@ public class Folks.SearchView : Object
    * calls might return before the first one. (Though they will be safe in every
    * other respect.)
    *
-   * @since UNRELEASED
+   * @since 0.11.0
    * @throws GLib.Error if unpreparing the backend-specific services failed —
    * this will be a backend-specific error
    */
@@ -304,7 +304,7 @@ public class Folks.SearchView : Object
    * search results, e.g. if the user requests a refresh.
    *
    * @throws GLib.Error if matching failed
-   * @since UNRELEASED
+   * @since 0.11.0
    */
   public async void refresh () throws GLib.Error
     {

@@ -987,7 +987,7 @@ public class Folks.Individual : Object,
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.11.0
    */
   public ExtendedFieldDetails? get_extended_field (string name)
     {
@@ -1014,7 +1014,7 @@ public class Folks.Individual : Object,
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.11.0
    */
   public async void change_extended_field (
       string name, ExtendedFieldDetails value) throws PropertyError
@@ -1067,7 +1067,7 @@ public class Folks.Individual : Object,
   /**
    * {@inheritDoc}
    *
-   * @since UNRELEASED
+   * @since 0.11.0
    */
   public async void remove_extended_field (string name) throws PropertyError
     {

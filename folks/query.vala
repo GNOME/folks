@@ -31,7 +31,7 @@ using GLib;
  * matches on receiving this signal.
  *
  * @see SearchView
- * @since UNRELEASED
+ * @since 0.11.0
  */
 public abstract class Folks.Query : Object
 {
@@ -43,7 +43,7 @@ public abstract class Folks.Query : Object
    * These are ordered approximately by descending match likeliness to speed up
    * calls to {@link is_match} when used as-is.
    *
-   * @since UNRELEASED
+   * @since 0.11.0
    */
   public static const string MATCH_FIELDS_NAMES[] =
     {
@@ -61,7 +61,7 @@ public abstract class Folks.Query : Object
    * These are ordered approximately by descending match likeliness to speed up
    * calls to {@link is_match} when used as-is.
    *
-   * @since UNRELEASED
+   * @since 0.11.0
    */
   public static const string MATCH_FIELDS_ADDRESSES[] =
     {
@@ -81,7 +81,7 @@ public abstract class Folks.Query : Object
    * These are ordered approximately by descending match likeliness to speed up
    * calls to {@link is_match} when used as-is.
    *
-   * @since UNRELEASED
+   * @since 0.11.0
    */
   public static const string MATCH_FIELDS_MISC[] =
     {
@@ -106,7 +106,7 @@ public abstract class Folks.Query : Object
    *
    * Default value is {@link Query.MATCH_FIELDS_NAMES}.
    *
-   * @since UNRELEASED
+   * @since 0.11.0
    * @see PersonaDetail
    * @see PersonaStore.detail_key
    * @see Query.MATCH_FIELDS_NAMES
@@ -134,7 +134,7 @@ public abstract class Folks.Query : Object
    * @param individual an {@link Individual} to match against
    * @return a positive integer if the individual matches this query, or zero
    *   if they do not match; higher numbers indicate a better match
-   * @since UNRELEASED
+   * @since 0.11.0
    */
   public abstract uint is_match (Individual individual);
 }
