@@ -409,11 +409,7 @@ distclean-docs:
 	rm -rf $(distclean_dirs)
 
 GITIGNOREFILES = \
-	folks/ \
-	folks-eds/ \
-	folks-libsocialweb/ \
-	folks-telepathy/ \
-	gtk-doc/ \
+	$(distclean_dirs) \
 	$(NULL)
 
 -include $(top_srcdir)/git.mk
