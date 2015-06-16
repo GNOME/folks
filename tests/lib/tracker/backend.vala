@@ -219,6 +219,10 @@ public class TrackerTest.Backend
         {
           GLib.warning ("Problem with the D-Bus connection : %s\n", e3.message);
         }
+      catch (GLib.Error e4)
+        {
+          GLib.warning ("Problem in general: %s", e4.message);
+        }
 
       return ret;
     }
@@ -291,6 +295,10 @@ public class TrackerTest.Backend
         {
           throw new BackendSetupError.ADD_CONTACT_FAILED
           ("Could not connect to D-Bus service : %s\n", e3.message);
+        }
+      catch (GLib.Error e4)
+        {
+          GLib.warning ("Problem in general: %s", e4.message);
         }
     }
 
