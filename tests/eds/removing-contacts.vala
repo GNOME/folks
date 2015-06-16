@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 Collabora Ltd.
+ * Copyright (C) 2011, 2015 Collabora Ltd.
  *
  * This library is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -15,6 +15,7 @@
  * along with this library.  If not, see <http://www.gnu.org/licenses/>.
  *
  * Authors: Raul Gutierrez Segales <raul.gutierrez.segales@collabora.co.uk>
+ *          Philip Withnall <philip.withnall@collabora.co.uk>
  *
  */
 
@@ -54,7 +55,7 @@ public class RemovingContactsTests : EdsTest.TestCase
 
       this._test_removal_async.begin ();
 
-      TestUtils.loop_run_with_non_fatal_timeout (this._main_loop, 5);
+      TestUtils.loop_run_with_timeout (this._main_loop);
 
       assert (this._added == true);
       assert (this._removed == true);
@@ -108,6 +109,8 @@ public class RemovingContactsTests : EdsTest.TestCase
           var name = (Folks.NameDetails) i;
           assert (name.full_name == "bernie h. innocenti");
           this._removed = true;
+
+          /* Finished. */
           this._main_loop.quit ();
         }
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 Collabora Ltd.
+ * Copyright (C) 2011, 2015 Collabora Ltd.
  *
  * This library is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -15,6 +15,7 @@
  * along with this library.  If not, see <http://www.gnu.org/licenses/>.
  *
  * Authors: Raul Gutierrez Segales <raul.gutierrez.segales@collabora.co.uk>
+ *          Philip Withnall <philip.withnall@collabora.co.uk>
  *
  */
 
@@ -86,7 +87,7 @@ public class EmailDetailsTests : EdsTest.TestCase
 
       this._test_email_details_async.begin ();
 
-      TestUtils.loop_run_with_non_fatal_timeout (this._main_loop, 5);
+      TestUtils.loop_run_with_timeout (this._main_loop);
 
       assert (this._email_count == 6);
       assert (this._email_types.size == 1);
@@ -172,6 +173,10 @@ public class EmailDetailsTests : EdsTest.TestCase
                   this._email_types.add (v);
                 }
             }
+
+          /* Finished? */
+          if (this._email_count == 6)
+              this._main_loop.quit ();
         }
 
       assert (removed.size == 1);

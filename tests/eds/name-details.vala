@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 Collabora Ltd.
+ * Copyright (C) 2011, 2015 Collabora Ltd.
  *
  * This library is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -15,6 +15,7 @@
  * along with this library.  If not, see <http://www.gnu.org/licenses/>.
  *
  * Authors: Raul Gutierrez Segales <raul.gutierrez.segales@collabora.co.uk>
+ *          Philip Withnall <philip.withnall@collabora.co.uk>
  *
  */
 
@@ -84,7 +85,7 @@ public class NameDetailsTests : EdsTest.TestCase
 
       this._test_names_async.begin ();
 
-      TestUtils.loop_run_with_non_fatal_timeout (this._main_loop, 5);
+      TestUtils.loop_run_with_timeout (this._main_loop);
 
       assert (this._names_count == 2);
       assert (this._c1.size == 0);
@@ -179,18 +180,18 @@ public class NameDetailsTests : EdsTest.TestCase
           this._names_count++;
         }
 
+      /* Finished? */
+      if (this._names_count == 2)
+        {
+          this._main_loop.quit ();
+        }
+
       assert (removed.size == 1);
 
       foreach (var i in removed)
         {
           assert (i == null);
         }
-
-        if (this._c1.size == 0 &&
-            this._c2.size == 0)
-          {
-            this._main_loop.quit ();
-          }
     }
 }
 
