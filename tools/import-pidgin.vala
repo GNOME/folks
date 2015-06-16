@@ -54,7 +54,7 @@ public class Folks.Importers.Pidgin : Folks.Importer
       try
         {
           file_info = yield file.query_info_async (
-              FILE_ATTRIBUTE_ACCESS_CAN_READ, FileQueryInfoFlags.NONE,
+              FileAttribute.ACCESS_CAN_READ, FileQueryInfoFlags.NONE,
               Priority.DEFAULT);
         }
       catch (GLib.Error e)
@@ -66,7 +66,7 @@ public class Folks.Importers.Pidgin : Folks.Importer
               e.message);
         }
 
-      if (!file_info.get_attribute_boolean (FILE_ATTRIBUTE_ACCESS_CAN_READ))
+      if (!file_info.get_attribute_boolean (FileAttribute.ACCESS_CAN_READ))
         {
           /* Translators: the parameter is a filename. */
           throw new ImportError.MALFORMED_INPUT (_("File %s is not readable."),
