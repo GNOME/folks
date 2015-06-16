@@ -115,6 +115,7 @@ public class EdsTest.TestCase : Folks.TestCase
       /* Create service files for the Evolution binaries. */
       const string sources_services[] =
         {
+          "org.gnome.evolution.dataserver.Sources5",
           "org.gnome.evolution.dataserver.Sources4",
           "org.gnome.evolution.dataserver.Sources3",
           "org.gnome.evolution.dataserver.Sources2",
