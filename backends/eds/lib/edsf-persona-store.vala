@@ -1362,57 +1362,18 @@ public class Edsf.PersonaStore : Folks.PersonaStore
         {
           var received_notification = false;
           var has_yielded = false;
+          var signal_name = property_name ?? "contact";
 
-          if (property_name != null)
+          signal_id = persona.notify[signal_name].connect ((obj, pspec) =>
             {
-              signal_id = persona.notify[property_name].connect ((obj, pspec) =>
+              /* Success! Return to _commit_modified_property(). */
+              received_notification = true;
+
+              if (has_yielded == true)
                 {
-                  /* Success! Return to _commit_modified_property(). */
-                  received_notification = true;
-
-                  if (has_yielded == true)
-                    {
-                      this._commit_modified_property.callback ();
-                    }
-                });
-            }
-          else
-            {
-              signal_id = ((!) this._ebookview).objects_modified.connect (
-                  (_contacts) =>
-                {
-                  unowned GLib.List<E.Contact> contacts =
-                      (GLib.List<E.Contact>) _contacts;
-
-                  /* Ignore other personas. */
-                  foreach (E.Contact c in contacts)
-                    {
-                      var iid = Edsf.Persona.build_iid_from_contact (this.id, c);
-                      if (iid != persona.iid)
-                        {
-                          continue;
-                        }
-
-                      /* Success! Return to _commit_modified_property(), but do
-                       * it via the idle queue so that the notification is
-                       * queued after the actual contact updates in
-                       * _contacts_changed_idle(). */
-                      this._idle_queue (() =>
-                        {
-                          received_notification = true;
-
-                          if (has_yielded == true)
-                            {
-                              this._commit_modified_property.callback ();
-                            }
-
-                          return false;
-                        });
-
-                      return;
-                    }
-                });
-            }
+                  this._commit_modified_property.callback ();
+                }
+            });
 
           /* Commit the modification. _addressbook is asserted as being non-null
            * above. */
@@ -1466,13 +1427,9 @@ public class Edsf.PersonaStore : Folks.PersonaStore
       finally
         {
           /* Remove the callbacks. */
-          if (signal_id != 0 && property_name != null)
+          if (signal_id != 0)
             {
               persona.disconnect (signal_id);
-            }
-          else if (signal_id != 0)
-            {
-              ((!) this._ebookview).disconnect (signal_id);
             }
 
           if (timeout_id != 0)
