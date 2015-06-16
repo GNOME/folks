@@ -1787,7 +1787,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
       if (prev_attr != null)
           vcard.remove_attribute (prev_attr);
 
-      E.VCardAttribute new_attr = new E.VCardAttribute ("", name);
+      E.VCardAttribute new_attr = new E.VCardAttribute (null, name);
       new_attr.add_value (details.value);
 
       vcard.add_attribute (new_attr);
@@ -2273,7 +2273,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
       if (prev_attr != null)
         contact.remove_attributes (null, group_ids_str);
 
-      E.VCardAttribute new_attr = new E.VCardAttribute ("", group_ids_str);
+      E.VCardAttribute new_attr = new E.VCardAttribute (null, group_ids_str);
       foreach (var group in system_groups)
         {
           if (group == null || group == "")
