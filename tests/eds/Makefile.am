@@ -54,27 +54,17 @@ all_test_programs = \
 	im-details \
 	postal-address-details \
 	remove-persona \
-	set-avatar \
 	set-emails \
 	set-im-addresses \
-	set-names \
-	set-structured-name \
-	set-phones \
-	set-postal-addresses \
 	link-personas \
-	set-notes \
 	add-contacts-stress-test \
-	set-gender \
-	set-urls \
+	set-properties \
 	set-properties-race \
-	set-birthday \
-	set-roles \
 	linkable-properties \
 	link-personas-diff-stores \
 	store-removed \
 	anti-linking \
 	enable-disable-stores \
-	set-is-favourite \
 	perf \
 	extended-info \
 	$(NULL)
@@ -141,10 +131,6 @@ remove_persona_SOURCES = \
 	remove-persona.vala \
 	$(NULL)
 
-set_avatar_SOURCES = \
-	set-avatar.vala \
-	$(NULL)
-
 linkable_properties_SOURCES = \
 	linkable-properties.vala \
 	$(NULL)
@@ -157,20 +143,8 @@ set_im_addresses_SOURCES = \
 	set-im-addresses.vala \
 	$(NULL)
 
-set_names_SOURCES = \
-	set-names.vala \
-	$(NULL)
-
-set_structured_name_SOURCES = \
-	set-structured-name.vala \
-	$(NULL)
-
-set_phones_SOURCES = \
-	set-phones.vala \
-	$(NULL)
-
-set_postal_addresses_SOURCES = \
-	set-postal-addresses.vala \
+set_properties_SOURCES = \
+	set-properties.vala \
 	$(NULL)
 
 set_properties_race_SOURCES = \
@@ -181,28 +155,8 @@ link_personas_SOURCES = \
 	link-personas.vala \
 	$(NULL)
 
-set_notes_SOURCES = \
-	set-notes.vala \
-	$(NULL)
-
 add_contacts_stress_test_SOURCES = \
 	add-contacts-stress-test.vala \
-	$(NULL)
-
-set_gender_SOURCES = \
-	set-gender.vala \
-	$(NULL)
-
-set_urls_SOURCES = \
-	set-urls.vala \
-	$(NULL)
-
-set_birthday_SOURCES = \
-	set-birthday.vala \
-	$(NULL)
-
-set_roles_SOURCES = \
-	set-roles.vala \
 	$(NULL)
 
 link_personas_diff_stores_SOURCES = \
@@ -211,10 +165,6 @@ link_personas_diff_stores_SOURCES = \
 
 enable_disable_stores_SOURCES = \
 	enable-disable-stores.vala \
-	$(NULL)
-
-set_is_favourite_SOURCES = \
-	set-is-favourite.vala \
 	$(NULL)
 
 store_removed_SOURCES = \
