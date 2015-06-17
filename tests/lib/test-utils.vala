@@ -295,7 +295,10 @@ public class Folks.TestUtils
       var has_yielded = false;
 
       foreach (var name in expected_persona_names)
+        {
+          debug ("Waiting for ‘%s’", name);
           expected.add (name);
+        }
 
       /* Set up the aggregator */
       var signal_id = aggregator.individuals_changed_detailed.connect (
@@ -312,6 +315,8 @@ public class Folks.TestUtils
               var name_details = i as NameDetails;
               assert (name_details != null);
               expected.remove (name_details.full_name);
+
+              debug ("Saw individual ‘%s’", name_details.full_name);
             }
 
           assert (removed.size == 1);
