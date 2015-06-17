@@ -376,13 +376,14 @@ public abstract class Folks.TestCase : Object
       TestSuite.get_root ().add_suite (this._suite);
     }
 
-  public void add_test (string name, TestMethod test)
+  public void add_test (string name, owned TestMethod test)
     {
-      this._suite.add (add_test_helper (name, test));
+      this._suite.add (add_test_helper (name, (owned) test));
     }
 
   /* implemented in test-case-helper.c */
-  internal extern GLib.TestCase add_test_helper (string name, TestMethod test);
+  internal extern GLib.TestCase add_test_helper (string name,
+      owned TestMethod test);
 
   /**
    * Set up for one test. If you have more than one test, this will
