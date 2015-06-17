@@ -271,12 +271,6 @@ public class LinkPersonasTests : EdsTest.TestCase
   private void _individuals_changed_cb (
        MultiMap<Individual?, Individual?> changes)
     {
-      this._individuals_changed_async (changes);
-    }
-
-  private void _individuals_changed_async (
-       MultiMap<Individual?, Individual?> changes)
-    {
       var added = changes.get_values ();
 
       foreach (var i in added)

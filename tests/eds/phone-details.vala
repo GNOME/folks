@@ -25,13 +25,6 @@ using Gee;
 
 public class PhoneDetailsTests : EdsTest.TestCase
 {
-  private GLib.MainLoop _main_loop;
-  private IndividualAggregator _aggregator;
-  private int _phones_count;
-  private HashSet<string> _phone_types;
-  private Gee.HashMap<string, Value?> _c1;
-  private Gee.HashMap<string, Value?> _c2;
-
   public PhoneDetailsTests ()
     {
       base ("PhoneDetails");
@@ -41,153 +34,101 @@ public class PhoneDetailsTests : EdsTest.TestCase
 
   public void test_phone_numbers ()
     {
-      this._phones_count = 0;
-      this._phone_types = new HashSet<string> ();
-      this._c1 = new Gee.HashMap<string, Value?> ();
-      this._c2 = new Gee.HashMap<string, Value?> ();
-      this._main_loop = new GLib.MainLoop (null, false);
+      /* Set up the backend. */
+      var c1 = new Gee.HashMap<string, Value?> ();
+      var c2 = new Gee.HashMap<string, Value?> ();
       Value? v;
-
-      this.eds_backend.reset ();
+      string[] names = {"bernie h. innocenti", "richard m. stallman"};
 
       v = Value (typeof (string));
       v.set_string ("bernie h. innocenti");
-      this._c1.set ("full_name", (owned) v);
+      c1.set ("full_name", (owned) v);
       v = Value (typeof (string));
       v.set_string ("123");
-      this._c1.set ("car_phone", (owned) v);
+      c1.set ("car_phone", (owned) v);
       v = Value (typeof (string));
       v.set_string ("1234");
-      this._c1.set ("company_phone", (owned) v);
+      c1.set ("company_phone", (owned) v);
       v = Value (typeof (string));
       v.set_string ("12345");
-      this._c1.set ("home_phone", (owned) v);
-      this.eds_backend.add_contact (this._c1);
+      c1.set ("home_phone", (owned) v);
+
+      this.eds_backend.add_contact (c1);
 
       v = Value (typeof (string));
       v.set_string ("richard m. stallman");
-      this._c2.set ("full_name", (owned) v);
+      c2.set ("full_name", (owned) v);
       v = Value (typeof (string));
       v.set_string ("54321");
-      this._c2.set ("car_phone", (owned) v);
+      c2.set ("car_phone", (owned) v);
       v = Value (typeof (string));
       v.set_string ("4321");
-      this._c2.set ("company_phone", (owned) v);
+      c2.set ("company_phone", (owned) v);
       v = Value (typeof (string));
       v.set_string ("321");
-      this._c2.set ("home_phone", (owned) v);
-      this.eds_backend.add_contact (this._c2);
+      c2.set ("home_phone", (owned) v);
 
-      this._test_phone_numbers_async.begin ();
+      this.eds_backend.add_contact (c2);
 
-      TestUtils.loop_run_with_timeout (this._main_loop);
+      this.eds_backend.commit_contacts_to_addressbook_sync ();
 
-      assert (this._phones_count == 6);
-      assert (this._phone_types.size == 3);
-      assert (this._c1.size == 0);
-      assert (this._c2.size == 0);
+      /* Set up the test variables. */
+      var phones_count = 0;
+      var phone_types = new HashSet<string> ();
 
-      foreach (var pt in this._phone_types)
+      /* Set up the aggregator and wait until either the expected personas are
+       * seen, or the test times out and fails. */
+      var aggregator = IndividualAggregator.dup ();
+      TestUtils.aggregator_prepare_and_wait_for_individuals_sync_with_timeout (
+          aggregator, names);
+
+      /* Check the properties of our individual. */
+      foreach (var n in names)
         {
-          assert(pt in Edsf.Persona.phone_fields);
-        }
-   }
-
-  private async void _test_phone_numbers_async ()
-    {
-
-      yield this.eds_backend.commit_contacts_to_addressbook ();
-
-      var store = BackendStore.dup ();
-      yield store.prepare ();
-      this._aggregator = IndividualAggregator.dup ();
-      this._aggregator.individuals_changed_detailed.connect
-          (this._individuals_changed_cb);
-      try
-        {
-          yield this._aggregator.prepare ();
-        }
-      catch (GLib.Error e)
-        {
-          GLib.warning ("Error when calling prepare: %s\n", e.message);
-        }
-    }
-
-  private void _individuals_changed_cb (
-       MultiMap<Individual?, Individual?> changes)
-    {
-      var added = changes.get_values ();
-      var removed = changes.get_keys ();
-
-      foreach (Individual i in added)
-        {
-          assert (i != null);
-
-          unowned Gee.HashMap<string, Value?> contact = null;
-          assert (i.personas.size == 1);
-
-          if (i.full_name == "bernie h. innocenti")
-            {
-              contact = this._c1;
-            }
-          else if (i.full_name == "richard m. stallman")
-            {
-              contact = this._c2;
-            }
-
-          if (contact == null)
-            {
-              continue;
-            }
+          var i = TestUtils.get_individual_by_name (aggregator, n);
+          var contact = (n == "bernie h. innocenti") ? c1 : c2;
 
           contact.unset ("full_name");
-          var phone_numbers = (Folks.PhoneDetails) i;
-          foreach (var phone_fd in phone_numbers.phone_numbers)
+
+          foreach (var phone_fd in i.phone_numbers)
             {
-              this._phones_count++;
+              phones_count++;
               foreach (var t in phone_fd.get_parameter_values (
                   AbstractFieldDetails.PARAM_TYPE))
                 {
-                  string? v = null;
+                  string? t_ = null;
 
                   if (t == "car")
-                    {
-                      v = "car_phone";
-                    }
+                      t_ = "car_phone";
                   else if (t == AbstractFieldDetails.PARAM_TYPE_HOME)
-                    {
-                      v = "home_phone";
-                    }
+                      t_ = "home_phone";
                   else if (t == "x-evolution-company")
+                      t_ = "company_phone";
+                  /* Expected aliases of the above: */
+                  else if (t != "voice")
                     {
-                      v = "company_phone";
+                      debug ("Unrecognised type: %s, %s", t, phone_fd.value);
+                      assert_not_reached ();
                     }
 
-                  if (v == null)
+                  if (t_ != null)
                     {
-                      continue;
+                      phone_types.add (t_);
+                      assert (contact.get (t_).get_string () == phone_fd.value);
+                      contact.unset (t_);
                     }
-
-                  this._phone_types.add (v);
-                  assert (contact.get (v).get_string () == phone_fd.value);
-                  contact.unset (v);
                 }
             }
         }
 
-        /* Finished? */
-        if (this._phones_count == 6)
-          {
-            this._main_loop.quit ();
-          }
+      assert (phones_count == 6);
+      assert (phone_types.size == 3);
+      assert (c1.size == 0);
+      assert (c2.size == 0);
 
-      assert (removed.size == 1);
-
-      foreach (var i in removed)
-        {
-          assert (i == null);
-        }
-    }
+      foreach (var pt in phone_types)
+          assert (pt in Edsf.Persona.phone_fields);
+   }
 }
 
 public int main (string[] args)

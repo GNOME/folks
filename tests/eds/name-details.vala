@@ -25,12 +25,6 @@ using Gee;
 
 public class NameDetailsTests : EdsTest.TestCase
 {
-  private GLib.MainLoop _main_loop;
-  private IndividualAggregator _aggregator;
-  private int _names_count;
-  private Gee.HashMap<string, Value?> _c1;
-  private Gee.HashMap<string, Value?> _c2;
-
   public NameDetailsTests ()
     {
       base ("NameDetails");
@@ -40,158 +34,114 @@ public class NameDetailsTests : EdsTest.TestCase
 
   public void test_names ()
     {
-      this._c1 = new Gee.HashMap<string, Value?> ();
-      this._c2 = new Gee.HashMap<string, Value?> ();
-      this._names_count = 0;
-      this._main_loop = new GLib.MainLoop (null, false);
+      /* Set up the backend. */
+      var c1 = new Gee.HashMap<string, Value?> ();
+      var c2 = new Gee.HashMap<string, Value?> ();
       Value? v;
-
-      this.eds_backend.reset ();
 
       /* FIXME: passing the EContactName would be better */
       v = Value (typeof (string));
       v.set_string ("bernie h. innocenti");
-      this._c1.set ("full_name", (owned) v);
+      c1.set ("full_name", (owned) v);
       v = Value (typeof (string));
       v.set_string ("bernie");
-      this._c1.set ("nickname", (owned) v);
+      c1.set ("nickname", (owned) v);
       v = Value (typeof (string));
       v.set_string ("Innocenti");
-      this._c1.set ("contact_name_family", (owned) v);
+      c1.set ("contact_name_family", (owned) v);
       v = Value (typeof (string));
       v.set_string ("Bernardo");
-      this._c1.set ("contact_name_given", (owned) v);
+      c1.set ("contact_name_given", (owned) v);
       v = Value (typeof (string));
       v.set_string ("H.");
-      this._c1.set ("contact_name_additional", (owned) v);
+      c1.set ("contact_name_additional", (owned) v);
       v = Value (typeof (string));
       v.set_string ("Mr.");
-      this._c1.set ("contact_name_prefixes", (owned) v);
+      c1.set ("contact_name_prefixes", (owned) v);
       v = Value (typeof (string));
       v.set_string ("(sysadmin FSF)");
-      this._c1.set ("contact_name_suffixes", (owned) v);
-      this.eds_backend.add_contact (this._c1);
+      c1.set ("contact_name_suffixes", (owned) v);
+
+      this.eds_backend.add_contact (c1);
 
       v = Value (typeof (string));
       v.set_string ("richard m. stallman");
-      this._c2.set ("full_name", (owned) v);
+      c2.set ("full_name", (owned) v);
       v = Value (typeof (string));
       v.set_string ("Stallman");
-      this._c2.set ("contact_name_family", (owned) v);
+      c2.set ("contact_name_family", (owned) v);
       v = Value (typeof (string));
       v.set_string ("Richard M.");
-      this._c2.set ("contact_name_given", (owned) v);
-      this.eds_backend.add_contact (this._c2);
+      c2.set ("contact_name_given", (owned) v);
 
-      this._test_names_async.begin ();
+      this.eds_backend.add_contact (c2);
 
-      TestUtils.loop_run_with_timeout (this._main_loop);
+      this.eds_backend.commit_contacts_to_addressbook_sync ();
 
-      assert (this._names_count == 2);
-      assert (this._c1.size == 0);
-      assert (this._c2.size == 0);
-    }
+      /* Set up the aggregator and wait until either the expected personas are
+       * seen, or the test times out and fails. */
+      var aggregator = IndividualAggregator.dup ();
+      TestUtils.aggregator_prepare_and_wait_for_individuals_sync_with_timeout (
+          aggregator, {"bernie h. innocenti", "richard m. stallman"});
 
-  private async void _test_names_async ()
-    {
+      /* Check the properties of our individuals. */
+      string s;
 
-      yield this.eds_backend.commit_contacts_to_addressbook ();
+      var i1 = TestUtils.get_individual_by_name (aggregator,
+          "bernie h. innocenti");
+      var name1 = (Folks.NameDetails) i1;
 
-      var store = BackendStore.dup ();
-      yield store.prepare ();
-      this._aggregator = IndividualAggregator.dup ();
-      this._aggregator.individuals_changed_detailed.connect
-          (this._individuals_changed_cb);
-      try
-        {
-          yield this._aggregator.prepare ();
-        }
-      catch (GLib.Error e)
-        {
-          GLib.warning ("Error when calling prepare: %s\n", e.message);
-        }
-    }
+      assert (name1.structured_name.is_empty () == false);
 
-  private void _individuals_changed_cb (
-       MultiMap<Individual?, Individual?> changes)
-    {
-      var added = changes.get_values ();
-      var removed = changes.get_keys ();
+      s = c1.get ("full_name").get_string ();
+      assert (name1.full_name == s);
+      c1.unset ("full_name");
 
-      foreach (Individual i in added)
-        {
-          assert (i != null);
+      s = c1.get ("nickname").get_string ();
+      assert (name1.nickname == s);
+      c1.unset ("nickname");
 
-          string s;
+      s = c1.get ("contact_name_family").get_string ();
+      assert (name1.structured_name.family_name == s);
+      c1.unset ("contact_name_family");
 
-          assert (i.personas.size == 1);
+      s = c1.get ("contact_name_given").get_string ();
+      assert (name1.structured_name.given_name == s);
+      c1.unset ("contact_name_given");
 
-          var name = (Folks.NameDetails) i;
+      s = c1.get ("contact_name_additional").get_string ();
+      assert (name1.structured_name.additional_names == s);
+      c1.unset ("contact_name_additional");
 
-          if (i.full_name == "bernie h. innocenti")
-            {
-              assert (name.structured_name.is_empty () == false);
+      s = c1.get ("contact_name_prefixes").get_string ();
+      assert (name1.structured_name.prefixes == s);
+      c1.unset ("contact_name_prefixes");
 
-              s = this._c1.get ("full_name").get_string ();
-              assert (name.full_name == s);
-              this._c1.unset ("full_name");
+      s = c1.get ("contact_name_suffixes").get_string ();
+      assert (name1.structured_name.suffixes == s);
+      c1.unset ("contact_name_suffixes");
 
-              s = this._c1.get ("nickname").get_string ();
-              assert (name.nickname == s);
-              this._c1.unset ("nickname");
+      assert (c1.size == 0);
 
-              s = this._c1.get ("contact_name_family").get_string ();
-              assert (name.structured_name.family_name == s);
-              this._c1.unset ("contact_name_family");
+      var i2 = TestUtils.get_individual_by_name (aggregator,
+          "richard m. stallman");
+      var name2 = (Folks.NameDetails) i2;
 
-              s = this._c1.get ("contact_name_given").get_string ();
-              assert (name.structured_name.given_name == s);
-              this._c1.unset ("contact_name_given");
+      assert (name2.structured_name.is_empty () == false);
 
-              s = this._c1.get ("contact_name_additional").get_string ();
-              assert (name.structured_name.additional_names == s);
-              this._c1.unset ("contact_name_additional");
+      s = c2.get ("full_name").get_string ();
+      assert (name2.full_name == s);
+      c2.unset ("full_name");
 
-              s = this._c1.get ("contact_name_prefixes").get_string ();
-              assert (name.structured_name.prefixes == s);
-              this._c1.unset ("contact_name_prefixes");
+      s = c2.get ("contact_name_family").get_string ();
+      assert (name2.structured_name.family_name == s);
+      c2.unset ("contact_name_family");
 
-              s = this._c1.get ("contact_name_suffixes").get_string ();
-              assert (name.structured_name.suffixes == s);
-              this._c1.unset ("contact_name_suffixes");
-            }
-          else if (i.full_name == "richard m. stallman")
-            {
-              assert (name.structured_name.is_empty () == false);
+      s = c2.get ("contact_name_given").get_string ();
+      assert (name2.structured_name.given_name == s);
+      c2.unset ("contact_name_given");
 
-              s = this._c2.get ("full_name").get_string ();
-              assert (name.full_name == s);
-              this._c2.unset ("full_name");
-
-              s = this._c2.get ("contact_name_family").get_string ();
-              assert (name.structured_name.family_name == s);
-              this._c2.unset ("contact_name_family");
-
-              s = this._c2.get ("contact_name_given").get_string ();
-              assert (name.structured_name.given_name == s);
-              this._c2.unset ("contact_name_given");
-            }
-
-          this._names_count++;
-        }
-
-      /* Finished? */
-      if (this._names_count == 2)
-        {
-          this._main_loop.quit ();
-        }
-
-      assert (removed.size == 1);
-
-      foreach (var i in removed)
-        {
-          assert (i == null);
-        }
+      assert (c2.size == 0);
     }
 }
 

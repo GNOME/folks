@@ -25,12 +25,6 @@ using Gee;
 
 public class AvatarDetailsTests : EdsTest.TestCase
 {
-  private GLib.MainLoop _main_loop;
-  private IndividualAggregator _aggregator;
-  private Gee.HashMap<string, Value?> _c1;
-  private bool _avatars_are_equal;
-  private string _avatar_path;
-
   public AvatarDetailsTests ()
     {
       base ("AvatarDetails");
@@ -40,95 +34,52 @@ public class AvatarDetailsTests : EdsTest.TestCase
 
   public void test_avatar ()
     {
-      this._c1 = new Gee.HashMap<string, Value?> ();
-      this._main_loop = new GLib.MainLoop (null, false);
-      this._avatar_path = Folks.TestUtils.get_source_test_data (
-          "data/avatar-01.jpg");
-      this._avatars_are_equal = false;
+      /* Set up the backend. */
+      var c1 = new Gee.HashMap<string, Value?> ();
+      var avatar_path =
+          Folks.TestUtils.get_source_test_data ("data/avatar-01.jpg");
       Value? v;
-
-      this.eds_backend.reset ();
 
       v = Value (typeof (string));
       v.set_string ("bernie h. innocenti");
-      this._c1.set ("full_name", (owned) v);
+      c1.set ("full_name", (owned) v);
       v = Value (typeof (string));
-      v.set_string (this._avatar_path);
-      this._c1.set ("avatar",(owned) v);
-      this.eds_backend.add_contact (this._c1);
+      v.set_string (avatar_path);
+      c1.set ("avatar", (owned) v);
 
-      this._test_avatar_async.begin ();
+      this.eds_backend.add_contact (c1);
+      this.eds_backend.commit_contacts_to_addressbook_sync ();
 
-      TestUtils.loop_run_with_timeout (this._main_loop);
+      /* Set up the test variables. */
+      var avatars_are_equal = false;
 
-      assert (this._avatars_are_equal);
-   }
+      /* Set up the aggregator and wait until either the expected personas are
+       * seen, or the test times out and fails. */
+      var aggregator = IndividualAggregator.dup ();
+      TestUtils.aggregator_prepare_and_wait_for_individuals_sync_with_timeout (
+          aggregator, {"bernie h. innocenti"});
 
-  private async void _test_avatar_async ()
-    {
-
-      yield this.eds_backend.commit_contacts_to_addressbook ();
-
-      var store = BackendStore.dup ();
-      yield store.prepare ();
-      this._aggregator = IndividualAggregator.dup ();
-      this._aggregator.individuals_changed_detailed.connect
-          (this._individuals_changed_cb);
-      try
+      /* Check the properties of our individual. */
+      var i = TestUtils.get_individual_by_name (aggregator,
+          "bernie h. innocenti");
+      if (i.avatar != null)
         {
-          yield this._aggregator.prepare ();
-        }
-      catch (GLib.Error e)
-        {
-          GLib.warning ("Error when calling prepare: %s\n", e.message);
-        }
-    }
+          var b = new FileIcon (File.new_for_path (avatar_path));
 
-  private void _individuals_changed_cb (
-       MultiMap<Individual?, Individual?> changes)
-    {
-      var added = changes.get_values ();
-      var removed = changes.get_keys ();
-
-      assert (removed.size == 1);
-
-      foreach (var i in removed)
-        {
-          assert (i == null);
-        }
-
-      foreach (Individual i in added)
-        {
-          assert (i != null);
-
-          assert (i.personas.size == 1);
-
-          if (i.full_name == "bernie h. innocenti")
+          var main_loop = new MainLoop ();
+          TestUtils.loadable_icons_content_equal.begin (i.avatar, b, -1,
+              (s, r) =>
             {
-              i.notify["avatar"].connect (this._notify_cb);
-              this._check_avatar.begin (i.avatar);
-            }
+              avatars_are_equal =
+                  TestUtils.loadable_icons_content_equal.end (r);
+              main_loop.quit ();
+            });
+
+          TestUtils.loop_run_with_timeout (main_loop);
         }
+
+      assert (avatars_are_equal);
    }
-
-  private void _notify_cb (Object individual_obj, ParamSpec ps)
-    {
-      Folks.Individual i = (Folks.Individual) individual_obj;
-      this._check_avatar.begin (i.avatar);
-    }
-
-  private async void _check_avatar (LoadableIcon? avatar)
-    {
-      if (avatar != null)
-        {
-          var b = new FileIcon (File.new_for_path (this._avatar_path));
-
-          this._avatars_are_equal =
-            yield TestUtils.loadable_icons_content_equal (
-                avatar, b, -1);
-          this._main_loop.quit ();
-        }
-    }
 }
 
 public int main (string[] args)
