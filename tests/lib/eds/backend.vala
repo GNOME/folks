@@ -223,6 +223,17 @@ public class EdsTest.Backend
         }
     }
 
+  public void commit_contacts_to_addressbook_sync ()
+    {
+      var main_loop = new MainLoop ();
+      this.commit_contacts_to_addressbook.begin ((s, r) =>
+        {
+          this.commit_contacts_to_addressbook.end (r);
+          main_loop.quit ();
+        });
+      TestUtils.loop_run_with_timeout (main_loop);
+    }
+
   private void _set_contact_fields (E.Contact contact,
                                     Gee.HashMap<string, Value?> c)
     {
