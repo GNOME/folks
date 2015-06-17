@@ -360,13 +360,15 @@ public class EdsTest.Backend
         {
           if (this._source_file != null)
             {
+              debug ("Deleting address book ‘%s’ source file ‘%s’.",
+                  this._addressbook_name, this._source_file.get_path ());
               this._source_file.delete ();
             }
         }
       catch (GLib.Error e)
         {
-          GLib.warning ("Unable to remove addressbook ‘%s’: %s",
-              this._addressbook_name, e.message);
+          GLib.error ("Unable to remove address book ‘%s’ source file ‘%s’: %s",
+              this._addressbook_name, this._source_file.get_path (), e.message);
         }
       finally
         {
