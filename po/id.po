@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: folks master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=folks&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2015-03-21 05:44+0000\n"
-"PO-Revision-Date: 2015-03-21 19:38+0700\n"
+"POT-Creation-Date: 2015-08-03 05:00+0000\n"
+"PO-Revision-Date: 2015-08-03 12:37+0700\n"
 "Last-Translator: Andika Triwidada <andika@gmail.com>\n"
 "Language-Team: Indonesian <gnome-l10n-id@googlegroups.com>\n"
 "Language: id\n"
@@ -97,199 +97,238 @@ msgstr "Perangkat Bluetooth '%s' menghilang saat transfer buku alamat."
 #. The timeout after which we consider a property change to have failed if we
 #. * haven't received a property change notification for it.
 #. seconds
+#. The timeout after which we consider a contact addition to have failed if we
+#. * haven't received an object addition signal for it.
+#. seconds
 #. Translators: This should be translated to the name of the “Starred in
 #. * Android” group in Google Contacts for your language. If Google have not
 #. * localised the group for your language, or Google Contacts isn't available
 #. * in your language, please *do not* translate this string (i.e. just copy
 #. * the msgid to the msgstr unchanged).
-#: ../backends/eds/lib/edsf-persona-store.vala:65
+#: ../backends/eds/lib/edsf-persona-store.vala:69
 msgid "Starred in Android"
 msgstr "Dibintangi di Android"
 
 #. Translators: the first parameter is an address book
 #. * URI and the second is a persona UID.
-#: ../backends/eds/lib/edsf-persona-store.vala:674
+#: ../backends/eds/lib/edsf-persona-store.vala:642
 #, c-format
 msgid "Address book ‘%s’ is offline, so contact ‘%s’ cannot be removed."
 msgstr "Buku alamat '%s' luring, sehingga kontak '%s' tak bisa dihapus."
 
 #. Translators: the first parameter is an address book
 #. * URI and the second is an error message.
-#: ../backends/eds/lib/edsf-persona-store.vala:680
+#: ../backends/eds/lib/edsf-persona-store.vala:648
 #, c-format
 msgid "Permission denied to remove contact ‘%s’: %s"
 msgstr "Izin ditolak untuk menghapus kontak '%s': %s"
 
 #. Translators: the parameter is an error message.
-#: ../backends/eds/lib/edsf-persona-store.vala:685
+#: ../backends/eds/lib/edsf-persona-store.vala:653
 #, c-format
 msgid "Removing contacts isn't supported by this persona store: %s"
 msgstr "Menghapus kontak tak didukung oleh penyimpanan orang ini: %s"
 
-#: ../backends/eds/lib/edsf-persona-store.vala:714
+#: ../backends/eds/lib/edsf-persona-store.vala:682
 #, c-format
 msgid "Can't remove contact ‘%s’: %s"
 msgstr "Tak bisa menghapus kontak '%s': %s"
 
 #. Translators: the parameter is an address book
 #. * URI.
-#: ../backends/eds/lib/edsf-persona-store.vala:803
-#: ../backends/eds/lib/edsf-persona-store.vala:996
+#: ../backends/eds/lib/edsf-persona-store.vala:771
+#: ../backends/eds/lib/edsf-persona-store.vala:964
 #, c-format
 msgid "Address book ‘%s’ is offline."
 msgstr "Buku alamat '%s' luring."
 
 #. Translators: the first parameter is an address
 #. * book URI and the second is an error message.
-#: ../backends/eds/lib/edsf-persona-store.vala:808
-#: ../backends/eds/lib/edsf-persona-store.vala:1001
+#: ../backends/eds/lib/edsf-persona-store.vala:776
+#: ../backends/eds/lib/edsf-persona-store.vala:969
 #, c-format
 msgid "Permission denied to open address book ‘%s’: %s"
 msgstr "Izin ditolak untuk membuka buku alamat '%s': %s"
 
 #. Translators: the first parameter is an address book URI
 #. * and the second is an error message.
-#: ../backends/eds/lib/edsf-persona-store.vala:841
+#: ../backends/eds/lib/edsf-persona-store.vala:809
 #, c-format
 msgid "Couldn't open address book ‘%s’: %s"
 msgstr "Tak bisa membuka buku alamat '%s': %s"
 
 #. Translators: the parameteter is an error message.
-#: ../backends/eds/lib/edsf-persona-store.vala:909
-#: ../backends/eds/lib/edsf-persona-store.vala:939
+#: ../backends/eds/lib/edsf-persona-store.vala:877
+#: ../backends/eds/lib/edsf-persona-store.vala:907
 #, c-format
 msgid "Couldn't get address book capabilities: %s"
 msgstr "Tak bisa memperoleh kapabilitas buku alamat: %s"
 
 #. Translators: the parameter is an address book URI.
-#: ../backends/eds/lib/edsf-persona-store.vala:955
+#: ../backends/eds/lib/edsf-persona-store.vala:923
 #, c-format
 msgid "Couldn't get view for address book ‘%s’."
 msgstr "Tak bisa memperoleh tilikan bagi buku alamat '%s'."
 
 #. Translators: the first parameter is an address book URI
 #. * and the second is an error message.
-#: ../backends/eds/lib/edsf-persona-store.vala:1034
+#: ../backends/eds/lib/edsf-persona-store.vala:1002
 #, c-format
 msgid "Couldn't get view for address book ‘%s’: %s"
 msgstr "Tak bisa memperoleh tilikan bagi buku alamat '%s': %s"
 
+#: ../backends/eds/lib/edsf-persona-store.vala:1305
+msgid "Creating a new contact failed due to reaching the timeout."
+msgstr "Membuat sebuah kontak baru gagal karena kehabisan waktu."
+
 #. Translators: the parameter is the name of a property on a
 #. * contact, formatted in the normal GObject style (e.g.
 #. * lowercase with hyphens to separate words).
-#: ../backends/eds/lib/edsf-persona-store.vala:1350
+#: ../backends/eds/lib/edsf-persona-store.vala:1419
 #, c-format
 msgid "Changing the ‘%s’ property failed due to reaching the timeout."
 msgstr "Mengubah properti '%s' gagal karena kehabisan waktu."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1388
+#: ../backends/eds/lib/edsf-persona-store.vala:1453
 #: ../folks/avatar-details.vala:63
 msgid "Avatar is not writeable on this contact."
 msgstr "Avatar tak dapat ditulisi pada kontak ini."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1409
+#: ../backends/eds/lib/edsf-persona-store.vala:1474
 #: ../folks/web-service-details.vala:123
 msgid "Web service addresses are not writeable on this contact."
 msgstr "Alamat web service tak dapat ditulisi pada kontak ini."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1445
+#: ../backends/eds/lib/edsf-persona-store.vala:1510
 #: ../folks/url-details.vala:152
 msgid "URLs are not writeable on this contact."
 msgstr "URL tak dapat ditulisi pada kontak ini."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1526
+#: ../backends/eds/lib/edsf-persona-store.vala:1591
 #: ../folks/local-id-details.vala:64
 msgid "Local IDs are not writeable on this contact."
 msgstr "ID lokal tak dapat ditulisi pada kontak ini."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1555
+#: ../backends/eds/lib/edsf-persona-store.vala:1620
 msgid "The contact cannot be marked as favourite."
 msgstr "Kontak ini tak dapat ditandai sebagai favorit."
 
 #. Translators: the parameter is an error message.
-#: ../backends/eds/lib/edsf-persona-store.vala:1627
+#: ../backends/eds/lib/edsf-persona-store.vala:1692
 #, c-format
 msgid "Can't update avatar: %s"
 msgstr "Tak bisa memutakhirkan avatar: %s"
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1638
+#: ../backends/eds/lib/edsf-persona-store.vala:1703
 #: ../folks/email-details.vala:120
 msgid "E-mail addresses are not writeable on this contact."
 msgstr "Alamat surel tak dapat ditulisi pada kontak ini."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1703
+#: ../backends/eds/lib/edsf-persona-store.vala:1768
 #: ../folks/phone-details.vala:255
 msgid "Phone numbers are not writeable on this contact."
 msgstr "Nomor telepon tak dapat ditulisi pada kontak ini."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1721
+#: ../backends/eds/lib/edsf-persona-store.vala:1786
 #: ../folks/postal-address-details.vala:361
 msgid "Postal addresses are not writeable on this contact."
 msgstr "Alamat surat tak dapat ditulisi pada kontak ini."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1792
+#: ../backends/eds/lib/edsf-persona-store.vala:1857
 #: ../folks/name-details.vala:454
 msgid "Full name is not writeable on this contact."
 msgstr "Nama lengkap tak dapat ditulisi pada kontak ini."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1814
+#: ../backends/eds/lib/edsf-persona-store.vala:1879
 #: ../folks/name-details.vala:492
 msgid "Nickname is not writeable on this contact."
 msgstr "Nama panggilan tak dapat ditulisi pada kontak ini."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1836
+#: ../backends/eds/lib/edsf-persona-store.vala:1901
 #: ../folks/note-details.vala:138
 msgid "Notes are not writeable on this contact."
 msgstr "Catatan tak dapat ditulisi pada kontak ini."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1868
+#: ../backends/eds/lib/edsf-persona-store.vala:1933
 #: ../folks/birthday-details.vala:62
 msgid "Birthday is not writeable on this contact."
 msgstr "Tanggal lahir tak dapat ditulisi pada kontak ini."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1912
+#: ../backends/eds/lib/edsf-persona-store.vala:1977
 #: ../folks/role-details.vala:279
 msgid "Roles are not writeable on this contact."
 msgstr "Peran tak dapat ditulisi pada kontak ini."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:2013
+#: ../backends/eds/lib/edsf-persona-store.vala:2078
 #: ../folks/name-details.vala:417
 msgid "Structured name is not writeable on this contact."
 msgstr "Nama terstruktur tak dapat ditulisi pada kontak ini."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:2052
+#: ../backends/eds/lib/edsf-persona-store.vala:2117
 #: ../folks/im-details.vala:136
 msgid "IM addresses are not writeable on this contact."
 msgstr "Alamat IM tak dapat ditulisi pada kontak ini."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:2102
+#: ../backends/eds/lib/edsf-persona-store.vala:2167
 #: ../folks/group-details.vala:174
 msgid "Groups are not writeable on this contact."
 msgstr "Grup tak dapat ditulisi pada kontak ini."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:2117
+#: ../backends/eds/lib/edsf-persona-store.vala:2182
 msgid "My Contacts is only available for Google Contacts"
 msgstr "Kontakku hanya tersedia bagi Kontak Google"
 
-#: ../backends/eds/lib/edsf-persona-store.vala:2188
+#: ../backends/eds/lib/edsf-persona-store.vala:2253
 #: ../folks/gender-details.vala:79
 msgid "Gender is not writeable on this contact."
 msgstr "Jenis kelamin tak dapat ditulisi pada kontak ini."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:2226
+#: ../backends/eds/lib/edsf-persona-store.vala:2291
 #: ../folks/anti-linkable.vala:84
 msgid "Anti-links are not writeable on this contact."
 msgstr "Antitaut tak dapat ditulisi pada kontak ini."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:2269
+#: ../backends/eds/lib/edsf-persona-store.vala:2334
 #: ../folks/location-details.vala:135
 msgid "Location is not writeable on this contact."
 msgstr "Lokasi tak dapat ditulisi pada kontak ini."
 
+#. Translators: the first parameter is an error message.
+#: ../backends/eds/lib/edsf-persona-store.vala:2658
+#, c-format
+msgid "Permission denied when creating new contact: %s"
+msgstr "Izin ditolak ketika membuat kontak baru: %s"
+
+#. Translators: the first parameter is an error message.
+#: ../backends/eds/lib/edsf-persona-store.vala:2663
+#, c-format
+msgid "Address book is offline and a new contact cannot be created: %s"
+msgstr "Buku alamat luring dan sebuah kontak baru tak bisa dibuat: %s"
+
 #. Translators: the first parameter is a non-human-readable
 #. * property name and the second parameter is an error
 #. * message.
-#: ../backends/eds/lib/edsf-persona-store.vala:2582
+#: ../backends/eds/lib/edsf-persona-store.vala:2672
+#, c-format
+msgid "New contact is not writeable: %s"
+msgstr "Kontak baru tak dapat ditulisi: %s"
+
+#. Translators: the first parameter is an error message.
+#: ../backends/eds/lib/edsf-persona-store.vala:2676
+#, c-format
+msgid "Invalid value in contact: %s"
+msgstr "Nilai yang tak valid dalam kontak: %s"
+
+#. Translators: the first parameter is an error message.
+#: ../backends/eds/lib/edsf-persona-store.vala:2700
+#, c-format
+msgid "Unknown error adding contact: %s"
+msgstr "Galat tak dikenal saat menambah kontak: %s"
+
+#. Translators: the first parameter is a non-human-readable
+#. * property name and the second parameter is an error
+#. * message.
+#: ../backends/eds/lib/edsf-persona-store.vala:2733
 #, c-format
 msgid "Property ‘%s’ is not writeable: %s"
 msgstr "Properti '%s' tak dapat ditulisi: %s"
@@ -297,14 +336,14 @@ msgstr "Properti '%s' tak dapat ditulisi: %s"
 #. Translators: the first parameter is a non-human-readable
 #. * property name and the second parameter is an error
 #. * message.
-#: ../backends/eds/lib/edsf-persona-store.vala:2591
+#: ../backends/eds/lib/edsf-persona-store.vala:2742
 #, c-format
 msgid "Invalid value for property ‘%s’: %s"
 msgstr "Nilai yang tak valid bagi properti '%s': %s"
 
 #. Translators: the first parameter is a non-human-readable
 #. * property name and the second parameter is an error message.
-#: ../backends/eds/lib/edsf-persona-store.vala:2617
+#: ../backends/eds/lib/edsf-persona-store.vala:2768
 #, c-format
 msgid "Unknown error setting property ‘%s’: %s"
 msgstr "Galat tak dikenal saat menata properti '%s': %s"
