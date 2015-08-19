@@ -744,7 +744,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       this._notify_connection_cb_async.begin ();
     }
 
-  private async void _notify_connection_cb_async () throws GLib.Error
+  private async void _notify_connection_cb_async ()
     {
       debug ("_notify_connection_cb_async() for Tpf.PersonaStore %p ('%s').",
           this, this.id);
@@ -753,14 +753,29 @@ public class Tpf.PersonaStore : Folks.PersonaStore
           "(ID: %s)", this.id);
 
       /* Ensure the connection is prepared as necessary. */
-      yield this.account.connection.prepare_async ({
-          TelepathyGLib.Connection.get_feature_quark_contact_list (),
-          TelepathyGLib.Connection.get_feature_quark_contact_groups (),
-          TelepathyGLib.Connection.get_feature_quark_contact_info (),
-          TelepathyGLib.Connection.get_feature_quark_connected (),
-          TelepathyGLib.Connection.get_feature_quark_aliasing (),
-          0
-      });
+      try
+        {
+          yield this.account.connection.prepare_async ({
+              TelepathyGLib.Connection.get_feature_quark_contact_list (),
+              TelepathyGLib.Connection.get_feature_quark_contact_groups (),
+              TelepathyGLib.Connection.get_feature_quark_contact_info (),
+              TelepathyGLib.Connection.get_feature_quark_connected (),
+              TelepathyGLib.Connection.get_feature_quark_aliasing (),
+              0
+          });
+        }
+      catch (GLib.Error e)
+        {
+          debug ("Failed to connect CM for Tpf.PersonaStore %p ('%s'): %s",
+              this, this.id, e.message);
+
+          /* If we're disconnected, advertise personas from the cache
+           * instead. */
+          yield this._load_cache (null);
+          this._force_quiescent ();
+
+          return;
+        }
 
       if (!this.account.connection.has_interface_by_id (
           iface_quark_connection_interface_contact_list ()))
