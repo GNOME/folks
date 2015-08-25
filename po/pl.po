@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: folks\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-03-30 17:23+0200\n"
-"PO-Revision-Date: 2015-03-30 17:25+0200\n"
+"POT-Creation-Date: 2015-08-25 15:40+0200\n"
+"PO-Revision-Date: 2015-08-25 15:42+0200\n"
 "Last-Translator: Piotr Drąg <piotrdrag@gmail.com>\n"
 "Language-Team: Polish <gnomepl@aviary.pl>\n"
 "Language: pl\n"
@@ -58,8 +58,7 @@ msgstr "Błąd podczas odczytywania przesłanego pliku książki adresowej: %s"
 msgid ""
 "Error during transfer of the address book ‘%s’ from Bluetooth device ‘%s’."
 msgstr ""
-"Błąd podczas przesyłania książki adresowej \"%s\" z urządzenia Bluetooth \"%s"
-"\"."
+"Błąd podczas przesyłania książki adresowej „%s” z urządzenia Bluetooth „%s”."
 
 #: ../backends/bluez/bluez-persona-store.vala:791
 #, c-format
@@ -68,7 +67,7 @@ msgid ""
 "the user."
 msgstr ""
 "Użytkownik odmówił uprawnienia do dostępu do książki adresowej na urządzeniu "
-"Bluetooth \"%s\"."
+"Bluetooth „%s”."
 
 #. Translators: the first parameter is a Bluetooth device
 #. * alias, and the second is an error message.
@@ -76,7 +75,7 @@ msgstr ""
 #, c-format
 msgid "An OBEX address book transfer from device ‘%s’ could not be started: %s"
 msgstr ""
-"Nie można rozpocząć przesłania książki adresowej OBEX z urządzenia \"%s\": %s"
+"Nie można rozpocząć przesłania książki adresowej OBEX z urządzenia „%s”: %s"
 
 #. Translators: the first parameter is a Bluetooth device
 #. * alias, and the second is an error message.
@@ -84,7 +83,7 @@ msgstr ""
 #, c-format
 msgid "The OBEX address book transfer from device ‘%s’ failed: %s"
 msgstr ""
-"Przesłanie książki adresowej OBEX z urządzenia \"%s\" się nie powiodło: %s"
+"Przesłanie książki adresowej OBEX z urządzenia „%s” się nie powiodło: %s"
 
 #. Translators: the first parameter is a Bluetooth device
 #. * alias, and the second is an error message.
@@ -93,13 +92,13 @@ msgstr ""
 msgid ""
 "Error during transfer of the address book from Bluetooth device ‘%s’: %s"
 msgstr ""
-"Błąd podczas przesyłania książki adresowej z urządzenia Bluetooth \"%s\": %s"
+"Błąd podczas przesyłania książki adresowej z urządzenia Bluetooth „%s”: %s"
 
 #: ../backends/bluez/bluez-persona-store.vala:1073
 #, c-format
 msgid "Bluetooth device ‘%s’ disappeared during address book transfer."
 msgstr ""
-"Urządzenie Bluetooth \"%s\" zniknęło podczas przesyłania książki adresowej."
+"Urządzenie Bluetooth „%s” zniknęło podczas przesyłania książki adresowej."
 
 #. The timeout after which we consider a property change to have failed if we
 #. * haven't received a property change notification for it.
@@ -122,15 +121,15 @@ msgstr "Oznaczone gwiazdką w systemie Android"
 #, c-format
 msgid "Address book ‘%s’ is offline, so contact ‘%s’ cannot be removed."
 msgstr ""
-"Książka adresowa \"%s\" jest w trybie offline, więc nie można usunąć "
-"kontaktu \"%s\"."
+"Książka adresowa „%s” jest w trybie offline, więc nie można usunąć kontaktu "
+"„%s”."
 
 #. Translators: the first parameter is an address book
 #. * URI and the second is an error message.
 #: ../backends/eds/lib/edsf-persona-store.vala:648
 #, c-format
 msgid "Permission denied to remove contact ‘%s’: %s"
-msgstr "Brak uprawnień, aby usunąć kontakt \"%s\": %s"
+msgstr "Brak uprawnień, aby usunąć kontakt „%s”: %s"
 
 #. Translators: the parameter is an error message.
 #: ../backends/eds/lib/edsf-persona-store.vala:653
@@ -142,7 +141,7 @@ msgstr ""
 #: ../backends/eds/lib/edsf-persona-store.vala:682
 #, c-format
 msgid "Can't remove contact ‘%s’: %s"
-msgstr "Nie można usunąć kontaktu \"%s\": %s"
+msgstr "Nie można usunąć kontaktu „%s”: %s"
 
 #. Translators: the parameter is an address book
 #. * URI.
@@ -150,7 +149,7 @@ msgstr "Nie można usunąć kontaktu \"%s\": %s"
 #: ../backends/eds/lib/edsf-persona-store.vala:964
 #, c-format
 msgid "Address book ‘%s’ is offline."
-msgstr "Książka adresowa \"%s\" jest w trybie offline."
+msgstr "Książka adresowa „%s” jest w trybie offline."
 
 #. Translators: the first parameter is an address
 #. * book URI and the second is an error message.
@@ -158,14 +157,14 @@ msgstr "Książka adresowa \"%s\" jest w trybie offline."
 #: ../backends/eds/lib/edsf-persona-store.vala:969
 #, c-format
 msgid "Permission denied to open address book ‘%s’: %s"
-msgstr "Brak uprawnień, aby otworzyć książkę adresową \"%s\": %s"
+msgstr "Brak uprawnień, aby otworzyć książkę adresową „%s”: %s"
 
 #. Translators: the first parameter is an address book URI
 #. * and the second is an error message.
 #: ../backends/eds/lib/edsf-persona-store.vala:809
 #, c-format
 msgid "Couldn't open address book ‘%s’: %s"
-msgstr "Nie można otworzyć książki adresowej \"%s\": %s"
+msgstr "Nie można otworzyć książki adresowej „%s”: %s"
 
 #. Translators: the parameteter is an error message.
 #: ../backends/eds/lib/edsf-persona-store.vala:877
@@ -178,14 +177,14 @@ msgstr "Nie można uzyskać możliwości książki adresowej: %s"
 #: ../backends/eds/lib/edsf-persona-store.vala:923
 #, c-format
 msgid "Couldn't get view for address book ‘%s’."
-msgstr "Nie można uzyskać widoku dla książki adresowej \"%s\"."
+msgstr "Nie można uzyskać widoku dla książki adresowej „%s”."
 
 #. Translators: the first parameter is an address book URI
 #. * and the second is an error message.
 #: ../backends/eds/lib/edsf-persona-store.vala:1002
 #, c-format
 msgid "Couldn't get view for address book ‘%s’: %s"
-msgstr "Nie można uzyskać widoku dla książki adresowej \"%s\": %s"
+msgstr "Nie można uzyskać widoku dla książki adresowej „%s”: %s"
 
 #: ../backends/eds/lib/edsf-persona-store.vala:1305
 msgid "Creating a new contact failed due to reaching the timeout."
@@ -196,125 +195,125 @@ msgstr ""
 #. Translators: the parameter is the name of a property on a
 #. * contact, formatted in the normal GObject style (e.g.
 #. * lowercase with hyphens to separate words).
-#: ../backends/eds/lib/edsf-persona-store.vala:1458
+#: ../backends/eds/lib/edsf-persona-store.vala:1419
 #, c-format
 msgid "Changing the ‘%s’ property failed due to reaching the timeout."
 msgstr ""
-"Zmienianie właściwości \"%s\" się nie powiodło z powodu przekroczenia czasu "
+"Zmienianie właściwości „%s” się nie powiodło z powodu przekroczenia czasu "
 "oczekiwania."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1496
+#: ../backends/eds/lib/edsf-persona-store.vala:1453
 #: ../folks/avatar-details.vala:63
 msgid "Avatar is not writeable on this contact."
 msgstr "Awatar nie jest zapisywalny w tym kontakcie."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1517
+#: ../backends/eds/lib/edsf-persona-store.vala:1474
 #: ../folks/web-service-details.vala:123
 msgid "Web service addresses are not writeable on this contact."
 msgstr "Adresy usług WWW nie są zapisywalne w tym kontakcie."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1553
+#: ../backends/eds/lib/edsf-persona-store.vala:1510
 #: ../folks/url-details.vala:152
 msgid "URLs are not writeable on this contact."
 msgstr "Adresy URL nie są zapisywalne w tym kontakcie."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1634
+#: ../backends/eds/lib/edsf-persona-store.vala:1591
 #: ../folks/local-id-details.vala:64
 msgid "Local IDs are not writeable on this contact."
 msgstr "Lokalne identyfikatory nie są zapisywalne w tym kontakcie."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1663
+#: ../backends/eds/lib/edsf-persona-store.vala:1620
 msgid "The contact cannot be marked as favourite."
 msgstr "Kontakt nie może zostać oznaczony jako ulubiony."
 
 #. Translators: the parameter is an error message.
-#: ../backends/eds/lib/edsf-persona-store.vala:1735
+#: ../backends/eds/lib/edsf-persona-store.vala:1692
 #, c-format
 msgid "Can't update avatar: %s"
 msgstr "Nie można zaktualizować awatara: %s"
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1746
+#: ../backends/eds/lib/edsf-persona-store.vala:1703
 #: ../folks/email-details.vala:120
 msgid "E-mail addresses are not writeable on this contact."
 msgstr "Adresy e-mail nie są zapisywalne w tym kontakcie."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1811
+#: ../backends/eds/lib/edsf-persona-store.vala:1768
 #: ../folks/phone-details.vala:255
 msgid "Phone numbers are not writeable on this contact."
 msgstr "Numery telefonu nie są zapisywalne w tym kontakcie."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1829
+#: ../backends/eds/lib/edsf-persona-store.vala:1786
 #: ../folks/postal-address-details.vala:361
 msgid "Postal addresses are not writeable on this contact."
 msgstr "Adresy pocztowe nie są zapisywalne w tym kontakcie."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1900
+#: ../backends/eds/lib/edsf-persona-store.vala:1857
 #: ../folks/name-details.vala:454
 msgid "Full name is not writeable on this contact."
 msgstr "Imię i nazwisko nie są zapisywalne w tym kontakcie."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1922
+#: ../backends/eds/lib/edsf-persona-store.vala:1879
 #: ../folks/name-details.vala:492
 msgid "Nickname is not writeable on this contact."
 msgstr "Pseudonim nie jest zapisywalny w tym kontakcie."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1944
+#: ../backends/eds/lib/edsf-persona-store.vala:1901
 #: ../folks/note-details.vala:138
 msgid "Notes are not writeable on this contact."
 msgstr "Notatki nie są zapisywalne w tym kontakcie."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1976
+#: ../backends/eds/lib/edsf-persona-store.vala:1933
 #: ../folks/birthday-details.vala:62
 msgid "Birthday is not writeable on this contact."
 msgstr "Urodziny nie są zapisywalne w tym kontakcie."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:2020
+#: ../backends/eds/lib/edsf-persona-store.vala:1977
 #: ../folks/role-details.vala:279
 msgid "Roles are not writeable on this contact."
 msgstr "Role nie są zapisywalne w tym kontakcie."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:2121
+#: ../backends/eds/lib/edsf-persona-store.vala:2078
 #: ../folks/name-details.vala:417
 msgid "Structured name is not writeable on this contact."
 msgstr "Nazwa strukturalna nie jest zapisywalna w tym kontakcie."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:2160
+#: ../backends/eds/lib/edsf-persona-store.vala:2117
 #: ../folks/im-details.vala:136
 msgid "IM addresses are not writeable on this contact."
 msgstr "Adresy komunikatora nie są zapisywalne w tym kontakcie."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:2210
+#: ../backends/eds/lib/edsf-persona-store.vala:2167
 #: ../folks/group-details.vala:174
 msgid "Groups are not writeable on this contact."
 msgstr "Grupy nie są zapisywalne w tym kontakcie."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:2225
+#: ../backends/eds/lib/edsf-persona-store.vala:2182
 msgid "My Contacts is only available for Google Contacts"
-msgstr "\"Moje kontakty\" są dostępne tylko w kontaktach Google"
+msgstr "„Moje kontakty” są dostępne tylko w kontaktach Google"
 
-#: ../backends/eds/lib/edsf-persona-store.vala:2296
+#: ../backends/eds/lib/edsf-persona-store.vala:2253
 #: ../folks/gender-details.vala:79
 msgid "Gender is not writeable on this contact."
 msgstr "Płeć nie jest nie jest zapisywalna w tym kontakcie."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:2334
+#: ../backends/eds/lib/edsf-persona-store.vala:2291
 #: ../folks/anti-linkable.vala:84
 msgid "Anti-links are not writeable on this contact."
 msgstr "Antypowiązania nie są zapisywalne w tym kontakcie."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:2377
+#: ../backends/eds/lib/edsf-persona-store.vala:2334
 #: ../folks/location-details.vala:135
 msgid "Location is not writeable on this contact."
 msgstr "Położenie nie jest zapisywalne w tym kontakcie."
 
 #. Translators: the first parameter is an error message.
-#: ../backends/eds/lib/edsf-persona-store.vala:2701
+#: ../backends/eds/lib/edsf-persona-store.vala:2658
 #, c-format
 msgid "Permission denied when creating new contact: %s"
 msgstr "Brak uprawnień, aby utworzyć nowy kontakt: %s"
 
 #. Translators: the first parameter is an error message.
-#: ../backends/eds/lib/edsf-persona-store.vala:2706
+#: ../backends/eds/lib/edsf-persona-store.vala:2663
 #, c-format
 msgid "Address book is offline and a new contact cannot be created: %s"
 msgstr ""
@@ -324,19 +323,19 @@ msgstr ""
 #. Translators: the first parameter is a non-human-readable
 #. * property name and the second parameter is an error
 #. * message.
-#: ../backends/eds/lib/edsf-persona-store.vala:2715
+#: ../backends/eds/lib/edsf-persona-store.vala:2672
 #, c-format
 msgid "New contact is not writeable: %s"
 msgstr "Nowy kontakt nie jest zapisywalny: %s"
 
 #. Translators: the first parameter is an error message.
-#: ../backends/eds/lib/edsf-persona-store.vala:2719
+#: ../backends/eds/lib/edsf-persona-store.vala:2676
 #, c-format
 msgid "Invalid value in contact: %s"
 msgstr "Nieprawidłowa wartość w kontakcie: %s"
 
 #. Translators: the first parameter is an error message.
-#: ../backends/eds/lib/edsf-persona-store.vala:2743
+#: ../backends/eds/lib/edsf-persona-store.vala:2700
 #, c-format
 msgid "Unknown error adding contact: %s"
 msgstr "Nieznany błąd podczas dodawania kontaktu: %s"
@@ -344,53 +343,53 @@ msgstr "Nieznany błąd podczas dodawania kontaktu: %s"
 #. Translators: the first parameter is a non-human-readable
 #. * property name and the second parameter is an error
 #. * message.
-#: ../backends/eds/lib/edsf-persona-store.vala:2776
+#: ../backends/eds/lib/edsf-persona-store.vala:2733
 #, c-format
 msgid "Property ‘%s’ is not writeable: %s"
-msgstr "Właściwość \"%s\" nie jest zapisywalna: %s"
+msgstr "Właściwość „%s” nie jest zapisywalna: %s"
 
 #. Translators: the first parameter is a non-human-readable
 #. * property name and the second parameter is an error
 #. * message.
-#: ../backends/eds/lib/edsf-persona-store.vala:2785
+#: ../backends/eds/lib/edsf-persona-store.vala:2742
 #, c-format
 msgid "Invalid value for property ‘%s’: %s"
-msgstr "Nieprawidłowa wartość dla właściwości \"%s\": %s"
+msgstr "Nieprawidłowa wartość dla właściwości „%s”: %s"
 
 #. Translators: the first parameter is a non-human-readable
 #. * property name and the second parameter is an error message.
-#: ../backends/eds/lib/edsf-persona-store.vala:2811
+#: ../backends/eds/lib/edsf-persona-store.vala:2768
 #, c-format
 msgid "Unknown error setting property ‘%s’: %s"
-msgstr "Nieznany błąd podczas ustawiania właściwości \"%s\": %s"
+msgstr "Nieznany błąd podczas ustawiania właściwości „%s”: %s"
 
 #. Translators: the first parameter is a filename, and
 #. * the second is an error message.
 #: ../backends/key-file/kf-persona-store.vala:234
 #, c-format
 msgid "The relationship key file '%s' could not be loaded: %s"
-msgstr "Nie można wczytać pliku klucza powiązania \"%s\": %s"
+msgstr "Nie można wczytać pliku klucza powiązania „%s”: %s"
 
 #. Translators: the first parameter is a path, and the
 #. * second is an error message.
 #: ../backends/key-file/kf-persona-store.vala:256
 #, c-format
 msgid "The relationship key file directory '%s' could not be created: %s"
-msgstr "Nie można utworzyć katalogu pliku klucza powiązania \"%s\": %s"
+msgstr "Nie można utworzyć katalogu pliku klucza powiązania „%s”: %s"
 
 #. Translators: the first parameter is a filename, and
 #. * the second is an error message.
 #: ../backends/key-file/kf-persona-store.vala:280
 #, c-format
 msgid "The relationship key file '%s' could not be created: %s"
-msgstr "Nie można utworzyć pliku klucza powiązania \"%s\": %s"
+msgstr "Nie można utworzyć pliku klucza powiązania „%s”: %s"
 
 #. Translators: the first parameter is a filename, the second is
 #. * an error message.
 #: ../backends/key-file/kf-persona-store.vala:471
 #, c-format
 msgid "Could not write updated key file '%s': %s"
-msgstr "Nie można zapisać zaktualizowanego pliku klucza \"%s\": %s"
+msgstr "Nie można zapisać zaktualizowanego pliku klucza „%s”: %s"
 
 #. Translators: this is an error message for if the user
 #. * provides an invalid IM address. The first parameter is
@@ -400,7 +399,7 @@ msgstr "Nie można zapisać zaktualizowanego pliku klucza \"%s\": %s"
 #: ../backends/key-file/kf-persona.vala:174
 #, c-format
 msgid "Invalid IM address ‘%s’ for protocol ‘%s’: %s"
-msgstr "Nieprawidłowy adres komunikatora \"%s\" dla protokołu \"%s\": %s"
+msgstr "Nieprawidłowy adres komunikatora „%s” dla protokołu „%s”: %s"
 
 #. Translators: the parameter is an error message.
 #: ../backends/key-file/kf-persona.vala:432
@@ -437,48 +436,48 @@ msgstr ""
 "nieaktywny. oFono nie jest zainstalowane lub usługa nie może zostać "
 "uruchomiona."
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1248
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1263
 msgid "Telepathy contacts representing the local user may not be removed."
 msgstr ""
 "Kontakty Telepathy reprezentujące lokalnego użytkownika nie mogą być usuwane."
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1259
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1274
 #, c-format
 msgid "Failed to remove a persona from store: %s"
 msgstr "Usunięcie osoby z przechowalni się nie powiodło: %s"
 
 #. Translators: the first two parameters are store identifiers and
 #. * the third is a contact identifier.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1294
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1309
 #, c-format
 msgid ""
 "Persona store (%s, %s) requires the following details:\n"
 "    contact (provided: '%s')\n"
 msgstr ""
 "Przechowalnia osoby (%s, %s) wymaga następujących informacji:\n"
-"    contact (dostarczono: \"%s\")\n"
+"    contact (dostarczono: „%s”)\n"
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1309
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1324
 msgid "Cannot create a new Telepathy contact while offline."
 msgstr ""
 "Nie można utworzyć nowego kontaktu Telepathy podczas działania w trybie "
 "offline."
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1327
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1342
 #, c-format
 msgid "Failed to add a persona from details: %s"
 msgstr "Dodanie osoby z informacji się nie powiodło: %s"
 
 #. Translators: "telepathy-logger" is the name of an application,
 #. * and should not be translated.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1347
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1362
 msgid ""
 "Failed to change favorite without a connection to the telepathy-logger "
 "service."
 msgstr ""
 "Zmiana ulubionych bez połączenia z usługą telepathy-logger się nie powiodła."
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1353
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1368
 msgid ""
 "Failed to change favorite status of Telepathy Persona because it has no "
 "attached TpContact."
@@ -487,25 +486,24 @@ msgstr ""
 "posiada ona dołączonego TpContact."
 
 #. Translators: the parameter is a contact identifier.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1371
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1386
 #, c-format
 msgid "Failed to change favorite status for Telepathy contact ‘%s’."
-msgstr ""
-"Zmiana ulubionego stanu dla kontaktu Telepathy \"%s\" się nie powiodła."
+msgstr "Zmiana ulubionego stanu dla kontaktu Telepathy „%s” się nie powiodła."
 
 #. Translators: the parameter is an error message.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1403
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1418
 #, c-format
 msgid "Failed to change contact's alias: %s"
 msgstr "Zmiana pseudonimu kontaktu się nie powiodła: %s"
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1484
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1499
 msgid "Extended information may only be set on the user's Telepathy contact."
 msgstr ""
 "Rozszerzone informacje mogą być ustawiane tylko w kontakcie Telepathy "
 "użytkownika."
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1513
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1528
 msgid ""
 "Extended information cannot be written because the store is disconnected."
 msgstr ""
@@ -533,7 +531,7 @@ msgstr "Konto jest w trybie offline."
 #: ../backends/tracker/lib/trf-persona-store.vala:743
 #, c-format
 msgid "Unrecognized parameter '%s' passed to persona store '%s'."
-msgstr "Nierozpoznany parametr \"%s\" przekazany do przechowalni osoby \"%s\"."
+msgstr "Nierozpoznany parametr „%s” przekazany do przechowalni osoby „%s”."
 
 #: ../folks/alias-details.vala:61
 msgid "Alias is not writeable on this contact."
@@ -544,7 +542,7 @@ msgstr "Alias nie jest zapisywalny w tym kontakcie."
 #: ../folks/backend-store.vala:654
 #, c-format
 msgid "Error listing contents of folder '%s': %s"
-msgstr "Błąd podczas wyświetlania listy zawartości katalogu \"%s\": %s"
+msgstr "Błąd podczas wyświetlania listy zawartości katalogu „%s”: %s"
 
 #. Translators: the first parameter is a folder path and the second
 #. * is an error message.
@@ -552,20 +550,20 @@ msgstr "Błąd podczas wyświetlania listy zawartości katalogu \"%s\": %s"
 #, c-format
 msgid "Error querying info for target ‘%s’ of symlink ‘%s’: %s"
 msgstr ""
-"Błąd podczas odpytywania informacji o celu \"%s\" dowiązania symbolicznego "
-"\"%s\": %s"
+"Błąd podczas odpytywania informacji o celu „%s” dowiązania symbolicznego "
+"„%s”: %s"
 
 #. Translators: the parameter is a filename.
 #: ../folks/backend-store.vala:823
 #, c-format
 msgid "File or directory '%s' does not exist."
-msgstr "Plik lub katalog \"%s\" nie istnieje."
+msgstr "Plik lub katalog „%s” nie istnieje."
 
 #. Translators: the parameter is a filename.
 #: ../folks/backend-store.vala:829
 #, c-format
 msgid "Failed to get content type for '%s'."
-msgstr "Uzyskanie typu treści dla \"%s\" się nie powiodło."
+msgstr "Uzyskanie typu treści dla „%s” się nie powiodło."
 
 #: ../folks/birthday-details.vala:93
 msgid "Birthday event ID is not writeable on this contact."
@@ -584,21 +582,21 @@ msgstr "Ulubiony stan nie jest zapisywalny w tym kontakcie."
 #: ../folks/im-details.vala:214 ../folks/im-details.vala:241
 #, c-format
 msgid "The IM address '%s' could not be understood."
-msgstr "Nie można przetworzyć adresu komunikatora \"%s\"."
+msgstr "Nie można przetworzyć adresu komunikatora „%s”."
 
 #. Translators: the first parameter is a persona store identifier
 #. * and the second is an error message.
 #: ../folks/individual-aggregator.vala:1063
 #, c-format
 msgid "Error preparing persona store '%s': %s"
-msgstr "Błąd podczas przygotowywania przechowalni osoby \"%s\": %s"
+msgstr "Błąd podczas przygotowywania przechowalni osoby „%s”: %s"
 
 #. Translators: the parameter is a property name.
 #: ../folks/individual-aggregator.vala:1294
 #: ../folks/individual-aggregator.vala:1567
 #, c-format
 msgid "Unknown property '%s' in linkable property list."
-msgstr "Nieznana właściwość \"%s\" na liście dowiązywalnych właściwości."
+msgstr "Nieznana właściwość „%s” na liście dowiązywalnych właściwości."
 
 #. Translators: the first parameter is a store identifier
 #. * and the second parameter is an error message.
@@ -606,7 +604,7 @@ msgstr "Nieznana właściwość \"%s\" na liście dowiązywalnych właściwości
 #, c-format
 msgid "Failed to add contact for persona store ID '%s': %s"
 msgstr ""
-"Dodanie kontaktu dla identyfikatora przechowalni osoby \"%s\" się nie "
+"Dodanie kontaktu dla identyfikatora przechowalni osoby „%s” się nie "
 "powiodło: %s"
 
 #: ../folks/individual-aggregator.vala:2150
@@ -620,7 +618,7 @@ msgid ""
 "Persona store ‘%s:%s’ is configured as primary, but could not be found or "
 "failed to load."
 msgstr ""
-"Przechowalnia osób \"%s:%s\" jest skonfigurowana jako główna, ale nie można "
+"Przechowalnia osób „%s:%s” jest skonfigurowana jako główna, ale nie można "
 "jej odnaleźć lub wczytanie się nie powiodło."
 
 #: ../folks/individual-aggregator.vala:2152
@@ -631,7 +629,7 @@ msgid ""
 "service or using the “%s” GSettings key."
 msgstr ""
 "Proszę sprawdzić, czy odpowiednia usługa jest uruchomiona, albo zmienić "
-"domyślną przechowalnię w tej usłudze lub używając klucza GSettings \"%s\"."
+"domyślną przechowalnię w tej usłudze lub używając klucza GSettings „%s”."
 
 #: ../folks/individual-aggregator.vala:2184
 msgid "Anti-links can't be removed between personas being linked."
@@ -645,7 +643,7 @@ msgstr "Nie można dodać osób bez głównej przechowalni."
 #, c-format
 msgid "Can't write to requested property (“%s”) of the writeable store."
 msgstr ""
-"Nie można zapisać do żądanej właściwości (\"%s\") zapisywalnej przechowalni."
+"Nie można zapisać do żądanej właściwości („%s”) zapisywalnej przechowalni."
 
 #: ../folks/individual.vala:217 ../folks/individual.vala:403
 #: ../folks/individual.vala:512 ../folks/individual.vala:763
@@ -653,8 +651,7 @@ msgstr ""
 #, c-format
 msgid "Failed to change property ‘%s’: No suitable personas were found."
 msgstr ""
-"Zmiana właściwości \"%s\" się nie powiodła: nie odnaleziono odpowiednich "
-"osób."
+"Zmiana właściwości „%s” się nie powiodła: nie odnaleziono odpowiednich osób."
 
 #. Translators: This is the default name for an Individual
 #. * when displayed in the UI if no personal details are available
@@ -719,7 +716,7 @@ msgstr ""
 "Identyfikator przechowalni osób, którą program folks powinien używać jako "
 "głową (tzn. do przechowywania danych powiązania). Identyfikator typu "
 "przechowalni, oddzielony przecinkiem, może zostać opcjonalnie dodany. Na "
-"przykład: \"eds:system-address-book\" lub \"key-file\"."
+"przykład: „eds:system-address-book” lub „key-file”."
 
 #: ../folks/postal-address-details.vala:231
 #, c-format
@@ -786,7 +783,7 @@ msgstr "Nie można odczytać pliku %s."
 #: ../tools/import-pidgin.vala:82
 #, c-format
 msgid "The Pidgin buddy list file '%s' could not be loaded."
-msgstr "Nie można wczytać pliku listy znajomych programu Pidgin \"%s\"."
+msgstr "Nie można wczytać pliku listy znajomych programu Pidgin „%s”."
 
 #. Translators: the parameter is a filename.
 #: ../tools/import-pidgin.vala:97
@@ -795,7 +792,7 @@ msgid ""
 "The Pidgin buddy list file ‘%s’ could not be loaded: the root element could "
 "not be found or was not recognized."
 msgstr ""
-"Nie można wczytać pliku listy znajomych programu Pidgin \"%s\": nie można "
+"Nie można wczytać pliku listy znajomych programu Pidgin „%s”: nie można "
 "odnaleźć lub rozpoznać elementu głównego."
 
 #. Translators: the first parameter is the number of buddies which
@@ -804,16 +801,16 @@ msgstr ""
 #, c-format
 msgid "Imported %u buddy from '%s'."
 msgid_plural "Imported %u buddies from '%s'."
-msgstr[0] "Zaimportowano %u znajomego z \"%s\"."
-msgstr[1] "Zaimportowano %u znajomych z \"%s\"."
-msgstr[2] "Zaimportowano %u znajomych z \"%s\"."
+msgstr[0] "Zaimportowano %u znajomego z „%s”."
+msgstr[1] "Zaimportowano %u znajomych z „%s”."
+msgstr[2] "Zaimportowano %u znajomych z „%s”."
 
 #. Translators: the first parameter is a persona identifier,
 #. * and the second is an error message.
 #: ../tools/import-pidgin.vala:164
 #, c-format
 msgid "Error changing group of contact ‘%s’: %s"
-msgstr "Błąd podczas zmieniania grupy kontaktu \"%s\": %s"
+msgstr "Błąd podczas zmieniania grupy kontaktu „%s”: %s"
 
 #. Translators: the parameter is the buddy's IM address.
 #: ../tools/import-pidgin.vala:221
@@ -832,7 +829,7 @@ msgid ""
 "%s\n"
 "Error: %s\n"
 msgstr ""
-"Utworzenie nowego kontaktu dla znajomego o pseudonimie \"%s\" i adresach "
+"Utworzenie nowego kontaktu dla znajomego o pseudonimie „%s” i adresach "
 "komunikatora się nie powiodło:\n"
 "%s\n"
 "Błąd: %s\n"
@@ -846,13 +843,13 @@ msgid ""
 "Created contact ‘%s’ for buddy with alias ‘%s’ and IM addresses:\n"
 "%s"
 msgstr ""
-"Utworzono kontakt \"%s\" dla znajomego o pseudonimie \"%s\" i adresach "
+"Utworzono kontakt „%s” dla znajomego o pseudonimie „%s” i adresach "
 "komunikatora:\n"
 "%s"
 
 #: ../tools/import.vala:44
 msgid "Source backend name (default: 'pidgin')"
-msgstr "Nazwa mechanizmu źródłowego (domyślnie: \"pidgin\")"
+msgstr "Nazwa mechanizmu źródłowego (domyślnie: „pidgin”)"
 
 #: ../tools/import.vala:47
 msgid "Source filename (default: specific to source backend)"
@@ -878,25 +875,25 @@ msgstr "Nie można wczytać mechanizmów: %s"
 #: ../tools/import.vala:120
 #, c-format
 msgid "Couldn't load the ‘%s’ backend."
-msgstr "Nie można wczytać mechanizmu \"%s\"."
+msgstr "Nie można wczytać mechanizmu „%s”."
 
 #. Translators: the first parameter is a backend identifier and the
 #. * second parameter is an error message.
 #: ../tools/import.vala:133
 #, c-format
 msgid "Couldn't prepare the ‘%s’ backend: %s"
-msgstr "Nie można przygotować mechanizmu \"%s\": %s"
+msgstr "Nie można przygotować mechanizmu „%s”: %s"
 
 #. Translators: the parameter is a backend identifier.
 #: ../tools/import.vala:146
 #, c-format
 msgid "Couldn't load the ‘%s’ backend's persona store."
-msgstr "Nie można wczytać przechowalni osoby mechanizmu \"%s\"."
+msgstr "Nie można wczytać przechowalni osoby mechanizmu „%s”."
 
 #: ../tools/import.vala:167
 #, c-format
 msgid "Couldn't prepare the ‘%s’ backend's persona store: %s"
-msgstr "Nie można przygotować przechowalni osoby mechanizmu \"%s\": %s"
+msgstr "Nie można przygotować przechowalni osoby mechanizmu „%s”: %s"
 
 #. Translators: the parameter is an error message.
 #: ../tools/import.vala:185
@@ -911,5 +908,5 @@ msgid ""
 "Unrecognized source backend name ‘%s’. ‘%s’ is currently the only supported "
 "source backend."
 msgstr ""
-"Nierozpoznana nazwa mechanizmu źródłowego \"%s\". Obecnie jest obsługiwany "
-"tylko mechanizm źródłowy \"%s\"."
+"Nierozpoznana nazwa mechanizmu źródłowego „%s”. Obecnie jest obsługiwany "
+"tylko mechanizm źródłowy „%s”."
