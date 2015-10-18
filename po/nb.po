@@ -5,10 +5,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: folks 3.17.x\n"
+"Project-Id-Version: folks 3.18.x\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-20 12:47+0200\n"
-"PO-Revision-Date: 2015-09-20 12:49+0200\n"
+"POT-Creation-Date: 2015-10-18 19:16+0200\n"
+"PO-Revision-Date: 2015-10-18 19:21+0200\n"
 "Last-Translator: Kjartan Maraas <kmaraas@gnome.org>\n"
 "Language-Team: Norwegian bokmål <i18n-nb@lister.ping.uio.no>\n"
 "Language: \n"
@@ -60,14 +60,14 @@ msgstr "Bruker nektet tilgang til adressebok på Bluetooth-enhet «%s»."
 #: ../backends/bluez/bluez-persona-store.vala:798
 #, c-format
 msgid "An OBEX address book transfer from device ‘%s’ could not be started: %s"
-msgstr ""
+msgstr "Kunne ikke starte en OBEX adressebokoverføring fra enhet «%s»: %s"
 
 #. Translators: the first parameter is a Bluetooth device
 #. * alias, and the second is an error message.
 #: ../backends/bluez/bluez-persona-store.vala:838
 #, c-format
 msgid "The OBEX address book transfer from device ‘%s’ failed: %s"
-msgstr ""
+msgstr "OBEX adressebokoverføring fra enhet «%s» feilet: %s"
 
 #. Translators: the first parameter is a Bluetooth device
 #. * alias, and the second is an error message.
@@ -75,7 +75,7 @@ msgstr ""
 #, c-format
 msgid ""
 "Error during transfer of the address book from Bluetooth device ‘%s’: %s"
-msgstr ""
+msgstr "Feil under overføring av adressebok fra Bluetooth-enhet «%s»: %s"
 
 #: ../backends/bluez/bluez-persona-store.vala:1073
 #, c-format
