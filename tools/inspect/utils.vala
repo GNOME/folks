@@ -123,7 +123,11 @@ private class Folks.Inspect.Utils
           individual.id, individual.personas.size);
 
       /* List the Individual's properties */
+#if VALA_0_32
+      (unowned ParamSpec)[] properties =
+#else
       unowned ParamSpec[] properties =
+#endif
           individual.get_class ().list_properties ();
 
       Utils.indent ();
@@ -163,7 +167,11 @@ private class Folks.Inspect.Utils
       Utils.print_line ("Persona '%s':", persona.uid);
 
       /* List the Persona's properties */
+#if VALA_0_32
+      (unowned ParamSpec)[] properties =
+#else
       unowned ParamSpec[] properties =
+#endif
           persona.get_class ().list_properties ();
 
       Utils.indent ();
@@ -200,7 +208,11 @@ private class Folks.Inspect.Utils
           store.id, store.personas.size);
 
       /* List the store's properties */
+#if VALA_0_32
+      (unowned ParamSpec)[] properties =
+#else
       unowned ParamSpec[] properties =
+#endif
           store.get_class ().list_properties ();
 
       Utils.indent ();
