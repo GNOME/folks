@@ -1,9 +1,9 @@
 # If not 1, append datestamp to the version number
-m4_define([folks_released], [1])
+m4_define([folks_released], [0])
 
 m4_define([folks_major_version], [0])
 m4_define([folks_minor_version], [11])
-m4_define([folks_micro_version], [2])
+m4_define([folks_micro_version], [3])
 m4_define([folks_nano_version], [0])
 
 # Core library LT version. When updating this, don't forget to bump the backend
