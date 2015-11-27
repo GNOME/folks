@@ -1,13 +1,13 @@
 Overview of changes from libfolks 0.11.1 to libfolks 0.11.2
 ===========================================================
 
-Dependencies:
-
 Major changes:
+ • Lots of translation updates
+ • Various EDS unit test fixes, improvements and simplifications
+ • Improve Telepathy error handling on connection failure of a CM to avoid timeouts
 
 Bugs fixed:
-
-API changes:
+ • Bug 751044 — addressbook: Treat an empty vCard attribute group name as NULL
 
 Overview of changes from libfolks 0.11.0 to libfolks 0.11.1
 ===========================================================
