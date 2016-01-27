@@ -302,7 +302,7 @@ case "x$enable_zeitgeist" in
     AC_MSG_ERROR([Unknown --enable-zeitgeist argument: $enable_zeitgeist])
 esac
 
-AS_IF([test "x$have_zeitgeist" == "xyes"], [
+AS_IF([test "x$have_zeitgeist" = "xyes"], [
    ZEITGEIST_VALAFLAGS="-D HAVE_ZEITGEIST"
    AC_SUBST([ZEITGEIST_VALAFLAGS])
    ZEITGEIST_PKG="--pkg zeitgeist-2.0"
@@ -456,7 +456,7 @@ AS_IF([test "x$enable_vala" = "xyes"], [
 
         AS_IF([test x$enable_telepathy_backend = xyes], [
           VALA_CHECK_PACKAGES([telepathy-glib])
-	  AS_IF([test "x$have_zeitgeist" == "xyes"], [
+	  AS_IF([test "x$have_zeitgeist" = "xyes"], [
 	      VALA_CHECK_PACKAGES([zeitgeist-2.0])
 	  ])
         ])
