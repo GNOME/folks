@@ -379,6 +379,7 @@ AC_ARG_ENABLE([vala],
               [enable_vala=no])
 
 # http://people.gnome.org/~walters/docs/build-api.txt
+#
 # We don't support separate builddir when building from git;
 # The automake vala rules run cd srcdir which screws up the
 # top_srcdir variable references.
