@@ -7,8 +7,8 @@ msgstr ""
 "Project-Id-Version: folks master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=folks&k"
 "eywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2016-03-13 18:25+0000\n"
-"PO-Revision-Date: 2016-05-08 18:15+0200\n"
+"POT-Creation-Date: 2016-05-19 05:37+0000\n"
+"PO-Revision-Date: 2016-05-29 20:34+0200\n"
 "Last-Translator: Cédric Valmary (totenoc.eu) <cvalmary@yahoo.fr>\n"
 "Language-Team: Tot En Òc\n"
 "Language: oc\n"
@@ -189,7 +189,6 @@ msgid "Couldn't get view for address book ‘%s’: %s"
 msgstr "Impossible d'obténer la vista pel quasernet d'adreças « %s » : %s"
 
 #: ../backends/eds/lib/edsf-persona-store.vala:1305
-#| msgid "Changing the ‘%s’ property failed due to reaching the timeout."
 msgid "Creating a new contact failed due to reaching the timeout."
 msgstr ""
 "La creacion d'un contacte novèl a fracassat en rason d'un relambi d'espèra "
@@ -315,14 +314,12 @@ msgstr "La posicion es pas modificabla per aqueste contacte."
 #. Translators: the first parameter is an error message.
 #: ../backends/eds/lib/edsf-persona-store.vala:2658
 #, c-format
-#| msgid "Permission denied to remove contact ‘%s’: %s"
 msgid "Permission denied when creating new contact: %s"
 msgstr "Permission refusada de suprimir lo contacte : %s"
 
 #. Translators: the first parameter is an error message.
 #: ../backends/eds/lib/edsf-persona-store.vala:2663
 #, c-format
-#| msgid "Address book ‘%s’ is offline, so contact ‘%s’ cannot be removed."
 msgid "Address book is offline and a new contact cannot be created: %s"
 msgstr ""
 "Lo quasernet d'adreças es fòra linha e lo contacte novèl pòt pas èsser "
@@ -333,21 +330,18 @@ msgstr ""
 #. * message.
 #: ../backends/eds/lib/edsf-persona-store.vala:2672
 #, c-format
-#| msgid "Property ‘%s’ is not writeable: %s"
 msgid "New contact is not writeable: %s"
 msgstr "Lo contacte novèl es pas inscriptible : %s"
 
 #. Translators: the first parameter is an error message.
 #: ../backends/eds/lib/edsf-persona-store.vala:2676
 #, c-format
-#| msgid "Invalid value for property ‘%s’: %s"
 msgid "Invalid value in contact: %s"
 msgstr "Valor invalida dins lo contacte : %s"
 
 #. Translators: the first parameter is an error message.
 #: ../backends/eds/lib/edsf-persona-store.vala:2700
 #, c-format
-#| msgid "Error importing contacts: %s"
 msgid "Unknown error adding contact: %s"
 msgstr "Error desconeguda a l'apondon d'un contact : %s"
 
@@ -587,7 +581,6 @@ msgstr ""
 "L'ID de l'eveniment anniversari es pas modificable per aqueste contacte."
 
 #: ../folks/extended-info.vala:133 ../folks/extended-info.vala:149
-#| msgid "Notes are not writeable on this contact."
 msgid "Extended fields are not writeable on this contact."
 msgstr "Los camps espandits son pas modificablas per aqueste contacte."
 
@@ -711,7 +704,7 @@ msgstr "Persona sens nom"
 #. * page if it’s suitable.
 #. *
 #. * More explicitly: the supported placeholders are %f, %F, %g, %G, %m, %M,
-#. * %t. The romanisation modificar (e.g. %Rf) is recognized but ignored.
+#. * %t. The romanisation modifier (e.g. %Rf) is recognized but ignored.
 #. * %s, %S and %d are all replaced by the same thing (the ‘Honorific
 #. * Prefixes’ from vCard) so please avoid using more than one.
 #. *
@@ -781,7 +774,6 @@ msgstr "Amagat"
 
 #: ../folks/role-details.vala:150
 #, c-format
-#| msgid "Title: %s, Organizacion: %s, Role: %s"
 msgid "Title: %s, Organisation: %s, Role: %s"
 msgstr "Títol : %s, organizacion : %s, ròtle : %s"
 
