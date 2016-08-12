@@ -9,7 +9,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=folks&keywords=I18N+L10N&component=general\n"
 "POT-Creation-Date: 2016-08-02 14:45+0000\n"
-"PO-Revision-Date: 2016-08-12 10:40+0200\n"
+"PO-Revision-Date: 2016-08-12 10:55+0200\n"
 "Language-Team: Friulian <fur@li.org>\n"
 "Language: fur\n"
 "MIME-Version: 1.0\n"
@@ -128,7 +128,8 @@ msgstr "Permès dineât par gjavâ il contat '%s': %s"
 #: ../backends/eds/lib/edsf-persona-store.vala:653
 #, c-format
 msgid "Removing contacts isn't supported by this persona store: %s"
-msgstr "La rimozion dai contats no je supuartade di chest archivi personâl: %s"
+msgstr ""
+"La rimozion dai contats no je supuartade di chest archivi di contats: %s"
 
 #: ../backends/eds/lib/edsf-persona-store.vala:682
 #, c-format
@@ -420,15 +421,18 @@ msgid ""
 "No oFono object manager running, so the oFono backend will be inactive. "
 "Either oFono isn’t installed or the service can’t be started."
 msgstr ""
+"Nissun gjestôr di ogjets oFono in esecuzion, duncje il backend oFono al sarà "
+"inatîf. O oFono nol è instalât o il servizi nol pues jessi inviât."
 
 #: ../backends/telepathy/lib/tpf-persona-store.vala:1263
 msgid "Telepathy contacts representing the local user may not be removed."
 msgstr ""
+"I contats Telepathy che a rapresentin l'utent locâl no puedin jessi gjavâts."
 
 #: ../backends/telepathy/lib/tpf-persona-store.vala:1274
 #, c-format
 msgid "Failed to remove a persona from store: %s"
-msgstr ""
+msgstr "No si è rivâts a gjavâ un contat dal archivi: %s"
 
 #. Translators: the first two parameters are store identifiers and
 #. * the third is a contact identifier.
@@ -438,15 +442,17 @@ msgid ""
 "Persona store (%s, %s) requires the following details:\n"
 "    contact (provided: '%s')\n"
 msgstr ""
+"L'archivi di contats (%s, %s) al à bisugne dai detais chi daurman:\n"
+"    contat (furnît di: '%s')\n"
 
 #: ../backends/telepathy/lib/tpf-persona-store.vala:1324
 msgid "Cannot create a new Telepathy contact while offline."
-msgstr ""
+msgstr "Impussibil creâ un gnûf contat Telepathy cuant che no si è in linie."
 
 #: ../backends/telepathy/lib/tpf-persona-store.vala:1342
 #, c-format
 msgid "Failed to add a persona from details: %s"
-msgstr ""
+msgstr "No si è rivâts a zontâ un contat dai detais: %s"
 
 #. Translators: "telepathy-logger" is the name of an application,
 #. * and should not be translated.
