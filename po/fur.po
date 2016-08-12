@@ -9,7 +9,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=folks&keywords=I18N+L10N&component=general\n"
 "POT-Creation-Date: 2016-08-02 14:45+0000\n"
-"PO-Revision-Date: 2016-08-12 10:13+0200\n"
+"PO-Revision-Date: 2016-08-12 10:40+0200\n"
 "Language-Team: Friulian <fur@li.org>\n"
 "Language: fur\n"
 "MIME-Version: 1.0\n"
@@ -115,7 +115,7 @@ msgstr "Starred in Android"
 #, c-format
 msgid "Address book ‘%s’ is offline, so contact ‘%s’ cannot be removed."
 msgstr ""
-"La rubriche '%s' no je in rêt, duncje nol è pussibil gjavâ il contat '%s'"
+"La rubriche '%s' no je in linie, duncje nol è pussibil gjavâ il contat '%s'"
 
 #. Translators: the first parameter is an address book
 #. * URI and the second is an error message.
@@ -141,7 +141,7 @@ msgstr "Impussibil gjavâ il contat '%s': %s"
 #: ../backends/eds/lib/edsf-persona-store.vala:964
 #, c-format
 msgid "Address book ‘%s’ is offline."
-msgstr "La rubriche '%s' no je in rêt."
+msgstr "La rubriche '%s' no je in linie."
 
 #. Translators: the first parameter is an address
 #. * book URI and the second is an error message.
@@ -279,34 +279,34 @@ msgstr "I grups no si puedin scrivi in chest contat."
 
 #: ../backends/eds/lib/edsf-persona-store.vala:2182
 msgid "My Contacts is only available for Google Contacts"
-msgstr ""
+msgstr "\"Miei contats\" al è disponibil nome pai Contats Google"
 
 #: ../backends/eds/lib/edsf-persona-store.vala:2253
 #: ../folks/gender-details.vala:79
 msgid "Gender is not writeable on this contact."
-msgstr ""
+msgstr "Il gjenar no si pues scrivi in chest contat."
 
 #: ../backends/eds/lib/edsf-persona-store.vala:2291
 #: ../folks/anti-linkable.vala:84
 msgid "Anti-links are not writeable on this contact."
-msgstr ""
+msgstr "I Anti-links no si puedin scrivi in chest contat."
 
 #: ../backends/eds/lib/edsf-persona-store.vala:2334
 #: ../folks/location-details.vala:135
 msgid "Location is not writeable on this contact."
-msgstr ""
+msgstr "La posizion no si pues scrivi in chest contat."
 
 #. Translators: the first parameter is an error message.
 #: ../backends/eds/lib/edsf-persona-store.vala:2658
 #, c-format
 msgid "Permission denied when creating new contact: %s"
-msgstr ""
+msgstr "Permès dineât tal creâ il gnûf contat: %s"
 
 #. Translators: the first parameter is an error message.
 #: ../backends/eds/lib/edsf-persona-store.vala:2663
 #, c-format
 msgid "Address book is offline and a new contact cannot be created: %s"
-msgstr ""
+msgstr "La rubriche no je in linie e nol è pussibil creâ un gnûf contat: %s"
 
 #. Translators: the first parameter is a non-human-readable
 #. * property name and the second parameter is an error
@@ -314,19 +314,19 @@ msgstr ""
 #: ../backends/eds/lib/edsf-persona-store.vala:2672
 #, c-format
 msgid "New contact is not writeable: %s"
-msgstr ""
+msgstr "No si pues scrivi sul gnûf contat: %s"
 
 #. Translators: the first parameter is an error message.
 #: ../backends/eds/lib/edsf-persona-store.vala:2676
 #, c-format
 msgid "Invalid value in contact: %s"
-msgstr ""
+msgstr "Valôr no valit tal contat: %s"
 
 #. Translators: the first parameter is an error message.
 #: ../backends/eds/lib/edsf-persona-store.vala:2700
 #, c-format
 msgid "Unknown error adding contact: %s"
-msgstr ""
+msgstr "Erôr no cognossût tal zontâ il contat: %s"
 
 #. Translators: the first parameter is a non-human-readable
 #. * property name and the second parameter is an error
@@ -334,7 +334,7 @@ msgstr ""
 #: ../backends/eds/lib/edsf-persona-store.vala:2733
 #, c-format
 msgid "Property ‘%s’ is not writeable: %s"
-msgstr ""
+msgstr "No si pues scrivi su la proprietât '%s': %s"
 
 #. Translators: the first parameter is a non-human-readable
 #. * property name and the second parameter is an error
@@ -342,42 +342,42 @@ msgstr ""
 #: ../backends/eds/lib/edsf-persona-store.vala:2742
 #, c-format
 msgid "Invalid value for property ‘%s’: %s"
-msgstr ""
+msgstr "Valôr no valit pe proprietât '%s': %s"
 
 #. Translators: the first parameter is a non-human-readable
 #. * property name and the second parameter is an error message.
 #: ../backends/eds/lib/edsf-persona-store.vala:2768
 #, c-format
 msgid "Unknown error setting property ‘%s’: %s"
-msgstr ""
+msgstr "Erôr no cognossût tal stabilî la proprietât '%s' : %s"
 
 #. Translators: the first parameter is a filename, and
 #. * the second is an error message.
 #: ../backends/key-file/kf-persona-store.vala:234
 #, c-format
 msgid "The relationship key file '%s' could not be loaded: %s"
-msgstr ""
+msgstr "Il file de clâf di relazion '%s' nol pues jessi cjariât: %s"
 
 #. Translators: the first parameter is a path, and the
 #. * second is an error message.
 #: ../backends/key-file/kf-persona-store.vala:256
 #, c-format
 msgid "The relationship key file directory '%s' could not be created: %s"
-msgstr ""
+msgstr "La cartele de clâf di relazion '%s' no pues jessi cjariade: %s"
 
 #. Translators: the first parameter is a filename, and
 #. * the second is an error message.
 #: ../backends/key-file/kf-persona-store.vala:280
 #, c-format
 msgid "The relationship key file '%s' could not be created: %s"
-msgstr ""
+msgstr "Il file de clâf di relazion '%s' nol pues jessi creât: %s"
 
 #. Translators: the first parameter is a filename, the second is
 #. * an error message.
 #: ../backends/key-file/kf-persona-store.vala:471
 #, c-format
 msgid "Could not write updated key file '%s': %s"
-msgstr ""
+msgstr "Impussibil scrivi il file clâf inzornât '%s': %s"
 
 #. Translators: this is an error message for if the user
 #. * provides an invalid IM address. The first parameter is
@@ -387,13 +387,13 @@ msgstr ""
 #: ../backends/key-file/kf-persona.vala:174
 #, c-format
 msgid "Invalid IM address ‘%s’ for protocol ‘%s’: %s"
-msgstr ""
+msgstr "Direzion pai messaçs istantanis '%s' no valide pal protocol '%s': %s"
 
 #. Translators: the parameter is an error message.
 #: ../backends/key-file/kf-persona.vala:432
 #, c-format
 msgid "Couldn't load data from key file: %s"
-msgstr ""
+msgstr "Impussibil cjariâ i dâts dal file clâf: %s"
 
 #. Translators: the parameter is an error message.
 #: ../backends/libsocialweb/lib/swf-persona-store.vala:349
@@ -401,19 +401,19 @@ msgstr ""
 #: ../backends/libsocialweb/lib/swf-persona-store.vala:392
 #, c-format
 msgid "Couldn’t prepare libsocialweb service: %s"
-msgstr ""
+msgstr "Impussibil preparâ il servizi libsocialweb: %s"
 
 #: ../backends/libsocialweb/lib/swf-persona-store.vala:350
 msgid "No capabilities were found."
-msgstr ""
+msgstr "No je stade cjatade nissune funzionalitât."
 
 #: ../backends/libsocialweb/lib/swf-persona-store.vala:372
 msgid "No contacts capability was found."
-msgstr ""
+msgstr "No je stade cjatade nissune funzionalitât di contats."
 
 #: ../backends/libsocialweb/lib/swf-persona-store.vala:393
 msgid "Error opening contacts view."
-msgstr ""
+msgstr "Erôr tal vierzi la visualizazion dai contats."
 
 #: ../backends/ofono/ofono-backend.vala:196
 msgid ""
@@ -496,7 +496,7 @@ msgstr ""
 #: ../backends/telepathy/lib/tpf-persona.vala:514
 #: ../backends/telepathy/lib/tpf-persona.vala:587
 msgid "Account is offline."
-msgstr ""
+msgstr "L'Account al è fûr rêt."
 
 #. Translators: the first parameter is the unknown key that
 #. * was received with the details params, and the second
@@ -621,7 +621,7 @@ msgstr ""
 #. * for them.
 #: ../folks/individual.vala:2072
 msgid "Unnamed Person"
-msgstr ""
+msgstr "Persone cence non"
 
 #. FIXME: Ideally we’d use a format string translated to the locale of the
 #. * persona whose name is being formatted, but no backend provides
@@ -680,39 +680,39 @@ msgstr ""
 #: ../folks/postal-address-details.vala:231
 #, c-format
 msgid "%s, %s, %s, %s, %s, %s, %s"
-msgstr ""
+msgstr "%s, %s, %s, %s, %s, %s, %s"
 
 #: ../folks/presence-details.vala:171
 msgid "Unknown status"
-msgstr ""
+msgstr "Stât no cognossût"
 
 #: ../folks/presence-details.vala:173
 msgid "Offline"
-msgstr ""
+msgstr "Fûr rêt"
 
 #: ../folks/presence-details.vala:177
 msgid "Error"
-msgstr ""
+msgstr "Erôr"
 
 #: ../folks/presence-details.vala:179
 msgid "Available"
-msgstr ""
+msgstr "Disponibil"
 
 #: ../folks/presence-details.vala:181
 msgid "Away"
-msgstr ""
+msgstr "Assent"
 
 #: ../folks/presence-details.vala:183
 msgid "Extended away"
-msgstr ""
+msgstr "Vie di tant timp"
 
 #: ../folks/presence-details.vala:185
 msgid "Busy"
-msgstr ""
+msgstr "Impegnât"
 
 #: ../folks/presence-details.vala:187
 msgid "Hidden"
-msgstr ""
+msgstr "Platât"
 
 #: ../folks/role-details.vala:150
 #, c-format
