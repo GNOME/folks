@@ -9,7 +9,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=folks&keywords=I18N+L10N&component=general\n"
 "POT-Creation-Date: 2016-08-02 14:45+0000\n"
-"PO-Revision-Date: 2016-08-12 10:55+0200\n"
+"PO-Revision-Date: 2016-08-15 13:49+0200\n"
 "Language-Team: Friulian <fur@li.org>\n"
 "Language: fur\n"
 "MIME-Version: 1.0\n"
@@ -461,33 +461,41 @@ msgid ""
 "Failed to change favorite without a connection to the telepathy-logger "
 "service."
 msgstr ""
+"No si è rivâts a cambiâ i preferîts cence une conession al servizi "
+"«telepathy-logger»."
 
 #: ../backends/telepathy/lib/tpf-persona-store.vala:1368
 msgid ""
 "Failed to change favorite status of Telepathy Persona because it has no "
 "attached TpContact."
 msgstr ""
+"No si è rivâts a cambiâ il stât di preferît dal profîl Telepathy parcè che "
+"nol à alegât nissun TpContact."
 
 #. Translators: the parameter is a contact identifier.
 #: ../backends/telepathy/lib/tpf-persona-store.vala:1386
 #, c-format
 msgid "Failed to change favorite status for Telepathy contact ‘%s’."
-msgstr ""
+msgstr "No si è rivâts a cambiâ il stât di preferît dal contat Telepathy '%s'."
 
 #. Translators: the parameter is an error message.
 #: ../backends/telepathy/lib/tpf-persona-store.vala:1418
 #, c-format
 msgid "Failed to change contact's alias: %s"
-msgstr ""
+msgstr "No si è rivâts a cambiâ l'alias dal contat: %s"
 
 #: ../backends/telepathy/lib/tpf-persona-store.vala:1499
 msgid "Extended information may only be set on the user's Telepathy contact."
 msgstr ""
+"Lis informazions estesis a puedin jessi metudis nome sul contat Telepathy "
+"dal utent."
 
 #: ../backends/telepathy/lib/tpf-persona-store.vala:1528
 msgid ""
 "Extended information cannot be written because the store is disconnected."
 msgstr ""
+"Lis informazions estesis no puedin jessi scritis parcè che l'archivi nol è "
+"conetût."
 
 #: ../backends/telepathy/lib/tpf-persona.vala:511
 #: ../backends/telepathy/lib/tpf-persona.vala:532
@@ -495,7 +503,7 @@ msgstr ""
 #: ../backends/telepathy/lib/tpf-persona.vala:598
 #, c-format
 msgid "Failed to change group membership: %s"
-msgstr ""
+msgstr "No si è rivâts a cambiâ il grup di apartignince: %s"
 
 #. Translators: "account" refers to an instant messaging
 #. * account.
@@ -511,17 +519,18 @@ msgstr "L'Account al è fûr rêt."
 #, c-format
 msgid "Unrecognized parameter '%s' passed to persona store '%s'."
 msgstr ""
+"Nol è stât ricognossût il parametri '%s' passât al archivi di contats '%s'."
 
 #: ../folks/alias-details.vala:61
 msgid "Alias is not writeable on this contact."
-msgstr ""
+msgstr "No si pues scrivi l'alias in chest contat."
 
 #. Translators: the first parameter is a folder path and the second
 #. * is an error message.
 #: ../folks/backend-store.vala:654
 #, c-format
 msgid "Error listing contents of folder '%s': %s"
-msgstr ""
+msgstr "Erôr tal listâ i contignûts de cartele '%s': %s"
 
 #. Translators: the first parameter is a folder path and the second
 #. * is an error message.
@@ -529,44 +538,46 @@ msgstr ""
 #, c-format
 msgid "Error querying info for target ‘%s’ of symlink ‘%s’: %s"
 msgstr ""
+"Erôr tal domandâ informazions pal ogjet '%s' dal colegament simbolic '%s': %s"
 
+# used plural cause no is for female (cartele) and nol is for male (file)
 #. Translators: the parameter is a filename.
 #: ../folks/backend-store.vala:823
 #, c-format
 msgid "File or directory '%s' does not exist."
-msgstr ""
+msgstr "Il file o la cartele '%s' no esistin."
 
 #. Translators: the parameter is a filename.
 #: ../folks/backend-store.vala:829
 #, c-format
 msgid "Failed to get content type for '%s'."
-msgstr ""
+msgstr "No si è rivâts a otignî il gjena di contignût par '%s'."
 
 #: ../folks/birthday-details.vala:93
 msgid "Birthday event ID is not writeable on this contact."
-msgstr ""
+msgstr "No si pues scrivi il ID dal event complean in chest contat."
 
 #: ../folks/extended-info.vala:133 ../folks/extended-info.vala:149
 msgid "Extended fields are not writeable on this contact."
-msgstr ""
+msgstr "No si puedin scrivi i cjamps estindûts in chest contat."
 
 #: ../folks/favourite-details.vala:58
 msgid "Favorite status is not writeable on this contact."
-msgstr ""
+msgstr "No si pues scrivi il stât di preferît in chest contat."
 
 #. Translators: the parameter is an IM address.
 #: ../folks/im-details.vala:178 ../folks/im-details.vala:192
 #: ../folks/im-details.vala:214 ../folks/im-details.vala:241
 #, c-format
 msgid "The IM address '%s' could not be understood."
-msgstr ""
+msgstr "Impussibil ricognossi la direzion pai messaçs istantanis '%s'."
 
 #. Translators: the first parameter is a persona store identifier
 #. * and the second is an error message.
 #: ../folks/individual-aggregator.vala:1063
 #, c-format
 msgid "Error preparing persona store '%s': %s"
-msgstr ""
+msgstr "Erôr tal preparâ l'archivi dai contats '%s': %s"
 
 #. Translators: the parameter is a property name.
 #: ../folks/individual-aggregator.vala:1294
@@ -574,17 +585,18 @@ msgstr ""
 #, c-format
 msgid "Unknown property '%s' in linkable property list."
 msgstr ""
+"Proprietât '%s' no cognossude te liste des proprietâts che si puedin colegâ."
 
 #. Translators: the first parameter is a store identifier
 #. * and the second parameter is an error message.
 #: ../folks/individual-aggregator.vala:2053
 #, c-format
 msgid "Failed to add contact for persona store ID '%s': %s"
-msgstr ""
+msgstr "No si è rivâts a zontâ il contat pal ID dal archivi personâl '%s': %s"
 
 #: ../folks/individual-aggregator.vala:2150
 msgid "Can’t link personas with no primary store."
-msgstr ""
+msgstr "Impussibil leâ contats cence un archivi primari."
 
 #: ../folks/individual-aggregator.vala:2151
 #: ../folks/individual-aggregator.vala:2482
