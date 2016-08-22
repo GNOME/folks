@@ -1,27 +1,23 @@
-# -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-# Aviary.pl
-# Jeśli masz jakiekolwiek uwagi odnoszące się do tłumaczenia lub chcesz
-# pomóc w jego rozwijaniu i pielęgnowaniu, napisz do nas:
-# gnomepl@aviary.pl
-# -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-# Piotr Drąg <piotrdrag@gmail.com>, 2011-2015.
-# Aviary.pl <gnomepl@aviary.pl>, 2011-2015.
+# Polish translation for folks.
+# Copyright © 2011-2016 the folks authors.
+# This file is distributed under the same license as the folks package.
+# Piotr Drąg <piotrdrag@gmail.com>, 2011-2016.
+# Aviary.pl <community-poland@mozilla.org>, 2011-2016.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: folks\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-08-25 15:40+0200\n"
-"PO-Revision-Date: 2015-08-25 15:42+0200\n"
+"POT-Creation-Date: 2016-08-22 19:00+0200\n"
+"PO-Revision-Date: 2016-08-22 19:01+0200\n"
 "Last-Translator: Piotr Drąg <piotrdrag@gmail.com>\n"
-"Language-Team: Polish <gnomepl@aviary.pl>\n"
+"Language-Team: Polish <community-poland@mozilla.org>\n"
 "Language: pl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2);\n"
-"X-Poedit-Language: Polish\n"
-"X-Poedit-Country: Poland\n"
 
 #: ../backends/bluez/bluez-backend.vala:600
 msgid ""
@@ -38,8 +34,8 @@ msgid ""
 "Error connecting to OBEX transfer daemon over D-Bus. Ensure BlueZ and obexd "
 "are installed."
 msgstr ""
-"Błąd podczas łączenia z usługą przesyłania OBEX przez magistralę D-Bus. "
-"Proszę się upewnić, że usługi BlueZ i obexd są zainstalowane."
+"Błąd podczas łączenia z usługą przesyłania OBEX przez magistralę D-Bus. "
+"Proszę się upewnić, że usługi BlueZ i obexd są zainstalowane."
 
 #. Translators: the parameter is an error message.
 #: ../backends/bluez/bluez-persona-store.vala:385
@@ -58,7 +54,7 @@ msgstr "Błąd podczas odczytywania przesłanego pliku książki adresowej: %s"
 msgid ""
 "Error during transfer of the address book ‘%s’ from Bluetooth device ‘%s’."
 msgstr ""
-"Błąd podczas przesyłania książki adresowej „%s” z urządzenia Bluetooth „%s”."
+"Błąd podczas przesyłania książki adresowej „%s” z urządzenia Bluetooth „%s”."
 
 #: ../backends/bluez/bluez-persona-store.vala:791
 #, c-format
@@ -75,7 +71,7 @@ msgstr ""
 #, c-format
 msgid "An OBEX address book transfer from device ‘%s’ could not be started: %s"
 msgstr ""
-"Nie można rozpocząć przesłania książki adresowej OBEX z urządzenia „%s”: %s"
+"Nie można rozpocząć przesłania książki adresowej OBEX z urządzenia „%s”: %s"
 
 #. Translators: the first parameter is a Bluetooth device
 #. * alias, and the second is an error message.
@@ -83,7 +79,7 @@ msgstr ""
 #, c-format
 msgid "The OBEX address book transfer from device ‘%s’ failed: %s"
 msgstr ""
-"Przesłanie książki adresowej OBEX z urządzenia „%s” się nie powiodło: %s"
+"Przesłanie książki adresowej OBEX z urządzenia „%s” się nie powiodło: %s"
 
 #. Translators: the first parameter is a Bluetooth device
 #. * alias, and the second is an error message.
@@ -92,7 +88,7 @@ msgstr ""
 msgid ""
 "Error during transfer of the address book from Bluetooth device ‘%s’: %s"
 msgstr ""
-"Błąd podczas przesyłania książki adresowej z urządzenia Bluetooth „%s”: %s"
+"Błąd podczas przesyłania książki adresowej z urządzenia Bluetooth „%s”: %s"
 
 #: ../backends/bluez/bluez-persona-store.vala:1073
 #, c-format
@@ -113,7 +109,7 @@ msgstr ""
 #. * the msgid to the msgstr unchanged).
 #: ../backends/eds/lib/edsf-persona-store.vala:69
 msgid "Starred in Android"
-msgstr "Oznaczone gwiazdką w systemie Android"
+msgstr "Oznaczone gwiazdką w systemie Android"
 
 #. Translators: the first parameter is an address book
 #. * URI and the second is a persona UID.
@@ -121,7 +117,7 @@ msgstr "Oznaczone gwiazdką w systemie Android"
 #, c-format
 msgid "Address book ‘%s’ is offline, so contact ‘%s’ cannot be removed."
 msgstr ""
-"Książka adresowa „%s” jest w trybie offline, więc nie można usunąć kontaktu "
+"Książka adresowa „%s” jest w trybie offline, więc nie można usunąć kontaktu "
 "„%s”."
 
 #. Translators: the first parameter is an address book
@@ -149,7 +145,7 @@ msgstr "Nie można usunąć kontaktu „%s”: %s"
 #: ../backends/eds/lib/edsf-persona-store.vala:964
 #, c-format
 msgid "Address book ‘%s’ is offline."
-msgstr "Książka adresowa „%s” jest w trybie offline."
+msgstr "Książka adresowa „%s” jest w trybie offline."
 
 #. Translators: the first parameter is an address
 #. * book URI and the second is an error message.
@@ -189,7 +185,7 @@ msgstr "Nie można uzyskać widoku dla książki adresowej „%s”: %s"
 #: ../backends/eds/lib/edsf-persona-store.vala:1305
 msgid "Creating a new contact failed due to reaching the timeout."
 msgstr ""
-"Utworzenie nowego kontaktu się nie powiodło z powodu przekroczenia czasu "
+"Utworzenie nowego kontaktu się nie powiodło z powodu przekroczenia czasu "
 "oczekiwania."
 
 #. Translators: the parameter is the name of a property on a
@@ -199,28 +195,28 @@ msgstr ""
 #, c-format
 msgid "Changing the ‘%s’ property failed due to reaching the timeout."
 msgstr ""
-"Zmienianie właściwości „%s” się nie powiodło z powodu przekroczenia czasu "
+"Zmienianie właściwości „%s” się nie powiodło z powodu przekroczenia czasu "
 "oczekiwania."
 
 #: ../backends/eds/lib/edsf-persona-store.vala:1453
 #: ../folks/avatar-details.vala:63
 msgid "Avatar is not writeable on this contact."
-msgstr "Awatar nie jest zapisywalny w tym kontakcie."
+msgstr "Awatar nie jest zapisywalny w tym kontakcie."
 
 #: ../backends/eds/lib/edsf-persona-store.vala:1474
 #: ../folks/web-service-details.vala:123
 msgid "Web service addresses are not writeable on this contact."
-msgstr "Adresy usług WWW nie są zapisywalne w tym kontakcie."
+msgstr "Adresy usług WWW nie są zapisywalne w tym kontakcie."
 
 #: ../backends/eds/lib/edsf-persona-store.vala:1510
 #: ../folks/url-details.vala:152
 msgid "URLs are not writeable on this contact."
-msgstr "Adresy URL nie są zapisywalne w tym kontakcie."
+msgstr "Adresy URL nie są zapisywalne w tym kontakcie."
 
 #: ../backends/eds/lib/edsf-persona-store.vala:1591
 #: ../folks/local-id-details.vala:64
 msgid "Local IDs are not writeable on this contact."
-msgstr "Lokalne identyfikatory nie są zapisywalne w tym kontakcie."
+msgstr "Lokalne identyfikatory nie są zapisywalne w tym kontakcie."
 
 #: ../backends/eds/lib/edsf-persona-store.vala:1620
 msgid "The contact cannot be marked as favourite."
@@ -235,76 +231,76 @@ msgstr "Nie można zaktualizować awatara: %s"
 #: ../backends/eds/lib/edsf-persona-store.vala:1703
 #: ../folks/email-details.vala:120
 msgid "E-mail addresses are not writeable on this contact."
-msgstr "Adresy e-mail nie są zapisywalne w tym kontakcie."
+msgstr "Adresy e-mail nie są zapisywalne w tym kontakcie."
 
 #: ../backends/eds/lib/edsf-persona-store.vala:1768
 #: ../folks/phone-details.vala:255
 msgid "Phone numbers are not writeable on this contact."
-msgstr "Numery telefonu nie są zapisywalne w tym kontakcie."
+msgstr "Numery telefonu nie są zapisywalne w tym kontakcie."
 
 #: ../backends/eds/lib/edsf-persona-store.vala:1786
 #: ../folks/postal-address-details.vala:361
 msgid "Postal addresses are not writeable on this contact."
-msgstr "Adresy pocztowe nie są zapisywalne w tym kontakcie."
+msgstr "Adresy pocztowe nie są zapisywalne w tym kontakcie."
 
 #: ../backends/eds/lib/edsf-persona-store.vala:1857
 #: ../folks/name-details.vala:454
 msgid "Full name is not writeable on this contact."
-msgstr "Imię i nazwisko nie są zapisywalne w tym kontakcie."
+msgstr "Imię i nazwisko nie są zapisywalne w tym kontakcie."
 
 #: ../backends/eds/lib/edsf-persona-store.vala:1879
 #: ../folks/name-details.vala:492
 msgid "Nickname is not writeable on this contact."
-msgstr "Pseudonim nie jest zapisywalny w tym kontakcie."
+msgstr "Pseudonim nie jest zapisywalny w tym kontakcie."
 
 #: ../backends/eds/lib/edsf-persona-store.vala:1901
 #: ../folks/note-details.vala:138
 msgid "Notes are not writeable on this contact."
-msgstr "Notatki nie są zapisywalne w tym kontakcie."
+msgstr "Notatki nie są zapisywalne w tym kontakcie."
 
 #: ../backends/eds/lib/edsf-persona-store.vala:1933
 #: ../folks/birthday-details.vala:62
 msgid "Birthday is not writeable on this contact."
-msgstr "Urodziny nie są zapisywalne w tym kontakcie."
+msgstr "Urodziny nie są zapisywalne w tym kontakcie."
 
 #: ../backends/eds/lib/edsf-persona-store.vala:1977
 #: ../folks/role-details.vala:279
 msgid "Roles are not writeable on this contact."
-msgstr "Role nie są zapisywalne w tym kontakcie."
+msgstr "Role nie są zapisywalne w tym kontakcie."
 
 #: ../backends/eds/lib/edsf-persona-store.vala:2078
 #: ../folks/name-details.vala:417
 msgid "Structured name is not writeable on this contact."
-msgstr "Nazwa strukturalna nie jest zapisywalna w tym kontakcie."
+msgstr "Nazwa strukturalna nie jest zapisywalna w tym kontakcie."
 
 #: ../backends/eds/lib/edsf-persona-store.vala:2117
 #: ../folks/im-details.vala:136
 msgid "IM addresses are not writeable on this contact."
-msgstr "Adresy komunikatora nie są zapisywalne w tym kontakcie."
+msgstr "Adresy komunikatora nie są zapisywalne w tym kontakcie."
 
 #: ../backends/eds/lib/edsf-persona-store.vala:2167
 #: ../folks/group-details.vala:174
 msgid "Groups are not writeable on this contact."
-msgstr "Grupy nie są zapisywalne w tym kontakcie."
+msgstr "Grupy nie są zapisywalne w tym kontakcie."
 
 #: ../backends/eds/lib/edsf-persona-store.vala:2182
 msgid "My Contacts is only available for Google Contacts"
-msgstr "„Moje kontakty” są dostępne tylko w kontaktach Google"
+msgstr "„Moje kontakty” są dostępne tylko w kontaktach Google"
 
 #: ../backends/eds/lib/edsf-persona-store.vala:2253
 #: ../folks/gender-details.vala:79
 msgid "Gender is not writeable on this contact."
-msgstr "Płeć nie jest nie jest zapisywalna w tym kontakcie."
+msgstr "Płeć nie jest nie jest zapisywalna w tym kontakcie."
 
 #: ../backends/eds/lib/edsf-persona-store.vala:2291
 #: ../folks/anti-linkable.vala:84
 msgid "Anti-links are not writeable on this contact."
-msgstr "Antypowiązania nie są zapisywalne w tym kontakcie."
+msgstr "Antypowiązania nie są zapisywalne w tym kontakcie."
 
 #: ../backends/eds/lib/edsf-persona-store.vala:2334
 #: ../folks/location-details.vala:135
 msgid "Location is not writeable on this contact."
-msgstr "Położenie nie jest zapisywalne w tym kontakcie."
+msgstr "Położenie nie jest zapisywalne w tym kontakcie."
 
 #. Translators: the first parameter is an error message.
 #: ../backends/eds/lib/edsf-persona-store.vala:2658
@@ -317,7 +313,7 @@ msgstr "Brak uprawnień, aby utworzyć nowy kontakt: %s"
 #, c-format
 msgid "Address book is offline and a new contact cannot be created: %s"
 msgstr ""
-"Książka adresowa jest w trybie offline, więc nie można utworzyć nowego "
+"Książka adresowa jest w trybie offline, więc nie można utworzyć nowego "
 "kontaktu: %s"
 
 #. Translators: the first parameter is a non-human-readable
@@ -332,7 +328,7 @@ msgstr "Nowy kontakt nie jest zapisywalny: %s"
 #: ../backends/eds/lib/edsf-persona-store.vala:2676
 #, c-format
 msgid "Invalid value in contact: %s"
-msgstr "Nieprawidłowa wartość w kontakcie: %s"
+msgstr "Nieprawidłowa wartość w kontakcie: %s"
 
 #. Translators: the first parameter is an error message.
 #: ../backends/eds/lib/edsf-persona-store.vala:2700
@@ -405,7 +401,7 @@ msgstr "Nieprawidłowy adres komunikatora „%s” dla protokołu „%s”: %s"
 #: ../backends/key-file/kf-persona.vala:432
 #, c-format
 msgid "Couldn't load data from key file: %s"
-msgstr "Nie można wczytać danych z pliku klucza: %s"
+msgstr "Nie można wczytać danych z pliku klucza: %s"
 
 #. Translators: the parameter is an error message.
 #: ../backends/libsocialweb/lib/swf-persona-store.vala:349
@@ -444,7 +440,7 @@ msgstr ""
 #: ../backends/telepathy/lib/tpf-persona-store.vala:1274
 #, c-format
 msgid "Failed to remove a persona from store: %s"
-msgstr "Usunięcie osoby z przechowalni się nie powiodło: %s"
+msgstr "Usunięcie osoby z przechowalni się nie powiodło: %s"
 
 #. Translators: the first two parameters are store identifiers and
 #. * the third is a contact identifier.
@@ -460,13 +456,13 @@ msgstr ""
 #: ../backends/telepathy/lib/tpf-persona-store.vala:1324
 msgid "Cannot create a new Telepathy contact while offline."
 msgstr ""
-"Nie można utworzyć nowego kontaktu Telepathy podczas działania w trybie "
+"Nie można utworzyć nowego kontaktu Telepathy podczas działania w trybie "
 "offline."
 
 #: ../backends/telepathy/lib/tpf-persona-store.vala:1342
 #, c-format
 msgid "Failed to add a persona from details: %s"
-msgstr "Dodanie osoby z informacji się nie powiodło: %s"
+msgstr "Dodanie osoby z informacji się nie powiodło: %s"
 
 #. Translators: "telepathy-logger" is the name of an application,
 #. * and should not be translated.
@@ -475,7 +471,7 @@ msgid ""
 "Failed to change favorite without a connection to the telepathy-logger "
 "service."
 msgstr ""
-"Zmiana ulubionych bez połączenia z usługą telepathy-logger się nie powiodła."
+"Zmiana ulubionych bez połączenia z usługą telepathy-logger się nie powiodła."
 
 #: ../backends/telepathy/lib/tpf-persona-store.vala:1368
 msgid ""
@@ -500,7 +496,7 @@ msgstr "Zmiana pseudonimu kontaktu się nie powiodła: %s"
 #: ../backends/telepathy/lib/tpf-persona-store.vala:1499
 msgid "Extended information may only be set on the user's Telepathy contact."
 msgstr ""
-"Rozszerzone informacje mogą być ustawiane tylko w kontakcie Telepathy "
+"Rozszerzone informacje mogą być ustawiane tylko w kontakcie Telepathy "
 "użytkownika."
 
 #: ../backends/telepathy/lib/tpf-persona-store.vala:1528
@@ -523,7 +519,7 @@ msgstr "Zmiana członkostwa grupy się nie powiodła: %s"
 #: ../backends/telepathy/lib/tpf-persona.vala:514
 #: ../backends/telepathy/lib/tpf-persona.vala:587
 msgid "Account is offline."
-msgstr "Konto jest w trybie offline."
+msgstr "Konto jest w trybie offline."
 
 #. Translators: the first parameter is the unknown key that
 #. * was received with the details params, and the second
@@ -535,7 +531,7 @@ msgstr "Nierozpoznany parametr „%s” przekazany do przechowalni osoby „%s�
 
 #: ../folks/alias-details.vala:61
 msgid "Alias is not writeable on this contact."
-msgstr "Alias nie jest zapisywalny w tym kontakcie."
+msgstr "Alias nie jest zapisywalny w tym kontakcie."
 
 #. Translators: the first parameter is a folder path and the second
 #. * is an error message.
@@ -550,7 +546,7 @@ msgstr "Błąd podczas wyświetlania listy zawartości katalogu „%s”: %s"
 #, c-format
 msgid "Error querying info for target ‘%s’ of symlink ‘%s’: %s"
 msgstr ""
-"Błąd podczas odpytywania informacji o celu „%s” dowiązania symbolicznego "
+"Błąd podczas odpytywania informacji o celu „%s” dowiązania symbolicznego "
 "„%s”: %s"
 
 #. Translators: the parameter is a filename.
@@ -567,15 +563,15 @@ msgstr "Uzyskanie typu treści dla „%s” się nie powiodło."
 
 #: ../folks/birthday-details.vala:93
 msgid "Birthday event ID is not writeable on this contact."
-msgstr "Identyfikator zdarzenia urodzin nie jest zapisywalny w tym kontakcie."
+msgstr "Identyfikator zdarzenia urodzin nie jest zapisywalny w tym kontakcie."
 
 #: ../folks/extended-info.vala:133 ../folks/extended-info.vala:149
 msgid "Extended fields are not writeable on this contact."
-msgstr "Rozszerzone pola nie są zapisywalne w tym kontakcie."
+msgstr "Rozszerzone pola nie są zapisywalne w tym kontakcie."
 
 #: ../folks/favourite-details.vala:58
 msgid "Favorite status is not writeable on this contact."
-msgstr "Ulubiony stan nie jest zapisywalny w tym kontakcie."
+msgstr "Ulubiony stan nie jest zapisywalny w tym kontakcie."
 
 #. Translators: the parameter is an IM address.
 #: ../folks/im-details.vala:178 ../folks/im-details.vala:192
@@ -629,7 +625,7 @@ msgid ""
 "service or using the “%s” GSettings key."
 msgstr ""
 "Proszę sprawdzić, czy odpowiednia usługa jest uruchomiona, albo zmienić "
-"domyślną przechowalnię w tej usłudze lub używając klucza GSettings „%s”."
+"domyślną przechowalnię w tej usłudze lub używając klucza GSettings „%s”."
 
 #: ../folks/individual-aggregator.vala:2184
 msgid "Anti-links can't be removed between personas being linked."
@@ -771,7 +767,7 @@ msgstr "Plik %s nie istnieje."
 #: ../tools/import-pidgin.vala:65
 #, c-format
 msgid "Failed to get information about file %s: %s"
-msgstr "Uzyskanie informacji o pliku %s się nie powiodło: %s"
+msgstr "Uzyskanie informacji o pliku %s się nie powiodło: %s"
 
 #. Translators: the parameter is a filename.
 #: ../tools/import-pidgin.vala:72
@@ -801,9 +797,9 @@ msgstr ""
 #, c-format
 msgid "Imported %u buddy from '%s'."
 msgid_plural "Imported %u buddies from '%s'."
-msgstr[0] "Zaimportowano %u znajomego z „%s”."
-msgstr[1] "Zaimportowano %u znajomych z „%s”."
-msgstr[2] "Zaimportowano %u znajomych z „%s”."
+msgstr[0] "Zaimportowano %u znajomego z „%s”."
+msgstr[1] "Zaimportowano %u znajomych z „%s”."
+msgstr[2] "Zaimportowano %u znajomych z „%s”."
 
 #. Translators: the first parameter is a persona identifier,
 #. * and the second is an error message.
@@ -819,7 +815,7 @@ msgid ""
 "Ignoring buddy with no alias and only one IM address:\n"
 "%s"
 msgstr ""
-"Ignorowanie znajomego bez pseudonimu i z tylko jednym adresem komunikatora:\n"
+"Ignorowanie znajomego bez pseudonimu i z tylko jednym adresem komunikatora:\n"
 "%s"
 
 #: ../tools/import-pidgin.vala:244
@@ -829,7 +825,7 @@ msgid ""
 "%s\n"
 "Error: %s\n"
 msgstr ""
-"Utworzenie nowego kontaktu dla znajomego o pseudonimie „%s” i adresach "
+"Utworzenie nowego kontaktu dla znajomego o pseudonimie „%s” i adresach "
 "komunikatora się nie powiodło:\n"
 "%s\n"
 "Błąd: %s\n"
@@ -843,7 +839,7 @@ msgid ""
 "Created contact ‘%s’ for buddy with alias ‘%s’ and IM addresses:\n"
 "%s"
 msgstr ""
-"Utworzono kontakt „%s” dla znajomego o pseudonimie „%s” i adresach "
+"Utworzono kontakt „%s” dla znajomego o pseudonimie „%s” i adresach "
 "komunikatora:\n"
 "%s"
 
@@ -857,7 +853,7 @@ msgstr "Nazwa pliku źródłowego (domyślnie: zależnie od mechanizmu źródło
 
 #: ../tools/import.vala:58
 msgid "— import meta-contact information to libfolks"
-msgstr "— importuje informacje o metakontaktach do biblioteki libfolks"
+msgstr "— importuje informacje o metakontaktach do biblioteki libfolks"
 
 #. Translators: the parameter is an error message.
 #: ../tools/import.vala:68
