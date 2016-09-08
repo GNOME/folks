@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: folks\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-22 19:00+0200\n"
-"PO-Revision-Date: 2016-08-22 19:01+0200\n"
+"POT-Creation-Date: 2016-09-08 03:13+0200\n"
+"PO-Revision-Date: 2016-09-08 03:14+0200\n"
 "Last-Translator: Piotr Drąg <piotrdrag@gmail.com>\n"
 "Language-Team: Polish <community-poland@mozilla.org>\n"
 "Language: pl\n"
@@ -290,7 +290,7 @@ msgstr "„Moje kontakty” są dostępne tylko w kontaktach Google"
 #: ../backends/eds/lib/edsf-persona-store.vala:2253
 #: ../folks/gender-details.vala:79
 msgid "Gender is not writeable on this contact."
-msgstr "Płeć nie jest nie jest zapisywalna w tym kontakcie."
+msgstr "Płeć nie jest zapisywalna w tym kontakcie."
 
 #: ../backends/eds/lib/edsf-persona-store.vala:2291
 #: ../folks/anti-linkable.vala:84
