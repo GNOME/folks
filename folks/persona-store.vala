@@ -355,7 +355,7 @@ public abstract class Folks.PersonaStore : Object
    *
    * @since 0.5.0
    */
-  private static const string _PERSONA_DETAIL[] = {
+  private const string _PERSONA_DETAIL[] = {
     "alias",
     "avatar",
     "birthday",

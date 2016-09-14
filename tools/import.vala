@@ -36,9 +36,9 @@ public class Folks.ImportTool : Object
   private static string source;
   private static string source_filename;
 
-  private static const string DEFAULT_SOURCE = "pidgin";
+  private const string DEFAULT_SOURCE = "pidgin";
 
-  private static const OptionEntry[] options =
+  private const OptionEntry[] options =
     {
       { "source", 's', 0, OptionArg.STRING, ref ImportTool.source,
           N_("Source backend name (default: 'pidgin')"), "name" },

@@ -23,7 +23,7 @@ using Folks;
 public class BackendLoadingTests : TpfTest.MixedTestCase
 {
   private MainLoop main_loop;
-  private static const string STORE_FILE_PATH = "folks-test-backend-store.ini";
+  private const string STORE_FILE_PATH = "folks-test-backend-store.ini";
 
   public BackendLoadingTests ()
     {

@@ -25,25 +25,25 @@
 public class Folks.BuildConf
 {
   [CCode (cname = "BACKEND_DIR")]
-  public static const string BACKEND_DIR;
+  public const string BACKEND_DIR;
 
   [CCode (cname = "PACKAGE_NAME")]
-  public static const string PACKAGE_NAME;
+  public const string PACKAGE_NAME;
 
   [CCode (cname = "PACKAGE_VERSION")]
-  public static const string PACKAGE_VERSION;
+  public const string PACKAGE_VERSION;
 
   [CCode (cname = "PACKAGE_STRING")]
-  public static const string PACKAGE_STRING;
+  public const string PACKAGE_STRING;
 
   [CCode (cname = "PACKAGE_DATADIR")]
-  public static const string PACKAGE_DATADIR;
+  public const string PACKAGE_DATADIR;
 
   [CCode (cname = "GETTEXT_PACKAGE")]
-  public static const string GETTEXT_PACKAGE;
+  public const string GETTEXT_PACKAGE;
 
   [CCode (cname = "LOCALE_DIR")]
-  public static const string LOCALE_DIR;
+  public const string LOCALE_DIR;
 
   [CCode (cname = "HAVE_EDS")]
   public static bool HAVE_EDS;
@@ -64,20 +64,20 @@ public class Folks.BuildConf
   public static bool HAVE_TRACKER;
 
   [CCode (cname = "TRACKER_SPARQL_MAJOR")]
-  public static const string TRACKER_SPARQL_MAJOR;
+  public const string TRACKER_SPARQL_MAJOR;
 
   [CCode (cname = "ABS_TOP_BUILDDIR")]
-  public static const string ABS_TOP_BUILDDIR;
+  public const string ABS_TOP_BUILDDIR;
 
   [CCode (cname = "ABS_TOP_SRCDIR")]
-  public static const string ABS_TOP_SRCDIR;
+  public const string ABS_TOP_SRCDIR;
 
   [CCode (cname = "PKGLIBEXECDIR")]
-  public static const string PKGLIBEXECDIR;
+  public const string PKGLIBEXECDIR;
 
   [CCode (cname = "INSTALLED_TESTS_DIR")]
-  public static const string INSTALLED_TESTS_DIR;
+  public const string INSTALLED_TESTS_DIR;
 
   [CCode (cname = "INSTALLED_TESTS_META_DIR")]
-  public static const string INSTALLED_TESTS_META_DIR;
+  public const string INSTALLED_TESTS_META_DIR;
 }

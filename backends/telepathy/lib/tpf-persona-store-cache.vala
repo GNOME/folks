@@ -56,7 +56,7 @@ internal class Tpf.PersonaStoreCache : Folks.ObjectCache<Tpf.Persona>
    * get_serialised_object_type(). This must be modified whenever that variant
    * type or its semantics are changed, since that would necessitate a cache
    * refresh. */
-  private static const uint8 _FILE_FORMAT_VERSION = 2;
+  private const uint8 _FILE_FORMAT_VERSION = 2;
 
   internal PersonaStoreCache (PersonaStore store)
     {

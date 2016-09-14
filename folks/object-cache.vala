@@ -42,13 +42,13 @@ public abstract class Folks.ObjectCache<T> : Object
    * of a cache file. They can't be stored as part of the Variant which forms
    * the rest of the file, as to interpret the Variant its entire type has to
    * be known — which depends on the version numbers. */
-  private static const uint8 _FILE_FORMAT_VERSION = 1;
+  private const uint8 _FILE_FORMAT_VERSION = 1;
 
   /* The length of the version header at the beginning of the file. This has
    * to be a multiple of 8 to keep Variant's alignment code happy.
    * As documented above, currently only the first two bytes of this header
    * are used (for version numbers). */
-  private static const size_t _HEADER_WIDTH = 8; /* bytes */
+  private const size_t _HEADER_WIDTH = 8; /* bytes */
 
   private File _cache_directory;
   private File _cache_file;

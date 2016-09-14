@@ -57,7 +57,7 @@ public abstract class Folks.AbstractFieldDetails<T> : Object
    *
    * @since 0.6.3
    */
-  public static const string PARAM_TYPE = "type";
+  public const string PARAM_TYPE = "type";
 
   /**
    * Parameter value for home-related field values.
@@ -66,7 +66,7 @@ public abstract class Folks.AbstractFieldDetails<T> : Object
    *
    * @since 0.6.3
    */
-  public static const string PARAM_TYPE_HOME = "home";
+  public const string PARAM_TYPE_HOME = "home";
 
   /**
    * Parameter value for work-related field values.
@@ -75,7 +75,7 @@ public abstract class Folks.AbstractFieldDetails<T> : Object
    *
    * @since 0.6.3
    */
-  public static const string PARAM_TYPE_WORK = "work";
+  public const string PARAM_TYPE_WORK = "work";
 
   /**
    * Parameter value for miscellaneous field values.
@@ -84,7 +84,7 @@ public abstract class Folks.AbstractFieldDetails<T> : Object
    *
    * @since 0.6.3
    */
-  public static const string PARAM_TYPE_OTHER = "other";
+  public const string PARAM_TYPE_OTHER = "other";
 
   private T _value;
   /**

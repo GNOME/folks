@@ -68,7 +68,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
    * the msgid to the msgstr unchanged). */
   internal const string android_favourite_group_name = N_("Starred in Android");
 
-  internal static const string anti_links_attribute_name = "X-FOLKS-ANTI-LINKS";
+  internal const string anti_links_attribute_name = "X-FOLKS-ANTI-LINKS";
 
   /**
    * The type of persona store this is.

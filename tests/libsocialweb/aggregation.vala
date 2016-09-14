@@ -25,9 +25,9 @@ using GLib;
 
 public class AggregationTests : LibsocialwebTest.TestCase
 {
-  private static const string STORE_FILE_PATH =
+  private const string STORE_FILE_PATH =
       "folks-test-libsocialweb-aggregation-store.ini";
-  private static const string KF_RELATIONSHIPS_FILE_PATH =
+  private const string KF_RELATIONSHIPS_FILE_PATH =
       "folks-test-libsocialweb-aggregation-relationships.ini";
 
   public AggregationTests ()

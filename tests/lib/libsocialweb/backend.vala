@@ -359,9 +359,9 @@ public class LibsocialwebTest.LibsocialwebServerTest : Object
 
 public class LibsocialwebTest.Backend
 {
-  public static const string LIBSOCIALWEB_IFACE = "org.gnome.libsocialweb";
-  public static const string LIBSOCIALWEB_PATH = "/org/gnome/libsocialweb";
-  public static const string LIBSOCIALWEB_BUS_NAME = "org.gnome.libsocialweb";
+  public const string LIBSOCIALWEB_IFACE = "org.gnome.libsocialweb";
+  public const string LIBSOCIALWEB_PATH = "/org/gnome/libsocialweb";
+  public const string LIBSOCIALWEB_BUS_NAME = "org.gnome.libsocialweb";
 
   public bool debug { get; set; }
   private LibsocialwebServerTest? _lsw_server;

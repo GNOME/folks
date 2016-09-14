@@ -45,7 +45,7 @@ public abstract class Folks.Query : Object
    *
    * @since 0.11.0
    */
-  public static const string MATCH_FIELDS_NAMES[] =
+  public const string MATCH_FIELDS_NAMES[] =
     {
       "alias",
       "full-name",
@@ -63,7 +63,7 @@ public abstract class Folks.Query : Object
    *
    * @since 0.11.0
    */
-  public static const string MATCH_FIELDS_ADDRESSES[] =
+  public const string MATCH_FIELDS_ADDRESSES[] =
     {
       "email-addresses",
       "im-addresses",
@@ -83,7 +83,7 @@ public abstract class Folks.Query : Object
    *
    * @since 0.11.0
    */
-  public static const string MATCH_FIELDS_MISC[] =
+  public const string MATCH_FIELDS_MISC[] =
     {
       "groups",
       "roles",

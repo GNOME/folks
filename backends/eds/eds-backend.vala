@@ -39,7 +39,7 @@ internal extern static async E.SourceRegistry create_source_registry (GLib.Cance
  */
 public class Folks.Backends.Eds.Backend : Folks.Backend
 {
-  private static const string _use_address_books =
+  private const string _use_address_books =
       "FOLKS_BACKEND_EDS_USE_ADDRESS_BOOKS";
   private bool _is_prepared = false;
   private bool _prepare_pending = false; /* used for unprepare() too */

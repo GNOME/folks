@@ -61,7 +61,7 @@ public class Edsf.Persona : Folks.Persona,
    *
    * @since 0.6.0
    */
-  public static const string[] phone_fields = {
+  public const string[] phone_fields = {
     "assistant_phone", "business_phone", "business_phone_2", "callback_phone",
     "car_phone", "company_phone", "home_phone", "home_phone_2", "isdn_phone",
     "mobile_phone", "other_phone", "primary_phone"
@@ -71,7 +71,7 @@ public class Edsf.Persona : Folks.Persona,
    *
    * @since 0.6.0
    */
-  public static const string[] address_fields = {
+  public const string[] address_fields = {
     "address_home", "address_other", "address_work"
   };
   /**
@@ -79,7 +79,7 @@ public class Edsf.Persona : Folks.Persona,
    *
    * @since 0.6.0
    */
-  public static const string[] email_fields = {
+  public const string[] email_fields = {
     "email_1", "email_2", "email_3", "email_4"
   };
 
@@ -90,7 +90,7 @@ public class Edsf.Persona : Folks.Persona,
    */
   [Deprecated (since = "0.6.3",
       replacement = "Folks.UrlFieldDetails.PARAM_TYPE_BLOG")]
-  public static const string[] url_properties = {
+  public const string[] url_properties = {
     "blog_url", "fburl", "homepage_url", "video_url"
   };
 
@@ -104,7 +104,7 @@ public class Edsf.Persona : Folks.Persona,
       string folks_type;
     }
 
-  internal static const UrlTypeMapping[] _url_properties =
+  internal const UrlTypeMapping[] _url_properties =
     {
       { "homepage_url", UrlFieldDetails.PARAM_TYPE_HOME_PAGE },
       { "blog_url", UrlFieldDetails.PARAM_TYPE_BLOG },
@@ -122,7 +122,7 @@ public class Edsf.Persona : Folks.Persona,
    *
    * @since 0.9.7
    */
-  public static const string folks_field_attribute_name = "X-FOLKS-FIELD";
+  public const string folks_field_attribute_name = "X-FOLKS-FIELD";
 
   /**
    * The vCard attribute used to specify a Contact's gender
@@ -136,7 +136,7 @@ public class Edsf.Persona : Folks.Persona,
    *
    * @since 0.6.0
    */
-  public static const string gender_attribute_name = "X-GENDER";
+  public const string gender_attribute_name = "X-GENDER";
 
   /**
    * The value used to define the male gender for the
@@ -147,7 +147,7 @@ public class Edsf.Persona : Folks.Persona,
    *
    * @since 0.6.0
    */
-  public static const string gender_male = "M";
+  public const string gender_male = "M";
 
   /**
    * The value used to define the female gender for the
@@ -158,7 +158,7 @@ public class Edsf.Persona : Folks.Persona,
    *
    * @since 0.6.0
    */
-  public static const string gender_female = "F";
+  public const string gender_female = "F";
 
   private const string[] _linkable_properties =
     {
@@ -726,7 +726,7 @@ public class Edsf.Persona : Folks.Persona,
       yield ((Edsf.PersonaStore) this.store)._set_system_groups (this, system_groups);
     }
 
-  private static const string GOOGLE_PERSONAL_GROUP_NAME = "Contacts";
+  private const string GOOGLE_PERSONAL_GROUP_NAME = "Contacts";
 
   /**
    * Change whether this contact belongs to the personal group or not.

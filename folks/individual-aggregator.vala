@@ -148,8 +148,8 @@ public class Folks.IndividualAggregator : Object
   private Debug _debug;
   private string _configured_primary_store_type_id;
   private string _configured_primary_store_id;
-  private static const string _FOLKS_GSETTINGS_SCHEMA = "org.freedesktop.folks";
-  private static const string _PRIMARY_STORE_CONFIG_KEY = "primary-store";
+  private const string _FOLKS_GSETTINGS_SCHEMA = "org.freedesktop.folks";
+  private const string _PRIMARY_STORE_CONFIG_KEY = "primary-store";
 
   /* The number of persona stores and backends we're waiting to become
    * quiescent. Once these both reach 0, we should be in a quiescent state.
@@ -167,7 +167,7 @@ public class Folks.IndividualAggregator : Object
    * reach quiescence. */
   private uint _quiescent_timeout_id = 0;
 
-  private static const uint _QUIESCENT_TIMEOUT = 30; /* seconds */
+  private const uint _QUIESCENT_TIMEOUT = 30; /* seconds */
 
   /* We use this to know if the primary PersonaStore has been explicitly
    * set by the user (either via GSettings or an env variable). If that is the

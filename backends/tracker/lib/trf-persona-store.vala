@@ -168,12 +168,12 @@ public class Trf.PersonaStore : Folks.PersonaStore
   private bool _is_prepared = false;
   private bool _prepare_pending = false;
   private bool _is_quiescent = false;
-  private static const int _default_timeout = 100;
+  private const int _default_timeout = 100;
   private Resources _resources_object;
   private Tracker.Sparql.Connection _connection;
   private static Gee.TreeMap<string, string> _urn_prefix = null;
   private static Gee.TreeMap<string, int> _prefix_tracker_id = null;
-  private static const string _INITIAL_QUERY =
+  private const string _INITIAL_QUERY =
     "SELECT " +
     "tracker:id(?_contact) " +
     "nco:fullname(?_contact) " +

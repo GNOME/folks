@@ -1321,7 +1321,7 @@ public class Folks.Individual : Object,
    * having to mess about with delegates.
    *
    * All keys in this array must be unique. */
-  private static const _Notifier _notifiers[] =
+  private const _Notifier _notifiers[] =
     {
       { "alias", Individual._notify_alias_cb },
       { "avatar", Individual._notify_avatar_cb },
