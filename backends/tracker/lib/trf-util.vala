@@ -72,7 +72,7 @@ internal class Trf.AfflInfo : Object
     {
       string ret = " { ";
       bool first = true;
-      unowned ParamSpec[] properties = this.get_class ().list_properties ();
+      var properties = this.get_class ().list_properties ();
 
       foreach (unowned ParamSpec pspec in properties)
         {
