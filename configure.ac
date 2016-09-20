@@ -1,5 +1,5 @@
 # If not 1, append datestamp to the version number
-m4_define([folks_released], [0])
+m4_define([folks_released], [1])
 
 m4_define([folks_major_version], [0])
 m4_define([folks_minor_version], [11])
@@ -25,7 +25,7 @@ m4_define([folks_nano_version], [0])
 # against a core with the same LT current number as itself. This allows the API
 # which is exposed to the modules to be changed.
 m4_define([folks_lt_current], [43])
-m4_define([folks_lt_revision], [2])
+m4_define([folks_lt_revision], [3])
 m4_define([folks_lt_age], [18])
 
 # Each of the backend libraries (e.g. libfolks-eds.so; *not* the loadable
@@ -34,23 +34,23 @@ m4_define([folks_lt_age], [18])
 # binary-dependent on libfolks.so), but should also be incremented when
 # incompatible changes are made in the backend library APIs themselves.
 m4_define([folks_eds_lt_current], [43])
-m4_define([folks_eds_lt_revision], [2])
+m4_define([folks_eds_lt_revision], [3])
 m4_define([folks_eds_lt_age], [18])
 
 m4_define([folks_libsocialweb_lt_current], [43])
-m4_define([folks_libsocialweb_lt_revision], [2])
+m4_define([folks_libsocialweb_lt_revision], [3])
 m4_define([folks_libsocialweb_lt_age], [18])
 
 m4_define([folks_telepathy_lt_current], [43])
-m4_define([folks_telepathy_lt_revision], [2])
+m4_define([folks_telepathy_lt_revision], [3])
 m4_define([folks_telepathy_lt_age], [18])
 
 m4_define([folks_tracker_lt_current], [43])
-m4_define([folks_tracker_lt_revision], [2])
+m4_define([folks_tracker_lt_revision], [3])
 m4_define([folks_tracker_lt_age], [18])
 
 m4_define([folks_dummy_lt_current], [43])
-m4_define([folks_dummy_lt_revision], [2])
+m4_define([folks_dummy_lt_revision], [3])
 m4_define([folks_dummy_lt_age], [18])
 
 # Display the nano_version only if it's not '0'
