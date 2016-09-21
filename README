@@ -6,7 +6,7 @@ This source distribution also builds a Telepathy backend
 libfolks classes (libfolks-telepathy.so).
 
 Browse the official repository for folks here:
-  http://git.gnome.org/browse/folks
+  https://git.gnome.org/browse/folks
 
 More information is available at:
   https://wiki.gnome.org/Projects/Folks
