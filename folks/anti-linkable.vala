@@ -119,7 +119,7 @@ public interface Folks.AntiLinkable : Folks.Persona
   public async void add_anti_links (Set<Persona> other_personas)
       throws PropertyError
     {
-      var new_anti_links = SmallSet.copy (this.anti_links);
+      var new_anti_links = SmallSet<string>.copy (this.anti_links);
 
       foreach (var p in other_personas)
         {
@@ -154,7 +154,7 @@ public interface Folks.AntiLinkable : Folks.Persona
   public async void remove_anti_links (Set<Persona> other_personas)
       throws PropertyError
     {
-      var new_anti_links = SmallSet.copy (this.anti_links);
+      var new_anti_links = SmallSet<string>.copy (this.anti_links);
 
       foreach (var p in other_personas)
         {
@@ -183,7 +183,7 @@ public interface Folks.AntiLinkable : Folks.Persona
     {
        if (!this.has_global_anti_link())
          {
-           var new_anti_links = SmallSet.copy (this.anti_links);
+           var new_anti_links = SmallSet<string>.copy (this.anti_links);
            new_anti_links.add ("*");
            yield this.change_anti_links (new_anti_links);
          }
@@ -206,7 +206,7 @@ public interface Folks.AntiLinkable : Folks.Persona
     {
        if (this.has_global_anti_link())
          {
-           var new_anti_links = SmallSet.copy (this.anti_links);
+           var new_anti_links = SmallSet<string>.copy (this.anti_links);
            new_anti_links.remove ("*");
            yield this.change_anti_links (new_anti_links);
          }

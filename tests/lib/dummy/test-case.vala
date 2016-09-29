@@ -121,7 +121,7 @@ public class DummyTest.TestCase : Folks.TestCase
       this.dummy_persona_store.persona_type = typeof (FolksDummy.FullPersona);
 
       /* Register it with the backend. */
-      var persona_stores = new HashSet<PersonaStore> ();
+      var persona_stores = new HashSet<FolksDummy.PersonaStore> ();
       persona_stores.add (this.dummy_persona_store);
       this.dummy_backend.register_persona_stores (persona_stores);
     }
@@ -133,7 +133,7 @@ public class DummyTest.TestCase : Folks.TestCase
    */
   public override void tear_down ()
     {
-      var persona_stores = new HashSet<PersonaStore> ();
+      var persona_stores = new HashSet<FolksDummy.PersonaStore> ();
       persona_stores.add (this.dummy_persona_store);
       this.dummy_backend.unregister_persona_stores (persona_stores);
 

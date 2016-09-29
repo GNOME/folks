@@ -50,7 +50,7 @@ public class IndividualRetrievalTests : DummyTest.TestCase
           "renato@jabber.com", "renato@yahoo.com" },
     };
 
-  private static async Folks.Persona _create_persona_from_info (
+  private static async FolksDummy.Persona _create_persona_from_info (
       FolksDummy.PersonaStore store, PersonaInfo info)
     {
       var p = new FullPersona (store, info.contact_id);
@@ -90,7 +90,7 @@ public class IndividualRetrievalTests : DummyTest.TestCase
 
   private async void _register_personas ()
     {
-      var personas = new HashSet<Folks.Persona> ();
+      var personas = new HashSet<FolksDummy.Persona> ();
 
       /* Create a set of personas. */
       foreach (var info in IndividualRetrievalTests._persona_info)

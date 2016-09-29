@@ -55,7 +55,7 @@ public class PrimaryStoreChangesTests : DummyTest.TestCase
           this._settings.set_string ("primary-store", "dummy:dummy-store");
         }
 
-      var persona_stores = new HashSet<PersonaStore> ();
+      var persona_stores = new HashSet<FolksDummy.PersonaStore> ();
       persona_stores.add (this.second_persona_store);
       this.dummy_backend.unregister_persona_stores (persona_stores);
 
@@ -80,7 +80,7 @@ public class PrimaryStoreChangesTests : DummyTest.TestCase
       this.second_persona_store.persona_type = typeof (FolksDummy.FullPersona);
 
       /* Register it with the backend. */
-      var persona_stores = new HashSet<PersonaStore> ();
+      var persona_stores = new HashSet<FolksDummy.PersonaStore> ();
       persona_stores.add (this.second_persona_store);
       this.dummy_backend.register_persona_stores (persona_stores);
     }

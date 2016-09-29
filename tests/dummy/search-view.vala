@@ -96,7 +96,7 @@ public class SearchViewTests : DummyTest.TestCase
       persona2.update_full_name ("Artemis Arachnid");
       persona3.update_full_name ("Álvaro Pañuelo");
 
-      var personas = new HashSet<Folks.Persona> ();
+      var personas = new HashSet<FolksDummy.Persona> ();
       personas.add (persona0);
       personas.add (persona1);
       personas.add (persona2);
@@ -205,7 +205,7 @@ public class SearchViewTests : DummyTest.TestCase
       var unexpected_matches = new HashSet<string> ();
 
       /* Add a first persona who will be matched. */
-      var personas = new HashSet<Folks.Persona> ();
+      var personas = new HashSet<FolksDummy.Persona> ();
       personas.add (this._generate_main_persona ());
 
       /* Add a second persona, not expected to match the query. */
@@ -274,7 +274,7 @@ public class SearchViewTests : DummyTest.TestCase
       email_addresses.add (new EmailFieldDetails ("mallory@isis.secret"));
       persona2.update_email_addresses (email_addresses);
 
-      personas = new HashSet<Folks.Persona> ();
+      personas = new HashSet<FolksDummy.Persona> ();
       personas.add (persona2);
       expected_matches.add ("persona2");
 
@@ -306,7 +306,7 @@ public class SearchViewTests : DummyTest.TestCase
        * search that only matches that value and confirm. */
 
       /* NOTE: each contact added here will only count if it has a test below */
-      var personas = new HashSet<Folks.Persona> ();
+      var personas = new HashSet<FolksDummy.Persona> ();
       personas.add (this._generate_test_contact ("full-name",
           (p) => { p.update_full_name ("full_name"); }));
       personas.add (this._generate_test_contact ("nickname",
@@ -492,7 +492,7 @@ public class SearchViewTests : DummyTest.TestCase
     {
       var main_loop = new GLib.MainLoop (null, false);
 
-      var personas = new HashSet<Folks.Persona> ();
+      var personas = new HashSet<FolksDummy.Persona> ();
       personas.add (this._generate_main_persona ());
 
       this.dummy_persona_store.register_personas (personas);
@@ -540,7 +540,7 @@ public class SearchViewTests : DummyTest.TestCase
     {
       var main_loop = new GLib.MainLoop (null, false);
 
-      var personas = new HashSet<Folks.Persona> ();
+      var personas = new HashSet<FolksDummy.Persona> ();
       personas.add (this._generate_main_persona ());
 
       this.dummy_persona_store.register_personas (personas);
