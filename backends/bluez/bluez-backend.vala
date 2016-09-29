@@ -558,7 +558,11 @@ public class Folks.Backends.BlueZ.Backend : Folks.Backend
           try
             {
               this._manager =
+#if VALA_0_36
+                  yield new DBusObjectManagerClient.for_bus (BusType.SYSTEM,
+#else
                   yield DBusObjectManagerClient.new_for_bus (BusType.SYSTEM,
+#endif
                       DBusObjectManagerClientFlags.NONE, "org.bluez", "/",
                       /* DBusProxyTypeFunc: */
                       (manager, path, iface_name) =>
