@@ -141,7 +141,7 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
   /**
    * {@inheritDoc}
    */
-  public override Map<string, Persona> personas
+  public override Map<string, Folks.Persona> personas
     {
       get { return this._personas_ro; }
     }

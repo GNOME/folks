@@ -110,7 +110,7 @@ public class Folks.Backends.Ofono.PersonaStore : Folks.PersonaStore
   /**
    * {@inheritDoc}
    */
-  public override Map<string, Persona> personas
+  public override Map<string, Folks.Persona> personas
     {
       get { return this._personas_ro; }
     }

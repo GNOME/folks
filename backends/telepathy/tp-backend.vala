@@ -46,7 +46,7 @@ public class Folks.Backends.Tp.Backend : Folks.Backend
   /**
    * {@inheritDoc}
    */
-  public override Map<string, PersonaStore> persona_stores
+  public override Map<string, Folks.PersonaStore> persona_stores
     {
       get { return Tpf.PersonaStore.list_persona_stores (); }
     }

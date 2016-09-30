@@ -225,7 +225,7 @@ public class FolksDummy.PersonaStore : Folks.PersonaStore
    *
    * @since 0.9.7
    */
-  public override Map<string, Persona> personas
+  public override Map<string, Folks.Persona> personas
     {
       get { return this._personas_ro; }
     }
