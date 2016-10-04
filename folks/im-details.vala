@@ -175,7 +175,7 @@ public interface Folks.ImDetails : Object
             {
               throw new ImDetailsError.INVALID_IM_ADDRESS (
                   /* Translators: the parameter is an IM address. */
-                  _("The IM address '%s' could not be understood."),
+                  _("The IM address ‘%s’ could not be understood."),
                   im_address);
             }
 
@@ -189,7 +189,7 @@ public interface Folks.ImDetails : Object
             {
               throw new ImDetailsError.INVALID_IM_ADDRESS (
                   /* Translators: the parameter is an IM address. */
-                  _("The IM address '%s' could not be understood."),
+                  _("The IM address ‘%s’ could not be understood."),
                   im_address);
             }
 
@@ -211,7 +211,7 @@ public interface Folks.ImDetails : Object
             {
               throw new ImDetailsError.INVALID_IM_ADDRESS (
                   /* Translators: the parameter is an IM address. */
-                  _("The IM address '%s' could not be understood."),
+                  _("The IM address ‘%s’ could not be understood."),
                   im_address);
             }
 
@@ -238,7 +238,7 @@ public interface Folks.ImDetails : Object
             {
               throw new ImDetailsError.INVALID_IM_ADDRESS (
                   /* Translators: the parameter is an IM address. */
-                  _("The IM address '%s' could not be understood."),
+                  _("The IM address ‘%s’ could not be understood."),
                   im_address);
             }
 

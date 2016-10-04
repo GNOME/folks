@@ -740,7 +740,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
                   /* Translators: the first parameter is the unknown key that
                    * was received with the details params, and the second
                    * identifies the persona store. */
-                _("Unrecognized parameter '%s' passed to persona store '%s'."),
+                _("Unrecognized parameter ‘%s’ passed to persona store ‘%s’."),
                 k, this.id);
             }
         }

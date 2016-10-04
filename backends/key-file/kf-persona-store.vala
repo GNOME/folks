@@ -231,7 +231,7 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
                       warning (
                           /* Translators: the first parameter is a filename, and
                            * the second is an error message. */
-                          _("The relationship key file '%s' could not be loaded: %s"),
+                          _("The relationship key file ‘%s’ could not be loaded: %s"),
                           filename, e1.message);
                       this.removed ();
                       return;
@@ -253,7 +253,7 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
                       warning (
                           /* Translators: the first parameter is a path, and the
                            * second is an error message. */
-                          _("The relationship key file directory '%s' could not be created: %s"),
+                          _("The relationship key file directory ‘%s’ could not be created: %s"),
                           parent_dir.get_path (), e3.message);
                       this.removed ();
                       return;
@@ -277,7 +277,7 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
                       warning (
                           /* Translators: the first parameter is a filename, and
                            * the second is an error message. */
-                          _("The relationship key file '%s' could not be created: %s"),
+                          _("The relationship key file ‘%s’ could not be created: %s"),
                           filename, e2.message);
                       this.removed ();
                       return;
@@ -468,7 +468,7 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
             {
               /* Translators: the first parameter is a filename, the second is
                * an error message. */
-              warning (_("Could not write updated key file '%s': %s"),
+              warning (_("Could not write updated key file ‘%s’: %s"),
                   this.file.get_path (), e.message);
             }
         }

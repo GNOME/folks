@@ -1306,7 +1306,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
           throw new PersonaStoreError.INVALID_ARGUMENT (
               /* Translators: the first two parameters are store identifiers and
                * the third is a contact identifier. */
-              _("Persona store (%s, %s) requires the following details:\n    contact (provided: '%s')\n"),
+              _("Persona store (%s, %s) requires the following details:\n    contact (provided: ‘%s’)\n"),
               this.type_id, this.id, contact_id);
         }
 
@@ -1415,7 +1415,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
         {
           throw new PropertyError.UNKNOWN_ERROR (
               /* Translators: the parameter is an error message. */
-              _("Failed to change contact's alias: %s"), e1.message);
+              _("Failed to change contact’s alias: %s"), e1.message);
         }
     }
 
@@ -1496,7 +1496,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       if (!persona.is_user)
         {
           throw new PersonaStoreError.UNSUPPORTED_ON_NON_USER (
-              _("Extended information may only be set on the user's Telepathy contact."));
+              _("Extended information may only be set on the user’s Telepathy contact."));
         }
 
       var info_list = PersonaStore._contact_info_set_to_list (info_set);

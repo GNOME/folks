@@ -651,7 +651,7 @@ public class Folks.BackendStore : Object {
         {
           /* Translators: the first parameter is a folder path and the second
            * is an error message. */
-          critical (_("Error listing contents of folder '%s': %s"),
+          critical (_("Error listing contents of folder ‘%s’: %s"),
               dir.get_path (), error.message);
 
           return null;
@@ -820,13 +820,13 @@ public class Folks.BackendStore : Object {
           if (error is IOError.NOT_FOUND)
             {
               /* Translators: the parameter is a filename. */
-              critical (_("File or directory '%s' does not exist."),
+              critical (_("File or directory ‘%s’ does not exist."),
                   file.get_path ());
             }
           else
             {
               /* Translators: the parameter is a filename. */
-              critical (_("Failed to get content type for '%s'."),
+              critical (_("Failed to get content type for ‘%s’."),
                   file.get_path ());
             }
 

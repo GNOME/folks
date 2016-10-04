@@ -429,7 +429,7 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
           if (!(e is KeyFileError.GROUP_NOT_FOUND))
             {
               /* Translators: the parameter is an error message. */
-              warning (_("Couldn't load data from key file: %s"), e.message);
+              warning (_("Couldn’t load data from key file: %s"), e.message);
             }
         }
     }

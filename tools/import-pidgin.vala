@@ -79,7 +79,7 @@ public class Folks.Importers.Pidgin : Folks.Importer
         {
           throw new ImportError.MALFORMED_INPUT (
               /* Translators: the parameter is a filename. */
-              _("The Pidgin buddy list file '%s' could not be loaded."),
+              _("The Pidgin buddy list file ‘%s’ could not be loaded."),
               filename);
         }
 
@@ -114,8 +114,8 @@ public class Folks.Importers.Pidgin : Folks.Importer
       stdout.printf (
           /* Translators: the first parameter is the number of buddies which
            * were successfully imported, and the second is a filename. */
-          ngettext ("Imported %u buddy from '%s'.",
-              "Imported %u buddies from '%s'.", this.persona_count) + "\n",
+          ngettext ("Imported %u buddy from ‘%s’.",
+              "Imported %u buddies from ‘%s’.", this.persona_count) + "\n",
           this.persona_count, filename);
 
       /* Return the number of Personas we imported */

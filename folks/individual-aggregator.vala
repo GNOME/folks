@@ -1060,7 +1060,7 @@ public class Folks.IndividualAggregator : Object
             {
               /* Translators: the first parameter is a persona store identifier
                * and the second is an error message. */
-              warning (_("Error preparing persona store '%s': %s"), store_id,
+              warning (_("Error preparing persona store ‘%s’: %s"), store_id,
                   e.message);
             }
         });
@@ -1291,7 +1291,7 @@ public class Folks.IndividualAggregator : Object
                     {
                       warning (
                           /* Translators: the parameter is a property name. */
-                          _("Unknown property '%s' in linkable property list."),
+                          _("Unknown property ‘%s’ in linkable property list."),
                           prop_name);
                       continue;
                     }
@@ -1564,7 +1564,7 @@ public class Folks.IndividualAggregator : Object
                 {
                   warning (
                       /* Translators: the parameter is a property name. */
-                      _("Unknown property '%s' in linkable property list."),
+                      _("Unknown property ‘%s’ in linkable property list."),
                       prop_name);
                   continue;
                 }
@@ -2050,7 +2050,7 @@ public class Folks.IndividualAggregator : Object
               throw new IndividualAggregatorError.ADD_FAILED (
                   /* Translators: the first parameter is a store identifier
                    * and the second parameter is an error message. */
-                  _("Failed to add contact for persona store ID '%s': %s"),
+                  _("Failed to add contact for persona store ID ‘%s’: %s"),
                   full_id, e.message);
             }
         }
@@ -2149,7 +2149,7 @@ public class Folks.IndividualAggregator : Object
           throw new IndividualAggregatorError.NO_PRIMARY_STORE (
               _("Can’t link personas with no primary store.") + "\n" +
               _("Persona store ‘%s:%s’ is configured as primary, but could not be found or failed to load.") + "\n" +
-              _("Check the relevant service is running, or change the default store in that service or using the “%s” GSettings key."),
+              _("Check the relevant service is running, or change the default store in that service or using the ‘%s’ GSettings key."),
               this._configured_primary_store_type_id,
               this._configured_primary_store_id,
               "%s %s".printf (IndividualAggregator._FOLKS_GSETTINGS_SCHEMA,
@@ -2181,7 +2181,7 @@ public class Folks.IndividualAggregator : Object
               catch (PropertyError e)
                 {
                   throw new IndividualAggregatorError.PROPERTY_NOT_WRITEABLE (
-                      _("Anti-links can't be removed between personas being linked."));
+                      _("Anti-links can’t be removed between personas being linked."));
                 }
             }
         }
@@ -2480,7 +2480,7 @@ public class Folks.IndividualAggregator : Object
           throw new IndividualAggregatorError.NO_PRIMARY_STORE (
               _("Can’t add personas with no primary store.") + "\n" +
               _("Persona store ‘%s:%s’ is configured as primary, but could not be found or failed to load.") + "\n" +
-              _("Check the relevant service is running, or change the default store in that service or using the “%s” GSettings key."),
+              _("Check the relevant service is running, or change the default store in that service or using the ‘%s’ GSettings key."),
               this._configured_primary_store_type_id,
               this._configured_primary_store_id,
               "%s %s".printf (IndividualAggregator._FOLKS_GSETTINGS_SCHEMA,
@@ -2489,7 +2489,7 @@ public class Folks.IndividualAggregator : Object
       else if (new_persona == null)
         {
           throw new IndividualAggregatorError.PROPERTY_NOT_WRITEABLE (
-              _("Can't write to requested property (“%s”) of the writeable store."),
+              _("Can’t write to requested property (‘%s’) of the writeable store."),
               property_name);
         }
 

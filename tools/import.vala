@@ -41,7 +41,7 @@ public class Folks.ImportTool : Object
   private const OptionEntry[] options =
     {
       { "source", 's', 0, OptionArg.STRING, ref ImportTool.source,
-          N_("Source backend name (default: 'pidgin')"), "name" },
+          N_("Source backend name (default: ‘pidgin’)"), "name" },
       { "source-filename", 0, 0, OptionArg.FILENAME,
           ref ImportTool.source_filename,
           N_("Source filename (default: specific to source backend)"), null },
@@ -65,7 +65,7 @@ public class Folks.ImportTool : Object
       catch (OptionError e)
         {
           /* Translators: the parameter is an error message. */
-          stderr.printf (_("Couldn't parse command line options: %s") + "\n",
+          stderr.printf (_("Couldn’t parse command line options: %s") + "\n",
               e.message);
           return 1;
         }
@@ -106,7 +106,7 @@ public class Folks.ImportTool : Object
       catch (GLib.Error e1)
         {
           /* Translators: the parameter is an error message. */
-          stderr.printf (_("Couldn't load the backends: %s") + "\n",
+          stderr.printf (_("Couldn’t load the backends: %s") + "\n",
               e1.message);
           return false;
         }
@@ -117,7 +117,7 @@ public class Folks.ImportTool : Object
       if (kf_backend == null)
         {
           /* Translators: the parameter is a backend identifier. */
-          stderr.printf (_("Couldn't load the ‘%s’ backend.") + "\n",
+          stderr.printf (_("Couldn’t load the ‘%s’ backend.") + "\n",
               "key-file");
           return false;
         }
@@ -130,7 +130,7 @@ public class Folks.ImportTool : Object
         {
           /* Translators: the first parameter is a backend identifier and the
            * second parameter is an error message. */
-          stderr.printf (_("Couldn't prepare the ‘%s’ backend: %s") + "\n",
+          stderr.printf (_("Couldn’t prepare the ‘%s’ backend: %s") + "\n",
               "key-file", e2.message);
           return false;
         }
@@ -143,7 +143,7 @@ public class Folks.ImportTool : Object
         {
           stderr.printf (
               /* Translators: the parameter is a backend identifier. */
-              _("Couldn't load the ‘%s’ backend's persona store.") + "\n",
+              _("Couldn’t load the ‘%s’ backend’s persona store.") + "\n",
               "key-file");
           return false;
         }
@@ -164,7 +164,7 @@ public class Folks.ImportTool : Object
           /* Translators: the first parameter is a backend identifier and the
            * second parameter is an error message. */
           stderr.printf (
-              _("Couldn't prepare the ‘%s’ backend's persona store: %s") + "\n",
+              _("Couldn’t prepare the ‘%s’ backend’s persona store: %s") + "\n",
               e3.message);
           return false;
         }

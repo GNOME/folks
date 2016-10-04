@@ -6,7 +6,7 @@
       <summary>Primary store ID</summary>
       <description>The ID of the persona store which folks should use as primary (i.e. to store linking data in).
           The type ID of the store may optionally be prepended, separated by a colon.
-          For example: “eds:system-address-book” or “key-file”.</description>
+          For example: ‘eds:system-address-book’ or ‘key-file’.</description>
     </key>
   </schema>
 </schemalist>

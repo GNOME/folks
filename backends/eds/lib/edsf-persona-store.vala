@@ -650,7 +650,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
                   case ClientError.NOT_SUPPORTED:
                     throw new PersonaStoreError.READ_ONLY (
                         /* Translators: the parameter is an error message. */
-                        _("Removing contacts isn't supported by this persona store: %s"),
+                        _("Removing contacts isn’t supported by this persona store: %s"),
                             e.message);
                   case ClientError.AUTHENTICATION_REQUIRED:
                     /* TODO: Support authentication. bgo#653339 */
@@ -679,7 +679,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
 
           /* Fallback error. */
           throw new PersonaStoreError.REMOVE_FAILED (
-              _("Can't remove contact ‘%s’: %s"), persona.uid, e.message);
+              _("Can’t remove contact ‘%s’: %s"), persona.uid, e.message);
         }
     }
 
@@ -806,7 +806,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
               throw new PersonaStoreError.INVALID_ARGUMENT (
                   /* Translators: the first parameter is an address book URI
                    * and the second is an error message. */
-                  _("Couldn't open address book ‘%s’: %s"), this.id, e1.message);
+                  _("Couldn’t open address book ‘%s’: %s"), this.id, e1.message);
             }
 
           /* Determine which fields the address book supports. This is necessary
@@ -874,7 +874,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
 
               throw new PersonaStoreError.INVALID_ARGUMENT (
                   /* Translators: the parameteter is an error message. */
-                  _("Couldn't get address book capabilities: %s"), e2.message);
+                  _("Couldn’t get address book capabilities: %s"), e2.message);
             }
 
           /* Get the set of capabilities supported by the address book.
@@ -904,7 +904,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
 
               throw new PersonaStoreError.INVALID_ARGUMENT (
                   /* Translators: the parameteter is an error message. */
-                  _("Couldn't get address book capabilities: %s"), e4.message);
+                  _("Couldn’t get address book capabilities: %s"), e4.message);
             }
 
           bool got_view = false;
@@ -920,7 +920,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
                 {
                   throw new PersonaStoreError.INVALID_ARGUMENT (
                       /* Translators: the parameter is an address book URI. */
-                      _("Couldn't get view for address book ‘%s’."),
+                      _("Couldn’t get view for address book ‘%s’."),
                           this.id);
                 }
 
@@ -999,7 +999,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
               throw new PersonaStoreError.INVALID_ARGUMENT (
                   /* Translators: the first parameter is an address book URI
                    * and the second is an error message. */
-                  _("Couldn't get view for address book ‘%s’: %s"),
+                  _("Couldn’t get view for address book ‘%s’: %s"),
                   this.id, e3.message);
             }
 
@@ -1689,7 +1689,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
               /* Loading/Reading the avatar failed. */
               throw new PropertyError.INVALID_VALUE (
                   /* Translators: the parameter is an error message. */
-                  _("Can't update avatar: %s"), e1.message);
+                  _("Can’t update avatar: %s"), e1.message);
             }
         }
     }
