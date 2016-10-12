@@ -6,9 +6,10 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: folks master\n"
-"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=folks&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2015-03-30 16:56+0000\n"
-"PO-Revision-Date: 2015-03-30 22:45+0100\n"
+"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
+"product=folks&keywords=I18N+L10N&component=general\n"
+"POT-Creation-Date: 2016-10-10 10:43+0000\n"
+"PO-Revision-Date: 2016-10-12 20:21+0200\n"
 "Last-Translator: Dušan Kazik <prescott66@gmail.com>\n"
 "Language-Team: Slovak <gnome-sk-list@gnome.org>\n"
 "Language: sk\n"
@@ -16,21 +17,25 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 1 : (n>=2 && n<=4) ? 2 : 0;\n"
-"X-Generator: Poedit 1.7.4\n"
+"X-Generator: Poedit 1.8.9\n"
 
-#: ../backends/bluez/bluez-backend.vala:600
+#: ../backends/bluez/bluez-backend.vala:604
 msgid ""
-"No BlueZ 5 object manager running, so the BlueZ backend will be inactive. Either your BlueZ installation is too "
-"old (only version 5 is supported) or the service can’t be started."
+"No BlueZ 5 object manager running, so the BlueZ backend will be inactive. "
+"Either your BlueZ installation is too old (only version 5 is supported) or "
+"the service can’t be started."
 msgstr ""
-"Nie je spustený žiadny správca objektov BlueZ 5, takže podporný program BlueZ nebude aktívny. Buď je inštalácia "
-"služby BlueZ príliš stará (iba verzia 5 je podporovaná), alebo sa ju nepodarilo spustiť."
+"Nie je spustený žiadny správca objektov BlueZ 5, takže podporný program "
+"BlueZ nebude aktívny. Buď je inštalácia služby BlueZ príliš stará (iba "
+"verzia 5 je podporovaná), alebo sa ju nepodarilo spustiť."
 
-#: ../backends/bluez/bluez-backend.vala:613
-msgid "Error connecting to OBEX transfer daemon over D-Bus. Ensure BlueZ and obexd are installed."
+#: ../backends/bluez/bluez-backend.vala:617
+msgid ""
+"Error connecting to OBEX transfer daemon over D-Bus. Ensure BlueZ and obexd "
+"are installed."
 msgstr ""
-"Chyba počas pripájania k démonovi na prenos pomocou protokolu OBEX cez zbernicu D-Bus. Uistite sa, že sú služby "
-"BlueZ a obexd nainštalované."
+"Chyba počas pripájania k démonovi na prenos pomocou protokolu OBEX cez "
+"zbernicu D-Bus. Uistite sa, že sú služby BlueZ a obexd nainštalované."
 
 #. Translators: the parameter is an error message.
 #: ../backends/bluez/bluez-persona-store.vala:385
@@ -43,36 +48,49 @@ msgstr "Chyba počas čítania súboru s preneseným adresárom kontaktov: %s"
 #. * alias.
 #. Translators: the first parameter is the name of the failed
 #. * transfer, and the second is a Bluetooth device alias.
-#: ../backends/bluez/bluez-persona-store.vala:676 ../backends/bluez/bluez-persona-store.vala:698
+#: ../backends/bluez/bluez-persona-store.vala:676
+#: ../backends/bluez/bluez-persona-store.vala:698
 #, c-format
-msgid "Error during transfer of the address book ‘%s’ from Bluetooth device ‘%s’."
-msgstr "Chyba počas prenosu adresára kontaktov „%s“ zo zariadenia Bluetooth „%s“."
+msgid ""
+"Error during transfer of the address book ‘%s’ from Bluetooth device ‘%s’."
+msgstr ""
+"Chyba počas prenosu adresára kontaktov „%s“ zo zariadenia Bluetooth „%s“."
 
 #: ../backends/bluez/bluez-persona-store.vala:791
 #, c-format
-msgid "Permission to access the address book on Bluetooth device ‘%s’ was denied by the user."
-msgstr "Oprávnenie na prístup k adresáru kontaktov v zariadení Bluetooth „%s“ bolo zamietnuté používateľom."
+msgid ""
+"Permission to access the address book on Bluetooth device ‘%s’ was denied by "
+"the user."
+msgstr ""
+"Oprávnenie na prístup k adresáru kontaktov v zariadení Bluetooth „%s“ bolo "
+"zamietnuté používateľom."
 
 #. Translators: the first parameter is a Bluetooth device
 #. * alias, and the second is an error message.
 #: ../backends/bluez/bluez-persona-store.vala:798
 #, c-format
 msgid "An OBEX address book transfer from device ‘%s’ could not be started: %s"
-msgstr "Nepodarilo sa spustiť prenos adresára kontaktov pomocou protokolu OBEX zo zariadenia „%s“: %s"
+msgstr ""
+"Nepodarilo sa spustiť prenos adresára kontaktov pomocou protokolu OBEX zo "
+"zariadenia „%s“: %s"
 
 #. Translators: the first parameter is a Bluetooth device
 #. * alias, and the second is an error message.
 #: ../backends/bluez/bluez-persona-store.vala:838
 #, c-format
 msgid "The OBEX address book transfer from device ‘%s’ failed: %s"
-msgstr "Zlyhal prenos adresára kontaktov pomocou protokolu OBEX zo zariadenia „%s“: %s"
+msgstr ""
+"Zlyhal prenos adresára kontaktov pomocou protokolu OBEX zo zariadenia „%s“: "
+"%s"
 
 #. Translators: the first parameter is a Bluetooth device
 #. * alias, and the second is an error message.
 #: ../backends/bluez/bluez-persona-store.vala:855
 #, c-format
-msgid "Error during transfer of the address book from Bluetooth device ‘%s’: %s"
-msgstr "Chyba počas prenosu adresára kontaktov zo zariadenia Bluetooth „%s“: %s"
+msgid ""
+"Error during transfer of the address book from Bluetooth device ‘%s’: %s"
+msgstr ""
+"Chyba počas prenosu adresára kontaktov zo zariadenia Bluetooth „%s“: %s"
 
 #: ../backends/bluez/bluez-persona-store.vala:1073
 #, c-format
@@ -99,7 +117,9 @@ msgstr "Označené hviezdičkou v Androide"
 #: ../backends/eds/lib/edsf-persona-store.vala:642
 #, c-format
 msgid "Address book ‘%s’ is offline, so contact ‘%s’ cannot be removed."
-msgstr "Adresár kontaktov „%s“ nie je pripojený, takže kontakt „%s“ nemôže byť odstránený."
+msgstr ""
+"Adresár kontaktov „%s“ nie je pripojený, takže kontakt „%s“ nemôže byť "
+"odstránený."
 
 #. Translators: the first parameter is an address book
 #. * URI and the second is an error message.
@@ -111,24 +131,26 @@ msgstr "Nemáte práva na odstránenie kontaktu „%s“: %s"
 #. Translators: the parameter is an error message.
 #: ../backends/eds/lib/edsf-persona-store.vala:653
 #, c-format
-msgid "Removing contacts isn't supported by this persona store: %s"
+msgid "Removing contacts isn’t supported by this persona store: %s"
 msgstr "Odstránenie kontaktov nie je podporované týmto úložiskom osôb: %s"
 
 #: ../backends/eds/lib/edsf-persona-store.vala:682
 #, c-format
-msgid "Can't remove contact ‘%s’: %s"
+msgid "Can’t remove contact ‘%s’: %s"
 msgstr "Nedá sa odstrániť kontakt „%s“: %s"
 
 #. Translators: the parameter is an address book
 #. * URI.
-#: ../backends/eds/lib/edsf-persona-store.vala:771 ../backends/eds/lib/edsf-persona-store.vala:964
+#: ../backends/eds/lib/edsf-persona-store.vala:771
+#: ../backends/eds/lib/edsf-persona-store.vala:964
 #, c-format
 msgid "Address book ‘%s’ is offline."
 msgstr "Adresár kontaktov „%s“ nie je pripojený."
 
 #. Translators: the first parameter is an address
 #. * book URI and the second is an error message.
-#: ../backends/eds/lib/edsf-persona-store.vala:776 ../backends/eds/lib/edsf-persona-store.vala:969
+#: ../backends/eds/lib/edsf-persona-store.vala:776
+#: ../backends/eds/lib/edsf-persona-store.vala:969
 #, c-format
 msgid "Permission denied to open address book ‘%s’: %s"
 msgstr "Nemáte práva na otvorenie adresára kontaktov „%s“: %s"
@@ -137,26 +159,27 @@ msgstr "Nemáte práva na otvorenie adresára kontaktov „%s“: %s"
 #. * and the second is an error message.
 #: ../backends/eds/lib/edsf-persona-store.vala:809
 #, c-format
-msgid "Couldn't open address book ‘%s’: %s"
+msgid "Couldn’t open address book ‘%s’: %s"
 msgstr "Nepodarilo sa otvoriť adresár kontaktov „%s“: %s"
 
 #. Translators: the parameteter is an error message.
-#: ../backends/eds/lib/edsf-persona-store.vala:877 ../backends/eds/lib/edsf-persona-store.vala:907
+#: ../backends/eds/lib/edsf-persona-store.vala:877
+#: ../backends/eds/lib/edsf-persona-store.vala:907
 #, c-format
-msgid "Couldn't get address book capabilities: %s"
+msgid "Couldn’t get address book capabilities: %s"
 msgstr "Nepodarilo sa získať schopnosti adresára kontaktov: %s"
 
 #. Translators: the parameter is an address book URI.
 #: ../backends/eds/lib/edsf-persona-store.vala:923
 #, c-format
-msgid "Couldn't get view for address book ‘%s’."
+msgid "Couldn’t get view for address book ‘%s’."
 msgstr "Nepodarilo sa získať zobrazenie adresára kontaktov „%s“."
 
 #. Translators: the first parameter is an address book URI
 #. * and the second is an error message.
 #: ../backends/eds/lib/edsf-persona-store.vala:1002
 #, c-format
-msgid "Couldn't get view for address book ‘%s’: %s"
+msgid "Couldn’t get view for address book ‘%s’: %s"
 msgstr "Nepodarilo sa získať zobrazenie adresára kontaktov „%s“: %s"
 
 #: ../backends/eds/lib/edsf-persona-store.vala:1305
@@ -166,127 +189,148 @@ msgstr "Vytvorenie nového kontaktu zlyhala kvôli vypršaniu časového limitu.
 #. Translators: the parameter is the name of a property on a
 #. * contact, formatted in the normal GObject style (e.g.
 #. * lowercase with hyphens to separate words).
-#: ../backends/eds/lib/edsf-persona-store.vala:1458
+#: ../backends/eds/lib/edsf-persona-store.vala:1419
 #, c-format
 msgid "Changing the ‘%s’ property failed due to reaching the timeout."
 msgstr "Zmena vlastnosti „%s“ zlyhala kvôli vypršaniu časového limitu."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1496 ../folks/avatar-details.vala:63
+#: ../backends/eds/lib/edsf-persona-store.vala:1453
+#: ../folks/avatar-details.vala:63
 msgid "Avatar is not writeable on this contact."
 msgstr "Vlastnosť „Podobizeň“ tohto kontaktu nie je zapisovateľná."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1517 ../folks/web-service-details.vala:123
+#: ../backends/eds/lib/edsf-persona-store.vala:1474
+#: ../folks/web-service-details.vala:123
 msgid "Web service addresses are not writeable on this contact."
 msgstr "Vlastnosť „Adresy webovej služby“ tohto kontaktu nie je zapisovateľná."
 
 # PK: URL nie je adresa, ale neviem ako inak to tu dat
 # PM: Locator je podľa definície je "určovač polohy" čo sa dá voľne preložiť ako adresa a je to už tak dosť zaužívané
-#: ../backends/eds/lib/edsf-persona-store.vala:1553 ../folks/url-details.vala:152
+#: ../backends/eds/lib/edsf-persona-store.vala:1510
+#: ../folks/url-details.vala:152
 msgid "URLs are not writeable on this contact."
 msgstr "Vlastnosť „Adresy URL“ tohto kontaktu nie je zapisovateľná."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1634 ../folks/local-id-details.vala:64
+#: ../backends/eds/lib/edsf-persona-store.vala:1591
+#: ../folks/local-id-details.vala:64
 msgid "Local IDs are not writeable on this contact."
-msgstr "Vlastnosť „Lokálne identifikátory“ tohto kontaktu nie je zapisovateľná."
+msgstr ""
+"Vlastnosť „Lokálne identifikátory“ tohto kontaktu nie je zapisovateľná."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1663
+#: ../backends/eds/lib/edsf-persona-store.vala:1620
 msgid "The contact cannot be marked as favourite."
 msgstr "Kontakt sa nedá označiť ako obľúbený."
 
 #. Translators: the parameter is an error message.
-#: ../backends/eds/lib/edsf-persona-store.vala:1735
+#: ../backends/eds/lib/edsf-persona-store.vala:1692
 #, c-format
-msgid "Can't update avatar: %s"
+msgid "Can’t update avatar: %s"
 msgstr "Nedá sa aktualizovať podobizeň: %s"
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1746 ../folks/email-details.vala:120
+#: ../backends/eds/lib/edsf-persona-store.vala:1703
+#: ../folks/email-details.vala:120
 msgid "E-mail addresses are not writeable on this contact."
 msgstr "Vlastnosť „Emailové adresy“ tohto kontaktu nie je zapisovateľná."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1811 ../folks/phone-details.vala:255
+#: ../backends/eds/lib/edsf-persona-store.vala:1768
+#: ../folks/phone-details.vala:255
 msgid "Phone numbers are not writeable on this contact."
 msgstr "Vlastnosť „Telefónne čísla“ tohto kontaktu nie je zapisovateľná."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1829 ../folks/postal-address-details.vala:361
+#: ../backends/eds/lib/edsf-persona-store.vala:1786
+#: ../folks/postal-address-details.vala:361
 msgid "Postal addresses are not writeable on this contact."
 msgstr "Vlastnosť „Poštové adresy“ tohto kontaktu nie je zapisovateľná."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1900 ../folks/name-details.vala:454
+#: ../backends/eds/lib/edsf-persona-store.vala:1857
+#: ../folks/name-details.vala:454
 msgid "Full name is not writeable on this contact."
 msgstr "Vlastnosť „Celé meno“ tohto kontaktu nie je zapisovateľná."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1922 ../folks/name-details.vala:492
+#: ../backends/eds/lib/edsf-persona-store.vala:1879
+#: ../folks/name-details.vala:492
 msgid "Nickname is not writeable on this contact."
 msgstr "Vlastnosť „Prezývka“ tohto kontaktu nie je zapisovateľná."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1944 ../folks/note-details.vala:138
+#: ../backends/eds/lib/edsf-persona-store.vala:1901
+#: ../folks/note-details.vala:138
 msgid "Notes are not writeable on this contact."
 msgstr "Vlastnosť „Poznámky“ tohto kontaktu nie je zapisovateľná."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1976 ../folks/birthday-details.vala:62
+#: ../backends/eds/lib/edsf-persona-store.vala:1933
+#: ../folks/birthday-details.vala:62
 msgid "Birthday is not writeable on this contact."
 msgstr "Vlastnosť „Narodeniny“ tohto kontaktu nie je zapisovateľná."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:2020 ../folks/role-details.vala:279
+#: ../backends/eds/lib/edsf-persona-store.vala:1977
+#: ../folks/role-details.vala:279
 msgid "Roles are not writeable on this contact."
 msgstr "Vlastnosť „Pozície“ tohto kontaktu nie je zapisovateľná."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:2121 ../folks/name-details.vala:417
+#: ../backends/eds/lib/edsf-persona-store.vala:2078
+#: ../folks/name-details.vala:417
 msgid "Structured name is not writeable on this contact."
 msgstr "Vlastnosť „Štruktúrované meno“ tohto kontaktu nie je zapisovateľná."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:2160 ../folks/im-details.vala:136
+#: ../backends/eds/lib/edsf-persona-store.vala:2117
+#: ../folks/im-details.vala:136
 msgid "IM addresses are not writeable on this contact."
-msgstr "Vlastnosť „Adresy pre okamžité správy“ tohto kontaktu nie je zapisovateľná."
+msgstr ""
+"Vlastnosť „Adresy pre okamžité správy“ tohto kontaktu nie je zapisovateľná."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:2210 ../folks/group-details.vala:174
+#: ../backends/eds/lib/edsf-persona-store.vala:2167
+#: ../folks/group-details.vala:174
 msgid "Groups are not writeable on this contact."
 msgstr "Vlastnosť „Skupiny“ tohto kontaktu nie je zapisovateľná."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:2225
+#: ../backends/eds/lib/edsf-persona-store.vala:2182
 msgid "My Contacts is only available for Google Contacts"
 msgstr "Moje kontakty sú dostupné iba pre kontakty Google"
 
-#: ../backends/eds/lib/edsf-persona-store.vala:2296 ../folks/gender-details.vala:79
+#: ../backends/eds/lib/edsf-persona-store.vala:2253
+#: ../folks/gender-details.vala:79
 msgid "Gender is not writeable on this contact."
 msgstr "Vlastnosť „Pohlavie“ tohto kontaktu nie je zapisovateľná."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:2334 ../folks/anti-linkable.vala:84
+#: ../backends/eds/lib/edsf-persona-store.vala:2291
+#: ../folks/anti-linkable.vala:84
 msgid "Anti-links are not writeable on this contact."
 msgstr "Vlastnosť „Anti-odkazy“ tohto kontaktu nie je zapisovateľná."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:2377 ../folks/location-details.vala:135
+#: ../backends/eds/lib/edsf-persona-store.vala:2334
+#: ../folks/location-details.vala:135
 msgid "Location is not writeable on this contact."
 msgstr "Vlastnosť „Umiestnenie“ tohto kontaktu nie je zapisovateľná."
 
 #. Translators: the first parameter is an error message.
-#: ../backends/eds/lib/edsf-persona-store.vala:2701
+#: ../backends/eds/lib/edsf-persona-store.vala:2658
 #, c-format
 msgid "Permission denied when creating new contact: %s"
 msgstr "Nemáte práva na vytvorenie nového kontaktu: %s"
 
 #. Translators: the first parameter is an error message.
-#: ../backends/eds/lib/edsf-persona-store.vala:2706
+#: ../backends/eds/lib/edsf-persona-store.vala:2663
 #, c-format
 msgid "Address book is offline and a new contact cannot be created: %s"
-msgstr "Adresár kontaktov nie je pripojený a nový kontakt nemôže byť vytvorený: %s"
+msgstr ""
+"Adresár kontaktov nie je pripojený a nový kontakt nemôže byť vytvorený: %s"
 
 #. Translators: the first parameter is a non-human-readable
 #. * property name and the second parameter is an error
 #. * message.
-#: ../backends/eds/lib/edsf-persona-store.vala:2715
+#: ../backends/eds/lib/edsf-persona-store.vala:2672
 #, c-format
 msgid "New contact is not writeable: %s"
 msgstr "Nový kontakt nie je zapisovateľný: %s"
 
 #. Translators: the first parameter is an error message.
-#: ../backends/eds/lib/edsf-persona-store.vala:2719
+#: ../backends/eds/lib/edsf-persona-store.vala:2676
 #, c-format
 msgid "Invalid value in contact: %s"
 msgstr "Neplatná hodnota v kontakte: %s"
 
 #. Translators: the first parameter is an error message.
-#: ../backends/eds/lib/edsf-persona-store.vala:2743
+#: ../backends/eds/lib/edsf-persona-store.vala:2700
 #, c-format
 msgid "Unknown error adding contact: %s"
 msgstr "Neznáma chyba počas pridávania kontaktu: %s"
@@ -294,7 +338,7 @@ msgstr "Neznáma chyba počas pridávania kontaktu: %s"
 #. Translators: the first parameter is a non-human-readable
 #. * property name and the second parameter is an error
 #. * message.
-#: ../backends/eds/lib/edsf-persona-store.vala:2776
+#: ../backends/eds/lib/edsf-persona-store.vala:2733
 #, c-format
 msgid "Property ‘%s’ is not writeable: %s"
 msgstr "Vlastnosť „%s“ nie je zapisovateľná: %s"
@@ -302,14 +346,14 @@ msgstr "Vlastnosť „%s“ nie je zapisovateľná: %s"
 #. Translators: the first parameter is a non-human-readable
 #. * property name and the second parameter is an error
 #. * message.
-#: ../backends/eds/lib/edsf-persona-store.vala:2785
+#: ../backends/eds/lib/edsf-persona-store.vala:2742
 #, c-format
 msgid "Invalid value for property ‘%s’: %s"
 msgstr "Neplatná hodnota pre vlastnosť „%s“: %s"
 
 #. Translators: the first parameter is a non-human-readable
 #. * property name and the second parameter is an error message.
-#: ../backends/eds/lib/edsf-persona-store.vala:2811
+#: ../backends/eds/lib/edsf-persona-store.vala:2768
 #, c-format
 msgid "Unknown error setting property ‘%s’: %s"
 msgstr "Vyskytla sa neznáma chyba pri nastavovaní vlastnosti „%s“: %s"
@@ -318,28 +362,28 @@ msgstr "Vyskytla sa neznáma chyba pri nastavovaní vlastnosti „%s“: %s"
 #. * the second is an error message.
 #: ../backends/key-file/kf-persona-store.vala:234
 #, c-format
-msgid "The relationship key file '%s' could not be loaded: %s"
+msgid "The relationship key file ‘%s’ could not be loaded: %s"
 msgstr "Nepodarilo sa načítať súbor s kľúčmi vzťahov „%s“: %s"
 
 #. Translators: the first parameter is a path, and the
 #. * second is an error message.
 #: ../backends/key-file/kf-persona-store.vala:256
 #, c-format
-msgid "The relationship key file directory '%s' could not be created: %s"
+msgid "The relationship key file directory ‘%s’ could not be created: %s"
 msgstr "Nepodarilo sa vytvoriť adresár pre súbor s kľúčmi vzťahov „%s“: %s"
 
 #. Translators: the first parameter is a filename, and
 #. * the second is an error message.
 #: ../backends/key-file/kf-persona-store.vala:280
 #, c-format
-msgid "The relationship key file '%s' could not be created: %s"
+msgid "The relationship key file ‘%s’ could not be created: %s"
 msgstr "Nepodarilo sa vytvoriť súbor s kľúčmi vzťahov „%s“: %s"
 
 #. Translators: the first parameter is a filename, the second is
 #. * an error message.
 #: ../backends/key-file/kf-persona-store.vala:471
 #, c-format
-msgid "Could not write updated key file '%s': %s"
+msgid "Could not write updated key file ‘%s’: %s"
 msgstr "Nepodarilo sa zapísať aktualizovaný súbor kľúčov „%s“: %s"
 
 #. Translators: this is an error message for if the user
@@ -355,11 +399,12 @@ msgstr "Neplatná adresa pre okamžité správy „%s“ pre protokol „%s“: 
 #. Translators: the parameter is an error message.
 #: ../backends/key-file/kf-persona.vala:432
 #, c-format
-msgid "Couldn't load data from key file: %s"
+msgid "Couldn’t load data from key file: %s"
 msgstr "Nepodarilo sa načítať údaje zo súboru kľúčov: %s"
 
 #. Translators: the parameter is an error message.
-#: ../backends/libsocialweb/lib/swf-persona-store.vala:349 ../backends/libsocialweb/lib/swf-persona-store.vala:371
+#: ../backends/libsocialweb/lib/swf-persona-store.vala:349
+#: ../backends/libsocialweb/lib/swf-persona-store.vala:371
 #: ../backends/libsocialweb/lib/swf-persona-store.vala:392
 #, c-format
 msgid "Couldn’t prepare libsocialweb service: %s"
@@ -379,80 +424,95 @@ msgstr "Vyskytla sa chyba pri otváraní zobrazenia kontaktov."
 
 #: ../backends/ofono/ofono-backend.vala:196
 msgid ""
-"No oFono object manager running, so the oFono backend will be inactive. Either oFono isn’t installed or the "
-"service can’t be started."
+"No oFono object manager running, so the oFono backend will be inactive. "
+"Either oFono isn’t installed or the service can’t be started."
 msgstr ""
-"Nie je spustený žiadny správca objektov oFono, takže podporný program oFono nebude aktívny. Buď nie je služba "
-"oFono nainštalovaná, alebo sa ju nepodarilo spustiť."
+"Nie je spustený žiadny správca objektov oFono, takže podporný program oFono "
+"nebude aktívny. Buď nie je služba oFono nainštalovaná, alebo sa ju "
+"nepodarilo spustiť."
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1248
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1263
 msgid "Telepathy contacts representing the local user may not be removed."
-msgstr "Nemôžu byť odstránené kontakty účtu pre Telepathy, ktoré reprezentujú lokálneho používateľa."
+msgstr ""
+"Nemôžu byť odstránené kontakty účtu pre Telepathy, ktoré reprezentujú "
+"lokálneho používateľa."
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1259
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1274
 #, c-format
 msgid "Failed to remove a persona from store: %s"
 msgstr "Zlyhalo odstraňovanie osoby z úložiska: %s"
 
 #. Translators: the first two parameters are store identifiers and
 #. * the third is a contact identifier.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1294
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1309
 #, c-format
 msgid ""
 "Persona store (%s, %s) requires the following details:\n"
-"    contact (provided: '%s')\n"
+"    contact (provided: ‘%s’)\n"
 msgstr ""
 "Úložisko osôb (%s, %s) požaduje nasledovné podrobnosti:\n"
 "    kontakt (poskytnutý: „%s“)\n"
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1309
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1324
 msgid "Cannot create a new Telepathy contact while offline."
-msgstr "Nedá sa vytvoriť nový kontakt v účte pre Telepathy, pokiaľ ste odhlásený."
+msgstr ""
+"Nedá sa vytvoriť nový kontakt v účte pre Telepathy, pokiaľ ste odhlásený."
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1327
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1342
 #, c-format
 msgid "Failed to add a persona from details: %s"
 msgstr "Zlyhalo pridávanie osoby podľa podrobností: %s"
 
 #. Translators: "telepathy-logger" is the name of an application,
 #. * and should not be translated.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1347
-msgid "Failed to change favorite without a connection to the telepathy-logger service."
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1362
+msgid ""
+"Failed to change favorite without a connection to the telepathy-logger "
+"service."
 msgstr "Zlyhala zmena obľúbenosti bez pripojenia k službe telepathy-logger."
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1353
-msgid "Failed to change favorite status of Telepathy Persona because it has no attached TpContact."
-msgstr "Zlyhala zmena stavu obľúbenosti osoby pre Telepathy, pretože nedisponuje pričleneným kľúčom TpContact."
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1368
+msgid ""
+"Failed to change favorite status of Telepathy Persona because it has no "
+"attached TpContact."
+msgstr ""
+"Zlyhala zmena stavu obľúbenosti osoby pre Telepathy, pretože nedisponuje "
+"pričleneným kľúčom TpContact."
 
 #. Translators: the parameter is a contact identifier.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1371
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1386
 #, c-format
 msgid "Failed to change favorite status for Telepathy contact ‘%s’."
 msgstr "Zlyhala zmena stavu obľúbenosti kontaktu „%s“ pre Telepathy."
 
 #. Translators: the parameter is an error message.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1403
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1418
 #, c-format
-msgid "Failed to change contact's alias: %s"
+msgid "Failed to change contact’s alias: %s"
 msgstr "Zlyhala zmena prezývky kontaktu: %s"
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1484
-msgid "Extended information may only be set on the user's Telepathy contact."
-msgstr "Rozšírené informácie môžu byť nastavené iba pre kontakt v programe Telepathy."
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1499
+msgid "Extended information may only be set on the user’s Telepathy contact."
+msgstr ""
+"Rozšírené informácie môžu byť nastavené iba pre kontakt v programe Telepathy."
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1513
-msgid "Extended information cannot be written because the store is disconnected."
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1528
+msgid ""
+"Extended information cannot be written because the store is disconnected."
 msgstr "Rozšírené informácie sa nedajú zapísať, pretože úložisko je odpojené."
 
-#: ../backends/telepathy/lib/tpf-persona.vala:511 ../backends/telepathy/lib/tpf-persona.vala:532
-#: ../backends/telepathy/lib/tpf-persona.vala:584 ../backends/telepathy/lib/tpf-persona.vala:598
+#: ../backends/telepathy/lib/tpf-persona.vala:511
+#: ../backends/telepathy/lib/tpf-persona.vala:532
+#: ../backends/telepathy/lib/tpf-persona.vala:584
+#: ../backends/telepathy/lib/tpf-persona.vala:598
 #, c-format
 msgid "Failed to change group membership: %s"
 msgstr "Zlyhala zmena členstva v skupine: %s"
 
 #. Translators: "account" refers to an instant messaging
 #. * account.
-#: ../backends/telepathy/lib/tpf-persona.vala:514 ../backends/telepathy/lib/tpf-persona.vala:587
+#: ../backends/telepathy/lib/tpf-persona.vala:514
+#: ../backends/telepathy/lib/tpf-persona.vala:587
 msgid "Account is offline."
 msgstr "Účet je odhlásený."
 
@@ -461,7 +521,7 @@ msgstr "Účet je odhlásený."
 #. * identifies the persona store.
 #: ../backends/tracker/lib/trf-persona-store.vala:743
 #, c-format
-msgid "Unrecognized parameter '%s' passed to persona store '%s'."
+msgid "Unrecognized parameter ‘%s’ passed to persona store ‘%s’."
 msgstr "Bol predaný nerozpoznaný parameter „%s“ do úložiska osôb „%s“."
 
 #: ../folks/alias-details.vala:61
@@ -472,7 +532,7 @@ msgstr "Vlastnosť „Prezývka“ tohto kontaktu nie je zapisovateľná."
 #. * is an error message.
 #: ../folks/backend-store.vala:654
 #, c-format
-msgid "Error listing contents of folder '%s': %s"
+msgid "Error listing contents of folder ‘%s’: %s"
 msgstr "Vyskytla sa chyba pri prehliadaní obsahu priečinka „%s“: %s"
 
 #. Translators: the first parameter is a folder path and the second
@@ -480,23 +540,27 @@ msgstr "Vyskytla sa chyba pri prehliadaní obsahu priečinka „%s“: %s"
 #: ../folks/backend-store.vala:695
 #, c-format
 msgid "Error querying info for target ‘%s’ of symlink ‘%s’: %s"
-msgstr "Chyba pri požadovaní informácií o cieľovom priečinku „%s“ so symbolickým odkazom „%s“: %s"
+msgstr ""
+"Chyba pri požadovaní informácií o cieľovom priečinku „%s“ so symbolickým "
+"odkazom „%s“: %s"
 
 #. Translators: the parameter is a filename.
 #: ../folks/backend-store.vala:823
 #, c-format
-msgid "File or directory '%s' does not exist."
+msgid "File or directory ‘%s’ does not exist."
 msgstr "Súbor alebo adresár „%s“ neexistuje."
 
 #. Translators: the parameter is a filename.
 #: ../folks/backend-store.vala:829
 #, c-format
-msgid "Failed to get content type for '%s'."
+msgid "Failed to get content type for ‘%s’."
 msgstr "Zlyhalo získavanie typu obsahu pre súbor „%s“."
 
 #: ../folks/birthday-details.vala:93
 msgid "Birthday event ID is not writeable on this contact."
-msgstr "Vlastnosť „Identifikátor udalosti narodenín“ tohto kontaktu nie je zapisovateľná."
+msgstr ""
+"Vlastnosť „Identifikátor udalosti narodenín“ tohto kontaktu nie je "
+"zapisovateľná."
 
 #: ../folks/extended-info.vala:133 ../folks/extended-info.vala:149
 msgid "Extended fields are not writeable on this contact."
@@ -507,55 +571,63 @@ msgid "Favorite status is not writeable on this contact."
 msgstr "Vlastnosť „Stav obľúbenosti“ tohto kontaktu nie je zapisovateľná."
 
 #. Translators: the parameter is an IM address.
-#: ../folks/im-details.vala:178 ../folks/im-details.vala:192 ../folks/im-details.vala:214
-#: ../folks/im-details.vala:241
+#: ../folks/im-details.vala:178 ../folks/im-details.vala:192
+#: ../folks/im-details.vala:214 ../folks/im-details.vala:241
 #, c-format
-msgid "The IM address '%s' could not be understood."
+msgid "The IM address ‘%s’ could not be understood."
 msgstr "Nepodarilo sa rozpoznať adresu pre okamžité správy „%s“."
 
 #. Translators: the first parameter is a persona store identifier
 #. * and the second is an error message.
 #: ../folks/individual-aggregator.vala:1063
 #, c-format
-msgid "Error preparing persona store '%s': %s"
+msgid "Error preparing persona store ‘%s’: %s"
 msgstr "Vyskytla sa chyba pri príprave úložiska osôb „%s“: %s"
 
 #. Translators: the parameter is a property name.
-#: ../folks/individual-aggregator.vala:1294 ../folks/individual-aggregator.vala:1567
+#: ../folks/individual-aggregator.vala:1294
+#: ../folks/individual-aggregator.vala:1567
 #, c-format
-msgid "Unknown property '%s' in linkable property list."
+msgid "Unknown property ‘%s’ in linkable property list."
 msgstr "Neznáma vlastnosť „%s“ v zozname prepojiteľných vlastností."
 
 #. Translators: the first parameter is a store identifier
 #. * and the second parameter is an error message.
 #: ../folks/individual-aggregator.vala:2053
 #, c-format
-msgid "Failed to add contact for persona store ID '%s': %s"
-msgstr "Zlyhalo pridávanie kontaktu do úložiska osôb s identifikátorom „%s“: %s"
+msgid "Failed to add contact for persona store ID ‘%s’: %s"
+msgstr ""
+"Zlyhalo pridávanie kontaktu do úložiska osôb s identifikátorom „%s“: %s"
 
 #: ../folks/individual-aggregator.vala:2150
 msgid "Can’t link personas with no primary store."
 msgstr "Nedajú sa prepojiť osoby bez hlavného úložiska."
 
-#: ../folks/individual-aggregator.vala:2151 ../folks/individual-aggregator.vala:2482
+#: ../folks/individual-aggregator.vala:2151
+#: ../folks/individual-aggregator.vala:2482
 #, c-format
-msgid "Persona store ‘%s:%s’ is configured as primary, but could not be found or failed to load."
+msgid ""
+"Persona store ‘%s:%s’ is configured as primary, but could not be found or "
+"failed to load."
 msgstr ""
-"Úložisko osôb „%s:%s“ je nakonfigurované ako hlavné, ale nepodarilo sa ho nájsť alebo zlyhalo jeho načítanie."
+"Úložisko osôb „%s:%s“ je nakonfigurované ako hlavné, ale nepodarilo sa ho "
+"nájsť alebo zlyhalo jeho načítanie."
 
 # PK: co to robi, mne to neni jasne ani z originalu
 # PM: tiez neviem co to robí, ale viac mi vadí, že preklad nezodpovedá originálu
-#: ../folks/individual-aggregator.vala:2152 ../folks/individual-aggregator.vala:2483
+#: ../folks/individual-aggregator.vala:2152
+#: ../folks/individual-aggregator.vala:2483
 #, c-format
 msgid ""
-"Check the relevant service is running, or change the default store in that service or using the “%s” GSettings key."
+"Check the relevant service is running, or change the default store in that "
+"service or using the ‘%s’ GSettings key."
 msgstr ""
-"Skontrolujte, či beží príslušná služba, alebo použitím kľúča GSettings „%s“ zmeňte predvolené úložisko pre túto "
-"službu."
+"Skontrolujte, či beží príslušná služba, alebo použitím kľúča GSettings „%s“ "
+"zmeňte predvolené úložisko pre túto službu."
 
 #  PM: vyžiadaj si komentár čo sú anti-links
 #: ../folks/individual-aggregator.vala:2184
-msgid "Anti-links can't be removed between personas being linked."
+msgid "Anti-links can’t be removed between personas being linked."
 msgstr "Zakázané odkazy nemôžu byť odstránené počas prepájania osôb."
 
 #: ../folks/individual-aggregator.vala:2481
@@ -564,11 +636,12 @@ msgstr "Nedajú sa pridať osoby bez hlavného úložiska."
 
 #: ../folks/individual-aggregator.vala:2492
 #, c-format
-msgid "Can't write to requested property (“%s”) of the writeable store."
+msgid "Can’t write to requested property (‘%s’) of the writeable store."
 msgstr "Nedá sa zapísať požadovaná vlastnosť („%s“) zapisovateľného úložiska."
 
-#: ../folks/individual.vala:217 ../folks/individual.vala:403 ../folks/individual.vala:512
-#: ../folks/individual.vala:763 ../folks/individual.vala:841 ../folks/individual.vala:1059
+#: ../folks/individual.vala:217 ../folks/individual.vala:403
+#: ../folks/individual.vala:512 ../folks/individual.vala:763
+#: ../folks/individual.vala:841 ../folks/individual.vala:1059
 #, c-format
 msgid "Failed to change property ‘%s’: No suitable personas were found."
 msgstr "Zlyhala zmena vlastnosti „%s“: Nenašli sa vhodné osoby."
@@ -629,11 +702,13 @@ msgstr "Identifikátor hlavného úložiska"
 
 #: ../folks/org.freedesktop.folks.gschema.xml.in.h:2
 msgid ""
-"The ID of the persona store which folks should use as primary (i.e. to store linking data in). The type ID of the "
-"store may optionally be prepended, separated by a colon. For example: “eds:system-address-book” or “key-file”."
+"The ID of the persona store which folks should use as primary (i.e. to store "
+"linking data in). The type ID of the store may optionally be prepended, "
+"separated by a colon. For example: ‘eds:system-address-book’ or ‘key-file’."
 msgstr ""
-"Identifikátor úložiska osôb, ktoré má program Folks použiť ako hlavné (napríklad na ukladanie údajov prepojení). "
-"Identifikátor typu úložiska osôb môže byť voliteľne predradený pomocou oddelenia dvojbodkou. Napríklad: „eds:"
+"Identifikátor úložiska osôb, ktoré má program Folks použiť ako hlavné "
+"(napríklad na ukladanie údajov prepojení). Identifikátor typu úložiska osôb "
+"môže byť voliteľne predradený pomocou oddelenia dvojbodkou. Napríklad: „eds:"
 "system-address-book“ alebo „key-file“."
 
 # PM: vyžiadaj si komentár, prečo toto vývojári dali na preklad
@@ -703,24 +778,26 @@ msgstr "Súbor %s nie je čitateľný."
 #. Translators: the parameter is a filename.
 #: ../tools/import-pidgin.vala:82
 #, c-format
-msgid "The Pidgin buddy list file '%s' could not be loaded."
-msgstr "Nepodarilo sa načítať súbor so zoznamom priateľov programu Pidgin „%s“."
+msgid "The Pidgin buddy list file ‘%s’ could not be loaded."
+msgstr ""
+"Nepodarilo sa načítať súbor so zoznamom priateľov programu Pidgin „%s“."
 
 #. Translators: the parameter is a filename.
 #: ../tools/import-pidgin.vala:97
 #, c-format
 msgid ""
-"The Pidgin buddy list file ‘%s’ could not be loaded: the root element could not be found or was not recognized."
+"The Pidgin buddy list file ‘%s’ could not be loaded: the root element could "
+"not be found or was not recognized."
 msgstr ""
-"Nepodarilo sa načítať súbor so zoznamom priateľov programu Pidgin „%s“: koreňový prvok sa nepodarilo nájsť alebo "
-"nebol rozpoznaný."
+"Nepodarilo sa načítať súbor so zoznamom priateľov programu Pidgin „%s“: "
+"koreňový prvok sa nepodarilo nájsť alebo nebol rozpoznaný."
 
 #. Translators: the first parameter is the number of buddies which
 #. * were successfully imported, and the second is a filename.
 #: ../tools/import-pidgin.vala:117
 #, c-format
-msgid "Imported %u buddy from '%s'."
-msgid_plural "Imported %u buddies from '%s'."
+msgid "Imported %u buddy from ‘%s’."
+msgid_plural "Imported %u buddies from ‘%s’."
 msgstr[0] "Bolo importovaných %u priateľov zo súboru „%s“"
 msgstr[1] "Bol importovaný %u priateľ zo súboru „%s“."
 msgstr[2] "Boli importovaní %u priatelia zo súboru „%s“."
@@ -739,7 +816,8 @@ msgid ""
 "Ignoring buddy with no alias and only one IM address:\n"
 "%s"
 msgstr ""
-"Ignoruje sa priateľ bez prezývky a iba s jednou adresou pre okamžité správy:\n"
+"Ignoruje sa priateľ bez prezývky a iba s jednou adresou pre okamžité "
+"správy:\n"
 "%s"
 
 #: ../tools/import-pidgin.vala:244
@@ -749,7 +827,8 @@ msgid ""
 "%s\n"
 "Error: %s\n"
 msgstr ""
-"Zlyhalo vytváranie nového kontaktu pre priateľa s prezývkou „%s“ a adresami okamzitých správ:\n"
+"Zlyhalo vytváranie nového kontaktu pre priateľa s prezývkou „%s“ a adresami "
+"okamzitých správ:\n"
 "%s\n"
 "Chyba: %s\n"
 
@@ -762,16 +841,18 @@ msgid ""
 "Created contact ‘%s’ for buddy with alias ‘%s’ and IM addresses:\n"
 "%s"
 msgstr ""
-"Bol vytvorený kontakt „%s“ pre priateľa s prezývkou „%s“ a adresami pre okamžité správy:\n"
+"Bol vytvorený kontakt „%s“ pre priateľa s prezývkou „%s“ a adresami pre "
+"okamžité správy:\n"
 "%s"
 
 #: ../tools/import.vala:44
-msgid "Source backend name (default: 'pidgin')"
+msgid "Source backend name (default: ‘pidgin’)"
 msgstr "Názov zdroja obslužného programu (predvolený: „pidgin“)"
 
 #: ../tools/import.vala:47
 msgid "Source filename (default: specific to source backend)"
-msgstr "Názov zdrojového súboru (predvolený: určený zdrojom obslužného programu)"
+msgstr ""
+"Názov zdrojového súboru (predvolený: určený zdrojom obslužného programu)"
 
 # OptionContext
 #: ../tools/import.vala:58
@@ -781,37 +862,37 @@ msgstr "— importuje metaúdaje o kontakte do libfolks"
 #. Translators: the parameter is an error message.
 #: ../tools/import.vala:68
 #, c-format
-msgid "Couldn't parse command line options: %s"
+msgid "Couldn’t parse command line options: %s"
 msgstr "Nepodarilo sa analyzovať voľby príkazového riadka: %s"
 
 #. Translators: the parameter is an error message.
 #: ../tools/import.vala:109
 #, c-format
-msgid "Couldn't load the backends: %s"
+msgid "Couldn’t load the backends: %s"
 msgstr "Nepodarilo sa načítať obslužné programy: %s"
 
 #. Translators: the parameter is a backend identifier.
 #: ../tools/import.vala:120
 #, c-format
-msgid "Couldn't load the ‘%s’ backend."
+msgid "Couldn’t load the ‘%s’ backend."
 msgstr "Nepodarilo sa načítať obslužný program „%s“."
 
 #. Translators: the first parameter is a backend identifier and the
 #. * second parameter is an error message.
 #: ../tools/import.vala:133
 #, c-format
-msgid "Couldn't prepare the ‘%s’ backend: %s"
+msgid "Couldn’t prepare the ‘%s’ backend: %s"
 msgstr "Nepodarilo sa pripraviť obslužný program „%s“: %s"
 
 #. Translators: the parameter is a backend identifier.
 #: ../tools/import.vala:146
 #, c-format
-msgid "Couldn't load the ‘%s’ backend's persona store."
+msgid "Couldn’t load the ‘%s’ backend’s persona store."
 msgstr "Nepodarilo sa načítať úložisko osôb obslužného programu „%s“."
 
 #: ../tools/import.vala:167
 #, c-format
-msgid "Couldn't prepare the ‘%s’ backend's persona store: %s"
+msgid "Couldn’t prepare the ‘%s’ backend’s persona store: %s"
 msgstr "Nepodarilo sa pripraviť úložisko osôb obslužného programu „%s“: %s"
 
 #. Translators: the parameter is an error message.
@@ -823,10 +904,16 @@ msgstr "Vyskytla sa chyba pri importe kontaktov: %s"
 #. Translators: both parameters are identifiers for backends.
 #: ../tools/import.vala:199
 #, c-format
-msgid "Unrecognized source backend name ‘%s’. ‘%s’ is currently the only supported source backend."
+msgid ""
+"Unrecognized source backend name ‘%s’. ‘%s’ is currently the only supported "
+"source backend."
 msgstr ""
-"Nerozpoznaný zdroj obslužného programu s názvom „%s“. Momentálne je podporovaný iba zdroj obslužného programu s "
-"názvom „%s“."
+"Nerozpoznaný zdroj obslužného programu s názvom „%s“. Momentálne je "
+"podporovaný iba zdroj obslužného programu s názvom „%s“."
 
-#~ msgid "Failed to determine whether we can set aliases on Telepathy account '%s': %s"
-#~ msgstr "Nepodarilo sa zistiť, či môžu byť v účte „%s“ pre Telepathy nastavené prezývky: %s"
+#~ msgid ""
+#~ "Failed to determine whether we can set aliases on Telepathy account '%s': "
+#~ "%s"
+#~ msgstr ""
+#~ "Nepodarilo sa zistiť, či môžu byť v účte „%s“ pre Telepathy nastavené "
+#~ "prezývky: %s"
