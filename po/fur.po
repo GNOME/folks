@@ -8,18 +8,18 @@ msgstr ""
 "Project-Id-Version: folks master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=folks&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2016-08-02 14:45+0000\n"
-"PO-Revision-Date: 2016-08-15 17:09+0200\n"
+"POT-Creation-Date: 2016-10-10 10:43+0000\n"
+"PO-Revision-Date: 2016-10-12 15:59+0200\n"
+"Last-Translator: Fabio Tomat <f.t.public@gmail.com>\n"
 "Language-Team: Friulian <fur@li.org>\n"
 "Language: fur\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"Last-Translator: Fabio Tomat <f.t.public@gmail.com>\n"
 "X-Generator: Poedit 1.8.8\n"
 
-#: ../backends/bluez/bluez-backend.vala:600
+#: ../backends/bluez/bluez-backend.vala:604
 msgid ""
 "No BlueZ 5 object manager running, so the BlueZ backend will be inactive. "
 "Either your BlueZ installation is too old (only version 5 is supported) or "
@@ -29,7 +29,7 @@ msgstr ""
 "sarà inatîf. O la instalazion di BlueZ e podarès jessi masse vecje (nome la "
 "version 5 e je supuartade) o il servizi nol pues jessi inviât."
 
-#: ../backends/bluez/bluez-backend.vala:613
+#: ../backends/bluez/bluez-backend.vala:617
 msgid ""
 "Error connecting to OBEX transfer daemon over D-Bus. Ensure BlueZ and obexd "
 "are installed."
@@ -127,13 +127,12 @@ msgstr "Permès dineât par gjavâ il contat '%s': %s"
 #. Translators: the parameter is an error message.
 #: ../backends/eds/lib/edsf-persona-store.vala:653
 #, c-format
-msgid "Removing contacts isn't supported by this persona store: %s"
-msgstr ""
-"La rimozion dai contats no je supuartade di chest archivi di contats: %s"
+msgid "Removing contacts isn’t supported by this persona store: %s"
+msgstr "Chest archivi di contats nol supuarte la rimozion dai contats: %s"
 
 #: ../backends/eds/lib/edsf-persona-store.vala:682
 #, c-format
-msgid "Can't remove contact ‘%s’: %s"
+msgid "Can’t remove contact ‘%s’: %s"
 msgstr "Impussibil gjavâ il contat '%s': %s"
 
 #. Translators: the parameter is an address book
@@ -156,27 +155,27 @@ msgstr "Permès dineât par vierzi la rubriche '%s': %s"
 #. * and the second is an error message.
 #: ../backends/eds/lib/edsf-persona-store.vala:809
 #, c-format
-msgid "Couldn't open address book ‘%s’: %s"
+msgid "Couldn’t open address book ‘%s’: %s"
 msgstr "Impussibil vierzi la rubriche '%s': %s"
 
 #. Translators: the parameteter is an error message.
 #: ../backends/eds/lib/edsf-persona-store.vala:877
 #: ../backends/eds/lib/edsf-persona-store.vala:907
 #, c-format
-msgid "Couldn't get address book capabilities: %s"
+msgid "Couldn’t get address book capabilities: %s"
 msgstr "Impussibil otignî lis funzionalitâts de rubriche: %s"
 
 #. Translators: the parameter is an address book URI.
 #: ../backends/eds/lib/edsf-persona-store.vala:923
 #, c-format
-msgid "Couldn't get view for address book ‘%s’."
+msgid "Couldn’t get view for address book ‘%s’."
 msgstr "Impussibil otignî la visualizazion pe rubriche '%s'."
 
 #. Translators: the first parameter is an address book URI
 #. * and the second is an error message.
 #: ../backends/eds/lib/edsf-persona-store.vala:1002
 #, c-format
-msgid "Couldn't get view for address book ‘%s’: %s"
+msgid "Couldn’t get view for address book ‘%s’: %s"
 msgstr "Impussibil otignî la visualizazion pe rubriche '%s': %s"
 
 #: ../backends/eds/lib/edsf-persona-store.vala:1305
@@ -219,7 +218,7 @@ msgstr "Impussibil segnâ il contat come preferît."
 #. Translators: the parameter is an error message.
 #: ../backends/eds/lib/edsf-persona-store.vala:1692
 #, c-format
-msgid "Can't update avatar: %s"
+msgid "Can’t update avatar: %s"
 msgstr "Impussibil inzornâ l'avatar: %s"
 
 #: ../backends/eds/lib/edsf-persona-store.vala:1703
@@ -356,28 +355,28 @@ msgstr "Erôr no cognossût tal stabilî la proprietât '%s' : %s"
 #. * the second is an error message.
 #: ../backends/key-file/kf-persona-store.vala:234
 #, c-format
-msgid "The relationship key file '%s' could not be loaded: %s"
+msgid "The relationship key file ‘%s’ could not be loaded: %s"
 msgstr "Il file de clâf di relazion '%s' nol pues jessi cjariât: %s"
 
 #. Translators: the first parameter is a path, and the
 #. * second is an error message.
 #: ../backends/key-file/kf-persona-store.vala:256
 #, c-format
-msgid "The relationship key file directory '%s' could not be created: %s"
+msgid "The relationship key file directory ‘%s’ could not be created: %s"
 msgstr "La cartele de clâf di relazion '%s' no pues jessi cjariade: %s"
 
 #. Translators: the first parameter is a filename, and
 #. * the second is an error message.
 #: ../backends/key-file/kf-persona-store.vala:280
 #, c-format
-msgid "The relationship key file '%s' could not be created: %s"
+msgid "The relationship key file ‘%s’ could not be created: %s"
 msgstr "Il file de clâf di relazion '%s' nol pues jessi creât: %s"
 
 #. Translators: the first parameter is a filename, the second is
 #. * an error message.
 #: ../backends/key-file/kf-persona-store.vala:471
 #, c-format
-msgid "Could not write updated key file '%s': %s"
+msgid "Could not write updated key file ‘%s’: %s"
 msgstr "Impussibil scrivi il file clâf inzornât '%s': %s"
 
 #. Translators: this is an error message for if the user
@@ -393,7 +392,7 @@ msgstr "Direzion pai messaçs istantanis '%s' no valide pal protocol '%s': %s"
 #. Translators: the parameter is an error message.
 #: ../backends/key-file/kf-persona.vala:432
 #, c-format
-msgid "Couldn't load data from key file: %s"
+msgid "Couldn’t load data from key file: %s"
 msgstr "Impussibil cjariâ i dâts dal file clâf: %s"
 
 #. Translators: the parameter is an error message.
@@ -440,7 +439,7 @@ msgstr "No si è rivâts a gjavâ un contat dal archivi: %s"
 #, c-format
 msgid ""
 "Persona store (%s, %s) requires the following details:\n"
-"    contact (provided: '%s')\n"
+"    contact (provided: ‘%s’)\n"
 msgstr ""
 "L'archivi di contats (%s, %s) al à bisugne dai detais chi daurman:\n"
 "    contat (furnît di: '%s')\n"
@@ -481,11 +480,11 @@ msgstr "No si è rivâts a cambiâ il stât di preferît dal contat Telepathy '%
 #. Translators: the parameter is an error message.
 #: ../backends/telepathy/lib/tpf-persona-store.vala:1418
 #, c-format
-msgid "Failed to change contact's alias: %s"
+msgid "Failed to change contact’s alias: %s"
 msgstr "No si è rivâts a cambiâ l'alias dal contat: %s"
 
 #: ../backends/telepathy/lib/tpf-persona-store.vala:1499
-msgid "Extended information may only be set on the user's Telepathy contact."
+msgid "Extended information may only be set on the user’s Telepathy contact."
 msgstr ""
 "Lis informazions estesis a puedin jessi metudis nome sul contat Telepathy "
 "dal utent."
@@ -517,7 +516,7 @@ msgstr "L'Account al è fûr rêt."
 #. * identifies the persona store.
 #: ../backends/tracker/lib/trf-persona-store.vala:743
 #, c-format
-msgid "Unrecognized parameter '%s' passed to persona store '%s'."
+msgid "Unrecognized parameter ‘%s’ passed to persona store ‘%s’."
 msgstr ""
 "Nol è stât ricognossût il parametri '%s' passât al archivi di contats '%s'."
 
@@ -529,7 +528,7 @@ msgstr "No si pues scrivi l'alias in chest contat."
 #. * is an error message.
 #: ../folks/backend-store.vala:654
 #, c-format
-msgid "Error listing contents of folder '%s': %s"
+msgid "Error listing contents of folder ‘%s’: %s"
 msgstr "Erôr tal listâ i contignûts de cartele '%s': %s"
 
 #. Translators: the first parameter is a folder path and the second
@@ -544,13 +543,13 @@ msgstr ""
 #. Translators: the parameter is a filename.
 #: ../folks/backend-store.vala:823
 #, c-format
-msgid "File or directory '%s' does not exist."
+msgid "File or directory ‘%s’ does not exist."
 msgstr "Il file o la cartele '%s' no esistin."
 
 #. Translators: the parameter is a filename.
 #: ../folks/backend-store.vala:829
 #, c-format
-msgid "Failed to get content type for '%s'."
+msgid "Failed to get content type for ‘%s’."
 msgstr "No si è rivâts a otignî il gjena di contignût par '%s'."
 
 #: ../folks/birthday-details.vala:93
@@ -569,21 +568,21 @@ msgstr "No si pues scrivi il stât di preferît in chest contat."
 #: ../folks/im-details.vala:178 ../folks/im-details.vala:192
 #: ../folks/im-details.vala:214 ../folks/im-details.vala:241
 #, c-format
-msgid "The IM address '%s' could not be understood."
+msgid "The IM address ‘%s’ could not be understood."
 msgstr "Impussibil ricognossi la direzion pai messaçs istantanis '%s'."
 
 #. Translators: the first parameter is a persona store identifier
 #. * and the second is an error message.
 #: ../folks/individual-aggregator.vala:1063
 #, c-format
-msgid "Error preparing persona store '%s': %s"
+msgid "Error preparing persona store ‘%s’: %s"
 msgstr "Erôr tal preparâ l'archivi dai contats '%s': %s"
 
 #. Translators: the parameter is a property name.
 #: ../folks/individual-aggregator.vala:1294
 #: ../folks/individual-aggregator.vala:1567
 #, c-format
-msgid "Unknown property '%s' in linkable property list."
+msgid "Unknown property ‘%s’ in linkable property list."
 msgstr ""
 "Proprietât '%s' no cognossude te liste des proprietâts che si puedin colegâ."
 
@@ -591,7 +590,7 @@ msgstr ""
 #. * and the second parameter is an error message.
 #: ../folks/individual-aggregator.vala:2053
 #, c-format
-msgid "Failed to add contact for persona store ID '%s': %s"
+msgid "Failed to add contact for persona store ID ‘%s’: %s"
 msgstr "No si è rivâts a zontâ il contat pal ID dal archivi personâl '%s': %s"
 
 #: ../folks/individual-aggregator.vala:2150
@@ -613,13 +612,13 @@ msgstr ""
 #, c-format
 msgid ""
 "Check the relevant service is running, or change the default store in that "
-"service or using the “%s” GSettings key."
+"service or using the ‘%s’ GSettings key."
 msgstr ""
 "Verifiche che il servizi in cuistion al stedi zirant o cambie l'archivi "
 "predefinît dal servizi o se no dopre la clâf GSettings «%s»."
 
 #: ../folks/individual-aggregator.vala:2184
-msgid "Anti-links can't be removed between personas being linked."
+msgid "Anti-links can’t be removed between personas being linked."
 msgstr "I Anti-links no puedin jessi gjavâts tra contats che a son colegâts."
 
 #: ../folks/individual-aggregator.vala:2481
@@ -628,7 +627,7 @@ msgstr "Impussibil zontâ contats cence un archivi primari."
 
 #: ../folks/individual-aggregator.vala:2492
 #, c-format
-msgid "Can't write to requested property (“%s”) of the writeable store."
+msgid "Can’t write to requested property (‘%s’) of the writeable store."
 msgstr ""
 "Impussibil scrivi la proprietât domandade (\"%s\") dal archivi scrivibil."
 
@@ -699,7 +698,7 @@ msgstr "ID archivi primari"
 msgid ""
 "The ID of the persona store which folks should use as primary (i.e. to store "
 "linking data in). The type ID of the store may optionally be prepended, "
-"separated by a colon. For example: “eds:system-address-book” or “key-file”."
+"separated by a colon. For example: ‘eds:system-address-book’ or ‘key-file’."
 msgstr ""
 "Il ID dal archivi contats che i utents a varessin di doprâ come primari (par "
 "esempli par salvâ i dâts di colegament). Il gjenar di ID dal archivi, in mût "
@@ -770,7 +769,7 @@ msgstr "Il file %s no si pues lei."
 #. Translators: the parameter is a filename.
 #: ../tools/import-pidgin.vala:82
 #, c-format
-msgid "The Pidgin buddy list file '%s' could not be loaded."
+msgid "The Pidgin buddy list file ‘%s’ could not be loaded."
 msgstr "Impussibil cjariâ il file «%s» de liste dai amîs di Pidgin."
 
 #. Translators: the parameter is a filename.
@@ -787,8 +786,8 @@ msgstr ""
 #. * were successfully imported, and the second is a filename.
 #: ../tools/import-pidgin.vala:117
 #, c-format
-msgid "Imported %u buddy from '%s'."
-msgid_plural "Imported %u buddies from '%s'."
+msgid "Imported %u buddy from ‘%s’."
+msgid_plural "Imported %u buddies from ‘%s’."
 msgstr[0] "Impuartât %u amì di '%s'."
 msgstr[1] "Impuartâts %u amîs di '%s'."
 
@@ -834,7 +833,7 @@ msgstr ""
 "%s"
 
 #: ../tools/import.vala:44
-msgid "Source backend name (default: 'pidgin')"
+msgid "Source backend name (default: ‘pidgin’)"
 msgstr "Non dal sorzint dal backend (predefinît: 'pidgin')"
 
 #: ../tools/import.vala:47
@@ -848,37 +847,37 @@ msgstr "— impuarte in libfolks lis informazions sui meta-contats"
 #. Translators: the parameter is an error message.
 #: ../tools/import.vala:68
 #, c-format
-msgid "Couldn't parse command line options: %s"
+msgid "Couldn’t parse command line options: %s"
 msgstr "Impussibil analizâ lis opzions de rie di comant: %s"
 
 #. Translators: the parameter is an error message.
 #: ../tools/import.vala:109
 #, c-format
-msgid "Couldn't load the backends: %s"
+msgid "Couldn’t load the backends: %s"
 msgstr "Impussibil cjariâ i backend: %s"
 
 #. Translators: the parameter is a backend identifier.
 #: ../tools/import.vala:120
 #, c-format
-msgid "Couldn't load the ‘%s’ backend."
+msgid "Couldn’t load the ‘%s’ backend."
 msgstr "Impussibil cjariâ il backend '%s'."
 
 #. Translators: the first parameter is a backend identifier and the
 #. * second parameter is an error message.
 #: ../tools/import.vala:133
 #, c-format
-msgid "Couldn't prepare the ‘%s’ backend: %s"
+msgid "Couldn’t prepare the ‘%s’ backend: %s"
 msgstr "Impussibil preparâ il backend '%s': %s"
 
 #. Translators: the parameter is a backend identifier.
 #: ../tools/import.vala:146
 #, c-format
-msgid "Couldn't load the ‘%s’ backend's persona store."
+msgid "Couldn’t load the ‘%s’ backend’s persona store."
 msgstr "Impussibil cjariâ il backend dal archivi contats '%s'."
 
 #: ../tools/import.vala:167
 #, c-format
-msgid "Couldn't prepare the ‘%s’ backend's persona store: %s"
+msgid "Couldn’t prepare the ‘%s’ backend’s persona store: %s"
 msgstr "Impussibil preparâ il backend dal archivi contats '%s': %s"
 
 #. Translators: the parameter is an error message.
