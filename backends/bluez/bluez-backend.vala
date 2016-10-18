@@ -166,6 +166,10 @@ public class Folks.Backends.BlueZ.Backend : Folks.Backend
 
       var device_address = store.id;  /* implicit assumption */
       this._enabled_devices.remove (device_address);
+      this._save_enabled_devices.begin ((o, r) =>
+        {
+          this._save_enabled_devices.end (r);
+        });
 
       if (!this._persona_stores.has_key (store.id))
         return;
@@ -188,6 +192,10 @@ public class Folks.Backends.BlueZ.Backend : Folks.Backend
 
       var device_address = store.id;  /* implicit assumption */
       this._enabled_devices.add (device_address);
+      this._save_enabled_devices.begin ((o, r) =>
+        {
+          this._save_enabled_devices.end (r);
+        });
 
       /* See if any existing device objects correspond to the store. */
       this._refresh_devices.begin ((o, r) =>
@@ -221,6 +229,11 @@ public class Folks.Backends.BlueZ.Backend : Folks.Backend
                 });
             }
 
+          this._save_enabled_devices.begin ((o, r) =>
+            {
+              this._save_enabled_devices.end (r);
+            });
+
           return;
         }
 
@@ -232,6 +245,11 @@ public class Folks.Backends.BlueZ.Backend : Folks.Backend
           var device_address = store_id;  /* implicit assumption */
           this._enabled_devices.add (device_address);
         }
+
+      this._save_enabled_devices.begin ((o, r) =>
+        {
+          this._save_enabled_devices.end (r);
+        });
 
       this._refresh_devices.begin ((o, r) =>
         {
@@ -254,6 +272,7 @@ public class Folks.Backends.BlueZ.Backend : Folks.Backend
       this._persona_stores = new HashMap<string, PersonaStore> ();
       this._persona_stores_ro = this._persona_stores.read_only_view;
       this._watched_devices = new HashMap<string, PersonaStore> ();
+      this._enabled_devices = new SmallSet<string> ();
     }
 
   /**
@@ -501,6 +520,12 @@ public class Folks.Backends.BlueZ.Backend : Folks.Backend
           return;
         }
 
+      if (!this._enabled_devices.contains (device.address))
+        {
+          debug ("    Device not in enabled devices list.");
+          return;
+        }
+
       yield this._add_persona_store (device, path);
     }
 
@@ -525,6 +550,105 @@ public class Folks.Backends.BlueZ.Backend : Folks.Backend
         }
     }
 
+  private string _get_enabled_devices_key_file_path ()
+    {
+      var file = File.new_for_path (Environment.get_user_data_dir ());
+      file = file.get_child ("folks");
+      file = file.get_child ("bluez-persona-stores.ini");
+
+      return file.get_path ();
+    }
+
+  /**
+   * Save the list of enabled devices to a configuration file.
+   *
+   * @since UNRELEASED
+   */
+  private async void _save_enabled_devices ()
+    {
+      var kf = new GLib.KeyFile ();
+      var kf_path = this._get_enabled_devices_key_file_path ();
+
+      foreach (var address in this._enabled_devices)
+        kf.set_boolean (address, "enabled", true);
+
+      debug ("Saving BlueZ enabled devices key file ‘%s’.", kf_path);
+
+      try
+        {
+          var file = File.new_for_path (kf_path);
+          var data = kf.to_data ();
+          file.replace_contents (data.data,
+              null, false, FileCreateFlags.PRIVATE,
+              null, null);
+        }
+      catch (GLib.Error e)
+        {
+          warning ("Could not write updated BlueZ enabled devices key file " +
+              "‘%s’: %s", kf_path, e.message);
+        }
+    }
+
+  /**
+   * Load the list of enabled devices from a configuration file.
+   *
+   * @since UNRELEASED
+   */
+  private async void _load_enabled_devices ()
+    {
+      var kf = new GLib.KeyFile ();
+      var kf_path = this._get_enabled_devices_key_file_path ();
+
+      debug ("Loading BlueZ enabled devices key file ‘%s’.", kf_path);
+
+      try
+        {
+          uint8[] contents;
+
+          var file = File.new_for_path (kf_path);
+          yield file.load_contents_async (null, out contents, null);
+          unowned string contents_s = (string) contents;
+
+          if (contents_s.length > 0)
+            {
+              kf.load_from_data (contents_s,
+                  contents_s.length, KeyFileFlags.KEEP_COMMENTS);
+            }
+        }
+      catch (GLib.Error e1)
+        {
+          if (!(e1 is IOError.NOT_FOUND))
+            {
+              warning ("The BlueZ enabled devices key file ‘%s’ could not be " +
+                  "loaded: %s", kf_path, e1.message);
+              return;
+            }
+          else
+            {
+              debug ("    Not found.");
+            }
+        }
+
+          /* Update the set of enabled devices in memory. */
+          this._enabled_devices.clear ();
+          var groups = kf.get_groups ();
+          foreach (var address in groups)
+            {
+              try
+                {
+                  if (kf.get_boolean (address, "enabled"))
+                    {
+                      debug ("    Enabling device ‘%s’", address);
+                      this._enabled_devices.add (address);
+                    }
+                }
+              catch (GLib.KeyFileError e)
+                {
+                  /* Ignore. */
+                }
+            }
+    }
+
   private delegate Type TypeFunc ();
 
   /**
@@ -542,6 +666,9 @@ public class Folks.Backends.BlueZ.Backend : Folks.Backend
         }
 
       /* In brief, this function:
+       *  0. Loads the list of enabled devices — these are the Bluetooth devices
+       *     which will be turned into PersonaStores (if they are connected,
+       *     paired, support PBAP, etc.).
        *  1. Connects to org.bluez. If that’s not available, we assume BlueZ
        *     is not installed (or is not version 5), and throw an error, leaving
        *     the store unprepared.
@@ -554,6 +681,9 @@ public class Folks.Backends.BlueZ.Backend : Folks.Backend
         {
           this._prepare_pending = true;
           this.freeze_notify ();
+
+          /* Load the enabled devices. */
+          yield this._load_enabled_devices ();
 
           try
             {
