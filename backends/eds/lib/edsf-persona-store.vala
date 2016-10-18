@@ -288,7 +288,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
    *
    * @since 0.6.0
    */
-  [Deprecated (since = "0.7.2",
+  [Version (deprecated = true, deprecated_since = "0.7.2",
       replacement = "Edsf.PersonaStore.with_source_registry")]
   public PersonaStore (E.Source s)
     {

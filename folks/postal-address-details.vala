@@ -135,7 +135,8 @@ public class Folks.PostalAddress : Object
   /**
    * The UID of the Postal Address (if any).
    */
-  [Deprecated (since = "0.6.5", replacement = "AbstractFieldDetails.id")]
+  [Version (deprecated = true, deprecated_since = "0.6.5",
+      replacement = "AbstractFieldDetails.id")]
   public string uid
     {
       get { return _uid; }

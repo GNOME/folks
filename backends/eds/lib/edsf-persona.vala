@@ -88,7 +88,7 @@ public class Edsf.Persona : Folks.Persona,
    *
    * @since 0.6.0
    */
-  [Deprecated (since = "0.6.3",
+  [Version (deprecated = true, deprecated_since = "0.6.3",
       replacement = "Folks.UrlFieldDetails.PARAM_TYPE_BLOG")]
   public const string[] url_properties = {
     "blog_url", "fburl", "homepage_url", "video_url"

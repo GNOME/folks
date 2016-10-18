@@ -74,7 +74,8 @@ public class Folks.Role : Object
   /**
    * The UID that distinguishes this role.
    */
-  [Deprecated (since = "0.6.5", replacement = "AbstractFieldDetails.id")]
+  [Version (deprecated = true, deprecated_since = "0.6.5",
+      replacement = "AbstractFieldDetails.id")]
   public string uid
     {
       get { return _uid; }

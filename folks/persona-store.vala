@@ -536,7 +536,7 @@ public abstract class Folks.PersonaStore : Object
    *
    * @since 0.3.1
    */
-  [Deprecated (since = "0.6.3.1",
+  [Version (deprecated = true, deprecated_since = "0.6.3.1",
       replacement = "PersonaStore.always_writeable_properties")]
   public abstract MaybeBool can_alias_personas
     {
@@ -549,7 +549,7 @@ public abstract class Folks.PersonaStore : Object
    *
    * @since 0.3.1
    */
-  [Deprecated (since = "0.6.3.1",
+  [Version (deprecated = true, deprecated_since = "0.6.3.1",
       replacement = "PersonaStore.always_writeable_properties")]
   public abstract MaybeBool can_group_personas
     {
@@ -611,7 +611,7 @@ public abstract class Folks.PersonaStore : Object
    *
    * @since 0.1.13
    */
-  [Deprecated (since = "0.6.3",
+  [Version (deprecated = true, deprecated_since = "0.6.3",
       replacement = "PersonaStore.is_primary_store")]
   public bool is_writeable { get; set; default = false; }
 

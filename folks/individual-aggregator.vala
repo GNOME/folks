@@ -39,7 +39,7 @@ public errordomain Folks.IndividualAggregatorError
    *
    * @since 0.1.13
    */
-  [Deprecated (since = "0.6.2.1",
+  [Version (deprecated = true, deprecated_since = "0.6.2.1",
       replacement = "IndividualAggregatorError.NO_PRIMARY_STORE")]
   NO_WRITEABLE_STORE,
 
@@ -288,7 +288,7 @@ public class Folks.IndividualAggregator : Object
    *
    * @since 0.5.1
    */
-  [Deprecated (since = "0.6.2",
+  [Version (deprecated = true, deprecated_since = "0.6.2",
       replacement = "IndividualAggregator.individuals_changed_detailed")]
   public signal void individuals_changed (Set<Individual> added,
       Set<Individual> removed,
@@ -387,7 +387,7 @@ public class Folks.IndividualAggregator : Object
    * instantiated at the same time. So it's recommended to use
    * {@link IndividualAggregator.dup} instead.
    */
-  [Deprecated (since = "0.9.5",
+  [Version (deprecated = true, deprecated_since = "0.9.5",
       replacement = "IndividualAggregator.dup")]
   public IndividualAggregator ()
   {
@@ -447,7 +447,7 @@ public class Folks.IndividualAggregator : Object
    *
    * @since 0.9.0
    */
-  [Deprecated (since = "0.9.5",
+  [Version (deprecated = true, deprecated_since = "0.9.5",
       replacement = "IndividualAggregator.dup_with_backend_store")]
   public IndividualAggregator.with_backend_store (BackendStore store)
   {

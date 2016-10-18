@@ -90,7 +90,7 @@ public class Folks.TestUtils
    *    enough to do something "reasonably fast". It will be adjusted with
    *    multiply_timeout() before use.
    */
-  [Deprecated (replacement = "loop_run_with_timeout")]
+  [Version (deprecated = true, replacement = "loop_run_with_timeout")]
   public static void loop_run_with_non_fatal_timeout (MainLoop loop,
       int timeout = 3)
     {
