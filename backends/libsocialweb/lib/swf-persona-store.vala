@@ -144,7 +144,7 @@ public class Swf.PersonaStore : Folks.PersonaStore
    *
    * See {@link Folks.PersonaStore.personas}.
    */
-  public override Map<string, Persona> personas
+  public override Map<string, Folks.Persona> personas
     {
       get { return this._personas_ro; }
     }
