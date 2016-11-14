@@ -98,20 +98,20 @@ public class Edsf.PersonaStore : Folks.PersonaStore
     {
       debug ("Creating addressbook %s", id);
       /* In order to create a new Address Book with the given id we follow
-       * the guidelines explained here: 
+       * the guidelines explained here:
        * https://live.gnome.org/Evolution/ESourceMigrationGuide#How_do_I_create_a_new_calendar_or_address_book.3F
-       * for setting the backend name and parent UID to "local" and 
+       * for setting the backend name and parent UID to "local" and
        * "local-stub" respectively.
        */
       E.Source new_source = new E.Source.with_uid (id, null);
-      
+
       new_source.set_parent ("local-stub");
       new_source.set_display_name (id);
-      
+
       E.SourceAddressBook ab_extension =
         (E.SourceAddressBook) new_source.get_extension ("Address Book");
       ab_extension.set_backend_name ("local");
-  
+
       E.SourceRegistry registry = yield create_source_registry ();
       yield registry.commit_source (new_source, null);
     }
@@ -120,7 +120,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
    * Remove a persona store's address book permamently.
    *
    * This is a utility function to remove an {@link Edsf.PersonaStore}'s address
-   * book from the disk permanently.  This simply wraps the EDS API to do 
+   * book from the disk permanently.  This simply wraps the EDS API to do
    * the same.
    *
    * @param store the PersonaStore to delete the address book for.
@@ -132,7 +132,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
     {
       yield store.source.remove (null);
     }
-  
+
   private void _address_book_notify_read_only_cb (Object address_book,
       ParamSpec pspec)
     {
