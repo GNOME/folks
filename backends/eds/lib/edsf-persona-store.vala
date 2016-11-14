@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2011 Collabora Ltd.
- * Copyright (C) 2013 Philip Withnall
+ * Copyright (C) 2013, 2016 Philip Withnall
  *
  * This library is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -2489,7 +2489,15 @@ public class Edsf.PersonaStore : Folks.PersonaStore
 
       foreach (E.Contact c in contacts)
         {
-          var iid = Edsf.Persona.build_iid_from_contact (this.id, c);
+          string? _iid = Edsf.Persona.build_iid_from_contact (this.id, c);
+
+          if (_iid == null)
+            {
+              debug ("Ignoring contact %p as UID is not set", c);
+              continue;
+            }
+
+          string iid = (!) _iid;
           var old_persona = this._personas.get (iid);
           var new_persona = new Persona (this, c);
 
@@ -2532,7 +2540,15 @@ public class Edsf.PersonaStore : Folks.PersonaStore
     {
       foreach (E.Contact c in contacts)
         {
-          var iid = Edsf.Persona.build_iid_from_contact (this.id, c);
+          string? _iid = Edsf.Persona.build_iid_from_contact (this.id, c);
+
+          if (_iid == null)
+            {
+              debug ("Ignoring contact %p as UID is not set", c);
+              continue;
+            }
+
+          string iid = (!) _iid;
           Persona? persona = this._personas.get (iid);
           if (persona != null)
             {
@@ -2554,6 +2570,11 @@ public class Edsf.PersonaStore : Folks.PersonaStore
 
       foreach (string contact_id in contacts_ids)
         {
+          /* Not sure how this could happen, but better to be safe. We do not
+           * allow empty UIDs. */
+          if (contact_id == "")
+              continue;
+
           var iid = Edsf.Persona.build_iid (this.id, contact_id);
           Persona? persona = _personas.get (iid);
           if (persona != null)
