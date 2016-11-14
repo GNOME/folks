@@ -300,7 +300,8 @@ public abstract class Folks.Persona : Object
   /**
    * Build a UID from the given components.
    *
-   * Each component is escaped before the UID is built.
+   * Each component is escaped before the UID is built. All components must be
+   * non-empty strings.
    *
    * @param backend_name the {@link Backend.name}
    * @param persona_store_id the {@link PersonaStore.id}
@@ -311,6 +312,9 @@ public abstract class Folks.Persona : Object
    */
   public static string build_uid (string backend_name,
       string persona_store_id, string persona_id)
+        requires (backend_name != "")
+        requires (persona_store_id != "")
+        requires (persona_id != "")
     {
       return "%s:%s:%s".printf (Persona._escape_uid_component (backend_name),
           Persona._escape_uid_component (persona_store_id),
