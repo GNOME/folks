@@ -161,9 +161,9 @@ public class Folks.ImportTool : Object
         }
       catch (GLib.Error e3)
         {
-          /* Translators: the first parameter is a backend identifier and the
-           * second parameter is an error message. */
           stderr.printf (
+              /* Translators: the first parameter is a backend identifier and the
+               * second parameter is an error message. */
               _("Couldn’t prepare the ‘%s’ backend’s persona store: %s") + "\n",
               e3.message);
           return false;

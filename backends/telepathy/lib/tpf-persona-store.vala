@@ -1269,8 +1269,8 @@ public class Tpf.PersonaStore : Folks.PersonaStore
         }
       catch (GLib.Error e)
         {
-          /* Translators: the parameter is an error message. */
           throw new PersonaStoreError.REMOVE_FAILED (
+              /* Translators: the parameter is an error message. */
               _("Failed to remove a persona from store: %s"), e.message);
         }
     }
@@ -1337,8 +1337,8 @@ public class Tpf.PersonaStore : Folks.PersonaStore
         }
       catch (GLib.Error e)
         {
-          /* Translators: the parameter is an error message. */
           throw new PersonaStoreError.CREATE_FAILED (
+              /* Translators: the parameter is an error message. */
               _("Failed to add a persona from details: %s"), e.message);
         }
     }

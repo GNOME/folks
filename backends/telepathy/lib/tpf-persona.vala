@@ -527,8 +527,8 @@ public class Tpf.Persona : Folks.Persona,
         }
       catch (GLib.Error e)
         {
-          /* Translators: the parameter is an error message. */
           throw new PropertyError.UNKNOWN_ERROR (
+              /* Translators: the parameter is an error message. */
               _("Failed to change group membership: %s"), e.message);
         }
 
@@ -593,8 +593,8 @@ public class Tpf.Persona : Folks.Persona,
         }
       catch (GLib.Error e)
         {
-          /* Translators: the parameter is an error message. */
           throw new PropertyError.UNKNOWN_ERROR (
+              /* Translators: the parameter is an error message. */
               _("Failed to change group membership: %s"), e.message);
         }
 
