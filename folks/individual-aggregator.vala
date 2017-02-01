@@ -347,24 +347,21 @@ public class Folks.IndividualAggregator : Object
    */
   public static IndividualAggregator dup ()
     {
-      lock (IndividualAggregator._instance)
+      IndividualAggregator? _retval = IndividualAggregator._instance;
+      IndividualAggregator retval;
+
+      if (_retval == null)
         {
-          IndividualAggregator? _retval = IndividualAggregator._instance;
-          IndividualAggregator retval;
-
-          if (_retval == null)
-            {
-              /* use an intermediate variable to force a strong reference */
-              retval = new IndividualAggregator ();
-              IndividualAggregator._instance = retval;
-            }
-          else
-            {
-              retval = (!) _retval;
-            }
-
-          return retval;
+          /* use an intermediate variable to force a strong reference */
+          retval = new IndividualAggregator ();
+          IndividualAggregator._instance = retval;
         }
+      else
+        {
+          retval = (!) _retval;
+        }
+
+      return retval;
     }
 
   /**
@@ -411,29 +408,26 @@ public class Folks.IndividualAggregator : Object
    */
   public static IndividualAggregator? dup_with_backend_store (BackendStore store)
     {
-      lock (IndividualAggregator._instance)
+      IndividualAggregator? _retval = IndividualAggregator._instance;
+      IndividualAggregator retval;
+
+      if (_retval == null)
         {
-          IndividualAggregator? _retval = IndividualAggregator._instance;
-          IndividualAggregator retval;
-
-          if (_retval == null)
-            {
-              /* use an intermediate variable to force a strong reference */
-              retval = new IndividualAggregator.with_backend_store (store);
-              IndividualAggregator._instance = retval;
-            }
-          else if (_retval._backend_store != store)
-            {
-              warning ("An aggregator already exists using another backend store");
-              return null;
-            }
-          else
-            {
-              retval = (!) _retval;
-            }
-
-          return retval;
+          /* use an intermediate variable to force a strong reference */
+          retval = new IndividualAggregator.with_backend_store (store);
+          IndividualAggregator._instance = retval;
         }
+      else if (_retval._backend_store != store)
+        {
+          warning ("An aggregator already exists using another backend store");
+          return null;
+        }
+      else
+        {
+          retval = (!) _retval;
+        }
+
+      return retval;
     }
 
   /**
@@ -535,10 +529,7 @@ public class Folks.IndividualAggregator : Object
       this._debug.print_status.disconnect (this._debug_print_status);
 
       /* Manually clear the singleton _instance */
-      lock (IndividualAggregator._instance)
-        {
-          IndividualAggregator._instance = null;
-        }
+      IndividualAggregator._instance = null;
     }
 
   private void _primary_store_setting_changed_cb (Settings settings,
@@ -783,25 +774,22 @@ public class Folks.IndividualAggregator : Object
    */
   public async void unprepare () throws GLib.Error
     {
-      lock (this._is_prepared)
+      if (!this._is_prepared || this._prepare_pending)
         {
-          if (!this._is_prepared || this._prepare_pending)
-            {
-              return;
-            }
+          return;
+        }
 
-          try
+      try
+        {
+          /* Flush any PersonaStores which need it. */
+          foreach (var p in this._stores.values)
             {
-              /* Flush any PersonaStores which need it. */
-              foreach (var p in this._stores.values)
-                {
-                  yield p.flush ();
-                }
+              yield p.flush ();
             }
-          finally
-            {
-              this._prepare_pending = false;
-            }
+        }
+      finally
+        {
+          this._prepare_pending = false;
         }
     }
 

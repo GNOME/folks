@@ -1972,30 +1972,25 @@ public class Edsf.Persona : Folks.Persona,
     {
       GLib.HashTable<string, E.ContactField> retval;
 
-      lock (Edsf.Persona._im_eds_map)
+      if (Edsf.Persona._im_eds_map == null)
         {
-          if (Edsf.Persona._im_eds_map == null)
-            {
-              var table =
-                  new GLib.HashTable<string, E.ContactField> (str_hash,
-                      str_equal);
+          var table =
+              new GLib.HashTable<string, E.ContactField> (str_hash,
+                  str_equal);
 
-              table.insert ("aim", ContactField.IM_AIM);
-              table.insert ("yahoo", ContactField.IM_YAHOO);
-              table.insert ("groupwise", ContactField.IM_GROUPWISE);
-              table.insert ("jabber", ContactField.IM_JABBER);
-              table.insert ("msn", ContactField.IM_MSN);
-              table.insert ("icq", ContactField.IM_ICQ);
-              table.insert ("gadugadu", ContactField.IM_GADUGADU);
-              table.insert ("skype", ContactField.IM_SKYPE);
+          table.insert ("aim", ContactField.IM_AIM);
+          table.insert ("yahoo", ContactField.IM_YAHOO);
+          table.insert ("groupwise", ContactField.IM_GROUPWISE);
+          table.insert ("jabber", ContactField.IM_JABBER);
+          table.insert ("msn", ContactField.IM_MSN);
+          table.insert ("icq", ContactField.IM_ICQ);
+          table.insert ("gadugadu", ContactField.IM_GADUGADU);
+          table.insert ("skype", ContactField.IM_SKYPE);
 
-              Edsf.Persona._im_eds_map = table;
-            }
-
-          retval = (!) Edsf.Persona._im_eds_map;
+          Edsf.Persona._im_eds_map = table;
         }
 
-      return retval;
+      return (!) Edsf.Persona._im_eds_map;
     }
 
   private void _update_phones (bool create_if_not_exist, bool emit_notification = true)

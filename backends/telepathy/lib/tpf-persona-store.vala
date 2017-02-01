@@ -1571,18 +1571,15 @@ public class Tpf.PersonaStore : Folks.PersonaStore
     {
       unowned Map<string, PersonaStore> store;
 
-      lock (PersonaStore._persona_stores_by_account)
+      if (PersonaStore._persona_stores_by_account == null)
         {
-          if (PersonaStore._persona_stores_by_account == null)
-            {
-              PersonaStore._persona_stores_by_account =
-                  new HashMap<string, PersonaStore> ();
-              PersonaStore._persona_stores_by_account_ro =
-                  PersonaStore._persona_stores_by_account.read_only_view;
-            }
-
-          store = PersonaStore._persona_stores_by_account_ro;
+          PersonaStore._persona_stores_by_account =
+              new HashMap<string, PersonaStore> ();
+          PersonaStore._persona_stores_by_account_ro =
+              PersonaStore._persona_stores_by_account.read_only_view;
         }
+
+      store = PersonaStore._persona_stores_by_account_ro;
 
       return store;
     }
@@ -1597,50 +1594,44 @@ public class Tpf.PersonaStore : Folks.PersonaStore
     {
       debug ("Adding PersonaStore %p ('%s') to map.", store, store.id);
 
-      lock (PersonaStore._persona_stores_by_account)
+      /* Lazy construction. */
+      if (PersonaStore._persona_stores_by_account == null)
         {
-          /* Lazy construction. */
-          if (PersonaStore._persona_stores_by_account == null)
-            {
-              PersonaStore._persona_stores_by_account =
-                  new HashMap<string, PersonaStore> ();
-              PersonaStore._persona_stores_by_account_ro =
-                  PersonaStore._persona_stores_by_account.read_only_view;
-            }
-
-          /* Bail if a store already exists for this account. */
-          return_if_fail (
-              !PersonaStore._persona_stores_by_account.has_key (store.id));
-
-          /* Add the store. */
-          PersonaStore._persona_stores_by_account.set (store.id, store);
-          store.removed.connect (PersonaStore._store_removed_cb);
+          PersonaStore._persona_stores_by_account =
+              new HashMap<string, PersonaStore> ();
+          PersonaStore._persona_stores_by_account_ro =
+              PersonaStore._persona_stores_by_account.read_only_view;
         }
+
+      /* Bail if a store already exists for this account. */
+      return_if_fail (
+          !PersonaStore._persona_stores_by_account.has_key (store.id));
+
+      /* Add the store. */
+      PersonaStore._persona_stores_by_account.set (store.id, store);
+      store.removed.connect (PersonaStore._store_removed_cb);
     }
 
   private static void _remove_store_from_map (PersonaStore store)
     {
       debug ("Removing PersonaStore %p ('%s') from map.", store, store.id);
 
-      lock (PersonaStore._persona_stores_by_account)
+      /* Bail if no store existed for this account. This can happen if the
+       * store emits its removed() signal (correctly) before being
+       * finalised; we remove the store from the map in both cases. */
+      if (PersonaStore._persona_stores_by_account == null ||
+          !PersonaStore._persona_stores_by_account.unset (store.id))
         {
-          /* Bail if no store existed for this account. This can happen if the
-           * store emits its removed() signal (correctly) before being
-           * finalised; we remove the store from the map in both cases. */
-          if (PersonaStore._persona_stores_by_account == null ||
-              !PersonaStore._persona_stores_by_account.unset (store.id))
-            {
-              return;
-            }
+          return;
+        }
 
-          store.removed.disconnect (PersonaStore._store_removed_cb);
+      store.removed.disconnect (PersonaStore._store_removed_cb);
 
-          /* Lazy destruction. */
-          if (PersonaStore._persona_stores_by_account.size == 0)
-            {
-              PersonaStore._persona_stores_by_account_ro = null;
-              PersonaStore._persona_stores_by_account = null;
-            }
+      /* Lazy destruction. */
+      if (PersonaStore._persona_stores_by_account.size == 0)
+        {
+          PersonaStore._persona_stores_by_account_ro = null;
+          PersonaStore._persona_stores_by_account = null;
         }
     }
 
@@ -1664,28 +1655,25 @@ public class Tpf.PersonaStore : Folks.PersonaStore
 
       debug ("Tpf.PersonaStore.dup_for_account (%p):", account);
 
-      lock (PersonaStore._persona_stores_by_account)
+      /* If the store already exists, return it. */
+      if (PersonaStore._persona_stores_by_account != null)
         {
-          /* If the store already exists, return it. */
-          if (PersonaStore._persona_stores_by_account != null)
-            {
-              store =
-                  PersonaStore._persona_stores_by_account.get (
-                      account.get_object_path ());
-            }
+          store =
+              PersonaStore._persona_stores_by_account.get (
+                  account.get_object_path ());
+        }
 
-          /* Otherwise, we have to create it. It's added to the map in its
-           * constructor. */
-          if (store == null)
-            {
-              debug ("    Creating new PersonaStore.");
-              store = new PersonaStore (account);
-            }
-          else
-            {
-              debug ("    Found existing PersonaStore %p ('%s').", store,
-                  store.id);
-            }
+      /* Otherwise, we have to create it. It's added to the map in its
+       * constructor. */
+      if (store == null)
+        {
+          debug ("    Creating new PersonaStore.");
+          store = new PersonaStore (account);
+        }
+      else
+        {
+          debug ("    Found existing PersonaStore %p ('%s').", store,
+              store.id);
         }
 
       return store;

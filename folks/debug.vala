@@ -74,18 +74,12 @@ public class Folks.Debug : Object
     {
       get
         {
-          lock (this._colour_enabled)
-            {
-              return this._colour_enabled;
-            }
+          return this._colour_enabled;
         }
 
       set
         {
-          lock (this._colour_enabled)
-            {
-              this._colour_enabled = value;
-            }
+          this._colour_enabled = value;
         }
     }
 
@@ -102,18 +96,12 @@ public class Folks.Debug : Object
     {
       get
         {
-          lock (this._debug_output_enabled)
-            {
-              return this._debug_output_enabled;
-            }
+          return this._debug_output_enabled;
         }
 
       set
         {
-          lock (this._debug_output_enabled)
-            {
-              this._debug_output_enabled = value;
-            }
+          this._debug_output_enabled = value;
         }
     }
 
@@ -168,14 +156,11 @@ public class Folks.Debug : Object
    * G_MESSAGES_DEBUG environment variable (or 'all' was set) */
   internal void _register_domain (string domain)
     {
-      lock (this._domains)
+      if (this._all || this._domains.contains (domain.down ()))
         {
-          if (this._all || this._domains.contains (domain.down ()))
-            {
-              this._set_handler (domain, LogLevelFlags.LEVEL_MASK,
-                  this._log_handler_cb);
-              return;
-            }
+          this._set_handler (domain, LogLevelFlags.LEVEL_MASK,
+              this._log_handler_cb);
+          return;
         }
 
       /* Install a log handler which will blackhole the log message.
@@ -196,24 +181,21 @@ public class Folks.Debug : Object
    */
   public static Debug dup ()
     {
-      lock (Debug._instance)
+      Debug? _retval = Debug._instance;
+      Debug retval;
+
+      if (_retval == null)
         {
-          Debug? _retval = Debug._instance;
-          Debug retval;
-
-          if (_retval == null)
-            {
-              /* use an intermediate variable to force a strong reference */
-              retval = new Debug ();
-              Debug._instance = retval;
-            }
-          else
-            {
-              retval = (!) _retval;
-            }
-
-          return retval;
+          /* use an intermediate variable to force a strong reference */
+          retval = new Debug ();
+          Debug._instance = retval;
         }
+      else
+        {
+          retval = (!) _retval;
+        }
+
+      return retval;
     }
 
   /**
@@ -234,23 +216,20 @@ public class Folks.Debug : Object
     {
       var retval = Debug.dup ();
 
-      lock (retval._domains)
+      retval._all = false;
+      retval._domains = new HashSet<string> ();
+
+      if (debug_flags != null && debug_flags != "")
         {
-          retval._all = false;
-          retval._domains = new HashSet<string> ();
-
-          if (debug_flags != null && debug_flags != "")
+          var domains_split = ((!) debug_flags).split (",");
+          foreach (var domain in domains_split)
             {
-              var domains_split = ((!) debug_flags).split (",");
-              foreach (var domain in domains_split)
-                {
-                  var domain_lower = domain.down ();
+              var domain_lower = domain.down ();
 
-                  if (GLib.strcmp (domain_lower, "all") == 0)
-                    retval._all = true;
-                  else
-                    retval._domains.add (domain_lower);
-                }
+              if (GLib.strcmp (domain_lower, "all") == 0)
+                retval._all = true;
+              else
+                retval._domains.add (domain_lower);
             }
         }
 
@@ -284,10 +263,7 @@ public class Folks.Debug : Object
       this._domains_handled.clear ();
 
       /* Manually clear the singleton _instance */
-      lock (Debug._instance)
-        {
-          Debug._instance = null;
-        }
+      Debug._instance = null;
     }
 
   private void _set_handler (

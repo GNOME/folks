@@ -82,33 +82,27 @@ public class Folks.AvatarCache : Object
    */
   public static AvatarCache dup ()
     {
-      lock (AvatarCache._instance)
+      var _retval = AvatarCache._instance;
+      AvatarCache retval;
+
+      if (_retval == null)
         {
-          var _retval = AvatarCache._instance;
-          AvatarCache retval;
-
-          if (_retval == null)
-            {
-              /* use an intermediate variable to force a strong reference */
-              retval = new AvatarCache ();
-              AvatarCache._instance = retval;
-            }
-          else
-            {
-              retval = (!) _retval;
-            }
-
-          return retval;
+          /* use an intermediate variable to force a strong reference */
+          retval = new AvatarCache ();
+          AvatarCache._instance = retval;
         }
+      else
+        {
+          retval = (!) _retval;
+        }
+
+      return retval;
     }
 
   ~AvatarCache ()
     {
       /* Manually clear the singleton _instance */
-      lock (AvatarCache._instance)
-        {
-          AvatarCache._instance = null;
-        }
+      AvatarCache._instance = null;
     }
 
   /**
