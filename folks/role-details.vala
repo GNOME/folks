@@ -34,7 +34,7 @@ using GLib;
  */
 public class Folks.Role : Object
 {
-  private string _organisation_name;
+  private string _organisation_name = "";
   /**
    * The name of the organisation in which the role is held.
    */
@@ -44,7 +44,7 @@ public class Folks.Role : Object
       set { this._organisation_name = (value != null ? value : ""); }
     }
 
-  private string _title;
+  private string _title = "";
   /**
    * The title of the position held.
    *
@@ -56,7 +56,7 @@ public class Folks.Role : Object
       set { this._title = (value != null ? value : ""); }
     }
 
-  private string _role;
+  private string _role = "";
   /**
    * The role of the position.
    *
@@ -70,7 +70,7 @@ public class Folks.Role : Object
       set { this._role = (value != null ? value : ""); }
     }
 
-  private string _uid;
+  private string _uid = "";
   /**
    * The UID that distinguishes this role.
    */
@@ -163,7 +163,7 @@ public class Folks.Role : Object
  */
 public class Folks.RoleFieldDetails : AbstractFieldDetails<Role>
 {
-  private string _id;
+  private string _id = "";
   /**
    * {@inheritDoc}
    */
