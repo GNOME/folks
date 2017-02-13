@@ -1,17 +1,17 @@
 # Basque translation for folks.
 # This file is distributed under the same license as the PACKAGE package.
 #
-# Iñaki Larrañaga Murgoitio <dooteo@zundan.com>, 2013, 2014, 2015.
 #
+# Iñaki Larrañaga Murgoitio <dooteo@zundan.com>, 2013, 2014, 2015, 2017.
 msgid ""
 msgstr ""
 "Project-Id-Version: folks master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=folks&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2015-04-04 13:07+0200\n"
-"PO-Revision-Date: 2015-04-04 13:09+0200\n"
+"POT-Creation-Date: 2016-10-10 10:43+0000\n"
+"PO-Revision-Date: 2017-02-13 20:00+0100\n"
 "Last-Translator: Iñaki Larrañaga Murgoitio <dooteo@zundan.com>\n"
-"Language-Team: Basque <librezale@librezale.org>\n"
+"Language-Team: Basque <librezale@librezale.eus>\n"
 "Language: eu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Lokalize 1.5\n"
 
-#: ../backends/bluez/bluez-backend.vala:600
+#: ../backends/bluez/bluez-backend.vala:604
 msgid ""
 "No BlueZ 5 object manager running, so the BlueZ backend will be inactive. "
 "Either your BlueZ installation is too old (only version 5 is supported) or "
@@ -29,7 +29,7 @@ msgstr ""
 "motorra ez dago aktibo. Edo BlueZ-ren instalazioa zaharregia da (soilik 5 "
 "bertsioa dago onartuta), edo ezin da zerbitzua abiarazi."
 
-#: ../backends/bluez/bluez-backend.vala:613
+#: ../backends/bluez/bluez-backend.vala:617
 msgid ""
 "Error connecting to OBEX transfer daemon over D-Bus. Ensure BlueZ and obexd "
 "are installed."
@@ -126,13 +126,15 @@ msgstr "Baimena ukatuta '%s' kontaktua kentzeko: %s"
 #. Translators: the parameter is an error message.
 #: ../backends/eds/lib/edsf-persona-store.vala:653
 #, c-format
-msgid "Removing contacts isn't supported by this persona store: %s"
+#| msgid "Removing contacts isn't supported by this persona store: %s"
+msgid "Removing contacts isn’t supported by this persona store: %s"
 msgstr "Kontaktuak kentzea ez dago onartuta pertsona honen biltegian: %s"
 
 #: ../backends/eds/lib/edsf-persona-store.vala:682
 #, c-format
-msgid "Can't remove contact ‘%s’: %s"
-msgstr "Ezin da '%s' kontaktua kendu: %s"
+#| msgid "Can't remove contact ‘%s’: %s"
+msgid "Can’t remove contact ‘%s’: %s"
+msgstr "Ezin da “%s“ kontaktua kendu: %s"
 
 #. Translators: the parameter is an address book
 #. * URI.
@@ -154,28 +156,32 @@ msgstr "Baimena ukatuta '%s' helbide-liburua irekitzeko: %s"
 #. * and the second is an error message.
 #: ../backends/eds/lib/edsf-persona-store.vala:809
 #, c-format
-msgid "Couldn't open address book ‘%s’: %s"
-msgstr "Ezin izan da '%s' helbide-liburua ireki: %s"
+#| msgid "Couldn't open address book ‘%s’: %s"
+msgid "Couldn’t open address book ‘%s’: %s"
+msgstr "Ezin izan da “%s“ helbide-liburua ireki: %s"
 
 #. Translators: the parameteter is an error message.
 #: ../backends/eds/lib/edsf-persona-store.vala:877
 #: ../backends/eds/lib/edsf-persona-store.vala:907
 #, c-format
-msgid "Couldn't get address book capabilities: %s"
+#| msgid "Couldn't get address book capabilities: %s"
+msgid "Couldn’t get address book capabilities: %s"
 msgstr "Ezin izan dira helbide-liburuaren gaitasunak eskuratu: %s"
 
 #. Translators: the parameter is an address book URI.
 #: ../backends/eds/lib/edsf-persona-store.vala:923
 #, c-format
-msgid "Couldn't get view for address book ‘%s’."
-msgstr "Ezin izan da '%s' helbide-liburuaren ikuspegia eskuratu."
+#| msgid "Couldn't get view for address book ‘%s’."
+msgid "Couldn’t get view for address book ‘%s’."
+msgstr "Ezin izan da “%s“ helbide-liburuaren ikuspegia eskuratu."
 
 #. Translators: the first parameter is an address book URI
 #. * and the second is an error message.
 #: ../backends/eds/lib/edsf-persona-store.vala:1002
 #, c-format
-msgid "Couldn't get view for address book ‘%s’: %s"
-msgstr "Ezin izan da '%s' helbide-liburuaren ikuspegia eskuratu: %s"
+#| msgid "Couldn't get view for address book ‘%s’: %s"
+msgid "Couldn’t get view for address book ‘%s’: %s"
+msgstr "Ezin izan da “%s“ helbide-liburuaren ikuspegia eskuratu: %s"
 
 #: ../backends/eds/lib/edsf-persona-store.vala:1305
 msgid "Creating a new contact failed due to reaching the timeout."
@@ -184,123 +190,124 @@ msgstr "Huts egin du kontaktu berria sortzean denbora-muga iraungi delako."
 #. Translators: the parameter is the name of a property on a
 #. * contact, formatted in the normal GObject style (e.g.
 #. * lowercase with hyphens to separate words).
-#: ../backends/eds/lib/edsf-persona-store.vala:1458
+#: ../backends/eds/lib/edsf-persona-store.vala:1419
 #, c-format
 msgid "Changing the ‘%s’ property failed due to reaching the timeout."
 msgstr "Huts egin du '%s' propietatea aldatzean denbora-muga iraungi delako."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1496
+#: ../backends/eds/lib/edsf-persona-store.vala:1453
 #: ../folks/avatar-details.vala:63
 msgid "Avatar is not writeable on this contact."
 msgstr "Avatar-a ez da idazgarria kontaktu honetan."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1517
+#: ../backends/eds/lib/edsf-persona-store.vala:1474
 #: ../folks/web-service-details.vala:123
 msgid "Web service addresses are not writeable on this contact."
 msgstr "Web zerbitzuaren helbideak ez dira idazgarriak kontaktu honetan."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1553
+#: ../backends/eds/lib/edsf-persona-store.vala:1510
 #: ../folks/url-details.vala:152
 msgid "URLs are not writeable on this contact."
 msgstr "URLak ez dira idazgarriak kontaktu honetan."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1634
+#: ../backends/eds/lib/edsf-persona-store.vala:1591
 #: ../folks/local-id-details.vala:64
 msgid "Local IDs are not writeable on this contact."
 msgstr "Lokaleko IDak ez dira idazgarriak kontaktu honetan."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1663
+#: ../backends/eds/lib/edsf-persona-store.vala:1620
 msgid "The contact cannot be marked as favourite."
 msgstr "Kontaktua ezin da gogokoa bezala markatu."
 
 #. Translators: the parameter is an error message.
-#: ../backends/eds/lib/edsf-persona-store.vala:1735
+#: ../backends/eds/lib/edsf-persona-store.vala:1692
 #, c-format
-msgid "Can't update avatar: %s"
+#| msgid "Can't update avatar: %s"
+msgid "Can’t update avatar: %s"
 msgstr "Ezin da avatar-a eguneratu: %s"
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1746
+#: ../backends/eds/lib/edsf-persona-store.vala:1703
 #: ../folks/email-details.vala:120
 msgid "E-mail addresses are not writeable on this contact."
 msgstr "Helbide elektronikoak ez dira idazgarriak kontaktu honetan."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1811
+#: ../backends/eds/lib/edsf-persona-store.vala:1768
 #: ../folks/phone-details.vala:255
 msgid "Phone numbers are not writeable on this contact."
 msgstr "Telefono zenbakiak ez dira idazgarriak kontaktu honetan."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1829
+#: ../backends/eds/lib/edsf-persona-store.vala:1786
 #: ../folks/postal-address-details.vala:361
 msgid "Postal addresses are not writeable on this contact."
 msgstr "Posta-helbideak ez dira idazgarriak kontaktu honetan."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1900
+#: ../backends/eds/lib/edsf-persona-store.vala:1857
 #: ../folks/name-details.vala:454
 msgid "Full name is not writeable on this contact."
 msgstr "Izen osoa ez da idazgarria kontaktu honetan."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1922
+#: ../backends/eds/lib/edsf-persona-store.vala:1879
 #: ../folks/name-details.vala:492
 msgid "Nickname is not writeable on this contact."
 msgstr "Goitizena ez da idazgarria kontaktu honetan."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1944
+#: ../backends/eds/lib/edsf-persona-store.vala:1901
 #: ../folks/note-details.vala:138
 msgid "Notes are not writeable on this contact."
 msgstr "Oharrak ez dira idazgarriak kontaktu honetan."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:1976
+#: ../backends/eds/lib/edsf-persona-store.vala:1933
 #: ../folks/birthday-details.vala:62
 msgid "Birthday is not writeable on this contact."
 msgstr "Urtebetetzea ez da idazgarria kontatu honetan."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:2020
+#: ../backends/eds/lib/edsf-persona-store.vala:1977
 #: ../folks/role-details.vala:279
 msgid "Roles are not writeable on this contact."
 msgstr "Egitekoak ez dira idazgarriak kontaktu honetan."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:2121
+#: ../backends/eds/lib/edsf-persona-store.vala:2078
 #: ../folks/name-details.vala:417
 msgid "Structured name is not writeable on this contact."
 msgstr "Egituratutako izena ez da idazgarria kontaktu honetan."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:2160
+#: ../backends/eds/lib/edsf-persona-store.vala:2117
 #: ../folks/im-details.vala:136
 msgid "IM addresses are not writeable on this contact."
 msgstr "BM helbideak ez dira idazgarriak kontaktu honetan."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:2210
+#: ../backends/eds/lib/edsf-persona-store.vala:2167
 #: ../folks/group-details.vala:174
 msgid "Groups are not writeable on this contact."
 msgstr "Taldeak ez dira idazgarriak kontaktu honetan."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:2225
+#: ../backends/eds/lib/edsf-persona-store.vala:2182
 msgid "My Contacts is only available for Google Contacts"
 msgstr "Nire Kontaktuak soilik Google-ren Kontaktuetan da erabilgarria."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:2296
+#: ../backends/eds/lib/edsf-persona-store.vala:2253
 #: ../folks/gender-details.vala:79
 msgid "Gender is not writeable on this contact."
 msgstr "Generoa ez da idazgarria kontaktu honetan."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:2334
+#: ../backends/eds/lib/edsf-persona-store.vala:2291
 #: ../folks/anti-linkable.vala:84
 msgid "Anti-links are not writeable on this contact."
 msgstr "Anti-estekak ez dira idazgarriak kontaktu honetan."
 
-#: ../backends/eds/lib/edsf-persona-store.vala:2377
+#: ../backends/eds/lib/edsf-persona-store.vala:2334
 #: ../folks/location-details.vala:135
 msgid "Location is not writeable on this contact."
 msgstr "Kokalekua ez da idazgarria kontaktu honetan."
 
 #. Translators: the first parameter is an error message.
-#: ../backends/eds/lib/edsf-persona-store.vala:2701
+#: ../backends/eds/lib/edsf-persona-store.vala:2658
 #, c-format
 msgid "Permission denied when creating new contact: %s"
 msgstr "Baimena ukatuta kontaktu berria sortzean: %s"
 
 #. Translators: the first parameter is an error message.
-#: ../backends/eds/lib/edsf-persona-store.vala:2706
+#: ../backends/eds/lib/edsf-persona-store.vala:2663
 #, c-format
 msgid "Address book is offline and a new contact cannot be created: %s"
 msgstr ""
@@ -309,19 +316,19 @@ msgstr ""
 #. Translators: the first parameter is a non-human-readable
 #. * property name and the second parameter is an error
 #. * message.
-#: ../backends/eds/lib/edsf-persona-store.vala:2715
+#: ../backends/eds/lib/edsf-persona-store.vala:2672
 #, c-format
 msgid "New contact is not writeable: %s"
 msgstr "Kontaktu berria ez da idazgarria: %s"
 
 #. Translators: the first parameter is an error message.
-#: ../backends/eds/lib/edsf-persona-store.vala:2719
+#: ../backends/eds/lib/edsf-persona-store.vala:2676
 #, c-format
 msgid "Invalid value in contact: %s"
 msgstr "Kontaktuaren balioa baliogabea: %s"
 
 #. Translators: the first parameter is an error message.
-#: ../backends/eds/lib/edsf-persona-store.vala:2743
+#: ../backends/eds/lib/edsf-persona-store.vala:2700
 #, c-format
 msgid "Unknown error adding contact: %s"
 msgstr "Errore ezezaguna kontaktua gehitzean: %s"
@@ -329,7 +336,7 @@ msgstr "Errore ezezaguna kontaktua gehitzean: %s"
 #. Translators: the first parameter is a non-human-readable
 #. * property name and the second parameter is an error
 #. * message.
-#: ../backends/eds/lib/edsf-persona-store.vala:2776
+#: ../backends/eds/lib/edsf-persona-store.vala:2733
 #, c-format
 msgid "Property ‘%s’ is not writeable: %s"
 msgstr "'%s' propietatea ez da idazgarria: %s"
@@ -337,14 +344,14 @@ msgstr "'%s' propietatea ez da idazgarria: %s"
 #. Translators: the first parameter is a non-human-readable
 #. * property name and the second parameter is an error
 #. * message.
-#: ../backends/eds/lib/edsf-persona-store.vala:2785
+#: ../backends/eds/lib/edsf-persona-store.vala:2742
 #, c-format
 msgid "Invalid value for property ‘%s’: %s"
 msgstr "'%s' propietatearen balioa baliogabea: %s"
 
 #. Translators: the first parameter is a non-human-readable
 #. * property name and the second parameter is an error message.
-#: ../backends/eds/lib/edsf-persona-store.vala:2811
+#: ../backends/eds/lib/edsf-persona-store.vala:2768
 #, c-format
 msgid "Unknown error setting property ‘%s’: %s"
 msgstr "Errore ezezaguna '%s' propietatearen ezartzean: %s"
@@ -353,29 +360,33 @@ msgstr "Errore ezezaguna '%s' propietatearen ezartzean: %s"
 #. * the second is an error message.
 #: ../backends/key-file/kf-persona-store.vala:234
 #, c-format
-msgid "The relationship key file '%s' could not be loaded: %s"
-msgstr "Ezin izan da '%s' erlazio-gakoaren fitxategia kargatu: %s"
+#| msgid "The relationship key file '%s' could not be loaded: %s"
+msgid "The relationship key file ‘%s’ could not be loaded: %s"
+msgstr "Ezin izan da “%s“ erlazio-gakoaren fitxategia kargatu: %s"
 
 #. Translators: the first parameter is a path, and the
 #. * second is an error message.
 #: ../backends/key-file/kf-persona-store.vala:256
 #, c-format
-msgid "The relationship key file directory '%s' could not be created: %s"
-msgstr "Ezin izan da '%s' erlazio-gakoaren direktorioa sortu: %s"
+#| msgid "The relationship key file directory '%s' could not be created: %s"
+msgid "The relationship key file directory ‘%s’ could not be created: %s"
+msgstr "Ezin izan da “%s“ erlazio-gakoaren direktorioa sortu: %s"
 
 #. Translators: the first parameter is a filename, and
 #. * the second is an error message.
 #: ../backends/key-file/kf-persona-store.vala:280
 #, c-format
-msgid "The relationship key file '%s' could not be created: %s"
-msgstr "Ezin izan da '%s' erlazio-gakoaren fitxategia sortu: %s"
+#| msgid "The relationship key file '%s' could not be created: %s"
+msgid "The relationship key file ‘%s’ could not be created: %s"
+msgstr "Ezin izan da “%s“ erlazio-gakoaren fitxategia sortu: %s"
 
 #. Translators: the first parameter is a filename, the second is
 #. * an error message.
 #: ../backends/key-file/kf-persona-store.vala:471
 #, c-format
-msgid "Could not write updated key file '%s': %s"
-msgstr "Ezin izan da eguneratutako '%s' gakoaren fitxategia idatzi: %s"
+#| msgid "Could not write updated key file '%s': %s"
+msgid "Could not write updated key file ‘%s’: %s"
+msgstr "Ezin izan da eguneratutako “%s“ gakoaren fitxategia idatzi: %s"
 
 #. Translators: this is an error message for if the user
 #. * provides an invalid IM address. The first parameter is
@@ -390,7 +401,8 @@ msgstr "'%s' BMren helbidea baliogabea '%s' protokoloarentzako: %s"
 #. Translators: the parameter is an error message.
 #: ../backends/key-file/kf-persona.vala:432
 #, c-format
-msgid "Couldn't load data from key file: %s"
+#| msgid "Couldn't load data from key file: %s"
+msgid "Couldn’t load data from key file: %s"
 msgstr "Ezin izan da daturik kargatu gakoaren fitxategitik: %s"
 
 #. Translators: the parameter is an error message.
@@ -421,40 +433,43 @@ msgstr ""
 "oFOno objektu-kudeatzailea ez da exekutatzen ari, beraz oFono motorra "
 "inaktibo dago. Edo oFono ez dago instalatuta, edo ezin da zerbitzua abiarazi."
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1248
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1263
 msgid "Telepathy contacts representing the local user may not be removed."
 msgstr ""
 "Lokaleko erabiltzaileak adierazten dituzten Telepathy-ko kontaktuak ez dira "
 "kenduko."
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1259
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1274
 #, c-format
 msgid "Failed to remove a persona from store: %s"
 msgstr "Huts egin du pertsona bat biltegitik kentzean: %s"
 
 #. Translators: the first two parameters are store identifiers and
 #. * the third is a contact identifier.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1294
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1309
 #, c-format
+#| msgid ""
+#| "Persona store (%s, %s) requires the following details:\n"
+#| "    contact (provided: '%s')\n"
 msgid ""
 "Persona store (%s, %s) requires the following details:\n"
-"    contact (provided: '%s')\n"
+"    contact (provided: ‘%s’)\n"
 msgstr ""
 "Pertsonaren bildumak (%s, %s) honako xehetasunak eskatzen ditu:\n"
-"   kontaktua (emandakoa: '%s')\n"
+"   kontaktua (emandakoa: “%s“)\n"
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1309
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1324
 msgid "Cannot create a new Telepathy contact while offline."
 msgstr "Ezin da Telepathy-ko kontaktu berria sortu lineaz kanpo dagoenean."
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1327
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1342
 #, c-format
 msgid "Failed to add a persona from details: %s"
 msgstr "Huts egin du xehetasunetatik pertsona bat gehitzean: %s"
 
 #. Translators: "telepathy-logger" is the name of an application,
 #. * and should not be translated.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1347
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1362
 msgid ""
 "Failed to change favorite without a connection to the telepathy-logger "
 "service."
@@ -462,7 +477,7 @@ msgstr ""
 "Huts egin du 'telepathy-logger' zerbitzuarekin konektatu gabe gogokoa "
 "aldatzean."
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1353
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1368
 msgid ""
 "Failed to change favorite status of Telepathy Persona because it has no "
 "attached TpContact."
@@ -471,25 +486,28 @@ msgstr ""
 "TpContact-era atxikituta."
 
 #. Translators: the parameter is a contact identifier.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1371
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1386
 #, c-format
 msgid "Failed to change favorite status for Telepathy contact ‘%s’."
 msgstr ""
 "Huts egin du Telepathy-ko '%s' kontaktuaren gogokoaren egoera aldatzean."
 
 #. Translators: the parameter is an error message.
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1403
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1418
 #, c-format
-msgid "Failed to change contact's alias: %s"
+#| msgid "Failed to change contact's alias: %s"
+msgid "Failed to change contact’s alias: %s"
 msgstr "Huts egin du kontaktuaren aliasa aldatzean: %s"
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1484
-msgid "Extended information may only be set on the user's Telepathy contact."
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1499
+#| msgid ""
+#| "Extended information may only be set on the user's Telepathy contact."
+msgid "Extended information may only be set on the user’s Telepathy contact."
 msgstr ""
 "Informazio hedatua soilik erabiltzailearen Telepathy-ko kontaktuan ezar "
 "daiteke."
 
-#: ../backends/telepathy/lib/tpf-persona-store.vala:1513
+#: ../backends/telepathy/lib/tpf-persona-store.vala:1528
 msgid ""
 "Extended information cannot be written because the store is disconnected."
 msgstr "Informazio hedatua ezin da idatzi biltegia deskonektatuta dagoelako."
@@ -514,8 +532,9 @@ msgstr "Kontua lineaz kanpo dago."
 #. * identifies the persona store.
 #: ../backends/tracker/lib/trf-persona-store.vala:743
 #, c-format
-msgid "Unrecognized parameter '%s' passed to persona store '%s'."
-msgstr "?%s' parametro ezezaguna igorri zaio '%s' pertsonaren biltegiari."
+#| msgid "Unrecognized parameter '%s' passed to persona store '%s'."
+msgid "Unrecognized parameter ‘%s’ passed to persona store ‘%s’."
+msgstr "“%s“ parametro ezezaguna igorri zaio “%s“ pertsonaren biltegiari."
 
 #: ../folks/alias-details.vala:61
 msgid "Alias is not writeable on this contact."
@@ -525,8 +544,9 @@ msgstr "Aliasa ez da idazgarria kontaktu honetan."
 #. * is an error message.
 #: ../folks/backend-store.vala:654
 #, c-format
-msgid "Error listing contents of folder '%s': %s"
-msgstr "Errorea '%s' karpetaren edukia zerrendatzean: %s"
+#| msgid "Error listing contents of folder '%s': %s"
+msgid "Error listing contents of folder ‘%s’: %s"
+msgstr "Errorea “%s“ karpetaren edukia zerrendatzean: %s"
 
 #. Translators: the first parameter is a folder path and the second
 #. * is an error message.
@@ -539,14 +559,16 @@ msgstr ""
 #. Translators: the parameter is a filename.
 #: ../folks/backend-store.vala:823
 #, c-format
-msgid "File or directory '%s' does not exist."
-msgstr "'%s' fitxategi edo direktorioa ez da existitzen."
+#| msgid "File or directory '%s' does not exist."
+msgid "File or directory ‘%s’ does not exist."
+msgstr "“%s“ fitxategi edo direktorioa ez da existitzen."
 
 #. Translators: the parameter is a filename.
 #: ../folks/backend-store.vala:829
 #, c-format
-msgid "Failed to get content type for '%s'."
-msgstr "Huts egin du '%s'(r)en eduki mota eskuratzean."
+#| msgid "Failed to get content type for '%s'."
+msgid "Failed to get content type for ‘%s’."
+msgstr "Huts egin du “%s“(r)en eduki mota eskuratzean."
 
 #: ../folks/birthday-details.vala:93
 msgid "Birthday event ID is not writeable on this contact."
@@ -564,29 +586,33 @@ msgstr "Gogokoaren egoera ez da idazgarria kontaktu honetan."
 #: ../folks/im-details.vala:178 ../folks/im-details.vala:192
 #: ../folks/im-details.vala:214 ../folks/im-details.vala:241
 #, c-format
-msgid "The IM address '%s' could not be understood."
-msgstr "Ezin izan da '%s' BMren helbidea ulertu."
+#| msgid "The IM address '%s' could not be understood."
+msgid "The IM address ‘%s’ could not be understood."
+msgstr "Ezin izan da “%s“ BMren helbidea ulertu."
 
 #. Translators: the first parameter is a persona store identifier
 #. * and the second is an error message.
 #: ../folks/individual-aggregator.vala:1063
 #, c-format
-msgid "Error preparing persona store '%s': %s"
-msgstr "Errorea '%s' pertsonaren biltegia prestatzean: %s"
+#| msgid "Error preparing persona store '%s': %s"
+msgid "Error preparing persona store ‘%s’: %s"
+msgstr "Errorea “%s“ pertsonaren biltegia prestatzean: %s"
 
 #. Translators: the parameter is a property name.
 #: ../folks/individual-aggregator.vala:1294
 #: ../folks/individual-aggregator.vala:1567
 #, c-format
-msgid "Unknown property '%s' in linkable property list."
-msgstr "'%s' propietate ezezaguna propietateen zerrenda estekagarrian."
+#| msgid "Unknown property '%s' in linkable property list."
+msgid "Unknown property ‘%s’ in linkable property list."
+msgstr "“%s“ propietate ezezaguna propietateen zerrenda estekagarrian."
 
 #. Translators: the first parameter is a store identifier
 #. * and the second parameter is an error message.
 #: ../folks/individual-aggregator.vala:2053
 #, c-format
-msgid "Failed to add contact for persona store ID '%s': %s"
-msgstr "Huts egin du '%s' pertsonaren biltegiaren kontaktua gehitzean: %s"
+#| msgid "Failed to add contact for persona store ID '%s': %s"
+msgid "Failed to add contact for persona store ID ‘%s’: %s"
+msgstr "Huts egin du “%s“ pertsonaren biltegiaren kontaktua gehitzean: %s"
 
 #: ../folks/individual-aggregator.vala:2150
 msgid "Can’t link personas with no primary store."
@@ -605,15 +631,19 @@ msgstr ""
 #: ../folks/individual-aggregator.vala:2152
 #: ../folks/individual-aggregator.vala:2483
 #, c-format
+#| msgid ""
+#| "Check the relevant service is running, or change the default store in "
+#| "that service or using the “%s” GSettings key."
 msgid ""
 "Check the relevant service is running, or change the default store in that "
-"service or using the “%s” GSettings key."
+"service or using the ‘%s’ GSettings key."
 msgstr ""
 "Egiaztatu dagokion zerbitzua exekutatzen ari dela, edo aldatu zerbitzu "
-"horren biltegi lehenetsia edo '%s' GSettings gakoa erabiliz."
+"horren biltegi lehenetsia edo “%s“ GSettings gakoa erabiliz."
 
 #: ../folks/individual-aggregator.vala:2184
-msgid "Anti-links can't be removed between personas being linked."
+#| msgid "Anti-links can't be removed between personas being linked."
+msgid "Anti-links can’t be removed between personas being linked."
 msgstr "Anti-estekak ezin dira kendu pertsonak konektatuta dauden bitartean."
 
 #: ../folks/individual-aggregator.vala:2481
@@ -622,8 +652,9 @@ msgstr "Ezin dira biltegi nagusirik gabeko pertsonak gehitu."
 
 #: ../folks/individual-aggregator.vala:2492
 #, c-format
-msgid "Can't write to requested property (“%s”) of the writeable store."
-msgstr "Ezin da biltegi idazgarriaren eskatutako propietatea ('%s') idatzi."
+#| msgid "Can't write to requested property (“%s”) of the writeable store."
+msgid "Can’t write to requested property (‘%s’) of the writeable store."
+msgstr "Ezin da biltegi idazgarriaren eskatutako propietatea (“%s“) idatzi."
 
 #: ../folks/individual.vala:217 ../folks/individual.vala:403
 #: ../folks/individual.vala:512 ../folks/individual.vala:763
@@ -688,15 +719,20 @@ msgid "Primary store ID"
 msgstr "Biltegi nagusiaren IDa"
 
 #: ../folks/org.freedesktop.folks.gschema.xml.in.h:2
+#| msgid ""
+#| "The ID of the persona store which folks should use as primary (i.e. to "
+#| "store linking data in). The type ID of the store may optionally be "
+#| "prepended, separated by a colon. For example: “eds:system-address-book” "
+#| "or “key-file”."
 msgid ""
 "The ID of the persona store which folks should use as primary (i.e. to store "
 "linking data in). The type ID of the store may optionally be prepended, "
-"separated by a colon. For example: “eds:system-address-book” or “key-file”."
+"separated by a colon. For example: ‘eds:system-address-book’ or ‘key-file’."
 msgstr ""
 "Pertsonaren biltegiaren IDa lagunek nagusi gisa erabiltzeko (adibidez, "
 "bertan estekatutako datuak gordetzeko). Biltegiaren ID mota aurrizkiarekin "
-"jar daiteke koma batez bereiztuta. Adibidez: \"eds:system-address-book” edo "
-"“key-file”."
+"jar daiteke koma batez bereiztuta. Adibidez: “eds:system-address-book“ edo "
+"“key-file“."
 
 #: ../folks/postal-address-details.vala:231
 #, c-format
@@ -762,8 +798,9 @@ msgstr "'%s' fitxategia ez da irakurgarria."
 #. Translators: the parameter is a filename.
 #: ../tools/import-pidgin.vala:82
 #, c-format
-msgid "The Pidgin buddy list file '%s' could not be loaded."
-msgstr "Ezin izan da Pidgin-eko lagunen zerrendaren '%s' fitxategia kargatu."
+#| msgid "The Pidgin buddy list file '%s' could not be loaded."
+msgid "The Pidgin buddy list file ‘%s’ could not be loaded."
+msgstr "Ezin izan da Pidgin-eko lagunen zerrendaren “%s“ fitxategia kargatu."
 
 #. Translators: the parameter is a filename.
 #: ../tools/import-pidgin.vala:97
@@ -779,10 +816,12 @@ msgstr ""
 #. * were successfully imported, and the second is a filename.
 #: ../tools/import-pidgin.vala:117
 #, c-format
-msgid "Imported %u buddy from '%s'."
-msgid_plural "Imported %u buddies from '%s'."
-msgstr[0] "Lagun %u inportatuta '%s'(e)ndik."
-msgstr[1] "%u lagun inportatuta '%s'(e)ndik."
+#| msgid "Imported %u buddy from '%s'."
+#| msgid_plural "Imported %u buddies from '%s'."
+msgid "Imported %u buddy from ‘%s’."
+msgid_plural "Imported %u buddies from ‘%s’."
+msgstr[0] "Lagun %u inportatuta “%s“(e)ndik."
+msgstr[1] "%u lagun inportatuta “%s“(e)ndik."
 
 #. Translators: the first parameter is a persona identifier,
 #. * and the second is an error message.
@@ -826,8 +865,9 @@ msgstr ""
 "helbideak dituen lagunarentzako."
 
 #: ../tools/import.vala:44
-msgid "Source backend name (default: 'pidgin')"
-msgstr "Iturburuko motorraren izena (lehenetsia: 'pidgin')"
+#| msgid "Source backend name (default: 'pidgin')"
+msgid "Source backend name (default: ‘pidgin’)"
+msgstr "Iturburuko motorraren izena (lehenetsia: “pidgin“)"
 
 #: ../tools/import.vala:47
 msgid "Source filename (default: specific to source backend)"
@@ -841,38 +881,44 @@ msgstr "— inportatu meta-kontaktuaren informazioa 'libfolks'-era"
 #. Translators: the parameter is an error message.
 #: ../tools/import.vala:68
 #, c-format
-msgid "Couldn't parse command line options: %s"
+#| msgid "Couldn't parse command line options: %s"
+msgid "Couldn’t parse command line options: %s"
 msgstr "Ezin izan dira komando-lerroko aukerak analizatu: %s"
 
 #. Translators: the parameter is an error message.
 #: ../tools/import.vala:109
 #, c-format
-msgid "Couldn't load the backends: %s"
+#| msgid "Couldn't load the backends: %s"
+msgid "Couldn’t load the backends: %s"
 msgstr "Ezin izan dira motorrak kargatu: %s"
 
 #. Translators: the parameter is a backend identifier.
 #: ../tools/import.vala:120
 #, c-format
-msgid "Couldn't load the ‘%s’ backend."
-msgstr "Ezin izan da '%s' motorra kargatu."
+#| msgid "Couldn't load the ‘%s’ backend."
+msgid "Couldn’t load the ‘%s’ backend."
+msgstr "Ezin izan da “%s“ motorra kargatu."
 
 #. Translators: the first parameter is a backend identifier and the
 #. * second parameter is an error message.
 #: ../tools/import.vala:133
 #, c-format
-msgid "Couldn't prepare the ‘%s’ backend: %s"
-msgstr "Ezin izan da '%s' motorra prestatu: %s"
+#| msgid "Couldn't prepare the ‘%s’ backend: %s"
+msgid "Couldn’t prepare the ‘%s’ backend: %s"
+msgstr "Ezin izan da “%s“ motorra prestatu: %s"
 
 #. Translators: the parameter is a backend identifier.
 #: ../tools/import.vala:146
 #, c-format
-msgid "Couldn't load the ‘%s’ backend's persona store."
-msgstr "Ezin izan da '%s' motorraren pertsonaren biltegia kargatu."
+#| msgid "Couldn't load the ‘%s’ backend's persona store."
+msgid "Couldn’t load the ‘%s’ backend’s persona store."
+msgstr "Ezin izan da “%s“ motorraren pertsonaren biltegia kargatu."
 
 #: ../tools/import.vala:167
 #, c-format
-msgid "Couldn't prepare the ‘%s’ backend's persona store: %s"
-msgstr "Ezin izan da '%s' motorraren pertsonaren biltegia prestatu: %s"
+#| msgid "Couldn't prepare the ‘%s’ backend's persona store: %s"
+msgid "Couldn’t prepare the ‘%s’ backend’s persona store: %s"
+msgstr "Ezin izan da “%s“ motorraren pertsonaren biltegia prestatu: %s"
 
 #. Translators: the parameter is an error message.
 #: ../tools/import.vala:185
