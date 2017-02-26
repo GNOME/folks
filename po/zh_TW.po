@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: folks master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=folks&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2015-08-25 12:52+0800\n"
-"PO-Revision-Date: 2015-08-25 12:52+0800\n"
+"POT-Creation-Date: 2016-10-10 10:43+0000\n"
+"PO-Revision-Date: 2017-02-24 10:44+0800\n"
 "Last-Translator: Chao-Hsiung Liao <j_h_liau@yahoo.com.tw>\n"
 "Language-Team: Chinese (Taiwan) <chinese-l10n@googlegroups.com>\n"
 "Language: zh_TW\n"
@@ -17,9 +17,9 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Poedit 1.8.4\n"
+"X-Generator: Poedit 1.8.12\n"
 
-#: ../backends/bluez/bluez-backend.vala:600
+#: ../backends/bluez/bluez-backend.vala:604
 msgid ""
 "No BlueZ 5 object manager running, so the BlueZ backend will be inactive. "
 "Either your BlueZ installation is too old (only version 5 is supported) or "
@@ -28,7 +28,7 @@ msgstr ""
 "沒有執行中的 BlueZ 5 物件管理員，因此 BlueZ 後端不會作用。可能是您安裝的 "
 "BlueZ 太舊 (只支援第 5 版) 或是服務無法啟動。"
 
-#: ../backends/bluez/bluez-backend.vala:613
+#: ../backends/bluez/bluez-backend.vala:617
 msgid ""
 "Error connecting to OBEX transfer daemon over D-Bus. Ensure BlueZ and obexd "
 "are installed."
@@ -120,12 +120,12 @@ msgstr "移除連絡人「%s」權限被拒絕：%s"
 #. Translators: the parameter is an error message.
 #: ../backends/eds/lib/edsf-persona-store.vala:653
 #, c-format
-msgid "Removing contacts isn't supported by this persona store: %s"
+msgid "Removing contacts isn’t supported by this persona store: %s"
 msgstr "這個 persona store 不支援移除連絡人：%s"
 
 #: ../backends/eds/lib/edsf-persona-store.vala:682
 #, c-format
-msgid "Can't remove contact ‘%s’: %s"
+msgid "Can’t remove contact ‘%s’: %s"
 msgstr "不能移除連絡人「%s」：%s"
 
 #. Translators: the parameter is an address book
@@ -148,27 +148,27 @@ msgstr "開啟通訊錄「%s」權限被拒絕：%s"
 #. * and the second is an error message.
 #: ../backends/eds/lib/edsf-persona-store.vala:809
 #, c-format
-msgid "Couldn't open address book ‘%s’: %s"
+msgid "Couldn’t open address book ‘%s’: %s"
 msgstr "無法開啟通訊錄「%s」：%s"
 
 #. Translators: the parameteter is an error message.
 #: ../backends/eds/lib/edsf-persona-store.vala:877
 #: ../backends/eds/lib/edsf-persona-store.vala:907
 #, c-format
-msgid "Couldn't get address book capabilities: %s"
+msgid "Couldn’t get address book capabilities: %s"
 msgstr "無法取得通訊錄功能：%s"
 
 #. Translators: the parameter is an address book URI.
 #: ../backends/eds/lib/edsf-persona-store.vala:923
 #, c-format
-msgid "Couldn't get view for address book ‘%s’."
+msgid "Couldn’t get view for address book ‘%s’."
 msgstr "無法取得通訊錄「%s」的檢視。"
 
 #. Translators: the first parameter is an address book URI
 #. * and the second is an error message.
 #: ../backends/eds/lib/edsf-persona-store.vala:1002
 #, c-format
-msgid "Couldn't get view for address book ‘%s’: %s"
+msgid "Couldn’t get view for address book ‘%s’: %s"
 msgstr "無法取得通訊錄「%s」的檢視：%s"
 
 #: ../backends/eds/lib/edsf-persona-store.vala:1305
@@ -210,7 +210,7 @@ msgstr "連絡人不能標記為喜好。"
 #. Translators: the parameter is an error message.
 #: ../backends/eds/lib/edsf-persona-store.vala:1692
 #, c-format
-msgid "Can't update avatar: %s"
+msgid "Can’t update avatar: %s"
 msgstr "不能更新大頭貼：%s"
 
 #: ../backends/eds/lib/edsf-persona-store.vala:1703
@@ -346,28 +346,28 @@ msgstr "不明的錯誤設定屬性「%s」：%s"
 #. * the second is an error message.
 #: ../backends/key-file/kf-persona-store.vala:234
 #, c-format
-msgid "The relationship key file '%s' could not be loaded: %s"
+msgid "The relationship key file ‘%s’ could not be loaded: %s"
 msgstr "無法載入關係設定鍵檔案「%s」：%s"
 
 #. Translators: the first parameter is a path, and the
 #. * second is an error message.
 #: ../backends/key-file/kf-persona-store.vala:256
 #, c-format
-msgid "The relationship key file directory '%s' could not be created: %s"
+msgid "The relationship key file directory ‘%s’ could not be created: %s"
 msgstr "無法建立關係設定鍵目錄「%s」：%s"
 
 #. Translators: the first parameter is a filename, and
 #. * the second is an error message.
 #: ../backends/key-file/kf-persona-store.vala:280
 #, c-format
-msgid "The relationship key file '%s' could not be created: %s"
+msgid "The relationship key file ‘%s’ could not be created: %s"
 msgstr "無法建立關係設定鍵檔案「%s」：%s"
 
 #. Translators: the first parameter is a filename, the second is
 #. * an error message.
 #: ../backends/key-file/kf-persona-store.vala:471
 #, c-format
-msgid "Could not write updated key file '%s': %s"
+msgid "Could not write updated key file ‘%s’: %s"
 msgstr "無法寫入已更新的設定鍵檔案「%s」：%s"
 
 #. Translators: this is an error message for if the user
@@ -383,7 +383,7 @@ msgstr "無效的 IM 位址「%s」通訊協定「%s」：%s"
 #. Translators: the parameter is an error message.
 #: ../backends/key-file/kf-persona.vala:432
 #, c-format
-msgid "Couldn't load data from key file: %s"
+msgid "Couldn’t load data from key file: %s"
 msgstr "無法從設定鍵檔案載入資料：%s"
 
 #. Translators: the parameter is an error message.
@@ -429,7 +429,7 @@ msgstr "無法從儲存區移除 persona：%s"
 #, c-format
 msgid ""
 "Persona store (%s, %s) requires the following details:\n"
-"    contact (provided: '%s')\n"
+"    contact (provided: ‘%s’)\n"
 msgstr ""
 "Persona store (%s, %s) 要求下列詳細資料：\n"
 "    連絡人 (提供者：「%s」)\n"
@@ -466,11 +466,11 @@ msgstr "無法改變 Telepathy 連絡人「%s」的喜好狀態。"
 #. Translators: the parameter is an error message.
 #: ../backends/telepathy/lib/tpf-persona-store.vala:1418
 #, c-format
-msgid "Failed to change contact's alias: %s"
+msgid "Failed to change contact’s alias: %s"
 msgstr "無法改變連絡人的別名：%s"
 
 #: ../backends/telepathy/lib/tpf-persona-store.vala:1499
-msgid "Extended information may only be set on the user's Telepathy contact."
+msgid "Extended information may only be set on the user’s Telepathy contact."
 msgstr "延伸資訊只能在使用者的 Telepathy 連絡人上設定。"
 
 #: ../backends/telepathy/lib/tpf-persona-store.vala:1528
@@ -498,7 +498,7 @@ msgstr "帳號已經離線。"
 #. * identifies the persona store.
 #: ../backends/tracker/lib/trf-persona-store.vala:743
 #, c-format
-msgid "Unrecognized parameter '%s' passed to persona store '%s'."
+msgid "Unrecognized parameter ‘%s’ passed to persona store ‘%s’."
 msgstr "無法辨識的參數「%s」傳送給 persona store 「%s」。"
 
 #: ../folks/alias-details.vala:61
@@ -509,7 +509,7 @@ msgstr "別名在這個連絡人是無法寫入的。"
 #. * is an error message.
 #: ../folks/backend-store.vala:654
 #, c-format
-msgid "Error listing contents of folder '%s': %s"
+msgid "Error listing contents of folder ‘%s’: %s"
 msgstr "列出資料夾「%s」的內容時發生錯誤：%s"
 
 #. Translators: the first parameter is a folder path and the second
@@ -522,13 +522,13 @@ msgstr "查詢符號連結「%2$s」的目標「%1$s」資訊時發生錯誤：%
 #. Translators: the parameter is a filename.
 #: ../folks/backend-store.vala:823
 #, c-format
-msgid "File or directory '%s' does not exist."
+msgid "File or directory ‘%s’ does not exist."
 msgstr "檔案或目錄「%s」不存在。"
 
 #. Translators: the parameter is a filename.
 #: ../folks/backend-store.vala:829
 #, c-format
-msgid "Failed to get content type for '%s'."
+msgid "Failed to get content type for ‘%s’."
 msgstr "無法取得「%s」的內容類型。"
 
 #: ../folks/birthday-details.vala:93
@@ -547,28 +547,28 @@ msgstr "喜好狀態在這個連絡人是無法寫入的。"
 #: ../folks/im-details.vala:178 ../folks/im-details.vala:192
 #: ../folks/im-details.vala:214 ../folks/im-details.vala:241
 #, c-format
-msgid "The IM address '%s' could not be understood."
+msgid "The IM address ‘%s’ could not be understood."
 msgstr "無法了解 IM 位址「%s」。"
 
 #. Translators: the first parameter is a persona store identifier
 #. * and the second is an error message.
 #: ../folks/individual-aggregator.vala:1063
 #, c-format
-msgid "Error preparing persona store '%s': %s"
-msgstr "準備 persona store 「%s」：%s"
+msgid "Error preparing persona store ‘%s’: %s"
+msgstr "準備 persona store 「%s」時發生錯誤：%s"
 
 #. Translators: the parameter is a property name.
 #: ../folks/individual-aggregator.vala:1294
 #: ../folks/individual-aggregator.vala:1567
 #, c-format
-msgid "Unknown property '%s' in linkable property list."
-msgstr "可連結屬性清單中有不明的屬性「%s」。"
+msgid "Unknown property ‘%s’ in linkable property list."
+msgstr "可連結屬性列表中有不明的屬性「%s」。"
 
 #. Translators: the first parameter is a store identifier
 #. * and the second parameter is an error message.
 #: ../folks/individual-aggregator.vala:2053
 #, c-format
-msgid "Failed to add contact for persona store ID '%s': %s"
+msgid "Failed to add contact for persona store ID ‘%s’: %s"
 msgstr "無法加入 persona store ID「%s」的連絡人：%s"
 
 #: ../folks/individual-aggregator.vala:2150
@@ -588,13 +588,13 @@ msgstr "Persona store 「%s:%s」已設定為主要，但是卻找不到或無�
 #, c-format
 msgid ""
 "Check the relevant service is running, or change the default store in that "
-"service or using the “%s” GSettings key."
+"service or using the ‘%s’ GSettings key."
 msgstr ""
 "檢查相關服務的執行，或改變該服務中的預設儲存區，或使用「%s」GSettings 設定"
 "鍵。"
 
 #: ../folks/individual-aggregator.vala:2184
-msgid "Anti-links can't be removed between personas being linked."
+msgid "Anti-links can’t be removed between personas being linked."
 msgstr "當 personas 已連結後無法移除其反制連結。"
 
 #: ../folks/individual-aggregator.vala:2481
@@ -603,7 +603,7 @@ msgstr "沒有主要儲存區不能加入 personas。"
 
 #: ../folks/individual-aggregator.vala:2492
 #, c-format
-msgid "Can't write to requested property (“%s”) of the writeable store."
+msgid "Can’t write to requested property (‘%s’) of the writeable store."
 msgstr "不能寫入要求的可寫入儲存區的屬性 (「%s」)"
 
 #: ../folks/individual.vala:217 ../folks/individual.vala:403
@@ -671,7 +671,7 @@ msgstr "主要儲存區 ID"
 msgid ""
 "The ID of the persona store which folks should use as primary (i.e. to store "
 "linking data in). The type ID of the store may optionally be prepended, "
-"separated by a colon. For example: “eds:system-address-book” or “key-file”."
+"separated by a colon. For example: ‘eds:system-address-book’ or ‘key-file’."
 msgstr ""
 "folks 設定為主要 persona store 的 ID (例如，用來儲存連結的資料)。儲存區的類"
 "型 ID 可以選擇性的前置，以冒號分隔即可。例如：「eds:system-address-book」或"
@@ -741,8 +741,8 @@ msgstr "檔案 %s 無法讀取。"
 #. Translators: the parameter is a filename.
 #: ../tools/import-pidgin.vala:82
 #, c-format
-msgid "The Pidgin buddy list file '%s' could not be loaded."
-msgstr "無法載入 Pidgin 好友清單檔案「%s」。"
+msgid "The Pidgin buddy list file ‘%s’ could not be loaded."
+msgstr "無法載入 Pidgin 好友列表檔案「%s」。"
 
 #. Translators: the parameter is a filename.
 #: ../tools/import-pidgin.vala:97
@@ -750,14 +750,14 @@ msgstr "無法載入 Pidgin 好友清單檔案「%s」。"
 msgid ""
 "The Pidgin buddy list file ‘%s’ could not be loaded: the root element could "
 "not be found or was not recognized."
-msgstr "無法載入 Pidgin 好友清單檔案「%s」：找不到根元素或無法辨識。"
+msgstr "無法載入 Pidgin 好友列表檔案「%s」：找不到根元素或無法辨識。"
 
 #. Translators: the first parameter is the number of buddies which
 #. * were successfully imported, and the second is a filename.
 #: ../tools/import-pidgin.vala:117
 #, c-format
-msgid "Imported %u buddy from '%s'."
-msgid_plural "Imported %u buddies from '%s'."
+msgid "Imported %u buddy from ‘%s’."
+msgid_plural "Imported %u buddies from ‘%s’."
 msgstr[0] "從「%2$s」匯入的 %1$u 個好友。"
 
 #. Translators: the first parameter is a persona identifier,
@@ -801,8 +801,8 @@ msgstr ""
 "%s"
 
 #: ../tools/import.vala:44
-msgid "Source backend name (default: 'pidgin')"
-msgstr "來源後端名稱 (預設值: 'pidgin')"
+msgid "Source backend name (default: ‘pidgin’)"
+msgstr "來源後端名稱 (預設值：「pidgin」)"
 
 #: ../tools/import.vala:47
 msgid "Source filename (default: specific to source backend)"
@@ -815,37 +815,37 @@ msgstr "— 匯入 meta-contact 資訊到 libfolks"
 #. Translators: the parameter is an error message.
 #: ../tools/import.vala:68
 #, c-format
-msgid "Couldn't parse command line options: %s"
+msgid "Couldn’t parse command line options: %s"
 msgstr "無法分析命令列選項：%s"
 
 #. Translators: the parameter is an error message.
 #: ../tools/import.vala:109
 #, c-format
-msgid "Couldn't load the backends: %s"
+msgid "Couldn’t load the backends: %s"
 msgstr "無法載入後端：%s"
 
 #. Translators: the parameter is a backend identifier.
 #: ../tools/import.vala:120
 #, c-format
-msgid "Couldn't load the ‘%s’ backend."
+msgid "Couldn’t load the ‘%s’ backend."
 msgstr "無法載入「%s」後端。"
 
 #. Translators: the first parameter is a backend identifier and the
 #. * second parameter is an error message.
 #: ../tools/import.vala:133
 #, c-format
-msgid "Couldn't prepare the ‘%s’ backend: %s"
+msgid "Couldn’t prepare the ‘%s’ backend: %s"
 msgstr "無法準備「%s」後端：%s"
 
 #. Translators: the parameter is a backend identifier.
 #: ../tools/import.vala:146
 #, c-format
-msgid "Couldn't load the ‘%s’ backend's persona store."
+msgid "Couldn’t load the ‘%s’ backend’s persona store."
 msgstr "無法載入「%s」後端的 persona store。"
 
 #: ../tools/import.vala:167
 #, c-format
-msgid "Couldn't prepare the ‘%s’ backend's persona store: %s"
+msgid "Couldn’t prepare the ‘%s’ backend’s persona store: %s"
 msgstr "無法準備「%s」後端的 persona store：%s"
 
 #. Translators: the parameter is an error message.
