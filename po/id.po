@@ -10,8 +10,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?"
 "product=folks&keywords=I18N+L10N&component=general\n"
 "POT-Creation-Date: 2017-02-26 23:50+0000\n"
-"PO-Revision-Date: 2017-03-14 15:34+0700\n"
-"Last-Translator: Andika Triwidada <atriwidada@gnome.org>\n"
+"PO-Revision-Date: 2017-03-14 15:37+0700\n"
+"Last-Translator: Kukuh Syafaat <syafaatkukuh@gmail.com>\n"
 "Language-Team: Indonesian <gnome-l10n-id@googlegroups.com>\n"
 "Language: id\n"
 "MIME-Version: 1.0\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Poedit-SourceCharset: UTF-8\n"
-"X-Generator: Poedit 1.6.10\n"
+"X-Generator: Poedit 1.8.11\n"
 
 #: ../backends/bluez/bluez-backend.vala:604
 msgid ""
@@ -127,7 +127,7 @@ msgstr "Izin ditolak untuk menghapus kontak '%s': %s"
 #: ../backends/eds/lib/edsf-persona-store.vala:653
 #, c-format
 msgid "Removing contacts isn’t supported by this persona store: %s"
-msgstr "Menghapus kontak tak didukung oleh penyimpanan orang ini: %s"
+msgstr "Menghapus kontak tak didukung oleh penyimpanan persona: %s"
 
 #: ../backends/eds/lib/edsf-persona-store.vala:682
 #, c-format
@@ -390,7 +390,7 @@ msgstr "Alamat '%s' IM tak valid bagi protokol '%s': %s"
 #: ../backends/key-file/kf-persona.vala:432
 #, c-format
 msgid "Couldn’t load data from key file: %s"
-msgstr "Tak bisa memuat data dari berkas kunci: %s"
+msgstr "Tak bisa memuat data dari berks kunci: %s"
 
 #. Translators: the parameter is an error message.
 #: ../backends/libsocialweb/lib/swf-persona-store.vala:349
@@ -511,7 +511,7 @@ msgstr "Akun sedang luring."
 #: ../backends/tracker/lib/trf-persona-store.vala:743
 #, c-format
 msgid "Unrecognized parameter ‘%s’ passed to persona store ‘%s’."
-msgstr "Parameter '%s' tak dikenal diteruskan ke penyimpanan persona '%s'."
+msgstr "Parameter tak dikenal '%s' diteruskan ke penyimpanan persona '%s'."
 
 #: ../folks/alias-details.vala:61
 msgid "Alias is not writeable on this contact."
@@ -560,7 +560,7 @@ msgstr "Status favorit tak dapat ditulisi pada kontak ini."
 #: ../folks/im-details.vala:214 ../folks/im-details.vala:241
 #, c-format
 msgid "The IM address ‘%s’ could not be understood."
-msgstr "Alamat IM '%s' tidak bisa dipahami."
+msgstr "Alamat IM '%s' tak dapat dipahami."
 
 #. Translators: the first parameter is a persona store identifier
 #. * and the second is an error message.
@@ -605,7 +605,7 @@ msgid ""
 "service or using the ‘%s’ GSettings key."
 msgstr ""
 "Periksa bahwa layanan yang relevan berjalan, atau ubah penyimpanan baku "
-"dalam layanan itu, atau menggunakan kunci GSettings '%s'."
+"dalam layanan itu, atau menggunakan kunci GSettings ‘%s’."
 
 #: ../folks/individual-aggregator.vala:2172
 msgid "Anti-links can’t be removed between personas being linked."
@@ -619,7 +619,7 @@ msgstr "Tak dapat menambah persona tanpa penyimpanan primer."
 #, c-format
 msgid "Can’t write to requested property (‘%s’) of the writeable store."
 msgstr ""
-"Tak dapat menulis ke properti ('%s') yang diminta atas penyimpanan yang "
+"Tak dapat menulis ke properti (‘%s’) yang diminta atas penyimpanan yang "
 "dapat ditulisi."
 
 #: ../folks/individual.vala:217 ../folks/individual.vala:403
@@ -691,8 +691,8 @@ msgid ""
 msgstr ""
 "ID dari penyimpanan persona yang dipakai oleh folks seharusnya adalah primer "
 "(yaitu untuk menyimpan data tertaut). Jenis ID dari penyimpanan boleh secara "
-"opsional diberi awalan, dipisahkan dengan titik dua. Sebagai contoh: 'eds:"
-"system' atau 'key-file'."
+"opsional diberi awalan, dipisahkan dengan titik dua. Sebagai contoh: ‘eds:"
+"system-address-book’ atau  ‘key-file’."
 
 #: ../folks/postal-address-details.vala:232
 #, c-format
@@ -854,7 +854,7 @@ msgstr "Tak bisa memuat backend '%s'."
 #: ../tools/import.vala:133
 #, c-format
 msgid "Couldn’t prepare the ‘%s’ backend: %s"
-msgstr "Tak bisa menyiapkan backend '%s': %s"
+msgstr "Tak bisa memuat backend '%s': %s"
 
 #. Translators: the parameter is a backend identifier.
 #: ../tools/import.vala:146
