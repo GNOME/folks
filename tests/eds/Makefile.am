@@ -37,6 +37,8 @@ LDADD = \
 	$(top_builddir)/tests/lib/eds/libeds-test.la \
 	$(top_builddir)/backends/eds/lib/libfolks-eds.la \
 	-L$(top_srcdir)/backends/eds/lib \
+	$(EBOOK_LIBS) \
+	$(EDATASERVER_LIBS) \
 	$(NULL)
 
 # in order from least to most complex
