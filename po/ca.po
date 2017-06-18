@@ -35,7 +35,7 @@ msgid ""
 "are installed."
 msgstr ""
 "S'ha produït un error en connectar-se al dimoni de transferència d'OBEX a "
-"través de D-Bus. Assegureu-vos que tan el BlueZ com l'obexd estan "
+"través de D-Bus. Assegureu-vos que tant el BlueZ com l'obexd estan "
 "instal·lats."
 
 #. Translators: the parameter is an error message.
@@ -375,21 +375,21 @@ msgstr ""
 #: ../backends/key-file/kf-persona-store.vala:234
 #, c-format
 msgid "The relationship key file ‘%s’ could not be loaded: %s"
-msgstr "La relació del fitxer clau «%s» no va ser carregat: %s"
+msgstr "La relació del fitxer clau «%s» no va ser carregada: %s"
 
 #. Translators: the first parameter is a path, and the
 #. * second is an error message.
 #: ../backends/key-file/kf-persona-store.vala:256
 #, c-format
 msgid "The relationship key file directory ‘%s’ could not be created: %s"
-msgstr "La relació del directori del fitxer clau «%s» no va ser creat: %s"
+msgstr "La relació del directori del fitxer clau «%s» no va ser creada: %s"
 
 #. Translators: the first parameter is a filename, and
 #. * the second is an error message.
 #: ../backends/key-file/kf-persona-store.vala:280
 #, c-format
 msgid "The relationship key file ‘%s’ could not be created: %s"
-msgstr "La relació del fitxer clau «%s» no va ser creat: %s"
+msgstr "La relació del fitxer clau «%s» no va ser creada: %s"
 
 #. Translators: the first parameter is a filename, the second is
 #. * an error message.
