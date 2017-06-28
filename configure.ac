@@ -324,7 +324,11 @@ AS_IF([test x$enable_tracker_backend = xyes], [
                             [TRACKER_SPARQL_MAJOR=0.18], [
             PKG_CHECK_MODULES([TRACKER_SPARQL],
                               [tracker-sparql-1.0 >= $TRACKER_SPARQL_REQUIRED],
-                              [TRACKER_SPARQL_MAJOR=1.0])
+                              [TRACKER_SPARQL_MAJOR=1.0], [
+              PKG_CHECK_MODULES([TRACKER_SPARQL],
+                                [tracker-sparql-2.0 >= $TRACKER_SPARQL_REQUIRED],
+                                [TRACKER_SPARQL_MAJOR=2.0])
+            ])
           ])
         ])
 ])
