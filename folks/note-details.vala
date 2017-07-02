@@ -33,7 +33,7 @@ using GLib;
  */
 public class Folks.NoteFieldDetails : AbstractFieldDetails<string>
 {
-  private string _id;
+  private string _id = "";
   /**
    * {@inheritDoc}
    */
