@@ -562,7 +562,7 @@ public class Folks.Backends.BlueZ.Backend : Folks.Backend
   /**
    * Save the list of enabled devices to a configuration file.
    *
-   * @since UNRELEASED
+   * @since 0.11.4
    */
   private async void _save_enabled_devices ()
     {
@@ -592,7 +592,7 @@ public class Folks.Backends.BlueZ.Backend : Folks.Backend
   /**
    * Load the list of enabled devices from a configuration file.
    *
-   * @since UNRELEASED
+   * @since 0.11.4
    */
   private async void _load_enabled_devices ()
     {

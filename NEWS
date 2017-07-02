@@ -1,13 +1,19 @@
 Overview of changes from libfolks 0.11.3 to libfolks 0.11.4
 ===========================================================
 
-Dependencies:
-
 Major changes:
+ • Various fixes for Vala compiler and VAPI changes in upstream projects
+ • Remove redundant locking
+ • Disable unknown BlueZ devices by default; BlueZ devices must now be explicitly
+   enabled via a configuration file before they will be queried for personas
+ • Fix build with latest versions of valadoc
 
 Bugs fixed:
-
-API changes:
+ • Bug 781485 — Fails to build tests after update to evolution-data-server 3.24.1
+ • Bug 720274 — Store state about enabled BlueZ persona stores
+ • Bug 778005 — locking issues reported by the ThreadSanitizer
+ • Bug 773011 — empathy aggregates many different individuals into a single
+   roster entry (Also spinning at 100% cpu for 20-60 seconds while it does it)
 
 
 Overview of changes from libfolks 0.11.2 to libfolks 0.11.3
