@@ -47,6 +47,20 @@ public class BluezTest.TestCase : Folks.TestCase
       Environment.set_variable ("FOLKS_BLUEZ_TIMEOUT_DIVISOR", "100", true);
     }
 
+  public override string create_transient_dir ()
+    {
+      var transient = base.create_transient_dir ();
+
+      /* Evolution configuration directory. */
+      var config_dir = Path.build_filename (transient, ".local", "share", "folks");
+
+      if (GLib.DirUtils.create_with_parents (config_dir, 0700) != 0)
+        error ("Unable to create ‘%s’: %s",
+            config_dir, GLib.strerror (GLib.errno));
+
+      return transient;
+    }
+
   /**
    * {@inheritDoc}
    *
@@ -87,6 +101,25 @@ public class BluezTest.TestCase : Folks.TestCase
   public virtual void create_backend ()
     {
       this.bluez_backend = new BluezTest.Backend ();
+
+      /* Whitelist any mock BlueZ devices we will create. */
+      var devices_file_name =
+          Path.build_filename (this.transient_dir, ".local", "share", "folks",
+              "bluez-persona-stores.ini");
+      var devices_file = ("[%s]\n" +
+          "enabled=true\n").printf (((!) this.bluez_backend).primary_device_address);
+
+      GLib.debug ("Creating device enabled file for ‘%s’ at %s", ((!) this.bluez_backend).primary_device_address, devices_file_name);
+      try
+        {
+          FileUtils.set_contents (devices_file_name, devices_file);
+        }
+      catch (FileError e1)
+        {
+          error ("Error creating BlueZ backend configuration file ‘%s’: %s",
+              devices_file_name, e1.message);
+        }
+
       ((!) this.bluez_backend).set_up ();
     }
 
