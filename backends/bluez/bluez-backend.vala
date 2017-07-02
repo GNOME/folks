@@ -629,24 +629,24 @@ public class Folks.Backends.BlueZ.Backend : Folks.Backend
             }
         }
 
-          /* Update the set of enabled devices in memory. */
-          this._enabled_devices.clear ();
-          var groups = kf.get_groups ();
-          foreach (var address in groups)
+      /* Update the set of enabled devices in memory. */
+      this._enabled_devices.clear ();
+      var groups = kf.get_groups ();
+      foreach (var address in groups)
+        {
+          try
             {
-              try
+              if (kf.get_boolean (address, "enabled"))
                 {
-                  if (kf.get_boolean (address, "enabled"))
-                    {
-                      debug ("    Enabling device ‘%s’", address);
-                      this._enabled_devices.add (address);
-                    }
-                }
-              catch (GLib.KeyFileError e)
-                {
-                  /* Ignore. */
+                  debug ("    Enabling device ‘%s’", address);
+                  this._enabled_devices.add (address);
                 }
             }
+          catch (GLib.KeyFileError e)
+            {
+              /* Ignore. */
+            }
+        }
     }
 
   private delegate Type TypeFunc ();
