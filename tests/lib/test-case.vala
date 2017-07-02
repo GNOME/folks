@@ -128,13 +128,14 @@ public abstract class Folks.TestCase : Object
   public virtual string create_transient_dir ()
     {
       unowned string tmp = Environment.get_tmp_dir ();
-      string transient = "%s/folks-test.XXXXXX".printf (tmp);
+      string transient_template = "%s/folks-test.XXXXXX".printf (tmp);
 
-      if (GLib.DirUtils.mkdtemp (transient) == null)
-        error ("unable to create temporary directory in '%s': %s",
+      string transient = GLib.DirUtils.mkdtemp (transient_template);
+      if (transient == null)
+        error ("Unable to create temporary directory in '%s': %s",
             tmp, GLib.strerror (GLib.errno));
 
-      debug ("setting up in transient directory %s", transient);
+      debug ("Setting up in transient directory %s", transient);
 
       /* Don't try to use dconf */
       Environment.set_variable ("GSETTINGS_BACKEND", "memory", true);
