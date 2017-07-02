@@ -583,7 +583,10 @@ AM_CONDITIONAL([ENABLE_DOCS], [test x$enable_docs = xyes])
 have_valadoc=no
 AS_IF([test x$enable_docs = xyes], [
   # make sure the library is new enough and the program exists
-  PKG_CHECK_MODULES([VALADOC], [valadoc-1.0 >= $VALADOC_REQUIRED])
+  # Valadoc changed its pkg-config name when it was merged into libvala.
+  PKG_CHECK_MODULES([VALADOC],[valadoc-0.38 >= $VALADOC_REQUIRED],,[
+    PKG_CHECK_MODULES([VALADOC],[valadoc-1.0 >= $VALADOC_REQUIRED])
+  ])
   AC_PATH_PROG([VALADOC], [valadoc], [:])
   AS_IF([test "$VALADOC" != :], have_valadoc=yes)
 ])
