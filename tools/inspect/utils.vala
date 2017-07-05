@@ -112,8 +112,8 @@ private class Folks.Inspect.Utils
       /* FIXME: store the va_list temporarily to work around bgo#638308 */
       var valist = va_list ();
       string output = format.vprintf (valist);
-      var str = "%s%s\n".printf (Utils.indentation_string, output);
-      Utils.output_filestream.printf (str);
+      var str = "%s%s".printf (Utils.indentation_string, output);
+      Utils.output_filestream.puts (str);
     }
 
   public static void print_individual (Individual individual,
