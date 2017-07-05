@@ -386,7 +386,8 @@ public class Tpf.PersonaStore : Folks.PersonaStore
 
       debug.unindent ();
 
-      debug.print_line (domain, level, "");
+      /* Finish with a blank line. The format string must be non-empty. */
+      debug.print_line (domain, level, "%s", "");
     }
 
   private void _reset ()

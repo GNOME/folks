@@ -666,7 +666,8 @@ public class Folks.IndividualAggregator : Object
 
       debug.unindent ();
 
-      debug.print_line (domain, level, "");
+      /* Finish with a blank line. The format string must be non-empty. */
+      debug.print_line (domain, level, "%s", "");
     }
 
   /**
