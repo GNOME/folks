@@ -35,11 +35,11 @@ private void print_individual (Individual i)
       int64 timestamp = 0;
       if (new_chat_datetime != null)
         timestamp = new_chat_datetime.to_unix();
-      stdout.printf("\n %s\n   chat interaction count: %u\n   chat interaction timestamp: %lld\n", i.alias, new_count, timestamp);
+      stdout.printf("\n %s\n   chat interaction count: %u\n   chat interaction timestamp: %" + int64.FORMAT + "\n", i.alias, new_count, timestamp);
       timestamp = 0;
       if (new_call_datetime != null)
         timestamp = new_call_datetime.to_unix();
-      stdout.printf("   call interaction count: %u\n   call interaction timestamp: %lld\n", new_call_count, timestamp);
+      stdout.printf("   call interaction count: %u\n   call interaction timestamp: %" + int64.FORMAT + "\n", new_call_count, timestamp);
     }
 }
 
@@ -62,11 +62,11 @@ public int main (string[] args)
               int64 timestamp = 0;
               if (chat_datetime != null)
                 timestamp = chat_datetime.to_unix();
-              stdout.printf("\n %s\n   chat interaction count: %u\n   chat interaction timestamp: %lld\n", i.alias, count, timestamp);
+              stdout.printf("\n %s\n   chat interaction count: %u\n   chat interaction timestamp: %" + int64.FORMAT + "\n", i.alias, count, timestamp);
               timestamp = 0;
               if (call_datetime != null)
                 timestamp = call_datetime.to_unix();
-              stdout.printf("   call interaction count: %u\n   call interaction timestamp: %lld\n", call_count, timestamp);
+              stdout.printf("   call interaction count: %u\n   call interaction timestamp: %" + int64.FORMAT + "\n", call_count, timestamp);
             }
           i.notify["im-interaction-count"].connect(() => {print_individual (i);});
           i.notify["call-interaction-count"].connect(() => {print_individual (i);});
