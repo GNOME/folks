@@ -116,6 +116,11 @@ private class Folks.Inspect.Utils
       Utils.output_filestream.puts (str);
     }
 
+  public static void print_blank_line ()
+    {
+      Utils.output_filestream.puts ("");
+    }
+
   public static void print_individual (Individual individual,
       bool show_personas)
     {
@@ -146,7 +151,7 @@ private class Folks.Inspect.Utils
 
       if (show_personas == true)
         {
-          Utils.print_line ("");
+          Utils.print_blank_line ();
           Utils.print_line ("Personas:");
 
           Utils.indent ();
@@ -221,7 +226,7 @@ private class Folks.Inspect.Utils
 
       if (show_personas == true)
         {
-          Utils.print_line ("");
+          Utils.print_blank_line ();
           Utils.print_line ("Personas:");
 
           Utils.indent ();

@@ -67,7 +67,7 @@ private class Folks.Inspect.Commands.Personas : Folks.Inspect.Command
               Utils.print_persona (persona);
 
               if (command_string == null)
-                Utils.print_line ("");
+                Utils.print_blank_line ();
               else
                 found_persona = true;
             }

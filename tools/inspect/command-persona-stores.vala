@@ -68,7 +68,7 @@ private class Folks.Inspect.Commands.PersonaStores : Folks.Inspect.Command
               foreach (var persona_store in stores.values)
                 {
                   Utils.print_persona_store (persona_store, false);
-                  Utils.print_line ("");
+                  Utils.print_blank_line ();
                 }
             }
         }

@@ -61,7 +61,7 @@ private class Folks.Inspect.Commands.Individuals : Folks.Inspect.Command
           foreach (var individual in this.client.aggregator.individuals.values)
             {
               Utils.print_individual (individual, false);
-              Utils.print_line ("");
+              Utils.print_blank_line ();
             }
         }
       else
