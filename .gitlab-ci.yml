@@ -6,28 +6,23 @@ fedora-latest:
   stage: build
   except:
     - tags
-  variables:
-    V: "1"
-    MAKEFLAGS: "-j8"
   before_script:
     - dnf update -y && dnf -y install dnf-plugins-core redhat-rpm-config
     - dnf -y builddep folks
+    - dnf -y install meson ninja-build
   script:
     # Configure
-    - ./autogen.sh
+    - meson _build
     # Build
-    - make
+    - ninja -C _build
     # Run tests
-    # FIXME: Tests temporarily disabled because they don’t pass on CI
-    # See https://gitlab.gnome.org/GNOME/folks/issues/3
-    - make check || true
+    - bash +x ./.gitlab-ci/run-tests.sh || true
   artifacts:
+    reports:
+      junit: "_build/${CI_JOB_NAME}-report.xml"
     name: "folks-${CI_JOB_NAME}-${CI_COMMIT_REF_NAME}"
     when: always
     paths:
       - "_build/config.h"
-      - "_build/*.log"
-      - "_build/*/*.log"
-      - "_build/*/*/*.log"
-      - "_build/*/*/*/*.log"
-      - "_build/*/*/*/*/*.log"
+      - "_build/meson-logs"
+      - "_build/${CI_JOB_NAME}-report.xml"
