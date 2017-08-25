@@ -1,0 +1,6 @@
+{
+global:
+  swf_*;
+local:
+  *;
+};
