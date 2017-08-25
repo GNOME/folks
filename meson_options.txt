@@ -1,0 +1,15 @@
+# Backends
+option('bluez-backend', type: 'boolean', value: true, description: 'build the Bluez backend')
+option('eds-backend', type: 'boolean', value: true, description: 'build the E-D-S backend')
+option('libsocialweb-backend', type: 'boolean', value: false, description: 'build the libsocialweb backend')
+option('ofono-backend', type: 'boolean', value: true, description: 'build the oFono backend')
+option('telepathy-backend', type: 'boolean', value: true, description: 'build the Telepathy backend')
+option('tracker-backend', type: 'boolean', value: false, description: 'build the Tracker backend')
+option('zeitgeist', type: 'boolean', value: false, description: 'build Zeitgeist support in the Telepathy backend')
+# Tools
+option('import-tool', type: 'boolean', value: true, description: 'Enable building the meta-contact import tool')
+option('inspect-tool', type: 'boolean', value: true, description: 'Enable building the data inspection tool')
+# Test options
+option('installed-tests', type: 'boolean', value: false, description: 'Install test programs')
+# Docs
+option('docs', type: 'boolean', value: false, description: 'Enable documentation generation')
