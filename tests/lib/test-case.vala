@@ -67,6 +67,7 @@ public abstract class Folks.TestCase : Object
 
       if (Environment.get_variable ("FOLKS_TESTS_INSTALLED") == null)
         {
+          // FIXME: this can be dropped when removing autotools
           string[] locations = {
               Folks.BuildConf.ABS_TOP_BUILDDIR + "/backends/key-file/.libs/key-file.so",
               Folks.BuildConf.ABS_TOP_BUILDDIR + "/backends/dummy/.libs/dummy.so",
@@ -91,7 +92,7 @@ public abstract class Folks.TestCase : Object
             locations += Folks.BuildConf.ABS_TOP_BUILDDIR + "/backends/bluez/.libs/bluez.so";
 
           Environment.set_variable ("FOLKS_BACKEND_PATH",
-              string.joinv (":", locations), true);
+              string.joinv (":", locations), false);
         }
 
       /* By default, no backend is allowed. Subclasses must override. */
