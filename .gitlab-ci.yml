@@ -1,33 +1,39 @@
+image: fedora:latest
+
 stages:
   - build
+  - test
 
-fedora-latest:
-  image: fedora:latest
+build-folks:
   stage: build
   except:
     - tags
-  variables:
-    V: "1"
-    MAKEFLAGS: "-j8"
   before_script:
-    - dnf update -y && dnf -y install dnf-plugins-core redhat-rpm-config
-    - dnf -y builddep folks
+    - dnf update -y --nogpgcheck
+    - dnf -y install dnf-plugins-core redhat-rpm-config meson ninja-build --nogpgcheck
+    - dnf -y builddep folks --nogpgcheck
   script:
-    # Configure
-    - ./autogen.sh
-    # Build
-    - make
-    # Run tests
-    # FIXME: Tests temporarily disabled because they don’t pass on CI
-    # See https://gitlab.gnome.org/GNOME/folks/issues/3
-    - make check || true
+    - meson _build
+    - ninja -C _build
   artifacts:
+    expire_in: 1 day
+    paths:
+      - "_build"
+
+test-folks:
+  stage: test
+  dependencies:
+    - build-folks
+  script:
+    - bash +x ./.gitlab-ci/run-tests.sh
+  allow_failure: true # FIXME: Remove when https://gitlab.gnome.org/GNOME/folks/issues/3 is fixed
+  artifacts:
+    reports:
+      junit: "_build/${CI_JOB_NAME}-report.xml"
     name: "folks-${CI_JOB_NAME}-${CI_COMMIT_REF_NAME}"
     when: always
+    expire_in: 1 month
     paths:
       - "_build/config.h"
-      - "_build/*.log"
-      - "_build/*/*.log"
-      - "_build/*/*/*.log"
-      - "_build/*/*/*/*.log"
-      - "_build/*/*/*/*/*.log"
+      - "_build/meson-logs"
+      - "_build/${CI_JOB_NAME}-report.xml"
