@@ -2,13 +2,14 @@
 # Copyright (C) 2012 Free Software Foundation, Inc.
 # This file is distributed under the same license as the folks package.
 # Gil Forcada <gilforcada@guifi.net>, 2012, 2013, 2014.
+# Jordi Serratosa <jordis@softcatala.cat>, 2017.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: folks\n"
 "Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?"
 "product=folks&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2017-02-26 23:50+0000\n"
+"POT-Creation-Date: 2017-06-18 15:14+0000\n"
 "PO-Revision-Date: 2017-06-17 11:44+0200\n"
 "Last-Translator: Gil Forcada <gilforcada@guifi.net>\n"
 "Language-Team: Catalan <tradgnome@softcatala.org>\n"
@@ -19,7 +20,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Poedit 1.8.7.1\n"
 
-#: ../backends/bluez/bluez-backend.vala:604
+#: ../backends/bluez/bluez-backend.vala:734
 msgid ""
 "No BlueZ 5 object manager running, so the BlueZ backend will be inactive. "
 "Either your BlueZ installation is too old (only version 5 is supported) or "
@@ -29,7 +30,7 @@ msgstr ""
 "rerefons de BlueZ restarà inactiu. O bé la instal·lació és massa antiga "
 "(només es pot utilitzar la versió 5), o bé no es pot iniciar el servei."
 
-#: ../backends/bluez/bluez-backend.vala:617
+#: ../backends/bluez/bluez-backend.vala:747
 msgid ""
 "Error connecting to OBEX transfer daemon over D-Bus. Ensure BlueZ and obexd "
 "are installed."
@@ -176,7 +177,7 @@ msgstr "No s'ha pogut obrir la llibreta d'adreces «%s»: %s"
 #: ../backends/eds/lib/edsf-persona-store.vala:907
 #, c-format
 msgid "Couldn’t get address book capabilities: %s"
-msgstr "No s'ha pogut obtenir les capacitats de la llibreta d'adreces: %s"
+msgstr "No s'han pogut obtenir les capacitats de la llibreta d'adreces: %s"
 
 #. Translators: the parameter is an address book URI.
 #: ../backends/eds/lib/edsf-persona-store.vala:923
@@ -512,14 +513,14 @@ msgstr "No s'ha pogut canviar l'àlies del contacte: %s"
 #: ../backends/telepathy/lib/tpf-persona-store.vala:1499
 msgid "Extended information may only be set on the user’s Telepathy contact."
 msgstr ""
-"La informació estesa només s'hauria d'afegir a l'usuari del contacte del "
-"Telepathy."
+"És possible que la informació ampliada només s'afegeixi al contacte del "
+"Telepathy de l'usuari."
 
 #: ../backends/telepathy/lib/tpf-persona-store.vala:1528
 msgid ""
 "Extended information cannot be written because the store is disconnected."
 msgstr ""
-"No s'ha pogut escriure la informació estesa perquè el magatzem està "
+"No s'ha pogut escriure la informació ampliada perquè el magatzem està "
 "desconnectat."
 
 #. Translators: the parameter is an error message.
@@ -588,7 +589,7 @@ msgstr ""
 
 #: ../folks/extended-info.vala:133 ../folks/extended-info.vala:149
 msgid "Extended fields are not writeable on this contact."
-msgstr "En aquest compte no es poden escriure els camps estesos."
+msgstr "En aquest contacte no es poden escriure els camps ampliats."
 
 #: ../folks/favourite-details.vala:58
 msgid "Favorite status is not writeable on this contact."
@@ -889,19 +890,19 @@ msgstr "— importació d'informació de metacontactes a la libfolks"
 #: ../tools/import.vala:68
 #, c-format
 msgid "Couldn’t parse command line options: %s"
-msgstr "No s'ha pogut analitzar les opcions de línia d'ordres: %s"
+msgstr "No s'han pogut analitzar les opcions de línia d'ordres: %s"
 
 #. Translators: the parameter is an error message.
 #: ../tools/import.vala:109
 #, c-format
 msgid "Couldn’t load the backends: %s"
-msgstr "No s'ha pogut carregar els rerefons: %s"
+msgstr "No s'han pogut carregar els rerefons: %s"
 
 #. Translators: the parameter is a backend identifier.
 #: ../tools/import.vala:120
 #, c-format
 msgid "Couldn’t load the ‘%s’ backend."
-msgstr "No s'ha pogut carregar el «%s» del rerefons ."
+msgstr "No s'ha pogut carregar el «%s» del rerefons."
 
 #. Translators: the first parameter is a backend identifier and the
 #. * second parameter is an error message.
