@@ -2,7 +2,6 @@
 set -e
 
 autoreconf -i -f
-intltoolize --force --copy --automake
 
 if test -z "$NOCONFIGURE"; then
     run_configure=true

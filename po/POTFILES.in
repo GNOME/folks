@@ -1,4 +1,3 @@
-[encoding: UTF-8]
 backends/bluez/bluez-backend.vala
 backends/bluez/bluez-persona-store.vala
 backends/eds/lib/edsf-persona-store.vala
@@ -28,7 +27,7 @@ folks/local-id-details.vala
 folks/location-details.vala
 folks/name-details.vala
 folks/note-details.vala
-[type: gettext/gsettings]folks/org.freedesktop.folks.gschema.xml.in
+folks/org.freedesktop.folks.gschema.xml.in
 folks/phone-details.vala
 folks/postal-address-details.vala
 folks/presence-details.vala
