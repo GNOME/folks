@@ -260,7 +260,6 @@ AM_CONDITIONAL([ENABLE_LIBSOCIALWEB],
 
 GLIB_REQUIRED=2.40.0
 VALA_REQUIRED=0.22.0.28-9090
-VALADOC_REQUIRED=0.3.1
 TRACKER_SPARQL_REQUIRED=0.15.2
 EBOOK_REQUIRED=3.13.90
 EDATASERVER_REQUIRED=3.13.90
@@ -582,11 +581,6 @@ AM_CONDITIONAL([ENABLE_DOCS], [test x$enable_docs = xyes])
 
 have_valadoc=no
 AS_IF([test x$enable_docs = xyes], [
-  # make sure the library is new enough and the program exists
-  # Valadoc changed its pkg-config name when it was merged into libvala.
-  PKG_CHECK_MODULES([VALADOC],[valadoc-0.38 >= $VALADOC_REQUIRED],,[
-    PKG_CHECK_MODULES([VALADOC],[valadoc-1.0 >= $VALADOC_REQUIRED])
-  ])
   AC_PATH_PROG([VALADOC], [valadoc], [:])
   AS_IF([test "$VALADOC" != :], have_valadoc=yes)
 ])
