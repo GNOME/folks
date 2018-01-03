@@ -669,7 +669,7 @@ public class Folks.PotentialMatch : Object
       if (pos < haystack_len && ch == c)
         return 0;
 
-      uint idx = ((int) pos - (int) max_dist).clamp (0, haystack_len);
+      uint idx = ((int) pos - (int) max_dist).clamp (0, haystack_len - 1);
       ch = 0;
 
       while (idx < pos + max_dist && (ch = haystack[idx]) != 0)
