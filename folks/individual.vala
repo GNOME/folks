@@ -318,6 +318,7 @@ public class Folks.Individual : Object,
    * # Alias
    * # Full name, structured name or nickname
    * # E-mail address
+   * # Phone number
    * # Display ID (e.g. foo@example.org)
    * # Postal address
    * # _("Unnamed Person")
@@ -1934,6 +1935,23 @@ public class Folks.Individual : Object,
       return "";
     }
 
+  private string _look_up_phone_number_for_display_name (Persona? p)
+    {
+      var e = p as PhoneDetails;
+      if (e != null)
+        {
+          foreach (var phone_fd in ((!) e).phone_numbers)
+            {
+              if (phone_fd.value != null)
+                {
+                  return phone_fd.value;
+                }
+            }
+        }
+
+      return "";
+    }
+
   private string _look_up_display_id_for_display_name (Persona? p)
     {
       if (p != null && p.display_id != null)
@@ -2024,6 +2042,24 @@ public class Folks.Individual : Object,
 
               new_display_name =
                   this._look_up_email_address_for_display_name (p);
+            }
+        }
+
+      /* Now the phone numbers. */
+      if (new_display_name == "")
+        {
+          new_display_name =
+              this._look_up_phone_number_for_display_name (primary_persona);
+
+          foreach (var p in this._persona_set)
+            {
+              if (new_display_name != "")
+                {
+                  break;
+                }
+
+              new_display_name =
+                  this._look_up_phone_number_for_display_name (p);
             }
         }
 
