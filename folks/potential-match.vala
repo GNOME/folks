@@ -665,12 +665,11 @@ public class Folks.PotentialMatch : Object
     {
       var haystack_len = haystack.length; /* in unichars */
 
-      unichar ch = haystack[pos];
-      if (pos < haystack_len && ch == c)
+      if (pos < haystack_len && haystack[pos] == c)
         return 0;
 
       uint idx = ((int) pos - (int) max_dist).clamp (0, haystack_len - 1);
-      ch = 0;
+      unichar ch = 0;
 
       while (idx < pos + max_dist && (ch = haystack[idx]) != 0)
         {
