@@ -671,7 +671,8 @@ public class Folks.PotentialMatch : Object
       uint idx = ((int) pos - (int) max_dist).clamp (0, haystack_len - 1);
       unichar ch = 0;
 
-      while (idx < pos + max_dist && (ch = haystack[idx]) != 0)
+      while (idx < pos + max_dist && idx < haystack_len &&
+          (ch = haystack[idx]) != 0)
         {
           if (ch == c)
             return ((int) pos - (int) idx).abs ();
