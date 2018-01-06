@@ -633,10 +633,11 @@ public class Folks.PotentialMatch : Object
     {
       int matches = 0;
       t = 0.0;
+      var len_s1 = s1.length;
 
       unichar look_for = 0;
 
-      for (uint idx = 0; (look_for = s1[idx]) != 0; idx++)
+      for (uint idx = 0; idx < len_s1 && (look_for = s1[idx]) != 0; idx++)
         {
           int contains = this._contains (s2, look_for, idx, max_dist);
           if (contains >= 0)
