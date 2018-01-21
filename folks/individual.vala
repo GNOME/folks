@@ -1954,7 +1954,9 @@ public class Folks.Individual : Object,
 
   private string _look_up_display_id_for_display_name (Persona? p)
     {
-      if (p != null && p.display_id != null)
+      // Sometimes, the display_id will fall back to the IID.
+      // The last condition makes sure we don't use that as a display name
+      if (p != null && p.display_id != null && p.display_id != p.iid)
         {
           return p.display_id;
         }
