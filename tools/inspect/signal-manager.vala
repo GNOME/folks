@@ -430,7 +430,11 @@ public class Folks.Inspect.SignalManager : Object
         return false;
 
       ulong hook_id = Signal.add_emission_hook (signal_id,
+#if VALA_0_42
+          detail_quark, this.emission_hook_cb);
+#else
           detail_quark, this.emission_hook_cb, null);
+#endif
 
       /* Store the hook ID so we can list or remove it later */
       HashMap<uint, ulong> hook_ids =
