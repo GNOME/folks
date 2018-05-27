@@ -1,0 +1,12 @@
+stages:
+  - build
+
+fedora-rawhide:
+  stage: build
+  script:
+    # Configure
+    - ./autogen.sh
+    # Build
+    - make -j
+    # Run tests
+    - make -j check
