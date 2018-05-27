@@ -1970,8 +1970,6 @@ public class Edsf.Persona : Folks.Persona,
    */
   internal static GLib.HashTable<string, E.ContactField> _get_im_eds_map ()
     {
-      GLib.HashTable<string, E.ContactField> retval;
-
       if (Edsf.Persona._im_eds_map == null)
         {
           var table =
