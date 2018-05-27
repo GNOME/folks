@@ -1,0 +1,16 @@
+stages:
+  - build
+
+fedora-rawhide:
+  image: fedora:rawhide
+  stage: build
+  before_script:
+    - dnf update -y && dnf -y install dnf-plugins-core @buildsys-build
+    - dnf -y builddep folks
+  script:
+    # Configure
+    - ./autogen.sh
+    # Build
+    - make -j
+    # Run tests
+    - make -j check
