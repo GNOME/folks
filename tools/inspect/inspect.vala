@@ -76,13 +76,21 @@ public class Folks.Inspect.Client : Object
       main_client = new Client ();
 
       /* Set up signal handling. */
+#if VALA_0_40
+      Unix.signal_add (Posix.Signal.TERM, () =>
+#else
       Unix.signal_add (Posix.SIGTERM, () =>
+#endif
         {
           /* Propagate the signal to our pager process, if it's running. */
           if (Client._pager_pid != 0)
             {
               main_client._quit_after_pager_dies = true;
+#if VALA_0_40
+              kill (Client._pager_pid, Posix.Signal.TERM);
+#else
               kill (Client._pager_pid, Posix.SIGTERM);
+#endif
             }
           else
             {
@@ -259,7 +267,11 @@ public class Folks.Inspect.Client : Object
         }
 
       /* Handle SIGINT. */
+#if VALA_0_40
+      Unix.signal_add (Posix.Signal.INT, () =>
+#else
       Unix.signal_add (Posix.SIGINT, () =>
+#endif
         {
           if (Client._is_readline_installed == false)
             {
