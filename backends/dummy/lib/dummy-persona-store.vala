@@ -534,9 +534,9 @@ public class FolksDummy.PersonaStore : Folks.PersonaStore
         }
 
       /* Allow the caller to inject failures and delays. */
-      if (this.remove_persona_mock != null)
+      if (this._remove_persona_mock != null)
         {
-          var delay = this.remove_persona_mock ((FolksDummy.Persona) persona);
+          var delay = this._remove_persona_mock ((FolksDummy.Persona) persona);
           yield this._implement_mock_delay (delay);
         }
 
@@ -688,7 +688,7 @@ public class FolksDummy.PersonaStore : Folks.PersonaStore
   /**
    * Type of a mock function for {@link Folks.PersonaStore.remove_persona}.
    *
-   * See {@link FolksDummy.PersonaStore.remove_persona_mock}.
+   * See {@link FolksDummy.PersonaStore.set_remove_persona_mock}.
    *
    * @param persona the persona being removed from the store
    * @throws PersonaStoreError to be thrown from
@@ -704,26 +704,8 @@ public class FolksDummy.PersonaStore : Folks.PersonaStore
 
   /**
    * Mock function for {@link Folks.PersonaStore.remove_persona}.
-   *
-   * This function is called whenever this store's
-   * {@link Folks.PersonaStore.remove_persona} method is called. It allows
-   * the caller to determine whether removing the given persona should fail, by
-   * throwing an error from this mock function. If no error is thrown from this
-   * function, removing the given persona will succeed. This is useful for
-   * testing error handling of calls to
-   * {@link Folks.PersonaStore.remove_persona}.
-   *
-   * See {@link FolksDummy.PersonaStore.add_persona_from_details_mock}.
-   *
-   * This mock function may be changed at any time; changes will take effect for
-   * the next call to {@link Folks.PersonaStore.remove_persona}.
-   *
-   * @since 0.9.7
    */
-  public unowned RemovePersonaMock? remove_persona_mock
-    {
-      get; set; default = null;
-    }
+  public unowned RemovePersonaMock? _remove_persona_mock = null;
 
   /**
    * Type of a mock function for {@link Folks.PersonaStore.prepare}.
@@ -1080,5 +1062,28 @@ public class FolksDummy.PersonaStore : Folks.PersonaStore
   public void set_add_persona_from_details_mock (AddPersonaFromDetailsMock? mock)
     {
       this._add_persona_from_details_mock = mock;
+    }
+
+  /**
+   * Mock function for {@link Folks.PersonaStore.remove_persona}.
+   *
+   * This function is called whenever this store's
+   * {@link Folks.PersonaStore.remove_persona} method is called. It allows
+   * the caller to determine whether removing the given persona should fail, by
+   * throwing an error from this mock function. If no error is thrown from this
+   * function, removing the given persona will succeed. This is useful for
+   * testing error handling of calls to
+   * {@link Folks.PersonaStore.remove_persona}.
+   *
+   * See {@link FolksDummy.PersonaStore.set_add_persona_from_details_mock}.
+   *
+   * This mock function may be changed at any time; changes will take effect for
+   * the next call to {@link Folks.PersonaStore.remove_persona}.
+   *
+   * @since 0.9.7
+   */
+  public void set_remove_persona_mock (RemovePersonaMock? mock)
+    {
+      this._remove_persona_mock = mock;
     }
 }
