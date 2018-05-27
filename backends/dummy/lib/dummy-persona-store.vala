@@ -33,8 +33,8 @@ using GLib;
  *
  * There are two sides to this class’ interface: the methods and properties
  * declared by {@link Folks.PersonaStore}, which form the normal libfolks
- * persona store API; and the mock methods and properties (such as
- * {@link FolksDummy.PersonaStore.add_persona_from_details_mock}) which are
+ * persona store API; and the mock methods and properties (see for example
+ * {@link FolksDummy.PersonaStore.set_add_persona_from_details_mock}) which are
  * intended to be used by test driver code to simulate the behaviour of a real
  * backing store. Calls to these mock methods effect state changes in the store
  * which are visible in the normal libfolks API. The ``update_``, ``register_``
@@ -489,9 +489,9 @@ public class FolksDummy.PersonaStore : Folks.PersonaStore
 
       /* Allow the caller to inject failures and delays into
        * add_persona_from_details() by providing a mock function. */
-      if (this.add_persona_from_details_mock != null)
+      if (this._add_persona_from_details_mock != null)
         {
-          var delay = this.add_persona_from_details_mock (persona);
+          var delay = this._add_persona_from_details_mock (persona);
           yield this._implement_mock_delay (delay);
         }
 
@@ -665,7 +665,7 @@ public class FolksDummy.PersonaStore : Folks.PersonaStore
    * Type of a mock function for
    * {@link Folks.PersonaStore.add_persona_from_details}.
    *
-   * See {@link FolksDummy.PersonaStore.add_persona_from_details_mock}.
+   * See {@link FolksDummy.PersonaStore.set_add_persona_from_details_mock}.
    *
    * @param persona the persona being added to the store, as constructed from
    * the details passed to {@link Folks.PersonaStore.add_persona_from_details}.
@@ -682,33 +682,8 @@ public class FolksDummy.PersonaStore : Folks.PersonaStore
 
   /**
    * Mock function for {@link Folks.PersonaStore.add_persona_from_details}.
-   *
-   * This function is called whenever this store's
-   * {@link Folks.PersonaStore.add_persona_from_details} method is called. It
-   * allows the caller to determine whether adding the given persona should
-   * fail, by throwing an error from this mock function. If no error is thrown
-   * from this function, adding the given persona will succeed. This is useful
-   * for testing error handling of calls to
-   * {@link Folks.PersonaStore.add_persona_from_details}.
-   *
-   * The value returned by this function gives a delay which is imposed for
-   * completion of the {@link Folks.PersonaStore.add_persona_from_details} call.
-   * Negative or zero delays
-   * result in completion in an idle callback, and positive delays result in
-   * completion after that many milliseconds.
-   *
-   * If this is ``null``, all calls to
-   * {@link Folks.PersonaStore.add_persona_from_details} will succeed.
-   *
-   * This mock function may be changed at any time; changes will take effect for
-   * the next call to {@link Folks.PersonaStore.add_persona_from_details}.
-   *
-   * @since 0.9.7
    */
-  public unowned AddPersonaFromDetailsMock? add_persona_from_details_mock
-    {
-      get; set; default = null;
-    }
+  private unowned AddPersonaFromDetailsMock? _add_persona_from_details_mock = null;
 
   /**
    * Type of a mock function for {@link Folks.PersonaStore.remove_persona}.
@@ -777,7 +752,7 @@ public class FolksDummy.PersonaStore : Folks.PersonaStore
    * this mock function). This is useful for testing error handling of calls to
    * {@link Folks.PersonaStore.prepare}.
    *
-   * See {@link FolksDummy.PersonaStore.add_persona_from_details_mock}.
+   * See {@link FolksDummy.PersonaStore.set_add_persona_from_details_mock}.
    *
    * This mock function may be changed at any time; changes will take effect for
    * the next call to {@link Folks.PersonaStore.prepare}.
@@ -1075,5 +1050,35 @@ public class FolksDummy.PersonaStore : Folks.PersonaStore
       /* Implemented as an ‘update_*()’ method to make it more explicit that
        * this is for test driver use only. */
       this.trust_level = trust_level;
+    }
+
+  /**
+   * Mock function for {@link Folks.PersonaStore.add_persona_from_details}.
+   *
+   * This function is called whenever this store's
+   * {@link Folks.PersonaStore.add_persona_from_details} method is called. It
+   * allows the caller to determine whether adding the given persona should
+   * fail, by throwing an error from this mock function. If no error is thrown
+   * from this function, adding the given persona will succeed. This is useful
+   * for testing error handling of calls to
+   * {@link Folks.PersonaStore.add_persona_from_details}.
+   *
+   * The value returned by this function gives a delay which is imposed for
+   * completion of the {@link Folks.PersonaStore.add_persona_from_details} call.
+   * Negative or zero delays
+   * result in completion in an idle callback, and positive delays result in
+   * completion after that many milliseconds.
+   *
+   * If this is ``null``, all calls to
+   * {@link Folks.PersonaStore.add_persona_from_details} will succeed.
+   *
+   * This mock function may be changed at any time; changes will take effect for
+   * the next call to {@link Folks.PersonaStore.add_persona_from_details}.
+   *
+   * @since 0.9.7
+   */
+  public void set_add_persona_from_details_mock (AddPersonaFromDetailsMock? mock)
+    {
+      this._add_persona_from_details_mock = mock;
     }
 }
