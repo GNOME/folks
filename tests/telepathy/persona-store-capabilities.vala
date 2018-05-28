@@ -75,7 +75,7 @@ public class PersonaStoreCapabilitiesTests : TpfTest.TestCase
 
       backend_store.load_backends.begin ();
 
-      TestUtils.loop_run_with_non_fatal_timeout (main_loop);
+      TestUtils.loop_run_with_timeout (main_loop);
 
       assert (this._capabilities_received.contains ("can-add-personas"));
       assert (this._capabilities_received.contains ("can-remove-personas"));

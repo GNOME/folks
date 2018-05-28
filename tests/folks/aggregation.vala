@@ -152,7 +152,7 @@ public class AggregationTests : TpfTest.MixedTestCase
           return false;
         });
 
-      TestUtils.loop_run_with_non_fatal_timeout (main_loop, 3);
+      TestUtils.loop_run_with_timeout (main_loop);
 
       /* We should have enumerated exactly the individuals in the set */
       assert (expected_individuals.size == 0);
@@ -285,7 +285,7 @@ public class AggregationTests : TpfTest.MixedTestCase
           return false;
         });
 
-      TestUtils.loop_run_with_non_fatal_timeout (main_loop, 3);
+      TestUtils.loop_run_with_timeout (main_loop);
 
       /* Verify the two individuals we should have */
       assert (individual1 != null);
@@ -461,7 +461,7 @@ public class AggregationTests : TpfTest.MixedTestCase
           return false;
         });
 
-      TestUtils.loop_run_with_non_fatal_timeout (main_loop, 3);
+      TestUtils.loop_run_with_timeout (main_loop);
 
       /* Verify the two individuals we should have */
       assert (individual1 != null);
@@ -641,7 +641,7 @@ public class AggregationTests : TpfTest.MixedTestCase
           return false;
         });
 
-      TestUtils.loop_run_with_non_fatal_timeout (main_loop, 3);
+      TestUtils.loop_run_with_timeout (main_loop);
 
       /* The user exported by the aggregator should be the same as the one
        * we've kept track of */
@@ -770,7 +770,7 @@ public class AggregationTests : TpfTest.MixedTestCase
           return false;
         });
 
-      TestUtils.loop_run_with_non_fatal_timeout (main_loop, 3);
+      TestUtils.loop_run_with_timeout (main_loop);
 
       aggregator.disconnect (individuals_changed_id);
       aggregator.disconnect (individuals_changed_detailed_id);
@@ -918,7 +918,7 @@ public class AggregationTests : TpfTest.MixedTestCase
           return false;
         });
 
-      TestUtils.loop_run_with_non_fatal_timeout (main_loop, 3);
+      TestUtils.loop_run_with_timeout (main_loop);
 
       /* Check that all Individuals are either ADDED or FINALISED. There should
        * be no Individuals which are REMOVED (but not yet finalised). */
@@ -939,7 +939,7 @@ public class AggregationTests : TpfTest.MixedTestCase
       /* Kill the main loop after a few seconds. We can assume that we've
        * reached another quiescent state by this point. */
 
-      TestUtils.loop_run_with_non_fatal_timeout (main_loop, 3);
+      TestUtils.loop_run_with_timeout (main_loop);
 
       /* Now that the backends have been finalised, all the Individuals should
        * have been finalised too. */
@@ -1007,7 +1007,7 @@ public class AggregationTests : TpfTest.MixedTestCase
           return false;
         });
 
-      TestUtils.loop_run_with_non_fatal_timeout (main_loop, 3);
+      TestUtils.loop_run_with_timeout (main_loop);
 
       /* Check we've got the individual we want */
       assert (individual != null);
@@ -1050,7 +1050,7 @@ public class AggregationTests : TpfTest.MixedTestCase
           return false;
         });
 
-      TestUtils.loop_run_with_non_fatal_timeout (main_loop, 3);
+      TestUtils.loop_run_with_timeout (main_loop);
 
       assert (writeable_persona != null);
       assert (writeable_persona == persona);
@@ -1128,7 +1128,7 @@ public class AggregationTests : TpfTest.MixedTestCase
           return false;
         });
 
-      TestUtils.loop_run_with_non_fatal_timeout (main_loop, 3);
+      TestUtils.loop_run_with_timeout (main_loop);
 
       /* Check we've got the individual we want */
       assert (individual != null);
@@ -1223,7 +1223,7 @@ public class AggregationTests : TpfTest.MixedTestCase
           return false;
         });
 
-      TestUtils.loop_run_with_non_fatal_timeout (main_loop, 3);
+      TestUtils.loop_run_with_timeout (main_loop);
 
       assert (writeable_persona != null);
       assert (writeable_persona != persona);
@@ -1295,7 +1295,7 @@ public class AggregationTests : TpfTest.MixedTestCase
           return false;
         });
 
-      TestUtils.loop_run_with_non_fatal_timeout (main_loop, 3);
+      TestUtils.loop_run_with_timeout (main_loop);
 
       /* Check we've got the individual we want */
       assert (individual != null);
@@ -1342,7 +1342,7 @@ public class AggregationTests : TpfTest.MixedTestCase
           return false;
         });
 
-      TestUtils.loop_run_with_non_fatal_timeout (main_loop, 3);
+      TestUtils.loop_run_with_timeout (main_loop);
 
       assert (writeable_persona == null);
 

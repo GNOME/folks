@@ -114,7 +114,7 @@ public class IndividualRetrievalTests : TpfTest.TestCase
           return false;
         });
 
-      TestUtils.loop_run_with_non_fatal_timeout (main_loop);
+      TestUtils.loop_run_with_timeout (main_loop);
 
       /* We should have enumerated exactly the individuals in the set */
       assert (expected_individuals.size == 0);
@@ -222,7 +222,7 @@ public class IndividualRetrievalTests : TpfTest.TestCase
           return false;
         });
 
-      TestUtils.loop_run_with_non_fatal_timeout (main_loop);
+      TestUtils.loop_run_with_timeout (main_loop);
 
       /* We should have received (and removed) the individuals in the set */
       assert (added_individuals.size == 0);

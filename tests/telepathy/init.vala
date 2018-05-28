@@ -61,7 +61,7 @@ public class InitTests : TpfTest.TestCase
         });
 
       /* Add a timeout for failure. */
-      TestUtils.loop_run_with_non_fatal_timeout (main_loop, 5);
+      TestUtils.loop_run_with_timeout (main_loop, 5);
 
       /* Check results. */
       assert (aggregator.is_quiescent == true);

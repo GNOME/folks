@@ -184,7 +184,7 @@ public class IndividualPropertiesTests : TpfTest.TestCase
       /* Kill the main loop after a few seconds. If there are still individuals
        * in the set of expected individuals, the aggregator has either failed
        * or been too slow (which we can consider to be failure). */
-      TestUtils.loop_run_with_non_fatal_timeout (main_loop);
+      TestUtils.loop_run_with_timeout (main_loop);
 
       /* necessary to reset the aggregator for the next test */
       aggregator = null;
@@ -255,7 +255,7 @@ public class IndividualPropertiesTests : TpfTest.TestCase
       /* Kill the main loop after a few seconds. If the alias hasn't been
        * notified, something along the way failed or been too slow (which we can
        * consider to be failure). */
-      TestUtils.loop_run_with_non_fatal_timeout (main_loop);
+      TestUtils.loop_run_with_timeout (main_loop);
 
       assert (alias_notified);
 
@@ -329,7 +329,7 @@ public class IndividualPropertiesTests : TpfTest.TestCase
       /* Kill the main loop after a few seconds. If the alias hasn't been
        * notified, something along the way failed or been too slow (which we can
        * consider to be failure). */
-      TestUtils.loop_run_with_non_fatal_timeout (main_loop);
+      TestUtils.loop_run_with_timeout (main_loop);
 
       assert (alias_notified);
 
@@ -358,7 +358,7 @@ public class IndividualPropertiesTests : TpfTest.TestCase
       /* Kill the main loop after a few seconds. If the alias hasn't been
        * notified, something along the way failed or been too slow (which we can
        * consider to be failure). */
-      TestUtils.loop_run_with_non_fatal_timeout (main_loop);
+      TestUtils.loop_run_with_timeout (main_loop);
 
       assert (this._changes_pending.size == 0);
 

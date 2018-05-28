@@ -67,7 +67,7 @@ public class InitTests : TpfTest.MixedTestCase
           aggregator = null;
         }
 
-      TestUtils.loop_run_with_non_fatal_timeout (main_loop, 5);
+      TestUtils.loop_run_with_timeout (main_loop, 5);
 
       /* Clean up for the next test */
       tp_backend.remove_account (account2_handle);
