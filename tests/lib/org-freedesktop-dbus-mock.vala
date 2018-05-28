@@ -49,7 +49,7 @@ namespace org
                 [DBus (name = "AddMethod")]
                 public abstract void add_method (string interface_name,
                     string name, string in_sig, string out_sig, string code)
-                        throws IOError;
+                        throws DBusError, IOError;
 
                 /* Parameter to AddMethods(). */
                 public struct Method
@@ -61,34 +61,35 @@ namespace org
 
                 [DBus (name = "AddMethods")]
                 public abstract void add_methods (string interface_name,
-                    Method[] methods) throws IOError;
+                    Method[] methods) throws DBusError, IOError;
 
                 [DBus (name = "AddObject")]
                 public abstract void add_object (string path,
                     string interface_name,
                     HashTable<string, Variant> properties, Method[] methods)
-                        throws IOError;
+                        throws DBusError, IOError;
 
                 [DBus (name = "AddProperties")]
                 public abstract void add_properties (string interface_name,
-                    HashTable<string, Variant> properties) throws IOError;
+                    HashTable<string, Variant> properties)
+                        throws DBusError, IOError;
 
                 [DBus (name = "AddProperty")]
                 public abstract void add_property (string interface_name,
-                    string name, Variant val) throws IOError;
+                    string name, Variant val) throws DBusError, IOError;
 
                 [DBus (name = "AddTemplate")]
                 public abstract void add_template (string template_name,
                     HashTable<string, Variant> template_params)
-                        throws IOError;
+                        throws DBusError, IOError;
 
                 [DBus (name = "ClearCalls")]
-                public abstract void clear_calls () throws IOError;
+                public abstract void clear_calls () throws DBusError, IOError;
 
                 [DBus (name = "EmitSignal")]
                 public abstract void emit_signal (string interface_name,
                     string name, string signature, Variant[] args)
-                        throws IOError;
+                        throws DBusError, IOError;
 
                 /* Returned by GetCalls(). */
                 public struct Call
@@ -99,7 +100,7 @@ namespace org
                   }
 
                 [DBus (name = "GetCalls")]
-                public abstract Call[] get_calls () throws IOError;
+                public abstract Call[] get_calls () throws DBusError, IOError;
 
                 /* Returned by GetMethodCalls(). */
                 public struct MethodCall
@@ -110,14 +111,14 @@ namespace org
 
                 [DBus (name = "GetMethodCalls")]
                 public abstract MethodCall[] get_method_calls (string method)
-                    throws IOError;
+                    throws DBusError, IOError;
 
                 [DBus (name = "RemoveObject")]
                 public abstract void remove_object (string path)
-                    throws IOError;
+                    throws DBusError, IOError;
 
                 [DBus (name = "Reset")]
-                public abstract void reset () throws IOError;
+                public abstract void reset () throws DBusError, IOError;
               }
           }
       }
