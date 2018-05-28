@@ -76,7 +76,7 @@ namespace org
             public interface Transfer : Object
               {
                 [DBus (name = "Cancel")]
-                public abstract void cancel () throws DBusError;
+                public abstract void cancel () throws DBusError, IOError;
                 [DBus (name = "Status")]
                 public abstract string status { owned get; }
                 [DBus (name = "Session")]

@@ -52,19 +52,24 @@ namespace org
           {
             /* Methods. */
             [DBus (name = "Connect")]
-            public abstract void connect () throws org.bluez.Error;
+            public abstract void connect ()
+                throws org.bluez.Error, DBusError, IOError;
 
             [DBus (name = "Disconnect")]
-            public abstract void disconnect () throws org.bluez.Error;
+            public abstract void disconnect ()
+                throws org.bluez.Error, DBusError, IOError;
 
             [DBus (name = "DisconnectProfile")]
-            public abstract void disconnect_profile (string uuid) throws org.bluez.Error;
+            public abstract void disconnect_profile (string uuid)
+                throws org.bluez.Error, DBusError, IOError;
 
             [DBus (name = "Pair")]
-            public abstract void pair () throws org.bluez.Error;
+            public abstract void pair ()
+                throws org.bluez.Error, DBusError, IOError;
 
             [DBus (name = "CancelPairing")]
-            public abstract void cancel_pairing () throws org.bluez.Error;
+            public abstract void cancel_pairing ()
+                throws org.bluez.Error, DBusError, IOError;
 
             /* Properties. */
             [DBus (name = "Address")]
