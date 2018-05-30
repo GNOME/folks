@@ -108,7 +108,7 @@ public class ObjectCacheTests : Folks.TestCase
     {
       // Delete the files in the directory
       var enumerator =
-          dir.enumerate_children (FILE_ATTRIBUTE_STANDARD_NAME,
+          dir.enumerate_children (FileAttribute.STANDARD_NAME,
               FileQueryInfoFlags.NONE);
 
       FileInfo? file_info = enumerator.next_file ();
