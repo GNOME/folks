@@ -6,7 +6,7 @@ Code merging
 This is the work flow for modifying the master repository:
 
 1. File a bug for the given flaw or feature (if it does not already exist) at
-   <https://bugzilla.gnome.org/enter_bug.cgi?product=folks>.
+   <https://gitlab.gnome.org/GNOME/folks/issues>.
 
 2. Clone the main repository (if you haven't already) and start work in a new
    branch (which preferably includes the bug number in its name).

@@ -263,7 +263,7 @@ public class Folks.StructuredName : Object
        *
        * If you need additional placeholders with other information or
        * punctuation, please file a bug against libfolks:
-       *   https://bugzilla.gnome.org/enter_bug.cgi?product=folks
+       *   https://gitlab.gnome.org/GNOME/folks/issues
        */
       var name_fmt = _("%g%t%m%t%f");
 
