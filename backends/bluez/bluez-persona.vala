@@ -265,7 +265,7 @@ public class Folks.Backends.BlueZ.Persona : Folks.Persona,
       /* Parse the attributes by iterating over the vCard’s attribute list once
        * only. Convenience functions like E.VCard.get_attribute() cause multiple
        * iterations over the list. */
-      unowned GLib.List<unowned E.VCardAttribute> attrs =
+      unowned GLib.List<E.VCardAttribute> attrs =
           card.get_attributes ();
 
       foreach (var attr in attrs)
@@ -314,7 +314,7 @@ public class Folks.Backends.BlueZ.Persona : Folks.Persona,
               new_nickname = attr.get_value ();
           else if (attr_name == "N")
             {
-              unowned GLib.List<unowned string> values = attr.get_values ();
+              unowned GLib.List<string> values = attr.get_values ();
               unowned string? family_name = null, given_name = null,
                   additional_names = null, prefixes = null, suffixes = null;
 

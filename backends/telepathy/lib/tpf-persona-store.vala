@@ -1173,15 +1173,15 @@ public class Tpf.PersonaStore : Folks.PersonaStore
 
       this._conn.contact_list_changed.connect (this._contact_list_changed_cb);
       this._contact_list_changed_cb (this._conn.dup_contact_list (),
-          new GLib.GenericArray<TelepathyGLib.Contact> ());
+          new GLib.GenericArray<weak TelepathyGLib.Contact> ());
 
       this._got_initial_members = true;
       this._populate_counters.begin ();
       this._notify_if_is_quiescent ();
     }
 
-  private void _contact_list_changed_cb (GLib.GenericArray<TelepathyGLib.Contact> added,
-      GLib.GenericArray<TelepathyGLib.Contact> removed)
+  private void _contact_list_changed_cb (GLib.GenericArray<weak TelepathyGLib.Contact> added,
+      GLib.GenericArray<weak TelepathyGLib.Contact> removed)
     {
       var personas_added = new HashSet<Persona> ();
       var personas_removed = new HashSet<Persona> ();
