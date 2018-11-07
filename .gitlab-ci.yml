@@ -16,7 +16,7 @@ fedora-latest:
     - mkdir _build
     - cd _build
     # Configure
-    - ./autogen.sh
+    - ../autogen.sh
     # Build
     - make
     # Run tests
