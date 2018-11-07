@@ -5,7 +5,7 @@ fedora-latest:
   image: fedora:latest
   stage: build
   before_script:
-    - dnf update -y && dnf -y install dnf-plugins-core
+    - dnf update -y && dnf -y install dnf-plugins-core redhat-rpm-config
     - dnf -y builddep folks
   script:
     # Configure
