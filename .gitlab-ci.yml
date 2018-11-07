@@ -4,6 +4,8 @@ stages:
 fedora-latest:
   image: fedora:latest
   stage: build
+  except:
+    - tags
   variables:
     MAKEFLAGS: "-j8"
   before_script:
