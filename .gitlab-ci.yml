@@ -4,6 +4,8 @@ stages:
 fedora-latest:
   image: fedora:latest
   stage: build
+  variables:
+    MAKEFLAGS: "-j8"
   before_script:
     - dnf update -y && dnf -y install dnf-plugins-core redhat-rpm-config
     - dnf -y builddep folks
@@ -13,6 +15,6 @@ fedora-latest:
     # Configure
     - ./autogen.sh
     # Build
-    - make -j
+    - make
     # Run tests
-    - make -j check
+    - make check
