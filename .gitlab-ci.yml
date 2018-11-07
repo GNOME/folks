@@ -8,8 +8,10 @@ fedora-latest:
     - dnf update -y && dnf -y install dnf-plugins-core redhat-rpm-config
     - dnf -y builddep folks
   script:
+    - mkdir _build
+    - cd _build
     # Configure
-    - ./autogen.sh
+    - ../autogen.sh
     # Build
     - make -j
     # Run tests
