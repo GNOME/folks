@@ -29,7 +29,6 @@ folks_lib_version = '25.19.1'
 # binary-dependent on libfolks.so), but should also be incremented when
 # incompatible changes are made in the backend library APIs themselves.
 folks_eds_lib_version = '25.19.1'
-folks_libsocialweb_lib_version = '25.19.1'
 folks_telepathy_lib_version = '25.19.1'
 folks_tracker_lib_version = '25.19.1'
 folks_dummy_lib_version = '25.19.1'
@@ -56,7 +55,6 @@ bluez_backend_enabled = get_option('bluez_backend')
 docs_enabled = get_option('docs')
 eds_backend_enabled = get_option('eds_backend')
 installed_tests_enabled = get_option('installed_tests')
-libsocialweb_backend_enabled = get_option('libsocialweb_backend')
 ofono_backend_enabled = get_option('ofono_backend')
 telepathy_backend_enabled = get_option('telepathy_backend')
 tracker_backend_enabled = get_option('tracker_backend')
@@ -131,10 +129,6 @@ if bluez_backend_enabled
   python_dbusmock = py_installation.dependency('dbusmock')
 endif
 
-if libsocialweb_backend_enabled
-  libsocialweb_dep = dependency('libsocialweb-client', version: '>= 0.25.20')
-endif
-
 if import_tool_enabled
   libxml_dep = dependency('libxml-2.0')
 endif
@@ -163,7 +157,6 @@ conf.set_quoted('INSTALLED_TESTS_META_DIR', folks_prefix / installed_tests_meta_
 conf.set_quoted('BACKEND_DIR', folks_prefix / folks_backend_dir)
 conf.set10('HAVE_BLUEZ', bluez_backend_enabled)
 conf.set10('HAVE_EDS', eds_backend_enabled)
-conf.set10('HAVE_LIBSOCIALWEB', libsocialweb_backend_enabled)
 conf.set10('HAVE_OFONO', ofono_backend_enabled)
 conf.set10('HAVE_TELEPATHY', telepathy_backend_enabled)
 conf.set10('HAVE_TRACKER', tracker_backend_enabled)

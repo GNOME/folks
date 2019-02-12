@@ -9,7 +9,6 @@ Available values for folks for the ''G_MESSAGES_DEBUG'' environment variable are
  * ''folks'' (for the core of libfolks)
  * ''eds'' (for the evolution-data-server backend)
  * ''key-file'' (for the key file backend)
- * ''libsocialweb'' (for the libsocialweb backend)
  * ''telepathy'' (for the Telepathy backend)
  * ''tracker'' (for the Tracker backend)
 
