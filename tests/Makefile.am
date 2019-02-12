@@ -18,10 +18,6 @@ if ENABLE_TELEPATHY
 SUBDIRS += folks telepathy
 endif
 
-if ENABLE_LIBSOCIALWEB
-SUBDIRS += libsocialweb
-endif
-
 if ENABLE_EDS
 SUBDIRS += eds
 endif
@@ -42,7 +38,6 @@ DIST_SUBDIRS = \
 	key-file \
 	bluez \
 	telepathy \
-	libsocialweb \
 	tracker \
 	$(NULL)
 

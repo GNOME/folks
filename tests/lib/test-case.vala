@@ -75,9 +75,6 @@ public abstract class Folks.TestCase : Object
           if (Folks.BuildConf.HAVE_EDS)
             locations += Folks.BuildConf.ABS_TOP_BUILDDIR + "/backends/eds/.libs/eds.so";
 
-          if (Folks.BuildConf.HAVE_LIBSOCIALWEB)
-            locations += Folks.BuildConf.ABS_TOP_BUILDDIR + "/backends/libsocialweb/.libs/libsocialweb.so";
-
           if (Folks.BuildConf.HAVE_OFONO)
             locations += Folks.BuildConf.ABS_TOP_BUILDDIR + "/backends/ofono/.libs/ofono.so";
 
