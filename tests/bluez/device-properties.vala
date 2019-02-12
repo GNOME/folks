@@ -46,7 +46,7 @@ public class DevicePropertiesTests : BluezTest.TestCase
           this.bluez_backend.mock_bluez.add_device ("hci0",
               this.bluez_backend.primary_device_address, "My Phone");
         }
-      catch (IOError e1)
+      catch (GLib.Error e1)
         {
           error ("Error setting up mock BlueZ device: %s", e1.message);
         }
@@ -103,7 +103,7 @@ public class DevicePropertiesTests : BluezTest.TestCase
           this.bluez_backend.mock_bluez.pair_device ("hci0",
               this.bluez_backend.primary_device_address);
         }
-      catch (IOError e4)
+      catch (GLib.Error e4)
         {
           error ("Error pairing mock BlueZ device: %s", e4.message);
         }
@@ -132,7 +132,7 @@ public class DevicePropertiesTests : BluezTest.TestCase
           this.bluez_backend.mock_bluez.block_device ("hci0",
               this.bluez_backend.primary_device_address);
         }
-      catch (IOError e1)
+      catch (GLib.Error e1)
         {
           error ("Error blocking device: %s", e1.message);
         }
@@ -180,7 +180,7 @@ public class DevicePropertiesTests : BluezTest.TestCase
           this.bluez_backend.mock_bluez.pair_device ("hci0",
               this.bluez_backend.primary_device_address);
         }
-      catch (IOError e4)
+      catch (GLib.Error e4)
         {
           error ("Error blocking device: %s", e4.message);
         }
@@ -201,7 +201,7 @@ public class DevicePropertiesTests : BluezTest.TestCase
           this.bluez_backend.mock_bluez.block_device ("hci0",
               this.bluez_backend.primary_device_address);
         }
-      catch (IOError e5)
+      catch (GLib.Error e5)
         {
           error ("Error blocking device again: %s", e5.message);
         }
@@ -275,7 +275,7 @@ public class DevicePropertiesTests : BluezTest.TestCase
                 new Variant.array (VariantType.STRING, {})
               });
         }
-      catch (IOError e1)
+      catch (GLib.Error e1)
         {
           error ("Error setting device alias: %s", e1.message);
         }

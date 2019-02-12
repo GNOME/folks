@@ -24,7 +24,7 @@ using Random;
 
 /* The following function is needed in order to use the async SourceRegistry
  * constructor. FIXME: https://bugzilla.gnome.org/show_bug.cgi?id=659886 */
-[CCode (cname = "e_source_registry_new", cheader_filename = "libedataserver/libedataserver.h", finish_function = "e_source_registry_new_finish")]
+[CCode (cname = "e_source_registry_new", cheader_filename = "libedataserver/libedataserver.h", finish_name = "e_source_registry_new_finish")]
 internal extern static async E.SourceRegistry create_source_registry (GLib.Cancellable? cancellable = null) throws GLib.Error;
 
 errordomain EdsTest.BackendSetupError
