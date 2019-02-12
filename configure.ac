@@ -37,10 +37,6 @@ m4_define([folks_eds_lt_current], [43])
 m4_define([folks_eds_lt_revision], [4])
 m4_define([folks_eds_lt_age], [18])
 
-m4_define([folks_libsocialweb_lt_current], [43])
-m4_define([folks_libsocialweb_lt_revision], [4])
-m4_define([folks_libsocialweb_lt_age], [18])
-
 m4_define([folks_telepathy_lt_current], [43])
 m4_define([folks_telepathy_lt_revision], [4])
 m4_define([folks_telepathy_lt_age], [18])
@@ -106,9 +102,6 @@ AC_SUBST([LT_AGE])
 FOLKS_EDS_LT_VERSION=folks_eds_lt_current:folks_eds_lt_revision:folks_eds_lt_age
 AC_SUBST([FOLKS_EDS_LT_VERSION])
 
-FOLKS_LIBSOCIALWEB_LT_VERSION=folks_libsocialweb_lt_current:folks_libsocialweb_lt_revision:folks_libsocialweb_lt_age
-AC_SUBST([FOLKS_LIBSOCIALWEB_LT_VERSION])
-
 FOLKS_TELEPATHY_LT_VERSION=folks_telepathy_lt_current:folks_telepathy_lt_revision:folks_telepathy_lt_age
 AC_SUBST([FOLKS_TELEPATHY_LT_VERSION])
 
@@ -130,7 +123,6 @@ AC_SUBST([API_VERSION_DOT])
 
 # Backend library API versions
 AC_SUBST([FOLKS_EDS_API_VERSION], [0.6])
-AC_SUBST([FOLKS_LIBSOCIALWEB_API_VERSION], [0.6])
 AC_SUBST([FOLKS_TELEPATHY_API_VERSION], [0.6])
 AC_SUBST([FOLKS_TRACKER_API_VERSION], [0.6])
 AC_SUBST([FOLKS_DUMMY_API_VERSION], [0.6])
@@ -213,46 +205,6 @@ AC_ARG_ENABLE(zeitgeist,
                        [ build Zeitgeist support in the Telepathy backend]),
         enable_zeitgeist=$enableval,
         enable_zeitgeist=auto)
-
-# Automatically check the dependencies for the libsocialweb backend
-SW_CLIENT_REQUIRED=0.25.20
-AC_ARG_ENABLE(libsocialweb-backend,
-        AS_HELP_STRING([--enable-libsocialweb-backend=@<:@no/yes/auto@:>@],
-                       [build the Libsocialweb backend (default: auto)]),
-        enable_libsocialweb_backend=$enableval,
-        enable_libsocialweb_backend=auto )
-
-# this may be overwritten farther down
-AC_DEFINE(HAVE_LIBSOCIALWEB, [0],
-          [Define as 1 if you have the libsocialweb backend])
-AS_IF([test "x$enable_libsocialweb_backend" != "xno"], [
-  PKG_CHECK_MODULES([SW_CLIENT], [libsocialweb-client >= $SW_CLIENT_REQUIRED],
-      have_libsocialweb_backend="yes", have_libsocialweb_backend="no")
-  AS_IF([test "x$have_libsocialweb_backend" = "xyes" -a \
-          "x$enable_vala" = "xyes"], [
-    VALA_CHECK_PACKAGES([telepathy-glib
-                         gio-2.0
-                         gee-0.8
-                         libsocialweb-client],
-        ,
-        have_libsocialweb_backend="no")
-  ])
-
-  AS_IF([test "x$have_libsocialweb_backend" = "xyes"], [
-    AC_DEFINE(HAVE_LIBSOCIALWEB, [1],
-              [Define if you have the libsocialweb backend])
-  ])
-], [
-   have_libsocialweb_backend=no
-])
-
-AS_IF([test "x$enable_libsocialweb_backend" = "xyes" -a \
-  "x$have_libsocialweb_backend" != "xyes"], [
-    AC_MSG_ERROR([Cannot find libsocialweb dependencies.])
-])
-
-AM_CONDITIONAL([ENABLE_LIBSOCIALWEB],
-        [test "x$have_libsocialweb_backend" = "xyes"])
 
 # -----------------------------------------------------------
 # Dependencies
@@ -790,10 +742,6 @@ AC_CONFIG_FILES([
     backends/dummy/Makefile
     backends/dummy/lib/Makefile
     backends/key-file/Makefile
-    backends/libsocialweb/Makefile
-    backends/libsocialweb/lib/Makefile
-    backends/libsocialweb/lib/folks-libsocialweb.pc
-    backends/libsocialweb/lib/folks-libsocialweb-uninstalled.pc
     backends/telepathy/Makefile
     backends/telepathy/lib/Makefile
     backends/tracker/Makefile
@@ -812,7 +760,6 @@ AC_CONFIG_FILES([
     tests/folks/Makefile
     tests/dummy/Makefile
     tests/key-file/Makefile
-    tests/libsocialweb/Makefile
     tests/telepathy/Makefile
     tests/tracker/Makefile
     tests/lib/Makefile
@@ -821,7 +768,6 @@ AC_CONFIG_FILES([
     tests/lib/eds/Makefile
     tests/lib/dummy/Makefile
     tests/lib/key-file/Makefile
-    tests/lib/libsocialweb/Makefile
     tests/lib/telepathy/Makefile
     tests/lib/tracker/Makefile
     tests/lib/telepathy/contactlist/Makefile
@@ -846,7 +792,6 @@ Configure summary:
         Inspector tool..............:  ${with_inspect_tool}
         Telepathy backend...........:  ${enable_telepathy_backend}
         Tracker backend.............:  ${enable_tracker_backend}
-        Libsocialweb backend........:  ${have_libsocialweb_backend}
         E-D-S backend...............:  ${enable_eds_backend}
         Ofono backend...............:  ${enable_ofono_backend}
         BlueZ backend...............:  ${enable_bluez_backend}
