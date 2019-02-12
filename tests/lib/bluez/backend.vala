@@ -31,19 +31,19 @@ namespace org
           {
             [DBus (name = "AddAdapter")]
             public abstract string add_adapter (string device_name,
-                string system_name) throws IOError;
+                string system_name) throws GLib.Error;
 
             [DBus (name = "AddDevice")]
             public abstract string add_device (string adapter_device_name,
-                string device_address, string alias) throws IOError;
+                string device_address, string alias) throws GLib.Error;
 
             [DBus (name = "PairDevice")]
             public abstract void pair_device (string adapter_device_name,
-                string device_address) throws IOError;
+                string device_address) throws GLib.Error;
 
             [DBus (name = "BlockDevice")]
             public abstract void block_device (string adapter_device_name,
-                string device_address) throws IOError;
+                string device_address) throws GLib.Error;
           }
 
         namespace obex
@@ -65,7 +65,7 @@ namespace org
                   {
                     [DBus (name = "UpdateStatus")]
                     public abstract void update_status (bool is_complete)
-                        throws IOError;
+                        throws GLib.Error;
                   }
               }
           }
@@ -201,7 +201,7 @@ public class BluezTest.Backend
           this._mock_obex_base.reset ();
           this._mock_bluez_base.reset ();
         }
-      catch (IOError e1)
+      catch (GLib.Error e1)
         {
           error ("Error resetting python-dbusmock state: %s", e1.message);
         }
@@ -252,7 +252,7 @@ public class BluezTest.Backend
           /* Set the vCard to be returned for all transfers. */
           return this.set_simple_device_vcard (vcard);
         }
-      catch (IOError e1)
+      catch (GLib.Error e1)
         {
           error ("Error setting up mock BlueZ device: %s", e1.message);
         }
