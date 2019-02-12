@@ -1,7 +1,6 @@
 # Backends
 option('bluez_backend', type: 'boolean', value: true, description: 'build the Bluez backend')
 option('eds_backend', type: 'boolean', value: true, description: 'build the E-D-S backend')
-option('libsocialweb_backend', type: 'boolean', value: false, description: 'build the libsocialweb backend')
 option('ofono_backend', type: 'boolean', value: true, description: 'build the oFono backend')
 option('telepathy_backend', type: 'boolean', value: true, description: 'build the Telepathy backend')
 option('tracker_backend', type: 'boolean', value: false, description: 'build the Tracker backend')

@@ -58,10 +58,6 @@ if telepathy_backend_enabled
   subdir('telepathy')
 endif
 
-if libsocialweb_backend_enabled
-  subdir('libsocialweb')
-endif
-
 if eds_backend_enabled
   subdir('eds')
 endif
