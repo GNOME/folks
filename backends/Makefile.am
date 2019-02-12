@@ -7,10 +7,6 @@ if ENABLE_TELEPATHY
 SUBDIRS += telepathy
 endif
 
-if ENABLE_LIBSOCIALWEB
-SUBDIRS += libsocialweb
-endif
-
 if ENABLE_TRACKER
 SUBDIRS += tracker
 endif
@@ -31,7 +27,6 @@ DIST_SUBDIRS = \
 	bluez \
 	eds \
 	key-file \
-	libsocialweb \
 	ofono \
 	telepathy \
 	tracker \

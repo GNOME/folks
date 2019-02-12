@@ -48,9 +48,6 @@ public class Folks.BuildConf
   [CCode (cname = "HAVE_EDS")]
   public static bool HAVE_EDS;
 
-  [CCode (cname = "HAVE_LIBSOCIALWEB")]
-  public static bool HAVE_LIBSOCIALWEB;
-
   [CCode (cname = "HAVE_OFONO")]
   public static bool HAVE_OFONO;
 

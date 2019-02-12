@@ -21,10 +21,6 @@ SUBDIRS += \
 	$(NULL)
 endif
 
-if ENABLE_LIBSOCIALWEB
-SUBDIRS += libsocialweb
-endif
-
 if ENABLE_TRACKER
 SUBDIRS += tracker
 endif
@@ -39,7 +35,6 @@ DIST_SUBDIRS = \
 	bluez \
 	telepathy \
 	eds \
-	libsocialweb \
 	tracker \
 	$(NULL)
 
