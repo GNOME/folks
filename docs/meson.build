@@ -43,15 +43,6 @@ if eds_backend_enabled
   }
 endif
 
-if libsocialweb_backend_enabled
-  valadoc_targets += {
-    'name': 'folks-libsocialweb',
-    'source_files': libsocialweb_backendlib_sources,
-    'library': libsocialweb_backendlib,
-    'dependencies': libsocialweb_backendlib_doc_deps,
-  }
-endif
-
 if telepathy_backend_enabled
   valadoc_targets += {
     'name': 'folks-telepathy',
