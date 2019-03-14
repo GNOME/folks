@@ -601,7 +601,7 @@ public abstract class Folks.Inspect.Command
 {
   protected Client client;
 
-  public Command (Client client)
+  protected Command (Client client)
     {
       this.client = client;
     }

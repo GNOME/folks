@@ -39,7 +39,7 @@ public abstract class Folks.TestCase : Object
   private GLib.TestSuite _suite;
   public delegate void TestMethod ();
 
-  public TestCase (string name)
+  protected TestCase (string name)
     {
       Intl.setlocale (LocaleCategory.ALL, "");
 
