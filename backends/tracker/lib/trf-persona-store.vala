@@ -814,7 +814,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
 
  /**
    * Transforms "service1:addr1,addr2;service2:addr3,.." to
-   *   --->  HashMultiMap<string, string>
+   * into a HashMultiMap<string, string>
    *
    * @since 0.5.1
    */
@@ -1066,7 +1066,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
    * Prepare the PersonaStore for use.
    *
    * TODO: we should throw different errors dependening on what went wrong
-   *       when we were trying to setup the PersonaStore.
+   * when we were trying to setup the PersonaStore.
    *
    * See {@link Folks.PersonaStore.prepare}.
    *
