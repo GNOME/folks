@@ -71,7 +71,7 @@ public class EdsTest.Backend
         {
           yield this._addressbook.get_contact (uid, null, out contact);
           this._set_contact_fields (contact, updated_data);
-          yield this._addressbook.modify_contact (contact, null);
+          yield this._addressbook.modify_contact (contact, E.BookOperationFlags.NONE, null);
         }
       catch (GLib.Error e)
         {
@@ -86,7 +86,7 @@ public class EdsTest.Backend
       try
         {
           yield this._addressbook.get_contact (uid, null, out contact);
-          yield this._addressbook.remove_contact (contact, null);
+          yield this._addressbook.remove_contact (contact, E.BookOperationFlags.NONE, null);
         }
       catch (GLib.Error e)
         {
@@ -211,7 +211,7 @@ public class EdsTest.Backend
         {
           GLib.SList<string> uids;
 
-          yield this._addressbook.add_contacts (contacts, null, out uids);
+          yield this._addressbook.add_contacts (contacts, E.BookOperationFlags.NONE, null, out uids);
 
           foreach (unowned string uid in uids)
             this._e_contacts += uid;

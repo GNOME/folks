@@ -107,7 +107,7 @@ public class Main
       SList<string> uids;
       try
         {
-          book_client.add_contacts_sync (contacts, out uids, null);
+          book_client.add_contacts_sync (contacts, E.BookOperationFlags.NONE, out uids, null);
         }
       catch (Error e)
         {

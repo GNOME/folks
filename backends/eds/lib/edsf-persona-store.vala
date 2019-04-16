@@ -610,7 +610,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
           /* _addressbook is guaranteed to be non-null before we ensure that
            * prepare() has already been called. */
           yield ((!) this._addressbook).remove_contact (
-              ((Edsf.Persona) persona).contact, null);
+              ((Edsf.Persona) persona).contact, E.BookOperationFlags.NONE, null);
         }
       catch (GLib.Error e)
         {
@@ -1258,7 +1258,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
 
           /* Commit the new contact. _addressbook is asserted as being non-null
            * above. */
-          yield ((!) this._addressbook).add_contact (contact, null,
+          yield ((!) this._addressbook).add_contact (contact, E.BookOperationFlags.NONE, null,
               out added_uid);
 
           debug ("Finished sending new contact to EDS; received UID %s.",
@@ -1377,7 +1377,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
 
           /* Commit the modification. _addressbook is asserted as being non-null
            * above. */
-          yield ((!) this._addressbook).modify_contact (contact, null);
+          yield ((!) this._addressbook).modify_contact (contact, E.BookOperationFlags.NONE, null);
 
           timeout_id = Timeout.add_seconds (PersonaStore._property_change_timeout, () =>
             {
