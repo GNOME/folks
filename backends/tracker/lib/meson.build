@@ -6,6 +6,16 @@ tracker_backendlib_sources = files(
   'trf-util.vala',
 )
 
+tracker_backendlib_sources += configure_file(
+  input: namespace_vala_in,
+  output: 'namespace.vala',
+  configuration: {
+    'BACKENDLIB_GIR_NAME': tracker_backendlib_gir_name.split('-')[0],
+    'BACKENDLIB_GIR_VERSION': folks_api_version,
+    'BACKENDLIB_NAMESPACE': 'Trf',
+  },
+)
+
 tracker_backendlib_deps = [
   backend_deps,
   tracker_sparql_dep,

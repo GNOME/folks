@@ -11,6 +11,14 @@ common_backendlib_vala_flags = [
   '--includedir', meson.project_name(),
 ]
 
+# Namespace Vala file
+#
+# FIXME: This can be removed once the backend namespaces have been sanitised.
+# https://gitlab.gnome.org/GNOME/folks/issues/73
+#
+# This file sets namespace and version attributes for GIR.
+namespace_vala_in = files('namespace.vala.in')
+
 # A subdirectory for each type of backend
 subdir('dummy')
 subdir('key-file')

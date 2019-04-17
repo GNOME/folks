@@ -74,6 +74,16 @@ telepathy_backendlib_sources = files(
   'tpf-persona.vala',
 )
 
+telepathy_backendlib_sources += configure_file(
+  input: namespace_vala_in,
+  output: 'namespace.vala',
+  configuration: {
+    'BACKENDLIB_GIR_NAME': telepathy_backendlib_gir_name.split('-')[0],
+    'BACKENDLIB_GIR_VERSION': folks_api_version,
+    'BACKENDLIB_NAMESPACE': 'Tpf',
+  },
+)
+
 telepathy_backendlib_deps = [
   backend_deps,
   telepathy_glib_dep,

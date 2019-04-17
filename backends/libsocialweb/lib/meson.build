@@ -5,6 +5,16 @@ libsocialweb_backendlib_sources = files(
   'swf-persona.vala',
 )
 
+libsocialweb_backendlib_sources += configure_file(
+  input: namespace_vala_in,
+  output: 'namespace.vala',
+  configuration: {
+    'BACKENDLIB_GIR_NAME': libsocialweb_backendlib_gir_name.split('-')[0],
+    'BACKENDLIB_GIR_VERSION': folks_api_version,
+    'BACKENDLIB_NAMESPACE': 'Swf',
+  },
+)
+
 libsocialweb_backendlib_deps = [
   backend_deps,
   libsocialweb_dep,

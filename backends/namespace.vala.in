@@ -1,0 +1,6 @@
+// FIXME: This can be removed once the backend namespaces have been sanitised.
+// https://gitlab.gnome.org/GNOME/folks/issues/73
+//
+// This file sets namespace and version attributes for GIR.
+[CCode (gir_namespace = "@BACKENDLIB_GIR_NAME@", gir_version = "@BACKENDLIB_GIR_VERSION@")]
+namespace @BACKENDLIB_NAMESPACE@ { }
