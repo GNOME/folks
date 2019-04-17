@@ -27,7 +27,7 @@ eds_backendlib_deps = [
 # doesn't have native support (https://github.com/mesonbuild/meson/issues/894)
 eds_backendlib_doc_deps = [
   '--pkg', 'folks',
-  '--pkg', 'libebook-1.2',
+  '--pkg', libebook_dep.name(),
 ]
 
 eds_backendlib_vala_flags = [

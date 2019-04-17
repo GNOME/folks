@@ -95,7 +95,7 @@ telepathy_backendlib_deps = [
 telepathy_backendlib_doc_deps = [
   '--pkg', 'folks',
   '--pkg', 'tp-lowlevel', '--vapidir', meson.current_build_dir(),
-  '--pkg', 'telepathy-glib',
+  '--pkg', telepathy_glib_dep.name(),
 ]
 
 if zeitgeist_enabled

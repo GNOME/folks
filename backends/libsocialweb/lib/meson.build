@@ -23,8 +23,8 @@ libsocialweb_backendlib_deps = [
 # FIXME: we need to set these manually for the valadoc target as long as meson
 # doesn't have native support (https://github.com/mesonbuild/meson/issues/894)
 libsocialweb_backendlib_doc_deps = [
-  '--pkg', 'libsocialweb-client',
   '--pkg', 'folks',
+  '--pkg', libsocialweb_dep.name(),
 ]
 
 libsocialweb_backendlib_vala_flags = [
