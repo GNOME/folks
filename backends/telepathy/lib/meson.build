@@ -137,6 +137,11 @@ telepathy_backendlib = shared_library('folks-@0@'.format(telepathy_backend_name)
   install_dir: [ true, folks_headers_install_dir, true, true ],
 )
 
+# Also make sure to install the VAPI's .deps file
+install_data('folks-telepathy.deps',
+  install_dir: get_option('datadir') / 'vala' / 'vapi',
+)
+
 # FIXME: This comes straight from the Meson docs on how to create/install a
 # typelib file for your Vala shared library. However, as mentioned in
 # https://github.com/mesonbuild/meson/issues/4481, this is not ideal.
