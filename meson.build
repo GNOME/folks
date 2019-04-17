@@ -185,7 +185,7 @@ add_project_arguments([
   language: 'vala'
 )
 
-# Configuration for pc.in files
+# Configuration for the pkgconfig files
 common_pkgconf_variables = [
   'exec_prefix=${prefix}',
   'bindir=${prefix}' / get_option('bindir'),
