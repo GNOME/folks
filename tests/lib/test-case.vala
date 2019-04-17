@@ -43,10 +43,8 @@ public abstract class Folks.TestCase : Object
     {
       Intl.setlocale (LocaleCategory.ALL, "");
 
-      /* Enable all debug output from libfolks. This is OK, as automake-1.12’s
-       * parallel test harness will only save the debug output from failed
-       * tests. If the user’s already set those variables, though, don’t
-       * overwrite them. */
+      /* Enable all debug output from libfolks. If the user’s already set
+       * those variables, though, don’t overwrite them. */
       Environment.set_variable ("G_MESSAGES_DEBUG", "all", false);
 
       /* Turn off use of gvfs. If using GTestDBus it's unavailable,
@@ -64,36 +62,6 @@ public abstract class Folks.TestCase : Object
 
       this._transient_dir = this.create_transient_dir ();
       this.private_bus_up ();
-
-      if (Environment.get_variable ("FOLKS_TESTS_INSTALLED") == null)
-        {
-          // FIXME: this can be dropped when removing autotools
-          string[] locations = {
-              Folks.BuildConf.ABS_TOP_BUILDDIR + "/backends/key-file/.libs/key-file.so",
-              Folks.BuildConf.ABS_TOP_BUILDDIR + "/backends/dummy/.libs/dummy.so",
-          };
-
-          if (Folks.BuildConf.HAVE_EDS)
-            locations += Folks.BuildConf.ABS_TOP_BUILDDIR + "/backends/eds/.libs/eds.so";
-
-          if (Folks.BuildConf.HAVE_LIBSOCIALWEB)
-            locations += Folks.BuildConf.ABS_TOP_BUILDDIR + "/backends/libsocialweb/.libs/libsocialweb.so";
-
-          if (Folks.BuildConf.HAVE_OFONO)
-            locations += Folks.BuildConf.ABS_TOP_BUILDDIR + "/backends/ofono/.libs/ofono.so";
-
-          if (Folks.BuildConf.HAVE_TELEPATHY)
-            locations += Folks.BuildConf.ABS_TOP_BUILDDIR + "/backends/telepathy/.libs/telepathy.so";
-
-          if (Folks.BuildConf.HAVE_TRACKER)
-            locations += Folks.BuildConf.ABS_TOP_BUILDDIR + "/backends/tracker/.libs/tracker.so";
-
-          if (Folks.BuildConf.HAVE_BLUEZ)
-            locations += Folks.BuildConf.ABS_TOP_BUILDDIR + "/backends/bluez/.libs/bluez.so";
-
-          Environment.set_variable ("FOLKS_BACKEND_PATH",
-              string.joinv (":", locations), false);
-        }
 
       /* By default, no backend is allowed. Subclasses must override. */
       Environment.set_variable ("FOLKS_BACKENDS_ALLOWED", "", true);
