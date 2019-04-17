@@ -1,3 +1,5 @@
+folks_build_dir  = meson.current_build_dir()
+
 # Internal library
 libfolks_internal_sources = [
   'internal.vala',
