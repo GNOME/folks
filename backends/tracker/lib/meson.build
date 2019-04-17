@@ -51,6 +51,7 @@ tracker_backendlib = shared_library('folks-@0@'.format(tracker_backend_name),
 custom_target(tracker_backendlib_gir_name + ' typelib',
   command: [ g_ir_compiler,
     '--output', '@OUTPUT@',
+    '--includedir', folks_build_dir,
     meson.current_build_dir() / (tracker_backendlib_gir_name + '.gir')
   ],
   output: tracker_backendlib_gir_name + '.typelib',
