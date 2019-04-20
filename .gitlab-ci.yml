@@ -9,8 +9,10 @@ build-folks:
     - tags
   before_script:
     - dnf update -y --nogpgcheck
-    - dnf -y install dnf-plugins-core redhat-rpm-config meson ninja-build --nogpgcheck
-    - dnf -y builddep folks --nogpgcheck
+    - dnf -y install --nogpgcheck
+      gcc GConf2-devel dbus-glib-devel evolution-data-server-devel glib2-devel
+      gobject-introspection-devel libgee-devel libxml2-devel meson ninja-build
+      readline-devel telepathy-glib-devel telepathy-glib-vala tracker-devel vala
   script:
     - meson _build
     - ninja -C _build
