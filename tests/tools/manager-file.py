@@ -1,8 +1,10 @@
-#!/usr/bin/python
+#!/usr/bin/python2
 
 # manager-file.py: generate .manager files and TpCMParamSpec arrays from the
 # same data (should be suitable for all connection managers that don't have
 # plugins)
+#
+# FIXME: port this from python2 to python3
 #
 # The master copy of this program is in the telepathy-glib repository -
 # please make any changes there.
