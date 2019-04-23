@@ -1,11 +1,24 @@
-Overview of changes from libfolks 0.11.4 to libfolks 0.11.5
+Overview of changes from libfolks 0.11.4 to libfolks 0.12.0
 ===========================================================
 
 Dependencies:
+ * Dropped depedency on libvaladoc (we now use the binary directly)
+ * Bumped minimal GLib version to 2.44
 
 Major changes:
+ * Folks is now being built using meson
+ * The autotools build definition was dropped
+ * Dropped support for building without vala
+ * Migrated to the GNOME GitLab and now use a CI-backed workflow
+ * Moved from intltool to gettext
+ * Various fixes for warnings
+ * Lots of translation updates
 
 Bugs fixed:
+ * Bug 784544 - Fatal error building git master
+ * Bug 739997 - Crash when selecting contact
+ * Bug 792238 - PotentialMatch: don't rely on null-terminated string
+ * Bug 792567 - Individual.display_name: don't fallback on persona's display_id if it equals the IID
 
 API changes:
 
