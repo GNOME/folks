@@ -39,10 +39,10 @@ public interface LibsocialwebTest.ContactView : DBusProxy
       public string id;
     }
 
-  public abstract async void Close () throws GLib.IOError;
-  public abstract async void Refresh () throws GLib.IOError;
-  public abstract async void Start () throws GLib.IOError;
-  public abstract async void Stop () throws GLib.IOError;
+  public abstract async void Close () throws GLib.DBusError, GLib.IOError;
+  public abstract async void Refresh () throws GLib.DBusError, GLib.IOError;
+  public abstract async void Start () throws GLib.DBusError, GLib.IOError;
+  public abstract async void Stop () throws GLib.DBusError, GLib.IOError;
 
   [DBus (signature = "a(ssxa{sas})")]
   public signal void ContactsAdded (ContactsAddedElement[] contacts);
@@ -82,21 +82,21 @@ public class LibsocialwebTest.LibsocialwebContactViewTest : Object
       this.path = path;
     }
 
-  public void Close ()
+  public void Close () throws GLib.DBusError, GLib.IOError
     {
     }
 
-  public void Refresh ()
+  public void Refresh () throws GLib.DBusError, GLib.IOError
     {
     }
 
-  public void Start ()
+  public void Start () throws GLib.DBusError, GLib.IOError
     {
       debug ("Start() called.");
       StartCalled (this.path);
     }
 
-  public void Stop ()
+  public void Stop () throws GLib.DBusError, GLib.IOError
     {
     }
 
@@ -186,7 +186,7 @@ public class LibsocialwebTest.LibsocialwebContactViewTest : Object
 public interface LibsocialwebTest.LibsocialwebServiceCapabilitiesTest : Object
 {
   [DBus (name = "GetStaticCapabilities")]
-  public abstract string[] GetStaticCapabilities () throws GLib.IOError;
+  public abstract string[] GetStaticCapabilities () throws GLib.DBusError, GLib.IOError;
 }
 
 [DBus (name = "org.gnome.libsocialweb.ContactsQuery")]
@@ -194,7 +194,7 @@ public interface LibsocialwebTest.LibsocialwebServiceQueryTest : Object
 {
   [DBus (name = "OpenView")]
   public abstract ObjectPath OpenView (string query,
-      HashTable<string, string> p) throws GLib.IOError;
+      HashTable<string, string> p) throws GLib.DBusError, GLib.IOError;
 }
 
 [DBus (name = "org.gnome.libsocialweb.ContactsQuery")]
@@ -217,6 +217,7 @@ public class LibsocialwebTest.LibsocialwebServiceTest : Object,
   public signal void registered_child (uint id);
 
   public ObjectPath OpenView (string query, HashTable<string, string> p)
+      throws GLib.DBusError, GLib.IOError
     {
       string path = LibsocialwebTest.Backend.LIBSOCIALWEB_PATH + "/View"
           + view_count.to_string();
@@ -242,7 +243,7 @@ public class LibsocialwebTest.LibsocialwebServiceTest : Object,
   public signal void OpenViewCalled (string query, HashTable<string, string> p,
                                      string path);
 
-  public string[] GetStaticCapabilities ()
+  public string[] GetStaticCapabilities () throws GLib.DBusError, GLib.IOError
     {
       var ret = new string[0];
       ret += "has-contacts-query-iface";
@@ -280,12 +281,12 @@ public class LibsocialwebTest.LibsocialwebServerTest : Object
     }
 
   [DBus (name = "IsOnline")]
-  public bool is_online ()
+  public bool is_online () throws GLib.DBusError, GLib.IOError
     {
       return true;
     }
   [DBus (name = "GetServices")]
-  public string[] get_services ()
+  public string[] get_services () throws GLib.DBusError, GLib.IOError
     {
       return services;
     }

@@ -66,6 +66,10 @@ public class DummyLswTests : LibsocialwebTest.TestCase
         {
           assert_not_reached ();
         }
+      catch (GLib.DBusError e)
+        {
+          assert_not_reached ();
+        }
 
       TestUtils.loop_run_with_timeout (main_loop, 5);
 
