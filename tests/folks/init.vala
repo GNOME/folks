@@ -63,7 +63,7 @@ public class InitTests : TpfTest.MixedTestCase
       for (uint i = 0; i < 10; i++)
         {
           var aggregator = IndividualAggregator.dup ();
-          aggregator.prepare (); /* Note: We don't yield for this to complete */
+          aggregator.prepare.begin (); /* Note: We don't yield for this to complete */
           aggregator = null;
         }
 

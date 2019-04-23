@@ -118,7 +118,7 @@ public class BackendLoadingTests : TpfTest.MixedTestCase
       this.main_loop = new GLib.MainLoop (null, false);
 
       var store = BackendStore.dup ();
-      this.test_disabling_async (store, (o, r) =>
+      this.test_disabling_async.begin (store, (o, r) =>
         {
           this.test_disabling_async.end (r);
         });
@@ -159,7 +159,7 @@ public class BackendLoadingTests : TpfTest.MixedTestCase
       this.main_loop = new GLib.MainLoop (null, false);
 
       var store = BackendStore.dup ();
-      this.test_reloading_async (store, (o, r) =>
+      this.test_reloading_async.begin (store, (o, r) =>
         {
           this.test_reloading_async.end (r);
         });

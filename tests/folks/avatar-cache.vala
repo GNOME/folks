@@ -179,7 +179,7 @@ public class AvatarCacheTests : Folks.TestCase
 
   protected void _assert_avatars_equal (LoadableIcon a, LoadableIcon b)
     {
-      TestUtils.loadable_icons_content_equal (a, b, -1, (object, result) =>
+      TestUtils.loadable_icons_content_equal.begin (a, b, -1, (object, result) =>
         {
           assert (TestUtils.loadable_icons_content_equal.end (result));
           this._main_loop.quit ();
