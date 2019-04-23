@@ -36,14 +36,16 @@ set_contact_alias_cb (TpConnection *conn,
     gpointer user_data,
     GObject *weak_object)
 {
-  GSimpleAsyncResult *simple = G_SIMPLE_ASYNC_RESULT (user_data);
+  GTask *task = G_TASK (user_data);
 
   if (error != NULL)
     {
-      g_simple_async_result_set_from_error (simple, error);
+      g_task_return_error (task, g_error_copy (error));
     }
-
-  g_simple_async_result_complete (simple);
+  else
+    {
+      g_task_return_boolean (task, TRUE);
+    }
 }
 
 /**
@@ -64,21 +66,19 @@ folks_tp_lowlevel_connection_set_contact_alias_async (
     GAsyncReadyCallback callback,
     gpointer user_data)
 {
-  GSimpleAsyncResult *result;
-  GHashTable *ht;
+  g_autoptr(GTask) task = NULL;
+  g_autoptr(GHashTable) ht = NULL;
 
   ht = g_hash_table_new_full (g_direct_hash, g_direct_equal, NULL, g_free);
   g_hash_table_insert (ht, GUINT_TO_POINTER (handle), g_strdup (alias));
 
-  result = g_simple_async_result_new (G_OBJECT (conn), callback, user_data,
-      folks_tp_lowlevel_connection_set_contact_alias_finish);
+  task = g_task_new (conn, NULL, callback, user_data);
+  g_task_set_source_tag (task,
+      folks_tp_lowlevel_connection_set_contact_alias_async);
 
   tp_cli_connection_interface_aliasing_call_set_aliases (conn, -1,
-      ht, set_contact_alias_cb, g_object_ref (result), g_object_unref,
+      ht, set_contact_alias_cb, g_steal_pointer (&task), g_object_unref,
       G_OBJECT (conn));
-
-  g_object_unref (result);
-  g_hash_table_destroy (ht);
 }
 
 /**
@@ -94,17 +94,17 @@ folks_tp_lowlevel_connection_set_contact_alias_finish (
     GAsyncResult *result,
     GError **error)
 {
-  GSimpleAsyncResult *simple = G_SIMPLE_ASYNC_RESULT (result);
   TpConnection *conn;
 
-  g_return_if_fail (G_IS_SIMPLE_ASYNC_RESULT (simple));
+  g_return_if_fail (G_IS_TASK (result));
 
-  conn = TP_CONNECTION (g_async_result_get_source_object (result));
+  conn = TP_CONNECTION (g_task_get_source_object (G_TASK (result)));
   g_return_if_fail (TP_IS_CONNECTION (conn));
 
-  g_return_if_fail (g_simple_async_result_is_valid (result,
-      G_OBJECT (conn),
-      folks_tp_lowlevel_connection_set_contact_alias_finish));
+  g_return_if_fail (g_task_is_valid (result, conn));
+  g_return_if_fail (g_task_get_source_tag (G_TASK (result)) ==
+      folks_tp_lowlevel_connection_set_contact_alias_async);
 
-  g_simple_async_result_propagate_error (simple, error);
+  /* Note: We throw away the boolean return value here */
+  g_task_propagate_boolean (G_TASK (result), error);
 }
