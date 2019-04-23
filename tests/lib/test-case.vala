@@ -446,19 +446,7 @@ public abstract class Folks.TestCase : Object
 
       public static void set_up ()
         {
-          GLib.set_printerr_handler (LogAdaptor._printerr_func_stack_trace);
           Log.set_default_handler (LogAdaptor._log_func_stack_trace);
-        }
-
-      private static void _printerr_func_stack_trace (string? text)
-        {
-          if (text == null || str_equal (text, ""))
-            return;
-
-          stderr.printf (text);
-
-          /* Print a stack trace since we've hit some major issue */
-          GLib.on_error_stack_trace ("libtool --mode=execute gdb");
         }
 
       private static void _log_func_stack_trace (string? log_domain,
@@ -472,16 +460,6 @@ public abstract class Folks.TestCase : Object
            * being forcibly disposed */
           if (TestCase.in_final_tear_down)
             return;
-
-          /* Print a stack trace for any message at the warning level or above
-           */
-          if ((log_levels &
-              (LogLevelFlags.LEVEL_WARNING | LogLevelFlags.LEVEL_ERROR |
-                  LogLevelFlags.LEVEL_CRITICAL))
-              != 0)
-            {
-              GLib.on_error_stack_trace ("libtool --mode=execute gdb");
-            }
         }
     }
 }
