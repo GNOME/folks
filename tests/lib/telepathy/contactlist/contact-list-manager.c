@@ -360,6 +360,17 @@ contact_list_set_contact_groups_async (TpBaseContactList *base,
   g_ptr_array_unref (new_groups);
 }
 
+static gboolean
+contact_list_unimplemented_finish (TpBaseContactList *base,
+    GAsyncResult *result,
+    GError **error)
+{
+  g_return_val_if_fail (base, FALSE);
+  g_return_val_if_fail (g_task_is_valid (result, base), FALSE);
+
+  return g_task_propagate_boolean (G_TASK (result), error);
+}
+
 static void
 contact_list_set_group_members_async (TpBaseContactList *base,
     const gchar *normalized_group,
@@ -367,12 +378,9 @@ contact_list_set_group_members_async (TpBaseContactList *base,
     GAsyncReadyCallback callback,
     gpointer user_data)
 {
-  GSimpleAsyncResult *simple;
-
-  simple = g_simple_async_result_new_error ((GObject *) base, callback,
-      user_data, TP_ERROR, TP_ERROR_NOT_IMPLEMENTED, "Not implemented");
-  g_simple_async_result_complete_in_idle (simple);
-  g_object_unref (simple);
+  g_task_report_new_error (base, callback, user_data,
+      contact_list_set_group_members_async,
+      TP_ERROR, TP_ERROR_NOT_IMPLEMENTED, "Not Implemented");
 }
 
 static void
@@ -382,12 +390,9 @@ contact_list_add_to_group_async (TpBaseContactList *base,
     GAsyncReadyCallback callback,
     gpointer user_data)
 {
-  GSimpleAsyncResult *simple;
-
-  simple = g_simple_async_result_new_error ((GObject *) base, callback,
-      user_data, TP_ERROR, TP_ERROR_NOT_IMPLEMENTED, "Not implemented");
-  g_simple_async_result_complete_in_idle (simple);
-  g_object_unref (simple);
+  g_task_report_new_error (base, callback, user_data,
+      contact_list_add_to_group_async,
+      TP_ERROR, TP_ERROR_NOT_IMPLEMENTED, "Not Implemented");
 }
 
 static void
@@ -397,12 +402,9 @@ contact_list_remove_from_group_async (TpBaseContactList *base,
     GAsyncReadyCallback callback,
     gpointer user_data)
 {
-  GSimpleAsyncResult *simple;
-
-  simple = g_simple_async_result_new_error ((GObject *) base, callback,
-      user_data, TP_ERROR, TP_ERROR_NOT_IMPLEMENTED, "Not implemented");
-  g_simple_async_result_complete_in_idle (simple);
-  g_object_unref (simple);
+  g_task_report_new_error (base, callback, user_data,
+      contact_list_remove_from_group_async,
+      TP_ERROR, TP_ERROR_NOT_IMPLEMENTED, "Not Implemented");
 }
 
 static void
@@ -411,12 +413,9 @@ contact_list_remove_group_async (TpBaseContactList *base,
     GAsyncReadyCallback callback,
     gpointer user_data)
 {
-  GSimpleAsyncResult *simple;
-
-  simple = g_simple_async_result_new_error ((GObject *) base, callback,
-      user_data, TP_ERROR, TP_ERROR_NOT_IMPLEMENTED, "Not implemented");
-  g_simple_async_result_complete_in_idle (simple);
-  g_object_unref (simple);
+  g_task_report_new_error (base, callback, user_data,
+      contact_list_remove_group_async,
+      TP_ERROR, TP_ERROR_NOT_IMPLEMENTED, "Not Implemented");
 }
 
 static void
@@ -569,10 +568,15 @@ mutable_contact_groups_iface_init (
     TpMutableContactGroupListInterface *iface)
 {
   iface->set_contact_groups_async = contact_list_set_contact_groups_async;
+
   iface->set_group_members_async = contact_list_set_group_members_async;
+  iface->set_group_members_finish = contact_list_unimplemented_finish;
   iface->add_to_group_async = contact_list_add_to_group_async;
+  iface->add_to_group_finish = contact_list_unimplemented_finish;
   iface->remove_from_group_async = contact_list_remove_from_group_async;
+  iface->remove_from_group_finish = contact_list_unimplemented_finish;
   iface->remove_group_async = contact_list_remove_group_async;
+  iface->remove_group_finish = contact_list_unimplemented_finish;
 }
 
 static void
