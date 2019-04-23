@@ -1,5 +1,5 @@
 project('folks', [ 'vala', 'c' ],
-  version: '0.11.5.0',
+  version: '0.12.0',
   license: 'LGPL2.1+',
   meson_version: '>= 0.49',
 )
@@ -21,18 +21,18 @@ folks_api_version = '0.6'
 # number: a given libfolks.so will only load modules which were compiled
 # against a core with the same major version as itself. This allows the API
 # which is exposed to the modules to be changed.
-folks_lib_version = '25.18.4'
+folks_lib_version = '25.19.4'
 
 # Each of the backend libraries (e.g. libfolks-eds.so; *not* the loadable
 # modules, eds.so) has its own version. These should be incremented when the
 # core folks_lib_version is incremented (as all the backend libraries are
 # binary-dependent on libfolks.so), but should also be incremented when
 # incompatible changes are made in the backend library APIs themselves.
-folks_eds_lib_version = '25.18.4'
-folks_libsocialweb_lib_version = '25.18.4'
-folks_telepathy_lib_version = '25.18.4'
-folks_tracker_lib_version = '25.18.4'
-folks_dummy_lib_version = '25.18.4'
+folks_eds_lib_version = '25.19.4'
+folks_libsocialweb_lib_version = '25.19.4'
+folks_telepathy_lib_version = '25.19.4'
+folks_tracker_lib_version = '25.19.4'
+folks_dummy_lib_version = '25.19.4'
 
 # The module version is used to set the shared object versions
 _version_split = folks_lib_version.split('.')
