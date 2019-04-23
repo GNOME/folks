@@ -40,7 +40,7 @@ public class BackendLoadingTests : TpfTest.MixedTestCase
 
       /* Use a temporary key file for the BackendStore */
       var kf_path = Path.build_filename (Environment.get_tmp_dir (),
-          this.STORE_FILE_PATH, null);
+          STORE_FILE_PATH, null);
 
       FileUtils.remove (kf_path);
 
@@ -70,7 +70,7 @@ public class BackendLoadingTests : TpfTest.MixedTestCase
   public override void tear_down ()
     {
       FileUtils.remove (Path.build_filename (Environment.get_tmp_dir (),
-          this.STORE_FILE_PATH, null));
+          STORE_FILE_PATH, null));
 
       base.tear_down ();
     }
