@@ -29,33 +29,10 @@
 G_BEGIN_DECLS
 
 #define TP_TESTS_TYPE_BACKEND (tp_tests_backend_get_type ())
-#define TP_TESTS_BACKEND(o) (G_TYPE_CHECK_INSTANCE_CAST ((o), \
-    TP_TESTS_TYPE_BACKEND, TpTestsBackend))
-#define TP_TESTS_BACKEND_CLASS(k) (G_TYPE_CHECK_CLASS_CAST((k), \
-    TP_TESTS_TYPE_BACKEND, TpTestsBackendClass))
-#define TP_TESTS_IS_BACKEND(o) (G_TYPE_CHECK_INSTANCE_TYPE ((o), \
-    TP_TESTS_TYPE_BACKEND))
-#define TP_TESTS_IS_BACKEND_CLASS(k) (G_TYPE_CHECK_CLASS_TYPE ((k), \
-    TP_TESTS_TYPE_BACKEND))
-#define TP_TESTS_BACKEND_GET_CLASS(o) (G_TYPE_INSTANCE_GET_CLASS ((o), \
-    TP_TESTS_TYPE_BACKEND, TpTestsBackendClass))
+G_DECLARE_FINAL_TYPE (TpTestsBackend, tp_tests_backend,
+    TP_TESTS, BACKEND,
+    GObject)
 
-typedef struct _TpTestsBackendPrivate TpTestsBackendPrivate;
-
-typedef struct
-{
-  /*< private >*/
-  GObject parent;
-  TpTestsBackendPrivate *priv;
-} TpTestsBackend;
-
-typedef struct
-{
-  /*< private > */
-  GObjectClass parent;
-} TpTestsBackendClass;
-
-GType tp_tests_backend_get_type (void) G_GNUC_CONST;
 
 TpTestsBackend *tp_tests_backend_new (void);
 
