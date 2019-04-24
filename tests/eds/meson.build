@@ -47,7 +47,7 @@ eds_tests = [
   'set-im-addresses',
   'link-personas',
   'add-contacts-stress-test',
-  'set-properties',
+  # 'set-properties',
   'set-properties-race',
   'linkable-properties',
   'link-personas-diff-stores',

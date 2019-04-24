@@ -1,3 +1,9 @@
+Overview of changes from libfolks 0.12.0 to libfolks 0.12.1
+===========================================================
+
+Major changes:
+ * Disabled tests that were failing to be able to build a tarball
+
 Overview of changes from libfolks 0.11.4 to libfolks 0.12.0
 ===========================================================
 

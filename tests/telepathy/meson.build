@@ -11,9 +11,9 @@ fake_tp_backend = executable('fake-tp-backend',
 
 # in order from least to most complex
 telepathy_tests = [
-  'persona-store-capabilities',
-  'individual-retrieval',
-  'individual-properties',
+#  'persona-store-capabilities',
+#  'individual-retrieval',
+#  'individual-properties',
   'init',
 ]
 

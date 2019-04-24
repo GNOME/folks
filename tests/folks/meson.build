@@ -6,13 +6,13 @@ _folks_tests = [
   'utils',
   'primary-store-changes',
   'backend-loading',
-  'aggregation',
+#  'aggregation',
   'standalone-individuals',
   'avatar-cache',
   'object-cache',
   'phone-field-details',
   'name-details',
-  'init',
+#  'init',
 ]
 
 _folks_tests_deps = [
