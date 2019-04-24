@@ -1,5 +1,5 @@
 project('folks', [ 'vala', 'c' ],
-  version: '0.12.1',
+  version: '0.12.2',
   license: 'LGPL2.1+',
   meson_version: '>= 0.49',
 )
