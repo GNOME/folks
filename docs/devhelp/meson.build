@@ -16,6 +16,6 @@ foreach doc_target : valadoc_targets
     ],
     depends: doc_target.get('library'),
     install: true,
-    install_dir: get_option('datadir') / 'devhelp' / 'references',
+    install_dir: get_option('datadir') / 'devhelp' / 'books',
   )
 endforeach
