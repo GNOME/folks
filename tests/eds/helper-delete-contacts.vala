@@ -41,7 +41,7 @@ public class Main
       SList<string> uids;
       book_client.get_contacts_uids_sync (
           "(contains \"x-evolution-any-field\" \"\")", out uids);
-      book_client.remove_contacts_sync (uids);
+      book_client.remove_contacts_sync (uids, E.BookOperationFlags.NONE);
     }
 
   private static string _uid = "";

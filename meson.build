@@ -65,7 +65,7 @@ inspect_tool_enabled = get_option('inspect_tool')
 # Dependencies
 #-------------------------------------------------
 min_glib_version = '2.44'
-min_eds_version = '3.13.90'
+min_eds_version = '3.33.2'
 
 valac = meson.get_compiler('vala')
 cc = meson.get_compiler('c')
