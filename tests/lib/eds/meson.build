@@ -7,6 +7,7 @@ libeds_test_deps = [
   common_test_lib_deps,
   libebook_dep,
   eds_backendlib_dep,
+  build_conf_dep,
 ]
 
 libeds_test = library('eds-test',

@@ -48,6 +48,12 @@ public class Folks.BuildConf
   [CCode (cname = "HAVE_EDS")]
   public static bool HAVE_EDS;
 
+  [CCode (cname = "EDS_SOURCES_SERVICE_NAME")]
+  public const string EDS_SOURCES_SERVICE_NAME;
+
+  [CCode (cname = "EDS_ADDRESS_BOOK_SERVICE_NAME")]
+  public const string EDS_ADDRESS_BOOK_SERVICE_NAME;
+
   [CCode (cname = "HAVE_OFONO")]
   public static bool HAVE_OFONO;
 
