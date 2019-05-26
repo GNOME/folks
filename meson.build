@@ -115,6 +115,10 @@ if eds_backend_enabled
   libebook_contacts_dep = dependency('libebook-contacts-1.2', version: '>=' + min_eds_version)
   libedataserver_dep = dependency('libedataserver-1.2', version: '>=' + min_eds_version)
   libxml_dep = dependency('libxml-2.0')
+
+  eds_dep = dependency('evolution-data-server-1.2', version: '>=' + min_eds_version)
+  eds_sources_service_name = eds_dep.get_pkgconfig_variable('sourcesdbusservicename')
+  eds_address_book_service_name = eds_dep.get_pkgconfig_variable('addressbookdbusservicename')
 endif
 
 if ofono_backend_enabled
@@ -160,6 +164,10 @@ conf.set10('HAVE_EDS', eds_backend_enabled)
 conf.set10('HAVE_OFONO', ofono_backend_enabled)
 conf.set10('HAVE_TELEPATHY', telepathy_backend_enabled)
 conf.set10('HAVE_TRACKER', tracker_backend_enabled)
+if eds_backend_enabled
+  conf.set_quoted('EDS_SOURCSE_SERVICE_NAME', eds_sources_service_name)
+  conf.set_quoted('EDS_ADDRESS_BOOK_SERVICE_NAME', eds_address_book_service_name)
+endif
 if tracker_backend_enabled
   conf.set_quoted('TRACKER_SPARQL_MAJOR', tracker_sparql_version)
 endif
