@@ -108,17 +108,6 @@ public class TpfTest.TestCase : Folks.TestCase
     }
 
   /**
-   * This test does use libdbus, via telepathy-glib.
-   */
-  public override bool uses_dbus_1
-    {
-      get
-        {
-          return true;
-        }
-    }
-
-  /**
    * Virtual method to create the keyfile backend. Currently called by
    * the constructor (once per process), but might move into set_up() later.
    *
@@ -228,6 +217,15 @@ public class TpfTest.TestCase : Folks.TestCase
       while (context.iteration (false));
 
       base.tear_down ();
+    }
+
+  internal extern static void _dbus_1_set_no_exit_on_disconnect ();
+
+  public override void final_tear_down ()
+    {
+      TestCase._dbus_1_set_no_exit_on_disconnect ();
+
+      base.final_tear_down ();
     }
 }
 

@@ -1,9 +1,11 @@
 telepathy_test_lib_sources = [
+  'test-case-helper.c',
   'test-case.vala',
 ]
 
 telepathy_test_lib_deps = [
   common_test_lib_deps,
+  dbus_glib_dep,
   telepathy_test_contactlist_dep,
   telepathy_backendlib_dep,
   libkeyfile_test_dep,

@@ -11,7 +11,6 @@ libfolks_test_sources = [
 
 libfolks_test_deps = [
   build_conf_dep,
-  dbus_glib_dep,
   libfolks_dep,
   folks_test_dbus,
   posix_dep,

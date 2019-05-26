@@ -276,21 +276,6 @@ public abstract class Folks.TestCase : Object
   public Folks.TestDBus? test_system_dbus = null;
 
   /**
-   * If true, libraries involved in this test use dbus-1 (or dbus-glib-1)
-   * so we need to turn off its exit-on-disconnect feature.
-   *
-   * FIXME: when our dependencies stop needing this, this whole feature
-   * can be removed (GNOME#696177).
-   */
-  public virtual bool uses_dbus_1
-    {
-      get
-        {
-          return false;
-        }
-    }
-
-  /**
    * Start the temporary D-Bus session.
    *
    * This is per-process, not per-test, for the reasons mentioned for
@@ -397,9 +382,6 @@ public abstract class Folks.TestCase : Object
   public virtual void final_tear_down ()
     {
       TestCase.in_final_tear_down = true;
-
-      if (this.uses_dbus_1)
-        TestCase._dbus_1_set_no_exit_on_disconnect ();
 
       /* FIXME: The EDS tests randomly fail due to race conditions in tearing
        * down the GTestDBus. So avoid that completely, because I’m sick of not
