@@ -70,7 +70,6 @@ min_eds_version = '3.13.90'
 valac = meson.get_compiler('vala')
 cc = meson.get_compiler('c')
 
-dbus_glib_dep = dependency('dbus-glib-1') # FIXME: get rid of this when our dependencies stop using dbus-1 (GNOME#696177)
 gee_dep = dependency('gee-0.8')
 gio_dep = dependency('gio-2.0')
 glib_dep = dependency('glib-2.0', version: '>=' + min_glib_version)
@@ -85,6 +84,7 @@ if docs_enabled
 endif
 
 if telepathy_backend_enabled
+  dbus_glib_dep = dependency('dbus-glib-1')  # FIXME: Drop this, see GNOME/folks#24
   telepathy_glib_dep = dependency('telepathy-glib', version: '>= 0.19.9')
 
   if zeitgeist_enabled
