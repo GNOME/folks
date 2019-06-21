@@ -219,7 +219,7 @@ subdir('tools')
 subdir('po')
 
 # Tests
-#subdir('tests')
+subdir('tests')
 
 if docs_enabled
   subdir('docs')
