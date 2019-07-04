@@ -27,8 +27,7 @@ using Gee;
 public class Folks.TestUtils
 {
   /* Implemented in C */
-  [CCode (cname = "haze_remove_directory",
-          cheader_filename = "haze-remove-directory.h")]
+  [CCode (cname = "haze_remove_directory")]
   public extern static bool remove_directory_recursively (string path);
 
   /**
