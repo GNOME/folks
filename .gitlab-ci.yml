@@ -1,4 +1,4 @@
-image: fedora:latest
+image: fedora:rawhide
 
 stages:
   - build
@@ -14,6 +14,7 @@ build-folks:
       gobject-introspection-devel libgee-devel libxml2-devel meson ninja-build
       python2 readline-devel redhat-rpm-config telepathy-glib-devel
       telepathy-glib-vala tracker-devel vala
+      dbus-daemon # FIXME: dbus-broker breaks the CI, see https://github.com/bus1/dbus-broker/issues/145
   script:
     - meson _build
     - ninja -C _build
