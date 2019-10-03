@@ -13,10 +13,17 @@ libfolks_internal_deps = [
   posix_dep,
 ]
 
+libfolks_internal_vala_flags = []
+
+if get_option('profiling')
+  libfolks_internal_vala_flags += '-DENABLE_PROFILING'
+endif
+
 libfolks_internal = static_library('folks-internal',
   libfolks_internal_sources,
   include_directories: include_directories('..'),
   dependencies: libfolks_internal_deps,
+  vala_args: libfolks_internal_vala_flags,
 )
 
 libfolks_internal_dep = declare_dependency(
