@@ -8,6 +8,8 @@ option('zeitgeist', type: 'boolean', value: false, description: 'build Zeitgeist
 # Tools
 option('import_tool', type: 'boolean', value: true, description: 'Enable building the meta-contact import tool')
 option('inspect_tool', type: 'boolean', value: true, description: 'Enable building the data inspection tool')
+# Profiling
+option('profiling', type: 'boolean', value: false, description: 'Enable profiling code')
 # Test options
 option('installed_tests', type: 'boolean', value: false, description: 'Install test programs')
 # Docs
