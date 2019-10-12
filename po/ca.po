@@ -155,7 +155,7 @@ msgstr "No s'ha pogut suprimir el contacte «%s»: %s"
 #: ../backends/eds/lib/edsf-persona-store.vala:964
 #, c-format
 msgid "Address book ‘%s’ is offline."
-msgstr "La llibreta d'adreces «%s» no està en línia."
+msgstr "La llibreta d'adreces «%s» no està en línia."
 
 #. Translators: the first parameter is an address
 #. * book URI and the second is an error message.
@@ -756,7 +756,7 @@ msgstr "Es desconeix l'estat"
 
 #: ../folks/presence-details.vala:173
 msgid "Offline"
-msgstr "Fora de línia"
+msgstr "Fora de línia"
 
 #: ../folks/presence-details.vala:177
 msgid "Error"
