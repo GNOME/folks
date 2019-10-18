@@ -45,6 +45,7 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
       "alias",
       "im-addresses",
       "web-service-addresses",
+      "local-ids",
       "anti-links",
       null /* FIXME: https://bugzilla.gnome.org/show_bug.cgi?id=682698 */
     };
@@ -386,6 +387,13 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
           ? (MultiMap<string, WebServiceFieldDetails>) val2.get_object ()
           : null;
 
+      unowned Value? val3 = details.lookup
+          (Folks.PersonaStore.detail_key (PersonaDetail.LOCAL_IDS));
+      Set<string> local_ids
+        = val3 != null
+        ? (Set<string>) val3.get_object ()
+        : null;
+
       debug ("Adding Persona from details.");
 
       /* Generate a new random number for the persona's ID, so as to try and
@@ -407,6 +415,10 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
 
       try
         {
+          if (local_ids != null)
+            {
+              yield persona.change_local_ids (local_ids);
+            }
           if (im_addresses != null)
             {
               yield persona.change_im_addresses (im_addresses);

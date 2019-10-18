@@ -32,6 +32,7 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
     AliasDetails,
     AntiLinkable,
     ImDetails,
+    LocalIdDetails,
     WebServiceDetails
 {
   private HashMultiMap<string, ImFieldDetails> _im_addresses;
@@ -41,6 +42,7 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
     {
       "im-addresses",
       "web-service-addresses",
+      "local-ids",
       null /* FIXME: https://bugzilla.gnome.org/show_bug.cgi?id=682698 */
     };
   private const string[] _writeable_properties =
@@ -303,6 +305,59 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
       this.notify_property ("anti-links");
     }
 
+  private SmallSet<string> _local_ids;
+  private Set<string> _local_ids_ro;
+
+  /**
+   * {@inheritDoc}
+   *
+   * @since 0.14.0
+   */
+
+  [CCode (notify = false)]
+  public Set<string> local_ids
+    {
+      get
+        {
+          if (this._local_ids.contains (this.iid) == false)
+            {
+              this._local_ids.add (this.iid);
+            }
+          return this._local_ids_ro;
+        }
+      set { this.change_local_ids.begin (value); }
+    }
+
+  /**
+   * {@inheritDoc}
+   *
+   * @since 0.14.0
+   */
+  public async void change_local_ids (Set<string> local_ids)
+      throws PropertyError
+    {
+      if (Folks.Internal.equal_sets<string> (local_ids, this._local_ids))
+        {
+          return;
+        }
+
+      unowned KeyFile key_file = ((Kf.PersonaStore) this.store).get_key_file ();
+
+      /* Skip the persona's UID; don't allow reflexive anti-links. */
+      //anti_links.remove (this.uid);
+
+      key_file.set_string_list (this.display_id,
+          "__local-ids", local_ids.to_array ());
+
+      /* Get the PersonaStore to save the key file */
+      yield ((Kf.PersonaStore) this.store).save_key_file ();
+
+      /* Update the stored local_ids. */
+      this._local_ids.clear ();
+      this._local_ids.add_all (local_ids);
+      this.notify_property ("local-ids");
+    }
+
   /**
    * Create a new persona.
    *
@@ -335,6 +390,8 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
           AbstractFieldDetails<string>.equal_static);
       this._anti_links = new SmallSet<string> ();
       this._anti_links_ro = this._anti_links.read_only_view;
+      this._local_ids = new SmallSet<string> ();
+      this._local_ids_ro = this._local_ids.read_only_view;
 
       /* Load the IM addresses from the key file */
       unowned KeyFile key_file = ((Kf.PersonaStore) this.store).get_key_file ();
@@ -376,6 +433,25 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
                       continue;
                     }
                 }
+              /* Local-ids. */
+              if (key == "__local_ids")
+                {
+                  var local_ids_array =
+                      key_file.get_string_list (this.display_id, key);
+
+                  if (local_ids_array != null)
+                    {
+                      foreach (var local_id in local_ids_array)
+                        {
+                          this.local_ids.add (local_id);
+                        }
+
+                      debug ("    Loaded %u local_ids.",
+                          local_ids_array.length);
+                      continue;
+                    }
+                }
+
 
               /* Web service addresses */
               var decomposed_key = key.split(".", 2);
@@ -446,6 +522,14 @@ public class Folks.Backends.Kf.Persona : Folks.Persona,
 
           while (iter.next ())
             callback (iter.get_key () + ":" + iter.get_value ().value);
+        }
+      else if (prop_name == "local-ids")
+        {
+          if (this._local_ids != null)
+          foreach (var id in this._local_ids)
+            {
+              callback (id);
+            }
         }
       else if (prop_name == "web-service-addresses")
         {
