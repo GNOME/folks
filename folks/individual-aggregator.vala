@@ -2133,17 +2133,13 @@ public class Folks.IndividualAggregator : Object
   public async void link_personas (Set<Persona> personas)
       throws IndividualAggregatorError
     {
-      if (this._primary_store == null)
-        {
-          throw new IndividualAggregatorError.NO_PRIMARY_STORE (
-              _("Can’t link personas with no primary store.") + "\n" +
-              _("Persona store ‘%s:%s’ is configured as primary, but could not be found or failed to load.") + "\n" +
-              _("Check the relevant service is running, or change the default store in that service or using the ‘%s’ GSettings key."),
-              this._configured_primary_store_type_id,
-              this._configured_primary_store_id,
-              "%s %s".printf (IndividualAggregator._FOLKS_GSETTINGS_SCHEMA,
-                  IndividualAggregator._PRIMARY_STORE_CONFIG_KEY));
-        }
+      var key_file_store = this._stores.get ("key-file:relationships.ini");
+
+      if (key_file_store == null) {
+        warning ("Can't link Personas: No keyfile");
+        return;
+      }
+
 
       /* Don't bother linking if it's just one Persona */
       if (personas.size <= 1)
@@ -2175,15 +2171,9 @@ public class Folks.IndividualAggregator : Object
             }
         }
 
-      /* Create a new persona in the primary store which links together the
-       * given personas */
-      assert (((!) this._primary_store).type_id ==
-          this._configured_primary_store_type_id);
-
       var details = this._build_linking_details (personas);
 
-      yield this.add_persona_from_details (null,
-          (!) this._primary_store, details);
+      yield this.add_persona_from_details (null, key_file_store, details);
     }
 
   private HashTable<string, Value?> _build_linking_details (
@@ -2292,6 +2282,8 @@ public class Folks.IndividualAggregator : Object
    */
   public async void unlink_individual (Individual individual) throws GLib.Error
     {
+      var key_file_store = this._stores.get ("key-file:relationships.ini");
+
       if (this._linking_enabled == false)
         {
           debug ("Can't unlink Individual '%s': linking disabled.",
@@ -2315,37 +2307,68 @@ public class Folks.IndividualAggregator : Object
       /* Copy it, since we modify it */
       var individual_personas = SmallSet<Persona>.copy (individual.personas);
 
+      var key_file_personas = new SmallSet<Persona> ();
+
+      /* Remove personas form the key-file store since they arn't need anymore */
+      foreach (var p in individual_personas) {
+        if (p.store.type_id == "key-file") {
+          debug ("Remove linking persona from key-file store");
+          key_file_personas.add (p);
+          individual_personas.remove (p);
+
+          /* FIXME: we also need to remove the key-file persona from
+           * all anti-links of any other possible persona since the key-file persona doesn't exist anymore
+           * This should properly be done by remove persona
+           */
+          yield p.store.remove_persona (p);
+        }
+      }
+
+      foreach (var p in individual_personas) {
+        var al = p as AntiLinkable;
+        assert (al != null);
+        yield al.remove_anti_links (key_file_personas);
+      }
+
       debug ("    Inserting anti-links:");
       foreach (var pers in individual_personas)
-        {
-          try
-            {
-              var personas = new SmallSet<Persona> ();
-              personas.add (pers);
-              debug ("        Anti-linking persona '%s' (%p)", pers.uid, pers);
+      {
+        debug ("        Anti-linking persona '%s' (%p)", pers.uid, pers);
 
-              var writeable_persona =
-                  yield this._ensure_personas_property_writeable (personas,
-                      "anti-links");
-              debug ("        Writeable persona '%s' (%p)",
-                  writeable_persona.uid, writeable_persona);
+        Persona writeable_persona;
+        if (!_is_anti_link_property_writeable (pers)) {
+          debug ("Anti link property isn't writeable, create a persona in the key-file store");
 
-              /* Make sure not to anti-link the new persona to pers. */
-              var anti_link_personas = SmallSet<Persona>.copy (individual_personas);
-              anti_link_personas.remove (pers);
+          if (key_file_store != null) {
+            var personas = new SmallSet<Persona> ();
+            personas.add (pers);
 
-              var al = writeable_persona as AntiLinkable;
-              assert (al != null);
-              yield ((!) al).add_anti_links (anti_link_personas);
-              debug ("");
-            }
-          catch (IndividualAggregatorError e1)
-            {
-              debug ("    Failed to ensure anti-links property is writeable " +
-                  "(continuing anyway): %s", e1.message);
-            }
+            var details = this._build_linking_details (personas);
+            writeable_persona = yield this.add_persona_from_details (null, key_file_store, details);
+          } else {
+            debug ("Key file store doesn't exist, can create a new writeable persona");
+            continue;
+          }
+        } else {
+          writeable_persona = pers;
         }
+
+        /* Make sure not to anti-link the new persona to pers. */
+        var anti_link_personas = SmallSet<Persona>.copy (individual_personas);
+        anti_link_personas.remove (pers);
+
+        var al = writeable_persona as AntiLinkable;
+        assert (al != null);
+        yield ((!) al).add_anti_links (anti_link_personas);
+        debug ("");
+      }
     }
+
+  private bool _is_anti_link_property_writeable (Persona persona)
+    {
+      return ("anti-links" in persona.writeable_properties);
+    }
+
 
   /**
    * Ensure that the given property is writeable for the given
