@@ -292,8 +292,8 @@ public class Edsf.PersonaStore : Folks.PersonaStore
       replacement = "Edsf.PersonaStore.with_source_registry")]
   public PersonaStore (E.Source s)
     {
-      string eds_uid = s.get_uid ();
-      string eds_name = s.get_display_name ();
+      unowned string eds_uid = s.get_uid ();
+      unowned string eds_name = s.get_display_name ();
       Object (id: eds_uid,
               display_name: eds_name,
               source: s);
@@ -437,7 +437,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
           if (k == Folks.PersonaStore.detail_key (
                 PersonaDetail.FULL_NAME))
             {
-              string? full_name = v.get_string ();
+              unowned string? full_name = v.get_string ();
               if (full_name != null && (!) full_name == "")
                 {
                   full_name = null;
@@ -448,7 +448,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
           else if (k == Folks.PersonaStore.detail_key (
                 PersonaDetail.NICKNAME))
             {
-              string? nickname = v.get_string ();
+              unowned string? nickname = v.get_string ();
               if (nickname != null && (!) nickname == "")
                 {
                   nickname = null;
@@ -459,7 +459,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
           else if (k == Folks.PersonaStore.detail_key (
                 PersonaDetail.EMAIL_ADDRESSES))
             {
-              Set<EmailFieldDetails> email_addresses =
+              unowned Set<EmailFieldDetails> email_addresses =
                 (Set<EmailFieldDetails>) v.get_object ();
               this._set_contact_attributes_string (contact,
                   email_addresses,
@@ -469,7 +469,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
             {
               try
                 {
-                  var avatar = (LoadableIcon?) v.get_object ();
+                  unowned LoadableIcon? avatar = (LoadableIcon?) v.get_object ();
                   yield this._set_contact_avatar (contact, avatar);
                 }
               catch (PropertyError e1)
@@ -481,13 +481,13 @@ public class Edsf.PersonaStore : Folks.PersonaStore
           else if (k == Folks.PersonaStore.detail_key (
                 PersonaDetail.IM_ADDRESSES))
             {
-              var im_fds = (MultiMap<string, ImFieldDetails>) v.get_object ();
+              unowned MultiMap<string, ImFieldDetails> im_fds = (MultiMap<string, ImFieldDetails>) v.get_object ();
               this._set_contact_im_fds (contact, im_fds);
             }
           else if (k == Folks.PersonaStore.detail_key (
                 PersonaDetail.PHONE_NUMBERS))
             {
-              Set<PhoneFieldDetails> phone_numbers =
+              unowned Set<PhoneFieldDetails> phone_numbers =
                 (Set<PhoneFieldDetails>) v.get_object ();
               this._set_contact_attributes_string (contact,
                   phone_numbers, "TEL",
@@ -496,30 +496,30 @@ public class Edsf.PersonaStore : Folks.PersonaStore
           else if (k == Folks.PersonaStore.detail_key (
                 PersonaDetail.POSTAL_ADDRESSES))
             {
-              Set<PostalAddressFieldDetails> postal_fds =
+              unowned Set<PostalAddressFieldDetails> postal_fds =
                 (Set<PostalAddressFieldDetails>) v.get_object ();
               this._set_contact_postal_addresses (contact, postal_fds);
             }
           else if (k == Folks.PersonaStore.detail_key (
                 PersonaDetail.STRUCTURED_NAME))
             {
-              StructuredName sname = (StructuredName) v.get_object ();
+              unowned StructuredName sname = (StructuredName) v.get_object ();
               this._set_contact_name (contact, sname);
             }
           else if (k == Folks.PersonaStore.detail_key (PersonaDetail.LOCAL_IDS))
             {
-              Set<string> local_ids = (Set<string>) v.get_object ();
+              unowned Set<string> local_ids = (Set<string>) v.get_object ();
               this._set_contact_local_ids (contact, local_ids);
             }
           else if (k == Folks.PersonaStore.detail_key (PersonaDetail.LOCATION))
             {
-              var location = (Location?) v.get_object ();
+              unowned Location? location = (Location?) v.get_object ();
               this._set_contact_location (contact, location);
             }
           else if (k == Folks.PersonaStore.detail_key
               (PersonaDetail.WEB_SERVICE_ADDRESSES))
             {
-              HashMultiMap<string, WebServiceFieldDetails>
+              unowned HashMultiMap<string, WebServiceFieldDetails>
                 web_service_addresses =
                 (HashMultiMap<string, WebServiceFieldDetails>) v.get_object ();
               this._set_contact_web_service_addresses (contact,
@@ -527,7 +527,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
             }
           else if (k == Folks.PersonaStore.detail_key (PersonaDetail.NOTES))
             {
-              var notes = (Gee.Set<NoteFieldDetails>) v.get_object ();
+              unowned Gee.Set<NoteFieldDetails> notes = (Gee.Set<NoteFieldDetails>) v.get_object ();
               this._set_contact_notes (contact, notes);
             }
           else if (k == Folks.PersonaStore.detail_key (PersonaDetail.GENDER))
@@ -542,7 +542,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
             }
           else if (k == Folks.PersonaStore.detail_key (PersonaDetail.BIRTHDAY))
             {
-              var birthday = (DateTime?) v.get_boxed ();
+              unowned DateTime? birthday = (DateTime?) v.get_boxed ();
               this._set_contact_birthday (contact, birthday);
             }
           else if (k == Folks.PersonaStore.detail_key (PersonaDetail.ROLES))
@@ -862,7 +862,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
                * here because it fails to null-terminate the array. Sigh. */
               this._always_writeable_properties = new string[prop_set.size];
               uint i = 0;
-              foreach (var final_prop in prop_set)
+              foreach (unowned string? final_prop in prop_set)
                 {
                   this._always_writeable_properties[i++] = final_prop;
                 }
@@ -1353,7 +1353,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
               persona.contact.to_string (E.VCardFormat.@30));
         }
 
-      var contact = persona.contact;
+      unowned E.Contact contact = persona.contact;
 
       ulong signal_id = 0;
       uint timeout_id = 0;
@@ -1362,7 +1362,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
         {
           var received_notification = false;
           var has_yielded = false;
-          var signal_name = property_name ?? "contact";
+          weak string signal_name = property_name ?? "contact";
 
           signal_id = persona.notify[signal_name].connect ((obj, pspec) =>
             {
@@ -1496,7 +1496,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
             {
               param.add_value (ws_fd.value);
             }
-          attr_n.add_param (param);
+          attr_n.add_param ((owned) param);
         }
       contact.add_attribute ((owned) attr_n);
     }
@@ -1519,7 +1519,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
 
   private void _set_contact_urls (E.Contact contact, Set<UrlFieldDetails> urls)
     {
-      var vcard = (E.VCard) contact;
+      unowned E.VCard vcard = (E.VCard) contact;
       vcard.remove_attributes (null, "X-URIS");
       contact.set (ContactField.HOMEPAGE_URL, null);
       contact.set (ContactField.VIDEO_URL, null);
@@ -1570,7 +1570,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
                   break;
                 }
 
-              attr.add_param (param);
+              attr.add_param ((owned) param);
             }
 
           if (set_attr_already == true)
@@ -1738,7 +1738,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
   internal async void _change_extended_field (Edsf.Persona persona,
       string name, ExtendedFieldDetails details) throws PropertyError
     {
-      var vcard = (E.VCard) persona.contact;
+      unowned E.VCard vcard = (E.VCard) persona.contact;
       unowned E.VCardAttribute? prev_attr = vcard.get_attribute (name);
 
       if (prev_attr != null)
@@ -1831,7 +1831,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
                 {
                   param.add_value (param_val);
                 }
-              attr.add_param (param);
+              attr.add_param ((owned) param);
             }
           attributes.prepend ((owned) attr);
         }
@@ -1857,7 +1857,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
               _("Full name is not writeable on this contact."));
         }
 
-      string? _full_name = full_name;
+      unowned string? _full_name = full_name;
       if (full_name == "")
         {
           _full_name = null;
@@ -1953,7 +1953,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
 
       if (_bday != null)
         {
-          var bday = (!) _bday;
+          unowned DateTime bday = (!) _bday;
           var bdaylocal = bday.to_local();
           E.ContactDate contact_bday;
 
@@ -1962,7 +1962,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
           contact_bday.month = (uint) bdaylocal.get_month ();
           contact_bday.day = (uint) bdaylocal.get_day_of_month ();
 
-          _contact_bday = contact_bday;
+          _contact_bday = (owned) contact_bday;
         }
 
       contact.set (E.Contact.field_id ("birth_date"), _contact_bday);
@@ -1987,16 +1987,16 @@ public class Edsf.PersonaStore : Folks.PersonaStore
   private void _set_contact_roles (E.Contact contact,
       Set<RoleFieldDetails> roles)
     {
-      var vcard = (E.VCard) contact;
+      unowned E.VCard vcard = (E.VCard) contact;
       vcard.remove_attributes (null, "X-ROLES");
 
-      string? org = null;
-      string? org_unit = null;
-      string? office = null;
-      string? title = null;
-      string? role = null;
-      string? manager = null;
-      string? assistant = null;
+      weak string? org = null;
+      weak string? org_unit = null;
+      weak string? office = null;
+      weak string? title = null;
+      weak string? role = null;
+      weak string? manager = null;
+      weak string? assistant = null;
 
       /* Because e-d-s supports only fields for one Role we save the
        * first in the Set to the fields available and the rest goes
@@ -2038,11 +2038,11 @@ public class Edsf.PersonaStore : Folks.PersonaStore
 
               var param1 = new E.VCardAttributeParam ("organisation_name");
               param1.add_value (role_fd.value.organisation_name);
-              attr.add_param (param1);
+              attr.add_param ((owned) param1);
 
               var param2 = new E.VCardAttributeParam ("title");
               param2.add_value (role_fd.value.title);
-              attr.add_param (param2);
+              attr.add_param ((owned) param2);
 
               foreach (var param_name in role_fd.parameters.get_keys ())
                 {
@@ -2051,7 +2051,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
                     {
                       param3.add_value (param_val);
                     }
-                  attr.add_param (param3);
+                  attr.add_param ((owned) param3);
                 }
 
               contact.add_attribute ((owned) attr);
@@ -2223,8 +2223,8 @@ public class Edsf.PersonaStore : Folks.PersonaStore
 
   private void _set_contact_system_groups (E.Contact contact, Set<string> system_groups)
     {
-      var group_ids_str = "X-GOOGLE-SYSTEM-GROUP-IDS";
-      var vcard = (E.VCard) contact;
+      const string group_ids_str = "X-GOOGLE-SYSTEM-GROUP-IDS";
+      unowned E.VCard vcard = (E.VCard) contact;
       unowned E.VCardAttribute? prev_attr = vcard.get_attribute (group_ids_str);
 
       if (prev_attr != null)
@@ -2303,7 +2303,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
   private void _set_contact_anti_links (E.Contact contact,
       Set<string> anti_links)
     {
-      var vcard = (E.VCard) contact;
+      unowned E.VCard vcard = (E.VCard) contact;
       vcard.remove_attributes (null, PersonaStore.anti_links_attribute_name);
 
       var persona_uid =
@@ -2497,7 +2497,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
               continue;
             }
 
-          string iid = (!) _iid;
+          unowned string iid = (!) _iid;
           var old_persona = this._personas.get (iid);
           var new_persona = new Persona (this, c);
 
@@ -2548,7 +2548,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
               continue;
             }
 
-          string iid = (!) _iid;
+          unowned string iid = (!) _iid;
           Persona? persona = this._personas.get (iid);
           if (persona != null)
             {

@@ -140,7 +140,7 @@ public class Folks.IndividualAggregator : Object
    * key: iid or value of some linkable property (email/IM address etc.)
    * value: owned non-empty set of owned Individual refs
    */
-  private HashTable<string, GenericArray<Individual>> _link_map;
+  private HashTable<unowned string, GenericArray<Individual>> _link_map;
 
   private bool _linking_enabled = true;
   private bool _is_prepared = false;
@@ -453,7 +453,7 @@ public class Folks.IndividualAggregator : Object
       this._stores = new HashMap<string, PersonaStore> ();
       this._individuals = new HashMap<string, Individual> ();
       this._individuals_ro = this._individuals.read_only_view;
-      this._link_map = new HashTable<string, GenericArray<Individual>> (
+      this._link_map = new HashTable<unowned string, GenericArray<Individual>> (
           str_hash, str_equal);
 
       this._backends = new SmallSet<Backend> ();
@@ -596,7 +596,7 @@ public class Folks.IndividualAggregator : Object
 
       foreach (var individual in this.individuals.values)
         {
-          string? trust_level = null;
+          unowned string? trust_level = null;
 
           switch (individual.trust_level)
             {
@@ -643,7 +643,7 @@ public class Folks.IndividualAggregator : Object
           this._link_map.size ());
       debug.indent ();
 
-      var iter = HashTableIter<string, GenericArray<Individual>> (
+      var iter = HashTableIter<unowned string, GenericArray<Individual>> (
           this._link_map);
       unowned string link_key;
       unowned GenericArray<Individual> individuals;
@@ -1295,7 +1295,7 @@ public class Folks.IndividualAggregator : Object
                         {
                           for (uint i = 0; i < ((!) candidates).length; i++)
                             {
-                              var candidate_ind = ((!) candidates)[i];
+                              unowned Individual candidate_ind = ((!) candidates)[i];
 
                               if (candidate_ind.trust_level !=
                                       TrustLevel.NONE &&
@@ -1425,7 +1425,7 @@ public class Folks.IndividualAggregator : Object
        * changed, so that persona might require re-linking. We do this in a
        * simplistic and hacky way (which should work) by simply treating the
        * persona as if it's been removed and re-added. */
-      var persona = (!) (obj as Persona);
+      unowned Persona persona = (!) (obj as Persona);
 
       debug ("Linkable property '%s' changed for persona '%s' " +
           "(is user: %s, IID: %s).", pspec.name, persona.uid,
@@ -1458,7 +1458,7 @@ public class Folks.IndividualAggregator : Object
 
   private void _connect_to_persona (Persona persona)
     {
-      foreach (var prop_name in persona.linkable_properties)
+      foreach (unowned string? prop_name in persona.linkable_properties)
         {
           /* FIXME: https://bugzilla.gnome.org/show_bug.cgi?id=682698 */
           if (prop_name == null)
@@ -1468,7 +1468,7 @@ public class Folks.IndividualAggregator : Object
               this._persona_linkable_property_changed_cb);
         }
 
-      var al = persona as AntiLinkable;
+      unowned AntiLinkable? al = persona as AntiLinkable;
       if (al != null)
         {
           al.notify["anti-links"].connect (this._persona_anti_links_changed_cb);
@@ -1477,14 +1477,14 @@ public class Folks.IndividualAggregator : Object
 
   private void _disconnect_from_persona (Persona persona)
     {
-      var al = persona as AntiLinkable;
+      unowned AntiLinkable? al = persona as AntiLinkable;
       if (al != null)
         {
           al.notify["anti-links"].disconnect (
               this._persona_anti_links_changed_cb);
         }
 
-      foreach (var prop_name in persona.linkable_properties)
+      foreach (unowned string? prop_name in persona.linkable_properties)
         {
           /* FIXME: https://bugzilla.gnome.org/show_bug.cgi?id=682698 */
           if (prop_name == null)
@@ -1580,7 +1580,7 @@ public class Folks.IndividualAggregator : Object
       debug ("Removing Individual '%s' from the link map.", individual.id);
 
       var iter =
-          HashTableIter<string, GenericArray<Individual>> (this._link_map);
+          HashTableIter<unowned string, GenericArray<Individual>> (this._link_map);
       unowned string link_key;
       unowned GenericArray<Individual> inds;
 
@@ -1791,7 +1791,7 @@ public class Folks.IndividualAggregator : Object
       if (this._debug.debug_output_enabled == true)
         {
           var link_map_iter =
-              HashTableIter<string, GenericArray<Individual>> (this._link_map);
+              HashTableIter<unowned string, GenericArray<Individual>> (this._link_map);
           unowned string link_key;
           unowned GenericArray<Individual> inds;
 
@@ -1799,7 +1799,7 @@ public class Folks.IndividualAggregator : Object
             {
               for (uint i = 0; i < inds.length; i++)
                 {
-                  var individual = inds[i];
+                  unowned Individual individual = inds[i];
                   assert (individual != null);
 
                   if (this._individuals.get (individual.id) != individual)
@@ -1832,7 +1832,7 @@ public class Folks.IndividualAggregator : Object
   private void _is_primary_store_changed_cb (Object object, ParamSpec pspec)
     {
       /* Ensure that we only have one primary PersonaStore */
-      var store = (PersonaStore) object;
+      unowned PersonaStore store = (PersonaStore) object;
       assert ((store.is_primary_store == true &&
               store == this._primary_store) ||
           (store.is_primary_store == false &&
@@ -1919,7 +1919,7 @@ public class Folks.IndividualAggregator : Object
   private void _persona_store_is_user_set_default_changed_cb (Object obj,
       ParamSpec pspec)
     {
-      var store = (PersonaStore) obj;
+      unowned PersonaStore store = (PersonaStore) obj;
 
       debug ("PersonaStore.is-user-set-default changed for store %p " +
           "(type ID: %s, ID: %s)", store, store.type_id, store.id);
@@ -2156,7 +2156,7 @@ public class Folks.IndividualAggregator : Object
        * anti-link map to ensure that linking the personas actually succeeds. */
       foreach (var p in personas)
         {
-          var al = p as AntiLinkable;
+          unowned AntiLinkable? al = p as AntiLinkable;
           if (al != null)
             {
               try
@@ -2189,7 +2189,7 @@ public class Folks.IndividualAggregator : Object
             AbstractFieldDetails<string>.equal_static);
 
       /* List of local_ids */
-      var local_ids = new SmallSet<string> ();
+      var local_ids = new SmallSet<unowned string> ();
 
       foreach (var persona in personas)
         {

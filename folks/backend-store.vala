@@ -140,8 +140,8 @@ public class Folks.BackendStore : Object {
   construct
     {
       /* Treat this as a library init function */
-      var debug_no_colour = Environment.get_variable ("FOLKS_DEBUG_NO_COLOUR");
-      var debug_no_color = Environment.get_variable ("FOLKS_DEBUG_NO_COLOR");
+      unowned string? debug_no_colour = Environment.get_variable ("FOLKS_DEBUG_NO_COLOUR");
+      unowned string? debug_no_color = Environment.get_variable ("FOLKS_DEBUG_NO_COLOR");
       this._debug =
           Debug.dup_with_flags (Environment.get_variable ("G_MESSAGES_DEBUG"),
               (debug_no_colour == null || debug_no_colour == "0") &&
@@ -217,7 +217,7 @@ public class Folks.BackendStore : Object {
 
           foreach (var persona_store in backend.persona_stores.values)
             {
-              string? trust_level = null;
+              unowned string? trust_level = null;
 
               switch (persona_store.trust_level)
                 {
@@ -757,7 +757,7 @@ public class Folks.BackendStore : Object {
         {
           return;
         }
-      var file_path = (!) _file_path;
+      unowned string file_path = (!) _file_path;
 
       if (this._modules.has_key (file_path))
         return;
@@ -848,7 +848,7 @@ public class Folks.BackendStore : Object {
        * Regression tests and benchmarks can use this to restrict themselves
        * to a small set of backends for which they have done the necessary
        * setup/configuration/sandboxing. */
-      var envvar = Environment.get_variable ("FOLKS_BACKENDS_ALLOWED");
+      unowned string? envvar = Environment.get_variable ("FOLKS_BACKENDS_ALLOWED");
 
       if (envvar != null)
         {

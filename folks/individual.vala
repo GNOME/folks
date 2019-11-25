@@ -178,7 +178,7 @@ public class Folks.Individual : Object,
 
       /* Try to write it to only the writeable Personas which have the
        * "avatar" property as writeable. */
-      foreach (var p in this._persona_set)
+      foreach (unowned Persona p in this._persona_set)
         {
           var _a = p as AvatarDetails;
           if (_a == null)
@@ -365,7 +365,7 @@ public class Folks.Individual : Object,
 
       /* Try to write it to only the writeable Personas which have "alias"
        * as a writeable property. */
-      foreach (var p in this._persona_set)
+      foreach (unowned Persona p in this._persona_set)
         {
           var _a = p as AliasDetails;
           if (_a == null)
@@ -474,7 +474,7 @@ public class Folks.Individual : Object,
 
       /* Try to write it to only the writeable Personas which have "nickname"
        * as a writeable property. */
-      foreach (var p in this._persona_set)
+      foreach (unowned Persona p in this._persona_set)
         {
           var _n = p as NameDetails;
           if (_n == null)
@@ -725,7 +725,7 @@ public class Folks.Individual : Object,
        * NOTE: We don't check whether the persona's store is writeable, as we
        * want is-favourite status to propagate to all stores, if possible. This
        * is one property which is harmless to propagate. */
-      foreach (var p in this._persona_set)
+      foreach (unowned Persona p in this._persona_set)
         {
           var _a = p as FavouriteDetails;
           if (_a == null)
@@ -803,7 +803,7 @@ public class Folks.Individual : Object,
 
       /* Try to write it to only the Personas which have "groups" as a
        * writeable property. */
-      foreach (var p in this._persona_set)
+      foreach (unowned Persona p in this._persona_set)
         {
           var _g = p as GroupDetails;
           if (_g == null)
@@ -996,7 +996,7 @@ public class Folks.Individual : Object,
 
       /* Try to get it from the writeable Personas which have "extended-info"
        * as a writeable property. */
-      foreach (var p in this._persona_set)
+      foreach (unowned Persona p in this._persona_set)
         {
           if ("extended-info" in p.writeable_properties)
             {
@@ -1027,7 +1027,7 @@ public class Folks.Individual : Object,
 
       /* Try to write it to only the writeable Personas which have "extended-info"
        * as a writeable property. */
-      foreach (var p in this._persona_set)
+      foreach (unowned Persona p in this._persona_set)
         {
           if ("extended-info" in p.writeable_properties)
             {
@@ -1077,7 +1077,7 @@ public class Folks.Individual : Object,
       PropertyError? persona_error = null;
 
       /* Try to remove it from all writeable Personas. */
-      foreach (var p in this._persona_set)
+      foreach (unowned Persona p in this._persona_set)
         {
           if ("extended-info" in p.writeable_properties)
             {
@@ -1239,7 +1239,7 @@ public class Folks.Individual : Object,
    */
   public async void change_group (string group, bool is_member)
     {
-      foreach (var p in this._persona_set)
+      foreach (unowned Persona p in this._persona_set)
         {
           if (p is GroupDetails)
             ((GroupDetails) p).change_group.begin (group, is_member);
@@ -1353,7 +1353,7 @@ public class Folks.Individual : Object,
 
   private void _persona_notify_cb (Object obj, ParamSpec ps)
     {
-      var persona = (Persona) obj;  /* will abort on failure */
+      unowned Persona persona = (Persona) obj;  /* will abort on failure */
 
       /* It should not be possible for two Individuals to be simultaneously
        * connected to the same Persona (as _connect_to_persona() will disconnect
@@ -1383,7 +1383,7 @@ public class Folks.Individual : Object,
           return;
         }
 
-      foreach (var notifier in Individual._notifiers)
+      foreach (unowned _Notifier notifier in Individual._notifiers)
         {
           if (ps.name == notifier.property)
             {
@@ -1619,7 +1619,7 @@ public class Folks.Individual : Object,
 
       Persona? candidate_p = null;
 
-      foreach (var p in this._persona_set)
+      foreach (unowned Persona p in this._persona_set)
         {
           /* We only care about personas implementing the given interface. */
           if (p.get_type ().is_a (interface_type))
@@ -1764,14 +1764,14 @@ public class Folks.Individual : Object,
       if (!created && !force_update)
          return;
 
-      var new_groups = new SmallSet<string> ();
+      var new_groups = new SmallSet<unowned string> ();
 
       /* FIXME: this should partition the personas by store (maybe we should
        * keep that mapping in general in this class), and execute
        * "groups-changed" on the store (with the set of personas), to allow the
        * back-end to optimize it (like Telepathy will for MembersChanged for the
        * groups channel list) */
-      foreach (var p in this._persona_set)
+      foreach (unowned Persona p in this._persona_set)
         {
           if (p is GroupDetails)
             {
@@ -1784,7 +1784,7 @@ public class Folks.Individual : Object,
             }
         }
 
-      foreach (var group in new_groups)
+      foreach (unowned string group in new_groups)
         {
           if (this._groups.add (group) && emit_notification)
             {
@@ -1793,8 +1793,8 @@ public class Folks.Individual : Object,
         }
 
       /* buffer the removals, so we don't remove while iterating */
-      var removes = new GLib.List<string> ();
-      foreach (var group in this._groups)
+      var removes = new GLib.List<unowned string> ();
+      foreach (unowned string group in this._groups)
         {
           if (!new_groups.contains (group))
             removes.prepend (group);
@@ -1802,7 +1802,7 @@ public class Folks.Individual : Object,
 
       removes.foreach ((l) =>
         {
-          unowned string group = (string) l;
+          unowned string group = l;
           this._groups.remove (group);
           if (emit_notification)
             {
@@ -1824,8 +1824,8 @@ public class Folks.Individual : Object,
           return PresenceDetails.typecmp (a_presence, b_presence);
         }, "presence", (p) =>
         {
-          var presence_message = ""; /* must not be null */
-          var presence_status = ""; /* must not be null */
+          unowned string presence_message = ""; /* must not be null */
+          unowned string presence_status = ""; /* must not be null */
           string[] client_types = {};
           var presence_type = Folks.PresenceType.UNSET;
 
@@ -1885,7 +1885,7 @@ public class Folks.Individual : Object,
         });
     }
 
-  private string _look_up_alias_for_display_name (Persona? p)
+  private unowned string _look_up_alias_for_display_name (Persona? p)
     {
       var a = p as AliasDetails;
       if (a != null && a.alias != null)
@@ -1918,7 +1918,7 @@ public class Folks.Individual : Object,
       return "";
     }
 
-  private string _look_up_email_address_for_display_name (Persona? p)
+  private unowned string _look_up_email_address_for_display_name (Persona? p)
     {
       var e = p as EmailDetails;
       if (e != null)
@@ -1935,7 +1935,7 @@ public class Folks.Individual : Object,
       return "";
     }
 
-  private string _look_up_phone_number_for_display_name (Persona? p)
+  private unowned string _look_up_phone_number_for_display_name (Persona? p)
     {
       var e = p as PhoneDetails;
       if (e != null)
@@ -1952,7 +1952,7 @@ public class Folks.Individual : Object,
       return "";
     }
 
-  private string _look_up_display_id_for_display_name (Persona? p)
+  private unowned string _look_up_display_id_for_display_name (Persona? p)
     {
       // Sometimes, the display_id will fall back to the IID.
       // The last condition makes sure we don't use that as a display name
@@ -1989,7 +1989,7 @@ public class Folks.Individual : Object,
 
       /* Find the primary persona first. The primary persona's values will be
        * preferred in every case where they're set. */
-      foreach (var p in this._persona_set)
+      foreach (unowned Persona p in this._persona_set)
         {
           if (p.store.is_primary_store)
             {
@@ -2001,7 +2001,7 @@ public class Folks.Individual : Object,
       /* See if any persona has an alias set. */
       new_display_name = this._look_up_alias_for_display_name (primary_persona);
 
-      foreach (var p in this._persona_set)
+      foreach (unowned Persona p in this._persona_set)
         {
           if (new_display_name != "")
             {
@@ -2017,7 +2017,7 @@ public class Folks.Individual : Object,
           new_display_name =
               this._look_up_name_details_for_display_name (primary_persona);
 
-          foreach (var p in this._persona_set)
+          foreach (unowned Persona p in this._persona_set)
             {
               if (new_display_name != "")
                 {
@@ -2035,7 +2035,7 @@ public class Folks.Individual : Object,
           new_display_name =
               this._look_up_email_address_for_display_name (primary_persona);
 
-          foreach (var p in this._persona_set)
+          foreach (unowned Persona p in this._persona_set)
             {
               if (new_display_name != "")
                 {
@@ -2053,7 +2053,7 @@ public class Folks.Individual : Object,
           new_display_name =
               this._look_up_phone_number_for_display_name (primary_persona);
 
-          foreach (var p in this._persona_set)
+          foreach (unowned Persona p in this._persona_set)
             {
               if (new_display_name != "")
                 {
@@ -2071,7 +2071,7 @@ public class Folks.Individual : Object,
           new_display_name =
               this._look_up_display_id_for_display_name (primary_persona);
 
-          foreach (var p in this._persona_set)
+          foreach (unowned Persona p in this._persona_set)
             {
               if (new_display_name != "")
                 {
@@ -2089,7 +2089,7 @@ public class Folks.Individual : Object,
           new_display_name =
               this._look_up_postal_address_for_display_name (primary_persona);
 
-          foreach (var p in this._persona_set)
+          foreach (unowned Persona p in this._persona_set)
             {
               if (new_display_name != "")
                 {
@@ -2203,7 +2203,7 @@ public class Folks.Individual : Object,
     {
       var trust_level = TrustLevel.PERSONAS;
 
-      foreach (var p in this._persona_set)
+      foreach (unowned Persona p in this._persona_set)
         {
           if (p.is_user == false &&
               p.store.trust_level == PersonaStoreTrust.NONE)
@@ -2396,10 +2396,10 @@ public class Folks.Individual : Object,
     {
       this._update_single_valued_property (typeof (NameDetails), (p) =>
         {
-          var nickname = ((NameDetails) p).nickname;
+          unowned string nickname = ((NameDetails) p).nickname;
           return_val_if_fail (nickname != null, false);
 
-          return (nickname.strip () != ""); /* empty names are unset */
+          return (((!) nickname).strip () != ""); /* empty names are unset */
         }, (a, b) =>
         {
           /* Can't compare two set names. */
@@ -2820,8 +2820,8 @@ public class Folks.Individual : Object,
         {
           var a_birthday = ((BirthdayDetails) a).birthday;
           var b_birthday = ((BirthdayDetails) b).birthday;
-          var a_event_id = ((BirthdayDetails) a).calendar_event_id;
-          var b_event_id = ((BirthdayDetails) b).calendar_event_id;
+          unowned string? a_event_id = ((BirthdayDetails) a).calendar_event_id;
+          unowned string? b_event_id = ((BirthdayDetails) b).calendar_event_id;
 
           var a_birthday_is_set = (a_birthday != null) ? 1 : 0;
           var b_birthday_is_set = (b_birthday != null) ? 1 : 0;
@@ -2947,7 +2947,7 @@ public class Folks.Individual : Object,
         }
 
       /* Determine which Personas have been removed */
-      foreach (var p in this._persona_set)
+      foreach (unowned Persona p in this._persona_set)
         {
           if (personas == null || !((!) personas).contains (p))
             {

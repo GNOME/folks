@@ -222,7 +222,7 @@ public class Folks.Debug : Object
       if (debug_flags != null && debug_flags != "")
         {
           var domains_split = ((!) debug_flags).split (",");
-          foreach (var domain in domains_split)
+          foreach (unowned string domain in domains_split)
             {
               var domain_lower = domain.down ();
 
@@ -454,7 +454,7 @@ public class Folks.Debug : Object
             {
               break;
             }
-          var key = (!) _key;
+          unowned string key = (!) _key;
 
           string? val = valist.arg ();
 

@@ -100,8 +100,8 @@ public class Edsf.Persona : Folks.Persona,
    * them. */
   private struct UrlTypeMapping
     {
-      string vcard_field_name;
-      string folks_type;
+      unowned string vcard_field_name;
+      unowned string folks_type;
     }
 
   internal const UrlTypeMapping[] _url_properties =
@@ -169,7 +169,7 @@ public class Edsf.Persona : Folks.Persona,
       null /* FIXME: https://bugzilla.gnome.org/show_bug.cgi?id=682698 */
     };
 
-  private static GLib.HashTable<string, E.ContactField>? _im_eds_map = null;
+  private static GLib.HashTable<unowned string, E.ContactField>? _im_eds_map = null;
 
   private E.Contact _contact; /* should be set on construct */
 
@@ -1005,7 +1005,7 @@ public class Edsf.Persona : Folks.Persona,
       var _contact_id =
           Edsf.Persona._get_property_from_contact<string> (contact, "id");
       assert (_contact_id != null && _contact_id != "");
-      var contact_id = (!) _contact_id;
+      unowned string contact_id = (!) _contact_id;
 
       var uid = Folks.Persona.build_uid (BACKEND_NAME, store.id, contact_id);
       var iid = Edsf.Persona.build_iid (store.id, contact_id);
@@ -1087,7 +1087,7 @@ public class Edsf.Persona : Folks.Persona,
            * otherwise this can have a different  behaviour depending
            * on the state of the current Persona depending on whether
            * this.local_ids was called before or not. */
-          foreach (var id in this.local_ids)
+          foreach (string id in this.local_ids)
             {
               callback (id);
             }
@@ -1214,7 +1214,7 @@ public class Edsf.Persona : Folks.Persona,
 
       if (_bday != null)
         {
-          var bday = (!) _bday;
+          unowned E.ContactDate bday = (!) _bday;
 
           /* Since e-d-s stores birthdays as a plain date, we take the
            * given date in local time and convert it to UTC as mandated
@@ -1341,13 +1341,13 @@ public class Edsf.Persona : Folks.Persona,
     {
       RoleFieldDetails? _default_role = null;
 
-      var org = this._get_property<string> ("org");
-      var org_unit = this._get_property<string> ("org_unit");
-      var office = this._get_property<string> ("office");
-      var title = this._get_property<string> ("title");
-      var role = this._get_property<string> ("role");
-      var manager = this._get_property<string> ("manager");
-      var assistant = this._get_property<string> ("assistant");
+      unowned string? org = this._get_property<unowned string> ("org");
+      unowned string? org_unit = this._get_property<unowned string> ("org_unit");
+      unowned string? office = this._get_property<unowned string> ("office");
+      unowned string? title = this._get_property<unowned string> ("title");
+      unowned string? role = this._get_property<unowned string> ("role");
+      unowned string? manager = this._get_property<unowned string> ("manager");
+      unowned string? assistant = this._get_property<unowned string> ("assistant");
 
       if (org != null ||
           org_unit != null ||
@@ -1394,7 +1394,7 @@ public class Edsf.Persona : Folks.Persona,
       var services = this.contact.get_attribute ("X-FOLKS-WEB-SERVICES-IDS");
       if (services != null)
         {
-          foreach (var service in ((!) services).get_params ())
+          foreach (unowned E.VCardAttributeParam service in ((!) services).get_params ())
             {
               var service_name = service.get_name ().down ();
               foreach (var service_id in service.get_values ())
@@ -1494,14 +1494,14 @@ public class Edsf.Persona : Folks.Persona,
 
   private void _update_names ()
     {
-      var _full_name = this._get_property<string> ("full_name");
+      unowned string? _full_name = this._get_property<unowned string> ("full_name");
 
       if (_full_name == null)
         {
           _full_name = "";
         }
 
-      var full_name = (!) _full_name;
+      unowned string full_name = (!) _full_name;
 
       if (this._full_name != full_name)
         {
@@ -1509,14 +1509,14 @@ public class Edsf.Persona : Folks.Persona,
           this.notify_property ("full-name");
         }
 
-      var _nickname = this._get_property<string> ("nickname");
+      unowned string? _nickname = this._get_property<unowned string> ("nickname");
 
       if (_nickname == null)
         {
           _nickname = "";
         }
 
-      var nickname = (!) _nickname;
+      unowned string nickname = (!) _nickname;
 
       if (this._nickname != nickname)
         {
@@ -1528,13 +1528,13 @@ public class Edsf.Persona : Folks.Persona,
       var _cn = this._get_property<E.ContactName> ("name");
       if (_cn != null)
         {
-          var cn = (!) _cn;
+          unowned E.ContactName cn = (!) _cn;
 
-          string family_name = cn.family;
-          string given_name  = cn.given;
-          string additional_names = cn.additional;
-          string prefixes = cn.prefixes;
-          string suffixes = cn.suffixes;
+          unowned string family_name = cn.family;
+          unowned string given_name  = cn.given;
+          unowned string additional_names = cn.additional;
+          unowned string prefixes = cn.prefixes;
+          unowned string suffixes = cn.suffixes;
           structured_name = new StructuredName (family_name, given_name,
                                                 additional_names, prefixes,
                                                 suffixes);
@@ -1559,12 +1559,12 @@ public class Edsf.Persona : Folks.Persona,
           return null;
         }
 
-      var p = (!) _p;
+      unowned ContactPhoto p = (!) _p;
 
       switch (p.type)
         {
           case ContactPhotoType.URI:
-            var uri = p.get_uri ();
+            unowned string? uri = p.get_uri ();
             if (uri == null)
               {
                 return null;
@@ -1585,7 +1585,7 @@ public class Edsf.Persona : Folks.Persona,
 
             return new FileIcon (File.new_for_uri ((!) uri));
           case ContactPhotoType.INLINED:
-            var data = p.get_inlined ();
+            unowned uint8[]? data = p.get_inlined ();
             var mime_type = p.get_mime_type ();
             if (data == null || mime_type == null)
               {
@@ -1604,7 +1604,7 @@ public class Edsf.Persona : Folks.Persona,
       var p = this._get_property<E.ContactPhoto> ("photo");
 
       // Convert the ContactPhoto to a LoadableIcon and store or update it.
-      var new_avatar = this._contact_photo_to_loadable_icon (p);
+      LoadableIcon? new_avatar = this._contact_photo_to_loadable_icon (p);
 
       if (this._avatar != null && new_avatar == null)
         {
@@ -1645,10 +1645,10 @@ public class Edsf.Persona : Folks.Persona,
           AbstractFieldDetails<string>.equal_static);
 
       /* First we get the standard Evo urls.. */
-      foreach (var mapping in Persona._url_properties)
+      foreach (unowned UrlTypeMapping? mapping in Persona._url_properties)
         {
-          var url_property = mapping.vcard_field_name;
-          var folks_type = mapping.folks_type;
+          unowned string url_property = mapping.vcard_field_name;
+          unowned string folks_type = mapping.folks_type;
 
           var u = this._get_property<string> (url_property);
           if (u != null && u != "")
@@ -1695,7 +1695,7 @@ public class Edsf.Persona : Folks.Persona,
           null, AbstractFieldDetails<string>.hash_static,
           AbstractFieldDetails<string>.equal_static);
 
-      foreach (var im_proto in im_eds_map.get_keys ())
+      foreach (unowned string im_proto in im_eds_map.get_keys ())
         {
           var addresses = this.contact.get_attributes (
               im_eds_map.lookup (im_proto));
@@ -1743,10 +1743,10 @@ public class Edsf.Persona : Folks.Persona,
        */
       foreach (var email in this._email_addresses)
         {
-          var _proto = this._im_proto_from_addr (email.value);
+          unowned string? _proto = this._im_proto_from_addr (email.value);
           if (_proto != null)
             {
-              var proto = (!) _proto;
+              unowned string proto = (!) _proto;
 
               /* Has this already been added? */
               var exists = false;
@@ -1812,7 +1812,7 @@ public class Edsf.Persona : Folks.Persona,
       var new_categories = new SmallSet<string> ();
       bool any_added_categories = false;
 
-      foreach (var category_name in category_names)
+      foreach (unowned string category_name in category_names)
         {
           /* Skip the “Starred in Android” group for Google personas; we handle
            * it later. */
@@ -1836,7 +1836,7 @@ public class Edsf.Persona : Folks.Persona,
 
       if (this._groups != null)
         {
-          foreach (var category_name in this._groups)
+          foreach (unowned string category_name in this._groups)
             {
               /* Skip the “Starred in Android” group for Google personas; we handle
                * it later. */
@@ -1857,13 +1857,13 @@ public class Edsf.Persona : Folks.Persona,
       this._groups_ro = this._groups.read_only_view;
 
       /* Check our new set of system groups if this is a Google address book. */
-      var store = (Edsf.PersonaStore) this.store;
+      unowned Edsf.PersonaStore store = (Edsf.PersonaStore) this.store;
       var in_google_personal_group = false;
       var should_notify_sysgroups = false;
 
       if (store._is_google_contacts_address_book ())
         {
-          var vcard = (E.VCard) this.contact;
+          unowned E.VCard vcard = (E.VCard) this.contact;
           unowned E.VCardAttribute? attr =
              vcard.get_attribute ("X-GOOGLE-SYSTEM-GROUP-IDS");
           if (attr != null)
@@ -1872,7 +1872,7 @@ public class Edsf.Persona : Folks.Persona,
               var new_sysgroups = new SmallSet<string> ();
               bool any_added_sysgroups = false;
 
-              foreach (var system_group_id in system_group_ids)
+              foreach (unowned string system_group_id in system_group_ids)
                 {
                   new_sysgroups.add (system_group_id);
 
@@ -1888,7 +1888,7 @@ public class Edsf.Persona : Folks.Persona,
 
               if (this._system_groups != null)
                 {
-                  foreach (var system_group_id in this._system_groups)
+                  foreach (unowned string system_group_id in this._system_groups)
                     {
                       if (!new_sysgroups.contains (system_group_id))
                         {
@@ -1925,7 +1925,7 @@ public class Edsf.Persona : Folks.Persona,
         {
           this._is_favourite = false;
 
-          foreach (var category_name in category_names)
+          foreach (unowned string category_name in category_names)
             {
               /* We link the “Starred in Android” group to Google Contacts
                * address books. See: bgo#661490. */
@@ -1968,12 +1968,12 @@ public class Edsf.Persona : Folks.Persona,
   /**
    * build a table of im protocols / im protocol aliases
    */
-  internal static GLib.HashTable<string, E.ContactField> _get_im_eds_map ()
+  internal static GLib.HashTable<unowned string, E.ContactField> _get_im_eds_map ()
     {
       if (Edsf.Persona._im_eds_map == null)
         {
           var table =
-              new GLib.HashTable<string, E.ContactField> (str_hash,
+              new GLib.HashTable<unowned string, E.ContactField> (str_hash,
                   str_equal);
 
           table.insert ("aim", ContactField.IM_AIM);
@@ -2045,14 +2045,14 @@ public class Edsf.Persona : Folks.Persona,
       unowned GLib.List<string>? values = attr.get_values();
       unowned GLib.List<string>? l = values;
 
-      var address_format = "";
-      var po_box = "";
-      var extension = "";
-      var street = "";
-      var locality = "";
-      var region = "";
-      var postal_code = "";
-      var country = "";
+      unowned string address_format = "";
+      unowned string po_box = "";
+      unowned string extension = "";
+      unowned string street = "";
+      unowned string locality = "";
+      unowned string region = "";
+      unowned string postal_code = "";
+      unowned string country = "";
 
       if (l != null)
         {
@@ -2160,7 +2160,7 @@ public class Edsf.Persona : Folks.Persona,
         {
           unowned GLib.List<string> ids_v = ((!) ids).get_values ();
 
-          foreach (var local_id in ids_v)
+          foreach (unowned string local_id in ids_v)
             {
               if (local_id != "")
                 {
@@ -2240,7 +2240,7 @@ public class Edsf.Persona : Folks.Persona,
     {
       var new_anti_links = new SmallSet<string> ();
 
-      var vcard = (E.VCard) this.contact;
+      unowned E.VCard vcard = (E.VCard) this.contact;
       foreach (unowned E.VCardAttribute attr in vcard.get_attributes ())
         {
           if (attr.get_name () != Edsf.PersonaStore.anti_links_attribute_name)
@@ -2279,7 +2279,7 @@ public class Edsf.Persona : Folks.Persona,
           prop_name);
     }
 
-  private string? _im_proto_from_addr (string addr)
+  private unowned string? _im_proto_from_addr (string addr)
     {
       if (addr.index_of ("@") == -1)
         return null;
@@ -2289,7 +2289,7 @@ public class Edsf.Persona : Folks.Persona,
       if (tokens.length != 2)
         return null;
 
-      var domain = tokens[1];
+      unowned string domain = tokens[1];
       if (domain.index_of (".") == -1)
         return null;
 
