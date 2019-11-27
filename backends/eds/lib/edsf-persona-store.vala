@@ -1747,7 +1747,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
       E.VCardAttribute new_attr = new E.VCardAttribute (null, name);
       new_attr.add_value (details.value);
 
-      vcard.add_attribute (new_attr);
+      vcard.add_attribute ((owned) new_attr);
 
       yield this._commit_modified_property (persona, null);
     }
@@ -2241,7 +2241,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
           new_attr.add_value (group);
         }
 
-      vcard.add_attribute (new_attr);
+      vcard.add_attribute ((owned) new_attr);
     }
 
   internal async void _set_gender (Edsf.Persona persona,

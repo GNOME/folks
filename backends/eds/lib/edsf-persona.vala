@@ -1178,7 +1178,7 @@ public class Edsf.Persona : Folks.Persona,
   private void _update_gender ()
     {
       var gender = Gender.UNSPECIFIED;
-      var gender_attr =
+      unowned E.VCardAttribute gender_attr =
           this.contact.get_attribute (Edsf.Persona.gender_attribute_name);
 
       if (gender_attr != null)
@@ -1391,7 +1391,8 @@ public class Edsf.Persona : Folks.Persona,
           null, null, AbstractFieldDetails<string>.hash_static,
           AbstractFieldDetails<string>.equal_static);
 
-      var services = this.contact.get_attribute ("X-FOLKS-WEB-SERVICES-IDS");
+      unowned E.VCardAttribute services =
+          this.contact.get_attribute ("X-FOLKS-WEB-SERVICES-IDS");
       if (services != null)
         {
           foreach (var service in ((!) services).get_params ())
@@ -1425,7 +1426,7 @@ public class Edsf.Persona : Folks.Persona,
           AbstractFieldDetails<string>.equal_static);
 
       var attrs = this.contact.get_attributes (E.ContactField.EMAIL);
-      foreach (var attr in attrs)
+      foreach (unowned E.VCardAttribute attr in attrs)
         {
           var val = attr.get_value ();
           if (val == null || (!) val == "")
@@ -1699,7 +1700,7 @@ public class Edsf.Persona : Folks.Persona,
         {
           var addresses = this.contact.get_attributes (
               im_eds_map.lookup (im_proto));
-          foreach (var attr in addresses)
+          foreach (unowned E.VCardAttribute attr in addresses)
             {
               try
                 {
@@ -2013,7 +2014,7 @@ public class Edsf.Persona : Folks.Persona,
           AbstractFieldDetails<string>.equal_static);
 
       var attrs = this.contact.get_attributes (E.ContactField.TEL);
-      foreach (var attr in attrs)
+      foreach (unowned E.VCardAttribute attr in attrs)
         {
           var val = attr.get_value ();
           if (val == null || (!) val == "")
@@ -2155,7 +2156,8 @@ public class Edsf.Persona : Folks.Persona,
     {
       var new_local_ids = new SmallSet<string> ();
 
-      var ids = this.contact.get_attribute ("X-FOLKS-CONTACTS-IDS");
+      unowned E.VCardAttribute ids =
+          this.contact.get_attribute ("X-FOLKS-CONTACTS-IDS");
       if (ids != null)
         {
           unowned GLib.List<string> ids_v = ((!) ids).get_values ();
@@ -2219,7 +2221,8 @@ public class Edsf.Persona : Folks.Persona,
     {
       bool is_fav = false;
 
-      var fav = this.contact.get_attribute ("X-FOLKS-FAVOURITE");
+      unowned E.VCardAttribute fav =
+          this.contact.get_attribute ("X-FOLKS-FAVOURITE");
       if (fav != null)
         {
           var val = ((!) fav).get_value ();
