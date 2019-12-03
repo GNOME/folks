@@ -142,6 +142,11 @@ install_data(gschema_file,
   install_dir: get_option('datadir') / 'glib-2.0' / 'schemas',
 )
 
+# GConf file
+install_data('folks.convert',
+  install_dir: get_option('datadir') / 'GConf' / 'gsettings',
+)
+
 # Pkg-config file
 pkgconfig.generate(libfolks_lib,
   name: 'Folks',
