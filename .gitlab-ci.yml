@@ -12,7 +12,7 @@ build-folks:
     - dnf -y install --nogpgcheck
       dbus-glib-devel evolution-data-server-devel glib2-devel
       gobject-introspection-devel libgee-devel libxml2-devel meson ninja-build
-      python2 readline-devel redhat-rpm-config telepathy-glib-devel
+      python2 python3-dbusmock readline-devel redhat-rpm-config telepathy-glib-devel
       telepathy-glib-vala tracker-devel vala
       dbus-daemon # FIXME: dbus-broker breaks the CI, see https://github.com/bus1/dbus-broker/issues/145
   script:
