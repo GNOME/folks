@@ -499,7 +499,9 @@ public class Folks.SimpleQuery : Folks.Query
         {
           if (str_token == token)
               return 3;
-          else if (str_token.has_prefix (token))
+          if (str_token.has_prefix (token))
+              return 2;
+          if (str_token.has_suffix (token))
               return 2;
         }
 
@@ -507,7 +509,9 @@ public class Folks.SimpleQuery : Folks.Query
         {
           if (str_token == token)
               return 2;
-          else if (str_token.has_prefix (token))
+          if (str_token.has_prefix (token))
+              return 1;
+          if (str_token.has_suffix (token))
               return 1;
         }
 
