@@ -100,7 +100,7 @@ public class Folks.SimpleQuery : Folks.Query
           this._query_string.tokenize_and_fold (this.query_locale, null);
 
       debug ("Created simple query with tokens:");
-      foreach (var token in this._query_tokens)
+      foreach (unowned string token in this._query_tokens)
           debug ("\t%s", token);
 
       /* Notify of the need to re-evaluate matches. */
@@ -156,9 +156,9 @@ public class Folks.SimpleQuery : Folks.Query
         return 1;
 
       /* Only check for matches in tokens not yet found to minimize our work */
-      var tokens_remaining = new HashSet<string> ();
+      var tokens_remaining = new HashSet<unowned string> ();
 
-      foreach (var t in this._query_tokens)
+      foreach (unowned string t in this._query_tokens)
           tokens_remaining.add (t);
 
       /* FIXME: In the future, we should find a way to know this Individual’s
@@ -173,7 +173,7 @@ public class Folks.SimpleQuery : Folks.Query
        * Track the match score as we go. */
       uint match_score = 0;
 
-      foreach (var prop_name in this.match_fields)
+      foreach (unowned string prop_name in this.match_fields)
         {
           unowned ObjectClass iclass = individual.get_class ();
           var prop_spec = iclass.find_property (prop_name);
@@ -187,7 +187,7 @@ public class Folks.SimpleQuery : Folks.Query
               var iter = tokens_remaining.iterator ();
               while (iter.next ())
                 {
-                  var token = iter.get ();
+                  unowned string token = iter.get ();
                   var inc = this._prop_contains_token (individual,
                       individual_translit_locale, prop_name, prop_spec, token);
                   match_score += inc;
@@ -495,22 +495,16 @@ public class Folks.SimpleQuery : Folks.Query
       var str_tokens =
           str.tokenize_and_fold (str_translit_locale, out alternates);
 
-      /* FIXME: We have to use for() rather than foreach() because of:
-       * https://bugzilla.gnome.org/show_bug.cgi?id=743877 */
-      for (var i = 0; str_tokens[i] != null; i++)
+      foreach (unowned string str_token in str_tokens)
         {
-          var str_token = str_tokens[i];
-
           if (str_token == token)
               return 3;
           else if (str_token.has_prefix (token))
               return 2;
         }
 
-      for (var i = 0; alternates[i] != null; i++)
+      foreach (unowned string str_token in alternates)
         {
-          var str_token = alternates[i];
-
           if (str_token == token)
               return 2;
           else if (str_token.has_prefix (token))
