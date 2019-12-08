@@ -1,10 +1,8 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 
 # manager-file.py: generate .manager files and TpCMParamSpec arrays from the
 # same data (should be suitable for all connection managers that don't have
 # plugins)
-#
-# FIXME: port this from python2 to python3
 #
 # The master copy of this program is in the telepathy-glib repository -
 # please make any changes there.
@@ -27,6 +25,7 @@
 
 import re
 import sys
+import runpy
 
 _NOT_C_STR = re.compile(r'[^A-Za-z0-9_-]')
 
@@ -42,10 +41,10 @@ supported = list('sbuiqn')
 fdefaultencoders = {
         's': desktop_string,
         'b': (lambda b: b and '1' or '0'),
-        'u': (lambda n: '%u' % n),
-        'i': (lambda n: '%d' % n),
-        'q': (lambda n: '%u' % n),
-        'n': (lambda n: '%d' % n),
+        'u': (lambda n: '{}'.format(n)),
+        'i': (lambda n: '{}'.format(n)),
+        'q': (lambda n: '{}'.format(n)),
+        'n': (lambda n: '{}'.format(n)),
         }
 for x in supported: assert x in fdefaultencoders
 
@@ -62,10 +61,10 @@ for x in supported: assert x in gtypes
 gdefaultencoders = {
         's': c_string,
         'b': (lambda b: b and 'GINT_TO_POINTER (TRUE)' or 'GINT_TO_POINTER (FALSE)'),
-        'u': (lambda n: 'GUINT_TO_POINTER (%u)' % n),
-        'i': (lambda n: 'GINT_TO_POINTER (%d)' % n),
-        'q': (lambda n: 'GUINT_TO_POINTER (%u)' % n),
-        'n': (lambda n: 'GINT_TO_POINTER (%d)' % n),
+        'u': (lambda n: 'GUINT_TO_POINTER ({})'.format(n)),
+        'i': (lambda n: 'GINT_TO_POINTER ({})'.format(n)),
+        'q': (lambda n: 'GUINT_TO_POINTER ({})'.format(n)),
+        'n': (lambda n: 'GINT_TO_POINTER ({})'.format(n)),
         }
 for x in supported: assert x in gdefaultencoders
 
@@ -89,18 +88,18 @@ gflags = {
 
 def write_manager(f, manager, protos):
     # pointless backwards compat section
-    print >> f, '[ConnectionManager]'
-    print >> f, 'BusName=org.freedesktop.Telepathy.ConnectionManager.' + manager
-    print >> f, 'ObjectPath=/org/freedesktop/Telepathy/ConnectionManager/' + manager
+    print('[ConnectionManager]', file=f)
+    print('BusName=org.freedesktop.Telepathy.ConnectionManager.' + manager, file=f)
+    print('ObjectPath=/org/freedesktop/Telepathy/ConnectionManager/' + manager, file=f)
 
     # protocols
-    for proto, params in protos.iteritems():
-        print >> f
-        print >> f, '[Protocol %s]' % proto
+    for proto, params in iter(protos.items()):
+        print('', file=f)
+        print('[Protocol {}]'.format(proto), file=f)
 
         defaults = {}
 
-        for param, info in params.iteritems():
+        for param, info in iter(params.items()):
             dtype = info['dtype']
             flags = info.get('flags', '').split()
             struct_field = info.get('struct_field', param.replace('-', '_'))
@@ -117,15 +116,15 @@ def write_manager(f, manager, protos):
             else:
                 flags = ''
 
-            print >> f, 'param-%s=%s%s' % (param, desktop_string(dtype), flags)
+            print('param-{}={}{}'.format(param, desktop_string(dtype), flags), file=f)
 
-        for param, default in defaults.iteritems():
-            print >> f, 'default-%s=%s' % (param, default)
+        for param, default in iter(defaults.items()):
+            print('default-{}={}'.format(param, default), file=f)
 
 def write_c_params(f, manager, proto, struct, params):
-    print >> f, "static const TpCMParamSpec %s_%s_params[] = {" % (manager, proto)
+    print("static const TpCMParamSpec {}_{}_params[] = {{".format(manager, proto), file=f)
 
-    for param, info in params.iteritems():
+    for param, info in iter(params.items()):
         dtype = info['dtype']
         flags = info.get('flags', '').split()
         struct_field = info.get('struct_field', param.replace('-', '_'))
@@ -146,32 +145,29 @@ def write_c_params(f, manager, proto, struct, params):
         if struct is None or struct_field is None:
             struct_offset = '0'
         else:
-            struct_offset = 'G_STRUCT_OFFSET (%s, %s)' % (struct, struct_field)
+            struct_offset = 'G_STRUCT_OFFSET ({}, {})'.format(struct, struct_field)
 
-        print >> f, ('''  { %s, %s, %s,
-    %s,
-    %s, /* default */
-    %s, /* struct offset */
-    %s, /* filter */
-    %s, /* filter data */
-    %s /* setter data */ },''' %
-                (c_string(param), c_string(dtype), gtypes[dtype], flags,
-                    default, struct_offset, filter, filter_data, setter_data))
+        print('''  {{ {}, {}, {},
+    {},
+    {}, /* default */
+    {}, /* struct offset */
+    {}, /* filter */
+    {}, /* filter data */
+    {} /* setter data */ }},'''.format(c_string(param), c_string(dtype),
+                    gtypes[dtype], flags, default, struct_offset, filter,
+                    filter_data, setter_data), file=f)
 
-    print >> f, "  { NULL }"
-    print >> f, "};"
+    print("  { NULL }", file=f)
+    print("};", file=f)
 
 if __name__ == '__main__':
-    environment = {}
-    execfile(sys.argv[1], environment)
+    environment = runpy.run_path(sys.argv[1])
 
-    f = open('%s/%s.manager' % (sys.argv[2], environment['MANAGER']), 'w')
-    write_manager(f, environment['MANAGER'], environment['PARAMS'])
-    f.close()
+    with open('{}/{}.manager'.format(sys.argv[2], environment['MANAGER']), 'w') as f:
+        write_manager(f, environment['MANAGER'], environment['PARAMS'])
 
-    f = open('%s/param-spec-struct.h' % sys.argv[2], 'w')
-    for protocol in environment['PARAMS']:
-        write_c_params(f, environment['MANAGER'], protocol,
-                environment['STRUCTS'][protocol],
-                environment['PARAMS'][protocol])
-    f.close()
+    with open('{}/param-spec-struct.h'.format(sys.argv[2]), 'w') as f:
+        for protocol in environment['PARAMS']:
+            write_c_params(f, environment['MANAGER'], protocol,
+                    environment['STRUCTS'][protocol],
+                    environment['PARAMS'][protocol])
