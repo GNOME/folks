@@ -37,6 +37,9 @@
  */
 public class EdsTest.TestCase : Folks.TestCase
 {
+  /* The key-file store is needed for linking */
+  public KfTest.Backend? kf_backend = null;
+
   /**
    * An EDS backend, normally non-null between set_up() and tear_down().
    *
@@ -50,7 +53,7 @@ public class EdsTest.TestCase : Folks.TestCase
     {
       base (name);
 
-      Environment.set_variable ("FOLKS_BACKENDS_ALLOWED", "eds", true);
+      Environment.set_variable ("FOLKS_BACKENDS_ALLOWED", "eds, key-file", true);
       Environment.set_variable ("FOLKS_PRIMARY_STORE", "eds:local://test",
           true);
     }
@@ -157,6 +160,7 @@ public class EdsTest.TestCase : Folks.TestCase
     {
       base.set_up ();
       this.create_backend ();
+      this.create_kf_backend ();
       this.configure_primary_store ();
     }
 
@@ -191,12 +195,31 @@ public class EdsTest.TestCase : Folks.TestCase
       Environment.set_variable ("FOLKS_PRIMARY_STORE", config_val, true);
     }
 
+  /**
+   * Virtual method to create the keyfile backend. Currently called by
+   * the constructor (once per process), but might move into set_up() later.
+   *
+   * Subclasses may chain up, but are not required to so.
+   */
+  public virtual void create_kf_backend ()
+    {
+      if (this.kf_backend != null)
+        ((!) this.kf_backend).set_up ("");
+
+      this.kf_backend = new KfTest.Backend ();
+    }
+
   public override void tear_down ()
     {
       if (this.eds_backend != null)
         {
           ((!) this.eds_backend).tear_down ();
           this.eds_backend = null;
+        }
+
+      if (this.kf_backend != null)
+        {
+          ((!) this.kf_backend).tear_down ();
         }
 
       Environment.unset_variable ("FOLKS_PRIMARY_STORE");

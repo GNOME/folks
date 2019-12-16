@@ -8,6 +8,7 @@ libeds_test_deps = [
   libebook_dep,
   eds_backendlib_dep,
   build_conf_dep,
+  libkeyfile_test_dep,
 ]
 
 libeds_test = library('eds-test',
@@ -19,4 +20,7 @@ libeds_test = library('eds-test',
 libeds_test_dep = declare_dependency(
   link_with: libeds_test,
   include_directories: include_directories('.'),
+  dependencies: [
+    libkeyfile_test_dep,
+  ],
 )
