@@ -40,9 +40,10 @@ eds_backendlib_c_flags = [
   '-DG_LOG_DOMAIN="@0@"'.format(eds_backend_name),
 ]
 
-eds_backendlib_link_flags = [
-  '-Wl,--version-script,@0@/folks-@1@.map'.format(meson.current_source_dir(), eds_backend_name),
-]
+eds_backendlib_symbolmap = meson.current_source_dir() / 'folks-@0@.map'.format(eds_backend_name)
+eds_backendlib_link_flags = cc.get_supported_link_arguments(
+  '-Wl,--version-script,@0@'.format(eds_backendlib_symbolmap),
+)
 
 eds_backendlib = shared_library('folks-@0@'.format(eds_backend_name),
   eds_backendlib_sources,
@@ -50,6 +51,7 @@ eds_backendlib = shared_library('folks-@0@'.format(eds_backend_name),
   vala_args: eds_backendlib_vala_flags,
   c_args: eds_backendlib_c_flags,
   link_args: eds_backendlib_link_flags,
+  link_depends: eds_backendlib_symbolmap,
   version: folks_eds_lib_version,
   vala_header: 'folks/folks-@0@.h'.format(eds_backend_name),
   vala_gir: eds_backendlib_gir_name + '.gir',

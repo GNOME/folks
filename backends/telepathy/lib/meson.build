@@ -120,9 +120,10 @@ telepathy_backendlib_c_flags = [
   '-DG_LOG_DOMAIN="@0@"'.format(telepathy_backend_name),
 ]
 
-telepathy_backendlib_link_flags = [
-  '-Wl,--version-script,@0@/folks-@1@.map'.format(meson.current_source_dir(), telepathy_backend_name),
-]
+telepathy_backendlib_symbolmap = meson.current_source_dir() / 'folks-@0@.map'.format(telepathy_backend_name)
+telepathy_backendlib_link_flags = cc.get_supported_link_arguments(
+  '-Wl,--version-script,@0@'.format(telepathy_backendlib_symbolmap),
+)
 
 telepathy_backendlib = shared_library('folks-@0@'.format(telepathy_backend_name),
   telepathy_backendlib_sources,
@@ -130,6 +131,7 @@ telepathy_backendlib = shared_library('folks-@0@'.format(telepathy_backend_name)
   vala_args: telepathy_backendlib_vala_flags,
   c_args: telepathy_backendlib_c_flags,
   link_args: telepathy_backendlib_link_flags,
+  link_depends: telepathy_backendlib_symbolmap,
   version: folks_telepathy_lib_version,
   vala_header: 'folks/folks-@0@.h'.format(telepathy_backend_name),
   vala_gir: telepathy_backendlib_gir_name + '.gir',

@@ -38,9 +38,10 @@ tracker_backendlib_c_flags = [
   '-DG_LOG_DOMAIN="@0@"'.format(tracker_backend_name),
 ]
 
-tracker_backendlib_link_flags = [
-  '-Wl,--version-script,@0@/folks-@1@.map'.format(meson.current_source_dir(), tracker_backend_name),
-]
+tracker_backendlib_symbolmap = meson.current_source_dir() / 'folks-@0@.map'.format(tracker_backend_name)
+tracker_backendlib_link_flags = cc.get_supported_link_arguments(
+  '-Wl,--version-script,@0@'.format(tracker_backendlib_symbolmap),
+)
 
 tracker_backendlib = shared_library('folks-@0@'.format(tracker_backend_name),
   tracker_backendlib_sources,
@@ -48,6 +49,7 @@ tracker_backendlib = shared_library('folks-@0@'.format(tracker_backend_name),
   vala_args: tracker_backendlib_vala_flags,
   c_args: tracker_backendlib_c_flags,
   link_args: tracker_backendlib_link_flags,
+  link_depends: tracker_backendlib_symbolmap,
   version: folks_tracker_lib_version,
   vala_header: 'folks/folks-@0@.h'.format(dummy_backend_name),
   vala_gir: tracker_backendlib_gir_name + '.gir',

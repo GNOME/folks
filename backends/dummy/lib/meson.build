@@ -27,9 +27,10 @@ dummy_backendlib_c_flags = [
   '-DG_LOG_DOMAIN="@0@"'.format(dummy_backend_name),
 ]
 
-dummy_backendlib_link_flags = [
-  '-Wl,--version-script,@0@/folks-@1@.map'.format(meson.current_source_dir(), dummy_backend_name),
-]
+dummy_backendlib_symbolmap = meson.current_source_dir() / 'folks-@0@.map'.format(dummy_backend_name)
+dummy_backendlib_link_flags = cc.get_supported_link_arguments(
+  '-Wl,--version-script,@0@'.format(dummy_backendlib_symbolmap),
+)
 
 dummy_backendlib = shared_library('folks-@0@'.format(dummy_backend_name),
   dummy_backendlib_sources,
@@ -37,6 +38,7 @@ dummy_backendlib = shared_library('folks-@0@'.format(dummy_backend_name),
   vala_args: dummy_backendlib_vala_flags,
   c_args: dummy_backendlib_c_flags,
   link_args: dummy_backendlib_link_flags,
+  link_depends: dummy_backendlib_symbolmap,
   version: folks_dummy_lib_version,
   vala_header: 'folks/folks-@0@.h'.format(dummy_backend_name),
   vala_gir: dummy_backendlib_gir_name + '.gir',
