@@ -3,7 +3,7 @@ docs_common_valadoc_flags = [
   '--force',
   '--package-version', meson.project_version(),
   '--no-protected',
-  '-X', meson.build_root() / 'folks' / 'folks.h',
+  '-X', meson.build_root() / 'folks' / 'folks' / 'folks.h',
 ]
 
 docs_common_valadoc_deps = [
@@ -65,6 +65,4 @@ endif
 subdir('devhelp')
 
 # Second, the gtk-doc module
-# FIXME: for some reason, this is broken due to the gtkdoc module not finding
-# the folks header
-# subdir('gtkdoc')
+subdir('gtkdoc')
