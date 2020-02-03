@@ -2598,7 +2598,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
       return false;
     }
 
-  private void _contacts_complete_cb (Error err)
+  private void _contacts_complete_cb (Error? err)
     {
       /* Handle errors. We treat an error in the first _contacts_complete_cb()
        * callback as unrecoverable, since it's being reported from the address
@@ -2617,7 +2617,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
       this._idle_queue (() => { return this._contacts_complete_idle_cb (err); });
     }
 
-  private bool _contacts_complete_idle_cb (Error err)
+  private bool _contacts_complete_idle_cb (Error? err)
     {
       /* The initial query is complete, so signal that we've reached
        * quiescence (even if there was an error). */
