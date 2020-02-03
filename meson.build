@@ -1,7 +1,7 @@
 project('folks', [ 'vala', 'c' ],
   version: '0.13.2',
   license: 'LGPL2.1+',
-  meson_version: '>= 0.49',
+  meson_version: '>= 0.51',
 )
 
 gnome = import('gnome')
@@ -132,8 +132,11 @@ if bluez_backend_enabled
   libebook_dep = dependency('libebook-1.2', version: '>=' + min_eds_version)
   # Needed for the BlueZ tests
   pymod = import('python')
-  py_installation = pymod.find_installation('python3')
-  python_dbusmock = py_installation.dependency('dbusmock')
+  py_installation = pymod.find_installation('python3',
+    modules: [
+      'dbusmock',
+    ],
+  )
 endif
 
 if import_tool_enabled
