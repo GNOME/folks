@@ -22,11 +22,6 @@ using E;
 using Folks;
 using Random;
 
-/* The following function is needed in order to use the async SourceRegistry
- * constructor. FIXME: https://bugzilla.gnome.org/show_bug.cgi?id=659886 */
-[CCode (cname = "e_source_registry_new", cheader_filename = "libedataserver/libedataserver.h", finish_name = "e_source_registry_new_finish")]
-internal extern static async E.SourceRegistry create_source_registry (GLib.Cancellable? cancellable = null) throws GLib.Error;
-
 errordomain EdsTest.BackendSetupError
 {
   FETCH_SOURCE_GROUP_FAILED,
@@ -162,7 +157,7 @@ public class EdsTest.Backend
           false, FileCreateFlags.NONE, null, null);
 
       /* Build a SourceRegistry to manage the sources. */
-      var source_registry = yield create_source_registry (null);
+      var source_registry = yield new E.SourceRegistry (null);
       this._source_registry = source_registry;
       var signal_id = source_registry.source_added.connect ((r, s) =>
         {
