@@ -2,10 +2,19 @@ Overview of changes from libfolks 0.13.1 to libfolks 0.13.2
 ===========================================================
 
 Dependencies:
+ * Drop python2 dependency
 
 Major changes:
+ * !25 - Use the key-file backend to link personas.
+ * !21 - Automatically pick the correct E-D-S AddressBook version (using pkgconfig)
 
 Bugs fixed:
+ * tests: Remove errornous c-header reference of extern method
+ * #114 - GSettings conversion tool no longer installed
+ * #115 - Profiling code cannot be enabled with Meson build system
+ * #117 - Documentation installed in wrong path
+ * #119 - Build failure with meson-0.53.0
+ * !34 - Tests failing on newer Vala versions
 
 API changes:
 
