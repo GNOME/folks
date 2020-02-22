@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: folks master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/folks/issues\n"
-"POT-Creation-Date: 2018-06-10 16:09+0000\n"
-"PO-Revision-Date: 2019-02-07 21:32+0200\n"
+"POT-Creation-Date: 2019-12-06 08:00+0000\n"
+"PO-Revision-Date: 2020-02-22 20:10+0200\n"
 "Last-Translator: Jiri Grönroos <jiri.gronroos+l10n@iki.fi>\n"
 "Language-Team: suomi <lokalisointi-lista@googlegroups.com>\n"
 "Language: fi\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 2.0.6\n"
+"X-Generator: Poedit 2.3\n"
 
 #: backends/bluez/bluez-backend.vala:734
 msgid ""
@@ -36,7 +36,7 @@ msgstr ""
 #: backends/bluez/bluez-persona-store.vala:385
 #, c-format
 msgid "Error reading the transferred address book file: %s"
-msgstr ""
+msgstr "Virhe luettaessa siirrettyä osoitekirjatiedostoa: %s"
 
 #. Translators: the first parameter is the name of the
 #. * failed transfer, and the second is a Bluetooth device
@@ -48,7 +48,7 @@ msgstr ""
 #, c-format
 msgid ""
 "Error during transfer of the address book ‘%s’ from Bluetooth device ‘%s’."
-msgstr ""
+msgstr "Virhe osoitekirjan ‘%s’ siirron aikana Bluetooth-laitteelta ‘%s’."
 
 #: backends/bluez/bluez-persona-store.vala:791
 #, c-format
@@ -62,14 +62,14 @@ msgstr ""
 #: backends/bluez/bluez-persona-store.vala:798
 #, c-format
 msgid "An OBEX address book transfer from device ‘%s’ could not be started: %s"
-msgstr ""
+msgstr "Osoitekirjan OBEX-siirtoa laitteelta ‘%s’ ei voitu käynnistää: %s"
 
 #. Translators: the first parameter is a Bluetooth device
 #. * alias, and the second is an error message.
 #: backends/bluez/bluez-persona-store.vala:838
 #, c-format
 msgid "The OBEX address book transfer from device ‘%s’ failed: %s"
-msgstr ""
+msgstr "Osoitekirjan OBEX-siirto laitteelta ‘%s’ epäonnistui: %s"
 
 #. Translators: the first parameter is a Bluetooth device
 #. * alias, and the second is an error message.
@@ -77,7 +77,7 @@ msgstr ""
 #, c-format
 msgid ""
 "Error during transfer of the address book from Bluetooth device ‘%s’: %s"
-msgstr ""
+msgstr "Virhe osoitekirjan siirron aikana Bluetooth-laitteelta ‘%s’: %s"
 
 #: backends/bluez/bluez-persona-store.vala:1073
 #, c-format
@@ -97,7 +97,7 @@ msgstr "Bluetooth-laite ‘%s’ katosi kesken osoitekirjan siirron."
 #. * the msgid to the msgstr unchanged).
 #: backends/eds/lib/edsf-persona-store.vala:69
 msgid "Starred in Android"
-msgstr ""
+msgstr "Tähdelliset Androidissa"
 
 #. Translators: the first parameter is an address book
 #. * URI and the second is a persona UID.
@@ -122,7 +122,6 @@ msgstr ""
 
 #: backends/eds/lib/edsf-persona-store.vala:682
 #, c-format
-#| msgid "Can't remove contact ‘%s’: %s"
 msgid "Can’t remove contact ‘%s’: %s"
 msgstr "Yhteystietoa ‘%s’ ei voi poistaa: %s"
 
@@ -160,7 +159,6 @@ msgstr "Osoitekirjan \"%s\" avaaminen ei onnistunut: %s"
 #. Translators: the parameter is an address book URI.
 #: backends/eds/lib/edsf-persona-store.vala:923
 #, c-format
-#| msgid "Couldn't open address book ‘%s’: %s"
 msgid "Couldn’t get view for address book ‘%s’."
 msgstr "Ei saatu osoitekirjan ‘%s’ näkymää."
 
@@ -331,28 +329,28 @@ msgstr "Tuntematon virhe asettaessa ominaisuutta \"%s\": %s"
 
 #. Translators: the first parameter is a filename, and
 #. * the second is an error message.
-#: backends/key-file/kf-persona-store.vala:234
+#: backends/key-file/kf-persona-store.vala:235
 #, c-format
 msgid "The relationship key file ‘%s’ could not be loaded: %s"
 msgstr ""
 
 #. Translators: the first parameter is a path, and the
 #. * second is an error message.
-#: backends/key-file/kf-persona-store.vala:256
+#: backends/key-file/kf-persona-store.vala:257
 #, c-format
 msgid "The relationship key file directory ‘%s’ could not be created: %s"
 msgstr ""
 
 #. Translators: the first parameter is a filename, and
 #. * the second is an error message.
-#: backends/key-file/kf-persona-store.vala:280
+#: backends/key-file/kf-persona-store.vala:281
 #, c-format
 msgid "The relationship key file ‘%s’ could not be created: %s"
 msgstr ""
 
 #. Translators: the first parameter is a filename, the second is
 #. * an error message.
-#: backends/key-file/kf-persona-store.vala:471
+#: backends/key-file/kf-persona-store.vala:483
 #, fuzzy, c-format
 #| msgid "Couldn't open address book ‘%s’: %s"
 msgid "Could not write updated key file ‘%s’: %s"
@@ -363,37 +361,16 @@ msgstr "Osoitekirjan \"%s\" avaaminen ei onnistunut: %s"
 #. * an IM address (e.g. “foo@jabber.org”), the second is
 #. * the name of a protocol (e.g. “jabber”) and the third is
 #. * an error message.
-#: backends/key-file/kf-persona.vala:174
+#: backends/key-file/kf-persona.vala:176
 #, c-format
 msgid "Invalid IM address ‘%s’ for protocol ‘%s’: %s"
 msgstr ""
 
 #. Translators: the parameter is an error message.
-#: backends/key-file/kf-persona.vala:432
+#: backends/key-file/kf-persona.vala:508
 #, c-format
-#| msgid "Couldn't load the backends: %s"
 msgid "Couldn’t load data from key file: %s"
 msgstr "Ei voitu ladata tietoja avaintiedostosta: %s"
-
-#. Translators: the parameter is an error message.
-#: backends/libsocialweb/lib/swf-persona-store.vala:349
-#: backends/libsocialweb/lib/swf-persona-store.vala:371
-#: backends/libsocialweb/lib/swf-persona-store.vala:392
-#, c-format
-msgid "Couldn’t prepare libsocialweb service: %s"
-msgstr "libsocialweb-palvelun valmistelu ei onnistunut: %s"
-
-#: backends/libsocialweb/lib/swf-persona-store.vala:350
-msgid "No capabilities were found."
-msgstr ""
-
-#: backends/libsocialweb/lib/swf-persona-store.vala:372
-msgid "No contacts capability was found."
-msgstr ""
-
-#: backends/libsocialweb/lib/swf-persona-store.vala:393
-msgid "Error opening contacts view."
-msgstr ""
 
 #: backends/ofono/ofono-backend.vala:196
 msgid ""
@@ -404,6 +381,8 @@ msgstr ""
 #: backends/telepathy/lib/tpf-persona-store.vala:1264
 msgid "Telepathy contacts representing the local user may not be removed."
 msgstr ""
+"Paikallista käyttäjää esittävät Telepathy-yhteystiedot eivät ole "
+"poistettavissa."
 
 #. Translators: the parameter is an error message.
 #: backends/telepathy/lib/tpf-persona-store.vala:1275
@@ -472,7 +451,7 @@ msgstr ""
 #: backends/telepathy/lib/tpf-persona.vala:598
 #, c-format
 msgid "Failed to change group membership: %s"
-msgstr ""
+msgstr "Ryhmäjäsenyyden muutos epäonnistui: %s"
 
 #. Translators: "account" refers to an instant messaging
 #. * account.
@@ -560,33 +539,29 @@ msgstr "Ominaisuus \"%s\" ei ole kirjoitettavissa: %s"
 msgid "Failed to add contact for persona store ID ‘%s’: %s"
 msgstr ""
 
-#: folks/individual-aggregator.vala:2139
-msgid "Can’t link personas with no primary store."
+#: folks/individual-aggregator.vala:2169
+msgid "Anti-links can’t be removed between personas being linked."
 msgstr ""
 
-#: folks/individual-aggregator.vala:2140 folks/individual-aggregator.vala:2471
+#: folks/individual-aggregator.vala:2493
+msgid "Can’t add personas with no primary store."
+msgstr ""
+
+#: folks/individual-aggregator.vala:2494
 #, c-format
 msgid ""
 "Persona store ‘%s:%s’ is configured as primary, but could not be found or "
 "failed to load."
 msgstr ""
 
-#: folks/individual-aggregator.vala:2141 folks/individual-aggregator.vala:2472
+#: folks/individual-aggregator.vala:2495
 #, c-format
 msgid ""
 "Check the relevant service is running, or change the default store in that "
 "service or using the ‘%s’ GSettings key."
 msgstr ""
 
-#: folks/individual-aggregator.vala:2173
-msgid "Anti-links can’t be removed between personas being linked."
-msgstr ""
-
-#: folks/individual-aggregator.vala:2470
-msgid "Can’t add personas with no primary store."
-msgstr ""
-
-#: folks/individual-aggregator.vala:2481
+#: folks/individual-aggregator.vala:2504
 #, c-format
 msgid "Can’t write to requested property (‘%s’) of the writeable store."
 msgstr ""
@@ -642,7 +617,7 @@ msgstr "Nimetön henkilö"
 #. *
 #. * If you need additional placeholders with other information or
 #. * punctuation, please file a bug against libfolks:
-#. *   https://bugzilla.gnome.org/enter_bug.cgi?product=folks
+#. *   https://gitlab.gnome.org/GNOME/folks/issues
 #.
 #: folks/name-details.vala:268
 msgid "%g%t%m%t%f"
@@ -778,7 +753,7 @@ msgstr ""
 
 #: tools/import.vala:44
 msgid "Source backend name (default: ‘pidgin’)"
-msgstr ""
+msgstr "Lähteen taustaosan nimi (oletus: ‘pidgin’)"
 
 #: tools/import.vala:47
 msgid "Source filename (default: specific to source backend)"
@@ -842,3 +817,6 @@ msgid ""
 "Unrecognized source backend name ‘%s’. ‘%s’ is currently the only supported "
 "source backend."
 msgstr ""
+
+#~ msgid "Couldn’t prepare libsocialweb service: %s"
+#~ msgstr "libsocialweb-palvelun valmistelu ei onnistunut: %s"
