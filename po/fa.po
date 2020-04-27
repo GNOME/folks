@@ -1,14 +1,15 @@
 # Persian translation for folks.
 # Copyright (C) 2012 folks's COPYRIGHT HOLDER
 # This file is distributed under the same license as the folks package.
-# Arash Mousavi <mousavi.arash@gmail.com>, 2012, 2013, 2015.
+# Arash Mousavi <mousavi.arash@gmail.com>, 2012-2015.
+# Danial Behzadi <dani.behzi@ubuntu.com>, 2020.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: folks master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/folks/issues\n"
-"POT-Creation-Date: 2019-09-22 09:41+0000\n"
-"PO-Revision-Date: 2019-09-24 13:35+0000\n"
+"POT-Creation-Date: 2019-12-06 08:00+0000\n"
+"PO-Revision-Date: 2020-04-27 15:44+0000\n"
 "Last-Translator: Danial Behzadi <dani.behzi@ubuntu.com>\n"
 "Language-Team: Persian\n"
 "Language: fa\n"
@@ -16,17 +17,17 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Poedit 2.2.1\n"
+"X-Generator: Poedit 2.3\n"
 
 #: backends/bluez/bluez-backend.vala:734
 msgid ""
 "No BlueZ 5 object manager running, so the BlueZ backend will be inactive. "
-"Either your BlueZ installation is too old (only version 5 is supported) or the "
-"service can’t be started."
+"Either your BlueZ installation is too old (only version 5 is supported) or "
+"the service can’t be started."
 msgstr ""
-"هیچ مدیر شیء BlueZ 5 در حال اجرا نیست، بنابراین پسانهٔ BlueZ غیرفعال خواهد بود. "
-"یا نسخه نصب شدهٔ BlueZ قدیمی است (تنها نسخه ۵ پشتیبانی می‌شود) یا خدمت نمی‌تواند "
-"شروع شود."
+"هیچ مدیر شیء BlueZ 5 در حال اجرا نیست، بنابراین پسانهٔ BlueZ غیرفعال خواهد "
+"بود. یا نسخه نصب شدهٔ BlueZ قدیمی است (تنها نسخه ۵ پشتیبانی می‌شود) یا خدمت "
+"نمی‌تواند شروع شود."
 
 #: backends/bluez/bluez-backend.vala:747
 msgid ""
@@ -118,16 +119,14 @@ msgstr "اجازه حذف آشنا رد شد «%s»: %s"
 
 #. Translators: the parameter is an error message.
 #: backends/eds/lib/edsf-persona-store.vala:653
-#, fuzzy, c-format
-#| msgid "Removing contacts isn't supported by this persona store: %s"
+#, c-format
 msgid "Removing contacts isn’t supported by this persona store: %s"
-msgstr "حذف آشنا توسط این مخزن شخصی پشتیبانی نمی‌شود: %s"
+msgstr "در این مخزن افراد، برداشتن آشنایان پشتیبانی نمی‌شود: %s"
 
 #: backends/eds/lib/edsf-persona-store.vala:682
-#, fuzzy, c-format
-#| msgid "Can't remove contact ‘%s’: %s"
+#, c-format
 msgid "Can’t remove contact ‘%s’: %s"
-msgstr "نمی‌توان آشنا را حذف کرد «%s»: %s"
+msgstr "نمی‌توان آشنای «%s » را برداشت: %s"
 
 #. Translators: the parameter is an address book
 #. * URI.
@@ -148,18 +147,16 @@ msgstr "اجازه گشودن دفترچه‌تلفن رد شد «%s»: %s"
 #. Translators: the first parameter is an address book URI
 #. * and the second is an error message.
 #: backends/eds/lib/edsf-persona-store.vala:809
-#, fuzzy, c-format
-#| msgid "Couldn't open address book ‘%s’: %s"
+#, c-format
 msgid "Couldn’t open address book ‘%s’: %s"
-msgstr "نمی‌توان دفترچه‌تلفن را باز کرد «%s»: %s"
+msgstr "نمی‌توان دفترچه‌تلفن %s را گشود: %s"
 
 #. Translators: the parameteter is an error message.
 #: backends/eds/lib/edsf-persona-store.vala:877
 #: backends/eds/lib/edsf-persona-store.vala:907
-#, fuzzy, c-format
-#| msgid "Couldn't get address book capabilities: %s"
+#, c-format
 msgid "Couldn’t get address book capabilities: %s"
-msgstr "نمی‌توان توانمندی‌های دفترچه‌تلفن را دریافت کرد: %s"
+msgstr "نمی‌توان توانمندی‌های دفترچه‌تلفن را گرفت: %s"
 
 #. Translators: the parameter is an address book URI.
 #: backends/eds/lib/edsf-persona-store.vala:923
@@ -170,10 +167,9 @@ msgstr "نمی‌توان نمای دفترچه‌تلفن «%s» را گرفت.
 #. Translators: the first parameter is an address book URI
 #. * and the second is an error message.
 #: backends/eds/lib/edsf-persona-store.vala:1002
-#, fuzzy, c-format
-#| msgid "Couldn't get view for address book ‘%s’: %s"
+#, c-format
 msgid "Couldn’t get view for address book ‘%s’: %s"
-msgstr "نمی‌توان نما دفترچه‌تلفن را دریافت کرد: «%s»: %s"
+msgstr "نمی‌توان نمای دفترچه‌تلفن %s را گرفت: %s"
 
 #: backends/eds/lib/edsf-persona-store.vala:1305
 msgid "Creating a new contact failed due to reaching the timeout."
@@ -210,10 +206,9 @@ msgstr "آشنا نمی‌تواند به فهرست علاقه‌مندی اض�
 
 #. Translators: the parameter is an error message.
 #: backends/eds/lib/edsf-persona-store.vala:1692
-#, fuzzy, c-format
-#| msgid "Can't update avatar: %s"
+#, c-format
 msgid "Can’t update avatar: %s"
-msgstr "نمی‌توان آواتار را به‌روز رسانی کرد: %s"
+msgstr "نمی‌توان آواتار را به‌روز کرد: %s"
 
 #: backends/eds/lib/edsf-persona-store.vala:1703 folks/email-details.vala:120
 msgid "E-mail addresses are not writeable on this contact."
@@ -333,57 +328,52 @@ msgstr "خطا ناشناخته در هنگام ثبت مشخصه «%s» رخ د
 
 #. Translators: the first parameter is a filename, and
 #. * the second is an error message.
-#: backends/key-file/kf-persona-store.vala:234
-#, fuzzy, c-format
-#| msgid "The relationship key file '%s' could not be loaded: %s"
+#: backends/key-file/kf-persona-store.vala:235
+#, c-format
 msgid "The relationship key file ‘%s’ could not be loaded: %s"
-msgstr "پرونده کلید وابسته «%s» قابل بارگیری نبود %s"
+msgstr "پروندهٔ کلید رابطهٔ %s نتوانست بار شود: %s"
 
 #. Translators: the first parameter is a path, and the
 #. * second is an error message.
-#: backends/key-file/kf-persona-store.vala:256
-#, fuzzy, c-format
-#| msgid "The relationship key file directory '%s' could not be created: %s"
+#: backends/key-file/kf-persona-store.vala:257
+#, c-format
 msgid "The relationship key file directory ‘%s’ could not be created: %s"
-msgstr "شاخه پرونده کلید وابسته «%s» قابل ایجاد نبود: %s"
+msgstr "شاخهٔ پروندهٔ کلید رابطهٔ %s نتوانست ایجاد شود: %s"
 
 #. Translators: the first parameter is a filename, and
 #. * the second is an error message.
-#: backends/key-file/kf-persona-store.vala:280
-#, fuzzy, c-format
-#| msgid "The relationship key file '%s' could not be created: %s"
+#: backends/key-file/kf-persona-store.vala:281
+#, c-format
 msgid "The relationship key file ‘%s’ could not be created: %s"
-msgstr "پرونده کلید وابسته «%s» قابل ایجاد نبود: %s"
+msgstr "پروندهٔ کلید رابطهٔ %s نتوانست ایجاد شود: %s"
 
 #. Translators: the first parameter is a filename, the second is
 #. * an error message.
-#: backends/key-file/kf-persona-store.vala:471
-#, fuzzy, c-format
-#| msgid "Could not write updated key file '%s': %s"
+#: backends/key-file/kf-persona-store.vala:483
+#, c-format
 msgid "Could not write updated key file ‘%s’: %s"
-msgstr "نمی‌توان کلید به‌روز رسانی شده را نوشت «%s»: %s"
+msgstr "نتوانست روی پروندهٔ کلید به‌روز شدهٔ %s بنویسد: %s"
 
 #. Translators: this is an error message for if the user
 #. * provides an invalid IM address. The first parameter is
 #. * an IM address (e.g. “foo@jabber.org”), the second is
 #. * the name of a protocol (e.g. “jabber”) and the third is
 #. * an error message.
-#: backends/key-file/kf-persona.vala:174
+#: backends/key-file/kf-persona.vala:176
 #, c-format
 msgid "Invalid IM address ‘%s’ for protocol ‘%s’: %s"
 msgstr "نشانی‌های پیام‌رسان فوری نامعتبر «%s» برای پروتکل «%s»: %s"
 
 #. Translators: the parameter is an error message.
-#: backends/key-file/kf-persona.vala:432
-#, fuzzy, c-format
-#| msgid "Couldn't load data from key file: %s"
+#: backends/key-file/kf-persona.vala:508
+#, c-format
 msgid "Couldn’t load data from key file: %s"
-msgstr "نمی‌توان اطلاعات را از پرونده کلید بارگیری کرد: %s"
+msgstr "نتوانست داده‌ها را از پروندهٔ کلید بار کند: %s"
 
 #: backends/ofono/ofono-backend.vala:196
 msgid ""
-"No oFono object manager running, so the oFono backend will be inactive. Either "
-"oFono isn’t installed or the service can’t be started."
+"No oFono object manager running, so the oFono backend will be inactive. "
+"Either oFono isn’t installed or the service can’t be started."
 msgstr ""
 "هیچ مدیر شیء oFono در حال اجرا نیست، بنابراین پسانهٔ oFono غیرفعال خواهد بود. "
 "یا oFono نصب نیست یا خدمت قابل اجرا نیست."
@@ -396,21 +386,18 @@ msgstr "حذف آشنایان Telepathy که نشان‌دهندهٔ کاربر 
 #: backends/telepathy/lib/tpf-persona-store.vala:1275
 #, c-format
 msgid "Failed to remove a persona from store: %s"
-msgstr "حذف مورد شخصی از مخزن شکست خورد: %s"
+msgstr "شکست در برداشتن فردی از مخزن: %s"
 
 #. Translators: the first two parameters are store identifiers and
 #. * the third is a contact identifier.
 #: backends/telepathy/lib/tpf-persona-store.vala:1310
-#, fuzzy, c-format
-#| msgid ""
-#| "Persona store (%s, %s) requires the following details:\n"
-#| "    contact (provided: '%s')\n"
+#, c-format
 msgid ""
 "Persona store (%s, %s) requires the following details:\n"
 "    contact (provided: ‘%s’)\n"
 msgstr ""
-"مخزن شخصی (%s، %s) جزئیات مقابل را احتیاج دارد:\n"
-"    اتصال (فراهم‌شده: «%s»)\n"
+"مخزن افراد (%s، %s) به جزییات زیر نیاز دارد:\n"
+"    آشنا (فراهم‌شده: «%s»)\n"
 
 #: backends/telepathy/lib/tpf-persona-store.vala:1325
 msgid "Cannot create a new Telepathy contact while offline."
@@ -420,13 +407,14 @@ msgstr "نمی‌توان یک آشنا Telepathy وقتی که برون‌خط 
 #: backends/telepathy/lib/tpf-persona-store.vala:1343
 #, c-format
 msgid "Failed to add a persona from details: %s"
-msgstr "افزودن مورد شخصی از طریق جزئیات شکست خورد: %s"
+msgstr "شکست در افزودن فردی از جزییات: %s"
 
 #. Translators: "telepathy-logger" is the name of an application,
 #. * and should not be translated.
 #: backends/telepathy/lib/tpf-persona-store.vala:1363
 msgid ""
-"Failed to change favorite without a connection to the telepathy-logger service."
+"Failed to change favorite without a connection to the telepathy-logger "
+"service."
 msgstr "تعییر علاقه‌مندی بدون اتصال به خدمت telepathy-logger شکست خورد."
 
 #: backends/telepathy/lib/tpf-persona-store.vala:1369
@@ -434,8 +422,7 @@ msgid ""
 "Failed to change favorite status of Telepathy Persona because it has no "
 "attached TpContact."
 msgstr ""
-"تغییر وضعیت موردعلاقه در Telepathy Persona شکست خورد زیرا هیچ TpContactای به "
-"آن متصل نشده است."
+"شکست در تغییر وضعیت محبوبیت فرد در تله‌پاتی به دلیل نداشتن TpContact پیوسته."
 
 #. Translators: the parameter is a contact identifier.
 #: backends/telepathy/lib/tpf-persona-store.vala:1387
@@ -445,19 +432,17 @@ msgstr "تغییر وضعیت مورد علاقه برای آشنا Telepathy ش
 
 #. Translators: the parameter is an error message.
 #: backends/telepathy/lib/tpf-persona-store.vala:1419
-#, fuzzy, c-format
-#| msgid "Failed to change contact's alias: %s"
+#, c-format
 msgid "Failed to change contact’s alias: %s"
-msgstr "تغییر نام‌مستعار کاربر شکست خورد: %s"
+msgstr "شکست در تغییر نام‌مستعار آشنا: %s"
 
 #: backends/telepathy/lib/tpf-persona-store.vala:1500
-#, fuzzy
-#| msgid "Extended information may only be set on the user's Telepathy contact."
 msgid "Extended information may only be set on the user’s Telepathy contact."
-msgstr "اطلاعات تکمیلی ممکن است فقط برای آشنا Telepathy کاربر تنظیم شود."
+msgstr "ممکن است اطّلاعات تکمیلی فقط روی آشنای تله‌پاتی کاربر تنظیم شده باشد."
 
 #: backends/telepathy/lib/tpf-persona-store.vala:1529
-msgid "Extended information cannot be written because the store is disconnected."
+msgid ""
+"Extended information cannot be written because the store is disconnected."
 msgstr "اطلاعات تکمیلی قادر به نوشته شدن نیستند چراکه مخزن قطع شده است."
 
 #. Translators: the parameter is an error message.
@@ -480,10 +465,9 @@ msgstr "حساب برون‌خط است."
 #. * was received with the details params, and the second
 #. * identifies the persona store.
 #: backends/tracker/lib/trf-persona-store.vala:743
-#, fuzzy, c-format
-#| msgid "Unrecognized parameter '%s' passed to persona store '%s'."
+#, c-format
 msgid "Unrecognized parameter ‘%s’ passed to persona store ‘%s’."
-msgstr "پارامتر ناشناس «%s» به مخزن شخصی ارسال شده است «%s»."
+msgstr "پارامتر ناشناختهٔ %s به مخزن افراد %s ارسال شده."
 
 #: folks/alias-details.vala:61
 msgid "Alias is not writeable on this contact."
@@ -492,10 +476,9 @@ msgstr "نام مستعار برای این آشنا قابل نوشتن نیس�
 #. Translators: the first parameter is a folder path and the second
 #. * is an error message.
 #: folks/backend-store.vala:655
-#, fuzzy, c-format
-#| msgid "Error listing contents of folder '%s': %s"
+#, c-format
 msgid "Error listing contents of folder ‘%s’: %s"
-msgstr "خطا در فهرست کردن مختویات پوشه «%s»: %s"
+msgstr "خطا در فهرست کردن محتوای شاخهٔ %s: %s"
 
 #. Translators: the first parameter is a folder path and the second
 #. * is an error message.
@@ -506,17 +489,15 @@ msgstr "خطا در دریافت اطلاعات از مقصد «%s» از پیو
 
 #. Translators: the parameter is a filename.
 #: folks/backend-store.vala:824
-#, fuzzy, c-format
-#| msgid "File or directory '%s' does not exist."
+#, c-format
 msgid "File or directory ‘%s’ does not exist."
-msgstr "پوشه یا شاخه «%s» وجود ندارد."
+msgstr "پروندهٔ یا شاخهٔ %s وجود ندارد."
 
 #. Translators: the parameter is a filename.
 #: folks/backend-store.vala:830
-#, fuzzy, c-format
-#| msgid "Failed to get content type for '%s'."
+#, c-format
 msgid "Failed to get content type for ‘%s’."
-msgstr "دریافت نوع محتویات برای «%s» شکست خورد."
+msgstr "شکست در گرفتن گونهٔ محتوا برای %s."
 
 #: folks/birthday-details.vala:93
 msgid "Birthday event ID is not writeable on this contact."
@@ -533,48 +514,48 @@ msgstr "وضعیت موردعلاقه برای این آشنا قابل نوشت
 #. Translators: the parameter is an IM address.
 #: folks/im-details.vala:178 folks/im-details.vala:192 folks/im-details.vala:214
 #: folks/im-details.vala:241
-#, fuzzy, c-format
-#| msgid "The IM address '%s' could not be understood."
+#, c-format
 msgid "The IM address ‘%s’ could not be understood."
-msgstr "نشانی پیام‌رسان فوری «%s» قابل فهم نبود."
+msgstr "نشانی پیام‌رسان %s قابل فهم نبود."
 
 #. Translators: the first parameter is a persona store identifier
 #. * and the second is an error message.
 #: folks/individual-aggregator.vala:1052
-#, fuzzy, c-format
-#| msgid "Error preparing persona store '%s': %s"
+#, c-format
 msgid "Error preparing persona store ‘%s’: %s"
-msgstr "خطا در آماده‌سازی مخزن شخصی «%s»:%s"
+msgstr "خطا در آماده‌سازی مخزن افراد %s: %s"
 
 #. Translators: the parameter is a property name.
 #: folks/individual-aggregator.vala:1283 folks/individual-aggregator.vala:1556
-#, fuzzy, c-format
-#| msgid "Unknown property '%s' in linkable property list."
+#, c-format
 msgid "Unknown property ‘%s’ in linkable property list."
-msgstr "مشخصه ناشناس «%s» در فهرست مشخصه قابل پیوند."
+msgstr "ویژگی ناشناختهٔ %s در فهرست ویژگی پیوندپذیر."
 
 #. Translators: the first parameter is a store identifier
 #. * and the second parameter is an error message.
 #: folks/individual-aggregator.vala:2042
-#, fuzzy, c-format
-#| msgid "Failed to add contact for persona store ID '%s': %s"
+#, c-format
 msgid "Failed to add contact for persona store ID ‘%s’: %s"
-msgstr "افزودن آشنا به مخزن شخصی با شناسه «%s»:%s شکست خورد"
+msgstr "شکست در افزودن آشنا در مخزن افرادی با شناسهٔ %s: %s"
 
-#: folks/individual-aggregator.vala:2139
-msgid "Can’t link personas with no primary store."
-msgstr "نمی‌توان موارد شخصی بدون مخزن اصلی را پیوند کرد."
+#: folks/individual-aggregator.vala:2169
+msgid "Anti-links can’t be removed between personas being linked."
+msgstr "پادپیوندها نمی‌توانند از بین افراد پیوند شده برداشته شوند."
 
-#: folks/individual-aggregator.vala:2140 folks/individual-aggregator.vala:2471
+#: folks/individual-aggregator.vala:2493
+msgid "Can’t add personas with no primary store."
+msgstr "نمی‌توان بدون مخزن اصلی، فردی را افزود."
+
+#: folks/individual-aggregator.vala:2494
 #, c-format
 msgid ""
 "Persona store ‘%s:%s’ is configured as primary, but could not be found or "
 "failed to load."
 msgstr ""
-"مخزن شخصی «%s:%s» به‌عنوان اصلی پیکربندی شده است، اما پیدا نمی‌شود و یا بارکردن "
-"آن شکست خورده است."
+"مخزن افراد «%s:%s» به‌عنوان اصلی پیکربندی شده است، اما پیدا نمی‌شود و یا "
+"بارکردن آن شکست خورده است."
 
-#: folks/individual-aggregator.vala:2141 folks/individual-aggregator.vala:2472
+#: folks/individual-aggregator.vala:2495
 #, c-format
 msgid ""
 "Check the relevant service is running, or change the default store in that "
@@ -583,27 +564,17 @@ msgstr ""
 "بررسی اجرای خدمت مرتبط، یا تغییر ذخیره‌گاه پیش‌گزیده در خدمت یا استفاده از کلید "
 "«%s» GSettings."
 
-#: folks/individual-aggregator.vala:2173
-#, fuzzy
-#| msgid "Anti-links can't be removed between personas being linked."
-msgid "Anti-links can’t be removed between personas being linked."
-msgstr "ضد-پیوندها (Anti-links) بین موارد شخصی پیوند شده را نمی‌توان حذف کرد."
-
-#: folks/individual-aggregator.vala:2470
-msgid "Can’t add personas with no primary store."
-msgstr "نمی‌توان مورد شخصی را بدون مخزن اصلی اضافه کرد."
-
-#: folks/individual-aggregator.vala:2481
-#, fuzzy, c-format
-#| msgid "Can't write to requested property (“%s”) of the writeable store."
+#: folks/individual-aggregator.vala:2504
+#, c-format
 msgid "Can’t write to requested property (‘%s’) of the writeable store."
-msgstr "نمی‌توان مشخصه درخواست شدهٔ «%s» را برای مخزن قابل‌نوشتن، نوشت."
+msgstr "نمی‌توان در مخزن قابل‌نوشتن، ویژگی خواستهٔ %s را نوشت."
 
 #: folks/individual.vala:217 folks/individual.vala:404 folks/individual.vala:513
-#: folks/individual.vala:764 folks/individual.vala:842 folks/individual.vala:1060
+#: folks/individual.vala:764 folks/individual.vala:842
+#: folks/individual.vala:1060
 #, c-format
 msgid "Failed to change property ‘%s’: No suitable personas were found."
-msgstr "تغییر مشخصه «%s» شکست خورد: هیچ مورد شخصی مناسبی پیدا نشد."
+msgstr "تغییر مشخصه «%s» شکست خورد: هیچ فرد مناسبی پیدا نشد."
 
 #. Translators: This is the default name for an Individual
 #. * when displayed in the UI if no personal details are available
@@ -660,21 +631,14 @@ msgid "Primary store ID"
 msgstr "شناسه مخزن اصلی"
 
 #: folks/org.freedesktop.folks.gschema.xml.in:7
-#, fuzzy
-#| msgid ""
-#| "The ID of the persona store which folks should use as primary (i.e. to "
-#| "store linking data in). The type ID of the store may optionally be "
-#| "prepended, separated by a colon. For example: “eds:system-address-book” or "
-#| "“key-file”."
 msgid ""
 "The ID of the persona store which folks should use as primary (i.e. to store "
 "linking data in). The type ID of the store may optionally be prepended, "
 "separated by a colon. For example: ‘eds:system-address-book’ or ‘key-file’."
 msgstr ""
-"شناسه مخزن شخصی که folks باید از آن به عنوان شناسه اصلی استفاده کند (مثلا جها "
-"ذخیره اطلاعات مرتبط در آن). شناسهٔ نوع مخزن ممکن است به‌طور دلخواه به ابتدای آن "
-"اضافه شود و توسط یک دو نقطه جدا شود. برای مثال: «eds:system-address-book» یا "
-"«key-file»."
+"شناسهٔ مخزن افرادی که folks باید به عنوان اصلی استفاده کند (مثلاً برای ذخیرهٔ "
+"داده‌های پیوند). شناسهٔ گونهٔ مخزن ممکن است به‌طور دلخواه به ابتدای آن اضافه شده "
+"و توسط یک دو نقطه جدا شود. برای مثال: «eds:system-address-book» یا «key-file»."
 
 #: folks/postal-address-details.vala:232
 #, c-format
@@ -711,7 +675,7 @@ msgstr "مشغول"
 
 #: folks/presence-details.vala:187
 msgid "Hidden"
-msgstr "مخفی"
+msgstr "پنهان"
 
 #: folks/role-details.vala:151
 #, c-format
@@ -739,10 +703,9 @@ msgstr "پرونده %s قابل خواندن نیست."
 
 #. Translators: the parameter is a filename.
 #: tools/import-pidgin.vala:82
-#, fuzzy, c-format
-#| msgid "The Pidgin buddy list file '%s' could not be loaded."
+#, c-format
 msgid "The Pidgin buddy list file ‘%s’ could not be loaded."
-msgstr "پرونده فهرست دوستان پیجین «%s» قابل بارگیری نبود."
+msgstr "پرونده فهرست دوستان پیجین «%s» نتوانست بار شود."
 
 #. Translators: the parameter is a filename.
 #: tools/import-pidgin.vala:97
@@ -751,18 +714,16 @@ msgid ""
 "The Pidgin buddy list file ‘%s’ could not be loaded: the root element could "
 "not be found or was not recognized."
 msgstr ""
-"پرونده فهرست دوستان پیجین «%s» قابل بارگیری نبود: عنصر ریشه پیدا یا تشخیص داده "
-"نشد."
+"پرونده فهرست دوستان پیجین «%s» قابل بارگیری نبود: عنصر ریشه پیدا یا تشخیص "
+"داده نشد."
 
 #. Translators: the first parameter is the number of buddies which
 #. * were successfully imported, and the second is a filename.
 #: tools/import-pidgin.vala:117
-#, fuzzy, c-format
-#| msgid "Imported %u buddy from '%s'."
-#| msgid_plural "Imported %u buddies from '%s'."
+#, c-format
 msgid "Imported %u buddy from ‘%s’."
 msgid_plural "Imported %u buddies from ‘%s’."
-msgstr[0] "تعداد %Iu دوست از «%s» وارد شدند."
+msgstr[0] "تعداد %Iu دوست از «%s» درون‌ریزی شد."
 
 #. Translators: the first parameter is a persona identifier,
 #. * and the second is an error message.
@@ -805,10 +766,8 @@ msgstr ""
 "%s"
 
 #: tools/import.vala:44
-#, fuzzy
-#| msgid "Source backend name (default: 'pidgin')"
 msgid "Source backend name (default: ‘pidgin’)"
-msgstr "نام پسانه منبع (پیش‌گزیده: «pidgin»)"
+msgstr "نام پسانهٔ منبع (پیش‌گزیده: pidgin)"
 
 #: tools/import.vala:47
 msgid "Source filename (default: specific to source backend)"
@@ -820,47 +779,41 @@ msgstr "— درون‌ریزی اطلاعات فرا-آشنا به libfolks"
 
 #. Translators: the parameter is an error message.
 #: tools/import.vala:68
-#, fuzzy, c-format
-#| msgid "Couldn't parse command line options: %s"
+#, c-format
 msgid "Couldn’t parse command line options: %s"
-msgstr "نمی‌توان گزینه خط فرمان را تجزیه کرد: %s"
+msgstr "نتوانست گزینهٔ خط فرمان را تجزیه کند: %s"
 
 #. Translators: the parameter is an error message.
 #: tools/import.vala:109
-#, fuzzy, c-format
-#| msgid "Couldn't load the backends: %s"
+#, c-format
 msgid "Couldn’t load the backends: %s"
-msgstr "نمی‌توان پسانه‌ها را بارگیری کرد: %s"
+msgstr "نتوانست پسانه‌ها را بار کند: %s"
 
 #. Translators: the parameter is a backend identifier.
 #: tools/import.vala:120
-#, fuzzy, c-format
-#| msgid "Couldn't load the ‘%s’ backend."
+#, c-format
 msgid "Couldn’t load the ‘%s’ backend."
-msgstr "نمی‌توان پسانه «%s» را بارگیری کرد."
+msgstr "نتوانست پسانهٔ %s را بار کند."
 
 #. Translators: the first parameter is a backend identifier and the
 #. * second parameter is an error message.
 #: tools/import.vala:133
-#, fuzzy, c-format
-#| msgid "Couldn't prepare the ‘%s’ backend: %s"
+#, c-format
 msgid "Couldn’t prepare the ‘%s’ backend: %s"
-msgstr "نمی‌توان پسانه «%s» را آماده کرد: %s"
+msgstr "نتوانست پسانهٔ %s را آماده کند: %s"
 
 #. Translators: the parameter is a backend identifier.
 #: tools/import.vala:146
-#, fuzzy, c-format
-#| msgid "Couldn't load the ‘%s’ backend's persona store."
+#, c-format
 msgid "Couldn’t load the ‘%s’ backend’s persona store."
-msgstr "امکان آماده‌سازی پسانهٔ مخزن شخصی «%s» وجود نداشت."
+msgstr "نتوانست مخزن افراد پسانهٔ %s را بار کند."
 
 #. Translators: the first parameter is a backend identifier and the
 #. * second parameter is an error message.
 #: tools/import.vala:167
-#, fuzzy, c-format
-#| msgid "Couldn't prepare the ‘%s’ backend's persona store: %s"
+#, c-format
 msgid "Couldn’t prepare the ‘%s’ backend’s persona store: %s"
-msgstr "امکان آماده‌سازی پسانهٔ مخزن شخصی «%s» وجود نداشت: %s"
+msgstr "نتوانست مخزن افراد پسانهٔ %s را آماده کند: %s"
 
 #. Translators: the parameter is an error message.
 #: tools/import.vala:185
@@ -875,7 +828,11 @@ msgid ""
 "Unrecognized source backend name ‘%s’. ‘%s’ is currently the only supported "
 "source backend."
 msgstr ""
-"نام پسانهٔ منبع ناشناخته «%s». «%s» درحال حاضر تنها پسانهٔ منبع پشتیبانی شده است."
+"نام پسانهٔ منبع ناشناخته «%s». «%s» درحال حاضر تنها پسانهٔ منبع پشتیبانی شده "
+"است."
+
+#~ msgid "Can’t link personas with no primary store."
+#~ msgstr "نمی‌توان موارد شخصی بدون مخزن اصلی را پیوند کرد."
 
 #~ msgid "Couldn’t prepare libsocialweb service: %s"
 #~ msgstr "نمی‌توان سرویس libsocialweb آماده کرد: %s"
@@ -890,7 +847,8 @@ msgstr ""
 #~ msgstr "خطا در بارگیری نمای مشترکان رُخ داد."
 
 #~ msgid ""
-#~ "Failed to determine whether we can set aliases on Telepathy account '%s': %s"
+#~ "Failed to determine whether we can set aliases on Telepathy account '%s': "
+#~ "%s"
 #~ msgstr ""
-#~ "تشخیص اینکه آیا می‌توان نام‌جانشینی برای حساب Telepathy تنظیم کرد یا خیر شکست "
-#~ "خورد «%s»: %s"
+#~ "تشخیص اینکه آیا می‌توان نام‌جانشینی برای حساب Telepathy تنظیم کرد یا خیر "
+#~ "شکست خورد «%s»: %s"
