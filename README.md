@@ -35,6 +35,10 @@ separate translation infrastructure instead. More info can be found at the
 ## More information
 libfolks has its own web page on https://wiki.gnome.org/Projects/Folks.
 
+The latest version of the documentation is alo published online by our CI to
+the GitLab Pages of our repository. You can find the documentation for both the
+[Vala API] as well as the [C API].
+
 To discuss issues with developers and other users, you can post to the [GNOME
 discourse] instance or join [#contacts] on irc.gnome.org.
 
@@ -48,4 +52,6 @@ libfolks is released under the LGPL, version 2.1. See `COPYING` for more info.
 [issue tracker]: https://gitlab.gnome.org/GNOME/folks/issues
 [translation project wiki page]: https://wiki.gnome.org/TranslationProject/
 [GNOME Discourse]: https://discourse.gnome.org
+[Vala API]: https://gnome.pages.gitlab.gnome.org/folks/devhelp/folks/index.htm
+[C API]: https://gnome.pages.gitlab.gnome.org/folks/gtkdoc/folks/
 [#contacts]: irc://irc.gnome.org/contacts
