@@ -201,19 +201,19 @@ public class Folks.PostalAddress : Object
    *
    * This does not factor in the {@link PostalAddress.uid}.
    *
-   * @param with another postal address to compare with
+   * @param other another postal address to compare with
    * @return ``true`` if the addresses are equal, ``false`` otherwise
    */
-  public bool equal (PostalAddress with)
+  public bool equal (PostalAddress other)
     {
-      if (this.po_box != with.po_box ||
-          this.extension != with.extension ||
-          this.street != with.street ||
-          this.locality != with.locality ||
-          this.region != with.region ||
-          this.postal_code != with.postal_code ||
-          this.country != with.country ||
-          this.address_format != with.address_format)
+      if (this.po_box != other.po_box ||
+          this.extension != other.extension ||
+          this.street != other.street ||
+          this.locality != other.locality ||
+          this.region != other.region ||
+          this.postal_code != other.postal_code ||
+          this.country != other.country ||
+          this.address_format != other.address_format)
         return false;
 
       return true;
