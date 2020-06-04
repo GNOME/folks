@@ -3,6 +3,9 @@ image: fedora:rawhide
 stages:
   - build
 
+variables:
+  MESON_TEST_TIMEOUT_MULTIPLIER: 2
+
 build-folks:
   stage: build
   except:
@@ -18,7 +21,7 @@ build-folks:
   script:
     - meson _build
     - ninja -C _build
-    - bash +x ./.gitlab-ci/run-tests.sh
+    - bash +x ./.gitlab-ci/run-tests.sh --timeout-multiplier ${MESON_TEST_TIMEOUT_MULTIPLIER}
   artifacts:
     reports:
       junit: "_build/${CI_JOB_NAME}-report.xml"
