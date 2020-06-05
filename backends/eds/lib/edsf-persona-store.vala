@@ -489,6 +489,8 @@ public class Edsf.PersonaStore : Folks.PersonaStore
             {
               Set<PhoneFieldDetails> phone_numbers =
                 (Set<PhoneFieldDetails>) v.get_object ();
+
+              debug ("Setting TELEPHONE NUMBER");
               this._set_contact_attributes_string (contact,
                   phone_numbers, "TEL",
                   E.ContactField.TEL);
@@ -575,6 +577,13 @@ public class Edsf.PersonaStore : Folks.PersonaStore
       var iid = Edsf.Persona.build_iid (this.id, added_uid);
       var _persona = this._personas.get (iid);
       assert (_persona != null);
+
+      debug("Persona is PhoneDetails: %s", (_persona is PhoneDetails).to_string());
+      if (_persona is PhoneDetails) {
+          foreach (var pf in ((PhoneDetails) _persona).phone_numbers) {
+            debug("Got phone number '%s'", pf.value);
+          }
+      }
 
       return _persona;
     }
@@ -2523,6 +2532,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
 
       if (added_personas.size > 0 && this._is_quiescent == true)
         {
+            debug("_added_idle: Emitting personas changed!");
           this._emit_personas_changed (added_personas, removed_personas);
         }
 
@@ -2593,6 +2603,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
 
        if (removed_personas.size > 0)
          {
+            debug("_removed_idle: Emitting personas changed!");
            this._emit_personas_changed (null, removed_personas);
          }
       return false;
@@ -2641,6 +2652,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
            * lot more efficient for the individual aggregator to handle. */
           if (this._pending_personas != null)
             {
+            debug("_complete_idle: Emitting personas changed!");
               this._emit_personas_changed (this._pending_personas, null);
               this._pending_personas = null;
             }
@@ -2848,6 +2860,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
               removed_personas.add (iter.get_value ());
             }
 
+            debug("_source_registry_changed: Emitting personas changed!");
           this._emit_personas_changed (null, removed_personas);
           this.removed ();
         }

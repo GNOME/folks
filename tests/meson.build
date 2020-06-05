@@ -26,6 +26,7 @@ common_test_vala_flags = [
 
 common_test_environment = environment()
 common_test_environment.append('FOLKS_BACKEND_PATH', folks_backend_path_uninstalled)
+common_test_environment.append('G_MESSAGES_DEBUG', 'all')
 
 # The tests, grouped in a directory per backend
 subdir('dummy')

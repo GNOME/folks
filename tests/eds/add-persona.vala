@@ -279,6 +279,8 @@ public class AddPersonaTests : EdsTest.TestCase
 
       uint num_replaces = 0;
 
+      message ("YYYYYY individuals changed");
+
       foreach (var i in added)
         {
           if (i == null)
@@ -286,9 +288,11 @@ public class AddPersonaTests : EdsTest.TestCase
               continue;
             }
 
+          debug_here();
           num_replaces = this._track_individual (i);
         }
 
+          debug_here();
       assert (removed.size <= num_replaces + 1);
     }
 
@@ -303,9 +307,12 @@ public class AddPersonaTests : EdsTest.TestCase
           assert (this._individual_received == null ||
               this._individual_received.id == i.id);
 
+          debug_here();
+
           /* handle replacement */
           if (this._individual_received != null)
             {
+              debug_here();
               i.notify["full-name"].disconnect (this._notify_cb);
               i.notify["nickname"].disconnect (this._notify_cb);
               i.notify["email-addresses"].disconnect (this._notify_cb);
@@ -338,6 +345,7 @@ public class AddPersonaTests : EdsTest.TestCase
           i.notify["roles"].connect (this._notify_cb);
           i.notify["is-favourite"].connect (this._notify_cb);
 
+          debug_here();
           this._check_properties.begin (i);
         }
 
@@ -346,6 +354,7 @@ public class AddPersonaTests : EdsTest.TestCase
 
   private void _notify_cb (Object individual_obj, ParamSpec ps)
     {
+      message ("_notify_cb called for ps '%s'", ps.get_name());
       Folks.Individual i = (Folks.Individual) individual_obj;
       this._check_properties.begin (i);
     }
@@ -474,11 +483,14 @@ public class AddPersonaTests : EdsTest.TestCase
 
   private void _exit_if_all_properties_found ()
     {
+      debug("--------------------------------------------------");
       foreach (var k in this._properties_found.get_keys ())
         {
           var v = this._properties_found.lookup (k);
-          if (v == false)
+          if (v == false) {
+            debug("Haven't found '%s' yet", k);
             return;
+          }
         }
       this._main_loop.quit ();
     }

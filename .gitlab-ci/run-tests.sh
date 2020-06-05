@@ -2,7 +2,7 @@
 
 set +e
 
-meson test -C _build $*
+meson test -C _build $* add-persona
 
 exit_code=$?
 

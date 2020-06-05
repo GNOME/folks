@@ -2044,8 +2044,10 @@ public class Folks.IndividualAggregator : Object
             }
         }
 
+      debug("Done adding persona from details");
       if (parent != null && persona != null)
         {
+          debug("Adding individual to parent %p", parent);
           ((!) parent).personas.add ((!) persona);
         }
 
