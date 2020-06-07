@@ -75,7 +75,6 @@ foreach _test: eds_tests
   test(_test, test_executable,
     suite: 'EDSBackend',
     env: common_test_environment,
-    timeout: 60, # We double the timeout for slower machines (especially for the stress test)
   )
 
   if installed_tests_enabled
