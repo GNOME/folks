@@ -25,7 +25,7 @@ Please try to add reproducible steps and the relevant version of libfolks.
 If you want to contribute functionality or bug fixes, please open a Merge
 Request (MR). For more info on how to do this, see GitLab's [help pages on
 MR's]. Please also follow our coding conventions, as described in
-CONTRIBUTIONS.md
+CONTRIBUTING.md
 
 If libfolks is not translated in your language or you believe that the current
 translation has errors, you can join one of the various translation teams in
