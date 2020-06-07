@@ -19,7 +19,10 @@ build-folks:
   script:
     - meson _build -Ddocs=true
     - ninja -C _build
-    - bash +x ./.gitlab-ci/run-tests.sh
+    # Multiply the Meson test timeout by 3 (mostly for the stress tests)
+    # For most tests it doesn't matter anyway, since we internally use
+    # TestUtils.loop_run_with_timeout()
+    - bash +x ./.gitlab-ci/run-tests.sh -t 3
   artifacts:
     reports:
       junit: "_build/${CI_JOB_NAME}-report.xml"
