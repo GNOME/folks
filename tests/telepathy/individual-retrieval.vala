@@ -128,7 +128,7 @@ public class IndividualRetrievalTests : TpfTest.TestCase
       var main_loop = new GLib.MainLoop (null, false);
 
       HashSet<string> added_individuals = new HashSet<string> ();
-      added_individuals.add ("master.shake@example.com");
+      added_individuals.add ("mister.shake@example.com");
       added_individuals.add ("2wycked@example.com");
       added_individuals.add ("carl-brutananadilewski@example.com");
 
@@ -147,7 +147,7 @@ public class IndividualRetrievalTests : TpfTest.TestCase
               assert (i != null);
 
               /* If the Individual contains a Persona with an ID we provided,
-               * mark it as recieved.
+               * mark it as received.
                * This intentionally avoids assuming that the Individual's ID is
                * necessarily related to the ID of any of its Persona(s) */
               foreach (Folks.Persona p in i.personas)

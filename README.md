@@ -36,7 +36,7 @@ separate translation infrastructure instead. More info can be found at the
 ## More information
 libfolks has its own web page on https://wiki.gnome.org/Projects/Folks.
 
-The latest version of the documentation is alo published online by our CI to
+The latest version of the documentation is also published online by our CI to
 the GitLab Pages of our repository. You can find the documentation for both the
 [Vala API] as well as the [C API].
 

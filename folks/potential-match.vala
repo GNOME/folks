@@ -379,7 +379,7 @@ public class Folks.PotentialMatch : Object
                     {
                       result = MatchResult.MEDIUM;
                     }
-                  /* So we have splitted the user part of the e-mail
+                  /* So we have split the user part of the e-mail
                    * address into tokens. Lets see if there is some
                    * matches between tokens.
                    * As in: first.middle.last@ ~= [first,middle,..]@  */
@@ -655,7 +655,7 @@ public class Folks.PotentialMatch : Object
     }
 
   /* If haystack contains c in pos return 0, if it contains
-   * it withing the bounds of max_dist return abs(pos-pos_found).
+   * it within the bounds of max_dist return abs(pos-pos_found).
    * If its not found, return -1.
    *
    * pos and max_dist are both in unichars.

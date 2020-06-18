@@ -1065,7 +1065,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
   /**
    * Prepare the PersonaStore for use.
    *
-   * TODO: we should throw different errors dependening on what went wrong
+   * TODO: we should throw different errors depending on what went wrong
    * when we were trying to setup the PersonaStore.
    *
    * See {@link Folks.PersonaStore.prepare}.
@@ -1106,7 +1106,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
 
               /* Don't add a match rule for all signals from Tracker but
                * only for GraphUpdated with the specific class we need. We
-               * don't want to be woken up for irrelevent updates on the
+               * don't want to be woken up for irrelevant updates on the
                * graph.
                */
               this._resources_object = yield GLib.Bus.get_proxy<Resources> (
@@ -2694,11 +2694,11 @@ public class Trf.PersonaStore : Folks.PersonaStore
   /*
    * NOTE:
    *
-   * We asume that the caller is holding a link to the resource,
+   * We assume that the caller is holding a link to the resource,
    * so if _resource_usage_count () == 1 it means no one else
    * (beside the caller) is linking to the resource.
    *
-   * This means that _delete_resource shold be called before
+   * This means that _delete_resource should be called before
    * removing the resources that hold a link to it (which also
    * makes sense from the signaling perspective).
    *

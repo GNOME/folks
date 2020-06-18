@@ -665,7 +665,7 @@ public class Folks.BackendStore : Object {
         {
           var file = dir.get_child (info.get_name ());
 
-          /* Handle symlinks by derefencing them. If we look at two symlinks
+          /* Handle symlinks by dereferencing them. If we look at two symlinks
            * with the same target, we don’t end up loading that backend twice
            * due to hashing the backend’s absolute path in @modules_final.
            *

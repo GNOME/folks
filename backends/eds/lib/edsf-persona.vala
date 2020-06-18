@@ -712,7 +712,7 @@ public class Edsf.Persona : Folks.Persona,
    * the localized version of those groups, and may change the value of
    * {@link Edsf.Persona.in_google_personal_group}.
    *
-   * Attempting to call this method on a persona beloging to a PersonaStore which
+   * Attempting to call this method on a persona belonging to a PersonaStore which
    * is not Google will throw a PropertyError.
    *
    * It's preferred to call this rather than setting {@link Persona.system_groups}
@@ -2027,7 +2027,7 @@ public class Edsf.Persona : Folks.Persona,
           new_phone_numbers.add (phone_fd);
         }
 
-      // Does not use phone comparation because this will try to match only
+      // Does not use phone comparison because this will try to match only
       // numbers and will remove the prefix, and that could cause a wrong result
       // since the the phone number is stored as string
       if (!Utils.set_string_afd_equal (this._phone_numbers, new_phone_numbers))

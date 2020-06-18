@@ -202,7 +202,7 @@ set_property (GObject *object,
     case PROP_HANDLE_TYPE:
     case PROP_CHANNEL_TYPE:
       /* these properties are writable in the interface, but not actually
-       * meaningfully changable on this channel, so we do nothing */
+       * meaningfully changeable on this channel, so we do nothing */
       break;
     case PROP_CONNECTION:
       self->priv->conn = g_value_get_object (value);

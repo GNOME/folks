@@ -2309,7 +2309,7 @@ public class Folks.IndividualAggregator : Object
 
       var key_file_personas = new SmallSet<Persona> ();
 
-      /* Remove personas form the key-file store since they arn't need anymore */
+      /* Remove personas from the key-file store since they aren't need anymore */
       foreach (var p in individual_personas) {
         if (p.store.type_id == "key-file") {
           debug ("Remove linking persona from key-file store");

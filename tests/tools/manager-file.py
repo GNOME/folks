@@ -4,7 +4,7 @@
 # same data (should be suitable for all connection managers that don't have
 # plugins)
 #
-# The master copy of this program is in the telepathy-glib repository -
+# The upstream copy of this program is in the telepathy-glib repository -
 # please make any changes there.
 #
 # Copyright (c) Collabora Ltd. <http://www.collabora.co.uk/>

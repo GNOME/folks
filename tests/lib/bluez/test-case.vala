@@ -102,7 +102,7 @@ public class BluezTest.TestCase : Folks.TestCase
     {
       this.bluez_backend = new BluezTest.Backend ();
 
-      /* Whitelist any mock BlueZ devices we will create. */
+      /* Allow any mock BlueZ devices we will create. */
       var devices_file_name =
           Path.build_filename (this.transient_dir, ".local", "share", "folks",
               "bluez-persona-stores.ini");

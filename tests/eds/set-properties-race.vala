@@ -34,7 +34,7 @@ public class SetPropertiesRaceTests : EdsTest.TestCase
     {
       base ("SetPropertiesRace");
 
-      this.add_test ("setting postal addresss on e-d-s persona",
+      this.add_test ("setting postal address on e-d-s persona",
           this.test_set_postal_addresses);
     }
 

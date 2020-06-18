@@ -223,7 +223,7 @@ public class Folks.Utils : Object
    * Check whether a set of AbstractFieldDetails with string values are equal.
    *
    * This performs a deep check for equality, checking whether both sets are of
-   * the same size, and that each set has the same values using string compation
+   * the same size, and that each set has the same values using string compaction
    * instead of AbstractFieldDetails equal function
    *
    * @param a a set to compare
