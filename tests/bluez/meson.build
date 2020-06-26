@@ -28,6 +28,7 @@ foreach _test: bluez_tests
   test(_test, test_executable,
     suite: 'BluezBackend',
     env: common_test_environment,
+    is_parallel: false,
   )
 
   if installed_tests_enabled
