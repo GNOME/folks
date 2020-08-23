@@ -54,6 +54,7 @@ folks_backend_dir = get_option('libdir') / 'folks' / '@0@'.format(folks_module_v
 bluez_backend_enabled = get_option('bluez_backend')
 docs_enabled = get_option('docs')
 eds_backend_enabled = get_option('eds_backend')
+tests_enabled = get_option('tests')
 installed_tests_enabled = get_option('installed_tests')
 ofono_backend_enabled = get_option('ofono_backend')
 telepathy_backend_enabled = get_option('telepathy_backend')
@@ -130,13 +131,15 @@ endif
 
 if bluez_backend_enabled
   libebook_dep = dependency('libebook-1.2', version: '>=' + min_eds_version)
-  # Needed for the BlueZ tests
-  pymod = import('python')
-  py_installation = pymod.find_installation('python3',
-    modules: [
-      'dbusmock',
-    ],
-  )
+  if tests_enabled
+    # Needed for the BlueZ tests
+    pymod = import('python')
+    py_installation = pymod.find_installation('python3',
+      modules: [
+        'dbusmock',
+      ],
+    )
+  endif
 endif
 
 if import_tool_enabled
@@ -233,7 +236,9 @@ subdir('tools')
 subdir('po')
 
 # Tests
-subdir('tests')
+if tests_enabled
+  subdir('tests')
+endif
 
 if docs_enabled
   subdir('docs')
