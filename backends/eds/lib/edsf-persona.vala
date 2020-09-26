@@ -1274,7 +1274,7 @@ public class Edsf.Persona : Folks.Persona,
           new_roles.add ((!) default_role_fd);
         }
 
-      var vcard = (E.VCard) this.contact;
+      unowned E.VCard vcard = (E.VCard) this.contact;
       foreach (unowned E.VCardAttribute attr in vcard.get_attributes ())
         {
           if (attr.get_name () != "X-ROLES")
@@ -1560,12 +1560,12 @@ public class Edsf.Persona : Folks.Persona,
           return null;
         }
 
-      var p = (!) _p;
+      unowned var p = (!) _p;
 
       switch (p.type)
         {
           case ContactPhotoType.URI:
-            var uri = p.get_uri ();
+            unowned var uri = p.get_uri ();
             if (uri == null)
               {
                 return null;
@@ -1586,8 +1586,8 @@ public class Edsf.Persona : Folks.Persona,
 
             return new FileIcon (File.new_for_uri ((!) uri));
           case ContactPhotoType.INLINED:
-            var data = p.get_inlined ();
-            var mime_type = p.get_mime_type ();
+            unowned var data = p.get_inlined ();
+            unowned var mime_type = p.get_mime_type ();
             if (data == null || mime_type == null)
               {
                 return null;
@@ -1661,7 +1661,7 @@ public class Edsf.Persona : Folks.Persona,
         }
 
       /* Now we go for extra URLs */
-      var vcard = (E.VCard) this.contact;
+      unowned E.VCard vcard = (E.VCard) this.contact;
       foreach (unowned E.VCardAttribute attr in vcard.get_attributes ())
         {
           if (attr.get_name () == "X-URIS")
@@ -1747,7 +1747,7 @@ public class Edsf.Persona : Folks.Persona,
           var _proto = this._im_proto_from_addr (email.value);
           if (_proto != null)
             {
-              var proto = (!) _proto;
+              unowned var proto = (!) _proto;
 
               /* Has this already been added? */
               var exists = false;
@@ -1864,7 +1864,7 @@ public class Edsf.Persona : Folks.Persona,
 
       if (store._is_google_contacts_address_book ())
         {
-          var vcard = (E.VCard) this.contact;
+          unowned var vcard = (E.VCard) this.contact;
           unowned E.VCardAttribute? attr =
              vcard.get_attribute ("X-GOOGLE-SYSTEM-GROUP-IDS");
           if (attr != null)
@@ -1873,7 +1873,7 @@ public class Edsf.Persona : Folks.Persona,
               var new_sysgroups = new SmallSet<string> ();
               bool any_added_sysgroups = false;
 
-              foreach (var system_group_id in system_group_ids)
+              foreach (unowned string system_group_id in system_group_ids)
                 {
                   new_sysgroups.add (system_group_id);
 
@@ -1889,7 +1889,7 @@ public class Edsf.Persona : Folks.Persona,
 
               if (this._system_groups != null)
                 {
-                  foreach (var system_group_id in this._system_groups)
+                  foreach (unowned string system_group_id in this._system_groups)
                     {
                       if (!new_sysgroups.contains (system_group_id))
                         {
@@ -2243,7 +2243,7 @@ public class Edsf.Persona : Folks.Persona,
     {
       var new_anti_links = new SmallSet<string> ();
 
-      var vcard = (E.VCard) this.contact;
+      unowned E.VCard vcard = (E.VCard) this.contact;
       foreach (unowned E.VCardAttribute attr in vcard.get_attributes ())
         {
           if (attr.get_name () != Edsf.PersonaStore.anti_links_attribute_name)
@@ -2292,7 +2292,7 @@ public class Edsf.Persona : Folks.Persona,
       if (tokens.length != 2)
         return null;
 
-      var domain = tokens[1];
+      unowned var domain = tokens[1];
       if (domain.index_of (".") == -1)
         return null;
 
