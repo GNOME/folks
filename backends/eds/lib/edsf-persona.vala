@@ -100,8 +100,8 @@ public class Edsf.Persona : Folks.Persona,
    * them. */
   private struct UrlTypeMapping
     {
-      string vcard_field_name;
-      string folks_type;
+      unowned string vcard_field_name;
+      unowned string folks_type;
     }
 
   internal const UrlTypeMapping[] _url_properties =
@@ -169,7 +169,7 @@ public class Edsf.Persona : Folks.Persona,
       null /* FIXME: https://bugzilla.gnome.org/show_bug.cgi?id=682698 */
     };
 
-  private static GLib.HashTable<string, E.ContactField>? _im_eds_map = null;
+  private static GLib.HashTable<unowned string, E.ContactField>? _im_eds_map = null;
 
   private E.Contact _contact; /* should be set on construct */
 
@@ -1442,8 +1442,8 @@ public class Edsf.Persona : Folks.Persona,
       if (!Folks.Internal.equal_sets<EmailFieldDetails> (new_email_addresses,
               this._email_addresses))
         {
-          this._email_addresses = new_email_addresses;
           this._email_addresses_ro = new_email_addresses.read_only_view;
+          this._email_addresses = (owned) new_email_addresses;
           if (emit_notification)
             {
               this.notify_property ("email-addresses");
@@ -1484,8 +1484,8 @@ public class Edsf.Persona : Folks.Persona,
 
       if (!Folks.Internal.equal_sets<NoteFieldDetails> (new_notes, this._notes))
         {
-          this._notes = new_notes;
           this._notes_ro = this._notes.read_only_view;
+          this._notes = (owned) new_notes;
           if (emit_notification)
             {
               this.notify_property ("notes");
@@ -1495,33 +1495,27 @@ public class Edsf.Persona : Folks.Persona,
 
   private void _update_names ()
     {
-      var _full_name = this._get_property<string> ("full_name");
-
-      if (_full_name == null)
+      var full_name = this._get_property<string> ("full_name");
+      if (full_name == null)
         {
-          _full_name = "";
+          full_name = "";
         }
 
-      var full_name = (!) _full_name;
-
-      if (this._full_name != full_name)
+      if (this._full_name != ((!) full_name))
         {
-          this._full_name = full_name;
+          this._full_name = (!) (owned) full_name;
           this.notify_property ("full-name");
         }
 
-      var _nickname = this._get_property<string> ("nickname");
-
-      if (_nickname == null)
+      var nickname = this._get_property<string> ("nickname");
+      if (nickname == null)
         {
-          _nickname = "";
+          nickname = "";
         }
 
-      var nickname = (!) _nickname;
-
-      if (this._nickname != nickname)
+      if (this._nickname != ((!) nickname))
         {
-          this._nickname = nickname;
+          this._nickname = (!) (owned) nickname;
           this.notify_property ("nickname");
         }
 
@@ -1529,13 +1523,13 @@ public class Edsf.Persona : Folks.Persona,
       var _cn = this._get_property<E.ContactName> ("name");
       if (_cn != null)
         {
-          var cn = (!) _cn;
+          unowned var cn = (!) _cn;
 
-          string family_name = cn.family;
-          string given_name  = cn.given;
-          string additional_names = cn.additional;
-          string prefixes = cn.prefixes;
-          string suffixes = cn.suffixes;
+          unowned string family_name = cn.family;
+          unowned string given_name  = cn.given;
+          unowned string additional_names = cn.additional;
+          unowned string prefixes = cn.prefixes;
+          unowned string suffixes = cn.suffixes;
           structured_name = new StructuredName (family_name, given_name,
                                                 additional_names, prefixes,
                                                 suffixes);
@@ -1543,7 +1537,7 @@ public class Edsf.Persona : Folks.Persona,
 
       if (structured_name != null && !((!) structured_name).is_empty ())
         {
-          this._structured_name = (!) structured_name;
+          this._structured_name = (!) (owned) structured_name;
           this.notify_property ("structured-name");
         }
       else if (this._structured_name != null)
@@ -1648,8 +1642,8 @@ public class Edsf.Persona : Folks.Persona,
       /* First we get the standard Evo urls.. */
       foreach (var mapping in Persona._url_properties)
         {
-          var url_property = mapping.vcard_field_name;
-          var folks_type = mapping.folks_type;
+          unowned var url_property = mapping.vcard_field_name;
+          unowned var folks_type = mapping.folks_type;
 
           var u = this._get_property<string> (url_property);
           if (u != null && u != "")
@@ -1691,12 +1685,12 @@ public class Edsf.Persona : Folks.Persona,
 
   private void _update_im_addresses ()
     {
-      var im_eds_map = Persona._get_im_eds_map ();
+      unowned var im_eds_map = Persona._get_im_eds_map ();
       var new_im_addresses = new HashMultiMap<string, ImFieldDetails> (null,
           null, AbstractFieldDetails<string>.hash_static,
           AbstractFieldDetails<string>.equal_static);
 
-      foreach (var im_proto in im_eds_map.get_keys ())
+      foreach (unowned string im_proto in im_eds_map.get_keys ())
         {
           var addresses = this.contact.get_attributes (
               im_eds_map.lookup (im_proto));
@@ -1744,7 +1738,7 @@ public class Edsf.Persona : Folks.Persona,
        */
       foreach (var email in this._email_addresses)
         {
-          var _proto = this._im_proto_from_addr (email.value);
+          unowned var _proto = this._im_proto_from_addr (email.value);
           if (_proto != null)
             {
               unowned var proto = (!) _proto;
@@ -1854,11 +1848,11 @@ public class Edsf.Persona : Folks.Persona,
             }
         }
 
-      this._groups = new_categories;
+      this._groups = (owned) new_categories;
       this._groups_ro = this._groups.read_only_view;
 
       /* Check our new set of system groups if this is a Google address book. */
-      var store = (Edsf.PersonaStore) this.store;
+      unowned var store = (Edsf.PersonaStore) this.store;
       var in_google_personal_group = false;
       var should_notify_sysgroups = false;
 
@@ -1889,7 +1883,7 @@ public class Edsf.Persona : Folks.Persona,
 
               if (this._system_groups != null)
                 {
-                  foreach (unowned string system_group_id in this._system_groups)
+                  foreach (var system_group_id in this._system_groups)
                     {
                       if (!new_sysgroups.contains (system_group_id))
                         {
@@ -1969,13 +1963,13 @@ public class Edsf.Persona : Folks.Persona,
   /**
    * build a table of im protocols / im protocol aliases
    */
-  internal static GLib.HashTable<string, E.ContactField> _get_im_eds_map ()
+  internal static unowned GLib.HashTable<unowned string, E.ContactField> _get_im_eds_map ()
     {
       if (Edsf.Persona._im_eds_map == null)
         {
           var table =
-              new GLib.HashTable<string, E.ContactField> (str_hash,
-                  str_equal);
+              new GLib.HashTable<unowned string, E.ContactField>
+                  (str_hash, str_equal);
 
           table.insert ("aim", ContactField.IM_AIM);
           table.insert ("yahoo", ContactField.IM_YAHOO);
@@ -2032,8 +2026,8 @@ public class Edsf.Persona : Folks.Persona,
       // since the the phone number is stored as string
       if (!Utils.set_string_afd_equal (this._phone_numbers, new_phone_numbers))
         {
-          this._phone_numbers = new_phone_numbers;
           this._phone_numbers_ro = new_phone_numbers.read_only_view;
+          this._phone_numbers = (owned) new_phone_numbers;
           if (emit_notification)
             {
               this.notify_property ("phone-numbers");
@@ -2046,14 +2040,14 @@ public class Edsf.Persona : Folks.Persona,
       unowned GLib.List<string>? values = attr.get_values();
       unowned GLib.List<string>? l = values;
 
-      var address_format = "";
-      var po_box = "";
-      var extension = "";
-      var street = "";
-      var locality = "";
-      var region = "";
-      var postal_code = "";
-      var country = "";
+      unowned var address_format = "";
+      unowned var po_box = "";
+      unowned var extension = "";
+      unowned var street = "";
+      unowned var locality = "";
+      unowned var region = "";
+      unowned var postal_code = "";
+      unowned var country = "";
 
       if (l != null)
         {
@@ -2262,8 +2256,8 @@ public class Edsf.Persona : Folks.Persona,
 
       if (!Folks.Internal.equal_sets<string> (new_anti_links, this._anti_links))
         {
-          this._anti_links = new_anti_links;
           this._anti_links_ro = new_anti_links.read_only_view;
+          this._anti_links = (owned) new_anti_links;
           this.notify_property ("anti-links");
         }
     }
@@ -2282,7 +2276,7 @@ public class Edsf.Persona : Folks.Persona,
           prop_name);
     }
 
-  private string? _im_proto_from_addr (string addr)
+  private unowned string? _im_proto_from_addr (string addr)
     {
       if (addr.index_of ("@") == -1)
         return null;
