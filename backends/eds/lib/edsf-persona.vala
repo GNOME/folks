@@ -100,8 +100,8 @@ public class Edsf.Persona : Folks.Persona,
    * them. */
   private struct UrlTypeMapping
     {
-      string vcard_field_name;
-      string folks_type;
+      unowned string vcard_field_name;
+      unowned string folks_type;
     }
 
   internal const UrlTypeMapping[] _url_properties =
@@ -169,7 +169,7 @@ public class Edsf.Persona : Folks.Persona,
       null /* FIXME: https://bugzilla.gnome.org/show_bug.cgi?id=682698 */
     };
 
-  private static GLib.HashTable<string, E.ContactField>? _im_eds_map = null;
+  private static GLib.HashTable<unowned string, E.ContactField>? _im_eds_map = null;
 
   private E.Contact _contact; /* should be set on construct */
 
@@ -1214,7 +1214,7 @@ public class Edsf.Persona : Folks.Persona,
 
       if (_bday != null)
         {
-          var bday = (!) _bday;
+          unowned var bday = (!) _bday;
 
           /* Since e-d-s stores birthdays as a plain date, we take the
            * given date in local time and convert it to UTC as mandated
@@ -1274,7 +1274,7 @@ public class Edsf.Persona : Folks.Persona,
           new_roles.add ((!) default_role_fd);
         }
 
-      var vcard = (E.VCard) this.contact;
+      unowned E.VCard vcard = (E.VCard) this.contact;
       foreach (unowned E.VCardAttribute attr in vcard.get_attributes ())
         {
           if (attr.get_name () != "X-ROLES")
@@ -1395,10 +1395,10 @@ public class Edsf.Persona : Folks.Persona,
           this.contact.get_attribute ("X-FOLKS-WEB-SERVICES-IDS");
       if (services != null)
         {
-          foreach (var service in ((!) services).get_params ())
+          foreach (unowned VCardAttributeParam service in ((!) services).get_params ())
             {
               var service_name = service.get_name ().down ();
-              foreach (var service_id in service.get_values ())
+              foreach (unowned string service_id in service.get_values ())
                 {
                   if (service_id == "")
                     {
@@ -1529,13 +1529,13 @@ public class Edsf.Persona : Folks.Persona,
       var _cn = this._get_property<E.ContactName> ("name");
       if (_cn != null)
         {
-          var cn = (!) _cn;
+          unowned var cn = (!) _cn;
 
-          string family_name = cn.family;
-          string given_name  = cn.given;
-          string additional_names = cn.additional;
-          string prefixes = cn.prefixes;
-          string suffixes = cn.suffixes;
+          unowned string family_name = cn.family;
+          unowned string given_name  = cn.given;
+          unowned string additional_names = cn.additional;
+          unowned string prefixes = cn.prefixes;
+          unowned string suffixes = cn.suffixes;
           structured_name = new StructuredName (family_name, given_name,
                                                 additional_names, prefixes,
                                                 suffixes);
@@ -1560,12 +1560,12 @@ public class Edsf.Persona : Folks.Persona,
           return null;
         }
 
-      var p = (!) _p;
+      unowned var p = (!) _p;
 
       switch (p.type)
         {
           case ContactPhotoType.URI:
-            var uri = p.get_uri ();
+            unowned var uri = p.get_uri ();
             if (uri == null)
               {
                 return null;
@@ -1586,8 +1586,8 @@ public class Edsf.Persona : Folks.Persona,
 
             return new FileIcon (File.new_for_uri ((!) uri));
           case ContactPhotoType.INLINED:
-            var data = p.get_inlined ();
-            var mime_type = p.get_mime_type ();
+            unowned var data = p.get_inlined ();
+            unowned var mime_type = p.get_mime_type ();
             if (data == null || mime_type == null)
               {
                 return null;
@@ -1646,10 +1646,10 @@ public class Edsf.Persona : Folks.Persona,
           AbstractFieldDetails<string>.equal_static);
 
       /* First we get the standard Evo urls.. */
-      foreach (var mapping in Persona._url_properties)
+      foreach (unowned UrlTypeMapping mapping in Persona._url_properties)
         {
-          var url_property = mapping.vcard_field_name;
-          var folks_type = mapping.folks_type;
+          unowned var url_property = mapping.vcard_field_name;
+          unowned var folks_type = mapping.folks_type;
 
           var u = this._get_property<string> (url_property);
           if (u != null && u != "")
@@ -1661,7 +1661,7 @@ public class Edsf.Persona : Folks.Persona,
         }
 
       /* Now we go for extra URLs */
-      var vcard = (E.VCard) this.contact;
+      unowned E.VCard vcard = (E.VCard) this.contact;
       foreach (unowned E.VCardAttribute attr in vcard.get_attributes ())
         {
           if (attr.get_name () == "X-URIS")
@@ -1691,12 +1691,12 @@ public class Edsf.Persona : Folks.Persona,
 
   private void _update_im_addresses ()
     {
-      var im_eds_map = Persona._get_im_eds_map ();
+      unowned var im_eds_map = Persona._get_im_eds_map ();
       var new_im_addresses = new HashMultiMap<string, ImFieldDetails> (null,
           null, AbstractFieldDetails<string>.hash_static,
           AbstractFieldDetails<string>.equal_static);
 
-      foreach (var im_proto in im_eds_map.get_keys ())
+      foreach (unowned string im_proto in im_eds_map.get_keys ())
         {
           var addresses = this.contact.get_attributes (
               im_eds_map.lookup (im_proto));
@@ -1744,10 +1744,10 @@ public class Edsf.Persona : Folks.Persona,
        */
       foreach (var email in this._email_addresses)
         {
-          var _proto = this._im_proto_from_addr (email.value);
+          unowned var _proto = this._im_proto_from_addr (email.value);
           if (_proto != null)
             {
-              var proto = (!) _proto;
+              unowned var proto = (!) _proto;
 
               /* Has this already been added? */
               var exists = false;
@@ -1813,7 +1813,7 @@ public class Edsf.Persona : Folks.Persona,
       var new_categories = new SmallSet<string> ();
       bool any_added_categories = false;
 
-      foreach (var category_name in category_names)
+      foreach (unowned string category_name in category_names)
         {
           /* Skip the “Starred in Android” group for Google personas; we handle
            * it later. */
@@ -1858,13 +1858,13 @@ public class Edsf.Persona : Folks.Persona,
       this._groups_ro = this._groups.read_only_view;
 
       /* Check our new set of system groups if this is a Google address book. */
-      var store = (Edsf.PersonaStore) this.store;
+      unowned var store = (Edsf.PersonaStore) this.store;
       var in_google_personal_group = false;
       var should_notify_sysgroups = false;
 
       if (store._is_google_contacts_address_book ())
         {
-          var vcard = (E.VCard) this.contact;
+          unowned var vcard = (E.VCard) this.contact;
           unowned E.VCardAttribute? attr =
              vcard.get_attribute ("X-GOOGLE-SYSTEM-GROUP-IDS");
           if (attr != null)
@@ -1873,7 +1873,7 @@ public class Edsf.Persona : Folks.Persona,
               var new_sysgroups = new SmallSet<string> ();
               bool any_added_sysgroups = false;
 
-              foreach (var system_group_id in system_group_ids)
+              foreach (unowned string system_group_id in system_group_ids)
                 {
                   new_sysgroups.add (system_group_id);
 
@@ -1926,7 +1926,7 @@ public class Edsf.Persona : Folks.Persona,
         {
           this._is_favourite = false;
 
-          foreach (var category_name in category_names)
+          foreach (unowned string category_name in category_names)
             {
               /* We link the “Starred in Android” group to Google Contacts
                * address books. See: bgo#661490. */
@@ -1969,12 +1969,12 @@ public class Edsf.Persona : Folks.Persona,
   /**
    * build a table of im protocols / im protocol aliases
    */
-  internal static GLib.HashTable<string, E.ContactField> _get_im_eds_map ()
+  internal static unowned GLib.HashTable<unowned string, E.ContactField> _get_im_eds_map ()
     {
       if (Edsf.Persona._im_eds_map == null)
         {
           var table =
-              new GLib.HashTable<string, E.ContactField> (str_hash,
+              new GLib.HashTable<unowned string, E.ContactField> (str_hash,
                   str_equal);
 
           table.insert ("aim", ContactField.IM_AIM);
@@ -2046,14 +2046,14 @@ public class Edsf.Persona : Folks.Persona,
       unowned GLib.List<string>? values = attr.get_values();
       unowned GLib.List<string>? l = values;
 
-      var address_format = "";
-      var po_box = "";
-      var extension = "";
-      var street = "";
-      var locality = "";
-      var region = "";
-      var postal_code = "";
-      var country = "";
+      unowned var address_format = "";
+      unowned var po_box = "";
+      unowned var extension = "";
+      unowned var street = "";
+      unowned var locality = "";
+      unowned var region = "";
+      unowned var postal_code = "";
+      unowned var country = "";
 
       if (l != null)
         {
@@ -2162,7 +2162,7 @@ public class Edsf.Persona : Folks.Persona,
         {
           unowned GLib.List<string> ids_v = ((!) ids).get_values ();
 
-          foreach (var local_id in ids_v)
+          foreach (unowned string local_id in ids_v)
             {
               if (local_id != "")
                 {
@@ -2243,7 +2243,7 @@ public class Edsf.Persona : Folks.Persona,
     {
       var new_anti_links = new SmallSet<string> ();
 
-      var vcard = (E.VCard) this.contact;
+      unowned var vcard = (E.VCard) this.contact;
       foreach (unowned E.VCardAttribute attr in vcard.get_attributes ())
         {
           if (attr.get_name () != Edsf.PersonaStore.anti_links_attribute_name)
@@ -2292,7 +2292,7 @@ public class Edsf.Persona : Folks.Persona,
       if (tokens.length != 2)
         return null;
 
-      var domain = tokens[1];
+      unowned var domain = tokens[1];
       if (domain.index_of (".") == -1)
         return null;
 
