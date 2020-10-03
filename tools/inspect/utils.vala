@@ -70,7 +70,7 @@ private class Folks.Inspect.Utils
       unowned string[] array = (string[]) src;
       string output = "{ ";
       bool first = true;
-      foreach (var element in array)
+      foreach (unowned string element in array)
         {
           if (first == false)
             output += ", ";
@@ -131,7 +131,7 @@ private class Folks.Inspect.Utils
       var properties = individual.get_class ().list_properties ();
 
       Utils.indent ();
-      foreach (var pspec in properties)
+      foreach (unowned ParamSpec pspec in properties)
         {
           Value prop_value;
           string output_string;
@@ -170,7 +170,7 @@ private class Folks.Inspect.Utils
       var properties = persona.get_class ().list_properties ();
 
       Utils.indent ();
-      foreach (var pspec in properties)
+      foreach (unowned ParamSpec pspec in properties)
         {
           Value prop_value;
           string output_string;
@@ -206,7 +206,7 @@ private class Folks.Inspect.Utils
       var properties = store.get_class ().list_properties ();
 
       Utils.indent ();
-      foreach (var pspec in properties)
+      foreach (unowned ParamSpec pspec in properties)
         {
           Value prop_value;
           string output_string;
@@ -248,13 +248,13 @@ private class Folks.Inspect.Utils
       /* Overrides for various known properties */
       if (object_type.is_a (typeof (Individual)) && prop_name == "personas")
         {
-          Set<Persona> personas = (Set<Persona>) prop_value.get_object ();
+          unowned var personas = (Set<Persona>) prop_value.get_object ();
           return "List of %u personas".printf (personas.size);
         }
       else if (object_type.is_a (typeof (PersonaStore)) &&
           prop_name == "personas")
         {
-          Map<string, Persona> personas =
+          unowned var personas =
               (Map<string, Persona>) prop_value.get_object ();
           return "Set of %u personas".printf (personas.size);
         }
@@ -263,7 +263,7 @@ private class Folks.Inspect.Utils
                prop_name == "supported-fields" ||
                prop_name == "anti-links")
         {
-          Set<string> groups = (Set<string>) prop_value.get_object ();
+          unowned var groups = (Set<string>) prop_value.get_object ();
           output_string = "{ ";
           bool first = true;
 
@@ -281,7 +281,7 @@ private class Folks.Inspect.Utils
       else if (prop_name == "avatar")
         {
           string ret = null;
-          LoadableIcon? avatar = (LoadableIcon) prop_value.get_object ();
+          unowned var avatar = (LoadableIcon) prop_value.get_object ();
 
           if (avatar != null &&
               avatar is FileIcon && ((FileIcon) avatar).get_file () != null)
@@ -299,7 +299,7 @@ private class Folks.Inspect.Utils
       else if (prop_name == "file")
         {
           string ret = null;
-          File? file = (File) prop_value.get_object ();
+          unowned File? file = (File) prop_value.get_object ();
 
           if (file != null)
             {
@@ -311,7 +311,7 @@ private class Folks.Inspect.Utils
       else if (prop_name == "im-addresses" ||
                prop_name == "web-service-addresses")
         {
-          var prop_list =
+          unowned var prop_list =
               (MultiMap<string, AbstractFieldDetails<string>>)
                   prop_value.get_object ();
           output_string = "{ ";
@@ -346,7 +346,7 @@ private class Folks.Inspect.Utils
         {
           output_string = "{ ";
           bool first = true;
-          var prop_list =
+          unowned var prop_list =
               (Set<AbstractFieldDetails<string>>) prop_value.get_object ();
 
           foreach (var p in prop_list)
@@ -374,7 +374,7 @@ private class Folks.Inspect.Utils
         {
           output_string = "{ ";
           bool first = true;
-          var prop_list =
+          unowned var prop_list =
               (Set<PostalAddressFieldDetails>) prop_value.get_object ();
 
           foreach (var p in prop_list)
@@ -392,7 +392,7 @@ private class Folks.Inspect.Utils
         }
       else if (prop_name == "notes")
         {
-          Set<NoteFieldDetails> notes =
+          unowned var notes =
               prop_value.get_object () as Set<NoteFieldDetails>;
 
           output_string = "{ ";
@@ -413,7 +413,7 @@ private class Folks.Inspect.Utils
         }
       else if (prop_name == "roles")
         {
-          var roles = (Set<RoleFieldDetails>) prop_value.get_object ();
+          unowned var roles = (Set<RoleFieldDetails>) prop_value.get_object ();
 
           output_string = "{ ";
           bool first = true;

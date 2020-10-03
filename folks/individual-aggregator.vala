@@ -1245,7 +1245,7 @@ public class Folks.IndividualAggregator : Object
                 {
                   for (uint i = 0; i < ((!) candidates).length; i++)
                     {
-                      var candidate_ind = ((!) candidates)[i];
+                      unowned var candidate_ind = ((!) candidates)[i];
 
                       if (candidate_ind.trust_level != TrustLevel.NONE &&
                           candidate_ind.has_anti_link_with_persona (
@@ -1425,7 +1425,7 @@ public class Folks.IndividualAggregator : Object
        * changed, so that persona might require re-linking. We do this in a
        * simplistic and hacky way (which should work) by simply treating the
        * persona as if it's been removed and re-added. */
-      var persona = (!) (obj as Persona);
+      unowned var persona = (!) (obj as Persona);
 
       debug ("Linkable property '%s' changed for persona '%s' " +
           "(is user: %s, IID: %s).", pspec.name, persona.uid,
@@ -1440,7 +1440,7 @@ public class Folks.IndividualAggregator : Object
 
   private void _persona_anti_links_changed_cb (Object obj, ParamSpec pspec)
     {
-      var persona = obj as Persona;
+      unowned var persona = obj as Persona;
 
       /* The anti-links associated with the persona has changed, so that persona
        * might require re-linking. We do this in a simplistic and hacky way
@@ -1458,7 +1458,7 @@ public class Folks.IndividualAggregator : Object
 
   private void _connect_to_persona (Persona persona)
     {
-      foreach (var prop_name in persona.linkable_properties)
+      foreach (unowned string prop_name in persona.linkable_properties)
         {
           /* FIXME: https://bugzilla.gnome.org/show_bug.cgi?id=682698 */
           if (prop_name == null)
@@ -1468,7 +1468,7 @@ public class Folks.IndividualAggregator : Object
               this._persona_linkable_property_changed_cb);
         }
 
-      var al = persona as AntiLinkable;
+      unowned var al = persona as AntiLinkable;
       if (al != null)
         {
           al.notify["anti-links"].connect (this._persona_anti_links_changed_cb);
@@ -1477,14 +1477,14 @@ public class Folks.IndividualAggregator : Object
 
   private void _disconnect_from_persona (Persona persona)
     {
-      var al = persona as AntiLinkable;
+      unowned var al = persona as AntiLinkable;
       if (al != null)
         {
           al.notify["anti-links"].disconnect (
               this._persona_anti_links_changed_cb);
         }
 
-      foreach (var prop_name in persona.linkable_properties)
+      foreach (unowned string prop_name in persona.linkable_properties)
         {
           /* FIXME: https://bugzilla.gnome.org/show_bug.cgi?id=682698 */
           if (prop_name == null)
@@ -1502,20 +1502,20 @@ public class Folks.IndividualAggregator : Object
    */
   private void _link_map_set (string key, Individual individual)
     {
-      GenericArray<Individual>? inds = this._link_map[key];
+      unowned GenericArray<Individual>? inds = this._link_map[key];
 
       if (inds == null)
         {
-          inds = new GenericArray<Individual> ();
-          this._link_map.insert (key, (!) inds);
+          var new_inds = new GenericArray<Individual> ();
+          this._link_map.insert (key, new_inds);
+          new_inds.add (individual);
+          return;
         }
-      else
+
+      for (uint i = 0; i < ((!) inds).length; i++)
         {
-          for (uint i = 0; i < ((!) inds).length; i++)
-            {
-              if (((!) inds)[i] == individual)
-                return;
-            }
+          if (((!) inds)[i] == individual)
+            return;
         }
 
       ((!) inds).add (individual);
@@ -1633,7 +1633,7 @@ public class Folks.IndividualAggregator : Object
           /* Find the Individual containing the Persona (if any) and mark them
            * for removal (any other Personas they have which aren't being
            * removed will be re-linked into other Individuals). */
-          Individual? ind = persona.individual;
+          unowned Individual? ind = persona.individual;
           if (ind != null)
             {
               removed_individuals.add ((!) ind);

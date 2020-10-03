@@ -180,12 +180,12 @@ public class Folks.Individual : Object,
        * "avatar" property as writeable. */
       foreach (var p in this._persona_set)
         {
-          var _a = p as AvatarDetails;
+          unowned var _a = p as AvatarDetails;
           if (_a == null)
             {
               continue;
             }
-          var a = (!) _a;
+          unowned var a = (!) _a;
 
           if ("avatar" in p.writeable_properties)
             {
@@ -367,12 +367,12 @@ public class Folks.Individual : Object,
        * as a writeable property. */
       foreach (var p in this._persona_set)
         {
-          var _a = p as AliasDetails;
+          unowned var _a = p as AliasDetails;
           if (_a == null)
             {
               continue;
             }
-          var a = (!) _a;
+          unowned var a = (!) _a;
 
           if ("alias" in p.writeable_properties)
             {
@@ -476,12 +476,12 @@ public class Folks.Individual : Object,
        * as a writeable property. */
       foreach (var p in this._persona_set)
         {
-          var _n = p as NameDetails;
+          unowned var _n = p as NameDetails;
           if (_n == null)
             {
               continue;
             }
-          var n = (!) _n;
+          unowned var n = (!) _n;
 
           if ("nickname" in p.writeable_properties)
             {
@@ -727,12 +727,12 @@ public class Folks.Individual : Object,
        * is one property which is harmless to propagate. */
       foreach (var p in this._persona_set)
         {
-          var _a = p as FavouriteDetails;
+          unowned var _a = p as FavouriteDetails;
           if (_a == null)
             {
               continue;
             }
-          var a = (!) _a;
+          unowned var a = (!) _a;
 
           if ("is-favourite" in p.writeable_properties)
             {
@@ -805,12 +805,12 @@ public class Folks.Individual : Object,
        * writeable property. */
       foreach (var p in this._persona_set)
         {
-          var _g = p as GroupDetails;
+          unowned var _g = p as GroupDetails;
           if (_g == null)
             {
               continue;
             }
-          var g = (!) _g;
+          unowned var g = (!) _g;
 
           if ("groups" in p.writeable_properties)
             {
@@ -892,7 +892,7 @@ public class Folks.Individual : Object,
           /* Iterate over all personas and sum up their IM interaction counts*/
           foreach (var persona in this._persona_set)
             {
-              var my_interaction_details = persona as InteractionDetails;
+              unowned var my_interaction_details = persona as InteractionDetails;
               if (my_interaction_details != null)
                 {
                   counter = counter + my_interaction_details.im_interaction_count;
@@ -916,7 +916,7 @@ public class Folks.Individual : Object,
               /* Iterate over all personas and get the latest IM interaction datetime */
               foreach (var persona in this._persona_set)
                 {
-                  var my_interaction_details = persona as InteractionDetails;
+                  unowned var my_interaction_details = persona as InteractionDetails;
                   if (my_interaction_details != null &&
                       my_interaction_details.last_im_interaction_datetime != null)
                     {
@@ -944,7 +944,7 @@ public class Folks.Individual : Object,
           /* Iterate over all personas and sum up their call interaction counts*/
           foreach (var persona in this._persona_set)
             {
-              var my_interaction_details = persona as InteractionDetails;
+              unowned var my_interaction_details = persona as InteractionDetails;
               if (my_interaction_details != null)
                 {
                   counter = counter + my_interaction_details.call_interaction_count;
@@ -1000,7 +1000,7 @@ public class Folks.Individual : Object,
         {
           if ("extended-info" in p.writeable_properties)
             {
-              var e = p as ExtendedInfo;
+              unowned var e = p as ExtendedInfo;
               var details = e.get_extended_field (name);
               if (details != null)
                 {
@@ -1031,7 +1031,7 @@ public class Folks.Individual : Object,
         {
           if ("extended-info" in p.writeable_properties)
             {
-              var e = p as ExtendedInfo;
+              unowned var e = p as ExtendedInfo;
               try
                 {
                   yield e.change_extended_field (name, value);
@@ -1081,7 +1081,7 @@ public class Folks.Individual : Object,
         {
           if ("extended-info" in p.writeable_properties)
             {
-              var e = p as ExtendedInfo;
+              unowned var e = p as ExtendedInfo;
               try
                 {
                   yield e.remove_extended_field (name);
@@ -1353,7 +1353,7 @@ public class Folks.Individual : Object,
 
   private void _persona_notify_cb (Object obj, ParamSpec ps)
     {
-      var persona = (Persona) obj;  /* will abort on failure */
+      unowned var persona = (Persona) obj;  /* will abort on failure */
 
       /* It should not be possible for two Individuals to be simultaneously
        * connected to the same Persona (as _connect_to_persona() will disconnect
@@ -1383,7 +1383,7 @@ public class Folks.Individual : Object,
           return;
         }
 
-      foreach (var notifier in Individual._notifiers)
+      foreach (unowned _Notifier notifier in Individual._notifiers)
         {
           if (ps.name == notifier.property)
             {
@@ -1617,7 +1617,7 @@ public class Folks.Individual : Object,
           return order;
         };
 
-      Persona? candidate_p = null;
+      unowned Persona? candidate_p = null;
 
       foreach (var p in this._persona_set)
         {
@@ -1775,7 +1775,7 @@ public class Folks.Individual : Object,
         {
           if (p is GroupDetails)
             {
-              var persona = (GroupDetails) p;
+              unowned var persona = (GroupDetails) p;
 
               foreach (var group in persona.groups)
                 {
@@ -1824,8 +1824,8 @@ public class Folks.Individual : Object,
           return PresenceDetails.typecmp (a_presence, b_presence);
         }, "presence", (p) =>
         {
-          var presence_message = ""; /* must not be null */
-          var presence_status = ""; /* must not be null */
+          unowned var presence_message = ""; /* must not be null */
+          unowned var presence_status = ""; /* must not be null */
           string[] client_types = {};
           var presence_type = Folks.PresenceType.UNSET;
 
@@ -1885,9 +1885,9 @@ public class Folks.Individual : Object,
         });
     }
 
-  private string _look_up_alias_for_display_name (Persona? p)
+  private unowned string _look_up_alias_for_display_name (Persona? p)
     {
-      var a = p as AliasDetails;
+      unowned var a = p as AliasDetails;
       if (a != null && a.alias != null)
         {
           return a.alias;
@@ -1898,7 +1898,7 @@ public class Folks.Individual : Object,
 
   private string _look_up_name_details_for_display_name (Persona? p)
     {
-      var n = p as NameDetails;
+      unowned var n = p as NameDetails;
       if (n != null)
         {
           if (n.full_name != "")
@@ -1918,9 +1918,9 @@ public class Folks.Individual : Object,
       return "";
     }
 
-  private string _look_up_email_address_for_display_name (Persona? p)
+  private unowned string _look_up_email_address_for_display_name (Persona? p)
     {
-      var e = p as EmailDetails;
+      unowned var e = p as EmailDetails;
       if (e != null)
         {
           foreach (var email_fd in ((!) e).email_addresses)
@@ -1935,9 +1935,9 @@ public class Folks.Individual : Object,
       return "";
     }
 
-  private string _look_up_phone_number_for_display_name (Persona? p)
+  private unowned string _look_up_phone_number_for_display_name (Persona? p)
     {
-      var e = p as PhoneDetails;
+      unowned var e = p as PhoneDetails;
       if (e != null)
         {
           foreach (var phone_fd in ((!) e).phone_numbers)
@@ -1952,7 +1952,7 @@ public class Folks.Individual : Object,
       return "";
     }
 
-  private string _look_up_display_id_for_display_name (Persona? p)
+  private unowned string _look_up_display_id_for_display_name (Persona? p)
     {
       // Sometimes, the display_id will fall back to the IID.
       // The last condition makes sure we don't use that as a display name
@@ -1966,7 +1966,7 @@ public class Folks.Individual : Object,
 
   private string _look_up_postal_address_for_display_name (Persona? p)
     {
-      var address_details = p as PostalAddressDetails;
+      unowned var address_details = p as PostalAddressDetails;
       if (address_details != null)
         {
           foreach (var pa_fd in ((!) address_details).postal_addresses)
@@ -1984,7 +1984,7 @@ public class Folks.Individual : Object,
 
   private void _update_display_name ()
     {
-      Persona? primary_persona = null;
+      unowned Persona? primary_persona = null;
       var new_display_name = "";
 
       /* Find the primary persona first. The primary persona's values will be
@@ -2122,14 +2122,14 @@ public class Folks.Individual : Object,
     {
       this._update_single_valued_property (typeof (AliasDetails), (p) =>
         {
-          var alias = ((AliasDetails) p).alias;
+          unowned var alias = ((AliasDetails) p).alias;
           return_val_if_fail (alias != null, false);
 
           return (alias.strip () != ""); /* empty aliases are unset */
         }, (a, b) =>
         {
-          var a_alias = ((AliasDetails) a).alias;
-          var b_alias = ((AliasDetails) b).alias;
+          unowned var a_alias = ((AliasDetails) a).alias;
+          unowned var b_alias = ((AliasDetails) b).alias;
 
           return_val_if_fail (a_alias != null, 0);
           return_val_if_fail (b_alias != null, 0);
@@ -2161,8 +2161,8 @@ public class Folks.Individual : Object,
            * display ID or something else undesirable. */
           if (this._alias != alias)
             {
-              this._alias = alias;
               debug ("Setting alias ‘%s’", alias);
+              this._alias = (owned) alias;
               this.notify_property ("alias");
 
               this._update_display_name ();
@@ -2181,7 +2181,7 @@ public class Folks.Individual : Object,
           return 0;
         }, "avatar", (p) =>
         {
-          LoadableIcon? avatar = null;
+          unowned LoadableIcon? avatar = null;
 
           if (p != null)
             {
@@ -2234,7 +2234,7 @@ public class Folks.Individual : Object,
               foreach (var persona in this._persona_set)
                 {
                   /* We only care about personas implementing the given interface. */
-                  var im_details = persona as ImDetails;
+                  unowned var im_details = persona as ImDetails;
                   if (im_details != null)
                     {
                       var iter = im_details.im_addresses.map_iterator ();
@@ -2278,7 +2278,7 @@ public class Folks.Individual : Object,
               foreach (var persona in this._persona_set)
                 {
                   /* We only care about personas implementing the given interface. */
-                  var web_service_details = persona as WebServiceDetails;
+                  unowned var web_service_details = persona as WebServiceDetails;
                   if (web_service_details != null)
                     {
                       var iter = web_service_details.web_service_addresses.map_iterator ();
@@ -2329,7 +2329,7 @@ public class Folks.Individual : Object,
     {
       this._update_single_valued_property (typeof (NameDetails), (p) =>
         {
-          var name = ((NameDetails) p).structured_name;
+          unowned var name = ((NameDetails) p).structured_name;
           return (name != null && !((!) name).is_empty ());
         }, (a, b) =>
         {
@@ -2337,7 +2337,7 @@ public class Folks.Individual : Object,
           return 0;
         }, "structured-name", (p) =>
         {
-          StructuredName? name = null;
+          unowned StructuredName? name = null;
 
           if (p != null)
             {
@@ -2365,7 +2365,7 @@ public class Folks.Individual : Object,
     {
       this._update_single_valued_property (typeof (NameDetails), (p) =>
         {
-          var name = ((NameDetails) p).full_name;
+          unowned var name = ((NameDetails) p).full_name;
           return_val_if_fail (name != null, false);
 
           return (name.strip () != ""); /* empty names are unset */
@@ -2396,7 +2396,7 @@ public class Folks.Individual : Object,
     {
       this._update_single_valued_property (typeof (NameDetails), (p) =>
         {
-          var nickname = ((NameDetails) p).nickname;
+          unowned var nickname = ((NameDetails) p).nickname;
           return_val_if_fail (nickname != null, false);
 
           return (nickname.strip () != ""); /* empty names are unset */
@@ -2513,7 +2513,7 @@ public class Folks.Individual : Object,
                   /* We only care about personas implementing the given
                    * interface. If the same URL exists multiple times we merge
                    * the parameters. */
-                  var url_details = persona as UrlDetails;
+                  unowned var url_details = persona as UrlDetails;
                   if (url_details != null)
                     {
                       foreach (var url_fd in ((!) url_details).urls)
@@ -2570,7 +2570,7 @@ public class Folks.Individual : Object,
                   /* We only care about personas implementing the given
                    * interface. If the same phone number exists multiple times
                    * we merge the parameters. */
-                  var phone_details = persona as PhoneDetails;
+                  unowned var phone_details = persona as PhoneDetails;
                   if (phone_details != null)
                     {
                       foreach (var phone_fd in ((!) phone_details).phone_numbers)
@@ -2627,7 +2627,7 @@ public class Folks.Individual : Object,
                   /* We only care about personas implementing the given
                    * interface. If the same e-mail address exists multiple times
                    * we merge the parameters. */
-                  var email_details = persona as EmailDetails;
+                  unowned var email_details = persona as EmailDetails;
                   if (email_details != null)
                     {
                       foreach (var email_fd in ((!) email_details).email_addresses)
@@ -2716,7 +2716,7 @@ public class Folks.Individual : Object,
 
               foreach (var persona in this._persona_set)
                 {
-                  var local_id_details = persona as LocalIdDetails;
+                  unowned var local_id_details = persona as LocalIdDetails;
                   if (local_id_details != null)
                     {
                       foreach (var id in ((!) local_id_details).local_ids)
@@ -2786,7 +2786,7 @@ public class Folks.Individual : Object,
 
               foreach (var persona in this._persona_set)
                 {
-                  var postal_address_details = persona as PostalAddressDetails;
+                  unowned var postal_address_details = persona as PostalAddressDetails;
                   if (postal_address_details != null)
                     {
                       foreach (var pafd in
@@ -2814,14 +2814,14 @@ public class Folks.Individual : Object,
     {
       this._update_single_valued_property (typeof (BirthdayDetails), (p) =>
         {
-          var details = ((BirthdayDetails) p);
+          unowned var details = ((BirthdayDetails) p);
           return details.birthday != null && details.calendar_event_id != null;
         }, (a, b) =>
         {
-          var a_birthday = ((BirthdayDetails) a).birthday;
-          var b_birthday = ((BirthdayDetails) b).birthday;
-          var a_event_id = ((BirthdayDetails) a).calendar_event_id;
-          var b_event_id = ((BirthdayDetails) b).calendar_event_id;
+          unowned var a_birthday = ((BirthdayDetails) a).birthday;
+          unowned var b_birthday = ((BirthdayDetails) b).birthday;
+          unowned var a_event_id = ((BirthdayDetails) a).calendar_event_id;
+          unowned var b_event_id = ((BirthdayDetails) b).calendar_event_id;
 
           var a_birthday_is_set = (a_birthday != null) ? 1 : 0;
           var b_birthday_is_set = (b_birthday != null) ? 1 : 0;
@@ -2881,7 +2881,7 @@ public class Folks.Individual : Object,
 
               foreach (var persona in this._persona_set)
                 {
-                  var note_details = persona as NoteDetails;
+                  unowned var note_details = persona as NoteDetails;
                   if (note_details != null)
                     {
                       foreach (var n in ((!) note_details).notes)
@@ -3020,7 +3020,7 @@ public class Folks.Individual : Object,
        */
       if (this._persona_set.size > 0)
         {
-          Persona? chosen_persona = null;
+          unowned Persona? chosen_persona = null;
 
           foreach (var persona in this._persona_set)
             {
@@ -3030,7 +3030,7 @@ public class Folks.Individual : Object,
                   continue;
                 }
 
-              var _chosen_persona = (!) chosen_persona;
+              unowned var _chosen_persona = (!) chosen_persona;
 
               if ((_chosen_persona.store.is_primary_store == false &&
                       persona.store.is_primary_store == true) ||
@@ -3094,11 +3094,11 @@ public class Folks.Individual : Object,
    */
   public bool has_anti_link_with_persona (Persona p)
     {
-      var al = p as AntiLinkable;
+      unowned var al = p as AntiLinkable;
 
       foreach (var persona in this._persona_set)
         {
-          var pl = persona as AntiLinkable;
+          unowned var pl = persona as AntiLinkable;
 
           if ((al != null && ((!) al).has_anti_link_with_persona (persona)) ||
               (pl != null && ((!) pl).has_anti_link_with_persona (p)))
