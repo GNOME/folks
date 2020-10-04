@@ -283,11 +283,20 @@ public abstract class Folks.Persona : Object
       assert_not_reached ();
     }
 
-  private static string _escape_uid_component (string component)
+  private static string _add_escaped_uid_component (StringBuilder uid, string component)
     {
       /* Escape colons with backslashes */
-      string escaped = component.replace ("\\", "\\\\");
-      return escaped.replace (":", "\\:");
+      for (int i = 0; i < component.length; i++)
+        {
+          char c = component[i];
+          if (c == ':' || c == '\\')
+            {
+              uid.append_c ('\\');
+            }
+          uid.append_c (c);
+        }
+
+      return uid.str;
     }
 
   private static string _unescape_uid_component (string component)
@@ -316,9 +325,20 @@ public abstract class Folks.Persona : Object
         requires (persona_store_id != "")
         requires (persona_id != "")
     {
-      return "%s:%s:%s".printf (Persona._escape_uid_component (backend_name),
-          Persona._escape_uid_component (persona_store_id),
-          Persona._escape_uid_component (persona_id));
+      long min_total_length = backend_name.length
+          + persona_store_id.length
+          + persona_id.length
+          + 2  // 2 colons
+          + 1; // terminator
+
+      StringBuilder uid = new StringBuilder.sized (min_total_length);
+      Persona._add_escaped_uid_component (uid, backend_name);
+      uid.append_c (':');
+      Persona._add_escaped_uid_component (uid, persona_store_id);
+      uid.append_c (':');
+      Persona._add_escaped_uid_component (uid, persona_id);
+
+      return uid.str;
     }
 
   /**
