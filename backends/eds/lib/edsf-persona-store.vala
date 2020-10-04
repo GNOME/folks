@@ -1721,7 +1721,9 @@ public class Edsf.PersonaStore : Folks.PersonaStore
           return null;
         }
 
-      var details = new ExtendedFieldDetails (attr.get_value (), null);
+      unowned var vals = attr.get_values ();
+      unowned string? val = (vals != null)? vals.data : null;
+      var details = new ExtendedFieldDetails (val, null);
 
       foreach (unowned E.VCardAttributeParam param in attr.get_params ())
         {

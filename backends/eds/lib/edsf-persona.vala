@@ -1181,7 +1181,7 @@ public class Edsf.Persona : Folks.Persona,
 
       if (gender_attr != null)
         {
-          var val = ((!) gender_attr).get_value ();
+          unowned var val = get_vcard_attr_value ((!) gender_attr);
           if (val != null)
             {
               switch (((!) val).up ())
@@ -1278,7 +1278,7 @@ public class Edsf.Persona : Folks.Persona,
           if (attr.get_name () != "X-ROLES")
             continue;
 
-          var val = attr.get_value ();
+          unowned var val = get_vcard_attr_value (attr);
           if (val == null || (!) val == "")
              {
               continue;
@@ -1426,7 +1426,7 @@ public class Edsf.Persona : Folks.Persona,
       var attrs = this.contact.get_attributes (E.ContactField.EMAIL);
       foreach (unowned E.VCardAttribute attr in attrs)
         {
-          var val = attr.get_value ();
+          unowned var val = get_vcard_attr_value (attr);
           if (val == null || (!) val == "")
             {
               continue;
@@ -1648,7 +1648,7 @@ public class Edsf.Persona : Folks.Persona,
         {
           if (attr.get_name () == "X-URIS")
             {
-              var val = attr.get_value ();
+              unowned var val = get_vcard_attr_value (attr);
               if (val == null || (!) val == "")
                 {
                   continue;
@@ -1686,7 +1686,7 @@ public class Edsf.Persona : Folks.Persona,
             {
               try
                 {
-                  var addr = attr.get_value ();
+                  unowned var addr = get_vcard_attr_value (attr);
                   if (addr == null || (!) addr == "")
                     {
                       continue;
@@ -1998,7 +1998,7 @@ public class Edsf.Persona : Folks.Persona,
       var attrs = this.contact.get_attributes (E.ContactField.TEL);
       foreach (unowned E.VCardAttribute attr in attrs)
         {
-          var val = attr.get_value ();
+          unowned var val = get_vcard_attr_value (attr);
           if (val == null || (!) val == "")
             {
               continue;
@@ -2207,7 +2207,7 @@ public class Edsf.Persona : Folks.Persona,
           this.contact.get_attribute ("X-FOLKS-FAVOURITE");
       if (fav != null)
         {
-          var val = ((!) fav).get_value ();
+          unowned var val = get_vcard_attr_value ((!) fav);
           if (val != null && ((!) val).down () == "true")
             {
               is_fav = true;
@@ -2233,7 +2233,7 @@ public class Edsf.Persona : Folks.Persona,
               continue;
             }
 
-          var val = attr.get_value ();
+          unowned var val = get_vcard_attr_value (attr);
           if (val == null || (!) val == "")
              {
               continue;
@@ -2264,12 +2264,18 @@ public class Edsf.Persona : Folks.Persona,
           prop_name);
     }
 
-  // We can prevent a lot of string copies here
+  // Some helpers to prevent a lot of string copies
   private unowned string? _get_string_property (string prop_name)
     {
       var field = E.Contact.field_id (prop_name);
       return_if_fail (E.Contact.field_is_string (field));
       return contact.get_const<string> (field);
+    }
+
+  private unowned string? get_vcard_attr_value (E.VCardAttribute attr)
+    {
+      unowned var values = attr.get_values ();
+      return (values != null)? values.data : null;
     }
 
   private unowned string? _im_proto_from_addr (string addr)
