@@ -961,8 +961,7 @@ public class Edsf.Persona : Folks.Persona,
   internal static string? build_iid_from_contact (string store_id,
       E.Contact contact)
     {
-      var contact_id =
-          Edsf.Persona._get_property_from_contact<string> (contact, "id");
+      unowned var contact_id = contact.get_const<string>(E.ContactField.UID);
 
       /* If the contact has no UID, then we cannot support it. Callers must
        * this first. */
@@ -1002,10 +1001,9 @@ public class Edsf.Persona : Folks.Persona,
    */
   public Persona (PersonaStore store, E.Contact contact)
     {
-      var _contact_id =
-          Edsf.Persona._get_property_from_contact<string> (contact, "id");
+      unowned var _contact_id = contact.get_const<string>(E.ContactField.UID);
       assert (_contact_id != null && _contact_id != "");
-      var contact_id = (!) _contact_id;
+      unowned var contact_id = (!) _contact_id;
 
       var uid = Folks.Persona.build_uid (BACKEND_NAME, store.id, contact_id);
       var iid = Edsf.Persona.build_iid (store.id, contact_id);
@@ -1341,13 +1339,13 @@ public class Edsf.Persona : Folks.Persona,
     {
       RoleFieldDetails? _default_role = null;
 
-      var org = this._get_property<string> ("org");
-      var org_unit = this._get_property<string> ("org_unit");
-      var office = this._get_property<string> ("office");
-      var title = this._get_property<string> ("title");
-      var role = this._get_property<string> ("role");
-      var manager = this._get_property<string> ("manager");
-      var assistant = this._get_property<string> ("assistant");
+      unowned var org = this._get_string_property ("org");
+      unowned var org_unit = this._get_string_property ("org_unit");
+      unowned var office = this._get_string_property ("office");
+      unowned var title = this._get_string_property ("title");
+      unowned var role = this._get_string_property ("role");
+      unowned var manager = this._get_string_property ("manager");
+      unowned var assistant = this._get_string_property ("assistant");
 
       if (org != null ||
           org_unit != null ||
@@ -1475,7 +1473,7 @@ public class Edsf.Persona : Folks.Persona,
           AbstractFieldDetails<string>.hash_static,
           AbstractFieldDetails<string>.equal_static);
 
-      var n = this._get_property<string> ("note");
+      unowned var n = this._get_string_property ("note");
       if (n != null && n != "")
         {
           var note = new NoteFieldDetails ((!) n);
@@ -1495,30 +1493,14 @@ public class Edsf.Persona : Folks.Persona,
 
   private void _update_names ()
     {
-      var _full_name = this._get_property<string> ("full_name");
-
-      if (_full_name == null)
-        {
-          _full_name = "";
-        }
-
-      var full_name = (!) _full_name;
-
+      unowned var full_name = this._get_string_property ("full_name") ?? "";
       if (this._full_name != full_name)
         {
           this._full_name = full_name;
           this.notify_property ("full-name");
         }
 
-      var _nickname = this._get_property<string> ("nickname");
-
-      if (_nickname == null)
-        {
-          _nickname = "";
-        }
-
-      var nickname = (!) _nickname;
-
+      unowned var nickname = this._get_string_property ("nickname") ?? "";
       if (this._nickname != nickname)
         {
           this._nickname = nickname;
@@ -1651,7 +1633,7 @@ public class Edsf.Persona : Folks.Persona,
           unowned var url_property = mapping.vcard_field_name;
           unowned var folks_type = mapping.folks_type;
 
-          var u = this._get_property<string> (url_property);
+          unowned var u = this._get_string_property (url_property);
           if (u != null && u != "")
             {
               var fd_u = new UrlFieldDetails ((!) u);
@@ -2282,7 +2264,15 @@ public class Edsf.Persona : Folks.Persona,
           prop_name);
     }
 
-  private string? _im_proto_from_addr (string addr)
+  // We can prevent a lot of string copies here
+  private unowned string? _get_string_property (string prop_name)
+    {
+      var field = E.Contact.field_id (prop_name);
+      return_if_fail (E.Contact.field_is_string (field));
+      return contact.get_const<string> (field);
+    }
+
+  private unowned string? _im_proto_from_addr (string addr)
     {
       if (addr.index_of ("@") == -1)
         return null;
