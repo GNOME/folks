@@ -283,7 +283,7 @@ public abstract class Folks.Persona : Object
       assert_not_reached ();
     }
 
-  private static string _add_escaped_uid_component (StringBuilder uid, string component)
+  private static void _add_escaped_uid_component (StringBuilder uid, string component)
     {
       /* Escape colons with backslashes */
       for (int i = 0; i < component.length; i++)
@@ -295,8 +295,6 @@ public abstract class Folks.Persona : Object
             }
           uid.append_c (c);
         }
-
-      return uid.str;
     }
 
   private static string _unescape_uid_component (string component)
@@ -338,7 +336,7 @@ public abstract class Folks.Persona : Object
       uid.append_c (':');
       Persona._add_escaped_uid_component (uid, persona_id);
 
-      return uid.str;
+      return (owned) uid.str;
     }
 
   /**

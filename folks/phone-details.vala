@@ -91,10 +91,10 @@ public class Folks.PhoneFieldDetails : AbstractFieldDetails<string>
    */
   public override bool values_equal (AbstractFieldDetails<string> that)
     {
-      var _that_fd = that as PhoneFieldDetails;
+      unowned var _that_fd = that as PhoneFieldDetails;
       if (_that_fd == null)
         return false;
-      PhoneFieldDetails that_fd = (!) _that_fd;
+      unowned PhoneFieldDetails that_fd = (!) _that_fd;
 
       var n1 = PhoneFieldDetails._drop_extension (this.get_normalised ());
       var n2 = PhoneFieldDetails._drop_extension (that_fd.get_normalised ());
@@ -185,7 +185,7 @@ public class Folks.PhoneFieldDetails : AbstractFieldDetails<string>
          builder.append_c (digit);
        }
 
-      return builder.str;
+      return (owned) builder.str;
     }
 
   /**
@@ -214,7 +214,7 @@ public class Folks.PhoneFieldDetails : AbstractFieldDetails<string>
           builder.append_c (digit);
         }
 
-      return builder.str;
+      return (owned) builder.str;
     }
 }
 

@@ -178,8 +178,9 @@ public class Folks.Individual : Object,
 
       /* Try to write it to only the writeable Personas which have the
        * "avatar" property as writeable. */
-      foreach (var p in this._persona_set)
+      for (int i = 0; i < this._persona_set.size; i++)
         {
+          unowned var p = this._persona_set[i];
           unowned var _a = p as AvatarDetails;
           if (_a == null)
             {
@@ -365,8 +366,9 @@ public class Folks.Individual : Object,
 
       /* Try to write it to only the writeable Personas which have "alias"
        * as a writeable property. */
-      foreach (var p in this._persona_set)
+      for (int i = 0; i < this._persona_set.size; i++)
         {
+          unowned var p = this._persona_set[i];
           unowned var _a = p as AliasDetails;
           if (_a == null)
             {
@@ -474,8 +476,9 @@ public class Folks.Individual : Object,
 
       /* Try to write it to only the writeable Personas which have "nickname"
        * as a writeable property. */
-      foreach (var p in this._persona_set)
+      for (int i = 0; i < this._persona_set.size; i++)
         {
+          unowned var p = this._persona_set[i];
           unowned var _n = p as NameDetails;
           if (_n == null)
             {
@@ -725,8 +728,9 @@ public class Folks.Individual : Object,
        * NOTE: We don't check whether the persona's store is writeable, as we
        * want is-favourite status to propagate to all stores, if possible. This
        * is one property which is harmless to propagate. */
-      foreach (var p in this._persona_set)
+      for (int i = 0; i < this._persona_set.size; i++)
         {
+          unowned var p = this._persona_set[i];
           unowned var _a = p as FavouriteDetails;
           if (_a == null)
             {
@@ -803,8 +807,9 @@ public class Folks.Individual : Object,
 
       /* Try to write it to only the Personas which have "groups" as a
        * writeable property. */
-      foreach (var p in this._persona_set)
+      for (int i = 0; i < this._persona_set.size; i++)
         {
+          unowned var p = this._persona_set[i];
           unowned var _g = p as GroupDetails;
           if (_g == null)
             {
@@ -890,8 +895,9 @@ public class Folks.Individual : Object,
         {
           uint counter = 0;
           /* Iterate over all personas and sum up their IM interaction counts*/
-          foreach (var persona in this._persona_set)
+          for (int i = 0; i < this._persona_set.size; i++)
             {
+              unowned var persona = this._persona_set[i];
               unowned var my_interaction_details = persona as InteractionDetails;
               if (my_interaction_details != null)
                 {
@@ -914,8 +920,9 @@ public class Folks.Individual : Object,
           if (this._last_im_interaction_datetime == null)
             {
               /* Iterate over all personas and get the latest IM interaction datetime */
-              foreach (var persona in this._persona_set)
+              for (int i = 0; i < this._persona_set.size; i++)
                 {
+                  unowned var persona = this._persona_set[i];
                   unowned var my_interaction_details = persona as InteractionDetails;
                   if (my_interaction_details != null &&
                       my_interaction_details.last_im_interaction_datetime != null)
@@ -942,8 +949,9 @@ public class Folks.Individual : Object,
         {
           uint counter = 0;
           /* Iterate over all personas and sum up their call interaction counts*/
-          foreach (var persona in this._persona_set)
+          for (int i = 0; i < this._persona_set.size; i++)
             {
+              unowned var persona = this._persona_set[i];
               unowned var my_interaction_details = persona as InteractionDetails;
               if (my_interaction_details != null)
                 {
@@ -966,9 +974,10 @@ public class Folks.Individual : Object,
           if (this._last_call_interaction_datetime == null)
             {
               /* Iterate over all personas and get the latest IM interaction datetime */
-              foreach (var persona in this._persona_set)
+              for (int i = 0; i < this._persona_set.size; i++)
                 {
-                  var my_interaction_details = persona as InteractionDetails;
+                  unowned var persona = this._persona_set[i];
+                  unowned var my_interaction_details = persona as InteractionDetails;
                   if (my_interaction_details != null &&
                       my_interaction_details.last_call_interaction_datetime != null)
                     {
@@ -996,8 +1005,9 @@ public class Folks.Individual : Object,
 
       /* Try to get it from the writeable Personas which have "extended-info"
        * as a writeable property. */
-      foreach (var p in this._persona_set)
+      for (int i = 0; i < this._persona_set.size; i++)
         {
+          unowned var p = this._persona_set[i];
           if ("extended-info" in p.writeable_properties)
             {
               unowned var e = p as ExtendedInfo;
@@ -1027,8 +1037,9 @@ public class Folks.Individual : Object,
 
       /* Try to write it to only the writeable Personas which have "extended-info"
        * as a writeable property. */
-      foreach (var p in this._persona_set)
+      for (int i = 0; i < this._persona_set.size; i++)
         {
+          unowned var p = this._persona_set[i];
           if ("extended-info" in p.writeable_properties)
             {
               unowned var e = p as ExtendedInfo;
@@ -1077,8 +1088,9 @@ public class Folks.Individual : Object,
       PropertyError? persona_error = null;
 
       /* Try to remove it from all writeable Personas. */
-      foreach (var p in this._persona_set)
+      for (int i = 0; i < this._persona_set.size; i++)
         {
+          unowned var p = this._persona_set[i];
           if ("extended-info" in p.writeable_properties)
             {
               unowned var e = p as ExtendedInfo;
@@ -1239,8 +1251,9 @@ public class Folks.Individual : Object,
    */
   public async void change_group (string group, bool is_member)
     {
-      foreach (var p in this._persona_set)
+      for (int i = 0; i < this._persona_set.size; i++)
         {
+          unowned var p = this._persona_set[i];
           if (p is GroupDetails)
             ((GroupDetails) p).change_group.begin (group, is_member);
         }
@@ -1459,8 +1472,9 @@ public class Folks.Individual : Object,
 
       /* Build a set of the remaining personas (those which weren't in the
        * removed store. */
-      foreach (var persona in this._persona_set)
+      for (int i = 0; i < this._persona_set.size; i++)
         {
+          unowned var persona = this._persona_set[i];
           if (persona.store != store)
             {
               remaining_personas.add (persona);
@@ -1481,8 +1495,9 @@ public class Folks.Individual : Object,
 
       /* Build a set of the remaining personas (those which aren't in the
        * set of removed personas). */
-      foreach (var persona in this._persona_set)
+      for (int i = 0; i < this._persona_set.size; i++)
         {
+          unowned var persona = this._persona_set[i];
           if (!removed.contains (persona))
             {
               remaining_personas.add (persona);
@@ -1619,8 +1634,9 @@ public class Folks.Individual : Object,
 
       unowned Persona? candidate_p = null;
 
-      foreach (var p in this._persona_set)
+      for (int i = 0; i < this._persona_set.size; i++)
         {
+          unowned var p = this._persona_set[i];
           /* We only care about personas implementing the given interface. */
           if (p.get_type ().is_a (interface_type))
             {
@@ -1771,8 +1787,9 @@ public class Folks.Individual : Object,
        * "groups-changed" on the store (with the set of personas), to allow the
        * back-end to optimize it (like Telepathy will for MembersChanged for the
        * groups channel list) */
-      foreach (var p in this._persona_set)
+      for (int i = 0; i < this._persona_set.size; i++)
         {
+          unowned var p = this._persona_set[i];
           if (p is GroupDetails)
             {
               unowned var persona = (GroupDetails) p;
@@ -1989,8 +2006,9 @@ public class Folks.Individual : Object,
 
       /* Find the primary persona first. The primary persona's values will be
        * preferred in every case where they're set. */
-      foreach (var p in this._persona_set)
+      for (int i = 0; i < this._persona_set.size; i++)
         {
+          unowned var p = this._persona_set[i];
           if (p.store.is_primary_store)
             {
               primary_persona = p;
@@ -2001,8 +2019,9 @@ public class Folks.Individual : Object,
       /* See if any persona has an alias set. */
       new_display_name = this._look_up_alias_for_display_name (primary_persona);
 
-      foreach (var p in this._persona_set)
+      for (int i = 0; i < this._persona_set.size; i++)
         {
+          unowned var p = this._persona_set[i];
           if (new_display_name != "")
             {
               break;
@@ -2017,8 +2036,9 @@ public class Folks.Individual : Object,
           new_display_name =
               this._look_up_name_details_for_display_name (primary_persona);
 
-          foreach (var p in this._persona_set)
+          for (int i = 0; i < this._persona_set.size; i++)
             {
+              unowned var p = this._persona_set[i];
               if (new_display_name != "")
                 {
                   break;
@@ -2035,8 +2055,9 @@ public class Folks.Individual : Object,
           new_display_name =
               this._look_up_email_address_for_display_name (primary_persona);
 
-          foreach (var p in this._persona_set)
+          for (int i = 0; i < this._persona_set.size; i++)
             {
+              unowned var p = this._persona_set[i];
               if (new_display_name != "")
                 {
                   break;
@@ -2053,8 +2074,9 @@ public class Folks.Individual : Object,
           new_display_name =
               this._look_up_phone_number_for_display_name (primary_persona);
 
-          foreach (var p in this._persona_set)
+          for (int i = 0; i < this._persona_set.size; i++)
             {
+              unowned var p = this._persona_set[i];
               if (new_display_name != "")
                 {
                   break;
@@ -2071,13 +2093,14 @@ public class Folks.Individual : Object,
           new_display_name =
               this._look_up_display_id_for_display_name (primary_persona);
 
-          foreach (var p in this._persona_set)
+          for (int i = 0; i < this._persona_set.size; i++)
             {
               if (new_display_name != "")
                 {
                   break;
                 }
 
+              unowned var p = this._persona_set[i];
               new_display_name =
                   this._look_up_display_id_for_display_name (p);
             }
@@ -2089,8 +2112,9 @@ public class Folks.Individual : Object,
           new_display_name =
               this._look_up_postal_address_for_display_name (primary_persona);
 
-          foreach (var p in this._persona_set)
+          for (int i = 0; i < this._persona_set.size; i++)
             {
+              unowned var p = this._persona_set[i];
               if (new_display_name != "")
                 {
                   break;
@@ -2112,7 +2136,7 @@ public class Folks.Individual : Object,
 
       if (new_display_name != this._display_name)
         {
-          this._display_name = new_display_name;
+          this._display_name = (owned) new_display_name;
           debug ("Setting display name ‘%s’", new_display_name);
           this.notify_property ("display-name");
         }
@@ -2125,7 +2149,7 @@ public class Folks.Individual : Object,
           unowned var alias = ((AliasDetails) p).alias;
           return_val_if_fail (alias != null, false);
 
-          return (alias.strip () != ""); /* empty aliases are unset */
+          return !Utils.is_string_empty (alias); /* empty aliases are unset */
         }, (a, b) =>
         {
           unowned var a_alias = ((AliasDetails) a).alias;
@@ -2134,8 +2158,8 @@ public class Folks.Individual : Object,
           return_val_if_fail (a_alias != null, 0);
           return_val_if_fail (b_alias != null, 0);
 
-          var a_is_empty = (a_alias.strip () == "") ? 1 : 0;
-          var b_is_empty = (b_alias.strip () == "") ? 1 : 0;
+          var a_is_empty = Utils.is_string_empty (a_alias) ? 1 : 0;
+          var b_is_empty = Utils.is_string_empty (b_alias) ? 1 : 0;
 
           /* We prefer to not have an alias which is the same as the Persona's
            * display-id, since having such an alias implies that it's the
@@ -2203,8 +2227,9 @@ public class Folks.Individual : Object,
     {
       var trust_level = TrustLevel.PERSONAS;
 
-      foreach (var p in this._persona_set)
+      for (int i = 0; i < this._persona_set.size; i++)
         {
+          unowned var p = this._persona_set[i];
           if (p.is_user == false &&
               p.store.trust_level == PersonaStoreTrust.NONE)
             trust_level = TrustLevel.NONE;
@@ -2231,10 +2256,10 @@ public class Folks.Individual : Object,
                   null, null, AbstractFieldDetails<string>.hash_static,
                   AbstractFieldDetails<string>.equal_static);
 
-              foreach (var persona in this._persona_set)
+              for (int i = 0; i < this._persona_set.size; i++)
                 {
                   /* We only care about personas implementing the given interface. */
-                  unowned var im_details = persona as ImDetails;
+                  unowned var im_details = this._persona_set[i] as ImDetails;
                   if (im_details != null)
                     {
                       var iter = im_details.im_addresses.map_iterator ();
@@ -2275,8 +2300,9 @@ public class Folks.Individual : Object,
                       AbstractFieldDetails<string>.hash_static,
                       AbstractFieldDetails<string>.equal_static);
 
-              foreach (var persona in this._persona_set)
+              for (int i = 0; i < this._persona_set.size; i++)
                 {
+                  unowned var persona = this._persona_set[i];
                   /* We only care about personas implementing the given interface. */
                   unowned var web_service_details = persona as WebServiceDetails;
                   if (web_service_details != null)
@@ -2368,7 +2394,7 @@ public class Folks.Individual : Object,
           unowned var name = ((NameDetails) p).full_name;
           return_val_if_fail (name != null, false);
 
-          return (name.strip () != ""); /* empty names are unset */
+          return !Utils.is_string_empty (name); /* empty names are unset */
         }, (a, b) =>
         {
           /* Can't compare two set names. */
@@ -2384,7 +2410,7 @@ public class Folks.Individual : Object,
 
           if (new_full_name != this._full_name)
             {
-              this._full_name = new_full_name;
+              this._full_name = (owned) new_full_name;
               this.notify_property ("full-name");
 
               this._update_display_name ();
@@ -2399,7 +2425,7 @@ public class Folks.Individual : Object,
           unowned var nickname = ((NameDetails) p).nickname;
           return_val_if_fail (nickname != null, false);
 
-          return (nickname.strip () != ""); /* empty names are unset */
+          return !Utils.is_string_empty (nickname); /* empty names are unset */
         }, (a, b) =>
         {
           /* Can't compare two set names. */
@@ -2415,7 +2441,7 @@ public class Folks.Individual : Object,
 
           if (new_nickname != this._nickname)
             {
-              this._nickname = new_nickname;
+              this._nickname = (owned) new_nickname;
               this.notify_property ("nickname");
 
               this._update_display_name ();
@@ -2508,12 +2534,12 @@ public class Folks.Individual : Object,
                   unowned UrlFieldDetails> (
                     null, null,  AbstractFieldDetails<string>.equal_static);
 
-              foreach (var persona in this._persona_set)
+              for (int i = 0; i < this._persona_set.size; i++)
                 {
                   /* We only care about personas implementing the given
                    * interface. If the same URL exists multiple times we merge
                    * the parameters. */
-                  unowned var url_details = persona as UrlDetails;
+                  unowned var url_details = this._persona_set[i] as UrlDetails;
                   if (url_details != null)
                     {
                       foreach (var url_fd in ((!) url_details).urls)
@@ -2565,12 +2591,12 @@ public class Folks.Individual : Object,
               var phone_numbers_set = new HashMap<string, PhoneFieldDetails> (
                   null, null, AbstractFieldDetails<string>.equal_static);
 
-              foreach (var persona in this._persona_set)
+              for (int i = 0; i < this._persona_set.size; i++)
                 {
                   /* We only care about personas implementing the given
                    * interface. If the same phone number exists multiple times
                    * we merge the parameters. */
-                  unowned var phone_details = persona as PhoneDetails;
+                  unowned var phone_details = this._persona_set[i] as PhoneDetails;
                   if (phone_details != null)
                     {
                       foreach (var phone_fd in ((!) phone_details).phone_numbers)
@@ -2622,8 +2648,10 @@ public class Folks.Individual : Object,
               var emails_set = new HashMap<string, EmailFieldDetails> (
                   null, null, AbstractFieldDetails<string>.equal_static);
 
-              foreach (var persona in this._persona_set)
+              for (int i = 0; i < this._persona_set.size; i++)
                 {
+                  unowned var persona = this._persona_set[i];
+
                   /* We only care about personas implementing the given
                    * interface. If the same e-mail address exists multiple times
                    * we merge the parameters. */
@@ -2678,9 +2706,9 @@ public class Folks.Individual : Object,
                   AbstractFieldDetails<Role>.hash_static,
                   AbstractFieldDetails<Role>.equal_static);
 
-              foreach (var persona in this._persona_set)
+              for (int i = 0; i < this._persona_set.size; i++)
                 {
-                  var role_details = persona as RoleDetails;
+                  unowned var role_details = this._persona_set[i] as RoleDetails;
                   if (role_details != null)
                     {
                       foreach (var role_fd in ((!) role_details).roles)
@@ -2714,8 +2742,9 @@ public class Folks.Individual : Object,
             {
               var new_local_ids = new SmallSet<string> ();
 
-              foreach (var persona in this._persona_set)
+              for (int i = 0; i < this._persona_set.size; i++)
                 {
+                  unowned var persona = this._persona_set[i];
                   unowned var local_id_details = persona as LocalIdDetails;
                   if (local_id_details != null)
                     {
@@ -2784,8 +2813,9 @@ public class Folks.Individual : Object,
                       AbstractFieldDetails<PostalAddress>.hash_static,
                       AbstractFieldDetails<PostalAddress>.equal_static);
 
-              foreach (var persona in this._persona_set)
+              for (int i = 0; i < this._persona_set.size; i++)
                 {
+                  unowned var persona = this._persona_set[i];
                   unowned var postal_address_details = persona as PostalAddressDetails;
                   if (postal_address_details != null)
                     {
@@ -2879,8 +2909,9 @@ public class Folks.Individual : Object,
                   AbstractFieldDetails<string>.hash_static,
                   AbstractFieldDetails<string>.equal_static);
 
-              foreach (var persona in this._persona_set)
+              for (int i = 0; i < this._persona_set.size; i++)
                 {
+                  unowned var persona = this._persona_set[i];
                   unowned var note_details = persona as NoteDetails;
                   if (note_details != null)
                     {
@@ -2947,8 +2978,9 @@ public class Folks.Individual : Object,
         }
 
       /* Determine which Personas have been removed */
-      foreach (var p in this._persona_set)
+      for (int i = 0; i < this._persona_set.size; i++)
         {
+          unowned var p = this._persona_set[i];
           if (personas == null || !((!) personas).contains (p))
             {
               /* Keep track of how many Personas are users */
@@ -3022,8 +3054,9 @@ public class Folks.Individual : Object,
         {
           unowned Persona? chosen_persona = null;
 
-          foreach (var persona in this._persona_set)
+          for (int i = 0; i < this._persona_set.size; i++)
             {
+              unowned var persona = this._persona_set[i];
               if (chosen_persona == null)
                 {
                   chosen_persona = persona;
@@ -3096,8 +3129,9 @@ public class Folks.Individual : Object,
     {
       unowned var al = p as AntiLinkable;
 
-      foreach (var persona in this._persona_set)
+      for (int i = 0; i < this._persona_set.size; i++)
         {
+          unowned var persona = this._persona_set[i];
           unowned var pl = persona as AntiLinkable;
 
           if ((al != null && ((!) al).has_anti_link_with_persona (persona)) ||

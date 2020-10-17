@@ -273,4 +273,24 @@ public class Folks.Utils : Object
 
       return true;
     }
+
+  /**
+   * Checks whether the given string is empty, ignoring any trailing or leading
+   * whitespace. Basically, it's the same as executing (str.strip() != ""), but
+   * without unnecessarily creating a string copy.
+   *
+   * @param str The string to check for
+   * @since 0.14.1
+   */
+  public static bool is_string_empty (string str)
+    {
+      int length = str.length;
+      for (int i = 0; i < length; i++)
+        {
+          if (! str[i].isspace ())
+            return false;
+        }
+
+      return true;
+    }
 }

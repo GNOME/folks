@@ -214,7 +214,7 @@ public class Folks.StructuredName : Object
             }
         }
 
-      return output.str;
+      return (owned) output.str;
     }
 
   /**
@@ -265,7 +265,7 @@ public class Folks.StructuredName : Object
        * punctuation, please file a bug against libfolks:
        *   https://gitlab.gnome.org/GNOME/folks/issues
        */
-      var name_fmt = _("%g%t%m%t%f");
+      unowned var name_fmt = _("%g%t%m%t%f");
 
       return this.to_string_with_format (name_fmt);
     }
@@ -372,7 +372,7 @@ public class Folks.StructuredName : Object
             }
         }
 
-      return output.str;
+      return (owned) output.str;
     }
 }
 

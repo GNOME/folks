@@ -229,7 +229,7 @@ public class Folks.PostalAddress : Object
    */
   public string to_string ()
     {
-      var str = _("%s, %s, %s, %s, %s, %s, %s");
+      unowned var str = _("%s, %s, %s, %s, %s, %s, %s");
       return str.printf (this.po_box, this.extension, this.street,
           this.locality, this.region, this.postal_code, this.country);
     }

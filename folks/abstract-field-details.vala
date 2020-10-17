@@ -292,8 +292,8 @@ public abstract class Folks.AbstractFieldDetails<T> : Object
       GLib.return_val_if_fail (left != null, false);
       GLib.return_val_if_fail (right != null, false);
 
-      AbstractFieldDetails left_details = (AbstractFieldDetails) left;
-      AbstractFieldDetails right_details = (AbstractFieldDetails) right;
+      unowned var left_details = (AbstractFieldDetails) left;
+      unowned var right_details = (AbstractFieldDetails) right;
       return left_details.equal (right_details);
     }
 
@@ -446,7 +446,7 @@ public abstract class Folks.AbstractFieldDetails<T> : Object
     {
       GLib.return_val_if_fail (value != null, 0);
 
-      AbstractFieldDetails details = (AbstractFieldDetails) value;
+      unowned var details = (AbstractFieldDetails) value;
       return details.hash ();
     }
 }

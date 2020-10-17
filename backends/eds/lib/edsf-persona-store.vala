@@ -861,7 +861,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
                * here because it fails to null-terminate the array. Sigh. */
               this._always_writeable_properties = new string[prop_set.size];
               uint i = 0;
-              foreach (var final_prop in prop_set)
+              foreach (unowned string final_prop in prop_set)
                 {
                   this._always_writeable_properties[i++] = final_prop;
                 }
