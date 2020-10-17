@@ -2439,19 +2439,19 @@ public class Edsf.PersonaStore : Folks.PersonaStore
         }
     }
 
-  private Gee.LinkedList<E.Contact> _copy_contacts (GLib.List<E.Contact> contacts)
+  private GenericArray<E.Contact> _copy_contacts (GLib.List<E.Contact> contacts)
     {
-      var copy = new Gee.LinkedList<E.Contact> ();
-      foreach (E.Contact c in contacts)
+      var copy = new GenericArray<E.Contact> (contacts.length());
+      foreach (unowned E.Contact c in contacts)
         {
           copy.add (c);
         }
       return copy;
     }
 
-  private Gee.LinkedList<string> _copy_contacts_ids (GLib.List<string> contacts_ids)
+  private GenericArray<string> _copy_contacts_ids (GLib.List<string> contacts_ids)
     {
-      var copy = new Gee.LinkedList<string> ();
+      var copy = new GenericArray<string> (contacts_ids.length());
       foreach (unowned string s in contacts_ids)
         {
           copy.add (s);
@@ -2465,7 +2465,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
       this._idle_queue (() => { return this._contacts_added_idle (copy); });
     }
 
-  private bool _contacts_added_idle (Gee.List<E.Contact> contacts)
+  private bool _contacts_added_idle (GenericArray<E.Contact> contacts)
     {
       HashSet<Persona> added_personas, removed_personas;
 
@@ -2489,8 +2489,9 @@ public class Edsf.PersonaStore : Folks.PersonaStore
 
       removed_personas = new HashSet<Persona> ();
 
-      foreach (E.Contact c in contacts)
+      for (uint i = 0; i < contacts.length; i++)
         {
+          unowned E.Contact c = contacts[i];
           string? _iid = Edsf.Persona.build_iid_from_contact (this.id, c);
 
           if (_iid == null)
@@ -2538,10 +2539,11 @@ public class Edsf.PersonaStore : Folks.PersonaStore
       this._idle_queue (() => { return this._contacts_changed_idle (copy); });
     }
 
-  private bool _contacts_changed_idle (Gee.List<E.Contact> contacts)
+  private bool _contacts_changed_idle (GenericArray<E.Contact> contacts)
     {
-      foreach (E.Contact c in contacts)
+      for (uint i = 0; i < contacts.length; i++)
         {
+          unowned E.Contact c = contacts[i];
           string? _iid = Edsf.Persona.build_iid_from_contact (this.id, c);
 
           if (_iid == null)
@@ -2566,12 +2568,13 @@ public class Edsf.PersonaStore : Folks.PersonaStore
       this._idle_queue (() => { return this._contacts_removed_idle (copy); });
     }
 
-  private bool _contacts_removed_idle (Gee.List<string> contacts_ids)
+  private bool _contacts_removed_idle (GenericArray<string> contacts_ids)
     {
       var removed_personas = new HashSet<Persona> ();
 
-      foreach (string contact_id in contacts_ids)
+      for (uint i = 0; i < contacts_ids.length; i++)
         {
+          unowned string contact_id = contacts_ids[i];
           /* Not sure how this could happen, but better to be safe. We do not
            * allow empty UIDs. */
           if (contact_id == "")
