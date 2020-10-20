@@ -28,7 +28,7 @@ public class AddContactsStressTestTests : EdsTest.TestCase
   private Edsf.PersonaStore _pstore;
   private bool _added_contacts = false;
   private HashTable<string, bool> _contacts_found;
-  private int _contacts_cnt = 1000;
+  private int _contacts_cnt = 10000;
   private DateTime _start_time;
 
   public AddContactsStressTestTests ()

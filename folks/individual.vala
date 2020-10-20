@@ -2555,7 +2555,7 @@ public class Folks.Individual : Object,
                                   new UrlFieldDetails (url_fd.value);
                               new_url_fd.extend_parameters (url_fd.parameters);
                               urls_set.set (new_url_fd.value, new_url_fd);
-                              new_urls.add (new_url_fd);
+                              new_urls.take ((owned) new_url_fd);
                             }
                         }
                     }
@@ -2612,7 +2612,7 @@ public class Folks.Individual : Object,
                                   new PhoneFieldDetails (phone_fd.value);
                               new_fd.extend_parameters (phone_fd.parameters);
                               phone_numbers_set.set (new_fd.value, new_fd);
-                              new_phone_numbers.add (new_fd);
+                              new_phone_numbers.take ((owned) new_fd);
                             }
                         }
                     }
@@ -2671,7 +2671,7 @@ public class Folks.Individual : Object,
                                   new EmailFieldDetails (email_fd.value,
                                       email_fd.parameters);
                               emails_set.set (new_email_fd.value, new_email_fd);
-                              new_email_addresses.add (new_email_fd);
+                              new_email_addresses.take ((owned) new_email_fd);
                             }
                         }
                     }

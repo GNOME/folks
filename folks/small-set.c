@@ -550,6 +550,29 @@ folks_small_set_contains (GeeAbstractCollection *collection,
 }
 
 /*
+ * folks_small_set_take:
+ * @self: A #FolksSmallSet
+ * @item: (transfer full):
+ *
+ * Adds @item and takes ownership.
+ *
+ * Returns: %TRUE if it was not already there.
+ */
+gboolean
+folks_small_set_take (FolksSmallSet *self,
+    gpointer item)
+{
+  g_return_val_if_fail (self != NULL, FALSE);
+  g_return_val_if_fail ((self->flags & FOLKS_SMALL_SET_FLAG_READ_ONLY) == 0, FALSE);
+
+  if (_find (self, item, NULL))
+    return FALSE;
+
+  g_ptr_array_add (self->items, item);
+  return TRUE;
+}
+
+/*
  * Add @item.
  *
  * Returns: %TRUE if it was not already there.

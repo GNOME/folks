@@ -1269,7 +1269,7 @@ public class Edsf.Persona : Folks.Persona,
       var default_role_fd = this._get_default_role ();
       if (default_role_fd != null)
         {
-          new_roles.add ((!) default_role_fd);
+          new_roles.take ((!) (owned) default_role_fd);
         }
 
       unowned E.VCard vcard = (E.VCard) this.contact;
@@ -1321,7 +1321,7 @@ public class Edsf.Persona : Folks.Persona,
                 }
             }
 
-            new_roles.add (role_fd);
+            new_roles.take ((owned) role_fd);
         }
 
       if (!Folks.Internal.equal_sets<RoleFieldDetails> (new_roles, this._roles))
@@ -1376,7 +1376,7 @@ public class Edsf.Persona : Folks.Persona,
               if (assistant != null && manager != "")
                 default_role.set_parameter ("assistant", (!) assistant);
 
-              _default_role = default_role;
+              _default_role = (owned) default_role;
             }
         }
 
@@ -1434,7 +1434,7 @@ public class Edsf.Persona : Folks.Persona,
 
           var email_fd = new EmailFieldDetails ((!) val);
           this._update_params (email_fd, attr);
-          new_email_addresses.add (email_fd);
+          new_email_addresses.take ((owned) email_fd);
         }
 
       if (!Folks.Internal.equal_sets<EmailFieldDetails> (new_email_addresses,
@@ -1477,7 +1477,7 @@ public class Edsf.Persona : Folks.Persona,
       if (n != null && n != "")
         {
           var note = new NoteFieldDetails ((!) n);
-          new_notes.add (note);
+          new_notes.take ((owned) note);
         }
 
       if (!Folks.Internal.equal_sets<NoteFieldDetails> (new_notes, this._notes))
@@ -1638,7 +1638,7 @@ public class Edsf.Persona : Folks.Persona,
             {
               var fd_u = new UrlFieldDetails ((!) u);
               fd_u.set_parameter (AbstractFieldDetails.PARAM_TYPE, folks_type);
-              new_urls.add (fd_u);
+              new_urls.take ((owned) fd_u);
             }
         }
 
@@ -1656,7 +1656,7 @@ public class Edsf.Persona : Folks.Persona,
 
               var url_fd = new UrlFieldDetails ((!) val);
               this._update_params (url_fd, attr);
-              new_urls.add (url_fd);
+              new_urls.take ((owned) url_fd);
             }
         }
 
@@ -2006,7 +2006,7 @@ public class Edsf.Persona : Folks.Persona,
 
           var phone_fd = new PhoneFieldDetails ((!) val);
           this._update_params (phone_fd, attr);
-          new_phone_numbers.add (phone_fd);
+          new_phone_numbers.take ((owned) phone_fd);
         }
 
       // Does not use phone comparison because this will try to match only
@@ -2118,7 +2118,7 @@ public class Edsf.Persona : Folks.Persona,
 
           var pa_fd = new PostalAddressFieldDetails (address);
           this._update_params (pa_fd, attr);
-          new_postal_addresses.add (pa_fd);
+          new_postal_addresses.take ((owned) pa_fd);
         }
 
       if (!Folks.Internal.equal_sets<PostalAddressFieldDetails> (

@@ -44,6 +44,9 @@ namespace Folks
 #if FOLKS_COMPILATION
     [CCode (cheader_filename = "folks/small-set-internal.h")]
     public unowned G @get (int i);
+
+    [CCode (cheader_filename = "folks/small-set-internal.h")]
+    public bool take (owned G item);
 #endif
   }
 }
