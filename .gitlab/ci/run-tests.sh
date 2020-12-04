@@ -6,7 +6,7 @@ meson test -C _build $*
 
 exit_code=$?
 
-python3 .gitlab-ci/meson-junit-report.py \
+python3 .gitlab/ci/meson-junit-report.py \
         --project-name=folks \
         --job-id "${CI_JOB_NAME}" \
         --output "_build/${CI_JOB_NAME}-report.xml" \
