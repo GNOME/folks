@@ -16,7 +16,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
  *
  * Authors:
- * 	Philip Withnall <philip@tecnocode.co.uk>
+ *   Philip Withnall <philip@tecnocode.co.uk>
  */
 
 using Folks;

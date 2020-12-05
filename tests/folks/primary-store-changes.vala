@@ -86,7 +86,7 @@ public class PrimaryStoreChangesTests : DummyTest.TestCase
     }
 
   /* Test that when manually changing ::primary-store gsetting key, the
-	 IndividualAgreggator instance gets notified */
+     IndividualAgreggator instance gets notified */
   public void test_change_primary_store_setting ()
     {
       /* Iff running uninstalled, the GSetting schema will not be available, and

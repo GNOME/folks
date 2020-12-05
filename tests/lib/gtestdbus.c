@@ -143,7 +143,7 @@ _folks_test_watcher_add_pid (GPid pid)
       info.BasicLimitInformation.LimitFlags = 0x2000 /* JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE */;
 
       if (!SetInformationJobObject(job, JobObjectExtendedLimitInformation, &info, sizeof (info)))
-	g_warning ("Can't enable JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE: %s", g_win32_error_message (GetLastError()));
+        g_warning ("Can't enable JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE: %s", g_win32_error_message (GetLastError()));
 
       g_once_init_leave (&started,(gsize)job);
     }
@@ -571,7 +571,7 @@ write_config_file (FolksTestDBus *self)
 #else
       "  <listen>unix:tmpdir=/tmp</listen>\n"
 #endif
-		   );
+  );
 
   if (self->priv->flags & FOLKS_TEST_DBUS_SYSTEM_BUS)
     {

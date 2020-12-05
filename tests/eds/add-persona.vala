@@ -401,7 +401,7 @@ public class AddPersonaTests : EdsTest.TestCase
       foreach (var phone_fd in i.phone_numbers)
         {
           /* Can be returned, when the evolution-data-server is compiled with the libphonenumber support */
-	  phone_fd.remove_parameter_all ("x-evolution-e164");
+          phone_fd.remove_parameter_all ("x-evolution-e164");
 
           var phone_1 = new PhoneFieldDetails (this._phone_1);
           phone_1.set_parameter (AbstractFieldDetails.PARAM_TYPE,

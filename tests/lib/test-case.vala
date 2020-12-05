@@ -18,8 +18,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
  *
  * Author:
- * 	Julien Peeters <contact@julienpeeters.fr>
- * 	Simon McVittie <simon.mcvittie@collabora.co.uk>
+ *   Julien Peeters <contact@julienpeeters.fr>
+ *   Simon McVittie <simon.mcvittie@collabora.co.uk>
  *
  * Adapted from libgee/tests/testcase.vala.
  */
