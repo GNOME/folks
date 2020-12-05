@@ -83,7 +83,7 @@ public class CreateRemoveStoresTests : EdsTest.TestCase
       try
         {
           yield this._backend_store.load_backends ();
-          
+
           var backend = this._backend_store.enabled_backends.get ("eds");
           assert (backend != null);
 
@@ -91,7 +91,7 @@ public class CreateRemoveStoresTests : EdsTest.TestCase
           assert (this._aggregator.is_prepared);
           backend.persona_store_removed.connect (this._store_removed_cb);
           backend.persona_store_added.connect (this._store_added_cb);
-          
+
           var pstore = "test1";
           this._store_removed[pstore] = false;
           this._store_added[pstore] = false;
@@ -102,7 +102,7 @@ public class CreateRemoveStoresTests : EdsTest.TestCase
           pstore = "test2";
           this._store_removed[pstore] = false;
           this._store_added[pstore] = false;
-          
+
           debug ("Creating addressbook test2");
           yield Edsf.PersonaStore.create_address_book (pstore);
         }
@@ -118,9 +118,9 @@ public class CreateRemoveStoresTests : EdsTest.TestCase
       assert (store != null);
       debug ("store removed %s", store.id);
       this._store_removed[store.id] = true;
-      
+
       int removed_count = 0;
-      
+
       foreach (bool removed in this._store_removed.values)
         {
           if (removed)
@@ -128,7 +128,7 @@ public class CreateRemoveStoresTests : EdsTest.TestCase
               ++removed_count;
             }
         }
-      
+
       debug ("removed_count is %d, expected size is %d\n", removed_count,
             this._store_removed.size);
       if (removed_count == this._store_removed.size)
@@ -141,10 +141,10 @@ public class CreateRemoveStoresTests : EdsTest.TestCase
     {
       debug ("store added %s", store.id);
       this._store_added[store.id] = true;
-      
+
       var backend = this._backend_store.enabled_backends.get ("eds");
       assert (backend != null);
-      
+
       debug ("removing store %s", store.id);
       Edsf.PersonaStore.remove_address_book.begin ((Edsf.PersonaStore)store);
     }

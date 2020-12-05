@@ -28,7 +28,7 @@ using Folks;
 using Folks.Backends.Ofono;
 
 /**
- * A persona store which is associated with a single Ofono device. It will 
+ * A persona store which is associated with a single Ofono device. It will
  * create a {@link Persona} for each contact on the SIM card phonebook.
  *
  * @since 0.9.0
@@ -144,22 +144,22 @@ public class Folks.Backends.Ofono.PersonaStore : Folks.PersonaStore
           this._remove_self ();
         }
     }
-    
+
   private void _remove_self ()
     {
       /* Marshal the personas from a Collection to a Set. */
       var removed_personas = new HashSet<Persona> ();
       var iter = this._personas.map_iterator ();
-      
+
       while (iter.next () == true)
       {
         removed_personas.add (iter.get_value ());
       }
-      
+
       this._emit_personas_changed (null, removed_personas);
       this.removed ();
     }
-    
+
   private string[] _split_all_vcards (string all_vcards)
     {
       /* Ofono vcards are in vcard 3.0 format and can include the following:

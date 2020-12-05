@@ -83,27 +83,27 @@ public class Folks.Backends.Eds.Backend : Folks.Backend
           this._add_persona_store (store);
         }
     }
-    
+
   private void _add_persona_store (PersonaStore store, bool notify = true)
     {
       store.removed.connect (this._store_removed_cb);
-      
+
       this._persona_stores.set (store.id, store);
-      
+
       this.persona_store_added (store);
       if (notify)
         {
           this.notify_property ("persona-stores");
         }
     }
-  
+
   /**
    * {@inheritDoc}
    */
   public override void set_persona_stores (Set<string>? storeids)
     {
       this._storeids = storeids;
-      
+
       /* If the set is empty, load all unloaded stores then return. */
       if (storeids == null)
         {
@@ -118,17 +118,17 @@ public class Folks.Backends.Eds.Backend : Folks.Backend
           if (this._persona_stores.has_key (id) == false)
             {
               E.Source? s = this._ab_sources.ref_source (id);
-              
+
               if (s == null)
                 {
                   warning ("Unable to reference EDS source with ID %s", id);
                   continue;
                 }
 
-              var store = 
+              var store =
                 new Edsf.PersonaStore.with_source_registry (this._ab_sources, s);
               this._add_persona_store (store, false);
-              
+
               stores_changed = true;
             }
         }
@@ -151,7 +151,7 @@ public class Folks.Backends.Eds.Backend : Folks.Backend
           this.notify_property ("persona-stores");
         }
     }
-    
+
   /**
    * {@inheritDoc}
    */
@@ -305,7 +305,7 @@ public class Folks.Backends.Eds.Backend : Folks.Backend
             {
               continue;
             }
-            
+
           if (this._storeids != null &&
               !(uid in this._storeids))
             {

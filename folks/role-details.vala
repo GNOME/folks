@@ -219,7 +219,7 @@ public class Folks.RoleFieldDetails : AbstractFieldDetails<Role>
   /**
    * {@inheritDoc}
    *
-   * @since 0.6.0 
+   * @since 0.6.0
    */
   public override bool equal (AbstractFieldDetails<Role> that)
     {

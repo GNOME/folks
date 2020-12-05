@@ -344,7 +344,7 @@ _folks_test_watcher_remove_pid (GPid pid)
  * threads.
  *
  * ## Creating unit tests using FolksTestDBus
- * 
+ *
  * Testing of D-Bus services can be tricky because normally we only ever run
  * D-Bus services over an existing instance of the D-Bus daemon thus we
  * usually don't activate D-Bus services that are not yet installed into the

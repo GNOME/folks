@@ -87,7 +87,7 @@ public class Folks.Backends.Ofono.Backend : Folks.Backend
           this._store_removed_cb (store);
         }
     }
-    
+
   /**
    * {@inheritDoc}
    */
@@ -98,7 +98,7 @@ public class Folks.Backends.Ofono.Backend : Folks.Backend
           this._add_store ((Ofono.PersonaStore) store);
         }
     }
-    
+
   /**
    * {@inheritDoc}
    */
@@ -106,11 +106,11 @@ public class Folks.Backends.Ofono.Backend : Folks.Backend
     {
       bool added_stores = false;
       PersonaStore[] removed_stores = {};
-      
+
       /* First handle adding any missing persona stores. */
       foreach (ModemProperties modem in this._modems)
         {
-          if (modem.path in storeids && 
+          if (modem.path in storeids &&
               this._persona_stores.has_key (modem.path) == false)
             {
               string alias = this._modem_alias (modem.properties);
@@ -119,7 +119,7 @@ public class Folks.Backends.Ofono.Backend : Folks.Backend
               added_stores = true;
             }
         }
-      
+
       foreach (PersonaStore store in this._persona_stores.values)
         {
           if (!storeids.contains (store.id))
@@ -127,19 +127,19 @@ public class Folks.Backends.Ofono.Backend : Folks.Backend
               removed_stores += store;
             }
         }
-      
+
       for (int i = 0; i < removed_stores.length; ++i)
         {
           this._remove_store ((Ofono.PersonaStore) removed_stores[i], false);
         }
-      
+
       /* Finally, if anything changed, emit the persona-stores notification. */
       if (added_stores || removed_stores.length > 0)
         {
           this.notify_property ("persona-stores");
         }
     }
-  
+
   /**
    * {@inheritDoc}
    */
@@ -261,7 +261,7 @@ public class Folks.Backends.Ofono.Backend : Folks.Backend
   private string _modem_alias (HashTable<string, Variant> properties)
     {
       string alias = "";
-      
+
       /* Name is more user friendly than Manufacturer, but both are optional,
        * so use Name if it's there, otherwise Manufacturer, otherwise leave
        * it blank. */
@@ -277,7 +277,7 @@ public class Folks.Backends.Ofono.Backend : Folks.Backend
         }
       return alias;
     }
-  
+
   private void _modem_added (ObjectPath path, HashTable<string, Variant> properties)
     {
       bool has_sim = false;
@@ -343,7 +343,7 @@ public class Folks.Backends.Ofono.Backend : Folks.Backend
           this.notify_property ("persona-stores");
         }
     }
-    
+
   /**
    * Utility function to remove a persona store.
    *
@@ -355,13 +355,13 @@ public class Folks.Backends.Ofono.Backend : Folks.Backend
       store.removed.disconnect (this._store_removed_cb);
       this._persona_stores.unset (store.id);
       this.persona_store_removed (store);
-    
+
       if (notify)
         {
           this.notify_property ("persona-stores");
         }
     }
-    
+
 
   private void _modem_removed (ObjectPath path)
     {
@@ -370,7 +370,7 @@ public class Folks.Backends.Ofono.Backend : Folks.Backend
           this._store_removed_cb (this._persona_stores.get (path));
         }
     }
-    
+
   private void _store_removed_cb (Folks.PersonaStore store)
     {
       this._remove_store ((Ofono.PersonaStore) store);

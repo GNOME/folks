@@ -141,7 +141,7 @@ public interface Folks.AntiLinkable : Folks.Persona
    * The UIDs of all personas in ``other_personas`` will be removed from this
    * persona's anti-links set and the changes propagated to backends.
    *
-   * If the global anti-link is set, this will not have any effect until the 
+   * If the global anti-link is set, this will not have any effect until the
    * global anti-link is removed.
    *
    * This method is safe to call multiple times concurrently (e.g. begin one

@@ -1877,7 +1877,7 @@ public class Trf.PersonaStore : Folks.PersonaStore
         {
           throw new PersonaStoreError.CREATE_FAILED("Cannot insert persona before store is prepared");
         }
-      
+
       try
         {
           debug ("_insert_persona: %s", query);

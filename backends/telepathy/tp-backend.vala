@@ -61,7 +61,7 @@ public class Folks.Backends.Tp.Backend : Folks.Backend
           this._add_store (store);
         }
     }
-    
+
   /**
    * {@inheritDoc}
    */
@@ -72,14 +72,14 @@ public class Folks.Backends.Tp.Backend : Folks.Backend
           this._remove_store (store);
         }
     }
-    
+
   /**
    * {@inheritDoc}
    */
   public override void set_persona_stores (Set<string>? storeids)
     {
       this._storeids = storeids;
-      
+
       bool added_stores = false;
       PersonaStore[] removed_stores = {};
 
@@ -96,7 +96,7 @@ public class Folks.Backends.Tp.Backend : Folks.Backend
               added_stores = true;
             }
         }
-        
+
       foreach (PersonaStore store in this.persona_stores.values)
         {
           if (!storeids.contains (store.id))
@@ -104,19 +104,19 @@ public class Folks.Backends.Tp.Backend : Folks.Backend
               removed_stores += store;
             }
         }
-        
+
       foreach (PersonaStore store in removed_stores)
         {
           this._remove_store ((Tpf.PersonaStore) store, false);
         }
-        
+
         /* Finally, if anything changed, emit the persona-stores notification. */
       if (added_stores || removed_stores.length > 0)
         {
           this.notify_property ("persona-stores");
         }
     }
-      
+
 
   /**
    * {@inheritDoc}
@@ -248,7 +248,7 @@ public class Folks.Backends.Tp.Backend : Folks.Backend
         {
           return;
         }
-        
+
       var store = Tpf.PersonaStore.dup_for_account (account);
       this._add_store (store);
     }
@@ -263,18 +263,18 @@ public class Folks.Backends.Tp.Backend : Folks.Backend
           this.notify_property ("persona-stores");
         }
     }
-  
+
   private void _remove_store (PersonaStore store, bool notify = true)
     {
       store.removed.disconnect (this._store_removed_cb);
       this.persona_store_removed (store);
-      
+
       if (notify)
       {
         this.notify_property ("persona-stores");
       }
     }
-    
+
   private void _store_removed_cb (PersonaStore store)
     {
       this._remove_store (store);

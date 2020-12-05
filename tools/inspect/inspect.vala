@@ -130,7 +130,7 @@ public class Folks.Inspect.Client : Object
             main_client.quit ();
           });
         }
-        
+
       main_client.main_loop.run ();
 
       return retval;

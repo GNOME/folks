@@ -136,7 +136,7 @@ public class ChangePhonesTests : EdsTest.TestCase
           var phones = (Folks.PhoneDetails) i;
 
           foreach (var phone_fd in phones.phone_numbers)
-            {              
+            {
               foreach (var t in phone_fd.get_parameter_values (
                   AbstractFieldDetails.PARAM_TYPE))
                 {

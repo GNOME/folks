@@ -97,11 +97,11 @@ private class Folks.Inspect.Commands.Set : Folks.Inspect.Command
               Utils.print_line ("Unrecognized individual ID '%s'.", id);
               return 1;
             }
-            
+
           try
             {
               var persona = yield this.client.aggregator.ensure_individual_property_writeable (individual, "alias");
-              
+
               /* Since the individual may have changed, use the individual from the new persona. */
               persona.individual.alias = parts[2];
               Utils.print_line ("Setting of individual's alias to '%s' was successful.",
@@ -187,7 +187,7 @@ private class Folks.Inspect.Commands.Set : Folks.Inspect.Command
 
       return null;
     }
-  
+
   public override string[]? complete_subcommand (string subcommand)
     {
       /* @subcommand should be “alias” */

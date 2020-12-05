@@ -43,7 +43,7 @@ public class Folks.Backends.Ofono.Persona : Folks.Persona,
   private Set<PhoneFieldDetails> _phone_numbers_ro;
   private SmallSet<EmailFieldDetails> _email_addresses;
   private Set<EmailFieldDetails> _email_addresses_ro;
-  
+
   private const string[] _linkable_properties =
     {
       "phone-numbers",
@@ -147,7 +147,7 @@ public class Folks.Backends.Ofono.Persona : Folks.Persona,
     {
       debug ("Adding Ofono Persona '%s' (IID '%s', group '%s')", this.uid,
           this.iid, this.display_id);
-      
+
       this._phone_numbers = new SmallSet<PhoneFieldDetails> ();
       this._phone_numbers_ro = this._phone_numbers.read_only_view;
 
@@ -158,7 +158,7 @@ public class Folks.Backends.Ofono.Persona : Folks.Persona,
   private void _set_vcard (string vcard)
     {
       E.VCard card = new E.VCard.from_string (vcard);
-      
+
       E.VCardAttribute? attribute = card.get_attribute ("TEL");
       if (attribute != null)
         {
@@ -170,13 +170,13 @@ public class Folks.Backends.Ofono.Persona : Folks.Persona,
         {
           this._full_name = attribute.get_value_decoded ().str;
         }
-      
+
       attribute = card.get_attribute ("NICKNAME");
       if (attribute != null)
         {
           this._nickname = attribute.get_value_decoded ().str;
         }
-        
+
       attribute = card.get_attribute ("N");
       if (attribute != null)
         {
@@ -194,14 +194,14 @@ public class Folks.Backends.Ofono.Persona : Folks.Persona,
               warning ("Expected 5 components to N value of vcard, got %u", values.length ());
             }
         }
-        
+
       attribute = card.get_attribute ("EMAIL");
       if (attribute != null)
         {
           this._email_addresses.add (new EmailFieldDetails (attribute.get_value_decoded ().str) );
         }
     }
-    
+
   /**
    * {@inheritDoc}
    */

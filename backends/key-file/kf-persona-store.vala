@@ -241,7 +241,7 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
 
                 /* Ensure the parent directory tree exists for the new file */
                 File parent_dir = this.file.get_parent ();
-        
+
               try
                 {
                   /* Recursively create the directory */

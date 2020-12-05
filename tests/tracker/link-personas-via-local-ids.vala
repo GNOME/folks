@@ -121,7 +121,7 @@ public class LinkPersonasViaLocalIDsTests : TrackerTest.TestCase
   private void _persona_store_prepared_cb (Object obj, ParamSpec params)
     {
       PersonaStore pstore = (!)(obj as PersonaStore);
-      
+
       _add_personas.begin (pstore);
     }
 

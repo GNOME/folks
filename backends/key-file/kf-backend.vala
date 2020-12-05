@@ -87,7 +87,7 @@ public class Folks.Backends.Kf.Backend : Folks.Backend
           this._add_store ((Kf.PersonaStore) store);
         }
     }
-    
+
   /**
    * {@inheritDoc}
    */
@@ -107,33 +107,33 @@ public class Folks.Backends.Kf.Backend : Folks.Backend
       file = file.get_child (filename);
       return file;
     }
-    
+
   /**
    * {@inheritDoc}
    * In this implementation storeids are assumed to be base filenames for
-   * ini files under user_data_dir()/folks/ like the default relationships 
+   * ini files under user_data_dir()/folks/ like the default relationships
    * {@link PersonaStore}.
    */
   public override void set_persona_stores (Set<string>? storeids)
     {
       /* All ids represent ini files in user_data_dir/folks/ */
-      
+
       bool added_stores = false;
       PersonaStore[] removed_stores = {};
-      
+
       /* First handle adding any missing persona stores. */
       foreach (string id in storeids)
         {
           if (this._persona_stores.has_key (id) == false)
             {
               File file = this._get_default_file (id);
-              
+
               PersonaStore store = new Kf.PersonaStore (file);
               this._add_store (store, false);
               added_stores = true;
             }
         }
-        
+
         foreach (PersonaStore store in this._persona_stores.values)
           {
             if (!storeids.contains (store.id))
@@ -141,19 +141,19 @@ public class Folks.Backends.Kf.Backend : Folks.Backend
                 removed_stores += store;
               }
           }
-        
+
         for (int i = 0; i < removed_stores.length; ++i)
           {
             this._remove_store ((Kf.PersonaStore) removed_stores[i], false);
           }
-        
+
         /* Finally, if anything changed, emit the persona-stores notification. */
         if (added_stores || removed_stores.length > 0)
           {
             this.notify_property ("persona-stores");
           }
     }
-  
+
   /**
    * {@inheritDoc}
    */
@@ -206,7 +206,7 @@ public class Folks.Backends.Kf.Backend : Folks.Backend
 
           /* Create the PersonaStore for the key file */
           PersonaStore store = new Kf.PersonaStore (file);
-          
+
           this._add_store (store);
 
           this._is_prepared = true;
@@ -240,7 +240,7 @@ public class Folks.Backends.Kf.Backend : Folks.Backend
           this.notify_property ("persona-stores");
         }
     }
-    
+
   /**
    * Utility function to remove a persona store.
    *
@@ -258,7 +258,7 @@ public class Folks.Backends.Kf.Backend : Folks.Backend
           this.notify_property ("persona-stores");
         }
     }
-  
+
   /**
    * {@inheritDoc}
    */

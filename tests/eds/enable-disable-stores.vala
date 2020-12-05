@@ -89,7 +89,7 @@ public class EnableDisableStoresTests : EdsTest.TestCase
       try
         {
           yield this._backend_store.load_backends ();
-          
+
           var backend = this._backend_store.enabled_backends.get ("eds");
           assert (backend != null);
 
@@ -134,10 +134,10 @@ public class EnableDisableStoresTests : EdsTest.TestCase
       assert (store != null);
       debug ("store removed %s", store.id);
       this._n_stores_removed++;
-      
+
       var backend = this._backend_store.enabled_backends.get ("eds");
       assert (backend != null);
-      
+
       debug ("enabling store %s", store.id);
       backend.enable_persona_store (store);
     }

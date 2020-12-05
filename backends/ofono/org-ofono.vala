@@ -29,13 +29,13 @@ namespace org
             ObjectPath path;
             HashTable<string, Variant> properties;
           }
-        
+
         [DBus (name = "org.ofono.Manager")]
         public interface Manager : Object
           {
             [DBus (name = "GetModems")]
             public abstract ModemProperties[] GetModems() throws DBusError, IOError;
-            
+
             public signal void ModemAdded (ObjectPath path, HashTable<string, Variant> properties);
             public signal void ModemRemoved (ObjectPath path);
           }
@@ -46,13 +46,13 @@ namespace org
             [DBus (name = "Import")]
             public abstract string Import() throws DBusError, IOError;
           }
-        
+
         [DBus (name = "org.ofono.SimManager")]
         public interface SimManager : Object
           {
               [DBus (name = "GetProperties")]
               public abstract HashTable<string, Variant> GetProperties() throws DBusError, IOError;
-              
+
               public signal void PropertyChanged (string property, Variant value);
           }
       }

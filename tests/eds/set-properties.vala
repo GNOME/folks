@@ -271,7 +271,7 @@ public class SetPropertiesTests : EdsTest.TestCase
             },
           (p) =>
             {
-              ((NameDetails) p).structured_name = 
+              ((NameDetails) p).structured_name =
                   new StructuredName.simple ("Neutron", "Jimmy");
             },
           (i) =>
