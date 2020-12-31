@@ -67,8 +67,8 @@ msgid ""
 "Permission to access the address book on Bluetooth device ‘%s’ was denied by "
 "the user."
 msgstr ""
-"El permís per accedir a la llibreta d'adreces del dispositiu Bluetooth «%s» "
-"va ser denegada per l'usuari."
+"El permís per a accedir a la llibreta d'adreces del dispositiu Bluetooth "
+"«%s» va ser denegada per l'usuari."
 
 #. Translators: the first parameter is a Bluetooth device
 #. * alias, and the second is an error message.
@@ -134,7 +134,7 @@ msgstr ""
 #: ../backends/eds/lib/edsf-persona-store.vala:648
 #, c-format
 msgid "Permission denied to remove contact ‘%s’: %s"
-msgstr "S'ha denegat el permís per suprimir el contacte «%s»: %s"
+msgstr "S'ha denegat el permís per a suprimir el contacte «%s»: %s"
 
 #. Translators: the parameter is an error message.
 #: ../backends/eds/lib/edsf-persona-store.vala:653
@@ -163,7 +163,7 @@ msgstr "La llibreta d'adreces «%s» no està en línia."
 #: ../backends/eds/lib/edsf-persona-store.vala:969
 #, c-format
 msgid "Permission denied to open address book ‘%s’: %s"
-msgstr "S'ha denegat el permís per obrir la llibreta d'adreces «%s»: %s"
+msgstr "S'ha denegat el permís per a obrir la llibreta d'adreces «%s»: %s"
 
 #. Translators: the first parameter is an address book URI
 #. * and the second is an error message.
@@ -316,7 +316,7 @@ msgstr "La ubicació d'aquest contacte és de sols-lectura."
 #: ../backends/eds/lib/edsf-persona-store.vala:2679
 #, c-format
 msgid "Permission denied when creating new contact: %s"
-msgstr "S'ha denegat el permís per crear el contacte nou: %s"
+msgstr "S'ha denegat el permís per a crear el contacte nou: %s"
 
 #. Translators: the first parameter is an error message.
 #: ../backends/eds/lib/edsf-persona-store.vala:2684
@@ -720,7 +720,6 @@ msgstr "Persona sense nom"
 #. * If you need additional placeholders with other information or
 #. * punctuation, please file a bug against libfolks:
 #. *   https://bugzilla.gnome.org/enter_bug.cgi?product=folks
-#.
 #: ../folks/name-details.vala:268
 msgid "%g%t%m%t%f"
 msgstr "%g%t%m%t%f"
@@ -735,8 +734,8 @@ msgid ""
 "linking data in). The type ID of the store may optionally be prepended, "
 "separated by a colon. For example: ‘eds:system-address-book’ or ‘key-file’."
 msgstr ""
-"L'identificador del magatzem de contactes que el folks hauria d'utilitzar "
-"com a primari (p. ex. per desar-hi dades de contactes enllaçats). Com a "
+"L'identificador del magatzem de contactes que el Folks hauria d'utilitzar "
+"com a primari (p. ex. per a desar-hi dades de contactes enllaçats). Com a "
 "opció, es pot afegir al principi el tipus d'identificador del magatzem, "
 "separat per dos punts. Per exemple: «eds:system-address-book» o «key-file»."
 
