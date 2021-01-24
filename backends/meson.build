@@ -27,10 +27,6 @@ if telepathy_backend_enabled
   subdir('telepathy')
 endif
 
-if tracker_backend_enabled
-  subdir('tracker')
-endif
-
 if eds_backend_enabled
   subdir('eds')
 endif

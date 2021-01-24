@@ -183,7 +183,7 @@ but then running it against an older version with a different API. EDS exposes
 its API version in its D-Bus interface, so if the wrong version of EDS is
 running, folks can’t find it on the bus, which cripples folks’ EDS backend.
 The same principle applies to other D-Bus services which folks relies on, such
-as Telepathy and Tracker.
+as Telepathy.
 
 There are two ways to fix this:
  • If you wish to use your desktop’s session bus, re-compile folks against the

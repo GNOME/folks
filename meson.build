@@ -30,7 +30,6 @@ folks_lib_version = '25.21.0'
 # incompatible changes are made in the backend library APIs themselves.
 folks_eds_lib_version = '25.21.0'
 folks_telepathy_lib_version = '25.21.0'
-folks_tracker_lib_version = '25.21.0'
 folks_dummy_lib_version = '25.21.0'
 
 # The module version is used to set the shared object versions
@@ -58,7 +57,6 @@ tests_enabled = get_option('tests')
 installed_tests_enabled = get_option('installed_tests')
 ofono_backend_enabled = get_option('ofono_backend')
 telepathy_backend_enabled = get_option('telepathy_backend')
-tracker_backend_enabled = get_option('tracker_backend')
 zeitgeist_enabled = get_option('zeitgeist')
 import_tool_enabled = get_option('import_tool')
 inspect_tool_enabled = get_option('inspect_tool')
@@ -90,24 +88,6 @@ if telepathy_backend_enabled
 
   if zeitgeist_enabled
     zeitgeist_dep = dependency('zeitgeist-2.0', version: '>= 0.9.14')
-  endif
-endif
-
-if tracker_backend_enabled
-  tracker_sparql_accepted_versions = [ '0.16', '0.18', '1.0', '2.0' ]
-  foreach version : tracker_sparql_accepted_versions
-    tracker_sparql_dep = dependency('tracker-sparql-@0@'.format(version),
-      version: '>= 0.15.2',
-      required: false,
-    )
-    if tracker_sparql_dep.found()
-      tracker_sparql_version = version
-      break
-    endif
-  endforeach
-
-  if not tracker_sparql_dep.found()
-    error('Tracker backend enabld, but couldn\'t find tracker-sparql package')
   endif
 endif
 
@@ -172,13 +152,9 @@ conf.set10('HAVE_BLUEZ', bluez_backend_enabled)
 conf.set10('HAVE_EDS', eds_backend_enabled)
 conf.set10('HAVE_OFONO', ofono_backend_enabled)
 conf.set10('HAVE_TELEPATHY', telepathy_backend_enabled)
-conf.set10('HAVE_TRACKER', tracker_backend_enabled)
 if eds_backend_enabled
   conf.set_quoted('EDS_SOURCES_SERVICE_NAME', eds_sources_service_name)
   conf.set_quoted('EDS_ADDRESS_BOOK_SERVICE_NAME', eds_address_book_service_name)
-endif
-if tracker_backend_enabled
-  conf.set_quoted('TRACKER_SPARQL_MAJOR', tracker_sparql_version)
 endif
 configure_file(output: 'config.h', configuration: conf)
 config_h_dir = include_directories('.')

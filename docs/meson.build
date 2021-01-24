@@ -52,15 +52,6 @@ if telepathy_backend_enabled
   }
 endif
 
-if tracker_backend_enabled
-  valadoc_targets += {
-    'name': 'folks-tracker',
-    'source_files': tracker_backendlib_sources,
-    'library': tracker_backendlib,
-    'dependencies': tracker_backendlib_doc_deps,
-  }
-endif
-
 # First, the devhelp modules
 subdir('devhelp')
 

@@ -44,6 +44,3 @@ if eds_backend_enabled
   subdir('eds')
 endif
 
-if tracker_backend_enabled
-  subdir('tracker')
-endif

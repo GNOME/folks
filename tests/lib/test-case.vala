@@ -160,8 +160,7 @@ public abstract class Folks.TestCase : Object
         error ("unable to create '%s': %s",
             local, GLib.strerror (GLib.errno));
 
-      /* Unset some things we don't want to inherit. In particular,
-       * Tracker might try to index XDG_*_DIR, which we don't want. */
+      /* Unset some things we don't want to inherit. */
       Environment.unset_variable ("XDG_DESKTOP_DIR");
       Environment.unset_variable ("XDG_DOCUMENTS_DIR");
       Environment.unset_variable ("XDG_DOWNLOAD_DIR");

@@ -1,7 +1,0 @@
-{
-global:
-  TRF_*;
-  trf_*;
-local:
-  *;
-};

@@ -10,7 +10,6 @@ Available values for folks for the ''G_MESSAGES_DEBUG'' environment variable are
  * ''eds'' (for the evolution-data-server backend)
  * ''key-file'' (for the key file backend)
  * ''telepathy'' (for the Telepathy backend)
- * ''tracker'' (for the Tracker backend)
 
 Multiple values can be specified using commas, e.g.: ''G_MESSAGES_DEBUG=folks,eds,key-file''.
 
