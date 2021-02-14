@@ -12,7 +12,7 @@ pkgconfig = import('pkgconfig')
 #-------------------------------------------------
 
 # Core library API version (potentially used for parallel installation)
-folks_api_version = '0.6'
+folks_api_version = '0.7'
 
 # Core library version. When updating this, don't forget to bump the backend
 # library versions too, below.
@@ -21,16 +21,16 @@ folks_api_version = '0.6'
 # number: a given libfolks.so will only load modules which were compiled
 # against a core with the same major version as itself. This allows the API
 # which is exposed to the modules to be changed.
-folks_lib_version = '25.21.0'
+folks_lib_version = '26.0.0'
 
 # Each of the backend libraries (e.g. libfolks-eds.so; *not* the loadable
 # modules, eds.so) has its own version. These should be incremented when the
 # core folks_lib_version is incremented (as all the backend libraries are
 # binary-dependent on libfolks.so), but should also be incremented when
 # incompatible changes are made in the backend library APIs themselves.
-folks_eds_lib_version = '25.21.0'
-folks_telepathy_lib_version = '25.21.0'
-folks_dummy_lib_version = '25.21.0'
+folks_eds_lib_version = '26.0.0'
+folks_telepathy_lib_version = '26.0.0'
+folks_dummy_lib_version = '26.0.0'
 
 # The module version is used to set the shared object versions
 _version_split = folks_lib_version.split('.')

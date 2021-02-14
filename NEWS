@@ -2,8 +2,14 @@ Overview of changes from libfolks 0.14.0 to libfolks 0.15.1
 ===========================================================
 
 Dependencies:
+  * No more dependencies on libtracker
+  * GLib minimal requirement: 0.58
+  * E-D-S minimal requirement: 3.38
 
 Major changes:
+  * This release drops the Tracker backend (along with its dependencies).
+  * A selection of (small) performance improvements
+  * Auto-generation and deployment of the docs using CI
 
 Bugs fixed:
 
