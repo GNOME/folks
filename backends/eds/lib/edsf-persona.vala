@@ -2268,7 +2268,7 @@ public class Edsf.Persona : Folks.Persona,
   private unowned string? _get_string_property (string prop_name)
     {
       var field = E.Contact.field_id (prop_name);
-      return_if_fail (E.Contact.field_is_string (field));
+      return_val_if_fail (E.Contact.field_is_string (field), null);
       return contact.get_const<string> (field);
     }
 
