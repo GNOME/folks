@@ -1224,7 +1224,11 @@ public class Edsf.PersonaStore : Folks.PersonaStore
           signal_id = ((!) this._ebookview).objects_added.connect (
               (_contacts) =>
             {
+#if HAS_EDS_3_41
               GLib.SList<E.Contact> contacts = _contacts.copy_deep ((GLib.CopyFunc<E.Contact>) GLib.Object.ref);
+#else
+              GLib.SList<E.Contact> contacts = ((GLib.SList<E.Contact>) _contacts).copy_deep ((GLib.CopyFunc<E.Contact>) GLib.Object.ref);
+#endif
 
               /* All handlers for objects-added have to be pushed through the
                * idle queue so they remain in order with respect to each other
@@ -2438,8 +2442,15 @@ public class Edsf.PersonaStore : Folks.PersonaStore
         }
     }
 
+#if HAS_EDS_3_41
   private void _contacts_added_cb (GLib.SList<E.Contact> contacts)
     {
+#else
+  // The binding was using the wrong list type
+  private void _contacts_added_cb (GLib.List<E.Contact> _contacts)
+    {
+      unowned GLib.SList<E.Contact> contacts = (GLib.SList<E.Contact>)_contacts;
+#endif
       GLib.SList<E.Contact> copy = contacts.copy_deep ((GLib.CopyFunc<E.Contact>) GLib.Object.ref);
       this._idle_queue (() => { return this._contacts_added_idle (copy); });
     }
@@ -2511,8 +2522,15 @@ public class Edsf.PersonaStore : Folks.PersonaStore
       return false;
     }
 
+#if HAS_EDS_3_41
   private void _contacts_changed_cb (GLib.SList<E.Contact> contacts)
     {
+#else
+  // The binding was using the wrong list type
+  private void _contacts_changed_cb (GLib.List<E.Contact> _contacts)
+    {
+      unowned GLib.SList<E.Contact> contacts = (GLib.SList<E.Contact>)_contacts;
+#endif
       GLib.SList<E.Contact> copy = contacts.copy_deep ((GLib.CopyFunc<E.Contact>) GLib.Object.ref);
       this._idle_queue (() => { return this._contacts_changed_idle (copy); });
     }
@@ -2539,8 +2557,15 @@ public class Edsf.PersonaStore : Folks.PersonaStore
       return false;
     }
 
+#if HAS_EDS_3_41
   private void _contacts_removed_cb (GLib.SList<string> contacts_ids)
     {
+#else
+  // The binding was using the wrong list type
+  private void _contacts_removed_cb (GLib.List<string> _contacts_ids)
+    {
+      unowned GLib.SList<string> contacts_ids = (GLib.SList<string>)_contacts_ids;
+#endif
       GLib.SList<string> copy = contacts_ids.copy_deep ((GLib.CopyFunc<string>) string.dup);
       this._idle_queue (() => { return this._contacts_removed_idle (copy); });
     }
