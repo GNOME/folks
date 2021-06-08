@@ -1224,13 +1224,16 @@ public class Edsf.PersonaStore : Folks.PersonaStore
           signal_id = ((!) this._ebookview).objects_added.connect (
               (_contacts) =>
             {
-              unowned GLib.List<E.Contact> contacts =
-                  (GLib.List<E.Contact>) _contacts;
+#if HAS_EDS_3_41
+              GLib.SList<E.Contact> contacts = _contacts.copy_deep ((GLib.CopyFunc<E.Contact>) GLib.Object.ref);
+#else
+              GLib.SList<E.Contact> contacts = ((GLib.SList<E.Contact>) _contacts).copy_deep ((GLib.CopyFunc<E.Contact>) GLib.Object.ref);
+#endif
 
               /* All handlers for objects-added have to be pushed through the
                * idle queue so they remain in order with respect to each other
                * and implement in-order modifications to this._personas. */
-              foreach (E.Contact c in contacts)
+              foreach (unowned E.Contact c in contacts)
                 {
                   this._idle_queue (() =>
                     {
@@ -2439,33 +2442,20 @@ public class Edsf.PersonaStore : Folks.PersonaStore
         }
     }
 
-  private GenericArray<E.Contact> _copy_contacts (GLib.List<E.Contact> contacts)
+#if HAS_EDS_3_41
+  private void _contacts_added_cb (GLib.SList<E.Contact> contacts)
     {
-      var copy = new GenericArray<E.Contact> (contacts.length());
-      foreach (unowned E.Contact c in contacts)
-        {
-          copy.add (c);
-        }
-      return copy;
-    }
-
-  private GenericArray<string> _copy_contacts_ids (GLib.List<string> contacts_ids)
+#else
+  // The binding was using the wrong list type
+  private void _contacts_added_cb (GLib.List<E.Contact> _contacts)
     {
-      var copy = new GenericArray<string> (contacts_ids.length());
-      foreach (unowned string s in contacts_ids)
-        {
-          copy.add (s);
-        }
-      return copy;
-    }
-
-  private void _contacts_added_cb (GLib.List<E.Contact> contacts)
-    {
-      var copy = this._copy_contacts (contacts);
+      unowned GLib.SList<E.Contact> contacts = (GLib.SList<E.Contact>)_contacts;
+#endif
+      GLib.SList<E.Contact> copy = contacts.copy_deep ((GLib.CopyFunc<E.Contact>) GLib.Object.ref);
       this._idle_queue (() => { return this._contacts_added_idle (copy); });
     }
 
-  private bool _contacts_added_idle (GenericArray<E.Contact> contacts)
+  private bool _contacts_added_idle (GLib.SList<E.Contact> contacts)
     {
       HashSet<Persona> added_personas, removed_personas;
 
@@ -2489,9 +2479,8 @@ public class Edsf.PersonaStore : Folks.PersonaStore
 
       removed_personas = new HashSet<Persona> ();
 
-      for (uint i = 0; i < contacts.length; i++)
+      foreach (unowned E.Contact c in contacts)
         {
-          unowned E.Contact c = contacts[i];
           string? _iid = Edsf.Persona.build_iid_from_contact (this.id, c);
 
           if (_iid == null)
@@ -2533,17 +2522,23 @@ public class Edsf.PersonaStore : Folks.PersonaStore
       return false;
     }
 
-  private void _contacts_changed_cb (GLib.List<E.Contact> contacts)
+#if HAS_EDS_3_41
+  private void _contacts_changed_cb (GLib.SList<E.Contact> contacts)
     {
-      var copy = this._copy_contacts (contacts);
+#else
+  // The binding was using the wrong list type
+  private void _contacts_changed_cb (GLib.List<E.Contact> _contacts)
+    {
+      unowned GLib.SList<E.Contact> contacts = (GLib.SList<E.Contact>)_contacts;
+#endif
+      GLib.SList<E.Contact> copy = contacts.copy_deep ((GLib.CopyFunc<E.Contact>) GLib.Object.ref);
       this._idle_queue (() => { return this._contacts_changed_idle (copy); });
     }
 
-  private bool _contacts_changed_idle (GenericArray<E.Contact> contacts)
+  private bool _contacts_changed_idle (GLib.SList<E.Contact> contacts)
     {
-      for (uint i = 0; i < contacts.length; i++)
+      foreach (unowned E.Contact c in contacts)
         {
-          unowned E.Contact c = contacts[i];
           string? _iid = Edsf.Persona.build_iid_from_contact (this.id, c);
 
           if (_iid == null)
@@ -2562,19 +2557,25 @@ public class Edsf.PersonaStore : Folks.PersonaStore
       return false;
     }
 
-  private void _contacts_removed_cb (GLib.List<string> contacts_ids)
+#if HAS_EDS_3_41
+  private void _contacts_removed_cb (GLib.SList<string> contacts_ids)
     {
-      var copy = this._copy_contacts_ids (contacts_ids);
+#else
+  // The binding was using the wrong list type
+  private void _contacts_removed_cb (GLib.List<string> _contacts_ids)
+    {
+      unowned GLib.SList<string> contacts_ids = (GLib.SList<string>)_contacts_ids;
+#endif
+      GLib.SList<string> copy = contacts_ids.copy_deep ((GLib.CopyFunc<string>) string.dup);
       this._idle_queue (() => { return this._contacts_removed_idle (copy); });
     }
 
-  private bool _contacts_removed_idle (GenericArray<string> contacts_ids)
+  private bool _contacts_removed_idle (GLib.SList<string> contacts_ids)
     {
       var removed_personas = new HashSet<Persona> ();
 
-      for (uint i = 0; i < contacts_ids.length; i++)
+      foreach (unowned string contact_id in contacts_ids)
         {
-          unowned string contact_id = contacts_ids[i];
           /* Not sure how this could happen, but better to be safe. We do not
            * allow empty UIDs. */
           if (contact_id == "")

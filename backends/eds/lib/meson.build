@@ -34,6 +34,10 @@ eds_backendlib_vala_flags = [
   common_backendlib_vala_flags,
 ]
 
+if eds_dep.version().version_compare('>=3.41')
+  eds_backendlib_vala_flags += ['-D', 'HAS_EDS_3_41']
+endif
+
 eds_backendlib_c_flags = [
   '-include', 'config.h',
   '-DBACKEND_NAME="@0@"'.format(eds_backend_name),
