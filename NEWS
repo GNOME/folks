@@ -1,3 +1,9 @@
+Overview of changes from libfolks 0.15.2 to libfolks 0.15.3
+===========================================================
+
+Bugs fixed:
+  * Fix build against newer eds version
+
 Overview of changes from libfolks 0.15.1 to libfolks 0.15.2
 ===========================================================
 
