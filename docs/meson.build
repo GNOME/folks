@@ -35,6 +35,10 @@ valadoc_targets = [
 ]
 
 if eds_backend_enabled
+  if eds_dep.version().version_compare('>=3.41')
+    docs_common_valadoc_flags += ['-D', 'HAS_EDS_3_41']
+  endif
+
   valadoc_targets += {
     'name': 'folks-eds',
     'source_files': eds_backendlib_sources,
