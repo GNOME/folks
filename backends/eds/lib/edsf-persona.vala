@@ -98,7 +98,7 @@ public class Edsf.Persona : Folks.Persona,
    * than the X-URIS field. Here are mappings between the custom vCard field
    * names which EDS uses, and the TYPE values which folks uses which map to
    * them. */
-  private struct UrlTypeMapping
+  internal struct UrlTypeMapping
     {
       unowned string vcard_field_name;
       unowned string folks_type;
