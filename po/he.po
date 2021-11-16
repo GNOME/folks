@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome folks\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/folks/issues\n"
-"POT-Creation-Date: 2021-07-18 21:27+0000\n"
-"PO-Revision-Date: 2021-09-23 14:20+0300\n"
+"POT-Creation-Date: 2021-09-23 11:22+0000\n"
+"PO-Revision-Date: 2021-11-16 23:53+0200\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: Hebrew <sh.yaron@gmail.com>\n"
 "Language: he\n"
@@ -32,12 +32,14 @@ msgid ""
 "Error connecting to OBEX transfer daemon over D-Bus. Ensure BlueZ and obexd "
 "are installed."
 msgstr ""
+"שגיאה בהתחברות לסוכן התעבורה של OBEX דרך D-Bus. נא לוודא ש־ BlueZ ו־obexd "
+"מותקנות."
 
 #. Translators: the parameter is an error message.
 #: backends/bluez/bluez-persona-store.vala:385
 #, c-format
 msgid "Error reading the transferred address book file: %s"
-msgstr ""
+msgstr "שגיאה בקריאת קובץ ספר הכתובות שהועבר: %s"
 
 #. Translators: the first parameter is the name of the
 #. * failed transfer, and the second is a Bluetooth device
@@ -70,7 +72,7 @@ msgstr ""
 #: backends/bluez/bluez-persona-store.vala:838
 #, c-format
 msgid "The OBEX address book transfer from device ‘%s’ failed: %s"
-msgstr ""
+msgstr "העברת ספר הכתובות ב־OBEX מהמכשיר ‚%s’ נכשלה: %s"
 
 #. Translators: the first parameter is a Bluetooth device
 #. * alias, and the second is an error message.
@@ -116,8 +118,7 @@ msgstr "הגישה למחיקת איש הקשר ‚%s‘ נדחתה: %s"
 
 #. Translators: the parameter is an error message.
 #: backends/eds/lib/edsf-persona-store.vala:652
-#, fuzzy, c-format
-#| msgid "Removing contacts isn't supported by this persona store: %s"
+#, c-format
 msgid "Removing contacts isn’t supported by this persona store: %s"
 msgstr "הסרת אנשי קשר אינה נתמכת במנגנון אחסון דמויות זה: %s"
 
@@ -152,25 +153,22 @@ msgstr "לא ניתן לפתוח את ספר הכתובות ‚%s’:‏ %s"
 #. Translators: the parameteter is an error message.
 #: backends/eds/lib/edsf-persona-store.vala:876
 #: backends/eds/lib/edsf-persona-store.vala:906
-#, fuzzy, c-format
-#| msgid "Couldn't get address book capabilities: %s"
+#, c-format
 msgid "Couldn’t get address book capabilities: %s"
 msgstr "לא ניתן לקבל את יכולות ספר הכתובות: %s"
 
 #. Translators: the parameter is an address book URI.
 #: backends/eds/lib/edsf-persona-store.vala:922
-#, fuzzy, c-format
-#| msgid "Couldn't get view for address book ‘%s’."
+#, c-format
 msgid "Couldn’t get view for address book ‘%s’."
-msgstr "לא ניתן לקבל תצוגה עבור ספר הכתובות ‚%s‘."
+msgstr "לא ניתן לקבל תצוגה עבור ספר הכתובות ‚%s’."
 
 #. Translators: the first parameter is an address book URI
 #. * and the second is an error message.
 #: backends/eds/lib/edsf-persona-store.vala:1001
-#, fuzzy, c-format
-#| msgid "Couldn't get view for address book ‘%s’: %s"
+#, c-format
 msgid "Couldn’t get view for address book ‘%s’: %s"
-msgstr "לא ניתן לקבל תצוגה לספר הכתובות ‚%s‘:‏ %s"
+msgstr "לא ניתן לקבל תצוגה לספר הכתובות ‚%s’:‏ %s"
 
 #: backends/eds/lib/edsf-persona-store.vala:1307
 msgid "Creating a new contact failed due to reaching the timeout."
@@ -331,34 +329,30 @@ msgstr "שגיאה בלתי ידועה בעת הגדרת התכונה ‚%s‘:�
 #. Translators: the first parameter is a filename, and
 #. * the second is an error message.
 #: backends/key-file/kf-persona-store.vala:235
-#, fuzzy, c-format
-#| msgid "The relationship key file '%s' could not be loaded: %s"
+#, c-format
 msgid "The relationship key file ‘%s’ could not be loaded: %s"
-msgstr "לא ניתן לטעון את קובץ מפתח הקשרים ‚%s‘:‏ %s"
+msgstr "לא ניתן לטעון את קובץ מפתח הקשרים ‚%s’:‏ %s"
 
 #. Translators: the first parameter is a path, and the
 #. * second is an error message.
 #: backends/key-file/kf-persona-store.vala:257
-#, fuzzy, c-format
-#| msgid "The relationship key file directory '%s' could not be created: %s"
+#, c-format
 msgid "The relationship key file directory ‘%s’ could not be created: %s"
-msgstr "לא ניתן ליצור את תיקיית קובץ מפתח הקשרים ‚%s‘:‏ %s"
+msgstr "לא ניתן ליצור את תיקיית קובץ מפתח הקשרים ‚%s’:‏ %s"
 
 #. Translators: the first parameter is a filename, and
 #. * the second is an error message.
 #: backends/key-file/kf-persona-store.vala:281
-#, fuzzy, c-format
-#| msgid "The relationship key file '%s' could not be created: %s"
+#, c-format
 msgid "The relationship key file ‘%s’ could not be created: %s"
-msgstr "לא ניתן ליצור את מפתח הקשרים ‚%s‘:‏ %s"
+msgstr "לא ניתן ליצור את קובץ מפתח הקשרים ‚%s’:‏ %s"
 
 #. Translators: the first parameter is a filename, the second is
 #. * an error message.
 #: backends/key-file/kf-persona-store.vala:483
-#, fuzzy, c-format
-#| msgid "Could not write updated key file '%s': %s"
+#, c-format
 msgid "Could not write updated key file ‘%s’: %s"
-msgstr "לא ניתן לכתוב את קובץ המפתח המעודכן ‚%s‘:‏ %s"
+msgstr "לא ניתן לכתוב את קובץ המפתח המעודכן ‚%s’:‏ %s"
 
 #. Translators: this is an error message for if the user
 #. * provides an invalid IM address. The first parameter is
@@ -469,10 +463,9 @@ msgstr "לא ניתן לכתוב כינוי למשתמש זה."
 #. Translators: the first parameter is a folder path and the second
 #. * is an error message.
 #: folks/backend-store.vala:655
-#, fuzzy, c-format
-#| msgid "Error listing contents of folder '%s': %s"
+#, c-format
 msgid "Error listing contents of folder ‘%s’: %s"
-msgstr "אירעה שגיאה בעת הצגת תכני התיקייה ‚%s‘:‏ %s"
+msgstr "אירעה שגיאה בעת הצגת תוכני התיקייה ‚%s’:‏ %s"
 
 #. Translators: the first parameter is a folder path and the second
 #. * is an error message.
@@ -521,10 +514,9 @@ msgstr "שגיאה בהכנת אחסון דמויות ‚%s’:‏ %s"
 
 #. Translators: the parameter is a property name.
 #: folks/individual-aggregator.vala:1283 folks/individual-aggregator.vala:1556
-#, fuzzy, c-format
-#| msgid "Property ‘%s’ is not writeable: %s"
+#, c-format
 msgid "Unknown property ‘%s’ in linkable property list."
-msgstr "התכונה ‚%s‘ חסומה בפני כתיבה: %s"
+msgstr "המאפיין ‚%s’ אינו מוכר ברשימת מאפםיינים מקושרת."
 
 #. Translators: the first parameter is a store identifier
 #. * and the second parameter is an error message.
