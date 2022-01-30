@@ -68,7 +68,10 @@ folks_small_set_empty (GType item_type,
     GBoxedCopyFunc item_dup,
     GDestroyNotify item_free);
 
-FolksSmallSet *folks_small_set_copy (GeeIterable *iterable,
+FolksSmallSet *folks_small_set_copy (GType item_type,
+    GBoxedCopyFunc item_dup,
+    GDestroyNotify item_free,
+    GeeIterable *iterable,
     GeeHashDataFunc item_hash,
     gpointer item_hash_data,
     GDestroyNotify item_hash_data_free,

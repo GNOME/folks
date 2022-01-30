@@ -337,7 +337,10 @@ _folks_small_set_new_take_array (GPtrArray *arr,
  * Returns: (transfer full):
  */
 FolksSmallSet *
-folks_small_set_copy (GeeIterable *iterable,
+folks_small_set_copy (GType item_type,
+    GBoxedCopyFunc item_dup,
+    GDestroyNotify item_free,
+    GeeIterable *iterable,
     GeeHashDataFunc item_hash,
     gpointer item_hash_data,
     GDestroyNotify item_hash_data_free,
@@ -347,10 +350,6 @@ folks_small_set_copy (GeeIterable *iterable,
 {
   FolksSmallSet *self;
   GeeIterator *iter;
-  GeeTraversableIface *traversable_iface;
-  GType item_type;
-  GBoxedCopyFunc item_dup;
-  GDestroyNotify item_free;
 
   /* Deliberately not allowing for subclasses here: this class is not
    * subclassable, and it's slower if we do check for subclasses. */
@@ -375,12 +374,6 @@ folks_small_set_copy (GeeIterable *iterable,
 
       return self;
     }
-
-  traversable_iface = GEE_TRAVERSABLE_GET_INTERFACE (iterable);
-  g_assert (traversable_iface != NULL);
-  item_type = traversable_iface->get_g_type ((GeeTraversable *) iterable);
-  item_dup = traversable_iface->get_g_dup_func ((GeeTraversable *) iterable);
-  item_free = traversable_iface->get_g_destroy_func ((GeeTraversable *) iterable);
 
   self = folks_small_set_new (item_type, item_dup, item_free,
       item_hash, item_hash_data, item_hash_data_free,

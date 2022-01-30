@@ -37,7 +37,7 @@ namespace Folks
     internal SmallSet (owned Gee.HashDataFunc<G>? item_hash = null,
         owned Gee.EqualDataFunc<G>? item_equals = null);
 
-    internal static SmallSet<G> copy (Gee.Iterable<G> iterable,
+    internal static SmallSet<G> copy<G> (Gee.Iterable<G> iterable,
         owned Gee.HashDataFunc<G>? item_hash = null,
         owned Gee.EqualDataFunc<G>? item_equals = null);
 
