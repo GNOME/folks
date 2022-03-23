@@ -1,3 +1,9 @@
+Overview of changes from libfolks 0.15.4 to libfolks 0.15.5
+===========================================================
+
+Bugs fixed:
+  * vapi: Add missing generic type argument
+
 Overview of changes from libfolks 0.15.3 to libfolks 0.15.4
 ===========================================================
 
