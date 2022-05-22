@@ -58,6 +58,7 @@ custom_target(dummy_backendlib_gir_name + '.typelib',
   command: [ g_ir_compiler,
     '--includedir', libfolks_gir_include_dir,
     '--output', '@OUTPUT@',
+    '--shared-library', 'lib' + dummy_backendlib.name(),
     meson.current_build_dir() / (dummy_backendlib_gir_name + '.gir')
   ],
   output: dummy_backendlib_gir_name + '.typelib',

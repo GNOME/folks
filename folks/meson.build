@@ -115,6 +115,7 @@ install_data('folks.deps',
 custom_target(libfolks_gir_name + '.typelib',
   command: [ g_ir_compiler,
     '--output', '@OUTPUT@',
+    '--shared-library', 'lib' + libfolks_lib.name(),
     meson.current_build_dir() / (libfolks_gir_name + '.gir')
   ],
   output: libfolks_gir_name + '.typelib',

@@ -151,6 +151,7 @@ custom_target(telepathy_backendlib_gir_name + '.typelib',
   command: [ g_ir_compiler,
     '--includedir', libfolks_gir_include_dir,
     '--output', '@OUTPUT@',
+    '--shared-library', 'lib' + telepathy_backendlib.name(),
     meson.current_build_dir() / (telepathy_backendlib_gir_name + '.gir')
   ],
   output: telepathy_backendlib_gir_name + '.typelib',

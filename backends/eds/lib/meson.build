@@ -75,6 +75,7 @@ custom_target(eds_backendlib_gir_name + '.typelib',
   command: [ g_ir_compiler,
     '--includedir', libfolks_gir_include_dir,
     '--output', '@OUTPUT@',
+    '--shared-library', 'lib' + eds_backendlib.name(),
     meson.current_build_dir() / (eds_backendlib_gir_name + '.gir')
   ],
   output: eds_backendlib_gir_name + '.typelib',
