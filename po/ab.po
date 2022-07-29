@@ -1,16 +1,9 @@
-# Copyright (C) 2022 The Abkhazian language development fund named after Bagrat Shinkuba
-# This file is distributed under the same license as the folks package.
-# Нанба Наала <naala-nanba@rambler.ru>, 2022.
-#
-
 msgid ""
 msgstr ""
-"Project-Id-Version: folks\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/folks/issues\n"
 "POT-Creation-Date: 2022-05-22 10:02+0000\n"
-"PO-Revision-Date: 2022-07-22 16:00+0000\n"
 "Last-Translator: Нанба Наала <naala-nanba@rambler.ru>\n"
-"Language-Team: Abkhazian <LL@li.org>\n"
+"Language-Team: Abkhazian <ab@li.org>\n"
 "Language: ab\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -82,11 +75,25 @@ msgstr ""
 msgid "Bluetooth device ‘%s’ disappeared during address book transfer."
 msgstr ""
 
+#. The timeout after which we consider a property change to have failed if we
+#. * haven't received a property change notification for it.
+#. seconds
+#. The timeout after which we consider a contact addition to have failed if we
+#. * haven't received an object addition signal for it.
+#. seconds
+#. Translators: This should be translated to the name of the “Starred in
+#. * Android” group in Google Contacts for your language. If Google have not
+#. * localised the group for your language, or Google Contacts isn't available
+#. * in your language, please *do not* translate this string (i.e. just copy
+#. * the msgid to the msgstr unchanged).
 #: backends/eds/lib/edsf-persona-store.vala:69
 msgid "Starred in Android"
 msgstr "Starred in Android"
 
+#. Translators: the first parameter is an address book
+#. * URI and the second is a persona UID.
 #: backends/eds/lib/edsf-persona-store.vala:641
+#, c-format
 msgid "Address book ‘%s’ is offline, so contact ‘%s’ cannot be removed."
 msgstr ""
 "Аҭыӡҭыԥтә шәҟәы    «%s» аус ауоит автономтә режим  аҟны ,аимадара  %s  "
@@ -110,7 +117,11 @@ msgstr ""
 msgid "Can’t remove contact ‘%s’: %s"
 msgstr ""
 
-#: backends/eds/lib/edsf-persona-store.vala:770+backends/eds/lib/edsf-persona-store.vala:963
+#. Translators: the parameter is an address book
+#. * URI.
+#: backends/eds/lib/edsf-persona-store.vala:770
+#: backends/eds/lib/edsf-persona-store.vala:963
+#, c-format
 msgid "Address book ‘%s’ is offline."
 msgstr "Аҭыӡҭыԥтә шәҟәы    «%s» аус ауоит автономтә режим  аҟны."
 
@@ -256,11 +267,12 @@ msgstr ""
 msgid "Permission denied when creating new contact: %s"
 msgstr ""
 
+#. Translators: the first parameter is an error message.
 #: backends/eds/lib/edsf-persona-store.vala:2690
+#, c-format
 msgid "Address book is offline and a new contact cannot be created: %s"
 msgstr ""
-"Аҭыӡҭыԥтә шәҟәы    «%s» аус ауоит автономтә режим  аҟны ,уи азы аимадара ҿыц "
-"заԥҵахаӡом: %s"
+"Аҭыӡҭыԥтә шәҟәы аус ауоит автономтә режим аҟны ,уи азы аимадара ҿыц заԥҵахаӡом: %s"
 
 #. Translators: the first parameter is a non-human-readable
 #. * property name and the second parameter is an error
@@ -538,6 +550,9 @@ msgstr ""
 msgid "Failed to change property ‘%s’: No suitable personas were found."
 msgstr ""
 
+#. Translators: This is the default name for an Individual
+#. * when displayed in the UI if no personal details are available
+#. * for them.
 #: folks/individual.vala:2110
 msgid "Unnamed Person"
 msgstr "Ихьӡыдоу аимадара"
@@ -597,6 +612,7 @@ msgid ""
 msgstr ""
 
 #: folks/postal-address-details.vala:232
+#, c-format
 msgid "%s, %s, %s, %s, %s, %s, %s"
 msgstr "%s, %s, %s, %s, %s, %s, %s"
 
@@ -606,7 +622,7 @@ msgstr ""
 
 #: folks/presence-details.vala:173
 msgid "Offline"
-msgstr ""
+msgstr "Автономла"
 
 #: folks/presence-details.vala:177
 msgid "Error"
