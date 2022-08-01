@@ -1153,7 +1153,7 @@ public class Edsf.Persona : Folks.Persona,
       this.thaw_notify ();
     }
 
-  private void _update_params (AbstractFieldDetails details,
+  private void _update_params (AbstractFieldDetails<void*> details,
       E.VCardAttribute attr)
     {
       foreach (unowned E.VCardAttributeParam param in attr.get_params ())

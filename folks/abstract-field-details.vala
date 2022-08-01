@@ -286,8 +286,8 @@ public abstract class Folks.AbstractFieldDetails<T> : Object
    *
    * @since 0.9.0
    */
-  public static bool equal_static (AbstractFieldDetails left,
-                                   AbstractFieldDetails right)
+  public static bool equal_static (AbstractFieldDetails<void*> left,
+                                   AbstractFieldDetails<void*> right)
     {
       GLib.return_val_if_fail (left != null, false);
       GLib.return_val_if_fail (right != null, false);
@@ -442,7 +442,7 @@ public abstract class Folks.AbstractFieldDetails<T> : Object
    *
    * @since 0.9.0
    */
-  public static uint hash_static (AbstractFieldDetails value)
+  public static uint hash_static (AbstractFieldDetails<void*> value)
     {
       GLib.return_val_if_fail (value != null, 0);
 

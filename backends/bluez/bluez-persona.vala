@@ -217,7 +217,7 @@ public class Folks.Backends.BlueZ.Persona : Folks.Persona,
       this._urls_ro = this._urls.read_only_view;
     }
 
-  private void _update_params (AbstractFieldDetails details,
+  private void _update_params (AbstractFieldDetails<void*> details,
       E.VCardAttribute attr)
     {
       foreach (unowned E.VCardAttributeParam param in attr.get_params ())
