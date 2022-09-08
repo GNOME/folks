@@ -182,7 +182,9 @@ common_pkgconf_variables = [
 
 # Post-install scripts
 #-------------------------------------------------
-meson.add_install_script('meson_post_install.py')
+gnome.post_install(
+  glib_compile_schemas: true,
+)
 
 
 # Subdirectories
