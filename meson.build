@@ -1,7 +1,7 @@
 project('folks', [ 'vala', 'c' ],
   version: '0.15.6',
   license: 'LGPL2.1+',
-  meson_version: '>= 0.51',
+  meson_version: '>= 0.57',
 )
 
 gnome = import('gnome')
@@ -98,8 +98,8 @@ if eds_backend_enabled
   libxml_dep = dependency('libxml-2.0')
 
   eds_dep = dependency('evolution-data-server-1.2', version: '>=' + min_eds_version)
-  eds_sources_service_name = eds_dep.get_pkgconfig_variable('sourcesdbusservicename')
-  eds_address_book_service_name = eds_dep.get_pkgconfig_variable('addressbookdbusservicename')
+  eds_sources_service_name = eds_dep.get_variable(pkgconfig: 'sourcesdbusservicename')
+  eds_address_book_service_name = eds_dep.get_variable(pkgconfig: 'addressbookdbusservicename')
 
   message('Building E-D-S with Sources service "@0@" AddressBook service "@1@"'.format(
     eds_sources_service_name, eds_address_book_service_name))
@@ -143,8 +143,8 @@ conf.set_quoted('LOCALE_DIR', folks_prefix / get_option('localedir'))
 conf.set_quoted('PACKAGE_NAME', meson.project_name())
 conf.set_quoted('PACKAGE_STRING', meson.project_name())
 conf.set_quoted('PACKAGE_VERSION', meson.project_version())
-conf.set_quoted('ABS_TOP_SRCDIR', meson.source_root())
-conf.set_quoted('ABS_TOP_BUILDDIR', meson.build_root())
+conf.set_quoted('ABS_TOP_SRCDIR', meson.project_source_root())
+conf.set_quoted('ABS_TOP_BUILDDIR', meson.project_build_root())
 conf.set_quoted('INSTALLED_TESTS_DIR', installed_tests_dir)
 conf.set_quoted('INSTALLED_TESTS_META_DIR', folks_prefix / installed_tests_meta_dir)
 conf.set_quoted('BACKEND_DIR', folks_prefix / folks_backend_dir)
@@ -164,7 +164,7 @@ build_conf_dep = valac.find_library('build-conf', dirs: meson.current_source_dir
 # Vala args
 add_project_arguments([
     # Make sure the targets find the build-conf and folks-internal VAPI
-    '--vapidir', meson.source_root() / 'folks',
+    '--vapidir', meson.project_source_root() / 'folks',
     # within the libfolks tree, select inline code paths
     '-D', 'FOLKS_COMPILATION',
   ],

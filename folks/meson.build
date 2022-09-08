@@ -28,7 +28,7 @@ libfolks_internal = static_library('folks-internal',
 
 libfolks_internal_dep = declare_dependency(
   link_with: libfolks_internal,
-  dependencies: valac.find_library('folks-generics', dirs: meson.source_root() / 'folks'),
+  dependencies: valac.find_library('folks-generics', dirs: meson.project_source_root() / 'folks'),
 )
 
 # Core library

@@ -3,7 +3,7 @@ docs_common_valadoc_flags = [
   '--force',
   '--package-version', meson.project_version(),
   '--no-protected',
-  '-X', meson.build_root() / 'folks' / 'folks' / 'folks.h',
+  '-X', meson.project_build_root() / 'folks' / 'folks' / 'folks.h',
 ]
 
 docs_common_valadoc_deps = [
@@ -11,9 +11,9 @@ docs_common_valadoc_deps = [
   '--pkg', 'glib-2.0',
   '--pkg', 'gio-2.0',
   '--pkg', 'gee-0.8',
-  '--vapidir', meson.build_root() / 'folks',
+  '--vapidir', meson.project_build_root() / 'folks',
   '--pkg', 'folks-internal',
-  '--vapidir', meson.source_root() / 'folks',
+  '--vapidir', meson.project_source_root() / 'folks',
   '--pkg', 'folks-generics',
   '--pkg', 'build-conf',
 ]

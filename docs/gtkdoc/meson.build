@@ -19,7 +19,7 @@ foreach doc_target : valadoc_targets
       docs_common_valadoc_flags,
       docs_common_valadoc_deps,
       doc_target.get('dependencies'),
-      '-X', meson.build_root() / 'folks' / 'folks' / 'folks.h',
+      '-X', meson.project_build_root() / 'folks' / 'folks' / 'folks.h',
       '@INPUT@',
     ],
     depends: doc_target.get('library'),
