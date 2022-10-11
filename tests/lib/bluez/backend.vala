@@ -39,7 +39,7 @@ namespace org
 
             [DBus (name = "PairDevice")]
             public abstract void pair_device (string adapter_device_name,
-                string device_address) throws GLib.Error;
+                string device_address, int class_=5898764) throws GLib.Error;
 
             [DBus (name = "BlockDevice")]
             public abstract void block_device (string adapter_device_name,
