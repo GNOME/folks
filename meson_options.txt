@@ -8,7 +8,7 @@ option('zeitgeist', type: 'boolean', value: false, description: 'build Zeitgeist
 option('import_tool', type: 'boolean', value: true, description: 'Enable building the meta-contact import tool')
 option('inspect_tool', type: 'boolean', value: true, description: 'Enable building the data inspection tool')
 # Profiling
-option('profiling', type: 'boolean', value: false, description: 'Enable profiling code')
+option('profiling', type: 'boolean', value: false, description: 'Enable profiling using sysprof')
 # Test options
 option('tests', type: 'boolean', value: true, description: 'Build tests programs')
 option('installed_tests', type: 'boolean', value: false, description: 'Install test programs')

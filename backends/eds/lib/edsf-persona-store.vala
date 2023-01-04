@@ -697,7 +697,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
    */
   public override async void prepare () throws PersonaStoreError
     {
-      Internal.profiling_start ("preparing Edsf.PersonaStore (ID: %s)",
+      var profiling = Internal.profiling_start ("preparing Edsf.PersonaStore (ID: %s)",
           this.id);
 
       if (this._is_prepared == true || this._prepare_pending == true)
@@ -1020,7 +1020,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
           this._prepare_pending = false;
         }
 
-      Internal.profiling_end ("preparing Edsf.PersonaStore");
+      Internal.profiling_end ((owned) profiling);
     }
 
   private PersonaDetail _eds_field_name_to_folks_persona_detail (

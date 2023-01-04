@@ -167,7 +167,7 @@ public class Folks.Backends.Ofono.Backend : Folks.Backend
    */
   public override async void prepare () throws DBusError
     {
-      Internal.profiling_start ("preparing Ofono.Backend");
+      var profiling = Internal.profiling_start ("preparing Ofono.Backend");
 
       if (this._is_prepared || this._prepare_pending)
         {
@@ -213,7 +213,7 @@ public class Folks.Backends.Ofono.Backend : Folks.Backend
           this._prepare_pending = false;
         }
 
-      Internal.profiling_end ("preparing Ofono.Backend");
+      Internal.profiling_end ((owned) profiling);
     }
 
   /**

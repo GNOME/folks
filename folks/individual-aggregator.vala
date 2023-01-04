@@ -695,7 +695,7 @@ public class Folks.IndividualAggregator : Object
    */
   public async void prepare () throws GLib.Error
     {
-      Internal.profiling_start ("preparing IndividualAggregator");
+      var profiling = Internal.profiling_start ("preparing IndividualAggregator");
 
       /* Once this async function returns, all the {@link Backend}s will have
        * been prepared (though no {@link PersonaStore}s are guaranteed to be
@@ -751,7 +751,7 @@ public class Folks.IndividualAggregator : Object
           this._prepare_pending = false;
         }
 
-      Internal.profiling_end ("preparing IndividualAggregator");
+      Internal.profiling_end ((owned) profiling);
     }
 
   /**

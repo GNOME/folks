@@ -192,7 +192,7 @@ public class Folks.Backends.Ofono.PersonaStore : Folks.PersonaStore
    */
   public override async void prepare () throws IOError, DBusError
     {
-      Internal.profiling_start ("preparing Ofono.PersonaStore (ID: %s)",
+      var profiling = Internal.profiling_start ("preparing Ofono.PersonaStore (ID: %s)",
           this.id);
 
       if (this._is_prepared || this._prepare_pending)
@@ -252,7 +252,7 @@ public class Folks.Backends.Ofono.PersonaStore : Folks.PersonaStore
           this._prepare_pending = false;
         }
 
-      Internal.profiling_end ("preparing Ofono.PersonaStore (ID: %s)", this.id);
+      Internal.profiling_end ((owned) profiling);
     }
 
   /**

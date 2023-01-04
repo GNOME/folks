@@ -196,7 +196,7 @@ public class Folks.Backends.Eds.Backend : Folks.Backend
    */
   public override async void prepare () throws GLib.Error
     {
-      Internal.profiling_start ("preparing Eds.Backend");
+      var profiling = Internal.profiling_start ("preparing Eds.Backend");
 
       if (this._is_prepared || this._prepare_pending)
         {
@@ -231,7 +231,7 @@ public class Folks.Backends.Eds.Backend : Folks.Backend
           this._prepare_pending = false;
         }
 
-      Internal.profiling_end ("preparing Eds.Backend");
+      Internal.profiling_end ((owned) profiling);
     }
 
   /**

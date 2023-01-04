@@ -183,7 +183,7 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
    */
   public override async void prepare ()
     {
-      Internal.profiling_start ("preparing Kf.PersonaStore (ID: %s)", this.id);
+      var profiling = Internal.profiling_start ("preparing Kf.PersonaStore (ID: %s)", this.id);
 
       if (this._is_prepared || this._prepare_pending)
         {
@@ -316,7 +316,7 @@ public class Folks.Backends.Kf.PersonaStore : Folks.PersonaStore
           this._prepare_pending = false;
         }
 
-      Internal.profiling_end ("preparing Kf.PersonaStore (ID: %s)", this.id);
+      Internal.profiling_end ((owned) profiling);
     }
 
   /**

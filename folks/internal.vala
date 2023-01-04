@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 Collabora Ltd.
+ * Copyright 2011,2023 Collabora Ltd.
  *
  * This library is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -16,6 +16,7 @@
  *
  * Authors:
  *       Raul Gutierrez Segales <raul.gutierrez.segales@collabora.co.uk>
+ *       Corentin Noël <corentin.noel@collabora.com>
  */
 
 using GLib;
@@ -38,17 +39,6 @@ namespace Folks.Internal
       return true;
     }
 
-#if ENABLE_PROFILING
-  /* See: http://people.gnome.org/~federico/news-2006-03.html#timeline-tools */
-  [PrintfFormat]
-  private static void profiling_markv (string format, va_list args)
-    {
-      var formatted = format.vprintf (args);
-      var str = "MARK: %s-%p: %s".printf (Environment.get_prgname (), Thread.self<void> (), formatted);
-      access (str, F_OK);
-    }
-#endif
-
   /**
    * Emit a profiling point.
    *
@@ -57,14 +47,27 @@ namespace Folks.Internal
    *
    * @param format printf-style message format
    * @param ... message arguments
-   * @since 0.7.2
    */
   [PrintfFormat]
-  public static void profiling_point (string format, ...)
+  public inline void profiling_point (string format, ...)
     {
 #if ENABLE_PROFILING
       var args = va_list ();
-      Internal.profiling_markv (format, args);
+      Sysprof.Collector.log (0, "folks", format.vprintf(args));
+#endif
+    }
+
+  [Compact]
+  public class ProfileBlock
+    {
+#if ENABLE_PROFILING
+      internal string name;
+      internal int64 start;
+
+      internal ProfileBlock (owned string name) {
+        this.name = (owned) name;
+        this.start = Sysprof.CAPTURE_CURRENT_TIME;
+      }
 #endif
     }
 
@@ -79,13 +82,14 @@ namespace Folks.Internal
    *
    * @param format printf-style message format
    * @param ... message arguments
-   * @since 0.7.2
    */
-  public static void profiling_start (string format, ...)
+  public inline ProfileBlock? profiling_start (string format, ...)
     {
 #if ENABLE_PROFILING
       var args = va_list ();
-      Internal.profiling_markv ("START: " + format, args);
+      return new ProfileBlock (format.vprintf (args));
+#else
+      return null;
 #endif
     }
 
@@ -98,15 +102,12 @@ namespace Folks.Internal
    * This is typically used in a pair with {@link Internal.profiling_start} to
    * delimit blocks of processing which need timing.
    *
-   * @param format printf-style message format
-   * @param ... message arguments
-   * @since 0.7.2
+   * @param block the ProfileBlock given by profiling_start
    */
-  public static void profiling_end (string format, ...)
+  public inline void profiling_end (owned ProfileBlock? block)
     {
 #if ENABLE_PROFILING
-      var args = va_list ();
-      Internal.profiling_markv ("END: " + format, args);
+        Sysprof.Collector.mark (block.start, Sysprof.CAPTURE_CURRENT_TIME - block.start, "folks", block.name);
 #endif
     }
 }

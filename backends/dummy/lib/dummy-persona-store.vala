@@ -572,7 +572,7 @@ public class FolksDummy.PersonaStore : Folks.PersonaStore
    */
   public override async void prepare () throws PersonaStoreError
     {
-      Internal.profiling_start ("preparing Dummy.PersonaStore (ID: %s)",
+      var profiling = Internal.profiling_start ("preparing Dummy.PersonaStore (ID: %s)",
           this.id);
 
       if (this._is_prepared == true || this._prepare_pending == true)
@@ -606,7 +606,7 @@ public class FolksDummy.PersonaStore : Folks.PersonaStore
           this._prepare_pending = false;
         }
 
-      Internal.profiling_end ("preparing Dummy.PersonaStore");
+      Internal.profiling_end ((owned) profiling);
     }
 
 

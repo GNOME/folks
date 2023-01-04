@@ -276,7 +276,7 @@ public class Folks.BackendStore : Object {
    */
   public async void prepare ()
     {
-      Internal.profiling_start ("preparing BackendStore");
+      var profiling = Internal.profiling_start ("preparing BackendStore");
 
       /* (re-)load the list of disabled backends */
       yield this._load_disabled_backend_names ();
@@ -287,7 +287,7 @@ public class Folks.BackendStore : Object {
           this.notify_property ("is-prepared");
         }
 
-      Internal.profiling_end ("preparing BackendStore");
+      Internal.profiling_end ((owned) profiling);
     }
 
   /**
@@ -305,7 +305,7 @@ public class Folks.BackendStore : Object {
     {
       assert (Module.supported());
 
-      Internal.profiling_start ("loading backends in BackendStore");
+      var profiling = Internal.profiling_start ("loading backends in BackendStore");
 
       yield this.prepare ();
 
@@ -400,7 +400,7 @@ public class Folks.BackendStore : Object {
           yield;
         }
 
-      Internal.profiling_end ("loading backends in BackendStore");
+      Internal.profiling_end ((owned) profiling);
     }
 
   /* This method is not safe to call multiple times concurrently, since there's

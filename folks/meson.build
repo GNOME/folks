@@ -16,7 +16,8 @@ libfolks_internal_deps = [
 libfolks_internal_vala_flags = []
 
 if get_option('profiling')
-  libfolks_internal_vala_flags += '-DENABLE_PROFILING'
+  libfolks_internal_vala_flags += '--define=ENABLE_PROFILING'
+  libfolks_internal_deps += sysprof_dep
 endif
 
 libfolks_internal = static_library('folks-internal',

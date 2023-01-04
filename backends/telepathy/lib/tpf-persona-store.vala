@@ -467,7 +467,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
    */
   public override async void prepare () throws GLib.Error
     {
-      Internal.profiling_start ("preparing Tpf.PersonaStore (ID: %s)", this.id);
+      var profiling_prepare = Internal.profiling_start ("preparing Tpf.PersonaStore (ID: %s)", this.id);
 
       if (this._is_prepared || this._prepare_pending)
         {
@@ -542,15 +542,15 @@ public class Tpf.PersonaStore : Folks.PersonaStore
               this._logger_invalidated_cb);
           this._logger.favourite_contacts_changed.connect (
               this._favourite_contacts_changed_cb);
-          Internal.profiling_start ("initialising favourite contacts in " +
+
+          var profiling = Internal.profiling_start ("initialising favourite contacts in " +
               "Tpf.PersonaStore (ID: %s)", this.id);
           this._initialise_favourite_contacts.begin ((o, r) =>
             {
               try
                 {
                   this._initialise_favourite_contacts.end (r);
-                  Internal.profiling_end ("initialising favourite " +
-                      "contacts in Tpf.PersonaStore (ID: %s)", this.id);
+                  Internal.profiling_end ((owned) profiling);
                 }
               catch (GLib.Error e)
                 {
@@ -591,7 +591,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
           this._prepare_pending = false;
         }
 
-      Internal.profiling_end ("preparing Tpf.PersonaStore (ID: %s)", this.id);
+      Internal.profiling_end ((owned) profiling_prepare);
     }
 
   private void _account_manager_invalidated_cb (uint domain, int code,
@@ -750,7 +750,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       debug ("_notify_connection_cb_async() for Tpf.PersonaStore %p ('%s').",
           this, this.id);
 
-      Internal.profiling_start ("notify connection for Tpf.PersonaStore " +
+      var profiling = Internal.profiling_start ("notify connection for Tpf.PersonaStore " +
           "(ID: %s)", this.id);
 
       /* Ensure the connection is prepared as necessary. */
@@ -852,8 +852,7 @@ public class Tpf.PersonaStore : Folks.PersonaStore
       this._self_contact_changed_cb (this._conn, null);
       this._contact_list_state_changed_cb (this._conn, null);
 
-      Internal.profiling_end ("notify connection for Tpf.PersonaStore " +
-          "(ID: %s)", this.id);
+      Internal.profiling_end ((owned) profiling);
     }
 
   private void _marshall_supported_fields ()

@@ -752,22 +752,23 @@ public class Folks.Backends.BlueZ.PersonaStore : Folks.PersonaStore
       org.bluez.obex.PhonebookAccess? obex_pbap = null;
       var success = true;
 
+      if (this._update_contacts_cancellable != null)
+        {
+          /* There’s an ongoing _update_contacts() call. Since downloading
+           * the address book takes a long time (tens of seconds), we don’t
+           * want to cancel the ongoing operation. Just return
+           * immediately. */
+          debug ("Not updating contacts due to ongoing update operation.");
+          return;
+        }
+
+      var profiling = Internal.profiling_start ("updating BlueZ.PersonaStore (ID: %s) " +
+          "contacts", this.id);
+
+      debug ("Updating contacts.");
+
       try
         {
-          if (this._update_contacts_cancellable != null)
-            {
-              /* There’s an ongoing _update_contacts() call. Since downloading
-               * the address book takes a long time (tens of seconds), we don’t
-               * want to cancel the ongoing operation. Just return
-               * immediately. */
-              debug ("Not updating contacts due to ongoing update operation.");
-              return;
-            }
-
-          Internal.profiling_start ("updating BlueZ.PersonaStore (ID: %s) " +
-              "contacts", this.id);
-
-          debug ("Updating contacts.");
 
           string path;
           HashTable<string, Variant> props;
@@ -889,8 +890,7 @@ public class Folks.Backends.BlueZ.PersonaStore : Folks.PersonaStore
               success == true && this._photos_up_to_date == false;
           this._schedule_update_contacts (new_download_photos);
 
-          Internal.profiling_end ("updating BlueZ.PersonaStore (ID: %s) " +
-              "contacts", this.id);
+          Internal.profiling_end ((owned) profiling);
         }
     }
 
@@ -1044,7 +1044,7 @@ public class Folks.Backends.BlueZ.PersonaStore : Folks.PersonaStore
    */
   public override async void prepare () throws PersonaStoreError
     {
-      Internal.profiling_start ("preparing BlueZ.PersonaStore (ID: %s)",
+      var profiling = Internal.profiling_start ("preparing BlueZ.PersonaStore (ID: %s)",
           this.id);
 
       if (this._is_prepared || this._prepare_pending)
@@ -1108,7 +1108,7 @@ public class Folks.Backends.BlueZ.PersonaStore : Folks.PersonaStore
           this._prepare_pending = false;
         }
 
-      Internal.profiling_end ("preparing BlueZ.PersonaStore (ID: %s)", this.id);
+      Internal.profiling_end ((owned) profiling);
     }
 
   /**

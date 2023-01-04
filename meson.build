@@ -135,6 +135,11 @@ if inspect_tool_enabled
   )
 endif
 
+if get_option('profiling')
+  sysprof_dep = dependency('sysprof-capture-4', version: '>= 3.38.0')
+  add_project_arguments(['--vapidir', meson.current_source_dir() / 'vapi'], language: 'vala')
+endif
+
 # Configuration
 #-------------------------------------------------
 conf = configuration_data()
