@@ -20,7 +20,7 @@ keyfile_backend_c_flags = [
   '-DG_LOG_DOMAIN="@0@"'.format(keyfile_backend_name),
 ]
 
-keyfile_backend = shared_library(keyfile_backend_name,
+keyfile_backend = shared_module(keyfile_backend_name,
   keyfile_backend_sources,
   dependencies: keyfile_backend_deps,
   vala_args: keyfile_backend_vala_flags,

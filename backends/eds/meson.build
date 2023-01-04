@@ -25,7 +25,7 @@ eds_backend_c_flags = [
   '-DG_LOG_DOMAIN="@0@"'.format(eds_backend_name),
 ]
 
-eds_backend = library('eds',
+eds_backend = shared_module('eds',
   eds_backend_sources,
   dependencies: eds_backend_deps,
   vala_args: eds_backend_vala_flags,

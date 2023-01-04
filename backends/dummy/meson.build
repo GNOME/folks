@@ -22,7 +22,7 @@ dummy_backend_c_flags = [
   '-DG_LOG_DOMAIN="@0@"'.format(dummy_backend_name),
 ]
 
-dummy_backend = shared_library(dummy_backend_name,
+dummy_backend = shared_module(dummy_backend_name,
   dummy_backend_sources,
   dependencies: dummy_backend_deps,
   vala_args: dummy_backend_vala_flags,

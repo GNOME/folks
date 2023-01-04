@@ -25,7 +25,7 @@ telepathy_backend_c_flags = [
   '-DG_LOG_DOMAIN="@0@"'.format(telepathy_backend_name),
 ]
 
-telepathy_backend = shared_library(telepathy_backend_name,
+telepathy_backend = shared_module(telepathy_backend_name,
   telepathy_backend_sources,
   dependencies: telepathy_backend_deps,
   vala_args: telepathy_backend_vala_flags,

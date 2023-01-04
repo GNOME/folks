@@ -23,7 +23,7 @@ ofono_backend_c_flags = [
   '-DG_LOG_DOMAIN="@0@"'.format(ofono_backend_name),
 ]
 
-ofono_backend = shared_library(ofono_backend_name,
+ofono_backend = shared_module(ofono_backend_name,
   ofono_backend_sources,
   dependencies: ofono_backend_deps,
   vala_args: ofono_backend_vala_flags,

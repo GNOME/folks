@@ -26,7 +26,7 @@ bluez_backend_c_flags = [
   '-DG_LOG_DOMAIN="@0@"'.format(bluez_backend_name),
 ]
 
-bluez_backend = shared_library(bluez_backend_name,
+bluez_backend = shared_module(bluez_backend_name,
   bluez_backend_sources,
   dependencies: bluez_backend_deps,
   vala_args: bluez_backend_vala_flags,
