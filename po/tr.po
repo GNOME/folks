@@ -14,16 +14,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: folks\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/folks/issues\n"
-"POT-Creation-Date: 2022-07-25 13:40+0000\n"
-"PO-Revision-Date: 2017-09-02 10:10+0300\n"
-"Last-Translator: Emin Tufan Çetin <etcetin@gmail.com>\n"
+"POT-Creation-Date: 2023-01-25 17:19+0000\n"
+"PO-Revision-Date: 2023-02-20 17:20+0300\n"
+"Last-Translator: Sabri Ünal <libreajans@gmail.com>\n"
 "Language-Team: Türkçe <gnome-turk@gnome.org>\n"
 "Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Gtranslator 2.91.7\n"
+"X-Generator: Poedit 3.1.1\n"
 "X-POOTLE-MTIME: 1433882337.000000\n"
 
 #: backends/bluez/bluez-backend.vala:734
@@ -64,7 +64,7 @@ msgstr ""
 "Bluetooth aygıtı ‘%2$s’ üzerinden ‘%1$s’ adres defteri aktarımı sırasında "
 "hata."
 
-#: backends/bluez/bluez-persona-store.vala:791
+#: backends/bluez/bluez-persona-store.vala:792
 #, c-format
 msgid ""
 "Permission to access the address book on Bluetooth device ‘%s’ was denied by "
@@ -75,21 +75,21 @@ msgstr ""
 
 #. Translators: the first parameter is a Bluetooth device
 #. * alias, and the second is an error message.
-#: backends/bluez/bluez-persona-store.vala:798
+#: backends/bluez/bluez-persona-store.vala:799
 #, c-format
 msgid "An OBEX address book transfer from device ‘%s’ could not be started: %s"
 msgstr "‘%s’ aygıtından OBEX adres defteri aktarımı başlatılamadı: %s"
 
 #. Translators: the first parameter is a Bluetooth device
 #. * alias, and the second is an error message.
-#: backends/bluez/bluez-persona-store.vala:838
+#: backends/bluez/bluez-persona-store.vala:839
 #, c-format
 msgid "The OBEX address book transfer from device ‘%s’ failed: %s"
-msgstr "‘%s’ aygıtından OBEX adres defteri aktarımı başarısız oldu: %s"
+msgstr "‘%s’ aygıtından OBEX adres defteri aktarılamadı: %s"
 
 #. Translators: the first parameter is a Bluetooth device
 #. * alias, and the second is an error message.
-#: backends/bluez/bluez-persona-store.vala:855
+#: backends/bluez/bluez-persona-store.vala:856
 #, c-format
 msgid ""
 "Error during transfer of the address book from Bluetooth device ‘%s’: %s"
@@ -396,19 +396,19 @@ msgstr ""
 "Hiçbir oFono nesne yöneticisi çalışmıyor, oFono art alanda çalışan uygulama "
 "etkin olmayacaktır. Ya oFono yüklü değil ya da servis başlatılamıyor."
 
-#: backends/telepathy/lib/tpf-persona-store.vala:1264
+#: backends/telepathy/lib/tpf-persona-store.vala:1263
 msgid "Telepathy contacts representing the local user may not be removed."
 msgstr "Yerel kullanıcıyı temsil eden Telepathy kişileri kaldırılamaz."
 
 #. Translators: the parameter is an error message.
-#: backends/telepathy/lib/tpf-persona-store.vala:1275
+#: backends/telepathy/lib/tpf-persona-store.vala:1274
 #, c-format
 msgid "Failed to remove a persona from store: %s"
-msgstr "Depodan kişi kaldırma başarısız oldu: %s"
+msgstr "Depodan kişi kaldırılamadı: %s"
 
 #. Translators: the first two parameters are store identifiers and
 #. * the third is a contact identifier.
-#: backends/telepathy/lib/tpf-persona-store.vala:1310
+#: backends/telepathy/lib/tpf-persona-store.vala:1309
 #, c-format
 msgid ""
 "Persona store (%s, %s) requires the following details:\n"
@@ -417,25 +417,25 @@ msgstr ""
 "Kişi deposu (%s, %s) aşağıdaki ayrıntıları gerektirir:\n"
 "    kişi (sağlanan: ‘%s’)\n"
 
-#: backends/telepathy/lib/tpf-persona-store.vala:1325
+#: backends/telepathy/lib/tpf-persona-store.vala:1324
 msgid "Cannot create a new Telepathy contact while offline."
 msgstr "Çevrim dışıyken yeni bir Telepathy kişisi oluşturulamaz."
 
 #. Translators: the parameter is an error message.
-#: backends/telepathy/lib/tpf-persona-store.vala:1343
+#: backends/telepathy/lib/tpf-persona-store.vala:1342
 #, c-format
 msgid "Failed to add a persona from details: %s"
 msgstr "Ayrıntılardan bir kişi eklenemedi: %s"
 
 #. Translators: "telepathy-logger" is the name of an application,
 #. * and should not be translated.
-#: backends/telepathy/lib/tpf-persona-store.vala:1363
+#: backends/telepathy/lib/tpf-persona-store.vala:1362
 msgid ""
 "Failed to change favorite without a connection to the telepathy-logger "
 "service."
 msgstr "Telepathy-logger servisine bağlantı yapılmadan favori değiştirilemedi."
 
-#: backends/telepathy/lib/tpf-persona-store.vala:1369
+#: backends/telepathy/lib/tpf-persona-store.vala:1368
 msgid ""
 "Failed to change favorite status of Telepathy Persona because it has no "
 "attached TpContact."
@@ -444,24 +444,24 @@ msgstr ""
 "değiştirilemedi."
 
 #. Translators: the parameter is a contact identifier.
-#: backends/telepathy/lib/tpf-persona-store.vala:1387
+#: backends/telepathy/lib/tpf-persona-store.vala:1386
 #, c-format
 msgid "Failed to change favorite status for Telepathy contact ‘%s’."
 msgstr "Telepathy kişisi ‘%s’ için favori durumu değiştirilemedi."
 
 #. Translators: the parameter is an error message.
-#: backends/telepathy/lib/tpf-persona-store.vala:1419
+#: backends/telepathy/lib/tpf-persona-store.vala:1418
 #, c-format
 msgid "Failed to change contact’s alias: %s"
 msgstr "Kişinin takma adı değiştirilemedi: %s"
 
-#: backends/telepathy/lib/tpf-persona-store.vala:1500
+#: backends/telepathy/lib/tpf-persona-store.vala:1499
 msgid "Extended information may only be set on the user’s Telepathy contact."
 msgstr ""
 "Genişletilmiş bilgi yalnızca kullanıcının Telepathy kişisi üzerinde "
 "ayarlanabilir."
 
-#: backends/telepathy/lib/tpf-persona-store.vala:1529
+#: backends/telepathy/lib/tpf-persona-store.vala:1528
 msgid ""
 "Extended information cannot be written because the store is disconnected."
 msgstr "Depo bağlantısı kesildiği için genişletilmiş bilgiler yazılamıyor."
@@ -568,7 +568,7 @@ msgid ""
 "failed to load."
 msgstr ""
 "Kişi deposu ‘%s:%s’ birincil olarak yapılandırılmış fakat bulunamadı ya da "
-"yükleme başarısız oldu."
+"yüklenemedi."
 
 #: folks/individual-aggregator.vala:2495
 #, c-format
@@ -765,7 +765,7 @@ msgid ""
 "%s\n"
 "Error: %s\n"
 msgstr ""
-"Sohbet adresleri ve ‘%s’ takma adıyla yeni kişi oluşturulamıyor:\n"
+"Sohbet adresleri ve ‘%s’ takma adıyla yeni kişi oluşturulamadı:\n"
 "%s\n"
 "Hata:%s\n"
 
