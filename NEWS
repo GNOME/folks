@@ -1,3 +1,15 @@
+Overview of changes from libfolks 0.15.5 to libfolks 0.15.6
+===========================================================
+Major changes:
+  * Projects should be able to use the typelib-based bindings
+  * sysprof is now used for profiling
+  * Lots of translation updates
+  * Several smaller Meson changes
+
+Bugs fixed:
+  * folks-generics: Add missing generic type argument
+  * tests/bluez: Follow PairDevice API change in python-dbusmock
+
 Overview of changes from libfolks 0.15.4 to libfolks 0.15.5
 ===========================================================
 
