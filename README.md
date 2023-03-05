@@ -5,12 +5,13 @@ libfolks is a library that aggregates people from multiple sources (eg,
 Telepathy connection managers) to create metacontacts.
 
 ## Building
-You can build and install libfolks using [Meson]:
+You can build, test and install libfolks using [Meson]:
 
 ```sh
-meson build
-ninja -C build
-ninja -C build install
+meson setup build
+meson compile -C build
+meson test -C build
+meson install -C build
 ```
 
 Various backends can be enabled or disabled at compile-time. A comprehensive
