@@ -82,25 +82,25 @@ namespace org
             public abstract string icon { owned get; }
 
             [DBus (name = "Class")]
-            public abstract uint32 bluetooth_class { owned get; }
+            public abstract uint32 bluetooth_class { get; }
 
             [DBus (name = "Appearance")]
-            public abstract uint16 appearance { owned get; }
+            public abstract uint16 appearance { get; }
 
             [DBus (name = "UUIDs")]
             public abstract string[] uuids { owned get; }
 
             [DBus (name = "Paired")]
-            public abstract bool paired { owned get; }
+            public abstract bool paired { get; }
 
             [DBus (name = "Connected")]
-            public abstract bool connected { owned get; }
+            public abstract bool connected { get; }
 
             [DBus (name = "Trusted")]
-            public abstract bool trusted { owned get; set; }
+            public abstract bool trusted { get; set; }
 
             [DBus (name = "Blocked")]
-            public abstract bool blocked { owned get; set; }
+            public abstract bool blocked { get; set; }
 
             [DBus (name = "Alias")]
             public abstract string alias { owned get; set; }
@@ -109,13 +109,13 @@ namespace org
             public abstract ObjectPath adapter { owned get; }
 
             [DBus (name = "LegacyPairing")]
-            public abstract bool legacy_pairing { owned get; }
+            public abstract bool legacy_pairing { get; }
 
             [DBus (name = "Modalias")]
             public abstract string mod_alias { owned get; }
 
             [DBus (name = "RSSI")]
-            public abstract int16 rssi { owned get; }
+            public abstract int16 rssi { get; }
           }
       }
   }
