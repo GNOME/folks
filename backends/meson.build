@@ -38,3 +38,7 @@ endif
 if bluez_backend_enabled
   subdir('bluez')
 endif
+
+if tracker_backend_enabled
+  subdir('tracker')
+endif

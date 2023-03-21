@@ -57,6 +57,7 @@ tests_enabled = get_option('tests')
 installed_tests_enabled = get_option('installed_tests')
 ofono_backend_enabled = get_option('ofono_backend')
 telepathy_backend_enabled = get_option('telepathy_backend')
+tracker_backend_enabled = get_option('tracker_backend')
 zeitgeist_enabled = get_option('zeitgeist')
 import_tool_enabled = get_option('import_tool')
 inspect_tool_enabled = get_option('inspect_tool')
@@ -120,6 +121,12 @@ if bluez_backend_enabled
       ],
     )
   endif
+endif
+
+if tracker_backend_enabled
+  vapi_dir = meson.current_source_dir() / 'vapi'
+  add_project_arguments(['--vapidir', vapi_dir], language: 'vala')
+  tracker_dep = dependency('tracker-sparql-3.0')
 endif
 
 if import_tool_enabled
