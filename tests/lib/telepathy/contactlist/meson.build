@@ -47,7 +47,7 @@ telepathy_test_contactlist_deps = [
   dbus_glib_dep,
 ]
 
-telepathy_test_contactlist_lib = static_library('tp-test-contactlist',
+telepathy_test_contactlist_lib = shared_library('tp-test-contactlist',
   [ telepathy_test_contactlist_sources, telepathy_test_contactlist_manager ],
   dependencies: telepathy_test_contactlist_deps,
   include_directories: config_h_dir,
