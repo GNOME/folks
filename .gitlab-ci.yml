@@ -28,7 +28,7 @@ build-folks:
       dbus-glib-devel evolution-data-server-devel glib2-devel
       gobject-introspection-devel libgee-devel libxml2-devel meson ninja-build
       python3-dbusmock readline-devel redhat-rpm-config telepathy-glib-devel
-      telepathy-glib-vala vala valadoc gtk-doc
+      telepathy-glib-vala tracker-devel vala gi-docgen
       dbus-daemon # FIXME: dbus-broker breaks the CI, see https://github.com/bus1/dbus-broker/issues/145
   script:
     - meson _build -Ddocs=true

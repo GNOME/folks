@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN" "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+<node>
+  <!--
+      org.bluez.obex.Client1:
+      @short_description: Database to store permissions
+
+      The permission store can be used by portals to store permissions
+      that sandboxed applications have to various resources, such as
+      files outside the sandbox.
+
+      Since the resources managed by portals can be varied, the permission
+      store is fairly free-form: there can be multiple tables; resources are
+      identified by an ID, as are applications, and permissions are stored as
+      string arrays. None of these strings are interpreted by the permission
+      store in any way.
+
+      In addition, the permission store allows to associate extra data
+      (in the form of a GVariant) with each resource.
+
+      This document describes version 2 of the permission store interface.
+  -->
+
+  <interface name="org.bluez.obex.Client1">
+    <!--
+        CreateSession:
+        @destination: map from application ID to permissions
+        @args: A dictionary to hold optional or type-specific parameters.
+
+        Create a new OBEX session for the given remote address.
+
+        Typical parameters for @args that can be set in include the following:
+          * string "Target" : type of session to be created
+          * string "Source" : local address to be used
+          * byte "Channel"
+
+        The currently supported targets are the following:
+          "ftp"
+          "map"
+          "opp"
+          "pbap"
+          "sync"
+    -->
+    <method name="CreateSession">
+      <arg name="destination" type="s" direction="in"/>
+      <arg name="args" type="a{sv}" direction="in"/>
+      <arg name="session" type="o" direction="out"/>
+    </method>
+
+    <!--
+        RemoveSession:
+        @session: the path of the session
+
+        Unregister session and abort pending transfers.
+    -->
+    <method name="RemoveSession">
+      <arg name="session" type="o" direction="in"/>
+    </method>
+  </interface>
+
+</node>
