@@ -1,7 +1,0 @@
-{
-global:
-  FOLKS_DUMMY_*;
-  folks_dummy_*;
-local:
-  *;
-};
