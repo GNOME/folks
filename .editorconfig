@@ -1,0 +1,25 @@
+# SPDX-FileCopyrightText: 2023 The Folks Authors
+# SPDX-License-Identifier: CC0-1.0
+
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+trim_trailing_whitespace = true
+
+[*.vala]
+indent_size = 2
+indent_style = space
+insert_final_newline = true
+
+[meson.build]
+indent_size = 2
+indent_style = space
+
+[*.yml]
+indent_size = 2
+indent_style = space
+
+[*.md]
+max_line_length = 80
