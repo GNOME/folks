@@ -14,8 +14,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: folks\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/folks/issues\n"
-"POT-Creation-Date: 2023-01-25 17:19+0000\n"
-"PO-Revision-Date: 2023-02-20 17:20+0300\n"
+"POT-Creation-Date: 2023-05-01 11:23+0000\n"
+"PO-Revision-Date: 2023-05-26 20:54+0300\n"
 "Last-Translator: Sabri Ünal <libreajans@gmail.com>\n"
 "Language-Team: Türkçe <gnome-turk@gnome.org>\n"
 "Language: tr\n"
@@ -23,7 +23,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Poedit 3.1.1\n"
+"X-Generator: Poedit 3.2.2\n"
 "X-POOTLE-MTIME: 1433882337.000000\n"
 
 #: backends/bluez/bluez-backend.vala:734
@@ -41,8 +41,8 @@ msgid ""
 "Error connecting to OBEX transfer daemon over D-Bus. Ensure BlueZ and obexd "
 "are installed."
 msgstr ""
-"D-Bus üzerinden OBEX aktarım artalan işlemine bağlanırken hata. BlueZ ve "
-"obexd yüklü olduğundan emin olun."
+"D-Bus üzerinden OBEX aktarım art alan hizmetine bağlanırken hata. BlueZ ve "
+"obexd kurulu olduğundan emin olun."
 
 #. Translators: the parameter is an error message.
 #: backends/bluez/bluez-persona-store.vala:385
@@ -394,7 +394,7 @@ msgid ""
 "Either oFono isn’t installed or the service can’t be started."
 msgstr ""
 "Hiçbir oFono nesne yöneticisi çalışmıyor, oFono art alanda çalışan uygulama "
-"etkin olmayacaktır. Ya oFono yüklü değil ya da servis başlatılamıyor."
+"etkin olmayacaktır. Ya oFono kurulu değil ya da servis başlatılamıyor."
 
 #: backends/telepathy/lib/tpf-persona-store.vala:1263
 msgid "Telepathy contacts representing the local user may not be removed."
@@ -792,7 +792,7 @@ msgstr "Kaynak dosya adı (öntanımlı: kaynak arka uca özel)"
 
 #: tools/import.vala:58
 msgid "— import meta-contact information to libfolks"
-msgstr "— libfolks kütüphanesine meta-contact bilgisini aktar "
+msgstr "— libfolks kütüphanesine meta-contact bilgisini aktar"
 
 #. Translators: the parameter is an error message.
 #: tools/import.vala:68
