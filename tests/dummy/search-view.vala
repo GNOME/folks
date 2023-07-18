@@ -73,6 +73,9 @@ public class SearchViewTests : DummyTest.TestCase
           /* Phone numbers. */
           { "867-5309", "persona0" },
           { "+1-800-867-5309", "persona0" },
+          { "+1-800", "persona0" },
+          { "8675309", "persona0" },
+          { "1800", "persona0" },
           /* Test transliteration only applies to the individual’s tokens. */
           { "Al", "persona1,persona3" },
           { "Ál", "persona3" },

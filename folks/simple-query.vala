@@ -417,8 +417,19 @@ public class Folks.SimpleQuery : Folks.Query
            * against ‘+01234567890’. The query string is tokenised to ‘123’ and
            * ‘4567’, neither of which would normally match against the full
            * phone number. */
-          if (val.values_equal (new PhoneFieldDetails (token)))
+          var pfd = new PhoneFieldDetails (token);
+          if (val.values_equal (pfd))
               return 2;
+
+          var normalized_token = pfd.get_normalised ();
+          if (normalized_token.length != 0)
+            {
+              var normalized_val =  ((PhoneFieldDetails)val).get_normalised ();
+              var score = this._string_matches_token (normalized_val, normalized_token,
+                  individual_translit_locale);
+              if (score > 0)
+                  return score;
+            }
         }
 
       return this._string_matches_token (val.value, token,
