@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: folks\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/folks/issues\n"
 "POT-Creation-Date: 2023-01-25 17:19+0000\n"
-"PO-Revision-Date: 2023-06-18 12:29+0200\n"
+"PO-Revision-Date: 2023-10-01 12:31+0200\n"
 "Last-Translator: Ekaterine Papava <papava.e@gtu.ge>\n"
 "Language-Team: Georgian <(nothing>)\n"
 "Language: ka\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.3.1\n"
+"X-Generator: Poedit 3.3.2\n"
 
 #: backends/bluez/bluez-backend.vala:734
 msgid ""
@@ -24,6 +24,9 @@ msgid ""
 "Either your BlueZ installation is too old (only version 5 is supported) or "
 "the service can’t be started."
 msgstr ""
+"BlueZ 5 ობიექტების მმართველი გაშვებული არაა, ასე რომ, BlueZ-ის უკანაბოლო "
+"არააქტიური იქნება. ან თქვენი BlueZ-ის ფაილები ძალიან ძველია (მხარდაჭერილია "
+"მხოლოდ v5) ან სერვისის გაშვება შეუძლებელია."
 
 #: backends/bluez/bluez-backend.vala:747
 msgid ""
@@ -385,10 +388,15 @@ msgid ""
 "No oFono object manager running, so the oFono backend will be inactive. "
 "Either oFono isn’t installed or the service can’t be started."
 msgstr ""
+"'oFono' ობიექტების მმართველი გაშვებული არაა, ასე რომ, oFono-ის უკანაბოლო "
+"არააქტიური იქნება. ან თქვენი oFono დაყენებული არაა, ან სერვისის გაშვება "
+"შეუძლებელია."
 
 #: backends/telepathy/lib/tpf-persona-store.vala:1263
 msgid "Telepathy contacts representing the local user may not be removed."
 msgstr ""
+"Telepathy-ის კონტაქტებს, რომლებიც ადგილობრივ მომხმარებელს წარმოადგენს, ვერ "
+"წაშლით."
 
 #. Translators: the parameter is an error message.
 #: backends/telepathy/lib/tpf-persona-store.vala:1274
@@ -404,10 +412,12 @@ msgid ""
 "Persona store (%s, %s) requires the following details:\n"
 "    contact (provided: ‘%s’)\n"
 msgstr ""
+"პიროვნების საცავი (%s, %s) შემდეგ დეტალებს მოითხოვს:\n"
+"   კონტაქტი (მოწოდებულია: '%s')\n"
 
 #: backends/telepathy/lib/tpf-persona-store.vala:1324
 msgid "Cannot create a new Telepathy contact while offline."
-msgstr ""
+msgstr "Telepathy-ის ახალ კონტაქტს ინტერნეტის გარეშე ვერ შექმნით."
 
 #. Translators: the parameter is an error message.
 #: backends/telepathy/lib/tpf-persona-store.vala:1342
@@ -422,18 +432,22 @@ msgid ""
 "Failed to change favorite without a connection to the telepathy-logger "
 "service."
 msgstr ""
+"რჩეულის შეცვლა შეუძლებელია სერვისთან telepathy-logger დაკავშირების გარეშე."
 
 #: backends/telepathy/lib/tpf-persona-store.vala:1368
 msgid ""
 "Failed to change favorite status of Telepathy Persona because it has no "
 "attached TpContact."
 msgstr ""
+"Telepathy-ის პიროვნების რჩეულობის სტატუსის შეცვლა ჩავარდა, რადგან მას "
+"მიმაგრებული TpContact არ გააჩნია."
 
 #. Translators: the parameter is a contact identifier.
 #: backends/telepathy/lib/tpf-persona-store.vala:1386
 #, c-format
 msgid "Failed to change favorite status for Telepathy contact ‘%s’."
 msgstr ""
+"ჩავარდა რჩეულის სტატუსის ინფორმაციის შეცვლა Telepathy-ის კონტაქტისთვის '%s'."
 
 #. Translators: the parameter is an error message.
 #: backends/telepathy/lib/tpf-persona-store.vala:1418
@@ -444,11 +458,13 @@ msgstr "კონტაქტის ფსევდონიმის შეც�
 #: backends/telepathy/lib/tpf-persona-store.vala:1499
 msgid "Extended information may only be set on the user’s Telepathy contact."
 msgstr ""
+"გაფართოებული ინფორმაცია მხოლოდ მომხმარებლის Telepathy-ის კონტაქტზე "
+"შეგიძლიათ, დააყენოთ."
 
 #: backends/telepathy/lib/tpf-persona-store.vala:1528
 msgid ""
 "Extended information cannot be written because the store is disconnected."
-msgstr ""
+msgstr "გაფართოებული ინფორმაციის ჩაწერა შეუძლებელია, რადგან საცავი გათიშულია."
 
 #. Translators: the parameter is an error message.
 #: backends/telepathy/lib/tpf-persona.vala:511
@@ -483,6 +499,7 @@ msgstr "საქაღალდის \"%s\" შემცველობის 
 #, c-format
 msgid "Error querying info for target ‘%s’ of symlink ‘%s’: %s"
 msgstr ""
+"შეცდომა ინფორმაციის გამოთხოვისას სამიზნისთვის '%s' სიმბმულისთვის '%s': %s"
 
 #. Translators: the parameter is a filename.
 #: folks/backend-store.vala:824
@@ -513,7 +530,7 @@ msgstr "ამ კონტაქტის სანიშნები ჩაწ
 #: folks/im-details.vala:214 folks/im-details.vala:241
 #, c-format
 msgid "The IM address ‘%s’ could not be understood."
-msgstr ""
+msgstr "IM მისამართი '%s' გაუგებარია."
 
 #. Translators: the first parameter is a persona store identifier
 #. * and the second is an error message.
@@ -526,14 +543,14 @@ msgstr "პიროვნების საცავის \"%s\" მომზ
 #: folks/individual-aggregator.vala:1283 folks/individual-aggregator.vala:1556
 #, c-format
 msgid "Unknown property ‘%s’ in linkable property list."
-msgstr ""
+msgstr "უცნობი თვისება '%s' მიბმად თვისებების სიაში."
 
 #. Translators: the first parameter is a store identifier
 #. * and the second parameter is an error message.
 #: folks/individual-aggregator.vala:2042
 #, c-format
 msgid "Failed to add contact for persona store ID ‘%s’: %s"
-msgstr ""
+msgstr "დრაივერების საცავს ID-სთვის '%s' კონტაქტის დამატება ჩავარდა: %s"
 
 #: folks/individual-aggregator.vala:2169
 msgid "Anti-links can’t be removed between personas being linked."
@@ -549,6 +566,8 @@ msgid ""
 "Persona store ‘%s:%s’ is configured as primary, but could not be found or "
 "failed to load."
 msgstr ""
+"დრაივერის საცავი '%s:%s' მორგებულია, როგორც ძირითადი, მაგრამ ვერ ვიპოვე, ან "
+"ჩატვირთვა ჩავარდა."
 
 #: folks/individual-aggregator.vala:2495
 #, c-format
@@ -556,18 +575,20 @@ msgid ""
 "Check the relevant service is running, or change the default store in that "
 "service or using the ‘%s’ GSettings key."
 msgstr ""
+"შეამოწმეთ, გაშვებულია შესაბამისი სერვისი, თუ არა, ან შეცვალეთ სერვისის "
+"ნაგულისხმევი საცავი ან გამოიყენეთ GSettings-ის პარამეტრი '%s'."
 
 #: folks/individual-aggregator.vala:2504
 #, c-format
 msgid "Can’t write to requested property (‘%s’) of the writeable store."
-msgstr ""
+msgstr "ჩაწერადი საცავის მოთხოვნილი თვისების ('%s') ჩაწერა შეუძლებელია."
 
 #: folks/individual.vala:217 folks/individual.vala:404
 #: folks/individual.vala:513 folks/individual.vala:764
 #: folks/individual.vala:842 folks/individual.vala:1060
 #, c-format
 msgid "Failed to change property ‘%s’: No suitable personas were found."
-msgstr ""
+msgstr "თვისების '%s' შეცვლა ჩავარდა: შესაბამისი დრაივერები ვერ ვიპოვე."
 
 #. Translators: This is the default name for an Individual
 #. * when displayed in the UI if no personal details are available
@@ -629,6 +650,10 @@ msgid ""
 "linking data in). The type ID of the store may optionally be prepended, "
 "separated by a colon. For example: ‘eds:system-address-book’ or ‘key-file’."
 msgstr ""
+"პიროვნების საცავის ID, რომელიც folks-მა, როგორც ძირითადი, უნდა გამოიყენოს "
+"(ანუ, ბმის ინფორმაციის შესანახად). შეგიძლიათ, ბოლოში საცავის ტიპის ID "
+"მიაწეროთ, ორიწერტილით გამოყოფილი. მაგ: 'eds:system-address-book' ან 'key-"
+"file'."
 
 #: folks/postal-address-details.vala:232
 #, c-format
@@ -695,7 +720,7 @@ msgstr "ფაილი %s წაკითხვადი არაა."
 #: tools/import-pidgin.vala:82
 #, c-format
 msgid "The Pidgin buddy list file ‘%s’ could not be loaded."
-msgstr ""
+msgstr "Pidgin-ის ახლობლების სიის ფაილის '%s' ჩატვირთვა შეუძლებელია."
 
 #. Translators: the parameter is a filename.
 #: tools/import-pidgin.vala:97
@@ -704,6 +729,8 @@ msgid ""
 "The Pidgin buddy list file ‘%s’ could not be loaded: the root element could "
 "not be found or was not recognized."
 msgstr ""
+"Pidgin-ის ახლობლების სიის ფაილის '%s' ჩატვირთვა შეუძლებელია: ძირითადი "
+"ელემენტი ვერ ვიპოვე ან ვერ ამოვიცანი."
 
 #. Translators: the first parameter is the number of buddies which
 #. * were successfully imported, and the second is a filename.
@@ -728,6 +755,8 @@ msgid ""
 "Ignoring buddy with no alias and only one IM address:\n"
 "%s"
 msgstr ""
+"გამოტოვებული იქნება ახლობელი ფსევდონიმის გარეშე და მხოლოდ ერთი IM "
+"მისამართით: %s"
 
 #: tools/import-pidgin.vala:244
 #, c-format
@@ -736,6 +765,10 @@ msgid ""
 "%s\n"
 "Error: %s\n"
 msgstr ""
+"ჩავარდა ახალი კონტაქტის შექმნა ახლობლისთვის ფსევდონიმით '%s' და IM "
+"მისამართებით:\n"
+"%s\n"
+"შეცდომა: %s\n"
 
 #. Translators: the first parameter is a persona identifier, the
 #. * second is an alias for the persona, and the third is a set of IM
@@ -746,24 +779,26 @@ msgid ""
 "Created contact ‘%s’ for buddy with alias ‘%s’ and IM addresses:\n"
 "%s"
 msgstr ""
+"შეიქმნა კონტაქტი '%s' ახლობლისთვის ფსევდონიმით '%s' და IM მისამართებით:\n"
+"%s"
 
 #: tools/import.vala:44
 msgid "Source backend name (default: ‘pidgin’)"
-msgstr ""
+msgstr "წყარო უკანაბოლოს სახელი (ნაგულისხმევი: ‘pidgin’)"
 
 #: tools/import.vala:47
 msgid "Source filename (default: specific to source backend)"
-msgstr ""
+msgstr "წყაროს ფაილის სახელი (ნაგულისხმევი: დამოკიდებულია წყარო უკანაბოლოზე)"
 
 #: tools/import.vala:58
 msgid "— import meta-contact information to libfolks"
-msgstr ""
+msgstr "— meta-contact ინფორმაციის შემოტანა ბიბლიოთეკისთვის libfolks"
 
 #. Translators: the parameter is an error message.
 #: tools/import.vala:68
 #, c-format
 msgid "Couldn’t parse command line options: %s"
-msgstr ""
+msgstr "ბრძანებების სტრიქონის პარამეტრების დამუშავება შეუძლებელია: %s"
 
 #. Translators: the parameter is an error message.
 #: tools/import.vala:109
@@ -788,14 +823,14 @@ msgstr "უკანაბოლოს (%s) მომზადების შ�
 #: tools/import.vala:146
 #, c-format
 msgid "Couldn’t load the ‘%s’ backend’s persona store."
-msgstr ""
+msgstr "'%s' უკანაბოლოს დრაივერის საცავის ჩატვირთვა შეუძლებელია."
 
 #. Translators: the first parameter is a backend identifier and the
 #. * second parameter is an error message.
 #: tools/import.vala:167
 #, c-format
 msgid "Couldn’t prepare the ‘%s’ backend’s persona store: %s"
-msgstr ""
+msgstr "'%s' უკანაბოლოს დრაივერის საცავის მომზადება შეუძლებელია: %s"
 
 #. Translators: the parameter is an error message.
 #: tools/import.vala:185
@@ -810,3 +845,5 @@ msgid ""
 "Unrecognized source backend name ‘%s’. ‘%s’ is currently the only supported "
 "source backend."
 msgstr ""
+"უცნობი წყარო უკანაბოლოს სახელი '%s'. %s ამჟამად ერთად-ერთი მხარდაჭერილი "
+"წყარო უკანაბოლოა."
