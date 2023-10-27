@@ -7,15 +7,15 @@ docs_common_valadoc_flags = [
 ]
 
 docs_common_valadoc_deps = [
-  '--pkg', 'gmodule-2.0',
-  '--pkg', 'glib-2.0',
-  '--pkg', 'gio-2.0',
-  '--pkg', 'gee-0.8',
-  '--vapidir', meson.project_build_root() / 'folks',
-  '--pkg', 'folks-internal',
-  '--vapidir', meson.project_source_root() / 'folks',
-  '--pkg', 'folks-generics',
-  '--pkg', 'build-conf',
+  'gmodule-2.0',
+  'glib-2.0',
+  'gio-2.0',
+  'gee-0.8',
+  # '--vapidir', meson.project_build_root() / 'folks',
+  libfolks_internal_dep,
+  # '--vapidir', meson.project_source_root() / 'folks',
+  # folks_generics_dep,
+  # build_conf_dep,
 ]
 
 # The modules we should build for
@@ -24,7 +24,7 @@ valadoc_targets = [
     'name': 'folks',
     'source_files': libfolks_sources,
     'library': libfolks_lib,
-    'dependencies': [],
+    'dependencies': [valac.find_library('folks-generics', dirs: meson.project_source_root() / 'folks')],
   },
   {
     'name': 'folks-dummy',
@@ -64,4 +64,4 @@ endif
 subdir('devhelp')
 
 # Second, the gtk-doc module
-subdir('gtkdoc')
+# subdir('gtkdoc')
