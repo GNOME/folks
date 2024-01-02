@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome folks\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/folks/issues\n"
-"POT-Creation-Date: 2021-09-23 11:22+0000\n"
-"PO-Revision-Date: 2021-11-16 23:53+0200\n"
+"POT-Creation-Date: 2023-01-25 17:19+0000\n"
+"PO-Revision-Date: 2024-01-02 23:49+0200\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: Hebrew <sh.yaron@gmail.com>\n"
 "Language: he\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : n==2 ? 1 : n>10 && n%10==0 ? "
 "2 : 3);\n"
 "X-Poedit-SourceCharset: UTF-8\n"
-"X-Generator: Poedit 3.0\n"
+"X-Generator: Poedit 3.4.1\n"
 
 #: backends/bluez/bluez-backend.vala:734
 msgid ""
@@ -26,6 +26,8 @@ msgid ""
 "Either your BlueZ installation is too old (only version 5 is supported) or "
 "the service can’t be started."
 msgstr ""
+"אין מנהלי עצמי BlueZ 5 פעיל, לכן המנגנון של BlueZ לא יהיה פעיל. או שהתקנת "
+"ה־BlueZ שלך ישנה מדי (יש תמיכה רק בגרסה 5) או שאי אפשר להפעיל את השירות."
 
 #: backends/bluez/bluez-backend.vala:747
 msgid ""
@@ -39,7 +41,7 @@ msgstr ""
 #: backends/bluez/bluez-persona-store.vala:385
 #, c-format
 msgid "Error reading the transferred address book file: %s"
-msgstr "שגיאה בקריאת קובץ ספר הכתובות שהועבר: %s"
+msgstr "שגיאה בקריאת קובץ פנקס הכתובות שהועבר: %s"
 
 #. Translators: the first parameter is the name of the
 #. * failed transfer, and the second is a Bluetooth device
@@ -51,36 +53,36 @@ msgstr "שגיאה בקריאת קובץ ספר הכתובות שהועבר: %s"
 #, c-format
 msgid ""
 "Error during transfer of the address book ‘%s’ from Bluetooth device ‘%s’."
-msgstr ""
+msgstr "שגיאה במהלך העברת פנקס הכתובות ‚%s’ מהתקן ה־Bluetooth ‏‚%s’."
 
-#: backends/bluez/bluez-persona-store.vala:791
+#: backends/bluez/bluez-persona-store.vala:792
 #, c-format
 msgid ""
 "Permission to access the address book on Bluetooth device ‘%s’ was denied by "
 "the user."
-msgstr ""
+msgstr "הרשאה לגשת לפנקס הכתובות בהתקן ה־Bluetooth‏ ‚%s’ נדחתה על ידי המשתמש."
 
 #. Translators: the first parameter is a Bluetooth device
 #. * alias, and the second is an error message.
-#: backends/bluez/bluez-persona-store.vala:798
+#: backends/bluez/bluez-persona-store.vala:799
 #, c-format
 msgid "An OBEX address book transfer from device ‘%s’ could not be started: %s"
-msgstr ""
+msgstr "התחלת העברת פנקס כתובות דרך OBEX מההתקן ‚%s’ לא הצליחה: %s"
 
 #. Translators: the first parameter is a Bluetooth device
 #. * alias, and the second is an error message.
-#: backends/bluez/bluez-persona-store.vala:838
+#: backends/bluez/bluez-persona-store.vala:839
 #, c-format
 msgid "The OBEX address book transfer from device ‘%s’ failed: %s"
-msgstr "העברת ספר הכתובות ב־OBEX מהמכשיר ‚%s’ נכשלה: %s"
+msgstr "העברת פנקס הכתובות ב־OBEX מהמכשיר ‚%s’ נכשלה: %s"
 
 #. Translators: the first parameter is a Bluetooth device
 #. * alias, and the second is an error message.
-#: backends/bluez/bluez-persona-store.vala:855
+#: backends/bluez/bluez-persona-store.vala:856
 #, c-format
 msgid ""
 "Error during transfer of the address book from Bluetooth device ‘%s’: %s"
-msgstr ""
+msgstr "שגיאה במהלך העברת פנקס הכתובות מהתקן ה־Bluetooth‏ ‚%s’‏: %s"
 
 #: backends/bluez/bluez-persona-store.vala:1073
 #, c-format
@@ -107,7 +109,7 @@ msgstr "בסימון כוכב באנדרויד"
 #: backends/eds/lib/edsf-persona-store.vala:641
 #, c-format
 msgid "Address book ‘%s’ is offline, so contact ‘%s’ cannot be removed."
-msgstr "ספר הכתובות ‚%s‘ אינו מקוון ולכן לא ניתן להסיר את איש הקשר ‚%s‘."
+msgstr "פנקס הכתובות ‚%s‘ אינו מקוון ולכן לא ניתן להסיר את איש הקשר ‚%s‘."
 
 #. Translators: the first parameter is an address book
 #. * URI and the second is an error message.
@@ -133,7 +135,7 @@ msgstr "לא ניתן להסיר את איש הקשר ‚%s’:‏ %s"
 #: backends/eds/lib/edsf-persona-store.vala:963
 #, c-format
 msgid "Address book ‘%s’ is offline."
-msgstr "ספר הכתובות ‚%s‘ אינו מקוון."
+msgstr "פנקס הכתובות ‚%s‘ אינו מקוון."
 
 #. Translators: the first parameter is an address
 #. * book URI and the second is an error message.
@@ -141,34 +143,34 @@ msgstr "ספר הכתובות ‚%s‘ אינו מקוון."
 #: backends/eds/lib/edsf-persona-store.vala:968
 #, c-format
 msgid "Permission denied to open address book ‘%s’: %s"
-msgstr "הגישה לפתיחת ספר הכתובת ‚%s‘ נדחתה: %s"
+msgstr "הגישה לפתיחת פנקס הכתובת ‚%s‘ נדחתה: %s"
 
 #. Translators: the first parameter is an address book URI
 #. * and the second is an error message.
 #: backends/eds/lib/edsf-persona-store.vala:808
 #, c-format
 msgid "Couldn’t open address book ‘%s’: %s"
-msgstr "לא ניתן לפתוח את ספר הכתובות ‚%s’:‏ %s"
+msgstr "לא ניתן לפתוח את פנקס הכתובות ‚%s’:‏ %s"
 
 #. Translators: the parameteter is an error message.
 #: backends/eds/lib/edsf-persona-store.vala:876
 #: backends/eds/lib/edsf-persona-store.vala:906
 #, c-format
 msgid "Couldn’t get address book capabilities: %s"
-msgstr "לא ניתן לקבל את יכולות ספר הכתובות: %s"
+msgstr "לא ניתן לקבל את יכולות פנקס הכתובות: %s"
 
 #. Translators: the parameter is an address book URI.
 #: backends/eds/lib/edsf-persona-store.vala:922
 #, c-format
 msgid "Couldn’t get view for address book ‘%s’."
-msgstr "לא ניתן לקבל תצוגה עבור ספר הכתובות ‚%s’."
+msgstr "לא ניתן לקבל תצוגה עבור פנקס הכתובות ‚%s’."
 
 #. Translators: the first parameter is an address book URI
 #. * and the second is an error message.
 #: backends/eds/lib/edsf-persona-store.vala:1001
 #, c-format
 msgid "Couldn’t get view for address book ‘%s’: %s"
-msgstr "לא ניתן לקבל תצוגה לספר הכתובות ‚%s’:‏ %s"
+msgstr "לא ניתן לקבל תצוגה לפנקס הכתובות ‚%s’:‏ %s"
 
 #: backends/eds/lib/edsf-persona-store.vala:1307
 msgid "Creating a new contact failed due to reaching the timeout."
@@ -281,7 +283,7 @@ msgstr "הגישה נדחתה בעת יצירת איש קשר חדש: %s"
 #: backends/eds/lib/edsf-persona-store.vala:2690
 #, c-format
 msgid "Address book is offline and a new contact cannot be created: %s"
-msgstr "ספר הכתובות אינו מקוון לא ניתן ליצור איש קשר חדש: %s"
+msgstr "פנקס הכתובות אינו מקוון לא ניתן ליצור איש קשר חדש: %s"
 
 #. Translators: the first parameter is a non-human-readable
 #. * property name and the second parameter is an error
@@ -375,70 +377,72 @@ msgid ""
 "No oFono object manager running, so the oFono backend will be inactive. "
 "Either oFono isn’t installed or the service can’t be started."
 msgstr ""
+"אין מנהל עצמי oFono פעיל, לכן מנגנון ה־oFono לא יהיה פעיל. או ש־oFono לא "
+"מותקן או שאי אפשר להפעיל את השירות."
 
-#: backends/telepathy/lib/tpf-persona-store.vala:1264
+#: backends/telepathy/lib/tpf-persona-store.vala:1263
 msgid "Telepathy contacts representing the local user may not be removed."
-msgstr ""
+msgstr "אסור להסיר אנשי קשר ב־Telepathy שמייצגים את המשתמש המקומי."
 
 #. Translators: the parameter is an error message.
-#: backends/telepathy/lib/tpf-persona-store.vala:1275
+#: backends/telepathy/lib/tpf-persona-store.vala:1274
 #, c-format
 msgid "Failed to remove a persona from store: %s"
 msgstr ""
 
 #. Translators: the first two parameters are store identifiers and
 #. * the third is a contact identifier.
-#: backends/telepathy/lib/tpf-persona-store.vala:1310
+#: backends/telepathy/lib/tpf-persona-store.vala:1309
 #, c-format
 msgid ""
 "Persona store (%s, %s) requires the following details:\n"
 "    contact (provided: ‘%s’)\n"
 msgstr ""
 
-#: backends/telepathy/lib/tpf-persona-store.vala:1325
+#: backends/telepathy/lib/tpf-persona-store.vala:1324
 msgid "Cannot create a new Telepathy contact while offline."
 msgstr "לא ניתן ליצור איש קשר חדש ב־Telepathy ללא חיבור לאינטרנט."
 
 #. Translators: the parameter is an error message.
-#: backends/telepathy/lib/tpf-persona-store.vala:1343
+#: backends/telepathy/lib/tpf-persona-store.vala:1342
 #, c-format
 msgid "Failed to add a persona from details: %s"
 msgstr "הוספת דמות מפרטים נכשלה: %s"
 
 #. Translators: "telepathy-logger" is the name of an application,
 #. * and should not be translated.
-#: backends/telepathy/lib/tpf-persona-store.vala:1363
+#: backends/telepathy/lib/tpf-persona-store.vala:1362
 msgid ""
 "Failed to change favorite without a connection to the telepathy-logger "
 "service."
 msgstr ""
 
-#: backends/telepathy/lib/tpf-persona-store.vala:1369
+#: backends/telepathy/lib/tpf-persona-store.vala:1368
 msgid ""
 "Failed to change favorite status of Telepathy Persona because it has no "
 "attached TpContact."
 msgstr ""
 
 #. Translators: the parameter is a contact identifier.
-#: backends/telepathy/lib/tpf-persona-store.vala:1387
+#: backends/telepathy/lib/tpf-persona-store.vala:1386
 #, c-format
 msgid "Failed to change favorite status for Telepathy contact ‘%s’."
 msgstr ""
 
 #. Translators: the parameter is an error message.
-#: backends/telepathy/lib/tpf-persona-store.vala:1419
+#: backends/telepathy/lib/tpf-persona-store.vala:1418
 #, c-format
 msgid "Failed to change contact’s alias: %s"
 msgstr "החלפת כינוי איש הקשר נכשלה: %s"
 
-#: backends/telepathy/lib/tpf-persona-store.vala:1500
+#: backends/telepathy/lib/tpf-persona-store.vala:1499
 msgid "Extended information may only be set on the user’s Telepathy contact."
-msgstr ""
+msgstr "אפשר להגדיר פרטים מורחבים רק על איש הקשר של המשתמש ב־Telepathy."
 
-#: backends/telepathy/lib/tpf-persona-store.vala:1529
+#: backends/telepathy/lib/tpf-persona-store.vala:1528
 msgid ""
 "Extended information cannot be written because the store is disconnected."
-msgstr ""
+msgstr "אי אפשר לכתוב פרטים מורחבים כיוון שהאחסון מנותק."
 
 #. Translators: the parameter is an error message.
 #: backends/telepathy/lib/tpf-persona.vala:511
@@ -472,7 +476,7 @@ msgstr "אירעה שגיאה בעת הצגת תוכני התיקייה ‚%s’
 #: folks/backend-store.vala:696
 #, c-format
 msgid "Error querying info for target ‘%s’ of symlink ‘%s’: %s"
-msgstr ""
+msgstr "שגיאה בתשאול המידע על היעד ‚%s’ לקישור הסמלי ‚%s’:‏ %s"
 
 #. Translators: the parameter is a filename.
 #: folks/backend-store.vala:824
@@ -546,11 +550,13 @@ msgid ""
 "Check the relevant service is running, or change the default store in that "
 "service or using the ‘%s’ GSettings key."
 msgstr ""
+"נא לבדוק שהשירות המתאים פעיל, או לשנות את אחסון ברירת המחדל בשירות הזה או "
+"באמצעות מפתח ההגדרה ‚%s’ ב־GSettings."
 
 #: folks/individual-aggregator.vala:2504
 #, c-format
 msgid "Can’t write to requested property (‘%s’) of the writeable store."
-msgstr ""
+msgstr "אי אפשר לכתוב למאפיין המבוקש (‚%s’) של האחסון שזמין לכתיבה."
 
 #: folks/individual.vala:217 folks/individual.vala:404
 #: folks/individual.vala:513 folks/individual.vala:764
@@ -694,6 +700,8 @@ msgid ""
 "The Pidgin buddy list file ‘%s’ could not be loaded: the root element could "
 "not be found or was not recognized."
 msgstr ""
+"אי אפשר לטעון את רשימת העמיתים של Pidgin‏ ‚%s’: רכיב השורש לא נמצא או שלא "
+"זוהה."
 
 #. Translators: the first parameter is the number of buddies which
 #. * were successfully imported, and the second is a filename.
@@ -728,6 +736,9 @@ msgid ""
 "%s\n"
 "Error: %s\n"
 msgstr ""
+"נכשלה יצירת איש קשר חדש לעמית עם הכינוי ‚%s’ וכתובות המסרים המיידיים הבאות:\n"
+"%s\n"
+"שגיאה: %s\n"
 
 #. Translators: the first parameter is a persona identifier, the
 #. * second is an alias for the persona, and the third is a set of IM
