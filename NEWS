@@ -1,3 +1,13 @@
+Overview of changes from libfolks 0.15.6 to libfolks 0.15.7
+===========================================================
+Major changes:
+  * Add .editorconfig file
+  * Lots of translation updates
+
+Bugs fixed:
+  * bluez: Fix invalid ownership of property accessors in Device interface
+  * tests/telepathy: Use shared_library() to fix g-ir-scanner which expects proper library
+
 Overview of changes from libfolks 0.15.5 to libfolks 0.15.6
 ===========================================================
 Major changes:
