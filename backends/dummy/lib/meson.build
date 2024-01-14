@@ -23,6 +23,7 @@ dummy_backendlib_vala_flags = [
 
 dummy_backendlib_c_flags = [
   '-include', 'config.h',
+  '-include', 'folks/redeclare-internal-api.h',
   '-DBACKEND_NAME="@0@"'.format(dummy_backend_name),
   '-DG_LOG_DOMAIN="@0@"'.format(dummy_backend_name),
 ]

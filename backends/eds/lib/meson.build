@@ -40,6 +40,7 @@ endif
 
 eds_backendlib_c_flags = [
   '-include', 'config.h',
+  '-include', 'folks/redeclare-internal-api.h',
   '-DBACKEND_NAME="@0@"'.format(eds_backend_name),
   '-DG_LOG_DOMAIN="@0@"'.format(eds_backend_name),
 ]
