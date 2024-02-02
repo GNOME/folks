@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome folks\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/folks/issues\n"
-"POT-Creation-Date: 2023-01-25 17:19+0000\n"
-"PO-Revision-Date: 2024-01-02 23:49+0200\n"
+"POT-Creation-Date: 2024-01-02 21:50+0000\n"
+"PO-Revision-Date: 2024-02-02 11:06+0200\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: Hebrew <sh.yaron@gmail.com>\n"
 "Language: he\n"
@@ -26,7 +26,7 @@ msgid ""
 "Either your BlueZ installation is too old (only version 5 is supported) or "
 "the service can’t be started."
 msgstr ""
-"אין מנהלי עצמי BlueZ 5 פעיל, לכן המנגנון של BlueZ לא יהיה פעיל. או שהתקנת "
+"אין מנהל עצמי BlueZ 5 פעיל, לכן המנגנון של BlueZ לא יהיה פעיל. או שהתקנת "
 "ה־BlueZ שלך ישנה מדי (יש תמיכה רק בגרסה 5) או שאי אפשר להפעיל את השירות."
 
 #: backends/bluez/bluez-backend.vala:747
@@ -388,7 +388,7 @@ msgstr "אסור להסיר אנשי קשר ב־Telepathy שמייצגים את 
 #: backends/telepathy/lib/tpf-persona-store.vala:1274
 #, c-format
 msgid "Failed to remove a persona from store: %s"
-msgstr ""
+msgstr "שגיאה בהסרת דמות מהאחסון: %s"
 
 #. Translators: the first two parameters are store identifiers and
 #. * the third is a contact identifier.
@@ -398,6 +398,8 @@ msgid ""
 "Persona store (%s, %s) requires the following details:\n"
 "    contact (provided: ‘%s’)\n"
 msgstr ""
+"אחסון הדמויות (%s, %s) דורש את הפרטים הבאים:\n"
+"    פרטי קשר (סופקו: ‚%s’)\n"
 
 #: backends/telepathy/lib/tpf-persona-store.vala:1324
 msgid "Cannot create a new Telepathy contact while offline."
@@ -415,19 +417,19 @@ msgstr "הוספת דמות מפרטים נכשלה: %s"
 msgid ""
 "Failed to change favorite without a connection to the telepathy-logger "
 "service."
-msgstr ""
+msgstr "החלפת מועדף ללא חיבור לשירות telepathy-logger נכשלה."
 
 #: backends/telepathy/lib/tpf-persona-store.vala:1368
 msgid ""
 "Failed to change favorite status of Telepathy Persona because it has no "
 "attached TpContact."
-msgstr ""
+msgstr "החלפת מצב המועדף של דמות ב־Telepathy נכשלה כי לא מצורף אליה TpContact."
 
 #. Translators: the parameter is a contact identifier.
 #: backends/telepathy/lib/tpf-persona-store.vala:1386
 #, c-format
 msgid "Failed to change favorite status for Telepathy contact ‘%s’."
-msgstr ""
+msgstr "החלפת מצב ההעדפה לאיש הקשר ‚%s’ ב־Telepathy נכשלה."
 
 #. Translators: the parameter is an error message.
 #: backends/telepathy/lib/tpf-persona-store.vala:1418
@@ -527,15 +529,15 @@ msgstr "המאפיין ‚%s’ אינו מוכר ברשימת מאפםייני�
 #: folks/individual-aggregator.vala:2042
 #, c-format
 msgid "Failed to add contact for persona store ID ‘%s’: %s"
-msgstr ""
+msgstr "הוספת איש קשר אחסון דמויות עם המזהה ‚%s’ נכשלה: %s"
 
 #: folks/individual-aggregator.vala:2169
 msgid "Anti-links can’t be removed between personas being linked."
-msgstr ""
+msgstr "אי אפשר להסיר קישורי נגד בין דמויות מקושרות."
 
 #: folks/individual-aggregator.vala:2493
 msgid "Can’t add personas with no primary store."
-msgstr ""
+msgstr "אי אפשר להוסיף דמויות ללא אחסון עיקרי."
 
 #: folks/individual-aggregator.vala:2494
 #, c-format
@@ -543,6 +545,8 @@ msgid ""
 "Persona store ‘%s:%s’ is configured as primary, but could not be found or "
 "failed to load."
 msgstr ""
+"אחסון הדמויות ‚%s:%s’ מוגדר כעיקרי אך אי אפשר למצוא אותו או שהטעינה שלו "
+"נכשלה."
 
 #: folks/individual-aggregator.vala:2495
 #, c-format
@@ -563,7 +567,7 @@ msgstr "אי אפשר לכתוב למאפיין המבוקש (‚%s’) של ה�
 #: folks/individual.vala:842 folks/individual.vala:1060
 #, c-format
 msgid "Failed to change property ‘%s’: No suitable personas were found."
-msgstr ""
+msgstr "החלפת המאפיין ‚%s’ נכשלה: לא נמצאו דמויות מתאימות."
 
 #. Translators: This is the default name for an Individual
 #. * when displayed in the UI if no personal details are available
