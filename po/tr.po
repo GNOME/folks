@@ -14,9 +14,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: folks\n"
-"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/folks/issues\n"
-"POT-Creation-Date: 2023-10-25 13:38+0000\n"
-"PO-Revision-Date: 2024-02-08 01:22+0300\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/folks/issues/\n"
+"POT-Creation-Date: 2024-02-10 10:59+0000\n"
+"PO-Revision-Date: 2024-02-12 19:18+0300\n"
 "Last-Translator: Sabri Ünal <libreajans@gmail.com>\n"
 "Language-Team: Türkçe <takim@gnome.org.tr>\n"
 "Language: tr\n"
@@ -202,7 +202,7 @@ msgstr ""
 
 #: backends/eds/lib/edsf-persona-store.vala:1455 folks/avatar-details.vala:63
 msgid "Avatar is not writeable on this contact."
-msgstr "Bu kişi için resim yazılabilir değil."
+msgstr "Bu kişi için profil resmi yazılabilir değil."
 
 #: backends/eds/lib/edsf-persona-store.vala:1476
 #: folks/web-service-details.vala:123
@@ -225,7 +225,7 @@ msgstr "Kişi favori olarak imlenemez."
 #: backends/eds/lib/edsf-persona-store.vala:1695
 #, c-format
 msgid "Can’t update avatar: %s"
-msgstr "Kişi resmi güncellenemiyor: %s"
+msgstr "Profil resmi güncellenemiyor: %s"
 
 #: backends/eds/lib/edsf-persona-store.vala:1706 folks/email-details.vala:120
 msgid "E-mail addresses are not writeable on this contact."
