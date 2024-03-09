@@ -176,7 +176,7 @@ public class Folks.SimpleQuery : Folks.Query
       foreach (var prop_name in this.match_fields)
         {
           unowned ObjectClass iclass = individual.get_class ();
-          var prop_spec = iclass.find_property (prop_name);
+          unowned var prop_spec = iclass.find_property (prop_name);
           if (prop_spec == null)
             {
               warning ("Folks.Individual does not contain property '%s'",
@@ -277,7 +277,7 @@ public class Folks.SimpleQuery : Folks.Query
 
           if (prop_value_set.element_type.is_a (typeof (AbstractFieldDetails)))
             {
-              var prop_value_afd = prop_value_set
+              unowned var prop_value_afd = prop_value_set
                 as Gee.Set<AbstractFieldDetails>;
               foreach (var val in prop_value_afd)
                 {
@@ -329,7 +329,7 @@ public class Folks.SimpleQuery : Folks.Query
           else if (prop_value_set.element_type == typeof (string))
             {
               /* Groups and local IDs. */
-              var prop_value_string = prop_value_set as Gee.Set<string>;
+              unowned var prop_value_string = prop_value_set as Gee.Set<string>;
               foreach (var val in prop_value_string)
                 {
                   if (val == null || val == "")
@@ -499,7 +499,7 @@ public class Folks.SimpleQuery : Folks.Query
        * https://bugzilla.gnome.org/show_bug.cgi?id=743877 */
       for (var i = 0; str_tokens[i] != null; i++)
         {
-          var str_token = str_tokens[i];
+          unowned var str_token = str_tokens[i];
 
           if (str_token == token)
               return 3;
@@ -509,7 +509,7 @@ public class Folks.SimpleQuery : Folks.Query
 
       for (var i = 0; alternates[i] != null; i++)
         {
-          var str_token = alternates[i];
+          unowned var str_token = alternates[i];
 
           if (str_token == token)
               return 2;
