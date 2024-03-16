@@ -1,3 +1,13 @@
+Overview of changes from libfolks 0.15.7 to libfolks 0.15.8
+===========================================================
+Major changes:
+  * simple-query: Avoid some silly string copies
+  * Lots of translation updates
+
+Bugs fixed:
+  * build: Add midding -include to dummy and EDS backends
+  * bluez: Follow breaking API change in dbusmock
+
 Overview of changes from libfolks 0.15.6 to libfolks 0.15.7
 ===========================================================
 Major changes:
