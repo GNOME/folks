@@ -173,7 +173,7 @@ public class Folks.SimpleQuery : Folks.Query
        * Track the match score as we go. */
       uint match_score = 0;
 
-      foreach (var prop_name in this.match_fields)
+      foreach (unowned var prop_name in this.match_fields)
         {
           unowned ObjectClass iclass = individual.get_class ();
           unowned var prop_spec = iclass.find_property (prop_name);
@@ -364,7 +364,7 @@ public class Folks.SimpleQuery : Folks.Query
           if (key_type.is_a (typeof (string)) &&
               value_type.is_a (typeof (AbstractFieldDetails)))
             {
-              var prop_value_multi_map_afd = prop_value_multi_map
+              unowned var prop_value_multi_map_afd = prop_value_multi_map
                 as Gee.MultiMap<string, AbstractFieldDetails>;
               var iter = prop_value_multi_map_afd.map_iterator ();
 
