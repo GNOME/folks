@@ -142,7 +142,7 @@ public abstract class Folks.Backend : Object
    *
    * @param store the {@link PersonaStore}
    */
-  public abstract signal void persona_store_added (PersonaStore store);
+  public signal void persona_store_added (PersonaStore store);
 
   /**
    * Emitted when a {@link PersonaStore} is removed from the backend.
@@ -152,7 +152,7 @@ public abstract class Folks.Backend : Object
    *
    * @param store the {@link PersonaStore}
    */
-  public abstract signal void persona_store_removed (PersonaStore store);
+  public signal void persona_store_removed (PersonaStore store);
 
   /**
    * Prepare the Backend for use.

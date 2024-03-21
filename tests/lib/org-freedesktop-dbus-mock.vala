@@ -42,7 +42,7 @@ namespace org
               {
                 /* Signals. */
                 [DBus (name = "MethodCalled")]
-                public abstract signal void method_called (string method_name,
+                public signal void method_called (string method_name,
                     Variant[] args);
 
                 /* Methods. */

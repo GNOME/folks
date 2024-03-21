@@ -152,7 +152,7 @@ public interface Folks.GroupDetails : Object
    * @param is_member whether the contact is joining or leaving the group
    * @since 0.1.11
    */
-  public async signal void group_changed (string group, bool is_member);
+  public signal void group_changed (string group, bool is_member);
 
   /**
    * Change the contact's groups.

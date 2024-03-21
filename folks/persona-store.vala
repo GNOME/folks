@@ -468,7 +468,7 @@ public abstract class Folks.PersonaStore : Object
    * This will not be emitted until after {@link PersonaStore.prepare} has been
    * called.
    */
-  public abstract signal void removed ();
+  public signal void removed ();
 
   /**
    * The type of PersonaStore this is.

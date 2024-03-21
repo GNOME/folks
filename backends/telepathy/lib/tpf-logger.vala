@@ -39,7 +39,7 @@ private interface LoggerIface : Object
   public abstract async void remove_favourite_contact (
       ObjectPath account_path, string id) throws GLib.Error;
 
-  public abstract signal void favourite_contacts_changed (
+  public signal void favourite_contacts_changed (
       ObjectPath account_path, string[] added, string[] removed);
 }
 

@@ -53,7 +53,7 @@ namespace org
             public interface Mock : Object
               {
                 [DBus (name = "TransferCreated")]
-                public abstract signal void transfer_created (string path,
+                public signal void transfer_created (string path,
                     HashTable<string, Variant> filters,
                     string transfer_filename);
               }
