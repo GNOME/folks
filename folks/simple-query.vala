@@ -506,22 +506,16 @@ public class Folks.SimpleQuery : Folks.Query
       var str_tokens =
           str.tokenize_and_fold (str_translit_locale, out alternates);
 
-      /* FIXME: We have to use for() rather than foreach() because of:
-       * https://bugzilla.gnome.org/show_bug.cgi?id=743877 */
-      for (var i = 0; str_tokens[i] != null; i++)
+      foreach (unowned var str_token in str_tokens)
         {
-          unowned var str_token = str_tokens[i];
-
           if (str_token == token)
               return 3;
           else if (str_token.has_prefix (token))
               return 2;
         }
 
-      for (var i = 0; alternates[i] != null; i++)
+      foreach (unowned var str_token in alternates)
         {
-          unowned var str_token = alternates[i];
-
           if (str_token == token)
               return 2;
           else if (str_token.has_prefix (token))
