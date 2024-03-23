@@ -11,7 +11,6 @@ bluez_tests_deps = [
   libebook_dep,
   libedataserver_dep,
   libbluez_test_dep,
-  bluez_backend_dep,
 ]
 
 foreach _test: bluez_tests

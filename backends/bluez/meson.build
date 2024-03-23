@@ -36,9 +36,4 @@ bluez_backend = shared_module(bluez_backend_name,
   install: true,
 )
 
-bluez_backend_dep = declare_dependency(
-  link_with: bluez_backend,
-  include_directories: include_directories('.'),
-)
-
 folks_backends += bluez_backend
