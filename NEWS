@@ -1,3 +1,13 @@
+Overview of changes from libfolks 0.15.8 to libfolks 0.15.9
+===========================================================
+Major changes:
+  * simple-query: normalize phone numbers in search
+  * Lots of translation updates
+
+Bugs fixed:
+  * bluez: Stop linking against bluez backend in tests to fix Meson warning
+  * build: fix vala syntax error for latest vala compilers
+
 Overview of changes from libfolks 0.15.7 to libfolks 0.15.8
 ===========================================================
 Major changes:
