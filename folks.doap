@@ -12,7 +12,7 @@
   from various sources (including Telepathy IM accounts, and local contact stores)
   and compiles them into fully-fledged people objects. The ultimate goal isto provide
   the platform with easy access to all of the user's contacts.</description>
-  <homepage rdf:resource="https://wiki.gnome.org/Projects/Folks" />
+  <homepage rdf:resource="https://gitlab.gnome.org/GNOME/folks/" />
   <download-page rdf:resource="https://download.gnome.org/sources/folks/" />
   <bug-database
     rdf:resource="https://gitlab.gnome.org/GNOME/folks/issues/" />

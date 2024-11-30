@@ -106,7 +106,7 @@ Vala-specific rules
     programmer's intentions clearer about whether a variable may be `null`). The
     ultimate goal is for folks to compile correctly with Vala’s strict-non-null
     mode enabled
-    (https://wiki.gnome.org/Projects/Vala/Tutorial#Strict_Non-Null_Mode).
+    (https://docs.vala.dev/tutorials/programming-language/main/05-00-experimental-features/05-03-strict-non-null-mode.html).
 
 12. Place the (private) member variable declaration for a variable which backs a
     property next to the (public) property declaration, rather than at the top
