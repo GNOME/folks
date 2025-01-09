@@ -1,9 +1,18 @@
+include:
+  - component: gitlab.gnome.org/GNOME/citemplates/release-service@master
+    inputs:
+      dist-job-name: "build"
+      tarball-artifact-path: "${TARBALL_ARTIFACT_PATH}"
+
 image: fedora:latest
 
 stages:
   - review
   - build
   - deploy
+
+variables:
+  TARBALL_ARTIFACT_PATH: "_build/meson-dist/${CI_PROJECT_NAME}-${CI_COMMIT_TAG}.tar.xz"
 
 style-check:
   stage: review
@@ -37,6 +46,7 @@ build-folks:
     # For most tests it doesn't matter anyway, since we internally use
     # TestUtils.loop_run_with_timeout()
     - meson test -C _build -t 3
+    - meson dist -C _build
   artifacts:
     reports:
       junit: "_build/meson-logs/testlog.junit.xml"
@@ -46,6 +56,7 @@ build-folks:
       - "_build/config.h"
       - "_build/meson-logs"
       - "_build/docs"
+      - $TARBALL_ARTIFACT_PATH
 
 pages:
   stage: deploy
