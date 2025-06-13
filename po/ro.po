@@ -3,14 +3,15 @@
 # This file is distributed under the same license as the folks package.
 # laurion <me_lawr@yahoo.com>, 2011.
 # Laurențiu Cristian Ion <ionlaurentiucristian@gmail.com>, 2011.
+# Antonio Marin <gnmer.6qxyg@slmail.me>, 2025.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: folks master\n"
-"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/folks/issues\n"
-"POT-Creation-Date: 2018-06-10 16:09+0000\n"
-"PO-Revision-Date: 2018-07-20 22:02+0300\n"
-"Last-Translator: Florentina Mușat <florentina.musat.28 [at] gmail [dot] "
-"com>\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/folks/issues/\n"
+"POT-Creation-Date: 2025-01-13 08:55+0000\n"
+"PO-Revision-Date: 2025-06-12 11:41+0200\n"
+"Last-Translator: Antonio Marin <gnmer.6qxyg@slmail.me>\n"
 "Language-Team: Romanian <gnomero-list@lists.sourceforge.net>\n"
 "Language: ro\n"
 "MIME-Version: 1.0\n"
@@ -18,7 +19,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
 "20)) ? 1 : 2);\n"
-"X-Generator: Poedit 2.0.9\n"
+"X-Generator: Gtranslator 48.0\n"
 "X-Project-Style: gnome\n"
 
 #: backends/bluez/bluez-backend.vala:734
@@ -27,23 +28,23 @@ msgid ""
 "Either your BlueZ installation is too old (only version 5 is supported) or "
 "the service can’t be started."
 msgstr ""
-"Nu rulează niciun administrator de obiect BlueZ 5, deci suportul BlueZ nu va "
-"fi activ. Ori instalarea BlueZ este prea veche (doar versiunea 5 este "
-"suportată) ori serviciul nu poate fi pornit."
+"Nu funcționează niciun administrator de obiect BlueZ 5, deci suportul BlueZ "
+"nu va fi activ. Ori versiunea BlueZ este prea veche (doar versiunea 5 este "
+"acceptată) ori serviciul nu poate fi pornit."
 
 #: backends/bluez/bluez-backend.vala:747
 msgid ""
 "Error connecting to OBEX transfer daemon over D-Bus. Ensure BlueZ and obexd "
 "are installed."
 msgstr ""
-"Eroare la conectarea la serviciul de transfer OBEX prin D-Bus. Asigurați-vă "
-"că BlueZ și obexd sunt instalate."
+"Eroare la conectarea la serviciul de transfer OBEX prin D-Bus. Trebuie ca "
+"BlueZ și obexd să fie instalate."
 
 #. Translators: the parameter is an error message.
 #: backends/bluez/bluez-persona-store.vala:385
 #, c-format
 msgid "Error reading the transferred address book file: %s"
-msgstr "Eroare la citirea fișierului de agendă transferat: %s"
+msgstr "Eroare la citirea fișierului agendă transferat: %s"
 
 #. Translators: the first parameter is the name of the
 #. * failed transfer, and the second is a Bluetooth device
@@ -56,45 +57,45 @@ msgstr "Eroare la citirea fișierului de agendă transferat: %s"
 msgid ""
 "Error during transfer of the address book ‘%s’ from Bluetooth device ‘%s’."
 msgstr ""
-"Eroare în timpul transferului agendei „%s” de la dispozitivul Bluetooth „%s”."
+"Eroare în timpul transferului agendei „%s” de la aparatul Bluetooth „%s”."
 
-#: backends/bluez/bluez-persona-store.vala:791
+#: backends/bluez/bluez-persona-store.vala:792
 #, c-format
 msgid ""
 "Permission to access the address book on Bluetooth device ‘%s’ was denied by "
 "the user."
 msgstr ""
-"Permisiunea de a accesa agenda pe dispozitivul Bluetooth „%s” a fost "
-"refuzată de către utilizator."
+"Permisiunea de a accesa agenda din aparatul Bluetooth „%s” a fost refuzată "
+"de către utilizator."
 
 #. Translators: the first parameter is a Bluetooth device
 #. * alias, and the second is an error message.
-#: backends/bluez/bluez-persona-store.vala:798
+#: backends/bluez/bluez-persona-store.vala:799
 #, c-format
 msgid "An OBEX address book transfer from device ‘%s’ could not be started: %s"
 msgstr ""
-"Nu s-a putut începe un transfer de agendă OBEX de la dispozitivul „%s”: %s"
+"Nu s-a putut începe un transfer al agendei OBEX de la aparatul „%s”: %s"
 
 #. Translators: the first parameter is a Bluetooth device
 #. * alias, and the second is an error message.
-#: backends/bluez/bluez-persona-store.vala:838
+#: backends/bluez/bluez-persona-store.vala:839
 #, c-format
 msgid "The OBEX address book transfer from device ‘%s’ failed: %s"
-msgstr "Transferul de agendă OBEX de la dispozitivul „%s” a eșuat: %s"
+msgstr "Transferul agendei  OBEX de la aparatul „%s” a eșuat: %s"
 
 #. Translators: the first parameter is a Bluetooth device
 #. * alias, and the second is an error message.
-#: backends/bluez/bluez-persona-store.vala:855
+#: backends/bluez/bluez-persona-store.vala:856
 #, c-format
 msgid ""
 "Error during transfer of the address book from Bluetooth device ‘%s’: %s"
 msgstr ""
-"Eroare în timpul transferului agendei de la dispozitivul Bluetooth „%s”: %s"
+"Eroare în timpul transferului agendei de la aparatul Bluetooth „%s”: %s"
 
 #: backends/bluez/bluez-persona-store.vala:1073
 #, c-format
 msgid "Bluetooth device ‘%s’ disappeared during address book transfer."
-msgstr "Dispozitivul Bluetooth „%s” a dispărut în timpul transferului agendei."
+msgstr "Aparatul Bluetooth „%s” a dispărut în timpul transferului agendei."
 
 #. The timeout after which we consider a property change to have failed if we
 #. * haven't received a property change notification for it.
@@ -109,193 +110,189 @@ msgstr "Dispozitivul Bluetooth „%s” a dispărut în timpul transferului agen
 #. * the msgid to the msgstr unchanged).
 #: backends/eds/lib/edsf-persona-store.vala:69
 msgid "Starred in Android"
-msgstr "Favorit în Android"
+msgstr "Preferat în Android"
 
 #. Translators: the first parameter is an address book
 #. * URI and the second is a persona UID.
-#: backends/eds/lib/edsf-persona-store.vala:642
+#: backends/eds/lib/edsf-persona-store.vala:641
 #, c-format
 msgid "Address book ‘%s’ is offline, so contact ‘%s’ cannot be removed."
 msgstr ""
-"Agenda „%s” nu este conectată, deci persoana de contact „%s” nu poate fi "
-"eliminată."
+"Agenda „%s” nu este conectată, deci contactul „%s” nu poate fi eliminat."
 
 #. Translators: the first parameter is an address book
 #. * URI and the second is an error message.
-#: backends/eds/lib/edsf-persona-store.vala:648
+#: backends/eds/lib/edsf-persona-store.vala:647
 #, c-format
 msgid "Permission denied to remove contact ‘%s’: %s"
-msgstr "Permisiune refuzată pentru a elimina persoana de contact „%s”: %s"
+msgstr "Permisiune refuzată pentru a elimina contactul „%s”: %s"
 
 #. Translators: the parameter is an error message.
-#: backends/eds/lib/edsf-persona-store.vala:653
+#: backends/eds/lib/edsf-persona-store.vala:652
 #, c-format
 msgid "Removing contacts isn’t supported by this persona store: %s"
 msgstr ""
-"Eliminarea contactelor nu este suportată de această stocare de persoane: %s"
+"Eliminarea contactelor nu este acceptată de această arhivă de persoane: %s"
 
-#: backends/eds/lib/edsf-persona-store.vala:682
+#: backends/eds/lib/edsf-persona-store.vala:681
 #, c-format
 msgid "Can’t remove contact ‘%s’: %s"
 msgstr "Nu se poate elimina contactul „%s”: %s"
 
 #. Translators: the parameter is an address book
 #. * URI.
-#: backends/eds/lib/edsf-persona-store.vala:771
-#: backends/eds/lib/edsf-persona-store.vala:964
+#: backends/eds/lib/edsf-persona-store.vala:770
+#: backends/eds/lib/edsf-persona-store.vala:963
 #, c-format
 msgid "Address book ‘%s’ is offline."
 msgstr "Agenda „%s” nu este conectată."
 
 #. Translators: the first parameter is an address
 #. * book URI and the second is an error message.
-#: backends/eds/lib/edsf-persona-store.vala:776
-#: backends/eds/lib/edsf-persona-store.vala:969
+#: backends/eds/lib/edsf-persona-store.vala:775
+#: backends/eds/lib/edsf-persona-store.vala:968
 #, c-format
 msgid "Permission denied to open address book ‘%s’: %s"
 msgstr "Permisiune refuzată pentru deschiderea agendei „%s”: %s"
 
 #. Translators: the first parameter is an address book URI
 #. * and the second is an error message.
-#: backends/eds/lib/edsf-persona-store.vala:809
+#: backends/eds/lib/edsf-persona-store.vala:808
 #, c-format
 msgid "Couldn’t open address book ‘%s’: %s"
 msgstr "Nu s-a putut deschide agenda „%s”: %s"
 
 #. Translators: the parameteter is an error message.
-#: backends/eds/lib/edsf-persona-store.vala:877
-#: backends/eds/lib/edsf-persona-store.vala:907
+#: backends/eds/lib/edsf-persona-store.vala:876
+#: backends/eds/lib/edsf-persona-store.vala:906
 #, c-format
 msgid "Couldn’t get address book capabilities: %s"
-msgstr "Nu s-au putut obține capabilitățile agendei: %s"
+msgstr "Nu s-au putut accesa agenda: %s"
 
 #. Translators: the parameter is an address book URI.
-#: backends/eds/lib/edsf-persona-store.vala:923
+#: backends/eds/lib/edsf-persona-store.vala:922
 #, c-format
 msgid "Couldn’t get view for address book ‘%s’."
-msgstr "Nu s-a putut obține vizualizarea pentru agenda „%s”."
+msgstr "Nu s-a putut afișa agenda „%s”."
 
 #. Translators: the first parameter is an address book URI
 #. * and the second is an error message.
-#: backends/eds/lib/edsf-persona-store.vala:1002
+#: backends/eds/lib/edsf-persona-store.vala:1001
 #, c-format
 msgid "Couldn’t get view for address book ‘%s’: %s"
-msgstr "Nu s-a putut obține vizualizarea pentru agenda „%s”: %s"
+msgstr "Nu s-a putut afișa agenda „%s”: %s"
 
-#: backends/eds/lib/edsf-persona-store.vala:1305
+#: backends/eds/lib/edsf-persona-store.vala:1307
 msgid "Creating a new contact failed due to reaching the timeout."
 msgstr "Crearea unui contact nou a eșuat din cauza atingerii limitei de timp."
 
 #. Translators: the parameter is the name of a property on a
 #. * contact, formatted in the normal GObject style (e.g.
 #. * lowercase with hyphens to separate words).
-#: backends/eds/lib/edsf-persona-store.vala:1419
+#: backends/eds/lib/edsf-persona-store.vala:1421
 #, c-format
 msgid "Changing the ‘%s’ property failed due to reaching the timeout."
 msgstr ""
 "Schimbarea proprietății „%s” a eșuat din cauza atingerii limitei de timp."
 
-#: backends/eds/lib/edsf-persona-store.vala:1453 folks/avatar-details.vala:63
+#: backends/eds/lib/edsf-persona-store.vala:1455 folks/avatar-details.vala:63
 msgid "Avatar is not writeable on this contact."
-msgstr "Nu poate fi scris un avatar pentru această persoană de contact."
+msgstr "Poza de profil a acestui contact nu poate fi modificată."
 
-#: backends/eds/lib/edsf-persona-store.vala:1474
+#: backends/eds/lib/edsf-persona-store.vala:1476
 #: folks/web-service-details.vala:123
 msgid "Web service addresses are not writeable on this contact."
-msgstr ""
-"Nu pot fi scrise adrese de serviciu web pentru această persoană de contact."
+msgstr "Adresele serviciilor web ale acestui contact nu pot fi modificate."
 
-#: backends/eds/lib/edsf-persona-store.vala:1510 folks/url-details.vala:152
+#: backends/eds/lib/edsf-persona-store.vala:1512 folks/url-details.vala:152
 msgid "URLs are not writeable on this contact."
-msgstr "Nu pot fi scrise URL-uri pentru această persoană de contact."
+msgstr "URL-urile acestui contact nu pot fi modificate."
 
-#: backends/eds/lib/edsf-persona-store.vala:1591 folks/local-id-details.vala:64
+#: backends/eds/lib/edsf-persona-store.vala:1594 folks/local-id-details.vala:64
 msgid "Local IDs are not writeable on this contact."
-msgstr "Nu pot fi scrise ID-uri locale pentru această persoană de contact."
+msgstr "ID-uri locale ale acestui contact nu pot fi modificate."
 
-#: backends/eds/lib/edsf-persona-store.vala:1620
+#: backends/eds/lib/edsf-persona-store.vala:1623
 msgid "The contact cannot be marked as favourite."
-msgstr "Persoana de contact nu poate fi marcată ca favorită."
+msgstr "Contactul nu poate fi marcat ca preferat."
 
 #. Translators: the parameter is an error message.
-#: backends/eds/lib/edsf-persona-store.vala:1692
+#: backends/eds/lib/edsf-persona-store.vala:1695
 #, c-format
 msgid "Can’t update avatar: %s"
-msgstr "Nu se poate actualiza avatarul: %s"
+msgstr "Nu se poate actualiza poza de profil: %s"
 
-#: backends/eds/lib/edsf-persona-store.vala:1703 folks/email-details.vala:120
+#: backends/eds/lib/edsf-persona-store.vala:1706 folks/email-details.vala:120
 msgid "E-mail addresses are not writeable on this contact."
-msgstr "Nu pot fi scrise adrese de email pentru această persoană de contact."
+msgstr "Adresele de e-mail ale acestui contact nu pot fi modificate."
 
-#: backends/eds/lib/edsf-persona-store.vala:1768 folks/phone-details.vala:255
+#: backends/eds/lib/edsf-persona-store.vala:1773 folks/phone-details.vala:255
 msgid "Phone numbers are not writeable on this contact."
-msgstr "Nu pot fi scrise numere de telefon pentru această persoană de contact."
+msgstr "Numerele de telefon ale acestui contact nu pot fi modificate."
 
-#: backends/eds/lib/edsf-persona-store.vala:1786
+#: backends/eds/lib/edsf-persona-store.vala:1791
 #: folks/postal-address-details.vala:362
 msgid "Postal addresses are not writeable on this contact."
-msgstr "Nu pot fi scrise adrese poștale pentru această persoană de contact."
+msgstr "Adresele poștale ale acestui contact nu pot fi modificate."
 
-#: backends/eds/lib/edsf-persona-store.vala:1857 folks/name-details.vala:454
+#: backends/eds/lib/edsf-persona-store.vala:1862 folks/name-details.vala:454
 msgid "Full name is not writeable on this contact."
-msgstr "Nu poate fi scris un nume complet pentru această persoană de contact."
+msgstr "Numele complet al acestui contact nu poate fi modificat."
 
-#: backends/eds/lib/edsf-persona-store.vala:1879 folks/name-details.vala:492
+#: backends/eds/lib/edsf-persona-store.vala:1884 folks/name-details.vala:492
 msgid "Nickname is not writeable on this contact."
-msgstr "Nu poate fi scris un pseudonim pentru această persoană de contact."
+msgstr "Pseudonimul acestui contact nu poate fi modificat."
 
-#: backends/eds/lib/edsf-persona-store.vala:1901 folks/note-details.vala:139
+#: backends/eds/lib/edsf-persona-store.vala:1906 folks/note-details.vala:139
 msgid "Notes are not writeable on this contact."
-msgstr "Nu pot fi scrise notițe pentru această persoană de contact."
+msgstr "Nu pot fi scrise notițe pentru acest contact."
 
-#: backends/eds/lib/edsf-persona-store.vala:1933 folks/birthday-details.vala:62
+#: backends/eds/lib/edsf-persona-store.vala:1938 folks/birthday-details.vala:62
 msgid "Birthday is not writeable on this contact."
-msgstr "Nu poate fi scrisă o zi de naștere pentru această persoană de contact."
+msgstr "Ziua de naștere a acestui contact nu poate fi modificată."
 
-#: backends/eds/lib/edsf-persona-store.vala:1977 folks/role-details.vala:280
+#: backends/eds/lib/edsf-persona-store.vala:1982 folks/role-details.vala:280
 msgid "Roles are not writeable on this contact."
-msgstr "Nu pot fi scrise roluri pentru această persoană de contact."
+msgstr "Rolurile acestui contact nu pot fi modificate."
 
-#: backends/eds/lib/edsf-persona-store.vala:2078 folks/name-details.vala:417
+#: backends/eds/lib/edsf-persona-store.vala:2083 folks/name-details.vala:417
 msgid "Structured name is not writeable on this contact."
-msgstr ""
-"Nu poate fi scris un nume structurat pentru această persoană de contact."
+msgstr "Numele și prenumele acestui contact nu pot fi modificate."
 
-#: backends/eds/lib/edsf-persona-store.vala:2117 folks/im-details.vala:136
+#: backends/eds/lib/edsf-persona-store.vala:2122 folks/im-details.vala:136
 msgid "IM addresses are not writeable on this contact."
 msgstr ""
-"Nu pot fi scrise adrese de mesagerie instant pentru această persoană de "
-"contact."
+"Adresele de mesagerie instantanee ale acestui contact nu pot fi modificate."
 
-#: backends/eds/lib/edsf-persona-store.vala:2167 folks/group-details.vala:174
+#: backends/eds/lib/edsf-persona-store.vala:2172 folks/group-details.vala:174
 msgid "Groups are not writeable on this contact."
-msgstr "Nu pot fi scrise grupuri pentru această persoană de contact."
+msgstr "Grupurile acestui contact nu pot fi modificate."
 
-#: backends/eds/lib/edsf-persona-store.vala:2182
+#: backends/eds/lib/edsf-persona-store.vala:2187
 msgid "My Contacts is only available for Google Contacts"
 msgstr "Contactele Mele este disponibil doar pentru Contacte Google"
 
-#: backends/eds/lib/edsf-persona-store.vala:2253 folks/gender-details.vala:79
+#: backends/eds/lib/edsf-persona-store.vala:2258 folks/gender-details.vala:79
 msgid "Gender is not writeable on this contact."
-msgstr "Nu poate fi scris un gen pentru această persoană de contact."
+msgstr "Genul acestei persoane nu poate fi modificat."
 
-#: backends/eds/lib/edsf-persona-store.vala:2291 folks/anti-linkable.vala:84
+#: backends/eds/lib/edsf-persona-store.vala:2296 folks/anti-linkable.vala:84
 msgid "Anti-links are not writeable on this contact."
-msgstr "Anti-legăturile nu sunt inscripționabile pentru acest contact."
+msgstr "Legăturile acestui contact nu pot fi modificate."
 
-#: backends/eds/lib/edsf-persona-store.vala:2334
+#: backends/eds/lib/edsf-persona-store.vala:2339
 #: folks/location-details.vala:135
 msgid "Location is not writeable on this contact."
-msgstr "Locația nu este inscripționabilă pentru acest contact."
+msgstr "Poziția acestui contact nu poate fi modificată."
 
 #. Translators: the first parameter is an error message.
-#: backends/eds/lib/edsf-persona-store.vala:2679
+#: backends/eds/lib/edsf-persona-store.vala:2685
 #, c-format
 msgid "Permission denied when creating new contact: %s"
 msgstr "Permisiune refuzată în timpul creării unui contact nou: %s"
 
 #. Translators: the first parameter is an error message.
-#: backends/eds/lib/edsf-persona-store.vala:2684
+#: backends/eds/lib/edsf-persona-store.vala:2690
 #, c-format
 msgid "Address book is offline and a new contact cannot be created: %s"
 msgstr "Agenda nu este conectată și nu se poate crea un contact nou: %s"
@@ -303,19 +300,19 @@ msgstr "Agenda nu este conectată și nu se poate crea un contact nou: %s"
 #. Translators: the first parameter is a non-human-readable
 #. * property name and the second parameter is an error
 #. * message.
-#: backends/eds/lib/edsf-persona-store.vala:2693
+#: backends/eds/lib/edsf-persona-store.vala:2699
 #, c-format
 msgid "New contact is not writeable: %s"
-msgstr "Contactul nou nu este inscripționabil: %s"
+msgstr "Nu poate fi scris un contact nou: %s"
 
 #. Translators: the first parameter is an error message.
-#: backends/eds/lib/edsf-persona-store.vala:2697
+#: backends/eds/lib/edsf-persona-store.vala:2703
 #, c-format
 msgid "Invalid value in contact: %s"
-msgstr "Valoare nevalidă în contactul: %s"
+msgstr "Valoare incorectă în contactul: %s"
 
 #. Translators: the first parameter is an error message.
-#: backends/eds/lib/edsf-persona-store.vala:2721
+#: backends/eds/lib/edsf-persona-store.vala:2727
 #, c-format
 msgid "Unknown error adding contact: %s"
 msgstr "Eroare necunoscută la adăugarea contactului: %s"
@@ -323,7 +320,7 @@ msgstr "Eroare necunoscută la adăugarea contactului: %s"
 #. Translators: the first parameter is a non-human-readable
 #. * property name and the second parameter is an error
 #. * message.
-#: backends/eds/lib/edsf-persona-store.vala:2754
+#: backends/eds/lib/edsf-persona-store.vala:2760
 #, c-format
 msgid "Property ‘%s’ is not writeable: %s"
 msgstr "Proprietatea „%s” nu poate fi scrisă: %s"
@@ -331,167 +328,148 @@ msgstr "Proprietatea „%s” nu poate fi scrisă: %s"
 #. Translators: the first parameter is a non-human-readable
 #. * property name and the second parameter is an error
 #. * message.
-#: backends/eds/lib/edsf-persona-store.vala:2763
+#: backends/eds/lib/edsf-persona-store.vala:2769
 #, c-format
 msgid "Invalid value for property ‘%s’: %s"
-msgstr "Valoarea pentru proprietatea „%s” nu este validă: %s"
+msgstr "Valoarea pentru proprietatea „%s” nu este corectă: %s"
 
 #. Translators: the first parameter is a non-human-readable
 #. * property name and the second parameter is an error message.
-#: backends/eds/lib/edsf-persona-store.vala:2789
+#: backends/eds/lib/edsf-persona-store.vala:2795
 #, c-format
 msgid "Unknown error setting property ‘%s’: %s"
-msgstr "Eroare necunoscută la setarea proprietății „%s”: %s"
+msgstr "Eroare necunoscută la stabilirea proprietății „%s”: %s"
 
 #. Translators: the first parameter is a filename, and
 #. * the second is an error message.
-#: backends/key-file/kf-persona-store.vala:234
+#: backends/key-file/kf-persona-store.vala:235
 #, c-format
 msgid "The relationship key file ‘%s’ could not be loaded: %s"
-msgstr "Nu s-a putut încărca fișierul de chei de relații „%s”: %s"
+msgstr "Nu s-a putut încărca fișierul de relații „%s”: %s"
 
 #. Translators: the first parameter is a path, and the
 #. * second is an error message.
-#: backends/key-file/kf-persona-store.vala:256
+#: backends/key-file/kf-persona-store.vala:257
 #, c-format
 msgid "The relationship key file directory ‘%s’ could not be created: %s"
-msgstr "Nu s-a putut crea directorul fișierului de chei de relații „%s”: %s"
+msgstr "Nu s-a putut crea dosarul fișierului de relații „%s”: %s"
 
 #. Translators: the first parameter is a filename, and
 #. * the second is an error message.
-#: backends/key-file/kf-persona-store.vala:280
+#: backends/key-file/kf-persona-store.vala:281
 #, c-format
 msgid "The relationship key file ‘%s’ could not be created: %s"
-msgstr "Nu s-a putut crea fișierul de chei de relații „%s”: %s"
+msgstr "Nu s-a putut crea fișierul de relații „%s”: %s"
 
 #. Translators: the first parameter is a filename, the second is
 #. * an error message.
-#: backends/key-file/kf-persona-store.vala:471
+#: backends/key-file/kf-persona-store.vala:483
 #, c-format
 msgid "Could not write updated key file ‘%s’: %s"
-msgstr "Nu s-a putut scrie fișierul de chei actualizat „%s”: %s"
+msgstr "Nu s-a putut scrie fișierul cheie actualizat „%s”: %s"
 
 #. Translators: this is an error message for if the user
 #. * provides an invalid IM address. The first parameter is
 #. * an IM address (e.g. “foo@jabber.org”), the second is
 #. * the name of a protocol (e.g. “jabber”) and the third is
 #. * an error message.
-#: backends/key-file/kf-persona.vala:174
+#: backends/key-file/kf-persona.vala:176
 #, c-format
 msgid "Invalid IM address ‘%s’ for protocol ‘%s’: %s"
 msgstr ""
-"Adresa de mesagerie instant „%s” pentru protocolul „%s” nu este validă: %s"
+"Adresa de mesagerie instantanee „%s” pentru protocolul „%s” nu este corectă: "
+"%s"
 
 #. Translators: the parameter is an error message.
-#: backends/key-file/kf-persona.vala:432
+#: backends/key-file/kf-persona.vala:508
 #, c-format
 msgid "Couldn’t load data from key file: %s"
-msgstr "Nu s-au putut încărca datele din fișierul de chei: %s"
-
-#. Translators: the parameter is an error message.
-#: backends/libsocialweb/lib/swf-persona-store.vala:349
-#: backends/libsocialweb/lib/swf-persona-store.vala:371
-#: backends/libsocialweb/lib/swf-persona-store.vala:392
-#, c-format
-msgid "Couldn’t prepare libsocialweb service: %s"
-msgstr "Nu s-a putut pregăti serviciul libsocialweb: %s"
-
-#: backends/libsocialweb/lib/swf-persona-store.vala:350
-msgid "No capabilities were found."
-msgstr "Nu s-au găsit capabilități."
-
-#: backends/libsocialweb/lib/swf-persona-store.vala:372
-msgid "No contacts capability was found."
-msgstr "Nu s-a găsit nicio capabilitate a contactelor."
-
-#: backends/libsocialweb/lib/swf-persona-store.vala:393
-msgid "Error opening contacts view."
-msgstr "Eroare la deschiderea vizualizării contactelor."
+msgstr "Nu s-au putut încărca datele din fișierul cheie: %s"
 
 #: backends/ofono/ofono-backend.vala:196
 msgid ""
 "No oFono object manager running, so the oFono backend will be inactive. "
 "Either oFono isn’t installed or the service can’t be started."
 msgstr ""
-"Nu rulează niciun administrator de obiect oFono, deci suportul oFono nu va "
-"fi activ. Ori oFono nu este instalat ori serviciul nu poate fi pornit."
+"Nu funcționează niciun administrator de obiect oFono, deci suportul oFono nu "
+"va fi activ. Ori oFono nu este instalat ori serviciul nu poate fi pornit."
 
-#: backends/telepathy/lib/tpf-persona-store.vala:1264
+#: backends/telepathy/lib/tpf-persona-store.vala:1263
 msgid "Telepathy contacts representing the local user may not be removed."
 msgstr ""
-"Contactele Telepathy care reprezintă utilizatorul local ar putea fi eliminat."
+"Contactele Telepathy care reprezintă utilizatorul local nu pot fi șterse."
 
 #. Translators: the parameter is an error message.
-#: backends/telepathy/lib/tpf-persona-store.vala:1275
+#: backends/telepathy/lib/tpf-persona-store.vala:1274
 #, c-format
 msgid "Failed to remove a persona from store: %s"
-msgstr "Nu s-a putut elimina o persoană din stocare: %s"
+msgstr "Nu s-a putut elimina o persoană din arhiva: %s"
 
 #. Translators: the first two parameters are store identifiers and
 #. * the third is a contact identifier.
-#: backends/telepathy/lib/tpf-persona-store.vala:1310
+#: backends/telepathy/lib/tpf-persona-store.vala:1309
 #, c-format
 msgid ""
 "Persona store (%s, %s) requires the following details:\n"
 "    contact (provided: ‘%s’)\n"
 msgstr ""
-"Stocarea de persoane (%s, %s) necesită următoarele detalii:\n"
+"Arhiva de persoane (%s, %s) necesită următoarele detalii:\n"
 "    contact (furnizat: „%s”)\n"
 
-#: backends/telepathy/lib/tpf-persona-store.vala:1325
+#: backends/telepathy/lib/tpf-persona-store.vala:1324
 msgid "Cannot create a new Telepathy contact while offline."
 msgstr ""
 "Nu se poate crea o persoană de contact Telepathy nouă cât timp este "
 "deconectat."
 
 #. Translators: the parameter is an error message.
-#: backends/telepathy/lib/tpf-persona-store.vala:1343
+#: backends/telepathy/lib/tpf-persona-store.vala:1342
 #, c-format
 msgid "Failed to add a persona from details: %s"
-msgstr "Adăugarea unei persoane din detalii nu a reușit: %s"
+msgstr "Nu s-a reușit adăugarea unei persoane din detalii: %s"
 
 #. Translators: "telepathy-logger" is the name of an application,
 #. * and should not be translated.
-#: backends/telepathy/lib/tpf-persona-store.vala:1363
+#: backends/telepathy/lib/tpf-persona-store.vala:1362
 msgid ""
 "Failed to change favorite without a connection to the telepathy-logger "
 "service."
 msgstr ""
-"Schimbarea favoritului a eșuat fără o conexiune la serviciul telepathy-"
+"Schimbarea preferatului a eșuat fără o conexiune la serviciul telepathy-"
 "logger."
 
-#: backends/telepathy/lib/tpf-persona-store.vala:1369
+#: backends/telepathy/lib/tpf-persona-store.vala:1368
 msgid ""
 "Failed to change favorite status of Telepathy Persona because it has no "
 "attached TpContact."
 msgstr ""
-"Nu s-a putut modifica starea favorită a Persona Telepathy întrucât nu are "
-"niciun TpContact atașat."
+"Nu s-a putut modifica starea de preferată pentru Persona Telepathy întrucât "
+"nu are niciun TpContact atașat."
 
 #. Translators: the parameter is a contact identifier.
-#: backends/telepathy/lib/tpf-persona-store.vala:1387
+#: backends/telepathy/lib/tpf-persona-store.vala:1386
 #, c-format
 msgid "Failed to change favorite status for Telepathy contact ‘%s’."
-msgstr "Modificarea stării favorite pentru contactul Telepathy „%s” a eșuat."
+msgstr ""
+"Modificarea stării de preferat pentru contactul Telepathy „%s” a eșuat."
 
 #. Translators: the parameter is an error message.
-#: backends/telepathy/lib/tpf-persona-store.vala:1419
+#: backends/telepathy/lib/tpf-persona-store.vala:1418
 #, c-format
 msgid "Failed to change contact’s alias: %s"
 msgstr "Nu s-a putut modifica pseudonimul contactului: %s"
 
-#: backends/telepathy/lib/tpf-persona-store.vala:1500
+#: backends/telepathy/lib/tpf-persona-store.vala:1499
 msgid "Extended information may only be set on the user’s Telepathy contact."
 msgstr ""
 "Informațiile extinse pot fi stabilite doar pentru contactul Telepathy al "
 "utilizatorului."
 
-#: backends/telepathy/lib/tpf-persona-store.vala:1529
+#: backends/telepathy/lib/tpf-persona-store.vala:1528
 msgid ""
 "Extended information cannot be written because the store is disconnected."
 msgstr ""
-"Informațiile adiționale nu pot fi stabilite deoarece depozitul este "
-"deconectat."
+"Informațiile suplimentare nu pot fi scrise deoarece arhiva este deconectată."
 
 #. Translators: the parameter is an error message.
 #: backends/telepathy/lib/tpf-persona.vala:511
@@ -509,14 +487,6 @@ msgstr "Nu s-a putut modifica apartenența la grup: %s"
 msgid "Account is offline."
 msgstr "Contul este deconectat."
 
-#. Translators: the first parameter is the unknown key that
-#. * was received with the details params, and the second
-#. * identifies the persona store.
-#: backends/tracker/lib/trf-persona-store.vala:743
-#, c-format
-msgid "Unrecognized parameter ‘%s’ passed to persona store ‘%s’."
-msgstr "Parametru nerecunoscut „%s” transmis la stocarea de persoane „%s”."
-
 #: folks/alias-details.vala:61
 msgid "Alias is not writeable on this contact."
 msgstr "Pseudonimul nu poate fi scris pentru această persoană de contact."
@@ -526,7 +496,7 @@ msgstr "Pseudonimul nu poate fi scris pentru această persoană de contact."
 #: folks/backend-store.vala:655
 #, c-format
 msgid "Error listing contents of folder ‘%s’: %s"
-msgstr "Eroare la listarea conținutului dosarului „%s”: %s"
+msgstr "Eroare la afișarea conținutului dosarului „%s”: %s"
 
 #. Translators: the first parameter is a folder path and the second
 #. * is an error message.
@@ -534,34 +504,32 @@ msgstr "Eroare la listarea conținutului dosarului „%s”: %s"
 #, c-format
 msgid "Error querying info for target ‘%s’ of symlink ‘%s’: %s"
 msgstr ""
-"Eroare la interogarea informațiilor pentru ținta „%s” a legăturii simbolice "
-"„%s”: %s"
+"Eroare la solicitarea informațiilor despre destinația „%s” a legăturii "
+"simbolice „%s”: %s"
 
 #. Translators: the parameter is a filename.
 #: folks/backend-store.vala:824
 #, c-format
 msgid "File or directory ‘%s’ does not exist."
-msgstr "Fișierul sau directorul „%s” nu există."
+msgstr "Fișierul sau dosarul „%s” nu există."
 
 #. Translators: the parameter is a filename.
 #: folks/backend-store.vala:830
 #, c-format
 msgid "Failed to get content type for ‘%s’."
-msgstr "Nu s-a putut obține tipul de conținut pentru „%s”."
+msgstr "Nu s-a putut obține tipul de conținut al fișierului „%s”."
 
 #: folks/birthday-details.vala:93
 msgid "Birthday event ID is not writeable on this contact."
-msgstr ""
-"ID-ul evenimentului pentru ziua de naștere nu poate fi scris pentru această "
-"persoană de contact."
+msgstr "ID-ul zilei de naștere nu poate fi modificat pentru acest contact."
 
 #: folks/extended-info.vala:133 folks/extended-info.vala:149
 msgid "Extended fields are not writeable on this contact."
-msgstr "Câmpurile extinse nu sunt inscripționabile pentru acest contact."
+msgstr "Informațiile suplimentare despre acest contact nu pot fi modificate."
 
 #: folks/favourite-details.vala:58
 msgid "Favorite status is not writeable on this contact."
-msgstr "Statusul favorit nu poate fi scris pentru această persoană de contact."
+msgstr "Starea de preferat nu poate fi modificată pentru acest contact."
 
 #. Translators: the parameter is an IM address.
 #: folks/im-details.vala:178 folks/im-details.vala:192
@@ -575,7 +543,7 @@ msgstr "Adresa IM „%s” nu a putut fi înțeleasă."
 #: folks/individual-aggregator.vala:1052
 #, c-format
 msgid "Error preparing persona store ‘%s’: %s"
-msgstr "Eroare la pregătirea stocării de persoane „%s”: %s"
+msgstr "Eroare la pregătirea arhivei de persoane „%s”: %s"
 
 #. Translators: the parameter is a property name.
 #: folks/individual-aggregator.vala:1283 folks/individual-aggregator.vala:1556
@@ -589,43 +557,42 @@ msgstr "Proprietate necunoscută „%s” în lista de proprietăți care se pot
 #, c-format
 msgid "Failed to add contact for persona store ID ‘%s’: %s"
 msgstr ""
-"Nu s-a putut adăuga contactul pentru ID-ul de stocare a persoanei „%s”: %s"
+"Nu s-a putut adăuga contactul pentru ID-ul arhivei de persoane „%s”: %s"
 
-#: folks/individual-aggregator.vala:2139
-msgid "Can’t link personas with no primary store."
-msgstr "Nu se pot lega persoane fără o stocare primară."
+#: folks/individual-aggregator.vala:2169
+msgid "Anti-links can’t be removed between personas being linked."
+msgstr ""
+"Legăturile nu pot fi eliminate dintre persoane care sunt în curs de a fi "
+"legate."
 
-#: folks/individual-aggregator.vala:2140 folks/individual-aggregator.vala:2471
+#: folks/individual-aggregator.vala:2493
+msgid "Can’t add personas with no primary store."
+msgstr "Nu se pot adăuga persoane fără o arhivă principală."
+
+#: folks/individual-aggregator.vala:2494
 #, c-format
 msgid ""
 "Persona store ‘%s:%s’ is configured as primary, but could not be found or "
 "failed to load."
 msgstr ""
-"Stocarea de persoane „%s:%s” este configurată ca primară, dar nu a putut fi "
+"Arhiva de persoane „%s:%s” este stabilită ca principală, dar nu a putut fi "
 "găsită sau nu s-a putut încărca."
 
-#: folks/individual-aggregator.vala:2141 folks/individual-aggregator.vala:2472
+#: folks/individual-aggregator.vala:2495
 #, c-format
 msgid ""
 "Check the relevant service is running, or change the default store in that "
 "service or using the ‘%s’ GSettings key."
 msgstr ""
-"Verificați că serviciul relevant rulează, sau modificați stocarea implicită "
-"în acel serviciu sau utilizând cheia GSettings „%s”."
+"Trebuie verificat dacă serviciul corespunzător funcționează sau să fie "
+"schimbată arhiva prestabilită din acel serviciu sau să fie folosită cheia "
+"GSettings „%s”."
 
-#: folks/individual-aggregator.vala:2173
-msgid "Anti-links can’t be removed between personas being linked."
-msgstr "Anti-legăturile nu pot fi eliminate între persoanele care se leagă."
-
-#: folks/individual-aggregator.vala:2470
-msgid "Can’t add personas with no primary store."
-msgstr "Nu se pot adăuga persoane fără o stocare primară."
-
-#: folks/individual-aggregator.vala:2481
+#: folks/individual-aggregator.vala:2504
 #, c-format
 msgid "Can’t write to requested property (‘%s’) of the writeable store."
 msgstr ""
-"Nu se poate scrie în proprietatea cerută („%s”) a stocării inscripționabile."
+"Nu s-a putut modifica proprietatea cerută („%s”) di arhiva modificabilă."
 
 #: folks/individual.vala:217 folks/individual.vala:404
 #: folks/individual.vala:513 folks/individual.vala:764
@@ -633,7 +600,8 @@ msgstr ""
 #, c-format
 msgid "Failed to change property ‘%s’: No suitable personas were found."
 msgstr ""
-"Nu s-a putut modifica proprietatea „%s”: nu s-au găsit persoane potrivite."
+"Nu s-a putut modifica proprietatea „%s”: nu s-au găsit persoanele "
+"corespunzătoare."
 
 #. Translators: This is the default name for an Individual
 #. * when displayed in the UI if no personal details are available
@@ -679,7 +647,7 @@ msgstr "Persoană nedenumită"
 #. *
 #. * If you need additional placeholders with other information or
 #. * punctuation, please file a bug against libfolks:
-#. *   https://bugzilla.gnome.org/enter_bug.cgi?product=folks
+#. *   https://gitlab.gnome.org/GNOME/folks/issues
 #.
 #: folks/name-details.vala:268
 msgid "%g%t%m%t%f"
@@ -687,7 +655,7 @@ msgstr "%g%t%m%t%f"
 
 #: folks/org.freedesktop.folks.gschema.xml.in:6
 msgid "Primary store ID"
-msgstr "ID stocare primară"
+msgstr "ID arhivă principală"
 
 #: folks/org.freedesktop.folks.gschema.xml.in:7
 msgid ""
@@ -695,10 +663,10 @@ msgid ""
 "linking data in). The type ID of the store may optionally be prepended, "
 "separated by a colon. For example: ‘eds:system-address-book’ or ‘key-file’."
 msgstr ""
-"ID-ul stocării de persoane pe care folks ar trebui să o utilizeze ca primară "
-"(ex. în care să stocheze datele de legătură). ID-ul de tip al stocării poate "
-"fi opțional prestabilit, separat prin două puncte. De exemplu: „eds:system-"
-"address-book” or „key-file”."
+"ID-ul arhivei de persoane pe care folks ar trebui să o utilizeze ca "
+"principală (ex. în care să stocheze datele de legătură). ID-ul de tip al "
+"stocării poate fi facultativ precedat, separat de două puncte. De exemplu: "
+"„eds:system-address-book” sau „key-file”."
 
 #: folks/postal-address-details.vala:232
 #, c-format
@@ -723,11 +691,11 @@ msgstr "Disponibil"
 
 #: folks/presence-details.vala:181
 msgid "Away"
-msgstr "Plecat"
+msgstr "Absent"
 
 #: folks/presence-details.vala:183
 msgid "Extended away"
-msgstr "Plecare extinsă"
+msgstr "Absență prelungită"
 
 #: folks/presence-details.vala:185
 msgid "Busy"
@@ -740,7 +708,7 @@ msgstr "Ascuns"
 #: folks/role-details.vala:151
 #, c-format
 msgid "Title: %s, Organisation: %s, Role: %s"
-msgstr "Titlu: %s, organizația: %s, rolul: %s"
+msgstr "Titlul: %s, organizația: %s, rolul: %s"
 
 #. Translators: the parameter is a filename.
 #: tools/import-pidgin.vala:49
@@ -802,7 +770,7 @@ msgid ""
 "%s"
 msgstr ""
 "Se ignoră prietenul cu niciun pseudonim și doar o singură adresă de "
-"mesagerie instant:\n"
+"mesagerie instantanee:\n"
 "%s"
 
 #: tools/import-pidgin.vala:244
@@ -812,9 +780,8 @@ msgid ""
 "%s\n"
 "Error: %s\n"
 msgstr ""
-"Crearea unui contact nou pentru prietenul cu aliasul „%s” și adresa de "
-"mesagerie instant a eșuat:\n"
-"%s\n"
+"Nu s-a reușit crearea unui contact nou pentru prietenul cu pseudonimul „%s”\n"
+"și adresa de mesagerie instantanee: %s\n"
 "Eroare: %s\n"
 
 #. Translators: the first parameter is a persona identifier, the
@@ -826,17 +793,16 @@ msgid ""
 "Created contact ‘%s’ for buddy with alias ‘%s’ and IM addresses:\n"
 "%s"
 msgstr ""
-"S-a creat un contact „%s” pentru prietenul cu pseudonimul „%s” și adresa de "
-"mesagerie instant:\n"
-"%s"
+"S-a creat contactul „%s” pentru prietenul cu pseudonimul „%s”\n"
+"și adresa de mesagerie instantanee: %s"
 
 #: tools/import.vala:44
 msgid "Source backend name (default: ‘pidgin’)"
-msgstr "Numele suportului sursă (implicit: „pidgin”)"
+msgstr "Numele suportului sursă (prestabilit: „pidgin”)"
 
 #: tools/import.vala:47
 msgid "Source filename (default: specific to source backend)"
-msgstr "Numele fișierului sursă (implicit: specific suportului sursă)"
+msgstr "Numele fișierului sursă (prestabilit: specific suportului sursă)"
 
 #: tools/import.vala:58
 msgid "— import meta-contact information to libfolks"
@@ -846,7 +812,7 @@ msgstr "— importare de informații despre meta-contact în libfolks"
 #: tools/import.vala:68
 #, c-format
 msgid "Couldn’t parse command line options: %s"
-msgstr "Nu s-au putut parsa opțiunile din linia de comandă: %s"
+msgstr "Nu s-au putut analiza opțiunile din linia de comandă: %s"
 
 #. Translators: the parameter is an error message.
 #: tools/import.vala:109
@@ -871,14 +837,14 @@ msgstr "Nu s-a putut pregăti suportul „%s”: %s"
 #: tools/import.vala:146
 #, c-format
 msgid "Couldn’t load the ‘%s’ backend’s persona store."
-msgstr "Nu s-a putut încărca stocarea persoanelor a suportului „%s”."
+msgstr "Nu s-a putut încărca suportul arhivei de persoane „%s”."
 
 #. Translators: the first parameter is a backend identifier and the
 #. * second parameter is an error message.
 #: tools/import.vala:167
 #, c-format
 msgid "Couldn’t prepare the ‘%s’ backend’s persona store: %s"
-msgstr "Nu s-a putut pregăti stocarea de persoane a suportului „%s”: %s"
+msgstr "Nu s-a putut pregăti suportul arhivei de persoane „%s”: %s"
 
 #. Translators: the parameter is an error message.
 #: tools/import.vala:185
@@ -893,102 +859,5 @@ msgid ""
 "Unrecognized source backend name ‘%s’. ‘%s’ is currently the only supported "
 "source backend."
 msgstr ""
-"Nume de suport de sursă „%s” nerecunoscut. „%s” este  singurul suport de "
-"sursă suportat curent."
-
-#~ msgid "Couldn't open address book ‘%s’."
-#~ msgstr "Nu s-a putut deschide agenda „%s”."
-
-#~ msgid "Error requesting a group channel: %s"
-#~ msgstr "Eroare la solicitarea unui canal de grup: %s"
-
-#~ msgid "Error requesting group handles: %s"
-#~ msgstr "Eroare la solicitarea identificatoarelor grupului: %s"
-
-#~ msgid "Get Channels property failed: %s"
-#~ msgstr "Obținerea proprietății canalelor a eșuat: %s"
-
-#~ msgid "Failed to add contact to group '%s': %s"
-#~ msgstr "Adăugarea persoanei de contact în grupul „%s” a eșuat: %s"
-
-#~ msgid "Failed to remove contact from group '%s': %s"
-#~ msgstr "Eliminarea persoanei de contact din grupul „%s” a eșuat: %s"
-
-#~ msgid "Invalid group channel %p to add handle %d to."
-#~ msgstr "Canalul %p nu este valid pentru adăugarea identificatorului %d."
-
-#~ msgid "Couldn't connect to the telepathy-logger service."
-#~ msgstr "Nu s-a putut realiza conexiunea la serviciul telepathy-logger."
-
-#~ msgid "Lost connection to the telepathy-logger service."
-#~ msgstr "S-a pierdut conexiunea la serviciul telepathy-logger."
-
-#~ msgid "Couldn't get list of favorite contacts: %s"
-#~ msgstr "Nu s-a putut obține lista de persoane de contact favorite: %s"
-
-#~ msgid "Unknown Telepathy contact ‘%s’ in favorites list."
-#~ msgstr "Contactul Telepathy „%s” din lista de favorite nu este cunoscut."
-
-#~ msgid "Couldn't add favorite contacts: %s"
-#~ msgstr "Nu s-au putut adăuga persoane de contact favorite: %s"
-
-#~ msgid "Couldn't remove favorite contacts: %s"
-#~ msgstr "Nu s-au putut elimina persoane de contact favorite: %s"
-
-#~ msgid ""
-#~ "Failed to determine whether we can set aliases on Telepathy account '%s': "
-#~ "%s"
-#~ msgstr ""
-#~ "Nu s-a putut determina dacă se pot stabili pseudonime pe contul de "
-#~ "Telepathy „%s”: %s"
-
-#~ msgid ""
-#~ "Failed to determine whether we can set groups on Telepathy account '%s': "
-#~ "%s"
-#~ msgstr ""
-#~ "Nu s-a putut determina dacă se pot stabili grupuri pe contul de Telepathy "
-#~ "„%s”: %s"
-
-#~ msgid "Failed to create contact for self handle '%u': %s"
-#~ msgstr ""
-#~ "Crearea contactului pentru identificatorul personal „%u” a eșuat: %s"
-
-#~ msgid "Error creating channel for NewChannels signal."
-#~ msgstr "Eroare la crearea unui canal pentru semnalul NewChannels."
-
-#~ msgid "Failed to add Telepathy contact ‘%s’ to group ‘%s’."
-#~ msgstr "Adăugarea contactului de Telepathy „%s” în grupul „%s”."
-
-#~ msgid "Failed to remove Telepathy contact ‘%s’ from group ‘%s’."
-#~ msgstr "Eliminarea contactului de Telepathy „%s” din grupul „%s”."
-
-#~ msgid "Failed to remove Telepathy contact ‘%s’ from ‘%s’ list: %s"
-#~ msgstr "Eliminarea contactului de Telepathy „%s” de pe lista „%s”: %s."
-
-#~ msgid "Failed to add Telepathy contact ‘%s’ to ‘%s’ list: %s"
-#~ msgstr "Adăugarea contactului de Telepathy „%s” pe lista „%s”: %s"
-
-#~ msgid "Failed to create incoming Telepathy contacts from channel ‘%s’: %s"
-#~ msgstr "Nu s-au putut crea contacte de Telepathy de pe canalul „%s”: %s"
-
-#~ msgid "Requested a single persona, but got %u persona back."
-#~ msgid_plural "Requested a single persona, but got %u personas back."
-#~ msgstr[0] "S-a solicitat o singură persoană, dar s-a primit una."
-#~ msgstr[1] "S-a solicitat o singură persoană, dar s-au primit %u."
-#~ msgstr[2] "S-a solicitat o singură persoană, dar s-au primit %u."
-
-#~ msgid "Error preparing Backend '%s': %s"
-#~ msgstr "Eroare la pregătirea backend-ului „%s”: %s"
-
-#~ msgid ""
-#~ "The content type of '%s' could not be determined. Have you installed "
-#~ "shared-mime-info?"
-#~ msgstr ""
-#~ "Nu s-a putut determina tipul conținutului fișierului „%s”. Ați instalat "
-#~ "shared-mime-info?"
-
-#~ msgid "Failed to load module from path '%s': %s"
-#~ msgstr "Nu s-a putut încărca modulul de la calea „%s”: %s"
-
-#~ msgid "Failed to find entry point function '%s' in '%s': %s"
-#~ msgstr "Nu s-a putut găsi funcția de intrare „%s” în „%s”: %s"
+"Nu a fost recunoscut numele suportului sursă „%s”. „%s” este  singurul "
+"suport sursă acceptat."
