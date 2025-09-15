@@ -2,27 +2,28 @@
 # Copyright (C) 2024 folks's COPYRIGHT HOLDER
 # This file is distributed under the same license as the folks package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# ButterflyOfFire <ButterflyOfFire@protonmail.com>, 2024.
+# ButterflyOfFire <butterflyoffire@protonmail.com>, 2024-2025.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: folks master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/folks/issues/\n"
-"POT-Creation-Date: 2024-03-23 08:29+0000\n"
-"PO-Revision-Date: 2024-03-29 10:43+0100\n"
-"Last-Translator: ButterflyOfFire <ButterflyOfFire@protonmail.com>\n"
-"Language-Team: Kabyle <>\n"
+"POT-Creation-Date: 2025-09-10 13:27+0000\n"
+"PO-Revision-Date: 2025-09-14 10:22+0100\n"
+"Last-Translator: ButterflyOfFire <butterflyoffire@protonmail.com>\n"
+"Language-Team: Kabyle\n"
 "Language: kab\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=n>1\n"
+"Plural-Forms: nplurals=2; plural=n>1;\n"
 "X-DL-Team: kab\n"
 "X-DL-Module: folks\n"
-"X-DL-Branch: master\n"
+"X-DL-Branch: main\n"
 "X-DL-Domain: po\n"
 "X-DL-State: Translating\n"
-"X-Generator: Gtranslator 41.0\n"
+"X-Generator: Gtranslator 48.0\n"
+"X-DL-Lang: kab\n"
 
 #: backends/bluez/bluez-backend.vala:734
 msgid ""
@@ -456,7 +457,7 @@ msgstr ""
 #: backends/telepathy/lib/tpf-persona.vala:514
 #: backends/telepathy/lib/tpf-persona.vala:587
 msgid "Account is offline."
-msgstr ""
+msgstr "Amiḍan d aruqqin."
 
 #: folks/alias-details.vala:61
 msgid "Alias is not writeable on this contact."
@@ -566,7 +567,7 @@ msgstr ""
 #. * for them.
 #: folks/individual.vala:2110
 msgid "Unnamed Person"
-msgstr ""
+msgstr "Amdan s war isem"
 
 #. FIXME: Ideally we’d use a format string translated to the locale of the
 #. * persona whose name is being formatted, but no backend provides
@@ -629,7 +630,7 @@ msgstr "%s, %s, %s, %s, %s, %s, %s"
 
 #: folks/presence-details.vala:171
 msgid "Unknown status"
-msgstr ""
+msgstr "Addad arussin"
 
 #: folks/presence-details.vala:173
 msgid "Offline"
