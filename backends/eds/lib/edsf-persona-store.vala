@@ -1198,8 +1198,14 @@ public class Edsf.PersonaStore : Folks.PersonaStore
       var debug_obj = Debug.dup ();
       if (debug_obj.debug_output_enabled == true)
         {
+          string vcard_str;
+#if HAS_EDS_3_60
+          vcard_str = contact.to_string ();
+#else
+          vcard_str = contact.to_string (E.VCardFormat.@30);
+#endif
           debug ("Adding new contact (UID: %s) to address book.", contact.id);
-          debug ("New vCard: %s", contact.to_string (E.VCardFormat.@30));
+          debug ("New vCard: %s", vcard_str);
         }
 
       ulong signal_id = 0;
@@ -1348,11 +1354,17 @@ public class Edsf.PersonaStore : Folks.PersonaStore
       var debug_obj = Debug.dup ();
       if (debug_obj.debug_output_enabled == true)
         {
+          string vcard_str;
+#if HAS_EDS_3_60
+          vcard_str = persona.contact.to_string ();
+#else
+          vcard_str = persona.contact.to_string (E.VCardFormat.@30);
+#endif
           debug ("Committing modified property ‘%s’ to persona %p (UID: %s).",
               property_name, persona, persona.uid);
 
           debug ("Modified vCard: %s",
-              persona.contact.to_string (E.VCardFormat.@30));
+              vcard_str);
         }
 
       var contact = persona.contact;
@@ -1841,7 +1853,12 @@ public class Edsf.PersonaStore : Folks.PersonaStore
           attributes.prepend ((owned) attr);
         }
 
+#if HAS_EDS_3_60
+      ((E.VCard) contact).remove_attributes (null, E.Contact.field_name (field_id));
+      ((E.VCard) contact).append_attributes (attributes);
+#else
       contact.set_attributes (field_id, attributes);
+#endif
     }
 
   private void _set_contact_attributes_string (E.Contact contact,
@@ -2158,7 +2175,12 @@ public class Edsf.PersonaStore : Folks.PersonaStore
          if (added)
            {
              var field_id_t = im_eds_map.lookup (proto);
+#if HAS_EDS_3_60
+             ((E.VCard) contact).remove_attributes (null, E.Contact.field_name (field_id_t));
+             ((E.VCard) contact).append_attributes (attributes);
+#else
              contact.set_attributes (field_id_t, attributes);
+#endif
            }
        }
     }

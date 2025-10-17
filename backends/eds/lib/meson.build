@@ -38,6 +38,10 @@ if eds_dep.version().version_compare('>=3.41')
   eds_backendlib_vala_flags += ['-D', 'HAS_EDS_3_41']
 endif
 
+if eds_dep.version().version_compare('>=3.59.1')
+  eds_backendlib_vala_flags += ['-D', 'HAS_EDS_3_60']
+endif
+
 eds_backendlib_c_flags = [
   '-include', 'config.h',
   '-include', 'folks/redeclare-internal-api.h',

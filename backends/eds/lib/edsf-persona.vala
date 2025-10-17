@@ -1423,7 +1423,12 @@ public class Edsf.Persona : Folks.Persona,
           AbstractFieldDetails<string>.hash_static,
           AbstractFieldDetails<string>.equal_static);
 
-      var attrs = this.contact.get_attributes (E.ContactField.EMAIL);
+      var attrs =
+#if HAS_EDS_3_60
+      ((E.VCard) this.contact).get_attributes_by_name (E.Contact.field_name (E.ContactField.EMAIL));
+#else
+      this.contact.get_attributes (E.ContactField.EMAIL);
+#endif
       foreach (unowned E.VCardAttribute attr in attrs)
         {
           unowned var val = get_vcard_attr_value (attr);
@@ -1680,8 +1685,12 @@ public class Edsf.Persona : Folks.Persona,
 
       foreach (unowned string im_proto in im_eds_map.get_keys ())
         {
-          var addresses = this.contact.get_attributes (
-              im_eds_map.lookup (im_proto));
+          var addresses =
+#if HAS_EDS_3_60
+          ((E.VCard) this.contact).get_attributes_by_name (E.Contact.field_name (im_eds_map.lookup (im_proto)));
+#else
+          this.contact.get_attributes (im_eds_map.lookup (im_proto));
+#endif
           foreach (unowned E.VCardAttribute attr in addresses)
             {
               try
@@ -1995,7 +2004,12 @@ public class Edsf.Persona : Folks.Persona,
           AbstractFieldDetails<string>.hash_static,
           AbstractFieldDetails<string>.equal_static);
 
-      var attrs = this.contact.get_attributes (E.ContactField.TEL);
+      var attrs =
+#if HAS_EDS_3_60
+      ((E.VCard) this.contact).get_attributes_by_name (E.Contact.field_name (E.ContactField.TEL));
+#else
+      this.contact.get_attributes (E.ContactField.TEL);
+#endif
       foreach (unowned E.VCardAttribute attr in attrs)
         {
           unowned var val = get_vcard_attr_value (attr);
@@ -2107,7 +2121,12 @@ public class Edsf.Persona : Folks.Persona,
           AbstractFieldDetails<PostalAddress>.hash_static,
           AbstractFieldDetails<PostalAddress>.equal_static);
 
-      var attrs = this.contact.get_attributes (E.ContactField.ADDRESS);
+      var attrs =
+#if HAS_EDS_3_60
+      ((E.VCard) this.contact).get_attributes_by_name (E.Contact.field_name (E.ContactField.ADDRESS));
+#else
+      this.contact.get_attributes (E.ContactField.ADDRESS);
+#endif
       foreach (unowned E.VCardAttribute attr in attrs)
         {
           var address = this._postal_address_from_attribute (attr);
