@@ -1,7 +1,7 @@
 include:
   - component: gitlab.gnome.org/GNOME/citemplates/release-service@master
     inputs:
-      dist-job-name: "build"
+      dist-job-name: "build-folks"
       tarball-artifact-path: "${TARBALL_ARTIFACT_PATH}"
 
 image: fedora:latest
