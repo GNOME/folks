@@ -40,6 +40,12 @@ endif
 
 if eds_dep.version().version_compare('>=3.59.1')
   eds_backendlib_vala_flags += ['-D', 'HAS_EDS_3_60']
+
+  # Check if the E-D-S VAPI we rely on is still an unstable version; if that's
+  # the case, disable the "since" version check
+  if eds_dep.version().version_compare('< 3.60')
+    eds_backendlib_vala_flags += ['--disable-since-check']
+  endif
 endif
 
 eds_backendlib_c_flags = [
