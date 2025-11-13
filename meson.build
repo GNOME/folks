@@ -63,16 +63,16 @@ inspect_tool_enabled = get_option('inspect_tool')
 
 # Dependencies
 #-------------------------------------------------
-min_glib_version = '2.58'
+min_glib_version = '2.80'
 min_eds_version = '3.38'
 
 valac = meson.get_compiler('vala')
 cc = meson.get_compiler('c')
 
 gee_dep = dependency('gee-0.8')
-gio_dep = dependency('gio-2.0')
+gio_dep = dependency('gio-2.0', version: '>=' + min_glib_version)
 glib_dep = dependency('glib-2.0', version: '>=' + min_glib_version)
-gmodule_dep = dependency('gmodule-2.0')
+gmodule_dep = dependency('gmodule-2.0', version: '>=' + min_glib_version)
 gobject_dep = dependency('gobject-2.0', version: '>=' + min_glib_version)
 libm_dep = cc.find_library('m')
 posix_dep = valac.find_library('posix')
