@@ -1854,7 +1854,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
         }
 
 #if HAS_EDS_3_60
-      ((E.VCard) contact).remove_attributes (null, E.Contact.field_name (field_id));
+      ((E.VCard) contact).remove_attributes (null, E.Contact.vcard_attribute (field_id));
       ((E.VCard) contact).append_attributes (attributes);
 #else
       contact.set_attributes (field_id, attributes);
@@ -2176,7 +2176,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
            {
              var field_id_t = im_eds_map.lookup (proto);
 #if HAS_EDS_3_60
-             ((E.VCard) contact).remove_attributes (null, E.Contact.field_name (field_id_t));
+             ((E.VCard) contact).remove_attributes (null, E.Contact.vcard_attribute (field_id_t));
              ((E.VCard) contact).append_attributes (attributes);
 #else
              contact.set_attributes (field_id_t, attributes);

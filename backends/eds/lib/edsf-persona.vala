@@ -1425,7 +1425,7 @@ public class Edsf.Persona : Folks.Persona,
 
       var attrs =
 #if HAS_EDS_3_60
-      ((E.VCard) this.contact).get_attributes_by_name (E.Contact.field_name (E.ContactField.EMAIL));
+      ((E.VCard) this.contact).get_attributes_by_name (E.Contact.vcard_attribute (E.ContactField.EMAIL));
 #else
       this.contact.get_attributes (E.ContactField.EMAIL);
 #endif
@@ -1687,7 +1687,7 @@ public class Edsf.Persona : Folks.Persona,
         {
           var addresses =
 #if HAS_EDS_3_60
-          ((E.VCard) this.contact).get_attributes_by_name (E.Contact.field_name (im_eds_map.lookup (im_proto)));
+          ((E.VCard) this.contact).get_attributes_by_name (E.Contact.vcard_attribute (im_eds_map.lookup (im_proto)));
 #else
           this.contact.get_attributes (im_eds_map.lookup (im_proto));
 #endif
@@ -2006,7 +2006,7 @@ public class Edsf.Persona : Folks.Persona,
 
       var attrs =
 #if HAS_EDS_3_60
-      ((E.VCard) this.contact).get_attributes_by_name (E.Contact.field_name (E.ContactField.TEL));
+      ((E.VCard) this.contact).get_attributes_by_name (E.Contact.vcard_attribute (E.ContactField.TEL));
 #else
       this.contact.get_attributes (E.ContactField.TEL);
 #endif
@@ -2123,7 +2123,7 @@ public class Edsf.Persona : Folks.Persona,
 
       var attrs =
 #if HAS_EDS_3_60
-      ((E.VCard) this.contact).get_attributes_by_name (E.Contact.field_name (E.ContactField.ADDRESS));
+      ((E.VCard) this.contact).get_attributes_by_name (E.Contact.vcard_attribute (E.ContactField.ADDRESS));
 #else
       this.contact.get_attributes (E.ContactField.ADDRESS);
 #endif
