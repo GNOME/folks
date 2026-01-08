@@ -6,9 +6,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: folks 4.0\n"
-"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/folks/issues\n"
-"POT-Creation-Date: 2021-02-13 11:25+0000\n"
-"PO-Revision-Date: 2021-05-12 13:22+0200\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/folks/issues/\n"
+"POT-Creation-Date: 2025-12-10 13:20+0000\n"
+"PO-Revision-Date: 2026-01-08 16:38+0100\n"
 "Last-Translator: Kjartan Maraas <kmaraas@gnome.org>\n"
 "Language-Team: Norwegian bokmål <i18n-nb@lister.ping.uio.no>\n"
 "Language: nb\n"
@@ -28,7 +28,7 @@ msgstr ""
 msgid ""
 "Error connecting to OBEX transfer daemon over D-Bus. Ensure BlueZ and obexd "
 "are installed."
-msgstr ""
+msgstr "Feil ved tilkobling til OBEX overføringstjenesten over D-Bus. Sjekk at Bluez og obexd er installert."
 
 #. Translators: the parameter is an error message.
 #: backends/bluez/bluez-persona-store.vala:385
@@ -48,7 +48,7 @@ msgid ""
 "Error during transfer of the address book ‘%s’ from Bluetooth device ‘%s’."
 msgstr "Feil under overføring av adressebok «%s» fra Bluetooth-enhet «%s»."
 
-#: backends/bluez/bluez-persona-store.vala:791
+#: backends/bluez/bluez-persona-store.vala:792
 #, c-format
 msgid ""
 "Permission to access the address book on Bluetooth device ‘%s’ was denied by "
@@ -57,21 +57,21 @@ msgstr "Bruker nektet tilgang til adressebok på Bluetooth-enhet «%s»."
 
 #. Translators: the first parameter is a Bluetooth device
 #. * alias, and the second is an error message.
-#: backends/bluez/bluez-persona-store.vala:798
+#: backends/bluez/bluez-persona-store.vala:799
 #, c-format
 msgid "An OBEX address book transfer from device ‘%s’ could not be started: %s"
 msgstr "Kunne ikke starte en OBEX adressebokoverføring fra enhet «%s»: %s"
 
 #. Translators: the first parameter is a Bluetooth device
 #. * alias, and the second is an error message.
-#: backends/bluez/bluez-persona-store.vala:838
+#: backends/bluez/bluez-persona-store.vala:839
 #, c-format
 msgid "The OBEX address book transfer from device ‘%s’ failed: %s"
 msgstr "OBEX adressebokoverføring fra enhet «%s» feilet: %s"
 
 #. Translators: the first parameter is a Bluetooth device
 #. * alias, and the second is an error message.
-#: backends/bluez/bluez-persona-store.vala:855
+#: backends/bluez/bluez-persona-store.vala:856
 #, c-format
 msgid ""
 "Error during transfer of the address book from Bluetooth device ‘%s’: %s"
@@ -165,115 +165,115 @@ msgstr "Fant ikke visning for adressebok «%s»."
 msgid "Couldn’t get view for address book ‘%s’: %s"
 msgstr "Fant ikke visning for adressebokk «%s»: %s"
 
-#: backends/eds/lib/edsf-persona-store.vala:1304
+#: backends/eds/lib/edsf-persona-store.vala:1313
 msgid "Creating a new contact failed due to reaching the timeout."
 msgstr "Klarte ikke å lage ny kontakt på grunn av tidsavbrudd."
 
 #. Translators: the parameter is the name of a property on a
 #. * contact, formatted in the normal GObject style (e.g.
 #. * lowercase with hyphens to separate words).
-#: backends/eds/lib/edsf-persona-store.vala:1418
+#: backends/eds/lib/edsf-persona-store.vala:1433
 #, c-format
 msgid "Changing the ‘%s’ property failed due to reaching the timeout."
 msgstr "Endring av egenskap «%s» feilet på grunn av tidsavbrudd."
 
-#: backends/eds/lib/edsf-persona-store.vala:1452 folks/avatar-details.vala:63
+#: backends/eds/lib/edsf-persona-store.vala:1467 folks/avatar-details.vala:63
 msgid "Avatar is not writeable on this contact."
 msgstr "Avatar er ikke skrivbar på denne kontakten."
 
-#: backends/eds/lib/edsf-persona-store.vala:1473
+#: backends/eds/lib/edsf-persona-store.vala:1488
 #: folks/web-service-details.vala:123
 msgid "Web service addresses are not writeable on this contact."
 msgstr "Webservice adresser er ikke skrivbare på denne kontakten."
 
-#: backends/eds/lib/edsf-persona-store.vala:1509 folks/url-details.vala:152
+#: backends/eds/lib/edsf-persona-store.vala:1524 folks/url-details.vala:152
 msgid "URLs are not writeable on this contact."
 msgstr "URLer er ikke skrivbare på denne kontakten."
 
-#: backends/eds/lib/edsf-persona-store.vala:1591 folks/local-id-details.vala:64
+#: backends/eds/lib/edsf-persona-store.vala:1606 folks/local-id-details.vala:64
 msgid "Local IDs are not writeable on this contact."
 msgstr "Lokale IDer er ikke skrivbare på denne kontakten."
 
-#: backends/eds/lib/edsf-persona-store.vala:1620
+#: backends/eds/lib/edsf-persona-store.vala:1635
 msgid "The contact cannot be marked as favourite."
 msgstr "Kontakten kan ikke merkes som favoritt."
 
 #. Translators: the parameter is an error message.
-#: backends/eds/lib/edsf-persona-store.vala:1692
+#: backends/eds/lib/edsf-persona-store.vala:1707
 #, c-format
 msgid "Can’t update avatar: %s"
 msgstr "Kan ikke oppdatere avatar: %s"
 
-#: backends/eds/lib/edsf-persona-store.vala:1703 folks/email-details.vala:120
+#: backends/eds/lib/edsf-persona-store.vala:1718 folks/email-details.vala:120
 msgid "E-mail addresses are not writeable on this contact."
 msgstr "E-postadresser er ikke skrivbare på denne kontakten."
 
-#: backends/eds/lib/edsf-persona-store.vala:1770 folks/phone-details.vala:255
+#: backends/eds/lib/edsf-persona-store.vala:1785 folks/phone-details.vala:255
 msgid "Phone numbers are not writeable on this contact."
 msgstr "Telefonnummer er ikke skrivbare på denne kontakten."
 
-#: backends/eds/lib/edsf-persona-store.vala:1788
+#: backends/eds/lib/edsf-persona-store.vala:1803
 #: folks/postal-address-details.vala:362
 msgid "Postal addresses are not writeable on this contact."
 msgstr "Postadresser er ikke skrivbare på denne kontakten."
 
-#: backends/eds/lib/edsf-persona-store.vala:1859 folks/name-details.vala:454
+#: backends/eds/lib/edsf-persona-store.vala:1879 folks/name-details.vala:454
 msgid "Full name is not writeable on this contact."
 msgstr "Fullt navn er ikke skrivbart på denne kontakten."
 
-#: backends/eds/lib/edsf-persona-store.vala:1881 folks/name-details.vala:492
+#: backends/eds/lib/edsf-persona-store.vala:1901 folks/name-details.vala:492
 msgid "Nickname is not writeable on this contact."
 msgstr "Kallenavn er ikke skrivbart på denne kontakten."
 
-#: backends/eds/lib/edsf-persona-store.vala:1903 folks/note-details.vala:139
+#: backends/eds/lib/edsf-persona-store.vala:1923 folks/note-details.vala:139
 msgid "Notes are not writeable on this contact."
 msgstr "Notater er ikke skrivbare på denne kontakten."
 
-#: backends/eds/lib/edsf-persona-store.vala:1935 folks/birthday-details.vala:62
+#: backends/eds/lib/edsf-persona-store.vala:1955 folks/birthday-details.vala:62
 msgid "Birthday is not writeable on this contact."
 msgstr "Fødselsdag er ikke skrivbar på denne kontakten."
 
-#: backends/eds/lib/edsf-persona-store.vala:1979 folks/role-details.vala:280
+#: backends/eds/lib/edsf-persona-store.vala:1999 folks/role-details.vala:280
 msgid "Roles are not writeable on this contact."
 msgstr "Roller er ikke skrivbare på denne kontakten."
 
-#: backends/eds/lib/edsf-persona-store.vala:2080 folks/name-details.vala:417
+#: backends/eds/lib/edsf-persona-store.vala:2100 folks/name-details.vala:417
 msgid "Structured name is not writeable on this contact."
 msgstr "Strukturert navn er ikke skrivbart på denne kontakten."
 
-#: backends/eds/lib/edsf-persona-store.vala:2119 folks/im-details.vala:136
+#: backends/eds/lib/edsf-persona-store.vala:2139 folks/im-details.vala:136
 msgid "IM addresses are not writeable on this contact."
 msgstr "Lynmeldingsadresser er ikke skrivbare på denne kontakten."
 
-#: backends/eds/lib/edsf-persona-store.vala:2169 folks/group-details.vala:174
+#: backends/eds/lib/edsf-persona-store.vala:2194 folks/group-details.vala:174
 msgid "Groups are not writeable on this contact."
 msgstr "Grupper er ikke skrivbare på denne kontakten."
 
-#: backends/eds/lib/edsf-persona-store.vala:2184
+#: backends/eds/lib/edsf-persona-store.vala:2209
 msgid "My Contacts is only available for Google Contacts"
 msgstr "Mine kontakter er kun tilgjengelig for Google-kontakter"
 
-#: backends/eds/lib/edsf-persona-store.vala:2255 folks/gender-details.vala:79
+#: backends/eds/lib/edsf-persona-store.vala:2280 folks/gender-details.vala:79
 msgid "Gender is not writeable on this contact."
 msgstr "Kjønn er ikke skrivbart på denne kontakten."
 
-#: backends/eds/lib/edsf-persona-store.vala:2293 folks/anti-linkable.vala:84
+#: backends/eds/lib/edsf-persona-store.vala:2318 folks/anti-linkable.vala:84
 msgid "Anti-links are not writeable on this contact."
 msgstr "Anti-lenker er ikke skrivbare på denne kontakten."
 
-#: backends/eds/lib/edsf-persona-store.vala:2336
+#: backends/eds/lib/edsf-persona-store.vala:2361
 #: folks/location-details.vala:135
 msgid "Location is not writeable on this contact."
 msgstr "Lokasjon er ikke skrivbar på denne kontakten."
 
 #. Translators: the first parameter is an error message.
-#: backends/eds/lib/edsf-persona-store.vala:2684
+#: backends/eds/lib/edsf-persona-store.vala:2707
 #, c-format
 msgid "Permission denied when creating new contact: %s"
 msgstr "Tilgang nektet ved oppretting av ny kontakt: %s"
 
 #. Translators: the first parameter is an error message.
-#: backends/eds/lib/edsf-persona-store.vala:2689
+#: backends/eds/lib/edsf-persona-store.vala:2712
 #, c-format
 msgid "Address book is offline and a new contact cannot be created: %s"
 msgstr "Adresseboken er frakoblet og en ny kontakt kan ikke opprettes: %s"
@@ -281,19 +281,19 @@ msgstr "Adresseboken er frakoblet og en ny kontakt kan ikke opprettes: %s"
 #. Translators: the first parameter is a non-human-readable
 #. * property name and the second parameter is an error
 #. * message.
-#: backends/eds/lib/edsf-persona-store.vala:2698
+#: backends/eds/lib/edsf-persona-store.vala:2721
 #, c-format
 msgid "New contact is not writeable: %s"
 msgstr "Ny kontakt er ikke skrivbar: %s"
 
 #. Translators: the first parameter is an error message.
-#: backends/eds/lib/edsf-persona-store.vala:2702
+#: backends/eds/lib/edsf-persona-store.vala:2725
 #, c-format
 msgid "Invalid value in contact: %s"
 msgstr "Ugyldig verdi i kontakt: %s"
 
 #. Translators: the first parameter is an error message.
-#: backends/eds/lib/edsf-persona-store.vala:2726
+#: backends/eds/lib/edsf-persona-store.vala:2749
 #, c-format
 msgid "Unknown error adding contact: %s"
 msgstr "Ukjent feil ved oppretting av kontakt: %s"
@@ -301,7 +301,7 @@ msgstr "Ukjent feil ved oppretting av kontakt: %s"
 #. Translators: the first parameter is a non-human-readable
 #. * property name and the second parameter is an error
 #. * message.
-#: backends/eds/lib/edsf-persona-store.vala:2759
+#: backends/eds/lib/edsf-persona-store.vala:2782
 #, c-format
 msgid "Property ‘%s’ is not writeable: %s"
 msgstr "Egenskap «%s» er ikke skrivbar: %s"
@@ -309,14 +309,14 @@ msgstr "Egenskap «%s» er ikke skrivbar: %s"
 #. Translators: the first parameter is a non-human-readable
 #. * property name and the second parameter is an error
 #. * message.
-#: backends/eds/lib/edsf-persona-store.vala:2768
+#: backends/eds/lib/edsf-persona-store.vala:2791
 #, c-format
 msgid "Invalid value for property ‘%s’: %s"
 msgstr "Ugyldig verdi for egenskap «%s»: %s"
 
 #. Translators: the first parameter is a non-human-readable
 #. * property name and the second parameter is an error message.
-#: backends/eds/lib/edsf-persona-store.vala:2794
+#: backends/eds/lib/edsf-persona-store.vala:2817
 #, c-format
 msgid "Unknown error setting property ‘%s’: %s"
 msgstr "Ukjent feil ved setting av egenskap «%s»: %s"
@@ -371,20 +371,20 @@ msgid ""
 "Either oFono isn’t installed or the service can’t be started."
 msgstr ""
 
-#: backends/telepathy/lib/tpf-persona-store.vala:1264
+#: backends/telepathy/lib/tpf-persona-store.vala:1263
 msgid "Telepathy contacts representing the local user may not be removed."
 msgstr ""
 "Telepathy-kontakter som representerer den lokale brukeren kan ikke fjernes."
 
 #. Translators: the parameter is an error message.
-#: backends/telepathy/lib/tpf-persona-store.vala:1275
+#: backends/telepathy/lib/tpf-persona-store.vala:1274
 #, c-format
 msgid "Failed to remove a persona from store: %s"
 msgstr "Klarte ikke å fjerne en persona fra lageret: %s"
 
 #. Translators: the first two parameters are store identifiers and
 #. * the third is a contact identifier.
-#: backends/telepathy/lib/tpf-persona-store.vala:1310
+#: backends/telepathy/lib/tpf-persona-store.vala:1309
 #, c-format
 msgid ""
 "Persona store (%s, %s) requires the following details:\n"
@@ -393,50 +393,50 @@ msgstr ""
 "Personalager (%s, %s) krever følgende detaljer:\n"
 "    kontakt (oppgitt: «%s»)\n"
 
-#: backends/telepathy/lib/tpf-persona-store.vala:1325
+#: backends/telepathy/lib/tpf-persona-store.vala:1324
 msgid "Cannot create a new Telepathy contact while offline."
 msgstr "Kan ikke lage en ny Telepathy-kontakt i frakoblet modus."
 
 #. Translators: the parameter is an error message.
-#: backends/telepathy/lib/tpf-persona-store.vala:1343
+#: backends/telepathy/lib/tpf-persona-store.vala:1342
 #, c-format
 msgid "Failed to add a persona from details: %s"
 msgstr "Klarte ikke å legge til persona fra detaljer: %s"
 
 #. Translators: "telepathy-logger" is the name of an application,
 #. * and should not be translated.
-#: backends/telepathy/lib/tpf-persona-store.vala:1363
+#: backends/telepathy/lib/tpf-persona-store.vala:1362
 msgid ""
 "Failed to change favorite without a connection to the telepathy-logger "
 "service."
-msgstr ""
+msgstr "Klarte ikke å bytte favoritt uten en tilkobling til telepathy-logger tjenesten."
 
-#: backends/telepathy/lib/tpf-persona-store.vala:1369
+#: backends/telepathy/lib/tpf-persona-store.vala:1368
 msgid ""
 "Failed to change favorite status of Telepathy Persona because it has no "
 "attached TpContact."
-msgstr ""
+msgstr "Klarte ikke å endre favorittstatus for Telepathy persona fordi den ikke har en tilkoblet TpContact."
 
 #. Translators: the parameter is a contact identifier.
-#: backends/telepathy/lib/tpf-persona-store.vala:1387
+#: backends/telepathy/lib/tpf-persona-store.vala:1386
 #, c-format
 msgid "Failed to change favorite status for Telepathy contact ‘%s’."
-msgstr ""
+msgstr "Klarte ikke å bytte favorittstatus for Telepathy-kontakt «%s»."
 
 #. Translators: the parameter is an error message.
-#: backends/telepathy/lib/tpf-persona-store.vala:1419
+#: backends/telepathy/lib/tpf-persona-store.vala:1418
 #, c-format
 msgid "Failed to change contact’s alias: %s"
 msgstr "Klarte ikke å endre kontaktens alias: %s"
 
-#: backends/telepathy/lib/tpf-persona-store.vala:1500
+#: backends/telepathy/lib/tpf-persona-store.vala:1499
 msgid "Extended information may only be set on the user’s Telepathy contact."
 msgstr "Utvidet informasjon kan kun settes på brukers Telepathy-kontakt."
 
-#: backends/telepathy/lib/tpf-persona-store.vala:1529
+#: backends/telepathy/lib/tpf-persona-store.vala:1528
 msgid ""
 "Extended information cannot be written because the store is disconnected."
-msgstr ""
+msgstr "Utvidet informasjon kan ikke skrives fordi lagringen er frakoblet."
 
 #. Translators: the parameter is an error message.
 #: backends/telepathy/lib/tpf-persona.vala:511
