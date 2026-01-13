@@ -29,8 +29,6 @@ style-check:
 
 build-folks:
   stage: build
-  except:
-    - tags
   before_script:
     - dnf update -y --nogpgcheck
     - dnf -y install --nogpgcheck
