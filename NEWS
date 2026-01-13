@@ -1,5 +1,12 @@
+overview of changes from libfolks 0.15.10 to libfolks 0.15.11
+=============================================================
+
+Bugs fixed:
+  * eds backend: Correct patch for evolution-data-server 3.59.1 API changes
+  * meson: Set minimum GLib version to 2.80
+
 Overview of changes from libfolks 0.15.9 to libfolks 0.15.10
-===========================================================
+============================================================
 
 Major changes:
   * backend: Adapt to evolution-data-server 3.59.1 API changes
