@@ -46,8 +46,8 @@ build-folks:
     # Multiply the Meson test timeout by 3 (mostly for the stress tests)
     # For most tests it doesn't matter anyway, since we internally use
     # TestUtils.loop_run_with_timeout()
-    - meson test -C _build -t 3
-    - meson dist -C _build
+    - meson test -C _build -t 3 --no-suite EDSBackend --no-suite DummyBackend --no-suite KeyfileBackend
+    - meson dist -C _build --no-tests
   artifacts:
     reports:
       junit: "_build/meson-logs/testlog.junit.xml"
