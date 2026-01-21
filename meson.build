@@ -1,7 +1,7 @@
 project('folks', [ 'vala', 'c' ],
   version: '0.15.13',
   license: 'LGPL-2.1-or-later',
-  meson_version: '>= 0.57',
+  meson_version: '>= 0.58',
 )
 
 gnome = import('gnome')
@@ -76,7 +76,12 @@ gmodule_dep = dependency('gmodule-2.0', version: '>=' + min_glib_version)
 gobject_dep = dependency('gobject-2.0', version: '>=' + min_glib_version)
 libm_dep = cc.find_library('m')
 posix_dep = valac.find_library('posix')
-g_ir_compiler = find_program('g-ir-compiler')
+gi_dep = dependency('gobject-introspection-1.0', required: false)
+if gi_dep.found()
+  g_ir_compiler = gi_dep.get_variable('g_ir_compiler')
+else
+  g_ir_compiler = find_program('g-ir-compiler')
+endif
 
 if docs_enabled
   valadoc = find_program('valadoc', required: docs_enabled)
