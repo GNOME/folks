@@ -10,7 +10,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?"
 "product=folks&keywords=I18N+L10N&component=general\n"
 "POT-Creation-Date: 2017-06-18 15:14+0000\n"
-"PO-Revision-Date: 2017-06-17 11:44+0200\n"
+"PO-Revision-Date: 2026-03-07 11:44+0200\n"
 "Last-Translator: Gil Forcada <gilforcada@guifi.net>\n"
 "Language-Team: Catalan <tradgnome@softcatala.org>\n"
 "Language: ca\n"
@@ -323,7 +323,7 @@ msgstr "S'ha denegat el permís per a crear el contacte nou: %s"
 #, c-format
 msgid "Address book is offline and a new contact cannot be created: %s"
 msgstr ""
-"La llibreta d'adreces està fora de línia, de manera que no es pot suprimir "
+"La llibreta d'adreces està fora de línia, de manera que no es pot crear "
 "el contacte nou: %s"
 
 #. Translators: the first parameter is a non-human-readable
@@ -584,7 +584,7 @@ msgstr "No s'ha pogut obtenir el tipus de contingut per «%s»."
 #: ../folks/birthday-details.vala:93
 msgid "Birthday event ID is not writeable on this contact."
 msgstr ""
-"En aquest compte no es permet canviar l'identificador de l'esdeveniment "
+"En aquest contacte no es permet canviar l'identificador de l'esdeveniment "
 "d'aniversari."
 
 #: ../folks/extended-info.vala:133 ../folks/extended-info.vala:149
@@ -828,7 +828,7 @@ msgstr ""
 msgid "Imported %u buddy from ‘%s’."
 msgid_plural "Imported %u buddies from ‘%s’."
 msgstr[0] "S'ha importat %u amic de «%s»."
-msgstr[1] "S'ha importat %u amics de «%s»."
+msgstr[1] "S'han importat %u amics de «%s»."
 
 #. Translators: the first parameter is a persona identifier,
 #. * and the second is an error message.
@@ -901,14 +901,14 @@ msgstr "No s'han pogut carregar els rerefons: %s"
 #: ../tools/import.vala:120
 #, c-format
 msgid "Couldn’t load the ‘%s’ backend."
-msgstr "No s'ha pogut carregar el «%s» del rerefons."
+msgstr "No s'ha pogut carregar el rerefons «%s»."
 
 #. Translators: the first parameter is a backend identifier and the
 #. * second parameter is an error message.
 #: ../tools/import.vala:133
 #, c-format
 msgid "Couldn’t prepare the ‘%s’ backend: %s"
-msgstr "No s'ha pogut preparar el «%s» del rerefons: %s"
+msgstr "No s'ha pogut preparar el rerefons «%s»: %s"
 
 #. Translators: the parameter is a backend identifier.
 #: ../tools/import.vala:146
