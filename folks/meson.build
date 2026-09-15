@@ -117,10 +117,10 @@ custom_target(libfolks_gir_name + '.typelib',
   command: [ g_ir_compiler,
     '--output', '@OUTPUT@',
     '--shared-library', 'lib' + libfolks_lib.name(),
-    meson.current_build_dir() / (libfolks_gir_name + '.gir')
+    '@INPUT@',
   ],
+  input: libfolks_lib.vala_gir(),
   output: libfolks_gir_name + '.typelib',
-  depends: libfolks_lib,
   install: true,
   install_dir: folks_typelibdir,
 )

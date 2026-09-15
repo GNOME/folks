@@ -1,7 +1,7 @@
 project('folks', [ 'vala', 'c' ],
   version: '0.15.13',
   license: 'LGPL-2.1-or-later',
-  meson_version: '>= 0.57',
+  meson_version: '>= 1.10',
 )
 
 gnome = import('gnome')
