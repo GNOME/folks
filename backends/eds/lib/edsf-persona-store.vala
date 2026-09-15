@@ -1889,6 +1889,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
         return;
 
       persona.contact.set (E.Contact.field_id ("full_name"), _full_name);
+      this._remove_attribute (persona.contact, E.EVC_X_FILE_AS);
       yield this._commit_modified_property (persona, "full-name");
     }
 
@@ -2109,6 +2110,7 @@ public class Edsf.PersonaStore : Folks.PersonaStore
         return;
 
       this._set_contact_name (persona.contact, sname);
+      this._remove_attribute (persona.contact, E.EVC_X_FILE_AS);
       yield this._commit_modified_property (persona, "structured-name");
     }
 
