@@ -163,7 +163,6 @@ public abstract class Folks.Persona : Object
       debug ("Individual %p has been destroyed; resetting the Individual of %s",
           obj, this.iid);
       this._individual = null;
-      this.notify_property ("individual");
     }
 
   /**
