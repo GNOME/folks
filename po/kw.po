@@ -8,10 +8,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: folks main\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/folks/issues/\n"
-"POT-Creation-Date: 2026-01-13 15:01+0000\n"
-"PO-Revision-Date: 2026-05-04 18:41+0100\n"
+"POT-Creation-Date: 2026-09-18 20:08+0000\n"
+"PO-Revision-Date: 2026-11-10 21:51+0000\n"
 "Last-Translator: Flynn Peck <cirilla@tuta.io>\n"
-"Language-Team: kw\n"
+"Language-Team: Cornish\n"
 "Language: kw\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,7 +23,7 @@ msgstr ""
 "X-DL-Branch: main\n"
 "X-DL-Domain: po\n"
 "X-DL-State: Translating\n"
-"X-Generator: Gtranslator 50.0\n"
+"X-Generator: Gtranslator 51.0\n"
 
 #: backends/bluez/bluez-backend.vala:734
 msgid ""
@@ -32,22 +32,22 @@ msgid ""
 "the service can’t be started."
 msgstr ""
 "Nyns eus dyghtyer tra BlueZ 5 owth eksekutya, ytho an oberer BlueZ a vydh "
-"marow. Po agas leyans Blue yw re goth (dyllans 5 yw skoodhys yn unnik) po ny "
-"yllir dalleth an gonis."
+"marow. Po agas leyans BlueZ yw re goth (dyllans 5 yw skoodhys yn unnik) po "
+"ny yll bos dallethys an gonis."
 
 #: backends/bluez/bluez-backend.vala:747
 msgid ""
 "Error connecting to OBEX transfer daemon over D-Bus. Ensure BlueZ and obexd "
 "are installed."
 msgstr ""
-"Error ow junya dhe dhaemon treusporth OBEX dres D-Bus. Surhewgh BlueZ hag "
-"obexd yw leys."
+"Gwall hag ow junya dhe dhaemon treusporth OBEX dre D-Bus. Surhewgh yma leys "
+"BlueZ hag obexd."
 
 #. Translators: the parameter is an error message.
 #: backends/bluez/bluez-persona-store.vala:385
 #, c-format
 msgid "Error reading the transferred address book file: %s"
-msgstr "Error ow redya an restren lyver trigvaow treusperthys: %s"
+msgstr "Gwall hag ow redya an restren lyver trigvaow treusperthys: %s"
 
 #. Translators: the first parameter is the name of the
 #. * failed transfer, and the second is a Bluetooth device
@@ -60,7 +60,7 @@ msgstr "Error ow redya an restren lyver trigvaow treusperthys: %s"
 msgid ""
 "Error during transfer of the address book ‘%s’ from Bluetooth device ‘%s’."
 msgstr ""
-"Eror dres treusporth a'n lyver trigvaow ‘%s’ dhyworth devis Bluetooth ‘%s’."
+"Gwall dres treusporth a'n lyver trigvaow ‘%s’ dhyworth devis Bluetooth ‘%s’."
 
 #: backends/bluez/bluez-persona-store.vala:792
 #, c-format
@@ -77,7 +77,7 @@ msgstr ""
 #, c-format
 msgid "An OBEX address book transfer from device ‘%s’ could not be started: %s"
 msgstr ""
-"Treusporth lyver trigvaow OBEX dhyworth devis ‘%s’ ny yllir bos dallethys: %s"
+"Ny yll bos dallethys treusporth lyver trigvaow OBEX dhyworth devis ‘%s’: %s"
 
 #. Translators: the first parameter is a Bluetooth device
 #. * alias, and the second is an error message.
@@ -93,12 +93,12 @@ msgstr "An treusporth lyver trigvaow OBEX dhyworth devis ‘%s’ re fyllis: %s"
 msgid ""
 "Error during transfer of the address book from Bluetooth device ‘%s’: %s"
 msgstr ""
-"Error dres treusporth a'n lyver trigvaow dhyworth devis Bluetooth ‘%s’: %s"
+"Gwall dres treusporth a'n lyver trigvaow dhyworth devis Bluetooth ‘%s’: %s"
 
 #: backends/bluez/bluez-persona-store.vala:1073
 #, c-format
 msgid "Bluetooth device ‘%s’ disappeared during address book transfer."
-msgstr "Devis Bluetooth ‘%s’ mes a wel dres treusporth lyver trigva."
+msgstr "Devis Bluetooth ‘%s’ eth mes a wel dres treusporth lyver trigva."
 
 #. The timeout after which we consider a property change to have failed if we
 #. * haven't received a property change notification for it.
@@ -113,7 +113,7 @@ msgstr "Devis Bluetooth ‘%s’ mes a wel dres treusporth lyver trigva."
 #. * the msgid to the msgstr unchanged).
 #: backends/eds/lib/edsf-persona-store.vala:69
 msgid "Starred in Android"
-msgstr "Sterenys yn Android"
+msgstr "Sterennys yn Android"
 
 #. Translators: the first parameter is an address book
 #. * URI and the second is a persona UID.
@@ -121,7 +121,7 @@ msgstr "Sterenys yn Android"
 #, c-format
 msgid "Address book ‘%s’ is offline, so contact ‘%s’ cannot be removed."
 msgstr ""
-"Lyver trigvaow ‘%s’ yw dhywarlinen, ytho kestav ‘%s’ ny yllir bos removys."
+"Lyver trigvaow ‘%s’ yw dhywarlinen, ytho ny yll bos removys kestav ‘%s’."
 
 #. Translators: the first parameter is an address book
 #. * URI and the second is an error message.
@@ -134,7 +134,7 @@ msgstr "Kummyas naghys dhe remova kestav ‘%s’: %s"
 #: backends/eds/lib/edsf-persona-store.vala:652
 #, c-format
 msgid "Removing contacts isn’t supported by this persona store: %s"
-msgstr "Ow remova kestavow yw anskoodhys gans an withva persona ma: %s"
+msgstr "Nyns yw skoodhys gans an withva persona ma dhe remova kestavow: %s"
 
 #: backends/eds/lib/edsf-persona-store.vala:681
 #, c-format
@@ -186,7 +186,7 @@ msgstr "Ny yllir kerghes gwel rag lyver trigvaow ‘%s’: %s"
 
 #: backends/eds/lib/edsf-persona-store.vala:1313
 msgid "Creating a new contact failed due to reaching the timeout."
-msgstr "Ow kwruthyl kestav nowydh re fyllis drefen ow hedhes an termyn yn-mes."
+msgstr "Ow kwruthyl kestav nowydh re fyllis awos y hedhsa an termyn yn-mes."
 
 #. Translators: the parameter is the name of a property on a
 #. * contact, formatted in the normal GObject style (e.g.
@@ -194,29 +194,28 @@ msgstr "Ow kwruthyl kestav nowydh re fyllis drefen ow hedhes an termyn yn-mes."
 #: backends/eds/lib/edsf-persona-store.vala:1433
 #, c-format
 msgid "Changing the ‘%s’ property failed due to reaching the timeout."
-msgstr ""
-"Ow chanjya an deythien ‘%s’ re fyllis drefen ow hedhes an termyn yn-mes."
+msgstr "Ow chanjya an deythien ‘%s’ re fyllis awos y hedhsa an termyn yn-mes."
 
 #: backends/eds/lib/edsf-persona-store.vala:1467 folks/avatar-details.vala:63
 msgid "Avatar is not writeable on this contact."
-msgstr "Skeusen brofil nyns yw skrifadow war'n kestav ma."
+msgstr "Nyns yw skrifadow war'n kestav ma skeusen brofil."
 
 #: backends/eds/lib/edsf-persona-store.vala:1488
 #: folks/web-service-details.vala:123
 msgid "Web service addresses are not writeable on this contact."
-msgstr "Trigvaow gonisyow gwi nyns yw skrifadow war'n kestav ma."
+msgstr "Nyns yw skrifadow war'n devis ma trigvaow gonisyow gwi."
 
 #: backends/eds/lib/edsf-persona-store.vala:1524 folks/url-details.vala:152
 msgid "URLs are not writeable on this contact."
-msgstr "Gorgevrennow nyns yw skrifadow war'n kestav ma."
+msgstr "Nyns yw skrifadow war'n devis ma gorgevrennow."
 
 #: backends/eds/lib/edsf-persona-store.vala:1606 folks/local-id-details.vala:64
 msgid "Local IDs are not writeable on this contact."
-msgstr "IDs leel nyns yw skrifadow war'n kestav ma."
+msgstr "Nyns yw skrifadow war'n devis ma IDs leel."
 
 #: backends/eds/lib/edsf-persona-store.vala:1635
 msgid "The contact cannot be marked as favourite."
-msgstr "An kestav ny allas bos merkys avel drudh."
+msgstr "Ny yll bos merkys avel drudh an kestav."
 
 #. Translators: the parameter is an error message.
 #: backends/eds/lib/edsf-persona-store.vala:1707
@@ -226,141 +225,141 @@ msgstr "Ny yllir nowedhi skeusen brofil: %s"
 
 #: backends/eds/lib/edsf-persona-store.vala:1718 folks/email-details.vala:120
 msgid "E-mail addresses are not writeable on this contact."
-msgstr "Trigvaow ebost nyns yw skrifadow war'n kestav ma."
+msgstr "Nyns yw skrifadow war'n kestav ma trigvaow ebost."
 
 #: backends/eds/lib/edsf-persona-store.vala:1785 folks/phone-details.vala:255
 msgid "Phone numbers are not writeable on this contact."
-msgstr "Niverow fon nyns yw skrifadow war'n kestav ma."
+msgstr "Nyns yw skrifadow war'n kestav ma niverow fon."
 
 #: backends/eds/lib/edsf-persona-store.vala:1803
 #: folks/postal-address-details.vala:362
 msgid "Postal addresses are not writeable on this contact."
-msgstr "Trigvaow bostek nyns yw skrifadow war'n kestav ma."
+msgstr "Nyns yw skrifadow war'n kestav ma trigvaow postek."
 
 #: backends/eds/lib/edsf-persona-store.vala:1879 folks/name-details.vala:454
 msgid "Full name is not writeable on this contact."
-msgstr "Hanow leun nyns yw skrifadow war'n kestav ma."
+msgstr "Nyns yw skrifadow war'n kestav ma hanow leun."
 
-#: backends/eds/lib/edsf-persona-store.vala:1901 folks/name-details.vala:492
+#: backends/eds/lib/edsf-persona-store.vala:1902 folks/name-details.vala:492
 msgid "Nickname is not writeable on this contact."
-msgstr "Leshanow nyns yw skrifadow war'n kestav ma."
+msgstr "Nyns yw skrifadow war'n kestav ma leshanow."
 
-#: backends/eds/lib/edsf-persona-store.vala:1923 folks/note-details.vala:139
+#: backends/eds/lib/edsf-persona-store.vala:1924 folks/note-details.vala:139
 msgid "Notes are not writeable on this contact."
-msgstr "Notennow nyns yw skrifadow war'n kestav ma."
+msgstr "Nyns yw skrifadow war'n kestav ma notennow."
 
-#: backends/eds/lib/edsf-persona-store.vala:1955 folks/birthday-details.vala:62
+#: backends/eds/lib/edsf-persona-store.vala:1956 folks/birthday-details.vala:62
 msgid "Birthday is not writeable on this contact."
-msgstr "Penn-bloodh nyns yw skrifadow war'n kestav ma."
+msgstr "Nyns yw skrifadow war'n kestav ma penn-bloodh."
 
-#: backends/eds/lib/edsf-persona-store.vala:1999 folks/role-details.vala:280
+#: backends/eds/lib/edsf-persona-store.vala:2000 folks/role-details.vala:280
 msgid "Roles are not writeable on this contact."
-msgstr "Rannow nyns yw skrifadow war'n kestav ma."
+msgstr "Nyns yw skrifadow war'n kestav ma rannow."
 
-#: backends/eds/lib/edsf-persona-store.vala:2100 folks/name-details.vala:417
+#: backends/eds/lib/edsf-persona-store.vala:2101 folks/name-details.vala:417
 msgid "Structured name is not writeable on this contact."
-msgstr "Hanow arayys nyns yw skrifadow war'n kestav ma."
+msgstr "Nyns yw skrifadow war'n kestav ma hanow arayys."
 
-#: backends/eds/lib/edsf-persona-store.vala:2139 folks/im-details.vala:136
+#: backends/eds/lib/edsf-persona-store.vala:2141 folks/im-details.vala:136
 msgid "IM addresses are not writeable on this contact."
-msgstr "Trigvaow vessajys desempis nyns yw skrifadow war'n kestav ma."
+msgstr "Nyns yw skrifadow war'n kestav ma trigvaow messajys desempis."
 
-#: backends/eds/lib/edsf-persona-store.vala:2194 folks/group-details.vala:174
+#: backends/eds/lib/edsf-persona-store.vala:2196 folks/group-details.vala:174
 msgid "Groups are not writeable on this contact."
-msgstr "Bagasow nyns yw skrifadow war'n kestav ma."
+msgstr "Nyns yw skrifadow war'n kestav ma bagasow."
 
-#: backends/eds/lib/edsf-persona-store.vala:2209
+#: backends/eds/lib/edsf-persona-store.vala:2211
 msgid "My Contacts is only available for Google Contacts"
-msgstr "Ow Hestavow yw kavadow rag Google Contacts yn unnik"
+msgstr "Ow Hestavow yw kavadow rag Google Contacts hepken"
 
-#: backends/eds/lib/edsf-persona-store.vala:2280 folks/gender-details.vala:79
+#: backends/eds/lib/edsf-persona-store.vala:2282 folks/gender-details.vala:79
 msgid "Gender is not writeable on this contact."
-msgstr "Reydh nyns yw skrifadow war'n kestav ma."
+msgstr "Nyns yw skrifadow war'n kestav ma reydh."
 
-#: backends/eds/lib/edsf-persona-store.vala:2318 folks/anti-linkable.vala:84
+#: backends/eds/lib/edsf-persona-store.vala:2320 folks/anti-linkable.vala:84
 msgid "Anti-links are not writeable on this contact."
-msgstr "Gorthgorgevrennow nyns yw skrifadow war'n kestav ma."
+msgstr "Nyns yw skrifadow war'n kestav ma gorthgorgevrennow."
 
-#: backends/eds/lib/edsf-persona-store.vala:2361
+#: backends/eds/lib/edsf-persona-store.vala:2363
 #: folks/location-details.vala:135
 msgid "Location is not writeable on this contact."
-msgstr "Tyller nyns yw skrifadow war'n kestav ma."
+msgstr "Nyns yw skrifadow war'n kestav ma tyller."
 
 #. Translators: the first parameter is an error message.
-#: backends/eds/lib/edsf-persona-store.vala:2707
+#: backends/eds/lib/edsf-persona-store.vala:2709
 #, c-format
 msgid "Permission denied when creating new contact: %s"
-msgstr "Kummyas naghys pan ow kwruthyl kestav nowydh: %s"
+msgstr "Kummyas naghys hag ow kwruthyl kestav nowydh: %s"
 
 #. Translators: the first parameter is an error message.
-#: backends/eds/lib/edsf-persona-store.vala:2712
+#: backends/eds/lib/edsf-persona-store.vala:2714
 #, c-format
 msgid "Address book is offline and a new contact cannot be created: %s"
-msgstr "Lyver trigva yw dhywarlinen ha kestav nowydh ny allas bos gwrys: %s"
+msgstr "Lyver trigva yw dhywarlinen ha ny yll bos gwrys kestav nowydh: %s"
 
 #. Translators: the first parameter is a non-human-readable
 #. * property name and the second parameter is an error
 #. * message.
-#: backends/eds/lib/edsf-persona-store.vala:2721
+#: backends/eds/lib/edsf-persona-store.vala:2723
 #, c-format
 msgid "New contact is not writeable: %s"
-msgstr "Kestav nowydh nyns yw skrifadow: %s"
+msgstr "Nyns yw skrifadow kestav nowydh: %s"
 
 #. Translators: the first parameter is an error message.
-#: backends/eds/lib/edsf-persona-store.vala:2725
+#: backends/eds/lib/edsf-persona-store.vala:2727
 #, c-format
 msgid "Invalid value in contact: %s"
 msgstr "Synsas anewn yn kestav: %s"
 
 #. Translators: the first parameter is an error message.
-#: backends/eds/lib/edsf-persona-store.vala:2749
+#: backends/eds/lib/edsf-persona-store.vala:2751
 #, c-format
 msgid "Unknown error adding contact: %s"
-msgstr "Error ankoth dres ow keworra kestav: %s"
+msgstr "Gwall ankoth hag ow keworra kestav: %s"
 
 #. Translators: the first parameter is a non-human-readable
 #. * property name and the second parameter is an error
 #. * message.
-#: backends/eds/lib/edsf-persona-store.vala:2782
+#: backends/eds/lib/edsf-persona-store.vala:2784
 #, c-format
 msgid "Property ‘%s’ is not writeable: %s"
-msgstr "Teythien ‘%s’ nyns yw skrifadow: %s"
+msgstr "Nyns yw skrifadow teythien ‘%s’: %s"
 
 #. Translators: the first parameter is a non-human-readable
 #. * property name and the second parameter is an error
 #. * message.
-#: backends/eds/lib/edsf-persona-store.vala:2791
+#: backends/eds/lib/edsf-persona-store.vala:2793
 #, c-format
 msgid "Invalid value for property ‘%s’: %s"
 msgstr "Synsas anewn rag teythien ‘%s’: %s"
 
 #. Translators: the first parameter is a non-human-readable
 #. * property name and the second parameter is an error message.
-#: backends/eds/lib/edsf-persona-store.vala:2817
+#: backends/eds/lib/edsf-persona-store.vala:2819
 #, c-format
 msgid "Unknown error setting property ‘%s’: %s"
-msgstr "Error ankoth ow korra teythien ‘%s’: %s"
+msgstr "Gwall ankoth hag ow korra teythien ‘%s’: %s"
 
 #. Translators: the first parameter is a filename, and
 #. * the second is an error message.
 #: backends/key-file/kf-persona-store.vala:235
 #, c-format
 msgid "The relationship key file ‘%s’ could not be loaded: %s"
-msgstr "An restren alhwedh keskolm ‘%s’ ny allas bos kargys: %s"
+msgstr "Ny yll bos kargys an restren alhwedh keskolm ‘%s’: %s"
 
 #. Translators: the first parameter is a path, and the
 #. * second is an error message.
 #: backends/key-file/kf-persona-store.vala:257
 #, c-format
 msgid "The relationship key file directory ‘%s’ could not be created: %s"
-msgstr "An restrenva restren alhwedh keskolm ‘%s’ ny allas bos gwrys: %s"
+msgstr "Ny yll bos gwrys an restrenva restren alhwedh keskolm ‘%s’: %s"
 
 #. Translators: the first parameter is a filename, and
 #. * the second is an error message.
 #: backends/key-file/kf-persona-store.vala:281
 #, c-format
 msgid "The relationship key file ‘%s’ could not be created: %s"
-msgstr "An restren alhwedh keskolm ‘%s’ ny allas bos gwrys: %s"
+msgstr "Ny yll bos gwrys an restren alhwedh keskolm ‘%s’: %s"
 
 #. Translators: the first parameter is a filename, the second is
 #. * an error message.
@@ -391,12 +390,12 @@ msgid ""
 "Either oFono isn’t installed or the service can’t be started."
 msgstr ""
 "Nyns eus dyghtyer tra oFono owth eksekutya, ytho an oberer oFono a vydh "
-"marow. Po oFono nyns yw leys po an gonis ny allas bos dallethys."
+"marow. Po oFono nyns yw leys po ny yll bos dallethys an gonis."
 
 #: backends/telepathy/lib/tpf-persona-store.vala:1263
 msgid "Telepathy contacts representing the local user may not be removed."
 msgstr ""
-"Kestavow Telepathy ow representya an devnydhyer leel ny allas bos removys."
+"Ny yll bos removys kestavow Telepathy ow representya an devnydhyer leel."
 
 #. Translators: the parameter is an error message.
 #: backends/telepathy/lib/tpf-persona-store.vala:1274
@@ -417,7 +416,7 @@ msgstr ""
 
 #: backends/telepathy/lib/tpf-persona-store.vala:1324
 msgid "Cannot create a new Telepathy contact while offline."
-msgstr "Ny yllir gwruthyl kestav Telepathy nowydh mar dhywarlinen."
+msgstr "Ny yllir gwruthyl kestav Telepathy nowydh mars esowgh dhywarlinen."
 
 #. Translators: the parameter is an error message.
 #: backends/telepathy/lib/tpf-persona-store.vala:1342
@@ -431,15 +430,15 @@ msgstr "Ny yllir keworra persona dhyworth manylyon: %s"
 msgid ""
 "Failed to change favorite without a connection to the telepathy-logger "
 "service."
-msgstr "Ny yllri chanjya drudh heb junyans dhe'n gonis telepathy-logger."
+msgstr "Ny yllir chanjya drudh heb junyans dhe'n gonis telepathy-logger."
 
 #: backends/telepathy/lib/tpf-persona-store.vala:1368
 msgid ""
 "Failed to change favorite status of Telepathy Persona because it has no "
 "attached TpContact."
 msgstr ""
-"Ny yllir chanjya studh drudh a Bersona Telepathy drefen nyns eus TpContact "
-"stag."
+"Ny yllir chanjya studh drudh a Bersona Telepathy dre reson nyns eus "
+"TpContact stag dhodho."
 
 #. Translators: the parameter is a contact identifier.
 #: backends/telepathy/lib/tpf-persona-store.vala:1386
@@ -451,18 +450,18 @@ msgstr "Ny yllir chanjya studh drudh rag kestav Telepathy ‘%s’."
 #: backends/telepathy/lib/tpf-persona-store.vala:1418
 #, c-format
 msgid "Failed to change contact’s alias: %s"
-msgstr "Ny yllir chanjya kenhanow kestav: %s"
+msgstr "Ny yllir chanjya kenhanow an kestav: %s"
 
 #: backends/telepathy/lib/tpf-persona-store.vala:1499
 msgid "Extended information may only be set on the user’s Telepathy contact."
 msgstr ""
-"Kedhlow ynstynnys a yll bos gorrys war'n kestav Telepathy a'n devnydhyer yn "
-"unnik."
+"Kedhlow ynstynnys a yll bos gorrys war'n kestav Telepathy an devnydhyer "
+"hepken."
 
 #: backends/telepathy/lib/tpf-persona-store.vala:1528
 msgid ""
 "Extended information cannot be written because the store is disconnected."
-msgstr "Kedhlow ynstynnys ny allas bos skrifys drefen an withva yw disjunys."
+msgstr "Ny yll bos skrifys kedhlow ynstynnys awos bos disjunys an withva."
 
 #. Translators: the parameter is an error message.
 #: backends/telepathy/lib/tpf-persona.vala:511
@@ -482,21 +481,22 @@ msgstr "Akont yw dhywarlinen."
 
 #: folks/alias-details.vala:61
 msgid "Alias is not writeable on this contact."
-msgstr "Kenhanow nyns yw skrifadow war'n kestav ma."
+msgstr "Nyns yw skrifadow war'n kestav ma kenhanow."
 
 #. Translators: the first parameter is a folder path and the second
 #. * is an error message.
 #: folks/backend-store.vala:655
 #, c-format
 msgid "Error listing contents of folder ‘%s’: %s"
-msgstr "Error ow rolya synsas a restrenva ‘%s’: %s"
+msgstr "Gwall hag ow rolya synsas a restrenva ‘%s’: %s"
 
 #. Translators: the first parameter is a folder path and the second
 #. * is an error message.
 #: folks/backend-store.vala:696
 #, c-format
 msgid "Error querying info for target ‘%s’ of symlink ‘%s’: %s"
-msgstr "Error ow kovyn kedhlow rag kosten ‘%s’ a arwodhek-gorgevren ‘%s’: %s"
+msgstr ""
+"Error hag ow kovyn kedhlow rag kosten ‘%s’ a arwodhek-gorgevren ‘%s’: %s"
 
 #. Translators: the parameter is a filename.
 #: folks/backend-store.vala:824
@@ -512,35 +512,35 @@ msgstr "Ny yllir kerghes eghen synsas rag ‘%s’."
 
 #: folks/birthday-details.vala:93
 msgid "Birthday event ID is not writeable on this contact."
-msgstr "ID hwarvos penn-bloodh nyns yw skrifadow war'n kestav ma."
+msgstr "Nyns yw skrifadow war'n kestav ma ID hwarvos penn-bloodh."
 
 #: folks/extended-info.vala:133 folks/extended-info.vala:149
 msgid "Extended fields are not writeable on this contact."
-msgstr "Ynworransow ynstynnys nyns yw skrifadow war'n kestav ma."
+msgstr "Nyns yw skrifadow war'n kestav ma ynworransow ynstynnys."
 
 #: folks/favourite-details.vala:58
 msgid "Favorite status is not writeable on this contact."
-msgstr "Studh drudh nyns yw skrifadow war'n kestav ma."
+msgstr "Nyns yw skrifadow war'n kestav ma studh drudh."
 
 #. Translators: the parameter is an IM address.
 #: folks/im-details.vala:178 folks/im-details.vala:192
 #: folks/im-details.vala:214 folks/im-details.vala:241
 #, c-format
 msgid "The IM address ‘%s’ could not be understood."
-msgstr "An trigva vessajys desempis ‘%s’ ny allas bos konvedhys."
+msgstr "Ny yll bos konvedhys an drigva vessajys desempis ‘%s’."
 
 #. Translators: the first parameter is a persona store identifier
 #. * and the second is an error message.
 #: folks/individual-aggregator.vala:1052
 #, c-format
 msgid "Error preparing persona store ‘%s’: %s"
-msgstr "Error ow pareusi gwithva bersona ‘%s’: %s"
+msgstr "Gwall hag ow pareusi gwithva bersona ‘%s’: %s"
 
 #. Translators: the parameter is a property name.
 #: folks/individual-aggregator.vala:1283 folks/individual-aggregator.vala:1556
 #, c-format
 msgid "Unknown property ‘%s’ in linkable property list."
-msgstr "Teythien ankoth ‘%s’ yn rol teythiennow junyadow."
+msgstr "Teythien ankoth ‘%s’ yn rol deythiennow junyadow."
 
 #. Translators: the first parameter is a store identifier
 #. * and the second parameter is an error message.
@@ -551,11 +551,11 @@ msgstr "Ny yllir keworra kestav rag ID gwithva bersona ‘%s’: %s"
 
 #: folks/individual-aggregator.vala:2169
 msgid "Anti-links can’t be removed between personas being linked."
-msgstr "Gorthgorgevrennow ny allas bos removys yntra personas dres junyans."
+msgstr "Ny yll bos removys gorthgorgevrennow yntra personas usi ow pos junys."
 
 #: folks/individual-aggregator.vala:2493
 msgid "Can’t add personas with no primary store."
-msgstr "Ny yllir keworra personas gans pennwithva vyth."
+msgstr "Ny yllir keworra personas heb pennwithva."
 
 #: folks/individual-aggregator.vala:2494
 #, c-format
@@ -563,8 +563,8 @@ msgid ""
 "Persona store ‘%s:%s’ is configured as primary, but could not be found or "
 "failed to load."
 msgstr ""
-"Gwithva bersona ‘%s:%s’ yw selys avel kynsa, mes ny yllir bos kevys po "
-"fyllis dhe garga."
+"Gwithva bersona ‘%s:%s’ yw selys avel kynsa, mes ny yllir bos kevys po y "
+"fyllir dhe garga."
 
 #: folks/individual-aggregator.vala:2495
 #, c-format
@@ -572,8 +572,8 @@ msgid ""
 "Check the relevant service is running, or change the default store in that "
 "service or using the ‘%s’ GSettings key."
 msgstr ""
-"Checkyewgh an gonis perthynek yw owth eksekutya, po chanjyewgh an withva "
-"dhefowt y'n gonis na po ow tevnydhya an alhwedh GSettings ‘%s’."
+"Checkyewgh yma an gonis perthynek owth eksekutya, po chanjyewgh an withva "
+"dhefowt y'n gonis na po dre dhevnydhya an alhwedh GSettings ‘%s’."
 
 #: folks/individual-aggregator.vala:2504
 #, c-format
@@ -585,7 +585,7 @@ msgstr "Ny yllir skrifa dhe deythien wovynys (‘%s’) a'n withva skrifadow."
 #: folks/individual.vala:842 folks/individual.vala:1060
 #, c-format
 msgid "Failed to change property ‘%s’: No suitable personas were found."
-msgstr "Ny yllir chanjya teythien ‘%s’: Nyns eus personas fytti kevys."
+msgstr "Ny yllir chanjya teythien ‘%s’: Nyns esa personas fytti kevys."
 
 #. Translators: This is the default name for an Individual
 #. * when displayed in the UI if no personal details are available
@@ -647,8 +647,8 @@ msgid ""
 "linking data in). The type ID of the store may optionally be prepended, "
 "separated by a colon. For example: ‘eds:system-address-book’ or ‘key-file’."
 msgstr ""
-"An ID a'n withva bersona may folks a kodh devnydhya avel kynsa (r.e. rag "
-"gwitha data junya yn). An ID eghen a'n withva a yll dre dhewis bos ragaddys, "
+"An ID a'n withva bersona may folks a wra devnydhya avel kynsa (r.e. rag "
+"gwitha data junya). An ID eghen a'n withva a yll bos ragkeworrys dre dhewis, "
 "diberthys gans dewpoyntys. Rag ensampel: ‘eds:system-address-book’ po ‘key-"
 "file’."
 
@@ -667,7 +667,7 @@ msgstr "Dhywarlinen"
 
 #: folks/presence-details.vala:177
 msgid "Error"
-msgstr "Error"
+msgstr "Gwall"
 
 #: folks/presence-details.vala:179
 msgid "Available"
@@ -711,13 +711,13 @@ msgstr "Ny yllir kerghes kedhlow a-dro dhe restren %s: %s"
 #: tools/import-pidgin.vala:72
 #, c-format
 msgid "File %s is not readable."
-msgstr "Restren %s nyns yw redyadow."
+msgstr "Nyns yw redyadow restren %s."
 
 #. Translators: the parameter is a filename.
 #: tools/import-pidgin.vala:82
 #, c-format
 msgid "The Pidgin buddy list file ‘%s’ could not be loaded."
-msgstr "An restren rol kowetha Pidgin ‘%s’ ny allas bos kargys."
+msgstr "Ny yll bos kargys an restren rol gowetha Pidgin ‘%s’."
 
 #. Translators: the parameter is a filename.
 #: tools/import-pidgin.vala:97
@@ -726,8 +726,8 @@ msgid ""
 "The Pidgin buddy list file ‘%s’ could not be loaded: the root element could "
 "not be found or was not recognized."
 msgstr ""
-"An restren rol kowetha Pidgin ‘%s’ ny allas bos kargys: an elven wreydhek ny "
-"allas bos kevys po nyns o aswonys."
+"Ny yll bos kargys an restren rol gowetha Pidgin ‘%s’: ny yll bos kevys an "
+"elven wreydhek kevys po nyns yw aswonys."
 
 #. Translators: the first parameter is the number of buddies which
 #. * were successfully imported, and the second is a filename.
@@ -736,14 +736,14 @@ msgstr ""
 msgid "Imported %u buddy from ‘%s’."
 msgid_plural "Imported %u buddies from ‘%s’."
 msgstr[0] "Ynperthys %u koweth dhyworth ‘%s’."
-msgstr[1] "Ynperthys %u kowetha dhyworth ‘%s’."
+msgstr[1] "Ynperthys %u a gowetha dhyworth ‘%s’."
 
 #. Translators: the first parameter is a persona identifier,
 #. * and the second is an error message.
 #: tools/import-pidgin.vala:164
 #, c-format
 msgid "Error changing group of contact ‘%s’: %s"
-msgstr "Error dres ow chanjya bagas a gestav ‘%s’: %s"
+msgstr "Gwall hag ow chanjya bagas a gestav ‘%s’: %s"
 
 #. Translators: the parameter is the buddy's IM address.
 #: tools/import-pidgin.vala:221
@@ -752,7 +752,7 @@ msgid ""
 "Ignoring buddy with no alias and only one IM address:\n"
 "%s"
 msgstr ""
-"Ow skonya aswon koweth gans kenhanow vyth hag unn trigva messajys desempis "
+"Ow skonya aswon a goweth heb kenhanow hag unn trigva vessajys desempis "
 "hepken:\n"
 "%s"
 
@@ -764,9 +764,9 @@ msgid ""
 "Error: %s\n"
 msgstr ""
 "Ny yllir gwruthyl kestav nowydh rag koweth gans kenhanow ‘%s’ ha trigvaow "
-"vessajys desempis:\n"
+"messajys desempis:\n"
 "%s\n"
-"Error: %s\n"
+"Gwall: %s\n"
 
 #. Translators: the first parameter is a persona identifier, the
 #. * second is an alias for the persona, and the third is a set of IM
@@ -777,7 +777,7 @@ msgid ""
 "Created contact ‘%s’ for buddy with alias ‘%s’ and IM addresses:\n"
 "%s"
 msgstr ""
-"Gwrys kestav ‘%s’ rag koweth gans kenhanow ‘%s’ ha trigvaow vessajys "
+"Gwrys kestav ‘%s’ rag koweth gans kenhanow ‘%s’ ha trigvaow messajys "
 "desempis:\n"
 "%s"
 
@@ -787,7 +787,7 @@ msgstr "Hanow oberer devedhyans (defowt: ‘pidgin’)"
 
 #: tools/import.vala:47
 msgid "Source filename (default: specific to source backend)"
-msgstr "Hanow restren dhevedhyans (defowt: komparek dhe oberer devedhyans)"
+msgstr "Hanow restren dhevedhyans (defowt: komparek orth oberer devedhyans)"
 
 #: tools/import.vala:58
 msgid "— import meta-contact information to libfolks"
@@ -835,7 +835,7 @@ msgstr "Ny yllir pareusi an withva bersona oberer ‘%s’: %s"
 #: tools/import.vala:185
 #, c-format
 msgid "Error importing contacts: %s"
-msgstr "Error owth ynperthi kestavow: %s"
+msgstr "Gwall hag owth ynperthi kestavow: %s"
 
 #. Translators: both parameters are identifiers for backends.
 #: tools/import.vala:199
@@ -844,5 +844,5 @@ msgid ""
 "Unrecognized source backend name ‘%s’. ‘%s’ is currently the only supported "
 "source backend."
 msgstr ""
-"Hanow oberer devedhyans anaswonys ‘%s’. ‘%s’ yw y'n eur ma an oberer "
-"devedhyans skoodhys yn unnik."
+"Hanow oberer devedhyans anaswonys ‘%s’. ‘%s’ yw y'n eur ma an unsel oberer "
+"devedhyans skoodhys."
